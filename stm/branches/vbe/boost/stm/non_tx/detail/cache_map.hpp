@@ -58,28 +58,63 @@ public:
     inline T * get() {
         return ptr_;
     }
-    virtual base_transaction_object* clone() const {
+
+#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
+    virtual base_transaction_object* clone(transaction* t) const {
+        cache* tmp = new(t) cache<T>(*this);
+#else
+    virtual base_transaction_object* clone(transaction*) const {
         cache* tmp = new cache<T>(*this);
+#endif
         if (tmp->value_!=0) {
             tmp->ptr_ = new T(*value_);
         }
         return tmp;
     }
 
-#ifdef BOOST_STM_USE_MEMCOPY
+#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
+    virtual void cache_deallocate() {
+        delete ptr_;
+        ptr_=0;
+        this->~cache<T>();
+        boost::stm::cache_deallocate(this);
+    }
+#else
     virtual void cache_deallocate() {
         delete ptr_;
         ptr_=0;
         delete this;
     }
-#endif
-
+#endif    
     virtual void copy_state(base_transaction_object const * const rhs) {
         if (value_==0) return;
         *value_= *(static_cast<cache<T> const * const>(rhs)->ptr_);
         delete ptr_;
         ptr_=0;
     }
+
+#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
+   void* operator new(size_t size, transaction* t) 
+   {
+      return boost::stm::cache_allocate<cache<T> >(t);
+   }   
+#if USE_STM_MEMORY_MANAGER
+   void* operator new(size_t size) throw ()
+   {
+      return retrieve_mem(size);
+   }
+
+   void operator delete(void* mem)
+   {
+      return_mem(mem, sizeof(cache<T>));
+   }
+#else   
+    void* operator new(size_t size) throw ()
+    {
+        return ::operator new(size);
+    }
+#endif
+#else
 
 #if USE_STM_MEMORY_MANAGER
    void* operator new(size_t size) throw ()
@@ -92,6 +127,8 @@ public:
       return_mem(mem, sizeof(cache<T>));
    }
 #endif
+#endif
+
 
 private:
     //cache(cache<T> const & r);

@@ -46,6 +46,7 @@
 #include <boost/stm/move.hpp>
 #include <boost/stm/non_tx/numeric.hpp>
 #include <boost/stm/non_tx/smart_ptr.hpp>
+#include <boost/stm/shallow_transaction_object.hpp>
 #include <boost/stm/synchro.hpp>
 #include <boost/stm/transaction.hpp>
 #include <boost/stm/transaction_bookkeeping.hpp>

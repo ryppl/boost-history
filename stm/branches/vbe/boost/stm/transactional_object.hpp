@@ -71,33 +71,64 @@ public:
         return *this;
     }
 
-    virtual base_transaction_object* clone() const {
+#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
+    virtual base_transaction_object* clone(transaction* t) const {
+        //return cache_clone(*this);
+        return new(t) transactional_object<T>(*this);
+    }
+#else
+    virtual base_transaction_object* clone(transaction*) const {
+        //return cache_clone(*this);
         return new transactional_object<T>(*this);
     }
-
-#ifdef BOOST_STM_USE_MEMCOPY
+#endif
+    
     virtual void cache_deallocate() {
         //boost::stm::cache_deallocate(this);
         delete this;
     }
-#endif
 
     virtual void copy_state(base_transaction_object const * const rhs) {
-        //cache_copy(static_cast<transactional_object<T> const * const>(rhs),                      this);
-         *this=*static_cast<transactional_object<T> const * const>(rhs);
+        //cache_copy(static_cast<transactional_object<T> const * const>(rhs), this);
+        *this=*static_cast<transactional_object<T> const * const>(rhs);
     }
 
-#if USE_STM_MEMORY_MANAGER
-   void* operator new(size_t size) throw ()
-   {
-      return retrieve_mem(size);
-   }
+    #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
+    void* operator new(size_t size, transaction* t) 
+    {
+        return cache_allocate<transactional_object<T> >(t);
+    }   
+    #if USE_STM_MEMORY_MANAGER
+    void* operator new(size_t size) throw ()
+    {
+        return retrieve_mem(size);
+    }
 
-   void operator delete(void* mem)
-   {
-      return_mem(mem, sizeof(transactional_object<T>));
-   }
-#endif
+    void operator delete(void* mem)
+    {
+    return_mem(mem, sizeof(transactional_object<T>));
+    }
+    #else
+    void* operator new(size_t size) throw ()
+    {
+        return ::operator new(size);
+    }
+    #endif
+
+    #else
+
+    #if USE_STM_MEMORY_MANAGER
+    void* operator new(size_t size) throw ()
+    {
+        return retrieve_mem(size);
+    }
+
+    void operator delete(void* mem)
+    {
+        return_mem(mem, sizeof(transactional_object<T>));
+    }
+    #endif
+    #endif
 
 };
 

@@ -11,8 +11,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_STM_TRANSACTION_OBJECT__HPP
-#define BOOST_STM_TRANSACTION_OBJECT__HPP
+#ifndef BOOST_STM_SHALLOW_TRANSACTION_OBJECT__HPP
+#define BOOST_STM_SHALLOW_TRANSACTION_OBJECT__HPP
 
 //-----------------------------------------------------------------------------
 //#include <stdarg.h>
@@ -41,7 +41,7 @@ class transaction;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-// transaction object mixin
+// transaction object mixin making shallow copy
 // Provides the definition of the virtual functions
 //      clone: use copy constructor
 //      copy_state: use assignement
@@ -54,41 +54,27 @@ class transaction;
 // class D : transaction_object<D, B> {}
 // the single issue is the forward constructors from transaction_object<D, B> to B
 //-----------------------------------------------------------------------------
+
 template <class Derived, typename Base=base_transaction_object>
-class transaction_object : public base_transaction_object
+class shallow_transaction_object : public base_transaction_object
 {
 public:
-    typedef transaction_object<Derived, Base> this_type;
 
     //--------------------------------------------------------------------------
-#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
     virtual base_transaction_object* clone(transaction* t) const {
-        Derived* tmp = new(t) Derived(*static_cast<Derived const*>(this));
+        Derived* tmp = cache_clone(t, *static_cast<Derived const*>(this));
         return tmp;
     }
-#else
-    virtual base_transaction_object* clone(transaction*) const {
-        Derived* tmp = new Derived(*static_cast<Derived const*>(this));
-        return tmp;
-    }
-#endif        
-
+    
    //--------------------------------------------------------------------------
-#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
     virtual void cache_deallocate() {
-        static_cast<Derived*>(this)->~Derived();
         boost::stm::cache_deallocate(this);
     }
-#else
-    virtual void cache_deallocate() {
-        delete this;
-    }
-#endif
     
    //--------------------------------------------------------------------------
    virtual void copy_state(base_transaction_object const * const rhs)
    {
-       *static_cast<Derived *>(this) = *static_cast<Derived const * const>(rhs);
+        boost::stm::cache_copy(static_cast<Derived const * const>(rhs), static_cast<Derived *>(this));
    }
 
 #if BUILD_MOVE_SEMANTICS
@@ -99,30 +85,7 @@ public:
    }
 #endif
 
-#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-   void* operator new(size_t size, transaction* t) 
-   {
-      return boost::stm::cache_allocate<Derived>(t);
-   }   
-#if USE_STM_MEMORY_MANAGER
-   void* operator new(size_t size) throw ()
-   {
-      return retrieve_mem(size);
-   }
 
-   void operator delete(void* mem)
-   {
-      static Derived elem;
-      static size_t elemSize = sizeof(elem);
-      return_mem(mem, elemSize);
-   }
-#else
-   void* operator new(size_t size) throw ()
-   {
-      return ::operator new(size);
-   }
-#endif
-#else  
 #if USE_STM_MEMORY_MANAGER
    void* operator new(size_t size) throw ()
    {
@@ -136,36 +99,36 @@ public:
       return_mem(mem, elemSize);
    }
 #endif
-#endif
+
 };
 
-template <typename T> class native_trans :
-public transaction_object< native_trans<T> >
+template <typename T> class shallow_native_trans :
+public shallow_transaction_object< shallow_native_trans<T> >
 {
 public:
 
-   native_trans() : value_(T()) {}
-   native_trans(T const &rhs) : value_(rhs) {}
-   native_trans(native_trans const &rhs) : value_(rhs.value_) {}
-   ~native_trans() {}
+   shallow_native_trans() : value_(T()) {}
+   shallow_native_trans(T const &rhs) : value_(rhs) {}
+   shallow_native_trans(shallow_native_trans const &rhs) : value_(rhs.value_) {}
+   ~shallow_native_trans() {}
 
-   native_trans& operator=(T const &rhs) { value_ = rhs; return *this; }
+   shallow_native_trans& operator=(T const &rhs) { value_ = rhs; return *this; }
 
-   native_trans& operator--() { --value_; return *this; }
-   native_trans operator--(int) { native_trans n = *this; --value_; return n; }
+   shallow_native_trans& operator--() { --value_; return *this; }
+   shallow_native_trans operator--(int) { shallow_native_trans n = *this; --value_; return n; }
 
-   native_trans& operator++() { ++value_; return *this; }
-   native_trans operator++(int) { native_trans n = *this; ++value_; return n; }
+   shallow_native_trans& operator++() { ++value_; return *this; }
+   shallow_native_trans operator++(int) { shallow_native_trans n = *this; ++value_; return n; }
 
-   native_trans& operator+=(T const &rhs)
+   shallow_native_trans& operator+=(T const &rhs)
    {
       value_ += rhs;
       return *this;
    }
 
-   native_trans operator+(native_trans const &rhs)
+   shallow_native_trans operator+(shallow_native_trans const &rhs)
    {
-      native_trans ret = *this;
+      shallow_native_trans ret = *this;
       ret.value_ += rhs.value_;
       return ret;
    }
@@ -180,8 +143,8 @@ public:
    //--------------------------------------------------
    // move semantics
    //--------------------------------------------------
-   native_trans(native_trans &&rhs) { value_ = rhs.value_;}
-   native_trans& operator=(native_trans &&rhs)
+   shallow_native_trans(shallow_native_trans &&rhs) { value_ = rhs.value_;}
+   shallow_native_trans& operator=(shallow_native_trans &&rhs)
    { value_ = rhs.value_; return *this; }
 #endif
 
@@ -193,6 +156,6 @@ private:
 };
 
 }}
-#endif // BOOST_STM_TRANSACTION_OBJECT__HPP
+#endif // BOOST_STM_SHALLOW_TRANSACTION_OBJECT__HPP
 
 

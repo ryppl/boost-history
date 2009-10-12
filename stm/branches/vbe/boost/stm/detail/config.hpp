@@ -34,8 +34,9 @@
 //      OTHER: each TSS data has its specific TSS
 
 #define USE_SINGLE_THREAD_CONTEXT_MAP 1
-#define BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP 1
-
+//#define BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP 1
+ 
+ 
 ///////////////////////////////////////////////////////////////////////////////
 // When USE_SINGLE_THREAD_CONTEXT_MAP or BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP are defined you can want to store references to the TSS or not
 //      BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS if you want to add these references
@@ -56,14 +57,13 @@
 #define BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm 1
 
 ///////////////////////////////////////////////////////////////////////////////
-// BOOST_STM_USE_MEMCOPY: STM uses memcpy insted of the copy constructor
-#define BOOST_STM_USE_MEMCOPY 1
+// BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
+//#define BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER 1
 
-//// The cache using memcpy can use the following memory managers
+//// The cache using BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER can use the following memory managers
 //// BOOST_STM_CACHE_USE_MALLOC: uses malloc/free
 //// BOOST_STM_CACHE_USE_MEMORY_MANAGER: uses the class specific memory manager
 //// BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER: uses the monotonic storage memory manager
-
 
 #define BOOST_STM_CACHE_USE_MALLOC  1
 //#define BOOST_STM_CACHE_USE_MEMORY_MANAGER 1

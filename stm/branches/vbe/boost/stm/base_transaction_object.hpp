@@ -47,7 +47,7 @@ class transaction;
 // transactional objets must specialize the pure virtual functions
 //      copy_state(base_transaction_object const * const rhs)
 //      move_state(base_transaction_object * rhs) if BUILD_MOVE_SEMANTICS
-//      cache_deallocate() if BOOST_STM_USE_MEMCOPY
+//      cache_deallocate()
 // copy_state is used to copy the backup/working copy to the shared transactional object when the roolback/commit is done direct/defered policy is used
 // move_state is used to move the backup/working copy to the shared transactional object when the roolback/commit is done direct/defered policy is used
 // cache_deallocate is used to release the backup/working copy when the transaction ends if direct/defered policy is used
@@ -75,7 +75,7 @@ public:
    {}
 #endif
 
-   virtual base_transaction_object* clone() const = 0;
+   virtual base_transaction_object* clone(transaction* t) const = 0;
    virtual void copy_state(base_transaction_object const * const rhs) = 0;
 #if BUILD_MOVE_SEMANTICS
    virtual void move_state(base_transaction_object * rhs) = 0;
@@ -83,9 +83,7 @@ public:
    virtual void move_state(base_transaction_object * rhs) {};
 #endif
    virtual ~base_transaction_object() {};
-#ifdef BOOST_STM_USE_MEMCOPY
     virtual void cache_deallocate()=0;
-#endif
 
    void transaction_thread(size_t rhs) const { transactionThread_ = rhs; }
    size_t const & transaction_thread() const { return transactionThread_; }

@@ -177,7 +177,7 @@ public:
     #ifdef USE_SINGLE_THREAD_CONTEXT_MAP
     struct tx_context
     {
-        #if defined(BOOST_STM_USE_MEMCOPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
+        #if defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
         monotonic_storage<6*1000*1000> mstorage_;
         #endif
         MemoryContainerList newMem;
@@ -212,7 +212,6 @@ public:
         #endif
         {
             // the current transaction is 0
-            //transactions_.push(static_cast<transaction*>(0));
             transactions_.push(0);
             #ifndef BOOST_STM_USE_BOOST_MUTEX
             pthread_mutex_init(&mutex_, 0);
@@ -738,52 +737,6 @@ public:
    }
 
    //--------------------------------------------------------------------------
-   template <typename T>
-   T* new_memory(T*)
-   {
-      if (forced_to_abort())
-      {
-         if (!direct_updating())
-         {
-            deferred_abort(true);
-            throw aborted_tx("");
-         }
-
-#ifndef DELAY_INVALIDATION_DOOMED_TXS_UNTIL_COMMIT
-         cm_abort_on_new(*this);
-#endif
-      }
-      T *newNode = new T();
-      newNode->transaction_thread(threadId_);
-      newNode->new_memory(1);
-      newMemoryList().push_back(newNode);
-
-      return newNode;
-   }
-
-   //--------------------------------------------------------------------------
-   template <typename T>
-   T* new_memory_copy(T const &rhs)
-   {
-      if (forced_to_abort())
-      {
-         if (!direct_updating())
-         {
-            deferred_abort(true);
-            throw aborted_tx("");
-         }
-#ifndef DELAY_INVALIDATION_DOOMED_TXS_UNTIL_COMMIT
-         cm_abort_on_new(*this);
-#endif
-      }
-      T *newNode = new T(rhs);
-      newNode->transaction_thread(threadId_);
-      newNode->new_memory(1);
-      newMemoryList().push_back(newNode);
-
-      return newNode;
-   }
-
     void throw_if_forced_to_abort_on_new() {
         if (forced_to_abort()) {
             if (!direct_updating()) {
@@ -796,6 +749,7 @@ public:
         }
     }
 
+   //--------------------------------------------------------------------------
    template <typename T>
    T* as_new(T *newNode)
    {
@@ -805,6 +759,22 @@ public:
 
       return newNode;
    }
+   //--------------------------------------------------------------------------
+   template <typename T>
+   T* new_memory(T*)
+   {
+      throw_if_forced_to_abort_on_new();
+      return as_new(new T());
+   }
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   T* new_memory_copy(T const &rhs)
+   {
+      throw_if_forced_to_abort_on_new();
+      return as_new(new T(rhs));
+   }
+
 
    void begin();
    bool restart();
@@ -1028,7 +998,7 @@ private:
       }
 
       in.transaction_thread(threadId_);
-      writeList().insert(tx_pair((base_transaction_object*)&in, in.clone()));
+      writeList().insert(tx_pair((base_transaction_object*)&in, in.clone(this)));
 #if USE_BLOOM_FILTER
       bloom().insert((size_t)&in);
 #endif
@@ -1171,7 +1141,7 @@ private:
          wbloom().set_bv2(bloom().h2());
          //sm_wbv().set_bit((size_t)&in % sm_wbv().size());
 #endif
-         base_transaction_object* returnValue = in.clone();
+         base_transaction_object* returnValue = in.clone(this);
          returnValue->transaction_thread(threadId_);
          writeList().insert(tx_pair((base_transaction_object*)&in, returnValue));
 #ifndef USE_BLOOM_FILTER
@@ -1633,7 +1603,8 @@ private:
     inline static TransactionsStack &transactions(thread_id_t id) {
         return *threadTransactionsStack_.find(id)->second;
     }
-   private:
+    private:
+
 
 ////////////////////////////////////////
 #else //BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
@@ -1800,7 +1771,7 @@ private:
         return i->second->transactions_;
     }
    private:
-   
+       
 #endif
 
 
@@ -1975,14 +1946,13 @@ public:
 
 };
 
-#ifdef BOOST_STM_USE_MEMCOPY
-template <class T> T* cache_allocate() {
-    #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
+template <class T> T* cache_allocate(transaction* t) {
+    #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER) && defined (USE_STM_MEMORY_MANAGER)
     return  reinterpret_cast<T*>(T::retrieve_mem(sizeof(T)));
     #elif defined(BOOST_STM_CACHE_USE_MALLOC)
     return  reinterpret_cast<T*>(malloc(sizeof(T)));
     #elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
-    return reinterpret_cast<T*>(context_.mstorage_.allocate<T>());
+    return reinterpret_cast<T*>(t->context_.mstorage_.allocate<T>());
     #else
     #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER, BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER must be defined"
     #endif
@@ -2000,7 +1970,7 @@ template <class T>
 struct cache_deallocate {
     static void apply(T* ptr) {
         if (ptr) {
-        #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
+        #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER) && defined (USE_STM_MEMORY_MANAGER)
             base_transaction_object::return_mem(ptr,sizeof(T));
         #elif defined(BOOST_STM_CACHE_USE_MALLOC)
             free(ptr);
@@ -2023,7 +1993,7 @@ template <class T> void cache_deallocate(T*ptr) {
 template <class T>
 inline void cache_deallocate(T* ptr) {
     if (ptr) {
-    #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
+    #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)  && defined (USE_STM_MEMORY_MANAGER
         base_transaction_object::return_mem(ptr,sizeof(T));
     #elif defined(BOOST_STM_CACHE_USE_MALLOC)
         free(ptr);
@@ -2034,17 +2004,11 @@ inline void cache_deallocate(T* ptr) {
     }
 }
 #endif //BOOST_STM_NO_PARTIAL_SPECIALIZATION
-#endif // BOOST_STM_USE_MEMCOPY
 
 inline void cache_release(base_transaction_object* ptr) {
-#ifdef BOOST_STM_USE_MEMCOPY
     ptr->cache_deallocate();
-#else
-    delete ptr;
-#endif
 }
 
-#ifdef BOOST_STM_USE_MEMCOPY
 #ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
 namespace partial_specialization_workaround {
 template <class T>
@@ -2052,8 +2016,8 @@ struct cache_clone;
 
 template <class T>
 struct cache_clone {
-    static inline T* apply(const T& val) {
-        T* p = cache_allocate<T>();
+    static inline T* apply(transaction* t, const T& val) {
+        T* p = cache_allocate<T>(t);
         if (p==0) {
             throw std::bad_alloc();
         }
@@ -2065,14 +2029,14 @@ struct cache_clone {
 } // partial_specialization_workaround
 
 template <class T>
-inline T* cache_clone(const T& val) {
-    return partial_specialization_workaround::cache_clone<T>::apply(val);
+inline T* cache_clone(transaction* t, const T& val) {
+    return partial_specialization_workaround::cache_clone<T>::apply(t, val);
 }
 #else //BOOST_STM_NO_PARTIAL_SPECIALIZATION
 
 template <class T>
-inline T* cache_clone(const T& val) {
-    T* p = cache_allocate<T>();
+inline T* cache_clone(transaction* t, const T& val) {
+    T* p = cache_allocate<T>(t);
     if (p==0) {
         throw std::bad_alloc();
     }
@@ -2080,21 +2044,11 @@ inline T* cache_clone(const T& val) {
     return p;
 }
 #endif // BOOST_STM_NO_PARTIAL_SPECIALIZATION
-#else
-template <class T>
-inline T* cache_clone(const T& val) {
-    T* tmp=new T(val);
-    return tmp;
-}
-#endif
 
 
 template <class T> void cache_copy(const T* const ori, T* target);
-// When BOOST_STM_USE_MEMCOPY is defined
-// this function must be specialized for objects that are non transactional by deleting the object, e.g.
 
 #ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
-#ifdef BOOST_STM_USE_MEMCOPY
 namespace partial_specialization_workaround {
 template <class T> struct cache_copy;
 
@@ -2107,24 +2061,15 @@ struct cache_copy {
 };
 
 } // partial_specialization_workaround
-#endif
 
 template <class T> void cache_copy(const T* const ori, T* target) {
-#ifdef BOOST_STM_USE_MEMCOPY
     partial_specialization_workaround::cache_copy<T>::apply(ori, target);
-#else
-    *target=*ori;
-#endif
 }
 
 #else
 
 template <class T> void cache_copy(const T* const ori, T* target) {
-#ifdef BOOST_STM_USE_MEMCOPY
     memcpy(target, ori, sizeof(T));
-#else
-    *target=*ori;
-#endif
 }
 #endif
 

@@ -36,17 +36,17 @@ namespace boost { namespace stm {
 //-----------------------------------------------------------------------------
 
 class base_transaction_object;
+class transaction;
 
 template <class T> T* cache_clone(const T& val);
 template <class T> void cache_copy(const T* const ori, T* target);
 void cache_release(base_transaction_object* ptr);
 
-template <class T> inline T* cache_clone_constructor(const T&);
+//template <class T> inline T* cache_clone_constructor(const T&);
 
-template <class T> T* cache_allocate();
+template <class T> T* cache_allocate(transaction*);
 template <class T> void cache_deallocate(T*);
 
-class transaction;
 
 } // namespace core
 }

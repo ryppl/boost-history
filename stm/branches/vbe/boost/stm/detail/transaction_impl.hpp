@@ -721,7 +721,7 @@ inline void transaction::end()
       invalidating_deferred_end_transaction();
 #endif
    }
-#if defined(BOOST_STM_USE_MEMCOPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
+#if defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
     context_.mstorage_.reset();
 #endif
 }
@@ -834,6 +834,7 @@ inline void transaction::invalidating_deferred_end_transaction()
    // this is an optimization to check forced to abort before obtaining the
    // transaction mutex, so if we do need to abort we do it now
    //--------------------------------------------------------------------------
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
 #ifndef DELAY_INVALIDATION_DOOMED_TXS_UNTIL_COMMIT
    if (forced_to_abort())
    {
@@ -850,12 +851,14 @@ inline void transaction::invalidating_deferred_end_transaction()
    //--------------------------------------------------------------------------
    if (is_only_reading())
    {
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
       lock(inflight_lock());
       transactionsInFlight_.erase(this);
 
 #if PERFORMING_COMPOSITION
       if (other_in_flight_same_thread_transactions())
       {
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
       unlock(inflight_lock());
          state_ = e_hand_off;
          bookkeeping_.inc_handoffs();
@@ -863,6 +866,7 @@ inline void transaction::invalidating_deferred_end_transaction()
       else
 #endif
       {
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
       unlock(inflight_lock());
          tx_type(eNormalTx);
 #if PERFORMING_LATM
@@ -871,12 +875,16 @@ inline void transaction::invalidating_deferred_end_transaction()
 #endif
          state_ = e_committed;
       }
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
       ++global_clock();
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
 
       return;
    }
 
-   while (0 != trylock(&transactionMutex_)) { }
+   while (0 != trylock(&transactionMutex_)) { 
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
+    }
 
    //--------------------------------------------------------------------------
    // as much as I'd like to transactionsInFlight_.erase() here, we have
@@ -885,6 +893,7 @@ inline void transaction::invalidating_deferred_end_transaction()
    // anyway. so we actually lose performance by doing it here and then
    // doing it again inside abort()
    //--------------------------------------------------------------------------
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
    if (forced_to_abort())
    {
       unlock(general_lock());
@@ -907,12 +916,14 @@ inline void transaction::invalidating_deferred_end_transaction()
       // al threads, because aborted threads will try to obtain the
       // transactionsInFlightMutex
       //-----------------------------------------------------------------------
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
       lock_all_mutexes();
       lock(inflight_lock());
 
 #if PERFORMING_COMPOSITION
       if (other_in_flight_same_thread_transactions())
       {
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
          transactionsInFlight_.erase(this);
          state_ = e_hand_off;
          unlock_all_mutexes();
@@ -924,10 +935,13 @@ inline void transaction::invalidating_deferred_end_transaction()
 #endif
       {
          // commit releases the inflight mutex as soon as its done with it
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
          invalidating_deferred_commit();
       }
 
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
       ++global_clock();
+    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
    }
 }
 
