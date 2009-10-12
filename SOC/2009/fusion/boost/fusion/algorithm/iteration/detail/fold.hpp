@@ -46,7 +46,6 @@ namespace boost { namespace fusion { namespace detail
             It3 it3 = fusion::next(it2);
 
             return unrolled_fold<Result,N-4>::call(
-                    fusion::next(it3),
                     f(
                         f(
                             f(
@@ -60,6 +59,7 @@ namespace boost { namespace fusion { namespace detail
                         ),
                         fusion::deref(it3)
                     ),
+                    fusion::next(it3),
                     BOOST_FUSION_FORWARD(F,f));
         }
     };
@@ -166,11 +166,11 @@ namespace boost { namespace fusion { namespace detail
     template<typename StateRef, typename It0, typename F, int N>
     struct result_of_unrolled_fold
     {
-        typedef typename fold_apply_rvalue_state<It0, StateRef, F>::type rest1;
+        typedef typename fold_apply_rvalue_state<StateRef, It0, F>::type rest1;
         typedef typename result_of::next<It0>::type it1;
-        typedef typename fold_apply_rvalue_state<it1, rest1, F>::type rest2;
+        typedef typename fold_apply_rvalue_state<rest1, it1, F>::type rest2;
         typedef typename result_of::next<it1>::type it2;
-        typedef typename fold_apply_rvalue_state<it2, rest2, F>::type rest3;
+        typedef typename fold_apply_rvalue_state<rest2, it2, F>::type rest3;
         typedef typename result_of::next<it2>::type it3;
 
         typedef typename
@@ -186,7 +186,7 @@ namespace boost { namespace fusion { namespace detail
     template<typename StateRef, typename It0, typename F>
     struct result_of_unrolled_fold<StateRef, It0, F, 3>
     {
-        typedef typename fold_apply_rvalue_state<It0, StateRef, F>::type rest1;
+        typedef typename fold_apply_rvalue_state<StateRef, It0, F>::type rest1;
         typedef typename result_of::next<It0>::type it1;
 
         typedef typename

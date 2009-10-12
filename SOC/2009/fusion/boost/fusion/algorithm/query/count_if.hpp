@@ -29,7 +29,7 @@ namespace boost { namespace fusion
 
             template<typename E>
             inline int
-            operator()(BOOST_FUSION_R_ELSE_CLREF(E) e, int count)const
+            operator()(int count, BOOST_FUSION_R_ELSE_CLREF(E) e)const
             {
                 return f(BOOST_FUSION_FORWARD(E,e)) ? ++count : count;
             }

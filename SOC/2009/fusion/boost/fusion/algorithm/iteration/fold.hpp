@@ -63,7 +63,7 @@ namespace boost { namespace fusion
                 BOOST_FUSION_R_ELSE_CLREF(Seq)
               , BOOST_FUSION_R_ELSE_CLREF(State)
               , BOOST_FUSION_R_ELSE_CLREF(F)
-            >::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)), state, f);
+            >::call(state, fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)), f);
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -78,7 +78,7 @@ namespace boost { namespace fusion
 #   pragma warning(disable: 4180)
 #endif
         return result_of::fold<Seq&,State const&,F const&>::call(
-                fusion::begin(seq), state, f);
+                state, fusion::begin(seq), f);
 #ifdef BOOST_MSVC
 #   pragma warning(pop)
 #endif

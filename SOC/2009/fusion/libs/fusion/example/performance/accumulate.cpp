@@ -249,7 +249,7 @@ namespace
     {
         template<typename Lhs, typename Rhs>
         struct result
-          : boost::fusion::detail::remove_reference<Rhs>
+          : boost::fusion::detail::remove_reference<Lhs>
         {};
         
         template<typename Lhs, typename Rhs>

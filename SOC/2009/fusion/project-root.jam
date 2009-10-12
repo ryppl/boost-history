@@ -23,5 +23,5 @@ build-project libs/fusion/example/test ;
 
 #build-project libs/fusion/doc ;
 #build-project libs/fusion/example/extension ;
-#build-project libs/fusion/example/performance ;
-#build-project libs/fusion/test ;
+build-project libs/fusion/example/performance ;
+build-project libs/fusion/test ;
