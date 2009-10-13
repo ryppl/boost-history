@@ -291,6 +291,7 @@ We want to be generic, the distance function has to be called from code not know
 There are two solutions:
 - tag dispatching
 - SFINAE
+
 We select tag dispatching because it fits into the traits system, and also because SFINAE has several drawbacks, listed in another paragraph.
 With tag dispatching the distance algorithm inspects the type of geometry of the input parameters. The distance function will be changed into this:
 \code

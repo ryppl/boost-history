@@ -211,7 +211,9 @@ We’ve designed a dimension agnostic system supporting any point-type of any coor
                 S <span class="keyword">const</span>&amp; s)
 </pre></div><p>
 We want to be generic, the distance function has to be called from code not knowing the type of geometry it handles, so it has to be named distance. We also cannot create an overload because that would be ambiguous, having the same template signature. There are two solutions:<ul>
-<li>tag dispatching</li><li>SFINAE We select tag dispatching because it fits into the traits system, and also because SFINAE has several drawbacks, listed in another paragraph. With tag dispatching the distance algorithm inspects the type of geometry of the input parameters. The distance function will be changed into this: <div class="fragment"><pre class="fragment"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> G1, <span class="keyword">typename</span> G2&gt;
+<li>tag dispatching</li><li>SFINAE</li></ul>
+<p>
+We select tag dispatching because it fits into the traits system, and also because SFINAE has several drawbacks, listed in another paragraph. With tag dispatching the distance algorithm inspects the type of geometry of the input parameters. The distance function will be changed into this: <div class="fragment"><pre class="fragment"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> G1, <span class="keyword">typename</span> G2&gt;
 <span class="keywordtype">double</span> <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">distance</a>(G1 <span class="keyword">const</span>&amp; g1, G2 <span class="keyword">const</span>&amp; g2)
 {
     <span class="keywordflow">return</span> <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">dispatch::distance</a>
@@ -221,8 +223,7 @@ We want to be generic, the distance function has to be called from code not know
             G1, G2
         &gt;::apply(g1, g2);
 }
-</pre></div></li></ul>
-<p>
+</pre></div><p>
 It is referring to the tag meta-function and forwarding the call to the apply method of a dispatch::distance structure. The tag meta-function is another traits class, and should be specialized for per point type, both shown here: <div class="fragment"><pre class="fragment"><span class="keyword">namespace </span>traits
 {
     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> G&gt;
