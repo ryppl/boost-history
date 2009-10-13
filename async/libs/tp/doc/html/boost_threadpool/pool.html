@@ -1,0 +1,294 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Pool</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="prev" href="../index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="next" href="task.html" title="Task">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="task.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_threadpool.pool"></a><a class="link" href="pool.html" title="Pool"> Pool</a>
+</h2></div></div></div>
+<p>
+      The pool manages internaly worker threads and submitted actions are stored
+      in a <a class="link" href="channel.html" title="Channel"><span class="emphasis"><em>channel</em></span></a>
+      (<a class="link" href="pool.html#boost_threadpool.pool.work_stealing"><span class="emphasis"><em>global queue</em></span></a>)
+      for processing by the worker threads (using a <a class="link" href="pool.html#boost_threadpool.pool.work_stealing"><span class="emphasis"><em>work
+      stealing</em></span></a> algorithm). Each submitted action gets associated
+      with a <a class="link" href="task.html" title="Task"><span class="emphasis"><em>task</em></span></a>
+      object that will be returned. The <a class="link" href="task.html" title="Task"><span class="emphasis"><em>task</em></span></a>
+      object acts as a proxy for a result that is initially not known and gets evaluated
+      later by a worker thread.
+    </p>
+<a name="boost_threadpool.pool.work_stealing"></a><h4>
+<a name="id326427"></a>
+      <a class="link" href="pool.html#boost_threadpool.pool.work_stealing">Work-Stealing</a>
+    </h4>
+<p>
+      Traditional thread poola do not scale because they use a single global queue
+      protected by a global lock. The frequency at which worker threads aquire the
+      global lock becomes a limiting factor for the throughput if:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        the actions become smaller
+      </li>
+<li>
+        more processors are added
+      </li>
+</ul></div>
+<p>
+      A work-stealing algorithm can be used to solve this problem. It uses a special
+      kind of queue which has two ends, and allows lock-free pushes and pops from
+      the <span class="emphasis"><em>private end</em></span> (accessed by the worker thread owning
+      the queue), but requires synchronization from the <span class="emphasis"><em>public end</em></span>
+      (accessed by the other worker threads). Synchronization is necessary when the
+      queue is sufficiently small that private and public operations could conflict.
+    </p>
+<p>
+      The pool contains one global queue (<a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+      channel</em></span></a> or <a class="link" href="channel.html#boost_threadpool.channel.unbounded_channel"><span class="emphasis"><em>unbounded
+      channel</em></span></a>) protected by a global lock and each worker thread
+      has its own private worker queue. If work is enqueued by a worker thread the
+      action is stored in the worker queue. If the work is enqueued by a application
+      thread it goes into the global queue. When worker threads are looking for work,
+      they have following search order:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        look into the private worker queue - actions can be dequeued without locks
+      </li>
+<li>
+        look in the global queue - locks are used for synchronization
+      </li>
+<li>
+        check other worker queues ('stealing' actions from private worker queues
+        of other worker threads) - requires locks
+      </li>
+</ul></div>
+<p>
+      For a lot of recursively queued actions, the use of a worker queue per thread
+      substantially reduces the synchronization necessary to complete the work. There
+      are also fewer cache effects due to sharing of the global queue information.
+    </p>
+<p>
+      Operations on the private worker queue are executed in LIFO order and operations
+      on worker queues of other worker threads in FIFO order (steals).
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        There are chances that memory is still hot in the cache, if the actions are
+        pushed in LIFO order into the private worker queue.
+      </li>
+<li>
+        If a worker thread steals work in FIFO order, increases the chances that
+        a larger 'chunk' of work will be stolen (the need for other steals will be
+        possibly reduced). Because the actions are stored in LIFO order, the oldest
+        items are closer to the <span class="emphasis"><em>public end</em></span> of the queue (forming
+        a tree). Stealing such an older action also steals a (probably) larger subtree
+        of actions unfolded if the stolen work item get executed.
+      </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        Actions submitted by a worker thread are stored into its private worker queue
+        in LIFO order, thatswhy priorities and timeouts specified at the submit-function
+        get ignored.
+      </p></td></tr>
+</table></div>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../doc/html/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        Because of the work-stealing algorithm the execution order of actions may
+        be not strict as in the global queue.
+      </p></td></tr>
+</table></div>
+<a name="boost_threadpool.pool.creation"></a><h4>
+<a name="id367654"></a>
+      <a class="link" href="pool.html#boost_threadpool.pool.creation">Creation</a>
+    </h4>
+<p>
+      The first template argument specifies the channel type and the scheduling policy.
+    </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">fifo</span> <span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">pool</span><span class="special">(</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">poolsize</span><span class="special">(</span> <span class="number">6</span><span class="special">),</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span> <span class="number">50</span><span class="special">),</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">scanns</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">);</span>
+</pre>
+<p>
+      In the example above a thread pool is created with a <a class="link" href="channel.html#boost_threadpool.channel.unbounded_channel"><span class="emphasis"><em>unbounded
+      channel</em></span></a>, scheduling actions in <span class="emphasis"><em>FIFO</em></span>
+      order. The pool contains six worker threads going to sleep for 50 millisec
+      after 10 iterations without geting an action from the <a class="link" href="pool.html#boost_threadpool.pool.work_stealing"><span class="emphasis"><em>global
+      queue</em></span></a>, from its local <a class="link" href="pool.html#boost_threadpool.pool.work_stealing"><span class="emphasis"><em>worker
+      queue</em></span></a> or local queues of other worker threads.
+    </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">bounded_channel</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">priority</span> <span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">pool</span><span class="special">(</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">poolsize</span><span class="special">(</span> <span class="number">10</span><span class="special">),</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">high_watermark</span><span class="special">(</span> <span class="number">10</span><span class="special">),</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">low_watermark</span><span class="special">(</span> <span class="number">5</span><span class="special">)</span> <span class="special">);</span>
+</pre>
+<p>
+      This pool uses a <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+      channel</em></span></a> which schedules actions by integer atrributes. A
+      maximum of 10 actions can be queued in the <a class="link" href="pool.html#boost_threadpool.pool.work_stealing"><span class="emphasis"><em>global
+      queue</em></span></a> without blocking the inserting thread.
+    </p>
+<a name="boost_threadpool.pool.shutdown"></a><h4>
+<a name="id368155"></a>
+      <a class="link" href="pool.html#boost_threadpool.pool.shutdown">Shutdown</a>
+    </h4>
+<p>
+      If <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span> <span class="special">&gt;::</span><span class="identifier">shutdown</span><span class="special">()</span></code> is called - the the status of the pool is
+      set to <span class="emphasis"><em>terminating</em></span> and all worker threads are joined.
+      No futher actions can be submitted by application threads. After all pending
+      actions are processed and all worker threads are joined, the pool is set to
+      status <span class="emphasis"><em>terminated</em></span>.
+    </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        The deconstructor calls <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span> <span class="special">&gt;::</span><span class="identifier">shutdown</span><span class="special">()</span></code>
+        if the pool was not shutdown yet.
+      </p></td></tr>
+</table></div>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">fifo</span> <span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">pool</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">poolsize</span><span class="special">(</span> <span class="number">1</span><span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">t1</span><span class="special">(</span>
+  <span class="identifier">pool</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+    <span class="identifier">fibonacci_fn</span><span class="special">,</span>
+    <span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">t2</span><span class="special">(</span>
+  <span class="identifier">pool</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+      <span class="identifier">fibonacci_fn</span><span class="special">,</span>
+      <span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">pool</span><span class="special">.</span><span class="identifier">shutdown</span><span class="special">();</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t1</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 55
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t2</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 55
+</span></pre>
+<a name="boost_threadpool.pool.shutdown_immediatly"></a><h4>
+<a name="id368800"></a>
+      <a class="link" href="pool.html#boost_threadpool.pool.shutdown_immediatly">Shutdown immediatly</a>
+    </h4>
+<p>
+      The function <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span> <span class="special">&gt;::</span><span class="identifier">shutdown_now</span><span class="special">()</span></code> sets the pool status to <span class="emphasis"><em>terminating</em></span>
+      interrupts and then joins all worker threads. After the worker threads are
+      joined the status of the pool is set to <span class="emphasis"><em>terminated</em></span> and
+      all pending (unprocessed) actions will be returned.
+    </p>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../doc/html/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        Pending actions in the local <a class="link" href="pool.html#boost_threadpool.pool.work_stealing"><span class="emphasis"><em>worker
+        queues</em></span></a> are not returned if <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span> <span class="special">&gt;::</span><span class="identifier">shutdown_now</span><span class="special">()</span></code>
+        was called.
+      </p></td></tr>
+</table></div>
+<a name="boost_threadpool.pool.default_pool"></a><h4>
+<a name="id368934"></a>
+      <a class="link" href="pool.html#boost_threadpool.pool.default_pool">Default pool</a>
+    </h4>
+<p>
+      The free function <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">get_default_pool</span><span class="special">()</span></code> returns a reference to the default thread
+      pool instance. The default thread pool is of type <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">fifo</span> <span class="special">&gt;</span> <span class="special">&gt;</span></code> and will contain as many worker threads
+      as <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">hardware_concurrency</span><span class="special">()</span></code>
+      returns.
+    </p>
+<a name="boost_threadpool.pool.meta_functions"></a><h4>
+<a name="id369097"></a>
+      <a class="link" href="pool.html#boost_threadpool.pool.meta_functions">Meta functions</a>
+    </h4>
+<p>
+      If the thread pool supports priorities <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">has_priority</span><span class="special">&lt;</span>
+      <span class="identifier">pool_type</span> <span class="special">&gt;</span></code>
+      evaluates to <code class="computeroutput"><span class="keyword">true</span></code>. The priority
+      type is determined by <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">priority_type</span><span class="special">&lt;</span>
+      <span class="identifier">pool_type</span> <span class="special">&gt;</span></code>.
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span>  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">priority</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">pool_type</span><span class="special">;</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span>  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">has_priority</span><span class="special">&lt;</span> <span class="identifier">pool_type</span> <span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span>  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">priority_type</span><span class="special">&lt;</span> <span class="identifier">pool_type</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</pre>
+<p>
+      The support of fibers can be tested with meta-function <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">has_fibers</span><span class="special">&lt;</span>
+      <span class="identifier">pool_type</span> <span class="special">&gt;</span></code>.
+    </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span>  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">has_fibers</span><span class="special">&lt;</span> <span class="identifier">pool_type</span> <span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</pre>
+<a name="boost_threadpool.pool.processor_binding"></a><h4>
+<a name="id369670"></a>
+      <a class="link" href="pool.html#boost_threadpool.pool.processor_binding">Processor binding</a>
+    </h4>
+<p>
+      For some applications it is convenient to bind the worker threads of the pool
+      to processors of the system. For this purpose BOOST_BIND_WORKER_TO_PROCESSORS
+      must be defined. Without the poolsize in the construtor the thread pool will
+      contain as many worker threads as processors (== boost::thread::hardware_concurrency)
+      are available and each worker thread is bound to one processor.
+    </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">fifo</span> <span class="special">&gt;</span>
+   <span class="special">&gt;</span> <span class="identifier">pool</span><span class="special">;</span>
+</pre>
+<p>
+      The code above will create a pool with two worker threads on a dual core system
+      (each bound to one core).
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Oliver Kowalke<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="task.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

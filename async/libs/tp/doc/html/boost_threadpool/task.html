@@ -1,0 +1,185 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Task</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="prev" href="pool.html" title="Pool">
+<link rel="next" href="this_task.html" title="Namespace this_task">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="pool.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="this_task.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_threadpool.task"></a><a class="link" href="task.html" title="Task"> Task</a>
+</h2></div></div></div>
+<p>
+      For each submitted action a new task object will be created and returned by
+      the pool. The <a class="link" href="task.html" title="Task"><span class="emphasis"><em>task</em></span></a>
+      object acts as a proxy for a result that is initially not known and gets evaluated
+      later by a worker thread. It transports the result (value or exception) of
+      the action back to the caller.
+    </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">fifo</span> <span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">pool</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">poolsize</span><span class="special">(</span> <span class="number">10</span><span class="special">)</span> <span class="special">);</span>
+
+<span class="comment">// task calculates fibonacci(10)
+</span><span class="comment">// scheduled in unbounded channel with FIFO ordering
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">t</span><span class="special">(</span>
+<span class="identifier">pool</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+  <span class="identifier">fibonacci_fn</span><span class="special">,</span>
+  <span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 55
+</span></pre>
+<a name="boost_threadpool.task.interruption"></a><h4>
+<a name="id370144"></a>
+      <a class="link" href="task.html#boost_threadpool.task.interruption">Interruption</a>
+    </h4>
+<p>
+      The returned <a class="link" href="task.html" title="Task"><span class="emphasis"><em>task</em></span></a>
+      object provides the possiblity to interrupt an action if it is cooperative.
+      An action is known as cooperative if it includes interruption points in its
+      code:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">join</span><span class="special">()</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">timed_join</span><span class="special">()</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable</span><span class="special">::</span><span class="identifier">wait</span><span class="special">()</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable</span><span class="special">::</span><span class="identifier">timed_wait</span><span class="special">()</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span><span class="special">::</span><span class="identifier">wait</span><span class="special">()</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span><span class="special">::</span><span class="identifier">timed_wait</span><span class="special">()</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">sleep</span><span class="special">()</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep</span><span class="special">()</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruption_point</span><span class="special">()</span></code></li>
+</ul></div>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../doc/html/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        Interruption must not be disabled for the worker thread (class <span class="emphasis"><em>boost::this_thread::disable_interruption</em></span>).
+      </p></td></tr>
+</table></div>
+<p>
+      The action will be interrupted even if it is pending (interruption is remembered).
+      A <span class="emphasis"><em>boost::thread_interrupted</em></span> exception will be thrown by
+      <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;::</span><span class="identifier">get</span><span class="special">()</span></code> if
+      the action was interrupted. 
+</p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">fifo</span> <span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">pool</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">poolsize</span><span class="special">(</span> <span class="number">10</span><span class="special">)</span> <span class="special">);</span>
+
+<span class="comment">// submit a long running task
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">t</span><span class="special">(</span>
+  <span class="identifier">pool</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+      <span class="identifier">long_running_fn</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+
+<span class="comment">// interrupt task
+</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">interrupt</span><span class="special">();</span>
+
+<span class="comment">// throws boost::thread_interrupted exception
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</pre>
+<p>
+    </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">fifo</span> <span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">pool</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">poolsize</span><span class="special">(</span> <span class="number">10</span><span class="special">)</span> <span class="special">);</span>
+
+<span class="comment">// submit a long running task
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">t</span><span class="special">(</span>
+  <span class="identifier">pool</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+      <span class="identifier">long_running_fn</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+
+<span class="comment">// interrupt task and wait for its termination
+</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">interrupt_and_wait</span><span class="special">();</span>
+
+<span class="comment">// throws boost::thread_interrupted exception
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</pre>
+<a name="boost_threadpool.task.exceptions_in_tasks"></a><h4>
+<a name="id371198"></a>
+      <a class="link" href="task.html#boost_threadpool.task.exceptions_in_tasks">Exceptions in tasks</a>
+    </h4>
+<p>
+      Exceptions thrown inside an action are transported by the associated task object.
+      Exceptions rethrown by type:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_cast</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_exception</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_typeid</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">domain_error</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">invalid_argument</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">failure</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">length_error</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">logic_error</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">out_of_range</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">overflow_error</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">range_error</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span></code></li>
+<li><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">underflow_error</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">broken_promise</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">future_already_set</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">future_cancel</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">invalid_thread_argument</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">lock_error</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_exception</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_interrupted</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_permission_error</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_resource_error</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">unsupported_thread_option</span></code></li>
+</ul></div>
+<p>
+      Exceptions derived from <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception</span></code>
+      will be rethrown as <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span></code> in all other cases a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_exception</span></code>
+      is thrown.
+    </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">fifo</span> <span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">pool</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">poolsize</span><span class="special">(</span> <span class="number">10</span><span class="special">)</span> <span class="special">);</span>
+
+<span class="comment">// task will throw an exception derived from std::exception
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">t</span><span class="special">(</span>
+  <span class="identifier">pool</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+      <span class="identifier">throwing_fn</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// will rethrow an std::runtime_error
+</span></pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Oliver Kowalke<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="pool.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="this_task.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

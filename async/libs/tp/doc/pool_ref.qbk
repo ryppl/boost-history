@@ -1,0 +1,349 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:pool Class template `pool`]
+
+    #include <boost/tp/pool.hpp>
+
+    template< typename Channel >
+    class pool
+    : private noncopyable
+    {
+    public:
+      explicit pool(
+        poolsize const& psize,
+        posix_time::time_duration const& asleep = posix_time::microseconds( 10),
+        scanns const& scns = scanns( 20) );
+
+      explicit pool(
+        poolsize const& psize,
+        high_watermark const& hwm,
+        low_watermark const& lwm,
+        posix_time::time_duration const& asleep = posix_time::milliseconds( 100),
+        scanns const& scns = scanns( 20) );
+
+
+      explicit pool(
+        posix_time::time_duration const& asleep = posix_time::microseconds( 10),
+        scanns const& scns = scanns( 20) );
+
+      explicit pool(
+        high_watermark const& hwm,
+        low_watermark const& lwm,
+        posix_time::time_duration const& asleep = posix_time::milliseconds( 100),
+        scanns const& scns = scanns( 20) );
+
+      ~pool();
+
+      std::size_t size();
+      std::size_t active();
+      std::size_t idle();
+
+      void shutdown();
+      const std::vector< callable > shutdown_now();
+
+      bool terminated();
+      bool terminateing();
+      void clear();
+      bool empty();
+      std::size_t pending();
+
+      const std::size_t upper_bound();
+      void upper_bound( high_watermark const& hwm);
+      const std::size_t lower_bound();
+      void lower_bound( low_watermark const& lwm);
+
+      template< typename Act >
+      task< typename result_of< Act() >::type > submit( Act const& act);
+
+      template< typename Act, typename Attr >
+      task< typename result_of< Act() >::type > submit(
+        Act const& act,
+        Attr const& attr);
+    };
+
+	pool< unbounded_channel< fifo > > & get_default_pool();
+
+[section:constructor_unbounded_channel_hw Constructor (unbounded channel)]
+
+    explicit pool(
+        posix_time::time_duration const& asleep = posix_time::microseconds( 10),
+        scanns const& scns = scanns( 20) );
+
+[variablelist
+[[Preconditions:] [Operating system provides functionality for processor pining.]]
+[[Effects:] [Constructs a `boost::tp::pool< Channel >` instance. For each processor a worker-thread is created and each worker-thread is pined exactly to one processor.]]
+[[Throws:] [`boost::tp::invalid_scanns`, `boost::tp::invalid_timeduration`]]
+[[Notes:] [Constructor has to be called if a __unbounded_channel__ is used.]]
+]
+[endsect]
+
+
+[section:constructor_unbounded_channel Constructor (unbounded channel)]
+
+    explicit pool(
+        poolsize const& psize,
+        posix_time::time_duration const& asleep = posix_time::microseconds( 10),
+        scanns const& scns = scanns( 20) );
+
+[variablelist
+[[Effects:] [Constructs a `boost::tp::pool< Channel >` instance. Pool contains psize worker-threads.]]
+[[Throws:] [`boost::tp::invalid_scanns`, `boost::tp::invalid_timeduration`]]
+[[Notes:] [Constructor has to be called if a __unbounded_channel__ is used.]]
+]
+[endsect]
+
+
+[section:constructor_bounded_channel_hw Constructor (bounded channel)]
+
+     explicit pool(
+        high_watermark const& hwm,
+        low_watermark const& lwm,
+        posix_time::time_duration const& asleep = posix_time::milliseconds( 100),
+        scanns const& scns = scanns( 20) );
+
+[variablelist
+[[Preconditions:] [Operating system provides functionality for processor pining.]]
+[[Effects:] [Constructs a `boost::tp::pool< Channel >` instance. For each processor a worker-thread is created and each worker-thread is pined exactly to one processor.]]
+[[Throws:] [`boost::tp::invalid_scanns`, `boost::tp::invalid_timeduration`, `boost::tp::invalid_watermark`]]
+[[Notes:] [Constructor has to be called if a __bounded_channel__ is used.]]
+]
+[endsect]
+
+
+[section:constructor_bounded_channel Constructor (bounded channel)]
+
+     explicit pool(
+        poolsize const& psize,
+        high_watermark const& hwm,
+        low_watermark const& lwm,
+        posix_time::time_duration const& asleep = posix_time::milliseconds( 100),
+        scanns const& scns = scanns( 20) );
+
+[variablelist
+[[Effects:] [Constructs a `boost::tp::pool< Channel >` instance. Pool contains psize worker-threads.]]
+[[Throws:] [`boost::tp::invalid_scanns`, `boost::tp::invalid_timeduration`, `boost::tp::invalid_watermark`]]
+[[Notes:] [Constructor has to be called if a __bounded_channel__ is used.]]
+]
+[endsect]
+
+
+[section:destructor Destructor]
+
+    ~pool();
+
+[variablelist
+[[Effects:] [Calls `boost::tp::pool< Channel >::shutdown()` if not yet called.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:size Member function `size()`]
+
+    std::size_t size();
+
+[variablelist
+[[Effects:] [Returns how many worker threads are running in the pool.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:active Member function `active()`]
+
+    std::size_t active();
+
+[variablelist
+[[Effects:] [Returns how many worker threads are active (executing an __action__).]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:idle Member function `idle()`]
+
+    std::size_t idle();
+
+[variablelist
+[[Effects:] [Returns how many worker threads are idle (not executing an __action__).]]
+[[Throws:] [Nothing]]
+[[Notes:] [The value is the difference of `size()` and `active()`]]
+]
+[endsect]
+
+
+[section:shutdown Member function `shutdown()`]
+
+    void shutdown();
+
+[variablelist
+[[Effects:] [Changes the pool state to ['terminating], deactivates the channel and joins all worker threads. The status of the pool is assigned to ['terminated] at the end.]]
+[[Throws:] [Nothing]]
+[[Notes:] [All pending __actions__ are processed.]]
+]
+[endsect]
+
+
+[section:shutdown_now Member function `shutdown_now()`]
+
+    const std::vector< callable > shutdown_now();
+
+[variablelist
+[[Effects:] [Changes the pool state to ['terminating], deactivates the channel, send interruption request to all worker threads and joins them. The status of the pool is assigned to ['terminated] at the end.]]
+[[Throws:] [Nothing]]
+[[Notes:] [Pending __actions__ are not processed but returned.]]
+]
+[endsect]
+
+
+[section:terminated Member function `terminated()`]
+
+    bool terminated();
+
+[variablelist
+[[Effects:] [Queries if the pool is in the terminated state (pool is shutdown).]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:terminateing Member function `terminateing()`]
+
+    bool terminateing();
+
+[variablelist
+[[Effects:] [Queries if the pool is in the terminating state (tries to shutdown the pool).]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:clear Member function `clear()`]
+
+    void clear();
+
+[variablelist
+[[Effects:] [Removes all pending __actions__ from the __channel__.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:empty Member function `empty()`]
+
+    bool empty();
+
+[variablelist
+[[Effects:] [Queries if the __channel__ is empty.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:pending Member function `pending()`]
+
+    std::size_t pending();
+
+[variablelist
+[[Effects:] [Queries how many __actions__ are pending in the __channel__.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:get_upper_bound Member function `upper_bound()`]
+
+    std::size_t upper_bound();
+
+[variablelist
+[[Preconditions:] [Channel is of type __bounded_channel__.]]
+[[Effects:] [Returns the upper bound of the __bounded_channel__.]]
+[[Throws:] [Nothing]]
+[[Notes:] [Can only be used if a __bounded_channel__ is used.]]
+]
+[endsect]
+
+
+[section:set_upper_bound Member function `upper_bound( high_watermark const& hwm)`]
+
+    void upper_bound( high_watermark const& hwm);
+
+[variablelist
+[[Preconditions:] [Channel is of type __bounded_channel__.]]
+[[Effects:] [Sets the upper bound of the __bounded_channel__.]]
+[[Postconditions:] [`this->upper_bound() == hwm`.]]
+[[Throws:] [`boost::tp::invalid_watermark`]]
+[[Notes:] [Can only be used if a __bounded_channel__ is used.]]
+]
+[endsect]
+
+
+[section:get_lower_bound Member function `lower_bound()`]
+
+    std::size_t lower_bound();
+
+[variablelist
+[[Preconditions:] [Channel is of type __bounded_channel__.]]
+[[Effects:] [Returns the lower bound of the __bounded_channel__.]]
+[[Throws:] [Nothing]]
+[[Notes:] [Can only be used if a __bounded_channel__ is used.]]
+]
+[endsect]
+
+
+[section:set_lower_bound Member function `lower_bound( low_watermark const& lwm)`]
+
+    void lower_bound( low_watermark const& lwm);
+
+[variablelist
+[[Preconditions:] [Channel is of type __bounded_channel__.]]
+[[Effects:] [Sets the lower bound of the __bounded_channel__.]]
+[[Postconditions:] [`this->lower_bound() == lwm`.]]
+[[Throws:] [`boost::tp::invalid_watermark`]]
+[[Notes:] [Can only be used if a __bounded_channel__ is used.]]
+]
+[endsect]
+
+
+[section:submit Member function `submit( Act const& act)`]
+
+    template< typename Act >
+    task< typename result_of< Act() >::type > submit( Act const& act);
+
+[variablelist
+[[Preconditions:] [has_priority< pool >::value == false && ! ( pool.terminating() || pool.terminated() )]]
+[[Effects:] [Submits an __action__ to the pool and returns a __task__ object.]]
+[[Throws:] [`boost::tp::task_rejected`]]
+]
+[endsect]
+
+
+[section:submit_attr Member function `submit( Act const& act, Attr const& attr)`]
+
+    template< typename Act, typename Attr >
+    task< typename result_of< Act() >::type > submit( Act const& act, Attr const& attr);
+
+[variablelist
+[[Preconditions:] [has_priority< pool >::value == true && ! ( pool.terminating() || pool.terminated() )]]
+[[Effects:] [Submits an __action__ to the pool and returns a __task__ object. __Action__ is scheduled by the attribute.]]
+[[Throws:] [`boost::tp::task_rejected`]]
+]
+[endsect]
+
+
+[section:get_default_pool Non-member function `get_default_pool()`]
+
+	pool< unbounded_channel< fifo > > & get_default_pool();
+
+[variablelist
+[[Effects:] [Get access to default thread pool (static).]]
+]
+[endsect]
+
+
+[endsect]

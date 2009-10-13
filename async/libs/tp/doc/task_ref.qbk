@@ -1,0 +1,86 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:task Class template `task`]
+
+    #include <boost/tp/task.hpp>
+
+    template< typename R >
+    class task
+    {
+    public:
+      template< typename Pool >
+      task(
+        Pool * pool,
+        shared_future< R > const& fut,
+        detail::interrupter const& intr);
+
+      void interrupt();
+      void interrupt_and_wait();
+      void interrupt_and_wait( system_time const& abs_time);
+      template< typename Duration >
+      void interrupt_and_wait( Duration const& rel_time);
+      bool interrupt_requested();
+
+      shared_future< R > result() const;
+    };
+
+[section:constructor Constructor]
+
+    template< typename Pool >
+    task(
+      Pool * pool,
+      shared_future< R > const& fut,
+      detail::interrupter const& intr);
+
+[variablelist
+[[Effects:] [Constructs a `boost::tp::task< R >` instance.]]
+[[Throws:] [Nothing]]
+[[Notes:] [task objects should only be constructed by the pool.]]
+]
+[endsect]
+
+
+[section:interrupt Member function `interrupt()`]
+
+    void interrupt();
+
+[variablelist
+[[Effects:] [Associated __action__ will be interrupted the next time it enters a __interruption_point__ if interruption is not disabled. The function returns immediatly.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:interrupt_and_wait Member function `interrupt_and_wait()`]
+
+    void interrupt_and_wait();
+
+    void interrupt_and_wait( system_time const& abs_time);
+
+    template< typename DurationTime >
+    void interrupt_and_wait( DurationTime const& rel_time);
+
+[variablelist
+[[Effects:] [Associated __action__ will be interrupted the next time it enters one __interruption_point__ if interruption is not disabled. The function waits until the __action__ has terminated or the specified duration td has elapsed.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:result Member function `result()`]
+
+    shared_future< R > result() const;
+
+[variablelist
+[[Effects:] [Returns fulfilled value or throws fulfilled exception via a shared_future.]]
+[[Throws:] [`boost::future::broken_promise`]]
+]
+[endsect]
+
+
+[endsect]

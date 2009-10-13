@@ -1,0 +1,1550 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Reference</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="prev" href="acknowledgement.html" title="Acknowledgements">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="acknowledgement.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_threadpool.reference"></a><a class="link" href="reference.html" title="Reference"> Reference</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool"> Class template <code class="computeroutput"><span class="identifier">pool</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task"> Class template <code class="computeroutput"><span class="identifier">task</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.reschedule_until"> Non-member
+      function <code class="computeroutput"><span class="identifier">reschedule_until</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.get_thread_pool"> Non-member
+      function <code class="computeroutput"><span class="identifier">get_thread_pool</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.is_worker"> Non-member function
+      <code class="computeroutput"><span class="identifier">is_worker</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.worker_id"> Non-member function
+      <code class="computeroutput"><span class="identifier">worker_id</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.poolsize"> Class <code class="computeroutput"><span class="identifier">poolsize</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.scanns"> Class <code class="computeroutput"><span class="identifier">scanns</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.high_watermark"> Class <code class="computeroutput"><span class="identifier">high_watermark</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.low_watermark"> Class <code class="computeroutput"><span class="identifier">low_watermark</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.invalid_poolsize"> Class
+      <code class="computeroutput"><span class="identifier">invalid_poolsize</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.invalid_scanns"> Class <code class="computeroutput"><span class="identifier">invalid_scanns</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.invalid_timeduration"> Class
+      <code class="computeroutput"><span class="identifier">invalid_timeduration</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.invalid_watermark"> Class
+      <code class="computeroutput"><span class="identifier">invalid_watermark</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task_rejected"> Class <code class="computeroutput"><span class="identifier">task_rejected</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.has_priority"> Meta function
+      <code class="computeroutput"><span class="identifier">has_priority</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.priority_type"> Meta function
+      <code class="computeroutput"><span class="identifier">priority_type</span></code></a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.pool"></a><a class="link" href="reference.html#boost_threadpool.reference.pool" title="Class template pool"> Class template <code class="computeroutput"><span class="identifier">pool</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.constructor_unbounded_channel_hw">
+        Constructor (unbounded channel)</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.constructor_unbounded_channel">
+        Constructor (unbounded channel)</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.constructor_bounded_channel_hw">
+        Constructor (bounded channel)</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.constructor_bounded_channel">
+        Constructor (bounded channel)</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.destructor"> Destructor</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.size"> Member function
+        <code class="computeroutput"><span class="identifier">size</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.active"> Member function
+        <code class="computeroutput"><span class="identifier">active</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.idle"> Member function
+        <code class="computeroutput"><span class="identifier">idle</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.shutdown"> Member function
+        <code class="computeroutput"><span class="identifier">shutdown</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.shutdown_now"> Member
+        function <code class="computeroutput"><span class="identifier">shutdown_now</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.terminated"> Member
+        function <code class="computeroutput"><span class="identifier">terminated</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.terminateing"> Member
+        function <code class="computeroutput"><span class="identifier">terminateing</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.clear"> Member function
+        <code class="computeroutput"><span class="identifier">clear</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.empty"> Member function
+        <code class="computeroutput"><span class="identifier">empty</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.pending"> Member function
+        <code class="computeroutput"><span class="identifier">pending</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.get_upper_bound"> Member
+        function <code class="computeroutput"><span class="identifier">upper_bound</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.set_upper_bound"> Member
+        function <code class="computeroutput"><span class="identifier">upper_bound</span><span class="special">(</span>
+        <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.get_lower_bound"> Member
+        function <code class="computeroutput"><span class="identifier">lower_bound</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.set_lower_bound"> Member
+        function <code class="computeroutput"><span class="identifier">lower_bound</span><span class="special">(</span>
+        <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.submit"> Member function
+        <code class="computeroutput"><span class="identifier">submit</span><span class="special">(</span>
+        <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.submit_attr"> Member
+        function <code class="computeroutput"><span class="identifier">submit</span><span class="special">(</span>
+        <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">,</span> <span class="identifier">Attr</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">attr</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.get_default_pool">
+        Non-member function <code class="computeroutput"><span class="identifier">get_default_pool</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+   <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Channel</span> <span class="special">&gt;</span>
+   <span class="keyword">class</span> <span class="identifier">pool</span>
+   <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span>
+   <span class="special">{</span>
+   <span class="keyword">public</span><span class="special">:</span>
+     <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+       <span class="identifier">poolsize</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">psize</span><span class="special">,</span>
+       <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">(</span> <span class="number">10</span><span class="special">),</span>
+       <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+
+     <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+       <span class="identifier">poolsize</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">psize</span><span class="special">,</span>
+       <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">,</span>
+       <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">,</span>
+       <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span> <span class="number">100</span><span class="special">),</span>
+       <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+
+
+     <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+       <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">(</span> <span class="number">10</span><span class="special">),</span>
+       <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+
+     <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+       <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">,</span>
+       <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">,</span>
+       <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span> <span class="number">100</span><span class="special">),</span>
+       <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+
+     <span class="special">~</span><span class="identifier">pool</span><span class="special">();</span>
+
+     <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">();</span>
+     <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">active</span><span class="special">();</span>
+     <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">idle</span><span class="special">();</span>
+
+     <span class="keyword">void</span> <span class="identifier">shutdown</span><span class="special">();</span>
+     <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">callable</span> <span class="special">&gt;</span> <span class="identifier">shutdown_now</span><span class="special">();</span>
+
+     <span class="keyword">bool</span> <span class="identifier">terminated</span><span class="special">();</span>
+     <span class="keyword">bool</span> <span class="identifier">terminateing</span><span class="special">();</span>
+     <span class="keyword">void</span> <span class="identifier">clear</span><span class="special">();</span>
+     <span class="keyword">bool</span> <span class="identifier">empty</span><span class="special">();</span>
+     <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">pending</span><span class="special">();</span>
+
+     <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">upper_bound</span><span class="special">();</span>
+     <span class="keyword">void</span> <span class="identifier">upper_bound</span><span class="special">(</span> <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">);</span>
+     <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">lower_bound</span><span class="special">();</span>
+     <span class="keyword">void</span> <span class="identifier">lower_bound</span><span class="special">(</span> <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">);</span>
+
+     <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Act</span> <span class="special">&gt;</span>
+     <span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">&lt;</span> <span class="identifier">Act</span><span class="special">()</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;</span> <span class="identifier">submit</span><span class="special">(</span> <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">);</span>
+
+     <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Act</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Attr</span> <span class="special">&gt;</span>
+     <span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">&lt;</span> <span class="identifier">Act</span><span class="special">()</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;</span> <span class="identifier">submit</span><span class="special">(</span>
+       <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">,</span>
+       <span class="identifier">Attr</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">attr</span><span class="special">);</span>
+   <span class="special">};</span>
+
+<span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">fifo</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">get_default_pool</span><span class="special">();</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.constructor_unbounded_channel_hw"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.constructor_unbounded_channel_hw" title="Constructor (unbounded channel)">
+        Constructor (unbounded channel)</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+    <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">(</span> <span class="number">10</span><span class="special">),</span>
+    <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+              Operating system provides functionality for processor pining.
+            </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span>
+              <span class="special">&gt;</span></code> instance. For each processor
+              a worker-thread is created and each worker-thread is pined exactly
+              to one processor.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_scanns</span></code>, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_timeduration</span></code>
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              Constructor has to be called if a <a class="link" href="channel.html#boost_threadpool.channel.unbounded_channel"><span class="emphasis"><em>unbounded
+              channel</em></span></a> is used.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.constructor_unbounded_channel"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.constructor_unbounded_channel" title="Constructor (unbounded channel)">
+        Constructor (unbounded channel)</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+    <span class="identifier">poolsize</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">psize</span><span class="special">,</span>
+    <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">(</span> <span class="number">10</span><span class="special">),</span>
+    <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span>
+              <span class="special">&gt;</span></code> instance. Pool contains
+              psize worker-threads.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_scanns</span></code>, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_timeduration</span></code>
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              Constructor has to be called if a <a class="link" href="channel.html#boost_threadpool.channel.unbounded_channel"><span class="emphasis"><em>unbounded
+              channel</em></span></a> is used.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.constructor_bounded_channel_hw"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.constructor_bounded_channel_hw" title="Constructor (bounded channel)">
+        Constructor (bounded channel)</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+   <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">,</span>
+   <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">,</span>
+   <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span> <span class="number">100</span><span class="special">),</span>
+   <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+              Operating system provides functionality for processor pining.
+            </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span>
+              <span class="special">&gt;</span></code> instance. For each processor
+              a worker-thread is created and each worker-thread is pined exactly
+              to one processor.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_scanns</span></code>, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_timeduration</span></code>,
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_watermark</span></code>
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              Constructor has to be called if a <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a> is used.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.constructor_bounded_channel"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.constructor_bounded_channel" title="Constructor (bounded channel)">
+        Constructor (bounded channel)</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+   <span class="identifier">poolsize</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">psize</span><span class="special">,</span>
+   <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">,</span>
+   <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">,</span>
+   <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span> <span class="number">100</span><span class="special">),</span>
+   <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span>
+              <span class="special">&gt;</span></code> instance. Pool contains
+              psize worker-threads.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_scanns</span></code>, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_timeduration</span></code>,
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_watermark</span></code>
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              Constructor has to be called if a <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a> is used.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.destructor"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.destructor" title="Destructor"> Destructor</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="special">~</span><span class="identifier">pool</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Calls <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+              <span class="identifier">Channel</span> <span class="special">&gt;::</span><span class="identifier">shutdown</span><span class="special">()</span></code>
+              if not yet called.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.size"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.size" title="Member function size()"> Member function
+        <code class="computeroutput"><span class="identifier">size</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Returns how many worker threads are running in the pool.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.active"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.active" title="Member function active()"> Member function
+        <code class="computeroutput"><span class="identifier">active</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">active</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Returns how many worker threads are active (executing an action).
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.idle"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.idle" title="Member function idle()"> Member function
+        <code class="computeroutput"><span class="identifier">idle</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">idle</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Returns how many worker threads are idle (not executing an action).
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              The value is the difference of <code class="computeroutput"><span class="identifier">size</span><span class="special">()</span></code> and <code class="computeroutput"><span class="identifier">active</span><span class="special">()</span></code>
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.shutdown"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.shutdown" title="Member function shutdown()"> Member function
+        <code class="computeroutput"><span class="identifier">shutdown</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">shutdown</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Changes the pool state to <span class="emphasis"><em>terminating</em></span>, deactivates
+              the channel and joins all worker threads. The status of the pool is
+              assigned to <span class="emphasis"><em>terminated</em></span> at the end.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              All pending actions are processed.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.shutdown_now"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.shutdown_now" title="Member function shutdown_now()"> Member
+        function <code class="computeroutput"><span class="identifier">shutdown_now</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">callable</span> <span class="special">&gt;</span> <span class="identifier">shutdown_now</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Changes the pool state to <span class="emphasis"><em>terminating</em></span>, deactivates
+              the channel, send interruption request to all worker threads and joins
+              them. The status of the pool is assigned to <span class="emphasis"><em>terminated</em></span>
+              at the end.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              Pending actions are not processed but returned.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.terminated"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.terminated" title="Member function terminated()"> Member
+        function <code class="computeroutput"><span class="identifier">terminated</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">terminated</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Queries if the pool is in the terminated state (pool is shutdown).
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.terminateing"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.terminateing" title="Member function terminateing()"> Member
+        function <code class="computeroutput"><span class="identifier">terminateing</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">terminateing</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Queries if the pool is in the terminating state (tries to shutdown
+              the pool).
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.clear"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.clear" title="Member function clear()"> Member function
+        <code class="computeroutput"><span class="identifier">clear</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">clear</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Removes all pending actions from the <a class="link" href="channel.html" title="Channel"><span class="emphasis"><em>channel</em></span></a>.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.empty"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.empty" title="Member function empty()"> Member function
+        <code class="computeroutput"><span class="identifier">empty</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">empty</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Queries if the <a class="link" href="channel.html" title="Channel"><span class="emphasis"><em>channel</em></span></a>
+              is empty.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.pending"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.pending" title="Member function pending()"> Member function
+        <code class="computeroutput"><span class="identifier">pending</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">pending</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Queries how many actions are pending in the <a class="link" href="channel.html" title="Channel"><span class="emphasis"><em>channel</em></span></a>.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.get_upper_bound"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.get_upper_bound" title="Member function upper_bound()"> Member
+        function <code class="computeroutput"><span class="identifier">upper_bound</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">upper_bound</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+              Channel is of type <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a>.
+            </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Returns the upper bound of the <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a>.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              Can only be used if a <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a> is used.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.set_upper_bound"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.set_upper_bound" title="Member function upper_bound( high_watermark const&amp; hwm)"> Member
+        function <code class="computeroutput"><span class="identifier">upper_bound</span><span class="special">(</span>
+        <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">)</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">upper_bound</span><span class="special">(</span> <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+              Channel is of type <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a>.
+            </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Sets the upper bound of the <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a>.
+            </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">upper_bound</span><span class="special">()</span>
+              <span class="special">==</span> <span class="identifier">hwm</span></code>.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_watermark</span></code>
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              Can only be used if a <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a> is used.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.get_lower_bound"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.get_lower_bound" title="Member function lower_bound()"> Member
+        function <code class="computeroutput"><span class="identifier">lower_bound</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">lower_bound</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+              Channel is of type <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a>.
+            </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Returns the lower bound of the <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a>.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              Can only be used if a <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a> is used.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.set_lower_bound"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.set_lower_bound" title="Member function lower_bound( low_watermark const&amp; lwm)"> Member
+        function <code class="computeroutput"><span class="identifier">lower_bound</span><span class="special">(</span>
+        <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">)</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">lower_bound</span><span class="special">(</span> <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+              Channel is of type <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a>.
+            </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Sets the lower bound of the <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a>.
+            </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">lower_bound</span><span class="special">()</span>
+              <span class="special">==</span> <span class="identifier">lwm</span></code>.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_watermark</span></code>
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              Can only be used if a <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel"><span class="emphasis"><em>bounded
+              channel</em></span></a> is used.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.submit"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.submit" title="Member function submit( Act const&amp; act)"> Member function
+        <code class="computeroutput"><span class="identifier">submit</span><span class="special">(</span>
+        <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">)</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Act</span> <span class="special">&gt;</span>
+<span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">&lt;</span> <span class="identifier">Act</span><span class="special">()</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;</span> <span class="identifier">submit</span><span class="special">(</span> <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+              has_priority&lt; pool &gt;::value == false &amp;&amp; ! ( pool.terminating()
+              || pool.terminated() )
+            </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Submits an action to the pool and returns a <a class="link" href="task.html" title="Task"><span class="emphasis"><em>task</em></span></a>
+              object.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task_rejected</span></code>
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.submit_attr"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.submit_attr" title="Member function submit( Act const&amp; act, Attr const&amp; attr)"> Member
+        function <code class="computeroutput"><span class="identifier">submit</span><span class="special">(</span>
+        <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">,</span> <span class="identifier">Attr</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">attr</span><span class="special">)</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Act</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Attr</span> <span class="special">&gt;</span>
+<span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">&lt;</span> <span class="identifier">Act</span><span class="special">()</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;</span> <span class="identifier">submit</span><span class="special">(</span> <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">,</span> <span class="identifier">Attr</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">attr</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+              has_priority&lt; pool &gt;::value == true &amp;&amp; ! ( pool.terminating()
+              || pool.terminated() )
+            </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Submits an action to the pool and returns a <a class="link" href="task.html" title="Task"><span class="emphasis"><em>task</em></span></a>
+              object. <span class="underline">_Action</span>_ is scheduled
+              by the attribute.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task_rejected</span></code>
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.get_default_pool"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.get_default_pool" title="Non-member function get_default_pool()">
+        Non-member function <code class="computeroutput"><span class="identifier">get_default_pool</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">fifo</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">get_default_pool</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Get access to default thread pool (static).
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.task"></a><a class="link" href="reference.html#boost_threadpool.reference.task" title="Class template task"> Class template <code class="computeroutput"><span class="identifier">task</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.constructor"> Constructor</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.interrupt"> Member
+        function <code class="computeroutput"><span class="identifier">interrupt</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.interrupt_and_wait">
+        Member function <code class="computeroutput"><span class="identifier">interrupt_and_wait</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.result"> Member function
+        <code class="computeroutput"><span class="identifier">result</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">task</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">R</span> <span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">task</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pool</span> <span class="special">&gt;</span>
+  <span class="identifier">task</span><span class="special">(</span>
+    <span class="identifier">Pool</span> <span class="special">*</span> <span class="identifier">pool</span><span class="special">,</span>
+    <span class="identifier">shared_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">fut</span><span class="special">,</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">interrupter</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">intr</span><span class="special">);</span>
+
+  <span class="keyword">void</span> <span class="identifier">interrupt</span><span class="special">();</span>
+  <span class="keyword">void</span> <span class="identifier">interrupt_and_wait</span><span class="special">();</span>
+  <span class="keyword">void</span> <span class="identifier">interrupt_and_wait</span><span class="special">(</span> <span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Duration</span> <span class="special">&gt;</span>
+  <span class="keyword">void</span> <span class="identifier">interrupt_and_wait</span><span class="special">(</span> <span class="identifier">Duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+  <span class="keyword">bool</span> <span class="identifier">interrupt_requested</span><span class="special">();</span>
+
+  <span class="identifier">shared_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="identifier">result</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.task.constructor"></a><a class="link" href="reference.html#boost_threadpool.reference.task.constructor" title="Constructor"> Constructor</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pool</span> <span class="special">&gt;</span>
+<span class="identifier">task</span><span class="special">(</span>
+  <span class="identifier">Pool</span> <span class="special">*</span> <span class="identifier">pool</span><span class="special">,</span>
+  <span class="identifier">shared_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">fut</span><span class="special">,</span>
+  <span class="identifier">detail</span><span class="special">::</span><span class="identifier">interrupter</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">intr</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">R</span>
+              <span class="special">&gt;</span></code> instance.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+              task objects should only be constructed by the pool.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.task.interrupt"></a><a class="link" href="reference.html#boost_threadpool.reference.task.interrupt" title="Member function interrupt()"> Member
+        function <code class="computeroutput"><span class="identifier">interrupt</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">interrupt</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Associated action will be interrupted the next time it enters a <a class="link" href="task.html#boost_threadpool.task.interruption"><span class="emphasis"><em>interruption
+              point</em></span></a> if interruption is not disabled. The function
+              returns immediatly.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.task.interrupt_and_wait"></a><a class="link" href="reference.html#boost_threadpool.reference.task.interrupt_and_wait" title="Member function interrupt_and_wait()">
+        Member function <code class="computeroutput"><span class="identifier">interrupt_and_wait</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">interrupt_and_wait</span><span class="special">();</span>
+
+<span class="keyword">void</span> <span class="identifier">interrupt_and_wait</span><span class="special">(</span> <span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">DurationTime</span> <span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">interrupt_and_wait</span><span class="special">(</span> <span class="identifier">DurationTime</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Associated action will be interrupted the next time it enters one
+              <a class="link" href="task.html#boost_threadpool.task.interruption"><span class="emphasis"><em>interruption
+              point</em></span></a> if interruption is not disabled. The function
+              waits until the action has terminated or the specified duration td
+              has elapsed.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.task.result"></a><a class="link" href="reference.html#boost_threadpool.reference.task.result" title="Member function result()"> Member function
+        <code class="computeroutput"><span class="identifier">result</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">shared_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="identifier">result</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Returns fulfilled value or throws fulfilled exception via a shared_future.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">future</span><span class="special">::</span><span class="identifier">broken_promise</span></code>
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.reschedule_until"></a><a class="link" href="reference.html#boost_threadpool.reference.reschedule_until" title="Non-member function reschedule_until()"> Non-member
+      function <code class="computeroutput"><span class="identifier">reschedule_until</span><span class="special">()</span></code></a>
+</h3></div></div></div>
+<pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pred</span> <span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">reschedule_until</span><span class="special">(</span> <span class="identifier">Pred</span> <span class="keyword">const</span><span class="special">&amp;);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd>
+<p>
+            Reschedules current task until passed callable predicate becomes ready.
+          </p>
+<p>
+            [Throws:
+          </p>
+<p>
+            Nothing.
+          </p>
+</dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+            This function resides in namespace <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_task</span></code>.
+          </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.get_thread_pool"></a><a class="link" href="reference.html#boost_threadpool.reference.get_thread_pool" title="Non-member function get_thread_pool()"> Non-member
+      function <code class="computeroutput"><span class="identifier">get_thread_pool</span><span class="special">()</span></code></a>
+</h3></div></div></div>
+<pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pool</span> <span class="special">&gt;</span>
+<span class="identifier">Pool</span> <span class="special">&amp;</span> <span class="identifier">get_thread_pool</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd>
+<p>
+            Returns reference to the thread pool where the current worker thread
+            is running.
+          </p>
+<p>
+            [Throws:
+          </p>
+<p>
+            Nothing.
+          </p>
+</dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+            This function resides in namespace <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_task</span></code>.
+          </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.is_worker"></a><a class="link" href="reference.html#boost_threadpool.reference.is_worker" title="Non-member function is_worker()"> Non-member function
+      <code class="computeroutput"><span class="identifier">is_worker</span><span class="special">()</span></code></a>
+</h3></div></div></div>
+<pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">bool</span> <span class="identifier">is_worker</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd>
+<p>
+            Returns true if the current thread is a worker-thread form a pool.
+          </p>
+<p>
+            [Throws:
+          </p>
+<p>
+            Nothing.
+          </p>
+</dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+            This function resides in namespace <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_task</span></code>.
+          </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.worker_id"></a><a class="link" href="reference.html#boost_threadpool.reference.worker_id" title="Non-member function worker_id()"> Non-member function
+      <code class="computeroutput"><span class="identifier">worker_id</span><span class="special">()</span></code></a>
+</h3></div></div></div>
+<pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">worker_id</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd>
+<p>
+            Returns returns the thread-id of the worker-thread.
+          </p>
+<p>
+            [Throws:
+          </p>
+<p>
+            Nothing.
+          </p>
+</dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+            This function resides in namespace <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_task</span></code>.
+          </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.poolsize"></a><a class="link" href="reference.html#boost_threadpool.reference.poolsize" title="Class poolsize"> Class <code class="computeroutput"><span class="identifier">poolsize</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.poolsize.constructor"> Constructor</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.poolsize.operator"> Member
+        function <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">poolsize</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">poolsize</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="keyword">explicit</span> <span class="identifier">poolsize</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">value</span><span class="special">);</span>
+
+  <span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.poolsize.constructor"></a><a class="link" href="reference.html#boost_threadpool.reference.poolsize.constructor" title="Constructor"> Constructor</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">poolsize</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">value</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+              value &gt; 0
+            </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">poolsize</span></code>
+              instance.
+            </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+              operator std::size_t () &gt; 0
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_poolsize</span></code>
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.poolsize.operator"></a><a class="link" href="reference.html#boost_threadpool.reference.poolsize.operator" title="Member function operator std::size_t()"> Member
+        function <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Returns pool size.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.scanns"></a><a class="link" href="reference.html#boost_threadpool.reference.scanns" title="Class scanns"> Class <code class="computeroutput"><span class="identifier">scanns</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.scanns.constructor"> Constructor</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.scanns.operator"> Member
+        function <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">scanns</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">scanns</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="keyword">explicit</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">value</span><span class="special">);</span>
+
+  <span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.scanns.constructor"></a><a class="link" href="reference.html#boost_threadpool.reference.scanns.constructor" title="Constructor"> Constructor</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">value</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+              value &gt;= 0
+            </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">scanns</span></code>
+              instance.
+            </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+              operator std::size_t () &gt;= 0
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_scanns</span></code>
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.scanns.operator"></a><a class="link" href="reference.html#boost_threadpool.reference.scanns.operator" title="Member function operator std::size_t()"> Member
+        function <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Returns scanns size.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.high_watermark"></a><a class="link" href="reference.html#boost_threadpool.reference.high_watermark" title="Class high_watermark"> Class <code class="computeroutput"><span class="identifier">high_watermark</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.high_watermark.constructor">
+        Constructor</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.high_watermark.operator">
+        Member function <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">watermark</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">high_watermark</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="keyword">explicit</span> <span class="identifier">high_watermark</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">value</span><span class="special">);</span>
+
+  <span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.high_watermark.constructor"></a><a class="link" href="reference.html#boost_threadpool.reference.high_watermark.constructor" title="Constructor">
+        Constructor</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">high_watermark</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">value</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">high_watermark</span></code>
+              instance.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_watermark</span></code>
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.high_watermark.operator"></a><a class="link" href="reference.html#boost_threadpool.reference.high_watermark.operator" title="Member function operator std::size_t()">
+        Member function <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Returns high watermark.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.low_watermark"></a><a class="link" href="reference.html#boost_threadpool.reference.low_watermark" title="Class low_watermark"> Class <code class="computeroutput"><span class="identifier">low_watermark</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.low_watermark.constructor">
+        Constructor</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.low_watermark.operator">
+        Member function <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">watermark</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">low_watermark</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="keyword">explicit</span> <span class="identifier">low_watermark</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">value</span><span class="special">);</span>
+
+  <span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.low_watermark.constructor"></a><a class="link" href="reference.html#boost_threadpool.reference.low_watermark.constructor" title="Constructor">
+        Constructor</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">low_watermark</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">value</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">low_watermark</span></code>
+              instance.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_watermark</span></code>
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.low_watermark.operator"></a><a class="link" href="reference.html#boost_threadpool.reference.low_watermark.operator" title="Member function operator std::size_t()">
+        Member function <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Returns low watermark.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.invalid_poolsize"></a><a class="link" href="reference.html#boost_threadpool.reference.invalid_poolsize" title="Class invalid_poolsize"> Class
+      <code class="computeroutput"><span class="identifier">invalid_poolsize</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="reference.html#boost_threadpool.reference.invalid_poolsize.constructor">
+        Constructor</a></span></dt></dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">exceptions</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">invalid_poolsize</span>
+<span class="special">:</span> <span class="keyword">public</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">invalid_argument</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">invalid_poolsize</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">msg</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.invalid_poolsize.constructor"></a><a class="link" href="reference.html#boost_threadpool.reference.invalid_poolsize.constructor" title="Constructor">
+        Constructor</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">invalid_poolsize</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">msg</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_poolsize</span></code>
+              instance.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.invalid_scanns"></a><a class="link" href="reference.html#boost_threadpool.reference.invalid_scanns" title="Class invalid_scanns"> Class <code class="computeroutput"><span class="identifier">invalid_scanns</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="reference.html#boost_threadpool.reference.invalid_scanns.constructor">
+        Constructor</a></span></dt></dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">exceptions</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">invalid_scanns</span>
+<span class="special">:</span> <span class="keyword">public</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">invalid_argument</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">invalid_scanns</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">msg</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.invalid_scanns.constructor"></a><a class="link" href="reference.html#boost_threadpool.reference.invalid_scanns.constructor" title="Constructor">
+        Constructor</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">invalid_scanns</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">msg</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_scanns</span></code>
+              instance.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.invalid_timeduration"></a><a class="link" href="reference.html#boost_threadpool.reference.invalid_timeduration" title="Class invalid_timeduration"> Class
+      <code class="computeroutput"><span class="identifier">invalid_timeduration</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="reference.html#boost_threadpool.reference.invalid_timeduration.constructor">
+        Constructor</a></span></dt></dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">exceptions</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">invalid_timeduration</span>
+<span class="special">:</span> <span class="keyword">public</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">invalid_argument</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">invalid_timeduration</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">msg</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.invalid_timeduration.constructor"></a><a class="link" href="reference.html#boost_threadpool.reference.invalid_timeduration.constructor" title="Constructor">
+        Constructor</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">invalid_timeduration</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">msg</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_timeduration</span></code>
+              instance.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.invalid_watermark"></a><a class="link" href="reference.html#boost_threadpool.reference.invalid_watermark" title="Class invalid_watermark"> Class
+      <code class="computeroutput"><span class="identifier">invalid_watermark</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="reference.html#boost_threadpool.reference.invalid_watermark.constructor">
+        Constructor</a></span></dt></dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">exceptions</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">invalid_watermark</span>
+<span class="special">:</span> <span class="keyword">public</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">invalid_argument</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">invalid_watermark</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">msg</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.invalid_watermark.constructor"></a><a class="link" href="reference.html#boost_threadpool.reference.invalid_watermark.constructor" title="Constructor">
+        Constructor</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">invalid_watermark</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">msg</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">invalid_watermark</span></code>
+              instance.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.task_rejected"></a><a class="link" href="reference.html#boost_threadpool.reference.task_rejected" title="Class task_rejected"> Class <code class="computeroutput"><span class="identifier">task_rejected</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="reference.html#boost_threadpool.reference.task_rejected.constructor">
+        Constructor</a></span></dt></dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">exceptions</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">task_rejected</span>
+<span class="special">:</span> <span class="keyword">public</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">task_rejected</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">msg</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.task_rejected.constructor"></a><a class="link" href="reference.html#boost_threadpool.reference.task_rejected.constructor" title="Constructor">
+        Constructor</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">task_rejected</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">msg</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Constructs a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task_rejected</span></code>
+              instance.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.has_priority"></a><a class="link" href="reference.html#boost_threadpool.reference.has_priority" title="Meta function has_priority"> Meta function
+      <code class="computeroutput"><span class="identifier">has_priority</span></code></a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">info</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pool</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">has_priority</span>
+<span class="special">:</span>
+<span class="keyword">public</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">bool_</span><span class="special">&lt;</span>
+  <span class="identifier">is_same</span><span class="special">&lt;</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">has_priority</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Pool</span><span class="special">::</span><span class="identifier">scheduler_type</span><span class="special">::</span><span class="identifier">priority_tag_type</span>
+  <span class="special">&gt;::</span><span class="identifier">value</span>
+<span class="special">&gt;</span>
+<span class="special">{};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.priority_type"></a><a class="link" href="reference.html#boost_threadpool.reference.priority_type" title="Meta function priority_type"> Meta function
+      <code class="computeroutput"><span class="identifier">priority_type</span></code></a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">info</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pool</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">priority_type</span>
+<span class="special">{</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">Pool</span><span class="special">::</span><span class="identifier">scheduler_type</span><span class="special">::</span><span class="identifier">attribute_type</span>   <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Oliver Kowalke<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="acknowledgement.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>

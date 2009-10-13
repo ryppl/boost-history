@@ -1,0 +1,129 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Chapter 1. Boost.Threadpool</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="next" href="boost_threadpool/pool.html" title="Pool">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_threadpool/pool.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="chapter" lang="en">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="boost_threadpool"></a>Chapter 1. Boost.Threadpool</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Oliver</span> <span class="surname">Kowalke</span>
+</h3></div></div>
+<div><p class="copyright">Copyright © 2008 Oliver Kowalke</p></div>
+<div><div class="legalnotice">
+<a name="id358702"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#boost_threadpool.introduction">Introduction</a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/pool.html"> Pool</a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/task.html"> Task</a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/this_task.html"> Namespace this_task</a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/channel.html"> Channel</a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/scheduling.html"> Scheduling</a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/forkjoin.html"> Fork/Join</a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/acknowledgement.html"> Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html"> Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.pool"> Class template <code class="computeroutput"><span class="identifier">pool</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.task"> Class template <code class="computeroutput"><span class="identifier">task</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.reschedule_until"> Non-member
+      function <code class="computeroutput"><span class="identifier">reschedule_until</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.get_thread_pool"> Non-member
+      function <code class="computeroutput"><span class="identifier">get_thread_pool</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.is_worker"> Non-member function
+      <code class="computeroutput"><span class="identifier">is_worker</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.worker_id"> Non-member function
+      <code class="computeroutput"><span class="identifier">worker_id</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.poolsize"> Class <code class="computeroutput"><span class="identifier">poolsize</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.scanns"> Class <code class="computeroutput"><span class="identifier">scanns</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.high_watermark"> Class <code class="computeroutput"><span class="identifier">high_watermark</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.low_watermark"> Class <code class="computeroutput"><span class="identifier">low_watermark</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.invalid_poolsize"> Class
+      <code class="computeroutput"><span class="identifier">invalid_poolsize</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.invalid_scanns"> Class <code class="computeroutput"><span class="identifier">invalid_scanns</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.invalid_timeduration"> Class
+      <code class="computeroutput"><span class="identifier">invalid_timeduration</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.invalid_watermark"> Class
+      <code class="computeroutput"><span class="identifier">invalid_watermark</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.task_rejected"> Class <code class="computeroutput"><span class="identifier">task_rejected</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.has_priority"> Meta function
+      <code class="computeroutput"><span class="identifier">has_priority</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_threadpool/reference.html#boost_threadpool.reference.priority_type"> Meta function
+      <code class="computeroutput"><span class="identifier">priority_type</span></code></a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_threadpool.introduction"></a><a class="link" href="index.html#boost_threadpool.introduction" title="Introduction">Introduction</a>
+</h2></div></div></div>
+<p>
+      <span class="bold"><strong>Boost.Threadpool</strong></span> is designed for effectively
+      utilize the available hardware and provide a way for efficient asynchronous
+      processing of independent time consuming operations (actions) in the same process.
+      A thread pool contains a number of worker threads to perform actions in parallel,
+      which are usually managed by a scheduler. If a worker thread completes its
+      action, it will take the next action from the scheduler until all actions have
+      been completed. The worker thread then sleeps until there are new actions available.
+      Using a pool of worker threads over creating a new thread for each action may
+      result in better performance and better system stability because the overhead
+      for thread creation and destruction is negated.
+    </p>
+<p>
+      <span class="bold"><strong>Boost.Threadpool</strong></span> uses a <a class="link" href="boost_threadpool/pool.html#boost_threadpool.pool.work_stealing"><span class="emphasis"><em>work
+      stealing</em></span></a> algorithm and supports <a class="link" href="boost_threadpool/forkjoin.html" title="Fork/Join"><span class="emphasis"><em>fork/join</em></span></a>
+      parallelism (recursively splitting of actions into sub-actions that are solved
+      in parallel, waiting for them to complete, and then joining results).
+    </p>
+<p>
+      In order to use the classes and functions described here, you can either include
+      the specific headers specified by the descriptions of each class or function,
+      or include the master library header:
+    </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">tp</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+      which includes all the other headers in turn.
+    </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        <span class="bold"><strong>Boost.Threadpool</strong></span> uses a modified version
+        of the futures library, N2561 C++0x proposal, from Anthony Williams (<a href="http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html" target="_top">http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html</a>).
+      </p></td></tr>
+</table></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: March 05, 2009 at 18:12:14 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_threadpool/pool.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
+</body>
+</html>

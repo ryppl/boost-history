@@ -1,0 +1,26 @@
+# Boost.ThreadPool Library Example Jamfile
+
+# Copyright (C) 2008 Oliver Kowalke
+
+# Use, modification and distribution is subject to the Boost Software License, 
+# Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at 
+# http://www.boost.org/LICENSE_1_0.txt) 
+
+# For more information, see http://www.boost.org/
+
+project boost/tp/example
+    : requirements
+        <library>../../thread/build//boost_thread
+        <library>../../system/build//boost_system
+        <threading>multi
+    ;
+
+exe chained_submit : chained_submit.cpp ;
+exe interrupt : interrupt.cpp ;
+exe lazy_submit : lazy_submit.cpp ;
+exe pending : pending.cpp ;
+exe priority : priority.cpp ;
+exe fork_join : fork_join.cpp ;
+exe shutdonw_now : shutdonw_now.cpp ;
+exe smart : smart.cpp ;
+exe submit : submit.cpp ;

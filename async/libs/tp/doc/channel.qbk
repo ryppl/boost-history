@@ -1,0 +1,30 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:channel Channel]
+The channel synchronizes the access between application threads (producer threads) submitting __actions__ to the pool and __worker_threads__ (consumer threads). The scheduling of __actions__ queued into the channel depends on channels the scheduling policy.
+If the channel becomes empty all __worker_threads__ are set to sleep until a new __action__ is put in.
+
+[heading bounded channel]
+
+    template< typename SchedulingPolicy > class bounded_channel
+
+The number of pending __actions__ is limited in order to prevent resource exhaustion. For this purpose a high and low watermark has to be passed at construction.
+`boost::tp::high_watermark` sets the maximum of pending tasks. If this limited is reached all threads which submit a tasks will be set to sleep (blocked).
+`boost::tp::low_watermark` sets the threshold when blocked threads get woken up.
+If __hwm__ is equal to __lwm__ everytime a sleeping producer thread will be woken up and puts
+its task if one worker thread has taken a task from the channel.
+If __lwm__ is less than __hwm__ all sleeping producer threads will be woken up if
+the amount of pending tasks reaches __lwm__.
+
+[heading unbounded channel]
+
+    template< typename SchedulingPolicy > class unbounded_channel
+
+An unlimited number of __actions__ can be queued into this channel. The insertion of __actions__ will never block. If the channel becomes empty __worker_threads__ will be set to sleep until new __actions__ are inserted into the channel.
+
+[endsect]

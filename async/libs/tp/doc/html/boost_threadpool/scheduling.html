@@ -1,0 +1,132 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Scheduling</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="prev" href="channel.html" title="Channel">
+<link rel="next" href="forkjoin.html" title="Fork/Join">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="channel.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="forkjoin.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_threadpool.scheduling"></a><a class="link" href="scheduling.html" title="Scheduling"> Scheduling</a>
+</h2></div></div></div>
+<p>
+      The scheduling policy determines how actions are scheduled inside the <a class="link" href="channel.html" title="Channel"><span class="emphasis"><em>channel</em></span></a>.
+    </p>
+<a name="boost_threadpool.scheduling.fifo"></a><h4>
+<a name="id372440"></a>
+      <a class="link" href="scheduling.html#boost_threadpool.scheduling.fifo">fifo</a>
+    </h4>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">fifo</span>
+</pre>
+<p>
+      First inserted pending action get taken first.
+    </p>
+<a name="boost_threadpool.scheduling.lifo"></a><h4>
+<a name="id372473"></a>
+      <a class="link" href="scheduling.html#boost_threadpool.scheduling.lifo">lifo</a>
+    </h4>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">lifo</span>
+</pre>
+<p>
+      Last inserted pending action get taken first.
+    </p>
+<a name="boost_threadpool.scheduling.priority"></a><h4>
+<a name="id372506"></a>
+      <a class="link" href="scheduling.html#boost_threadpool.scheduling.priority">priority</a>
+    </h4>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Attr</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ord</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span> <span class="identifier">Attr</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">priority</span>
+</pre>
+<p>
+      Each pending task is associated with a priority attribute which is used for
+      ordering actions.
+    </p>
+<a name="boost_threadpool.scheduling.smart"></a><h4>
+<a name="id372612"></a>
+      <a class="link" href="scheduling.html#boost_threadpool.scheduling.smart">smart</a>
+    </h4>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Attr</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ord</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Enq</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Deq</span> <span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">smart</span>
+</pre>
+<p>
+      Each pending actions is associated with an attribute. The scheduler gets an
+      put- and take-policy as template arguments. The corresponding policy get applied
+      for each insertion and removal.
+    </p>
+<p>
+      <span class="bold"><strong>Boost.Threadpool</strong></span> provides <span class="emphasis"><em>boost::tp::replace_oldest</em></span>
+      as put policy and <span class="emphasis"><em>boost::tp::take_oldest</em></span> as take policy.
+      Both policies allow the replacement of old actions in the scheduler by new
+      ones.
+    </p>
+<pre class="programlisting"><span class="comment">// creates a pool with unbounded channel
+</span><span class="comment">// tasks are processed depending on the associated attributed
+</span><span class="comment">// oldest tasks with the same attributed pending in the channel
+</span><span class="comment">// will be replaced by the new task
+</span><span class="comment">// this example would execute add( 1, 2) and add( 5, 6)
+</span><span class="comment">// add( 2, 3) is removed (if pending when add( 5, 6) is submitted)
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">smart</span><span class="special">&lt;</span>
+      <span class="keyword">int</span><span class="special">,</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;,</span>
+      <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">replace_oldest</span><span class="special">,</span>
+      <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">take_oldest</span>
+    <span class="special">&gt;</span>
+  <span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">pool</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">poolsize</span><span class="special">(</span> <span class="number">1</span><span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">pool</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+    <span class="identifier">add_fn</span><span class="special">,</span>
+    <span class="number">1</span><span class="special">,</span>
+    <span class="number">2</span><span class="special">),</span>
+    <span class="number">0</span><span class="special">);</span>
+
+<span class="comment">// replaced by later task with same attribute
+</span><span class="comment">// if still pending in pool
+</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+    <span class="identifier">add_fn</span><span class="special">,</span>
+    <span class="number">3</span><span class="special">,</span>
+    <span class="number">4</span><span class="special">),</span>
+    <span class="number">1</span><span class="special">);</span>
+
+<span class="comment">// will replace previous pending action
+</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+    <span class="identifier">add_fn</span><span class="special">,</span>
+    <span class="number">5</span><span class="special">,</span>
+    <span class="number">6</span><span class="special">),</span>
+    <span class="number">1</span><span class="special">);</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Oliver Kowalke<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="channel.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="forkjoin.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

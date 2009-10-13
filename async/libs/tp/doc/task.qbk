@@ -1,0 +1,122 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:task Task]
+For each submitted __action__ a new task object will be created and returned by the pool.
+The __task__ object acts as a proxy for a result that is initially not known and gets evaluated later by a __worker_thread__. It transports the result (value or exception) of the __action__ back to the caller.
+
+    boost::tp::pool<
+      boost::tp::unbounded_channel< boost::tp::fifo >
+    > pool( boost::tp::poolsize( 10) );
+
+    // task calculates fibonacci(10)
+    // scheduled in unbounded channel with FIFO ordering
+    boost::tp::task< int > t(
+    pool.submit(
+      boost::bind(
+      fibonacci_fn,
+      10) ) );
+
+    std::cout << t.result().get() << std::endl; // 55
+
+
+[heading Interruption]
+The returned __task__ object provides the possiblity to interrupt an __action__ if it is cooperative.
+An __action__ is known as cooperative if it includes interruption points in its code:
+
+* `boost::thread::join()`
+* `boost::thread::timed_join()`
+* `boost::condition_variable::wait()`
+* `boost::condition_variable::timed_wait()`
+* `boost::condition_variable_any::wait()`
+* `boost::condition_variable_any::timed_wait()`
+* `boost::thread::sleep()`
+* `boost::this_thread::sleep()`
+* `boost::this_thread::interruption_point()`
+
+[important Interruption must not be disabled for the __worker_thread__ (class ['boost::this_thread::disable_interruption]).]
+
+The __action__ will be interrupted even if it is pending (interruption is remembered).
+A ['boost::thread_interrupted] exception will be thrown by `boost::tp::task< T >::get()` if the __action__ was interrupted.
+``
+    boost::tp::pool<
+      boost::tp::unbounded_channel< boost::tp::fifo >
+    > pool( boost::tp::poolsize( 10) );
+
+    // submit a long running task
+    boost::tp::task< int > t(
+      pool.submit(
+        boost::bind(
+          long_running_fn) ) );
+
+    // interrupt task
+    t.interrupt();
+
+    // throws boost::thread_interrupted exception
+    std::cout << t.result().get() << std::endl;
+``
+
+    boost::tp::pool<
+      boost::tp::unbounded_channel< boost::tp::fifo >
+    > pool( boost::tp::poolsize( 10) );
+
+    // submit a long running task
+    boost::tp::task< int > t(
+      pool.submit(
+        boost::bind(
+          long_running_fn) ) );
+
+    // interrupt task and wait for its termination
+    t.interrupt_and_wait();
+
+    // throws boost::thread_interrupted exception
+    std::cout << t.result().get() << std::endl;
+
+[heading Exceptions in tasks]
+Exceptions thrown inside an __action__ are transported by the associated task object.
+Exceptions rethrown by type:
+
+*  `std::bad_alloc`
+*  `std::bad_cast`
+*  `std::bad_exception`
+*  `std::bad_typeid`
+*  `std::domain_error`
+*  `std::invalid_argument`
+*  `std::ios_base::failure`
+*  `std::length_error`
+*  `std::logic_error`
+*  `std::out_of_range`
+*  `std::overflow_error`
+*  `std::range_error`
+*  `std::runtime_error`
+*  `std::underflow_error`
+*  `boost::broken_promise`
+*  `boost::future_already_set`
+*  `boost::future_cancel`
+*  `boost::invalid_thread_argument`
+*  `boost::lock_error`
+*  `boost::thread_exception`
+*  `boost::thread_interrupted`
+*  `boost::thread_permission_error`
+*  `boost::thread_resource_error`
+*  `boost::unsupported_thread_option`
+
+Exceptions derived from `std::exception` will be rethrown as `std::runtime_error` in all other cases a `std::bad_exception` is thrown.
+
+    boost::tp::pool<
+      boost::tp::unbounded_channel< boost::tp::fifo >
+    > pool( boost::tp::poolsize( 10) );
+
+    // task will throw an exception derived from std::exception
+    boost::tp::task< int > t(
+      pool.submit(
+        boost::bind(
+          throwing_fn) ) );
+
+    std::cout << t.result().get() << std::endl; // will rethrow an std::runtime_error
+
+[endsect]

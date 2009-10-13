@@ -1,0 +1,126 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:invalid_poolsize Class `invalid_poolsize`]
+
+    #include <boost/tp/exceptions.hpp>
+
+    class invalid_poolsize
+    : public std::invalid_argument
+    {
+    public:
+      invalid_poolsize( std::string const& msg);
+    };
+
+[section:constructor Constructor]
+
+    invalid_poolsize( std::string const& msg);
+
+[variablelist
+[[Effects:] [Constructs a `boost::tp::invalid_poolsize` instance.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+[endsect]
+
+
+[section:invalid_scanns Class `invalid_scanns`]
+
+    #include <boost/tp/exceptions.hpp>
+
+    class invalid_scanns
+    : public std::invalid_argument
+    {
+    public:
+      invalid_scanns( std::string const& msg);
+    };
+
+[section:constructor Constructor]
+
+    invalid_scanns( std::string const& msg);
+
+[variablelist
+[[Effects:] [Constructs a `boost::tp::invalid_scanns` instance.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+[endsect]
+
+
+[section:invalid_timeduration Class `invalid_timeduration`]
+
+    #include <boost/tp/exceptions.hpp>
+
+    class invalid_timeduration
+    : public std::invalid_argument
+    {
+    public:
+      invalid_timeduration( std::string const& msg);
+    };
+
+[section:constructor Constructor]
+
+    invalid_timeduration( std::string const& msg);
+
+[variablelist
+[[Effects:] [Constructs a `boost::tp::invalid_timeduration` instance.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+[endsect]
+
+
+[section:invalid_watermark Class `invalid_watermark`]
+
+    #include <boost/tp/exceptions.hpp>
+
+    class invalid_watermark
+    : public std::invalid_argument
+    {
+    public:
+      invalid_watermark( std::string const& msg);
+    };
+
+[section:constructor Constructor]
+
+    invalid_watermark( std::string const& msg);
+
+[variablelist
+[[Effects:] [Constructs a `boost::tp::invalid_watermark` instance.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+[endsect]
+
+
+[section:task_rejected Class `task_rejected`]
+
+    #include <boost/tp/exceptions.hpp>
+
+    class task_rejected
+    : public std::runtime_error
+    {
+    public:
+      task_rejected( std::string const& msg);
+    };
+
+[section:constructor Constructor]
+
+    task_rejected( std::string const& msg);
+
+[variablelist
+[[Effects:] [Constructs a `boost::tp::task_rejected` instance.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+[endsect]
+
