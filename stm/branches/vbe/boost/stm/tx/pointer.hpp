@@ -51,7 +51,7 @@ public:
     operator T*&() { return get(); }
 
     T*& get() {
-        transaction* tx=transaction::current_transaction();
+        transaction* tx=current_transaction();
         if (tx!=0) {
             if (tx->forced_to_abort()) {
                 tx->lock_and_abort();
@@ -64,7 +64,7 @@ public:
     }
 
     T const * get() const {
-        transaction* tx=transaction::current_transaction();
+        transaction* tx=current_transaction();
         if (tx!=0) {
             if (tx->forced_to_abort()) {
                 tx->lock_and_abort();
@@ -111,7 +111,7 @@ public:
     operator R C::*&() { return get(); }
 
     R C::*& get() {
-        transaction* tx=transaction::current_transaction();
+        transaction* tx=current_transaction();
         if (tx!=0) {
             if (tx->forced_to_abort()) {
                 tx->lock_and_abort();
@@ -124,7 +124,7 @@ public:
     }
 
     R C::* const * get() const {
-        transaction* tx=transaction::current_transaction();
+        transaction* tx=current_transaction();
         if (tx!=0) {
             if (tx->forced_to_abort()) {
                 tx->lock_and_abort();

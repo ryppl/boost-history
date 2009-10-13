@@ -51,7 +51,7 @@ public:
     operator T&() { return ref(); }
 
     T& ref() {
-        transaction* tx=transaction::current_transaction();
+        transaction* tx=current_transaction();
         if (tx!=0) {
             if (tx->forced_to_abort()) {
                 tx->lock_and_abort();
@@ -65,7 +65,7 @@ public:
     }
 
     T value() const {
-        transaction* tx=transaction::current_transaction();
+        transaction* tx=current_transaction();
         if (tx!=0) {
             if (tx->forced_to_abort()) {
                 tx->lock_and_abort();

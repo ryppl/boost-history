@@ -32,6 +32,7 @@
 #include <boost/stm/transaction_bookkeeping.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/datatypes.hpp>
+#include <boost/stm/detail/deleters.hpp>
 #include <boost/stm/detail/bloom_filter.hpp>
 #include <boost/stm/detail/vector_map.hpp>
 #include <boost/stm/detail/vector_set.hpp>
@@ -124,9 +125,9 @@ public:
 #endif
 
 #ifndef MAP_NEW_CONTAINER
-   typedef vector_set<base_transaction_object*> MemoryContainerList;
+   typedef vector_set<detail::deleter_type*> MemoryContainerList;
 #else
-   typedef std::list<base_transaction_object*> MemoryContainerList;
+   typedef std::list<detail::deleter_type*> MemoryContainerList;
 #endif
 
 
@@ -733,7 +734,18 @@ public:
    {
       newNode->transaction_thread(threadId_);
       newNode->new_memory(1);
-      newMemoryList().push_back(newNode);
+      newMemoryList().push_back(detail::make(newNode));
+
+      return newNode;
+   }
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   T* as_new_array(T *newNode, std::size_t size)
+   {
+      //newNode->transaction_thread(threadId_);
+      //newNode->new_memory(1);
+      newMemoryList().push_back(detail::make_array(newNode, size));
 
       return newNode;
    }
@@ -1000,8 +1012,7 @@ private:
    {
       if (in.transaction_thread() == threadId_)
       {
-         //deletedMemoryList().push_back(&(T)in);
-         deletedMemoryList().push_back((base_transaction_object*)&in);
+         deletedMemoryList().push_back(detail::make(in));
          return;
       }
 
@@ -1025,7 +1036,7 @@ private:
          // doesn't actually save any time for anything
          //writeList()[(base_transaction_object*)&in] = 0;
 
-         deletedMemoryList().push_back((base_transaction_object*)&in);
+         deletedMemoryList().push_back(detail::make(in));
       }
    }
 #endif
@@ -1179,12 +1190,12 @@ private:
             if (j->second == (base_transaction_object*)&in)
             {
                writeList().insert(tx_pair(j->first, 0));
-               deletedMemoryList().push_back(j->first);
+               deletedMemoryList().push_back(detail::make(j->first));
             }
          }
       }
 
-      deletedMemoryList().push_back((base_transaction_object *)&in);
+      deletedMemoryList().push_back(detail::make(in));
    }
 
    //--------------------------------------------------------------------------
@@ -1253,7 +1264,16 @@ private:
    void deferredCommitTransactionNewMemory();
 
    void directAbortTransactionDeletedMemory() throw();
-   void deferredAbortTransactionDeletedMemory() throw() { deletedMemoryList().clear(); }
+   void deferredAbortTransactionDeletedMemory() throw() {
+#ifdef BOOST_STM_ALLOWS_DELETERS
+        for (MemoryContainerList::iterator i = deletedMemoryList().begin();
+            i != deletedMemoryList().end(); ++i)
+        {
+            delete *i;
+        }
+#endif
+       deletedMemoryList().clear(); 
+    }
    void directAbortTransactionNewMemory() throw() { deferredAbortTransactionNewMemory(); }
    void deferredAbortTransactionNewMemory() throw();
 
@@ -1934,6 +1954,8 @@ public:
 
 };
 
+inline transaction* current_transaction() {return transaction::current_transaction();}
+
 template <class T> T* cache_allocate(transaction* t) {
     #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER) && defined (USE_STM_MEMORY_MANAGER)
     return  reinterpret_cast<T*>(T::retrieve_mem(sizeof(T)));
@@ -2119,7 +2141,7 @@ inline int transaction::unlock<Mutex*> (Mutex *lock) { return transaction::pthre
     (T).as_new(new P))
 
 #define BOOST_STM_NEW_1(P) \
-    ((boost::stm::transaction::current_transaction()!=0)?BOOST_STM_NEW(*boost::stm::transaction::current_transaction(), P):new P)
+    ((boost::stm::current_transaction()!=0)?BOOST_STM_NEW(*boost::stm::current_transaction(), P):new P)
 
 } // stm  namespace
 } // boost namespace
@@ -2136,6 +2158,6 @@ inline int transaction::unlock<Mutex*> (Mutex *lock) { return transaction::pthre
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-#endif // TRANSACTION_H
+#endif // BOOST_STM_TRANSACTION__HPP
 
 

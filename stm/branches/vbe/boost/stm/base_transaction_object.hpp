@@ -15,7 +15,6 @@
 #define BOOST_STM_BASE_TRANSACTION_OBJECT__HPP
 
 //-----------------------------------------------------------------------------
-//#include <stdarg.h>
 #include <pthread.h>
 //-----------------------------------------------------------------------------
 #include <list>
@@ -58,10 +57,14 @@ class base_transaction_object
 {
 public:
 
-   base_transaction_object() : transactionThread_(kInvalidThread),
-      newMemory_(0)
+    base_transaction_object() 
+        : transactionThread_(kInvalidThread)
+        , newMemory_(0)
 #if PERFORMING_VALIDATION
-      ,version_(0)
+        , version_(0)
+#endif
+#if BOOST_STM_ALLOWS_EMBEDEEDS
+        , embeddeds_()
 #endif
    {}
 
@@ -72,33 +75,41 @@ public:
 #if PERFORMING_VALIDATION
         , version_(0)
 #endif
-   {}
+#if BOOST_STM_ALLOWS_EMBEDEEDS
+        , embeddeds_()
+#endif
+    {}
 #endif
 
-   virtual base_transaction_object* clone(transaction* t) const = 0;
-   virtual void copy_state(base_transaction_object const * const rhs) = 0;
+    virtual base_transaction_object* clone(transaction* t) const = 0;
+    virtual void copy_state(base_transaction_object const * const rhs) = 0;
 #if BUILD_MOVE_SEMANTICS
-   virtual void move_state(base_transaction_object * rhs) = 0;
+    virtual void move_state(base_transaction_object * rhs) = 0;
 #else
-   virtual void move_state(base_transaction_object * rhs) {};
+    virtual void move_state(base_transaction_object * rhs) {};
 #endif
-   virtual ~base_transaction_object() {};
+    virtual ~base_transaction_object() {};
     virtual void cache_deallocate()=0;
 
-   void transaction_thread(size_t rhs) const { transactionThread_ = rhs; }
-   size_t const & transaction_thread() const { return transactionThread_; }
+    void transaction_thread(size_t rhs) const { transactionThread_ = rhs; }
+    size_t const & transaction_thread() const { return transactionThread_; }
 
 #if USE_STM_MEMORY_MANAGER
-   static void alloc_size(size_t size) { memory_.alloc_size(size); }
+    static void alloc_size(size_t size) { memory_.alloc_size(size); }
 #else
-   static void alloc_size(size_t size) { }
+    static void alloc_size(size_t size) { }
 #endif
 
-   void new_memory(size_t rhs) const { newMemory_ = rhs; }
-   size_t const & new_memory() const { return newMemory_; }
+    void new_memory(size_t rhs) const { newMemory_ = rhs; }
+    size_t const & new_memory() const { return newMemory_; }
 
 #if PERFORMING_VALIDATION
-   size_t version_;
+    size_t version_;
+#endif
+
+#if BOOST_STM_ALLOWS_EMBEDEEDS
+    std::list<base_transaction_object*>& embeddeds() {return embeddeds_;}
+    void bind(base_transaction_object* bto) {embeddeds_.push_back(bto);}   
 #endif
 
 //protected:
@@ -107,17 +118,17 @@ public:
     static void return_mem(void *mem, size_t size)
     {
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-      lock(&transactionObjectMutex_);
+        lock(&transactionObjectMutex_);
         memory_.returnChunk(mem, size);
-      unlock(&transactionObjectMutex_);
+        unlock(&transactionObjectMutex_);
 #else
         boost::lock_guard<boost::mutex> lock(transactionObjectMutex_);
         memory_.returnChunk(mem, size);
 #endif
     }
 
-   static void* retrieve_mem(size_t size)
-   {
+    static void* retrieve_mem(size_t size)
+    {
 #ifndef BOOST_STM_USE_BOOST_MUTEX
         lock(&transactionObjectMutex_);
         void *mem = memory_.retrieveChunk(size);
@@ -128,31 +139,34 @@ public:
 #endif
 
       return mem;
-   }
+    }
 #endif
 
 private:
 
-   //--------------------------------------------------------------------------
-   // int instead of bool for architecture word-boundary alignment
-   //
-   // transactionThread_ means a transaction is writing to this memory.
-   //
-   // in direct environments, this flag means memory being written to directly
-   //
-   // in deferred environments, this flag means this is memory that was copied
-   // and being written to off to the side
-   //
-   // it's important to note the differences between as direct reads and writes
-   // and deferred reads and writes behave very differently when using this
-   // flag.
-   //--------------------------------------------------------------------------
-   mutable size_t transactionThread_;
+    //--------------------------------------------------------------------------
+    // int instead of bool for architecture word-boundary alignment
+    //
+    // transactionThread_ means a transaction is writing to this memory.
+    //
+    // in direct environments, this flag means memory being written to directly
+    //
+    // in deferred environments, this flag means this is memory that was copied
+    // and being written to off to the side
+    //
+    // it's important to note the differences between as direct reads and writes
+    // and deferred reads and writes behave very differently when using this
+    // flag.
+    //--------------------------------------------------------------------------
+    mutable size_t transactionThread_;
 
-   mutable size_t newMemory_;
+    mutable size_t newMemory_;
 #if USE_STM_MEMORY_MANAGER
-   static Mutex transactionObjectMutex_;
-   static MemoryPool<base_transaction_object> memory_;
+    static Mutex transactionObjectMutex_;
+    static MemoryPool<base_transaction_object> memory_;
+#endif
+#if BOOST_STM_ALLOWS_EMBEDEEDS
+    std::list<base_transaction_object*> embeddeds_;
 #endif
 };
 

@@ -107,14 +107,14 @@ inline rd_ptr<T> make_rd_ptr(transaction& tx, T& ref) {
 
 template <typename T>
 inline rd_ptr<T> make_rd_ptr(T* ptr) {
-    transaction* tx = transaction::current_transaction();
+    transaction* tx = current_transaction();
     assert(tx==0);
     return rd_ptr<T>(*tx, ptr);
 }
 
 template <typename T>
 inline rd_ptr<T> make_rd_ptr(T& ref) {
-    transaction* tx = transaction::current_transaction();
+    transaction* tx = current_transaction();
     assert(tx==0);
     return rd_ptr<T>(*tx, ref);
 }

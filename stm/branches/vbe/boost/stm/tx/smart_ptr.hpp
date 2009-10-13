@@ -83,7 +83,7 @@ public:
         return &this->ref();
     }
     T& ref() {
-        transaction* tx=transaction::current_transaction();
+        transaction* tx=current_transaction();
         if (tx!=0) {
             if (tx->forced_to_abort()) {
                 tx->lock_and_abort();
@@ -95,7 +95,7 @@ public:
     }
 
     const T& ref() const {
-        transaction* tx=transaction::current_transaction();
+        transaction* tx=current_transaction();
         if (tx!=0) {
             if (tx->forced_to_abort()) {
                 tx->lock_and_abort();
@@ -214,7 +214,7 @@ public:
     }
     T* get() const {
         if (0==ptr_) return 0;
-        transaction* tx=transaction::current_transaction();
+        transaction* tx=current_transaction();
         if (tx!=0) {
             if (tx->forced_to_abort()) {
                     tx->lock_and_abort();
@@ -265,7 +265,7 @@ inline tx_ptr<T> make_tx_ptr(A1 const &a1) {
 template <typename T>
 void delete_ptr(tx_ptr<T> ptr) {
     if (ptr.ptr_==0) return;
-    transaction* tx=transaction::current_transaction();
+    transaction* tx=current_transaction();
     if (tx==0) delete ptr.ptr_;
     tx->delete_tx_ptr(ptr.ptr_);
 }
@@ -361,14 +361,14 @@ rd_ptr<T> make_rd_ptr(transaction& tx, tx_obj<T> const & ref) {
 
 template <typename T>
 rd_ptr<T> make_rd_ptr(tx_ptr<T> ptr) {
-    transaction* tx = transaction::current_transaction();
+    transaction* tx = current_transaction();
     assert(tx==0);
     return rd_ptr<T>(*tx, ptr);
 }
 
 template <typename T>
 rd_ptr<T> make_rd_ptr(tx_obj<T> const & ref) {
-    transaction* tx = transaction::current_transaction();
+    transaction* tx = current_transaction();
     assert(tx==0);
     return rd_ptr<T>(*tx, ref);
 }
@@ -418,7 +418,7 @@ public:
     template<class Y>
     upgrd_ptr & operator=(tx_ptr<Y> const&  r) { // never throws
         //this_type(r).swap(*this);
-        transaction* tx=transaction::current_transaction();
+        transaction* tx=current_transaction();
         if (tx==0) throw "error";
         tx_=tx;
         ptr_=r.ptr_;
@@ -558,7 +558,7 @@ inline wr_ptr<T> make_wr_ptr(transaction& tx, tx_ptr<T>& ptr) {
 
 template <typename T>
 inline wr_ptr<T> make_wr_ptr(tx_ptr<T>& ptr) {
-    transaction* tx = transaction::current_transaction();
+    transaction* tx = current_transaction();
     return wr_ptr<T>(*tx, ptr);
 }
 

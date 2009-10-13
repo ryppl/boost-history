@@ -1806,7 +1806,7 @@ inline void transaction::directAbortTransactionDeletedMemory() throw()
    for (MemoryContainerList::iterator j = deletedMemoryList().begin();
    j != deletedMemoryList().end(); ++j)
    {
-      (*j)->transaction_thread(kInvalidThread);
+      detail::reset(*j);
    }
 
    deletedMemoryList().clear();
@@ -1860,7 +1860,8 @@ inline void transaction::doIntervalDeletions()
       {
          for (MemoryContainerList::iterator j = i->second.begin(); j != i->second.end(); ++j)
          {
-            delete *j;
+            detail::release(*j);
+            // delete *j;
          }
          deletionBuffer_.erase(i);
          i = deletionBuffer_.begin();
@@ -1892,7 +1893,8 @@ inline void transaction::deferredCommitTransactionDeletedMemory() throw()
    for (MemoryContainerList::iterator i = deletedMemoryList().begin();
       i != deletedMemoryList().end(); ++i)
    {
-      delete *i;
+      detail::release(*i);
+      //delete *i;
    }
 
    deletedMemoryList().clear();
@@ -1903,7 +1905,8 @@ inline void transaction::deferredAbortTransactionNewMemory() throw()
 {
    for (MemoryContainerList::iterator i = newMemoryList().begin(); i != newMemoryList().end(); ++i)
    {
-      delete *i;
+      detail::release(*i);
+      //delete *i;
    }
 
    newMemoryList().clear();
@@ -1914,8 +1917,9 @@ inline void transaction::deferredCommitTransactionNewMemory()
 {
    for (MemoryContainerList::iterator i = newMemoryList().begin(); i != newMemoryList().end(); ++i)
    {
-      (*i)->transaction_thread(kInvalidThread);
-      (*i)->new_memory(0);
+      detail::reset(*i);
+      //(*i)->transaction_thread(kInvalidThread);
+      //(*i)->new_memory(0);
    }
 
    newMemoryList().clear();
