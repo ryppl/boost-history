@@ -1,0 +1,194 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Overview</title>
+<link rel="stylesheet" href="../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../index.html" title="Toward Boost Async">
+<link rel="up" href="../index.html" title="Toward Boost Async">
+<link rel="prev" href="../index.html" title="Toward Boost Async">
+<link rel="next" href="overview/motivation.html" title=" Motivation">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="overview/motivation.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="toward_boost_async.overview"></a><a href="overview.html" title=" Overview"> Overview</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="overview/motivation.html"> Motivation</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="overview/motivation.html#toward_boost_async.overview.motivation.asynchronous_executors_and_asynchronous_completion_token_handles">Asynchronous
+        Executors and Asynchronous Completion Token Handles</a></span></dt>
+<dt><span class="section"><a href="overview/motivation.html#toward_boost_async.overview.motivation.threader_joiner">Threader/Joiner</a></span></dt>
+</dl></dd>
+</dl></div>
+<a name="toward_boost_async.overview.description"></a><h3>
+<a name="id4803159"></a>
+      <a href="overview.html#toward_boost_async.overview.description">Description</a>
+    </h3>
+<p>
+      Boost.Async is a C++ library to allow the calling of functions and functors
+      in an asynchronous manner, thereby making it easier to improve the level of
+      concurrency and parallelism in your applications. It provides:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        An asynchronous execution framework working with <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+        and <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>.
+        It includes some generic functions and several <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+        and <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>:
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            fork and fork_all to execute asynchronously functions
+          </li>
+<li>
+            fork_after: request an <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+            to execute a function asynchronously once each one of <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+            in the dependency tuple parameter are ready. It is similar to the async_with_dependencies
+            proposed Peter Dimov.
+          </li>
+<li>
+            generic get, join, ... free functions to synchronize on an <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+</li>
+<li>
+            generic get_all, join_all, ... free functions to synchronize on multiple
+            <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+</li>
+<li>
+            generic wait_for_all, wait_for_any to execute asynchronously functions
+            and wait for the completion of all or any of them.
+          </li>
+</ul></div>
+</li>
+<li>
+        Some <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+        and <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+        models
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            immediate executors: executes synchronously a function on the current
+            thread. Often used for test purposes
+          </li>
+<li>
+            basic_threader: can be seen as a thread factory executing asynchronously
+            a function on the returned thread.
+          </li>
+<li>
+            launchers: Lanchers can be seen as a future factory executing asynchronously
+            a function on a hidden thread.
+          </li>
+<li>
+            threader/joiner: A Threader runs a unary function in its own thread.
+            A Threader can be seen as a Joiner factory executing asynchronously a
+            function on a thread encapsulated on the returned Joiner. The joiner
+            is used to synchronize with and pick up the result from a function or
+            to manage the encapsulated thread.
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span></code> and <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span></code>
+            customization as an <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+            and an <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+            respectively. <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span></code> can be seen as a <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span></code> factory executing asynchronously
+            a function on a pool of threads.
+          </li>
+<li>
+            a generic asynchronous_executor_decorator which allows to decorate the
+            function to be evaluated asynchronously.
+          </li>
+</ul></div>
+</li>
+</ul></div>
+<p>
+      References
+    </p>
+<div class="itemizedlist"><ul type="disc"><li>
+        The threader-joiner classes are based on the original idea of Kevlin Henney
+        <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf" target="_top">N1833
+        - Preliminary Threading Library Proposal for TR2</a>
+</li></ul></div>
+<a name="toward_boost_async.overview.how_to_use_this_documentation"></a><h3>
+<a name="id4764943"></a>
+      <a href="overview.html#toward_boost_async.overview.how_to_use_this_documentation">How
+      to Use This Documentation</a>
+    </h3>
+<p>
+      This documentation makes use of the following naming and formatting conventions.
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        Code is in <code class="computeroutput"><span class="identifier">fixed</span> <span class="identifier">width</span>
+        <span class="identifier">font</span></code> and is syntax-highlighted.
+      </li>
+<li>
+        Replaceable text that you will need to supply is in
+        <em class="replaceable"><code>
+          italics
+        </code></em>
+        .
+      </li>
+<li>
+        If a name refers to a free function, it is specified like this: <code class="computeroutput"><span class="identifier">free_function</span><span class="special">()</span></code>;
+        that is, it is in code font and its name is followed by <code class="computeroutput"><span class="special">()</span></code>
+        to indicate that it is a free function.
+      </li>
+<li>
+        If a name refers to a class template, it is specified like this: <code class="computeroutput"><span class="identifier">class_template</span><span class="special">&lt;&gt;</span></code>;
+        that is, it is in code font and its name is followed by <code class="computeroutput"><span class="special">&lt;&gt;</span></code>
+        to indicate that it is a class template.
+      </li>
+<li>
+        If a name refers to a function-like macro, it is specified like this: <code class="computeroutput"><span class="identifier">MACRO</span><span class="special">()</span></code>;
+        that is, it is uppercase in code font and its name is followed by <code class="computeroutput"><span class="special">()</span></code> to indicate that it is a function-like
+        macro. Object-like macros appear without the trailing <code class="computeroutput"><span class="special">()</span></code>.
+      </li>
+<li>
+        Names that refer to <span class="emphasis"><em>concepts</em></span> in the generic programming
+        sense are specified in CamelCase.
+      </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        In addition, notes such as this one specify non-essential information that
+        provides additional background or rationale.
+      </p></td></tr>
+</table></div>
+<p>
+      Finally, you can mentally add the following to any code fragments in this document:
+    </p>
+<pre class="programlisting"><span class="comment">// Include all of Async
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">async</span><span class="special">/</span><span class="identifier">async</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="comment">// Create a namespace aliases
+</span><span class="keyword">namespace</span> <span class="identifier">basync</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">async</span><span class="special">;</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="overview/motivation.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,740 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Motivation</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost Async">
+<link rel="up" href="../overview.html" title=" Overview">
+<link rel="prev" href="../overview.html" title=" Overview">
+<link rel="next" href="../users_guide.html" title=" Users'Guide">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_async.overview.motivation"></a><a href="motivation.html" title=" Motivation"> Motivation</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="motivation.html#toward_boost_async.overview.motivation.asynchronous_executors_and_asynchronous_completion_token_handles">Asynchronous
+        Executors and Asynchronous Completion Token Handles</a></span></dt>
+<dt><span class="section"><a href="motivation.html#toward_boost_async.overview.motivation.threader_joiner">Threader/Joiner</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_async.overview.motivation.asynchronous_executors_and_asynchronous_completion_token_handles"></a><a href="motivation.html#toward_boost_async.overview.motivation.asynchronous_executors_and_asynchronous_completion_token_handles" title="Asynchronous
+        Executors and Asynchronous Completion Token Handles">Asynchronous
+        Executors and Asynchronous Completion Token Handles</a>
+</h4></div></div></div>
+<p>
+          In <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf" target="_top">N1833
+          - Preliminary Threading Library Proposal for TR2</a> Kevlin Henney
+          introduces the concept of <code class="computeroutput"><span class="identifier">threader</span></code>
+          an asynchronous executor and a function <code class="computeroutput"><span class="identifier">thread</span><span class="special">()</span></code> that evaluates a function asynchronously
+          and returns an asynchronous completion token <code class="computeroutput"><span class="identifier">joiner</span></code>,
+          able to join but also to get the value of the function result.
+        </p>
+<p>
+          In <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2185.html" target="_top">N2185
+          - Proposed Text for Parallel Task Execution</a> Peter Dimov introduces
+          a <code class="computeroutput"><span class="identifier">fork</span><span class="special">()</span></code>
+          function able to evaluate a function asynchronously and returns a <code class="computeroutput"><span class="identifier">future</span></code> handle.
+        </p>
+<p>
+          In <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2276.html" target="_top">N2276
+          - Thread Pools and Futures</a> Anthony William introduces <code class="computeroutput"><span class="identifier">launch_in_thread</span></code> and <code class="computeroutput"><span class="identifier">launch_in_pool</span></code>
+          function templates which evaluates a function asynchronously either in
+          a specific <code class="computeroutput"><span class="identifier">thread</span></code> or a
+          thread pool and returns a <code class="computeroutput"><span class="identifier">unique_future</span></code>
+          handle.
+        </p>
+<p>
+          In <a href="http://www.boostpro.com/vault/index.php?action=downloadfile&amp;filename=boost-threadpool.3.tar.gz&amp;directory=Concurrent%20Programming&amp;" target="_top">Boost.ThreadPool</a>
+          Oliver Kowalke proposes a complete implementation of a thread <code class="computeroutput"><span class="identifier">pool</span></code> with a <code class="computeroutput"><span class="identifier">submit</span><span class="special">()</span></code> function which evaluates a function asynchronously
+          and returns a <code class="computeroutput"><span class="identifier">task</span></code> handle.
+        </p>
+<p>
+          Behind all these proposals there is a concept of asynchronous executor,
+          fork-like function and the asynchronous completion token handle.
+        </p>
+<div class="table">
+<a name="id4765459"></a><p class="title"><b>Table 1. AE/ACT/fork-like relationship</b></p>
+<table class="table" summary="AE/ACT/fork-like relationship">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                <span class="bold"><strong>Proposal</strong></span>
+              </p>
+              </th>
+<th>
+              <p>
+                <span class="bold"><strong>executor</strong></span>
+              </p>
+              </th>
+<th>
+              <p>
+                <span class="bold"><strong>fork-like</strong></span>
+              </p>
+              </th>
+<th>
+              <p>
+                <span class="bold"><strong>ACT handle</strong></span>
+              </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                Boost.Thread
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">thread</span></code> class
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">thread</span><span class="special">()</span></code>
+                constructor
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                Boost.ThreadPool
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">submit</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span></code>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                N2276
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">launch_in_thread</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">unique_future</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                N2276
+              </p>
+              </td>
+<td>
+              <p>
+                thread_pool
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">launch_in_pool</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">unique_future</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                N2185
+              </p>
+              </td>
+<td>
+              <p>
+                thread pool
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">fork</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">future</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                N1833
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">threader</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">thread</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">joiner</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+              </p>
+              </td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+          The asynchronous completion token models can follow two interfaces, the
+          thread interface and the future interface. Some asynchronous completion
+          tokens handle allow to recover the result of the evaluation of the function,
+          others allow to manage the underlying thread of execution.
+        </p>
+<p>
+          It seems natural to make a generic <span class="underline">_fork</span>_
+          function that will evaluate a function asynchronously with respect to the
+          calling thread and returns an ACT handle. The following meta-function associates
+          an ACT handle to an asynchronous executor.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">AE</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">asynchronous_completion_token</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">AE</span><span class="special">::</span><span class="keyword">template</span> <span class="identifier">handle</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+          The result of forking a nullary function by an asynchronous executor is
+          given by the metafunction result_of::fork&lt;AE,F&gt;
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">result_of</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">AE</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">F</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">__c_fork__</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">&lt;</span><span class="identifier">F</span><span class="special">()&gt;::</span><span class="identifier">type</span> <span class="identifier">result_type</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">asynchronous_completion_token</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span> <span class="identifier">result_type</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">type</span><span class="special">;</span>
+    <span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The default implementation of fork delegates on fork asynchronous executor
+          function.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">AE</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span> <span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">fork</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span> <span class="identifier">F</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">fork</span><span class="special">(</span> <span class="identifier">AE</span><span class="special">&amp;</span> <span class="identifier">ae</span><span class="special">,</span> <span class="identifier">F</span> <span class="identifier">fn</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">ae</span><span class="special">.</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">fn</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Forking n-ary functions rely on the nullary version and bind.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">AE</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">A1</span><span class="special">,</span> <span class="special">...,</span> <span class="keyword">typename</span> <span class="identifier">An</span> <span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">asynchronous_completion_token</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span>
+            <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">&lt;</span><span class="identifier">F</span><span class="special">(</span><span class="identifier">A1</span><span class="special">,...,</span> <span class="identifier">An</span><span class="special">)&gt;::</span><span class="identifier">type</span> <span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">fork</span><span class="special">(</span> <span class="identifier">AE</span><span class="special">&amp;</span> <span class="identifier">ae</span><span class="special">,</span> <span class="identifier">F</span> <span class="identifier">fn</span><span class="special">,</span> <span class="identifier">A1</span> <span class="identifier">a1</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">An</span> <span class="identifier">an</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">ae</span><span class="special">.</span><span class="identifier">fork</span><span class="special">(</span> <span class="identifier">bind</span><span class="special">(</span> <span class="identifier">fn</span><span class="special">,</span> <span class="identifier">a1</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">an</span> <span class="special">)</span> <span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+          We can define a basic_threader which just returns a new thread as follows:
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">basic_threader</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">handle</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">type</span><span class="special">;</span>
+    <span class="special">};</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">F</span><span class="special">&gt;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">fork</span><span class="special">(</span><span class="identifier">F</span> <span class="identifier">f</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">thread</span> <span class="identifier">th</span><span class="special">(</span><span class="identifier">f</span><span class="special">);</span>
+        <span class="keyword">return</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">th</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+          The library includes also a launcher class that creates a thread and returns
+          a unique_future when forking
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">launcher</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">handle</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="identifier">unique_future</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
+    <span class="special">};</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">F</span><span class="special">&gt;</span>
+    <span class="identifier">unique_future</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">&lt;</span><span class="identifier">F</span><span class="special">()&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
+    <span class="identifier">fork</span><span class="special">(</span><span class="identifier">F</span> <span class="identifier">f</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">&lt;</span><span class="identifier">F</span><span class="special">()&gt;::</span><span class="identifier">type</span> <span class="identifier">result_type</span><span class="special">;</span>
+        <span class="identifier">packaged_task</span><span class="special">&lt;</span><span class="identifier">result_type</span><span class="special">&gt;</span> <span class="identifier">tsk</span><span class="special">(</span><span class="identifier">f</span><span class="special">);</span>
+        <span class="identifier">unique_future</span><span class="special">&lt;</span><span class="identifier">result_type</span><span class="special">&gt;</span> <span class="identifier">res</span> <span class="special">=</span> <span class="identifier">tsk</span><span class="special">.</span><span class="identifier">get_future</span><span class="special">();</span>
+        <span class="identifier">thread</span> <span class="identifier">th</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">tsk</span><span class="special">));</span>
+        <span class="keyword">return</span> <span class="identifier">res</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+          and a shared_launcher class that creates a thread and returns a shared_future
+          when forking.
+        </p>
+<p>
+          Given the sequential example:
+        </p>
+<pre class="programlisting"><span class="keyword">double</span> <span class="identifier">f</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">n</span> <span class="special">)</span>
+<span class="special">{</span>
+    <span class="keyword">double</span> <span class="identifier">r</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+
+    <span class="keyword">for</span><span class="special">(</span> <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;=</span> <span class="identifier">n</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="keyword">double</span> <span class="identifier">x</span> <span class="special">=</span> <span class="number">1.0</span> <span class="special">/</span> <span class="identifier">i</span><span class="special">;</span>
+        <span class="identifier">r</span> <span class="special">+=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pow</span><span class="special">(</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">a</span> <span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="keyword">return</span> <span class="identifier">r</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="keyword">double</span> <span class="identifier">m1</span> <span class="special">=</span> <span class="identifier">f</span><span class="special">(</span> <span class="number">1.0</span><span class="special">,</span> <span class="number">1000000</span> <span class="special">);</span>
+    <span class="keyword">double</span> <span class="identifier">m2</span> <span class="special">=</span> <span class="identifier">f</span><span class="special">(</span> <span class="number">1.0</span><span class="special">,</span> <span class="number">5000000</span> <span class="special">);</span>
+    <span class="keyword">double</span> <span class="identifier">m3</span> <span class="special">=</span> <span class="identifier">f</span><span class="special">(</span> <span class="number">2.2</span><span class="special">,</span> <span class="number">1000000</span> <span class="special">);</span>
+    <span class="keyword">double</span> <span class="identifier">m4</span> <span class="special">=</span> <span class="identifier">f</span><span class="special">(</span> <span class="number">2.2</span><span class="special">,</span> <span class="number">5000000</span> <span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">m2</span> <span class="special">-</span> <span class="identifier">m1</span> <span class="special">+</span> <span class="identifier">m3</span> <span class="special">-</span> <span class="identifier">m4</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The library allows a programmer to switch to parallel execution as follows:
+        </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">launcher</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_future</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">fm1</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span> <span class="identifier">l</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="number">1.0</span><span class="special">,</span> <span class="number">1000000</span> <span class="special">);</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_future</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">fm2</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span> <span class="identifier">l</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="number">1.0</span><span class="special">,</span> <span class="number">5000000</span> <span class="special">);</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_future</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">fm3</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span> <span class="identifier">l</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="number">2.2</span><span class="special">,</span> <span class="number">1000000</span> <span class="special">);</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_future</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">fm4</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span> <span class="identifier">l</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="number">2.2</span><span class="special">,</span> <span class="number">5000000</span> <span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">fm2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">fm1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">fm3</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">fm4</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The question now is how we can adapt the example to an existing asynchronous
+          executor such as the Boost.ThreadPool library. We need to specialize the
+          template class asynchronous_completion_token to state which is the <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code> associate
+          to the <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span></code>.
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">async</span> <span class="special">{</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Channel</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">asynchronous_completion_token</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span><span class="identifier">Channel</span><span class="special">&gt;,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="special">}}</span>
+</pre>
+<p>
+          and also to specialize the fork function as the default one requires a
+          fork member function and <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span></code>
+          provides a <code class="computeroutput"><span class="identifier">submit</span><span class="special">()</span></code>
+          member function`
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">async</span> <span class="special">{</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Channel</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span> <span class="special">&gt;</span>
+<span class="identifier">result_of</span><span class="special">::</span><span class="identifier">fork</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span><span class="identifier">Channel</span><span class="special">&gt;,</span> <span class="identifier">F</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">fork</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span><span class="identifier">Channel</span><span class="special">&gt;,</span><span class="identifier">F</span><span class="special">&gt;(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span><span class="identifier">Channel</span><span class="special">&gt;&amp;</span> <span class="identifier">ae</span><span class="special">,</span> <span class="identifier">F</span> <span class="identifier">fn</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">ae</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span><span class="identifier">fn</span><span class="special">);</span>
+<span class="special">}</span>
+<span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Evidently these specializations must be done on the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">async</span></code>
+          namespace.
+        </p>
+<p>
+          As the preceding is ilegal in C++03 we need to use an auxiliary class to
+          define the default behaviour of the fork function
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">AE</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span> <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">fork</span> <span class="special">{</span>
+        <span class="keyword">static</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">fork</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span><span class="identifier">F</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">AE</span><span class="special">&amp;</span> <span class="identifier">ae</span><span class="special">,</span> <span class="identifier">F</span> <span class="identifier">fn</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">return</span> <span class="identifier">ae</span><span class="special">.</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">fn</span><span class="special">);</span>
+        <span class="special">}</span>
+    <span class="special">};</span>
+<span class="special">}</span>
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">AE</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span> <span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">fork</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span><span class="identifier">F</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">fork</span><span class="special">(</span> <span class="identifier">AE</span><span class="special">&amp;</span> <span class="identifier">ae</span><span class="special">,</span> <span class="identifier">F</span> <span class="identifier">fn</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">fork</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span><span class="identifier">F</span><span class="special">&gt;::</span><span class="identifier">apply</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span><span class="identifier">fn</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+          And specialize partially the partial_specialization_workaround::fork class
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">async</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
+        <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Channel</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span> <span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">fork</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span><span class="identifier">Channel</span><span class="special">&gt;,</span><span class="identifier">F</span><span class="special">&gt;</span> <span class="special">{</span>
+            <span class="keyword">static</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">fork</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span><span class="identifier">Channel</span><span class="special">&gt;,</span> <span class="identifier">F</span><span class="special">&gt;::</span><span class="identifier">type</span>
+            <span class="identifier">apply</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span><span class="identifier">Channel</span><span class="special">&gt;&amp;</span> <span class="identifier">ae</span><span class="special">,</span> <span class="identifier">F</span> <span class="identifier">fn</span> <span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">ae</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span><span class="identifier">fn</span><span class="special">);</span>
+            <span class="special">}</span>
+        <span class="special">};</span>
+    <span class="special">}</span>
+<span class="special">}}</span>
+</pre>
+<p>
+          Note that only the <span class="underline">_fork</span>_ function
+          needs to be specialized. The library provides the other overloadings.
+        </p>
+<p>
+          We can write the preceding main function in a more generic way
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">AE</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="keyword">do</span><span class="special">(</span><span class="identifier">AE</span><span class="special">&amp;</span> <span class="identifier">ae</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">fork</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span> <span class="keyword">int</span><span class="special">(*)(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">int</span><span class="special">)</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">auto_type</span><span class="special">;</span>
+    <span class="identifier">auto_type</span> <span class="identifier">fm1</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="number">1.0</span><span class="special">,</span> <span class="number">1000000</span> <span class="special">);</span>
+    <span class="identifier">auto_type</span> <span class="identifier">fm2</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="number">1.0</span><span class="special">,</span> <span class="number">5000000</span> <span class="special">);</span>
+    <span class="identifier">auto_type</span> <span class="identifier">fm3</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="number">2.2</span><span class="special">,</span> <span class="number">1000000</span> <span class="special">);</span>
+    <span class="identifier">auto_type</span> <span class="identifier">fm4</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="number">2.2</span><span class="special">,</span> <span class="number">5000000</span> <span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">fm2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">fm1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">fm3</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">fm4</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">launcher</span> <span class="identifier">ae</span><span class="special">;</span>
+    <span class="keyword">do</span><span class="special">(</span><span class="identifier">ae</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+          and we can switch from using the launcher or the tp::pool just by changing
+          one line
+        </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;&gt;</span> <span class="identifier">ae</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">poolsize</span><span class="special">(</span><span class="number">6</span><span class="special">))</span>
+    <span class="keyword">do</span><span class="special">(</span><span class="identifier">ae</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Instead of defining a type, the user can make use of BOOST_AUTO once the
+          associated files included on the threadpool sub-directory.
+        </p>
+<pre class="programlisting"><span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">fm1</span><span class="special">,</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="number">1.0</span><span class="special">,</span> <span class="number">1000000</span> <span class="special">));</span>
+</pre>
+<p>
+          As a extreme case the library provides a immediate executor which allows
+          to execute synchronously the function on the current thread. This can be
+          used for test purposes. Note that this executor can not be used when there
+          are dependencies between the children <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+          and the parent <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>.
+        </p>
+<p>
+          The library allows also to fork several functions at one time
+        </p>
+<pre class="programlisting"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">fork_all</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)()&gt;::</span><span class="identifier">type</span> <span class="identifier">handles</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork_all</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="identifier">g</span><span class="special">,</span> <span class="identifier">h</span><span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;(</span><span class="identifier">res</span><span class="special">).</span><span class="identifier">get</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;(</span><span class="identifier">res</span><span class="special">).</span><span class="identifier">get</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;(</span><span class="identifier">res</span><span class="special">).</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</pre>
+<p>
+          The result of the fork_all operation is a fusion tuple of asynchronous
+          completion token handles. The user can apply any fusion algorithm on this
+          tuple as for example
+        </p>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">fusion</span><span class="special">::</span><span class="identifier">none</span><span class="special">(</span><span class="identifier">handles</span><span class="special">,</span> <span class="identifier">fct</span><span class="special">::</span><span class="identifier">interruption_requested</span><span class="special">());</span>
+</pre>
+<p>
+          The asynchronous completion token models follows two interfaces, the thread
+          interface and the unique_/shared_future interface.
+        </p>
+<p>
+          To make common tasks easier the library provides some functors in the name
+          space fct: for the thread interface as
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            fct::join
+          </li>
+<li>
+            fct::join_until
+          </li>
+<li>
+            fct::join_for
+          </li>
+<li>
+            fct::detach
+          </li>
+<li>
+            fct::interrupt
+          </li>
+<li>
+            fct::interrupt_requested
+          </li>
+</ul></div>
+<p>
+          and for the future operations as
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            fct::get
+          </li>
+<li>
+            fct::wait
+          </li>
+<li>
+            fct::wait_until
+          </li>
+<li>
+            fct::wait_for
+          </li>
+<li>
+            fct::is_ready
+          </li>
+<li>
+            fct::has_value
+          </li>
+<li>
+            fct::has_exception
+          </li>
+</ul></div>
+<p>
+          Here is an example for get:
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">fct</span> <span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">get</span> <span class="special">{</span>
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">ACT</span><span class="special">&gt;</span>
+        <span class="keyword">typename</span> <span class="identifier">ACT</span><span class="special">::</span><span class="identifier">result_type</span> <span class="keyword">operator</span><span class="special">()(</span><span class="identifier">ACT</span><span class="special">&amp;</span> <span class="identifier">t</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+            <span class="keyword">return</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">get</span><span class="special">();</span>
+        <span class="special">}</span>
+    <span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<p>
+          In addition the library provides some non member functions that are the
+          result of applying these functors to the tuple using a fusion algorithm:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            join_all
+          </li>
+<li>
+            join_all_until
+          </li>
+<li>
+            join_all_for
+          </li>
+<li>
+            detach_all
+          </li>
+<li>
+            interrupt_all
+          </li>
+<li>
+            interrupt_requested_on_all
+          </li>
+<li>
+            get_all
+          </li>
+<li>
+            wait_all
+          </li>
+<li>
+            wait_all_until
+          </li>
+<li>
+            wait_all_for
+          </li>
+<li>
+            are_all_ready
+          </li>
+<li>
+            have_all_value
+          </li>
+<li>
+            have_all_exception
+          </li>
+</ul></div>
+<p>
+          Next follows how get_all is defined.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">MovableTuple</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">get_all</span><span class="special">&lt;</span><span class="identifier">Sequence</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">get_all</span><span class="special">(</span><span class="identifier">Sequence</span><span class="special">&amp;</span> <span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">fusion</span><span class="special">::</span><span class="identifier">transform</span><span class="special">(</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">fct</span><span class="special">::</span><span class="identifier">get</span><span class="special">());</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The library defines in a systematic way the result_of of a function as
+          a metafunction having the same name as the function on the namespace result_of,
+          as the Boost.Fusion library does.
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">result_of</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Sequence</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">get_all</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">fusion</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">transform</span><span class="special">&lt;</span><span class="identifier">Sequence</span><span class="special">,</span> <span class="identifier">fct</span><span class="special">::</span><span class="identifier">get</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">type</span>
+    <span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<p>
+          So the user can do the following
+        </p>
+<pre class="programlisting"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">fork_all</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)()&gt;::</span><span class="identifier">type</span> <span class="identifier">res</span> <span class="special">=</span> 
+    <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork_all</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="identifier">g</span><span class="special">,</span> <span class="identifier">h</span><span class="special">);</span>
+<span class="identifier">result_of</span><span class="special">::</span><span class="identifier">get_all</span><span class="special">&lt;</span><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">fork_all</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)()&gt;::</span><span class="identifier">type</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">values</span> <span class="special">=</span> 
+    <span class="identifier">basync</span><span class="special">::</span><span class="identifier">get_all</span><span class="special">(</span><span class="identifier">handles</span><span class="special">);</span>
+</pre>
+<p>
+          or using a typedef
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">fork_all</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)()&gt;::</span><span class="identifier">type</span> <span class="identifier">auto_type</span><span class="special">;</span>
+<span class="identifier">auto_type</span> <span class="identifier">handles</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork_all</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="identifier">g</span><span class="special">,</span> <span class="identifier">h</span><span class="special">);</span>
+<span class="identifier">result_of</span><span class="special">::</span><span class="identifier">get_all</span><span class="special">&lt;</span><span class="identifier">auto_type</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">values</span><span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">get_all</span><span class="special">(</span><span class="identifier">handles</span><span class="special">);</span>
+</pre>
+<p>
+          Note that the notation can be shortened by using the C++0x auto keyword.
+        </p>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">res</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork_all</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="identifier">g</span><span class="special">,</span> <span class="identifier">h</span><span class="special">);</span>
+<span class="keyword">auto</span> <span class="identifier">values</span> <span class="special">=</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">get_all</span><span class="special">(</span><span class="identifier">handles</span><span class="special">);</span>
+</pre>
+<p>
+          or using BOOST_AUTO
+        </p>
+<pre class="programlisting"><span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">res</span><span class="special">,</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">fork_all</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="identifier">g</span><span class="special">,</span> <span class="identifier">h</span><span class="special">));</span>
+<span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">values</span><span class="special">,</span> <span class="identifier">basync</span><span class="special">::</span><span class="identifier">get_all</span><span class="special">(</span><span class="identifier">handles</span><span class="special">));</span>
+</pre>
+<p>
+          Last but not least the library provides also some sugaring functions like
+          wait_for_all that forks and wait for the completion of all the functions.
+        </p>
+<pre class="programlisting"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">wait_for_all</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)()&gt;::</span><span class="identifier">type</span> <span class="identifier">res</span> <span class="special">=</span> 
+    <span class="identifier">basync</span><span class="special">::</span><span class="identifier">wait_for_all</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="identifier">g</span><span class="special">,</span> <span class="identifier">h</span><span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;(</span><span class="identifier">res</span><span class="special">)</span> <span class="special">-</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;(</span><span class="identifier">res</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;(</span><span class="identifier">res</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</pre>
+<p>
+          and wait_for_any, which works only with functions that return the same
+          type or are convertible to the same type, and return the index and the
+          value of any of the completed functions.
+        </p>
+<pre class="programlisting"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">wait_for_any</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)(),</span> <span class="keyword">int</span><span class="special">(*)()&gt;::</span><span class="identifier">type</span> <span class="identifier">res</span> <span class="special">=</span> 
+    <span class="identifier">basync</span><span class="special">::</span><span class="identifier">wait_for_any</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="identifier">g</span><span class="special">,</span> <span class="identifier">h</span><span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"function "</span> <span class="special">&lt;&lt;</span> <span class="identifier">res</span><span class="special">.</span><span class="identifier">first</span> 
+    <span class="special">&lt;&lt;</span> <span class="string">" finshed first with result="</span> <span class="special">&lt;&lt;</span> <span class="identifier">res</span><span class="special">.</span><span class="identifier">second</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</pre>
+<p>
+          The current implementation use the wait_for_any function so any AE must
+          provide a way to get a unique|shared_future from its <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>.
+        </p>
+<p>
+          The library defines a functor allowing the user to specialize it
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">AE</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">get_future</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">shared_future</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">typename</span> <span class="identifier">asynchronous_completion_token</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">)</span>
+    <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">act</span><span class="special">.</span><span class="identifier">get_future</span><span class="special">();</span> <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+          Resuming a simple way to define a new AsynchronousExecutor is to define
+          a class as
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">AsynchronousExecutor</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">handle</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="identifier">implementation</span><span class="special">-</span><span class="identifier">specific</span><span class="special">-</span><span class="identifier">type</span><span class="special">-</span><span class="identifier">modeling</span><span class="special">-</span><span class="identifier">a</span><span class="special">-</span><span class="identifier">ACT</span> <span class="identifier">type</span><span class="special">;</span>
+    <span class="special">};</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">F</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">handle</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">&lt;</span><span class="identifier">F</span><span class="special">()&gt;::</span><span class="identifier">type</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">fork</span><span class="special">(</span><span class="identifier">F</span> <span class="identifier">f</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_async.overview.motivation.threader_joiner"></a><a href="motivation.html#toward_boost_async.overview.motivation.threader_joiner" title="Threader/Joiner">Threader/Joiner</a>
+</h4></div></div></div>
+<p>
+          See the <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf" target="_top">N1833
+          - Preliminary Threading Library Proposal for TR2</a> where Kevlin Henney
+          introduces the concept of threader as an asynchronous executor and a function
+          thread that evaluates a function asynchronously and returns an asynchronous
+          completion token joiner, able to join but also to get the value of the
+          function result.
+        </p>
+<p>
+          The main specificity is that here we make a difference between unique_joiner
+          (move-only) and shared_joiner and as consequence unique_threader and shared_threader.
+        </p>
+<p>
+          The second specificity concerns the fact joiners can detach, terminate,
+          ... on destruction.
+        </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

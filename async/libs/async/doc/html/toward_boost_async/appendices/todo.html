@@ -1,0 +1,167 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Appendix G: Future
+      plans</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost Async">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="tickets.html" title=" Appendix F: Tickets">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tickets.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_async.appendices.todo"></a><a href="todo.html" title=" Appendix G: Future
+      plans"> Appendix G: Future
+      plans</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="todo.html#toward_boost_async.appendices.todo.tasks_to_do_before_review">Tasks
+        to do before review</a></span></dt>
+<dt><span class="section"><a href="todo.html#toward_boost_async.appendices.todo.for_later_releases">For
+        later releases</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_async.appendices.todo.tasks_to_do_before_review"></a><a href="todo.html#toward_boost_async.appendices.todo.tasks_to_do_before_review" title="Tasks
+        to do before review">Tasks
+        to do before review</a>
+</h4></div></div></div>
+<a name="toward_boost_async.appendices.todo.tasks_to_do_before_review.add_an_overloading_for_wait_for_all_in_sequence_ae__f__seq_"></a><h5>
+<a name="id4894972"></a>
+          <a href="todo.html#toward_boost_async.appendices.todo.tasks_to_do_before_review.add_an_overloading_for_wait_for_all_in_sequence_ae__f__seq_">Add
+          an overloading for wait_for_all_in_sequence(ae, f, seq)</a>
+        </h5>
+<p>
+          This will be quite useful on recursive algorithms evaluating asynchronously
+          the same function on different parts.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">DirectSolver</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Composer</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">AsynchronousExecutor</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Input</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">inplace_solve</span><span class="special">(</span><span class="identifier">AsynchronousExecutor</span><span class="special">&amp;</span> <span class="identifier">ae</span><span class="special">,</span> <span class="identifier">Problem</span><span class="special">&amp;</span> <span class="identifier">input</span><span class="special">)</span> <span class="special">{</span>
+  <span class="comment">//  if (problem is small)
+</span>    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">size</span><span class="special">(</span><span class="identifier">range</span><span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">concurrency_threshold</span><span class="special">)</span> <span class="special">{</span>
+    <span class="comment">// directly solve problem
+</span>        <span class="identifier">DirectSolver</span><span class="special">()(</span><span class="identifier">input</span><span class="special">);</span>
+    <span class="special">}</span> <span class="keyword">else</span> <span class="special">{</span>
+        <span class="comment">// split problem into independent parts
+</span>        <span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">partition</span><span class="special">,</span> <span class="identifier">partition_view</span><span class="special">(</span><span class="identifier">input</span><span class="special">));</span>
+        <span class="comment">// evaluates asynchronously inplace_solve on each element of the partition
+</span>        <span class="comment">// using the asynchronous executor as scheduler
+</span>        <span class="identifier">wait_for_all_in_sequence</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">inplace_solve</span><span class="special">,</span> <span class="identifier">partition</span><span class="special">);</span>
+        <span class="comment">// compose the result in place from subresults
+</span>        <span class="identifier">Composer</span><span class="special">()(</span><span class="identifier">partition</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<a name="toward_boost_async.appendices.todo.tasks_to_do_before_review.add_polymorphic_act_and_adapters"></a><h5>
+<a name="id4895384"></a>
+          <a href="todo.html#toward_boost_async.appendices.todo.tasks_to_do_before_review.add_polymorphic_act_and_adapters">Add
+          polymorphic act and adapters</a>
+        </h5>
+<p>
+          When we need to chain <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+          using the fork_after the nature of the <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+          can change over time, an why not change also its template parameter. So
+          at least we need to make polymorphic every function used by fork_after.
+        </p>
+<a name="toward_boost_async.appendices.todo.tasks_to_do_before_review.complete_the_tests"></a><h5>
+<a name="id4895438"></a>
+          <a href="todo.html#toward_boost_async.appendices.todo.tasks_to_do_before_review.complete_the_tests">Complete
+          the tests</a>
+        </h5>
+<p>
+          Even if the current release include some test there is yet a long way before
+          been able to review the library.
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            change the test so they take less time using locks; conditions and variables.
+          </li>
+<li>
+            Complete the test for the AE/ACT framework
+          </li>
+<li>
+            Add test with functions throwing
+          </li>
+</ul></div>
+<a name="toward_boost_async.appendices.todo.tasks_to_do_before_review.add_more_examples"></a><h5>
+<a name="id4895484"></a>
+          <a href="todo.html#toward_boost_async.appendices.todo.tasks_to_do_before_review.add_more_examples">Add
+          more examples</a>
+        </h5>
+<a name="toward_boost_async.appendices.todo.tasks_to_do_before_review.complete_the_reference"></a><h5>
+<a name="id4895509"></a>
+          <a href="todo.html#toward_boost_async.appendices.todo.tasks_to_do_before_review.complete_the_reference">Complete
+          the reference</a>
+        </h5>
+<div class="itemizedlist"><ul type="disc"><li>
+            ae/act framework
+          </li></ul></div>
+<a name="toward_boost_async.appendices.todo.tasks_to_do_before_review.change_the_rational_and_implementation_sections"></a><h5>
+<a name="id4895542"></a>
+          <a href="todo.html#toward_boost_async.appendices.todo.tasks_to_do_before_review.change_the_rational_and_implementation_sections">Change
+          the rational and implementation sections</a>
+        </h5>
+<a name="toward_boost_async.appendices.todo.tasks_to_do_before_review.use_boost_chrono"></a><h5>
+<a name="id4895567"></a>
+          <a href="todo.html#toward_boost_async.appendices.todo.tasks_to_do_before_review.use_boost_chrono">Use
+          Boost.Chrono</a>
+        </h5>
+<a name="toward_boost_async.appendices.todo.tasks_to_do_before_review.add_c__0x_move_semantics_on_compilers_supporting_it_and_use_the_boost_move_emulation_otherwise"></a><h5>
+<a name="id4895589"></a>
+          <a href="todo.html#toward_boost_async.appendices.todo.tasks_to_do_before_review.add_c__0x_move_semantics_on_compilers_supporting_it_and_use_the_boost_move_emulation_otherwise">Add
+          C++0x move semantics on compilers supporting it and use the Boost.Move
+          emulation otherwise</a>
+        </h5>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_async.appendices.todo.for_later_releases"></a><a href="todo.html#toward_boost_async.appendices.todo.for_later_releases" title="For
+        later releases">For
+        later releases</a>
+</h4></div></div></div>
+<a name="toward_boost_async.appendices.todo.for_later_releases.use_c__0x_variadic_templates_on_compilers_supporting_it_and_use_the_preprocessor_otherwise"></a><h5>
+<a name="id4895639"></a>
+          <a href="todo.html#toward_boost_async.appendices.todo.for_later_releases.use_c__0x_variadic_templates_on_compilers_supporting_it_and_use_the_preprocessor_otherwise">Use
+          C++0x variadic templates on compilers supporting it and use the preprocessor
+          otherwise</a>
+        </h5>
+<a name="toward_boost_async.appendices.todo.for_later_releases.use_c__0x_concepts_on_compilers_supporting_them_and_use_the_boost_conceptcheck_or_boost_concepttraits_otherwise"></a><h5>
+<a name="id4895670"></a>
+          <a href="todo.html#toward_boost_async.appendices.todo.for_later_releases.use_c__0x_concepts_on_compilers_supporting_them_and_use_the_boost_conceptcheck_or_boost_concepttraits_otherwise">Use
+          C++0x Concepts on compilers supporting them and use the Boost.ConceptCheck
+          or Boost.ConceptTraits otherwise</a>
+        </h5>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tickets.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,1875 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Concepts</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost Async">
+<link rel="up" href="../reference.html" title=" Reference">
+<link rel="prev" href="../reference.html" title=" Reference">
+<link rel="next" href="ae_act_framework_reference.html" title="AE/ACT
+      Framework Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../reference.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ae_act_framework_reference.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_async.reference.concepts"></a><a href="concepts.html" title="Concepts">Concepts</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts">Asynchronous
+        Completion Token Concepts</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT">
+          Concept <code class="computeroutput"><span class="identifier">ACT</span></code> </a></span></dt>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT">
+          Concept <code class="computeroutput"><span class="identifier">FutureBasedACT</span></code>
+          </a></span></dt>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT">
+          Concept <code class="computeroutput"><span class="identifier">ThreadBasedACT</span></code>
+          </a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts">Asynchronous
+        Executors Concepts</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_">Concept
+          <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code></a></span></dt>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_">Concept
+          <code class="computeroutput"><span class="identifier">IntrinsicAsynchronousExecutor</span></code></a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts"></a><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts" title="Asynchronous
+        Completion Token Concepts">Asynchronous
+        Completion Token Concepts</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT">
+          Concept <code class="computeroutput"><span class="identifier">ACT</span></code> </a></span></dt>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT">
+          Concept <code class="computeroutput"><span class="identifier">FutureBasedACT</span></code>
+          </a></span></dt>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT">
+          Concept <code class="computeroutput"><span class="identifier">ThreadBasedACT</span></code>
+          </a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT"></a><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT" title="
+          Concept ACT ">
+          Concept <code class="computeroutput"><span class="identifier">ACT</span></code> </a>
+</h5></div></div></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.description"></a><h6>
+<a name="id4820895"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.description">Description</a>
+          </h6>
+<p>
+            An <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+            allows to wait for the completion of an asynchronous executed operation.
+            An <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+            should be <code class="computeroutput"><span class="identifier">Movable</span></code> or
+            <code class="computeroutput"><span class="identifier">CopyConstructible</span></code>. The
+            completion of the <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+            is undefined at this level. Different models could signal this completion
+            when setting a value or an exception.
+          </p>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.notation"></a><h6>
+<a name="id4820970"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.notation">Notation</a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">act</span></code></span></dt>
+<dd><p>
+                An <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">f</span></code></span></dt>
+<dd><p>
+                A <code class="computeroutput"><span class="identifier">Nullary</span></code> function
+                with type F
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">abs_time</span></code></span></dt>
+<dd><p>
+                A <code class="computeroutput"><span class="identifier">system_time</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">rel_time</span></code></span></dt>
+<dd><p>
+                A <code class="computeroutput"><span class="identifier">DurationType</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">b</span></code></span></dt>
+<dd><p>
+                A bool
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.expression_requirements"></a><h6>
+<a name="id4821128"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.expression_requirements">Expression
+            requirements</a>
+          </h6>
+<p>
+            A type models a <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+            if, the following expressions are valid:
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Return type
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Runtime Complexity
+                  </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">wait</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    void
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">wait_until</span><span class="special">(</span><span class="identifier">act</span><span class="special">,</span>
+                    <span class="identifier">abs_time</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    bool
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">act</span><span class="special">,</span>
+                    <span class="identifier">rel_time</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    bool
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.meta_expressions"></a><h6>
+<a name="id4821375"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.meta_expressions">Meta
+            Expressions</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Type
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Compile Time Complexity
+                  </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><span class="identifier">ACT</span><span class="special">&gt;::</span><span class="identifier">move_dest_type</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Any
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><span class="identifier">ACT</span><span class="special">&gt;::</span><span class="identifier">move_result</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    MPL boolean
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">is_movable</span><span class="special">&lt;</span><span class="identifier">ACT</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    MPL boolean
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">has_future_if</span><span class="special">&lt;</span><span class="identifier">ACT</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    MPL boolean
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">has_thread_if</span><span class="special">&lt;</span><span class="identifier">ACT</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    MPL boolean
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.expression_semantics"></a><h6>
+<a name="id4821676"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Semantics
+                  </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">wait</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Blocks until the <code class="computeroutput"><span class="identifier">act</span></code>
+                    completes
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">wait_until</span><span class="special">(</span><span class="identifier">act</span><span class="special">,</span><span class="identifier">abs_time</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Blocks until the <code class="computeroutput"><span class="identifier">act</span></code>
+                    completes or <code class="computeroutput"><span class="identifier">abs_time</span></code>
+                    is reached
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">act</span><span class="special">,</span><span class="identifier">rel_time</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Blocks until the <code class="computeroutput"><span class="identifier">act</span></code>
+                    completes or <code class="computeroutput"><span class="identifier">rel_time</span></code>
+                    has been elapsed
+                  </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.expression__code__phrase_role__identifier__wait__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4821931"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.expression__code__phrase_role__identifier__wait__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">wait</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Blocks until the <code class="computeroutput"><span class="identifier">act</span></code>
+                completes.
+              </p></dd>
+<dt><span class="term">Synchronization:</span></dt>
+<dd><p>
+                The completion of <code class="computeroutput"><span class="identifier">act</span></code>
+                happens before wait() returns.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                the stored exception, if an exception was stored and not retrieved
+                before.
+              </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+                is_ready(act) == true.
+              </p></dd>
+<dt><span class="term">Thread safety:</span></dt>
+<dd><p>
+                unsafe
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.expression__code__phrase_role__identifier__b__phrase___phrase_role__special_____phrase___phrase_role__identifier__wait_until__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase__phrase_role__identifier__abs_time__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4822075"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.expression__code__phrase_role__identifier__b__phrase___phrase_role__special_____phrase___phrase_role__identifier__wait_until__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase__phrase_role__identifier__abs_time__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+            <span class="identifier">wait_until</span><span class="special">(</span><span class="identifier">act</span><span class="special">,</span><span class="identifier">abs_time</span><span class="special">)</span></code></a>
+          </h6>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">wait_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Blocks until the <code class="computeroutput"><span class="identifier">act</span></code>
+                completes or <code class="computeroutput"><span class="identifier">abs_time</span></code>
+                is not reached.
+              </p></dd>
+<dt><span class="term">Synchronization:</span></dt>
+<dd><p>
+                The completion of the <code class="computeroutput"><span class="identifier">act</span></code>
+                happens before wait() returns.
+              </p></dd>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                true only if the function returns because <code class="computeroutput"><span class="identifier">act</span></code>
+                is ready.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                the stored exception, if an exception was stored and not retrieved
+                before.
+              </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+                is_ready() == true.
+              </p></dd>
+<dt><span class="term">Thread safety:</span></dt>
+<dd><p>
+                unsafe
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.expression__code__phrase_role__identifier__b__phrase___phrase_role__special_____phrase___phrase_role__identifier__wait_for__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase__phrase_role__identifier__rel_time__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4822381"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.expression__code__phrase_role__identifier__b__phrase___phrase_role__special_____phrase___phrase_role__identifier__wait_for__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase__phrase_role__identifier__rel_time__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+            <span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">act</span><span class="special">,</span><span class="identifier">rel_time</span><span class="special">)</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                blocks until the <code class="computeroutput"><span class="identifier">act</span></code>
+                completes or <code class="computeroutput"><span class="identifier">rel_time</span></code>
+                has elapsed.
+              </p></dd>
+<dt><span class="term">Synchronization:</span></dt>
+<dd><p>
+                The completion of the <code class="computeroutput"><span class="identifier">act</span></code>
+                happens before wait() returns.
+              </p></dd>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                true only if the function returns because <code class="computeroutput"><span class="identifier">act</span></code>
+                is ready.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                the stored exception, if an exception was stored and not retrieved
+                before.
+              </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+                is_ready() == true.
+              </p></dd>
+<dt><span class="term">Thread safety:</span></dt>
+<dd><p>
+                unsafe
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.models"></a><h6>
+<a name="id4822582"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ACT.models">Models</a>
+          </h6>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">unique_future</span></code></li>
+<li><code class="computeroutput"><span class="identifier">shared_future</span></code></li>
+<li><code class="computeroutput"><span class="identifier">unique_joiner</span></code></li>
+<li><code class="computeroutput"><span class="identifier">shared_joiner</span></code></li>
+<li><code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code></li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT"></a><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT" title="
+          Concept FutureBasedACT
+          ">
+          Concept <code class="computeroutput"><span class="identifier">FutureBasedACT</span></code>
+          </a>
+</h5></div></div></div>
+<p>
+            The completion of the <code class="computeroutput"><span class="identifier">FutureBasedACT</span></code>
+            is undefined at this level but occurs usually after a set_value or set_exception
+            on the associated promise.
+          </p>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.description"></a><h6>
+<a name="id4822740"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.description">Description</a>
+          </h6>
+<p>
+            An <code class="computeroutput"><span class="identifier">FutureBasedACT</span></code> is
+            a <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+            that associates a value expected on the its completion.
+          </p>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.notation"></a><h6>
+<a name="id4822786"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.notation">Notation</a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">act</span></code></span></dt>
+<dd><p>
+                An <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">cact</span></code></span></dt>
+<dd><p>
+                An const <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">f</span></code></span></dt>
+<dd><p>
+                A <code class="computeroutput"><span class="identifier">Nullary</span></code> function
+                with type F
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">abs_time</span></code></span></dt>
+<dd><p>
+                A <code class="computeroutput"><span class="identifier">system_time</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">rel_time</span></code></span></dt>
+<dd><p>
+                A <code class="computeroutput"><span class="identifier">DurationType</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">b</span></code></span></dt>
+<dd><p>
+                A bool
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">v</span></code></span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><span class="identifier">typeof</span><span class="special">(</span><span class="identifier">act</span><span class="special">)&gt;::</span><span class="identifier">move_dest_type</span></code>
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression_requirements"></a><h6>
+<a name="id4823024"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression_requirements">Expression
+            requirements</a>
+          </h6>
+<p>
+            A type models an <code class="computeroutput"><span class="identifier">FutureBasedACT</span></code>
+            if, in addition to being an <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>,
+            the following expressions are valid:
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Return type
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Runtime Complexity
+                  </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">v</span> <span class="special">=</span>
+                    <span class="identifier">get</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><span class="identifier">typeof</span><span class="special">(</span><span class="identifier">act</span><span class="special">)&gt;::</span><span class="identifier">move_dest_type</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">is_ready</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    bool
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">has_exception</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    bool
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">has_value</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    bool
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression_semantics"></a><h6>
+<a name="id4823360"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Semantics
+                  </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">v</span> <span class="special">=</span>
+                    <span class="identifier">get</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Blocks until <code class="computeroutput"><span class="identifier">act</span></code>
+                    contains a value and returns the stored value
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">is_ready</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Is true only if <code class="computeroutput"><span class="identifier">cact</span></code>
+                    holds a value or an exception ready for retrieval.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">has_exception</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Is true only if <code class="computeroutput"><span class="identifier">cact</span></code>
+                    contains an exception.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">has_value</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Is true only if <code class="computeroutput"><span class="identifier">cact</span></code>
+                    contains a value
+                  </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression__code__phrase_role__identifier__v__phrase__phrase_role__special_____phrase__phrase_role__identifier__get__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4823648"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression__code__phrase_role__identifier__v__phrase__phrase_role__special_____phrase__phrase_role__identifier__get__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">v</span><span class="special">=</span><span class="identifier">get</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Retrieves the value returned by the Nullary function.
+              </p></dd>
+<dt><span class="term">Synchronization:</span></dt>
+<dd><p>
+                The completion of the <code class="computeroutput"><span class="identifier">act</span></code>
+                happens before get() returns.
+              </p></dd>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                Depending on the nature of the ACT returns a <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><span class="identifier">ACT</span><span class="special">&gt;::</span><span class="identifier">move_dest_type</span></code>.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                the stored exception, if an exception was stored and not retrieved
+                before.
+              </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+                if <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><span class="identifier">ACT</span><span class="special">&gt;::</span><span class="identifier">move_result</span></code> is <code class="computeroutput"><span class="keyword">true</span></code>
+                it is unspecified what happens when <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code> is called a second time on the
+                same shared_joiner.
+              </p></dd>
+<dt><span class="term">Thread safety:</span></dt>
+<dd><p>
+                unsafe
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression__code__phrase_role__identifier__b__phrase___phrase_role__special_____phrase___phrase_role__identifier__is_ready__phrase__phrase_role__special_____phrase__phrase_role__identifier__cact__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4823883"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression__code__phrase_role__identifier__b__phrase___phrase_role__special_____phrase___phrase_role__identifier__is_ready__phrase__phrase_role__special_____phrase__phrase_role__identifier__cact__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+            <span class="identifier">is_ready</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                true only if <code class="computeroutput"><span class="identifier">cact</span></code>
+                holds a value or an exception ready for retrieval.
+              </p></dd>
+<dt><span class="term">Remark:</span></dt>
+<dd><p>
+                if <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><span class="identifier">ACT</span><span class="special">&gt;::</span><span class="identifier">move_result</span></code> is true the return
+                value could be unspecified after a call to <code class="computeroutput"><span class="identifier">get</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code>.
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression__code__phrase_role__identifier__b__phrase___phrase_role__special_____phrase___phrase_role__identifier__has_exception__phrase__phrase_role__special_____phrase__phrase_role__identifier__cact__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4824041"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression__code__phrase_role__identifier__b__phrase___phrase_role__special_____phrase___phrase_role__identifier__has_exception__phrase__phrase_role__special_____phrase__phrase_role__identifier__cact__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+            <span class="identifier">has_exception</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                true only if <code class="computeroutput"><span class="identifier">is_ready</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code> == true and <code class="computeroutput"><span class="identifier">cact</span></code>
+                contains an exception.
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression__code__phrase_role__identifier__b__phrase___phrase_role__special_____phrase___phrase_role__identifier__has_value__phrase__phrase_role__special_____phrase__phrase_role__identifier__cact__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4824160"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.expression__code__phrase_role__identifier__b__phrase___phrase_role__special_____phrase___phrase_role__identifier__has_value__phrase__phrase_role__special_____phrase__phrase_role__identifier__cact__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+            <span class="identifier">has_value</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                true only if <code class="computeroutput"><span class="identifier">is_ready</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code> == true and <code class="computeroutput"><span class="identifier">cact</span></code>
+                contains a value.
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.models"></a><h6>
+<a name="id4824277"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.FutureBasedACT.models">Models</a>
+          </h6>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">unique_future</span></code></li>
+<li><code class="computeroutput"><span class="identifier">shared_future</span></code></li>
+<li><code class="computeroutput"><span class="identifier">unique_joiner</span></code></li>
+<li><code class="computeroutput"><span class="identifier">shared_joiner</span></code></li>
+<li><code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span></code></li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT"></a><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT" title="
+          Concept ThreadBasedACT
+          ">
+          Concept <code class="computeroutput"><span class="identifier">ThreadBasedACT</span></code>
+          </a>
+</h5></div></div></div>
+<p>
+            The completion of the <code class="computeroutput"><span class="identifier">ThreadBasedACT</span></code>
+            is undefined at this level but occurs usually after a function finish.
+          </p>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.description"></a><h6>
+<a name="id4824415"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.description">Description</a>
+          </h6>
+<p>
+            An <code class="computeroutput"><span class="identifier">ThreadBasedACT</span></code> is
+            a <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+            that provides a thread like interface.
+          </p>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.notation"></a><h6>
+<a name="id4824460"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.notation">Notation</a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">act</span></code></span></dt>
+<dd><p>
+                An <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">cact</span></code></span></dt>
+<dd><p>
+                A const <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">cact</span></code></span></dt>
+<dd><p>
+                An const <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">f</span></code></span></dt>
+<dd><p>
+                A <code class="computeroutput"><span class="identifier">Nullary</span></code> function
+                with type F
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">abs_time</span></code></span></dt>
+<dd><p>
+                A <code class="computeroutput"><span class="identifier">system_time</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">rel_time</span></code></span></dt>
+<dd><p>
+                A <code class="computeroutput"><span class="identifier">DurationType</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">b</span></code></span></dt>
+<dd><p>
+                A bool
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">id</span></code></span></dt>
+<dd><p>
+                An <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code><span class="special">&gt;::</span><span class="identifier">id_type</span></code>
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression_requirements"></a><h6>
+<a name="id4824721"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression_requirements">Expression
+            requirements</a>
+          </h6>
+<p>
+            A type models an <code class="computeroutput"><span class="identifier">FutureBasedACT</span></code>
+            if, in addition to being an <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>,
+            the following expressions are valid:
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Return type
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Runtime Complexity
+                  </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">joinable</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    bool
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">join</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    void
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">join_until</span><span class="special">(</span><span class="identifier">act</span><span class="special">,</span>
+                    <span class="identifier">abs_time</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    bool
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">join_for</span><span class="special">(</span><span class="identifier">act</span><span class="special">,</span>
+                    <span class="identifier">rel_time</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    bool
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">detach</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    void
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">interrupt</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    void
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">interruption_requested</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    bool
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">id</span> <span class="special">=</span>
+                    <span class="identifier">get_id</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code><span class="special">&gt;::</span><span class="identifier">id_type</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression_semantics"></a><h6>
+<a name="id4825270"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Semantics
+                  </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">joinable</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    true if <code class="computeroutput"><span class="identifier">cact</span></code>
+                    refers to a 'thread of execution', false otherwise
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">join</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    waits for the associated 'thread of execution' to complete
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">join_until</span><span class="special">(</span><span class="identifier">act</span><span class="special">,</span>
+                    <span class="identifier">abs_time</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    waits for the associated 'thread of execution' to complete or
+                    the time <code class="computeroutput"><span class="identifier">wait_until</span></code>
+                    has been reach.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">join_for</span><span class="special">(</span><span class="identifier">act</span><span class="special">,</span>
+                    <span class="identifier">rel_time</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    waits for the associated 'thread of execution' to complete or
+                    the specified duration <code class="computeroutput"><span class="identifier">rel_time</span></code>
+                    has elapsed
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">detach</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    the associated 'thread of execution' becomes detached, and no
+                    longer has an associated one
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">interrupt</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    request that the associated 'thread of execution' be interrupted
+                    the next time it enters one of the predefined interruption points
+                    with interruption enabled, or if it is currently blocked in a
+                    call to one of the predefined interruption points with interruption
+                    enabled
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">b</span> <span class="special">=</span>
+                    <span class="identifier">interruption_requested</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    true if interruption has been requested for the associated 'thread
+                    of execution', false otherwise.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">id</span> <span class="special">=</span>
+                    <span class="identifier">get_id</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    an instance of <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code><span class="special">&gt;::</span><span class="identifier">id_type</span></code>
+                    that represents the associated 'thread of execution'.
+                  </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__b__phrase__phrase_role__special_____phrase__phrase_role__identifier__joinable__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4825804"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__b__phrase__phrase_role__special_____phrase__phrase_role__identifier__joinable__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">b</span><span class="special">=</span><span class="identifier">joinable</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                true if <code class="computeroutput"><span class="identifier">act</span></code> refers
+                to a 'thread of execution', false otherwise
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__join__phrase__phrase_role__special______phrase___code_"></a><h6>
+<a name="id4825916"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__join__phrase__phrase_role__special______phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">join</span><span class="special">()</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="identifier">get_id</span><span class="special">(</span><span class="identifier">act</span><span class="special">)!=</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">async</span><span class="special">::</span><span class="identifier">get_current_id</span><span class="special">&lt;</span><span class="identifier">ACT</span><span class="special">&gt;()</span></code>
+              </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                If <code class="computeroutput"><span class="identifier">act</span></code> refers to
+                a thread of execution, waits for that 'thread of execution' to complete.
+              </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+                If <code class="computeroutput"><span class="identifier">act</span></code> refers to
+                a 'thread of execution' on entry, that 'thread of execution' has
+                completed. <code class="computeroutput"><span class="identifier">act</span></code> no
+                longer refers to any 'thread of execution'.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_interrupted</span></code> if the current
+                thread of execution is interrupted.
+              </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="identifier">join</span><span class="special">()</span></code>
+                is one of the predefined <span class="emphasis"><em>interruption points</em></span>.
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__b__phrase__phrase_role__special_____phrase__phrase_role__identifier__join_until__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special______phrase__phrase_role__identifier__b__phrase__phrase_role__special_____phrase__phrase_role__identifier__join_for__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4826171"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__b__phrase__phrase_role__special_____phrase__phrase_role__identifier__join_until__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special______phrase__phrase_role__identifier__b__phrase__phrase_role__special_____phrase__phrase_role__identifier__join_for__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">b</span><span class="special">=</span><span class="identifier">join_until</span><span class="special">(</span><span class="identifier">act</span><span class="special">)|</span><span class="identifier">b</span><span class="special">=</span><span class="identifier">join_for</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code></a>
+          </h6>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">join_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">wait_until</span><span class="special">);</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="identifier">join_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="identifier">get_id</span><span class="special">(</span><span class="identifier">act</span><span class="special">)!=</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">async</span><span class="special">::</span><span class="identifier">get_current_id</span><span class="special">&lt;</span><span class="identifier">ACT</span><span class="special">&gt;()</span></code>
+              </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                If <code class="computeroutput"><span class="identifier">act</span></code> refers to
+                a 'thread of execution', waits for that thread of execution to complete,
+                the time <code class="computeroutput"><span class="identifier">wait_until</span></code>
+                has been reach or the specified duration <code class="computeroutput"><span class="identifier">rel_time</span></code>
+                has elapsed. If <code class="computeroutput"><span class="identifier">act</span></code>
+                doesn't refer to a 'thread of execution', returns immediately.
+              </p></dd>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="keyword">true</span></code> if <code class="computeroutput"><span class="identifier">act</span></code> refers to a thread of execution
+                on entry, and that thread of execution has completed before the call
+                times out, <code class="computeroutput"><span class="keyword">false</span></code> otherwise.
+              </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+                If <code class="computeroutput"><span class="identifier">act</span></code> refers to
+                a thread of execution on entry, and <code class="computeroutput"><span class="identifier">timed_join</span></code>
+                returns <code class="computeroutput"><span class="keyword">true</span></code>, that thread
+                of execution has completed, and <code class="computeroutput"><span class="identifier">act</span></code>
+                no longer refers to any thread of execution. If this call to <code class="computeroutput"><span class="identifier">timed_join</span></code> returns <code class="computeroutput"><span class="keyword">false</span></code>, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is unchanged.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_interrupted</span></code> if the current
+                thread of execution is interrupted.
+              </p></dd>
+<dt><span class="term">Notes:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="identifier">join_until</span><span class="special">()</span></code>
+                is one of the predefined <span class="emphasis"><em>interruption points</em></span>.
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__detach__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4826739"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__detach__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">detach</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                If <code class="computeroutput"><span class="identifier">act</span></code> refers to
+                a 'thread of execution', that 'thread of execution' becomes detached,
+                and no longer has an associated thread object.
+              </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="identifier">act</span></code> no longer refers
+                to any 'thread of execution'.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__get_id__phrase__phrase_role__special_____phrase__phrase_role__identifier__cact__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4758264"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__get_id__phrase__phrase_role__special_____phrase__phrase_role__identifier__cact__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">get_id</span><span class="special">(</span><span class="identifier">cact</span><span class="special">)</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                If <code class="computeroutput"><span class="identifier">act</span></code> refers to
+                a 'thread of execution', an instance of <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code><span class="special">&gt;::</span><span class="identifier">id_type</span></code>
+                that represents that <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>.
+                Otherwise returns a default-constructed <code class="computeroutput"><span class="identifier">act_traits</span><span class="special">&lt;</span><code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code><span class="special">&gt;::</span><span class="identifier">id_type</span></code>.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__interrupt__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4827181"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__interrupt__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">interrupt</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                If <code class="computeroutput"><span class="identifier">act</span></code> refers to
+                a 'thread of execution', request that the 'thread of execution' will
+                be interrupted the next time it enters one of the predefined <span class="emphasis"><em>interruption
+                points</em></span> with interruption enabled, or if it is currently
+                <span class="emphasis"><em>blocked</em></span> in a call to one of the predefined
+                <span class="emphasis"><em>interruption points</em></span> with interruption enabled
+                .
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__h__phrase___phrase_role__special_____phrase___phrase_role__identifier__native_handle__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id4827299"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.expression__code__phrase_role__identifier__h__phrase___phrase_role__special_____phrase___phrase_role__identifier__native_handle__phrase__phrase_role__special_____phrase__phrase_role__identifier__act__phrase__phrase_role__special_____phrase___code_">Expression
+            <code class="computeroutput"><span class="identifier">h</span> <span class="special">=</span>
+            <span class="identifier">native_handle</span><span class="special">(</span><span class="identifier">act</span><span class="special">)</span></code></a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Returns an instance of <code class="computeroutput"><span class="identifier">native_handle_type</span></code>
+                that can be used with platform-specific APIs to manipulate the underlying
+                implementation. If no such instance exists, <code class="computeroutput"><span class="identifier">native_handle</span><span class="special">()</span></code> and <code class="computeroutput"><span class="identifier">native_handle_type</span></code>
+                are not present.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing.
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.models"></a><h6>
+<a name="id4827446"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_completion_token_concepts.ThreadBasedACT.models">Models</a>
+          </h6>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">unique_joiner</span></code></li>
+<li><code class="computeroutput"><span class="identifier">shared_joiner</span></code></li>
+<li><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code></li>
+<li><code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span></code></li>
+</ul></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts"></a><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts" title="Asynchronous
+        Executors Concepts">Asynchronous
+        Executors Concepts</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_">Concept
+          <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code></a></span></dt>
+<dt><span class="section"><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_">Concept
+          <code class="computeroutput"><span class="identifier">IntrinsicAsynchronousExecutor</span></code></a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_"></a><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_" title="Concept
+          AsynchronousExecutor">Concept
+          <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code></a>
+</h5></div></div></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.description"></a><h6>
+<a name="id4827599"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.description">Description</a>
+          </h6>
+<p>
+            An <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+            executes asynchronously a function and returns an <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+            when calling the fork function on it.
+          </p>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.notation"></a><h6>
+<a name="id4827652"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.notation">Notation</a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">ae</span></code></span></dt>
+<dd><p>
+                An <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">f</span></code></span></dt>
+<dd><p>
+                A <code class="computeroutput"><span class="identifier">Nullary</span></code> function
+                with type F
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">act</span></code></span></dt>
+<dd><p>
+                An <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.expression_requirements"></a><h6>
+<a name="id4827774"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.expression_requirements">Expression
+            requirements</a>
+          </h6>
+<p>
+            A type models a <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+            if, the following expressions are valid:
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Return type
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Runtime Complexity
+                  </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">__fork__</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span>
+                    <span class="identifier">f</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">get_future</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">&gt;()(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    inherits from <code class="computeroutput"><span class="identifier">unique_future</span><span class="special">|</span><span class="identifier">shared_future</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">asynchronous_completion_token</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Model of <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+                    satisfying <code class="computeroutput"><span class="identifier">__act_value</span><span class="special">&lt;</span><span class="identifier">ACT</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                    is <code class="computeroutput"><span class="identifier">T</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.expression_semantics"></a><h6>
+<a name="id4828109"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Semantics
+                  </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">act</span> <span class="special">=</span>
+                    <span class="identifier">__fork__</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span>
+                    <span class="identifier">f</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    request <code class="computeroutput"><span class="identifier">ae</span></code> to
+                    execute asynchronously the function <code class="computeroutput"><span class="identifier">f</span></code>and
+                    returns an <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">get_future</span><span class="special">&lt;</span><span class="identifier">AE</span><span class="special">&gt;()(</span><span class="identifier">act</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    gets a reference to a inherits from <code class="computeroutput"><span class="identifier">unique_future</span><span class="special">|</span><span class="identifier">shared_future</span></code>
+                  </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.constraints"></a><h6>
+<a name="id4828335"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.constraints">Constraints</a>
+          </h6>
+<p>
+            The following constraints applies:
+          </p>
+<div class="itemizedlist"><ul type="disc"><li><code class="computeroutput"><span class="identifier">act_value</span><span class="special">&lt;</span><code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code><span class="special">&gt;::</span><span class="identifier">type</span>
+              <span class="special">==</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">&lt;</span><span class="identifier">F</span><span class="special">()::</span><span class="identifier">type</span><span class="special">&gt;</span></code></li></ul></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.models"></a><h6>
+<a name="id4828447"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__asynchronousexecutor_.models">Models</a>
+          </h6>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">basic_threader</span></code></li>
+<li><code class="computeroutput"><span class="identifier">unique_threader</span></code></li>
+<li><code class="computeroutput"><span class="identifier">shared_threader</span></code></li>
+<li><code class="computeroutput"><span class="identifier">launcher</span></code></li>
+<li><code class="computeroutput"><span class="identifier">shared_launcher</span></code></li>
+<li><code class="computeroutput"><span class="identifier">scheduler</span></code></li>
+<li><code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span></code></li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_"></a><a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_" title="Concept
+          IntrinsicAsynchronousExecutor">Concept
+          <code class="computeroutput"><span class="identifier">IntrinsicAsynchronousExecutor</span></code></a>
+</h5></div></div></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.description"></a><h6>
+<a name="id4828610"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.description">Description</a>
+          </h6>
+<p>
+            The default fork implementation put some requirements in its <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code> parameter. This
+            concept is related to this. An <code class="computeroutput"><span class="identifier">IntrinsicAsynchronousExecutor</span></code>
+            is <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+            that works well with the default implementation of <span class="underline">_fork</span>_.
+          </p>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.notation"></a><h6>
+<a name="id4828681"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.notation">Notation</a>
+          </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">ae</span></code></span></dt>
+<dd><p>
+                An <code class="computeroutput"><span class="identifier">IntrinsicAsynchronousExecutor</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">f</span></code></span></dt>
+<dd><p>
+                A <code class="computeroutput"><span class="identifier">Nullary</span></code> function
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.expression_requirements"></a><h6>
+<a name="id4828775"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.expression_requirements">Expression
+            requirements</a>
+          </h6>
+<p>
+            A type models an <code class="computeroutput"><span class="identifier">IntrinsicAsynchronousExecutor</span></code>
+            if, in addition to being an <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>,
+            the following expressions are valid:
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Return type
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Runtime Complexity
+                  </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">ae</span><span class="special">.</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">handle</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">&lt;</span><span class="identifier">F</span><span class="special">()&gt;::</span><span class="identifier">type</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.meta_expressions"></a><h6>
+<a name="id4828972"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.meta_expressions">Meta
+            Expressions</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Model Of
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Compile Time Complexity
+                  </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">handle</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">&lt;</span><span class="identifier">F</span><span class="special">()&gt;::</span><span class="identifier">type</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Constant
+                  </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.expression_semantics"></a><h6>
+<a name="id4829118"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Semantics
+                  </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">ae</span><span class="special">.</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    executes asynchronously the function <code class="computeroutput"><span class="identifier">f</span></code>
+                    and returns a <code class="computeroutput"><span class="identifier">handle</span></code>
+                  </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<a name="toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.models"></a><h6>
+<a name="id4829249"></a>
+            <a href="concepts.html#toward_boost_async.reference.concepts.asynchronous_executors_concepts.concept__intrinsicasynchronousexecutor_.models">Models</a>
+          </h6>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">basic_threader</span></code></li>
+<li><code class="computeroutput"><span class="identifier">unique_threader</span></code></li>
+<li><code class="computeroutput"><span class="identifier">shared_threader</span></code></li>
+<li><code class="computeroutput"><span class="identifier">launcher</span></code></li>
+<li><code class="computeroutput"><span class="identifier">shared_launcher</span></code></li>
+<li><code class="computeroutput"><span class="identifier">scheduler</span></code></li>
+</ul></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../reference.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ae_act_framework_reference.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

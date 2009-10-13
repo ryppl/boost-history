@@ -1,0 +1,151 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Appendix A: History</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost Async">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="../appendices.html" title="Appendices">
+<link rel="next" href="rationale.html" title=" Appendix B:
+      Rationale">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../appendices.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_async.appendices.changes"></a><a href="changes.html" title=" Appendix A: History"> Appendix A: History</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="changes.html#toward_boost_async.appendices.changes.__version_0_2__may_07__2009__adding_immediate_asynchronous_executor___adaptation_to_boost_1_39"><span class="bold"><strong>Version 0.2, May 07, 2009</strong></span> Adding immediate asynchronous
+        executor + Adaptation to Boost 1.39</a></span></dt>
+<dt><span class="section"><a href="changes.html#toward_boost_async.appendices.changes.__version_0_1__april_29__2009__extraction_of_the_ae_act_frameworks_from_boost_async"><span class="bold"><strong>Version 0.1, April 29, 2009</strong></span> Extraction of the AE/ACT
+        frameworks from Boost.Async</a></span></dt>
+<dt><span class="section"><a href="changes.html#toward_boost_async.appendices.changes.__bugs_"><span class="bold"><strong>Bugs</strong></span></a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_async.appendices.changes.__version_0_2__may_07__2009__adding_immediate_asynchronous_executor___adaptation_to_boost_1_39"></a><a href="changes.html#toward_boost_async.appendices.changes.__version_0_2__may_07__2009__adding_immediate_asynchronous_executor___adaptation_to_boost_1_39" title="Version 0.2, May 07, 2009 Adding immediate asynchronous
+        executor + Adaptation to Boost 1.39"><span class="bold"><strong>Version 0.2, May 07, 2009</strong></span> Adding immediate asynchronous
+        executor + Adaptation to Boost 1.39</a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Features:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            Immediate asynchronous executor
+          </li></ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_async.appendices.changes.__version_0_1__april_29__2009__extraction_of_the_ae_act_frameworks_from_boost_async"></a><a href="changes.html#toward_boost_async.appendices.changes.__version_0_1__april_29__2009__extraction_of_the_ae_act_frameworks_from_boost_async" title="Version 0.1, April 29, 2009 Extraction of the AE/ACT
+        frameworks from Boost.Async"><span class="bold"><strong>Version 0.1, April 29, 2009</strong></span> Extraction of the AE/ACT
+        frameworks from Boost.Async</a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Features:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            An asynchronous execution framework working with <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+            and <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>.
+            It includes some generic functions and several <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+            and <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>:
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                fork and fork_all to execute asynchronously functions
+              </li>
+<li>
+                fork_after: request an <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+                to execute a function asynchronously once each one of <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code> in
+                the dependency tuple parameter are ready. It is similar to the async_with_dependencies
+                proposed Peter Dimov.
+              </li>
+<li>
+                generic get, join, ... free functions to synchronize on an <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+</li>
+<li>
+                generic get_all, join_all, ... free functions to synchronize on multiple
+                <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+</li>
+<li>
+                generic wait_for_all, wait_for_any to execute asynchronously functions
+                and wait for the completion of all or any of them.
+              </li>
+</ul></div>
+</li>
+<li>
+            Some <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+            and <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+            models
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                basic_threader: can be seen as a thread factory executing asynchronously
+                a function on the returned thread.
+              </li>
+<li>
+                launchers: Launchers can be seen as a future factory executing asynchronously
+                a function on a hidden thread.
+              </li>
+<li>
+                threader/joiner: A Threader runs a unary function in its own thread.
+                A Threader can be seen as a Joiner factory executing asynchronously
+                a function on a thread encapsulated on the returned Joiner. The joiner
+                is used to synchronize with and pick up the result from a function
+                or to manage the encapsulated thread.
+              </li>
+<li>
+<code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span></code> and <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span></code>
+                customization as an <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+                and an <code class="computeroutput"><span class="identifier">AsynchronousCompletionToken</span></code>
+                respectively. <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span></code>
+                can be seen as a <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span></code>
+                factory executing asynchronously a function on a pool of threads.
+              </li>
+<li>
+                a generic asynchronous_executor_decorator which allows to decorate
+                the function to be evaluated asynchronously.
+              </li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_async.appendices.changes.__bugs_"></a><a href="changes.html#toward_boost_async.appendices.changes.__bugs_" title="Bugs"><span class="bold"><strong>Bugs</strong></span></a>
+</h4></div></div></div>
+<a name="toward_boost_async.appendices.changes.__bugs_._emphasis_role__bold__open_bugs___emphasis_"></a><h5>
+<a name="id4892622"></a>
+          <a href="changes.html#toward_boost_async.appendices.changes.__bugs_._emphasis_role__bold__open_bugs___emphasis_"><span class="bold"><strong>Open Bugs:</strong></span></a>
+        </h5>
+<a name="toward_boost_async.appendices.changes.__bugs_._emphasis_role__bold__fixed_bugs___emphasis_"></a><h5>
+<a name="id4892649"></a>
+          <a href="changes.html#toward_boost_async.appendices.changes.__bugs_._emphasis_role__bold__fixed_bugs___emphasis_"><span class="bold"><strong>Fixed Bugs:</strong></span></a>
+        </h5>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../appendices.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
