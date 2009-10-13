@@ -10,6 +10,7 @@
 
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
+#include <boost/thread.hpp>
 
 #include "boost/task/exceptions.hpp"
 #include "boost/task/utility.hpp"
@@ -41,7 +42,11 @@ semaphore::wait()
 	if ( this_task::runs_in_pool() )
 	{
 		while ( ! try_wait() )
+		{
+			this_thread::interruption_point();
 			this_task::block();
+			this_thread::interruption_point();
+		}
 	}
 	else
 	{

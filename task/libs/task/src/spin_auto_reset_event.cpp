@@ -33,10 +33,13 @@ spin_auto_reset_event::wait()
 			& state_, & expected,
 			static_cast< uint32_t >( RESET) ) )
 	{
+		this_thread::interruption_point();
 		if ( this_task::runs_in_pool() )
 			this_task::block();
 		else
-			this_thread::yield();	
+			this_thread::yield();
+		this_thread::interruption_point();
+		expected = static_cast< uint32_t >( SET);
 	}
 }
 
@@ -50,12 +53,15 @@ spin_auto_reset_event::wait( system_time const& abs_time)
 			& state_, & expected,
 			static_cast< uint32_t >( RESET) ) )
 	{
+		this_thread::interruption_point();
 		if ( this_task::runs_in_pool() )
 			this_task::block();
 		else
 			this_thread::yield();	
+		this_thread::interruption_point();
 	
 		if ( get_system_time() >= abs_time) return false;
+		expected = static_cast< uint32_t >( SET);
 	}
 
 	return true;

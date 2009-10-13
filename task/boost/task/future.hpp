@@ -7,6 +7,7 @@
 #ifndef BOOST_FUTURE_HPP
 #define BOOST_FUTURE_HPP
 #include <stdexcept>
+#include <vector>
 #include <boost/exception.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/detail/move.hpp>

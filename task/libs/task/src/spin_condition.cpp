@@ -32,10 +32,12 @@ spin_condition::notify_( uint32_t cmd)
 	while ( ! detail::atomic_compare_exchange_strong(
 				& cmd_, & expected, cmd) )
 	{
+		this_thread::interruption_point();
 		if ( this_task::runs_in_pool() )
 			this_task::block();
 		else
 			this_thread::yield();	
+		this_thread::interruption_point();
 	}
 }
 
@@ -54,10 +56,12 @@ spin_condition::wait_( spin_mutex & mtx)
 	{
 		while ( static_cast< uint32_t >( SLEEPING) == detail::atomic_load( & cmd_) )
 		{
+			this_thread::interruption_point();
 			if ( this_task::runs_in_pool() )
 				this_task::block();
 			else
 				this_thread::yield();	
+			this_thread::interruption_point();
 		}
 
 		spin_lock< spin_mutex > lk( check_mtx_);
@@ -112,10 +116,12 @@ spin_condition::wait_( spin_mutex & mtx, system_time const& abs_time)
 	{
 		while ( static_cast< uint32_t >( SLEEPING) == detail::atomic_load( & cmd_) )
 		{
+			this_thread::interruption_point();
 			if ( this_task::runs_in_pool() )
 				this_task::block();
 			else
 				this_thread::yield();	
+			this_thread::interruption_point();
 
 			if ( get_system_time() >= abs_time)
 			{

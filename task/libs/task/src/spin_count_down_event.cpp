@@ -52,10 +52,12 @@ spin_count_down_event::wait()
 {
 	while ( 0 != detail::atomic_load( & current_) )
 	{
+		this_thread::interruption_point();
 		if ( this_task::runs_in_pool() )
 			this_task::block();
 		else
 			this_thread::yield();	
+		this_thread::interruption_point();
 	}
 }
 
@@ -66,10 +68,12 @@ spin_count_down_event::wait( system_time const& abs_time)
 
 	while ( 0 < detail::atomic_load( & current_) )
 	{
+		this_thread::interruption_point();
 		if ( this_task::runs_in_pool() )
 			this_task::block();
 		else
 			this_thread::yield();
+		this_thread::interruption_point();
 
 		if ( get_system_time() >= abs_time) return false;
 	}

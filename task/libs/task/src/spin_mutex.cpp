@@ -28,10 +28,12 @@ spin_mutex::lock()
 			break;
 		else
 		{
+			this_thread::interruption_point();
 			if ( this_task::runs_in_pool() )
 				this_task::block();
 			else
 				this_thread::yield();	
+			this_thread::interruption_point();
 		}	
 	}
 }
@@ -48,8 +50,8 @@ spin_mutex::timed_lock( system_time const& abs_time)
 {
 	if ( abs_time.is_infinity() )
 	{
-			lock();
-			return true;
+		lock();
+		return true;
 	}
 
 	if ( get_system_time() >= abs_time)
@@ -62,10 +64,12 @@ spin_mutex::timed_lock( system_time const& abs_time)
 		if ( get_system_time() >= abs_time)
 			return false;
 
+		this_thread::interruption_point();
 		if ( this_task::runs_in_pool() )
 			this_task::block();
 		else
 			this_thread::yield();	
+		this_thread::interruption_point();
 	}
 
 	return true;

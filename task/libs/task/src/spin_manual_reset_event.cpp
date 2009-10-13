@@ -60,10 +60,12 @@ spin_manual_reset_event::wait()
 
 	while ( static_cast< uint32_t >( RESET) == detail::atomic_load( & state_) )
 	{
+		this_thread::interruption_point();
 		if ( this_task::runs_in_pool() )
 			this_task::block();
 		else
 			this_thread::yield();	
+		this_thread::interruption_point();
 	}
 
 	if ( 1 == detail::atomic_fetch_sub( & waiters_, 1) )
@@ -77,10 +79,12 @@ spin_manual_reset_event::wait( system_time const& abs_time)
 
 	while ( static_cast< uint32_t >( RESET) == detail::atomic_load( & state_) )
 	{
+		this_thread::interruption_point();
 		if ( this_task::runs_in_pool() )
 			this_task::block();
 		else
 			this_thread::yield();	
+		this_thread::interruption_point();
 	
 		if ( get_system_time() >= abs_time) return false;
 	}
