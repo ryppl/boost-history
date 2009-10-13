@@ -21,15 +21,13 @@ import testing ;
 
 project
     : requirements
-#       <library>/boost/test//boost_unit_test_framework/<link>static
-#       <library>/boost/thread//boost_thread/<link>static
-        <library>/boost_1_39_0/libs/test/build//boost_unit_test_framework/<link>static
-        <library>/boost_1_39_0/libs/thread/build//boost_thread/<link>static
+        <library>/boost/test///boost_unit_test_framework/<link>static
+        <library>/boost/thread//boost_thread/<link>static
         <library>../../tp/build//boost_threadpool/<link>static
 
         <include>.
         <include>../../..
-        <include>/boost_1_39_0
+        <include>$(BOOST_ROOT)
         <threading>multi
 #       <target-os>cygwin
 #       <interthreadapi>pthread
