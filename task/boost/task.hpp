@@ -29,9 +29,9 @@
 #include <boost/task/spin_auto_reset_event.hpp>
 #include <boost/task/spin_condition.hpp>
 #include <boost/task/spin_count_down_event.hpp>
-#include <boost/task/spin_lock.hpp>
 #include <boost/task/spin_manual_reset_event.hpp>
 #include <boost/task/spin_mutex.hpp>
+#include <boost/task/spin_unique_lock.hpp>
 #include <boost/task/stacksize.hpp>
 #include <boost/task/static_pool.hpp>
 #include <boost/task/task.hpp>

@@ -6,11 +6,12 @@
 //
 //  based on boost::interprocess::sync::scoped_lock
 
-#ifndef BOOST_TASK_SPIN_LOCK_H
-#define BOOST_TASK_SPIN_LOCK_H
+#ifndef BOOST_TASK_SPIN_UNIQUE_LOCK_H
+#define BOOST_TASK_SPIN_UNIQUE_LOCK_H
 
 #include <algorithm>
 
+#include <boost/thread/locks.hpp>
 #include <boost/thread/thread_time.hpp>
 
 #include <boost/task/exceptions.hpp>
@@ -19,36 +20,59 @@ namespace boost {
 namespace task {
 
 template< typename Mutex >
-class spin_lock
+class spin_unique_lock
 {
 private:
-	typedef spin_lock< Mutex >		lock_t;
-	typedef bool spin_lock::*unspecified_bool_type;
+	typedef spin_unique_lock< Mutex >		lock_t;
+	typedef bool spin_unique_lock::*unspecified_bool_type;
 
 	Mutex	*	mtx_; 
 	bool        locked_;
 
-	spin_lock( spin_lock &);
-	spin_lock & operator=( spin_lock &);
+	spin_unique_lock( spin_unique_lock &);
+	spin_unique_lock & operator=( spin_unique_lock &);
 
 public:
-	explicit spin_lock( Mutex & mtx)
-	: mtx_( & mtx), locked_( false)
+	spin_unique_lock() :
+		mtx_( 0),
+	   	locked_( false)
+	{}
+
+	explicit spin_unique_lock( Mutex & mtx) :
+		mtx_( & mtx),
+		locked_( false)
 	{
 		mtx_->lock();
 		locked_ = true;
 	}
 
-	spin_lock( Mutex & mtx, system_time const& abs_time)
-	: mtx_( & mtx), locked_( mtx_->timed_lock( abs_time) )
+	spin_unique_lock( Mutex & mtx, adopt_lock_t) :
+		mtx_( & mtx),
+		locked_( true)
+	{}
+
+	spin_unique_lock( Mutex & mtx, defer_lock_t) :
+		mtx_( & mtx),
+		locked_( false)
+	{}
+
+	spin_unique_lock( Mutex & mtx, try_to_lock_t) :
+		mtx_( & mtx),
+		locked_( mtx_->try_lock() )
+	{}
+
+	spin_unique_lock( Mutex & mtx, system_time const& abs_time) :
+		mtx_( & mtx),
+		locked_( mtx_->timed_lock( abs_time) )
 	{}
 
 	template< typename TimeDuration >
-	spin_lock( Mutex & mtx, TimeDuration const& rel_time)
-	: mtx_( & mtx), locked_( mtx_->timed_lock( rel_time) )
+	spin_unique_lock( Mutex & mtx, TimeDuration const& rel_time) :
+		mtx_( & mtx),
+		locked_( mtx_->timed_lock( rel_time) )
 	{}
 
-	~spin_lock()
+	~spin_unique_lock()
 	{
 		try
 		{ if ( locked_ && mtx_) mtx_->unlock(); }
@@ -91,7 +115,7 @@ public:
 		locked_ = false;
 	}
 
-	bool owns() const
+	bool owns_lock() const
 	{ return locked_ && mtx_; }
 
 	operator unspecified_bool_type() const
@@ -103,7 +127,15 @@ public:
 	Mutex * mutex() const
 	{ return mtx_; }
 
-	void swap( spin_lock & other)
+	Mutex * release()
+	{
+		Mutex * mtx = mtx_;
+		mtx_ = 0;
+		locked_ = false;
+		return mtx;
+	}
+
+	void swap( spin_unique_lock & other)
 	{
 		std::swap( mtx_, other.mtx_);
 		std::swap( locked_, other.locked_);
@@ -112,4 +144,4 @@ public:
 
 }}
 
-#endif // BOOST_TASK_SPIN_LOCK_H
+#endif // BOOST_TASK_SPIN_UNIQUE_LOCK_H

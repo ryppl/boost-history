@@ -71,7 +71,7 @@ public:
 	{
 		if ( abs_time.is_infinity() )
 		{
-			wait_( lk);
+			wait( lk);
 			return true;
 		}
 
@@ -88,7 +88,7 @@ public:
 	{
 		if ( abs_time.is_infinity() )
 		{
-			wait_( lk, pred);
+			wait( lk, pred);
 			return true;
 		}
 

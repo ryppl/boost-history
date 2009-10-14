@@ -19,7 +19,7 @@
 #include <boost/task/exceptions.hpp>
 #include <boost/task/semaphore.hpp>
 #include <boost/task/spin_condition.hpp>
-#include <boost/task/spin_lock.hpp>
+#include <boost/task/spin_unique_lock.hpp>
 #include <boost/task/spin_mutex.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -62,7 +62,7 @@ private:
 
 		bool take_(
 			optional< value_type > & va,
-			spin_lock< spin_mutex > & lk)
+			spin_unique_lock< spin_mutex > & lk)
 		{
 			bool empty = empty_();
 			if ( ! active_() && empty)
@@ -91,7 +91,7 @@ private:
 		bool take_(
 			optional< value_type > & va,
 			Duration const& rel_time,
-			spin_lock< spin_mutex > & lk)
+			spin_unique_lock< spin_mutex > & lk)
 		{
 			bool empty = empty_();
 			if ( ! active_() && empty)
@@ -147,19 +147,19 @@ private:
 
 		bool empty()
 		{
-			spin_lock< spin_mutex > lk( mtx_);
+			spin_unique_lock< spin_mutex > lk( mtx_);
 			return empty_();
 		}
 
 		void put( value_type const& va)
 		{
-			spin_lock< spin_mutex > lk( mtx_);
+			spin_unique_lock< spin_mutex > lk( mtx_);
 			put_( va);
 		}
 
 		bool take( optional< value_type > & va)
 		{
-			spin_lock< spin_mutex > lk( mtx_);
+			spin_unique_lock< spin_mutex > lk( mtx_);
 			return take_( va, lk);
 		}
 
@@ -168,13 +168,13 @@ private:
 			optional< value_type > & va,
 			TimeDuration const& rel_time)
 		{
-			spin_lock< spin_mutex > lk( mtx_);
+			spin_unique_lock< spin_mutex > lk( mtx_);
 			return take_( va, rel_time, lk);
 		}
 
 		bool try_take( optional< value_type > & va)
 		{
-			spin_lock< spin_mutex > lk( mtx_);
+			spin_unique_lock< spin_mutex > lk( mtx_);
 			return try_take_( va);
 		}
 	};

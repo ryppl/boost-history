@@ -20,186 +20,182 @@
 
 #include <boost/task.hpp>
 
-#include "test_functions.hpp"
-
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
 namespace {
+
 uint32_t wait_fn( uint32_t n, tsk::spin_auto_reset_event & ev)
 {
 	ev.wait();
 	return n;
 }
+
+// check wait in new thread
+void test_case_1()
+{
+	uint32_t n = 3;
+	tsk::spin_auto_reset_event ev;
+
+	tsk::handle< uint32_t > h1(
+			tsk::async(
+				tsk::make_task(
+					wait_fn,
+					n, boost::ref( ev) ),
+				tsk::new_thread() ) );
+	tsk::handle< uint32_t > h2(
+			tsk::async(
+				tsk::make_task(
+					wait_fn,
+					n, boost::ref( ev) ),
+				tsk::new_thread() ) );
+
+	boost::this_thread::sleep( pt::millisec( 250) );
+	BOOST_CHECK( ! h1.is_ready() );
+	BOOST_CHECK( ! h2.is_ready() );
+
+	ev.set();
+
+	boost::this_thread::sleep( pt::millisec( 250) );
+	BOOST_CHECK( h1.is_ready() || h2.is_ready() );
+	if ( h1.is_ready() )
+	{
+		BOOST_CHECK_EQUAL( h1.get(), n);
+		BOOST_CHECK( ! h2.is_ready() );
+
+		ev.set();
+
+		boost::this_thread::sleep( pt::millisec( 250) );
+		BOOST_CHECK( h2.is_ready() );
+		BOOST_CHECK_EQUAL( h2.get(), n);
+	}
+	else
+	{
+		BOOST_CHECK( h2.is_ready() );
+		BOOST_CHECK_EQUAL( h2.get(), n);
+		BOOST_CHECK( ! h1.is_ready() );
+
+		ev.set();
+
+		boost::this_thread::sleep( pt::millisec( 250) );
+		BOOST_CHECK( h1.is_ready() );
+		BOOST_CHECK_EQUAL( h1.get(), n);
+	
+	}
 }
 
-class test_spin_auto_reset_event
+// check wait in pool
+void test_case_2()
 {
-public:
-	// check wait in new thread
-	void test_case_1()
+	tsk::static_pool<
+		tsk::unbounded_onelock_fifo
+	> pool( tsk::poolsize( 3) );
+
+	uint32_t n = 3;
+	tsk::spin_auto_reset_event ev;
+
+	tsk::handle< uint32_t > h1(
+			tsk::async(
+				tsk::make_task(
+					wait_fn,
+					n, boost::ref( ev) ),
+				pool) );
+	tsk::handle< uint32_t > h2(
+			tsk::async(
+				tsk::make_task(
+					wait_fn,
+					n, boost::ref( ev) ),
+				pool) );
+	boost::this_thread::sleep( pt::millisec( 250) );
+	BOOST_CHECK( ! h1.is_ready() );
+	BOOST_CHECK( ! h2.is_ready() );
+
+	ev.set();
+
+	boost::this_thread::sleep( pt::millisec( 250) );
+	BOOST_CHECK( h1.is_ready() || h2.is_ready() );
+	if ( h1.is_ready() )
 	{
-		uint32_t n = 3;
-		tsk::spin_auto_reset_event ev;
-
-		tsk::handle< uint32_t > h1(
-				tsk::async(
-					tsk::make_task(
-						wait_fn,
-						n, boost::ref( ev) ),
-					tsk::new_thread() ) );
-		tsk::handle< uint32_t > h2(
-				tsk::async(
-					tsk::make_task(
-						wait_fn,
-						n, boost::ref( ev) ),
-					tsk::new_thread() ) );
-
-		boost::this_thread::sleep( pt::millisec( 250) );
-		BOOST_CHECK( ! h1.is_ready() );
+		BOOST_CHECK_EQUAL( h1.get(), n);
 		BOOST_CHECK( ! h2.is_ready() );
 
 		ev.set();
 
 		boost::this_thread::sleep( pt::millisec( 250) );
-		BOOST_CHECK( h1.is_ready() || h2.is_ready() );
-		if ( h1.is_ready() )
-		{
-			BOOST_CHECK_EQUAL( h1.get(), n);
-			BOOST_CHECK( ! h2.is_ready() );
-
-			ev.set();
-
-			boost::this_thread::sleep( pt::millisec( 250) );
-			BOOST_CHECK( h2.is_ready() );
-			BOOST_CHECK_EQUAL( h2.get(), n);
-		}
-		else
-		{
-			BOOST_CHECK( h2.is_ready() );
-			BOOST_CHECK_EQUAL( h2.get(), n);
-			BOOST_CHECK( ! h1.is_ready() );
-
-			ev.set();
-
-			boost::this_thread::sleep( pt::millisec( 250) );
-			BOOST_CHECK( h1.is_ready() );
-			BOOST_CHECK_EQUAL( h1.get(), n);
-		
-		}
+		BOOST_CHECK( h2.is_ready() );
+		BOOST_CHECK_EQUAL( h2.get(), n);
 	}
-
-	// check wait in pool
-	void test_case_2()
+	else
 	{
-		tsk::static_pool<
-			tsk::unbounded_onelock_fifo
-		> pool( tsk::poolsize( 3) );
-
-		uint32_t n = 3;
-		tsk::spin_auto_reset_event ev;
-
-		tsk::handle< uint32_t > h1(
-				tsk::async(
-					tsk::make_task(
-						wait_fn,
-						n, boost::ref( ev) ),
-					pool) );
-		tsk::handle< uint32_t > h2(
-				tsk::async(
-					tsk::make_task(
-						wait_fn,
-						n, boost::ref( ev) ),
-					pool) );
-		boost::this_thread::sleep( pt::millisec( 250) );
+		BOOST_CHECK( h2.is_ready() );
+		BOOST_CHECK_EQUAL( h2.get(), n);
 		BOOST_CHECK( ! h1.is_ready() );
+
+		ev.set();
+
+		boost::this_thread::sleep( pt::millisec( 250) );
+		BOOST_CHECK( h1.is_ready() );
+		BOOST_CHECK_EQUAL( h1.get(), n);
+	
+	}
+}
+
+void test_case_3()
+{
+	uint32_t n = 3;
+	tsk::spin_auto_reset_event ev( true);
+
+	tsk::handle< uint32_t > h1(
+			tsk::async(
+				tsk::make_task(
+					wait_fn,
+					n, boost::ref( ev) ),
+				tsk::new_thread() ) );
+	tsk::handle< uint32_t > h2(
+			tsk::async(
+				tsk::make_task(
+					wait_fn,
+					n, boost::ref( ev) ),
+				tsk::new_thread() ) );
+
+	boost::this_thread::sleep( pt::millisec( 250) );
+	BOOST_CHECK( h1.is_ready() || h2.is_ready() );
+	if ( h1.is_ready() )
+	{
+		BOOST_CHECK_EQUAL( h1.get(), n);
 		BOOST_CHECK( ! h2.is_ready() );
 
 		ev.set();
 
 		boost::this_thread::sleep( pt::millisec( 250) );
-		BOOST_CHECK( h1.is_ready() || h2.is_ready() );
-		if ( h1.is_ready() )
-		{
-			BOOST_CHECK_EQUAL( h1.get(), n);
-			BOOST_CHECK( ! h2.is_ready() );
-
-			ev.set();
-
-			boost::this_thread::sleep( pt::millisec( 250) );
-			BOOST_CHECK( h2.is_ready() );
-			BOOST_CHECK_EQUAL( h2.get(), n);
-		}
-		else
-		{
-			BOOST_CHECK( h2.is_ready() );
-			BOOST_CHECK_EQUAL( h2.get(), n);
-			BOOST_CHECK( ! h1.is_ready() );
-
-			ev.set();
-
-			boost::this_thread::sleep( pt::millisec( 250) );
-			BOOST_CHECK( h1.is_ready() );
-			BOOST_CHECK_EQUAL( h1.get(), n);
-		
-		}
+		BOOST_CHECK( h2.is_ready() );
+		BOOST_CHECK_EQUAL( h2.get(), n);
 	}
-
-	void test_case_3()
+	else
 	{
-		uint32_t n = 3;
-		tsk::spin_auto_reset_event ev( true);
+		BOOST_CHECK( h2.is_ready() );
+		BOOST_CHECK_EQUAL( h2.get(), n);
+		BOOST_CHECK( ! h1.is_ready() );
 
-		tsk::handle< uint32_t > h1(
-				tsk::async(
-					tsk::make_task(
-						wait_fn,
-						n, boost::ref( ev) ),
-					tsk::new_thread() ) );
-		tsk::handle< uint32_t > h2(
-				tsk::async(
-					tsk::make_task(
-						wait_fn,
-						n, boost::ref( ev) ),
-					tsk::new_thread() ) );
+		ev.set();
 
 		boost::this_thread::sleep( pt::millisec( 250) );
-		BOOST_CHECK( h1.is_ready() || h2.is_ready() );
-		if ( h1.is_ready() )
-		{
-			BOOST_CHECK_EQUAL( h1.get(), n);
-			BOOST_CHECK( ! h2.is_ready() );
-
-			ev.set();
-
-			boost::this_thread::sleep( pt::millisec( 250) );
-			BOOST_CHECK( h2.is_ready() );
-			BOOST_CHECK_EQUAL( h2.get(), n);
-		}
-		else
-		{
-			BOOST_CHECK( h2.is_ready() );
-			BOOST_CHECK_EQUAL( h2.get(), n);
-			BOOST_CHECK( ! h1.is_ready() );
-
-			ev.set();
-
-			boost::this_thread::sleep( pt::millisec( 250) );
-			BOOST_CHECK( h1.is_ready() );
-			BOOST_CHECK_EQUAL( h1.get(), n);
-		
-		}
+		BOOST_CHECK( h1.is_ready() );
+		BOOST_CHECK_EQUAL( h1.get(), n);
+	
 	}
-};
+}
+
+}
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
-	boost::unit_test::test_suite * test( BOOST_TEST_SUITE("Boost.Task: test suite") );
+	boost::unit_test::test_suite * test =
+		BOOST_TEST_SUITE("Boost.Task: spin-auto-reset-event test suite");
 
-	boost::shared_ptr< test_spin_auto_reset_event > instance( new test_spin_auto_reset_event() );
-	test->add( BOOST_CLASS_TEST_CASE( & test_spin_auto_reset_event::test_case_1, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & test_spin_auto_reset_event::test_case_2, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & test_spin_auto_reset_event::test_case_3, instance) );
+	test->add( BOOST_TEST_CASE( & test_case_1) );
+	test->add( BOOST_TEST_CASE( & test_case_2) );
+	test->add( BOOST_TEST_CASE( & test_case_3) );
 
 	return test;
 }

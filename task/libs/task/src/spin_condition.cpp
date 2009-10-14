@@ -11,7 +11,6 @@
 
 #include <boost/task/detail/atomic.hpp>
 #include <boost/task/spin_mutex.hpp>
-#include <boost/task/spin_lock.hpp>
 #include <boost/task/utility.hpp>
 
 namespace boost {
@@ -45,7 +44,7 @@ void
 spin_condition::wait_( spin_mutex & mtx)
 {
 	{
-		spin_lock< spin_mutex > lk( enter_mtx_);
+		spin_mutex::scoped_lock lk( enter_mtx_);
 		BOOST_ASSERT( lk);
 		detail::atomic_fetch_add( & waiters_, 1);
 		mtx.unlock();
@@ -64,7 +63,7 @@ spin_condition::wait_( spin_mutex & mtx)
 			this_thread::interruption_point();
 		}
 
-		spin_lock< spin_mutex > lk( check_mtx_);
+		spin_mutex::scoped_lock lk( check_mtx_);
 		BOOST_ASSERT( lk);
 
 		uint32_t expected = static_cast< uint32_t >( NOTIFY_ONE);
@@ -105,7 +104,7 @@ spin_condition::wait_( spin_mutex & mtx, system_time const& abs_time)
 	if ( get_system_time() >= abs_time) return false;
 
 	{
-		spin_lock< spin_mutex > lk( enter_mtx_, abs_time);
+		spin_mutex::scoped_lock lk( enter_mtx_, abs_time);
 		BOOST_ASSERT( lk);
 		detail::atomic_fetch_add( & waiters_, 1);
 		mtx.unlock();
@@ -140,7 +139,7 @@ spin_condition::wait_( spin_mutex & mtx, system_time const& abs_time)
 		}
 		else
 		{
-			spin_lock< spin_mutex > lk( check_mtx_);
+			spin_mutex::scoped_lock lk( check_mtx_);
 			BOOST_ASSERT( lk);
 
 			uint32_t expected = static_cast< uint32_t >( NOTIFY_ONE);

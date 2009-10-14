@@ -3,6 +3,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
+//
+// This test is based on the tests of Boost.Thread 
 
 #include <cstdlib>
 #include <iostream>
@@ -20,51 +22,40 @@
 
 #include <boost/task.hpp>
 
-#include "test_functions.hpp"
-
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
 namespace {
 
-bool exec_sub_task()
+void test_lock()
 {
-	tsk::handle< bool > h(
-		tsk::async(
-			tsk::make_task( runs_in_pool_fn),
-			tsk::as_sub_task() ) );
-	return h.get();	
-}
-
-void test_runs_not_in_pool()
-{
-	tsk::task< bool > t( runs_in_pool_fn);
-	tsk::handle< bool > h(
-		tsk::async( boost::move( t), tsk::as_sub_task() ) );
-	BOOST_CHECK_EQUAL( h.get(), false);
-}
-
-void test_runs_in_pool()
-{
-	tsk::static_pool<
-		tsk::unbounded_onelock_fifo
-	> pool( tsk::poolsize( 1) );
-	tsk::handle< bool > h(
-		tsk::async(
-			tsk::make_task( exec_sub_task),
-			pool) );
-	BOOST_CHECK_EQUAL( h.get(), true);
-}
+	tsk::spin_mutex mtx;
+	tsk::spin_condition cond;
+	
+	{
+		tsk::spin_mutex::scoped_lock lk( mtx);
+	    BOOST_CHECK( lk);
+	}
+	tsk::spin_mutex::scoped_lock lk( mtx);
+	BOOST_CHECK( lk);
+	
+	BOOST_CHECK( ! cond.timed_wait( lk, pt::millisec( 250) ) );
+	BOOST_CHECK( lk);
+	
+	lk.unlock();
+	BOOST_CHECK( ! lk);
+	lk.lock();
+	BOOST_CHECK( lk);
+};
 
 }
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
     boost::unit_test_framework::test_suite * test =
-		BOOST_TEST_SUITE("Boost.Task: as-sub-task test suite");
+		BOOST_TEST_SUITE("Boost.Task: spin-mutex test suite");
 
-	test->add( BOOST_TEST_CASE( & test_runs_in_pool) );
-	test->add( BOOST_TEST_CASE( & test_runs_not_in_pool) );
+    test->add( BOOST_TEST_CASE( & test_lock) );
 
 	return test;
 }

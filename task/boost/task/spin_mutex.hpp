@@ -13,6 +13,8 @@
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/spin_unique_lock.hpp>
+
 namespace boost {
 namespace task {
 
@@ -22,6 +24,8 @@ private:
 	volatile uint32_t	state_;
 
 public:
+	typedef spin_unique_lock< spin_mutex >		scoped_lock;
+
 	spin_mutex();
 
 	void lock();
