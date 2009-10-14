@@ -85,13 +85,6 @@ inline T sqr(T const& value)
 
 } // namespace math
 
-// To be moved somewhere.
-namespace constants
-{
-
-double const average_earth_radius = 6372795.0;
-
-} // namespace constants
 
 } // namespace ggl
 

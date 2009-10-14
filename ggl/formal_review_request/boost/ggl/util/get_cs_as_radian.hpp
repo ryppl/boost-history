@@ -10,14 +10,11 @@
 #ifndef GGL_UTIL_GET_CS_AS_RADIAN_HPP
 #define GGL_UTIL_GET_CS_AS_RADIAN_HPP
 
-
-#include <boost/type_traits/remove_const.hpp>
-
-
-
+#include <ggl/core/cs.hpp>
 
 namespace ggl {
 
+#ifndef DOXYGEN_NO_DETAIL
 namespace detail {
 
     template <typename CoordinateSystem>
@@ -35,8 +32,8 @@ namespace detail {
         typedef cs::spherical<radian> type;
     };
 
-}
-
+} // namespace detail
+#endif
 
 
 

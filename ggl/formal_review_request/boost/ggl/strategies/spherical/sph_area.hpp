@@ -51,7 +51,7 @@ namespace strategy
                     double m_radius;
 
                     // TODO: make this 1.0 & implement other construct to let user specify
-                    inline excess_sum(double radius = constants::average_earth_radius)
+                    inline excess_sum(double radius = 1.0) //constants::average_earth_radius)
                         : m_sum(0)
                         , m_radius(radius)
                     {}

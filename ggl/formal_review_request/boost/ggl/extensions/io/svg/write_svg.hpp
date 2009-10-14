@@ -22,7 +22,7 @@
 #include <ggl/core/ring_type.hpp>
 
 /*!
-\defgroup svg svg: stream SVG (Scalable Vector Graphics)
+\defgroup svg x Extension svg: Stream SVG (Scalable Vector Graphics)
 */
 
 namespace ggl
@@ -249,14 +249,8 @@ private:
 };
 
 /*!
-\brief Object generator to conveniently stream objects without including streamsvg
+\brief Main svg function to stream geometries as SVG
 \ingroup svg
-\par Example:
-Small example showing how to use the make_svg helper function
-\dontinclude doxygen_examples.cpp
-\skip example_as_svg_vector
-\line {
-\until }
 */
 template <typename Geometry>
 inline svg_manipulator<Geometry> svg(Geometry const& t, std::string const& style, int size = -1)

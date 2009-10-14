@@ -51,7 +51,7 @@ namespace strategy
                 //typedef spherical_distance return_type;
                 typedef double return_type;
 
-                inline haversine(double r = constants::average_earth_radius)
+                inline haversine(double r = 1.0)
                     : m_radius(r)
                 {}
 
@@ -89,7 +89,7 @@ namespace strategy
             public :
                 typedef double return_type;
 
-                inline ll_point_segment(double r = constants::average_earth_radius) : m_radius(r)
+                inline ll_point_segment(double r = 1.0) : m_radius(r)
                 {}
 
                 inline return_type operator()(P const& p, S const& s) const
