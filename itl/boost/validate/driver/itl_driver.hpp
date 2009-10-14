@@ -43,18 +43,18 @@ namespace boost{namespace itl
         enum NeutronHandlerTypes { partial_absorber, partial_enricher, total_absorber, total_enricher, NeutronHandlerTypes_size };
     }
 
-	namespace inform
-	{
-		enum informs { never=0, rarely, frequently };
-	}
+    namespace inform
+    {
+        enum informs { never=0, rarely, frequently };
+    }
     
     class itl_driver
     {
     public:
         itl_driver()
-			: _required_law_validation_count(0)
-			, _required_law_count(0)
-			, _info_level(inform::frequently)
+            : _required_law_validation_count(0)
+            , _required_law_count(0)
+            , _info_level(inform::frequently)
         {
             _laws_per_cycle = GentorProfileSgl::it()->laws_per_cycle();
         }
@@ -64,19 +64,19 @@ namespace boost{namespace itl
         virtual void setProfile() = 0;
         virtual algebra_validater* chooseValidater() = 0;
 
-		void require_validation_count(int count){ _required_law_validation_count = count; }
-		int  required_validation_count()const   { return _required_law_validation_count;  }
+        void require_validation_count(int count){ _required_law_validation_count = count; }
+        int  required_validation_count()const   { return _required_law_validation_count;  }
 
-		void require_law_count(int count){ _required_law_count = count; }
-		int  required_law_count()const   { return _required_law_count;  }
+        void require_law_count(int count){ _required_law_count = count; }
+        int  required_law_count()const   { return _required_law_count;  }
 
-		void terminate_at_law_count(int law_count, int instance_count = 1)
-		{ 
-			require_law_count(law_count); 
-			require_validation_count(instance_count); 
-		}
+        void terminate_at_law_count(int law_count, int instance_count = 1)
+        { 
+            require_law_count(law_count); 
+            require_validation_count(instance_count); 
+        }
 
-		void set_information_level(int inform){ _info_level = inform; }
+        void set_information_level(int inform){ _info_level = inform; }
 
         bool validate()
         {
@@ -87,15 +87,15 @@ namespace boost{namespace itl
             for(int idx=0; !terminates(); idx++)
             {
                 if(idx>0 && idx % _laws_per_cycle == 0)
-					if(_info_level == inform::frequently)
-						reportFrequencies();
+                    if(_info_level == inform::frequently)
+                        reportFrequencies();
                 validateType();
             }
 
-			if(_info_level >= inform::rarely)
-				reportFrequencies();
+            if(_info_level >= inform::rarely)
+                reportFrequencies();
 
-			return _violationsCount.empty();
+            return _violationsCount.empty();
         }
 
         void validateType()
@@ -110,17 +110,17 @@ namespace boost{namespace itl
             }
         }
 
-		int least_law_validation_count()const
-		{
-			// The least count of validation cycles performed on a single law instance.
-			int min_test_count = 9999;
-			
+        int least_law_validation_count()const
+        {
+            // The least count of validation cycles performed on a single law instance.
+            int min_test_count = 9999;
+            
             ITL_const_FORALL(ValidationCounterT, it, _frequencies)
                 min_test_count = min_test_count < it->second.count() ?
-								 min_test_count : it->second.count() ;
+                                 min_test_count : it->second.count() ;
 
-			return min_test_count;
-		}
+            return min_test_count;
+        }
 
         void reportFrequencies()
         {
@@ -235,19 +235,19 @@ namespace boost{namespace itl
             return NULL; 
         }
 
-	private:
-		bool terminates()const
-		{
-			if(!hasValidProfile())
-				return true;
-			else if(_required_law_count == 0 || _required_law_validation_count == 0)
-				return false; // If counts are not limited: Run for ever.
-			else if(_frequencies.size() < static_cast<size_t>(_required_law_count))
-				return false; // Not yet reached all laws
-			else
-				// All laws reached. Enough validation cycles for every law?
-				return _required_law_validation_count <= least_law_validation_count();
-		}
+    private:
+        bool terminates()const
+        {
+            if(!hasValidProfile())
+                return true;
+            else if(_required_law_count == 0 || _required_law_validation_count == 0)
+                return false; // If counts are not limited: Run for ever.
+            else if(_frequencies.size() < static_cast<size_t>(_required_law_count))
+                return false; // Not yet reached all laws
+            else
+                // All laws reached. Enough validation cycles for every law?
+                return _required_law_validation_count <= least_law_validation_count();
+        }
 
     protected:
         ChoiceT            _rootChoice;
@@ -266,9 +266,9 @@ namespace boost{namespace itl
                              // done and times and frequencies of law 
                              // validations are reported for all instances.
 
-		int _required_law_validation_count;
-		int _required_law_count;
-		int _info_level;
+        int _required_law_validation_count;
+        int _required_law_count;
+        int _info_level;
     };
 
 

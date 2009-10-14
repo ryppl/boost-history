@@ -26,7 +26,7 @@ void test_Validater()
     ">> ------------------------------------------------------ <<\n";
     GentorProfileSgl::it()->set_std_profile(20,1);
     GentorProfileSgl::it()->report_profile();
-	validater.terminate_at_law_count(33, 2);
+    validater.terminate_at_law_count(33, 2);
     validater.validate();
 };
 

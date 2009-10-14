@@ -90,11 +90,11 @@ namespace boost{namespace itl
         public SeqGentorT<itl::list<std::pair<DomainT,CodomainT> > > {};
 
     template <class DomainT> 
-	class RandomGentor<itl::list<itl::interval<DomainT> > > :
+    class RandomGentor<itl::list<itl::interval<DomainT> > > :
         public SeqGentorT<itl::list<itl::interval<DomainT> > > {};
 
     template <class DomainT> 
-	class RandomGentor<itl::list<DomainT> > :
+    class RandomGentor<itl::list<DomainT> > :
         public SeqGentorT<itl::list<DomainT> > {};
 
     // ----- sets --------------------------------------------------------------

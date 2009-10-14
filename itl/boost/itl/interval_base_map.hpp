@@ -763,8 +763,8 @@ protected:
     template <class Combiner>
     std::pair<iterator,bool> map_insert(const interval_type& inter_val, const codomain_type& co_val)
     {
-		using namespace type_traits;
-		if(ice_and<Traits::is_total, has_inverse<codomain_type>::value, is_negative<Combiner>::value>::value)
+        using namespace type_traits;
+        if(ice_and<Traits::is_total, has_inverse<codomain_type>::value, is_negative<Combiner>::value>::value)
             return this->_map.insert(value_type(inter_val, version<Combiner>()(co_val)));
         else
             return this->_map.insert(value_type(inter_val, co_val));
@@ -813,7 +813,7 @@ protected:
         BOOST_ASSERT(this->_map.find(inter_val) == this->_map.end());
         BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
 
-		if(mpl::and_<has_inverse<codomain_type>, is_negative<Combiner> >::value)
+        if(mpl::and_<has_inverse<codomain_type>, is_negative<Combiner> >::value)
             return this->_map.insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
         else
             return this->_map.insert(prior_, value_type(inter_val, co_val));
@@ -1053,7 +1053,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
         ITL_FORALL(typename ImplMapT, it_, _map)
             it_->second = neutron<codomain_type>::value();
 
-		if(mpl::not_<is_interval_splitter<SubType> >::value)
+        if(mpl::not_<is_interval_splitter<SubType> >::value)
             join();
 
         return *that();
@@ -1142,7 +1142,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
         ITL_FORALL(typename ImplMapT, it_, _map)
             it_->second = neutron<codomain_type>::value();
 
-		if(mpl::not_<is_interval_splitter<SubType> >::value)
+        if(mpl::not_<is_interval_splitter<SubType> >::value)
             join();
 
         return *that();
@@ -1362,7 +1362,7 @@ template
 SubType& 
 interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::assign_if(const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& src, 
-	            const Predicate& pred)
+                const Predicate& pred)
 {
     clear();
     const_iterator it = src.begin();

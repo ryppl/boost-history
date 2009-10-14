@@ -27,8 +27,8 @@ public:
     typedef typename LeftT::const_iterator  LeftIterT;
     typedef typename RightT::const_iterator RightIterT;
 
-	BOOST_STATIC_CONSTANT(bool, 
-		_compare_codomain = (mpl::and_<is_map<LeftT>, is_map<RightT> >::value)); 
+    BOOST_STATIC_CONSTANT(bool, 
+        _compare_codomain = (mpl::and_<is_map<LeftT>, is_map<RightT> >::value)); 
 
     element_comparer(const LeftT&      left,
                      const RightT&     right,

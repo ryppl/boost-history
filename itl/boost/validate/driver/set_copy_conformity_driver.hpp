@@ -100,7 +100,7 @@ namespace boost{namespace itl
             switch(rootChoice)
             {
             //-----------------------------------------------------------------
-			case RootType::itl_set:               return new function_equality_validater<itl::list<int>,                 itl::set<int> >;
+            case RootType::itl_set:               return new function_equality_validater<itl::list<int>,                 itl::set<int> >;
             case RootType::interval_set:          return new function_equality_validater<itl::list<itl::interval<int> >, interval_set<int> >;
             case RootType::separate_interval_set: return new function_equality_validater<itl::list<itl::interval<int> >, separate_interval_set<int> >;
             case RootType::split_interval_set:    return new function_equality_validater<itl::list<itl::interval<int> >, split_interval_set<int> >;

@@ -113,7 +113,7 @@ bool key_intersects(const ObjectT& left, const CoObjectT& right)
 template<class MapType>
 void flip(MapType& result, const MapType& x2)
 {
-	if(mpl::and_<is_total<MapType>, absorbs_neutrons<MapType> >::value)
+    if(mpl::and_<is_total<MapType>, absorbs_neutrons<MapType> >::value)
     {
         result.clear();
         return;
@@ -142,7 +142,7 @@ void flip(MapType& result, const MapType& x2)
         }
     }
 
-	if(mpl::and_<is_total<MapType>, mpl::not_<absorbs_neutrons<MapType> > >::value)
+    if(mpl::and_<is_total<MapType>, mpl::not_<absorbs_neutrons<MapType> > >::value)
         ITL_FORALL(typename MapType, it_, result)
             it_->second = neutron<typename MapType::codomain_type>::value();
 }

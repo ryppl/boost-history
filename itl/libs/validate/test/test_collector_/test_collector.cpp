@@ -23,8 +23,8 @@ BOOST_AUTO_TEST_CASE(test_validate_itl_collector)
     collector_driver validater;
     GentorProfileSgl::it()->set_std_profile(6,1);
     //GentorProfileSgl::it()->report_profile();
-	validater.terminate_at_law_count(72, 2);
-	//validater.set_information_level(inform::never);
+    validater.terminate_at_law_count(72, 2);
+    //validater.set_information_level(inform::never);
 
     BOOST_CHECK_EQUAL(validater.validate(), true);
 }

@@ -381,7 +381,7 @@ typename boost::enable_if<is_intra_combinable<LeftT, RightT>,
                           bool>::type
 intersects(const LeftT& left, const RightT& right)
 {
-	if(mpl::or_<is_total<LeftT>, is_total<RightT> >::value)
+    if(mpl::or_<is_total<LeftT>, is_total<RightT> >::value)
         return true;
 
     LeftT intersection;

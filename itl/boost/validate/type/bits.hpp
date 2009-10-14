@@ -20,7 +20,7 @@ namespace boost{namespace itl
 template<class NaturalT> class bits
 {
 public:
-	typedef NaturalT chunk_type;
+    typedef NaturalT chunk_type;
 
     bits():_bits(){}
     explicit bits(NaturalT value):_bits(value){}
