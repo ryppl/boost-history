@@ -64,9 +64,8 @@ make_distribution_function(
 }
 
 }// iterator
-}// distribution
 }// toolkit
-
+}// distribution
 }// detail
 }// statistics
 }// boost
