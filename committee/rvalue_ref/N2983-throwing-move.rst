@@ -241,6 +241,14 @@ successful in practice and is regarded by many as superior to the one
 in the standard.  Standardizing `throw(false)` gives everyone access
 to this optimization tool.
 
+Proposed Changes to Standard Wording
+====================================
+
+.. Rani fills in this part
+
+
+-------
+
 .. [#attribute] In Frankfurt, Dave proposed that we use the attribute
    syntax ``[[moves(subobj1,subobj2)]]`` for this purpose.  Aside from
    being controversial, it's a wart regardless of the syntax used,
