@@ -180,9 +180,9 @@ namespace boost{namespace itl
             Type val_a = this->template getInputValue<operand_a>();
             Type val_b = this->template getInputValue<operand_b>();
             Type val_c = this->template getInputValue<operand_c>();
-            cout << "a = " << val_a << endl;
-            cout << "b = " << val_b << endl;
-            cout << "c = " << val_c << endl;
+            std::cout << "a = " << val_a << std::endl;
+            std::cout << "b = " << val_b << std::endl;
+            std::cout << "c = " << val_c << std::endl;
             // --- left hand side ------------------------
             Type b_plus_c = val_b;
             Operator1<Type>()(b_plus_c, val_c);
@@ -194,11 +194,11 @@ namespace boost{namespace itl
             // --- right hand side -----------------------
             Type a_minus_b = this->template getInputValue<operand_a>();
             Subtraction<Type>()(a_minus_b, this->template getInputValue<operand_b>());
-            cout << "a-b = " << a_minus_b << endl;
+            std::cout << "a-b = " << a_minus_b << std::endl;
 
             Type a_minus_c = this->template getInputValue<operand_a>();
             Subtraction<Type>()(a_minus_c, this->template getInputValue<operand_c>());
-            cout << "a-c = " << a_minus_c << endl;
+            std::cout << "a-c = " << a_minus_c << std::endl;
 
             // rhs := (a - b) & (a - c)
             Type rhs = a_minus_b;
