@@ -103,7 +103,7 @@ public:
     /// key type of the implementing container
     typedef typename ImplSetT::key_type   key_type;
     /// data type of the implementing container
-    typedef typename key_type  data_type;
+    typedef typename ImplSetT::key_type   data_type;
     /// value type of the implementing container
     typedef typename ImplSetT::value_type value_type;
 
