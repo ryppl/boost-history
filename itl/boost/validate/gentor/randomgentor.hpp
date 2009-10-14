@@ -243,7 +243,7 @@ namespace boost{namespace itl
         static void apply(RandomGentor<itl::bits<BitsT> >& gentor) 
         {
             // Set the range within which the sizes of the generated object varies.
-            gentor.set_range(itl::interval<BitsT>::rightopen(0, sizeof BitsT));
+            gentor.set_range(itl::interval<BitsT>::rightopen(0, sizeof(BitsT)));
         }
     };
 
@@ -610,7 +610,7 @@ namespace boost{namespace itl
             NumberGentorT<NumericDomainT>* domainGentor   = new NumberGentorT<NumericDomainT>;
             bits_gentor<BitsT>*            codomainGentor = new bits_gentor<BitsT>;
             domainGentor->setRange(GentorProfileSgl_numeric_range<NumericDomainT>::get());
-            codomainGentor->set_range(interval<BitsT>::closed(0, (numeric_limits<BitsT>::max)()));
+            codomainGentor->set_range(interval<BitsT>::closed(0, (std::numeric_limits<BitsT>::max)()));
             gentor.setDomainGentor(domainGentor);
             gentor.setCodomainGentor(codomainGentor);
         }
@@ -742,7 +742,7 @@ namespace boost{namespace itl
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
             bits_gentor<BitsT>* codomainGentor = new bits_gentor<BitsT>;
-            codomainGentor->set_range(interval<BitsT>::closed(0, (numeric_limits<BitsT>::max)()));
+            codomainGentor->set_range(interval<BitsT>::closed(0, (std::numeric_limits<BitsT>::max)()));
 
             gentor.setDomainGentor(itvGentor);
             gentor.setCodomainGentor(codomainGentor);
@@ -767,7 +767,7 @@ namespace boost{namespace itl
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
             bits_gentor<BitsT>* codomainGentor = new bits_gentor<BitsT>;
-            codomainGentor->set_range(interval<BitsT>::closed(0, (numeric_limits<BitsT>::max)()));
+            codomainGentor->set_range(interval<BitsT>::closed(0, (std::numeric_limits<BitsT>::max)()));
 
             gentor.setDomainGentor(itvGentor);
             gentor.setCodomainGentor(codomainGentor);
