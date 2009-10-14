@@ -97,7 +97,7 @@ discovered::
 
 However, ``std::vector::reserve`` would be move-enabled this way:
 
-.. parsed-literal:
+.. parsed-literal::
 
   void reserve(size_type n)
   {
@@ -172,26 +172,26 @@ propose to add a new kind of exception-specification, spelled:
    throw( *integral constant expression* )
 
 The only impact of such an exception-specification is this: if a
-function decorated with `throw(false)` throws an exception, the
+function decorated with ``throw(false)`` throws an exception, the
 behavior is undefined. [#no-diagnostic]_ That effect is sufficient to
 allow these *xxx*\ ``_nothrow_``\ *xxx* traits to report ``true`` for
-any operation decorated with `throw(false)`.  Class maintainers could
-label their move constructors `throw(false)` to indicate non-throwing
+any operation decorated with ``throw(false)``.  Class maintainers could
+label their move constructors ``throw(false)`` to indicate non-throwing
 behavior, and the library is permitted to take advantage of that
 labelling if it can be detected (via “compiler magic”).
 
-Note that the usefulness of `throw(false)` as an optimization hint
+Note that the usefulness of ``throw(false)`` as an optimization hint
 goes way beyond the narrow case introduced by N2855_.  In fact, it
 goes beyond move construction: when the compiler can detect
 non-throwing operations with certainty, it can optimize away a great
 deal of code and/or data that is devoted to exception handling.  Some
-compilers already do that for `throw()` specifications, but since
+compilers already do that for ``throw()`` specifications, but since
 those incur the overhead of an implicit try/catch block to handle
 unexpected exceptions, the benefits are limited.
 
 The advantage of the integral constant expression parameter is that
 one can easily offer accurate hints in templated move constructors.
-For example, `std::pair`\ 's converting move constructor could be
+For example, ``std::pair``\ 's converting move constructor could be
 written as follows:
 
 .. parsed-literal::
@@ -204,7 +204,7 @@ written as follows:
         second( move(rhs.second) )
     {}
 
-Although the above is reminiscent of the `enable_if` clause that would
+Although the above is reminiscent of the ``enable_if`` clause that would
 be *required* if there is a ban on throwing move constructors, the
 exception specification above is entirely optional; its presence or
 absence doesn't affect the correctness of a move constructor.
@@ -226,19 +226,19 @@ matter of QOI, that doesn't have any effect on standard text.
 
 The proposed ``[[nothrow]]`` attribute is just a less-powerful version
 of this feature.  In particular, it can't express the hint shown for
-`pair`\ 's move constructor above.  We suggest it be dropped.
+``pair``\ 's move constructor above.  We suggest it be dropped.
 
 Existing Practice
 =================
 
 The Microsoft compiler has always treated empty
 exception-specifications as though they have the same meaning we
-propose for `throw(false)`.  That is, Microsoft omits the
+propose for ``throw(false)``.  That is, Microsoft omits the
 standard-mandated runtime behavior if the function throws, and it
 performs optimizations based on the assumption that the function
-doesn't throw.  This interpretation of `throw()` has proven to be
+doesn't throw.  This interpretation of ``throw()`` has proven to be
 successful in practice and is regarded by many as superior to the one
-in the standard.  Standardizing `throw(false)` gives everyone access
+in the standard.  Standardizing ``throw(false)`` gives everyone access
 to this optimization tool.
 
 Proposed Changes to Standard Wording
@@ -266,10 +266,10 @@ Proposed Changes to Standard Wording
    from locations observable by the caller.
 
 .. [#no-diagnostic] In particular, we are not proposing to mandate
-   static checking: a `throw(false)` function can call a `throw(true)`
+   static checking: a ``throw(false)`` function can call a ``throw(true)``
    function without causing the program to become ill-formed or
    generating a diagnostic.  Generating a diagnostic in such cases
    can, of course, be implemented by any compiler as a matter of QOI.
 
 .. [#is_nothrow_constructible] See N2953_ for a definition of
-   `is_nothrow_constructible`.
+   ``is_nothrow_constructible``.

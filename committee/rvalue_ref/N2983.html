@@ -111,34 +111,34 @@ pair( pair&lt;First2,Second2&gt;&amp;&amp; rhs )
 {}
 </pre>
 <p>However, <tt class="docutils literal"><span class="pre">std::vector::reserve</span></tt> would be move-enabled this way:</p>
-<!-- parsed-literal:
-
+<pre class="literal-block">
 void reserve(size_type n)
 {
-    if (n > this->capacity())
+    if (n &gt; this-&gt;capacity())
     {
-        pointer new_begin = this->allocate( n );
-        size_type s = this->size(), i = 0;
+        pointer new_begin = this-&gt;allocate( n );
+        size_type s = this-&gt;size(), i = 0;
         try
         {
-            for (;i < s; ++i)
-                 new ((void*)(new_begin + i)) value_type( **nothrow_move(** (\*this)[i]) **)** );
+            for (;i &lt; s; ++i)
+                 new ((void*)(new_begin + i)) value_type( <strong>nothrow_move(</strong> (*this)[i]) <strong>)</strong> );
         }
         catch(...)
         {
-            for (;i > 0; - -i)                 // clean up new elements
-               (new_begin + i)->~value_type();
+            for (;i &gt; 0; --i)                 // clean up new elements
+               (new_begin + i)-&gt;~value_type();
 
-            this->deallocate( new_begin );    // release storage
+            this-&gt;deallocate( new_begin );    // release storage
             throw;
         }
-        // - - - - - - - - irreversible mutation starts here - - - - - - - - - - -
-        this->deallocate( this->begin_ );
-        this->begin_ = new_begin;
-        this->end_ = new_begin + s;
-        this->cap_ = new_begin + n;
+        // -------- irreversible mutation starts here -----------
+        this-&gt;deallocate( this-&gt;begin_ );
+        this-&gt;begin_ = new_begin;
+        this-&gt;end_ = new_begin + s;
+        this-&gt;cap_ = new_begin + n;
     }
-} -->
+}
+</pre>
 <p>We stress again that the use of <tt class="docutils literal"><span class="pre">nothrow_move</span></tt> as opposed to <tt class="docutils literal"><span class="pre">move</span></tt>
 would only be necessary under an <em>extremely</em> limited set of
 circumstances.  In particular, it would never be required in new code,
@@ -180,24 +180,24 @@ propose to add a new kind of exception-specification, spelled:</p>
 throw( <em>integral constant expression</em> )
 </pre>
 <p>The only impact of such an exception-specification is this: if a
-function decorated with <cite>throw(false)</cite> throws an exception, the
+function decorated with <tt class="docutils literal"><span class="pre">throw(false)</span></tt> throws an exception, the
 behavior is undefined.<a class="footnote-reference" href="#no-diagnostic" id="id3"><sup>3</sup></a> That effect is sufficient to
 allow these <em>xxx</em><tt class="docutils literal"><span class="pre">_nothrow_</span></tt><em>xxx</em> traits to report <tt class="docutils literal"><span class="pre">true</span></tt> for
-any operation decorated with <cite>throw(false)</cite>.  Class maintainers could
-label their move constructors <cite>throw(false)</cite> to indicate non-throwing
+any operation decorated with <tt class="docutils literal"><span class="pre">throw(false)</span></tt>.  Class maintainers could
+label their move constructors <tt class="docutils literal"><span class="pre">throw(false)</span></tt> to indicate non-throwing
 behavior, and the library is permitted to take advantage of that
 labelling if it can be detected (via “compiler magic”).</p>
-<p>Note that the usefulness of <cite>throw(false)</cite> as an optimization hint
+<p>Note that the usefulness of <tt class="docutils literal"><span class="pre">throw(false)</span></tt> as an optimization hint
 goes way beyond the narrow case introduced by <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2855.html">N2855</a>.  In fact, it
 goes beyond move construction: when the compiler can detect
 non-throwing operations with certainty, it can optimize away a great
 deal of code and/or data that is devoted to exception handling.  Some
-compilers already do that for <cite>throw()</cite> specifications, but since
+compilers already do that for <tt class="docutils literal"><span class="pre">throw()</span></tt> specifications, but since
 those incur the overhead of an implicit try/catch block to handle
 unexpected exceptions, the benefits are limited.</p>
 <p>The advantage of the integral constant expression parameter is that
 one can easily offer accurate hints in templated move constructors.
-For example, <cite>std::pair</cite>'s converting move constructor could be
+For example, <tt class="docutils literal"><span class="pre">std::pair</span></tt>'s converting move constructor could be
 written as follows:</p>
 <pre class="literal-block">
 template &lt;class First2, Second2&gt;
@@ -208,7 +208,7 @@ pair( pair&lt;First2,Second2&gt;&amp;&amp; rhs )
     second( move(rhs.second) )
 {}
 </pre>
-<p>Although the above is reminiscent of the <cite>enable_if</cite> clause that would
+<p>Although the above is reminiscent of the <tt class="docutils literal"><span class="pre">enable_if</span></tt> clause that would
 be <em>required</em> if there is a ban on throwing move constructors, the
 exception specification above is entirely optional; its presence or
 absence doesn't affect the correctness of a move constructor.</p>
@@ -227,18 +227,18 @@ from the results of has_nothrow_move on all subobjects, but, being a
 matter of QOI, that doesn't have any effect on standard text.</p>
 <p>The proposed <tt class="docutils literal"><span class="pre">[[nothrow]]</span></tt> attribute is just a less-powerful version
 of this feature.  In particular, it can't express the hint shown for
-<cite>pair</cite>'s move constructor above.  We suggest it be dropped.</p>
+<tt class="docutils literal"><span class="pre">pair</span></tt>'s move constructor above.  We suggest it be dropped.</p>
 </div>
 <div class="section" id="existing-practice">
 <h1><a class="toc-backref" href="#id9">Existing Practice</a></h1>
 <p>The Microsoft compiler has always treated empty
 exception-specifications as though they have the same meaning we
-propose for <cite>throw(false)</cite>.  That is, Microsoft omits the
+propose for <tt class="docutils literal"><span class="pre">throw(false)</span></tt>.  That is, Microsoft omits the
 standard-mandated runtime behavior if the function throws, and it
 performs optimizations based on the assumption that the function
-doesn't throw.  This interpretation of <cite>throw()</cite> has proven to be
+doesn't throw.  This interpretation of <tt class="docutils literal"><span class="pre">throw()</span></tt> has proven to be
 successful in practice and is regarded by many as superior to the one
-in the standard.  Standardizing <cite>throw(false)</cite> gives everyone access
+in the standard.  Standardizing <tt class="docutils literal"><span class="pre">throw(false)</span></tt> gives everyone access
 to this optimization tool.</p>
 </div>
 <div class="section" id="proposed-changes-to-standard-wording">
@@ -269,7 +269,7 @@ from locations observable by the caller.</td></tr>
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>In particular, we are not proposing to mandate
-static checking: a <cite>throw(false)</cite> function can call a <cite>throw(true)</cite>
+static checking: a <tt class="docutils literal"><span class="pre">throw(false)</span></tt> function can call a <tt class="docutils literal"><span class="pre">throw(true)</span></tt>
 function without causing the program to become ill-formed or
 generating a diagnostic.  Generating a diagnostic in such cases
 can, of course, be implemented by any compiler as a matter of QOI.</td></tr>
@@ -279,7 +279,7 @@ can, of course, be implemented by any compiler as a matter of QOI.</td></tr>
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>See <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a> for a definition of
-<cite>is_nothrow_constructible</cite>.</td></tr>
+<tt class="docutils literal"><span class="pre">is_nothrow_constructible</span></tt>.</td></tr>
 </tbody>
 </table>
 </div>
