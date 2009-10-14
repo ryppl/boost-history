@@ -35,6 +35,7 @@ Mac OS Leopard 10.5         gcc version 4.0.1
 
 boost_1_40_0
 /sandbox/statistics/random/ 
+/sandbox/statistics/distribution_common/ 
 
 To use distributions/wrapper,
 libboost_serialization-xgcc42-mt-1_39.a
@@ -87,10 +88,16 @@ See distributions/wrapper/wrapper.hpp
 
 [ History ]
 
-Oct 2   Transfered parts of /meta and /concept to newly created library
-        /distribution_common. Split the namepsace distribution_toolkit into
+Oct 11 2009 : 
+    removed /data. use instead sandbox/non_parametric/statistic
+    added   /test
+
+Oct 2 2009  
+        Removed /concept, replaced by /distribution_common. 
+        Split the namepsace distribution_toolkit into
         distribution::toolkit. Brought some function uder this namespace into
         statistics::detail. Concept checks in libs/.../test
+
 Sep 23 2009 : Merged 
         sandbox/statistics/scalar_dist 
         sandbox/statistics/standard_distribution
