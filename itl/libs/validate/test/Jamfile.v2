@@ -39,15 +39,14 @@ test-suite "itl"
       [ run test_unsigned_quantifier_/test_unsigned_quantifier.cpp ../src/gentor/gentorprofile.cpp ]
       
       # msvc9 compilation time:  
-      [ run test_itl_morphic_/test_itl_morphic.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time: 2:36  
-      [ run test_signed_quantifier_/test_signed_quantifier.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time:  
       [ run test_set_order_/test_set_order.cpp ../src/gentor/gentorprofile.cpp ]
       
       # msvc9 compilation time:  
-      [ run test_map_order_/test_map_order.cpp ../src/gentor/gentorprofile.cpp ]
+      # [ run test_map_order_/test_map_order.cpp ../src/gentor/gentorprofile.cpp ]
+            
+      # msvc9 compilation time:  
+      # [ run test_itl_morphic_/test_itl_morphic.cpp ../src/gentor/gentorprofile.cpp ]
       
+      # msvc9 compilation time: 2:36  
+      # [ run test_signed_quantifier_/test_signed_quantifier.cpp ../src/gentor/gentorprofile.cpp ]
     ;
