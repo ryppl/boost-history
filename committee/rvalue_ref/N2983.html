@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<title>Allowing Move Constructors to Throw</title>
+<meta name="author" content="David Abrahams, Rani Sharoni" />
+<meta name="organization" content="BoostPro Computing, Microsoft" />
+<meta name="date" content="2009-10-14" />
+<link rel="stylesheet" href="http://www.boost.org/doc/libs/1_38_0/rst.css" type="text/css" />
+</head>
+<body>
+<div class="document" id="allowing-move-constructors-to-throw">
+<h1 class="title">Allowing Move Constructors to Throw</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td>David Abrahams, Rani Sharoni</td></tr>
+<tr><th class="docinfo-name">Contact:</th>
+<td><a class="first reference external" href="mailto:dave&#64;boostpro.com">dave&#64;boostpro.com</a>, <a class="last reference external" href="mailto:ranis&#64;microsoft.com">ranis&#64;microsoft.com</a></td></tr>
+<tr><th class="docinfo-name">Organization:</th>
+<td><a class="first reference external" href="http://www.boostpro.com">BoostPro Computing</a>, Microsoft</td></tr>
+<tr><th class="docinfo-name">Date:</th>
+<td>2009-10-14</td></tr>
+<tr class="field"><th class="docinfo-name">Number:</th><td class="field-body">D2983=09-0173</td>
+</tr>
+</tbody>
+</table>
+<div class="contents topic" id="index">
+<p class="topic-title first">index</p>
+<ul class="simple">
+<li><a class="reference internal" href="#introduction" id="id5">Introduction</a></li>
+<li><a class="reference internal" href="#implementing-nothrow-move" id="id6">Implementing <tt class="docutils literal"><span class="pre">nothrow_move</span></tt></a></li>
+<li><a class="reference internal" href="#an-optimization-hint" id="id7">An Optimization Hint</a></li>
+<li><a class="reference internal" href="#interactions-with-other-proposals" id="id8">Interactions with Other Proposals</a></li>
+<li><a class="reference internal" href="#existing-practice" id="id9">Existing Practice</a></li>
+<li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id10">Proposed Changes to Standard Wording</a></li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h1><a class="toc-backref" href="#id5">Introduction</a></h1>
+<p>In <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2855.html">N2855</a>, Doug Gregor and Dave Abrahams discussed a problematic
+interaction between move constructors, templates, and certain standard
+library member functions.  To date, attempts to solve the problem
+(including <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2855.html">N2855</a> itself) have taken one basic approach: <em>ban throwing
+move constructors, and be sure never to generate one</em>.</p>
+<p>Consider, for a moment, the actual magnitude of the problem we're
+addressing: it's a backward-compatibility/code evolution issue that
+only arises when <em>all</em> these conditions are satisfied:</p>
+<ul class="simple">
+<li>An existing operation today gives the strong guarantee</li>
+<li>The operation is being <em>move-enabled</em> (altered to use move operations)</li>
+<li>An existing type that the operation manipulates acquires a move constructor</li>
+<li>That move constructor can throw</li>
+<li>The particular move-enabled operation can only offer the basic
+guarantee if a move constructor throws<a class="footnote-reference" href="#x" id="id1"><sup>2</sup></a></li>
+</ul>
+<p>In light of the extremely narrow set of circumstances under which the
+problem can arise, it seems rather heavy-handed to ban throwing move
+constructors altogether:</p>
+<ul class="simple">
+<li>It can be a hard rule for users to follow.</li>
+<li>Generating move constructors by default as proposed in <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2904.pdf">N2904</a>
+requires a carefully-engineered set of rules about when such a
+default can be generated.</li>
+<li>It hobbles the optimization potential of move constructors, because
+efficient move constructors that might throw (but almost never will)
+can't be generated or written.</li>
+<li>It adds another &quot;Gotcha&quot; that people have to worry about.</li>
+<li>It places tight restrictions on the order of code evolution: one
+cannot move-enable a class until all its sub-objects have been
+move-enabled.</li>
+<li>It forces the weakening of class invariants for some move-enabled
+classes: if move construction can throw, it must be possible to
+leave the source object in a resource-less state.</li>
+<li>In some cases class maintainers may need to choose between
+move-enabling their class and maintaining its current guarantees to
+users.  For example, dinkumware's list implementation currently
+derives QOI benefits from having no resource-less state—“begin” and
+“end” iterators maintain their relationships even after lists are
+swapped.  If throwing move constructors are banned, that would no
+longer be possible.</li>
+<li>When it is necessary to manually write a move constructor for a
+templated class, it would in many cases require either expert-level
+metaprogramming skill or the addition of a language feature, just
+for move constructors, whose only purpose is in solving this
+particular problem.<a class="footnote-reference" href="#attribute" id="id2"><sup>1</sup></a></li>
+</ul>
+<p>Fortunately, there is a better way.  Instead of imposing this burden
+on every class author, we can deal with the issue more selectively in
+the operation being move-enabled.  There, we know whether a throwing
+move can disturb existing guarantees.  We propose that instead of
+using <tt class="docutils literal"><span class="pre">std::move(x)</span></tt> in those cases, thus granting permission for the
+compiler to use <em>any</em> available move constructor, maintainers of these
+particular operations should use <tt class="docutils literal"><span class="pre">std::nothrow_move(x)</span></tt>, which only
+grants permission to use non-throwing move constructors.  Unless <tt class="docutils literal"><span class="pre">x</span></tt>
+is known to have a nonthrowing move constructor, the operation would
+fall back to copying <tt class="docutils literal"><span class="pre">x</span></tt>, just as though <tt class="docutils literal"><span class="pre">x</span></tt> had never acquired a move
+constructor at all.</p>
+<p>For example, <tt class="docutils literal"><span class="pre">std::pair</span></tt>'s move constructor, were it to be written
+out manually, could remain as it was before this issue was
+discovered:</p>
+<pre class="literal-block">
+template &lt;class First2, Second2&gt;
+pair( pair&lt;First2,Second2&gt;&amp;&amp; rhs )
+  : first( move(rhs.first) ),
+    second( move(rhs.second) )
+{}
+</pre>
+<p>However, <tt class="docutils literal"><span class="pre">std::vector::reserve</span></tt> would be move-enabled this way:</p>
+<!-- parsed-literal:
+
+void reserve(size_type n)
+{
+    if (n > this->capacity())
+    {
+        pointer new_begin = this->allocate( n );
+        size_type s = this->size(), i = 0;
+        try
+        {
+            for (;i < s; ++i)
+                 new ((void*)(new_begin + i)) value_type( **nothrow_move(** (\*this)[i]) **)** );
+        }
+        catch(...)
+        {
+            for (;i > 0; - -i)                 // clean up new elements
+               (new_begin + i)->~value_type();
+
+            this->deallocate( new_begin );    // release storage
+            throw;
+        }
+        // - - - - - - - - irreversible mutation starts here - - - - - - - - - - -
+        this->deallocate( this->begin_ );
+        this->begin_ = new_begin;
+        this->end_ = new_begin + s;
+        this->cap_ = new_begin + n;
+    }
+} -->
+<p>We stress again that the use of <tt class="docutils literal"><span class="pre">nothrow_move</span></tt> as opposed to <tt class="docutils literal"><span class="pre">move</span></tt>
+would only be necessary under an <em>extremely</em> limited set of
+circumstances.  In particular, it would never be required in new code,
+which could simply give a <em>conditional</em> strong guarantee, e.g. “if an
+exception is thrown other than by <tt class="docutils literal"><span class="pre">T</span></tt>'s move constructor, there are
+no effects.”</p>
+</div>
+<div class="section" id="implementing-nothrow-move">
+<h1><a class="toc-backref" href="#id6">Implementing <tt class="docutils literal"><span class="pre">nothrow_move</span></tt></a></h1>
+<p>One reasonable implementation of <tt class="docutils literal"><span class="pre">std::nothrow_move</span></tt> might be:</p>
+<pre class="literal-block">
+template &lt;class T&gt;
+typename enable_if&lt;has_nothrow_move_constructor&lt;T&gt;, T&amp;&amp;&gt;::type
+nothrow_move(T&amp; x)
+{
+    return std::move(x);
+}
+
+template &lt;class T&gt;
+typename disable_if&lt;has_nothrow_move_constructor&lt;T&gt;, T&amp;&gt;::type
+nothrow_move(T&amp; x)
+{
+    return x;
+}
+</pre>
+<p>However, that begs the question of how
+<tt class="docutils literal"><span class="pre">has_nothrow_move_constructor&lt;T&gt;</span></tt> might be implemented.  We propose
+that <tt class="docutils literal"><span class="pre">has_nothrow_move_constructor&lt;T&gt;</span></tt> be a conservative trait very
+much like <tt class="docutils literal"><span class="pre">has_nothrow_copy_constructor&lt;T&gt;</span></tt> from the current working
+draft; it would be identical to the proposed
+<tt class="docutils literal"><span class="pre">is_nothrow_constructible&lt;T,T&amp;&amp;&gt;</span></tt> from <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a>.  In other words, it is
+<em>allowed</em> to return <tt class="docutils literal"><span class="pre">false</span></tt> even when the proper result is <tt class="docutils literal"><span class="pre">true</span></tt>.</p>
+</div>
+<div class="section" id="an-optimization-hint">
+<h1><a class="toc-backref" href="#id7">An Optimization Hint</a></h1>
+<p>To help the library deduce the correct result for these traits, we
+propose to add a new kind of exception-specification, spelled:</p>
+<pre class="literal-block">
+throw( <em>integral constant expression</em> )
+</pre>
+<p>The only impact of such an exception-specification is this: if a
+function decorated with <cite>throw(false)</cite> throws an exception, the
+behavior is undefined.<a class="footnote-reference" href="#no-diagnostic" id="id3"><sup>3</sup></a> That effect is sufficient to
+allow these <em>xxx</em><tt class="docutils literal"><span class="pre">_nothrow_</span></tt><em>xxx</em> traits to report <tt class="docutils literal"><span class="pre">true</span></tt> for
+any operation decorated with <cite>throw(false)</cite>.  Class maintainers could
+label their move constructors <cite>throw(false)</cite> to indicate non-throwing
+behavior, and the library is permitted to take advantage of that
+labelling if it can be detected (via “compiler magic”).</p>
+<p>Note that the usefulness of <cite>throw(false)</cite> as an optimization hint
+goes way beyond the narrow case introduced by <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2855.html">N2855</a>.  In fact, it
+goes beyond move construction: when the compiler can detect
+non-throwing operations with certainty, it can optimize away a great
+deal of code and/or data that is devoted to exception handling.  Some
+compilers already do that for <cite>throw()</cite> specifications, but since
+those incur the overhead of an implicit try/catch block to handle
+unexpected exceptions, the benefits are limited.</p>
+<p>The advantage of the integral constant expression parameter is that
+one can easily offer accurate hints in templated move constructors.
+For example, <cite>std::pair</cite>'s converting move constructor could be
+written as follows:</p>
+<pre class="literal-block">
+template &lt;class First2, Second2&gt;
+pair( pair&lt;First2,Second2&gt;&amp;&amp; rhs )
+      <strong>throw( !is_nothrow_constructible&lt;First,First2&amp;&amp;&gt;::value
+             || !is_nothrow_constructible&lt;Second,Second2&amp;&amp;&gt;::value )</strong><a class="footnote-reference" href="#is-nothrow-constructible" id="id4"><sup>4</sup></a>
+  : first( move(rhs.first) ),
+    second( move(rhs.second) )
+{}
+</pre>
+<p>Although the above is reminiscent of the <cite>enable_if</cite> clause that would
+be <em>required</em> if there is a ban on throwing move constructors, the
+exception specification above is entirely optional; its presence or
+absence doesn't affect the correctness of a move constructor.</p>
+</div>
+<div class="section" id="interactions-with-other-proposals">
+<h1><a class="toc-backref" href="#id8">Interactions with Other Proposals</a></h1>
+<p>The generation of default move constructors, first proposed by Bjarne
+Stroustrup in <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2904.pdf">N2904</a>, and again by Bjarne Stroustrup and Lawrence
+Crowl in <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a>, is harmonious with our proposal.  For example, since
+throwing move constructors are allowed, default move constructors will
+be generated in more cases, with performance benefits if <em>any</em>
+subobjects have been move-enabled.</p>
+<p>As a matter of QOI, a default move constructor would probably gain an
+exception specification whose boolean constant parameter is computed
+from the results of has_nothrow_move on all subobjects, but, being a
+matter of QOI, that doesn't have any effect on standard text.</p>
+<p>The proposed <tt class="docutils literal"><span class="pre">[[nothrow]]</span></tt> attribute is just a less-powerful version
+of this feature.  In particular, it can't express the hint shown for
+<cite>pair</cite>'s move constructor above.  We suggest it be dropped.</p>
+</div>
+<div class="section" id="existing-practice">
+<h1><a class="toc-backref" href="#id9">Existing Practice</a></h1>
+<p>The Microsoft compiler has always treated empty
+exception-specifications as though they have the same meaning we
+propose for <cite>throw(false)</cite>.  That is, Microsoft omits the
+standard-mandated runtime behavior if the function throws, and it
+performs optimizations based on the assumption that the function
+doesn't throw.  This interpretation of <cite>throw()</cite> has proven to be
+successful in practice and is regarded by many as superior to the one
+in the standard.  Standardizing <cite>throw(false)</cite> gives everyone access
+to this optimization tool.</p>
+</div>
+<div class="section" id="proposed-changes-to-standard-wording">
+<h1><a class="toc-backref" href="#id10">Proposed Changes to Standard Wording</a></h1>
+<!-- Rani fills in this part -->
+<hr class="docutils" />
+<table class="docutils footnote" frame="void" id="attribute" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>In Frankfurt, Dave proposed that we use the attribute
+syntax <tt class="docutils literal"><span class="pre">[[moves(subobj1,subobj2)]]</span></tt> for this purpose.  Aside from
+being controversial, it's a wart regardless of the syntax used,
+adding a whole new mechanism just for move constructors but useless
+elsewhere.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="x" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[2]</a></td><td>Many move-enabled operations can give the strong guarantee
+regardless of whether move construction throws.  One example is
+<tt class="docutils literal"><span class="pre">std::list&lt;T&gt;::push_back</span></tt>.  This issue affects only the narrow
+subset of operations that need to make <em>multiple</em> explicit moves
+from locations observable by the caller.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="no-diagnostic" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>In particular, we are not proposing to mandate
+static checking: a <cite>throw(false)</cite> function can call a <cite>throw(true)</cite>
+function without causing the program to become ill-formed or
+generating a diagnostic.  Generating a diagnostic in such cases
+can, of course, be implemented by any compiler as a matter of QOI.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="is-nothrow-constructible" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>See <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a> for a definition of
+<cite>is_nothrow_constructible</cite>.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>
