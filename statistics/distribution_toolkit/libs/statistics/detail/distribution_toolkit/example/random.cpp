@@ -11,6 +11,9 @@
 #include <boost/statistics/detail/distribution_toolkit/distributions/gamma/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/students_t/include.hpp>
+
+// Warning: location_scale<Z> comes after fwd_math because Z is defined in math::
+#include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/wrapper/include.hpp>
 
@@ -24,6 +27,8 @@ void example_random(std::ostream& os)
     // by make_random(dist), this example outputs a series of kolmogorov-
     // smirnov statistics. Convergence to zero is evidence that 
     // the sample agrees wit the cdf of dist
+
+    os << "-> test_random " << std::endl;
 
     using namespace boost;
     using namespace boost::statistics;
@@ -53,7 +58,7 @@ void example_random(std::ostream& os)
 
     }
     {
-        typedef math::exponential_distribution<val_>            dist_;
+        typedef math::exponential_distribution<val_>     dist_;
         const val_ lambda = 1.0;
         dist_ dist( lambda );
 
@@ -127,7 +132,7 @@ void example_random(std::ostream& os)
     }
     {
         typedef math::students_t_distribution<val_>         d0_;
-        typedef tk::wrapper<d0_>                     dist_; 
+        typedef tk::wrapper<d0_>                            dist_; 
         const val_ df = 4.0;
         d0_ d0( df );
         dist_ dist(d0);

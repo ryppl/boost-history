@@ -9,6 +9,7 @@
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_TEST_RANDOM_HPP_ER_2009
 #include <iterator>
 #include <boost/utility/result_of.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <ext/algorithm>
 #include <boost/range.hpp>
 #include <boost/static_assert.hpp>
@@ -27,7 +28,6 @@
 #include <boost/statistics/detail/distribution_toolkit/fun_wrap/cdf.hpp>
 
 #include <boost/statistics/detail/distribution_toolkit/random/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/data/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/unscope/os.hpp>
 
 namespace boost{
@@ -56,10 +56,7 @@ void random(
     // Types 
     typedef typename common::meta::value<D>::type     val_;
     typedef mt19937                                   urng_;
-
     typedef typename meta::bind_delegate<D>::type     fun_;
-//    typedef function<val_(const val_&)>               fun_;
-
     typedef detail::fusion::functor::map_identity_f<
         mpl::int_<0>,
         mpl::int_<1>,
@@ -68,7 +65,6 @@ void random(
 
    typedef typename functor_::identity::key_ key1_;
    typedef typename functor_::function::key_ key2_;
-
 
     typedef non_parametric::kolmogorov_smirnov::statistic<
         val_,
@@ -88,9 +84,6 @@ void random(
     kolmogorov_smirnov_stat_ kolmogorov_smirnov_stat;
 
     {
-        typedef math::chi_squared_distribution<val_> dist_;
-        const val_ df = 10;
-        dist_ dist( df );
 
         functor_ functor(
             make_bind_delegate<fun_wrap::cdf_>(dist)

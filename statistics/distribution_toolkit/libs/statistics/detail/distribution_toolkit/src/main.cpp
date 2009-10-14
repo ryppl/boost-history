@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution::toolkit::src::main.h                                        //
+// distribution::toolkit::src::main.h                                       //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
