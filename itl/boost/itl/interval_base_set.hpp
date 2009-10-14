@@ -98,12 +98,12 @@ public:
     typedef Alloc<DomainT> domain_allocator_type;
 
     /// Container type for the implementation 
-    typedef typename itl::set<interval_type,ITL_EXCLUSIVE_LESS(interval_type),Alloc> ImplSetT;
+    typedef typename std::set<interval_type,key_compare,allocator_type> ImplSetT;
 
     /// key type of the implementing container
     typedef typename ImplSetT::key_type   key_type;
     /// data type of the implementing container
-    typedef typename ImplSetT::data_type  data_type;
+    typedef typename key_type  data_type;
     /// value type of the implementing container
     typedef typename ImplSetT::value_type value_type;
 

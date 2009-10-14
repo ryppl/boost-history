@@ -9,22 +9,34 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 +-----------------------------------------------------------------------------*/
 #include <iostream>
 #include <stdio.h>
-#include <boost/validate/driver/bit_collector_driver.hpp>
+
+#include <boost/validate/loki_xt/Tuple.h>
+#include <boost/itl/set.hpp>
+#include <boost/itl/map.hpp>
+#include <boost/validate/gentor/gentorprofile.hpp>
+#include <boost/validate/gentor/rangegentor.hpp>
+
+#include <boost/itl/interval_set.hpp>
+#include <boost/itl_xt/numbergentor.hpp>
+#include <boost/itl_xt/setgentor.hpp>
+#include <boost/itl/functors.hpp>
+#include <boost/validate/driver/set_order_driver.hpp>
 
 using namespace std;
+using namespace Loki;
 using namespace boost;
 using namespace boost::itl;
 
-void test_bit_collector_driver()
+void test_itl_order_driver()
 {
-    bit_collector_driver validater;
+    set_order_driver validater;
     cout << 
     ">> ------------------------------------------------------ <<\n"
     ">> -------- Law based test automaton 'LaBatea' ---------- <<\n"
     ">> Output will be generated in a few seconds\n"
     ">> terminate by typing <CTRL>C\n"
     ">> ------------------------------------------------------ <<\n";
-    GentorProfileSgl::it()->set_std_profile(10,1);
+    GentorProfileSgl::it()->set_std_profile(16,1);
     GentorProfileSgl::it()->report_profile();
     validater.validate();
 };
@@ -32,6 +44,6 @@ void test_bit_collector_driver()
 
 int main()
 {
-    test_bit_collector_driver();
+    test_itl_order_driver();
     return 0;
 }

@@ -18,23 +18,23 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
     
-    class itl_order_driver : public itl_driver
+    class map_order_driver : public itl_driver
     {
     public:
-        itl_order_driver() { setProfile(); }
+        map_order_driver() { setProfile(); }
 
         void setProfile()
         {
             setValid(true);
             _rootChoice.setSize(RootType::Types_size);
             _rootChoice.setMaxWeights(100);
-            _rootChoice[RootType::itl_set]               = 14;
-            _rootChoice[RootType::interval_set]          = 14;
-            _rootChoice[RootType::separate_interval_set] = 14;
-            _rootChoice[RootType::split_interval_set]    = 14;
-            _rootChoice[RootType::itl_map]               = 14;
-            _rootChoice[RootType::interval_map]          = 15;
-            _rootChoice[RootType::split_interval_map]    = 15;
+            _rootChoice[RootType::itl_set]               = 0;
+            _rootChoice[RootType::interval_set]          = 0;
+            _rootChoice[RootType::separate_interval_set] = 0;
+            _rootChoice[RootType::split_interval_set]    = 0;
+            _rootChoice[RootType::itl_map]               = 33;
+            _rootChoice[RootType::interval_map]          = 33;
+            _rootChoice[RootType::split_interval_map]    = 34;
             setRootTypeNames();
             _rootChoice.init();
 
@@ -66,25 +66,25 @@ namespace boost{namespace itl
             if(!_rootChoice.is_consistent())
             {
                 setValid(false);
-                std::cout << _rootChoice.inconsitencyMessage("itl_order_driver::setProfile()") << std::endl;
+                std::cout << _rootChoice.inconsitencyMessage("map_order_driver::setProfile()") << std::endl;
             }
 
             if(!_domainChoice.is_consistent())
             {
                 setValid(false);
-                std::cout << _domainChoice.inconsitencyMessage("itl_order_driver::setProfile()") << std::endl;
+                std::cout << _domainChoice.inconsitencyMessage("map_order_driver::setProfile()") << std::endl;
             }
 
             if(!_codomainChoice.is_consistent())
             {
                 setValid(false);
-                std::cout << _codomainChoice.inconsitencyMessage("itl_order_driver::setProfile()") << std::endl;
+                std::cout << _codomainChoice.inconsitencyMessage("map_order_driver::setProfile()") << std::endl;
             }
 
             if(!_neutronizerChoice.is_consistent())
             {
                 setValid(false);
-                std::cout << _neutronizerChoice.inconsitencyMessage("itl_order_driver::setProfile()") << std::endl;
+                std::cout << _neutronizerChoice.inconsitencyMessage("map_order_driver::setProfile()") << std::endl;
             }
 
         }
@@ -98,43 +98,6 @@ namespace boost{namespace itl
 
             switch(rootChoice)
             {
-            //-----------------------------------------------------------------
-            // Sets
-            //-----------------------------------------------------------------
-            case RootType::itl_set: {
-                    switch(domainChoice) {
-                    case DomainType::Int:    return new itl_order_validater<itl::set<int> >; 
-                    case DomainType::Double: return new itl_order_validater<itl::set<double> >; 
-                    default: return choiceError(ITL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
-                                                domainChoice, _domainChoice);
-                    }
-                }
-            case RootType::interval_set: {
-                    switch(domainChoice) {
-                    case DomainType::Int:    return new itl_order_validater<interval_set<int> >;
-                    case DomainType::Double: return new itl_order_validater<interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::interval_set: domainChoice:\n"), 
-                                                domainChoice, _domainChoice);
-                    }
-                }
-            case RootType::separate_interval_set: {
-                    switch(domainChoice) {
-                    case DomainType::Int:    return new itl_order_validater<separate_interval_set<int> >;
-                    case DomainType::Double: return new itl_order_validater<separate_interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::separate_interval_set: domainChoice:\n"), 
-                                                domainChoice, _domainChoice);
-                    }
-                 }
-            case RootType::split_interval_set: {
-                    switch(domainChoice) {
-                    case DomainType::Int:    return new itl_order_validater<split_interval_set<int> >;
-                    case DomainType::Double: return new itl_order_validater<split_interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::split_interval_set: domainChoice:\n"), 
-                                                domainChoice, _domainChoice);
-                    }
-                }
-            //-----------------------------------------------------------------
-            // Maps
             //-----------------------------------------------------------------
             case RootType::itl_map: {
                 switch(domainChoice) {

@@ -47,13 +47,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_single", "..\..\.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_casual", "..\..\test\test_casual_\vc9_test_casual.vcproj", "{EE61B7EF-EC45-4165-8B49-FD5B8D3A9FA0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_val_relations", "..\..\..\validate\example\labat_val_relations_\vc9_labat_val_relations.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F471F}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_unsigned_quantifier", "..\..\..\validate\example\labat_unsigned_quantifier_\vc9_labat_unsigned_quantifier.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4720}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_signed_quantifier", "..\..\..\validate\example\labat_signed_quantifier_\vc9_labat_signed_quantifier.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4721}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_itl_order", "..\..\..\validate\example\labat_itl_order_\vc9_labat_itl_order.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4722}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_collector", "..\..\..\validate\example\labat_collector_\vc9_labat_collector.vcproj", "{9EF72937-0585-487D-B887-5359BFA569E8}"
 EndProject
@@ -136,6 +132,14 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_map_copy_conformity", "..\..\..\validate\example\labat_map_copy_conformity_\vc9_labat_map_copy_conformity.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F472F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_bit_collector", "..\..\..\validate\example\labat_bit_collector_\vc9_labat_bit_collector.vcproj", "{9EF72937-0585-487D-B887-5359BFA569E9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_set_copy_conformity", "..\..\..\validate\example\labat_set_copy_conformity_\vc9_labat_set_copy_conformity.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F473F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_val_relations", "..\..\..\validate\example\labat_val_relations_\vc9_labat_val_relations.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F471F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_set_order", "..\..\..\validate\example\labat_set_order_\vc9_labat_set_order.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4728}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_map_order", "..\..\..\validate\example\labat_map_order_\vc9_labat_map_order.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4727}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -235,10 +239,6 @@ Global
 		{EE61B7EF-EC45-4165-8B49-FD5B8D3A9FA0}.Debug|Win32.Build.0 = Debug|Win32
 		{EE61B7EF-EC45-4165-8B49-FD5B8D3A9FA0}.Release|Win32.ActiveCfg = Release|Win32
 		{EE61B7EF-EC45-4165-8B49-FD5B8D3A9FA0}.Release|Win32.Build.0 = Release|Win32
-		{BF42574F-66E2-42DD-90D9-3A8FCE6F471F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BF42574F-66E2-42DD-90D9-3A8FCE6F471F}.Debug|Win32.Build.0 = Debug|Win32
-		{BF42574F-66E2-42DD-90D9-3A8FCE6F471F}.Release|Win32.ActiveCfg = Release|Win32
-		{BF42574F-66E2-42DD-90D9-3A8FCE6F471F}.Release|Win32.Build.0 = Release|Win32
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F4720}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F4720}.Debug|Win32.Build.0 = Debug|Win32
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F4720}.Release|Win32.ActiveCfg = Release|Win32
@@ -247,10 +247,6 @@ Global
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F4721}.Debug|Win32.Build.0 = Debug|Win32
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F4721}.Release|Win32.ActiveCfg = Release|Win32
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F4721}.Release|Win32.Build.0 = Release|Win32
-		{BF42574F-66E2-42DD-90D9-3A8FCE6F4722}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BF42574F-66E2-42DD-90D9-3A8FCE6F4722}.Debug|Win32.Build.0 = Debug|Win32
-		{BF42574F-66E2-42DD-90D9-3A8FCE6F4722}.Release|Win32.ActiveCfg = Release|Win32
-		{BF42574F-66E2-42DD-90D9-3A8FCE6F4722}.Release|Win32.Build.0 = Release|Win32
 		{9EF72937-0585-487D-B887-5359BFA569E8}.Debug|Win32.ActiveCfg = Debug|Win32
 		{9EF72937-0585-487D-B887-5359BFA569E8}.Debug|Win32.Build.0 = Debug|Win32
 		{9EF72937-0585-487D-B887-5359BFA569E8}.Release|Win32.ActiveCfg = Release|Win32
@@ -415,6 +411,22 @@ Global
 		{9EF72937-0585-487D-B887-5359BFA569E9}.Debug|Win32.Build.0 = Debug|Win32
 		{9EF72937-0585-487D-B887-5359BFA569E9}.Release|Win32.ActiveCfg = Release|Win32
 		{9EF72937-0585-487D-B887-5359BFA569E9}.Release|Win32.Build.0 = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F473F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F473F}.Debug|Win32.Build.0 = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F473F}.Release|Win32.ActiveCfg = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F473F}.Release|Win32.Build.0 = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F471F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F471F}.Debug|Win32.Build.0 = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F471F}.Release|Win32.ActiveCfg = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F471F}.Release|Win32.Build.0 = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4728}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4728}.Debug|Win32.Build.0 = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4728}.Release|Win32.ActiveCfg = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4728}.Release|Win32.Build.0 = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4727}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4727}.Debug|Win32.Build.0 = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4727}.Release|Win32.ActiveCfg = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4727}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -20,7 +20,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl_xt/numbergentor.hpp>
 #include <boost/itl_xt/setgentor.hpp>
 #include <boost/itl/functors.hpp>
-#include <boost/validate/driver/itl_order_driver.hpp>
+#include <boost/validate/driver/map_order_driver.hpp>
 
 using namespace std;
 using namespace Loki;
@@ -29,7 +29,7 @@ using namespace boost::itl;
 
 void test_itl_order_driver()
 {
-    itl_order_driver validater;
+    map_order_driver validater;
     cout << 
     ">> ------------------------------------------------------ <<\n"
     ">> -------- Law based test automaton 'LaBatea' ---------- <<\n"

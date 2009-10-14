@@ -10,10 +10,12 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define __interval_base_map_h_JOFA_990223__
 
 #include <limits>
+#include <boost/type_traits/ice.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
-
-
 #include <boost/itl/map.hpp>
 #include <boost/itl/interval_base_set.hpp>
 
@@ -132,8 +134,8 @@ public:
         allocator_type;
 
     /// Container type for the implementation 
-    typedef itl::map<interval_type,codomain_type,Traits,
-                     ITL_EXCLUSIVE_LESS(interval_type),Combine,Section,Alloc> ImplMapT;
+    typedef std::map<interval_type,codomain_type,
+                     key_compare,allocator_type> ImplMapT;
 
     /// key type of the implementing container
     typedef typename ImplMapT::key_type   key_type;
@@ -194,8 +196,7 @@ public:
 
     /** Copy all elements if predicate <tt>pred</tt> holds */
     template<class Predicate>
-    interval_base_map& assign_if(const interval_base_map& src, const Predicate& pred)
-    { _map.assign_if(src._map, pred); return *this; }
+    SubType& assign_if(const interval_base_map& src, const Predicate& pred);
 
     //==========================================================================
     //= Containedness
@@ -501,8 +502,7 @@ public:
 
     /** Remove all elements where property <tt>p</tt> holds, keep all others */
     template<class Predicate>
-    interval_base_map& erase_if(const Predicate& pred)
-    { _map.erase_if(pred); return *this; }
+    SubType& erase_if(const Predicate& pred);
 
     //==========================================================================
     //= Intersection
@@ -763,7 +763,8 @@ protected:
     template <class Combiner>
     std::pair<iterator,bool> map_insert(const interval_type& inter_val, const codomain_type& co_val)
     {
-        if(Traits::is_total && has_inverse<codomain_type>::value && is_negative<Combiner>::value)
+		using namespace type_traits;
+		if(ice_and<Traits::is_total, has_inverse<codomain_type>::value, is_negative<Combiner>::value>::value)
             return this->_map.insert(value_type(inter_val, version<Combiner>()(co_val)));
         else
             return this->_map.insert(value_type(inter_val, co_val));
@@ -793,7 +794,7 @@ protected:
         BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
 
         iterator inserted_ 
-            = this->_map.base_insert(prior_, value_type(inter_val, Combiner::neutron()));
+            = this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
 
         if(inserted_->first == inter_val && inserted_->second == Combiner::neutron())
         {
@@ -812,7 +813,7 @@ protected:
         BOOST_ASSERT(this->_map.find(inter_val) == this->_map.end());
         BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
 
-        if(has_inverse<codomain_type>::value && is_negative<Combiner>::value)
+		if(mpl::and_<has_inverse<codomain_type>, is_negative<Combiner> >::value)
             return this->_map.insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
         else
             return this->_map.insert(prior_, value_type(inter_val, co_val));
@@ -1052,7 +1053,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
         ITL_FORALL(typename ImplMapT, it_, _map)
             it_->second = neutron<codomain_type>::value();
 
-        if(!is_interval_splitter<SubType>::value)
+		if(mpl::not_<is_interval_splitter<SubType> >::value)
             join();
 
         return *that();
@@ -1141,7 +1142,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
         ITL_FORALL(typename ImplMapT, it_, _map)
             it_->second = neutron<codomain_type>::value();
 
-        if(!is_interval_splitter<SubType>::value)
+		if(mpl::not_<is_interval_splitter<SubType> >::value)
             join();
 
         return *that();
@@ -1331,6 +1332,48 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Inter
 
     return *that();
 }
+
+
+template 
+<
+    class SubType,
+    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+    template<class Predicate>
+SubType& 
+interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+    ::erase_if(const Predicate& pred)
+{
+    iterator it = _map.begin();
+    while(it != _map.end())
+        if(Predicate()(*it))
+            _map.erase(it++); 
+        else ++it;
+    return *that();
+}
+
+
+template 
+<
+    class SubType,
+    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+    template<class Predicate>
+SubType& 
+interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+    ::assign_if(const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& src, 
+	            const Predicate& pred)
+{
+    clear();
+    const_iterator it = src.begin();
+    while(it != src.end()) {
+        if(Predicate()(*it)) 
+            add(*it++); 
+    }
+    return *that();
+}
+
+
 
 //==============================================================================
 //= Equivalences and Orderings

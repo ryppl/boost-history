@@ -9,6 +9,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_ITL_MAP_HPP_JOFA_070519
 
 #include <string>
+#include <boost/type_traits/ice.hpp>
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/concept_check.hpp>
@@ -276,16 +277,6 @@ public:
             return base_type::insert(prior, value_pair);
     }
 
-    iterator base_insert(iterator prior, const value_type& value_pair)
-    {
-        return base_type::insert(prior, value_pair);
-    }
-
-    std::pair<iterator,bool> base_insert(const value_type& value_pair)
-    {
-        return base_type::insert(value_pair);
-    }
-
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
     map& set(const element_type& key_value_pair)
     { 
@@ -421,16 +412,13 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::_add(const value_type& val)
 {
+	using namespace type_traits;
     if(Traits::absorbs_neutrons && val.second == Combiner::neutron())
         return *this;
 
     std::pair<iterator, bool> insertion;
-    if(Traits::is_total && has_inverse<codomain_type>::value)
-    {
-        CodomainT added_val = Combiner::neutron();
-        Combiner()(added_val, val.second);
-        insertion = insert(value_type(val.first, added_val));
-    }
+	if(ice_and<Traits::is_total, has_inverse<codomain_type>::value, is_negative<Combiner>::value>::value)
+        insertion = insert(value_type(val.first, version<Combiner>()(val.second)));
     else // Existential case
         insertion = insert(val);
 
@@ -456,9 +444,9 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
     ::_add(iterator prior_, const value_type& val)
 {
     if(Traits::absorbs_neutrons && val.second == Combiner::neutron())
-        return prior_;
+        return end();
 
-    iterator inserted_ = base_insert(prior_, value_type(val.first, Combiner::neutron()));
+	iterator inserted_ = base_type::insert(prior_, value_type(val.first, Combiner::neutron()));
     Combiner()(inserted_->second, val.second);
 
     if(Traits::absorbs_neutrons && inserted_->second == Combiner::neutron())
@@ -1130,15 +1118,24 @@ struct is_interval_container<itl::map<DomainT,CodomainT,Traits,Compare,Combine,S
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 struct is_interval_splitter<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
-{ BOOST_STATIC_CONSTANT(bool, value = false); };
+{
+	typedef is_interval_splitter type;
+	BOOST_STATIC_CONSTANT(bool, value = false); 
+};
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 struct absorbs_neutrons<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
-{ enum{value = Traits::absorbs_neutrons}; };
+{ 
+	typedef absorbs_neutrons type;
+	BOOST_STATIC_CONSTANT(int, value = Traits::absorbs_neutrons); 
+};
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 struct is_total<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
-{ enum{value = Traits::is_total}; };
+{ 
+	typedef is_total type;
+	BOOST_STATIC_CONSTANT(int, value = Traits::is_total); 
+};
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 struct type_to_string<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >

@@ -89,6 +89,14 @@ namespace boost{namespace itl
     class RandomGentor<itl::list<std::pair<DomainT,CodomainT> > > :
         public SeqGentorT<itl::list<std::pair<DomainT,CodomainT> > > {};
 
+    template <class DomainT> 
+	class RandomGentor<itl::list<itl::interval<DomainT> > > :
+        public SeqGentorT<itl::list<itl::interval<DomainT> > > {};
+
+    template <class DomainT> 
+	class RandomGentor<itl::list<DomainT> > :
+        public SeqGentorT<itl::list<DomainT> > {};
+
     // ----- sets --------------------------------------------------------------
     //template <class DomainT, template<class>class Set> 
     //class RandomGentor<Set<DomainT> > :
@@ -337,6 +345,31 @@ namespace boost{namespace itl
             segment_gentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
             segment_gentor->set_corange(GentorProfileSgl::it()->range_int()); // sets range of codomain_values
             gentor.setDomainGentor(segment_gentor);
+        }
+    };
+
+    template <class NumericT> 
+    struct Calibrater<itl::list< itl::interval<NumericT> >, RandomGentor>
+    {
+        static void apply(RandomGentor< itl::list< itl::interval<NumericT> > >& gentor) 
+        {
+            gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
+            ItvGentorT<NumericT>* itvGentor  = new ItvGentorT<NumericT>;
+            itvGentor->setRange(GentorProfileSgl_numeric_range<NumericT>::get());
+            itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
+            gentor.setDomainGentor(itvGentor);
+        }
+    };
+
+    template <class NumericT> 
+    struct Calibrater<itl::list<NumericT>, RandomGentor>
+    {
+        static void apply(RandomGentor< itl::list<NumericT> >& gentor) 
+        {
+            gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
+            NumberGentorT<NumericT>* domainGentor = new NumberGentorT<NumericT>;
+            domainGentor->setRange(GentorProfileSgl_numeric_range<NumericT>::get());
+            gentor.setDomainGentor(domainGentor);
         }
     };
 

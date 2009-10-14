@@ -7,31 +7,25 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
+#define BOOST_TEST_MODULE validate::bit_collector_copy_conformity unit test
+#include <string>
 #include <iostream>
-#include <stdio.h>
+#include <boost/test/unit_test.hpp>
 #include <boost/validate/driver/bit_collector_driver.hpp>
 
 using namespace std;
 using namespace boost;
+using namespace unit_test;
 using namespace boost::itl;
 
-void test_bit_collector_driver()
+BOOST_AUTO_TEST_CASE(test_validate_itl_bit_collector)
 {
     bit_collector_driver validater;
-    cout << 
-    ">> ------------------------------------------------------ <<\n"
-    ">> -------- Law based test automaton 'LaBatea' ---------- <<\n"
-    ">> Output will be generated in a few seconds\n"
-    ">> terminate by typing <CTRL>C\n"
-    ">> ------------------------------------------------------ <<\n";
-    GentorProfileSgl::it()->set_std_profile(10,1);
-    GentorProfileSgl::it()->report_profile();
-    validater.validate();
-};
+    GentorProfileSgl::it()->set_std_profile(12,1);
+    //GentorProfileSgl::it()->report_profile();
+	validater.terminate_at_law_count(72, 2);
+	validater.set_information_level(inform::never);
 
-
-int main()
-{
-    test_bit_collector_driver();
-    return 0;
+    BOOST_CHECK_EQUAL(validater.validate(), true);
 }
+

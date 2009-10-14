@@ -25,6 +25,28 @@ exe labat_val_relations
         <include>$(BOOST_ROOT)
     ;
 
+# msvc9 compilation time: 1:01  
+exe labat_set_copy_conformity
+    :
+        set_copy_conformity_/labat_set_copy_conformity.cpp
+		gentorprofile.obj
+		/boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+# msvc9 compilation time: 1:03  
+exe labat_map_copy_conformity
+    :
+        map_copy_conformity_/labat_map_copy_conformity.cpp
+		gentorprofile.obj
+		/boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
 # msvc9 compilation time: 1:28  
 exe labat_itl_set
     :
@@ -51,6 +73,17 @@ exe labat_collector
 exe labat_unsigned_quantifier
     :
         labat_unsigned_quantifier_/labat_unsigned_quantifier.cpp
+		gentorprofile.obj
+		/boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+   
+# msvc9 compilation time: 1:56   
+exe labat_bit_collector
+    :
+        labat_bit_collector_/labat_bit_collector.cpp
 		gentorprofile.obj
 		/boost/date_time//boost_date_time
     :

@@ -685,15 +685,24 @@ struct is_interval_container<itl::set<Type> >
 
 template <class Type>
 struct is_interval_splitter<itl::set<Type> >
-{ BOOST_STATIC_CONSTANT(bool, value = false); };
+{ 
+	typedef is_interval_splitter type;
+	BOOST_STATIC_CONSTANT(bool, value = false); 
+};
 
 template <class Type>
 struct absorbs_neutrons<itl::set<Type> >
-{ BOOST_STATIC_CONSTANT(bool, value = false); };
+{ 
+	typedef absorbs_neutrons type;
+	BOOST_STATIC_CONSTANT(bool, value = false); 
+};
 
 template <class Type>
 struct is_total<itl::set<Type> >
-{ BOOST_STATIC_CONSTANT(bool, value = false); };
+{ 
+	typedef is_total type;
+	BOOST_STATIC_CONSTANT(bool, value = false); 
+};
 
 template <class Type>
 struct type_to_string<itl::set<Type> >

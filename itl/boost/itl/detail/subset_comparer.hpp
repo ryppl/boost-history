@@ -8,6 +8,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_SUBSET_COMPARER_HPP_JOFA_090202
 #define BOOST_ITL_SUBSET_COMPARER_HPP_JOFA_090202
 
+#include <boost/mpl/and.hpp>
 #include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/relation_state.hpp>
@@ -83,13 +84,15 @@ public:
     typedef typename LeftT::const_iterator  LeftIterT;
     typedef typename RightT::const_iterator RightIterT;
 
+	BOOST_STATIC_CONSTANT(bool, 
+		_compare_codomain = (mpl::and_<is_map<LeftT>, is_map<RightT> >::value)); 
+
     subset_comparer(const LeftT&      left,
                     const RightT&     right,
                     const LeftIterT&  left_end,
                     const RightIterT& right_end)
         : _left(left), _right(right),
-          _left_end(left_end), _right_end(right_end), 
-          _compare_codomain(false), _result(equal)
+          _left_end(left_end), _right_end(right_end), _result(equal)
     {}
 
     enum{nextboth, stop};
@@ -102,13 +105,7 @@ public:
         equal      = inclusion::equal       // equal = subset | superset
     };
 
-    void set_compare_codomain(bool truth=true)
-    { _compare_codomain = truth; }
-
-    bool compare_codomain()const { return _compare_codomain; }
-
     int result()const{ return _result; }
-
 
     int co_compare(LeftIterT& left, RightIterT& right)
     {
@@ -181,7 +178,7 @@ public:
         }
 
         // left =key= right 
-        if(compare_codomain())
+        if(_compare_codomain)
             if(unrelated == restrict_result(co_compare(left,right)))
                 return stop;
 
@@ -195,7 +192,6 @@ private:
     const RightT& _right;
     LeftIterT     _left_end;
     RightIterT    _right_end;
-    bool          _compare_codomain;
     int           _result;
 };
 
@@ -219,7 +215,6 @@ int subset_compare
 {
     typedef subset_comparer<LeftT,RightT> Step;
     Step step(left, right, left_end, right_end);
-    step.set_compare_codomain(is_map<LeftT>::value && is_map<RightT>::value);
 
     typename LeftT::const_iterator  left_  = left_begin;
     typename RightT::const_iterator right_ = right_begin;

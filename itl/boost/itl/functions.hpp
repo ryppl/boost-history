@@ -8,6 +8,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_FUNCTIONS_HPP_JOFA_090803
 #define BOOST_ITL_FUNCTIONS_HPP_JOFA_090803
 
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/itl/type_traits/is_element_container.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
@@ -379,7 +381,7 @@ typename boost::enable_if<is_intra_combinable<LeftT, RightT>,
                           bool>::type
 intersects(const LeftT& left, const RightT& right)
 {
-    if(is_total<LeftT>::value || is_total<RightT>::value)
+	if(mpl::or_<is_total<LeftT>, is_total<RightT> >::value)
         return true;
 
     LeftT intersection;

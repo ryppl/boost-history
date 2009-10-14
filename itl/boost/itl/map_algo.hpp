@@ -8,6 +8,9 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_MAPALGO_HPP_JOFA_080225
 #define BOOST_ITL_MAPALGO_HPP_JOFA_080225
 
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/set_algo.hpp>
 
@@ -110,7 +113,7 @@ bool key_intersects(const ObjectT& left, const CoObjectT& right)
 template<class MapType>
 void flip(MapType& result, const MapType& x2)
 {
-    if(is_total<MapType>::value && absorbs_neutrons<MapType>::value)
+	if(mpl::and_<is_total<MapType>, absorbs_neutrons<MapType> >::value)
     {
         result.clear();
         return;
@@ -139,7 +142,7 @@ void flip(MapType& result, const MapType& x2)
         }
     }
 
-    if(is_total<MapType>::value && !absorbs_neutrons<MapType>::value)
+	if(mpl::and_<is_total<MapType>, mpl::not_<absorbs_neutrons<MapType> > >::value)
         ITL_FORALL(typename MapType, it_, result)
             it_->second = neutron<typename MapType::codomain_type>::value();
 }

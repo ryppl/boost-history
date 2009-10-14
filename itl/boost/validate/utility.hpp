@@ -11,7 +11,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_VALIDATE_UTILITY_HPP_JOFA_090203
 
 #include <iostream>
-#include <stdio.h>
+#include <boost/itl/type_traits/to_string.hpp>
 
 #define ITL_LOCATION(message) location(__FILE__,__LINE__,message)
 
@@ -35,3 +35,4 @@ namespace boost{namespace itl
 }} // namespace itl boost
 
 #endif // BOOST_VALIDATE_UTILITY_HPP_JOFA_090203
+

@@ -43,11 +43,18 @@ namespace boost{namespace itl
         enum NeutronHandlerTypes { partial_absorber, partial_enricher, total_absorber, total_enricher, NeutronHandlerTypes_size };
     }
 
+	namespace inform
+	{
+		enum informs { never=0, rarely, frequently };
+	}
     
     class itl_driver
     {
     public:
         itl_driver()
+			: _required_law_validation_count(0)
+			, _required_law_count(0)
+			, _info_level(inform::frequently)
         {
             _laws_per_cycle = GentorProfileSgl::it()->laws_per_cycle();
         }
@@ -57,18 +64,38 @@ namespace boost{namespace itl
         virtual void setProfile() = 0;
         virtual algebra_validater* chooseValidater() = 0;
 
-        void validate()
+		void require_validation_count(int count){ _required_law_validation_count = count; }
+		int  required_validation_count()const   { return _required_law_validation_count;  }
+
+		void require_law_count(int count){ _required_law_count = count; }
+		int  required_law_count()const   { return _required_law_count;  }
+
+		void terminate_at_law_count(int law_count, int instance_count = 1)
+		{ 
+			require_law_count(law_count); 
+			require_validation_count(instance_count); 
+		}
+
+		void set_information_level(int inform){ _info_level = inform; }
+
+        bool validate()
         {
             //srand(static_cast<unsigned>(time(NULL))); //Different numbers each run
             srand(static_cast<unsigned>(1)); //Same numbers each run (std)
             //srand(static_cast<unsigned>(4711)); //Same numbers each run (varying)
 
-            for(int idx=0; hasValidProfile(); idx++)
+            for(int idx=0; !terminates(); idx++)
             {
                 if(idx>0 && idx % _laws_per_cycle == 0)
-                    reportFrequencies();
+					if(_info_level == inform::frequently)
+						reportFrequencies();
                 validateType();
             }
+
+			if(_info_level >= inform::rarely)
+				reportFrequencies();
+
+			return _violationsCount.empty();
         }
 
         void validateType()
@@ -82,6 +109,18 @@ namespace boost{namespace itl
                 delete _validater;
             }
         }
+
+		int least_law_validation_count()const
+		{
+			// The least count of validation cycles performed on a single law instance.
+			int min_test_count = 9999;
+			
+            ITL_const_FORALL(ValidationCounterT, it, _frequencies)
+                min_test_count = min_test_count < it->second.count() ?
+								 min_test_count : it->second.count() ;
+
+			return min_test_count;
+		}
 
         void reportFrequencies()
         {
@@ -144,6 +183,7 @@ namespace boost{namespace itl
                 << chooser.asString();
         }
 
+
     protected:
         void setValid(bool truth) 
         { 
@@ -195,6 +235,20 @@ namespace boost{namespace itl
             return NULL; 
         }
 
+	private:
+		bool terminates()const
+		{
+			if(!hasValidProfile())
+				return true;
+			else if(_required_law_count == 0 || _required_law_validation_count == 0)
+				return false; // If counts are not limited: Run for ever.
+			else if(_frequencies.size() < static_cast<size_t>(_required_law_count))
+				return false; // Not yet reached all laws
+			else
+				// All laws reached. Enough validation cycles for every law?
+				return _required_law_validation_count <= least_law_validation_count();
+		}
+
     protected:
         ChoiceT            _rootChoice;
         ChoiceT            _domainChoice;
@@ -211,6 +265,10 @@ namespace boost{namespace itl
         int _laws_per_cycle; // After _laws_per_cycle times a cycle is
                              // done and times and frequencies of law 
                              // validations are reported for all instances.
+
+		int _required_law_validation_count;
+		int _required_law_count;
+		int _info_level;
     };
 
 
