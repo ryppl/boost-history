@@ -14,7 +14,6 @@ namespace statistics{
 namespace detail{
 namespace distribution{
 namespace toolkit{
-
 namespace meta{
 
     template<typename D>
@@ -27,7 +26,6 @@ namespace meta{
 }// meta
 }// distribution
 }// toolkit
-
 }// detail
 }// statistics
 }// boost

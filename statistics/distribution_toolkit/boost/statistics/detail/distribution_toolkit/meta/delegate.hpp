@@ -28,10 +28,10 @@ namespace meta{
         static type make(){ return type(F<D>::instance); }
     };
 
+
 }// meta
 }// distribution
 }// toolkit
-
 }// detail
 }// statistics
 }// boost

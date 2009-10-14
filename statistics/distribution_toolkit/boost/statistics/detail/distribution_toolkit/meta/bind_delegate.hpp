@@ -28,11 +28,11 @@ namespace meta{
     
         typedef signature<D>                              sig_;
         typedef delegate<D>                               deleg_;
-        typedef function_traits<typename sig_::type>            traits_;
-        typedef typename traits_::result_type                   result_;
-        typedef typename traits_::arg2_type                     arg2_;
+        typedef function_traits<typename sig_::type>      traits_;
+        typedef typename traits_::result_type             result_;
+        typedef typename traits_::arg2_type               arg2_;
         typedef result_ sig2_( arg2_ );
-        typedef function<sig2_>                                 type;
+        typedef function<sig2_>                           type;
         
         template<template<typename> class F>
         static type make(const D& dist){
@@ -47,9 +47,22 @@ namespace meta{
     };
 
 }// meta
+
+
+
+    template<template<typename> class F,typename D>
+    typename meta::bind_delegate<D>::type
+    make_bind_delegate(
+        const D& dist
+    )
+    {
+        typedef meta::bind_delegate<D> meta_;
+        return meta_::template make<F>(dist);
+    }
+    
+
 }// distribution
 }// toolkit
-
 }// detail
 }// statistics
 }// boost

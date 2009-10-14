@@ -40,7 +40,8 @@ namespace meta{
         statistics::detail::distribution::toolkit::meta::random<D> 
     >::type
     make_random(const D& d){
-        typedef statistics::detail::distribution::toolkit::meta::random<D> meta_;
+        typedef 
+            statistics::detail::distribution::toolkit::meta::random<D> meta_;
         return meta_::make(d);
     }
 
