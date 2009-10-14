@@ -58,30 +58,26 @@ namespace path_traits {
   //  Pathable dispatch
 
   template <class Container, class U> inline
-  void dispatch( const Container & c, U & to, const codecvt_type & cvt,
-                   system::error_code & ec = throws() )
+  void dispatch( const Container & c, U & to, const codecvt_type & cvt )
   {
 //    std::cout << "dispatch() container\n";
     if ( c.size() )
-      convert( &*c.begin(), &*c.begin() + c.size(), to, cvt, ec );
-    else if ( &ec != &throws() ) ec.clear();
+      convert( &*c.begin(), &*c.begin() + c.size(), to, cvt );
   }
 
   template <class T, class U> inline
-  void dispatch( T * const & c_str, U & to, const codecvt_type & cvt,
-                   system::error_code & ec = throws() )
+  void dispatch( T * const & c_str, U & to, const codecvt_type & cvt )
   {
 //    std::cout << "dispatch() const T *\n";
     BOOST_ASSERT( c_str );
-    convert( c_str, to, cvt, ec );
+    convert( c_str, to, cvt );
   }
   
   template <typename T, size_t N, class U> inline
-  void dispatch( T (&array)[N], U & to, const codecvt_type & cvt,
-                   system::error_code & ec = throws() ) // T, N, U deduced
+  void dispatch( T (&array)[N], U & to, const codecvt_type & cvt ) // T, N, U deduced
   {
 //    std::cout << "dispatch() array, N=" << N << "\n"; 
-    convert( array, array + N - 1, to, cvt, ec );
+    convert( array, array + N - 1, to, cvt );
   }
 
   BOOST_FILESYSTEM_DECL
@@ -91,7 +87,7 @@ namespace path_traits {
 #                else   
                    std::string & to,
 #                endif
-                 const codecvt_type &, system::error_code & ec = throws() );
+                 const codecvt_type & );
 
   // value types differ  ---------------------------------------------------------------//
   //
@@ -101,34 +97,30 @@ namespace path_traits {
   void convert( const char * from,
                 const char * from_end,    // 0 for null terminated MBCS
                 std::wstring & to,
-                const codecvt_type & cvt,
-                system::error_code & ec = throws() );
+                const codecvt_type & cvt );
 
   BOOST_FILESYSTEM_DECL
   void convert( const wchar_t * from,
                 const wchar_t * from_end,  // 0 for null terminated MBCS
                 std::string & to,
-                const codecvt_type & cvt,
-                system::error_code & ec = throws() );
+                const codecvt_type & cvt );
 
   inline 
   void convert( const char * from,
                 std::wstring & to,
-                const codecvt_type & cvt,
-                system::error_code & ec = throws() )
+                const codecvt_type & cvt )
   {
     BOOST_ASSERT( from );
-    convert( from, 0, to, cvt, ec );
+    convert( from, 0, to, cvt );
   }
 
   inline 
   void convert( const wchar_t * from,
                 std::string & to,
-                const codecvt_type & cvt,
-                system::error_code & ec = throws() )
+                const codecvt_type & cvt )
   {
     BOOST_ASSERT( from );
-    convert( from, 0, to, cvt, ec );
+    convert( from, 0, to, cvt );
   }
 
   // value types same  -----------------------------------------------------------------//
@@ -137,42 +129,40 @@ namespace path_traits {
 
   inline 
   void convert( const char * from, const char * from_end, std::string & to,
-    const codecvt_type &, system::error_code & ec = throws() )
+    const codecvt_type & )
   {
     BOOST_ASSERT( from );
     BOOST_ASSERT( from_end );
     to.append( from, from_end );
-    if ( &ec != &throws() ) ec.clear();
   }
 
   inline 
-  void convert( const char * from, std::string & to, const codecvt_type &,
-                system::error_code & ec = throws() )
+  void convert( const char * from,
+                std::string & to,
+                const codecvt_type & )
   {
     BOOST_ASSERT( from );
     to += from;
-    if ( &ec != &throws() ) ec.clear();
   }
 
   // wchar_t
 
   inline 
   void convert( const wchar_t * from, const wchar_t * from_end, std::wstring & to,
-    const codecvt_type &, system::error_code & ec = throws() )
+    const codecvt_type & )
   {
     BOOST_ASSERT( from );
     BOOST_ASSERT( from_end );
     to.append( from, from_end );
-    if ( &ec != &throws() ) ec.clear();
   }
 
   inline 
-  void convert( const wchar_t * from, std::wstring & to, const codecvt_type &,
-                   system::error_code & ec = throws() )
+  void convert( const wchar_t * from,
+                std::wstring & to,
+                const codecvt_type & )
   {
     BOOST_ASSERT( from );
     to += from;
-    if ( &ec != &throws() ) ec.clear();
   }
 
 }}} // namespace boost::filesystem::path_traits

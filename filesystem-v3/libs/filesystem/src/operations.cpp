@@ -1449,10 +1449,9 @@ namespace path_traits
 #                else   
                    std::string & to,
 #                endif
-                 const codecvt_type &, system::error_code & ec )
+                 const codecvt_type & )
   {
     to = de.path().native();
-    if ( &ec != &throws() ) ec.clear();
   }
 
 }  // namespace path_traits

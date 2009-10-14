@@ -29,6 +29,7 @@
 #include <locale>
 
 namespace fs = boost::filesystem;
+namespace bs = boost::system;
 using boost::filesystem::path;
 using std::cout;
 using std::string;
@@ -577,31 +578,96 @@ namespace
 
   //  test_error_handling  -------------------------------------------------------------//
 
+  class error_codecvt
+    : public std::codecvt< wchar_t, char, std::mbstate_t >  
+  {
+  public:
+    explicit error_codecvt()
+        : std::codecvt<wchar_t, char, std::mbstate_t>() {}
+  protected:
+
+    virtual bool do_always_noconv() const throw() { return false; }
+    virtual int do_encoding() const throw() { return 0; }
+
+    virtual std::codecvt_base::result do_in( std::mbstate_t& state, 
+      const char * from, const char * from_end, const char *& from_next,
+      wchar_t * to, wchar_t * to_end, wchar_t *& to_next ) const
+    {
+      static std::codecvt_base::result result = std::codecvt_base::noconv;
+      if ( result == std::codecvt_base::partial ) result = std::codecvt_base::error;
+      else if ( result == std::codecvt_base::error ) result = std::codecvt_base::noconv;
+      else if ( result == std::codecvt_base::noconv ) result = std::codecvt_base::partial;
+      return result;
+    }
+
+    virtual std::codecvt_base::result do_out( std::mbstate_t & state,
+      const wchar_t * from, const wchar_t * from_end, const wchar_t *& from_next,
+      char * to, char * to_end, char *& to_next ) const
+    {
+      static std::codecvt_base::result result = std::codecvt_base::noconv;
+      if ( result == std::codecvt_base::partial ) result = std::codecvt_base::error;
+      else if ( result == std::codecvt_base::error ) result = std::codecvt_base::noconv;
+      else if ( result == std::codecvt_base::noconv ) result = std::codecvt_base::partial;
+      return result;
+    }
+
+    virtual std::codecvt_base::result do_unshift( std::mbstate_t&,
+        char * from, char * /*to*/, char * & next) const  { return ok; } 
+    virtual int do_length( std::mbstate_t &,
+      const char * from, const char * from_end, std::size_t max ) const  { return 0; }
+    virtual int do_max_length() const throw () { return 0; }
+  };
+
   void test_error_handling()
   {
     std::cout << "testing error handling..." << std::endl;
 
-    boost::system::error_code ec ( -1, fs::codecvt_error_category() );
-
-    BOOST_TEST( ec );
-    path p1( "foo", ec );
-    BOOST_TEST( !ec );
+    std::locale global_loc = std::locale();
+    std::locale loc( global_loc, new error_codecvt );
+    std::cout << "  imbuing error locale ..." << std::endl;
+    std::locale old_loc = path::imbue( loc );
 
 # ifdef BOOST_WINDOWS_PATH
-
-    ec.assign( -1, fs::codecvt_error_category() );
-    BOOST_TEST( ec );
-    path p2( L"\u2780", ec ); // \u2780 is circled 1, white background == e2 9e 80 in UTF-8
-    BOOST_TEST( !ec );
-
-    ec.clear();
-    std::string s2 ( p2.string( ec ) );
-    BOOST_TEST( ec );
-    BOOST_TEST_EQ( ec, boost::system::error_code( std::codecvt_base::error,
-      fs::codecvt_error_category() ) );
-
+#   define STRING_FOO_
+# else
+#   define STRING_FOO_ L
 # endif
 
+    {
+      bool exception_thrown (false);
+      try { path( STRING_FOO_"foo" ); }
+      catch ( const bs::system_error & ex )
+      {
+        exception_thrown = true;
+        BOOST_TEST_EQ( ex.code(), bs::error_code( std::codecvt_base::partial, fs::codecvt_error_category() ) );
+      }
+      BOOST_TEST( exception_thrown );
+    }
+
+    {
+      bool exception_thrown (false);
+      try { path( STRING_FOO_"foo" ); }
+      catch ( const bs::system_error & ex )
+      {
+        exception_thrown = true;
+        BOOST_TEST_EQ( ex.code(), bs::error_code( std::codecvt_base::error, fs::codecvt_error_category() ) );
+      }
+      BOOST_TEST( exception_thrown );
+    }
+
+    {
+      bool exception_thrown (false);
+      try { path( STRING_FOO_"foo" ); }
+      catch ( const bs::system_error & ex )
+      {
+        exception_thrown = true;
+        BOOST_TEST_EQ( ex.code(), bs::error_code( std::codecvt_base::noconv, fs::codecvt_error_category() ) );
+      }
+      BOOST_TEST( exception_thrown );
+    }
+
+    std::cout << "  restoring original locale ..." << std::endl;
+    path::imbue( old_loc );
   }
 
 # if 0

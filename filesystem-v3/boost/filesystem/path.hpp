@@ -90,6 +90,43 @@ namespace filesystem
   //                                                                                    //
   //------------------------------------------------------------------------------------//
 
+/*
+   FAQ
+
+   Why are there no error_code & arguments?
+   ----------------------------------------
+
+   error_code & arguments add considerably to the surface area of the interface, yet
+   appear to be of limited usefulness. They have not been requested by users; the need
+   for filesystem error reporting via error_code seems limited to operational failures
+   rather than path failures.
+
+   error_code & arguments double the number of signatures, since for efficiency the
+   use of a default throws() argument is not desirable.
+
+   Errors in path conversions only occur if the source and target value types differ AND
+   the target encoding can't represent a character present in the source. The only
+   commonplace case is when directory iteration on Windows encounters a file name that
+   can't be represented in a char encoding.
+
+   Workarounds (such as pre-scanning for characters that can't be encoded) appear
+   resonable.
+
+   Why are there no const codecvt_type & arguments?
+   ------------------------------------------------
+
+   To hold down the size of the class path interface. Per function codecvt facets
+   just aren't needed very often in practice.
+
+   An RAII idiom can be used to ensure push/pop behavior as an alternative.
+
+   Note that codecvt() is passed to the path_traits::convert functions, since that
+   decouples the convert functions from class path.
+
+   const codecvt_type & can be added later, but once added, they can never be removed
+   since that would break user code.
+*/
+
   class BOOST_FILESYSTEM_DECL path
   {
   public:
@@ -166,7 +203,7 @@ namespace filesystem
     //  and single pointer to null terminated string.
 
     //  All source arguments except pointers to null terminated byte strings support
-    //  multi-byte character string, which may have embedded nulls. Embedded null
+    //  multi-byte character strings which may have embedded nulls. Embedded null
     //  support is required for some Asian languages on Windows.
 
     //  -----  constructors  -----
@@ -183,16 +220,10 @@ namespace filesystem
           m_path, codecvt() );
     }
 
-    template <class PathSource>
-    path( PathSource const & pathable )
+    template <class Source>
+    path( Source const & pathable )
     {
       path_traits::dispatch( pathable, m_path, codecvt() );
-    }
-
-    template <class PathSource>
-    path( PathSource const & pathable, system::error_code & ec )
-    {
-      path_traits::dispatch( pathable, m_path, codecvt(), ec );
     }
 
     //  -----  assignments  -----
@@ -213,11 +244,11 @@ namespace filesystem
       return *this;
     }
 
-    template <class PathSource>
-    path & operator=( PathSource const & range )
+    template <class Source>
+    path & operator=( Source const & source )
     {
       m_path.clear();
-      path_traits::dispatch( range, m_path, codecvt() );
+      path_traits::dispatch( source, m_path, codecvt() );
       return *this;
     }
 
@@ -231,8 +262,8 @@ namespace filesystem
     template <class ContiguousIterator>
     path & append( ContiguousIterator begin, ContiguousIterator end );
 
-    template <class PathSource>
-    path & operator/=( PathSource const & range );
+    template <class Source>
+    path & operator/=( Source const & source );
 
     //  -----  modifiers  -----
 
@@ -286,7 +317,7 @@ namespace filesystem
 
 #   ifdef BOOST_WINDOWS_API
 
-    const std::string     native_string( system::error_code & ec = throws() ) const;
+    const std::string     native_string() const;
     const std::wstring &  native_wstring() const { return m_path; }
 
 #   else   // BOOST_POSIX_API
@@ -307,7 +338,7 @@ namespace filesystem
 
 #   ifdef BOOST_WINDOWS_API
 
-    const std::string    string( system::error_code & ec = throws() ) const; 
+    const std::string    string() const; 
     const std::wstring   wstring() const;
 
 #   else // BOOST_POSIX_API
@@ -617,13 +648,13 @@ namespace filesystem
     return *this;
   }
 
-  template <class PathSource>
-  path & path::operator/=( PathSource const & range )
+  template <class Source>
+  path & path::operator/=( Source const & source )
   {
-    if ( path_traits::empty( range ) )
+    if ( path_traits::empty( source ) )
       return *this;
     string_type::size_type sep_pos( m_append_separator_if_needed() );
-    path_traits::dispatch( range, m_path, codecvt() );
+    path_traits::dispatch( source, m_path, codecvt() );
     if ( sep_pos )
       m_erase_redundant_separator( sep_pos );
     return *this;

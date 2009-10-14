@@ -55,26 +55,15 @@
 <a href="#Pathname-grammar">Pathname grammar</a><br>
     &nbsp;&nbsp;&nbsp;
 <a href="#Input-conversion">Filename conversion</a><br>
-    &nbsp;&nbsp;&nbsp;
-<a href="#path-requirements">Requirements</a> <br>
-&nbsp;&nbsp;
-<a href="#path-requirements">&nbsp;path constructors</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#path-assignments">path assignments</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#path-modifiers">path modifiers</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#path-inserter-extractor">path operators</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#path-decompositions">path observers</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#path-iterators">path iterators</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="#path-deprecated-functions">path deprecated functions</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#path-non-member-functions">path non-member functions</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#path-inserter-extractor">path inserter and extractor</a><span style="background-color: #FFFFFF"><br>
+    &nbsp;&nbsp;&nbsp; <a href="#path-constructors">path constructors</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#path-assignments">path assignments</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-appends">path appends</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-modifiers">path modifiers</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-decompositions">path observers</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-iterators">path iterators</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-deprecated-functions">path deprecated functions</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-non-member-functions">path non-member functions</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-inserter-extractor">path inserter and extractor</a><span style="background-color: #FFFFFF"><br>
 </span> &nbsp;<a href="#Class-template-basic_filesystem_error">Class template 
     basic_filesystem_error</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -475,31 +464,15 @@ templates&nbsp; <code>slash</code> and <code>dot</code> shall be specialized to
 provide <code>value</code> with type which is convertible to <code>
 path::value_type</code>.</p>
 <h3><a name="Class-template-path">Class <code>path</code></a></h3>
-<p>An object of class <code>path</code> represents a <a href="#Path">path</a>. The exact string type, 
-format, and encoding are as required by the host operating system.</p>
-<p><i>[Note:</i></p>
-<ul>
-  <li>For POSIX-like operating systems, <code>string_type</code> is <code>std::string</code>, the 
-  format is the <a href="#Pathname-grammar">portable pathname format</a>, and 
-  the encoding follows the conventions of the specific operating system.<br>
-&nbsp;</li>
-  <li>For Windows,&nbsp; <code>string_type</code> is <code>std::wstring</code>, 
-  the format is the Windows pathname format, and the encoding is UTF-16 (UCS-2 
-  for older versions). Windows recognizes either slash or backslash as a 
-  directory separator. The preferred separator is backslash.</li>
-</ul>
-<p><i>-- end note]</i></p>
-<p>Class template <code>path</code> provides a portable mechanism for 
-representing <a href="#Path">paths</a> in C++ programs, using a portable generic 
-pathname <a href="#Pathname-grammar">grammar</a>. When portability is not a 
-requirement, native file system specific formats can be used.&nbsp;Class template
-<code>path</code> is concerned only with the lexical and syntactic aspects 
-of a path. The path does not have to exist in the operating system's file 
-system, and may contain names which are not even valid for the current operating 
+<p>An object of class <code>path</code> represents a <a href="#Path">path</a>, 
+and contains a <a href="#Pathname">pathname</a> in the
+<a href="#Native-pathname-format">native format</a>. Such an object is concerned only with the lexical and syntactic aspects 
+of a path. The path does not have to actually exist in the operating system's file 
+systems, and may contain pathnames which are not even valid for the current operating 
 system. </p>
 <blockquote>
-  <p>[<i>Note: </i>If the library's functions trafficked only in C++<i> </i>or 
-  C-style strings, they would provide only the illusion of portability since 
+  <p>[<i>Note: </i>If the library's operational functions trafficked only in C++<i> </i>or 
+  C-style strings rather than <code>path</code> objects, it would provide only the illusion of portability since 
   while the syntax of function calls would be portable, the semantics of the 
   strings they operate on would not be portable. <i>-- end note</i>]</p>
 </blockquote>
@@ -510,21 +483,19 @@ system. </p>
       class path
       {
       public:
-        typedef <b><i>see below</i></b>                     value_type;  // char for POSIX, wchar_t for Windows
+        typedef <b><i><a href="#value_type">see below</a></i></b>                     value_type;  // char for POSIX, wchar_t for Windows
         typedef std::basic_string&lt;value_type&gt; string_type;
         typedef path_traits::codecvt_type     codecvt_type;
 
-        // <a href="#path-constructors">constructors/destructor</a>
+        // <a href="#path-constructors">constructors</a>
         path();
         path(const path&amp; p);
 
         template &lt;class ContiguousIterator&gt;
           path(ContiguousIterator begin, ContiguousIterator end);
 
-        template &lt;class PathSource&gt;
-          path(PathSource const &amp; source);
-
-       ~path();
+        template &lt;class Source&gt;
+          path(Source const&amp; source);
 
         // <a href="#path-assignments">assignments</a>
         path&amp; operator=(const path&amp; p);
@@ -532,8 +503,8 @@ system. </p>
         template &lt;class ContiguousIterator&gt;
           path&amp; assign(ContiguousIterator begin, ContiguousIterator end);
 
-        template &lt;class PathSource&gt;
-          path&amp; operator=(PathSource const &amp; source);
+        template &lt;class Source&gt;
+          path&amp; operator=(Source const&amp; source);
 
         // <a href="#path-appends">appends</a>
         path&amp; operator/=(const path&amp; p);
@@ -541,17 +512,18 @@ system. </p>
         template &lt;class ContiguousIterator&gt;
           path&amp; append(ContiguousIterator begin, ContiguousIterator end);
 
-        template &lt;class PathSource&gt;
-          path&amp; operator/=(PathSource const &amp; source);
+        template &lt;class Source&gt;
+          path&amp; operator/=(Source const&amp; source);
 
         // <a href="#path-modifiers">modifiers</a>
-        void clear();
-        void swap(path &amp; rhs);
+        void  clear();
+        void  swap(path&amp; rhs);
         path&amp; remove_filename();
-        path&amp; replace_extension(const path &amp; new_extension = path());
+        path&amp; replace_extension(const path&amp; new_extension = path());
+        path&amp; localize();  // POSIX: no effect. Windows: convert slashes to backslashes
 
-        // <a href="#path-decompositions">observers</a>
-        const string_type&amp;  native() const;          // native format, native string-type, native encoding
+        // <a href="#path-observers">observers</a>
+        const string_type&amp;  native() const;          // native format, encoding
         const value_type*   c_str() const;           // native().c_str()
 
         <i><b>const-string</b></i>        native_string() const;   // native format, uses codecvt() for encoding
@@ -560,7 +532,7 @@ system. </p>
         <b><i>const-string</i></b>        string() const;          // portable format, uses codecvt() for encoding
         <b><i>const-wstring</i></b>       wstring() const;         // portable format, uses codecvt() for encoding
 
-        // decomposition
+        // <a href="#path-decomposition">decomposition</a>
         path  root_name() const;
         path  root_directory() const;
         path  root_path() const;
@@ -570,7 +542,7 @@ system. </p>
         path  stem() const;
         path  extension() const;
 
-        // query
+        // <a href="#path-query">query</a>
         bool empty() const;
         bool has_root_name() const;
         bool has_root_directory() const;
@@ -594,21 +566,15 @@ system. </p>
 
     } // namespace filesystem
   } // namespace boost</pre>
-<p><code>value_type</code> is an implementation-defined typedef for the 
-character type used by the implementation to represent paths.</p>
+<p><code><a name="value_type">value_type</a></code> is an implementation-defined typedef for the 
+character type used by the implementation to represent pathnames.</p>
 <blockquote>
-<p><i>[Note:</i> On POSIX-like systems, including Cygwin, <code>value_type</code> 
-is <code>char</code>. On Windows-like systems, <code>value_type</code> is <code>
-wchar_t</code>. <i>--end note]</i></p>
-</blockquote>
-<p><a name="pathname-resolution">Functions</a> described in this clause which access files or their attributes do so by 
-resolving a <code>path</code> object to a particular file in a file 
-hierarchy. The path is resolved as if by the <i>POSIX</i>
-<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap04.html#tag_04_11">
-Pathname Resolution</a> mechanism.</p>
-<blockquote>
-<p>[<i>Note:</i> There is no guarantee that the path stored in a&nbsp; <code>path</code> 
-object is valid for a particular operating system or file system. <i>-- end note</i>]</p>
+<p><i>[Note:</i></p>
+<b>POSIX-like implementations, including
+  <a href="http://www.cygwin.com/">Cygwin</a>:</b> <code>path::value_type</code> 
+is <code>char</code> .<p><b>Windows-like implementations:</b> <code>path::value_type</code> is <code>
+wchar_t</code>.</p>
+<p>&nbsp;<i>--end note]</i></p>
 </blockquote>
 <p>For member functions described as returning &quot;<code>const path</code>&quot;, implementations are permitted to return 
 &quot;<code>const path&amp;</code>&quot;.</p>
@@ -619,91 +585,132 @@ Return-by-value is specified as
 implementation. <i>-- 
 end note</i>]</p>
 </blockquote>
-<h4><a name="Pathname-formats">Pathname formats</a></h4>
-<p>There are two formats for string or sequence arguments that describe a 
-path:</p>
+<p><code>ContiguousIterator</code> shall be a standard library <code>RandomIterator</code> 
+pointing to contiguous storage. The iterator's value_type is required to be <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
+<p><code>Source</code> shall be one of:</p>
 <ul>
-  <li>The portable pathname format as described in <a href="#Pathname-grammar">
+  <li>A container. The value type is required to be <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li>An iterator for a null terminated byte-string. The value type is required 
+  to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
+  char32_t</code>.</li>
+  <li>A C-array. The value type is required to be <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li>A boost::filesystem::directory_entry.</li>
+</ul>
+<h4><a name="Pathname-formats">Pathname formats</a></h4>
+<p>Strings representing paths may be in two possible formats: </p>
+<ul>
+  <li><i><b><a name="Portable-pathname-format">Portable pathname format</a>:</b></i> As described in <a href="#Pathname-grammar">
   Pathname grammar</a> and by the <i>POSIX</i> <i><a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_169">Filename</a>,
 <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_266">
 Pathname</a> </i>and<i>
 <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap04.html#tag_04_11">
 Pathname Resolution</a></i> definitions.<blockquote>
 <p>[<i>Note:</i> <span style="background-color: #FFFFFF">The <i>POSIX</i> format 
-is the basis for the portable format because it is already an ISO standard, is 
-the basis for the ubiquitous <i>URL</i> format, and is the native format or a 
-subset of the native format for <i>UNIX</i>-like and <i>Windows</i>-like 
-operating systems familiar to large numbers of programmers. </span></p>
+is the basis for the portable format because it is already part of an ISO standard, is 
+the basis for the ubiquitous <i>URL</i> format, and is the native pathname format 
+(or a 
+subset thereof) for the <i>UNIX</i>-like and <i>Windows</i>-like 
+pathnames familiar to most programmers. </span></p>
 <p>Use of the portable format does not alone guarantee 
 portability;  filenames must also be portable.<span style="background-color: #FFFFFF"> 
 See <a href="#Input-conversion">Filename conversions</a>. Each operating system 
  
 follows its own rules. Use of the portable format 
-does not change that. </span> <i>-- end note</i>]</p>
+does not change those rules. </span> <i>-- end note</i>]</p>
   </blockquote>
+  
   </li>
-  <li>A native pathname format 
-  as defined by the operating system.<blockquote>
-    <p>[<i>Note:</i> If an operating system supports only the <i>POSIX</i> 
-    pathname format, the portable format and the native format are the same. </p>
-    <p><span style="background-color: #FFFFFF">Identifying user-provided paths 
-    as native format is a common need, and ensures maximum portability, even 
-    though not strictly needed except on systems where the native format 
-    is not implicitly recognized.</span></p>
+  <li>
+  
+  <b><i><a name="Native-pathname-format">Native pathname format</a>:</i></b> As defined by the operating system.<blockquote>
+    <p>[<i>Note:</i> <span style="background-color: #FFFFFF">Working with 
+    user-provided paths in the native format is a common need.</span></p>
     <p><span style="background-color: #FFFFFF">Programs using hard-coding native 
-    formats are likely to be non-portable.&nbsp; --</span><i><span style="background-color: #FFFFFF"> end note</span></i><span style="background-color: #FFFFFF">]</span></p>
+    formats may not be  portable.&nbsp; --</span><i><span style="background-color: #FFFFFF"> end note</span></i><span style="background-color: #FFFFFF">]</span></p>
   </blockquote>
   </li>
 </ul>
-<p><span style="background-color: #FFFFFF">All <code>path</code> string or sequence arguments that describe a 
+<div align="left">
+  <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="90%">
+    <tr>
+      <td width="90%" bgcolor="#D7EEFF">
+    <p align="left">[<i>Note:</i></p>
+    <p align="left"><b>POSIX-like<i> </i>implementations, including Cygwin:</b> 
+    The portable format and the native format are the same, and the encoding 
+    follows the conventions of the specific operating system</p>
+    <p align="left"><b>Windows-like implementations:</b> The native format is 
+    the Windows pathname format, and the encoding is UTF-16 (UCS-2 for older 
+    versions). The native directory separator is a backslash, but a slash is 
+    also acceptable. Since the portable format is a subset of the native format, 
+    no reformatting is required and directory separators are preserved. For 
+    example, on Windows:</p>
+      <blockquote>
+    <p align="left"><code>path p = &quot;foo\\bar/baz&quot;;<br>
+    assert( p.native() == L&quot;foo\\bar/baz&quot; );<br>
+    p = &quot;baz/bar/foo&quot;;<br>
+    assert( p.native() == L&quot;baz/bar/foo&quot; );</code></p>
+      </blockquote>
+    <p align="left"> <i>--end note</i>]</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p><span style="background-color: #FFFF00">All <code>path</code> string or sequence arguments that describe a 
 path shall accept the portable pathname format, and shall accept the native 
 format if explicitly identified by a native format escape sequence prefix of
 <code>slash slash colon</code>.</span></p>
 <blockquote>
-    <p><span style="background-color: #FFFFFF">[<i>Note:</i> <code>slash 
+    <p><span style="background-color: #FFFF00">[<i>Note:</i> <code>slash 
     slash colon</code> was chosen as the escape sequence because a leading <code>
     slash slash</code>&nbsp; is already implementation-defined by POSIX, <code>
     colon</code> is prohibited in a Windows filename, and on any system a single
     <code>slash</code> can be used when a filename beginning with a <code>colon</code> 
     is desired.&nbsp;These factors eliminate the chance of collision with a real 
-    filename. --</span><i><span style="background-color: #FFFFFF"> end note</span></i><span style="background-color: #FFFFFF">]</span></p>
+    filename. --</span><i><span style="background-color: #FFFF00"> end note</span></i><span style="background-color: #FFFF00">]</span></p>
     </blockquote>
-<p><span style="background-color: #FFFFFF">Implementations are encouraged to 
+<p><span style="background-color: #FFFF00">Implementations are encouraged to 
 implicitly recognize the native pathname format if it can be lexically 
-identified. An implementation  </span>shall document whether or 
-not the native pathname format is <span style="background-color: #FFFFFF">
-implicitly recognized</span>.</p>
+identified. An implementation shall document whether or 
+not the native pathname format is
+implicitly recognized.</span></p>
 <blockquote>
-<p>[<i>Example:</i></p>
-<p><i>-- OpenVMS:</i> <code>&quot;SYS1::DISK1:[JANE.TYLER.HARRY]</code>&quot; is treated 
+<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Example:</span></i></p>
+<p><i><span style="background-color: #FFFF00">-- OpenVMS:</span></i><span style="background-color: #FFFF00">
+</span> <code><span style="background-color: #FFFF00">&quot;SYS1::DISK1:[JANE.TYLER.HARRY]</span></code><span style="background-color: #FFFF00">&quot; is treated 
 as a native pathname with a system name, drive name,&nbsp;and three directory 
-filenames, rather than a portable pathname with one filename.</p>
-<p><i>-- Windows: </i><code>&quot;c:\\jane\\tyler\\harry&quot;</code> is treated as a 
+filenames, rather than a portable pathname with one filename.</span></p>
+<p><i><span style="background-color: #FFFF00">-- Windows: </span> </i><code>
+<span style="background-color: #FFFF00">&quot;c:\\jane\\tyler\\harry&quot;</span></code><span style="background-color: #FFFF00"> is treated as a 
 native pathname with a drive letter, root-directory, and three filenames, rather 
-than a portable pathname with one filename.</p>
-<p><i>-- Counter-example 1:</i> An operating system that allows slashes in 
+than a portable pathname with one filename.</span></p>
+<p><i><span style="background-color: #FFFF00">-- Counter-example 1:</span></i><span style="background-color: #FFFF00"> An operating system that allows slashes in 
 filenames and uses dot as a directory separator. Distinguishing between portable 
 and native format argument strings or sequences is not possible as there is no 
 other distinguishing syntax. The implementation does not accept native format 
-pathnames unless the <code>native</code> argument is present.</p>
-<p><i>-- Counter-example 2:</i> An operating system that allows slashes in 
+pathnames unless the </span> <code><span style="background-color: #FFFF00">native</span></code><span style="background-color: #FFFF00"> argument is present.</span></p>
+<p><i><span style="background-color: #FFFF00">-- Counter-example 2:</span></i><span style="background-color: #FFFF00"> An operating system that allows slashes in 
 filenames and uses some unusual character as a directory separator. The 
-implementation does accept native format pathnames without the additional <code>
-native</code> argument, which only has to be used for native format arguments 
-containing slashes in filenames.</p>
-<p><i>-- end example</i>]</p>
-<p>[<i>Note:</i> This <i><a name="duck-rule">duck-rule</a></i> (&quot;if it looks 
+implementation does accept native format pathnames without the additional </span> <code>
+<span style="background-color: #FFFF00">native</span></code><span style="background-color: #FFFF00"> argument, which only has to be used for native format arguments 
+containing slashes in filenames.</span></p>
+<p><i><span style="background-color: #FFFF00">-- end example</span></i><span style="background-color: #FFFF00">]</span></p>
+<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00"> This
+</span> <i><a name="duck-rule"><span style="background-color: #FFFF00">duck-rule</span></a></i><span style="background-color: #FFFF00"> (&quot;if it looks 
 like a duck, walks like a duck, and quacks like a duck, it must be a duck&quot;) 
 eliminates format confusion as a source of programmer error and support 
-requests. <i>-- end note</i>]</p>
+requests. </span> <i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
 </blockquote>
-<p>If both the portable and native formats are accepted, implementations shall 
+<p><span style="background-color: #FFFF00">If both the portable and native formats are accepted, implementations shall 
 document what characters or character sequences are used to distinguish between 
-portable and native formats.</p>
+portable and native formats.</span></p>
 <blockquote>
-<p>[<i>Note:</i> <i>Windows</i> implementations are encouraged to define colons 
+<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00">
+</span> <i><span style="background-color: #FFFF00">Windows</span></i><span style="background-color: #FFFF00"> implementations are encouraged to define colons 
 and backslashes as the characters which distinguish native from portable 
-formats. <i>--end note</i>]</p>
+formats. </span> <i><span style="background-color: #FFFF00">--end note</span></i><span style="background-color: #FFFF00">]</span></p>
 </blockquote>
 <h4><a name="Pathname-grammar">Pathname grammar</a></h4>
 <p>The grammar for the portable pathname format is as follows:</p>
@@ -715,28 +722,27 @@ root-directory<sub>opt</sub> relative-path<sub>opt</sub></i></p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 implementation-defined</i></p>
 <p><i>root-directory:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; slash<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-root-directory slash<br>
+directory-separator<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+root-directory directory-separator<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 implementation-defined</i></p>
 <p><i>relative-path:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 filename<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
-slash<br>
+directory-separator<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
-slash filename</i></p>
+directory-separator filename</i></p>
 <p><i>filename:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dot<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dot dot</i></p>
-<p><i>slash:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>
-slash&lt;Path&gt;::value</code></i></p>
+<p><i>directory-separator:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>&quot;/&quot;</code></i></p>
 <p><i>dot:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>
-dot&lt;Path&gt;::value</code></i></p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>&quot;.&quot;</code></p>
 </blockquote>
 <p>The grammar is aligned with the <i>POSIX </i>&nbsp;<i><a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_169">Filename</a>,
 <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_266">
@@ -760,38 +766,24 @@ and a backslash as a format element equivalent to <i>slash</i>. <i>-- end note</
 <h4><a name="Input-conversion">Input conversion</a></h4>
 <p><span style="background-color: #FFFF00">To be supplied. Explain when, how 
 codecvt applied.</span></p>
-<p>When converting filenames to the native operating system format, 
+<p><span style="background-color: #FFFF00">When converting filenames to the native operating system format, 
 implementations are encouraged, but not required, to convert otherwise invalid 
 characters or character sequences to valid characters or character sequences. 
-Such conversions are implementation-defined.</p>
+Such conversions are implementation-defined.</span></p>
 <blockquote>
-<p>[<i>Note:</i> Filename conversion allows much wider portability of both 
-programs and filenames that would otherwise be possible.</p>
-<p>Implementations are encouraged to base conversion on existing standards or 
-practice. Examples include the Uniform Resource Locator escape syntax of a percent sign (<code>'%'</code>) 
-followed by two hex digits representing the character value. On
-<i>OpenVMS</i>, which does not allow percent signs in filenames, a dollar sign (<code>'$'</code>) 
+<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00"> Filename conversion allows much wider portability of both 
+programs and filenames that would otherwise be possible.</span></p>
+<p><span style="background-color: #FFFF00">Implementations are encouraged to base conversion on existing standards or 
+practice. Examples include the Uniform Resource Locator escape syntax of a percent sign (</span><code><span style="background-color: #FFFF00">'%'</span></code><span style="background-color: #FFFF00">) 
+followed by two hex digits representing the character value. On </span>
+<i><span style="background-color: #FFFF00">OpenVMS</span></i><span style="background-color: #FFFF00">, which does not allow percent signs in filenames, a dollar sign (</span><code><span style="background-color: #FFFF00">'$'</span></code><span style="background-color: #FFFF00">) 
 followed by two hex digits is the existing practice, as is converting lowercase 
-letters to uppercase.<i> -- end note.</i>]</p>
+letters to uppercase.</span><i><span style="background-color: #FFFF00"> -- end note.</span></i><span style="background-color: #FFFF00">]</span></p>
 <p><span style="background-color: #E0E0E0"><i>The Boost implementation for 
 Windows currently does not map invalid characters. Pending feedback from the LWG, 
 Boost may settle on % hex hex as the preferred escape sequence. If so, should 
 there be normative encouragement?</i></span></p>
 </blockquote>
-<h4><a name="path-requirements">Requirements</a></h4>
-<p><code>ContiguousIterator</code> is required to be a <code>RandomIterator</code> 
-pointing to contiguous storage. The iterator's value_type is required to be </p>
-<p>PathSource is:</p>
-<ul>
-  <li>A container. The value type is required to be <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li>An iterator for a null terminated byte-string. The value type is required 
-  to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
-  char32_t</code>.</li>
-  <li>A c-array. The value type is required to be <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li>A boost::filesystem::directory_entry.</li>
-</ul>
 <h4> <code><font size="4">class </font></code> <a name="path-constructors"> <code>
 <font size="4">path</font></code> constructors</a></h4>
 <pre>path();</pre>
@@ -800,74 +792,80 @@ pointing to contiguous storage. The iterator's value_type is required to be </p>
   </blockquote>
 <pre>template &lt;class ContiguousIterator&gt;
   path(ContiguousIterator begin, ContiguousIterator end);</pre>
-<pre>template &lt;class PathSource&gt;
-  path(PathSource const &amp; source);</pre>
+<pre>template &lt;class Source&gt;
+  path(Source const&amp; source);</pre>
 <blockquote>
-  <p><i>Postconditions:</i> <code>native()</code> is a copy of [<code>begin</code>,<code>end</code>) 
-  or <code>source</code>, 
-  converted to the format and encoding required by the host operating system (<a href="#Input-conversion">Input 
-  conversion</a>).</p>
+  <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
+  or <code>source</code>, in the native format, as the contained pathname.</p>
+  <p>
+  <i>Remarks:</i> If the value type of&nbsp; [<code>begin</code>,<code>end</code>) 
+  or <code>source</code> is not <code>value_type</code>, the contents are 
+  converted by <code>codecvt()</code>.</p>
 </blockquote>
 <h4> <code><font size="4">class </font></code> <a name="path-assignments"> <code>
 <font size="4">path</font></code> assignments</a></h4>
 <pre>template &lt;class ContiguousIterator&gt;
   path&amp; assign(ContiguousIterator begin, ContiguousIterator end);</pre>
-<pre>template &lt;class PathSource&gt;
-  path&amp; operator=(PathSource const &amp; source);</pre>
+<pre>template &lt;class Source&gt;
+  path&amp; operator=(Source const&amp; source);</pre>
 <blockquote>
-  <p><i>Postconditions:</i> <code>native()</code> is a copy of [<code>begin</code>,<code>end</code>) 
-  or <code>source</code>, 
-  converted to the format and encoding required by the host operating system (<a href="#Input-conversion">Input 
-  conversion</a>).</p>
+  <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
+  or <code>source</code>, in the native format, as the contained pathname.</p>
+  <p>
+  <i>Remarks:</i> If the value type of&nbsp; [<code>begin</code>,<code>end</code>) 
+  or <code>source</code> is not <code>value_type</code>, the contents are 
+  converted by <code>codecvt()</code>.</p>
   <p><i>Returns: </i><code>*this</code></p>
   </blockquote>
 <h4> <code><font size="4">class <a name="path-appends">path</a></font></code><a name="path-appends"> 
 appends</a></h4>
   <p>The append operations use <code>operator/=</code> to denote their semantic 
-  effect of automatically supplying a separator unless an added separator would 
-  be redundant or would change an incomplete path to a complete path.</p>
-  <p>The cases where a separator is automatically supplied are:</p>
-  <ul>
-    <li>On POSIX, when <code>!empty() &amp;&amp; native().back() != '/'</code></li>
-    <li>On Windows, when <code>!empty() &amp;&amp; native().back() != L'/' &amp;&amp; 
-    native().back() != L'\\' &amp;&amp; native().back() != L':'</code></li>
-</ul>
+  effect of appending a native directory separator when needed. The native 
+  directory separator is implementation-defined.</p>
+<blockquote>
+    <p align="left">[<i>Note:</i></p>
+    <p align="left"><b>POSIX-like<i> </i>implementations, including Cygwin:</b> 
+    The native directory separator is a forward slash.</p>
+    <p align="left"><b>Windows-like implementations:</b> The native directory 
+    separator is a backslash.</p>
+    <p align="left"> <i>--end note</i>]</p>
+      </blockquote>
 <pre>path&amp; operator/=(const path&amp; p);</pre>
 <blockquote>
-  <p><i>Postconditions:</i> <code>native()</code> contains:</p>
-  <ul>
-    <li>the original contents of <code>native()</code>, </li>
-    <li>followed by an added native separator, unless:<ul>
+  <p><i>Effects:</i></p>
+  <blockquote>
+    Appends a native directory separator to the contained pathname, unless:<ul>
     <li>an added separator 
     would be redundant, or</li>
     <li>would change an incomplete path to a complete path, or</li>
     <li><code>p.empty()</code>, or</li>
-    <li><code>*p.native().cbegin()</code> is a separator,</li>
+    <li><code>*p.native().cbegin()</code> is a directory separator.</li>
   </ul>
-    </li>
-    <li>followed by <code>p.native()</code>.</li>
-  </ul>
+    <p>Appends <code>p.native()</code> to the contained pathname.</p>
+  </blockquote>
+  <p><i>Returns: </i><code>*this</code></p>
 </blockquote>
 <pre>template &lt;class ContiguousIterator&gt;
   path&amp; append(ContiguousIterator begin, ContiguousIterator end);</pre>
-<pre>template &lt;class PathSource&gt;
-  path&amp; operator/=(PathSource const &amp; source);</pre>
+<pre>template &lt;class Source&gt;
+  path&amp; operator/=(Source const &amp; source);</pre>
 <blockquote>
-  <p><i>Postconditions:</i> <code>native()</code> contains:</p>
-  <ul>
-    <li>the original contents of <code>native()</code>, </li>
-    <li>followed by an added native separator, unless:<ul>
+  <p><i>Effects:</i></p>
+  <blockquote>
+    <p>Appends a native directory separator to the contained pathname, unless:</p>
+    <ul>
     <li>an added separator 
     would be redundant, or</li>
     <li>would change an incomplete path to a complete path, or</li>
-    <li><code>source</code> is empty, or</li>
-    <li><code>source</code> begins with a separator,</li>
+    <li><code>p.empty()</code>, or</li>
+    <li><code>*p.native().cbegin()</code> is a separator.</li>
   </ul>
-    </li>
-    <li>followed by a copy of [<code>begin</code>,<code>end</code>) or <code>source</code>, converted to the 
-  format and encoding required by the host operating system (<a href="#Input-conversion">Input 
-  conversion</a>).</li>
-  </ul>
+    <p>Appends the contents [<code>begin</code>,<code>end</code>) 
+  or <code>source</code>, in the native format, to the contained pathname.</p>
+  </blockquote>
+  <p><i>Remarks:</i> If the value type of&nbsp; [<code>begin</code>,<code>end</code>) 
+  or <code>source</code> is not <code>value_type</code>, the contents are 
+  converted by <code>codecvt()</code>.</p>
   <p><i>Returns: </i><code>*this</code></p>
   </blockquote>
 <h4> <code><font size="4">class </font></code> <a name="path-modifiers"> <code>
@@ -887,8 +885,9 @@ appends</a></h4>
 </blockquote>
 <pre>path&amp; remove_filename();</pre>
 <blockquote>
-  <p><i>Effects:</i> If <code>has_parent_path()</code> then remove the last filename from the stored path. If that leaves 
-  the stored path with one or more trailing separator elements not 
+  <p><i>Effects:</i> If <code>has_parent_path()</code> then remove the last filename from the 
+  contained pathname. If that leaves 
+  the contained pathname with one or more trailing separator elements not 
   representing&nbsp;a root-directory, remove them.</p>
   <p><i>Returns:</i> <code>*this</code></p>
   <p>[<i>Note:</i> This function is needed to efficiently implement <code>
@@ -904,40 +903,49 @@ appends</a></h4>
   <code>new_extension</code>.</p>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
+<pre>path&amp; localize();</pre>
+<blockquote>
+  <p><i>Effects:</i> The contained pathname is converted to the preferred native 
+  format. [<i>Note:</i> On Windows, the effect is to replace slashes with 
+  backslashes. On POSIX, there is no effect. <i>-- end note</i>]</p>
+  <p><i>Returns:</i> <code>*this</code></p>
+</blockquote>
 <h4> <code><font size="4">class </font></code> <a name="path-observers"> <code>
 <font size="4">path</font></code> observers</a></h4>
-<p>Some operating systems, including <i>POSIX</i> and <i>
-Windows</i>, use the same format for paths to directories and paths to regular 
-files.</p>
-<p>Other operating systems, such as OpenVMS, used different formats for paths to 
+<p><span style="background-color: #FFFF00"><i>Move elsewhere.</i> </span></p>
+<p><span style="background-color: #FFFF00">Some operating systems, including
+</span> <i><span style="background-color: #FFFF00">POSIX</span></i><span style="background-color: #FFFF00"> and
+</span> <i>
+<span style="background-color: #FFFF00">Windows</span></i><span style="background-color: #FFFF00">, use the same format for paths to directories and paths to regular 
+files.</span></p>
+<p><span style="background-color: #FFFF00">Other operating systems, such as 
+</span><span style="background-color: #FFFF00">OpenVMS</span><span style="background-color: #FFFF00">, used different formats for paths to 
 directories and paths to regular files. On such systems, implementations shall 
 determine the format according to whether or not the last element is a 
-separator.</p>
+separator.</span></p>
 <table border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td colspan="2">
-    <p align="center"><b>OpenVMS</b></td>
+    <p align="center"><b><span style="background-color: #FFFF00">OpenVMS</span></b></td>
   </tr>
   <tr>
-    <td><code>path p</code></td>
-    <td><code>p.native()</code></td>
+    <td><code><span style="background-color: #FFFF00">path p</span></code></td>
+    <td><code><span style="background-color: #FFFF00">p.native()</span></code></td>
   </tr>
   <tr>
-    <td><code>p = &quot;/cats/jane&quot;</code></td>
-    <td> <code>&quot;[CATS]JANE&quot;</code></td>
+    <td><code><span style="background-color: #FFFF00">p = &quot;/cats/jane&quot;</span></code></td>
+    <td> <code><span style="background-color: #FFFF00">&quot;[CATS]JANE&quot;</span></code></td>
   </tr>
   <tr>
-    <td><code>p = &quot;/cats/jane/&quot;</code></td>
-    <td> <code>&quot;[CATS.JANE]&quot;</code></td>
+    <td><code><span style="background-color: #FFFF00">p = &quot;/cats/jane/&quot;</span></code></td>
+    <td> <code><span style="background-color: #FFFF00">&quot;[CATS.JANE]&quot;</span></code></td>
   </tr>
 </table>
 <pre>const string_type&amp;  native() const;</pre>
 <blockquote>
-<p><i>Returns:</i> A string formatted and encoded as defined by the 
-implementation. <i>[Note:</i> This is normally the format and encoding of paths 
-for the host operating system. If the implementation emulates a different 
-operating system, such as Cygwin's emulation of Windows, the format and encoding 
-will be that of the emulated operating system. <i>--end note]</i></p>
+<p><i>Returns:</i> The contained pathname. [<i>Note:</i> The contained pathname 
+is in the <a href="#Native-pathname-format">native pathname format</a>. <i>-- 
+end note</i>]</p>
 <p><i>Throws:</i> nothing.</p>
 </blockquote>
 <pre>const value_type* c_str() const;</pre>
@@ -949,19 +957,25 @@ will be that of the emulated operating system. <i>--end note]</i></p>
 <blockquote>
 <p><b><i><code>const-string</code></i></b> is permitted to be <code>const 
 std::string</code> or <code>const std::string&amp;</code>.</p>
-<p><i>Returns:</i> A string containing the contents of <code>native()</code>. If
+<p><i>Returns:</i> The contained pathname. [<i>Note:</i> The contained pathname 
+is in the <a href="#Native-pathname-format">native pathname format</a>. <i>-- 
+end note</i>]</p>
+<p><i>Remarks:</i> If
 <code>value_type</code> is not <code>char</code>, the encoding is converted by
 <code>codecvt()</code>.</p>
-<p><i>[Note:</i> For POSIX implementations, no conversion is required; the 
+<p><i>[Note:</i> For POSIX-like implementations, no conversion is required; the 
 implementation will simply return <code>native()</code>. <i>-- end note]</i></p>
 </blockquote>
 <pre><i><b>const-wstring</b></i> native_wstring() const; </pre>
 <blockquote>
 <p><b><i><code>const-wstring</code></i></b> is permitted to be <code>const 
 std::wstring</code> or <code>const std::wstring&amp;</code>.</p>
-<p><i>Returns:</i> A string containing the contents of <code>native()</code>. If
-<code>value_type</code> is not <code>wchar_t</code>, the encoding is converted 
-by <code>codecvt()</code>.</p>
+<p><i>Returns:</i> The contained pathname. [<i>Note:</i> The contained pathname 
+is in the <a href="#Native-pathname-format">native pathname format</a>. <i>-- 
+end note</i>]</p>
+<p><i>Remarks:</i> If
+<code>value_type</code> is not <code>wchar_t</code>, the encoding is converted by
+<code>codecvt()</code>.</p>
 <p><i>[Note:</i> For Windows implementations, no conversion is required; the 
 implementation will simply return <code>native()</code>. <i>-- end note]</i></p>
 </blockquote>
@@ -969,32 +983,36 @@ implementation will simply return <code>native()</code>. <i>-- end note]</i></p>
 <blockquote>
 <p><b><i><code>const-string</code></i></b> is permitted to be <code>const 
 std::string</code> or <code>const std::string&amp;</code>.</p>
-<p><i>Returns:</i> A string containing the <a href="#Pathname-grammar">portable 
-representation</a> of the contents of <code>native()</code>. If <code>value_type</code> 
-is not <code>char</code>, the encoding is converted by <code>codecvt()</code>.</p>
+<p><i>Returns:</i> The contained pathname, in the
+<a href="#Portable-pathname-format">portable pathname format</a>.</p>
+<p><i>Remarks:</i> If
+<code>value_type</code> is not <code>char</code>, the encoding is converted by
+<code>codecvt()</code>.</p>
 </blockquote>
 <pre><b><i>const-wstring</i></b> wstring() const;</pre>
 <blockquote>
 <p><b><i><code>const-wstring</code></i></b> is permitted to be <code>const 
 std::wstring</code> or <code>const std::wstring&amp;</code>.</p>
-<p><i>Returns:</i> A string containing the <a href="#Pathname-grammar">portable 
-representation</a> of the contents of <code>native()</code>. If <code>value_type</code> 
-is not <code>wchar_t</code>, the encoding is converted by <code>codecvt()</code>.</p>
+<p><i>Returns:</i> The contained pathname, in the
+<a href="#Portable-pathname-format">portable pathname format</a>.</p>
+<p><i>Remarks:</i> If
+<code>value_type</code> is not <code>wchar_t</code>, the encoding is converted by
+<code>codecvt()</code>.</p>
 </blockquote>
 <h4> <a name="path-decomposition"> <code><font size="4">class path</font></code> 
 decomposition</a></h4>
 <p><span style="background-color: #E0E0E0"><i>See the
 <a href="#Path-decomposition-table">Path decomposition table</a> for examples 
 for values returned by decomposition functions.</i></span></p>
-<pre>string_type root_name() const;</pre>
+<pre>path root_name() const;</pre>
 <blockquote>
 <p><i>Returns:</i> <i>root-name,</i> if the stored path includes <i>
-root-name</i>, otherwise <code>string_type()</code>. </p>
+root-name</i>, otherwise <code>path()</code>. </p>
 </blockquote>
-<pre>string_type root_directory() const;</pre>
+<pre>path root_directory() const;</pre>
 <blockquote>
 <p><i>Returns:</i> <i>root-directory</i>, if the stored path includes <i>
-root-directory</i>, otherwise <code>string_type()</code>.</p>
+root-directory</i>, otherwise <code>path()</code>.</p>
 <p>If <i>root-directory</i> is composed <i>slash name</i>, <i>slash</i> is 
 excluded from the returned string.</p>
 </blockquote>
@@ -1005,22 +1023,21 @@ excluded from the returned string.</p>
 <pre>path relative_path() const;</pre>
 <blockquote>
 <p><i>Returns:</i> A <code>path</code> composed from the the stored path, if any, beginning 
-with the first <i>filename</i> after <i>root-path</i>. 
-Otherwise, an empty <code>path</code>.</p>
+with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</code>.</p>
 </blockquote>
-<pre>string_type filename() const;</pre>
+<pre>path filename() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>empty() ? string_type() : *--end()</code></p>
+  <p><i>Returns:</i> <code>empty() ? path() : *--end()</code></p>
 </blockquote>
 <pre>path parent_path() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>(string().empty() || begin() == --end()) ? path_type(&quot;&quot;) : 
+  <p><i>Returns:</i> <code>(empty() || begin() == --end()) ? path() : 
   <i>br</i></code>, where <code><i>br</i></code> is constructed as if by 
   starting with an empty <code>path</code> and successively applying <code>
   operator/=</code> for each element in the range <code>begin()</code>, <code>
   --end()</code>.</p>
 </blockquote>
-<pre>string_type stem(const Path &amp; p) const;</pre>
+<pre>path stem(const path&amp; p) const;</pre>
 <blockquote>
   <p><i>Returns:</i> if <code>p.filename()</code> contains a <i>dot</i>, returns 
   the substring of <code>p.filename()</code> starting at its beginning and 
@@ -1028,20 +1045,21 @@ Otherwise, an empty <code>path</code>.</p>
   returns <code>
   p.filename()</code>.</p>
 </blockquote>
-<pre>string_type extension(const Path &amp; p) const;</pre>
+<pre>path extension(const path&amp; p) const;</pre>
 <blockquote>
   <p><i>Returns:</i> if <code>p.filename()</code> contains a <i>dot</i>, returns 
   the substring of <code>p.filename()</code> starting at the rightmost <i>dot</i> 
   and ending at the string's end. Otherwise, returns an empty string. </p>
   <p>[<i>Note:<b> </b></i>The <i>dot</i> is included in the return value so that 
-  it is possible to distinguish between no extension and an empty extension. </p>
+  it is possible to distinguish between no extension and an empty extension.&nbsp; <i>-- end note</i>]</p>
   <p>Implementations are permitted but not required to define additional 
   behavior for file systems which append additional elements to extensions, such 
-  as alternate data stream or partitioned dataset names. <i>-- end note</i>]</p>
+  as alternate data streams or partitioned dataset names.</p>
 </blockquote>
+<h4> <a name="path-query"> <code><font size="4">class path</font></code> query</a></h4>
 <pre>bool empty() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>string().empty()</code>.</p>
+  <p><i>Returns:</i> <code>native().empty()</code>.</p>
 </blockquote>
 <pre>bool is_complete() const;</pre>
 <blockquote>
@@ -1927,14 +1945,17 @@ file. The internal form of the stored information is unspecified.</p>
   value.</p>
 </blockquote>
 <h3><a name="Operational-functions">Operational functions</a></h3>
-<p>Operational functions query or modify file system components in external 
+<p>Operational functions query or modify files, including directories of files, in external 
 storage.</p>
-<blockquote>
-<p>[<i>Note:</i> Because the operational functions are subject to
+<p style="font-size: 10pt">Operational functions access a file by resolving an 
+object of class <code>path</code> to a particular file in a file hierarchy. The 
+path is resolved as if by the <i>POSIX</i>
+<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap04.html#tag_04_11">
+Pathname Resolution</a> mechanism.</p>
+<p>[<i>Note:</i> Because operational functions are subject to
 <a href="#Race-condition">race conditions</a> and I/O errors,
 <a href="#Error-handling">error handling</a> is of particular concern. <i>-- end 
 note</i>] </p>
-</blockquote>
 <pre>path <a name="complete">complete</a>(const path&amp; p, const path&amp; base, system::error_code&amp; ec=throws());</pre>
 <blockquote>
   <p><i>Effects:</i> Composes a complete path from <code>p</code> and <code>base</code>, 
@@ -3119,7 +3140,7 @@ final document.</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->06 October 2009<!--webbot bot="Timestamp" endspan i-checksum="32669" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->10 October 2009<!--webbot bot="Timestamp" endspan i-checksum="32658" --></p>
 
 </body>
 

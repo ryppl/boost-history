@@ -140,14 +140,12 @@ namespace filesystem
 
 # ifdef BOOST_WINDOWS_PATH
 
-  const std::string  path::native_string( system::error_code & ec ) const
+  const std::string  path::native_string() const
   { 
     std::string tmp;
     if ( !m_path.empty() )
       path_traits::convert( &*m_path.begin(), &*m_path.begin()+m_path.size(),
-        tmp, codecvt(), ec );
-    else
-      if ( &ec != &throws() ) ec.clear();
+        tmp, codecvt() );
     return tmp;
   }
 
@@ -161,11 +159,11 @@ namespace filesystem
     }
   }
 
-  const std::string path::string( system::error_code & ec ) const
+  const std::string path::string() const
   { 
     path tmp( *this );
     tmp.m_portable();
-    return tmp.native_string( ec );
+    return tmp.native_string();
   }
 
   const std::wstring path::wstring() const
