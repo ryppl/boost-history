@@ -2091,6 +2091,7 @@ inline void cache_deallocate(T* ptr) {
 #endif //BOOST_STM_NO_PARTIAL_SPECIALIZATION
 
 inline void cache_release(base_transaction_object* ptr) {
+    if (ptr==0) return ;
     ptr->cache_deallocate();
 }
 
