@@ -568,11 +568,12 @@ where a strategy is specified explicitly and constructed with a radius.
 
 \section par9 Point concept
 The five traits classes mentioned in the paragraphs above form together the Point Concept. Any point type for which specializations are implemented in the traits namespace should be handled correctly by the library. So the Point concept consists of:
- * a specialization for traits::tag
- * a specialization for traits::coordinate_system
- * a specialization for traits::coordinate_type
- * a specialization for traits::dimension
- * a specialization for traits::access
+- a specialization for traits::tag
+- a specialization for traits::coordinate_system
+- a specialization for traits::coordinate_type
+- a specialization for traits::dimension
+- a specialization for traits::access
+
 The last one is a class, containing a function, the first four are meta-functions.
 So we now have agnosticism for the number of dimensions, agnosticism for coordinate systems, our design can handle any coordinate type, and it can handle different geometry types.
 Furthermore we can specify our own strategies, the code will not compile in case of two points with different dimensions (because of the assertion), and it will not compile for two points with different coordinate systems (because there is no specialization).
