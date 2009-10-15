@@ -193,7 +193,7 @@ public:
       double abortPriority = 0;
       bool hasLargestReadSet = true;
 
-      int mem = lhs.reads() + (lhs.writes() * 10);
+      unsigned int mem = lhs.reads() + (lhs.writes() * 10);
 
       double decrementing = 1.0;
       for (std::list<transaction*>::iterator iter = rhs.begin();
