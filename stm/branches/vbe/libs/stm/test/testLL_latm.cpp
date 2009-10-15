@@ -69,7 +69,7 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
 
    int start = *(int*)threadId;
    int startingValue = start * kMaxInserts;
-   int threadInserts = 0;
+   //int threadInserts = 0;
 
    if (kInsertSameValues) startingValue = 0;
 
@@ -110,7 +110,7 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
 
    if (kDoLookup)
    {
-      bool allFound = true;
+      //bool allFound = true;
 
       for (i = startingValue; i < endingValue; ++i)
       {
@@ -155,7 +155,7 @@ static void* TestLinkedListInserts(void *threadId)
 
    int start = *(int*)threadId;
    int startingValue = start * kMaxInserts;
-   int threadInserts = 0;
+   //int threadInserts = 0;
 
    if (kInsertSameValues) startingValue = 0;
 
@@ -195,7 +195,7 @@ static void* TestLinkedListInserts(void *threadId)
 
    if (kDoLookup)
    {
-      bool allFound = true;
+      //bool allFound = true;
 
       for (i = startingValue; i < endingValue; ++i)
       {
@@ -238,7 +238,7 @@ static void* TestLinkedListInserts(void *threadId)
 void TestLinkedListSetsWithLocks()
 {
    static std::vector<int> runVector;
-   int iterations = 0;
+   //int iterations = 0;
 
    usingSingleList = false;
 
@@ -255,7 +255,7 @@ void TestLinkedListSetsWithLocks()
    }
 
    kMainThreadId = kMaxThreads-1;
-   int lists = (kMaxThreads / 4) * 3;
+   //int lists = (kMaxThreads / 4) * 3;
 
    for (int k = 0; k < kMaxThreads; ++k)
    {
@@ -264,7 +264,7 @@ void TestLinkedListSetsWithLocks()
       transaction::initialize();
       transaction::initialize_thread();
 
-      int index = convertThreadIdToLinkedListIndex(k);
+      (void)convertThreadIdToLinkedListIndex(k);
 
       //----------------------------------------------------------------
       // every 4th thread works on the same linked list that

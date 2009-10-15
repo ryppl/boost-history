@@ -152,7 +152,7 @@ void except_and_back_off_on_abort_notice_cm::abort_on_new(transaction const &con
       double abortPriority = 0;
       bool hasLargestReadSet = true;
 
-      int mem = lhs.reads() + (lhs.writes() * 10);
+      std::size_t mem = lhs.reads() + (lhs.writes() * 10);
 
       double decrementing = 1.0;
       for (std::list<boost::stm::transaction*>::iterator iter = rhs.begin();

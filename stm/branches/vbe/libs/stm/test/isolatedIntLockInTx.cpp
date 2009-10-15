@@ -118,7 +118,7 @@ static void* TestIsolatedLockInTxCount(void *threadId)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static void* TestCount(void *threadId)
+void* TestCount2(void *threadId)
 {
    transaction::initialize_thread();
    int start = *(int*)threadId;

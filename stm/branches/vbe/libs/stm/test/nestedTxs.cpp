@@ -38,12 +38,12 @@
 static Mutex L = PTHREAD_MUTEX_INITIALIZER;
 static Mutex L2 = PTHREAD_MUTEX_INITIALIZER;
 static Mutex L3 = PTHREAD_MUTEX_INITIALIZER;
-static Mutex L4 = PTHREAD_MUTEX_INITIALIZER;
+//static Mutex L4 = PTHREAD_MUTEX_INITIALIZER;
 #else
 static Mutex L;
 static Mutex L2;
 static Mutex L3;
-static Mutex L4;
+//static Mutex L4;
 #endif
 
 using namespace boost::stm;
@@ -55,7 +55,7 @@ static native_trans<int> y = 0;
 static void tx_bar();
 static void lk_bar();
 
-static void* tx_foo(void*)
+void* tx_foo(void*)
 {
    transaction::initialize_thread();
    size_t tries = 0;
@@ -83,7 +83,7 @@ static void tx_bar()
 
 
 
-static void*  lk_foo(void*)
+void*  lk_foo(void*)
 {
    use_lock(&L)
    {
@@ -240,7 +240,7 @@ static void TestEarlyRelease()
 void NestedTxTest()
 {
    static std::vector<int> runVector;
-   int iterations = 0;
+   //int iterations = 0;
 
    transaction::initialize();
    transaction::initialize_thread();

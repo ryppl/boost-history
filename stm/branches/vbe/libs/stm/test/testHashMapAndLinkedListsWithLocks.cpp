@@ -156,7 +156,7 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static void* TestLinkedListInserts(void *threadId)
+void* TestLinkedListInserts(void *threadId)
 {
    LATM::list_node<int> node;
    transaction::initialize_thread();
@@ -197,7 +197,7 @@ static void* TestLinkedListInserts(void *threadId)
 
    if (kDoLookup)
    {
-      bool allFound = true;
+      //bool allFound = true;
 
       for (i = startingValue; i < endingValue; ++i)
       {

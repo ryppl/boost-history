@@ -49,7 +49,7 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
 
    int start = *(int*)threadId;
    int startingValue = start * kMaxInserts;
-   int threadInserts = 0;
+   //int threadInserts = 0;
 
    if (kInsertSameValues) startingValue = 0;
 
@@ -84,7 +84,7 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
 
    if (kDoLookup)
    {
-      bool allFound = true;
+      //bool allFound = true;
 
       for (i = startingValue; i < endingValue; ++i)
       {
@@ -130,7 +130,7 @@ static void* TestLinkedListInserts(void *threadId)
 
    int start = *(int*)threadId;
    int startingValue = start * kMaxInserts;
-   int threadInserts = 0;
+   //int threadInserts = 0;
 
    if (kInsertSameValues) startingValue = 0;
 
@@ -165,7 +165,7 @@ static void* TestLinkedListInserts(void *threadId)
 
    if (kDoLookup)
    {
-      bool allFound = true;
+      //bool allFound = true;
 
       for (i = startingValue; i < endingValue; ++i)
       {
@@ -207,7 +207,7 @@ static void* TestLinkedListInserts(void *threadId)
 void TestLinkedListWithLocks()
 {
    static std::vector<int> runVector;
-   int iterations = 0;
+   //int iterations = 0;
 
    llist = new LATM::LinkedList<list_node_type>;
    transaction::initialize();

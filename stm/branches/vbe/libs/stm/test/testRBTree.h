@@ -55,12 +55,12 @@ public:
    typedef T type;
 
     ////////////////////////////////////////////////////////////////////////////
-   RedBlackNode(T const &in) : value_(in), color_(nRedBlackTree::eRed),
-      parent_(&sentinel), left_(&sentinel), right_(&sentinel) {}
+   RedBlackNode(T const &in) : color_(nRedBlackTree::eRed), value_(in), 
+      left_(&sentinel), right_(&sentinel), parent_(&sentinel) {}
 
    ////////////////////////////////////////////////////////////////////////////
-   RedBlackNode() : value_(T()), color_(nRedBlackTree::eRed), parent_(&sentinel),
-      left_(&sentinel), right_(&sentinel) {}
+   RedBlackNode() : color_(nRedBlackTree::eRed), value_(T()),
+      left_(&sentinel), right_(&sentinel), parent_(&sentinel) {}
 
    T const & const_value(boost::stm::transaction &t) const
    { return t.read(*const_cast<RedBlackNode<T>*>(this)).value_; }

@@ -32,11 +32,11 @@ class list_node : public boost::stm::transaction_object< list_node<T> >
 {
 public:
 
-   list_node() : value_(0), next_(0) {}
-   explicit list_node(int const &rhs) : value_(rhs), next_(NULL) {}
+   list_node() : next_(0), value_(0)  {}
+   explicit list_node(int const &rhs) : next_(0), value_(rhs) {}
 
    // zero initialization for native types
-   void clear() { value_ = T(); next_ = NULL; }
+   void clear() { value_ = T(); next_ = 0; }
 
    T &value() { return value_; }
    T const &value() const { return value_; }
@@ -48,13 +48,13 @@ public:
 
    void next(list_node const *rhs, boost::stm::transaction &t)
    {
-      if (NULL == rhs) next_ = NULL;
+      if (0 == rhs) next_ = 0;
       else next_ = &t.find_original(*(list_node*)rhs);
    }
 
    void next_for_new_mem(list_node *rhs, boost::stm::transaction &t)
    {
-      if (NULL == rhs) next_ = NULL;
+      if (0 == rhs) next_ = 0;
       else next_ = &t.find_original(*rhs);
    }
 
@@ -93,7 +93,7 @@ public:
    LinkedList()
    {
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-      pthread_mutex_init (&list_lock_, NULL);
+      pthread_mutex_init (&list_lock_, 0);
 #endif
       head_.value() = T();
    }
@@ -205,7 +205,7 @@ public:
 
       list_node<T> *headP = &head_;
 
-      if (NULL != headP->next())
+      if (0 != headP->next())
       {
          list_node<T> *prev = headP;
          list_node<T> *cur = headP->next();
@@ -224,7 +224,7 @@ public:
 
             list_node<T> *curNext = cur->next();
 
-            if (NULL == curNext) break;
+            if (0 == curNext) break;
 
             cur = curNext;
          }
@@ -232,10 +232,10 @@ public:
          list_node<T> *newNode = new list_node<T>(rhs);
 
          //--------------------------------------------------------------------
-         // if cur->next() is null it means our newNode value is greater than
+         // if cur->next() is 0 it means our newNode value is greater than
          // cur, so insert ourselves after cur.
          //--------------------------------------------------------------------
-         if (NULL == cur->next()) cur->next(newNode);
+         if (0 == cur->next()) cur->next(newNode);
          //--------------------------------------------------------------------
          // otherwise, we are smaller than cur, so insert between prev and cur
          //--------------------------------------------------------------------
@@ -272,7 +272,7 @@ public:
             return true;
          }
 
-         if (NULL == cur->next()) break;
+         if (0 == cur->next()) break;
       }
 
       transaction::unlock_(&list_lock_);
@@ -284,7 +284,7 @@ public:
    bool remove(list_node<T> const &node)
    {
       using namespace boost::stm;
-      bool succeeded = true;
+      //bool succeeded = true;
 
       for (transaction t; ; t.restart())
       {
@@ -298,7 +298,7 @@ public:
    void outputList(std::ofstream &o)
    {
       int i = 0;
-      for (list_node<T> *cur = head_.next(); cur != NULL; cur = cur->next())
+      for (list_node<T> *cur = head_.next(); cur != 0; cur = cur->next())
       {
          o << "element [" << i++ << "]: " << cur->value() << std::endl;
       }
@@ -309,7 +309,7 @@ public:
    int walk_size()
    {
       int i = 0;
-      for (list_node<T> *cur = head_.next(); cur != NULL; cur = cur->next())
+      for (list_node<T> *cur = head_.next(); cur != 0; cur = cur->next())
       {
          ++i;
       }
@@ -321,7 +321,7 @@ public:
    //--------------------------------------------------------------------------
    void quick_clear()
    {
-      for (list_node<T> *cur = head_.next(); cur != NULL;)
+      for (list_node<T> *cur = head_.next(); cur != 0;)
       {
          list_node<T> *prev = cur;
          cur = cur->next();
@@ -340,7 +340,7 @@ public:
       {
          try
          {
-            for (list_node<T> *cur = t.read(head_).next(); cur != NULL;)
+            for (list_node<T> *cur = t.read(head_).next(); cur != 0;)
             {
                list_node<T> *prev = &t.read(*cur);
                cur = t.read(*cur).next();
@@ -363,7 +363,7 @@ private:
    {
       list_node<T> *headP = &t.read(head_);
 
-      if (NULL != headP->next())
+      if (0 != headP->next())
       {
          list_node<T> *prev = headP;
          list_node<T> *cur = t.read_ptr(headP->next());
@@ -378,7 +378,7 @@ private:
 
             list_node<T> *curNext = t.read_ptr(cur->next());
 
-            if (NULL == curNext) break;
+            if (0 == curNext) break;
 
             cur = curNext;
          }
@@ -386,10 +386,10 @@ private:
          list_node<T> *newNode = t.new_memory_copy(rhs);
 
          //--------------------------------------------------------------------
-         // if cur->next() is null it means our newNode value is greater than
+         // if cur->next() is 0 it means our newNode value is greater than
          // cur, so insert ourselves after cur.
          //--------------------------------------------------------------------
-         if (NULL == cur->next()) t.write_ptr(cur)->next_for_new_mem(newNode, t);
+         if (0 == cur->next()) t.write_ptr(cur)->next_for_new_mem(newNode, t);
          //--------------------------------------------------------------------
          // otherwise, we are smaller than cur, so insert between prev and cur
          //--------------------------------------------------------------------
@@ -426,7 +426,7 @@ private:
             return true;
          }
 
-         if (NULL == trueCur->next()) break;
+         if (0 == trueCur->next()) break;
       }
 
       return false;
@@ -438,11 +438,11 @@ private:
    {
       list_node<T> const *prev = &t.read(head_);
 
-      for (list_node<T> const *cur = prev; cur != NULL; prev = cur)
+      for (list_node<T> const *cur = prev; cur != 0; prev = cur)
       {
          cur = t.read(*cur).next();
 
-         if (NULL == cur) break;
+         if (0 == cur) break;
 
          if (cur->value() == rhs.value())
          {
@@ -467,7 +467,7 @@ private:
 
       list_node<T> const *headP = &t.read(head_);
 
-      if (NULL != headP->next())
+      if (0 != headP->next())
       {
          list_node<T> const *prev = headP;
          list_node<T> const *cur = t.read_ptr(headP->next());
@@ -482,7 +482,7 @@ private:
 
             list_node<T> const *curNext = t.read_ptr(cur->next());
 
-            if (NULL == curNext) break;
+            if (0 == curNext) break;
 
             cur = curNext;
          }
@@ -490,10 +490,10 @@ private:
          list_node<T> *newNode = t.new_memory_copy(rhs);
 
          //--------------------------------------------------------------------
-         // if cur->next() is null it means our newNode value is greater than
+         // if cur->next() is 0 it means our newNode value is greater than
          // cur, so insert ourselves after cur.
          //--------------------------------------------------------------------
-         if (NULL == cur->next()) t.write_ptr((list_node<T>*)cur)->next_for_new_mem(newNode, t);
+         if (0 == cur->next()) t.write_ptr((list_node<T>*)cur)->next_for_new_mem(newNode, t);
          //--------------------------------------------------------------------
          // otherwise, we are smaller than cur, so insert between prev and cur
          //--------------------------------------------------------------------
@@ -522,7 +522,7 @@ private:
 
       list_node<T> const *prev = &t.read(head_);
 
-      for (list_node<T> const *cur = prev; cur != NULL;
+      for (list_node<T> const *cur = prev; cur != 0;
            prev = cur, cur = t.read(*cur).next())
       {
          if (cur->value() == rhs.value())

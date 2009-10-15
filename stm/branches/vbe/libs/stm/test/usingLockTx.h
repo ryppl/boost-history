@@ -260,7 +260,7 @@ public:
    bool remove(list_node<T> const &node)
    {
       using namespace boost::stm;
-      bool succeeded = true;
+      //bool succeeded = true;
 
       for (transaction t; ; t.restart())
       {

@@ -33,7 +33,7 @@ class list_node : public boost::stm::transaction_object< list_node<T> >
 {
 public:
 
-   list_node() : value_(0), next_(0) {}
+   list_node() : next_(0), value_(0) {}
    explicit list_node(int const &rhs) : value_(rhs), next_(NULL) {}
 
    // zero initialization for native types
@@ -260,7 +260,7 @@ public:
    bool remove(list_node<T> const &node)
    {
       using namespace boost::stm;
-      bool succeeded = true;
+      //bool succeeded = true;
 
       for (transaction t; ; t.restart())
       {

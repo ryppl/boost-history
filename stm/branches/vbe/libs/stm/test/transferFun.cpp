@@ -56,14 +56,14 @@ void* TestTreeTransferFunctionInserts(void *threadId)
 {
    transaction::initialize_thread();
 
-   int id = *(int*)threadId;
+   //int id = *(int*)threadId;
    int start = *(int*)threadId;
    int startingValue = start * kMaxInserts;
-   int threadInserts = 0;
+   //int threadInserts = 0;
 
    if (kInsertSameValues) startingValue = 0;
 
-   int endingValue = startingValue + kMaxInserts;
+   //int endingValue = startingValue + kMaxInserts;
 
    idleUntilAllThreadsHaveReached(*(int*)threadId);
 
@@ -103,7 +103,7 @@ void* TestTreeTransferFunctionInserts(void *threadId)
 void TestTransferFunctionMultipleThreads()
 {
    static std::vector<int> runVector;
-   int iterations = 0;
+   //int iterations = 0;
 
    global_int2.value() = 0;
 

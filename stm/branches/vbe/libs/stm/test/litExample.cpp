@@ -133,7 +133,7 @@ static void do_work2()
    }
 }
 
-static void do_work3() 
+void do_work3() 
 {
    if (work3) return;
    work3 = true;

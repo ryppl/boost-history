@@ -105,7 +105,7 @@ static void do_work2()
    }
 }
 
-static void do_work3() 
+void do_work3bis() 
 {
    if (work3) return;
    work3 = true;
@@ -121,7 +121,7 @@ static void do_work3()
    }
 }
 
-static void do_work4() 
+void do_work4() 
 {
    if (work4) return;
    work4 = true;

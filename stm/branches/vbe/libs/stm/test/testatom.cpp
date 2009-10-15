@@ -53,7 +53,7 @@ Account accounts[ACCOUNTS];
 //-----------------------------------------------------------------------------
 void* AccountEntry(void* threadId)
 {
-   static bool first = true;
+   //static bool first = true;
 
 	stm::transaction::initialize_thread();
    int start = *(int*)threadId;

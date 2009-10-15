@@ -22,12 +22,12 @@ static newSyntaxNS::LinkedList< list_node_type > *llist = NULL;
 static Mutex L = PTHREAD_MUTEX_INITIALIZER;
 static Mutex L2 = PTHREAD_MUTEX_INITIALIZER;
 static Mutex L3 = PTHREAD_MUTEX_INITIALIZER;
-static Mutex L4 = PTHREAD_MUTEX_INITIALIZER;
+//static Mutex L4 = PTHREAD_MUTEX_INITIALIZER;
 #else
 static Mutex L;
 static Mutex L2;
 static Mutex L3;
-static Mutex L4;
+//static Mutex L4;
 #endif
 
 using namespace boost::stm;
@@ -113,14 +113,14 @@ using namespace std; using namespace boost::stm;
 using namespace nMain;
 
 ///////////////////////////////////////////////////////////////////////////////
-static void* TestLinkedListInsertsWithLocks(void *threadId)
+void* TestLinkedListInsertsWithLocksBis(void *threadId)
 {
    newSyntaxNS::list_node<list_node_type> node;
    transaction::initialize_thread();
 
    int start = *(int*)threadId;
    int startingValue = start * kMaxInserts;
-   int threadInserts = 0;
+   //int threadInserts = 0;
 
    if (kInsertSameValues) startingValue = 0;
 
@@ -156,7 +156,7 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
 
    if (kDoLookup)
    {
-      bool allFound = true;
+      //bool allFound = true;
 
       for (i = startingValue; i < endingValue; ++i)
       {
@@ -195,14 +195,14 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static void* TestLinkedListInserts(void *threadId)
+void* TestLinkedListInsertsBis(void *threadId)
 {
    newSyntaxNS::list_node<list_node_type> node;
    transaction::initialize_thread();
 
    int start = *(int*)threadId;
    int startingValue = start * kMaxInserts;
-   int threadInserts = 0;
+   //int threadInserts = 0;
 
    if (kInsertSameValues) startingValue = 0;
 
@@ -237,7 +237,7 @@ static void* TestLinkedListInserts(void *threadId)
 
    if (kDoLookup)
    {
-      bool allFound = true;
+      //bool allFound = true;
 
       for (i = startingValue; i < endingValue; ++i)
       {
@@ -308,7 +308,7 @@ static void TestNested2()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static void TestNested()
+void TestNested()
 {
    atomic(t)
    {
@@ -385,7 +385,7 @@ static void TestEarlyRelease()
 void TestLinkedListWithUsingLocks()
 {
    static std::vector<int> runVector;
-   int iterations = 0;
+   //int iterations = 0;
 
    llist = new newSyntaxNS::LinkedList<list_node_type>;
 
