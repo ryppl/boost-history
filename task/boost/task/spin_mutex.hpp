@@ -24,7 +24,7 @@ private:
 	volatile uint32_t	state_;
 
 public:
-	typedef spin_unique_lock< spin_mutex >		scoped_lock;
+	typedef spin_unique_lock< spin_mutex >			scoped_lock;
 
 	spin_mutex();
 
@@ -40,6 +40,8 @@ public:
 
 	void unlock();
 };
+
+typedef spin_mutex spin_try_mutex;
 
 }}
 

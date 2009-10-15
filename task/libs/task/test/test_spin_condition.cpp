@@ -1,201 +1,191 @@
-
-//          Copyright Oliver Kowalke 2009.
-// Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// Copyright (C) 2001-2003
+// William E. Kempf
+// Copyright (C) 2007 Anthony Williams
 //
-// This test is based on the tests of Boost.Thread 
+//  Distributed under the Boost Software License, Version 1.0. (See accompanying 
+//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include <cstdlib>
-#include <iostream>
-#include <map>
-#include <stdexcept>
-#include <vector>
-
-#include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/function.hpp>
-#include <boost/ref.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
-#include <boost/utility.hpp>
-
 #include <boost/task.hpp>
 
-namespace pt = boost::posix_time;
+#include <boost/test/unit_test.hpp>
+
+#include <libs/task/test/util.ipp>
+
 namespace tsk = boost::task;
+namespace pt = boost::posix_time;
 
-namespace {
-
-struct condition_test
+struct condition_test_data
 {
-    condition_test() :
-		notified( 0),
-		awoken( 0)
-	{}
+    condition_test_data() : notified(0), awoken(0) { }
 
-    tsk::spin_mutex		mtx;
-    tsk::spin_condition	condition;
+    tsk::spin_mutex mutex;
+    tsk::spin_condition condition;
     int notified;
     int awoken;
 };
 
-struct cond_predicate
+void condition_test_thread(condition_test_data* data)
 {
-    cond_predicate( int & var_, int val_) :
-		var( var_),
-		val( val_)
-	{}
-
-    bool operator()()
-	{ return var == val; }
-
-    int	&	var;
-    int		val;
-
-private:
-    void operator=( cond_predicate&);
-};
-
-void condition_test_thread( condition_test * data)
-{
-	tsk::spin_mutex::scoped_lock lk( data->mtx);
-    BOOST_CHECK( lk);
-    while ( ! ( data->notified > 0) )
-        data->condition.wait( lk);
-    BOOST_CHECK( lk);
+    tsk::spin_mutex::scoped_lock lock(data->mutex);
+    BOOST_CHECK(lock ? true : false);
+    while (!(data->notified > 0))
+        data->condition.wait(lock);
+    BOOST_CHECK(lock ? true : false);
     data->awoken++;
 }
 
-void condition_test_waits( condition_test * data)
+struct cond_predicate
 {
-	tsk::spin_mutex::scoped_lock lk( data->mtx);
-    BOOST_CHECK( lk);
+    cond_predicate(int& var, int val) : _var(var), _val(val) { }
+
+    bool operator()() { return _var == _val; }
+
+    int& _var;
+    int _val;
+private:
+    void operator=(cond_predicate&);
+    
+};
+
+void condition_test_waits(condition_test_data* data)
+{
+    tsk::spin_mutex::scoped_lock lock(data->mutex);
+    BOOST_CHECK(lock ? true : false);
 
     // Test wait.
-    while ( data->notified != 1)
-        data->condition.wait( lk);
-    BOOST_CHECK( lk);
-    BOOST_CHECK_EQUAL( data->notified, 1);
+    while (data->notified != 1)
+        data->condition.wait(lock);
+    BOOST_CHECK(lock ? true : false);
+    BOOST_CHECK_EQUAL(data->notified, 1);
     data->awoken++;
     data->condition.notify_one();
 
     // Test predicate wait.
-    data->condition.wait( lk, cond_predicate( data->notified, 2));
-    BOOST_CHECK( lk);
-    BOOST_CHECK_EQUAL( data->notified, 2);
+    data->condition.wait(lock, cond_predicate(data->notified, 2));
+    BOOST_CHECK(lock ? true : false);
+    BOOST_CHECK_EQUAL(data->notified, 2);
     data->awoken++;
     data->condition.notify_one();
 
     // Test timed_wait.
-	pt::millisec xt( 250);
-    while ( data->notified != 3)
-        data->condition.timed_wait( lk, xt);
-    BOOST_CHECK( lk);
-    BOOST_CHECK_EQUAL( data->notified, 3);
+    pt::time_duration xt = pt::seconds(10);
+    while (data->notified != 3)
+        data->condition.timed_wait(lock, xt);
+    BOOST_CHECK(lock ? true : false);
+    BOOST_CHECK_EQUAL(data->notified, 3);
     data->awoken++;
     data->condition.notify_one();
 
     // Test predicate timed_wait.
-    cond_predicate pred( data->notified, 4);
-    BOOST_CHECK( data->condition.timed_wait( lk, xt, pred));
-    BOOST_CHECK( lk);
-    BOOST_CHECK( pred() );
-    BOOST_CHECK_EQUAL( data->notified, 4);
+    xt = pt::seconds(10);
+    cond_predicate pred(data->notified, 4);
+    BOOST_CHECK(data->condition.timed_wait(lock, xt, pred));
+    BOOST_CHECK(lock ? true : false);
+    BOOST_CHECK(pred());
+    BOOST_CHECK_EQUAL(data->notified, 4);
     data->awoken++;
     data->condition.notify_one();
 
     // Test predicate timed_wait with relative timeout
-    cond_predicate pred_rel( data->notified, 5);
-    BOOST_CHECK( data->condition.timed_wait( lk, pt::seconds( 10), pred_rel) );
-    BOOST_CHECK( lk);
-    BOOST_CHECK( pred_rel() );
-    BOOST_CHECK_EQUAL( data->notified, 5);
+    cond_predicate pred_rel(data->notified, 5);
+    BOOST_CHECK(data->condition.timed_wait(lock, boost::posix_time::seconds(10), pred_rel));
+    BOOST_CHECK(lock ? true : false);
+    BOOST_CHECK(pred_rel());
+    BOOST_CHECK_EQUAL(data->notified, 5);
     data->awoken++;
     data->condition.notify_one();
 }
 
-void test_wait()
+void do_test_condition_waits()
 {
-    condition_test	data;
+    condition_test_data data;
 
-    boost::thread thrd(
-			boost::bind(
-				& condition_test_waits, & data) );
+    boost::thread thread(bind(&condition_test_waits, &data));
 
     {
-		tsk::spin_mutex::scoped_lock lk( data.mtx);
-        BOOST_CHECK( lk);
+        tsk::spin_mutex::scoped_lock lock(data.mutex);
+        BOOST_CHECK(lock ? true : false);
 
-        boost::this_thread::sleep( pt::millisec( 250) );
+        boost::this_thread::sleep(pt::seconds(1));
         data.notified++;
         data.condition.notify_one();
-        while ( data.awoken != 1)
-            data.condition.wait( lk);
-        BOOST_CHECK( lk);
-        BOOST_CHECK_EQUAL( data.awoken, 1);
+        while (data.awoken != 1)
+            data.condition.wait(lock);
+        BOOST_CHECK(lock ? true : false);
+        BOOST_CHECK_EQUAL(data.awoken, 1);
 
-        boost::this_thread::sleep( pt::millisec( 250) );
+        boost::this_thread::sleep(pt::seconds(1));
         data.notified++;
         data.condition.notify_one();
-        while ( data.awoken != 2)
-            data.condition.wait( lk);
-        BOOST_CHECK( lk);
-        BOOST_CHECK_EQUAL( data.awoken, 2);
+        while (data.awoken != 2)
+            data.condition.wait(lock);
+        BOOST_CHECK(lock ? true : false);
+        BOOST_CHECK_EQUAL(data.awoken, 2);
 
-        boost::this_thread::sleep( pt::millisec( 250) );
+        boost::this_thread::sleep(pt::seconds(1));
         data.notified++;
         data.condition.notify_one();
-        while ( data.awoken != 3)
-            data.condition.wait( lk);
-        BOOST_CHECK( lk);
-        BOOST_CHECK_EQUAL( data.awoken, 3);
+        while (data.awoken != 3)
+            data.condition.wait(lock);
+        BOOST_CHECK(lock ? true : false);
+        BOOST_CHECK_EQUAL(data.awoken, 3);
 
-        boost::this_thread::sleep( pt::millisec( 250) );
+        boost::this_thread::sleep(pt::seconds(1));
         data.notified++;
         data.condition.notify_one();
-        while ( data.awoken != 4)
-            data.condition.wait( lk);
-        BOOST_CHECK( lk);
-        BOOST_CHECK_EQUAL( data.awoken, 4);
+        while (data.awoken != 4)
+            data.condition.wait(lock);
+        BOOST_CHECK(lock ? true : false);
+        BOOST_CHECK_EQUAL(data.awoken, 4);
 
-        boost::this_thread::sleep( pt::millisec( 250) );
+
+        boost::this_thread::sleep(pt::seconds(1));
         data.notified++;
         data.condition.notify_one();
-        while ( data.awoken != 5)
-            data.condition.wait( lk);
-        BOOST_CHECK( lk);
-        BOOST_CHECK_EQUAL( data.awoken, 5);
+        while (data.awoken != 5)
+            data.condition.wait(lock);
+        BOOST_CHECK(lock ? true : false);
+        BOOST_CHECK_EQUAL(data.awoken, 5);
     }
 
-    thrd.join();
-    BOOST_CHECK_EQUAL( data.awoken, 5);
+    thread.join();
+    BOOST_CHECK_EQUAL(data.awoken, 5);
 }
 
-
-void test_interruption_point()
+void test_condition_waits()
 {
-    condition_test	data;
-
-    boost::thread thrd(
-			boost::bind(
-				& condition_test_thread, & data) );
-
-    thrd.interrupt();
-    thrd.join();
-
-    BOOST_CHECK_EQUAL( data.awoken, 0);
+    // We should have already tested notify_one here, so
+    // a timed test with the default execution_monitor::use_condition
+    // should be OK, and gives the fastest performance
+    timed_test(&do_test_condition_waits, 12);
 }
 
-}
-
-boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
+void do_test_condition_wait_is_a_interruption_point()
 {
-    boost::unit_test_framework::test_suite * test =
-		BOOST_TEST_SUITE("Boost.Task: spin-condition test suite");
+    condition_test_data data;
 
-    test->add( BOOST_TEST_CASE( & test_wait) );
-    test->add( BOOST_TEST_CASE( & test_interruption_point) );
+    boost::thread thread(bind(&condition_test_thread, &data));
 
-	return test;
+    thread.interrupt();
+    thread.join();
+    BOOST_CHECK_EQUAL(data.awoken,0);
+}
+
+
+void test_condition_wait_is_a_interruption_point()
+{
+    timed_test(&do_test_condition_wait_is_a_interruption_point, 1);
+}
+
+boost::unit_test_framework::test_suite* init_unit_test_suite(int, char*[])
+{
+    boost::unit_test_framework::test_suite* test =
+        BOOST_TEST_SUITE("Boost.Task: condition test suite");
+
+    test->add(BOOST_TEST_CASE(&test_condition_waits));
+    test->add(BOOST_TEST_CASE(&test_condition_wait_is_a_interruption_point));
+
+    return test;
 }
