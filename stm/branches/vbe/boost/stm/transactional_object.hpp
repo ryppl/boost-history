@@ -73,8 +73,12 @@ public:
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
     virtual base_transaction_object* clone(transaction* t) const {
-        //return cache_clone(*this);
-        return new(t) transactional_object<T>(*this);
+        transactional_object<T>* p = cache_allocate<transactional_object<T> >(t);
+        if (p==0) {
+            throw std::bad_alloc();
+        }
+        ::new (p) transactional_object<T>(*static_cast<transactional_object<T> const*>(this));
+        return p;
     }
 #else
     virtual base_transaction_object* clone(transaction*) const {
@@ -83,51 +87,40 @@ public:
     }
 #endif
 
+#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
     virtual void cache_deallocate() {
-        //boost::stm::cache_deallocate(this);
+        static_cast<transactional_object<T>*>(this)->~transactional_object<T>();
+        boost::stm::cache_deallocate(this);
+    }
+#else
+    virtual void cache_deallocate() {
         delete this;
     }
+#endif
 
     virtual void copy_state(base_transaction_object const * const rhs) {
         //cache_copy(static_cast<transactional_object<T> const * const>(rhs), this);
         *this=*static_cast<transactional_object<T> const * const>(rhs);
     }
 
-    #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    void* operator new(size_t size, transaction* t)
-    {
-        return cache_allocate<transactional_object<T> >(t);
-    }
     #if USE_STM_MEMORY_MANAGER
-    void* operator new(size_t size) throw ()
+   void* operator new(size_t size, const std::nothrow_t&) throw ()
+   {
+      return retrieve_mem(size);
+   }
+    void* operator new(size_t size) throw (std::bad_alloc)
     {
-        return retrieve_mem(size);
+        void* ptr= retrieve_mem(size);
+        if (ptr==0) throw std::bad_alloc;
+        return ptr;
     }
 
-    void operator delete(void* mem)
-    {
-    return_mem(mem, sizeof(transactional_object<T>));
-    }
-    #else
-    void* operator new(size_t size) throw ()
-    {
-        return ::operator new(size);
-    }
-    #endif
-
-    #else
-
-    #if USE_STM_MEMORY_MANAGER
-    void* operator new(size_t size) throw ()
-    {
-        return retrieve_mem(size);
-    }
-
-    void operator delete(void* mem)
-    {
-        return_mem(mem, sizeof(transactional_object<T>));
-    }
-    #endif
+   void operator delete(void* mem) throw ()
+   {
+      static transactional_object<T> elem;
+      static size_t elemSize = sizeof(elem);
+      return_mem(mem, elemSize);
+   }
     #endif
 
 };

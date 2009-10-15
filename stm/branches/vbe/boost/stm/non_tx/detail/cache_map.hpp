@@ -61,15 +61,20 @@ public:
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
     virtual base_transaction_object* clone(transaction* t) const {
-        cache* tmp = new(t) cache<T>(*this);
+        cache<T>* p = cache_allocate<cache<T> >(t);
+        if (p==0) {
+            throw std::bad_alloc();
+        }
+        ::new (p) cache<T>(*static_cast<cache<T> const*>(this));
+        return p;
 #else
     virtual base_transaction_object* clone(transaction*) const {
-        cache* tmp = new cache<T>(*this);
+        cache* p = new cache<T>(*this);
 #endif
-        if (tmp->value_!=0) {
-            tmp->ptr_ = new T(*value_);
+        if (p->value_!=0) {
+            p->ptr_ = new T(*value_);
         }
-        return tmp;
+        return p;
     }
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
@@ -93,40 +98,24 @@ public:
         ptr_=0;
     }
 
-#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-   void* operator new(size_t size, transaction* t)
-   {
-      return boost::stm::cache_allocate<cache<T> >(t);
-   }
 #if USE_STM_MEMORY_MANAGER
-   void* operator new(size_t size) throw ()
+   void* operator new(size_t size, const std::nothrow_t&) throw ()
    {
       return retrieve_mem(size);
    }
-
-   void operator delete(void* mem)
-   {
-      return_mem(mem, sizeof(cache<T>));
-   }
-#else
-    void* operator new(size_t size) throw ()
+    void* operator new(size_t size) throw (std::bad_alloc)
     {
-        return ::operator new(size);
+        void* ptr= retrieve_mem(size);
+        if (ptr==0) throw std::bad_alloc;
+        return ptr;
     }
-#endif
-#else
 
-#if USE_STM_MEMORY_MANAGER
-   void* operator new(size_t size) throw ()
+   void operator delete(void* mem) throw ()
    {
-      return retrieve_mem(size);
+      static cache<T> elem;
+      static size_t elemSize = sizeof(elem);
+      return_mem(mem, elemSize);
    }
-
-   void operator delete(void* mem)
-   {
-      return_mem(mem, sizeof(cache<T>));
-   }
-#endif
 #endif
 
 

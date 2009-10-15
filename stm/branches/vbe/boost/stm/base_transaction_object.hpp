@@ -57,7 +57,7 @@ class base_transaction_object
 {
 public:
 
-    base_transaction_object() 
+    base_transaction_object()
         : transactionThread_(kInvalidThread)
         , newMemory_(0)
 #if PERFORMING_VALIDATION
@@ -94,12 +94,6 @@ public:
     void transaction_thread(size_t rhs) const { transactionThread_ = rhs; }
     size_t const & transaction_thread() const { return transactionThread_; }
 
-#if USE_STM_MEMORY_MANAGER
-    static void alloc_size(size_t size) { memory_.alloc_size(size); }
-#else
-    static void alloc_size(size_t size) { }
-#endif
-
     void new_memory(size_t rhs) const { newMemory_ = rhs; }
     size_t const & new_memory() const { return newMemory_; }
 
@@ -109,9 +103,14 @@ public:
 
 #if BOOST_STM_ALLOWS_EMBEDEEDS
     std::list<base_transaction_object*>& embeddeds() {return embeddeds_;}
-    void bind(base_transaction_object* bto) {embeddeds_.push_back(bto);}   
+    void bind(base_transaction_object* bto) {embeddeds_.push_back(bto);}
 #endif
 
+#if USE_STM_MEMORY_MANAGER
+    static void alloc_size(size_t size) { memory_.alloc_size(size); }
+#else
+    static void alloc_size(size_t size) { }
+#endif
 //protected:
 
 #if USE_STM_MEMORY_MANAGER

@@ -87,12 +87,18 @@ public:
 
 
 #if USE_STM_MEMORY_MANAGER
-   void* operator new(size_t size) throw ()
+   void* operator new(size_t size, const std::nothrow_t&) throw ()
    {
       return retrieve_mem(size);
    }
+    void* operator new(size_t size) throw (std::bad_alloc)
+    {
+        void* ptr= retrieve_mem(size);
+        if (ptr==0) throw std::bad_alloc;
+        return ptr;
+    }
 
-   void operator delete(void* mem)
+   void operator delete(void* mem) throw ()
    {
       static Derived elem;
       static size_t elemSize = sizeof(elem);
