@@ -1,0 +1,5 @@
+@import "http://www.boost.org/doc/libs/1_38_0/rst.css";
+p {text-align:justify}
+li {text-align:justify}
+.ins {background-color:#A0FFA0;border-bottom: 1px solid black}
+.del {background-color:#FFA0A0;text-decoration:line-through}

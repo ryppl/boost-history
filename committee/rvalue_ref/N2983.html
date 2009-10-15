@@ -8,7 +8,15 @@
 <meta name="author" content="David Abrahams, Rani Sharoni" />
 <meta name="organization" content="BoostPro Computing, Microsoft" />
 <meta name="date" content="2009-10-14" />
-<link rel="stylesheet" href="http://www.boost.org/doc/libs/1_38_0/rst.css" type="text/css" />
+<style type="text/css">
+
+@import "http://www.boost.org/doc/libs/1_38_0/rst.css";
+p {text-align:justify}
+li {text-align:justify}
+.ins {background-color:#A0FFA0;border-bottom: 1px solid black}
+.del {background-color:#FFA0A0;text-decoration:line-through}
+
+</style>
 </head>
 <body>
 <div class="document" id="allowing-move-constructors-to-throw">
@@ -63,9 +71,6 @@ problem can arise, it seems rather heavy-handed to ban throwing move
 constructors altogether:</p>
 <ul class="simple">
 <li>It can be a hard rule for users to follow.</li>
-<li>Generating move constructors by default as proposed in <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2904.pdf">N2904</a>
-requires a carefully-engineered set of rules about when such a
-default can be generated.</li>
 <li>It hobbles the optimization potential of move constructors, because
 efficient move constructors that might throw (but almost never will)
 can't be generated or written.</li>
@@ -74,11 +79,12 @@ can't be generated or written.</li>
 cannot move-enable a class until all its sub-objects have been
 move-enabled.</li>
 <li>It forces the weakening of class invariants for some move-enabled
-classes: if move construction can throw, it must be possible to
-leave the source object in a resource-less state.</li>
+classes: if move construction is not allowed to throw, the invariant
+must include a resource-less state in which we can leave the source
+object.</li>
 <li>In some cases class maintainers may need to choose between
 move-enabling their class and maintaining its current guarantees to
-users.  For example, dinkumware's list implementation currently
+users.  For example, Dinkumware's list implementation currently
 derives QOI benefits from having no resource-less state—“begin” and
 “end” iterators maintain their relationships even after lists are
 swapped.  If throwing move constructors are banned, that would no
@@ -243,7 +249,17 @@ to this optimization tool.</p>
 </div>
 <div class="section" id="proposed-changes-to-standard-wording">
 <h1><a class="toc-backref" href="#id10">Proposed Changes to Standard Wording</a></h1>
-<!-- Rani fills in this part -->
+<p>This is some text with <span class="ins">an inserted section</span> and <span class="del">a deleted section</span>.</p>
+<p>To insert and delete in code, use the “parsed-literal” directive as follows:</p>
+<pre class="literal-block">
+.. parsed-literal::
+
+   int foo(:ins:`int`:del:`short` x);
+</pre>
+<p>The result looks like:</p>
+<pre class="literal-block">
+int foo(<span class="ins">int</span><span class="del">short</span> x);
+</pre>
 <hr class="docutils" />
 <table class="docutils footnote" frame="void" id="attribute" rules="none">
 <colgroup><col class="label" /><col /></colgroup>

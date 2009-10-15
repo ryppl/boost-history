@@ -241,8 +241,25 @@ to this optimization tool.
 Proposed Changes to Standard Wording
 ====================================
 
-.. Rani fills in this part
+.. role:: ins
+   :class: ins
 
+.. role:: del
+   :class: del
+
+This is some text with :ins:`an inserted section` and :del:`a deleted section`.
+
+To insert and delete in code, use the “parsed-literal” directive as follows::
+
+  .. parsed-literal::
+
+     int foo(:ins:`int`:del:`short` x);
+
+The result looks like:
+
+.. parsed-literal::
+
+   int foo(:ins:`int`:del:`short` x);
 
 -------
 
