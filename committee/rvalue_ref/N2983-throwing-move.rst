@@ -39,10 +39,6 @@ constructors altogether:
 
 * It can be a hard rule for users to follow.
 
-* Generating move constructors by default as proposed in N2904_
-  requires a carefully-engineered set of rules about when such a
-  default can be generated.
- 
 * It hobbles the optimization potential of move constructors, because
   efficient move constructors that might throw (but almost never will)
   can't be generated or written.
@@ -54,12 +50,13 @@ constructors altogether:
   move-enabled.
 
 * It forces the weakening of class invariants for some move-enabled
-  classes: if move construction can throw, it must be possible to
-  leave the source object in a resource-less state.  
+  classes: if move construction is not allowed to throw, the invariant
+  must include a resource-less state in which we can leave the source
+  object.
 
 * In some cases class maintainers may need to choose between
   move-enabling their class and maintaining its current guarantees to
-  users.  For example, dinkumware's list implementation currently
+  users.  For example, Dinkumware's list implementation currently
   derives QOI benefits from having no resource-less state—“begin” and
   “end” iterators maintain their relationships even after lists are
   swapped.  If throwing move constructors are banned, that would no
