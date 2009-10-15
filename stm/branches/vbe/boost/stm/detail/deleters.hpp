@@ -49,7 +49,7 @@ struct base_transaction_object_array_deleter  : deleter {
     std::size_t size_;
     base_transaction_object_array_deleter (T* ptr, std::size_t size) : ptr_(ptr), size_(size) {}
     virtual void reset() {
-        for (int std::size_t =0; i< size_; ++i) {
+        for (std::size_t i =0; i< size_; ++i) {
             static_cast<base_transaction_object*>(ptr_+i)->transaction_thread(kInvalidThread);
             static_cast<base_transaction_object*>(ptr_+i)->new_memory(0);
         }
