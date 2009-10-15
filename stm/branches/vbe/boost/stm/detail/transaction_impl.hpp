@@ -383,6 +383,9 @@ inline void transaction::unlock_all_mutexes()
 //--------------------------------------------------------------------------
 inline transaction::transaction() :
    threadId_(THREAD_ID),
+   //transactionMutexLocker_(),
+   auto_general_lock_(general_lock()),
+
 #if USE_SINGLE_THREAD_CONTEXT_MAP
 ////////////////////////////////////////
    context_(*tss_context_map_.find(threadId_)->second),
@@ -431,7 +434,6 @@ inline transaction::transaction() :
 #endif
    transactionsRef_(transactions(threadId_)),
 
-
 ////////////////////////////////////////
 #else
 ////////////////////////////////////////
@@ -466,10 +468,9 @@ inline transaction::transaction() :
    obtainedLocksRef_(*threadObtainedLocks_.find(threadId_)->second),
    currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
-
+////////////////////////////////////////
    transactionsRef_(transactions(threadId_)),
 
-////////////////////////////////////////
 #endif
 
    hasMutex_(0), priority_(0),

@@ -35,6 +35,7 @@
 * [*DONE] Adding transactional smart pointers.
 * Allows to have non transactional_object participating on transactions (separate the information related to a transactional object from the object itself and add two pointers to transactional_object_cache one to the object itself and the other to the transactional_object.
 * [*DONE] Managing Movable and non CopyConstructible types.
+* Replace auto_lock by boost::stm::synchro::unique_locker and redefine language-like macros.
 
 [heading Boostifying STM]
 
@@ -48,8 +49,7 @@
 * Replace THREAD_ID by boost::thread_id
 * [*DONE] Provide a unique array/tuple locker (Boost.Synchro)
 * Replace var_auto_lock by boost::synchro::unique_array_locker
-* Replace auto_lock by boost::synchro::unique_locker and redefine use_lock macros
-* use lock_guard when lock/unlock
+* Use boost::lock_guard when lock/unlock
 * Adapt the pool to Boost.Pool
 * [*DONE] Provide a thread specific shared pointer (Boost.Interthreads)
 * [*DONE] Provide a transparent initialization (Boost.Interthreads)
@@ -117,6 +117,10 @@
 
 * Mixing STM updating policies.
 * Mixing STM consistency checking.
+* Providing Closed Nested transaction that are not flat.
+Currently __Boost_STM__ provides closed nested transactions which are flat, i.e. all the nested transactions are flatten on the outer transaction of the thread.
+* Suspend/resume transactions
+* Add explicit outer transaction (those that can not be nested in aother transactions, i.e. root transactions).
 
 [endsect]
 [endsect]

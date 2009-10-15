@@ -137,6 +137,51 @@ typedef boost::mutex PLOCK;
         //}
     };
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+
+class light_auto_lock
+{
+public:
+
+   light_auto_lock(Mutex &mutex) : lock_(NULL)
+   {
+      do_auto_lock(&mutex);
+   }
+
+   light_auto_lock(Mutex *mutex) : lock_(NULL)
+   {
+      do_auto_lock(mutex);
+   }
+
+   ~light_auto_lock() { do_auto_unlock(); }
+
+   bool has_lock() { return hasLock_; }
+
+   void release_lock() { do_auto_unlock(); }
+
+private:
+
+   void do_auto_lock(Mutex *mutex)
+   {
+      lock_ = mutex;
+      pthread_mutex_lock(mutex);
+      hasLock_ = true;
+   }
+
+   void do_auto_unlock()
+   {
+      if (hasLock_)
+      {
+         hasLock_ = false;
+         pthread_mutex_unlock(lock_);
+      }
+   }
+
+   bool hasLock_;
+   Mutex *lock_;
+};
+
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

@@ -101,6 +101,13 @@ typedef transaction_type TxType;
 
 typedef std::pair<base_transaction_object*, base_transaction_object*> tx_pair;
 
+   template <typename MUTEX, MUTEX& mtx>
+   struct locker {
+       inline locker();
+       inline ~locker();
+       inline void unlock();
+   };
+
 ///////////////////////////////////////////////////////////////////////////////
 // transaction Class
 ///////////////////////////////////////////////////////////////////////////////
@@ -710,6 +717,22 @@ public:
        delete_memory(*in);
    }
 
+   template <typename T>
+   inline void delete_tx_array(T *in) {
+      if (direct_updating())
+      {
+#if PERFORMING_VALIDATION
+         throw "direct updating not implemented for validation yet";
+#else
+         direct_delete_tx_array(in);
+#endif
+      }
+      else
+      {
+         deferred_delete_tx_array(in);
+      }
+   }
+
    //--------------------------------------------------------------------------
    // allocation of new memory behaves the same for both deferred and direct
    // transaction implementations
@@ -1039,6 +1062,40 @@ private:
          deletedMemoryList().push_back(detail::make(in));
       }
    }
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   void direct_delete_tx_array(T *in)
+   {
+      if (in.transaction_thread() == threadId_)
+      {
+         deletedMemoryList().push_back(detail::make(in));
+         return;
+      }
+
+      //-----------------------------------------------------------------------
+      // if we're here this item isn't in our writeList - get the global lock
+      // and see if anyone else is writing to it. if not, we add the item to
+      // our write list and our deletedList
+      //-----------------------------------------------------------------------
+      lock(&transactionMutex_);
+
+      if (in.transaction_thread() != kInvalidThread)
+      {
+         unlock(&transactionMutex_);
+         cm_abort_on_write(*this, (base_transaction_object&)(in));
+      }
+      else
+      {
+         in.transaction_thread(threadId_);
+         unlock(&transactionMutex_);
+         // is this really necessary? in the deferred case it is, but in direct it
+         // doesn't actually save any time for anything
+         //writeList()[(base_transaction_object*)&in] = 0;
+
+         deletedMemoryList().push_back(detail::make(in));
+      }
+   }
 #endif
 
 
@@ -1272,7 +1329,7 @@ private:
             delete *i;
         }
 #endif
-       deletedMemoryList().clear(); 
+       deletedMemoryList().clear();
     }
    void directAbortTransactionNewMemory() throw() { deferredAbortTransactionNewMemory(); }
    void deferredAbortTransactionNewMemory() throw();
@@ -1439,6 +1496,9 @@ private:
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION
    //--------------------------------------------------------------------------
    size_t threadId_;
+
+   light_auto_lock auto_general_lock_;
+   //locker<Mutex, transactionMutex_> transactionMutexLocker_;
 
    //--------------------------------------------------------------------------
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION.
@@ -1609,6 +1669,7 @@ private:
    public:
     inline TransactionsStack& transactions() {return transactionsRef_;}
     inline static TransactionsStack &transactions(thread_id_t id) {
+        light_auto_lock auto_general_lock_(general_lock());
         return *threadTransactionsStack_.find(id)->second;
     }
     private:
@@ -1775,6 +1836,7 @@ private:
    public:
     inline TransactionsStack& transactions() {return transactionsRef_;}
     inline static TransactionsStack &transactions(thread_id_t id) {
+        light_auto_lock auto_general_lock_(general_lock());
         tss_context_map_type::iterator i = tss_context_map_.find(id);
         return i->second->transactions_;
     }
@@ -1920,11 +1982,12 @@ private:
    inline static MutexSet &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
 #endif
 
-    //static ThreadTransactionsStack threadTransactionsStack_;
+    static ThreadTransactionsStack threadTransactionsStack_;
     TransactionsStack& transactionsRef_;
    public:
     inline TransactionsStack& transactions() {return transactionsRef_;}
     inline static TransactionsStack &transactions(thread_id_t id) {
+        light_auto_lock auto_general_lock_(general_lock());
         return *threadTransactionsStack_.find(id)->second;
     }
     private:
@@ -1955,6 +2018,18 @@ public:
 };
 
 inline transaction* current_transaction() {return transaction::current_transaction();}
+
+template <typename MUTEX, MUTEX& mtx>
+locker<MUTEX,mtx>::locker() {
+    boost::stm::lock(mtx);
+}
+template <typename MUTEX, MUTEX& mtx>
+locker<MUTEX,mtx>::~locker() {}
+
+template <typename MUTEX, MUTEX& mtx>
+void locker<MUTEX,mtx>::unlock() {
+    boost::stm::unlock(mtx);
+}
 
 template <class T> T* cache_allocate(transaction* t) {
     #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER) && defined (USE_STM_MEMORY_MANAGER)

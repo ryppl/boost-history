@@ -105,31 +105,48 @@ public:
       return boost::stm::cache_allocate<Derived>(t);
    }
 #if USE_STM_MEMORY_MANAGER
-   void* operator new(size_t size) throw ()
+   void* operator new(size_t size, const nothrow_t&) throw ()
    {
       return retrieve_mem(size);
    }
+    void* operator new(size_t size) throw (std::bad_alloc)
+    {
+        void* ptr= retrieve_mem(size);
+        if (ptr==0) throw std::bad_alloc;
+        return ptr;
+    }
 
-   void operator delete(void* mem)
+   void operator delete(void* mem) throw ()
    {
       static Derived elem;
       static size_t elemSize = sizeof(elem);
       return_mem(mem, elemSize);
    }
 #else
-   void* operator new(size_t size) throw ()
+   void* operator new(size_t size, const nothrow_t& nt) throw ()
+   {
+      return ::operator new(size, nt);
+   }
+   void* operator new(size_t size)  throw (std::bad_alloc)
    {
       return ::operator new(size);
    }
 #endif
 #else
 #if USE_STM_MEMORY_MANAGER
-   void* operator new(size_t size) throw ()
+   void* operator new(size_t size, const nothrow_t&) throw ()
    {
       return retrieve_mem(size);
    }
 
-   void operator delete(void* mem)
+   void* operator new(size_t size) throw (std::bad_alloc)
+   {
+        void* ptr= retrieve_mem(size);
+        if (ptr==0) throw std::bad_alloc;
+        return ptr;
+   }
+
+   void operator delete(void* mem) throw ()
    {
       static Derived elem;
       static size_t elemSize = sizeof(elem);

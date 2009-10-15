@@ -46,7 +46,8 @@
 #define BOOST_STM_USE_ATOMIC(TX)                                \
     BOOST_STM_COMPILER_DONT_DESTROY_FOR_VARIABLES_WORKAROUND    \
     for (boost::stm::transaction TX;                            \
-        !TX.committed() && TX.restart();                        \
+            !   TX.committed() \
+            &&  TX.restart();                        \
         TX.end())
 
 //---------------------------------------------------------------------------
@@ -111,13 +112,13 @@
 //---------------------------------------------------------------------------
 
 #define BOOST_STM_TX_ABORT_ON_EXCEPTION(TX, E) \
-    catch (E&) {(TX).abort();}
+    catch (E&) {(TX).force_to_abort();}
 //---------------------------------------------------------------------------
 // Catch any exception and abort the transaction TX
 //---------------------------------------------------------------------------
 
-#define BOOST_STM_TX_ABORT_ANY(TX) \
-    catch (...) {(TX).abort();}
+#define BOOST_STM_TX_ABORT_ON_ANY_EXCEPTION(TX) \
+    catch (...) {(TX).force_to_abort();}
 
 //---------------------------------------------------------------------------
 // helper function to implement BOOST_STM_RETURN
@@ -167,7 +168,7 @@ T commit_and_return(transaction&t, T expression) {
 //---------------------------------------------------------------------------
 // aborts the transaction TX
 //---------------------------------------------------------------------------
-#define BOOST_STM_TX_ABORT(TX) TX.abort()
+#define BOOST_STM_TX_ABORT(TX) (TX).force_to_abort()
 
 //---------------------------------------------------------------------------
 // aborts the current transaction
@@ -179,14 +180,46 @@ T commit_and_return(transaction&t, T expression) {
 //---------------------------------------------------------------------------
 // aborts the transaction TX
 //---------------------------------------------------------------------------
-#define BOOST_STM_TX_ABORT_ALL(TX) TX.abort()
+#define BOOST_STM_TX_ABORT_OUTER(TX) (TX).force_to_abort()
 
 //---------------------------------------------------------------------------
 // aborts the current transaction
 //---------------------------------------------------------------------------
-#define BOOST_STM_ABORT_ALL     \
+#define BOOST_STM_ABORT_OUTER     \
     if (boost::stm::current_transaction()==0) ;  \
-    else BOOST_STM_ABORT_ALL(*boost::stm::current_transaction())
+    else BOOST_STM_TX_ABORT_OUTER(*boost::stm::current_transaction())
+
+
+//---------------------------------------------------------------------------
+// throw an exception
+//---------------------------------------------------------------------------
+#define BOOST_STM_TX_THROW(TX, EXCEPTION) throw (EXCEPTION)
+
+#define BOOST_STM_THROW(EXCEPTION) throw (EXCEPTION)
+
+//---------------------------------------------------------------------------
+// aborts the transaction TX and throw exception
+//---------------------------------------------------------------------------
+#define BOOST_STM_TX_ABORT_AND_THROW(TX, EXCEPTION) if ((TX).force_to_abort()) throw (EXCEPTION)
+
+//---------------------------------------------------------------------------
+// aborts the current transaction
+//---------------------------------------------------------------------------
+#define BOOST_STM_ABORT_AND_THROW(EXCEPTION)     \
+    if (boost::stm::current_transaction()==0) ;  \
+    else BOOST_STM_TX_ABORT_AND_THROW(*boost::stm::current_transaction(), EXCEPTION)
+
+//---------------------------------------------------------------------------
+// aborts the transaction TX and throw exception
+//---------------------------------------------------------------------------
+#define BOOST_STM_TX_ABORT_OUTER_AND_THROW(TX, EXCEPTION) if ((TX).force_to_abort()) throw (EXCEPTION)
+
+//---------------------------------------------------------------------------
+// aborts the current transaction
+//---------------------------------------------------------------------------
+#define BOOST_STM_ABORT_OUTER_AND_THROW(EXCEPTION)     \
+    if (boost::stm::current_transaction()==0) ;  \
+    else BOOST_STM_TX_ABORT_OUTER_AND_THROW(*boost::stm::current_transaction(), EXCEPTION)
 
 //---------------------------------------------------------------------------
 // Memory management

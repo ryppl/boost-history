@@ -142,6 +142,89 @@ public:
       //return lhs.writes() + lhs.reads() >= rhs.writes() + rhs.reads();
    }
 
+   virtual bool permission_to_abort
+      (transaction const &lhs,
+       std::list<transaction*> &rhs)
+   {
+#ifdef JUST_PRIORITY
+      int setSize = (lhs.writes() * lhs.priority()) +
+                    (lhs.reads() * lhs.priority());
+      double abortSetSize = 0;
+      double abortPriority = 0;
+      double decrementing = 1.0;
+
+      double highestPriority = 0;
+
+      bool hasLargestReadSet = true;
+
+      for (std::list<core::transaction*>::iterator iter = rhs.begin();
+           iter != rhs.end(); ++iter)
+      {
+         if ((*iter)->priority() > highestPriority)
+         {
+            highestPriority = (*iter)->priority();
+         }
+
+         if ((*iter)->reads() > lhs.reads()) hasLargestReadSet = false;
+         if ((*iter)->writes() > 0) return true;
+
+        abortSetSize += (double)(*iter)->reads() / decrementing;
+        abortPriority += (double)(*iter)->priority() / decrementing;
+        decrementing += 0.5;
+      }
+
+      if (lhs.priority() >= highestPriority) return true;
+
+      if (hasLargestReadSet) return true;
+
+      if (setSize >= abortPriority + abortSetSize)
+      {
+         return true;
+      }
+      else
+      {
+         return false;
+      }
+
+#else
+      double setSize = (lhs.writes() * lhs.priority()) +
+         (lhs.reads() * lhs.priority());
+      double abortSetSize = 0;
+      double abortPriority = 0;
+      bool hasLargestReadSet = true;
+
+      int mem = lhs.reads() + (lhs.writes() * 10);
+
+      double decrementing = 1.0;
+      for (std::list<transaction*>::iterator iter = rhs.begin();
+           iter != rhs.end(); ++iter)
+      {
+         if ((*iter)->reads() > mem) hasLargestReadSet = false;
+
+         if ((*iter)->writes() > 0) return true;
+
+         if (lhs.reads() < (*iter)->reads() / 8 &&
+             lhs.priority() * 100 < (*iter)->priority()) return false;
+
+        abortSetSize += (double)(*iter)->reads() / decrementing;
+        abortPriority += (double)(*iter)->priority() / decrementing;
+        decrementing += 0.5;
+      }
+
+      if (hasLargestReadSet) return true;
+
+      if (setSize >=
+         (abortPriority / setSize) + (abortSetSize / setSize))
+      {
+         return true;
+      }
+      else
+      {
+         return false;
+      }
+#endif
+   }
+
    virtual bool allow_lock_to_abort_tx
    (int const & lockWaitTime, int const &lockAborted,
    bool txTryingToAbortIsIrrevocable, transaction const &rhs)

@@ -73,6 +73,23 @@ __Boost_STM__ uses the last C++ features to provide a friendly and efficient int
 ]
 ]
 
+C++ Language based approaches.
+
+[variablelist
+[
+    [ [@http://www-949.ibm.com/software/rational/cafe/servlet/JiveServlet/download/3222-1-2389/C++-transactional-constructs-1.0.pdf [*Draft Specification of Transactional Language Constructs for C++]]]
+    [Transactional Memory Specification Drafting Group
+    ['Version: 1.0 - August 4, 2009] ]
+]
+
+[
+    [ [@http://www.cs.rochester.edu/meetings/TRANSACT07/papers/crowl.pdf [*Integrating Transactional Memory into C++]]]
+    [Lawrence Crowl, Yossi Lev, Victor Luchangco, Mark Moir and Dan Nussbaum -
+    ['TRANSACT 2007]]
+]
+]
+
+
 Check for the last updates.
 
 [variablelist
