@@ -8,7 +8,7 @@
 [section:tutorial Tutorial]
 [/========================]
 
-[section Thread Extensions]
+[/section Thread Extensions]
 
 [section Thread Decorator]
 [/==========================================================================================]
@@ -30,10 +30,12 @@ When we want the decorations to decorate one thread of execution we can create t
 
     boost::thread th(bith::thread_decorator(fct));
 
-or using one of the __AE__ decorators, as
+
+This behavion is obtained also using one of the __AE__ decorators of the Boost.Async library, as
 
     bith::basic_threader_decorator ae;
     BOOST_AUTO(th, bith::fork(ae, fct));
+
 
 [endsect]
 
@@ -159,7 +161,7 @@ or
 
 
 In order to ensure that the decorations have been called, a cleaner and safer option is not to return the thread until it has been started.
-This behavior is obtained each time the thread is created with an __AE__ decorator, as
+This behavior is obtained each time the thread is created with an __AE__ decorator when using the Boost.Async library, as
 
     bith::basic_threader_decorator ae;
     BOOST_AUTO(th, bith::fork(ae, func));
@@ -686,7 +688,7 @@ See the __boost_thread__ library for the Predefined Interruption Points.
 
 [endsect]
 [endsect]
-[endsect]
+[/endsect]
 
 
 [endsect]

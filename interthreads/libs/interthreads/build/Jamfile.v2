@@ -36,6 +36,10 @@ import feature ;
 import indirect ;
 import path ;
 
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
 project boost/interthreads
     : source-location ../src
     : requirements 
@@ -46,7 +50,8 @@ project boost/interthreads
 #       <define>BOOST_THREAD_HAS_THREAD_ATTR
     
       <include>../../..
-      <include>$BOOST_ROOT
+      <include>/boost_1_39_0
+      #<include>$BOOST_ROOT
       <link>static:<define>BOOST_INTERTHREADS_BUILD_LIB=1
       <link>shared:<define>BOOST_INTERTHREADS_BUILD_DLL=1 
 #      <link>shared:<library>/boost/thread//boost_thread/<link>shared

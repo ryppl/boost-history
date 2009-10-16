@@ -19,6 +19,11 @@
 # bring in rules for testing
 import testing ;
 
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
 project
     : requirements
         <library>/boost/test//boost_unit_test_framework/<link>static
@@ -27,7 +32,7 @@ project
         #<library>/sandbox/interthreads/libs/interthreads/build//boost_interthreads/<link>static
 
         <include>../../..
-        <include>$(BOOST_ROOT)
+        <include>/boost_1_39_0
         <threading>multi
 #       <target-os>cygwin
 #       <interthreadapi>pthread

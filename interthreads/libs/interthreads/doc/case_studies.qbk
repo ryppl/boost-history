@@ -286,6 +286,7 @@ The concentrator loop looks like:
 
 [endsect]
 
+[/
 [/========================]
 [section:stm STM]
 [/========================]
@@ -566,4 +567,5 @@ Before finishing with the `transaction` class let me show you the
 
 [endsect]
 
+]/
 [endsect]

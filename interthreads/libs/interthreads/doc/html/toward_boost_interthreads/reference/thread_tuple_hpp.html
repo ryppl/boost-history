@@ -1,0 +1,536 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>
+      Header &lt;boost/interthreads/thread_tuple.hpp&gt;</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.InterThreads">
+<link rel="up" href="../reference.html" title=" Reference">
+<link rel="prev" href="set_once_hpp.html" title=" Header
+      &lt;boost/interthreads/set_once.hpp&gt;">
+<link rel="next" href="thread_tuple_once_hpp.html" title="
+      Header &lt;boost/interthreads/thread_tuple_once.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="set_once_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="thread_tuple_once_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp"></a><a href="thread_tuple_hpp.html" title="
+      Header &lt;boost/interthreads/thread_tuple.hpp&gt;">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">interthreads</span><span class="special">/</span><span class="identifier">thread_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class">
+        Template Class <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.template_parameters">Template
+          parameters</a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_callable_constructor">
+          Constructor</a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_destructor">
+          Destructor</a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_joinable">
+          Member function <code class="computeroutput"><span class="identifier">joinable</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_join">
+          Member function <code class="computeroutput"><span class="identifier">join_all</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_all_until___">Member
+          function <code class="computeroutput"><span class="identifier">join_all_until</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_all_for___">Member
+          function <code class="computeroutput"><span class="identifier">join_all_for</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.join_first_then_interrupt">
+          Member function <code class="computeroutput"><span class="identifier">join_any</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_any_until___">Member
+          function <code class="computeroutput"><span class="identifier">join_any_until</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.detach_all">
+          Member function <code class="computeroutput"><span class="identifier">detach_all</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_interrupt_all">
+          Member function <code class="computeroutput"><span class="identifier">interrupt_all</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_size">
+          Member function <code class="computeroutput"><span class="identifier">size</span><span class="special">()</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_make_thread_tuple">
+        Non Member Function <code class="computeroutput"><span class="identifier">make_thread_tuple</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">interthreads</span> <span class="special">{</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span>  <span class="identifier">N</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">thread_tuple</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">F0</span><span class="special">,</span> <span class="special">...,</span> <span class="keyword">typename</span> <span class="identifier">Fn</span><span class="special">-</span><span class="number">1</span><span class="special">&gt;</span>
+    <span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="identifier">n</span><span class="special">&gt;</span> <span class="identifier">make_thread_tuple</span><span class="special">(</span><span class="identifier">F0</span> <span class="identifier">f0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Fn</span> <span class="identifier">fn</span><span class="special">-</span><span class="number">1</span><span class="special">);</span>
+
+<span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class" title="
+        Template Class thread_tuple&lt;&gt;">
+        Template Class <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.template_parameters">Template
+          parameters</a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_callable_constructor">
+          Constructor</a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_destructor">
+          Destructor</a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_joinable">
+          Member function <code class="computeroutput"><span class="identifier">joinable</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_join">
+          Member function <code class="computeroutput"><span class="identifier">join_all</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_all_until___">Member
+          function <code class="computeroutput"><span class="identifier">join_all_until</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_all_for___">Member
+          function <code class="computeroutput"><span class="identifier">join_all_for</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.join_first_then_interrupt">
+          Member function <code class="computeroutput"><span class="identifier">join_any</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_any_until___">Member
+          function <code class="computeroutput"><span class="identifier">join_any_until</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.detach_all">
+          Member function <code class="computeroutput"><span class="identifier">detach_all</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_interrupt_all">
+          Member function <code class="computeroutput"><span class="identifier">interrupt_all</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_size">
+          Member function <code class="computeroutput"><span class="identifier">size</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<p>
+          <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code>
+          defines a thread groupe where the number of threads is know statically
+          and the threads are created at construction time.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span>  <span class="identifier">n</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">thread_tuple</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">F0</span><span class="special">,</span> <span class="special">...,</span> <span class="keyword">typename</span> <span class="identifier">Fn</span><span class="special">-</span><span class="number">1</span><span class="special">&gt;</span>
+    <span class="identifier">thread_tuple</span><span class="special">(</span><span class="identifier">F0</span> <span class="identifier">f0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Fn</span><span class="special">-</span><span class="number">1</span> <span class="identifier">fn</span><span class="special">-</span><span class="number">1</span><span class="special">);</span>
+    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">F</span><span class="special">&gt;</span>
+    <span class="identifier">thread_tuple</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">move_t</span><span class="special">&lt;</span><span class="identifier">F</span><span class="special">&gt;</span> <span class="identifier">f</span><span class="special">);</span>
+    <span class="special">~</span><span class="identifier">thread_tuple</span><span class="special">();</span>
+
+    <span class="comment">// move support
+</span>    <span class="identifier">thread_tuple</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">move_t</span><span class="special">&lt;</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="identifier">n</span><span class="special">&gt;&gt;</span> <span class="identifier">x</span><span class="special">);</span>
+    <span class="identifier">thread_tuple</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">move_t</span><span class="special">&lt;</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="identifier">n</span><span class="special">&gt;&gt;</span> <span class="identifier">x</span><span class="special">);</span>
+    <span class="keyword">operator</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">move_t</span><span class="special">&lt;</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="identifier">n</span><span class="special">&gt;&gt;();</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">move_t</span><span class="special">&lt;</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="identifier">n</span><span class="special">&gt;&gt;</span> <span class="identifier">move</span><span class="special">();</span>
+
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="identifier">n</span><span class="special">&gt;&amp;</span> <span class="identifier">x</span><span class="special">);</span>
+
+    <span class="keyword">bool</span> <span class="identifier">joinable</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">void</span> <span class="identifier">join_all</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">join_all_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">wait_until</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">join_all_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">detach</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">detach_all</span><span class="special">();</span>
+
+    <span class="keyword">void</span> <span class="identifier">interrupt</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">interrupt_all</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">interruption_requested</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">();</span>
+    
+    <span class="keyword">const</span> <span class="identifier">thread</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">);</span>
+<span class="special">};</span>    
+<span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code>
+          class is responsible for launching and managing a static collection of
+          threads that are related in some fashion. No new threads can be added to
+          the tuple once constructed.
+        </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.template_parameters"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.template_parameters" title="Template
+          parameters">Template
+          parameters</a>
+</h5></div></div></div>
+<p>
+            <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code>
+            is instantiated with the following value:
+          </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              n is the size of the tuple.
+            </li></ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_callable_constructor"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_callable_constructor" title="
+          Constructor">
+          Constructor</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">F0</span><span class="special">,</span> <span class="special">...,</span> <span class="keyword">typename</span> <span class="identifier">Fn</span><span class="special">-</span><span class="number">1</span><span class="special">&gt;</span>
+<span class="identifier">thread_tuple</span><span class="special">(</span><span class="identifier">F0</span> <span class="identifier">func_0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Fn</span><span class="special">-</span><span class="number">1</span> <span class="identifier">func_n</span><span class="special">-</span><span class="number">1</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Preconditions:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="identifier">Fk</span></code> must by copyable.
+              </p></dd>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="identifier">func_k</span></code> is copied
+                into storage managed internally by the library, and that copy is
+                invoked on a newly-created thread of execution. If this invocation
+                results in an exception being propagated into the internals of the
+                library that is not of type <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_interrupted</span></code>,
+                then <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">terminate</span><span class="special">()</span></code>
+                will be called.
+              </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                refers to the newly created tuple of threads of execution.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_resource_error</span></code> if an error
+                occurs.
+              </p></dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+                Currently up to ten arguments <code class="computeroutput"><span class="identifier">func_0</span></code>
+                to <code class="computeroutput"><span class="identifier">funct_9</span></code> can be
+                specified.
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_destructor"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_destructor" title="
+          Destructor">
+          Destructor</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="special">~</span><span class="identifier">thread_tuple</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                If *this have associateds thread of execution, calls detach() on
+                them. Destroys *this.
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_joinable"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_joinable" title="
+          Member function joinable()">
+          Member function <code class="computeroutput"><span class="identifier">joinable</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">joinable</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                <code class="computeroutput"><span class="keyword">true</span></code> if <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                refers to threads of execution, <code class="computeroutput"><span class="keyword">false</span></code>
+                otherwise.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_join"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_join" title="
+          Member function join_all()">
+          Member function <code class="computeroutput"><span class="identifier">join_all</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">join</span><span class="special">();</span>
+<span class="keyword">void</span> <span class="identifier">join_all</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Call <code class="computeroutput"><span class="identifier">join</span><span class="special">()</span></code>
+                on each <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code> object in the tuple.
+              </p></dd>
+<dt><span class="term">Postcondition:</span></dt>
+<dd><p>
+                Every thread in the tuple has terminated.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+                Since <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">join</span></code> is one of the predefined interruption
+                points, <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;::</span><span class="identifier">join_all</span><span class="special">()</span></code> is also an interruption point.
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_all_until___"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_all_until___" title="Member
+          function join_all_until()">Member
+          function <code class="computeroutput"><span class="identifier">join_all_until</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">join_all_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">wait_until</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Call <code class="computeroutput"><span class="identifier">timed_join</span><span class="special">()</span></code>
+                on each <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code> object in the tuple.
+              </p></dd>
+<dt><span class="term">Postcondition:</span></dt>
+<dd><p>
+                Every thread in the tuple has terminated.
+              </p></dd>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                true if joined.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+                Since <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">timed_join</span></code> is one of the predefined
+                interruption points, <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;::</span><span class="identifier">join_all_until</span><span class="special">()</span></code> is also an interruption point.
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_all_for___"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_all_for___" title="Member
+          function join_all_for()">Member
+          function <code class="computeroutput"><span class="identifier">join_all_for</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="identifier">join_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                As <code class="computeroutput"><span class="identifier">join_all_until</span><span class="special">(</span><span class="identifier">now</span><span class="special">()+</span><span class="identifier">rel_time</span><span class="special">)</span></code>.
+              </p></dd>
+<dt><span class="term">Postcondition:</span></dt>
+<dd><p>
+                Every thread in the tuple has terminated.
+              </p></dd>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                true if joined.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+                Since <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">timed_join</span></code> is one of the predefined
+                interruption points, <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;::</span><span class="identifier">join_all_for</span><span class="special">()</span></code> is also an interruption point.
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.join_first_then_interrupt"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.join_first_then_interrupt" title="
+          Member function join_any()">
+          Member function <code class="computeroutput"><span class="identifier">join_any</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">conc_join_any</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Call <code class="computeroutput"><span class="identifier">join_any</span><span class="special">()</span></code>
+                on a temporary thread_tuple and the <code class="computeroutput"><span class="identifier">interrup_all</span><span class="special">()</span></code>.
+              </p></dd>
+<dt><span class="term">Postcondition:</span></dt>
+<dd><p>
+                Every thread in the tuple has terminated.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+                Since <code class="computeroutput"><span class="identifier">join_any</span><span class="special">()</span></code>
+                is one of the predefined interruption points, <code class="computeroutput"><span class="identifier">conc_join_any</span><span class="special">()</span></code> is also an interruption point.
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_any_until___"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.member_function__join_any_until___" title="Member
+          function join_any_until()">Member
+          function <code class="computeroutput"><span class="identifier">join_any_until</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span> <span class="identifier">conc_join_any_until</span><span class="special">(</span>
+        <span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">wait_until</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span> <span class="identifier">join_any_for</span><span class="special">(</span>
+        <span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Call <code class="computeroutput"><span class="identifier">join_any_until</span><span class="special">()</span></code> on a temporary thread_tuple and
+                the <code class="computeroutput"><span class="identifier">interrup_all</span><span class="special">()</span></code>.
+              </p></dd>
+<dt><span class="term">Postcondition:</span></dt>
+<dd><p>
+                Every thread in the tuple has terminated.
+              </p></dd>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                true if joined.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+                Since <code class="computeroutput"><span class="identifier">join_any_until</span><span class="special">()</span></code> is one of the predefined interruption
+                points, <code class="computeroutput"><span class="identifier">conc_join_any_until</span><span class="special">()</span></code> is also an interruption point.
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.detach_all"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.detach_all" title="
+          Member function detach_all()">
+          Member function <code class="computeroutput"><span class="identifier">detach_all</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">detach_all</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Call <code class="computeroutput"><span class="identifier">detach</span><span class="special">()</span></code>
+                on each <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code> object in the tuple.
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_interrupt_all"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_interrupt_all" title="
+          Member function interrupt_all()">
+          Member function <code class="computeroutput"><span class="identifier">interrupt_all</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">interrupt_all</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Call <code class="computeroutput"><span class="identifier">thread</span><span class="special">::</span><span class="identifier">interrupt</span><span class="special">()</span></code>
+                on each <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code> object in the tuple.
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_size"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_class.thread_tuple_size" title="
+          Member function size()">
+          Member function <code class="computeroutput"><span class="identifier">size</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">size</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+                The number of threads in the tuple.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing.
+              </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_make_thread_tuple"></a><a href="thread_tuple_hpp.html#toward_boost_interthreads.reference.thread_tuple_hpp.thread_tuple_make_thread_tuple" title="
+        Non Member Function make_thread_tuple()">
+        Non Member Function <code class="computeroutput"><span class="identifier">make_thread_tuple</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">F0</span><span class="special">,</span> <span class="special">...,</span> <span class="keyword">typename</span> <span class="identifier">Fn</span><span class="special">-</span><span class="number">1</span><span class="special">&gt;</span>
+<span class="identifier">thread_tuple</span> <span class="identifier">make_thread_tuple</span><span class="special">(</span><span class="identifier">F0</span> <span class="identifier">f0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Fn</span> <span class="identifier">fn</span><span class="special">-</span><span class="number">1</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              makes a new thread_tuple&lt;&gt;.
+            </p></dd>
+<dt><span class="term">Returns:</span></dt>
+<dd><p>
+              the created thread tuple.
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="set_once_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="thread_tuple_once_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

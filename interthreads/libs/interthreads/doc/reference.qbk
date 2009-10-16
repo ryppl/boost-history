@@ -10,17 +10,17 @@
 [/==========================]
 [include concepts.qbk]
 
-[section Thread Extensions Reference]
+[/section Thread Extensions Reference]
 [include reference/thread_decoration.qbk]
 [include reference/thread_decorator.qbk]
 
 [include reference/thread_specific_shared_ptr.qbk]
 
 [include reference/thread_keep_alive.qbk]
-[endsect]
+[/endsect]
 
 
-[section Thread Array Reference]
+[/section Thread Array Reference]
 
 [include reference/set_once.qbk]
 [include reference/thread_tuple.qbk]
@@ -28,6 +28,6 @@
 [include reference/thread_group_once.qbk]
 
 [/include reference/thread_and_join.qbk]
-[endsect]
+[/endsect]
 
 [endsect]

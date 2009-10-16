@@ -1,0 +1,300 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>
+      Header &lt;boost/interthreads/thread_keep_alive.hpp&gt;</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.InterThreads">
+<link rel="up" href="../reference.html" title=" Reference">
+<link rel="prev" href="thread_specific_shared_ptr_hpp.html" title="
+      Header &lt;boost/interthreads/thread_specific_shared_ptr.hpp&gt;">
+<link rel="next" href="set_once_hpp.html" title=" Header
+      &lt;boost/interthreads/set_once.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="thread_specific_shared_ptr_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="set_once_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_interthreads.reference.keep_alive_file_hpp"></a><a href="keep_alive_file_hpp.html" title="
+      Header &lt;boost/interthreads/thread_keep_alive.hpp&gt;">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">interthreads</span><span class="special">/</span><span class="identifier">thread_keep_alive</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive">
+        class <code class="computeroutput"><span class="identifier">enable_keep_alive</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive.keep_alive_enable_keep_alive_Constructor">
+          Constructor</a></span></dt>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive.keep_alive_enable_keep_alive_Destructor">
+          Destructor</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive">
+        class <code class="computeroutput"><span class="identifier">disable_keep_alive</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive.keep_alive_disable_keep_alive_Constructor">
+          Constructor</a></span></dt>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive.keep_alive_disable_keep_alive_Destructor">
+          Destructor</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_keep_alive_check_point">
+        Non Member Function <code class="computeroutput"><span class="identifier">keep_alive_check_point</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_keep_alive_enabled">
+        Non Member Function <code class="computeroutput"><span class="identifier">keep_alive_enabled</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_keep_alive_set_on_dead_thread">
+        Non Member Function <code class="computeroutput"><span class="identifier">set_on_dead_thread</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<p>
+        Includes the keep alive enabling/disabling classes and non member functions.
+      </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">interthreads</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">this_thread</span> <span class="special">{</span>
+        <span class="keyword">class</span> <span class="identifier">enable_keep_alive</span><span class="special">;</span>
+        <span class="keyword">class</span> <span class="identifier">disable_keep_alive</span><span class="special">;</span>
+
+        <span class="keyword">void</span> <span class="identifier">keep_alive_check_point</span><span class="special">();</span>
+        <span class="keyword">bool</span> <span class="identifier">keep_alive_enabled</span><span class="special">();</span>
+        <span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">on_dead_thread_type</span><span class="special">)(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span><span class="special">);</span>
+        <span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive" title="
+        class enable_keep_alive">
+        class <code class="computeroutput"><span class="identifier">enable_keep_alive</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive.keep_alive_enable_keep_alive_Constructor">
+          Constructor</a></span></dt>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive.keep_alive_enable_keep_alive_Destructor">
+          Destructor</a></span></dt>
+</dl></div>
+<p>
+          Keep alive enabler.
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">enable_keep_alive</span> <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span><span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">enable_keep_alive</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">threshold</span><span class="special">=</span><span class="number">2</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">tap</span><span class="special">=</span><span class="number">1</span><span class="special">);</span>
+    <span class="special">~</span><span class="identifier">enable_keep_alive</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive.keep_alive_enable_keep_alive_Constructor"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive.keep_alive_enable_keep_alive_Constructor" title="
+          Constructor">
+          Constructor</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="identifier">enable_keep_alive</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">threshold</span><span class="special">=</span><span class="number">2</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">tap</span><span class="special">=</span><span class="number">1</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Enable the keep alive mechanism on this thread of execution.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive.keep_alive_enable_keep_alive_Destructor"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive.keep_alive_enable_keep_alive_Destructor" title="
+          Destructor">
+          Destructor</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="special">~</span><span class="identifier">enable_keep_alive</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Restore the keep alive mechanism as it was before the constructor.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive" title="
+        class disable_keep_alive">
+        class <code class="computeroutput"><span class="identifier">disable_keep_alive</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive.keep_alive_disable_keep_alive_Constructor">
+          Constructor</a></span></dt>
+<dt><span class="section"><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive.keep_alive_disable_keep_alive_Destructor">
+          Destructor</a></span></dt>
+</dl></div>
+<p>
+          Keep alive disabler.
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">disable_keep_alive</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">disable_keep_alive</span><span class="special">();</span>
+    <span class="special">~</span><span class="identifier">disable_keep_alive</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive.keep_alive_disable_keep_alive_Constructor"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive.keep_alive_disable_keep_alive_Constructor" title="
+          Constructor">
+          Constructor</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="identifier">disable_keep_alive</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Disable the keep alive mechanism on this thread of execution.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive.keep_alive_disable_keep_alive_Destructor"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive.keep_alive_disable_keep_alive_Destructor" title="
+          Destructor">
+          Destructor</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="special">~</span><span class="identifier">disable_keep_alive</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                Restore the keep alive mechanism as it was before the constructor.
+              </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                Nothing
+              </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_keep_alive_check_point"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_keep_alive_check_point" title="
+        Non Member Function keep_alive_check_point()">
+        Non Member Function <code class="computeroutput"><span class="identifier">keep_alive_check_point</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<p>
+          Keep alive check point.
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">keep_alive_check_point</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              States that the current thread is alive.
+            </p></dd>
+<dt><span class="term">Postconditions:</span></dt>
+<dd><p>
+              The thread is alive.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_keep_alive_enabled"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_keep_alive_enabled" title="
+        Non Member Function keep_alive_enabled()">
+        Non Member Function <code class="computeroutput"><span class="identifier">keep_alive_enabled</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<p>
+          Keep alive query.
+        </p>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">keep_alive_enabled</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              States if the keep alive mechanism is enabled on this thread.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_keep_alive_set_on_dead_thread"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_keep_alive_set_on_dead_thread" title="
+        Non Member Function set_on_dead_thread()">
+        Non Member Function <code class="computeroutput"><span class="identifier">set_on_dead_thread</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<p>
+          Keep alive on dead thread action setting.
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Modifies the action to be done when a this thread is declared dead.
+            </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+              Nothing
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="thread_specific_shared_ptr_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="set_once_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
