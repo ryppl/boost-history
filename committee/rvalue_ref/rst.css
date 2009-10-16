@@ -1,5 +1,7 @@
 @import "http://www.boost.org/doc/libs/1_38_0/rst.css";
-p {text-align:justify}
+div,li {font-family:serif}
+*,li {font-size:12pt}
+p,blockquote {font-family:serif;text-align:justify;font-face:times,serif;font-size:12pt}
 li {text-align:justify}
 .ins {background-color:#A0FFA0;border-bottom: 1px solid black}
 .del {background-color:#FFA0A0;text-decoration:line-through}
