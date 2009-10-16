@@ -37,6 +37,9 @@ namespace functor{
         template<typename F,typename M>
         struct result<F(M)>
             : result_impl<typename remove_reference<M>::type>{};
+
+        template<typename S>
+        struct sig : result<S>{};
     
         template<typename M>
         typename result_impl<const M>::type 

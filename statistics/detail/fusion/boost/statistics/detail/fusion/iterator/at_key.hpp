@@ -28,8 +28,6 @@ namespace iterator{
         // See boost.user mailing list
         // Subject: [transform_iterator]'s reference
         // 10/05/2009
-        //
-        // Note that at_key2 could also have been used
                 
         typedef typename result_of<f_(ref1_)>::type ref2_;
         typedef boost::transform_iterator<f_,It,ref2_> type;
@@ -48,7 +46,8 @@ namespace iterator{
         return m_::make(i);
     }
 
-}// functor
+}// iterator
+
 }// fusion
 }// detail
 }// statistics
