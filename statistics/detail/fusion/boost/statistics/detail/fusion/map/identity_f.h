@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// detail::fusion::functor::map_identity_f.hpp                              //
+// detail::fusion::functor::identity_f.hpp                                  //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -9,7 +9,10 @@
 #ifndef BOOST_STATISTICS_DETAIL_FUSION_MAP_IDENTITY_F_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_FUSION_MAP_IDENTITY_F_HPP_ER_2009
 #include <boost/utility/result_of.hpp>
+
 #include <boost/fusion/include/pair.hpp>
+
+
 #include <boost/fusion/container/map.hpp>
 #include <boost/fusion/include/map.hpp>
 #include <boost/fusion/include/map_fwd.hpp>
@@ -20,10 +23,10 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace fusion{
-namespace functor{
+namespace map{
 
     template<typename K1,typename K2,typename F>
-    class map_identity_f{
+    class identity_f{
     
         public:
 
@@ -52,14 +55,14 @@ namespace functor{
             };
         };
 
-        map_identity_f()
+        identity_f()
             {}
-        map_identity_f(const F& f)
+        identity_f(const F& f)
             :f_(f){}
-        map_identity_f(const map_identity_f& that)
+        identity_f(const identity_f& that)
             :f_(that.f_){}
 
-        map_identity_f& operator=(const map_identity_f& that)
+        identity_f& operator=(const identity_f& that)
         {
             if(&that!=this)
             {
@@ -86,10 +89,10 @@ namespace functor{
         struct sig : result<S>{};
 
         template<typename X>
-        typename result<map_identity_f(const X&)>::type
+        typename result<identity_f(const X&)>::type
         operator()(const X& x)const
         {
-            typedef typename result<map_identity_f(const X&)>::type type;
+            typedef typename result<identity_f(const X&)>::type type;
             return type(
                 boost::fusion::make_pair<K1>(x),
                 boost::fusion::make_pair<K2>(
@@ -102,7 +105,7 @@ namespace functor{
         F f_;
     };
 
-}// functor
+}// map
 }// fusion
 }// detail
 }// statistics

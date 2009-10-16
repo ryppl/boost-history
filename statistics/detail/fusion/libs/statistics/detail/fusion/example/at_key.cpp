@@ -20,7 +20,7 @@
 
 #include <boost/iterator/iterator_traits.hpp>
 
-#include <libs/statistics/detail/fusion/example/iterator_at_key.h>
+#include <libs/statistics/detail/fusion/example/at_key.h>
 
 void example_at_key_iterator(std::ostream& os){
 

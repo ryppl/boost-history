@@ -11,7 +11,7 @@
 #include <boost/utility/result_of.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/iterator/iterator_traits.hpp>
-#include <boost/statistics/detail/fusion/functor/at_key.hpp>
+#include <boost/statistics/detail/fusion/at_key/functor.hpp>
 
 namespace boost{
 namespace statistics{
@@ -22,7 +22,7 @@ namespace at_key{
     template<typename It,typename K>
     struct meta_iterator
     {
-        typedef statistics::detail::fusion::functor::at_key<K> f_;
+        typedef statistics::detail::fusion::at_key::functor<K> f_;
         typedef typename iterator_reference<It>::type ref1_;
         
         // See boost.user mailing list
