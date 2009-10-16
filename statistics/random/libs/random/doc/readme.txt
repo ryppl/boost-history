@@ -34,18 +34,19 @@ http://www.boost.org/doc/libs/1_39_0/libs/random/index.html
 	gen_to_random<X>                A generator that acts like a RandomDist
 
 
-[ Compiler ]
+[ Platform/Compiler ]
 
-gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
+Mac OS Leopard 10.5         gcc version 4.0.1
+                            Intel C++ compiler 11.1
 
 [ Dependencies ]
 
-boost_1_39_0
+boost_1_40_0
 
 [ History ]
 
 Sept   25 2009  : location_scale : modified constructor and constrain Z to be 
-a class type because a reference would be redundant with ref_distribution).
+a class type because a reference would be redundant with ref_distribution.
 August 18 2009  : renamed multinomial_distribution to categorical_distribution
 July 2009       : Current version
 
