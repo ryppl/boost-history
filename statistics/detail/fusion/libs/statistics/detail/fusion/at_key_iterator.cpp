@@ -6,13 +6,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 /////////////////////////////////////////////////////////////////////////////// 
 
-#include <libs/statistics/detail/fusion/example/at_key_iterator.h>
 
-
-void example_at_key_iterator(std::ostream& os){
-
-
-}
 
 
 

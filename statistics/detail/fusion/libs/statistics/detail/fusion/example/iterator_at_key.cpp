@@ -15,8 +15,8 @@
 #include <boost/fusion/container/map.hpp>
 #include <boost/fusion/include/map.hpp>
 #include <boost/fusion/include/map_fwd.hpp>
-#include <boost/statistics/detail/fusion/functor/at_key.hpp>
-#include <boost/statistics/detail/fusion/iterator/at_key.hpp>
+#include <boost/statistics/detail/fusion/at_key/functor.hpp>
+#include <boost/statistics/detail/fusion/at_key/iterator.hpp>
 
 #include <boost/iterator/iterator_traits.hpp>
 
@@ -35,13 +35,13 @@ void example_iterator_at_key(std::ostream& os){
     typedef fusion::pair<key_0_,int>                    p_0_;
     typedef fusion::pair<key_1_,int>                    p_1_;
     typedef fusion::map<p_0_,p_1_>                      map_;
-    typedef stat::fusion::functor::at_key<key_0_>       get_0_;
-    typedef stat::fusion::functor::at_key<key_1_>       get_1_;
+    typedef stat::fusion::at_key::functor<key_0_>       get_0_;
+    typedef stat::fusion::at_key::functor<key_1_>       get_1_;
     typedef std::vector<map_>                           vec_map_;
     typedef range_iterator<const vec_map_>::type        it_cvec_map_;
-    typedef stat::fusion::iterator::meta_at_key<it_cvec_map_,key_0_> m_0_;
+    typedef stat::fusion::at_key::meta_iterator<it_cvec_map_,key_0_> m_0_;
     typedef m_0_::type it_0_;
-    typedef stat::fusion::iterator::meta_at_key<it_cvec_map_,key_1_> m_1_;
+    typedef stat::fusion::at_key::meta_iterator<it_cvec_map_,key_1_> m_1_;
     typedef m_1_::type it_1_;
     
     const unsigned n = 10;
@@ -59,10 +59,10 @@ void example_iterator_at_key(std::ostream& os){
         typedef it_0_   it_;
         typedef key_0_  key_;
     
-        it_ b = stat::fusion::iterator::make_at_key<key_>(
+        it_ b = stat::fusion::at_key::make_iterator<key_>(
             boost::begin(vec_map)
         );
-        it_ e = stat::fusion::iterator::make_at_key<key_>(
+        it_ e = stat::fusion::at_key::make_iterator<key_>(
             boost::end(vec_map)
         );
         unsigned j = 0;
@@ -80,10 +80,10 @@ void example_iterator_at_key(std::ostream& os){
         typedef it_1_   it_;
         typedef key_1_  key_;
 
-        it_ b = stat::fusion::iterator::make_at_key<key_>(
+        it_ b = stat::fusion::at_key::make_iterator<key_>(
             boost::begin(vec_map)
         );
-        it_ e = stat::fusion::iterator::make_at_key<key_>(
+        it_ e = stat::fusion::at_key::make_iterator<key_>(
             boost::end(vec_map)
         );
         unsigned j = 0;
