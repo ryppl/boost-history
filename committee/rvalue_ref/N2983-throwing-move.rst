@@ -3,8 +3,8 @@
 =====================================
 
 :Author: David Abrahams, Rani Sharoni
-:Contact: dave@boostpro.com, ranis@microsoft.com
-:organization: `BoostPro Computing`_, Microsoft
+:Contact: dave@boostpro.com, rani_sharoni@hotmail.com
+:organization: `BoostPro Computing`_
 :date: 2009-10-14
 
 :Number: D2983=09-0173
@@ -14,7 +14,7 @@
 .. contents:: index
 
 Introduction
-============
+************
 
 In N2855_, Doug Gregor and Dave Abrahams discussed a problematic
 interaction between move constructors, templates, and certain standard
@@ -59,7 +59,7 @@ constructors altogether:
   users.  For example, Dinkumware's list implementation currently
   derives QOI benefits from having no resource-less state—“begin” and
   “end” iterators maintain their relationships even after lists are
-  swapped.  If throwing move constructors are banned, that would no
+  swapped.  If throwing move constructors were banned, that would no
   longer be possible.
 
 * When it is necessary to manually write a move constructor for a
@@ -132,7 +132,7 @@ exception is thrown other than by ``T``\ 's move constructor, there are
 no effects.”
 
 Implementing ``nothrow_move``
-=============================
+*****************************
 
 One reasonable implementation of ``std::nothrow_move`` might be::
 
@@ -159,7 +159,7 @@ draft; it would be identical to the proposed
 *allowed* to return ``false`` even when the proper result is ``true``.
 
 An Optimization Hint
-====================
+********************
 
 To help the library deduce the correct result for these traits, we
 propose to add a new kind of exception-specification, spelled:
@@ -207,7 +207,7 @@ exception specification above is entirely optional; its presence or
 absence doesn't affect the correctness of a move constructor.
 
 Interactions with Other Proposals
-=================================
+*********************************
 
 The generation of default move constructors, first proposed by Bjarne
 Stroustrup in N2904_, and again by Bjarne Stroustrup and Lawrence
@@ -226,7 +226,7 @@ of this feature.  In particular, it can't express the hint shown for
 ``pair``\ 's move constructor above.  We suggest it be dropped.
 
 Existing Practice
-=================
+*****************
 
 The Microsoft compiler has always treated empty
 exception-specifications as though they have the same meaning we
@@ -239,27 +239,186 @@ in the standard.  Standardizing ``throw(false)`` gives everyone access
 to this optimization tool.
 
 Proposed Changes to Standard Wording
-====================================
+************************************
 
 .. role:: ins
-   :class: ins
 
 .. role:: del
-   :class: del
 
-This is some text with :ins:`an inserted section` and :del:`a deleted section`.
+.. role:: insc(ins)
+   :class: ins code
 
-To insert and delete in code, use the “parsed-literal” directive as follows::
+.. role:: delc(del)
+   :class: ins code
+
+.. role:: raw-html(raw)
+   :format: html
+   
+15.4 Exception specifications [except.spec]
+===========================================
+
+Change paragraph 1 as follows:
+
+  1 A function declaration lists exceptions that its function might directly 
+  or indirectly throw by using an exception-specification as a suffix of its 
+  declarator.
 
   .. parsed-literal::
 
-     int foo(:ins:`int`:del:`short` x);
+     exception-specification
+       throw ( type-id-listopt )
+       type-id-list:
+       type-id ...opt
+       type-id-list , type-id ...opt
+       :ins:`throw( constant-expression )`
 
-The result looks like:
+
+Add these paragraphs:
+
+    :raw-html:`<span class="ins">15 In an exception-specification of
+    the form <code>throw(</code> <em>constant-expression</em>
+    <code>)</code>, the constant-expression shall be a constant
+    expression (5.19) that can be contextually converted to
+    <code>bool</code> (Clause 4).</span>`
+
+    :raw-html:`<span class="ins">16 If a function with the
+    exception-specification <code>throw(false)</code> throws an
+    exception, the behavior is undefined.</span>`
+
+A.13 Exception handling [gram.except]
+=====================================
 
 .. parsed-literal::
 
-   int foo(:ins:`int`:del:`short` x);
+  exception-specification
+  throw ( type-id-listopt )
+  :ins:`throw(constant-expression)`
+
+20.6.2 Header <type_traits> synopsis [meta.type.synop]
+======================================================
+
+.. parsed-literal::
+
+    template <class T> struct has_nothrow_assign;
+    :ins:`template <class T> struct has_move_constructor; 
+    template <class T> struct has_nothrow_move_constructor;
+
+    template <class T> struct has_move_assign; 
+    template <class T> struct has_nothrow_move_assign;
+
+    template <class T> struct has_copy_constructor; 
+    template <class T> struct has_default_constructor; 
+    template <class T> struct has_copy_assign;`
+
+    template <class T> struct has_virtual_destructor;
+
+
+
+20.6.4.3 Type properties [meta.unary.prop]
+==========================================
+
+Add entries to table 43:
+
++--------------------------------+---------------------------+-------------------------+
+| Template                       |Condition                  |Preconditions            |
++================================+===========================+=========================+
+| ``template <class T>           |``T`` has a move           |``T`` shall be a complete|
+| struct has_move_constructor;`` |constructor (17.3.14).     |type.                    |
++--------------------------------+---------------------------+-------------------------+
+| ``template <class T>           |``T`` is a class type with |``has_move_constructor<T>|
+| struct                         |a move constructor that is |::value``                |
+| has_nothrow_move_constructor;``|known not to throw any     |                         |
+|                                |exceptions.                |                         |
++--------------------------------+---------------------------+-------------------------+
+| ``template <class T>           |``T`` has a move assignment|``T`` shall be a complete|
+| struct has_move_assign;``      |operator (17.3.13).        |type.                    |
++--------------------------------+---------------------------+-------------------------+
+| ``template <class T>           |``T`` is a class type with |``has_move_assign<T>::   |
+| struct                         |a move assignment operator |value``                  |
+| has_nothrow_move_assign;``     |that is known not to throw |                         |
+|                                |any exceptions.            |                         |
++--------------------------------+---------------------------+-------------------------+
+| ``template <class T>           |``T`` has a copy           |``T`` shall be a complete|
+| struct has_copy_constructor;`` |constructor (12.8).        |type, an array of unknown| 
+|                                |                           |bound, or (possibly      |
+|                                |                           |cv-qualified) ``void.``  |
++--------------------------------+---------------------------+-------------------------+
+| ``template <class T>           |``T`` has a default        |``T`` shall be a complete|
+| struct                         |constructor (12.1).        |type, an array of unknown|
+| has_default_constructor;``     |                           |bound, or (possibly      |
+|                                |                           |cv-qualified) ``void.``  |
++--------------------------------+---------------------------+-------------------------+
+| ``template <class T>           |``T`` has a copy assignment|``T`` shall be a complete|
+| struct has_copy_assign;``      |operator (12.8).           |type, an array of unknown|
+|                                |                           |bound, or (possibly      |
+|                                |                           |cv-qualified) ``void``.  |
++--------------------------------+---------------------------+-------------------------+
+
+
+23.3.2.3 deque modifiers [deque.modifiers]
+==========================================
+
+Change paragraph 2 as follows:
+
+    2 Remarks: If an exception is thrown other than by the copy constructor,
+    :ins:`move constructor, move assignment operator`
+    or assignment operator of ``T`` there are no effects.
+
+Change paragraph 6 as follows:
+
+    6 Throws: Nothing unless an exception is thrown by the copy constructor,
+    :ins:`move constructor, move assignment operator`
+    or assignment operator of ``T``.
+
+23.3.6.2 vector capacity [vector.capacity]
+==========================================
+Remove paragraph 2
+
+    :del:`2 Requires: If value_type has a move constructor, that constructor shall
+    not throw any exceptions.`
+
+Change paragraph 3 to say
+
+    Effects: A directive that informs a vector of a planned change in
+    size, so that it can manage the storage allocation
+    accordingly. After ``reserve()``, ``capacity()`` is greater or
+    equal to the argument of reserve if reallocation happens; and
+    equal to the previous value of ``capacity()`` otherwise.
+    Reallocation happens at this point if and only if the current
+    capacity is less than the argument of ``reserve()``. If an
+    exception is thrown :raw-html:`<span class="ins">other than by the
+    move constructor of <code>T</code></span>` there are no effects.
+
+Change paragraph 13 to say
+
+    If an exception is thrown :raw-html:`<span class="ins">other than
+    by the move constructor of <code>T</code></span>` there are no
+    effects.
+
+23.3.6.4 vector modifiers [vector.modifiers]
+============================================
+
+Delete paragraph 1:
+
+    :del:`1 Requires: If value_type has a move constructor, that constructor shall
+    not throw any exceptions.`
+
+
+Change paragraph 2 as follows:
+
+    2 Remarks: Causes reallocation if the new size is greater than the old
+    capacity. If no reallocation happens, all the iterators and references 
+    before the insertion point remain valid. If an exception is thrown other 
+    than by the copy constructor, 
+    :ins: `move constructor, move assignment operator`
+    or assignment operator of ``T`` or by any InputIterator operation there are 
+    no effects.
+
+Change paragraph 6 as follows:
+
+    6 Throws: Nothing unless an exception is thrown by the copy
+    constructor, :ins:`move constructor, move assignment operator`, or
+    assignment operator of ``T``.
 
 -------
 
