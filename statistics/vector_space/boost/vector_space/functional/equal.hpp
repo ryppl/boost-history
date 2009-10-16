@@ -5,8 +5,8 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_VECTOR_SPACE_FUNCTIONAL_EQUAL_HPP_ER_2009
-#define BOOST_VECTOR_SPACE_FUNCTIONAL_EQUAL_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_VECTOR_SPACE_FUNCTIONAL_EQUAL_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_VECTOR_SPACE_FUNCTIONAL_EQUAL_HPP_ER_2009
 #include <boost/call_traits.hpp>
 #include <ostream>
 #include <boost/range.hpp>
@@ -16,9 +16,11 @@
 #include <boost/vector_space/functional/l2_distance_squared.hpp>
 
 namespace boost{
+namespace statistics{
+namespace detail{
 namespace vector_space{
 
-// This predicate implements (x == y) iff (|| x - y || == 0).
+// This is a predicate for (x == y) iff (|| x - y || == 0).
 //
 // Requirements:
 // F<R> distance(x);        Construction
@@ -106,7 +108,9 @@ equal<R,F>::operator()(const R1& y)const{
     return (distance_(y)<eps_);
 }
 
-}//vector_space
-}//boost
+}// vector_space
+}// detail
+}// statistics
+}// boost
 
 #endif

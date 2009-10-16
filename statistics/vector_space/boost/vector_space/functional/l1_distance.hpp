@@ -5,8 +5,8 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_VECTOR_SPACE_FUNCTIONAL_l1_DISTANCE_SQUARED_HPP_ER_2009
-#define BOOST_VECTOR_SPACE_FUNCTIONAL_l1_DISTANCE_SQUARED_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_VECTOR_SPACE_FUNCTIONAL_l1_DISTANCE_SQUARED_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_VECTOR_SPACE_FUNCTIONAL_l1_DISTANCE_SQUARED_HPP_ER_2009
 #include <cmath>
 #include <numeric>
 #include <functional>
@@ -20,6 +20,8 @@
 #include <boost/math/tools/precision.hpp>
 
 namespace boost{
+namespace statistics{
+namespace detail{
 namespace vector_space{
 
     // See l2_distance_squared
@@ -56,7 +58,7 @@ namespace vector_space{
     l1_distance<R>::l1_distance(
         typename call_traits<R>::param_type x
     ):x_(x){
-        BOOST_MPL_ASSERT((mpl::not<is_ref_>));
+        BOOST_MPL_ASSERT((mpl::not_<is_ref_>));
     }
 
     template<typename R>
@@ -68,7 +70,7 @@ namespace vector_space{
     l1_distance<R>& 
     l1_distance<R>::operator=(const l1_distance& that){
         if(&that != this){
-            BOOST_MPL_ASSERT((mpl::not<is_ref_>));
+            BOOST_MPL_ASSERT((mpl::not_<is_ref_>));
             x_ = that.x_;
         }
         return *this;
@@ -99,7 +101,9 @@ namespace vector_space{
         );
     };
 
-}// range
+}// vector_space
+}// detail
+}// statistics
 }// boost
 
 #endif

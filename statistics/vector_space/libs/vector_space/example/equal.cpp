@@ -15,6 +15,7 @@
 void example_equal(std::ostream& out) {
     out << "-> example_equal : ";
     using namespace boost;
+    namespace vs = boost::statistics::detail::vector_space;
     
     typedef unsigned val_;
     typedef std::vector<val_> row_;
@@ -23,12 +24,14 @@ void example_equal(std::ostream& out) {
     typedef range_iterator<row_>::type iterator_elem_;
     typedef range_reference<mat_>::type ref_row_;
     typedef range_reference<row_>::type ref_elem_;
-    typedef vector_space::equal<row_&> equal_;
+    typedef vs::equal<row_&> equal_;
         
     const unsigned n = 3;
     const val_ eps = 1; // defaul eps = 0, so |i-j| < 1 need, i,j integers
     row_ row(n);
     equal_ equal(row,eps);
+/*
+
     std::cout << equal << std::endl;
     mat_ mat(n,row);
     val_ val = 0;
@@ -50,6 +53,6 @@ void example_equal(std::ostream& out) {
             equal(ref_row)
         );
     }
-
+*/
     out << "<-" << std::endl;
 }

@@ -28,11 +28,17 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 
 [ Dependencies ]
 
-/usr/local/boost_1_39_0/ 
+/usr/local/boost_1_40_0/ 
+/Users/erwann/sandbox/statistics/detail/tuple/ 
+/Users/erwann/sandbox/statistics/mpl/ 
 
 [ History ]
 
-July 2009 : Current version
+October 8th 2009    : 
+    vector_space namespace embedded in statistics::detail
+    implem of lazy_difference modified
+    
+July 2009           : First version
 
 [Output]
 

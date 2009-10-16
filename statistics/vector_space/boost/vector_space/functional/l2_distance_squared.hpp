@@ -5,12 +5,11 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_VECTOR_SPACE_FUNCTIONAL_l2_DISTANCE_SQUARED_HPP_ER_2009
-#define BOOST_VECTOR_SPACE_FUNCTIONAL_l2_DISTANCE_SQUARED_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_VECTOR_SPACE_FUNCTIONAL_l2_DISTANCE_SQUARED_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_VECTOR_SPACE_FUNCTIONAL_l2_DISTANCE_SQUARED_HPP_ER_2009
 #include <cmath>
 #include <numeric>
 #include <functional>
-#include <boost/mpl/assert.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/function.hpp>
 #include <boost/call_traits.hpp>
@@ -20,6 +19,8 @@
 #include <boost/math/tools/precision.hpp>
 
 namespace boost{
+namespace statistics{
+namespace detail{
 namespace vector_space{
 
     // Stores a range r, and when passed another range r1, computes the squared
@@ -37,6 +38,7 @@ namespace vector_space{
         typedef typename range_value<range_type>::type result_type;
                     
         // Constructor
+        l2_distance_squared(){} // Warning, x_ not initialized
         l2_distance_squared(typename call_traits<R>::param_type x);
         l2_distance_squared(const l2_distance_squared& that);
         l2_distance_squared& operator=(const l2_distance_squared& that);                    
@@ -46,7 +48,6 @@ namespace vector_space{
         result_type operator()(const R1& y)const;
                         
         private:
-        l2_distance_squared();
         typename call_traits<R>::value_type x_;
     };
     
@@ -60,9 +61,7 @@ namespace vector_space{
     template<typename R>
     l2_distance_squared<R>::l2_distance_squared(
         typename call_traits<R>::param_type x
-    ):x_(x){
-        BOOST_MPL_ASSERT((mpl::not<is_ref_>));
-    }
+    ):x_(x){}
 
     template<typename R>
     l2_distance_squared<R>::l2_distance_squared(
@@ -73,7 +72,6 @@ namespace vector_space{
     l2_distance_squared<R>& 
     l2_distance_squared<R>::operator=(const l2_distance_squared& that){
         if(&that != this){
-            BOOST_MPL_ASSERT((mpl::not<is_ref_>));
             x_ = that.x_;
         }
         return *this;
@@ -96,7 +94,9 @@ namespace vector_space{
         );
     };
 
-}// range
+}// vector_space
+}// detail
+}// statistics
 }// boost
 
 #endif

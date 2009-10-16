@@ -20,7 +20,7 @@
 void example_difference(std::ostream& out){
     std::cout << "-> example_difference : ";
     using namespace boost;
-    namespace vs = vector_space;
+    namespace vs = statistics::detail::vector_space;
     typedef double                          val_;
     typedef std::vector<val_>               vec_;
     typedef vs::lazy_difference<vec_,vec_>  range_diff_;

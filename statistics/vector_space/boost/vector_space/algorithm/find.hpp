@@ -5,13 +5,15 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_VECTOR_SPACE_FIND_HPP_ER_2009
-#define BOOST_VECTOR_SPACE_FIND_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_VECTOR_SPACE_FIND_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_VECTOR_SPACE_FIND_HPP_ER_2009
 #include <numeric>
 #include <cmath>
 #include <boost/vector_space/functional/equal.hpp>
 
 namespace boost{
+namespace statistics{
+namespace detail{
 namespace vector_space{
     
     // This is a version of find where the elements in *[b,e) are ranges.
@@ -40,11 +42,13 @@ namespace vector_space{
         return std::find_if(
             b,
             e,
-            functional::equal(x,eps)
+            functional::equal(x)
         );
     }
     
-}//algorithm
-}//boost
+}// vector_space
+}// detail
+}// statistics
+}// boost
 
 #endif
