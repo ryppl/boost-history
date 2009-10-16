@@ -25,10 +25,10 @@
 # pragma warning(disable:4251 4275)
 # endif
 
-namespace boost { namespace task
-{
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
+
 class BOOST_TASK_DECL worker_group
 {
 private:
@@ -80,7 +80,7 @@ public:
 	const const_iterator find( thread::id const& id) const;
 
 	void insert( worker const& w);
-	
+
 	iterator erase( iterator const& i);
 
 	void join_all();
@@ -91,7 +91,8 @@ public:
 
 	void signal_shutdown_now_all();
 };
-} } }
+
+}}}
 
 # if defined(BOOST_MSVC)
 # pragma warning(pop)

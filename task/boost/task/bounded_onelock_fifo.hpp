@@ -25,8 +25,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 class bounded_onelock_fifo
 {
 public:
@@ -220,16 +221,15 @@ private:
 
 public:
 	bounded_onelock_fifo(
-		high_watermark const& hwm,
-		low_watermark const& lwm)
-	:
-	state_( 0),
-	queue_(),
-	mtx_(),
-	not_empty_cond_(),
-	not_full_cond_(),
-	hwm_( hwm),
-	lwm_( lwm)
+			high_watermark const& hwm,
+			low_watermark const& lwm) :
+		state_( 0),
+		queue_(),
+		mtx_(),
+		not_empty_cond_(),
+		not_full_cond_(),
+		hwm_( hwm),
+		lwm_( lwm)
 	{
 		if ( lwm_ > hwm_ )
 			throw invalid_watermark("low watermark must be less than or equal to high watermark");
@@ -304,7 +304,8 @@ public:
 		return try_take_( va);
 	}
 };
-} }
+
+}}
 
 #include <boost/config/abi_suffix.hpp>
 

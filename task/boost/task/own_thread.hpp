@@ -18,8 +18,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 struct own_thread
 {
 	template< typename R >
@@ -33,6 +34,7 @@ struct own_thread
 		return h;
 	}
 };
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

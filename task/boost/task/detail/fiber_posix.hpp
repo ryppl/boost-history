@@ -21,9 +21,10 @@ extern "C"
 #include <boost/shared_ptr.hpp>
 #include <boost/system/system_error.hpp>
 
-namespace boost { namespace task {
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
+
 template< typename Fiber >
 void trampoline( Fiber * fib)
 {
@@ -56,15 +57,14 @@ private:
 	st_state				state_;
 
 	fiber(
-		function< void() > fn,
-		std::size_t stack_size)
-	:
-	fn_( fn),
-	stack_size_( stack_size),
-	caller_(),
-	callee_(),
-	stack_( new char[stack_size]),
-	state_( st_uninitialized)
+			function< void() > fn,
+			std::size_t stack_size) :
+		fn_( fn),
+		stack_size_( stack_size),
+		caller_(),
+		callee_(),
+		stack_( new char[stack_size]),
+		state_( st_uninitialized)
 	{ BOOST_ASSERT( stack_size_ > 0); }
 
 	bool uninitialized_() const
@@ -173,7 +173,8 @@ public:
 		BOOST_ASSERT(!"should never be reached");
 	}
 };
-} } }
+
+}}}
 
 #endif // BOOST_TASK_DETAIL_FIBER_POSIX_H
 

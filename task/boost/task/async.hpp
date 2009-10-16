@@ -17,8 +17,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 template< typename R >
 handle< R > async( task< R > t)
 { return as_sub_task()( boost::move( t) ); }
@@ -34,7 +35,8 @@ handle< R > async( task< R > t, static_pool< Queue > & pool)
 template< typename R, typename Queue, typename Attr >
 handle< R > async( task< R > t, Attr attr, static_pool< Queue > & pool)
 { return pool.submit( boost::move( t), attr); }
-} }
+
+}}
 
 #include <boost/config/abi_suffix.hpp>
 

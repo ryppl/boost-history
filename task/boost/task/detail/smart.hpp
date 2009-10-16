@@ -11,9 +11,10 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task {
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
+
 struct replace_oldest
 {
 	template<
@@ -39,8 +40,8 @@ struct take_oldest
 		callable	&	ca_;
 
 	public:
-		swapper( callable & ca)
-		: ca_( ca)
+		swapper( callable & ca) :
+			ca_( ca)
 		{}
 
 		template< typename Value >
@@ -58,6 +59,7 @@ struct take_oldest
 		idx.erase( i);
 	}
 };
+
 }}}
 
 #include <boost/config/abi_suffix.hpp>

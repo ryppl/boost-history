@@ -12,6 +12,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/bind.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/utility.hpp>
@@ -25,8 +26,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 template< typename T >
 class bounded_buffer
 {
@@ -45,6 +47,7 @@ private:
 		std::size_t					lwm_;
 
 		base( base &);
+
 		base & operator=( base const&);
 
 		bool active_() const
@@ -61,7 +64,7 @@ private:
 		
 		std::size_t size_() const
 		{ return queue_.size(); }
-		
+
 		void upper_bound_( std::size_t hwm)
 		{
 			if ( lwm_ > hwm )
@@ -70,7 +73,7 @@ private:
 			hwm_ = hwm;
 			if ( hwm_ > tmp) not_full_cond_.notify_one();
 		}
-		
+
 		void lower_bound_( std::size_t lwm)
 		{
 			if ( lwm > hwm_ )
@@ -223,17 +226,19 @@ private:
 
 	public:
 		base(
-			high_watermark const& hwm,
-			low_watermark const& lwm)
-		:
-		state_( 0),
-		queue_(),
-		mtx_(),
-		not_empty_cond_(),
-		not_full_cond_(),
-		hwm_( hwm),
-		lwm_( lwm)
+				high_watermark const& hwm,
+				low_watermark const& lwm) :
+			state_( 0),
+			queue_(),
+			mtx_(),
+			not_empty_cond_(),
+			not_full_cond_(),
+			hwm_( hwm),
+			lwm_( lwm)
 		{}
+
+		bool active()
+		{ return active_(); }
 
 		void deactivate()
 		{ deactivate_(); }
@@ -249,19 +254,19 @@ private:
 			spin_unique_lock< spin_mutex > lk( mtx_);
 			return hwm_;
 		}
-		
+
 		void upper_bound( std::size_t hwm)
 		{
 			spin_unique_lock< spin_mutex > lk( mtx_);
 			upper_bound_( hwm);
 		}
-		
+
 		std::size_t lower_bound()
 		{
 			spin_unique_lock< spin_mutex > lk( mtx_);
 			return lwm_;
 		}
-		
+
 		void lower_bound( std::size_t lwm)
 		{
 			spin_unique_lock< spin_mutex > lk( mtx_);
@@ -271,7 +276,7 @@ private:
 		void put( value_type const& va)
 		{
 			spin_unique_lock< spin_mutex > lk( mtx_);
-			put_( va);
+			put_( va, lk);
 		}
 
 		template< typename TimeDuration >
@@ -308,9 +313,14 @@ private:
 	shared_ptr< base >		impl_;
 
 public:
-	bounded_buffer()
-	: impl_( new base)
+	bounded_buffer(
+			high_watermark const& hwm,
+			low_watermark const& lwm) :
+		impl_( new base( hwm, lwm) )
 	{}
+
+	bool active()
+	{ return impl_->active(); }
 
 	void deactivate()
 	{ impl_->deactivate(); }
@@ -349,8 +359,9 @@ public:
 	{ return impl_->take( t, rel_time); }
 
 	bool try_take( optional< T > & t)
-	{ return impl_->try_take_( t); }
+	{ return impl_->try_take( t); }
 };
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

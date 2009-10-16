@@ -22,10 +22,10 @@
 # pragma warning(disable:4251 4275)
 # endif
 
-namespace boost { namespace task
-{
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
+
 class BOOST_TASK_DECL wsq : private noncopyable
 {
 private:
@@ -50,6 +50,7 @@ public:
 
 	bool try_steal( callable &);
 };
+
 }}}
 
 # if defined(BOOST_MSVC)

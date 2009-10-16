@@ -28,9 +28,13 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
-template< typename Queue, typename UMS = local_rr_ums >
+namespace boost {
+namespace task {
+
+template<
+	typename Queue,
+	typename UMS = local_rr_ums
+>
 class static_pool
 {
 public:
@@ -53,45 +57,45 @@ private:
 	static_pool & operator=( static_pool &);
 
 public:
-	static_pool()
-	: pool_()
+	static_pool() :
+		pool_()
 	{}
 	
 	explicit static_pool(
-		poolsize const& psize,
-		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
-		scanns const& max_scns = scanns( 20),
-		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new base_type( psize, asleep, max_scns, stack_size) )
+			poolsize const& psize,
+			posix_time::time_duration const& asleep = posix_time::microseconds( 10),
+			scanns const& max_scns = scanns( 20),
+			stacksize const& stack_size = stacksize( 64000) ) :
+		pool_( new base_type( psize, asleep, max_scns, stack_size) )
 	{}
 
 	explicit static_pool(
-		poolsize const& psize,
-		high_watermark const& hwm,
-		low_watermark const& lwm,
-		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
-		scanns const& max_scns = scanns( 20),
-		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new base_type( psize, hwm, lwm, asleep, max_scns, stack_size) )
+			poolsize const& psize,
+			high_watermark const& hwm,
+			low_watermark const& lwm,
+			posix_time::time_duration const& asleep = posix_time::microseconds( 100),
+			scanns const& max_scns = scanns( 20),
+			stacksize const& stack_size = stacksize( 64000) ) :
+		pool_( new base_type( psize, hwm, lwm, asleep, max_scns, stack_size) )
 	{}
 
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
 	explicit static_pool(
-		tag_bind_to_processors,
-		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
-		scanns const& max_scns = scanns( 20),
-		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new base_type( asleep, max_scns, stack_size) )
+			tag_bind_to_processors,
+			posix_time::time_duration const& asleep = posix_time::microseconds( 10),
+			scanns const& max_scns = scanns( 20),
+			stacksize const& stack_size = stacksize( 64000) ) :
+		pool_( new base_type( asleep, max_scns, stack_size) )
 	{}
 
 	explicit static_pool(
-		tag_bind_to_processors,
-		high_watermark const& hwm,
-		low_watermark const& lwm,
-		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
-		scanns const& max_scns = scanns( 20),
-		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new base_type( hwm, lwm, asleep, max_scns, stack_size) )
+			tag_bind_to_processors,
+			high_watermark const& hwm,
+			low_watermark const& lwm,
+			posix_time::time_duration const& asleep = posix_time::microseconds( 100),
+			scanns const& max_scns = scanns( 20),
+			stacksize const& stack_size = stacksize( 64000) ) :
+		pool_( new base_type( hwm, lwm, asleep, max_scns, stack_size) )
 	{}
 
 	static tag_bind_to_processors bind_to_processors()
@@ -99,8 +103,8 @@ public:
 # endif
 
 # if defined(BOOST_HAS_RVALUE_REFS)
-	static_pool( static_pool && other)
-	: pool_()
+	static_pool( static_pool && other) :
+		pool_()
 	{ pool_.swap( other.pool_); }
 
 	static_pool & operator=( static_pool && other)
@@ -113,15 +117,15 @@ public:
 	static_pool && move()
 	{ return static_cast< static_pool && >( * this); }
 # else
-	static_pool( boost::detail::thread_move_t< static_pool > other)
-	: pool_()
+	static_pool( boost::detail::thread_move_t< static_pool > other) :
+		pool_()
 	{ pool_.swap( other->pool_); }
 
 	static_pool & operator=( boost::detail::thread_move_t< static_pool > other)
 	{
-	    static_pool tmp( other);
-	    swap( tmp);
-	    return * this;
+		static_pool tmp( other);
+		swap( tmp);
+		return * this;
 	}
 
 	operator boost::detail::thread_move_t< static_pool >()
@@ -224,6 +228,7 @@ public:
 	void swap( static_pool & other) // throw()
 	{ pool_.swap( other.pool_); }
 };
+
 }
 
 template< typename Queue, typename UMS >

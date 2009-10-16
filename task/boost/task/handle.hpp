@@ -16,8 +16,8 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
 
 template< typename R >
 class handle
@@ -27,16 +27,15 @@ private:
 	context				ctx_;
 
 public:
-	handle()
-	: fut_(), ctx_()
+	handle() :
+		fut_(), ctx_()
 	{}
 
 	handle(
-		shared_future< R > fut,
-		context const& ctx)
-	:
-	fut_( fut),
-	ctx_( ctx)
+			shared_future< R > fut,
+			context const& ctx) :
+		fut_( fut),
+		ctx_( ctx)
 	{}
 
 	void interrupt()
@@ -229,6 +228,7 @@ unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

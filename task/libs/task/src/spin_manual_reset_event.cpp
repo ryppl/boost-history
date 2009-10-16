@@ -16,14 +16,13 @@
 namespace boost {
 namespace task {
 
-spin_manual_reset_event::spin_manual_reset_event( bool isset)
-:
-state_(
-	isset ?
-		static_cast< uint32_t >( SET) :
-		static_cast< uint32_t >( RESET) ),
-waiters_( 0),
-enter_mtx_()
+spin_manual_reset_event::spin_manual_reset_event( bool isset) :
+	state_(
+		isset ?
+			static_cast< uint32_t >( SET) :
+			static_cast< uint32_t >( RESET) ),
+	waiters_( 0),
+	enter_mtx_()
 {}
 
 void

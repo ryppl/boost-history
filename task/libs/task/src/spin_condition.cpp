@@ -177,12 +177,11 @@ spin_condition::wait_( spin_mutex & mtx, system_time const& abs_time)
 	return ! timed_out;
 }
 
-spin_condition::spin_condition()
-:
-cmd_( static_cast< uint32_t >( SLEEPING) ),
-waiters_( 0),
-enter_mtx_(),
-check_mtx_()
+spin_condition::spin_condition() :
+	cmd_( static_cast< uint32_t >( SLEEPING) ),
+	waiters_( 0),
+	enter_mtx_(),
+	check_mtx_()
 {}
 
 void

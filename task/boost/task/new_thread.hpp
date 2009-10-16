@@ -50,8 +50,8 @@ private:
 	{
 		callable	ca;
 		
-		wrapper( callable const& ca_)
-		: ca( ca_)
+		wrapper( callable const& ca_) :
+			ca( ca_)
 		{}
 		
 		void operator()()
@@ -60,7 +60,7 @@ private:
 			ca.clear();
 		}
 	};
-	
+
 public:
 	template< typename R >
 	handle< R > operator()( task< R > t)

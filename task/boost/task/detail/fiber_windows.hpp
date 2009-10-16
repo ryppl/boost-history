@@ -20,9 +20,10 @@ extern "C"
 #include <boost/shared_ptr.hpp>
 #include <boost/system/system_error.hpp>
 
-namespace boost { namespace task {
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
+
 template< typename Fiber >
 VOID CALLBACK trampoline( LPVOID vp)
 {
@@ -55,14 +56,13 @@ private:
 	st_state			state_;
 
 	fiber(
-		function< void() > fn,
-		std::size_t stack_size)
-	:
-	fn_( fn),
-	stack_size_( stack_size),
-	caller_( 0),
-	callee_( 0),
-	state_( st_uninitialized)
+			function< void() > fn,
+			std::size_t stack_size) :
+		fn_( fn),
+		stack_size_( stack_size),
+		caller_( 0),
+		callee_( 0),
+		state_( st_uninitialized)
 	{ BOOST_ASSERT( stack_size_ > 0); }
 
 	bool uninitialized_() const
@@ -118,11 +118,11 @@ public:
 
 	static void convert_thread_to_fiber()
 	{
-			if ( ! ::ConvertThreadToFiber( 0) )
-				throw system::system_error(
-					system::error_code(
-						::GetLastError(),
-						system::system_category) );
+		if ( ! ::ConvertThreadToFiber( 0) )
+			throw system::system_error(
+				system::error_code(
+					::GetLastError(),
+					system::system_category) );
 	}
 
 	static sptr_t create(
@@ -139,10 +139,10 @@ public:
 	bool ready() const
 	{ return uninitialized_() || ready_(); }
 
-    bool running() const
+	bool running() const
 	{ return running_(); }
 
-    bool exited() const
+	bool exited() const
 	{ return exited_(); }
 
 	void switch_to( sptr_t & to)
@@ -172,7 +172,8 @@ public:
 		BOOST_ASSERT(!"should never be reached");
 	}
 };
-} } }
+
+}}}
 
 #endif // BOOST_TASK_DETAIL_FIBER_WINDOWS_H
 

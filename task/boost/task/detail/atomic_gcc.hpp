@@ -21,10 +21,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
 
 #if defined(__GLIBCXX__) // g++ 3.4+
 
@@ -69,7 +68,8 @@ uint32_t atomic_fetch_sub( uint32_t volatile * object, uint32_t operand)
 	BOOST_ASSERT( operand == 1);
 	return __exchange_and_add( ( _Atomic_word volatile *) object, -1) - 1;
 }
-} } }
+
+}}}
 
 #include <boost/config/abi_suffix.hpp>
 

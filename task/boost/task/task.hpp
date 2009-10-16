@@ -19,10 +19,10 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
+
 template< typename R >
 class task_base
 {
@@ -35,8 +35,8 @@ protected:
 	virtual void do_run() = 0;
 
 public:
-	task_base()
-	: done_( false), prom_()
+	task_base() :
+		done_( false), prom_()
 	{}
 
 	virtual ~task_base() {}
@@ -107,8 +107,8 @@ private:
 	}
 
 public:
-	task_wrapper( Fn const& fn)
-	: task_base< R >(), fn_( fn)
+	task_wrapper( Fn const& fn) :
+		task_base< R >(), fn_( fn)
 	{}
 };
 
@@ -166,8 +166,8 @@ private:
 	}
 
 public:
-	task_wrapper( Fn const& fn)
-	: task_base< void >(), fn_( fn)
+	task_wrapper( Fn const& fn) :
+		task_base< void >(), fn_( fn)
 	{}
 };
 }
@@ -184,29 +184,29 @@ private:
 	task & operator=( task &);
 
 public:
-	task()
-	: task_()
+	task() :
+		task_()
 	{}
 
-	explicit task( R( * fn)())
-	: task_( new detail::task_wrapper< R, R( *)() >( fn) )
+	explicit task( R( * fn)()) :
+		task_( new detail::task_wrapper< R, R( *)() >( fn) )
 	{}
 
 # if defined(BOOST_HAS_RVALUE_REFS)
 	template< typename Fn >
-	task( Fn && fn)
-	: task_( new detail::task_wrapper< R, Fn >( fn) )
+	task( Fn && fn) :
+		task_( new detail::task_wrapper< R, Fn >( fn) )
 	{}
 
-	task( task && other)
-	: task_()
+	task( task && other) :
+		task_()
 	{ task_.swap( other.task_); }
 
 	task & operator=( task && other)
 	{
-	    task tmp( static_cast< task && >( other) );
-	    swap( tmp);
-	    return * this;
+		task tmp( static_cast< task && >( other) );
+		swap( tmp);
+		return * this;
 	}
 
 	task && move()
@@ -214,29 +214,31 @@ public:
 # else
 #ifdef BOOST_NO_SFINAE
 	template< typename Fn >
-	explicit task( Fn fn)
-	: task_( new detail::task_wrapper< R, Fn >( fn) )
+	explicit task( Fn fn) :
+		task_( new detail::task_wrapper< R, Fn >( fn) )
 	{}
 #else
 	template< typename Fn >
-	explicit task( Fn fn, typename disable_if< boost::is_convertible< Fn &, boost::detail::thread_move_t< Fn > >, dummy * >::type = 0)
-	: task_( new detail::task_wrapper< R, Fn >( fn) )
+	explicit task(
+			Fn fn,
+			typename disable_if< boost::is_convertible< Fn &, boost::detail::thread_move_t< Fn > >, dummy * >::type = 0) :
+		task_( new detail::task_wrapper< R, Fn >( fn) )
 	{}
 #endif
 	template< typename Fn >
-	explicit task( boost::detail::thread_move_t< Fn > fn)
-	: task_( new detail::task_wrapper< R, Fn >( fn) )
+	explicit task( boost::detail::thread_move_t< Fn > fn) :
+		task_( new detail::task_wrapper< R, Fn >( fn) )
 	{}
 
-	task( boost::detail::thread_move_t< task > other)
-	: task_()
+	task( boost::detail::thread_move_t< task > other) :
+		task_()
 	{ task_.swap( other->task_); }
 
 	task & operator=( boost::detail::thread_move_t< task > other)
 	{
-	    task tmp( other);
-	    swap( tmp);
-	    return * this;
+		task tmp( other);
+		swap( tmp);
+		return * this;
 	}
 
 	operator boost::detail::thread_move_t< task >()

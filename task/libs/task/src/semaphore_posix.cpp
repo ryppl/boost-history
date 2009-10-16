@@ -15,11 +15,11 @@
 #include "boost/task/exceptions.hpp"
 #include "boost/task/utility.hpp"
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
 
-semaphore::semaphore( int value)
-: handle_()
+semaphore::semaphore( int value) :
+	handle_()
 {
 	if ( ::sem_init( & handle_, 0, value) == -1)
 		throw system::system_error( errno, system::system_category);

@@ -31,6 +31,7 @@ test-suite task :
     [ task-test test_new_thread ]
     [ task-test test_unbounded_twolock_pool ]
     [ task-test test_unbounded_onelock_pool ]
+    [ task-test test_unbounded_onelock_pool_distrib ]
     [ task-test test_bounded_twolock_pool ]
     [ task-test test_bounded_onelock_pool ]
     [ task-test test_as_sub_task ]
@@ -45,4 +46,6 @@ test-suite task :
     [ task-test test_spin_count_down_event ]
     [ task-test test_spin_auto_reset_event ]
     [ task-test test_spin_manual_reset_event ]
+    [ task-test test_unbounded_buffer ]
+    [ task-test test_bounded_buffer ]
     ;

@@ -26,8 +26,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 template<
 	typename Attr,
 	typename Comp = std::less< Attr >
@@ -44,9 +45,9 @@ public:
 		attribute_type	attr;
 
 		value_type(
-			callable const& ca_,
-			attribute_type const& attr_)
-		: ca( ca_), attr( attr_)
+				callable const& ca_,
+				attribute_type const& attr_) :
+			ca( ca_), attr( attr_)
 		{ BOOST_ASSERT( ! ca.empty() ); }
 
 		void swap( value_type & other)
@@ -165,12 +166,11 @@ private:
 	{ return ! active_() || ! empty_(); }
 
 public:
-	unbounded_onelock_prio_queue()
-	:
-	state_( 0),
-	queue_(),
-	mtx_(),
-	not_empty_cond_()
+	unbounded_onelock_prio_queue() :
+		state_( 0),
+		queue_(),
+		mtx_(),
+		not_empty_cond_()
 	{}
 
 	void deactivate()
@@ -209,7 +209,8 @@ public:
 		return try_take_( ca);
 	}
 };
-} }
+
+}}
 
 #include <boost/config/abi_suffix.hpp>
 

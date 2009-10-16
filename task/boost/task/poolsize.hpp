@@ -18,8 +18,9 @@
 # pragma warning(disable:4251 4275)
 # endif
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 class BOOST_TASK_DECL poolsize
 {
 private:
@@ -30,7 +31,8 @@ public:
 
 	operator std::size_t () const;
 };
-} }
+
+}}
 
 # if defined(BOOST_MSVC)
 # pragma warning(pop)

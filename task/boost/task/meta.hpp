@@ -14,8 +14,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 template< typename Pool >
 struct has_attribute : public mpl::bool_<
 	is_same<
@@ -30,7 +31,8 @@ struct attribute_type
 {
 	typedef typename Pool::queue_type::attribute_type	type;
 };
-} }
+
+}}
 
 #include <boost/config/abi_suffix.hpp>
 

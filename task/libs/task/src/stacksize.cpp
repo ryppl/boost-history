@@ -8,11 +8,11 @@
 
 #include <boost/task/exceptions.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
 
-stacksize::stacksize( std::size_t value)
-: value_( value)
+stacksize::stacksize( std::size_t value) :
+	value_( value)
 { if ( value <= 0) throw invalid_stacksize(); }
 
 stacksize::operator std::size_t () const

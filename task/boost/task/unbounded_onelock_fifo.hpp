@@ -24,8 +24,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 class unbounded_onelock_fifo
 {
 public:
@@ -128,12 +129,11 @@ private:
 	{ return ! active_() || ! empty_(); }
 
 public:
-	unbounded_onelock_fifo()
-	:
-	state_( 0),
-	queue_(),
-	mtx_(),
-	not_empty_cond_()
+	unbounded_onelock_fifo() :
+		state_( 0),
+		queue_(),
+		mtx_(),
+		not_empty_cond_()
 	{}
 
 	void deactivate()
@@ -172,7 +172,8 @@ public:
 		return try_take_( va);
 	}
 };
-} }
+
+}}
 
 #include <boost/config/abi_suffix.hpp>
 

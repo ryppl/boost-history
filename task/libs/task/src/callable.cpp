@@ -6,11 +6,11 @@
 
 #include "boost/task/callable.hpp"
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
 
-callable::callable()
-: impl_()
+callable::callable() :
+	impl_()
 {}
 
 void

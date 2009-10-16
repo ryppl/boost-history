@@ -8,8 +8,8 @@
 
 #include <boost/assert.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
 
 void
 context::impl::reset_( shared_ptr< thread > const& thrd)
@@ -30,11 +30,10 @@ context::impl::interrupt_()
 	}
 }
 
-context::impl::impl()
-:
-requested_( false),
-mtx_(),
-thrd_()
+context::impl::impl() :
+	requested_( false),
+	mtx_(),
+	thrd_()
 {}
 
 void
@@ -58,8 +57,8 @@ context::impl::interruption_requested()
 	return requested_;
 }
 
-context::context()
-: impl_( new impl() )
+context::context() :
+	impl_( new impl() )
 {}
 
 void

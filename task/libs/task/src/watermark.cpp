@@ -8,11 +8,11 @@
 
 #include <boost/task/exceptions.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
 
-high_watermark::high_watermark( std::size_t value)
-: value_( value)
+high_watermark::high_watermark( std::size_t value) :
+	value_( value)
 {
 	if ( value <= 0)
 		throw invalid_watermark("high watermark must be greater than zero");

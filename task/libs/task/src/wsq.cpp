@@ -10,19 +10,18 @@
 
 #include <boost/task/detail/atomic.hpp>
 
-namespace boost { namespace task {
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
 
-wsq::wsq()
-:
-initial_size_( 32),
-array_( new callable[ initial_size_]),
-capacity_( initial_size_),
-mask_( initial_size_ - 1),
-head_idx_( 0),
-tail_idx_( 0),
-mtx_()
+wsq::wsq() :
+	initial_size_( 32),
+	array_( new callable[ initial_size_]),
+	capacity_( initial_size_),
+	mask_( initial_size_ - 1),
+	head_idx_( 0),
+	tail_idx_( 0),
+	mtx_()
 {}
 
 bool

@@ -6,9 +6,9 @@
 
 #include "boost/task/detail/worker.hpp"
 
-namespace boost { namespace task {
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
 
 thread_specific_ptr< worker > worker::tss_;
 

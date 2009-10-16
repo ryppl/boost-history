@@ -9,16 +9,17 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
+
 struct has_attribute
 {};
 
 struct has_no_attribute
 {};
-} } }
+
+}}}
 
 #include <boost/config/abi_suffix.hpp>
 

@@ -11,6 +11,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/bind.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/utility.hpp>
@@ -24,8 +25,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 template< typename T >
 class unbounded_buffer
 {
@@ -41,6 +43,7 @@ private:
 		spin_condition				not_empty_cond_;
 
 		base( base &);
+
 		base & operator=( base const&);
 
 		bool active_() const
@@ -131,12 +134,11 @@ private:
 		{ return ! active_() || ! empty_(); }
 
 	public:
-		base()
-		:
-		state_( 0),
-		queue_(),
-		mtx_(),
-		not_empty_cond_()
+		base() :
+			state_( 0),
+			queue_(),
+			mtx_(),
+			not_empty_cond_()
 		{}
 
 		bool active()
@@ -182,8 +184,8 @@ private:
 	shared_ptr< base >		impl_;
 
 public:
-	unbounded_buffer()
-	: impl_( new base)
+	unbounded_buffer() :
+		impl_( new base)
 	{}
 
 	bool active()
@@ -208,8 +210,9 @@ public:
 	{ return impl_->take( t, rel_time); }
 
 	bool try_take( optional< T > & t)
-	{ return impl_->try_take_( t); }
+	{ return impl_->try_take( t); }
 };
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

@@ -22,8 +22,8 @@
 # pragma warning(disable:4251 4275)
 # endif
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
 
 class BOOST_TASK_DECL callable
 {
@@ -44,9 +44,9 @@ private:
 
 	public:
 		impl_wrapper(
-			task< R > t,
-			context const& ctx)
-		: t_( boost::move( t) ), ctx_( ctx)
+				task< R > t,
+				context const& ctx) :
+			t_( boost::move( t) ), ctx_( ctx)
 		{}
 
 		void run()
@@ -63,9 +63,9 @@ public:
 
 	template< typename R >
 	callable(
-		task< R > t,
-		context const& ctx)
-	: impl_( new impl_wrapper<  R >( boost::move( t), ctx) )
+			task< R > t,
+			context const& ctx) :
+		impl_( new impl_wrapper<  R >( boost::move( t), ctx) )
 	{}
 
 	void operator()();
@@ -85,8 +85,8 @@ private:
 	callable	&	ca_;
 
 public:
-	context_guard( callable & ca, shared_ptr< thread > const& thrd)
-	: ca_( ca)
+	context_guard( callable & ca, shared_ptr< thread > const& thrd) :
+		ca_( ca)
 	{ ca_.reset( thrd); }
 
 	~context_guard()

@@ -34,9 +34,9 @@
 # pragma warning(disable:4251 4275)
 # endif
 
-namespace boost { namespace task {
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
 
 struct worker_base
 {
@@ -80,11 +80,10 @@ private:
 		variate_generator< rand48 &, uniform_int<> > die_;
 
 	public:
-		random_idx( std::size_t size)
-		:
-		rng_(),
-		six_( 0, size - 1),
-		die_( rng_, six_)
+		random_idx( std::size_t size) :
+			rng_(),
+			six_( 0, size - 1),
+			die_( rng_, six_)
 		{}
 
 		std::size_t operator()()
@@ -261,27 +260,26 @@ private:
 
 public:
 	worker_object(
-		Pool & pool,
-		UMS & ums,
-		poolsize const& psize,
-		posix_time::time_duration const& asleep,
-		scanns const& max_scns,
-		stacksize const& stack_size,
-		function< void() > const& fn)
-	:
-	pool_( pool),
-	ums_( ums),
-	thrd_( new thread( fn) ),
-	fib_(),
-	wsq_(),
-	shtdwn_sem_( 0),
-	shtdwn_now_sem_( 0),
-	shtdwn_( false),
-	asleep_( asleep),
-	max_scns_( max_scns),
-	scns_( 0),
-	stack_size_( stack_size),
-	rnd_idx_( psize)
+			Pool & pool,
+			UMS & ums,
+			poolsize const& psize,
+			posix_time::time_duration const& asleep,
+			scanns const& max_scns,
+			stacksize const& stack_size,
+			function< void() > const& fn) :
+		pool_( pool),
+		ums_( ums),
+		thrd_( new thread( fn) ),
+		fib_(),
+		wsq_(),
+		shtdwn_sem_( 0),
+		shtdwn_now_sem_( 0),
+		shtdwn_( false),
+		asleep_( asleep),
+		max_scns_( max_scns),
+		scns_( 0),
+		stack_size_( stack_size),
+		rnd_idx_( psize)
 	{ BOOST_ASSERT( ! fn.empty() ); }
 
 	const thread::id get_id() const
@@ -360,23 +358,22 @@ private:
 public:
 	template< typename Pool, typename UMS >
 	worker(
-		Pool & pool,
-		UMS & ums,
-		poolsize const& psize,
-		posix_time::time_duration const& asleep,
-		scanns const& max_scns,
-		stacksize const& stack_size,
-		function< void() > const& fn)
-	:
-	impl_(
-		new worker_object< Pool, UMS, worker >(
-			pool,
-			ums,
-			psize,
-			asleep,
-			max_scns,
-			stack_size,
-			fn) )
+			Pool & pool,
+			UMS & ums,
+			poolsize const& psize,
+			posix_time::time_duration const& asleep,
+			scanns const& max_scns,
+			stacksize const& stack_size,
+			function< void() > const& fn) :
+		impl_(
+			new worker_object< Pool, UMS, worker >(
+				pool,
+				ums,
+				psize,
+				asleep,
+				max_scns,
+				stack_size,
+				fn) )
 	{}
 
 	const thread::id get_id() const;

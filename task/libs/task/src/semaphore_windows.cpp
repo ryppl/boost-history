@@ -15,11 +15,11 @@
 #include "boost/task/exceptions.hpp"
 #include "boost/task/utility.hpp"
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
 
-semaphore::semaphore( int value)
-: handle_()
+semaphore::semaphore( int value) :
+	handle_()
 {
 	if ( ( handle_ = ::CreateSemaphore( 0, value, (std::numeric_limits< int >::max)(), 0) ) == 0)
 		throw system::system_error( ::GetLastError(), system::system_category);

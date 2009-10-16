@@ -14,8 +14,8 @@
 namespace boost {
 namespace task {
 
-spin_auto_reset_event::spin_auto_reset_event( bool isset)
-: state_(
+spin_auto_reset_event::spin_auto_reset_event( bool isset) :
+	state_(
 		isset ?
 		static_cast< uint32_t >( SET) :
 		static_cast< uint32_t >( RESET) )

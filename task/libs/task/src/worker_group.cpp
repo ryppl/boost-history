@@ -9,15 +9,14 @@
 #include <boost/foreach.hpp>
 #include <boost/utility.hpp>
 
-namespace boost { namespace task {
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
 
-worker_group::worker_group()
-:
-cont_(),
-id_idx_( cont_.get< id_idx_tag >() ),
-rnd_idx_( cont_.get< rnd_idx_tag >() )
+worker_group::worker_group() :
+	cont_(),
+	id_idx_( cont_.get< id_idx_tag >() ),
+	rnd_idx_( cont_.get< rnd_idx_tag >() )
 {}
 
 worker_group::~worker_group()

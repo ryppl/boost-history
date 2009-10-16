@@ -14,8 +14,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace this_task
-{
+namespace boost {
+namespace this_task {
+
 inline
 void block()
 {
@@ -35,6 +36,7 @@ thread::id worker_id()
 	BOOST_ASSERT( w);
 	return w->get_id();
 }
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

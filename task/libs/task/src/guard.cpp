@@ -10,12 +10,12 @@
 
 #include <boost/task/detail/atomic.hpp>
 
-namespace boost { namespace task {
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
 
-guard::guard( volatile uint32_t & active_worker)
-: active_worker_( active_worker)
+guard::guard( volatile uint32_t & active_worker) :
+	active_worker_( active_worker)
 {
 	BOOST_ASSERT( active_worker_ >= 0);
 	atomic_fetch_add( & active_worker_, 1);

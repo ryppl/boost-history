@@ -19,31 +19,32 @@ extern "C"
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace this_thread
+namespace boost {
+namespace this_thread {
+
+inline
+void bind_to_processor( unsigned int n)
 {
-	inline
-	void bind_to_processor( unsigned int n)
-	{
-		BOOST_ASSERT( n >= 0);
-		BOOST_ASSERT( n < boost::thread::hardware_concurrency() );
+	BOOST_ASSERT( n >= 0);
+	BOOST_ASSERT( n < boost::thread::hardware_concurrency() );
 
-		if ( ::bindprocessor( BINDTHREAD, ::thread_self(), static_cast< cpu_t >( n) ) == -1)
-			throw boost::system::system_error(
-					boost::system::error_code(
-						errno,
-						boost::system::system_category) );
-	}
+	if ( ::bindprocessor( BINDTHREAD, ::thread_self(), static_cast< cpu_t >( n) ) == -1)
+		throw boost::system::system_error(
+				boost::system::error_code(
+					errno,
+					boost::system::system_category) );
+}
 
-	
-	inline
-	void bind_to_any_processor()
-	{
-		if ( ::bindprocessor( BINDTHREAD, ::thread_self(), PROCESSOR_CLASS_ANY) == -1)
-			throw boost::system::system_error(
-					boost::system::error_code(
-						errno,
-						boost::system::system_category) );
-	}
+inline
+void bind_to_any_processor()
+{
+	if ( ::bindprocessor( BINDTHREAD, ::thread_self(), PROCESSOR_CLASS_ANY) == -1)
+		throw boost::system::system_error(
+				boost::system::error_code(
+					errno,
+					boost::system::system_category) );
+}
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

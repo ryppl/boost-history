@@ -29,8 +29,9 @@ extern "C"
 # pragma warning(disable:4251 4275)
 # endif
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 class BOOST_TASK_DECL semaphore : private boost::noncopyable
 {
 private:
@@ -51,6 +52,7 @@ public:
 
 	int value();
 };
+
 }}
 
 # if defined(BOOST_MSVC)

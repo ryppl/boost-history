@@ -14,8 +14,8 @@
 namespace boost {
 namespace task {
 
-spin_mutex::spin_mutex()
-: state_( 0)
+spin_mutex::spin_mutex() :
+	state_( 0)
 {}
 
 void

@@ -19,44 +19,46 @@ extern "C"
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace this_thread
+namespace boost {
+namespace this_thread {
+
+inline
+void bind_to_processor( unsigned int n)
 {
-	inline
-	void bind_to_processor( unsigned int n)
-	{
-		BOOST_ASSERT( n >= 0);
-		BOOST_ASSERT( n < CPU_SETSIZE);
-		BOOST_ASSERT( n < boost::thread::hardware_concurrency() );
+	BOOST_ASSERT( n >= 0);
+	BOOST_ASSERT( n < CPU_SETSIZE);
+	BOOST_ASSERT( n < boost::thread::hardware_concurrency() );
 
-		cpu_set_t cpuset;
-		CPU_ZERO( & cpuset);
-		CPU_SET( n, & cpuset);
-	
-		int errno_( ::pthread_setaffinity_np( ::pthread_self(), sizeof( cpuset), & cpuset) );
-		if ( errno_ != 0)
-			throw boost::system::system_error(
-					boost::system::error_code(
-						errno_,
-						boost::system::system_category) );
-	}
+	cpu_set_t cpuset;
+	CPU_ZERO( & cpuset);
+	CPU_SET( n, & cpuset);
 
-	inline
-	void bind_to_any_processor()
-	{
-		cpu_set_t cpuset;
-		CPU_ZERO( & cpuset);
+	int errno_( ::pthread_setaffinity_np( ::pthread_self(), sizeof( cpuset), & cpuset) );
+	if ( errno_ != 0)
+		throw boost::system::system_error(
+				boost::system::error_code(
+					errno_,
+					boost::system::system_category) );
+}
 
-		unsigned int max( boost::thread::hardware_concurrency() );
-		for ( unsigned int i( 0); i < max; ++i)
-			CPU_SET( i, & cpuset);
+inline
+void bind_to_any_processor()
+{
+	cpu_set_t cpuset;
+	CPU_ZERO( & cpuset);
 
-		int errno_( ::pthread_setaffinity_np( ::pthread_self(), sizeof( cpuset), & cpuset) );
-		if ( errno_ != 0)
-			throw boost::system::system_error(
-					boost::system::error_code(
-						errno_,
-						boost::system::system_category) );
-	}
+	unsigned int max( boost::thread::hardware_concurrency() );
+	for ( unsigned int i( 0); i < max; ++i)
+		CPU_SET( i, & cpuset);
+
+	int errno_( ::pthread_setaffinity_np( ::pthread_self(), sizeof( cpuset), & cpuset) );
+	if ( errno_ != 0)
+		throw boost::system::system_error(
+				boost::system::error_code(
+					errno_,
+					boost::system::system_category) );
+}
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

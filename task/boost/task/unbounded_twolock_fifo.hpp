@@ -11,6 +11,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/bind.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/foreach.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/locks.hpp>
@@ -23,8 +24,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 class unbounded_twolock_fifo
 {
 public:
@@ -71,14 +73,13 @@ private:
 	}
 
 public:
-	unbounded_twolock_fifo()
-	:
-	state_( 0),
-	head_( new node),
-	head_mtx_(),
-	tail_( head_),
-	tail_mtx_(),
-	not_empty_cond_()
+	unbounded_twolock_fifo() :
+		state_( 0),
+		head_( new node),
+		head_mtx_(),
+		tail_( head_),
+		tail_mtx_(),
+		not_empty_cond_()
 	{}
 
 	void deactivate()
@@ -87,7 +88,7 @@ public:
 	bool empty()
 	{
 		unique_lock< mutex > lk( head_mtx_);
-		return empty_();	
+		return empty_();
 	}
 
 	void put( value_type const& va)
@@ -162,7 +163,8 @@ public:
 		return ! va.empty();
 	}
 };
-} }
+
+}}
 
 #include <boost/config/abi_suffix.hpp>
 

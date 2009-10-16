@@ -18,34 +18,36 @@ extern "C"
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace this_thread
+namespace boost {
+namespace this_thread {
+
+inline
+void bind_to_processor( unsigned int n)
 {
-	inline
-	void bind_to_processor( unsigned int n)
-	{
-		BOOST_ASSERT( n >= 0);
-		BOOST_ASSERT( n < boost::thread::hardware_concurrency() );
+	BOOST_ASSERT( n >= 0);
+	BOOST_ASSERT( n < boost::thread::hardware_concurrency() );
 
-		if ( ::SetThreadAffinityMask( ::GetCurrentThread(), ( DWORD_PTR)1 << n) == 0)
-			throw boost::system::system_error(
-					boost::system::error_code(
-						::GetLastError(),
-						boost::system::system_category) );
-	}
+	if ( ::SetThreadAffinityMask( ::GetCurrentThread(), ( DWORD_PTR)1 << n) == 0)
+		throw boost::system::system_error(
+				boost::system::error_code(
+					::GetLastError(),
+					boost::system::system_category) );
+}
 
-	inline
-	void bind_to_any_processor()
-	{
-		DWORD_PTR ptr( 1);
-		for ( unsigned int i( 0); i < boost::thread::hardware_concurrency(); ++i)
-			ptr = ptr << i;
+inline
+void bind_to_any_processor()
+{
+	DWORD_PTR ptr( 1);
+	for ( unsigned int i( 0); i < boost::thread::hardware_concurrency(); ++i)
+		ptr = ptr << i;
 
-		if ( ::SetThreadAffinityMask( ::GetCurrentThread(), ptr) == 0)
-			throw boost::system::system_error(
-					boost::system::error_code(
-						::GetLastError(),
-						boost::system::system_category) );
-	}
+	if ( ::SetThreadAffinityMask( ::GetCurrentThread(), ptr) == 0)
+		throw boost::system::system_error(
+				boost::system::error_code(
+					::GetLastError(),
+					boost::system::system_category) );
+}
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

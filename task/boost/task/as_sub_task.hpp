@@ -22,8 +22,8 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
 
 struct as_sub_task
 {

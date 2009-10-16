@@ -18,44 +18,46 @@ extern "C"
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace this_thread
+namespace boost {
+namespace this_thread {
+
+inline
+void bind_to_processor( unsigned int n)
 {
-	inline
-	void bind_to_processor( unsigned int n)
-	{
-		BOOST_ASSERT( n >= 0);
-		BOOST_ASSERT( n < boost::thread::hardware_concurrency() );
+	BOOST_ASSERT( n >= 0);
+	BOOST_ASSERT( n < boost::thread::hardware_concurrency() );
 
-		::pthread_spu_t spu;
-		int errno_(
-			::pthread_processor_bind_np(
-				PTHREAD_BIND_FORCED_NP,
-				& spu,
-				static_cast< pthread_spu_t >( n),
-				PTHREAD_SELFTID_NP) );
-		if ( errno_ != 0)
-			throw boost::system::system_error(
-					boost::system::error_code(
-						errno_,
-						boost::system::system_category) );
-	}
+	::pthread_spu_t spu;
+	int errno_(
+		::pthread_processor_bind_np(
+			PTHREAD_BIND_FORCED_NP,
+			& spu,
+			static_cast< pthread_spu_t >( n),
+			PTHREAD_SELFTID_NP) );
+	if ( errno_ != 0)
+		throw boost::system::system_error(
+				boost::system::error_code(
+					errno_,
+					boost::system::system_category) );
+}
 
-	inline
-	void bind_to_any_processor()
-	{
-		::pthread_spu_t spu;
-		int errno_(
-			::pthread_processor_bind_np(
-				PTHREAD_BIND_FORCED_NP,
-				& spu,
-				PTHREAD_SPUFLOAT_NP,
-				PTHREAD_SELFTID_NP) );
-		if ( errno_ != 0)
-			throw boost::system::system_error(
-					boost::system::error_code(
-						errno_,
-						boost::system::system_category) );
-	}
+inline
+void bind_to_any_processor()
+{
+	::pthread_spu_t spu;
+	int errno_(
+		::pthread_processor_bind_np(
+			PTHREAD_BIND_FORCED_NP,
+			& spu,
+			PTHREAD_SPUFLOAT_NP,
+			PTHREAD_SELFTID_NP) );
+	if ( errno_ != 0)
+		throw boost::system::system_error(
+				boost::system::error_code(
+					errno_,
+					boost::system::system_category) );
+}
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

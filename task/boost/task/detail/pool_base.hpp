@@ -35,11 +35,14 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task {
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
 
-template< typename Queue, typename UMS >
+template<
+	typename Queue,
+	typename UMS
+>
 class pool_base
 {
 private:
@@ -128,17 +131,16 @@ private:
 
 public:
 	explicit pool_base(
-		poolsize const& psize,
-		posix_time::time_duration const& asleep,
-		scanns const& max_scns,
-		stacksize const& stack_size)
-	:
-	ums_(),
-	wg_(),
-	mtx_wg_(),
-	state_( 0),
-	queue_(),
-	idle_worker_( 0)
+			poolsize const& psize,
+			posix_time::time_duration const& asleep,
+			scanns const& max_scns,
+			stacksize const& stack_size) :
+		ums_(),
+		wg_(),
+		mtx_wg_(),
+		state_( 0),
+		queue_(),
+		idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
@@ -148,20 +150,17 @@ public:
 	}
 
 	explicit pool_base(
-		poolsize const& psize,
-		high_watermark const& hwm,
-		low_watermark const& lwm,
-		posix_time::time_duration const& asleep,
-		scanns const& max_scns,
-		stacksize const& stack_size)
-	:
-	wg_(),
-	mtx_wg_(),
-	state_( 0),
-	queue_(
-		hwm,
-		lwm),
-	idle_worker_( 0)
+			poolsize const& psize,
+			high_watermark const& hwm,
+			low_watermark const& lwm,
+			posix_time::time_duration const& asleep,
+			scanns const& max_scns,
+			stacksize const& stack_size) :
+		wg_(),
+		mtx_wg_(),
+		state_( 0),
+		queue_( hwm, lwm),
+		idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
@@ -172,15 +171,14 @@ public:
 
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
 	explicit pool_base(
-		posix_time::time_duration const& asleep,
-		scanns const& max_scns,
-		stacksize const& stack_size)
-	:
-	wg_(),
-	mtx_wg_(),
-	state_( 0),
-	queue_(),
-	idle_worker_( 0)
+			posix_time::time_duration const& asleep,
+			scanns const& max_scns,
+			stacksize const& stack_size) :
+		wg_(),
+		mtx_wg_(),
+		state_( 0),
+		queue_(),
+		idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
@@ -192,19 +190,16 @@ public:
 	}
 
 	explicit pool_base(
-		high_watermark const& hwm,
-		low_watermark const& lwm,
-		posix_time::time_duration const& asleep,
-		scanns const& max_scns,
-		stacksize const& stack_size)
-	:
-	wg_(),
-	mtx_wg_(),
-	state_( 0),
-	queue_(
-		hwm,
-		lwm),
-	idle_worker_( 0)
+			high_watermark const& hwm,
+			low_watermark const& lwm,
+			posix_time::time_duration const& asleep,
+			scanns const& max_scns,
+			stacksize const& stack_size) :
+		wg_(),
+		mtx_wg_(),
+		state_( 0),
+		queue_( hwm, lwm),
+		idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();

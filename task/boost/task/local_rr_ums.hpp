@@ -17,8 +17,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 class local_rr_ums
 {
 private:
@@ -26,8 +27,8 @@ private:
 	thread_specific_ptr< std::list< detail::fiber::sptr_t > >		blocked_;
 
 public:
-	local_rr_ums()
-	: runnable_(), blocked_()
+	local_rr_ums() :
+		runnable_(), blocked_()
 	{}
 
 	void attach()
@@ -64,7 +65,8 @@ public:
 		return true;
 	}
 };
-} }
+
+}}
 
 #include <boost/config/abi_suffix.hpp>
 

@@ -24,8 +24,9 @@
 # pragma warning(disable:4251 4275)
 # endif
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 class BOOST_TASK_DECL context
 {
 private:
@@ -63,6 +64,7 @@ public:
 
 	void swap( context & other);
 };
+
 }}
 
 # if defined(BOOST_MSVC)

@@ -16,10 +16,9 @@
 namespace boost {
 namespace task {
 
-spin_count_down_event::spin_count_down_event( uint32_t initial)
-:
-initial_( initial),
-current_( initial_)
+spin_count_down_event::spin_count_down_event( uint32_t initial) :
+	initial_( initial),
+	current_( initial_)
 {}
 
 uint32_t
