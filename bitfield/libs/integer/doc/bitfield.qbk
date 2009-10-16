@@ -9,8 +9,6 @@
     [quickbook 1.4]
     [authors [Botet Escriba, Vicente J.]]
     [copyright 2009 Vicente J. Botet Escriba]
-    [id boost.bitfield]
-    [dirname integer]
     [purpose Bitfield portable traits]
     [license
         Distributed under the Boost Software License, Version 1.0.
@@ -713,6 +711,83 @@ Thanks to Emile Cormier, the initiator of this library. And also to Beman Dawes;
 
 [heading For later releases]
 
+[*Add bitfields group]
+
+Used to easily manipulate groups of bitfields the same way as does C bitfields, but in a portable manner. Example declaration:
+
+    struct Rgb565
+    {
+        struct red {};
+        struct green {};
+        struct blue {};
+        typedef bitfields<mpl::vector<
+                member<unsigned char, red,   5>,
+                member<unsigned char, green, 6>,
+                member<unsigned char, blue,  5> 
+        > > type; 
+    };
+
+Example usage:
+
+    Rgb565::type r = make_bitfields<Rgb565::type, 1,2,3>;
+
+    // Write to a bitfield.
+    r.get<Rgb565::red>() = 23;
+    //or
+    r.set<Rgb565::red>(23);
+
+    // Read from a bitfield
+    Rgb565::at<Rgb565::blue>::value_type b = r.get<Rgb565::blue>();
+
+
+Other posibility could be to use unamed bitfields whic are accessed as tuples.
+
+    typedef bitfields_group<mpl::vector_c<5,6,5> > Rgb565; 
+    Rgb565 r;
+
+    r.get<0>() = 23;
+    // or
+    r.set<0>(23);
+
+    // Read from a bitfield
+    Rgb565::at<2>::value_type b = r.get<2>();
+
+
+[*Add pointer_plus_bits]
+
+Based  on 
+
+* The article of Joaquin [@http://bannalia.blogspot.com/2008/11/optimizing-red-black-tree-color-bits.html Optimizing red-black tree color bits], 
+* the implementation of Ion [@http://www.boost.org/boost/boost/intrusive/pointer_plus_bits.hpp pointer_plus_bits from Boost.Intrusive ], and 
+*  [@https://llvm.org/svn/llvm-project/llvm/trunk/include/llvm/ADT/PointerIntPair.h Clang's QualType smart pointer]
+
+This class will allows to use the unsused bits of a pointer to reduce  the size of the nodes containing pointers and bits and sometimes improving also the performances.
+
+I have not reached yet the interface I would like to have. For the moment we can do 
+
+    typedef pointer_plus_bits<int*,1,bool>::type pint_and_bool;
+
+    int i=0;
+    pint_and_bool v1;
+    ASSERT_EQUALS(v1.pointer(),0);
+    ASSERT_EQUALS(v1.small_int(),false);
+    pint_and_bool v2(&i, true);
+    ASSERT_EQUALS(v2.pointer(),&i);
+    ASSERT_EQUALS(v2.small_int(),true);
+    v1.pointer()=v2.pointer();
+    v1.small_int()=true;
+    ASSERT_EQUALS(v1.pointer(),&i);
+    ASSERT_EQUALS(v1.small_int(),true);
+    
+    typedef pointer_plus_bits<
+            pointer_plus_bits<int*,1,bool>::type
+                            ,1, bool>::type  pint_and_bool_bool
+    pint_and_bool_bool v1;
+    ASSERT_EQUALS(v1.small_int(),false);
+    ASSERT_EQUALS(v1.pointer().get_pointer(),0);
+    ASSERT_EQUALS(v1.get_pointer().get_pointer(),0);
+    ASSERT_EQUALS(v1.get_pointer().small_int(),false);
+                            
 
 [endsect]
 [endsect]

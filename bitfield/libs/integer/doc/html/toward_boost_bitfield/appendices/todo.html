@@ -42,6 +42,101 @@
         <a href="todo.html#toward_boost_bitfield.appendices.todo.for_later_releases">For
         later releases</a>
       </h4>
+<p>
+        <span class="bold"><strong>Add bitfields group</strong></span>
+      </p>
+<p>
+        Used to easily manipulate groups of bitfields the same way as does C bitfields,
+        but in a portable manner. Example declaration:
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">Rgb565</span>
+<span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">red</span> <span class="special">{};</span>
+    <span class="keyword">struct</span> <span class="identifier">green</span> <span class="special">{};</span>
+    <span class="keyword">struct</span> <span class="identifier">blue</span> <span class="special">{};</span>
+    <span class="keyword">typedef</span> <span class="identifier">bitfields</span><span class="special">&lt;</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span>
+            <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">red</span><span class="special">,</span>   <span class="number">5</span><span class="special">&gt;,</span>
+            <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">green</span><span class="special">,</span> <span class="number">6</span><span class="special">&gt;,</span>
+            <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">,</span>  <span class="number">5</span><span class="special">&gt;</span> 
+    <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span> 
+<span class="special">};</span>
+</pre>
+<p>
+        Example usage:
+      </p>
+<pre class="programlisting"><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">type</span> <span class="identifier">r</span> <span class="special">=</span> <span class="identifier">make_bitfields</span><span class="special">&lt;</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">type</span><span class="special">,</span> <span class="number">1</span><span class="special">,</span><span class="number">2</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;;</span>
+
+<span class="comment">// Write to a bitfield.
+</span><span class="identifier">r</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">red</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">23</span><span class="special">;</span>
+<span class="comment">//or
+</span><span class="identifier">r</span><span class="special">.</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">red</span><span class="special">&gt;(</span><span class="number">23</span><span class="special">);</span>
+
+<span class="comment">// Read from a bitfield
+</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">at</span><span class="special">&lt;</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">blue</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">r</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">blue</span><span class="special">&gt;();</span>
+</pre>
+<p>
+        Other posibility could be to use unamed bitfields whic are accessed as tuples.
+      </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bitfields_group</span><span class="special">&lt;</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector_c</span><span class="special">&lt;</span><span class="number">5</span><span class="special">,</span><span class="number">6</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">Rgb565</span><span class="special">;</span> 
+<span class="identifier">Rgb565</span> <span class="identifier">r</span><span class="special">;</span>
+
+<span class="identifier">r</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">23</span><span class="special">;</span>
+<span class="comment">// or
+</span><span class="identifier">r</span><span class="special">.</span><span class="identifier">set</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;(</span><span class="number">23</span><span class="special">);</span>
+
+<span class="comment">// Read from a bitfield
+</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">at</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">r</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;();</span>
+</pre>
+<p>
+        <span class="bold"><strong>Add pointer_plus_bits</strong></span>
+      </p>
+<p>
+        Based on
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          The article of Joaquin <a href="http://bannalia.blogspot.com/2008/11/optimizing-red-black-tree-color-bits.html" target="_top">Optimizing
+          red-black tree color bits</a>,
+        </li>
+<li>
+          the implementation of Ion <a href="http://www.boost.org/boost/boost/intrusive/pointer_plus_bits.hpp" target="_top">pointer_plus_bits
+          from Boost.Intrusive </a>, and
+        </li>
+<li><a href="https://llvm.org/svn/llvm-project/llvm/trunk/include/llvm/ADT/PointerIntPair.h" target="_top">Clang's
+          QualType smart pointer</a></li>
+</ul></div>
+<p>
+        This class will allows to use the unsused bits of a pointer to reduce the
+        size of the nodes containing pointers and bits and sometimes improving also
+        the performances.
+      </p>
+<p>
+        I have not reached yet the interface I would like to have. For the moment
+        we can do
+      </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">pointer_plus_bits</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">*,</span><span class="number">1</span><span class="special">,</span><span class="keyword">bool</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">pint_and_bool</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>
+<span class="identifier">pint_and_bool</span> <span class="identifier">v1</span><span class="special">;</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">(),</span><span class="number">0</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">small_int</span><span class="special">(),</span><span class="keyword">false</span><span class="special">);</span>
+<span class="identifier">pint_and_bool</span> <span class="identifier">v2</span><span class="special">(&amp;</span><span class="identifier">i</span><span class="special">,</span> <span class="keyword">true</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v2</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">(),&amp;</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v2</span><span class="special">.</span><span class="identifier">small_int</span><span class="special">(),</span><span class="keyword">true</span><span class="special">);</span>
+<span class="identifier">v1</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">()=</span><span class="identifier">v2</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">();</span>
+<span class="identifier">v1</span><span class="special">.</span><span class="identifier">small_int</span><span class="special">()=</span><span class="keyword">true</span><span class="special">;</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">(),&amp;</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">small_int</span><span class="special">(),</span><span class="keyword">true</span><span class="special">);</span>
+
+<span class="keyword">typedef</span> <span class="identifier">pointer_plus_bits</span><span class="special">&lt;</span>
+        <span class="identifier">pointer_plus_bits</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">*,</span><span class="number">1</span><span class="special">,</span><span class="keyword">bool</span><span class="special">&gt;::</span><span class="identifier">type</span>
+                        <span class="special">,</span><span class="number">1</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">&gt;::</span><span class="identifier">type</span>  <span class="identifier">pint_and_bool_bool</span>
+<span class="identifier">pint_and_bool_bool</span> <span class="identifier">v1</span><span class="special">;</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">small_int</span><span class="special">(),</span><span class="keyword">false</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">().</span><span class="identifier">get_pointer</span><span class="special">(),</span><span class="number">0</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">get_pointer</span><span class="special">().</span><span class="identifier">get_pointer</span><span class="special">(),</span><span class="number">0</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">get_pointer</span><span class="special">().</span><span class="identifier">small_int</span><span class="special">(),</span><span class="keyword">false</span><span class="special">);</span>
+</pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
