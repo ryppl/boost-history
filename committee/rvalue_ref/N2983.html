@@ -321,7 +321,7 @@ ul.auto-toc {
 <p class="topic-title first">index</p>
 <ul class="simple">
 <li><a class="reference internal" href="#introduction" id="id5">Introduction</a></li>
-<li><a class="reference internal" href="#implementing-nothrow-move" id="id6">Implementing <tt class="docutils literal"><span class="pre">nothrow_move</span></tt></a></li>
+<li><a class="reference internal" href="#implementing-std-legacy-move" id="id6">Implementing <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt></a></li>
 <li><a class="reference internal" href="#an-optimization-hint" id="id7">An Optimization Hint</a></li>
 <li><a class="reference internal" href="#interactions-with-other-proposals" id="id8">Interactions with Other Proposals</a></li>
 <li><a class="reference internal" href="#existing-practice" id="id9">Existing Practice</a></li>
@@ -388,13 +388,15 @@ particular problem.<a class="footnote-reference" href="#attribute" id="id2"><sup
 on every class author, we can deal with the issue more selectively in
 the operation being move-enabled.  There, we know whether a throwing
 move can disturb existing guarantees.  We propose that instead of
-using <tt class="docutils literal"><span class="pre">std::move(x)</span></tt> in those cases, thus granting permission for the
-compiler to use <em>any</em> available move constructor, maintainers of these
-particular operations should use <tt class="docutils literal"><span class="pre">std::nothrow_move(x)</span></tt>, which only
-grants permission to use non-throwing move constructors.  Unless <tt class="docutils literal"><span class="pre">x</span></tt>
-is known to have a nonthrowing move constructor, the operation would
-fall back to copying <tt class="docutils literal"><span class="pre">x</span></tt>, just as though <tt class="docutils literal"><span class="pre">x</span></tt> had never acquired a move
-constructor at all.</p>
+using <tt class="docutils literal"><span class="pre">std::move(x)</span></tt> in those cases, thus granting permission for
+the compiler to use <em>any</em> available move constructor, maintainers of
+these particular operations should use
+<tt class="docutils literal"><span class="pre">std::legacy_move(x)</span></tt>, which only grants
+permission to use the non-throwing move constructors of copyable
+types.  Unless <tt class="docutils literal"><span class="pre">x</span></tt> is a move-only type, or is known to have a
+nonthrowing move constructor, the operation would fall back to copying
+<tt class="docutils literal"><span class="pre">x</span></tt>, just as though <tt class="docutils literal"><span class="pre">x</span></tt> had never acquired a move constructor at
+all.</p>
 <p>For example, <tt class="docutils literal"><span class="pre">std::pair</span></tt>'s move constructor, were it to be written
 out manually, could remain as it was before this issue was
 discovered:</p>
@@ -416,7 +418,7 @@ void reserve(size_type n)
         try
         {
             for (;i &lt; s; ++i)
-                 new ((void*)(new_begin + i)) value_type( <strong>nothrow_move(</strong> (*this)[i]) <strong>)</strong> );
+                 new ((void*)(new_begin + i)) value_type( <strong>std::legacy_move(</strong> (*this)[i]) <strong>)</strong> );
         }
         catch(...)
         {
@@ -434,38 +436,36 @@ void reserve(size_type n)
     }
 }
 </pre>
-<p>We stress again that the use of <tt class="docutils literal"><span class="pre">nothrow_move</span></tt> as opposed to <tt class="docutils literal"><span class="pre">move</span></tt>
+<p>We stress again that the use of <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt> as opposed to <tt class="docutils literal"><span class="pre">move</span></tt>
 would only be necessary under an <em>extremely</em> limited set of
 circumstances.  In particular, it would never be required in new code,
 which could simply give a <em>conditional</em> strong guarantee, e.g. “if an
 exception is thrown other than by <tt class="docutils literal"><span class="pre">T</span></tt>'s move constructor, there are
 no effects.”</p>
 </div>
-<div class="section" id="implementing-nothrow-move">
-<h1><a class="toc-backref" href="#id6">Implementing <tt class="docutils literal"><span class="pre">nothrow_move</span></tt></a></h1>
-<p>One reasonable implementation of <tt class="docutils literal"><span class="pre">std::nothrow_move</span></tt> might be:</p>
+<div class="section" id="implementing-std-legacy-move">
+<h1><a class="toc-backref" href="#id6">Implementing <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt></a></h1>
+<p>One possible implementation of <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt> might be:</p>
 <pre class="literal-block">
 template &lt;class T&gt;
-typename enable_if&lt;has_nothrow_move_constructor&lt;T&gt;, T&amp;&amp;&gt;::type
-nothrow_move(T&amp; x)
+typename conditional&lt;
+    !has_nothrow_move_constructor&lt;T&gt;::value
+    &amp;&amp; has_copy_constructor&lt;T&gt;::value,
+    T&amp;,
+    T&amp;&amp;
+&gt;::type
+legacy_move(T&amp; x)
 {
     return std::move(x);
 }
-
-template &lt;class T&gt;
-typename disable_if&lt;has_nothrow_move_constructor&lt;T&gt;, T&amp;&gt;::type
-nothrow_move(T&amp; x)
-{
-    return x;
-}
 </pre>
-<p>However, that begs the question of how
-<tt class="docutils literal"><span class="pre">has_nothrow_move_constructor&lt;T&gt;</span></tt> might be implemented.  We propose
-that <tt class="docutils literal"><span class="pre">has_nothrow_move_constructor&lt;T&gt;</span></tt> be a conservative trait very
-much like <tt class="docutils literal"><span class="pre">has_nothrow_copy_constructor&lt;T&gt;</span></tt> from the current working
-draft; it would be identical to the proposed
-<tt class="docutils literal"><span class="pre">is_nothrow_constructible&lt;T,T&amp;&amp;&gt;</span></tt> from <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a>.  In other words, it is
-<em>allowed</em> to return <tt class="docutils literal"><span class="pre">false</span></tt> even when the proper result is <tt class="docutils literal"><span class="pre">true</span></tt>.</p>
+<p>We propose that <tt class="docutils literal"><span class="pre">has_nothrow_move_constructor&lt;T&gt;</span></tt> be a conservative
+trait very much like <tt class="docutils literal"><span class="pre">has_nothrow_copy_constructor&lt;T&gt;</span></tt> from the
+current working draft; it would be identical to the proposed
+<tt class="docutils literal"><span class="pre">is_nothrow_constructible&lt;T,T&amp;&amp;&gt;</span></tt> from <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a>.  In other words, it
+returns <tt class="docutils literal"><span class="pre">true</span></tt> only when it can prove the move constructor doesn't
+throw, and is <em>allowed</em> to return <tt class="docutils literal"><span class="pre">false</span></tt> even when the move
+constructor can throw.</p>
 </div>
 <div class="section" id="an-optimization-hint">
 <h1><a class="toc-backref" href="#id7">An Optimization Hint</a></h1>
@@ -563,7 +563,9 @@ expression (5.19) that can be contextually converted to
 <code>bool</code> (Clause 4).</span></span></p>
 <p><span class="raw-html"><span class="ins">16 If a function with the
 exception-specification <code>throw(false)</code> throws an
-exception, the behavior is undefined.</span></span></p>
+exception, the behavior is undefined. The exception-specification
+<code>throw(true)</code> is equivalent to
+<code>throw(...)</code>.</span></span></p>
 </blockquote>
 </div>
 <div class="section" id="a-13-exception-handling-gram-except">
@@ -596,9 +598,9 @@ template &lt;class T&gt; struct has_virtual_destructor;
 <p>Add entries to table 43:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="38%" />
-<col width="32%" />
-<col width="30%" />
+<col width="34%" />
+<col width="29%" />
+<col width="37%" />
 </colgroup>
 <thead valign="bottom">
 <tr><th class="head">Template</th>
@@ -611,8 +613,7 @@ template &lt;class T&gt; struct has_virtual_destructor;
 <span class="pre">struct</span> <span class="pre">has_move_constructor;</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">T</span></tt> has a move
 constructor (17.3.14).</td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete
-type.</td>
+<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type.</td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span>
@@ -621,15 +622,13 @@ type.</td>
 a move constructor that is
 known not to throw any
 exceptions.</td>
-<td><tt class="docutils literal"><span class="pre">has_move_constructor&lt;T&gt;</span>
-<span class="pre">::value</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">has_move_constructor&lt;T&gt;</span> <span class="pre">::value</span></tt></td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span> <span class="pre">has_move_assign;</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">T</span></tt> has a move assignment
 operator (17.3.13).</td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete
-type.</td>
+<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type.</td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span>
@@ -638,36 +637,32 @@ type.</td>
 a move assignment operator
 that is known not to throw
 any exceptions.</td>
-<td><tt class="docutils literal"><span class="pre">has_move_assign&lt;T&gt;::</span>
-<span class="pre">value</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">has_move_assign&lt;T&gt;::</span> <span class="pre">value</span></tt></td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span> <span class="pre">has_copy_constructor;</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">T</span></tt> has a copy
 constructor (12.8).</td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete
-type, an array of unknown
-bound, or (possibly
-cv-qualified) <tt class="docutils literal"><span class="pre">void.</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type, an
+array of unknown bound, or
+(possibly cv-qualified) <tt class="docutils literal"><span class="pre">void.</span></tt></td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span>
 <span class="pre">has_default_constructor;</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">T</span></tt> has a default
 constructor (12.1).</td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete
-type, an array of unknown
-bound, or (possibly
-cv-qualified) <tt class="docutils literal"><span class="pre">void.</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type, an
+array of unknown bound, or
+(possibly cv-qualified) <tt class="docutils literal"><span class="pre">void.</span></tt></td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span> <span class="pre">has_copy_assign;</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">T</span></tt> has a copy assignment
 operator (12.8).</td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete
-type, an array of unknown
-bound, or (possibly
-cv-qualified) <tt class="docutils literal"><span class="pre">void</span></tt>.</td>
+<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type, an
+array of unknown bound, or
+(possibly cv-qualified) <tt class="docutils literal"><span class="pre">void</span></tt>.</td>
 </tr>
 </tbody>
 </table>
@@ -687,6 +682,10 @@ or assignment operator of <tt class="docutils literal"><span class="pre">T</span
 </div>
 <div class="section" id="vector-capacity-vector-capacity">
 <h2><a class="toc-backref" href="#id16">23.3.6.2 vector capacity [vector.capacity]</a></h2>
+<p>Context:</p>
+<pre class="literal-block">
+void reserve(size_type n);
+</pre>
 <p>Remove paragraph 2:</p>
 <blockquote>
 <span class="del">2 Requires: If value_type has a move constructor, that constructor shall
@@ -701,28 +700,53 @@ equal to the previous value of <tt class="docutils literal"><span class="pre">ca
 Reallocation happens at this point if and only if the current
 capacity is less than the argument of <tt class="docutils literal"><span class="pre">reserve()</span></tt>. If an
 exception is thrown <span class="raw-html"><span class="ins">other than by the
-move constructor of <code>T</code></span></span> there are no effects.</blockquote>
+move constructor of a non-CopyConstructible <code>T</code></span> there
+are no effects.</blockquote>
+<hr class="docutils" />
+<p>Context:</p>
+<pre class="literal-block">
+void resize(size_type sz, const T&amp; c);
+</pre>
 <p>Change paragraph 13 to say:</p>
 <blockquote>
 If an exception is thrown <span class="raw-html"><span class="ins">other than
-by the move constructor of <code>T</code></span></span> there are no
-effects.</blockquote>
+by the move constructor of a non-CopyConstructible
+<code>T</code></span></span> there are no effects.</blockquote>
 </div>
 <div class="section" id="vector-modifiers-vector-modifiers">
 <h2><a class="toc-backref" href="#id17">23.3.6.4 vector modifiers [vector.modifiers]</a></h2>
+<p>Context:</p>
+<pre class="literal-block">
+iterator insert(const_iterator position, const T&amp; x);
+iterator insert(const_iterator position, T&amp;&amp; x);
+void insert(const_iterator position, size_type n, const T&amp; x);
+template &lt;class InputIterator&gt;
+  void insert(const_iterator position, InputIterator first, InputIterator last);
+template &lt;class... Args&gt; void emplace_back(Args&amp;&amp;... args);
+template &lt;class... Args&gt; iterator emplace(const_iterator position, Args&amp;&amp;... args);
+void push_back(const T&amp; x);
+void push_back(T&amp;&amp; x);
+</pre>
 <p>Delete paragraph 1:</p>
 <blockquote>
 <span class="del">1 Requires: If value_type has a move constructor, that constructor shall
 not throw any exceptions.</span></blockquote>
 <p>Change paragraph 2 as follows:</p>
 <blockquote>
-2 Remarks: Causes reallocation if the new size is greater than the old
-capacity. If no reallocation happens, all the iterators and references
-before the insertion point remain valid. If an exception is thrown other
-than by the copy constructor,
-:ins: <cite>move constructor, move assignment operator</cite>
-or assignment operator of <tt class="docutils literal"><span class="pre">T</span></tt> or by any InputIterator operation there are
-no effects.</blockquote>
+2 Remarks: Causes reallocation if the new size is greater than the
+old capacity. If no reallocation happens, all the iterators and
+references before the insertion point remain valid. If an exception
+is thrown other than by the copy constructor, <span class="ins">move
+constructor, move assignment operator</span> or assignment operator of T
+or by any InputIterator operation there are no effects.</blockquote>
+<p><strong>Note:</strong> The strong guarantee of <tt class="docutils literal"><span class="pre">push_back</span></tt> is maintained by
+paragraph 11 in 23.2.1 [container.requirements.general]</p>
+<hr class="docutils" />
+<p>Context:</p>
+<pre class="literal-block">
+iterator erase(const_iterator position);
+iterator erase(const_iterator first, const_iterator last);
+</pre>
 <p>Change paragraph 6 as follows:</p>
 <blockquote>
 6 Throws: Nothing unless an exception is thrown by the copy

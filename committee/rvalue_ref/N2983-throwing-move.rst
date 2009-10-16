@@ -74,13 +74,15 @@ Fortunately, there is a better way.  Instead of imposing this burden
 on every class author, we can deal with the issue more selectively in
 the operation being move-enabled.  There, we know whether a throwing
 move can disturb existing guarantees.  We propose that instead of
-using ``std::move(x)`` in those cases, thus granting permission for the
-compiler to use *any* available move constructor, maintainers of these
-particular operations should use ``std::nothrow_move(x)``, which only
-grants permission to use non-throwing move constructors.  Unless ``x``
-is known to have a nonthrowing move constructor, the operation would
-fall back to copying ``x``, just as though ``x`` had never acquired a move
-constructor at all.
+using ``std::move(x)`` in those cases, thus granting permission for
+the compiler to use *any* available move constructor, maintainers of
+these particular operations should use
+``std::legacy_move(x)``, which only grants
+permission to use the non-throwing move constructors of copyable
+types.  Unless ``x`` is a move-only type, or is known to have a
+nonthrowing move constructor, the operation would fall back to copying
+``x``, just as though ``x`` had never acquired a move constructor at
+all.
 
 For example, ``std::pair``\ 's move constructor, were it to be written
 out manually, could remain as it was before this issue was
@@ -105,7 +107,7 @@ However, ``std::vector::reserve`` would be move-enabled this way:
           try
           {
               for (;i < s; ++i)
-                   new ((void*)(new_begin + i)) value_type( **nothrow_move(** (\*this)[i]) **)** );
+                   new ((void*)(new_begin + i)) value_type( **std::legacy_move(** (\*this)[i]) **)** );
           }
           catch(...)
           {
@@ -124,39 +126,37 @@ However, ``std::vector::reserve`` would be move-enabled this way:
   }
 
 
-We stress again that the use of ``nothrow_move`` as opposed to ``move``
+We stress again that the use of ``std::legacy_move`` as opposed to ``move``
 would only be necessary under an *extremely* limited set of
 circumstances.  In particular, it would never be required in new code,
 which could simply give a *conditional* strong guarantee, e.g. “if an
 exception is thrown other than by ``T``\ 's move constructor, there are
 no effects.”
 
-Implementing ``nothrow_move``
-*****************************
+Implementing ``std::legacy_move``
+*********************************
 
-One reasonable implementation of ``std::nothrow_move`` might be::
+One possible implementation of ``std::legacy_move`` might be::
 
   template <class T>
-  typename enable_if<has_nothrow_move_constructor<T>, T&&>::type 
-  nothrow_move(T& x)
+  typename conditional<
+      !has_nothrow_move_constructor<T>::value
+      && has_copy_constructor<T>::value,
+      T&,
+      T&&
+  >::type
+  legacy_move(T& x)
   {
       return std::move(x);
   }
-  
-  template <class T>
-  typename disable_if<has_nothrow_move_constructor<T>, T&>::type 
-  nothrow_move(T& x)
-  {
-      return x;
-  }
 
-However, that begs the question of how
-``has_nothrow_move_constructor<T>`` might be implemented.  We propose
-that ``has_nothrow_move_constructor<T>`` be a conservative trait very
-much like ``has_nothrow_copy_constructor<T>`` from the current working
-draft; it would be identical to the proposed
-``is_nothrow_constructible<T,T&&>`` from N2953_.  In other words, it is
-*allowed* to return ``false`` even when the proper result is ``true``.
+We propose that ``has_nothrow_move_constructor<T>`` be a conservative
+trait very much like ``has_nothrow_copy_constructor<T>`` from the
+current working draft; it would be identical to the proposed
+``is_nothrow_constructible<T,T&&>`` from N2953_.  In other words, it
+returns ``true`` only when it can prove the move constructor doesn't
+throw, and is *allowed* to return ``false`` even when the move
+constructor can throw.
 
 An Optimization Hint
 ********************
@@ -283,7 +283,9 @@ Add these paragraphs:
 
     :raw-html:`<span class="ins">16 If a function with the
     exception-specification <code>throw(false)</code> throws an
-    exception, the behavior is undefined.</span>`
+    exception, the behavior is undefined. The exception-specification
+    <code>throw(true)</code> is equivalent to
+    <code>throw(...)</code>.</span>`
 
 A.13 Exception handling [gram.except]
 =====================================
@@ -319,40 +321,40 @@ A.13 Exception handling [gram.except]
 
 Add entries to table 43:
 
-+--------------------------------+---------------------------+-------------------------+
-| Template                       |Condition                  |Preconditions            |
-+================================+===========================+=========================+
-| ``template <class T>           |``T`` has a move           |``T`` shall be a complete|
-| struct has_move_constructor;`` |constructor (17.3.14).     |type.                    |
-+--------------------------------+---------------------------+-------------------------+
-| ``template <class T>           |``T`` is a class type with |``has_move_constructor<T>|
-| struct                         |a move constructor that is |::value``                |
-| has_nothrow_move_constructor;``|known not to throw any     |                         |
-|                                |exceptions.                |                         |
-+--------------------------------+---------------------------+-------------------------+
-| ``template <class T>           |``T`` has a move assignment|``T`` shall be a complete|
-| struct has_move_assign;``      |operator (17.3.13).        |type.                    |
-+--------------------------------+---------------------------+-------------------------+
-| ``template <class T>           |``T`` is a class type with |``has_move_assign<T>::   |
-| struct                         |a move assignment operator |value``                  |
-| has_nothrow_move_assign;``     |that is known not to throw |                         |
-|                                |any exceptions.            |                         |
-+--------------------------------+---------------------------+-------------------------+
-| ``template <class T>           |``T`` has a copy           |``T`` shall be a complete|
-| struct has_copy_constructor;`` |constructor (12.8).        |type, an array of unknown| 
-|                                |                           |bound, or (possibly      |
-|                                |                           |cv-qualified) ``void.``  |
-+--------------------------------+---------------------------+-------------------------+
-| ``template <class T>           |``T`` has a default        |``T`` shall be a complete|
-| struct                         |constructor (12.1).        |type, an array of unknown|
-| has_default_constructor;``     |                           |bound, or (possibly      |
-|                                |                           |cv-qualified) ``void.``  |
-+--------------------------------+---------------------------+-------------------------+
-| ``template <class T>           |``T`` has a copy assignment|``T`` shall be a complete|
-| struct has_copy_assign;``      |operator (12.8).           |type, an array of unknown|
-|                                |                           |bound, or (possibly      |
-|                                |                           |cv-qualified) ``void``.  |
-+--------------------------------+---------------------------+-------------------------+
++--------------------------------+---------------------------+-----------------------------------+
+| Template                       |Condition                  |Preconditions                      |
++================================+===========================+===================================+
+| ``template <class T>           |``T`` has a move           |``T`` shall be a complete type.    |
+| struct has_move_constructor;`` |constructor (17.3.14).     |                                   |
++--------------------------------+---------------------------+-----------------------------------+
+| ``template <class T>           |``T`` is a class type with |``has_move_constructor<T> ::value``|
+| struct                         |a move constructor that is |                                   |
+| has_nothrow_move_constructor;``|known not to throw any     |                                   |
+|                                |exceptions.                |                                   |
++--------------------------------+---------------------------+-----------------------------------+
+| ``template <class T>           |``T`` has a move assignment|``T`` shall be a complete type.    |
+| struct has_move_assign;``      |operator (17.3.13).        |                                   |
++--------------------------------+---------------------------+-----------------------------------+
+| ``template <class T>           |``T`` is a class type with |``has_move_assign<T>:: value``     |
+| struct                         |a move assignment operator |                                   |
+| has_nothrow_move_assign;``     |that is known not to throw |                                   |
+|                                |any exceptions.            |                                   |
++--------------------------------+---------------------------+-----------------------------------+
+| ``template <class T>           |``T`` has a copy           |``T`` shall be a complete type, an |
+| struct has_copy_constructor;`` |constructor (12.8).        |array of unknown bound, or         | 
+|                                |                           |(possibly cv-qualified) ``void.``  |
+|                                |                           |                                   |
++--------------------------------+---------------------------+-----------------------------------+
+| ``template <class T>           |``T`` has a default        |``T`` shall be a complete type, an |
+| struct                         |constructor (12.1).        |array of unknown bound, or         |
+| has_default_constructor;``     |                           |(possibly cv-qualified) ``void.``  |
+|                                |                           |                                   |
++--------------------------------+---------------------------+-----------------------------------+
+| ``template <class T>           |``T`` has a copy assignment|``T`` shall be a complete type, an |
+| struct has_copy_assign;``      |operator (12.8).           |array of unknown bound, or         |
+|                                |                           |(possibly cv-qualified) ``void``.  |
+|                                |                           |                                   |
++--------------------------------+---------------------------+-----------------------------------+
 
 
 23.3.2.3 deque modifiers [deque.modifiers]
@@ -373,6 +375,10 @@ Change paragraph 6 as follows:
 23.3.6.2 vector capacity [vector.capacity]
 ==========================================
 
+Context::
+
+   void reserve(size_type n);
+
 Remove paragraph 2:
 
     :del:`2 Requires: If value_type has a move constructor, that constructor shall
@@ -388,32 +394,59 @@ Change paragraph 3 as follows:
     Reallocation happens at this point if and only if the current
     capacity is less than the argument of ``reserve()``. If an
     exception is thrown :raw-html:`<span class="ins">other than by the
-    move constructor of <code>T</code></span>` there are no effects.
+    move constructor of a non-CopyConstructible <code>T</code>` there
+    are no effects.
+
+-----
+
+Context::
+
+      void resize(size_type sz, const T& c);
 
 Change paragraph 13 to say:
 
     If an exception is thrown :raw-html:`<span class="ins">other than
-    by the move constructor of <code>T</code></span>` there are no
-    effects.
+    by the move constructor of a non-CopyConstructible
+    <code>T</code></span>` there are no effects.
 
 23.3.6.4 vector modifiers [vector.modifiers]
 ============================================
+
+Context::
+
+    iterator insert(const_iterator position, const T& x); 
+    iterator insert(const_iterator position, T&& x); 
+    void insert(const_iterator position, size_type n, const T& x); 
+    template <class InputIterator>
+      void insert(const_iterator position, InputIterator first, InputIterator last);
+    template <class... Args> void emplace_back(Args&&... args); 
+    template <class... Args> iterator emplace(const_iterator position, Args&&... args); 
+    void push_back(const T& x); 
+    void push_back(T&& x);
 
 Delete paragraph 1:
 
     :del:`1 Requires: If value_type has a move constructor, that constructor shall
     not throw any exceptions.`
 
-
 Change paragraph 2 as follows:
 
-    2 Remarks: Causes reallocation if the new size is greater than the old
-    capacity. If no reallocation happens, all the iterators and references 
-    before the insertion point remain valid. If an exception is thrown other 
-    than by the copy constructor, 
-    :ins: `move constructor, move assignment operator`
-    or assignment operator of ``T`` or by any InputIterator operation there are 
-    no effects.
+  2 Remarks: Causes reallocation if the new size is greater than the
+  old capacity. If no reallocation happens, all the iterators and
+  references before the insertion point remain valid. If an exception
+  is thrown other than by the copy constructor, :ins:`move
+  constructor, move assignment operator` or assignment operator of T
+  or by any InputIterator operation there are no effects.
+
+**Note:** The strong guarantee of ``push_back`` is maintained by
+paragraph 11 in 23.2.1 [container.requirements.general]
+
+-----
+
+Context::
+
+  iterator erase(const_iterator position); 
+  iterator erase(const_iterator first, const_iterator last);
 
 Change paragraph 6 as follows:
 
