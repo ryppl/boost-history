@@ -125,6 +125,7 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
 
 # if defined(BOOST_POSIX_API)
 
+//  POSIX uses a 0 return to indicate success
 #   define BOOST_ERRNO    errno 
 #   define BOOST_SET_CURRENT_DIRECTORY(P) (::chdir(P) == 0)
 #   define BOOST_CREATE_DIRECTORY(P) (::mkdir( P, S_IRWXU|S_IRWXG|S_IRWXO ) == 0)
@@ -136,12 +137,14 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
          || ::mkdir( to.c_str(),from_stat.st_mode ) != 0))
 #   define BOOST_COPY_FILE(F,T,FailIfExistsBool) copy_file_api(F, T, FailIfExistsBool)
 #   define BOOST_MOVE_FILE(F,T) (::rename(F, T) == 0)
+#   define BOOST_SET_FILE_SIZE(P,SZ) (::truncate( P, SZ ) == 0)
 
 #   define BOOST_ERROR_NOT_SUPPORTED ENOSYS
 #   define BOOST_ERROR_ALREADY_EXISTS EEXIST
 
 # else  // BOOST_WINDOWS_API
 
+//  Windows uses a non-0 return to indicate success
 #   define BOOST_ERRNO    ::GetLastError() 
 #   define BOOST_SET_CURRENT_DIRECTORY(P) (::SetCurrentDirectoryW(P) != 0)
 #   define BOOST_CREATE_DIRECTORY(P) (::CreateDirectoryW( P, 0 ) != 0)
@@ -152,6 +155,7 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
 #   define BOOST_COPY_DIRECTORY(F,T) (::CreateDirectoryExW( F, T, 0 ) != 0)
 #   define BOOST_COPY_FILE(F,T,FailIfExistsBool) (::CopyFileW(F, T, FailIfExistsBool) != 0)
 #   define BOOST_MOVE_FILE(F,T) (::MoveFileW( F, T ) != 0)
+#   define BOOST_SET_FILE_SIZE(P,SZ) (file_size_file_api( P, SZ ) != 0)
 #   define BOOST_READ_SYMLINK(P,T)
 
 #   define BOOST_ERROR_ALREADY_EXISTS ERROR_ALREADY_EXISTS
@@ -203,7 +207,7 @@ namespace
     else  
     { //  error
       if ( &ec == &throws() )
-        throw/*_exception*/( filesystem_error( message,
+        throw_exception( filesystem_error( message,
           p, BOOST_ERRNO, system_category ) );
       else
         ec.assign( BOOST_ERRNO, system_category );
@@ -390,6 +394,18 @@ namespace
       ::GetFullPathNameW( src.c_str(), static_cast<DWORD>(len), buf, p ));
   }
 
+  BOOL file_size_file_api( const wchar_t * p, boost::uintmax_t size )
+  {
+    HANDLE handle = CreateFileW( p, GENERIC_WRITE, 0, 0, OPEN_EXISTING,
+                                FILE_ATTRIBUTE_NORMAL, 0 );
+    LARGE_INTEGER sz;
+    sz.QuadPart = size;
+    return handle != INVALID_HANDLE_VALUE
+      && ::SetFilePointerEx( handle, sz, 0, FILE_BEGIN )
+      && ::SetEndOfFile( handle )
+      && ::CloseHandle( handle );
+  }
+
   //  Windows kernel32.dll functions that may or may not be present
   //  must be accessed through pointers
 
@@ -412,6 +428,8 @@ namespace
   PtrCreateSymbolicLinkW create_symbolic_link_api = PtrCreateSymbolicLinkW(
     ::GetProcAddress(
       ::GetModuleHandle(TEXT("kernel32.dll")), "CreateSymbolicLinkW") );
+
+
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -917,6 +935,12 @@ namespace boost
   }
 
   BOOST_FILESYSTEM_DECL
+  void file_size( const path & p, uintmax_t size, system::error_code & ec )
+  {
+    error( !BOOST_SET_FILE_SIZE( p.c_str(), size ), p, ec, "boost::filesystem::file_size");
+  }
+
+  BOOST_FILESYSTEM_DECL
   boost::uintmax_t hard_link_count( const path & p, system::error_code & ec )
   {
 #   ifdef BOOST_WINDOWS_API
@@ -1362,45 +1386,6 @@ namespace boost
       ? p : current_path() / p;
 #   endif
   }
-
-//
-//#   else // BOOST_POSIX_API
-//
-//
-//
-//      // suggested by Walter Landry
-//      BOOST_FILESYSTEM_DECL bool
-//      symbolic_link_exists_api( const std::string & ph )
-//      {
-//        struct stat path_stat;
-//        return ::lstat( ph.c_str(), &path_stat ) == 0
-//          && S_ISLNK( path_stat.st_mode );
-//      }
-//
-//
-//      BOOST_FILESYSTEM_DECL error_code
-//      remove_api( const std::string & ph )
-//      {
-//        if ( posix_remove( ph.c_str() ) == 0 )
-//          return ok;
-//        int error = errno;
-//        // POSIX says "If the directory is not an empty directory, rmdir()
-//        // shall fail and set errno to EEXIST or ENOTEMPTY."
-//        // Linux uses ENOTEMPTY, Solaris uses EEXIST.
-//        if ( error == EEXIST ) error = ENOTEMPTY;
-//
-//        error_code ec;
-//
-//        // ignore errors if post-condition satisfied
-//        return status_api(ph, ec).type() == file_not_found
-//          ? ok : error_code( error, system_category ) ;
-//      }
-//
-//
-//
-//
-//#   endif
-//    } // namespace detail
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //

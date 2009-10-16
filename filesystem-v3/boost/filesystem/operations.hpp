@@ -239,6 +239,9 @@ namespace boost
                    system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
+  void file_size( const path & p, uintmax_t size, system::error_code & ec = throws() );
+
+  BOOST_FILESYSTEM_DECL
   boost::uintmax_t hard_link_count( const path & p, system::error_code & ec = throws() );
 
   //  initial_path() declaration precedes complete()
@@ -255,12 +258,14 @@ namespace boost
   path read_symlink( const path & p, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
+    // For standardization, if the committee doesn't like "remove", consider "eliminate"
   bool remove( const path & p, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   boost::uintmax_t remove_all( const path & p,
                    system::error_code & ec = throws() );
 
+  
   BOOST_FILESYSTEM_DECL
   void rename( const path & from, const path & to,
                    system::error_code & ec = throws() );
@@ -274,7 +279,7 @@ namespace boost
 # endif
 
   BOOST_FILESYSTEM_DECL
-  path system_complete( const path & p, system::error_code & ec = throws() ); 
+  path system_complete( const path & p, system::error_code & ec = throws() );
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //

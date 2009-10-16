@@ -2150,6 +2150,16 @@ note</i>] </p>
   <p style="font-size: 10pt"><i>Throws:</i> <code>filesystem_error</code><span style="background-color: #FFFFFF">
   </span>if <code>!exists(p) || !is_regular_file(p)</code>.</p>
 </blockquote>
+<pre>void <a name="file_size">file_size</a>(const path&amp; p, <span style="background-color: #FFFFFF; ">uintmax_t new_size, </span>system::error_code&amp; ec=throws());</pre>
+<blockquote>
+<p><i>Postcondition:</i> <code>file_size() == new_size</code>.</p>
+  <p style="font-size: 10pt"><i>Throws:</i> <code>filesystem_error</code><span style="background-color: #FFFFFF">
+  </span>if <code>!exists(p) || !is_regular_file(p)</code>.</p>
+  <p style="font-size: 10pt"><i>Remarks:</i> Achieves its postcondition as if by 
+  POSIX <code>
+  <a href="http://www.opengroup.org/onlinepubs/000095399/functions/truncate.html">
+  truncate()</a></code>.</p>
+</blockquote>
 <pre>const path&amp; <a name="initial_path">initial_path</a>(system::error_code&amp; ec=throws());</pre>
 <blockquote>
   <p><i>Returns:</i> <code>current_path()</code> at the time of entry to <code>
@@ -3140,7 +3150,7 @@ final document.</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->10 October 2009<!--webbot bot="Timestamp" endspan i-checksum="32658" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->16 October 2009<!--webbot bot="Timestamp" endspan i-checksum="32670" --></p>
 
 </body>
 
