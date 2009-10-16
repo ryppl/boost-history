@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// importance_weights::example::scale_to_finite_sum.h                        //
+// statistics::importance_weights::example::scale_to_finite_sum.h            //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //

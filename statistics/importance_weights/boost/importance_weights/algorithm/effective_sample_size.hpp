@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// importance_weights::effective_sample_size.hpp                             //
+// statistics::importance_weights::effective_sample_size.hpp                 //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_IMPORTANCE_WEIGHTS_ALGORITHM_EFFECTIVE_SAMPLE_SIZE_HPP_ER_2009
-#define BOOST_IMPORTANCE_WEIGHTS_ALGORITHM_EFFECTIVE_SAMPLE_SIZE_HPP_ER_2009
+#ifndef BOOST_STATISTICS_IMPORTANCE_WEIGHTS_ALGORITHM_EFFECTIVE_SAMPLE_SIZE_HPP_ER_2009
+#define BOOST_STATISTICS_IMPORTANCE_WEIGHTS_ALGORITHM_EFFECTIVE_SAMPLE_SIZE_HPP_ER_2009
 #include <algorithm>
 #include <numeric>
 #include <iterator>
@@ -17,6 +17,7 @@
 #include <boost/functional/mean_var_accumulator.hpp>
 
 namespace boost{
+namespace statistics{
 namespace importance_weights{
     
     // Finds the number of iid observations whose standard error equates that
@@ -68,6 +69,7 @@ namespace importance_weights{
     }
 
 }// importance_weights            
+}// statistics
 }// boost
 
 #endif 

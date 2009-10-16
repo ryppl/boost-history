@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// importance_weights::doc::readme                                          //
+// statistics::importance_weights::doc::readme                              //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -28,8 +28,7 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 [ Dependencies ]
 
 /usr/local/boost_1_39_0/ 
-/sandbox/statistics/non_param/ 
-/sandbox/statistics/binary_op/ 
+/sandbox/statistics/empirical_cdf/ 
 /sandbox/statistics/functional/
 
 [ Sources ]
@@ -43,7 +42,10 @@ Madigan
 
 [ History ]
 
-July 2009 : Current version
+Sep  3 2009 : 
+    - replaced importance_weights by statistics::importance_weights
+    - simplified the interface of prepare_weights
+July   2009 : Creation
 
 [ Output ]
 

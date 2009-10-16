@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// importance_weights::algorithm::apply_exp_offset                           //
+// statistics::importance_weights::algorithm::apply_exp_offset               //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_IMPORTANCE_WEIGHTS_ALGORITHM_APPLY_EXP_OFFSET_HPP_ER_2009
-#define BOOST_IMPORTANCE_WEIGHTS_ALGORITHM_APPLY_EXP_OFFSET_HPP_ER_2009
+#ifndef BOOST_STATISTICS_IMPORTANCE_WEIGHTS_ALGORITHM_APPLY_EXP_OFFSET_HPP_ER_2009
+#define BOOST_STATISTICS_IMPORTANCE_WEIGHTS_ALGORITHM_APPLY_EXP_OFFSET_HPP_ER_2009
 #include <cmath>
 #include <algorithm>
 #include <boost/lambda/lambda.hpp>
@@ -14,6 +14,7 @@
 #include <boost/math/tools/precision.hpp>
 
 namespace boost{
+namespace statistics{
 namespace importance_weights{
     
     // Returns          The smallest value, c, s/t *i + c <= t, i in [b_w,e_w)
@@ -55,6 +56,7 @@ namespace importance_weights{
     }
 
 }// importance_weights
+}// statistics
 }// boost
 
 #endif

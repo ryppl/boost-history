@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// importance_weights::algorithm::prepare_weights.hpp                        //
+// statistics::importance_weights::algorithm::prepare_weights.hpp            //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_IMPORTANCE_WEIGHTS_ALGORITHM_PREPARE_WEIGHTS_HPP_ER_2009
-#define BOOST_IMPORTANCE_WEIGHTS_ALGORITHM_PREPARE_WEIGHTS_HPP_ER_2009
+#ifndef BOOST_STATISTICS_IMPORTANCE_WEIGHTS_ALGORITHM_PREPARE_WEIGHTS_HPP_ER_2009
+#define BOOST_STATISTICS_IMPORTANCE_WEIGHTS_ALGORITHM_PREPARE_WEIGHTS_HPP_ER_2009
 #include <iterator>
 #include <functional>
 #include <boost/format.hpp>
@@ -19,6 +19,7 @@
 #include <boost/importance_weights/algorithm/effective_sample_size.hpp>
 
 namespace boost{
+namespace statistics{
 namespace importance_weights{
 
     // Warning: read side effects carefully.
@@ -46,12 +47,10 @@ namespace importance_weights{
         // [ Side effect ] 
         // 1) w <- exp(lw+offset)
         // 2) if needed, w <- w/c such that sum{w} < inf
-        // Deprecated: 3) Sorts [b_w,e_w) in decr order, and [b_p,e_p) accordingly
-        template<typename ItW,typename ItP>
+        template<typename ItW>
         void operator()(
             ItW b_w,    // log( unnormalized weights )
-            ItW e_w,
-            ItP b_p     // proposal values
+            ItW e_w    
         );
 
         public:
@@ -111,27 +110,17 @@ namespace importance_weights{
     offset(zero),scaling_factor(zero),pc_ess(zero),pc_lt_eps(zero){}
     
     template<typename T>
-    template<typename ItW,typename ItP>
+    template<typename ItW>
     void
     prepare_weights<T>::operator()(
         ItW b_w,
-        ItW e_w,
-        ItP b_p
+        ItW e_w
     ){
         offset = apply_exp_offset(
             b_w,
             e_w,
             max_log
         );
-
-        // Deprecated because of discrete_distribution (see importance_sampling)
-        // crucial that this step precedes scale_to_finite_sum because
-        // finiteness is not nec preserved by reordering (non associativity)
-        //binary_op::sort_on_head_greater(
-        //    b_w,
-        //    e_w,
-        //    b_p
-        //);  
 
         // if max_log is small enough (which costs precision), this does not 
         // nothing i.e. scaling_factor = 1
@@ -165,6 +154,7 @@ namespace importance_weights{
     }
 
 }// importance_weights
+}// statistics
 }// boost
 
 #endif

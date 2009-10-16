@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// importance_weights::example::scale_to_finite_sum.cpp                      //
+// statistics::importance_weights::example::scale_to_finite_sum.cpp          //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -39,7 +39,7 @@ void example_scale_to_finite_sum(std::ostream& out){
     }
 
     // Computations
-    val_ c = importance_weights::scale_to_finite_sum(
+    val_ c = statistics::importance_weights::scale_to_finite_sum(
         boost::begin(vec_in),
         boost::end(vec_in)
     );
