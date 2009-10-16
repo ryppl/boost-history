@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -12,7 +12,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 //---------------------------------------------------------------------------
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -67,7 +67,7 @@ void* TestTreeTransferFunctionInserts(void *threadId)
 
    idleUntilAllThreadsHaveReached(*(int*)threadId);
 
-   if (kStartingTime == startTimer) startTimer = time(NULL);
+   if (kStartingTime == startTimer) startTimer = time(0);
 
 #if 1
 
@@ -87,7 +87,7 @@ void* TestTreeTransferFunctionInserts(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -119,7 +119,7 @@ void TestTransferFunctionMultipleThreads()
 
    //--------------------------------------------------------------------------
    // Reset barrier variables before creating any threads. Otherwise, it is
-   // possible for the first thread 
+   // possible for the first thread
    //--------------------------------------------------------------------------
    threadsFinished.value() = 0;
    threadsStarted.value() = 0;
@@ -129,7 +129,7 @@ void TestTransferFunctionMultipleThreads()
    for (int j = 0; j < kMaxThreads - 1; ++j)
    {
       threadId[j] = j;
-      pthread_create(&threads[j], NULL, TestTreeTransferFunctionInserts, (void *)&threadId[j]);
+      pthread_create(&threads[j], 0, TestTreeTransferFunctionInserts, (void *)&threadId[j]);
    }
 
    int mainThreadId = kMaxThreads-1;
@@ -211,12 +211,12 @@ void TransferFunction::performFunction()
       break;
 
    case eSigmoid:
-      output_ = 1 / (1 + pow(constantE, -input_)); 
+      output_ = 1 / (1 + pow(constantE, -input_));
       break;
 
    case eTanSigmoid:
-      output_ = (pow(constantE, input_) - pow(constantE, -input_)) 
-         / (pow(constantE, input_) + pow(constantE, -input_)); 
+      output_ = (pow(constantE, input_) - pow(constantE, -input_))
+         / (pow(constantE, input_) + pow(constantE, -input_));
       break;
 
    default:

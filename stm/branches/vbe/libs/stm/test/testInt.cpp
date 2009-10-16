@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -14,7 +14,7 @@
 #include "testInt.h"
 #include <boost/stm/transaction.hpp>
 
-Integer *globalInt = NULL;
+Integer *globalInt = 0;
 
 ////////////////////////////////////////////////////////////////////////////
 namespace nIntTest
@@ -79,7 +79,7 @@ void TestInt()
    for (int i = 0; i < kMaxThreads; ++i)
    {
       cout << "Creating thread: " << i << endl;
-      rc = pthread_create(&threads[i], NULL, TestCount, (void *)&i);
+      rc = pthread_create(&threads[i], 0, TestCount, (void *)&i);
 
       if (rc)
       {

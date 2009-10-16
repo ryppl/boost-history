@@ -71,7 +71,7 @@ static void* Test1(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -111,7 +111,7 @@ static void* Test3(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -143,7 +143,7 @@ void TestTxLinearLock()
    for (int j = 0; j < kMaxThreads - 1; ++j)
    {
       threadId[j] = j;
-      pthread_create(&threads[j], NULL, Test1, (void *)&threadId[j]);
+      pthread_create(&threads[j], 0, Test1, (void *)&threadId[j]);
    }
 
    int mainThreadId = kMaxThreads-1;

@@ -14,10 +14,6 @@
 #ifndef RED_BLACK_TREE_H
 #define RED_BLACK_TREE_H
 
-#ifndef NULL
-#define NULL 0
-#endif
-
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -55,7 +51,7 @@ public:
    typedef T type;
 
     ////////////////////////////////////////////////////////////////////////////
-   RedBlackNode(T const &in) : color_(nRedBlackTree::eRed), value_(in), 
+   RedBlackNode(T const &in) : color_(nRedBlackTree::eRed), value_(in),
       left_(&sentinel), right_(&sentinel), parent_(&sentinel) {}
 
    ////////////////////////////////////////////////////////////////////////////
@@ -118,8 +114,8 @@ public:
    ////////////////////////////////////////////////////////////////////////////
    static void initializeSentinel()
    {
-      sentinel.left_ = NULL;
-      sentinel.right_ = NULL;
+      sentinel.left_ = 0;
+      sentinel.right_ = 0;
       sentinel.color_ = nRedBlackTree::eBlack;
    }
 
@@ -261,7 +257,7 @@ inline bool RedBlackTree<T>::internal_lookup(T const &v, T* found, boost::stm::t
 
    while (x != &RedBlackNode<T>::sentinel)
    {
-      if (NULL == x) throw boost::stm::aborted_transaction_exception("aborting transaction");
+      if (0 == x) throw boost::stm::aborted_transaction_exception("aborting transaction");
       if (x->value() == v)
       {
          found = &x->value();
@@ -291,11 +287,11 @@ inline RedBlackNode<T>* RedBlackTree<T>::binary_insert(RedBlackNode<T> const &ne
 
    while (x != &RedBlackNode<T>::sentinel)
    {
-      if (NULL == x) throw boost::stm::aborted_transaction_exception("aborting transaction");
+      if (0 == x) throw boost::stm::aborted_transaction_exception("aborting transaction");
       if (x->value() == val)
       {
          t.lock_and_abort();
-         return NULL;
+         return 0;
       }
 
       y = x;
@@ -326,10 +322,10 @@ bool RedBlackTree<T>::internal_insert(RedBlackNode<T> const & newEntry, boost::s
    //--------------------------------------------------------------------------
    RedBlackNode<T> *x = binary_insert(newEntry, t);
 
-   if (NULL == x) return false;
+   if (0 == x) return false;
 
    RedBlackNode<T> *xParent = x->parent();
-   //RedBlackNode<T> *xParentParent = NULL;
+   //RedBlackNode<T> *xParentParent = 0;
 
    while (eRed == xParent->read_color(t) && xParent != &RedBlackNode<T>::sentinel)
    {
@@ -428,8 +424,8 @@ void RedBlackTree<T>::internal_remove_help(RedBlackNode<T> *x, boost::stm::trans
 {
    using namespace nRedBlackTree;
 
-   RedBlackNode<T> *y = NULL;
-   RedBlackNode<T> *xParent = NULL;
+   RedBlackNode<T> *y = 0;
+   RedBlackNode<T> *xParent = 0;
 
    while ( eBlack == x->read_color(t) && root->read_left(t) != x)
    {
@@ -639,7 +635,7 @@ bool RedBlackTree<T>::internal_remove(RedBlackNode<T> const &inNode, boost::stm:
    // find node inNode in our tree then delete it
    for (; &RedBlackNode<T>::sentinel != z; )
    {
-      if (NULL == z) throw boost::stm::aborted_transaction_exception("altered tree");
+      if (0 == z) throw boost::stm::aborted_transaction_exception("altered tree");
       if (z->value() == inNode.value()) break;
       z = z->value() > inNode.value() ? z->read_left(t) : z->read_right(t);
    }

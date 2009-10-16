@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -160,27 +160,27 @@ void test_smart()
       cout << "outer loop #: " << kMaxOuterLoops << endl;
       cout << "inner loop #: " << kMaxInnerLoops << endl << endl;
 
-      startTimer = time(NULL);
+      startTimer = time(0);
       test_no_private();
-      endTimer = time(NULL);
+      endTimer = time(0);
 
       cout << "no_privatization time: " << endTimer - startTimer << endl;
       cout << "                txInt: " << txInt << endl << endl;
 
       txInt = 0;
 
-      startTimer = time(NULL);
+      startTimer = time(0);
       test_priv_write_ptr();
-      endTimer = time(NULL);
+      endTimer = time(0);
 
       cout << "   privatization time w/ write_ptr: " << endTimer - startTimer << endl;
       cout << "                txInt: " << txInt << endl << endl;
 
       txInt = 0;
 
-      startTimer = time(NULL);
+      startTimer = time(0);
       test_priv_read_ptr();
-      endTimer = time(NULL);
+      endTimer = time(0);
 
       cout << "   privatization time w/ read_ptr: " << endTimer - startTimer << endl;
       cout << "                txInt: " << txInt << endl << endl;

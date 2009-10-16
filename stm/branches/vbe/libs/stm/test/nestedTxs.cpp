@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -141,7 +141,7 @@ static void nested2()
       }
       ++t.w(x);
    }
-   before_retry 
+   before_retry
    {
       cout << "caught at nested2\n";
    }
@@ -155,7 +155,7 @@ static void nested1()
       ++t.w(x);
       nested2();
    }
-   before_retry 
+   before_retry
    {
       cout << "caught at nested1\n";
    }
@@ -168,8 +168,8 @@ static void nested0()
    {
       ++t.w(x);
       nested1();
-   } 
-   before_retry 
+   }
+   before_retry
    {
       cout << "caught at nested0" << endl;
    }
@@ -260,7 +260,7 @@ void NestedTxTest()
 
    pthread_t *second_thread = new pthread_t;
 
-   pthread_create(second_thread, NULL, stall, (void*)NULL);
+   pthread_create(second_thread, 0, stall, (void*)0);
 
    TestTransactionInsideLock();
    TestEarlyRelease();

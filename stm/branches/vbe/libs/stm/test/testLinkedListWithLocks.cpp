@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -35,7 +35,7 @@
 
 typedef int list_node_type;
 
-static LATM::LinkedList< list_node_type > *llist = NULL;
+static LATM::LinkedList< list_node_type > *llist = 0;
 
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
@@ -57,7 +57,7 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
 
    idleUntilAllThreadsHaveReached(*(int*)threadId);
 
-   if (kStartingTime == startTimer) startTimer = time(NULL);
+   if (kStartingTime == startTimer) startTimer = time(0);
 
    //--------------------------------------------------------------------------
    // do the transactional inserts. this is the main transactional loop.
@@ -110,7 +110,7 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -138,7 +138,7 @@ static void* TestLinkedListInserts(void *threadId)
 
    idleUntilAllThreadsHaveReached(*(int*)threadId);
 
-   if (kStartingTime == startTimer) startTimer = time(NULL);
+   if (kStartingTime == startTimer) startTimer = time(0);
 
    //--------------------------------------------------------------------------
    // do the transactional inserts. this is the main transactional loop.
@@ -191,7 +191,7 @@ static void* TestLinkedListInserts(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -224,7 +224,7 @@ void TestLinkedListWithLocks()
 
    //--------------------------------------------------------------------------
    // Reset barrier variables before creating any threads. Otherwise, it is
-   // possible for the first thread 
+   // possible for the first thread
    //--------------------------------------------------------------------------
    threadsFinished.value() = 0;
    threadsStarted.value() = 0;
@@ -234,8 +234,8 @@ void TestLinkedListWithLocks()
    for (int j = 0; j < kMaxThreads - 1; ++j)
    {
       threadId[j] = j;
-      if (0 == j % 2) pthread_create(&threads[j], NULL, TestLinkedListInserts, (void *)&threadId[j]);
-      else pthread_create(&threads[j], NULL, TestLinkedListInsertsWithLocks, (void *)&threadId[j]);
+      if (0 == j % 2) pthread_create(&threads[j], 0, TestLinkedListInserts, (void *)&threadId[j]);
+      else pthread_create(&threads[j], 0, TestLinkedListInsertsWithLocks, (void *)&threadId[j]);
    }
 
    int mainThreadId = kMaxThreads-1;
@@ -270,7 +270,7 @@ void TestLinkedListWithLocks()
    cout << " TX_SEC: " << transaction::bookkeeping().commits() / (totalAverageRunTime * runVector.size()) << endl;
    cout << transaction::bookkeeping() << endl;
 
-   if ((kInsertSameValues && totalInserts != kMaxInserts) || 
+   if ((kInsertSameValues && totalInserts != kMaxInserts) ||
       (!kInsertSameValues && totalInserts != kMaxInserts * kMaxThreads))
    {
       std::cout << std::endl << std::endl << "###########################################################";

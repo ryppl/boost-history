@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -63,7 +63,7 @@ static int lockFactor = 1;
 ////////////////////////////////////////////////////////////////////////////
 static int iterations = 0;
 
-static void do_work1() 
+static void do_work1()
 {
    if (work1) return;
    work1 = true;
@@ -84,7 +84,7 @@ static void do_work1()
    }
 }
 
-static void do_work2() 
+static void do_work2()
 {
    if (work2) return;
    work2 = true;
@@ -105,7 +105,7 @@ static void do_work2()
    }
 }
 
-void do_work3bis() 
+void do_work3bis()
 {
    if (work3) return;
    work3 = true;
@@ -121,7 +121,7 @@ void do_work3bis()
    }
 }
 
-void do_work4() 
+void do_work4()
 {
    if (work4) return;
    work4 = true;
@@ -137,13 +137,13 @@ void do_work4()
    }
 }
 
-static void* tx1(void *threadId) 
+static void* tx1(void *threadId)
 {
    transaction::initialize_thread();
    int start = *(int*)threadId;
 
    idleUntilAllThreadsHaveReached(*(int*)threadId);
-   startTimer = time(NULL);
+   startTimer = time(0);
 
    for (int iters = 0; iters < txFactor*iterations; ++iters)
    {
@@ -160,7 +160,7 @@ static void* tx1(void *threadId)
    if (!work1) { do_work1(); }
    if (!work2) { do_work2(); }
 
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -172,13 +172,13 @@ static void* tx1(void *threadId)
    return threadId;
 }
 
-static void* tx2(void *threadId) 
+static void* tx2(void *threadId)
 {
    transaction::initialize_thread();
    int start = *(int*)threadId;
 
    idleUntilAllThreadsHaveReached(*(int*)threadId);
-   startTimer = time(NULL);
+   startTimer = time(0);
 
    for (int iters = 0; iters < txFactor*iterations; ++iters)
    {
@@ -195,7 +195,7 @@ static void* tx2(void *threadId)
    if (!work1) { do_work1(); }
    if (!work2) { do_work2(); }
 
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -207,20 +207,20 @@ static void* tx2(void *threadId)
    return threadId;
 }
 
-static void* tx3(void *threadId) 
+static void* tx3(void *threadId)
 {
    transaction::initialize_thread();
 
    int start = *(int*)threadId;
 
    idleUntilAllThreadsHaveReached(*(int*)threadId);
-   startTimer = time(NULL);
+   startTimer = time(0);
 
    for (int iters = 0; iters < txFactor*iterations; ++iters)
    {
       for (transaction t;;t.restart())
         try {
-       
+
           t.add_tx_conflicting_lock(L1);
           t.add_tx_conflicting_lock(L2);
 
@@ -236,7 +236,7 @@ static void* tx3(void *threadId)
    if (!work1) { do_work1(); }
    if (!work2) { do_work2(); }
 
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -248,11 +248,11 @@ static void* tx3(void *threadId)
    return threadId;
 }
 
-static void* lock1(void *threadId) 
+static void* lock1(void *threadId)
 {
    transaction::initialize_thread();
    idleUntilAllThreadsHaveReached(*(int*)threadId);
-   startTimer = time(NULL);
+   startTimer = time(0);
 
    for (int iters = 0; iters < lockFactor*3000*iterations; ++iters)
    {
@@ -261,7 +261,7 @@ static void* lock1(void *threadId)
       transaction::unlock_(L1);
    }
 
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread();
 
    if (*(int*)threadId != kMainThreadId)
@@ -272,11 +272,11 @@ static void* lock1(void *threadId)
    return threadId;
 }
 
-static void* lock2(void *threadId) 
+static void* lock2(void *threadId)
 {
    transaction::initialize_thread();
    idleUntilAllThreadsHaveReached(*(int*)threadId);
-   startTimer = time(NULL);
+   startTimer = time(0);
 
    for (int iters = 0; iters < lockFactor*3000*iterations; ++iters)
    {
@@ -285,7 +285,7 @@ static void* lock2(void *threadId)
       transaction::unlock_(L2);
    }
 
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread();
 
    if (*(int*)threadId != kMainThreadId)
@@ -296,11 +296,11 @@ static void* lock2(void *threadId)
    return threadId;
 }
 
-static void* lock3(void *threadId) 
+static void* lock3(void *threadId)
 {
    transaction::initialize_thread();
    idleUntilAllThreadsHaveReached(*(int*)threadId);
-   startTimer = time(NULL);
+   startTimer = time(0);
 
    for (int iters = 0; iters < 10000*iterations; ++iters)
    {
@@ -309,7 +309,7 @@ static void* lock3(void *threadId)
       transaction::unlock_(L3);
    }
 
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread();
 
    if (*(int*)threadId != kMainThreadId)
@@ -346,7 +346,7 @@ void TestLotExample()
 
    //--------------------------------------------------------------------------
    // Reset barrier variables before creating any threads. Otherwise, it is
-   // possible for the first thread 
+   // possible for the first thread
    //--------------------------------------------------------------------------
    threadsFinished.value() = 0;
    threadsStarted.value() = 0;
@@ -354,19 +354,19 @@ void TestLotExample()
    endTimer = 0;
 
    threadId[0] = 0;
-   pthread_create(&threads[0], NULL, tx1, (void *)&threadId[0]);
+   pthread_create(&threads[0], 0, tx1, (void *)&threadId[0]);
 
    threadId[1] = 1;
-   pthread_create(&threads[1], NULL, tx2, (void *)&threadId[1]);
+   pthread_create(&threads[1], 0, tx2, (void *)&threadId[1]);
 
    threadId[2] = 2;
-   pthread_create(&threads[2], NULL, tx3, (void *)&threadId[2]);
+   pthread_create(&threads[2], 0, tx3, (void *)&threadId[2]);
 
    threadId[3] = 3;
-   pthread_create(&threads[3], NULL, lock1, (void *)&threadId[3]);
+   pthread_create(&threads[3], 0, lock1, (void *)&threadId[3]);
 
    threadId[4] = 4;
-   pthread_create(&threads[4], NULL, lock2, (void *)&threadId[4]);
+   pthread_create(&threads[4], 0, lock2, (void *)&threadId[4]);
 
    int mainThreadId = kMaxThreads-1;
    lock3((void*)&mainThreadId);

@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -85,7 +85,7 @@ static void* TestIsolatedLockInTxCount(void *threadId)
             transaction::unlock_(lock1);
 
             //-------------------------------------------------------
-            // now again access gInt via tx. tx should access the 
+            // now again access gInt via tx. tx should access the
             // changes previously made by the lock
             //-------------------------------------------------------
             --t.w(gInt).value();
@@ -105,7 +105,7 @@ static void* TestIsolatedLockInTxCount(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -134,14 +134,14 @@ void* TestCount2(void *threadId)
          {
             t.w(gInt).value()++;
 
-            if (1)//0 == rand() % 2) 
+            if (1)//0 == rand() % 2)
             {
                t.w(gInt2).value()++;
             }
             t.end();
             break;
          }
-         catch (aborted_tx&) 
+         catch (aborted_tx&)
          {
             cout << "aborted" << endl;
          }
@@ -151,7 +151,7 @@ void* TestCount2(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -175,7 +175,7 @@ void TestIsolatedIntLockInTx()
 
    //--------------------------------------------------------------------------
    // Reset barrier variables before creating any threads. Otherwise, it is
-   // possible for the first thread 
+   // possible for the first thread
    //--------------------------------------------------------------------------
    threadsFinished.value() = 0;
    threadsStarted.value() = 0;
@@ -185,7 +185,7 @@ void TestIsolatedIntLockInTx()
    for (int j = 0; j < kMaxThreads - 1; ++j)
    {
       threadId[j] = j;
-      pthread_create(&threads[j], NULL, TestIsolatedLockInTxCount, (void *)&threadId[j]);
+      pthread_create(&threads[j], 0, TestIsolatedLockInTxCount, (void *)&threadId[j]);
    }
 
    int mainThreadId = kMaxThreads-1;

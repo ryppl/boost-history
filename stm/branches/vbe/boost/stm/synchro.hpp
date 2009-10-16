@@ -144,12 +144,12 @@ class light_auto_lock
 {
 public:
 
-   light_auto_lock(Mutex &mutex) : lock_(NULL)
+   light_auto_lock(Mutex &mutex) : lock_(0)
    {
       do_auto_lock(&mutex);
    }
 
-   light_auto_lock(Mutex *mutex) : lock_(NULL)
+   light_auto_lock(Mutex *mutex) : lock_(0)
    {
       do_auto_lock(mutex);
    }

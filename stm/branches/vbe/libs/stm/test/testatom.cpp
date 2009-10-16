@@ -78,7 +78,7 @@ void* AccountEntry(void* threadId)
       pthread_exit(threadId);
    }
 
-   return NULL;
+   return 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -93,7 +93,7 @@ int testAccounts()
 
 	stm::transaction::initialize();
 	stm::transaction::initialize_thread();
-	srand(time(NULL));
+	srand(time(0));
 
    int i = 0;
 	for(i = 0; i < ACCOUNTS; ++i) {
@@ -106,7 +106,7 @@ int testAccounts()
 
    //--------------------------------------------------------------------------
    // Reset barrier variables before creating any threads. Otherwise, it is
-   // possible for the first thread 
+   // possible for the first thread
    //--------------------------------------------------------------------------
    threadsFinished.value() = 0;
    threadsStarted.value() = 0;
@@ -116,7 +116,7 @@ int testAccounts()
    for (int j = 0; j < kMaxThreads - 1; ++j)
    {
       threadId[j] = j;
-      pthread_create(&threads[j], NULL, AccountEntry, (void *)&threadId[j]);
+      pthread_create(&threads[j], 0, AccountEntry, (void *)&threadId[j]);
    }
 
    int mainThreadId = kMaxThreads-1;

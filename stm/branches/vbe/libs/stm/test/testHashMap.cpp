@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -34,10 +34,10 @@
 #include <fstream>
 #include <sstream>
 
-HashMap<int> *hashMap = NULL;
+HashMap<int> *hashMap = 0;
 
 ////////////////////////////////////////////////////////////////////////////
-using namespace std; using namespace boost::stm; using namespace nHashMap; 
+using namespace std; using namespace boost::stm; using namespace nHashMap;
 using namespace nMain;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ void* TestHashMapInserts(void *threadId)
    idleUntilAllThreadsHaveReached(*(int*)threadId);
    //cout << "i: " << startingValue << endl;
 
-   if (kStartingTime == startTimer) startTimer = time(NULL);
+   if (kStartingTime == startTimer) startTimer = time(0);
 
    //--------------------------------------------------------------------------
    // do the transactional inserts. this is the main transactional loop.
@@ -94,7 +94,7 @@ void* TestHashMapInserts(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -124,7 +124,7 @@ void TestHashMapWithMultipleThreads()
 
    //--------------------------------------------------------------------------
    // Reset barrier variables before creating any threads. Otherwise, it is
-   // possible for the first thread 
+   // possible for the first thread
    //--------------------------------------------------------------------------
    threadsFinished.value() = 0;
    threadsStarted.value() = 0;
@@ -134,7 +134,7 @@ void TestHashMapWithMultipleThreads()
    for (int j = 0; j < kMaxThreads - 1; ++j)
    {
       threadId[j] = j;
-      pthread_create(&threads[j], NULL, TestHashMapInserts, (void *)&threadId[j]);
+      pthread_create(&threads[j], 0, TestHashMapInserts, (void *)&threadId[j]);
    }
 
    int mainThreadId = kMaxThreads-1;
@@ -168,7 +168,7 @@ void TestHashMapWithMultipleThreads()
    cout << " TX_SEC: " << transaction::bookkeeping().commits() / (totalAverageRunTime * runVector.size()) << endl;
    cout << transaction::bookkeeping() << endl;
 
-   if ((kInsertSameValues && totalInserts != kMaxInserts) || 
+   if ((kInsertSameValues && totalInserts != kMaxInserts) ||
       (!kInsertSameValues && totalInserts != kMaxInserts * kMaxThreads))
    {
       std::cout << std::endl << std::endl << "###########################################################";

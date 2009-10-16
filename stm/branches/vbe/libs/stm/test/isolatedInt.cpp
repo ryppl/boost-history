@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -63,7 +63,7 @@ static void* TestIsolatedCount(void *threadId)
             oldVal = gInt2.value();
 
             ++gInt2.value();
-            
+
             if (oldVal + 1 != gInt2.value())
             {
                cout << "invariant changed" << endl;
@@ -79,7 +79,7 @@ static void* TestIsolatedCount(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -108,7 +108,7 @@ static void* TestCount(void *threadId)
          {
             t.w(gInt2).value()++;
 
-            if (1)//0 == rand() % 2) 
+            if (1)//0 == rand() % 2)
             {
                t.w(gInt).value()++;
             }
@@ -122,7 +122,7 @@ static void* TestCount(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -144,7 +144,7 @@ void TestIsolatedInt()
 
    //--------------------------------------------------------------------------
    // Reset barrier variables before creating any threads. Otherwise, it is
-   // possible for the first thread 
+   // possible for the first thread
    //--------------------------------------------------------------------------
    threadsFinished.value() = 0;
    threadsStarted.value() = 0;
@@ -154,7 +154,7 @@ void TestIsolatedInt()
    for (int j = 0; j < kMaxThreads - 1; ++j)
    {
       threadId[j] = j;
-      pthread_create(&threads[j], NULL, TestCount, (void *)&threadId[j]);
+      pthread_create(&threads[j], 0, TestCount, (void *)&threadId[j]);
    }
 
    int mainThreadId = kMaxThreads-1;

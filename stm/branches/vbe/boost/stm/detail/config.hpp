@@ -87,11 +87,11 @@
 #define BOOST_STM_NO_PARTIAL_SPECIALIZATION 1
 
 ///////////////////////////////////////////////////////////////////////////////
-// Define BOOST_STM_ALLOWS_EMBEDEEDS when you want embeed TO 
+// Define BOOST_STM_ALLOWS_EMBEDEEDS when you want embeed TO
 #define BOOST_STM_ALLOWS_EMBEDEEDS 1
 
 ///////////////////////////////////////////////////////////////////////////////
-// Define BOOST_STM_ALLOWS_DELETERS when you want STM manage with others deleters than delete 
+// Define BOOST_STM_ALLOWS_DELETERS when you want STM manage with others deleters than delete
 #define BOOST_STM_ALLOWS_DELETERS 1
 
 #endif // BOOST_STM_DETAIL_CONFIG_H

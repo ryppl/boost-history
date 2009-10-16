@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -38,7 +38,7 @@ typedef int list_node_type;
 int const kMaxThreadsWhenTestingSets = 128;
 // Subtract one max linked list per complete set of four threads
 int const kMaxLinkedLists = kMaxThreadsWhenTestingSets - ((kMaxThreadsWhenTestingSets + 1) / 4);
-static LATM::LinkedList< list_node_type > *llist[kMaxLinkedLists] = { NULL };
+static LATM::LinkedList< list_node_type > *llist[kMaxLinkedLists] = { 0 };
 bool usingSingleList = false;
 
 ////////////////////////////////////////////////////////////////////////////
@@ -55,7 +55,7 @@ int convertThreadIdToLinkedListIndex(int id)
    //    lock  -> list B
    //    trans + lock -> list C
    //
-   // Thus, for every set of four incremental thread ids, the linked list index 
+   // Thus, for every set of four incremental thread ids, the linked list index
    // increments only with the first three incremental thread ids.
    //------------------------------------------------------------------------------
    return id - ((id + 1) / 4);
@@ -82,7 +82,7 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
 
    idleUntilAllThreadsHaveReached(*(int*)threadId);
 
-   if (kStartingTime == startTimer) startTimer = time(NULL);
+   if (kStartingTime == startTimer) startTimer = time(0);
 
    //--------------------------------------------------------------------------
    // do the transactional inserts. this is the main transactional loop.
@@ -136,7 +136,7 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -168,7 +168,7 @@ static void* TestLinkedListInserts(void *threadId)
 
    idleUntilAllThreadsHaveReached(*(int*)threadId);
 
-   if (kStartingTime == startTimer) startTimer = time(NULL);
+   if (kStartingTime == startTimer) startTimer = time(0);
 
    //--------------------------------------------------------------------------
    // do the transactional inserts. this is the main transactional loop.
@@ -221,7 +221,7 @@ static void* TestLinkedListInserts(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -259,7 +259,7 @@ void TestLinkedListSetsWithLocks()
 
    for (int k = 0; k < kMaxThreads; ++k)
    {
-      llist[k] = new LATM::LinkedList<list_node_type>;   
+      llist[k] = new LATM::LinkedList<list_node_type>;
 
       transaction::initialize();
       transaction::initialize_thread();
@@ -287,7 +287,7 @@ void TestLinkedListSetsWithLocks()
 
    //--------------------------------------------------------------------------
    // Reset barrier variables before creating any threads. Otherwise, it is
-   // possible for the first thread 
+   // possible for the first thread
    //--------------------------------------------------------------------------
    threadsFinished.value() = 0;
    threadsStarted.value() = 0;
@@ -297,8 +297,8 @@ void TestLinkedListSetsWithLocks()
    for (int j = 0; j < kMaxThreads - 1; ++j)
    {
       threadId[j] = j;
-      if (0 == j % 2) pthread_create(&threads[j], NULL, TestLinkedListInserts, (void *)&threadId[j]);
-      else pthread_create(&threads[j], NULL, TestLinkedListInsertsWithLocks, (void *)&threadId[j]);
+      if (0 == j % 2) pthread_create(&threads[j], 0, TestLinkedListInserts, (void *)&threadId[j]);
+      else pthread_create(&threads[j], 0, TestLinkedListInsertsWithLocks, (void *)&threadId[j]);
    }
 
    int mainThreadId = kMaxThreads-1;
@@ -338,7 +338,7 @@ void TestLinkedListSetsWithLocks()
    cout << transaction::bookkeeping() << endl;
 
 #if 0
-   if ((kInsertSameValues && totalInserts != kMaxInserts) || 
+   if ((kInsertSameValues && totalInserts != kMaxInserts) ||
       (!kInsertSameValues && totalInserts != kMaxInserts * kMaxThreads))
    {
       std::cout << std::endl << std::endl << "###########################################################";

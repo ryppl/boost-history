@@ -16,7 +16,7 @@
 
 typedef int list_node_type;
 
-static newSyntaxNS::LinkedList< list_node_type > *llist = NULL;
+static newSyntaxNS::LinkedList< list_node_type > *llist = 0;
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
 static Mutex L = PTHREAD_MUTEX_INITIALIZER;
@@ -128,7 +128,7 @@ void* TestLinkedListInsertsWithLocksBis(void *threadId)
 
    idleUntilAllThreadsHaveReached(*(int*)threadId);
 
-   if (kStartingTime == startTimer) startTimer = time(NULL);
+   if (kStartingTime == startTimer) startTimer = time(0);
 
    //--------------------------------------------------------------------------
    // do the transactional inserts. this is the main transactional loop.
@@ -182,7 +182,7 @@ void* TestLinkedListInsertsWithLocksBis(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -210,7 +210,7 @@ void* TestLinkedListInsertsBis(void *threadId)
 
    idleUntilAllThreadsHaveReached(*(int*)threadId);
 
-   if (kStartingTime == startTimer) startTimer = time(NULL);
+   if (kStartingTime == startTimer) startTimer = time(0);
 
    //--------------------------------------------------------------------------
    // do the transactional inserts. this is the main transactional loop.
@@ -263,7 +263,7 @@ void* TestLinkedListInsertsBis(void *threadId)
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
-   endTimer = time(NULL);
+   endTimer = time(0);
    finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
@@ -405,7 +405,7 @@ void TestLinkedListWithUsingLocks()
 
    pthread_t *second_thread = new pthread_t;
 
-   pthread_create(second_thread, NULL, stall, (void*)NULL);
+   pthread_create(second_thread, 0, stall, (void*)0);
 
    TestTransactionInsideLock();
    TestEarlyRelease();
@@ -441,10 +441,10 @@ void TestLinkedListWithUsingLocks()
    for (int j = 0; j < kMaxThreads - 1; ++j)
    {
       threadId[j] = j;
-      //if (0 == j % 2) pthread_create(&threads[j], NULL, TestLinkedListInserts, (void *)&threadId[j]);
-      //else pthread_create(&threads[j], NULL, TestLinkedListInsertsWithLocks, (void *)&threadId[j]);
+      //if (0 == j % 2) pthread_create(&threads[j], 0, TestLinkedListInserts, (void *)&threadId[j]);
+      //else pthread_create(&threads[j], 0, TestLinkedListInsertsWithLocks, (void *)&threadId[j]);
 
-      pthread_create(&threads[j], NULL, tx_foo, (void*)&threadId[j]);
+      pthread_create(&threads[j], 0, tx_foo, (void*)&threadId[j]);
    }
 
    int mainThreadId = kMaxThreads-1;

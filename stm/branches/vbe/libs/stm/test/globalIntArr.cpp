@@ -205,14 +205,14 @@ void TestGlobalIntArrayWithMultipleThreads()
    threadsStarted.value() = 0;
    endTimer = 0;
 
-   pthread_create(&threads[0], NULL, SetGlobalInt, (void *)&threadId[0]);
-   pthread_create(&threads[1], NULL, SetGlobalIntThread3, (void *)&threadId[1]);
+   pthread_create(&threads[0], 0, SetGlobalInt, (void *)&threadId[0]);
+   pthread_create(&threads[1], 0, SetGlobalIntThread3, (void *)&threadId[1]);
 
    int mainThreadId = kLocalThreads-1;
 
-   startTimer = time(NULL);
+   startTimer = time(0);
    SumGlobalArray((void*)&mainThreadId);
-   endTimer = time(NULL);
+   endTimer = time(0);
 
    int averageRunTime = endTimer - startTimer;
    if (averageRunTime < 1) averageRunTime = 1;
