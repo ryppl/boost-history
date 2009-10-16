@@ -333,18 +333,18 @@ Add entries to table 43:
 | ``template <class T>           |``T`` has a move           |``T`` shall be a complete type.    |
 | struct has_move_constructor;`` |constructor (17.3.14).     |                                   |
 +--------------------------------+---------------------------+-----------------------------------+
-| ``template <class T>           |``T`` is a class type with |``has_move_constructor<T> ::value``|
-| struct                         |a move constructor that is |                                   |
-| has_nothrow_move_constructor;``|known not to throw any     |                                   |
+| ``template <class T>           |``T`` is a type with a move|``has_move_constructor<T>::value`` |
+| struct                         |constructor that is known  |                                   |
+| has_nothrow_move_constructor;``|not to throw any           |                                   |
 |                                |exceptions.                |                                   |
 +--------------------------------+---------------------------+-----------------------------------+
 | ``template <class T>           |``T`` has a move assignment|``T`` shall be a complete type.    |
 | struct has_move_assign;``      |operator (17.3.13).        |                                   |
 +--------------------------------+---------------------------+-----------------------------------+
-| ``template <class T>           |``T`` is a class type with |``has_move_assign<T>:: value``     |
-| struct                         |a move assignment operator |                                   |
-| has_nothrow_move_assign;``     |that is known not to throw |                                   |
-|                                |any exceptions.            |                                   |
+| ``template <class T>           |``T`` is a type with a move|``has_move_assign<T>::value``      |
+| struct                         |assignment operator that is|                                   |
+| has_nothrow_move_assign;``     |known not to throw any     |                                   |
+|                                |exceptions.                |                                   |
 +--------------------------------+---------------------------+-----------------------------------+
 | ``template <class T>           |``T`` has a copy           |``T`` shall be a complete type, an |
 | struct has_copy_constructor;`` |constructor (12.8).        |array of unknown bound, or         | 
