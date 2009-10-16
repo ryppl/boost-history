@@ -22,6 +22,9 @@ library member functions.  To date, attempts to solve the problem
 (including N2855_ itself) have taken one basic approach: *ban throwing
 move constructors, and be sure never to generate one*.  
 
+Motivation
+**********
+
 Consider, for a moment, the actual magnitude of the problem we're
 addressing: it's a backward-compatibility/code evolution issue that
 only arises when *all* these conditions are satisfied:
@@ -70,6 +73,9 @@ constructors altogether:
 
 .. _N2904: http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2904.pdf
 
+Solution
+********
+
 Fortunately, there is a better way.  Instead of imposing this burden
 on every class author, we can deal with the issue more selectively in
 the operation being move-enabled.  There, we know whether a throwing
@@ -94,7 +100,7 @@ discovered::
         second( move(rhs.second) )
     {}
 
-However, ``std::vector::reserve`` would be move-enabled this way:
+However, ``std::vector::reserve`` could be move-enabled this way: [#default-construct-swap]_
 
 .. parsed-literal::
 
@@ -131,7 +137,7 @@ would only be necessary under an *extremely* limited set of
 circumstances.  In particular, it would never be required in new code,
 which could simply give a *conditional* strong guarantee, e.g. “if an
 exception is thrown other than by ``T``\ 's move constructor, there are
-no effects.”
+no effects.”  We recommend that approach as best practice for new code.
 
 Implementing ``std::legacy_move``
 *********************************
@@ -480,3 +486,9 @@ Change paragraph 6 as follows:
 
 .. [#is_nothrow_constructible] See N2953_ for a definition of
    ``is_nothrow_constructible``.
+
+.. [#default-construct-swap] Actually ``reserve`` and other such
+   operations can be optimized even for a type without non-throwing
+   move constructors but with a default constructor and a non-throwing
+   swap, by first default-constructing elements in the new array and
+   swapping each element into place.

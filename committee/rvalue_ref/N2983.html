@@ -320,30 +320,35 @@ ul.auto-toc {
 <div class="contents topic" id="index">
 <p class="topic-title first">index</p>
 <ul class="simple">
-<li><a class="reference internal" href="#introduction" id="id5">Introduction</a></li>
-<li><a class="reference internal" href="#implementing-std-legacy-move" id="id6">Implementing <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt></a></li>
-<li><a class="reference internal" href="#an-optimization-hint" id="id7">An Optimization Hint</a></li>
-<li><a class="reference internal" href="#interactions-with-other-proposals" id="id8">Interactions with Other Proposals</a></li>
-<li><a class="reference internal" href="#existing-practice" id="id9">Existing Practice</a></li>
-<li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id10">Proposed Changes to Standard Wording</a><ul>
-<li><a class="reference internal" href="#exception-specifications-except-spec" id="id11">15.4 Exception specifications [except.spec]</a></li>
-<li><a class="reference internal" href="#a-13-exception-handling-gram-except" id="id12">A.13 Exception handling [gram.except]</a></li>
-<li><a class="reference internal" href="#header-type-traits-synopsis-meta-type-synop" id="id13">20.6.2 Header &lt;type_traits&gt; synopsis [meta.type.synop]</a></li>
-<li><a class="reference internal" href="#type-properties-meta-unary-prop" id="id14">20.6.4.3 Type properties [meta.unary.prop]</a></li>
-<li><a class="reference internal" href="#deque-modifiers-deque-modifiers" id="id15">23.3.2.3 deque modifiers [deque.modifiers]</a></li>
-<li><a class="reference internal" href="#vector-capacity-vector-capacity" id="id16">23.3.6.2 vector capacity [vector.capacity]</a></li>
-<li><a class="reference internal" href="#vector-modifiers-vector-modifiers" id="id17">23.3.6.4 vector modifiers [vector.modifiers]</a></li>
+<li><a class="reference internal" href="#introduction" id="id6">Introduction</a></li>
+<li><a class="reference internal" href="#motivation" id="id7">Motivation</a></li>
+<li><a class="reference internal" href="#solution" id="id8">Solution</a></li>
+<li><a class="reference internal" href="#implementing-std-legacy-move" id="id9">Implementing <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt></a></li>
+<li><a class="reference internal" href="#an-optimization-hint" id="id10">An Optimization Hint</a></li>
+<li><a class="reference internal" href="#interactions-with-other-proposals" id="id11">Interactions with Other Proposals</a></li>
+<li><a class="reference internal" href="#existing-practice" id="id12">Existing Practice</a></li>
+<li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id13">Proposed Changes to Standard Wording</a><ul>
+<li><a class="reference internal" href="#exception-specifications-except-spec" id="id14">15.4 Exception specifications [except.spec]</a></li>
+<li><a class="reference internal" href="#a-13-exception-handling-gram-except" id="id15">A.13 Exception handling [gram.except]</a></li>
+<li><a class="reference internal" href="#header-type-traits-synopsis-meta-type-synop" id="id16">20.6.2 Header &lt;type_traits&gt; synopsis [meta.type.synop]</a></li>
+<li><a class="reference internal" href="#type-properties-meta-unary-prop" id="id17">20.6.4.3 Type properties [meta.unary.prop]</a></li>
+<li><a class="reference internal" href="#deque-modifiers-deque-modifiers" id="id18">23.3.2.3 deque modifiers [deque.modifiers]</a></li>
+<li><a class="reference internal" href="#vector-capacity-vector-capacity" id="id19">23.3.6.2 vector capacity [vector.capacity]</a></li>
+<li><a class="reference internal" href="#vector-modifiers-vector-modifiers" id="id20">23.3.6.4 vector modifiers [vector.modifiers]</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="introduction">
-<h1><a class="toc-backref" href="#id5">Introduction</a></h1>
+<h1><a class="toc-backref" href="#id6">Introduction</a></h1>
 <p>In <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2855.html">N2855</a>, Doug Gregor and Dave Abrahams discussed a problematic
 interaction between move constructors, templates, and certain standard
 library member functions.  To date, attempts to solve the problem
 (including <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2855.html">N2855</a> itself) have taken one basic approach: <em>ban throwing
 move constructors, and be sure never to generate one</em>.</p>
+</div>
+<div class="section" id="motivation">
+<h1><a class="toc-backref" href="#id7">Motivation</a></h1>
 <p>Consider, for a moment, the actual magnitude of the problem we're
 addressing: it's a backward-compatibility/code evolution issue that
 only arises when <em>all</em> these conditions are satisfied:</p>
@@ -384,6 +389,9 @@ metaprogramming skill or the addition of a language feature, just
 for move constructors, whose only purpose is in solving this
 particular problem.<a class="footnote-reference" href="#attribute" id="id2"><sup>1</sup></a></li>
 </ul>
+</div>
+<div class="section" id="solution">
+<h1><a class="toc-backref" href="#id8">Solution</a></h1>
 <p>Fortunately, there is a better way.  Instead of imposing this burden
 on every class author, we can deal with the issue more selectively in
 the operation being move-enabled.  There, we know whether a throwing
@@ -407,7 +415,7 @@ pair( pair&lt;First2,Second2&gt;&amp;&amp; rhs )
     second( move(rhs.second) )
 {}
 </pre>
-<p>However, <tt class="docutils literal"><span class="pre">std::vector::reserve</span></tt> would be move-enabled this way:</p>
+<p>However, <tt class="docutils literal"><span class="pre">std::vector::reserve</span></tt> could be move-enabled this way:<a class="footnote-reference" href="#default-construct-swap" id="id3"><sup>5</sup></a></p>
 <pre class="literal-block">
 void reserve(size_type n)
 {
@@ -441,10 +449,10 @@ would only be necessary under an <em>extremely</em> limited set of
 circumstances.  In particular, it would never be required in new code,
 which could simply give a <em>conditional</em> strong guarantee, e.g. “if an
 exception is thrown other than by <tt class="docutils literal"><span class="pre">T</span></tt>'s move constructor, there are
-no effects.”</p>
+no effects.”  We recommend that approach as best practice for new code.</p>
 </div>
 <div class="section" id="implementing-std-legacy-move">
-<h1><a class="toc-backref" href="#id6">Implementing <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt></a></h1>
+<h1><a class="toc-backref" href="#id9">Implementing <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt></a></h1>
 <p>One possible implementation of <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt> might be:</p>
 <pre class="literal-block">
 template &lt;class T&gt;
@@ -468,7 +476,7 @@ throw, and is <em>allowed</em> to return <tt class="docutils literal"><span clas
 constructor can throw.</p>
 </div>
 <div class="section" id="an-optimization-hint">
-<h1><a class="toc-backref" href="#id7">An Optimization Hint</a></h1>
+<h1><a class="toc-backref" href="#id10">An Optimization Hint</a></h1>
 <p>To help the library deduce the correct result for these traits, we
 propose to add a new kind of exception-specification, spelled:</p>
 <pre class="literal-block">
@@ -476,7 +484,7 @@ throw( <em>integral constant expression</em> )
 </pre>
 <p>The only impact of such an exception-specification is this: if a
 function decorated with <tt class="docutils literal"><span class="pre">throw(false)</span></tt> throws an exception, the
-behavior is undefined.<a class="footnote-reference" href="#no-diagnostic" id="id3"><sup>3</sup></a> That effect is sufficient to
+behavior is undefined.<a class="footnote-reference" href="#no-diagnostic" id="id4"><sup>3</sup></a> That effect is sufficient to
 allow these <em>xxx</em><tt class="docutils literal"><span class="pre">_nothrow_</span></tt><em>xxx</em> traits to report <tt class="docutils literal"><span class="pre">true</span></tt> for
 any operation decorated with <tt class="docutils literal"><span class="pre">throw(false)</span></tt>.  Class maintainers could
 label their move constructors <tt class="docutils literal"><span class="pre">throw(false)</span></tt> to indicate non-throwing
@@ -498,7 +506,7 @@ written as follows:</p>
 template &lt;class First2, Second2&gt;
 pair( pair&lt;First2,Second2&gt;&amp;&amp; rhs )
       <strong>throw( !is_nothrow_constructible&lt;First,First2&amp;&amp;&gt;::value
-             || !is_nothrow_constructible&lt;Second,Second2&amp;&amp;&gt;::value )</strong><a class="footnote-reference" href="#is-nothrow-constructible" id="id4"><sup>4</sup></a>
+             || !is_nothrow_constructible&lt;Second,Second2&amp;&amp;&gt;::value )</strong><a class="footnote-reference" href="#is-nothrow-constructible" id="id5"><sup>4</sup></a>
   : first( move(rhs.first) ),
     second( move(rhs.second) )
 {}
@@ -509,7 +517,7 @@ exception specification above is entirely optional; its presence or
 absence doesn't affect the correctness of a move constructor.</p>
 </div>
 <div class="section" id="interactions-with-other-proposals">
-<h1><a class="toc-backref" href="#id8">Interactions with Other Proposals</a></h1>
+<h1><a class="toc-backref" href="#id11">Interactions with Other Proposals</a></h1>
 <p>The generation of default move constructors, first proposed by Bjarne
 Stroustrup in <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2904.pdf">N2904</a>, and again by Bjarne Stroustrup and Lawrence
 Crowl in <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a>, is harmonious with our proposal.  For example, since
@@ -525,7 +533,7 @@ of this feature.  In particular, it can't express the hint shown for
 <tt class="docutils literal"><span class="pre">pair</span></tt>'s move constructor above.  We suggest it be dropped.</p>
 </div>
 <div class="section" id="existing-practice">
-<h1><a class="toc-backref" href="#id9">Existing Practice</a></h1>
+<h1><a class="toc-backref" href="#id12">Existing Practice</a></h1>
 <p>The Microsoft compiler has always treated empty
 exception-specifications as though they have the same meaning we
 propose for <tt class="docutils literal"><span class="pre">throw(false)</span></tt>.  That is, Microsoft omits the
@@ -537,9 +545,9 @@ in the standard.  Standardizing <tt class="docutils literal"><span class="pre">t
 to this optimization tool.</p>
 </div>
 <div class="section" id="proposed-changes-to-standard-wording">
-<h1><a class="toc-backref" href="#id10">Proposed Changes to Standard Wording</a></h1>
+<h1><a class="toc-backref" href="#id13">Proposed Changes to Standard Wording</a></h1>
 <div class="section" id="exception-specifications-except-spec">
-<h2><a class="toc-backref" href="#id11">15.4 Exception specifications [except.spec]</a></h2>
+<h2><a class="toc-backref" href="#id14">15.4 Exception specifications [except.spec]</a></h2>
 <p>Change paragraph 1 as follows:</p>
 <blockquote>
 <p>1 A function declaration lists exceptions that its function might directly
@@ -569,7 +577,7 @@ exception, the behavior is undefined. The exception-specification
 </blockquote>
 </div>
 <div class="section" id="a-13-exception-handling-gram-except">
-<h2><a class="toc-backref" href="#id12">A.13 Exception handling [gram.except]</a></h2>
+<h2><a class="toc-backref" href="#id15">A.13 Exception handling [gram.except]</a></h2>
 <pre class="literal-block">
 exception-specification
 throw ( type-id-listopt )
@@ -577,7 +585,7 @@ throw ( type-id-listopt )
 </pre>
 </div>
 <div class="section" id="header-type-traits-synopsis-meta-type-synop">
-<h2><a class="toc-backref" href="#id13">20.6.2 Header &lt;type_traits&gt; synopsis [meta.type.synop]</a></h2>
+<h2><a class="toc-backref" href="#id16">20.6.2 Header &lt;type_traits&gt; synopsis [meta.type.synop]</a></h2>
 <pre class="literal-block">
 template &lt;class T&gt; struct has_nothrow_assign;
 <span class="ins">template &lt;class T&gt; struct has_move_constructor;
@@ -594,7 +602,7 @@ template &lt;class T&gt; struct has_virtual_destructor;
 </pre>
 </div>
 <div class="section" id="type-properties-meta-unary-prop">
-<h2><a class="toc-backref" href="#id14">20.6.4.3 Type properties [meta.unary.prop]</a></h2>
+<h2><a class="toc-backref" href="#id17">20.6.4.3 Type properties [meta.unary.prop]</a></h2>
 <p>Add entries to table 43:</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -668,7 +676,7 @@ array of unknown bound, or
 </table>
 </div>
 <div class="section" id="deque-modifiers-deque-modifiers">
-<h2><a class="toc-backref" href="#id15">23.3.2.3 deque modifiers [deque.modifiers]</a></h2>
+<h2><a class="toc-backref" href="#id18">23.3.2.3 deque modifiers [deque.modifiers]</a></h2>
 <p>Change paragraph 2 as follows:</p>
 <blockquote>
 2 Remarks: If an exception is thrown other than by the copy constructor,
@@ -681,7 +689,7 @@ or assignment operator of <tt class="docutils literal"><span class="pre">T</span
 or assignment operator of <tt class="docutils literal"><span class="pre">T</span></tt>.</blockquote>
 </div>
 <div class="section" id="vector-capacity-vector-capacity">
-<h2><a class="toc-backref" href="#id16">23.3.6.2 vector capacity [vector.capacity]</a></h2>
+<h2><a class="toc-backref" href="#id19">23.3.6.2 vector capacity [vector.capacity]</a></h2>
 <p>Context:</p>
 <pre class="literal-block">
 void reserve(size_type n);
@@ -714,7 +722,7 @@ by the move constructor of a non-CopyConstructible
 <code>T</code></span></span> there are no effects.</blockquote>
 </div>
 <div class="section" id="vector-modifiers-vector-modifiers">
-<h2><a class="toc-backref" href="#id17">23.3.6.4 vector modifiers [vector.modifiers]</a></h2>
+<h2><a class="toc-backref" href="#id20">23.3.6.4 vector modifiers [vector.modifiers]</a></h2>
 <p>Context:</p>
 <pre class="literal-block">
 iterator insert(const_iterator position, const T&amp; x);
@@ -776,7 +784,7 @@ from locations observable by the caller.</td></tr>
 <table class="docutils footnote" frame="void" id="no-diagnostic" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>In particular, we are not proposing to mandate
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>In particular, we are not proposing to mandate
 static checking: a <tt class="docutils literal"><span class="pre">throw(false)</span></tt> function can call a <tt class="docutils literal"><span class="pre">throw(true)</span></tt>
 function without causing the program to become ill-formed or
 generating a diagnostic.  Generating a diagnostic in such cases
@@ -786,8 +794,18 @@ can, of course, be implemented by any compiler as a matter of QOI.</td></tr>
 <table class="docutils footnote" frame="void" id="is-nothrow-constructible" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>See <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a> for a definition of
+<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td>See <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a> for a definition of
 <tt class="docutils literal"><span class="pre">is_nothrow_constructible</span></tt>.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="default-construct-swap" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[5]</a></td><td>Actually <tt class="docutils literal"><span class="pre">reserve</span></tt> and other such
+operations can be optimized even for a type without non-throwing
+move constructors but with a default constructor and a non-throwing
+swap, by first default-constructing elements in the new array and
+swapping each element into place.</td></tr>
 </tbody>
 </table>
 </div>
