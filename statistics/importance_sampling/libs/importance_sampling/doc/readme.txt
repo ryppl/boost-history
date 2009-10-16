@@ -53,7 +53,7 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
     the proposal sample.
 
     Class
-    is::sampler<R>                      SIR sampler    
+    statistics::importance_sampling::sampler<R>                      SIR sampler    
 
 [ Sources ]
 
@@ -71,6 +71,9 @@ Ridgeway and Madigan
 
 [ History ]
 
+Sep    3  2009 : 
+    - replaced is:: by statistics::importance_sampling
+    - modified the interface of generate_n
 August 18 2009 : refactored sampler to use discrete_distribution, no longer 
     categorical_distribution
     

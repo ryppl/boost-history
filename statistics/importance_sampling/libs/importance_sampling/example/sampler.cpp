@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// is::example::sampler.cpp                                                  //
+// statistics::importance_sampling::example::sampler.cpp                     //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -31,6 +31,7 @@ void example_sampler(std::ostream& out){
     // The quality of the sample is assessed by a series of 
     // kolmorov-distances along the the sample size of the targets.    
     using namespace boost;
+    using namespace statistics;
     typedef std::string                                 str_;
     typedef double                                      val_;
     typedef std::vector<val_>                           vec_;
@@ -74,8 +75,7 @@ void example_sampler(std::ostream& out){
 
     prepare_weights(
         boost::begin(is_weights),
-        boost::end(is_weights),
-        boost::begin(proposals)
+        boost::end(is_weights)
     );
 
     out << std::endl << "Initial sample : " << std::endl
@@ -83,13 +83,13 @@ void example_sampler(std::ostream& out){
         << prepare_weights << std::endl;
 
     targets.clear();
-    is::generate(
-        urng,
+    statistics::importance_sampling::generate(
+        std::back_inserter(targets),
+        n_t_pl * n_ks,
         boost::begin(is_weights),
         boost::end(is_weights),
         boost::begin(proposals),
-        std::back_inserter(targets),
-        n_t_pl * n_ks
+        urng
     );
     {
         // i       0       1        ...    n-1           

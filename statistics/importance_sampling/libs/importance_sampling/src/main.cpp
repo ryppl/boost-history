@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// is::src::main.cpp                                                         //
+// statistics::importance_sampling::src::main.cpp                            //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
