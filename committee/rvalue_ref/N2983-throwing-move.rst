@@ -372,12 +372,13 @@ Change paragraph 6 as follows:
 
 23.3.6.2 vector capacity [vector.capacity]
 ==========================================
-Remove paragraph 2
+
+Remove paragraph 2:
 
     :del:`2 Requires: If value_type has a move constructor, that constructor shall
     not throw any exceptions.`
 
-Change paragraph 3 to say
+Change paragraph 3 as follows:
 
     Effects: A directive that informs a vector of a planned change in
     size, so that it can manage the storage allocation
@@ -389,7 +390,7 @@ Change paragraph 3 to say
     exception is thrown :raw-html:`<span class="ins">other than by the
     move constructor of <code>T</code></span>` there are no effects.
 
-Change paragraph 13 to say
+Change paragraph 13 to say:
 
     If an exception is thrown :raw-html:`<span class="ins">other than
     by the move constructor of <code>T</code></span>` there are no
