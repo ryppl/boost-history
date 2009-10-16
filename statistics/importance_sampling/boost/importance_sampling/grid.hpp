@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// is::grid.hpp                                                              //
+// statistics::importance_sampling::grid.hpp                                 //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -11,7 +11,8 @@
 #include <boost/limits.hpp>
 
 namespace boost{
-namespace is{
+namespace statistics{
+namespace importance_sampling{
 
 // Equally spaced univariate grid.
 template<typename T>
@@ -45,7 +46,8 @@ T grid<T>::operator()(){
     return result;
 }
 
-}// is            
+}// importance_sampling
+}// statistics
 }// boost
 
 #endif 

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// is::sampler_deprecated.hpp                                                //
+// statistics::importance_sampling::sampler_deprecated.hpp                   //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -20,7 +20,8 @@
 #include <boost/random/discrete_distribution_sw_2009.hpp> 
 
 namespace boost{
-namespace is{
+namespace statistics{
+namespace importance_sampling{
 
 // Deprecated because uses categorical_distribution rather than discrete
 //
@@ -122,7 +123,8 @@ template<typename R1, template<typename> class Ur>
 const typename sampler_deprecated<R1,Ur>::mult_dist_t&
 sampler_deprecated<R1,Ur>::categorical_distribution()const{ return mult_dist_; }
 
-}//random
-}//boost
+}// importance_sampling
+}// statistics
+}// boost
 
 #endif 

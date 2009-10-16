@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// is::sampler.hpp                                                           //
+// statistics::importance_sampling::sampler.hpp                              //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -20,7 +20,8 @@
 #include <boost/random/discrete_distribution_sw_2009.hpp> 
 
 namespace boost{
-namespace is{
+namespace statistics{
+namespace importance_sampling{
 
 // Samples by SIR given a set of proposal values and their unnormalized weights
 //
@@ -120,7 +121,8 @@ template<typename R1, typename W>
 const typename sampler<R1,W>::discr_dist_t&
 sampler<R1,W>::discrete_distribution()const{ return discr_dist_; }
 
-}//random
-}//boost
+}// importance_sampling
+}// statistics
+}// boost
 
 #endif 
