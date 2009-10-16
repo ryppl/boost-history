@@ -197,13 +197,13 @@ public :
             bool& trivial)
     {
 
-        typedef typename ggl::point_const_iterator
+        typedef typename ggl::vertex_iterator
             <
-                Geometry1
+                Geometry1, true
             >::type range1_iterator;
-        typedef typename ggl::point_const_iterator
+        typedef typename ggl::vertex_iterator
             <
-                Geometry2
+                Geometry2, true
             >::type range2_iterator;
 
         int const dir1 = sec1.directions[0];

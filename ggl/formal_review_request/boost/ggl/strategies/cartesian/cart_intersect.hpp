@@ -15,6 +15,7 @@
 #include <ggl/core/concepts/point_concept.hpp>
 #include <ggl/core/concepts/segment_concept.hpp>
 
+#include <ggl/util/math.hpp>
 #include <ggl/util/select_coordinate_type.hpp>
 
 

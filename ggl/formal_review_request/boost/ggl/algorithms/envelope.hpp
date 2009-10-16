@@ -101,6 +101,7 @@ struct envelope_segment
 {
     static inline void apply(S const& s, B& mbr, Strategy const&)
     {
+        // TODO: remove s.first/s.second, use strategies
         ggl::assign_inverse(mbr);
         ggl::combine(mbr, s.first);
         ggl::combine(mbr, s.second);
@@ -165,7 +166,7 @@ struct envelope<box_tag, box_tag, B, B, Strategy>
 {
     /*!
         \brief Calculate envelope of a box
-        \details The envelope of a box is itself, provided for consistency
+        \details The envelope of a box is itself, provided
         for consistency, on itself it is not useful.
      */
     static inline void apply(B const& b, B& mbr, Strategy const&)

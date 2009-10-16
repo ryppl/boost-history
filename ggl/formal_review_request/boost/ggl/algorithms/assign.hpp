@@ -168,6 +168,64 @@ struct assign_zero_box
 
 
 
+template <std::size_t C1, std::size_t C2, typename Box, typename Point>
+inline void assign_box_2d_corner(Box const& box, Point& point)
+{
+    // Be sure both are 2-Dimensional
+    assert_dimension<Box, 2>();
+    assert_dimension<Point, 2>();
+
+    // Copy coordinates
+    typedef typename coordinate_type<Point>::type coordinate_type;
+
+    set<0>(point, boost::numeric_cast<coordinate_type>(get<C1, 0>(box)));
+    set<1>(point, boost::numeric_cast<coordinate_type>(get<C2, 1>(box)));
+}
+
+
+
+
+
+template
+<
+    typename Box, typename Point,
+    std::size_t Corner,
+    std::size_t Dimension, std::size_t Count
+>
+struct assign_point_to_box
+{
+    typedef typename coordinate_type<Box>::type coordinate_type;
+
+    static inline void apply(Point const& point, Box& box)
+    {
+        ggl::set<Corner, Dimension>
+            (
+                box,
+                boost::numeric_cast<coordinate_type>(ggl::get<Dimension>(point))
+            );
+
+        assign_point_to_box
+            <
+                Box, Point, Corner, Dimension + 1, Count
+            >::apply(point, box);
+    }
+};
+
+template
+<
+    typename Box, typename Point,
+    std::size_t Corner,
+    std::size_t Count
+>
+struct assign_point_to_box<Box, Point, Corner, Count, Count>
+{
+    static inline void apply(Point const& point, Box& box)
+    {
+    }
+};
+
+
+
 }} // namespace detail::assign
 #endif // DOXYGEN_NO_DETAIL
 
@@ -404,6 +462,39 @@ inline void assign_zero(G& geometry)
             G
         >::apply(geometry);
 }
+
+
+/*!
+    \brief Assign the 4 points of a 2D box
+    \ingroup assign
+    \note The order can be crucial. Most logical is LOWER, UPPER and sub-order LEFT, RIGHT
+*/
+template <typename B, typename P>
+inline void assign_box_corners(B const& box, P& lower_left, P& lower_right, P& upper_left, P& upper_right)
+{
+    detail::assign::assign_box_2d_corner<min_corner, min_corner>(box, lower_left);
+    detail::assign::assign_box_2d_corner<max_corner, min_corner>(box, lower_right);
+    detail::assign::assign_box_2d_corner<min_corner, max_corner>(box, upper_left);
+    detail::assign::assign_box_2d_corner<max_corner, max_corner>(box, upper_right);
+}
+
+
+
+/*!
+    \brief Assign a box with the value of a point
+    \ingroup assign
+    \tparam Corner indicates which box-corner, min_corner (0) or max_corner (1)
+*/
+template <std::size_t Corner, typename Box, typename Point>
+inline void assign_point_to_box(Point const& point, Box& box)
+{
+    detail::assign::assign_point_to_box
+        <
+            Box, Point, Corner, 0, dimension<Box>::type::value
+        >::apply(point, box);
+}
+
+
 
 } // namespace ggl
 

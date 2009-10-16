@@ -17,7 +17,7 @@
 #include <ggl/algorithms/overlay/intersection_point.hpp>
 
 #include <ggl/iterators/ever_circling_iterator.hpp>
-#include <ggl/iterators/point_const_iterator.hpp>
+#include <ggl/iterators/vertex_iterator.hpp>
 
 
 namespace ggl
@@ -36,7 +36,7 @@ struct copy_segments_ring
             RangeOut& current_output)
     {
 
-        typedef typename ggl::point_const_iterator<Ring>::type iterator;
+        typedef typename ggl::vertex_iterator<Ring, true>::type iterator;
         typedef ggl::ever_circling_iterator<iterator> ec_iterator;
 
         // The problem: sometimes we want to from "3" to "2" -> end = "3" -> end == begin
@@ -63,8 +63,8 @@ struct copy_segments_ring
         {
             // TODO: use 'copy coordinates' to handle different point types
 #ifdef GGL_DEBUG_INTERSECTION
-            std::cout << "  add: (" 
-                << ggl::get<0>(*it) << ", " << ggl::get<1>(*it) << ")" 
+            std::cout << "  add: ("
+                << ggl::get<0>(*it) << ", " << ggl::get<1>(*it) << ")"
                 << std::endl;
 #endif
             current_output.push_back(*it);
@@ -91,7 +91,7 @@ struct copy_segments_polygon
                     seg_id.ring_index < 0
                     ? ggl::exterior_ring(polygon)
                     : ggl::interior_rings(polygon)[seg_id.ring_index],
-                    seg_id, to_index, 
+                    seg_id, to_index,
                     current_output
                 );
     }

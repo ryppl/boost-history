@@ -48,8 +48,6 @@ struct segment_iterator
         , m_it(end)
         , m_end(end)
     {
-        BOOST_ASSERT(ggl::equals(point_type(), m_segment.first));
-        BOOST_ASSERT(ggl::equals(point_type(), m_segment.second));
     }
 
     segment_iterator(Base const& it, Base const& end)

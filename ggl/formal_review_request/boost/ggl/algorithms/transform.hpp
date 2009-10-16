@@ -84,8 +84,8 @@ struct transform_box
         typedef typename point_type<B2>::type point_type2;
 
         point_type1 lower_left, upper_right;
-        assign_box_corner<min_corner, min_corner>(b1, lower_left);
-        assign_box_corner<max_corner, max_corner>(b1, upper_right);
+        detail::assign::assign_box_2d_corner<min_corner, min_corner>(b1, lower_left);
+        detail::assign::assign_box_2d_corner<max_corner, max_corner>(b1, upper_right);
 
         point_type2 p1, p2;
         if (strategy(lower_left, p1) && strategy(upper_right, p2))

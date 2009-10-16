@@ -23,9 +23,6 @@
 #include <ggl/core/access.hpp>
 #include <ggl/core/exterior_ring.hpp>
 
-#include <ggl/iterators/point_const_iterator.hpp>
-
-#include <ggl/util/assign_box_corner.hpp>
 #include <ggl/util/math.hpp>
 #include <ggl/geometries/segment.hpp>
 

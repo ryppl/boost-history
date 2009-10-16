@@ -17,7 +17,6 @@
 #include <ggl/core/coordinate_dimension.hpp>
 #include <ggl/core/concepts/box_concept.hpp>
 #include <ggl/core/concepts/point_concept.hpp>
-#include <ggl/util/assign_box_corner.hpp>
 #include <ggl/util/select_coordinate_type.hpp>
 
 /*!

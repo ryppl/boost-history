@@ -16,7 +16,6 @@
 #include <ggl/arithmetic/arithmetic.hpp>
 #include <ggl/core/concepts/box_concept.hpp>
 #include <ggl/core/concepts/point_concept.hpp>
-#include <ggl/util/assign_box_corner.hpp>
 
 // Buffer functions
 // Was before: "grow" but then only for box

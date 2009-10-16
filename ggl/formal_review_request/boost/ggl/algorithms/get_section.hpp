@@ -20,7 +20,7 @@
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 
-#include <ggl/iterators/point_const_iterator.hpp>
+#include <ggl/iterators/vertex_iterator.hpp>
 
 #include <ggl/geometries/segment.hpp>
 
@@ -37,7 +37,7 @@ namespace dispatch
 template <typename Tag, typename Geometry, typename Section>
 struct get_section
 {
-    typedef typename ggl::point_const_iterator<Geometry>::type iterator_type;
+    typedef typename ggl::vertex_iterator<Geometry, true>::type iterator_type;
     static inline void apply(Geometry const& geometry, Section const& section,
                 iterator_type& begin, iterator_type& end)
     {
@@ -49,7 +49,7 @@ struct get_section
 template <typename Polygon, typename Section>
 struct get_section<polygon_tag, Polygon, Section>
 {
-    typedef typename ggl::point_const_iterator<Polygon>::type iterator_type;
+    typedef typename ggl::vertex_iterator<Polygon, true>::type iterator_type;
     static inline void apply(Polygon const& polygon, Section const& section,
                 iterator_type& begin, iterator_type& end)
     {
@@ -83,8 +83,8 @@ struct get_section<polygon_tag, Polygon, Section>
  */
 template <typename Geometry, typename Section>
 inline void get_section(Geometry const& geometry, Section const& section,
-    typename point_const_iterator<Geometry>::type& begin,
-    typename point_const_iterator<Geometry>::type& end)
+    typename vertex_iterator<Geometry, true>::type& begin,
+    typename vertex_iterator<Geometry, true>::type& end)
 {
     dispatch::get_section
         <

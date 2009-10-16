@@ -15,7 +15,7 @@
 #include <ggl/multi/algorithms/get_section.hpp>
 #include <ggl/multi/algorithms/sectionalize.hpp>
 
-#include <ggl/multi/iterators/point_const_iterator.hpp>
+#include <ggl/multi/iterators/vertex_iterator.hpp>
 
 #include <ggl/algorithms/overlay/get_intersection_points.hpp>
 

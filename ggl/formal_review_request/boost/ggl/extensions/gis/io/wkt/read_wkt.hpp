@@ -21,12 +21,17 @@
 #include <boost/type_traits.hpp>
 
 
+#include <ggl/algorithms/assign.hpp>
 #include <ggl/algorithms/clear.hpp>
+
 #include <ggl/core/access.hpp>
+#include <ggl/core/coordinate_dimension.hpp>
 #include <ggl/core/concepts/point_concept.hpp>
 #include <ggl/core/exception.hpp>
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
+
+
 
 #include <ggl/extensions/gis/io/wkt/detail/wkt.hpp>
 
@@ -417,6 +422,8 @@ struct geometry_parser
 
 
 
+
+
 /*!
 \brief Supports box parsing
 \note OGC does not define the box geometry, and WKT does not support boxes.
@@ -482,10 +489,9 @@ struct box_parser
         {
             throw read_wkt_exception("Box should have 2,4 or 5 points", wkt);
         }
-        set<min_corner, 0>(box, get<0>(points[0]));
-        set<min_corner, 1>(box, get<1>(points[0]));
-        set<max_corner, 0>(box, get<0>(points[index]));
-        set<max_corner, 1>(box, get<1>(points[index]));
+
+        assign_point_to_box<min_corner>(points.front(), box);
+        assign_point_to_box<max_corner>(points[index], box);
     }
 };
 

@@ -17,7 +17,11 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 
+#include <ggl/core/access.hpp>
 #include <ggl/core/coordinate_dimension.hpp>
+#include <ggl/core/cs.hpp>
+#include <ggl/util/math.hpp>
+#include <ggl/util/select_coordinate_type.hpp>
 
 
 namespace ggl
