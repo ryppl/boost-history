@@ -1,0 +1,12 @@
+# Generic Geometry Library unit tests
+#
+# Copyright Bruno Lalande 2008
+# Copyright Barend Gehrels, Geodan Holding B.V. Amsterdam, the Netherlands.
+# Use, modification and distribution is subject to the Boost Software License,
+# Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+run circular_iterator.cpp  ;
+run ever_circling_iterator.cpp  ;
+run vertex_iterator.cpp   ;
+run segment_iterator.cpp   ;

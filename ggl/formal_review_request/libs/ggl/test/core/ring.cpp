@@ -6,9 +6,9 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <iostream>
 
-#include <boost/test/included/test_exec_monitor.hpp>
+#include <ggl_test_common.hpp>
+
 
 // To be tested:
 #include <ggl/core/ring_type.hpp>

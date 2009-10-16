@@ -6,14 +6,13 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/test/floating_point_comparison.hpp>
-#include <boost/test/included/test_exec_monitor.hpp>
 
+#include <ggl_test_common.hpp>
 
-#include <ggl/core/coordinate_type.hpp>
 #include <ggl/core/radian_access.hpp>
 
 #include <ggl/core/cs.hpp>
+#include <ggl/core/coordinate_type.hpp>
 #include <ggl/geometries/point.hpp>
 
 
