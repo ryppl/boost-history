@@ -626,11 +626,11 @@ constructor (17.3.14).</td>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span>
 <span class="pre">has_nothrow_move_constructor;</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> is a class type with
-a move constructor that is
-known not to throw any
+<td><tt class="docutils literal"><span class="pre">T</span></tt> is a type with a move
+constructor that is known
+not to throw any
 exceptions.</td>
-<td><tt class="docutils literal"><span class="pre">has_move_constructor&lt;T&gt;</span> <span class="pre">::value</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">has_move_constructor&lt;T&gt;::value</span></tt></td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span> <span class="pre">has_move_assign;</span></tt></td>
@@ -641,11 +641,11 @@ operator (17.3.13).</td>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span>
 <span class="pre">has_nothrow_move_assign;</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> is a class type with
-a move assignment operator
-that is known not to throw
-any exceptions.</td>
-<td><tt class="docutils literal"><span class="pre">has_move_assign&lt;T&gt;::</span> <span class="pre">value</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">T</span></tt> is a type with a move
+assignment operator that is
+known not to throw any
+exceptions.</td>
+<td><tt class="docutils literal"><span class="pre">has_move_assign&lt;T&gt;::value</span></tt></td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span> <span class="pre">has_copy_constructor;</span></tt></td>
