@@ -442,7 +442,7 @@ public:
         c = h.insert(c, data_type(val));
         
         balancer_type::add(h, c);
-        return iterator(c.to_begin());
+        return iterator(c);
     }
 
     /**

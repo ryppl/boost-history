@@ -18,63 +18,60 @@ template <class Cursor>
 void fill_subtree_with_data(Cursor cur)
 {
     //cur.to_begin();
-    *cur.begin() = 8;
-    *cur.begin().begin() = 3;
-    *cur.begin().begin().begin() = 1;  //Leaf
-    *cur.begin().end().begin() = 6;
-    *cur.begin().end().begin().begin() = 4; //Leaf
-    *cur.begin().end().end().begin() = 7; //Leaf
-    *cur.end().begin() = 10;
-    *cur.end().end().begin() = 14;
-    *cur.end().end().begin().begin() = 13;
-    *cur.end().end().begin().begin().begin() = 11; 
-    *cur.end().end().begin().begin().end().begin() = 12; //Leaf
+    *cur = 8;
+    *cur.begin() = 3;
+    *cur.begin().begin() = 1;  //Leaf
+    *cur.begin().end() = 6;
+    *cur.begin().end().begin() = 4; //Leaf
+    *cur.begin().end().end() = 7; //Leaf
+    *cur.end() = 10;
+    *cur.end().end() = 14;
+    *cur.end().end().begin() = 13;
+    *cur.end().end().begin().begin() = 11; 
+    *cur.end().end().begin().begin().end() = 12; //Leaf
 }
 
 template <class Cursor>
 void fill_subtree_with_data_in_preorder(Cursor cur)
 {
-    *cur.to_begin() = 8;
-    Cursor c2(cur);
+    *cur = 8;
     *cur.to_begin() = 3;
-    Cursor c3(cur);
+    Cursor c2(cur);
     *cur.to_begin() = 1;
-    *(++c3).to_begin() = 6;
-    Cursor c4(c3);
-    *c3.to_begin() = 4;
-    *(++c4).to_begin() = 7;
+    *++cur = 6;
+    *cur.to_begin() = 4;
+    *++cur = 7;
 
-    *(++c2).to_begin() = 10;
-    *(++c2).to_begin() = 14;
+    *++c2 = 10;
+    *c2.to_end() = 14;
     *c2.to_begin() = 13;
     *c2.to_begin() = 11;
-    *(++c2).to_begin() = 12;
+    *c2.to_end() = 12;
 }
 
 template <class Cursor>
 void fill_subtree_with_data_in_inorder(Cursor cur)
 {
-    cur.to_begin();
     Cursor c2(cur);
     cur.to_begin();
     Cursor c3(cur);
     *cur.to_begin() = 1;
     *c3 = 3;
     Cursor c4(c3);
-    *(++c3).to_begin();
+    *c3.to_end();
     Cursor c5(c3);
     *c3.to_begin() = 4;
     *c5 = 6;
-    *(++c5).to_begin() = 7;
+    *c5.to_end() = 7;
     *c2 = 8;
     
-    *(++c2).to_begin() = 10;
-    (++c2).to_begin();
+    *c2.to_end() = 10;
+    c2.to_end();
     Cursor c14(c2);
     c2.to_begin();
     Cursor c13(c2);
     *c2.to_begin() = 11;
-    *(++c2).to_begin() = 12;
+    *c2.to_end() = 12;
     *c13 = 13;
     *c14 = 14;
 }
@@ -82,30 +79,29 @@ void fill_subtree_with_data_in_inorder(Cursor cur)
 template <class Cursor>
 void fill_subtree_with_data_in_postorder(Cursor cur)
 {
-    cur.to_begin();
     Cursor c2(cur);
     cur.to_begin();
     Cursor c3(cur);
     *cur.to_begin() = 1;
     Cursor c4(c3);
-    *(++c4).to_begin();
+    *c4.to_end();
     Cursor c6(c4);
     Cursor c7(c4);
     *c4.to_begin() = 4;
-    *(++c7).to_begin() = 7;
+    *c7.to_end() = 7;
     *c6 = 6;
     *c3 = 3;
     
     Cursor c8(c2);
-    (++c2).to_begin();
+    c2.to_end();
     Cursor c10(c2);
-    (++c2).to_begin();
+    c2.to_end();
     Cursor c14(c2);
     c2.to_begin();
     Cursor c13(c2);
     c2.to_begin();
     Cursor c11(c2);
-    *(++c2).to_begin() = 12;
+    *c2.to_end() = 12;
     *c11 = 11;
     *c13 = 13;
     *c14 = 14;

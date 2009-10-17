@@ -32,16 +32,18 @@ using namespace boost_concepts;
  */
 template <class MultiwayCursor, class Op>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<MultiwayCursor>)),
+    ((DescendingCursor<MultiwayCursor>))
+    ((UnaryFunction<Op, void, typename cursor_value<MultiwayCursor>::type>)),
     (void)) // return type
-for_each_recursive(inorder, MultiwayCursor s, Op& f)
+for_each_recursive(inorder, MultiwayCursor r, Op& f)
 {
-    MultiwayCursor t = s.end();
+    MultiwayCursor s = r.begin();
+    MultiwayCursor t = r.end();
 
-    for (s.to_begin(); s!=t; ++s) {
+    for (; s!=t; ++s) {
         if (!s.is_leaf())
             for_each_recursive(inorder(), s, f);
-        f(*s);
+        f(*r);
     }
     
     // Multiway cursor
@@ -62,16 +64,18 @@ for_each_recursive(inorder, MultiwayCursor s, Op& f)
  */
 template <class MultiwayCursor, class Op>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<MultiwayCursor>)),
+    ((DescendingCursor<MultiwayCursor>))
+    ((UnaryFunction<Op, void, typename cursor_value<MultiwayCursor>::type>)),
     (Op)) // return type
-for_each(inorder, MultiwayCursor s, Op f, descending_vertical_traversal_tag)
+for_each(inorder, MultiwayCursor r, Op f, descending_vertical_traversal_tag)
 {
-    MultiwayCursor t = s.end();
+    MultiwayCursor s = r.begin();
+    MultiwayCursor t = r.end();
 
-    for (s.to_begin(); s!=t; ++s) {
+    for (; s!=t; ++s) {
         if (!s.is_leaf())
             for_each_recursive(inorder(), s, f);
-        f(*s);
+        f(*r);
     }
     
     // Multiway cursor

@@ -30,12 +30,11 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 for_each_recursive(preorder, Cursor s, Cursor t2, Op& f)
 {
+    f(*s);
     Cursor t = s.end();
-    for (s.to_begin(); s != t; ++s) {
-        f(*s);
+    for (s.to_begin(); s != t; ++s)
         if (!s.is_leaf() && s != t2)
             for_each_recursive(preorder(), s, t2, f);
-    }
     
     // Multiway cursor
     if (!s.is_leaf() && s != t2)
@@ -50,16 +49,16 @@ for_each_recursive(preorder, Cursor s, Cursor t2, Op& f)
  */
 template <class Cursor, class Op>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<Cursor>)),
+    ((DescendingCursor<Cursor>))
+    ((UnaryFunction<Op, void, typename cursor_value<Cursor>::type>)),
     (void)) // return type
 for_each_recursive(preorder, Cursor s, Op& f)
 {
+    f(*s);
     Cursor t = s.end();
-    for (s.to_begin(); s != t; ++s) {
-        f(*s);
+    for (s.to_begin(); s != t; ++s)
         if (!s.is_leaf())
             for_each_recursive(preorder(), s, f);
-    }
     
     // Multiway cursor
     if (!s.is_leaf())
@@ -72,13 +71,12 @@ BOOST_CONCEPT_REQUIRES(
     (Op)) // return type
 for_each(preorder, Cursor s, Cursor t2, Op f, descending_vertical_traversal_tag)
 {
+    f(*s);
     Cursor t = s.end();
     --t2; // Bit tweaky.
-    for (s.to_begin(); s != t ; ++s) {
-        f(*s);
+    for (s.to_begin(); s != t ; ++s)
         if (!s.is_leaf() && s != t2)
             for_each_recursive(preorder(), s, t2, f);
-    }
     
     // Multiway cursor
     if (!t.is_leaf() && t != t2)
@@ -99,13 +97,14 @@ for_each(preorder, Cursor s, Cursor t2, Op f, descending_vertical_traversal_tag)
  */
 template <class Cursor, class Op>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<Cursor>)),
+    ((DescendingCursor<Cursor>))
+    ((UnaryFunction<Op, void, typename cursor_value<Cursor>::type>)),
     (Op)) // return type
 for_each(preorder, Cursor s, Op f, descending_vertical_traversal_tag)
 {
+    f(*s);
     Cursor t = s.end();
     for (s.to_begin(); s != t; ++s) {
-        f(*s);
         if (!s.is_leaf())
             for_each_recursive(preorder(), s, f);
     }

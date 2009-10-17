@@ -141,7 +141,11 @@ to_forest_parent(BinaryCursor& c)
  */
 //[ for_each
 template <class Order, class Cursor, class Op>
-Op for_each(Order, Cursor s, Op f)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>))
+    ((UnaryFunction<Op, void, typename cursor_value<Cursor>::type>)),
+    (Op)) // return type
+for_each(Order, Cursor s, Op f)
 //]
 {
     return detail::for_each(Order(), s, f

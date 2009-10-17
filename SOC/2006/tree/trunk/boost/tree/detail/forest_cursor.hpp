@@ -97,7 +97,7 @@ private:
 
     typename forest_cursor::cursor_adaptor_::reference dereference() const
     {
-        return *this->base_reference().begin();
+        return *this->base_reference();
     }
 
     void increment()

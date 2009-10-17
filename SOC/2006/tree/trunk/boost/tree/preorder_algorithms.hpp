@@ -31,8 +31,8 @@ struct preorder {
 };
 
 /**
- * @brief    Preorder successor
- * @param c    Cursor to be set to its preorder successor
+ * @brief   Preorder successor
+ * @param c Cursor to be set to its preorder successor
  */
 template <typename Cursor>
 inline
@@ -43,16 +43,12 @@ BOOST_CONCEPT_REQUIRES(
 successor(preorder, Cursor& c)
 {
     // If we have a left child, go there.
-    if (!c.is_leaf()) {
-        c.to_begin();
+    if (!c.to_begin().is_leaf())
         return;
-    }
     
     // No left child. So if we have a right child, go there.
-    if (!(++c).is_leaf()) {
-        c.to_begin();
+    if (!(++c).is_leaf())
         return;
-    }
     
     // (Here's where we'd need to check if this is the end().)
     
@@ -61,19 +57,16 @@ successor(preorder, Cursor& c)
     // we find an ancestor that has a right child.
     while (!c.is_root()) { // Doesn't work with subtrees!    
         c.to_parent();
-        if (!c.is_root() && !index(c)) {
-            if (!(++c).is_leaf()) {
-                c.to_begin();
+        if (!c.is_root() && !index(c))
+            if (!(++c).is_leaf())
                 return;
-            }
-        }
     }
     return;
 }
 
 /**
- * @brief    Preorder successor
- * @param c    Cursor to be set to its preorder successor
+ * @brief   Preorder successor
+ * @param c Cursor to be set to its preorder successor
  */
 template <typename Cursor>
 inline
@@ -157,9 +150,7 @@ BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>)),
     (void)) // return type
 to_first(preorder, Cursor& c)
-{
-    c.to_begin();
-}
+{}
 
 /**
  * @brief   One position past the last element of a subtree in preorder 

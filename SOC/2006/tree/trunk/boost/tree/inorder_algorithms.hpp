@@ -46,13 +46,14 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 successor(inorder, MultiwayCursor& c)
 {
-    if (!(++c).is_leaf()) {
-        to_leftmost(c);
+    if (!c.to_end().is_leaf()) {
+        to_first(inorder(),c);
         return;
     }
-    
+
     while (index(c) && !c.is_root())
         c.to_parent();
+    c.to_parent();
     return;
 }
 
@@ -92,8 +93,11 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 to_first(inorder, Cursor& c)
 {
-    while (!c.is_leaf())
-        c.to_begin();
+    Cursor d = c;
+    while (!d.is_leaf()) {
+        c = d;
+        d.to_begin();
+    }
 }
 
 /**
@@ -123,17 +127,20 @@ void to_last(inorder, Cursor& c)
 //[ lower_bound
 template <class MultiwayCursor, class T>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<MultiwayCursor>)),
+    ((DescendingCursor<MultiwayCursor>))
+    ((LessThanComparable<T>)),
     (MultiwayCursor)) // return type
 lower_bound(MultiwayCursor x, T const& val)
 //]
 {
     MultiwayCursor y = x;
-    while (!x.is_leaf()) {
-        x = std::lower_bound(x.begin(), x.end(), val);
-        if (x.index() == 0)
+    while (!x.is_leaf())
+        if (*x < val) {
+            x.to_end();
+        } else {
             y = x;
-    }
+            x.to_begin();
+        }
     return y;
 }
 
@@ -152,17 +159,19 @@ lower_bound(MultiwayCursor x, T const& val)
 template <class MultiwayCursor, class T, class Cmp>
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<MultiwayCursor>))
-    /*((LessThanComparable<Cmp>))*/, // Problem with balance
+    /*((StrictWeakOrdering<Cmp>))*/, //FIXME
     (MultiwayCursor)) // return type
 lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
 //]
 {
     MultiwayCursor y = x;
-    while (!x.is_leaf()) {
-        x = std::lower_bound(x.begin(), x.end(), val, cmp);
-        if (index(x) == 0)
+    while (!x.is_leaf())
+        if (cmp(*x,val)) {
+            x.to_end();
+        } else {
             y = x;
-    }
+            x.to_begin();
+        }
     return y;
 }
 
@@ -179,17 +188,20 @@ lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
 //[ upper_bound
 template <class MultiwayCursor, class T>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<MultiwayCursor>)),
+    ((DescendingCursor<MultiwayCursor>))
+    ((LessThanComparable<T>)),
     (MultiwayCursor)) // return type
 upper_bound(MultiwayCursor x, T const& val)
 //]
 {
     MultiwayCursor y = x;
-    while (!x.is_leaf()) {
-        x = std::upper_bound(x.begin(), x.end(), val);
-        if (index(x) == 0)
+    while (!x.is_leaf())
+        if (val < *x) {
             y = x;
-    }
+            x.to_begin();
+        } else {
+            x.to_end();
+        }
     return y;
 }
 
@@ -208,17 +220,19 @@ upper_bound(MultiwayCursor x, T const& val)
 template <class MultiwayCursor, class T, class Cmp>
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<MultiwayCursor>))
-    ((LessThanComparable<Cmp>)),
+    /*((LessThanComparable<Cmp>))*/, //FIXME
     (MultiwayCursor)) // return type
 upper_bound(MultiwayCursor x, T const& val, Cmp cmp)
 //]
 {
     MultiwayCursor y = x;
-    while (!x.is_leaf()) {
-        x = std::upper_bound(x.begin(), x.end(), val, cmp);
-        if (index(x) == 0)
+    while (!x.is_leaf())
+        if (cmp(val,*x)) {
             y = x;
-    }
+            x.to_begin();
+        } else {
+            x.to_end();
+        }
     return y;
 }
 

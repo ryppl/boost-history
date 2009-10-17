@@ -108,7 +108,7 @@ private:
     
     value_type& dereference() const
     {
-        return **static_cast<node_type*>(this->base_reference());
+        return **static_cast<node_type*>(this->base_reference()->m_children[m_pos]);
     }
     
     bool equal(cursor const& other) const

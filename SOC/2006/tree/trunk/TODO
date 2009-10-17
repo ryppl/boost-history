@@ -14,6 +14,9 @@
 [section TODO]
 
 General:
+* Add a test for the equal() algorithm
+* Apply all binary_tree_test cchecks also to fake_binary_tree in order to check if semantics
+  are mapped properly.
 * Subforest algorithms: with a first and last parameter (which, for binary tree based
   forests, should be passed through to the corresponding binary cursor algorithms.
 * Do we need to_{left|right}most_ancestor?

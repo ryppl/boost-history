@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE( test_ascending_cursor )
     typedef fake_binary_tree<int>::descending_cursor dc_t;
     ascending_cursor<dc_t> ac = make_ascending_cursor(fbt1.descending_root());
 
-    ac.to_begin().to_end().to_begin().to_begin();
+    ac.to_begin().to_end().to_begin();
 
     BOOST_CHECK_EQUAL(*ac, 4);
     ac.to_parent();

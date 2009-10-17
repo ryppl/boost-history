@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE( test_successor_ascending )
 {
     fake_binary_tree<int, boost::tree::ascending_vertical_traversal_tag> fabt1(fbt1);
     fake_binary_tree<int, boost::tree::ascending_vertical_traversal_tag>::cursor c = fabt1.root();
-    c.to_begin().to_end().to_begin().to_begin();
+    c.to_begin().to_end().to_begin();
     BOOST_CHECK_EQUAL(*c, 4);
     boost::tree::successor(ascending(), c);
     BOOST_CHECK_EQUAL(*c, 6);

@@ -28,8 +28,8 @@ test-suite tree :
 	[ run successor_test.cpp ]
 	[ run predecessor_test.cpp ]
 	[ run for_each_test.cpp ]
-	[ run copy_test.cpp ]
-	[ run transform_test.cpp ]
+##	[ run copy_test.cpp ]
+##	[ run transform_test.cpp ]
 #
 	[ run range_helpers_test.cpp ]
 	[ run binary_tree_test.cpp ]
@@ -49,5 +49,5 @@ test-suite tree :
 #	[ run nary_tree_test.cpp ]
 	[ run multiway_tree_test.cpp ]
 	[ run unbalanced_binary_tree_test.cpp ]
-	[ run graph_test.cpp ]
+#	[ run graph_test.cpp ]
 	;

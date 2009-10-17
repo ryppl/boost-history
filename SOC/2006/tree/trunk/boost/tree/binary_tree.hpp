@@ -224,12 +224,12 @@ public:
 //                , boost::tree::tree_inserter(*this, pos)
 //                , descending_vertical_traversal_tag()));
 
-        subtree.to_begin();
+        //subtree.to_begin();
         insert(pos, *subtree);
-        if (!subtree.is_leaf())
-            insert(pos.begin(), subtree);
-        if (!(++subtree).is_leaf())
-            insert(pos.end(), subtree);
+        if (!subtree.begin().is_leaf())
+            insert(pos.begin(), subtree.begin());
+        if (!subtree.end().is_leaf())
+            insert(pos.end(), subtree.end());
         return pos;
     }
 

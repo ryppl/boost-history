@@ -237,7 +237,7 @@ private:
     typename fake_binary_cursor<T, descending_vertical_traversal_tag>::cursor_facade_::reference
     dereference() const
     {
-        return m_tree->m_data[(m_pos-1)/2];
+        return m_tree->m_data[m_pos];
     }
 
     bool equal(fake_binary_cursor<T, descending_vertical_traversal_tag> const& other) const
@@ -375,34 +375,34 @@ struct fake_binary_tree_fixture {
     template <class Cursor>
     static void validate_test_dataset1_tree(Cursor cur)
     {
-        BOOST_CHECK_EQUAL(*cur.begin(), 8);
-        BOOST_CHECK_EQUAL(*cur.begin().begin(), 3);
-        BOOST_CHECK_EQUAL(*cur.begin().begin().begin(), 1);  //Leaf
-        BOOST_CHECK_EQUAL(*cur.begin().end().begin(), 6);
-        BOOST_CHECK_EQUAL(*cur.begin().end().begin().begin(), 4); //Leaf
-        BOOST_CHECK_EQUAL(*cur.begin().end().end().begin(), 7); //Leaf
-        BOOST_CHECK_EQUAL(*cur.end().begin(), 10);
-        BOOST_CHECK_EQUAL(*cur.end().end().begin(), 14);
-        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin(), 13);
-        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().begin(), 11); 
-        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().end().begin(), 12); //Leaf
+        BOOST_CHECK_EQUAL(*cur, 8);
+        BOOST_CHECK_EQUAL(*cur.begin(), 3);
+        BOOST_CHECK_EQUAL(*cur.begin().begin(), 1);  //Leaf
+        BOOST_CHECK_EQUAL(*cur.begin().end(), 6);
+        BOOST_CHECK_EQUAL(*cur.begin().end().begin(), 4); //Leaf
+        BOOST_CHECK_EQUAL(*cur.begin().end().end(), 7); //Leaf
+        BOOST_CHECK_EQUAL(*cur.end(), 10);
+        BOOST_CHECK_EQUAL(*cur.end().end(), 14);
+        BOOST_CHECK_EQUAL(*cur.end().end().begin(), 13);
+        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin(), 11); 
+        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().end(), 12); //Leaf
     }
 
     template <class Cursor>
     static void validate_test_dataset1_minus_1_tree(Cursor cur)
     {
-        BOOST_CHECK_EQUAL(*cur.begin(), 7);
-        BOOST_CHECK_EQUAL(*cur.begin().begin(), 2);    
-        BOOST_CHECK_EQUAL(*cur.begin().begin().begin(), 0);  //Leaf
-        BOOST_CHECK_EQUAL(*cur.begin().end().begin(), 5);        
-        BOOST_CHECK_EQUAL(*cur.begin().end().begin().begin(), 3); //Leaf
-        BOOST_CHECK_EQUAL(*cur.begin().end().end().begin(), 6); //Leaf
+        BOOST_CHECK_EQUAL(*cur, 7);
+        BOOST_CHECK_EQUAL(*cur.begin(), 2);    
+        BOOST_CHECK_EQUAL(*cur.begin().begin(), 0);  //Leaf
+        BOOST_CHECK_EQUAL(*cur.begin().end(), 5);        
+        BOOST_CHECK_EQUAL(*cur.begin().end().begin(), 3); //Leaf
+        BOOST_CHECK_EQUAL(*cur.begin().end().end(), 6); //Leaf
     
-        BOOST_CHECK_EQUAL(*cur.end().begin(), 9);
-        BOOST_CHECK_EQUAL(*cur.end().end().begin(), 13);
-        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin(), 12);
-        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().begin(), 10); 
-        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().end().begin(), 11); //Leaf
+        BOOST_CHECK_EQUAL(*cur.end(), 9);
+        BOOST_CHECK_EQUAL(*cur.end().end(), 13);
+        BOOST_CHECK_EQUAL(*cur.end().end().begin(), 12);
+        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin(), 10); 
+        BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().end(), 11); //Leaf
     }
     
     fake_binary_tree<T> fbt1, fbt2;

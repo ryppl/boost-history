@@ -32,7 +32,8 @@ using namespace boost_concepts;
  */
 template <class Cursor, class Op>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<Cursor>)),
+    ((DescendingCursor<Cursor>))
+    ((UnaryFunction<Op, void, typename cursor_value<Cursor>::type>)),
     (void)) // return type
 for_each_recursive(postorder, Cursor s, Op& f)
 {
@@ -45,7 +46,7 @@ for_each_recursive(postorder, Cursor s, Op& f)
     if (!s.is_leaf())
         for_each_recursive(postorder(), s, f);
 
-    f(*t.to_begin());
+    f(*t);
 }
 
 /**
@@ -60,7 +61,8 @@ for_each_recursive(postorder, Cursor s, Op& f)
  */
 template <class Cursor, class Op>
 BOOST_CONCEPT_REQUIRES(
-    ((DescendingCursor<Cursor>)),
+    ((DescendingCursor<Cursor>))
+    ((UnaryFunction<Op, void, typename cursor_value<Cursor>::type>)),
     (Op)) // return type
 for_each(postorder, Cursor s, Op f, descending_vertical_traversal_tag)
 {
@@ -73,7 +75,7 @@ for_each(postorder, Cursor s, Op f, descending_vertical_traversal_tag)
     if (!s.is_leaf())
         for_each_recursive(postorder(), s, f);
 
-    f(*t.to_begin());
+    f(*t);
 
     return f;
 }

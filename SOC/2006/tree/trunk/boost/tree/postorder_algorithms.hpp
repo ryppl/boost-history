@@ -42,13 +42,11 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 successor(postorder, Cursor& c)
 {
-    c.to_parent();
-
     if (c.is_root())
         return;
 
     if (index(c)) { // Right child? Return parent.
-        --c;
+        c.to_parent();
         return;
     }
         
@@ -59,8 +57,7 @@ successor(postorder, Cursor& c)
         if (c.is_leaf())
             ++c;
     }
-    if (index(c))
-        --c;
+    c.to_parent();
     return;
 }
 
@@ -114,13 +111,16 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 to_first(postorder, Cursor& c)
 {
+    Cursor d = c;
     while (true)
-        if (!c.is_leaf())
-            c.to_begin();
-        else if (!(++c).is_leaf())
-            c.to_begin();
-        else {
-            --c;
+        if (!d.is_leaf()) {
+            c = d;
+            d.to_begin();
+        } else if (!(++d).is_leaf()) {
+            c = d;
+            d.to_begin();
+        } else {
+            //--c;
             return;
         }
 }
