@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -53,6 +53,8 @@
 #include <vector>
 #include <pthread.h>
 
+#include <boost/stm/detail/transactions_stack.hpp>
+
 #if BUILD_MOVE_SEMANTICS
 #include <type_traits>
 #endif
@@ -80,6 +82,14 @@ namespace boost { namespace stm {
    };
 
    typedef std::pair<base_transaction_object*, base_transaction_object*> tx_pair;
+
+   template <typename MUTEX, MUTEX& mtx>
+   struct locker {
+       inline locker();
+       inline ~locker();
+       inline void unlock();
+   };
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // transaction Class
@@ -110,6 +120,7 @@ public:
    typedef std::list<base_transaction_object*> MemoryContainerList;
 #endif
 
+   typedef std::map<size_t, TransactionsStack*> ThreadTransactionsStack;
    typedef std::map<size_t, WriteContainer*> ThreadWriteContainer;
    typedef std::map<size_t, TxType*> ThreadTxTypeContainer;
 
@@ -463,7 +474,7 @@ typedef std::map<size_t, boost::stm::bit_vector*> ThreadBitVectorList;
 
    template <typename T> T const * read_ptr(T const * in)
    {
-      if (NULL == in) return NULL;
+      if (0 == in) return 0;
       return &read(*in);
    }
    template <typename T> T const & r(T const & in) { return read(in); }
@@ -478,13 +489,13 @@ typedef std::map<size_t, boost::stm::bit_vector*> ThreadBitVectorList;
       if (direct_updating())
       {
          if (in.transaction_thread() == threadId_) return (T*)(&in);
-         else return NULL;
+         else return 0;
       }
       else
       {
          WriteContainer::iterator i = writeList().find
             ((base_transaction_object*)(&in));
-         if (i == writeList().end()) return NULL;
+         if (i == writeList().end()) return 0;
          else return static_cast<T*>(i->second);
       }
    }
@@ -526,7 +537,7 @@ typedef std::map<size_t, boost::stm::bit_vector*> ThreadBitVectorList;
    //--------------------------------------------------------------------------
    template <typename T> T* write_ptr(T* in)
    {
-      if (NULL == in) return NULL;
+      if (0 == in) return 0;
       return &write(*in);
    }
    template <typename T> T& w(T& in) { return write(in); }
@@ -938,7 +949,7 @@ private:
          unlock(&transactionMutex_);
          // is this really necessary? in the deferred case it is, but in direct it
          // doesn't actually save any time for anything
-         //writeList()[(base_transaction_object*)&in] = NULL;
+         //writeList()[(base_transaction_object*)&in] = 0;
 
          deletedMemoryList().push_back((base_transaction_object*)&in);
       }
@@ -1071,7 +1082,7 @@ private:
          lock_tx();
          bloom().insert((size_t)&in);
          unlock_tx();
-         writeList().insert(tx_pair((base_transaction_object*)&in, NULL));
+         writeList().insert(tx_pair((base_transaction_object*)&in, 0));
       }
       //-----------------------------------------------------------------------
       // this isn't real memory, it's transactional memory. But the good news is,
@@ -1089,7 +1100,7 @@ private:
          {
             if (j->second == (base_transaction_object*)&in)
             {
-               writeList().insert(tx_pair(j->first, NULL));
+               writeList().insert(tx_pair(j->first, 0));
                deletedMemoryList().push_back(j->first);
             }
          }
@@ -1329,6 +1340,7 @@ private:
    size_t threadId_;
 
    light_auto_lock auto_general_lock_;
+   //locker<Mutex, transactionMutex_> transactionMutexLocker_;
 
    //--------------------------------------------------------------------------
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION.
@@ -1491,6 +1503,16 @@ private:
    inline static MutexSet &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
 #endif
 
+    static ThreadTransactionsStack threadTransactionsStack_;
+    TransactionsStack& transactionsRef_;
+   public:
+    inline TransactionsStack& transactions() {return transactionsRef_;}
+    inline static TransactionsStack &transactions(thread_id_t id) {
+        light_auto_lock auto_general_lock_(general_lock());
+        return *threadTransactionsStack_.find(id)->second;
+    }
+    private:
+
 ////////////////////////////////////////
 #else   // USE_SINGLE_THREAD_CONTEXT_MAP
 ////////////////////////////////////////
@@ -1627,6 +1649,15 @@ private:
    inline static MutexSet &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
 #endif
 
+    static ThreadTransactionsStack threadTransactionsStack_;
+    TransactionsStack& transactionsRef_;
+   public:
+    inline TransactionsStack& transactions() {return transactionsRef_;}
+    inline static TransactionsStack &transactions(thread_id_t id) {
+        light_auto_lock auto_general_lock_(general_lock());
+        return *threadTransactionsStack_.find(id)->second;
+    }
+    private:
 
 ////////////////////////////////////////
 #endif
@@ -1649,6 +1680,36 @@ private:
 
 
 
+public:
+    inline static transaction* current_transaction() {return transactions(THREAD_ID).top();}
+
+
+};
+
+inline transaction* current_transaction() {
+    return transaction::current_transaction();
+}
+
+template <typename MUTEX, MUTEX& mtx>
+locker<MUTEX,mtx>::locker() {
+    boost::stm::lock(mtx);
+}
+template <typename MUTEX, MUTEX& mtx>
+locker<MUTEX,mtx>::~locker() {}
+
+template <typename MUTEX, MUTEX& mtx>
+void locker<MUTEX,mtx>::unlock() {
+    boost::stm::unlock(mtx);
+}
+
+
+//-----------------------------------------------------------------------------
+// scoped thread initializer calling transaction::initialize_thread() in the
+// constructor and transaction::terminate_thread() in the destructor
+//-----------------------------------------------------------------------------
+struct thread_initializer {
+    thread_initializer() {transaction::initialize_thread();}
+    ~thread_initializer() {transaction::terminate_thread();}
 };
 
 #if 0
@@ -1679,24 +1740,38 @@ inline int transaction::unlock<Mutex*> (Mutex *lock) { return transaction::pthre
 // rand()+1 check is necessarily complex so smart compilers can't
 // optimize the if away
 //---------------------------------------------------------------------------
-#define use_atomic(T) if (0 != rand()+1) for (transaction T; !T.committed() && T.restart(); T.end())
-#define try_atomic(T) if (0 != rand()+1) for (transaction T; !T.committed() && T.restart(); T.no_throw_end()) try
-#define atomic(T)     if (0 != rand()+1) for (transaction T; !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); T.no_throw_end()) try
+#ifdef BOOST_STM_COMPILER_DONT_DESTROY_FOR_VARIABLES
+#define use_atomic(T) if (0==rnd()+1) {} else for (boost::stm::transaction T; !T.committed() && T.restart(); T.end())
+#define try_atomic(T) if (0==rnd()+1) {} else for (boost::stm::transaction T; !T.committed() && T.restart(); T.no_throw_end()) try
+#define atomic(T)     if (0==rnd()+1) {} else for (boost::stm::transaction T; !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); T.no_throw_end()) try
+#else
+#define use_atomic(T) for (boost::stm::transaction T; !T.committed() && T.restart(); T.end())
+#define try_atomic(T) for (boost::stm::transaction T; !T.committed() && T.restart(); T.no_throw_end()) try
+#define atomic(T)     for (boost::stm::transaction T; !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); T.no_throw_end()) try
+#endif
 
 
+#define catch_before_retry(E) catch (boost::stm::aborted_tx &E)
+#define before_retry catch (boost::stm::aborted_tx &)
+#define end_atom catch (boost::stm::aborted_tx &) {}
 
-#define catch_before_retry(E) catch (aborted_tx &E)
-#define before_retry catch (aborted_tx &)
-#define end_atom catch (aborted_tx &) {}
+#define BOOST_STM_NEW(T, P) \
+    ((T).throw_if_forced_to_abort_on_new(), \
+    (T).as_new(new P))
 
-} // core namespace
-}
+#define BOOST_STM_NEW_1(P) \
+    ((boost::stm::current_transaction()!=0)?BOOST_STM_NEW(*boost::stm::current_transaction(), P):new P)
+
+
+} // stm namespace
+} // boost namespace
+
 #include <boost/stm/detail/transaction_impl.hpp>
 #include <boost/stm/detail/latm_general_impl.hpp>
 #include <boost/stm/detail/auto_lock.hpp>
 #include <boost/stm/detail/tx_ptr.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
-#endif // TRANSACTION_H
+#endif // BOOST_STM_TRANSACTION__HPP
 
 

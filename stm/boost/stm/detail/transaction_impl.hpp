@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -406,7 +406,7 @@ inline void boost::stm::transaction::unlock_all_mutexes()
    {
       unlock(i->second);
    }
-   hasMutex_ = 0;  
+   hasMutex_ = 0;
 }
 
 //--------------------------------------------------------------------------
@@ -429,10 +429,11 @@ inline boost::stm::transaction::transaction() :
    //-----------------------------------------------------------------------
 
    threadId_(THREAD_ID),
+   //transactionMutexLocker_(),
    auto_general_lock_(general_lock()),
 
 #if USE_SINGLE_THREAD_CONTEXT_MAP
-////////////////////////////////////////   
+////////////////////////////////////////
    context_(*tss_context_map_.find(threadId_)->second),
 
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
@@ -447,7 +448,7 @@ inline boost::stm::transaction::transaction() :
 #else
    forcedToAbortRef_(false),
 #endif
-#endif   
+#endif
    mutexRef_(threadMutexes_.find(threadId_)->second),
 
 #if PERFORMING_LATM
@@ -461,10 +462,12 @@ inline boost::stm::transaction::transaction() :
    obtainedLocksRef_(*threadObtainedLocks_.find(threadId_)->second),
    currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
-   
-////////////////////////////////////////   
+
+   transactionsRef_(transactions(threadId_)),
+
+////////////////////////////////////////
 #else
-////////////////////////////////////////   
+////////////////////////////////////////
 #ifndef DISABLE_READ_SETS
    readListRef_(*threadReadLists_.find(threadId_)->second),
 #endif
@@ -497,15 +500,17 @@ inline boost::stm::transaction::transaction() :
    currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
 
-////////////////////////////////////////   
+////////////////////////////////////////
+   transactionsRef_(transactions(threadId_)),
 #endif
 
    hasMutex_(0), priority_(0),
    state_(e_no_state),
    reads_(0),
-   startTime_(time(NULL))
+   startTime_(time(0))
 {
    auto_general_lock_.release_lock();
+    //transactionMutexLocker_.unlock();
 
    if (direct_updating()) doIntervalDeletions();
 #if PERFORMING_LATM
@@ -513,6 +518,7 @@ inline boost::stm::transaction::transaction() :
 #endif
 
    put_tx_inflight();
+   transactions().push(this);
 }
 
 //--------------------------------------------------------------------------
@@ -588,7 +594,7 @@ inline bool boost::stm::transaction::restart()
 #ifdef LOGGING_BLOCKS
       if (++iterations > 100)
       {
-         var_auto_lock<PLOCK> autolock(latm_lock(), general_lock(), NULL);
+         var_auto_lock<PLOCK> autolock(latm_lock(), general_lock(), 0);
          //unblock_threads_if_locks_are_empty();
          logFile_ << outputBlockedThreadsAndLockedLocks().c_str();
          SLEEP(10000);
@@ -1446,7 +1452,7 @@ inline void boost::stm::transaction::invalidating_deferred_commit()
          static int stalling_ = 0;
 
          bool wait = stalling_ * stalls_ < global_clock();
-         transaction *stallingOn = NULL;
+         transaction *stallingOn = 0;
          //int iter = 1;
 
 #if USE_BLOOM_FILTER
@@ -1774,9 +1780,9 @@ inline void boost::stm::transaction::directAbortWriteList()
    for (WriteContainer::iterator i = writeList().begin(); writeList().end() != i; ++i)
    {
       //-----------------------------------------------------------------------
-      // i->second == NULL will happen when a transaction has added a piece of
+      // i->second == 0 will happen when a transaction has added a piece of
       // memory to its writeList_ that it is deleting (not writing to).
-      // Thus, when seeing NULL as the second value, it signifies that this
+      // Thus, when seeing 0 as the second value, it signifies that this
       // memory is being destroyed, not updated. Do not perform copy_state()
       // on it.
       //
@@ -1784,7 +1790,7 @@ inline void boost::stm::transaction::directAbortWriteList()
       // transaction_thread (which is performed in    void directAbortTransactionDeletedMemory() throw();
 
       //-----------------------------------------------------------------------
-      if (NULL == i->second) continue;
+      if (0 == i->second) continue;
 
       if (using_move_semantics()) i->first->move_state(i->second);
       else i->first->copy_state(i->second);
@@ -1822,7 +1828,7 @@ inline void boost::stm::transaction::deferredAbortWriteList() throw()
 //----------------------------------------------------------------------------
 inline size_t boost::stm::transaction::earliest_start_time_of_inflight_txes()
 {
-   var_auto_lock<PLOCK> a(inflight_lock(), NULL);
+   var_auto_lock<PLOCK> a(inflight_lock(), 0);
 
    size_t secs = 0xffffffff;
 
@@ -1847,7 +1853,7 @@ inline void boost::stm::transaction::doIntervalDeletions()
 
    size_t earliestInFlightTx = earliest_start_time_of_inflight_txes();
 
-   var_auto_lock<PLOCK> a(&deletionBufferMutex_, NULL);
+   var_auto_lock<PLOCK> a(&deletionBufferMutex_, 0);
 
    for (DeletionBuffer::iterator i = deletionBuffer_.begin(); i != deletionBuffer_.end();)
    {
@@ -1874,9 +1880,9 @@ inline void boost::stm::transaction::directCommitTransactionDeletedMemory() thro
 
    if (!deletedMemoryList().empty())
    {
-      var_auto_lock<PLOCK> a(&deletionBufferMutex_, NULL);
+      var_auto_lock<PLOCK> a(&deletionBufferMutex_, 0);
       deletionBuffer_.insert( std::pair<size_t, MemoryContainerList>
-         (time(NULL), deletedMemoryList()) );
+         (time(0), deletedMemoryList()) );
       deletedMemoryList().clear();
    }
 }
@@ -1924,9 +1930,9 @@ inline void boost::stm::transaction::directCommitWriteState()
    for (WriteContainer::iterator i = writeList().begin(); writeList().end() != i; ++i)
    {
       //-----------------------------------------------------------------------
-      // i->second == NULL will happen when a transaction has added a piece of
+      // i->second == 0 will happen when a transaction has added a piece of
       // memory to its writeList_ that it is deleting (not writing to).
-      // Thus, when seeing NULL as the second value, it signifies that this
+      // Thus, when seeing 0 as the second value, it signifies that this
       // memory is being destroyed, not updated. Do not perform copyState()
       // on it.
       //-----------------------------------------------------------------------
@@ -1950,13 +1956,13 @@ inline void boost::stm::transaction::deferredCommitWriteState()
    for (WriteContainer::iterator i = writeList().begin(); writeList().end() != i; ++i)
    {
       //-----------------------------------------------------------------------
-      // i->second == NULL will happen when a transaction has added a piece of
+      // i->second == 0 will happen when a transaction has added a piece of
       // memory to its writeList_ that it is deleting (not writing to).
-      // Thus, when seeing NULL as the second value, it signifies that this
+      // Thus, when seeing 0 as the second value, it signifies that this
       // memory is being destroyed, not updated. Do not perform copyState()
       // on it.
       //-----------------------------------------------------------------------
-      if (NULL == i->second)
+      if (0 == i->second)
       {
          continue;
       }
@@ -1999,7 +2005,7 @@ inline void boost::stm::transaction::verifyWrittenMemoryIsValidWithGlobalMemory(
    // copy the newObject into the oldObject, updating the real data
    for (WriteContainer::iterator i = writeList().begin(); writeList().end() != i; ++i)
    {
-      if (NULL == i->second) continue;
+      if (0 == i->second) continue;
       if (i->first->version_ != i->second->version_)
       {
          bookkeeping_.inc_write_aborts();
@@ -2045,7 +2051,7 @@ inline bool boost::stm::transaction::forceOtherInFlightTransactionsAccessingThis
    if (writes() > 3) allow_stall = false;
 
    //--------------------------------------------------------------------------
-   // FOR THE TIME BEING, DO NOT ALLOW STALLS AT ALL! Stalls somehow cause 
+   // FOR THE TIME BEING, DO NOT ALLOW STALLS AT ALL! Stalls somehow cause
    // Sebastian's account code to break ... we need to investigate why and fix it.
    //
    // Until such time, stalling txes for increased concurrency MUST be disabled.
@@ -2054,7 +2060,7 @@ inline bool boost::stm::transaction::forceOtherInFlightTransactionsAccessingThis
    allow_stall = false;
 
    //--------------------------------------------------------------------------
-   // FOR THE TIME BEING, DO NOT ALLOW STALLS AT ALL! Stalls somehow cause 
+   // FOR THE TIME BEING, DO NOT ALLOW STALLS AT ALL! Stalls somehow cause
    // Sebastian's account code to break ... we need to investigate why and fix it.
    //
    // Until such time, stalling txes for increased concurrency MUST be disabled.
@@ -2166,7 +2172,7 @@ inline bool boost::stm::transaction::forceOtherInFlightTransactionsAccessingThis
       if (cm_->permission_to_abort(*this, aborted))
       {
          // ok, forced to aborts are allowed, do them
-         for (std::list<transaction*>::iterator k = aborted.begin(); 
+         for (std::list<transaction*>::iterator k = aborted.begin();
               k != aborted.end(); ++k)
          {
             (*k)->force_to_abort();
