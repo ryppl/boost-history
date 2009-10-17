@@ -28,12 +28,12 @@ template< typename R, typename EP >
 handle< R > async( task< R > t, EP ep)
 { return ep( boost::move( t) ); }
 
-template< typename R, typename Queue >
-handle< R > async( task< R > t, static_pool< Queue > & pool)
+template< typename R, typename Queue, typename UMS >
+handle< R > async( task< R > t, static_pool< Queue, UMS > & pool)
 { return pool.submit( boost::move( t) ); }
 
-template< typename R, typename Queue, typename Attr >
-handle< R > async( task< R > t, Attr attr, static_pool< Queue > & pool)
+template< typename R, typename Attr, typename Queue, typename UMS >
+handle< R > async( task< R > t, Attr attr, static_pool< Queue, UMS > & pool)
 { return pool.submit( boost::move( t), attr); }
 
 }}

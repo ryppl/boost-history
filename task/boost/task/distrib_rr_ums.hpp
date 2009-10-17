@@ -7,6 +7,8 @@
 #ifndef BOOST_TASK_DISTRIB_RR_UMS_H
 #define BOOST_TASK_DISTRIB_RR_UMS_H
 
+#include <list>
+
 #include <boost/assert.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/shared_ptr.hpp>
@@ -23,73 +25,117 @@ namespace task {
 class distrib_rr_ums
 {
 private:
+//	class twolock_fifo
+//	{
+//		struct node
+//		{
+//			typedef shared_ptr< node >	sptr_t;
+//	
+//			detail::fiber::sptr_t	fib;
+//			sptr_t					next;
+//		};
+//	
+//		node::sptr_t		head_;
+//		mutex				head_mtx_;
+//		node::sptr_t		tail_;
+//		mutex				tail_mtx_;
+//	
+//		bool empty_()
+//		{ return head_ == get_tail_(); }
+//	
+//		node::sptr_t get_tail_()
+//		{
+//			lock_guard< mutex > lk( tail_mtx_);	
+//			node::sptr_t tmp = tail_;
+//			return tmp;
+//		}
+//	
+//		node::sptr_t pop_head_()
+//		{
+//			node::sptr_t old_head = head_;
+//			head_ = old_head->next;
+//			return old_head;
+//		}
+//	
+//	public:
+//		twolock_fifo() :
+//			head_( new node),
+//			head_mtx_(),
+//			tail_( head_),
+//			tail_mtx_()
+//		{}
+//	
+//		bool empty()
+//		{
+//			unique_lock< mutex > lk( head_mtx_);
+//			return empty_();
+//		}
+//	
+//		void put( detail::fiber::sptr_t const& fib)
+//		{
+//			node::sptr_t new_node( new node);
+//			{
+//				unique_lock< mutex > lk( tail_mtx_);
+//				tail_->fib = fib;
+//				tail_->next = new_node;
+//				tail_ = new_node;
+//			}
+//		}
+//	
+//		bool try_take( detail::fiber::sptr_t & fib)
+//		{
+//			unique_lock< mutex > lk( head_mtx_);
+//			if ( empty_() )
+//				return false;
+//			fib.swap( head_->fib);
+//			pop_head_();
+//			return fib;
+//		}
+//	};	
+
 	class twolock_fifo
 	{
-		struct node
+	private:
+		mutex								mtx_;
+		std::list< detail::fiber::sptr_t >	lst_;
+
+		bool empty_() const
+		{ return lst_.empty(); }
+
+		void put_( detail::fiber::sptr_t const& fib)
+		{ lst_.push_back( fib); }
+
+		bool try_take_( detail::fiber::sptr_t & fib)
 		{
-			typedef shared_ptr< node >	sptr_t;
-
-			detail::fiber::sptr_t	fib;
-			sptr_t					next;
-		};
-
-		node::sptr_t		head_;
-		mutex				head_mtx_;
-		node::sptr_t		tail_;
-		mutex				tail_mtx_;
-
-		bool empty_()
-		{ return head_ == get_tail_(); }
-
-		node::sptr_t get_tail_()
-		{
-			lock_guard< mutex > lk( tail_mtx_);	
-			node::sptr_t tmp = tail_;
-			return tmp;
-		}
-
-		node::sptr_t pop_head_()
-		{
-			node::sptr_t old_head = head_;
-			head_ = old_head->next;
-			return old_head;
+			if ( empty_() ) return false;
+			fib = lst_.front();
+			lst_.pop_front();
+			return fib;
 		}
 
 	public:
 		twolock_fifo() :
-			head_( new node),
-			head_mtx_(),
-			tail_( head_),
-			tail_mtx_()
+			mtx_(), lst_()
 		{}
-
+	
 		bool empty()
 		{
-			unique_lock< mutex > lk( head_mtx_);
+			mutex::scoped_lock lk( mtx_);
 			return empty_();
 		}
-
+	
 		void put( detail::fiber::sptr_t const& fib)
 		{
-			node::sptr_t new_node( new node);
-			{
-				unique_lock< mutex > lk( tail_mtx_);
-				tail_->fib = fib;
-				tail_->next = new_node;
-				tail_ = new_node;
-			}
+			mutex::scoped_lock lk( mtx_);
+			put_( fib);
 		}
-
+	
 		bool try_take( detail::fiber::sptr_t & fib)
 		{
-			unique_lock< mutex > lk( head_mtx_);
-			if ( empty_() )
-				return false;
-			fib.swap( head_->fib);
-			pop_head_();
-			return fib;
+			mutex::scoped_lock lk( mtx_);
+			return try_take_( fib);
 		}
-	};	
+	};
 
 	twolock_fifo	runnable_;
 	twolock_fifo	blocked_;
