@@ -362,7 +362,6 @@ Add entries to table 43:
 |                                |                           |                                   |
 +--------------------------------+---------------------------+-----------------------------------+
 
-
 23.3.2.3 deque modifiers [deque.modifiers]
 ==========================================
 
@@ -418,34 +417,50 @@ Change paragraph 13 to say:
 23.3.6.4 vector modifiers [vector.modifiers]
 ============================================
 
-Context::
+Change the section as follows:
+
+  .. parsed-literal::
 
     iterator insert(const_iterator position, const T& x); 
     iterator insert(const_iterator position, T&& x); 
     void insert(const_iterator position, size_type n, const T& x); 
     template <class InputIterator>
       void insert(const_iterator position, InputIterator first, InputIterator last);
-    template <class... Args> void emplace_back(Args&&... args); 
+    :del:`template <class... Args> void emplace_back(Args&&... args);`
     template <class... Args> iterator emplace(const_iterator position, Args&&... args); 
-    void push_back(const T& x); 
-    void push_back(T&& x);
+    :del:`void push_back(const T& x); 
+    void push_back(T&& x);`
 
-Delete paragraph 1:
+  :del:`1 Requires: If value_type has a move constructor, that constructor shall
+  not throw any exceptions.`
 
-    :del:`1 Requires: If value_type has a move constructor, that constructor shall
-    not throw any exceptions.`
-
-Change paragraph 2 as follows:
-
-  2 Remarks: Causes reallocation if the new size is greater than the
+  :del:`2`:ins:`1` Remarks: Causes reallocation if the new size is greater than the
   old capacity. If no reallocation happens, all the iterators and
-  references before the insertion point remain valid. If an exception
-  is thrown other than by the copy constructor, :ins:`move
-  constructor, move assignment operator` or assignment operator of T
-  or by any InputIterator operation there are no effects.
+  references before the insertion point remain valid.  If an exception
+  is thrown other than by the copy constructor :ins:`move constructor,
+  move assignment operator,` or assignment operator of ``T`` or by any
+  InputIterator operation there are no effects.
 
-**Note:** The strong guarantee of ``push_back`` is maintained by
-paragraph 11 in 23.2.1 [container.requirements.general]
+  :del:`3`:ins:`2` Complexity: The complexity is linear in the number of elements
+  inserted plus the distance to the end of the vector.
+
+  .. parsed-literal::
+
+    :ins:`void push_back(const T& x); 
+    void push_back(T&& x);
+    template <class... Args> void emplace_back(Args&&... args);`
+
+  :ins:`2 Remarks: Causes reallocation if the new size is greater than
+  the old capacity. If no reallocation happens, all iterators and
+  references remain valid.  Otherwise, if an exception is thrown by
+  the move constructor of a non-CopyConstructible type, the effects
+  are unspecified.`
+
+  :ins:`Complexity: O(1)`
+
+**Note to proposal reader:** The strong guarantee of ``push_back`` for
+CopyConstructible ``T``\ s is maintained by virtue of 23.2.1
+[container.requirements.general] paragraph 11.
 
 -----
 
