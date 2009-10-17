@@ -167,6 +167,7 @@ namespace boost
 //                  in alphabetical order, unless otherwise noted                       //
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
+
   BOOST_FILESYSTEM_DECL // declaration must precede complete()
   path initial_path( system::error_code & ec = throws() );
 
@@ -197,8 +198,7 @@ namespace boost
                   system::error_code & ec = throws() );
 
   inline
-  void copy_file( const path & from, const path & to,
-                  system::error_code & ec = throws() )
+  void copy_file( const path & from, const path & to, system::error_code & ec = throws() )
     { copy_file( from, to, copy_option::fail_if_exists, ec ); }
 
   BOOST_FILESYSTEM_DECL
@@ -206,8 +206,7 @@ namespace boost
                      system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
-  bool create_directories( const path & p/*,
-                  system::error_code & ec = throws()*/ );
+  bool create_directories( const path & p );
 
   BOOST_FILESYSTEM_DECL
   bool create_directory( const path & p, system::error_code & ec = throws() );
@@ -231,15 +230,10 @@ namespace boost
   void current_path( const path & p, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
-  bool equivalent( const path & p1, const path & p2,
-                   system::error_code & ec = throws() );
+  bool equivalent( const path & p1, const path & p2, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
-  boost::uintmax_t file_size( const path & p,
-                   system::error_code & ec = throws() );
-
-  BOOST_FILESYSTEM_DECL
-  void file_size( const path & p, uintmax_t size, system::error_code & ec = throws() );
+  boost::uintmax_t file_size( const path & p, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   boost::uintmax_t hard_link_count( const path & p, system::error_code & ec = throws() );
@@ -247,8 +241,7 @@ namespace boost
   //  initial_path() declaration precedes complete()
 
   BOOST_FILESYSTEM_DECL
-  std::time_t last_write_time( const path & p,
-                   system::error_code & ec = throws() );
+  std::time_t last_write_time( const path & p, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   void last_write_time( const path & p, const std::time_t new_time,
@@ -262,13 +255,13 @@ namespace boost
   bool remove( const path & p, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
-  boost::uintmax_t remove_all( const path & p,
-                   system::error_code & ec = throws() );
-
-  
+  boost::uintmax_t remove_all( const path & p, system::error_code & ec = throws() );
+    
   BOOST_FILESYSTEM_DECL
-  void rename( const path & from, const path & to,
-                   system::error_code & ec = throws() );
+  void rename( const path & from, const path & to, system::error_code & ec = throws() );
+
+  BOOST_FILESYSTEM_DECL  // name suggested by Scott McMurray
+  void resize_file( const path & p, uintmax_t size, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   space_info space( const path & p, system::error_code & ec = throws() ); 

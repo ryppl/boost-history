@@ -107,7 +107,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#current_path">current_path</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#is_symlink">exists</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#equivalent">equivalent</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#file_size">file_size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp <a href="#resize_file">file_size</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp i<a href="#initial_path">nitial_path</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp i<a href="#is_directory">s_directory</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#is_empty">is_empty</a><br>
@@ -118,6 +118,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#remove">remove</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#remove_all">remove_all</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#rename">rename</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#resize_file">resize_file</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#space">space</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#status">status</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#status_known">status_known</a><br>
@@ -2150,16 +2151,6 @@ note</i>] </p>
   <p style="font-size: 10pt"><i>Throws:</i> <code>filesystem_error</code><span style="background-color: #FFFFFF">
   </span>if <code>!exists(p) || !is_regular_file(p)</code>.</p>
 </blockquote>
-<pre>void <a name="file_size">file_size</a>(const path&amp; p, <span style="background-color: #FFFFFF; ">uintmax_t new_size, </span>system::error_code&amp; ec=throws());</pre>
-<blockquote>
-<p><i>Postcondition:</i> <code>file_size() == new_size</code>.</p>
-  <p style="font-size: 10pt"><i>Throws:</i> <code>filesystem_error</code><span style="background-color: #FFFFFF">
-  </span>if <code>!exists(p) || !is_regular_file(p)</code>.</p>
-  <p style="font-size: 10pt"><i>Remarks:</i> Achieves its postcondition as if by 
-  POSIX <code>
-  <a href="http://www.opengroup.org/onlinepubs/000095399/functions/truncate.html">
-  truncate()</a></code>.</p>
-</blockquote>
 <pre>const path&amp; <a name="initial_path">initial_path</a>(system::error_code&amp; ec=throws());</pre>
 <blockquote>
   <p><i>Returns:</i> <code>current_path()</code> at the time of entry to <code>
@@ -2282,6 +2273,16 @@ note</i>] </p>
   same file, no action is taken. Otherwise, if <code>to_p</code> resolves to an 
   existing file, it is removed. A symbolic link is itself renamed, rather than 
   the file it resolves to being renamed. <i>-- end note</i>]</p>
+</blockquote>
+<pre>void <a name="resize_file">resize_file</a>(const path&amp; p, <span style="background-color: #FFFFFF; ">uintmax_t new_size, </span>system::error_code&amp; ec=throws());</pre>
+<blockquote>
+<p><i>Postcondition:</i> <code>file_size() == new_size</code>.</p>
+  <p style="font-size: 10pt"><i>Throws:</i> <code>filesystem_error</code><span style="background-color: #FFFFFF">
+  </span>if <code>!exists(p) || !is_regular_file(p)</code>.</p>
+  <p style="font-size: 10pt"><i>Remarks:</i> Achieves its postcondition as if by 
+  POSIX <code>
+  <a href="http://www.opengroup.org/onlinepubs/000095399/functions/truncate.html">
+  truncate()</a></code>.</p>
 </blockquote>
 <pre><span style="background-color: #FFFFFF">space_info <a name="space">space</a>(const path&amp; p</span>, system::error_code&amp; ec=throws()<span style="background-color: #FFFFFF">);</span></pre>
 <blockquote>
@@ -3150,7 +3151,7 @@ final document.</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->16 October 2009<!--webbot bot="Timestamp" endspan i-checksum="32670" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->17 October 2009<!--webbot bot="Timestamp" endspan i-checksum="32672" --></p>
 
 </body>
 

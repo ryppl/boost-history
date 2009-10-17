@@ -731,28 +731,28 @@ namespace
     BOOST_TEST( fs::is_directory( p ) );
   }
 
-  //  file_size_tests  ----------------------------------------------------//
+  //  resize_file_tests  ----------------------------------------------------//
 
-  void file_size_tests()
+  void resize_file_tests()
   {
-    std::cout << "file_size_tests..." << std::endl;
+    std::cout << "resize_file_tests..." << std::endl;
 
-    const std::string f ("file_size_test.txt");
+    const std::string f ("resize_file_test.txt");
 
     fs::remove( f );
     create_file( f, "1234567890" );
 
     BOOST_TEST( fs::exists(f) );
     BOOST_TEST_EQ( fs::file_size(f), 10 );
-    fs::file_size( f, 5 );
+    fs::resize_file( f, 5 );
     BOOST_TEST( fs::exists(f) );
     BOOST_TEST_EQ( fs::file_size(f), 5 );
-    fs::file_size( f, 15 );
+    fs::resize_file( f, 15 );
     BOOST_TEST( fs::exists(f) );
     BOOST_TEST_EQ( fs::file_size(f), 15 );
 
     error_code ec;
-    fs::file_size( "no such file", 15, ec );
+    fs::resize_file( "no such file", 15, ec );
     BOOST_TEST( ec );
   }
 
@@ -974,7 +974,7 @@ int main( int argc, char * argv[] )
   
   create_hard_link_tests();
   create_symlink_tests();
-  file_size_tests();
+  resize_file_tests();
 
   // copy_file() tests
   std::cout << "begin copy_file test..." << std::endl;

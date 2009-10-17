@@ -137,7 +137,7 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
          || ::mkdir( to.c_str(),from_stat.st_mode ) != 0))
 #   define BOOST_COPY_FILE(F,T,FailIfExistsBool) copy_file_api(F, T, FailIfExistsBool)
 #   define BOOST_MOVE_FILE(F,T) (::rename(F, T) == 0)
-#   define BOOST_SET_FILE_SIZE(P,SZ) (::truncate( P, SZ ) == 0)
+#   define BOOST_RESIZE_FILE(P,SZ) (::truncate( P, SZ ) == 0)
 
 #   define BOOST_ERROR_NOT_SUPPORTED ENOSYS
 #   define BOOST_ERROR_ALREADY_EXISTS EEXIST
@@ -155,7 +155,7 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
 #   define BOOST_COPY_DIRECTORY(F,T) (::CreateDirectoryExW( F, T, 0 ) != 0)
 #   define BOOST_COPY_FILE(F,T,FailIfExistsBool) (::CopyFileW(F, T, FailIfExistsBool) != 0)
 #   define BOOST_MOVE_FILE(F,T) (::MoveFileW( F, T ) != 0)
-#   define BOOST_SET_FILE_SIZE(P,SZ) (file_size_file_api( P, SZ ) != 0)
+#   define BOOST_RESIZE_FILE(P,SZ) (resize_file_api( P, SZ ) != 0)
 #   define BOOST_READ_SYMLINK(P,T)
 
 #   define BOOST_ERROR_ALREADY_EXISTS ERROR_ALREADY_EXISTS
@@ -394,7 +394,7 @@ namespace
       ::GetFullPathNameW( src.c_str(), static_cast<DWORD>(len), buf, p ));
   }
 
-  BOOL file_size_file_api( const wchar_t * p, boost::uintmax_t size )
+  BOOL resize_file_api( const wchar_t * p, boost::uintmax_t size )
   {
     HANDLE handle = CreateFileW( p, GENERIC_WRITE, 0, 0, OPEN_EXISTING,
                                 FILE_ATTRIBUTE_NORMAL, 0 );
@@ -935,12 +935,6 @@ namespace boost
   }
 
   BOOST_FILESYSTEM_DECL
-  void file_size( const path & p, uintmax_t size, system::error_code & ec )
-  {
-    error( !BOOST_SET_FILE_SIZE( p.c_str(), size ), p, ec, "boost::filesystem::file_size");
-  }
-
-  BOOST_FILESYSTEM_DECL
   boost::uintmax_t hard_link_count( const path & p, system::error_code & ec )
   {
 #   ifdef BOOST_WINDOWS_API
@@ -1151,6 +1145,12 @@ namespace boost
 
     error( !BOOST_MOVE_FILE( from.c_str(), to.c_str() ), from, to, ec,
       "boost::filesystem::rename" );
+  }
+
+  BOOST_FILESYSTEM_DECL
+  void resize_file( const path & p, uintmax_t size, system::error_code & ec )
+  {
+    error(!BOOST_RESIZE_FILE( p.c_str(), size ), p, ec, "boost::filesystem::resize_file");
   }
 
   BOOST_FILESYSTEM_DECL
