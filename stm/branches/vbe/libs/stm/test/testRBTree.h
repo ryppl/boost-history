@@ -56,7 +56,7 @@ public:
 
    ////////////////////////////////////////////////////////////////////////////
    RedBlackNode() : color_(nRedBlackTree::eRed), value_(T()),
-      left_(&sentinel), right_(&sentinel), parent_(&sentinel) {}
+      left_(&sentinel), right_(&sentinel), parent_(&sentinel)  {}
 
    T const & const_value(boost::stm::transaction &t) const
    { return t.read(*const_cast<RedBlackNode<T>*>(this)).value_; }
@@ -153,7 +153,7 @@ public:
       for (transaction t; ; t.restart())
       {
          try { return internal_insert(node, t); }
-         catch (boost::stm::aborted_transaction_exception&) {}
+         catch (aborted_transaction_exception&) {}
       }
    }
 
@@ -165,7 +165,7 @@ public:
       for (transaction t; ; t.restart())
       {
          try { return internal_lookup(v, found, t); }
-         catch (boost::stm::aborted_transaction_exception&) {}
+         catch (aborted_transaction_exception&) {}
       }
    }
 
@@ -618,7 +618,7 @@ bool RedBlackTree<T>::remove(RedBlackNode<T> const &inNode)
    for (transaction t; ; t.restart())
    {
       try { return internal_remove(inNode, t); }
-      catch (boost::stm::aborted_transaction_exception&) {}
+      catch (aborted_transaction_exception&) {}
    }
 }
 

@@ -160,7 +160,7 @@ void transaction::initialize()
 ///////////////////////////////////////////////////////////////////////////////
 void transaction::initialize_thread()
 {
-   lock(general_lock());
+   synchro::lock_guard<Mutex> lock(*general_lock());
 
    //--------------------------------------------------------------------------
    // WARNING: before you think lock_all_mutexes() does not make sense, make
@@ -421,14 +421,16 @@ void transaction::initialize_thread()
 
    //--------------------------------------------------------------------------
 
-   unlock(general_lock());
+   //synchro::unlock(*general_lock());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void transaction::terminate_thread()
 {
-   lock(general_lock());
-   lock(inflight_lock());
+   synchro::lock_guard<Mutex> lock_g(*general_lock());
+   //synchro::lock(*general_lock());
+   synchro::lock_guard<Mutex> lock_i(*inflight_lock());
+   //synchro::lock(*inflight_lock());
 
    size_t threadId = THREAD_ID;
 
@@ -527,8 +529,8 @@ void transaction::terminate_thread()
 #endif
 
 
-   unlock(inflight_lock());
-   unlock(general_lock());
+   //synchro::unlock(*inflight_lock());
+   //synchro::unlock(*general_lock());
 }
 
 }}

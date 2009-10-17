@@ -121,7 +121,7 @@ public:
             succeeded2 = internal_insert(node2);
             t.end();
          }
-         catch (boost::stm::aborted_transaction_exception&) {}
+         catch (aborted_transaction_exception&) {}
 
          if (!succeeded1 || !succeeded2)
          {
@@ -265,7 +265,7 @@ public:
       for (transaction t; ; t.restart())
       {
          try { return internal_remove(node, t); }
-         catch (boost::stm::aborted_transaction_exception&) {}
+         catch (aborted_transaction_exception&) {}
       }
    }
 
@@ -326,7 +326,7 @@ public:
             t.write(head_).clear();
             t.end();
          }
-         catch (boost::stm::aborted_transaction_exception&) {}
+         catch (aborted_transaction_exception&) {}
       }
    }
 

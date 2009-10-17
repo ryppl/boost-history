@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -45,7 +45,7 @@ static Mutex lock1;
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
 
-static boost::stm::native_trans<int> globalInt;
+static native_trans<int> globalInt;
 
 ///////////////////////////////////////////////////////////////////////////////
 static void* TestIsolatedLockInTxCount(void *threadId)
@@ -118,7 +118,8 @@ static void* TestIsolatedLockInTxCount(void *threadId)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void* TestCount2(void *threadId)
+#if 0
+static void* TestCount(void *threadId)
 {
    transaction::initialize_thread();
    int start = *(int*)threadId;
@@ -162,7 +163,7 @@ void* TestCount2(void *threadId)
 
    return 0;
 }
-
+#endif
 ///////////////////////////////////////////////////////////////////////////////
 void TestIsolatedIntLockInTx()
 {

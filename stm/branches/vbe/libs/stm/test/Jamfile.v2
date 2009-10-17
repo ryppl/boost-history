@@ -22,7 +22,8 @@ project
 
         <include>.
         <include>../../..
-        <include>$BOOST_ROOT
+        #<include>$BOOST_ROOT
+        <include>/boost_1_39_0
         <threading>multi
 #       <target-os>cygwin
 #       <interthreadapi>pthread

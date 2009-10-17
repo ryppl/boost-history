@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -71,15 +71,15 @@ static void do_pointer_access()
 
 static void* pointer_access_test(void*)
 {
-   boost::stm::transaction::initialize_thread();
+   transaction::initialize_thread();
    do_pointer_access();
    return 0;
 }
 
 void pointer_test()
 {
-   boost::stm::transaction::initialize();
-   boost::stm::transaction::initialize_thread();
+   transaction::initialize();
+   transaction::initialize_thread();
 
    pthread_t *threads = new pthread_t[kMaxThreads];
    int *threadId = new int[kMaxThreads];

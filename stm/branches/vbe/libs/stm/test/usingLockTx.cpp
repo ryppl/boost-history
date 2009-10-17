@@ -14,6 +14,8 @@
 #include <sstream>
 #include "usingLockTx.h"
 
+using namespace std;
+
 typedef int list_node_type;
 
 static newSyntaxNS::LinkedList< list_node_type > *llist = 0;
@@ -31,7 +33,6 @@ static Mutex L3;
 #endif
 
 using namespace boost::stm;
-using namespace std;
 
 static native_trans<int> x = 0;
 static native_trans<int> y = 0;
@@ -109,11 +110,12 @@ static void lk_bar()
 
 
 ////////////////////////////////////////////////////////////////////////////
-using namespace std; using namespace boost::stm;
+using namespace std;
 using namespace nMain;
 
 ///////////////////////////////////////////////////////////////////////////////
-void* TestLinkedListInsertsWithLocksBis(void *threadId)
+#if 0
+static void* TestLinkedListInsertsWithLocks(void *threadId)
 {
    newSyntaxNS::list_node<list_node_type> node;
    transaction::initialize_thread();
@@ -193,9 +195,10 @@ void* TestLinkedListInsertsWithLocksBis(void *threadId)
 
    return 0;
 }
-
+#endif
 ///////////////////////////////////////////////////////////////////////////////
-void* TestLinkedListInsertsBis(void *threadId)
+#if 0
+static void* TestLinkedListInserts(void *threadId)
 {
    newSyntaxNS::list_node<list_node_type> node;
    transaction::initialize_thread();
@@ -275,7 +278,7 @@ void* TestLinkedListInsertsBis(void *threadId)
    return 0;
 }
 
-
+#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -293,6 +296,7 @@ static void* stall(void *)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+#if 0
 static void TestNested2()
 {
    atomic(t)
@@ -306,9 +310,10 @@ static void TestNested2()
    }
 
 }
-
+#endif
 ///////////////////////////////////////////////////////////////////////////////
-void TestNested()
+#if 0
+static void TestNested()
 {
    atomic(t)
    {
@@ -320,11 +325,12 @@ void TestNested()
       cout << "TestNested caught exception" << endl;
    }
 }
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 static void TestTransactionInsideLock()
 {
-   using namespace boost::stm;
+   //using namespace boost::stm;
 
    cout << "X: " << x.value() << endl;
 
@@ -349,11 +355,10 @@ static void TestTransactionInsideLock()
    cout << "X: " << x.value() << endl;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 static void TestEarlyRelease()
 {
-   using namespace boost::stm;
+   //using namespace boost::stm;
 
    cout << "X: " << x.value() << endl;
 

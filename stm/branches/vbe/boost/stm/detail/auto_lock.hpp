@@ -27,8 +27,8 @@
 #define BOOST_STM_LOCK(a) boost::stm::transaction::lock_(a)
 #define BOOST_STM_UNLOCK(a) boost::stm::transaction::unlock_(a)
 #else
-#define BOOST_STM_LOCK(a) boost::stm::lock(a)
-#define BOOST_STM_UNLOCK(a) boost::stm::unlock(a)
+#define BOOST_STM_LOCK(a) boost::synchro::lock(a)
+#define BOOST_STM_UNLOCK(a) boost::synchro::unlock(a)
 #endif
 
 //---------------------------------------------------------------------------
@@ -102,7 +102,7 @@ private:
 
       for (size_t i = 0; i < timeOut; ++i)
       {
-         if (0 == trylock(lock_))
+         if (0 == synchro::try_lock(*lock_))
          {
             hasLock_ = true;
             insert_into_threaded_lock_map(mutex);
@@ -117,9 +117,8 @@ private:
 
    void insert_into_threaded_lock_map(Mutex* mutex)
    {
-      lock(global_lock());
+      synchro::lock_guard<Mutex> lock_i(*global_lock());
       threaded_locks().insert(ThreadedLockPair(THREAD_ID, mutex));
-      unlock(global_lock());
    }
 
    void do_auto_lock(Mutex *mutex)
@@ -145,25 +144,23 @@ private:
 
    bool thread_has_lock(Mutex *rhs)
    {
-      lock(global_lock());
+      synchro::lock_guard<Mutex> lock_g(*global_lock());
 
       for (ThreadedLockIter i = threaded_locks().begin();
       i != threaded_locks().end(); ++i)
       {
          if (i->first == THREAD_ID && i->second == rhs)
          {
-            unlock(global_lock());
             return true;
          }
       }
 
-      unlock(global_lock());
       return false;
    }
 
    void remove_thread_has_lock(Mutex *rhs)
    {
-      lock(global_lock());
+      synchro::lock_guard<Mutex> lock_g(*global_lock());
 
       for (ThreadedLockIter i = threaded_locks().begin();
       i != threaded_locks().end(); ++i)
@@ -174,8 +171,6 @@ private:
             break;
          }
       }
-
-      unlock(global_lock());
    }
 
    static Mutex *global_lock()

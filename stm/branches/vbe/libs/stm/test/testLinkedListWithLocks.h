@@ -34,7 +34,7 @@ class list_node : public boost::stm::transaction_object< list_node<T> >
 public:
 
    list_node() : next_(0), value_(0) {}
-   explicit list_node(int const &rhs) : value_(rhs), next_(0) {}
+   explicit list_node(int const &rhs) : next_(0), value_(rhs) {}
 
    // zero initialization for native types
    void clear() { value_ = T(); next_ = 0; }
@@ -120,7 +120,7 @@ public:
             succeeded2 = internal_insert(node2);
             t.end();
          }
-         catch (boost::stm::aborted_transaction_exception&) {}
+         catch (aborted_transaction_exception&) {}
 
          if (!succeeded1 || !succeeded2)
          {
@@ -148,7 +148,7 @@ public:
       for (; ;t.restart())
       {
          try { return internal_insert(node, t); }
-         catch (boost::stm::aborted_transaction_exception&) {}
+         catch (aborted_transaction_exception&) {}
       }
    }
 
@@ -168,7 +168,7 @@ public:
       for (; ; t.restart())
       {
          try { return internal_lookup(val, t); }
-         catch (boost::stm::aborted_transaction_exception&) {}
+         catch (aborted_transaction_exception&) {}
       }
    }
 
@@ -265,7 +265,7 @@ public:
       for (transaction t; ; t.restart())
       {
          try { return internal_remove(node, t); }
-         catch (boost::stm::aborted_transaction_exception&) {}
+         catch (aborted_transaction_exception&) {}
       }
    }
 
@@ -326,7 +326,7 @@ public:
             t.write(head_).clear();
             t.end();
          }
-         catch (boost::stm::aborted_transaction_exception&) {}
+         catch (aborted_transaction_exception&) {}
       }
    }
 

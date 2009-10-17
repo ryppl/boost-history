@@ -151,27 +151,27 @@ inline int transaction::def_tx_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
 
       if (!t->is_currently_locked_lock(mutex))
       {
-         lock(mutex); // TBR if (0 != lock(mutex)) return -1;
+         synchro::lock(*mutex); // TBR if (0 != lock(mutex)) return -1;
       }
 
       t->add_to_currently_locked_locks(mutex);
       t->add_to_obtained_locks(mutex);
       t->commit_deferred_update_tx();
 
-      lock(&latmMutex_);
+      synchro::lock(latmMutex_);
       def_do_core_tx_conflicting_lock_pthread_lock_mutex
          (mutex, 0, 0, true);
-      unlock(&latmMutex_);
+      synchro::unlock(latmMutex_);
 
       return 0;
    }
 
    for (;;)
    {
-      lock(mutex); // TBR int val = lock(mutex);
+      synchro::lock(*mutex); // TBR int val = lock(mutex);
       // TBR if (0 != val) return val;
 
-      lock(&latmMutex_);
+      synchro::lock(latmMutex_);
 
       try
       {
@@ -183,16 +183,16 @@ inline int transaction::def_tx_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
       }
       catch (...)
       {
-         unlock(mutex);
-         unlock(&latmMutex_);
+         synchro::unlock(*mutex);
+         synchro::unlock(latmMutex_);
          throw;
       }
 
       //-----------------------------------------------------------------------
       // we weren't able to do the core lock work, unlock our mutex and sleep
       //-----------------------------------------------------------------------
-      unlock(mutex);
-      unlock(&latmMutex_);
+      synchro::unlock(*mutex);
+      synchro::unlock(latmMutex_);
 
       SLEEP(cm_lock_sleep_time());
       waitTime += cm_lock_sleep_time();
@@ -200,7 +200,7 @@ inline int transaction::def_tx_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
    }
 
    latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-   unlock(&latmMutex_);
+   synchro::unlock(latmMutex_);
 
    // note: we do not release the transactionsInFlightMutex - this will prevents
    // new transactions from starting until this lock is released
@@ -218,10 +218,10 @@ inline int transaction::def_tx_conflicting_lock_pthread_trylock_mutex(Mutex *mut
 
    bool txIsIrrevocable = false;
 
-   int val = trylock(mutex);
+   int val = synchro::try_lock(*mutex);
    if (0 != val) return val;
 
-   lock(&latmMutex_);
+   synchro::lock(latmMutex_);
 
    if (transaction* t = get_inflight_tx_of_same_thread(false))
    {
@@ -239,20 +239,20 @@ inline int transaction::def_tx_conflicting_lock_pthread_trylock_mutex(Mutex *mut
       //-----------------------------------------------------------------------
       if (!def_do_core_tx_conflicting_lock_pthread_lock_mutex(mutex, 0, 0, txIsIrrevocable))
       {
-         unlock(mutex);
-         unlock(&latmMutex_);
+         synchro::unlock(*mutex);
+         synchro::unlock(latmMutex_);
          return -1;
       }
    }
    catch (...)
    {
-      unlock(mutex);
-      unlock(&latmMutex_);
+      synchro::unlock(*mutex);
+      synchro::unlock(latmMutex_);
       throw;
    }
 
    latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-   unlock(&latmMutex_);
+   synchro::unlock(latmMutex_);
 
    // note: we do not release the transactionsInFlightMutex - this will prevents
    // new transactions from starting until this lock is released
@@ -306,7 +306,7 @@ inline int transaction::def_tx_conflicting_lock_pthread_unlock_mutex(Mutex *mute
 
    // TBR if (hasLock) return unlock(mutex);
    // TBR else return 0;
-   if (hasLock) unlock(mutex);
+   if (hasLock) synchro::unlock(*mutex);
    return 0;
 }
 

@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -40,23 +40,23 @@
 static Mutex L1 = PTHREAD_MUTEX_INITIALIZER;
 static Mutex L2 = PTHREAD_MUTEX_INITIALIZER;
 static Mutex L3 = PTHREAD_MUTEX_INITIALIZER;
-static Mutex L8 = PTHREAD_MUTEX_INITIALIZER;
-static Mutex L9 = PTHREAD_MUTEX_INITIALIZER;
+//static Mutex L8 = PTHREAD_MUTEX_INITIALIZER;
+//static Mutex L9 = PTHREAD_MUTEX_INITIALIZER;
 
 #else
 static Mutex L1;
 static Mutex L2;
 static Mutex L3;
-static Mutex L8;
-static Mutex L9;
+//static Mutex L8;
+//static Mutex L9;
 
 #endif
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
 
-static native_trans<int> *arr1, *arr2, *arr3, *arr4, *arr5, *arr6, *arr7, *arr8, *arr9;
+static native_trans<int> *arr1, *arr2, *arr3, *arr4, *arr5, *arr6, *arr7, *arr8; //, *arr9;
 
-static bool work1 = false, work2 = false, work3 = false, work4 = false;
+static bool work1 = false, work2 = false; //, work3 = false, work4 = false;
 static int txFactor = 1;
 static int lockFactor = 1;
 
@@ -105,7 +105,8 @@ static void do_work2()
    }
 }
 
-void do_work3bis()
+#if 0
+static void do_work3()
 {
    if (work3) return;
    work3 = true;
@@ -120,8 +121,9 @@ void do_work3bis()
        transaction::unlock_(L8);
    }
 }
-
-void do_work4()
+#endif
+#if 0
+static void do_work4()
 {
    if (work4) return;
    work4 = true;
@@ -136,7 +138,7 @@ void do_work4()
       transaction::unlock_(L9);
    }
 }
-
+#endif
 static void* tx1(void *threadId)
 {
    transaction::initialize_thread();

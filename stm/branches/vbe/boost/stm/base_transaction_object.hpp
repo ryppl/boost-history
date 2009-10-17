@@ -116,28 +116,15 @@ public:
 #if USE_STM_MEMORY_MANAGER
     static void return_mem(void *mem, size_t size)
     {
-#ifndef BOOST_STM_USE_BOOST_MUTEX
-        lock(&transactionObjectMutex_);
+        synchro::lock_guard<Mutex> lock(transactionObjectMutex_);
         memory_.returnChunk(mem, size);
-        unlock(&transactionObjectMutex_);
-#else
-        boost::lock_guard<boost::mutex> lock(transactionObjectMutex_);
-        memory_.returnChunk(mem, size);
-#endif
     }
 
     static void* retrieve_mem(size_t size)
     {
-#ifndef BOOST_STM_USE_BOOST_MUTEX
-        lock(&transactionObjectMutex_);
+        synchro::lock_guard<Mutex> lock(transactionObjectMutex_);
         void *mem = memory_.retrieveChunk(size);
-        unlock(&transactionObjectMutex_);
-#else
-        boost::lock_guard<boost::mutex> lock(transactionObjectMutex_);
-        void *mem = memory_.retrieveChunk(size);
-#endif
-
-      return mem;
+        return mem;
     }
 #endif
 

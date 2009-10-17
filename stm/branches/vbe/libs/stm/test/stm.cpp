@@ -1,18 +1,19 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////
 #include <boost/stm/transaction.hpp>
+
 #include "main.h"
 #include <sstream>
 #include <iostream>
@@ -45,10 +46,10 @@
 #include "litExample.h"
 #endif
 
-using namespace boost::stm; using namespace nMain; using namespace std;
+using namespace boost; using namespace boost::stm; using namespace nMain; using namespace std;
 
-boost::stm::native_trans<int> threadsFinished;
-boost::stm::native_trans<int> threadsStarted;
+native_trans<int> threadsFinished;
+native_trans<int> threadsStarted;
 time_t startTimer = kStartingTime;
 time_t endTimer = 0;
 eWorkType gWorkLoadType;
@@ -144,7 +145,7 @@ void setupEnvironment(int argc, char **argv)
          if (latmType == "full") transaction::do_full_lock_protection();
          else if (latmType == "tm") transaction::do_tm_lock_protection();
          else if (latmType == "tx") transaction::do_tx_lock_protection();
-         else 
+         else
          {
             cout << "invalid LATM protection type, exiting" << endl;
             cout << first << latmType << endl;
@@ -205,9 +206,9 @@ int main(int argc, char **argv)
 //-----------------------------------------------------------------------------
 void idleUntilAllThreadsHaveReached(int const &threadId)
 {
-   lock(&finishLock);
+   synchro::lock(finishLock);
    threadsStarted.value()++;
-   unlock(&finishLock);
+   synchro::unlock(finishLock);
 
    while (threadsStarted.value() != kMaxThreads) SLEEP(5);
 }
@@ -215,17 +216,17 @@ void idleUntilAllThreadsHaveReached(int const &threadId)
 //-----------------------------------------------------------------------------
 void finishThread()
 {
-   lock(&finishLock);
+   synchro::lock(finishLock);
    threadsFinished.value()++;
-   unlock(&finishLock);
+   synchro::unlock(finishLock);
 }
 
 //-----------------------------------------------------------------------------
 void finishThread(int const &threadId)
 {
-   lock(&finishLock);
+   synchro::lock(finishLock);
    threadsFinished.value()++;
-   unlock(&finishLock);
+   synchro::unlock(finishLock);
 }
 
 //-----------------------------------------------------------------------------
@@ -233,14 +234,14 @@ void logCommitsAndAborts(std::string const &typeOfRun)
 {
    ofstream aborts("abortSetSize.txt", std::ios::app);
 
-   transaction_bookkeeping::AbortHistory::const_iterator j = 
+   transaction_bookkeeping::AbortHistory::const_iterator j =
       transaction::bookkeeping().getAbortWriteSetList().begin();
-   transaction_bookkeeping::AbortHistory::const_iterator k = 
+   transaction_bookkeeping::AbortHistory::const_iterator k =
       transaction::bookkeeping().getAbortReadSetList().begin();
 
-   transaction_bookkeeping::CommitHistory::const_iterator l = 
+   transaction_bookkeeping::CommitHistory::const_iterator l =
       transaction::bookkeeping().getCommitWriteSetList().begin();
-   transaction_bookkeeping::CommitHistory::const_iterator m = 
+   transaction_bookkeeping::CommitHistory::const_iterator m =
       transaction::bookkeeping().getCommitReadSetList().begin();
 
    std::vector<double> percentList;
@@ -253,7 +254,7 @@ void logCommitsAndAborts(std::string const &typeOfRun)
       char *space = k->first.commitId_ > 10 ? "   " : k->first.commitId_ > 100 ? "  " : " ";
 
       aborts << k->first.threadId_ << "\t\t" << space
-             << k->first.commitId_ << "\t\t" << k->second << "\t\t" << j->second 
+             << k->first.commitId_ << "\t\t" << k->second << "\t\t" << j->second
              << "\t\t\t\t" << m->second << "\t\t" << l->second << "\t\t";
 #endif
       double percent = double(j->second + k->second) / double(m->second + l->second);
@@ -269,10 +270,10 @@ void logCommitsAndAborts(std::string const &typeOfRun)
 
    percentTotal = percentTotal / double(percentList.size());
 
-   uint32 abortCount = transaction::bookkeeping().getAbortReadSetList().size() 
+   uint32 abortCount = transaction::bookkeeping().getAbortReadSetList().size()
       + transaction::bookkeeping().getAbortWriteSetList().size();
 
-   aborts << typeOfRun.c_str() << "  total_aborts: " << transaction::bookkeeping().totalAborts() 
+   aborts << typeOfRun.c_str() << "  total_aborts: " << transaction::bookkeeping().totalAborts()
           << "\t\taborted_r+w_count: " <<  abortCount
           << "\t\tabort_ops/commit_ops: " << percentTotal << endl;
 

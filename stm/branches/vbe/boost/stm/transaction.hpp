@@ -538,13 +538,14 @@ public:
       // an exception here because restarting the transactions will cause it to
       // infinitely fail
       //-----------------------------------------------------------------------
-      lock(inflight_lock());
+      synchro::lock_guard<Mutex> lock_m(*inflight_lock());
+      //lock(inflight_lock());
       if (other_in_flight_same_thread_transactions())
       {
-         unlock(inflight_lock());
+         //unlock(inflight_lock());
          throw aborted_transaction_exception("closed nesting throw");
       }
-      unlock(inflight_lock());
+      //unlock(inflight_lock());
 
       return true;
    }
@@ -866,7 +867,7 @@ private:
    static std::string outputBlockedThreadsAndLockedLocks();
 #endif
    //--------------------------------------------------------------------------
-   inline int const& hasLock() const { return hasMutex_; }
+   //inline int const& hasLock() const { return hasMutex_; }
    void lock_tx();
    void unlock_tx();
 
@@ -922,14 +923,17 @@ private:
          // if transaction_thread() is not invalid (and not us), we get original
          // object from the thread that is changing it
          //--------------------------------------------------------------------
-         lock(&transactionMutex_);
-         lock_tx();
+         //lock(&transactionMutex_);
+         synchro::lock_guard<Mutex> guard_transactionMutex(transactionMutex_);
+         //lock_tx();
+         synchro::lock_guard<Mutex> lock(*mutex());
+
 
          if (in.transaction_thread() != kInvalidThread)
          {
-            //lock_guard2<Mutex> guard(mutex(in.transaction_thread()));
-            Mutex& m=mutex(in.transaction_thread());
-            stm::lock(m);
+            synchro::lock_guard<Mutex> guard(mutex(in.transaction_thread()));
+            //Mutex& m=mutex(in.transaction_thread());
+            //stm::lock(m);
 
             WriteContainer* c = write_lists(in.transaction_thread());
             WriteContainer::iterator readMem = c->find((base_transaction_object*)&in);
@@ -944,10 +948,7 @@ private:
 #if USE_BLOOM_FILTER
             bloom().insert((size_t)readMem->second);
 #endif
-            unlock(&transactionMutex_);
-            unlock_tx();
-            stm::unlock(m);
-            //guard.unlock();
+            //unlock_tx();
 
             ++reads_;
             return *static_cast<T*>(readMem->second);
@@ -960,8 +961,7 @@ private:
 #if USE_BLOOM_FILTER
          bloom().insert((size_t)&in);
 #endif
-         unlock(&transactionMutex_);
-         unlock_tx();
+         //unlock_tx();
          ++reads_;
          return in;
       }
@@ -977,7 +977,8 @@ private:
             cm_abort_on_write(*this, (base_transaction_object&)(in));
          }
 
-         lock_tx();
+         synchro::lock_guard<Mutex> lock(*mutex());
+         //lock_tx();
          // already have locked us above - in both if / else
 #ifndef DISABLE_READ_SETS
          readList().insert((base_transaction_object*)&in);
@@ -985,7 +986,7 @@ private:
 #if USE_BLOOM_FILTER
          bloom().insert((size_t)&in);
 #endif
-         unlock_tx();
+         //unlock_tx();
          ++reads_;
       }
       return in;
@@ -1009,13 +1010,14 @@ private:
       // memory - since we need to ensure other threads don't try to
       // manipulate this at the same time we are going to
       //-----------------------------------------------------------------------
-      lock(&transactionMutex_);
+      //lock(&transactionMutex_);
+      synchro::lock_guard<Mutex> lock_m(transactionMutex_);
 
       // we currently don't allow write stealing in direct update. if another
       // tx beat us to the memory, we abort
       if (in.transaction_thread() != kInvalidThread)
       {
-         unlock(&transactionMutex_);
+         //unlock(&transactionMutex_);
          throw aborted_tx("direct writer already exists.");
       }
 
@@ -1024,7 +1026,7 @@ private:
 #if USE_BLOOM_FILTER
       bloom().insert((size_t)&in);
 #endif
-      unlock(&transactionMutex_);
+      //unlock(&transactionMutex_);
       return in;
    }
 
@@ -1043,17 +1045,20 @@ private:
       // and see if anyone else is writing to it. if not, we add the item to
       // our write list and our deletedList
       //-----------------------------------------------------------------------
-      lock(&transactionMutex_);
+      //lock(&transactionMutex_);
+      synchro::unique_lock<Mutex> lock_m(transactionMutex_);
 
       if (in.transaction_thread() != kInvalidThread)
       {
-         unlock(&transactionMutex_);
+         //unlock(&transactionMutex_);
          cm_abort_on_write(*this, (base_transaction_object&)(in));
       }
       else
       {
          in.transaction_thread(threadId_);
-         unlock(&transactionMutex_);
+          
+         //unlock(&transactionMutex_);
+         lock_m.unlock();
          // is this really necessary? in the deferred case it is, but in direct it
          // doesn't actually save any time for anything
          //writeList()[(base_transaction_object*)&in] = 0;
@@ -1077,17 +1082,19 @@ private:
       // and see if anyone else is writing to it. if not, we add the item to
       // our write list and our deletedList
       //-----------------------------------------------------------------------
-      lock(&transactionMutex_);
+      //lock(&transactionMutex_);
+      synchro::unique_lock<Mutex> lock_m(transactionMutex_);
 
       if (in.transaction_thread() != kInvalidThread)
       {
-         unlock(&transactionMutex_);
+         //unlock(&transactionMutex_);
          cm_abort_on_write(*this, (base_transaction_object&)(in));
       }
       else
       {
          in.transaction_thread(threadId_);
-         unlock(&transactionMutex_);
+         //unlock(&transactionMutex_);
+         lock_m.unlock();
          // is this really necessary? in the deferred case it is, but in direct it
          // doesn't actually save any time for anything
          //writeList()[(base_transaction_object*)&in] = 0;
@@ -1147,7 +1154,8 @@ public:
 #else
       if (bloom().exists((size_t)&in)) return in;
 #endif
-      lock_tx();
+      synchro::lock_guard<Mutex> lock(*mutex());
+      //lock_tx();
 #ifndef DISABLE_READ_SETS
 #if PERFORMING_VALIDATION
       readList()[(base_transaction_object*)&in] = in.version_;
@@ -1158,7 +1166,7 @@ public:
 #if USE_BLOOM_FILTER
       bloom().insert((size_t)&in);
 #endif
-      unlock_tx();
+      //unlock_tx();
       ++reads_;
       return in;
    }
@@ -1186,10 +1194,14 @@ private:
       if (i == writeList().end())
       {
          // get the lock before we make a copy of this object
-         lock_tx();
+         //lock_tx();
+         synchro::unique_lock<Mutex> lock(*mutex());
 #if USE_BLOOM_FILTER
          bloom().insert((size_t)&in);
-         unlock_tx();
+         //unlock_tx();
+         lock.unlock();
+#else
+         
 #endif
 #if PERFORMING_WRITE_BLOOM
          wbloom().set_bv1(bloom().h1());
@@ -1200,7 +1212,7 @@ private:
          returnValue->transaction_thread(threadId_);
          writeList().insert(tx_pair((base_transaction_object*)&in, returnValue));
 #ifndef USE_BLOOM_FILTER
-         unlock_tx();
+         //unlock_tx();
 #endif
          return *static_cast<T*>(returnValue);
       }
@@ -1224,9 +1236,11 @@ private:
       //-----------------------------------------------------------------------
       if (in.transaction_thread() != kInvalidThread)
       {
-         lock_tx();
+         { synchro::lock_guard<Mutex> lock(*mutex());
+         //lock_tx();
          bloom().insert((size_t)&in);
-         unlock_tx();
+         //unlock_tx();
+         }
          writeList().insert(tx_pair((base_transaction_object*)&in, 0));
       }
       //-----------------------------------------------------------------------
@@ -1236,9 +1250,11 @@ private:
       //-----------------------------------------------------------------------
       else
       {
-         lock_tx();
+         { synchro::lock_guard<Mutex> lock(*mutex());
+         //lock_tx();
          bloom().insert((size_t)&in);
-         unlock_tx();
+         //unlock_tx();
+         }
          // check the ENTIRE write container for this piece of memory in the
          // second location. If it's there, it means we made a copy of a piece
          for (WriteContainer::iterator j = writeList().begin(); writeList().end() != j; ++j)
@@ -1997,7 +2013,7 @@ private:
 
 
    // transaction specific data
-   int hasMutex_; // bool - 1 bit
+   //int hasMutex_; // bool - 1 bit
    mutable size_t priority_;
    transaction_state state_; // 2bits
    size_t reads_;
@@ -2020,14 +2036,14 @@ inline transaction* current_transaction() {return transaction::current_transacti
 
 template <typename MUTEX, MUTEX& mtx>
 locker<MUTEX,mtx>::locker() {
-    boost::stm::lock(mtx);
+    synchro::lock(mtx);
 }
 template <typename MUTEX, MUTEX& mtx>
 locker<MUTEX,mtx>::~locker() {}
 
 template <typename MUTEX, MUTEX& mtx>
 void locker<MUTEX,mtx>::unlock() {
-    boost::stm::unlock(mtx);
+    synchro::unlock(mtx);
 }
 
 template <class T> T* cache_allocate(transaction* t) {

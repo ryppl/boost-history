@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -156,7 +156,8 @@ static void* TestLinkedListInsertsWithLocks(void *threadId)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void* TestLinkedListInserts(void *threadId)
+#if 0
+static void* TestLinkedListInserts(void *threadId)
 {
    LATM::list_node<int> node;
    transaction::initialize_thread();
@@ -234,7 +235,7 @@ void* TestLinkedListInserts(void *threadId)
 
    return 0;
 }
-
+#endif
 ///////////////////////////////////////////////////////////////////////////////
 static void* TestHashMapInserts(void *threadId)
 {

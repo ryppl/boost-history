@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -44,7 +44,7 @@ static Mutex lock1;
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
 
-static boost::stm::native_trans<int> globalInt;
+static native_trans<int> globalInt;
 
 ///////////////////////////////////////////////////////////////////////////////
 static void* TestIsolatedComposedLockInTxCount(void *threadId)

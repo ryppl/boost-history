@@ -29,8 +29,8 @@ namespace nGlobalIntArr
 
 using namespace nGlobalIntArr;
 int globalCountExe = 0;
-boost::stm::native_trans<int> global_int;
-boost::stm::native_trans<int> arr[kMaxGlobalIntSize];
+native_trans<int> global_int;
+native_trans<int> arr[kMaxGlobalIntSize];
 
 int executionsPending = 0;
 

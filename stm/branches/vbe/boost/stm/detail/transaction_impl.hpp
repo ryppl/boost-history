@@ -125,16 +125,19 @@ inline void transaction::make_irrevocable()
    //-----------------------------------------------------------------------
    while (true)
    {
-      lock(inflight_lock());
+      {
+      //lock(inflight_lock());
+      synchro::lock_guard<Mutex> lock_m(*inflight_lock());
 
       if (!irrevocableTxInFlight())
       {
          tx_type(eIrrevocableTx);
-         unlock(inflight_lock());
+         //unlock(inflight_lock());
          return;
       }
 
-      unlock(inflight_lock());
+      //unlock(inflight_lock());
+      }
       SLEEP(10);
       cm_perform_irrevocable_tx_wait_priority_promotion(*this);
    }
@@ -160,20 +163,24 @@ inline void transaction::make_isolated()
          ("aborting tx in make_isolated");
       }
 
-      lock(general_lock());
-      lock(inflight_lock());
+      {
+      //lock(general_lock());
+      synchro::lock_guard<Mutex> lock_g(*general_lock());
+      //lock(inflight_lock());
+      synchro::lock_guard<Mutex> lock_i(*inflight_lock());
 
       if (!irrevocableTxInFlight() && canAbortAllInFlightTxs())
       {
          tx_type(eIrrevocableAndIsolatedTx);
          abortAllInFlightTxs();
-         unlock(general_lock());
-         unlock(inflight_lock());
+         //unlock(general_lock());
+         //unlock(inflight_lock());
          return;
       }
 
-      unlock(general_lock());
-      unlock(inflight_lock());
+      //unlock(general_lock());
+      //unlock(inflight_lock());
+     }
       //SLEEP(10);
       cm_perform_isolated_tx_wait_priority_promotion(*this);
    }
@@ -222,13 +229,17 @@ inline void transaction::commit_deferred_update_tx()
    //--------------------------------------------------------------------------
    // otherwise, force the tx to commit its writes/reads
    //--------------------------------------------------------------------------
-   while (0 != trylock(&transactionMutex_))
+   #if 0
+   while (0 != synchro::try_lock(&transactionMutex_))
    {
       bookkeeping_.inc_lock_convoy_ms(1);
       SLEEP(1);
    }
+   #endif
 
-   lock_tx();
+   synchro::lock_guard<Mutex> lock_g(*general_lock());
+   synchro::lock_guard<Mutex> lock_m(*mutex());
+   //lock_tx();
 
    //--------------------------------------------------------------------------
    // this is a very important and subtle optimization. if the transaction is
@@ -238,12 +249,13 @@ inline void transaction::commit_deferred_update_tx()
    //--------------------------------------------------------------------------
    if (is_only_reading())
    {
-      unlock(general_lock());
-      unlock_tx();
+      //unlock(general_lock());
+      //unlock_tx();
    }
    else
    {
-      lock(inflight_lock());
+      //lock(inflight_lock());
+      synchro::lock_guard<Mutex> lock_i(*inflight_lock());
 
       //-----------------------------------------------------------------------
       // commit writes, clear new and deletes
@@ -255,9 +267,9 @@ inline void transaction::commit_deferred_update_tx()
       deferredCommitTransactionNewMemory();
       deferredCommitTransactionDeletedMemory();
 
-      unlock_tx();
-      unlock(general_lock());
-      unlock(inflight_lock());
+      //unlock_tx();
+      //unlock(general_lock());
+      //unlock(inflight_lock());
    }
 
    //--------------------------------------------------------------------------
@@ -269,20 +281,20 @@ inline void transaction::commit_deferred_update_tx()
 //-----------------------------------------------------------------------------
 inline void transaction::lock_tx()
 {
-   while (0 != trylock(mutex()))
+   while (0 != synchro::try_lock(*mutex()))
    {
       SLEEP(1);
    }
 
-   hasMutex_ = 1;
+   //hasMutex_ = 1;
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 inline void transaction::unlock_tx()
 {
-   unlock(mutex());
-   hasMutex_ = 0;
+   synchro::unlock(*mutex());
+   //hasMutex_ = 0;
 }
 
 //--------------------------------------------------------------------------
@@ -294,14 +306,14 @@ inline void transaction::lock_all_mutexes_but_this(size_t threadId)
       i != tss_context_map_.end(); ++i)
    {
       if (i->first == threadId) continue;
-      lock(i->second->mutex_);
+      synchro::lock(i->second->mutex_);
    }
 #else
     for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
       i != threadMutexes_.end(); ++i)
    {
       if (i->first == threadId) continue;
-      lock(i->second);
+      synchro::lock(*(i->second));
    }
 #endif
 }
@@ -314,14 +326,14 @@ inline void transaction::unlock_all_mutexes_but_this(size_t threadId)
       i != tss_context_map_.end(); ++i)
    {
       if (i->first == threadId) continue;
-      unlock(i->second->mutex_);
+      synchro::unlock(i->second->mutex_);
    }
 #else
    for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
       i != threadMutexes_.end(); ++i)
    {
       if (i->first == threadId) continue;
-      unlock(i->second);
+      synchro::unlock(*(i->second));
    }
 #endif
 }
@@ -334,16 +346,16 @@ inline void transaction::lock_all_mutexes()
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
       i != tss_context_map_.end(); ++i)
    {
-      lock(i->second->mutex_);
+      synchro::lock(i->second->mutex_);
    }
 #else
    for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
       i != threadMutexes_.end(); ++i)
    {
-      lock(i->second);
+      synchro::lock(*(i->second));
    }
 #endif
-   hasMutex_ = 1;
+   //hasMutex_ = 1;
 }
 
 //-----------------------------------------------------------------------------
@@ -358,16 +370,16 @@ inline void transaction::unlock_all_mutexes()
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
       i != tss_context_map_.end(); ++i)
    {
-      unlock(i->second->mutex_);
+      synchro::unlock(i->second->mutex_);
    }
 #else
    for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
       i != threadMutexes_.end(); ++i)
    {
-      unlock(i->second);
+      synchro::unlock(*(i->second));
    }
 #endif
-   hasMutex_ = 0;
+   //hasMutex_ = 0;
 }
 
 //--------------------------------------------------------------------------
@@ -473,7 +485,8 @@ inline transaction::transaction() :
 
 #endif
 
-   hasMutex_(0), priority_(0),
+   //hasMutex_(0), 
+   priority_(0),
    state_(e_no_state),
    reads_(0),
    startTime_(time(0))
@@ -577,12 +590,15 @@ inline bool transaction::restart()
    //-----------------------------------------------------------------------
 #if PERFORMING_COMPOSITION
 #ifdef USING_SHARED_FORCED_TO_ABORT
-   lock(inflight_lock());
+   {
+   //lock(inflight_lock());
+   synchro::lock_guard<Mutex> lock_i(*inflight_lock());
    if (!otherInFlightTransactionsOfSameThreadNotIncludingThis(this))
    {
       unforce_to_abort();
    }
-   unlock(inflight_lock());
+   //unlock(inflight_lock());
+   }
 #else
    unforce_to_abort();
 #endif
@@ -652,23 +668,27 @@ inline void transaction::put_tx_inflight()
 #if PERFORMING_LATM
    while (true)
    {
-      lock(inflight_lock());
+      {
+      //lock(inflight_lock());
+      synchro::lock_guard<Mutex> lock_i(*inflight_lock());
 
       if (can_go_inflight() && !isolatedTxInFlight())
       {
          transactionsInFlight_.insert(this);
          state_ = e_in_flight;
-         unlock(inflight_lock());
+         //unlock(inflight_lock());
          break;
       }
 
-      unlock(inflight_lock());
+      //unlock(inflight_lock());
+      }
       SLEEP(10);
    }
 #else
-   lock(inflight_lock());
+   synchro::lock_guard<Mutex> lock_i(*inflight_lock());
+   //lock(inflight_lock());
    transactionsInFlight_.insert(this);
-   unlock(inflight_lock());
+   //unlock(inflight_lock());
    state_ = e_in_flight;
 #endif
 }
@@ -680,14 +700,16 @@ inline transaction::~transaction()
    // if we're not an inflight transaction - bail
    if (state_ != e_in_flight)
    {
-      if (hasLock()) unlock_tx();
+      //if (hasLock()) unlock_tx();
       return;
    }
 
-   if (!hasLock()) lock_tx();
-   abort();
-   unlock_tx();
-   transactions().pop();
+    //if (!hasLock()) 
+    { 
+       synchro::lock_guard<Mutex> lock(*mutex());
+        abort();
+    }
+    transactions().pop();
 
 }
 
@@ -739,20 +761,14 @@ inline void transaction::lock_and_abort()
 {
    if (direct_updating())
    {
-      //bool wasWriting = isWriting() ? true : false;
-      bool wasWriting = isWriting();
-
-      if (wasWriting) lock(general_lock());
-      lock_tx();
+      synchro::lock_guard_if<Mutex> lock_g(*general_lock(), isWriting());
+      synchro::lock_guard<Mutex> lock_m(*mutex());
       direct_abort();
-      unlock_tx();
-      if (wasWriting) unlock(general_lock());
    }
    else
    {
-      lock_tx();
+      synchro::lock_guard<Mutex> lock_m(*mutex());
       deferred_abort();
-      unlock_tx();
    }
 }
 
@@ -772,8 +788,10 @@ inline void transaction::invalidating_direct_end_transaction()
       ("aborting committing transaction due to contention manager priority inversion");
    }
 
-   lock(general_lock());
-   lock_tx();
+   synchro::lock(*general_lock());
+   //lock_tx();
+   synchro::lock(*mutex());
+
 
    //--------------------------------------------------------------------------
    // erase this from the inflight transactions so processing through the
@@ -789,28 +807,30 @@ inline void transaction::invalidating_direct_end_transaction()
       // so unlock it so we can reduce contention
       //-----------------------------------------------------------------------
       bool wasWriting = isWriting() ? true : false;
-      if (!wasWriting) unlock(general_lock());
+      if (!wasWriting) synchro::unlock(*general_lock());
       direct_abort();
-      unlock_tx();
+      //unlock_tx();
+      synchro::unlock(*mutex());
+      
       //-----------------------------------------------------------------------
       // if this tx was writing, unlock the transaction mutex now
       //-----------------------------------------------------------------------
-      if (wasWriting) unlock(general_lock());
+      if (wasWriting) synchro::unlock(*general_lock());
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
    }
 
    lock_all_mutexes_but_this(threadId_);
 
-   lock(inflight_lock());
+   synchro::lock(*inflight_lock());
    transactionsInFlight_.erase(this);
 
    if (other_in_flight_same_thread_transactions())
    {
       state_ = e_hand_off;
       unlock_all_mutexes();
-      unlock(general_lock());
-      unlock(inflight_lock());
+      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock());
       bookkeeping_.inc_handoffs();
    }
    else
@@ -821,8 +841,8 @@ inline void transaction::invalidating_direct_end_transaction()
       if (e_committed == state_)
       {
          unlock_all_mutexes();
-         unlock(general_lock());
-         unlock(inflight_lock());
+         synchro::unlock(*general_lock());
+         synchro::unlock(*inflight_lock());
       }
    }
 }
@@ -854,14 +874,14 @@ inline void transaction::invalidating_deferred_end_transaction()
    if (is_only_reading())
    {
     //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
-      lock(inflight_lock());
+      synchro::lock(*inflight_lock());
       transactionsInFlight_.erase(this);
 
 #if PERFORMING_COMPOSITION
       if (other_in_flight_same_thread_transactions())
       {
     //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
-      unlock(inflight_lock());
+      synchro::unlock(*inflight_lock());
          state_ = e_hand_off;
          bookkeeping_.inc_handoffs();
       }
@@ -869,7 +889,7 @@ inline void transaction::invalidating_deferred_end_transaction()
 #endif
       {
     //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
-      unlock(inflight_lock());
+      synchro::unlock(*inflight_lock());
          tx_type(eNormalTx);
 #if PERFORMING_LATM
          get_tx_conflicting_locks().clear();
@@ -884,7 +904,7 @@ inline void transaction::invalidating_deferred_end_transaction()
       return;
    }
 
-   while (0 != trylock(&transactionMutex_)) {
+   while (0 != synchro::try_lock(transactionMutex_)) {
     //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
     }
 
@@ -898,7 +918,7 @@ inline void transaction::invalidating_deferred_end_transaction()
     //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
    if (forced_to_abort())
    {
-      unlock(general_lock());
+      synchro::unlock(*general_lock());
       deferred_abort(true);
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
@@ -920,7 +940,7 @@ inline void transaction::invalidating_deferred_end_transaction()
       //-----------------------------------------------------------------------
     //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
       lock_all_mutexes();
-      lock(inflight_lock());
+      synchro::lock(*inflight_lock());
 
 #if PERFORMING_COMPOSITION
       if (other_in_flight_same_thread_transactions())
@@ -929,8 +949,8 @@ inline void transaction::invalidating_deferred_end_transaction()
          transactionsInFlight_.erase(this);
          state_ = e_hand_off;
          unlock_all_mutexes();
-         unlock(general_lock());
-         unlock(inflight_lock());
+         synchro::unlock(*general_lock());
+         synchro::unlock(*inflight_lock());
          bookkeeping_.inc_handoffs();
       }
       else
@@ -953,8 +973,8 @@ inline void transaction::invalidating_deferred_end_transaction()
 //-----------------------------------------------------------------------------
 inline void transaction::validating_direct_end_transaction()
 {
-   lock(general_lock());
-   lock_tx();
+   synchro::lock(*general_lock());
+   synchro::lock(*mutex());
 
    //--------------------------------------------------------------------------
    // can only be called after above transactionMutex_ is called
@@ -963,8 +983,8 @@ inline void transaction::validating_direct_end_transaction()
    {
       abort();
       //bookkeeping_.inc_abort_perm_denied(threadId_);
-      unlock_tx();
-      unlock(general_lock());
+      synchro::unlock(*mutex());
+      synchro::unlock(*general_lock());
       throw aborted_transaction_exception
       ("aborting commit due to CM priority");
    }
@@ -983,28 +1003,28 @@ inline void transaction::validating_direct_end_transaction()
       // so unlock it so we can reduce contention
       //-----------------------------------------------------------------------
       bool wasWriting = isWriting() ? true : false;
-      if (!wasWriting) unlock(general_lock());
+      if (!wasWriting) synchro::unlock(*general_lock());
       direct_abort();
-      unlock_tx();
+      synchro::unlock(*general_lock());
       //-----------------------------------------------------------------------
       // if this tx was writing, unlock the transaction mutex now
       //-----------------------------------------------------------------------
-      if (wasWriting) unlock(general_lock());
+      if (wasWriting) synchro::unlock(*general_lock());
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
    }
 
    lock_all_mutexes_but_this(threadId_);
 
-   lock(inflight_lock());
+   synchro::lock(*inflight_lock());
    transactionsInFlight_.erase(this);
 
    if (other_in_flight_same_thread_transactions())
    {
       state_ = e_hand_off;
       unlock_all_mutexes();
-      unlock(general_lock());
-      unlock(inflight_lock());
+      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock());
       bookkeeping_.inc_handoffs();
    }
    else
@@ -1015,8 +1035,8 @@ inline void transaction::validating_direct_end_transaction()
       if (e_committed == state_)
       {
          unlock_all_mutexes();
-         unlock(general_lock());
-         unlock(inflight_lock());
+         synchro::unlock(*general_lock());
+         synchro::unlock(*inflight_lock());
       }
    }
 }
@@ -1026,9 +1046,9 @@ inline void transaction::validating_direct_end_transaction()
 //-----------------------------------------------------------------------------
 inline void transaction::validating_deferred_end_transaction()
 {
-   lock(general_lock());
-   lock(inflight_lock());
-   lock_tx();
+   synchro::lock(*general_lock());
+   synchro::lock(*inflight_lock());
+   synchro::lock(*mutex());
 
    //--------------------------------------------------------------------------
    // can only be called after above transactionMutex_ is called
@@ -1036,16 +1056,16 @@ inline void transaction::validating_deferred_end_transaction()
    if (cm_abort_before_commit(*this))
    {
       //bookkeeping_.inc_abort_perm_denied(threadId_);
-      unlock(inflight_lock());
-      unlock(general_lock());
-      deferred_abort();
-      unlock_tx();
+      synchro::unlock(*inflight_lock());
+      synchro::unlock(*general_lock());
+      //unlock_tx();
+      synchro::unlock(*mutex());
       throw aborted_transaction_exception
       ("aborting commit due to CM priority");
    }
 
    // unlock this - we only needed it to check abort_before_commit()
-   unlock(inflight_lock());
+   synchro::unlock(*inflight_lock());
 
    uint32 ms = clock();
 
@@ -1058,9 +1078,9 @@ inline void transaction::validating_deferred_end_transaction()
    //--------------------------------------------------------------------------
    if (forced_to_abort())
    {
-      unlock(general_lock());
+      synchro::unlock(*general_lock());
       deferred_abort();
-      unlock_tx();
+      synchro::unlock(*mutex());
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
    }
@@ -1074,7 +1094,7 @@ inline void transaction::validating_deferred_end_transaction()
       //--------------------------------------------------------------------------
       if (is_only_reading())
       {
-         lock(inflight_lock());
+         synchro::lock(*inflight_lock());
          transactionsInFlight_.erase(this);
 
          if (other_in_flight_same_thread_transactions())
@@ -1092,15 +1112,15 @@ inline void transaction::validating_deferred_end_transaction()
             state_ = e_committed;
          }
 
-         unlock(general_lock());
-         unlock(inflight_lock());
+         synchro::unlock(*general_lock());
+         synchro::unlock(*inflight_lock());
 
          bookkeeping_.inc_commits();
 #ifndef DISABLE_READ_SETS
          bookkeeping_.pushBackSizeOfReadSetWhenCommitting(readList().size());
 #endif
          bookkeeping_.inc_commit_time_ms(clock() - ms);
-         unlock_tx();
+         synchro::unlock(*mutex());
       }
 
       //-----------------------------------------------------------------------
@@ -1118,15 +1138,15 @@ inline void transaction::validating_deferred_end_transaction()
       //-----------------------------------------------------------------------
       lock_all_mutexes_but_this(threadId_);
 
-      lock(inflight_lock());
+      synchro::lock(*inflight_lock());
       transactionsInFlight_.erase(this);
 
       if (other_in_flight_same_thread_transactions())
       {
          state_ = e_hand_off;
          unlock_all_mutexes();
-         unlock(general_lock());
-         unlock(inflight_lock());
+         synchro::unlock(*general_lock());
+         synchro::unlock(*inflight_lock());
          bookkeeping_.inc_handoffs();
       }
       else
@@ -1139,9 +1159,10 @@ inline void transaction::validating_deferred_end_transaction()
          // unlocked these already
          if (e_committed == state_)
          {
-            unlock_tx();
-            unlock(general_lock());
-            unlock(inflight_lock());
+            //unlock_tx();
+            synchro::unlock(*mutex());
+            synchro::unlock(*general_lock());
+            synchro::unlock(*inflight_lock());
          }
       }
    }
@@ -1260,7 +1281,7 @@ inline void transaction::direct_abort
 #endif
       if (!alreadyRemovedFromInFlight)
       {
-         lock(inflight_lock());
+         synchro::lock(*inflight_lock());
          // if I'm the last transaction of this thread, reset abort to false
          transactionsInFlight_.erase(this);
       }
@@ -1275,7 +1296,7 @@ inline void transaction::direct_abort
 #endif
       if (!alreadyRemovedFromInFlight)
       {
-         unlock(inflight_lock());
+         synchro::unlock(*inflight_lock());
       }
    }
    catch (...)
@@ -1310,7 +1331,7 @@ inline void transaction::deferred_abort
 
    if (alreadyRemovedFromInFlight)
    {
-      lock(inflight_lock());
+      synchro::lock(*inflight_lock());
       // if I'm the last transaction of this thread, reset abort to false
       transactionsInFlight_.erase(this);
 
@@ -1323,7 +1344,7 @@ inline void transaction::deferred_abort
       unforce_to_abort();
 #endif
 
-      unlock(inflight_lock());
+      synchro::unlock(*inflight_lock());
    }
    else unforce_to_abort();
 }
@@ -1371,11 +1392,11 @@ inline void transaction::invalidating_direct_commit()
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock(general_lock());
-      unlock(inflight_lock());
+      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock());
 
       direct_abort();
-      unlock_tx();
+      synchro::unlock(*mutex());
 
       throw;
    }
@@ -1385,11 +1406,11 @@ inline void transaction::invalidating_direct_commit()
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock(general_lock());
-      unlock(inflight_lock());
+      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock());
 
       direct_abort();
-      unlock_tx();
+      synchro::unlock(*mutex());
 
       throw;
    }
@@ -1447,8 +1468,8 @@ inline void transaction::invalidating_deferred_commit()
             ++stalling_;
             size_t local_clock = global_clock();
 
-            unlock(inflight_lock());
-            unlock(general_lock());
+            synchro::unlock(*inflight_lock());
+            synchro::unlock(*general_lock());
             unlock_all_mutexes();
 
             for (;;)
@@ -1465,8 +1486,8 @@ inline void transaction::invalidating_deferred_commit()
                   throw aborted_transaction_exception_no_unlocks();
                }
 
-               lock(general_lock());
-               lock(inflight_lock());
+               synchro::lock(*general_lock());
+               synchro::lock(*inflight_lock());
 
                // if our stalling on tx is gone, continue
                if (transactionsInFlight_.end() == transactionsInFlight_.find(stallingOn))
@@ -1478,8 +1499,8 @@ inline void transaction::invalidating_deferred_commit()
                   break;
                }
 
-               unlock(general_lock());
-               unlock(inflight_lock());
+               synchro::unlock(*general_lock());
+               synchro::unlock(*inflight_lock());
             }
 
             lock_all_mutexes();
@@ -1499,8 +1520,8 @@ inline void transaction::invalidating_deferred_commit()
       }
 
       transactionsInFlight_.erase(this);
-      unlock(inflight_lock());
-      unlock(general_lock());
+      synchro::unlock(*inflight_lock());
+      synchro::unlock(*general_lock());
 
       deferredCommitWriteState();
 
@@ -1547,10 +1568,10 @@ inline void transaction::invalidating_deferred_commit()
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock(general_lock());
-      unlock(inflight_lock());
+      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock());
       deferred_abort();
-      unlock_tx();
+      synchro::unlock(*mutex());
 
       throw;
    }
@@ -1560,10 +1581,10 @@ inline void transaction::invalidating_deferred_commit()
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock(general_lock());
-      unlock(inflight_lock());
+      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock());
       deferred_abort();
-      unlock_tx();
+      synchro::unlock(*mutex());
 
       throw;
    }
@@ -1632,11 +1653,11 @@ std::allocator<__pthread_mutex_t**> >::clear (this=0x0)
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock(general_lock());
-      unlock(inflight_lock());
+      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock());
 
       direct_abort();
-      unlock_tx();
+      synchro::unlock(*mutex());
 
       throw;
    }
@@ -1646,11 +1667,11 @@ std::allocator<__pthread_mutex_t**> >::clear (this=0x0)
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock(general_lock());
-      unlock(inflight_lock());
+      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock());
 
       direct_abort();
-      unlock_tx();
+      synchro::unlock(*mutex());
 
       throw;
    }
@@ -1740,10 +1761,10 @@ inline void transaction::validating_deferred_commit()
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock(general_lock());
-      unlock(inflight_lock());
+      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock());
       deferred_abort();
-      unlock_tx();
+      synchro::unlock(*mutex());
 
       throw;
    }
@@ -1753,10 +1774,10 @@ inline void transaction::validating_deferred_commit()
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock(general_lock());
-      unlock(inflight_lock());
+      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock());
       deferred_abort();
-      unlock_tx();
+      synchro::unlock(*mutex());
 
       throw;
    }

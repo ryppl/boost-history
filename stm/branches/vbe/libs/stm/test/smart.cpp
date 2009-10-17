@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -27,6 +27,7 @@ static native_trans<int> txInt = 0, txInt2, txInt3 = 0;
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
+#if 0
 static void test_nested()
 {
    atomic(t)
@@ -35,10 +36,11 @@ static void test_nested()
       ++*tx;
    } end_atom
 }
-
+#endif
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
-void test_parent()
+#if 0
+static void test_parent()
 {
    atomic(t)
    {
@@ -49,7 +51,7 @@ void test_parent()
       cout << "*tx should be 1, output: " << *tx << endl;
    } end_atom
 }
-
+#endif
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 static void test_priv_write_ptr()
@@ -124,7 +126,8 @@ static void test_no_private()
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
-void test2()
+#if 0
+static void test2()
 {
    atomic(t)
    {
@@ -136,17 +139,17 @@ void test2()
 
    //int y = 0;
 }
-
+#endif
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 void test_smart()
 {
-   boost::stm::transaction::initialize();
-   boost::stm::transaction::initialize_thread();
+   transaction::initialize();
+   transaction::initialize_thread();
 
-   //boost::stm::transaction::do_direct_updating();
-   boost::stm::transaction::do_deferred_updating();
+   //transaction::do_direct_updating();
+   transaction::do_deferred_updating();
 
    //test_2();
    //test_parent();

@@ -58,8 +58,8 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
    //--------------------------------------------------------------------------
    if (latmLockedLocks_.empty())
    {
-      lock(general_lock());
-      lock(inflight_lock());
+      synchro::lock(*general_lock());
+      synchro::lock(*inflight_lock());
 
       std::list<transaction*> txList;
       for (InflightTxes::iterator i = transactionsInFlight_.begin();
@@ -74,8 +74,8 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
          }
          else
          {
-            unlock(general_lock());
-            unlock(inflight_lock());
+            synchro::unlock(*general_lock());
+            synchro::unlock(*inflight_lock());
             return false;
          }
       }
@@ -85,14 +85,14 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
          (*it)->force_to_abort();
       }
 
-      unlock(general_lock());
-      unlock(inflight_lock());
+      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock());
    }
 
    try { latmLockedLocks_.insert(mutex); }
    catch (...)
    {
-      unlock(inflight_lock());
+      synchro::unlock(*inflight_lock());
       throw;
    }
 
@@ -113,14 +113,14 @@ inline int transaction::def_full_pthread_lock_mutex(Mutex *mutex)
       t->add_to_obtained_locks(mutex);
 
       t->commit_deferred_update_tx();
-      lock(latm_lock());
+      synchro::lock(*latm_lock());
       latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-      unlock(latm_lock());
+      synchro::unlock(*latm_lock());
 
       // TBR if (hadLock) return 0;
       // TBR else return lock(mutex);
       if (hadLock) return 0;
-      else lock(mutex);
+      else synchro::lock(*mutex);
       return 0;
    }
 
@@ -129,9 +129,9 @@ inline int transaction::def_full_pthread_lock_mutex(Mutex *mutex)
    {
       // TBR int val = lock(mutex);
       // TBR if (0 != val) return val;
-      lock(mutex);
+      synchro::lock(*mutex);
 
-      lock(&latmMutex_);
+      synchro::lock(latmMutex_);
 
       try
       {
@@ -142,16 +142,16 @@ inline int transaction::def_full_pthread_lock_mutex(Mutex *mutex)
       }
       catch (...)
       {
-         unlock(mutex);
-         unlock(&latmMutex_);
+         synchro::unlock(*mutex);
+         synchro::unlock(latmMutex_);
          throw;
       }
 
       //-----------------------------------------------------------------------
       // we weren't able to do the core lock work, unlock our mutex and sleep
       //-----------------------------------------------------------------------
-      unlock(mutex);
-      unlock(&latmMutex_);
+      synchro::unlock(*mutex);
+      synchro::unlock(latmMutex_);
 
       SLEEP(cm_lock_sleep_time());
       waitTime += cm_lock_sleep_time();
@@ -159,7 +159,7 @@ inline int transaction::def_full_pthread_lock_mutex(Mutex *mutex)
    }
 
    latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-   unlock(&latmMutex_);
+   synchro::unlock(latmMutex_);
    return 0;
 }
 
@@ -177,18 +177,18 @@ inline int transaction::def_full_pthread_trylock_mutex(Mutex *mutex)
       t->add_to_obtained_locks(mutex);
 
       t->commit_deferred_update_tx();
-      lock(latm_lock());
+      synchro::lock(*latm_lock());
       latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-      unlock(latm_lock());
+      synchro::unlock(*latm_lock());
 
       if (hadLock) return 0;
-      else return trylock(mutex);
+      else return synchro::try_lock(*mutex);
    }
 
-   int val = trylock(mutex);
+   int val = synchro::try_lock(*mutex);
    if (0 != val) return val;
 
-   lock(&latmMutex_);
+   synchro::lock(latmMutex_);
 
    try
    {
@@ -197,20 +197,20 @@ inline int transaction::def_full_pthread_trylock_mutex(Mutex *mutex)
       //-----------------------------------------------------------------------
       if (!def_do_core_full_pthread_lock_mutex(mutex, 0, 0))
       {
-         unlock(mutex);
-         unlock(&latmMutex_);
+         synchro::unlock(*mutex);
+         synchro::unlock(latmMutex_);
          return -1;
       }
    }
    catch (...)
    {
-      unlock(mutex);
-      unlock(&latmMutex_);
+      synchro::unlock(*mutex);
+      synchro::unlock(latmMutex_);
       throw;
    }
 
    latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-   unlock(&latmMutex_);
+   synchro::unlock(latmMutex_);
    // note: we do not release the transactionsInFlightMutex - this will prevents
    // new transactions from starting until this lock is released
    return 0;
@@ -221,7 +221,7 @@ inline int transaction::def_full_pthread_trylock_mutex(Mutex *mutex)
 //----------------------------------------------------------------------------
 inline int transaction::def_full_pthread_unlock_mutex(Mutex *mutex)
 {
-   lock(&latmMutex_);
+   synchro::lock(latmMutex_);
    bool hasLock = true;
 
    if (transaction* t = get_inflight_tx_of_same_thread(false))
@@ -240,14 +240,14 @@ inline int transaction::def_full_pthread_unlock_mutex(Mutex *mutex)
 
    latmLockedLocks_.erase(mutex);
 
-   if (latmLockedLocks_.empty()) unlock(inflight_lock());
+   if (latmLockedLocks_.empty()) synchro::unlock(*inflight_lock());
 
    latmLockedLocksOfThreadMap_.erase(mutex);
-   unlock(&latmMutex_);
+   synchro::unlock(latmMutex_);
 
    // TBR if (hasLock) return unlock(mutex);
    // TBR else return 0;
-   if (hasLock) unlock(mutex);
+   if (hasLock) synchro::unlock(*mutex);
    return 0;
 }
 

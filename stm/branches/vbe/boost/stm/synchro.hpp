@@ -14,19 +14,26 @@
 #ifndef BOOST_STM_SYNCHO__HPP
 #define BOOST_STM_SYNCHO__HPP
 
+#include <boost/stm/detail/config.hpp>
+
 //-----------------------------------------------------------------------------
 #include <stdarg.h>
 #include <pthread.h>
 //-----------------------------------------------------------------------------
 #include <list>
+#include <stdexcept>
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-#include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
 //#include <boost/stm/exceptions.hpp>
 //-----------------------------------------------------------------------------
 //#include <boost/stm/detail/memory_pool.hpp>
 //-----------------------------------------------------------------------------
+
+#ifdef BOOST_STM_USE_BOOST
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/thread_time.hpp>
+#endif
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
    typedef pthread_mutex_t Mutex;
@@ -35,107 +42,383 @@
 #endif
 
 //-----------------------------------------------------------------------------
-namespace boost { namespace stm {
+namespace boost { 
+namespace synchro {
+
+    class lock_error : public std::exception
+    {
+    public:
+        lock_error() {}
+        ~lock_error() throw() {}
+
+        virtual const char* what() const throw() {return "synchro::lock_error";}
+    };    
+    
+    struct defer_lock_t
+    {};
+    struct try_to_lock_t
+    {};
+    struct adopt_lock_t
+    {};
+    
+    const defer_lock_t defer_lock={};
+    const try_to_lock_t try_to_lock={};
+    const adopt_lock_t adopt_lock={};
+        
+    template< typename Lockable >
+    inline void lock(Lockable& lockable) {
+        lockable.lock();
+    }
+
+    template< typename Lockable >
+    inline void unlock(Lockable& lockable) {
+        lockable.unlock();
+    }
+
+    template< typename Lockable >
+    inline bool try_lock(Lockable& lockable) {
+        return lockable.try_lock();
+    }
+
+#ifdef BOOST_PTHREAD_HAS_TIMEDLOCK
+    template <typename Lockable, typename TimeDuration >
+    bool lock_for(Lockable& lockable, const TimeDuration& rel_time) {
+        return lock_until(&lockable, get_system_time()+rel_time);
+    }
+    
+    template< typename Lockable>
+    inline bool lock_until(Lockable& lockable, system_time const& target_time) {
+        return lockable.timed_lock(target_time);
+    }
+#endif
+    template<>
+    inline void lock<pthread_mutex_t>(pthread_mutex_t& lockable) {
+        pthread_mutex_lock(&lockable);
+    }
+
+    template<>
+    inline void unlock<pthread_mutex_t>(pthread_mutex_t& lockable) {
+        pthread_mutex_unlock(&lockable);
+    }
+    
+    template<>
+    inline bool try_lock<pthread_mutex_t>(pthread_mutex_t& lockable) {
+        return pthread_mutex_trylock(&lockable);
+    }
+
+#ifdef BOOST_PTHREAD_HAS_TIMEDLOCK
+    template<>
+    inline bool lock_until<pthread_mutex_t>(
+                pthread_mutex_t& lockable, system_time const& abs_time) {
+        struct timespec const timeout=boost::detail::get_timespec(abs_time);
+        int const res=pthread_mutex_timedlock(&lockable,&timeout);
+        //BOOST_ASSERT(!res || res==ETIMEDOUT);
+        return !res;
+    }
+#endif       
+    
+    template<typename Mutex>
+    class lock_guard
+    {
+    private:
+        Mutex& m;
+
+        explicit lock_guard(lock_guard&);
+        lock_guard& operator=(lock_guard&);
+    public:
+        explicit lock_guard(Mutex& m_)
+            : m(m_)
+        {
+            synchro::lock(m);
+        }
+        lock_guard(Mutex& m_,adopt_lock_t)
+            : m(m_)
+        {}
+        ~lock_guard()
+        {
+            synchro::unlock(m);
+        }
+    };    
+
+    template<typename Mutex>
+    class lock_guard_if
+    {
+    private:
+        Mutex& m;
+        bool cnd_;
+
+        explicit lock_guard_if(lock_guard_if&);
+        lock_guard_if& operator=(lock_guard_if&);
+    public:
+        explicit lock_guard_if(Mutex& m_, bool cnd)
+            : m(m_)
+            , cnd_(cnd)
+        {
+            if (cnd_) synchro::lock(m);
+        }
+        lock_guard_if(Mutex& m_, bool cnd,adopt_lock_t)
+            : m(m_)
+            , cnd_(cnd)
+        {}
+        ~lock_guard_if()
+        {
+            if (cnd_) synchro::unlock(m);
+        }
+    };    
+    
+    
+    template<typename Mutex>
+    class unique_lock
+    {
+    private:
+        Mutex* m;
+        bool is_locked;
+        unique_lock(unique_lock&);
+        unique_lock& operator=(unique_lock&);
+    public:
+        unique_lock():
+            m(0),is_locked(false)
+        {}
+        
+        explicit unique_lock(Mutex& m_):
+            m(&m_),is_locked(false)
+        {
+            lock();
+        }
+        
+        unique_lock(Mutex& m_,adopt_lock_t):
+            m(&m_),is_locked(true)
+        {}
+        unique_lock(Mutex& m_,defer_lock_t):
+            m(&m_),is_locked(false)
+        {}
+        unique_lock(Mutex& m_,try_to_lock_t):
+            m(&m_),is_locked(false)
+        {
+            try_lock();
+        }
+#ifdef BOOST_PTHREAD_HAS_TIMEDLOCK
+        template<typename TimeDuration>
+        unique_lock(Mutex& m_,TimeDuration const& target_time):
+            m(&m_),is_locked(false)
+        {
+            timed_lock(target_time);
+        }
+        unique_lock(Mutex& m_,boost::system_time const& target_time):
+            m(&m_),is_locked(false)
+        {
+            timed_lock(target_time);
+        }
+#endif        
+#if 0        
+#ifdef BOOST_HAS_RVALUE_REFS
+        unique_lock(unique_lock&& other):
+            m(other.m),is_locked(other.is_locked)
+        {
+            other.is_locked=false;
+            other.m=0;
+        }
+        unique_lock<Mutex>&& move()
+        {
+            return static_cast<unique_lock<Mutex>&&>(*this);
+        }
+
+
+        unique_lock& operator=(unique_lock<Mutex>&& other)
+        {
+            unique_lock temp(other);
+            swap(temp);
+            return *this;
+        }
+
+        void swap(unique_lock&& other)
+        {
+            std::swap(m,other.m);
+            std::swap(is_locked,other.is_locked);
+        }
+#else
+        unique_lock(detail::thread_move_t<unique_lock<Mutex> > other):
+            m(other->m),is_locked(other->is_locked)
+        {
+            other->is_locked=false;
+            other->m=0;
+        }
+
+        operator detail::thread_move_t<unique_lock<Mutex> >()
+        {
+            return move();
+        }
+
+        detail::thread_move_t<unique_lock<Mutex> > move()
+        {
+            return detail::thread_move_t<unique_lock<Mutex> >(*this);
+        }
+
+        unique_lock& operator=(detail::thread_move_t<unique_lock<Mutex> > other)
+        {
+            unique_lock temp(other);
+            swap(temp);
+            return *this;
+        }
+
+        void swap(unique_lock& other)
+        {
+            std::swap(m,other.m);
+            std::swap(is_locked,other.is_locked);
+        }
+        void swap(detail::thread_move_t<unique_lock<Mutex> > other)
+        {
+            std::swap(m,other->m);
+            std::swap(is_locked,other->is_locked);
+        }
+#endif
+#else
+        void swap(unique_lock& other)
+        {
+            std::swap(m,other.m);
+            std::swap(is_locked,other.is_locked);
+        }
+        
+#endif        
+        ~unique_lock()
+        {
+            if(owns_lock())
+            {
+                synchro::unlock(*m);
+            }
+        }
+        void lock()
+        {
+            if(owns_lock())
+            {
+                throw lock_error();
+            }
+            synchro::lock(*m);
+            is_locked=true;
+        }
+        bool try_lock()
+        {
+            if(owns_lock())
+            {
+                throw lock_error();
+            }
+            is_locked=synchro::try_lock(*m);
+            return is_locked;
+        }
+#ifdef BOOST_PTHREAD_HAS_TIMEDLOCK
+        template<typename TimeDuration>
+        bool timed_lock(TimeDuration const& relative_time)
+        {
+            is_locked=synchro::timed_lock(*m, relative_time);
+            return is_locked;
+        }
+        
+        bool timed_lock(::boost::system_time const& absolute_time)
+        {
+            is_locked=synchro::timed_lock(*m, absolute_time);
+            return is_locked;
+        }
+        bool timed_lock(::boost::xtime const& absolute_time)
+        {
+            is_locked=synchro::timed_lock(*m, absolute_time);
+            return is_locked;
+        }
+#endif        
+        void unlock()
+        {
+            if(!owns_lock())
+            {
+                throw lock_error();
+            }
+            synchro::unlock(*m);
+            is_locked=false;
+        }
+            
+        typedef void (unique_lock::*bool_type)();
+        operator bool_type() const
+        {
+            return is_locked?&unique_lock::lock:0;
+        }
+        bool operator!() const
+        {
+            return !owns_lock();
+        }
+        bool owns_lock() const
+        {
+            return is_locked;
+        }
+
+        Mutex* mutex() const
+        {
+            return m;
+        }
+
+        Mutex* release()
+        {
+            Mutex* const res=m;
+            m=0;
+            is_locked=false;
+            return res;
+        }
+    };
+
+#if 0
+#ifdef BOOST_HAS_RVALUE_REFS
+    template<typename Mutex>
+    void swap(unique_lock<Mutex>&& lhs,unique_lock<Mutex>&& rhs)
+    {
+        lhs.swap(rhs);
+    }
+#else
+    template<typename Mutex>
+    void swap(unique_lock<Mutex>& lhs,unique_lock<Mutex>& rhs)
+    {
+        lhs.swap(rhs);
+    }
+#endif
+#else
+    template<typename Mutex>
+    void swap(unique_lock<Mutex>& lhs,unique_lock<Mutex>& rhs)
+    {
+        lhs.swap(rhs);
+    }
+#endif    
+
+#if 0
+#ifdef BOOST_HAS_RVALUE_REFS
+    template<typename Mutex>
+    inline unique_lock<Mutex>&& move(unique_lock<Mutex>&& ul)
+    {
+        return ul;
+    }
+#endif
+#endif
+
+    
+}
+namespace stm {
 
 //-----------------------------------------------------------------------------
 // forward declarations
 //-----------------------------------------------------------------------------
 
-#ifndef BOOST_STM_USE_BOOST_MUTEX
 typedef pthread_mutex_t PLOCK;
-#else
-typedef boost::mutex PLOCK;
-#endif
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-#ifndef BOOST_STM_USE_BOOST_MUTEX
 
-#if 0
-   template <typename T>
-   inline int lock(T *lock) { throw "unsupported lock type"; }
+   inline int lock22(PLOCK &lock) { return pthread_mutex_lock(&lock); }
+   inline int lock22(PLOCK *lock) { return pthread_mutex_lock(lock); }
 
-   template <typename T>
-   inline int trylock(T *lock) { throw "unsupported lock type"; }
+   inline int trylock22(PLOCK &lock) { return pthread_mutex_trylock(&lock); }
+   inline int trylock22(PLOCK *lock) { return pthread_mutex_trylock(lock); }
 
-   template <typename T>
-   inline int unlock(T *lock) { throw "unsupported lock type"; }
-
-   template <>
-   inline int lock(Mutex &lock) { return pthread_mutex_lock(&lock); }
-
-   template <>
-   inline int lock(Mutex *lock) { return pthread_mutex_lock(lock); }
-
-   template <>
-   inline int trylock(Mutex &lock) { return pthread_mutex_trylock(&lock); }
-
-   template <>
-   inline int trylock(Mutex *lock) { return pthread_mutex_trylock(lock); }
-
-   template <>
-   inline int unlock(Mutex &lock) { return pthread_mutex_unlock(&lock); }
-
-   template <>
-   inline int unlock(Mutex *lock) { return pthread_unlock(lock); }
-#else
-   inline int lock(PLOCK &lock) { return pthread_mutex_lock(&lock); }
-   inline int lock(PLOCK *lock) { return pthread_mutex_lock(lock); }
-
-   inline int trylock(PLOCK &lock) { return pthread_mutex_trylock(&lock); }
-   inline int trylock(PLOCK *lock) { return pthread_mutex_trylock(lock); }
-
-   inline int unlock(PLOCK &lock) { return pthread_mutex_unlock(&lock); }
-   inline int unlock(PLOCK *lock) { return pthread_mutex_unlock(lock); }
-#endif
-#else
-   inline void lock(PLOCK &lock) { lock.lock(); }
-   inline void lock(PLOCK *lock) { lock->lock(); }
-
-   inline bool trylock(PLOCK &lock) { return lock.try_lock(); }
-   inline bool trylock(PLOCK *lock) { return lock->try_lock(); }
-
-   inline void unlock(PLOCK &lock) { lock.unlock(); }
-   inline void unlock(PLOCK *lock) { lock->unlock(); }
-#endif
+   inline int unlock22(PLOCK &lock) { return pthread_mutex_unlock(&lock); }
+   inline int unlock22(PLOCK *lock) { return pthread_mutex_unlock(lock); }
 
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-    template<typename Lockable>
-    class lock_guard2
-    {
-    private:
-        Lockable& m;
-        //bool owns_;
-
-        explicit lock_guard2(lock_guard2&);
-        lock_guard2& operator=(lock_guard2&);
-    public:
-        inline explicit lock_guard2(Lockable& m_):
-            m(m_)
-        {
-            lock();
-        }
-        inline ~lock_guard2()
-        {
-            //unlock();
-        }
-        //inline bool owns_lock() { return owns_;}
-        inline void lock() {
-            //if (owns_)
-                stm::lock(m);
-            //owns_=true;
-        }
-        inline void unlock() {
-            //if (owns_)
-                stm::unlock(m);
-            //owns_=false;
-        }
-        //inline void release() {
-        //    owns_=false;
-        //}
-    };
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -165,7 +448,7 @@ private:
    void do_auto_lock(Mutex *mutex)
    {
       lock_ = mutex;
-      pthread_mutex_lock(mutex);
+      synchro::lock(*mutex);
       hasLock_ = true;
    }
 
@@ -174,7 +457,7 @@ private:
       if (hasLock_)
       {
          hasLock_ = false;
-         pthread_mutex_unlock(lock_);
+         synchro::unlock(*lock_);
       }
    }
 
@@ -212,7 +495,7 @@ public:
 
       for (; i != lockList_.end(); ++i)
       {
-         lock(*i);
+         synchro::lock(**i);
       }
    }
 
@@ -221,7 +504,7 @@ public:
    {
       for (std::list<PLOCK*>::iterator i = lockList_.begin(); i != lockList_.end(); ++i)
       {
-         unlock(*i);
+         synchro::unlock(**i);
       }
    }
 

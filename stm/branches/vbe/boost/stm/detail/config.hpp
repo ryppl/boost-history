@@ -79,11 +79,18 @@
 #define MAP_THREAD_BOOL_CONTAINER 1
 #define USING_SHARED_FORCED_TO_ABORT 1
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Define BOOST_STM_USE_BOOST when you want STM uses BOOST internally
+
+#define BOOST_STM_USE_BOOST 1
+
+#ifdef BOOST_STM_USE_BOOST
 //#define BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET 1
 //#define BOOST_STM_USE_BOOST_SLEEP 1
 //#define BOOST_STM_USE_BOOST_THREAD_ID 1
 //#define BOOST_STM_USE_BOOST_MUTEX 1
-
+#endif
 #define BOOST_STM_NO_PARTIAL_SPECIALIZATION 1
 
 ///////////////////////////////////////////////////////////////////////////////

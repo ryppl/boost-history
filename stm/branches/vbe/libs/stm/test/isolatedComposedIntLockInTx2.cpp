@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -102,7 +102,8 @@ static void* Test1(void *threadId)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void* Test2(void *threadId)
+#if 0
+static void* Test2(void *threadId)
 {
    transaction::initialize_thread();
    int start = *(int*)threadId;
@@ -139,7 +140,7 @@ void* Test2(void *threadId)
 
    return 0;
 }
-
+#endif
 ///////////////////////////////////////////////////////////////////////////////
 static void* Test3(void *threadId)
 {

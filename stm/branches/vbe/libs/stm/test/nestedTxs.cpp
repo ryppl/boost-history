@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -52,10 +52,11 @@ using namespace std;
 static native_trans<int> x = 0;
 static native_trans<int> y = 0;
 
+#if 0
 static void tx_bar();
 static void lk_bar();
 
-void* tx_foo(void*)
+static void* tx_foo(void*)
 {
    transaction::initialize_thread();
    size_t tries = 0;
@@ -80,10 +81,9 @@ static void tx_bar()
       t.write(y) = t.read(x) + y;
    }
 }
-
-
-
-void*  lk_foo(void*)
+#endif
+#if 0
+static void*  lk_foo(void*)
 {
    use_lock(&L)
    {
@@ -93,7 +93,8 @@ void*  lk_foo(void*)
 
    return 0;
 }
-
+#endif
+#if 0
 static void lk_bar()
 {
    use_lock(L)
@@ -102,13 +103,12 @@ static void lk_bar()
       cout << "locking done" << endl;
    }
 }
-
+#endif
 
 
 
 
 ////////////////////////////////////////////////////////////////////////////
-using namespace std; using namespace boost::stm;
 using namespace nMain;
 
 
@@ -179,7 +179,6 @@ static void nested0()
 ///////////////////////////////////////////////////////////////////////////////
 static void TestTransactionInsideLock()
 {
-   using namespace boost::stm;
 
    cout << "X: " << x.value() << endl;
 
@@ -208,7 +207,6 @@ static void TestTransactionInsideLock()
 ///////////////////////////////////////////////////////////////////////////////
 static void TestEarlyRelease()
 {
-   using namespace boost::stm;
 
    cout << "X: " << x.value() << endl;
 
