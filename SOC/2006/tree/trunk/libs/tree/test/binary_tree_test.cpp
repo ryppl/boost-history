@@ -375,7 +375,7 @@ BOOST_AUTO_TEST_CASE( splice_subtree_test )
     bt0.splice(bt0.root().end(), bt, bt.root().end());
     BOOST_CHECK(bt.root().end().is_leaf());
 
-    BOOST_CHECK_EQUAL(*bt.root().begin(), 8);
+    BOOST_CHECK_EQUAL(*bt.root(), 8);
     validate_test_dataset1_tree(bt0.root());
 }
 
@@ -391,20 +391,23 @@ BOOST_AUTO_TEST_CASE( splice_test )
 BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
 {
     binary_tree<int>::cursor c = bt.root().begin().end();
-    BOOST_CHECK_EQUAL(*c.begin(), 6);
+    BOOST_CHECK_EQUAL(*c, 6);
 
-    BOOST_CHECK_EQUAL(*c.parent(), 8);
-    BOOST_CHECK_EQUAL(*c.parent().begin(), 3); // invariant candidate
+    BOOST_CHECK_EQUAL(*c.parent().parent(), 8);
+    BOOST_CHECK_EQUAL(*c.parent().parent().begin(), 3); // invariant candidate
     
-    BOOST_CHECK_EQUAL(*--c, 3); // differently (not invariantly!) spoken
-    BOOST_CHECK_EQUAL(*c.begin(), 1);
-    BOOST_CHECK_EQUAL(*((++c).begin()).begin(), 4);
-    BOOST_CHECK_EQUAL(*(++c.begin()).begin(), 7);
+    BOOST_CHECK_EQUAL(*c.parent(), 3); // differently (not invariantly!) spoken
+    BOOST_CHECK_EQUAL(*--c, 1);
+    BOOST_CHECK_EQUAL(*(++c).begin(), 4);
+    BOOST_CHECK_EQUAL(*++c, 7);
 
     BOOST_CHECK_EQUAL(index(c), 1);    
-    BOOST_CHECK_EQUAL(*c.begin(), 6);
-        
+    BOOST_CHECK_EQUAL(*c, 6);
+
+    c.to_begin();
+
     bt.rotate(c); // Left rotate
+    
     c.to_parent().to_parent();
 
     BOOST_CHECK_EQUAL(*c.begin(), 6);
@@ -446,7 +449,6 @@ BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
 //    BOOST_CHECK_EQUAL(*c.parent().parent().begin(), 6);
 //    BOOST_CHECK_EQUAL(*c.parent().parent().parent().begin(), 8);
 //    BOOST_CHECK_EQUAL(*c.parent().parent().end().begin(), 7);
-    
 }
 
 BOOST_AUTO_TEST_SUITE_END()

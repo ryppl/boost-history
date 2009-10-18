@@ -15,6 +15,7 @@
 #include <boost/tree/cursor_concepts.hpp>
 
 #include <boost/concept/requires.hpp>
+#include <boost/concept_check.hpp>
 
 namespace boost {
 namespace tree {
@@ -72,14 +73,20 @@ to_rightmost(Cursor& c)
  */
 //[ equal
 template <class InCursor1, class InCursor2>
-bool equal(InCursor1 c1, InCursor2 c2)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<InCursor1>))
+    ((DescendingCursor<InCursor2>)),
+    (bool)) // return type
+equal(InCursor1 c1, InCursor2 c2)
 //]
 {
+    if (!(*c1 == *c2))
+        return false;
+
     InCursor1 d1 = c1.end();
     c1.to_begin();
     c2.to_begin();
-    if (!(*c1 == *c2))
-        return false;
+
     do {
         if (!c1.is_leaf())
             if (!equal(c1, c2))
@@ -103,14 +110,24 @@ bool equal(InCursor1 c1, InCursor2 c2)
  */
 //[ equal_pred
 template <class InCursor1, class InCursor2, class BinPred>
-bool equal(InCursor1 c1, InCursor2 c2, BinPred p)
+//FIXME
+//BOOST_CONCEPT_REQUIRES(
+//    ((DescendingCursor<InCursor1>))
+//    ((DescendingCursor<InCursor2>))
+//    ((BinaryPredicate<BinPred, typename cursor_value<InCursor1>::type
+//                             , typename cursor_value<InCursor2>::type>)),
+//    (bool)) // return type
+bool
+equal(InCursor1 c1, InCursor2 c2, BinPred p)
 //]
 {
+    if (!p(*c1,*c2))
+        return false;
+
     InCursor1 d1 = c1.end();
     c1.to_begin();
     c2.to_begin();
-    if (!p(*c1,*c2))
-        return false;
+
     do {
         if (!c1.is_leaf())
             if (!equal(c1, c2))
@@ -129,7 +146,10 @@ bool equal(InCursor1 c1, InCursor2 c2, BinPred p)
  * After finishing, s will have been increased by the number of elements in c.         
  */
 template <class InCursor>
-void size(InCursor c, typename InCursor::subtree_size_type& s)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<InCursor>)),
+    (void)) // return type
+size(InCursor c, typename InCursor::subtree_size_type& s)
 {
     InCursor d = c.end();
     c.to_begin();
@@ -147,7 +167,10 @@ void size(InCursor c, typename InCursor::subtree_size_type& s)
  */
 //[ size
 template <class InCursor>
-typename InCursor::subtree_size_type size(InCursor c)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<InCursor>)),
+    (typename InCursor::subtree_size_type)) // return type
+size(InCursor c)
 //]
 {
     typename InCursor::subtree_size_type s = 0;

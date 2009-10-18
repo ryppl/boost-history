@@ -14,7 +14,7 @@
 [section TODO]
 
 General:
-* Add a test for the equal() algorithm
+* Fix binary_tree_test (rotate)
 * Apply all binary_tree_test cchecks also to fake_binary_tree in order to check if semantics
   are mapped properly.
 * Subforest algorithms: with a first and last parameter (which, for binary tree based

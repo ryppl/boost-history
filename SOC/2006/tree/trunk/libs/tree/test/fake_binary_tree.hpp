@@ -206,6 +206,7 @@ public:
     typedef fake_binary_cursor<T/* const*/, descending_vertical_traversal_tag> const_cursor;
 
     typedef typename fake_binary_cursor<T, descending_vertical_traversal_tag>::cursor_facade_::size_type size_type;
+    typedef size_type subtree_size_type;
 
     fake_binary_cursor()
     : m_tree(0), m_pos(0) {}

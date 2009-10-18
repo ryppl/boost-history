@@ -23,6 +23,7 @@ project :
 	
 test-suite tree :
 # Algorithms
+	[ run equal_test.cpp ]
 	[ run to_first_test.cpp ]
 	[ run to_last_test.cpp ]
 	[ run successor_test.cpp ]
