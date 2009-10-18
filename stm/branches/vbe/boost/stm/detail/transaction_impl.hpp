@@ -396,7 +396,7 @@ inline void transaction::unlock_all_mutexes()
 inline transaction::transaction() :
    threadId_(THREAD_ID),
    //transactionMutexLocker_(),
-   auto_general_lock_(general_lock()),
+   auto_general_lock_(*general_lock()),
 
 #if USE_SINGLE_THREAD_CONTEXT_MAP
 ////////////////////////////////////////
@@ -444,7 +444,7 @@ inline transaction::transaction() :
    currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
 #endif
-   transactionsRef_(transactions(threadId_)),
+   transactionsRef_(transactions_unsafe(threadId_)),
 
 ////////////////////////////////////////
 #else
@@ -481,7 +481,7 @@ inline transaction::transaction() :
    currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
 ////////////////////////////////////////
-   transactionsRef_(transactions(threadId_)),
+   transactionsRef_(transactions_unsafe(threadId_)),
 
 #endif
 
@@ -491,6 +491,7 @@ inline transaction::transaction() :
    reads_(0),
    startTime_(time(0))
 {
+   auto_general_lock_.unlock();
    if (direct_updating()) doIntervalDeletions();
 #if PERFORMING_LATM
    while (blocked()) { SLEEP(10) ; }

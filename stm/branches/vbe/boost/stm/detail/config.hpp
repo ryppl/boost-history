@@ -34,7 +34,7 @@
 //      OTHER: each TSS data has its specific TSS
 
 #define USE_SINGLE_THREAD_CONTEXT_MAP 1
-//#define BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP 1
+#define BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP 1
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -102,6 +102,7 @@
 #define BOOST_STM_ALLOWS_DELETERS 1
 
 #define BOOST_STM_USE_BOOST_SYNCHRO 1
+
 #endif // BOOST_STM_DETAIL_CONFIG_H
 
 

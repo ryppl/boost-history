@@ -100,12 +100,6 @@ typedef transaction_type TxType;
 
 typedef std::pair<base_transaction_object*, base_transaction_object*> tx_pair;
 
-   template <typename MUTEX, MUTEX& mtx>
-   struct locker {
-       inline locker();
-       inline ~locker();
-       inline void unlock();
-   };
 
 ///////////////////////////////////////////////////////////////////////////////
 // transaction Class
@@ -1512,8 +1506,7 @@ private:
    //--------------------------------------------------------------------------
    size_t threadId_;
 
-   light_auto_lock auto_general_lock_;
-   //locker<Mutex, transactionMutex_> transactionMutexLocker_;
+   synchro::unique_lock<Mutex> auto_general_lock_;
 
    //--------------------------------------------------------------------------
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION.
@@ -1684,7 +1677,11 @@ private:
    public:
     inline TransactionsStack& transactions() {return transactionsRef_;}
     inline static TransactionsStack &transactions(thread_id_t id) {
-        light_auto_lock auto_general_lock_(general_lock());
+        synchro::lock_guard<Mutex> auto_general_lock_(*general_lock());
+        return *threadTransactionsStack_.find(id)->second;
+    }
+    inline static TransactionsStack &transactions_unsafe(thread_id_t id) {
+        //synchro::lock_guard<Mutex> auto_general_lock_(*general_lock());
         return *threadTransactionsStack_.find(id)->second;
     }
     private:
@@ -1851,7 +1848,11 @@ private:
    public:
     inline TransactionsStack& transactions() {return transactionsRef_;}
     inline static TransactionsStack &transactions(thread_id_t id) {
-        light_auto_lock auto_general_lock_(general_lock());
+        synchro::lock_guard<Mutex> auto_general_lock_(*general_lock());
+        tss_context_map_type::iterator i = tss_context_map_.find(id);
+        return i->second->transactions_;
+    }
+    inline static TransactionsStack &transactions_unsafe(thread_id_t id) {
         tss_context_map_type::iterator i = tss_context_map_.find(id);
         return i->second->transactions_;
     }
@@ -2002,7 +2003,10 @@ private:
    public:
     inline TransactionsStack& transactions() {return transactionsRef_;}
     inline static TransactionsStack &transactions(thread_id_t id) {
-        light_auto_lock auto_general_lock_(general_lock());
+        synchro::lock_guard<Mutex> auto_general_lock_(*general_lock());
+        return *threadTransactionsStack_.find(id)->second;
+    }
+    inline static TransactionsStack &transactions_unsafe(thread_id_t id) {
         return *threadTransactionsStack_.find(id)->second;
     }
     private:
@@ -2034,17 +2038,6 @@ public:
 
 inline transaction* current_transaction() {return transaction::current_transaction();}
 
-template <typename MUTEX, MUTEX& mtx>
-locker<MUTEX,mtx>::locker() {
-    synchro::lock(mtx);
-}
-template <typename MUTEX, MUTEX& mtx>
-locker<MUTEX,mtx>::~locker() {}
-
-template <typename MUTEX, MUTEX& mtx>
-void locker<MUTEX,mtx>::unlock() {
-    synchro::unlock(mtx);
-}
 
 template <class T> T* cache_allocate(transaction* t) {
     #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER) && defined (USE_STM_MEMORY_MANAGER)
