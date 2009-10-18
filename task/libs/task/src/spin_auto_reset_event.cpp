@@ -67,4 +67,13 @@ spin_auto_reset_event::wait( system_time const& abs_time)
 	return true;
 }
 
+bool
+spin_auto_reset_event::try_wait()
+{
+	uint32_t expected = static_cast< uint32_t >( SET);
+	return detail::atomic_compare_exchange_strong(
+			& state_, & expected,
+			static_cast< uint32_t >( RESET) );
+}
+
 }}

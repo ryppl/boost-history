@@ -26,7 +26,7 @@ private:
 	volatile uint32_t	state_;
 
 public:
-	spin_auto_reset_event( bool = false);
+	explicit spin_auto_reset_event( bool = false);
 
 	void set();
 
@@ -37,6 +37,8 @@ public:
 	template< typename TimeDuration >
 	bool wait( TimeDuration const& rel_time)
 	{ return wait( get_system_time() + rel_time); }
+
+	bool try_wait();
 };
 
 }}

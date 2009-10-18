@@ -23,8 +23,6 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
-namespace {
-
 uint32_t wait_fn( uint32_t n, tsk::spin_manual_reset_event & ev)
 {
 	ev.wait();
@@ -205,6 +203,21 @@ void test_case_3()
 	BOOST_CHECK_EQUAL( h4.get(), n);
 }
 
+void test_case_4()
+{
+	tsk::spin_manual_reset_event ev;
+
+	BOOST_CHECK_EQUAL( false, ev.try_wait() );
+
+	ev.set();
+
+	BOOST_CHECK_EQUAL( true, ev.try_wait() );
+	BOOST_CHECK_EQUAL( true, ev.try_wait() );
+	ev.wait();
+	BOOST_CHECK_EQUAL( true, ev.try_wait() );
+
+	ev.reset();
+	BOOST_CHECK_EQUAL( false, ev.try_wait() );
 }
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])

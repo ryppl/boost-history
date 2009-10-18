@@ -85,18 +85,4 @@ worker_group::interrupt_all()
 	{ w.interrupt(); }
 }
 
-void
-worker_group::signal_shutdown_all()
-{
-	BOOST_FOREACH( worker w, cont_)
-	{ w.signal_shutdown(); }
-}
-
-void
-worker_group::signal_shutdown_now_all()
-{
-	BOOST_FOREACH( worker w, cont_)
-	{ w.signal_shutdown_now(); }
-}
-
 }}}

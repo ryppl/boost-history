@@ -17,6 +17,7 @@
 
 #include <boost/task/detail/config.hpp>
 #include <boost/task/detail/worker.hpp>
+#include <boost/task/spin_manual_reset_event.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -57,6 +58,7 @@ private:
 	id_idx		&	id_idx_;
 	rnd_idx		&	rnd_idx_;
 
+
 public:
 	typedef id_idx::iterator		iterator;
 	typedef id_idx::const_iterator	const_iterator;
@@ -86,10 +88,6 @@ public:
 	void join_all();
 
 	void interrupt_all();
-
-	void signal_shutdown_all();
-
-	void signal_shutdown_now_all();
 };
 
 }}}

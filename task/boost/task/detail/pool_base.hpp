@@ -29,6 +29,7 @@
 #include <boost/task/handle.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
+#include <boost/task/spin_manual_reset_event.hpp>
 #include <boost/task/stacksize.hpp>
 #include <boost/task/task.hpp>
 #include <boost/task/watermark.hpp>
@@ -43,23 +44,24 @@ template<
 	typename Queue,
 	typename UMS
 >
-class pool_base
+class pool_base : public UMS
 {
 private:
 	friend class worker;
 
-	template< typename T, typename X, typename Z >
+	template< typename T, typename Z >
 	friend class worker_object;
 
 	typedef Queue							queue_type;
 	typedef typename queue_type::value_type	value_type;
 
-	UMS						ums_;	
 	worker_group			wg_;
 	shared_mutex			mtx_wg_;
 	volatile uint32_t		state_;
 	queue_type			 	queue_;
 	volatile uint32_t		idle_worker_;
+	spin_manual_reset_event	shtdwn_ev_;
+	spin_manual_reset_event	shtdwn_now_ev_;
 
 	void worker_entry_()
 	{
@@ -81,7 +83,6 @@ private:
 		wg_.insert(
 			worker(
 				* this,
-				ums_,
 				psize,
 				asleep,
 				max_scns,
@@ -108,7 +109,6 @@ private:
 		wg_.insert(
 			worker(
 				* this,
-				ums_,
 				psize,
 				asleep,
 				max_scns,
@@ -135,12 +135,13 @@ public:
 			posix_time::time_duration const& asleep,
 			scanns const& max_scns,
 			stacksize const& stack_size) :
-		ums_(),
 		wg_(),
 		mtx_wg_(),
 		state_( 0),
 		queue_(),
-		idle_worker_( 0)
+		idle_worker_( 0),
+		shtdwn_ev_(),
+		shtdwn_now_ev_()
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
@@ -160,7 +161,9 @@ public:
 		mtx_wg_(),
 		state_( 0),
 		queue_( hwm, lwm),
-		idle_worker_( 0)
+		idle_worker_( 0),
+		shtdwn_ev_(),
+		shtdwn_now_ev_()
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
@@ -178,7 +181,9 @@ public:
 		mtx_wg_(),
 		state_( 0),
 		queue_(),
-		idle_worker_( 0)
+		idle_worker_( 0),
+		shtdwn_ev_(),
+		shtdwn_now_ev_()
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
@@ -199,7 +204,9 @@ public:
 		mtx_wg_(),
 		state_( 0),
 		queue_( hwm, lwm),
-		idle_worker_( 0)
+		idle_worker_( 0),
+		shtdwn_ev_(),
+		shtdwn_now_ev_()
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
@@ -228,7 +235,7 @@ public:
 
 		queue_.deactivate();
 		shared_lock< shared_mutex > lk( mtx_wg_);
-		wg_.signal_shutdown_all();
+		shtdwn_ev_.set();
 		wg_.join_all();
 	}
 
@@ -238,7 +245,7 @@ public:
 
 		queue_.deactivate();
 		shared_lock< shared_mutex > lk( mtx_wg_);
-		wg_.signal_shutdown_now_all();
+		shtdwn_now_ev_.set();
 		wg_.interrupt_all();
 		wg_.join_all();
 	}

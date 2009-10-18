@@ -52,10 +52,6 @@ struct worker_base
 
 	virtual bool try_steal( callable &) = 0;
 
-	virtual void signal_shutdown() = 0;
-
-	virtual void signal_shutdown_now() = 0;
-
 	virtual void run() = 0;
 
 	virtual void reschedule_until( function< bool() > const&) = 0;
@@ -65,7 +61,6 @@ struct worker_base
 
 template<
 	typename Pool,
-	typename UMS,
 	typename Worker
 >
 class worker_object : public worker_base,
@@ -93,12 +88,9 @@ private:
 	typedef shared_ptr< thread >	thread_t;
 
 	Pool					&	pool_;
-	UMS						&	ums_;
 	thread_t					thrd_;
 	fiber::sptr_t				fib_;
 	wsq							wsq_;
-	semaphore					shtdwn_sem_;
-	semaphore					shtdwn_now_sem_;
 	bool						shtdwn_;
 	posix_time::time_duration	asleep_;
 	scanns						max_scns_;
@@ -133,7 +125,6 @@ private:
 		std::size_t idx( rnd_idx_() );
 		for ( std::size_t j( 0); j < pool_.wg_.size(); ++j)
 		{
-			// TODO: not thread-safe -> segfault
 			Worker other( pool_.wg_[idx]);
 			if ( this_thread::get_id() == other.get_id() ) continue;
 			if ( ++idx >= pool_.wg_.size() ) idx = 0;
@@ -145,13 +136,13 @@ private:
 
 	bool try_blocked_fibers_()
 	{
-		if ( ums_.has_blocked() )
+		if ( pool_.has_blocked() )
 		{
 			fiber::sptr_t this_fib = fib_;
 			BOOST_ASSERT( this_fib);
-			ums_.put_runnable( this_fib);
+			pool_.put_runnable( this_fib);
 			fiber::sptr_t blocked_fib;
-			ums_.try_take_blocked( blocked_fib);
+			pool_.try_take_blocked( blocked_fib);
 			BOOST_ASSERT( blocked_fib);
 			fib_ = blocked_fib;
 			BOOST_ASSERT( this_fib->running() );
@@ -161,43 +152,6 @@ private:
 			return true;
 		}
 		return false;
-	}
-
-	void process_( bool all)
-	{
-		try_blocked_fibers_();
-		callable ca;
-		if ( all ? try_take_local_callable_( ca) || 
-					try_steal_other_callable_( ca) ||
-					try_take_global_callable_( ca)
-				 : try_take_local_callable_( ca) )
-		{
-			execute_( ca);
-			scns_ = 0;
-		}
-		else
-		{
-			guard grd( pool_.idle_worker_);
-			++scns_;
-			if ( scns_ >= max_scns_)
-			{
-				if ( pool_.size_() > pool_.idle_worker_)
-				{
-					if ( take_global_callable_( ca, asleep_) )
-						execute_( ca);
-				}
-				else if ( ! ums_.has_blocked() )
-				{
-					if ( take_global_callable_( ca) )
-						execute_( ca);
-				}
-				else
-					this_thread::yield();
-				scns_ = 0;
-			}
-			else
-				this_thread::yield();
-		}
 	}
 
 	void run_()
@@ -224,7 +178,7 @@ private:
 						if ( take_global_callable_( ca, asleep_) )
 							execute_( ca);
 					}
-					else if ( ! ums_.has_blocked() )
+					else if ( ! pool_.has_blocked() )
 					{
 						try
 						{ this_thread::sleep( asleep_); }
@@ -241,7 +195,7 @@ private:
 
 	bool shutdown_()
 	{
-		if ( shutdown__() && pool_.queue_.empty() && ! ums_.has_blocked() )
+		if ( shutdown__() && pool_.queue_.empty() && ! pool_.has_blocked() )
 			return true;
 		else if ( shutdown_now__() )
 			return true;
@@ -251,29 +205,25 @@ private:
 	bool shutdown__()
 	{
 		if ( ! shtdwn_)
-			shtdwn_ = shtdwn_sem_.try_wait();
+			shtdwn_ = pool_.shtdwn_ev_.try_wait();
 		return shtdwn_;
 	}
 	
 	bool shutdown_now__()
-	{ return shtdwn_now_sem_.try_wait(); }
+	{ return pool_.shtdwn_now_ev_.try_wait(); }
 
 public:
 	worker_object(
 			Pool & pool,
-			UMS & ums,
 			poolsize const& psize,
 			posix_time::time_duration const& asleep,
 			scanns const& max_scns,
 			stacksize const& stack_size,
 			function< void() > const& fn) :
 		pool_( pool),
-		ums_( ums),
 		thrd_( new thread( fn) ),
 		fib_(),
 		wsq_(),
-		shtdwn_sem_( 0),
-		shtdwn_now_sem_( 0),
 		shtdwn_( false),
 		asleep_( asleep),
 		max_scns_( max_scns),
@@ -292,12 +242,6 @@ public:
 	interrupt() const
 	{ thrd_->interrupt(); }
 
-	void signal_shutdown()
-	{ shtdwn_sem_.post(); }
-	
-	void signal_shutdown_now()
-	{ shtdwn_now_sem_.post(); }
-
 	void put( callable const& ca)
 	{
 		BOOST_ASSERT( ! ca.empty() );
@@ -313,7 +257,7 @@ public:
 
 		fiber::convert_thread_to_fiber();
 
-		ums_.attach();
+		pool_.attach();
 
 		fib_ = fiber::create(
 			bind( & worker_object::run_, this),
@@ -331,10 +275,10 @@ public:
 	void block()
 	{
 		fiber::sptr_t this_fib = fib_;
-		ums_.put_blocked( this_fib);
+		pool_.put_blocked( this_fib);
 		fiber::sptr_t runnable_fib;
-		if ( ums_.has_runnable() )
-			ums_.try_take_runnable( runnable_fib);
+		if ( pool_.has_runnable() )
+			pool_.try_take_runnable( runnable_fib);
 		else
 			runnable_fib = fiber::create(
 				bind( & worker_object::run_, this),
@@ -356,19 +300,17 @@ private:
 	shared_ptr< worker_base >	impl_;
 
 public:
-	template< typename Pool, typename UMS >
+	template< typename Pool >
 	worker(
 			Pool & pool,
-			UMS & ums,
 			poolsize const& psize,
 			posix_time::time_duration const& asleep,
 			scanns const& max_scns,
 			stacksize const& stack_size,
 			function< void() > const& fn) :
 		impl_(
-			new worker_object< Pool, UMS, worker >(
+			new worker_object< Pool, worker >(
 				pool,
-				ums,
 				psize,
 				asleep,
 				max_scns,
@@ -380,8 +322,6 @@ public:
 
 	void join() const;
 	void interrupt() const;
-	void signal_shutdown();
-	void signal_shutdown_now();
 
 	void put( callable const&);
 	bool try_steal( callable &);

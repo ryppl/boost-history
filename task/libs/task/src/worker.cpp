@@ -25,14 +25,6 @@ worker::interrupt() const
 { impl_->interrupt(); }
 
 void
-worker::signal_shutdown()
-{ impl_->signal_shutdown(); }
-
-void
-worker::signal_shutdown_now()
-{ impl_->signal_shutdown_now(); }
-
-void
 worker::put( callable const& ca)
 { impl_->put( ca); }
 

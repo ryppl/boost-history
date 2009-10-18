@@ -91,4 +91,21 @@ spin_manual_reset_event::wait( system_time const& abs_time)
 	return true;
 }
 
+bool
+spin_manual_reset_event::try_wait()
+{
+	{
+		spin_lock< spin_mutex > lk( enter_mtx_);
+		BOOST_ASSERT( lk);
+		detail::atomic_fetch_add( & waiters_, 1);
+	}
+
+	bool result = static_cast< uint32_t >( SET) == detail::atomic_load( & state_);
+
+	if ( 1 == detail::atomic_fetch_sub( & waiters_, 1) )
+		enter_mtx_.unlock();
+
+	return result;
+}
+
 }}
