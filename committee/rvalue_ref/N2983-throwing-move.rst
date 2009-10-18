@@ -11,6 +11,12 @@
 
 .. _`BoostPro Computing`: http://www.boostpro.com
 
+.. build HTML with:
+
+   rst2html.py --footnote-references=superscript \
+     --stylesheet-path=./rst.css --embed-stylesheet N2983-throwing-move.rst \
+     N2983.html
+
 .. contents:: index
 
 Introduction
@@ -289,9 +295,11 @@ Add these paragraphs:
 
     :raw-html:`<span class="ins">16 If a function with the
     exception-specification <code>throw(false)</code> throws an
-    exception, the behavior is undefined. The exception-specification
-    <code>throw(true)</code> is equivalent to
-    <code>throw(...)</code>.</span>`
+    exception, the behavior is undefined.  The exception-specification
+    <code>throw(false)</code> is in all other respects equivalent to
+    <code>throw()</code>.  The exception-specification
+    <code>throw(true)</code> is equivalent to omitting the exception
+    specification altogether.</span>`
 
 A.13 Exception handling [gram.except]
 =====================================
