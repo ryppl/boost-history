@@ -24,7 +24,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     \include overlap_counter_/overlap_counter.cpp
 */
 //[example_overlap_counter
-#include <stdio.h>
 #include <iostream>
 #include <boost/itl/split_interval_map.hpp>
 

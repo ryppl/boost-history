@@ -19,7 +19,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     \include interval_container_/interval_container.cpp
 */
 //[example_interval_container
-#include <stdio.h>
 #include <iostream>
 
 #include <boost/itl/interval_set.hpp>

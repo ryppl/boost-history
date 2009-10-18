@@ -544,6 +544,9 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
     interval_type end_gap = left_subtract(rest_interval, last_interval);
     if(!end_gap.empty())
         it_ = this->_map.insert(prior_, value_type(end_gap, co_val));
+    else
+        it_ = prior_;
+
 }
 
 

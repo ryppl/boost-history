@@ -31,7 +31,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     \include user_groups_/user_groups.cpp
 */
 //[example_user_groups
-#include <stdio.h>
 #include <iostream>
 
 // The next line includes <boost/gregorian/date.hpp>

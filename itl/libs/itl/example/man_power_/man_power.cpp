@@ -22,7 +22,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     \include man_power_/man_power.cpp
 */
 //[example_man_power
-#include <stdio.h>
 #include <iostream>
 
 // The next line includes <boost/gregorian/date.hpp>

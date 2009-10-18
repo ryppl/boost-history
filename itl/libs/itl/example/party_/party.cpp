@@ -8,7 +8,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#include <stdio.h>
 #include <iostream>
 #include <boost/itl/interval_map.hpp>
 #include "../toytime.hpp"

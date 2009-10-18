@@ -686,6 +686,8 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         inserted_ = this->_map.insert(prior_, value_type(end_gap, co_val));
         it_ = join_neighbours(inserted_);
     }
+    else
+        it_ = prior_;
 }
 
 

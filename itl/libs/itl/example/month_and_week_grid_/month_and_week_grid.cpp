@@ -27,7 +27,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     \include month_and_week_grid_/month_and_week_grid.cpp
 */
 //[example_month_and_week_grid
-#include <stdio.h>
 #include <iostream>
 
 // The next line includes <boost/gregorian/date.hpp>
