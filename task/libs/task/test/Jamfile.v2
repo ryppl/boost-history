@@ -31,7 +31,6 @@ test-suite task :
     [ task-test test_new_thread ]
     [ task-test test_unbounded_twolock_pool ]
     [ task-test test_unbounded_onelock_pool ]
-    [ task-test test_unbounded_onelock_pool_distrib ]
     [ task-test test_bounded_twolock_pool ]
     [ task-test test_bounded_onelock_pool ]
     [ task-test test_as_sub_task ]
