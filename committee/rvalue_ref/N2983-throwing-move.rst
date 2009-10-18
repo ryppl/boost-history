@@ -82,10 +82,9 @@ the operation being move-enabled.  There, we know whether a throwing
 move can disturb existing guarantees.  We propose that instead of
 using ``std::move(x)`` in those cases, thus granting permission for
 the compiler to use *any* available move constructor, maintainers of
-these particular operations should use
-``std::legacy_move(x)``, which only grants
-permission to use the non-throwing move constructors of copyable
-types.  Unless ``x`` is a move-only type, or is known to have a
+these particular operations should use ``std::legacy_move(x)``, which
+grants permission move *unless* it could throw and the type is
+copyable.  Unless ``x`` is a move-only type, or is known to have a
 nonthrowing move constructor, the operation would fall back to copying
 ``x``, just as though ``x`` had never acquired a move constructor at
 all.
@@ -132,12 +131,13 @@ However, ``std::vector::reserve`` could be move-enabled this way: [#default-cons
   }
 
 
-We stress again that the use of ``std::legacy_move`` as opposed to ``move``
-would only be necessary under an *extremely* limited set of
+We stress again that the use of ``std::legacy_move`` as opposed to
+``move`` would only be necessary under an *extremely* limited set of
 circumstances.  In particular, it would never be required in new code,
 which could simply give a *conditional* strong guarantee, e.g. “if an
-exception is thrown other than by ``T``\ 's move constructor, there are
-no effects.”  We recommend that approach as best practice for new code.
+exception is thrown other than by ``T``\ 's move constructor, there
+are no effects.”  We recommend that approach as best practice for new
+code.
 
 Implementing ``std::legacy_move``
 *********************************
@@ -148,7 +148,7 @@ One possible implementation of ``std::legacy_move`` might be::
   typename conditional<
       !has_nothrow_move_constructor<T>::value
       && has_copy_constructor<T>::value,
-      T&,
+      T const&,
       T&&
   >::type
   legacy_move(T& x)
@@ -333,7 +333,7 @@ Add entries to table 43:
 | ``template <class T>           |``T`` has a move           |``T`` shall be a complete type.    |
 | struct has_move_constructor;`` |constructor (17.3.14).     |                                   |
 +--------------------------------+---------------------------+-----------------------------------+
-| ``template <class T>           |``T`` is a type with a move|``has_move_constructor<T>::value`` |
+| ``template <class T>           |``T`` is a type with a move|``T`` shall be a complete type.    |
 | struct                         |constructor that is known  |                                   |
 | has_nothrow_move_constructor;``|not to throw any           |                                   |
 |                                |exceptions.                |                                   |
@@ -341,7 +341,7 @@ Add entries to table 43:
 | ``template <class T>           |``T`` has a move assignment|``T`` shall be a complete type.    |
 | struct has_move_assign;``      |operator (17.3.13).        |                                   |
 +--------------------------------+---------------------------+-----------------------------------+
-| ``template <class T>           |``T`` is a type with a move|``has_move_assign<T>::value``      |
+| ``template <class T>           |``T`` is a type with a move|``T`` shall be a complete type.    |
 | struct                         |assignment operator that is|                                   |
 | has_nothrow_move_assign;``     |known not to throw any     |                                   |
 |                                |exceptions.                |                                   |
@@ -365,11 +365,38 @@ Add entries to table 43:
 23.3.2.3 deque modifiers [deque.modifiers]
 ==========================================
 
-Change paragraph 2 as follows:
+Context::
 
-    2 Remarks: If an exception is thrown other than by the copy constructor,
-    :ins:`move constructor, move assignment operator`
-    or assignment operator of ``T`` there are no effects.
+    iterator insert(const_iterator position, const T& x);
+    iterator insert(const_iterator position, T&& x);
+    void insert(const_iterator position, size_type n, const T& x);
+    template <class InputIterator>;
+       void insert(const_iterator position, ;
+                   InputIterator first, InputIterator last);
+
+    template <class... Args> void emplace_front(Args&&... args);
+    template <class... Args> void emplace_back(Args&&... args);
+    template <class... Args> iterator emplace(const_iterator position, Args&&... args);
+    void push_front(const T& x);
+    void push_front(T&& x);
+    void push_back(const T& x);
+    void push_back(T&& x);`
+
+Change Paragraph 2 as follows:
+
+  2 Remarks: If an exception is thrown other than by the copy
+  constructor\ :ins:`, move constructor, move assignment operator` or
+  assignment operator of ``T`` there are no effects.  :raw-html:`<span
+  class="ins">If an exception is thrown by the move constructor of a
+  non-CopyConstructible <code>T</code>, the effects are
+  unspecified.</span>`
+
+-----
+
+Context::
+
+  iterator erase(const_iterator position); 
+  iterator erase(const_iterator first, const_iterator last);
 
 Change paragraph 6 as follows:
 
@@ -391,7 +418,7 @@ Remove paragraph 2:
 
 Change paragraph 3 as follows:
 
-    Effects: A directive that informs a vector of a planned change in
+    :del:`3`:ins:`2` Effects: A directive that informs a vector of a planned change in
     size, so that it can manage the storage allocation
     accordingly. After ``reserve()``, ``capacity()`` is greater or
     equal to the argument of reserve if reallocation happens; and
@@ -426,37 +453,26 @@ Change the section as follows:
     void insert(const_iterator position, size_type n, const T& x); 
     template <class InputIterator>
       void insert(const_iterator position, InputIterator first, InputIterator last);
-    :del:`template <class... Args> void emplace_back(Args&&... args);`
-    template <class... Args> iterator emplace(const_iterator position, Args&&... args); 
-    :del:`void push_back(const T& x); 
-    void push_back(T&& x);`
+    template <class... Args> void emplace_back(Args&&... args);
+    template <class... Args> iterator emplace(const_iterator position, Args&&... args);
+    void push_back(const T& x); 
+    void push_back(T&& x);
 
   :del:`1 Requires: If value_type has a move constructor, that constructor shall
   not throw any exceptions.`
 
-  :del:`2`:ins:`1` Remarks: Causes reallocation if the new size is greater than the
-  old capacity. If no reallocation happens, all the iterators and
-  references before the insertion point remain valid.  If an exception
-  is thrown other than by the copy constructor :ins:`move constructor,
-  move assignment operator,` or assignment operator of ``T`` or by any
-  InputIterator operation there are no effects.
+  :del:`2`:ins:`1` Remarks: Causes reallocation if the new size is
+  greater than the old capacity. If no reallocation happens, all the
+  iterators and references before the insertion point remain valid.
+  If an exception is thrown other than by the copy constructor
+  :ins:`move constructor, move assignment operator,` or assignment
+  operator of ``T`` or by any InputIterator operation there are no
+  effects.  :raw-html:`<span class="ins">if an exception is thrown by
+  the move constructor of a non-CopyConstructible <code>T</code>, the
+  effects are unspecified.`
 
-  :del:`3`:ins:`2` Complexity: The complexity is linear in the number of elements
-  inserted plus the distance to the end of the vector.
-
-  .. parsed-literal::
-
-    :ins:`void push_back(const T& x); 
-    void push_back(T&& x);
-    template <class... Args> void emplace_back(Args&&... args);`
-
-  :ins:`2 Remarks: Causes reallocation if the new size is greater than
-  the old capacity. If no reallocation happens, all iterators and
-  references remain valid.  Otherwise, if an exception is thrown by
-  the move constructor of a non-CopyConstructible type, the effects
-  are unspecified.`
-
-  :ins:`Complexity: O(1)`
+  :del:`3`:ins:`2` Complexity: The complexity is linear in the number
+  of elements inserted plus the distance to the end of the vector.
 
 **Note to proposal reader:** The strong guarantee of ``push_back`` for
 CopyConstructible ``T``\ s is maintained by virtue of 23.2.1

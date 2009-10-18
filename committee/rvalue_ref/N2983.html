@@ -398,10 +398,9 @@ the operation being move-enabled.  There, we know whether a throwing
 move can disturb existing guarantees.  We propose that instead of
 using <tt class="docutils literal"><span class="pre">std::move(x)</span></tt> in those cases, thus granting permission for
 the compiler to use <em>any</em> available move constructor, maintainers of
-these particular operations should use
-<tt class="docutils literal"><span class="pre">std::legacy_move(x)</span></tt>, which only grants
-permission to use the non-throwing move constructors of copyable
-types.  Unless <tt class="docutils literal"><span class="pre">x</span></tt> is a move-only type, or is known to have a
+these particular operations should use <tt class="docutils literal"><span class="pre">std::legacy_move(x)</span></tt>, which
+grants permission move <em>unless</em> it could throw and the type is
+copyable.  Unless <tt class="docutils literal"><span class="pre">x</span></tt> is a move-only type, or is known to have a
 nonthrowing move constructor, the operation would fall back to copying
 <tt class="docutils literal"><span class="pre">x</span></tt>, just as though <tt class="docutils literal"><span class="pre">x</span></tt> had never acquired a move constructor at
 all.</p>
@@ -444,12 +443,13 @@ void reserve(size_type n)
     }
 }
 </pre>
-<p>We stress again that the use of <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt> as opposed to <tt class="docutils literal"><span class="pre">move</span></tt>
-would only be necessary under an <em>extremely</em> limited set of
+<p>We stress again that the use of <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt> as opposed to
+<tt class="docutils literal"><span class="pre">move</span></tt> would only be necessary under an <em>extremely</em> limited set of
 circumstances.  In particular, it would never be required in new code,
 which could simply give a <em>conditional</em> strong guarantee, e.g. “if an
-exception is thrown other than by <tt class="docutils literal"><span class="pre">T</span></tt>'s move constructor, there are
-no effects.”  We recommend that approach as best practice for new code.</p>
+exception is thrown other than by <tt class="docutils literal"><span class="pre">T</span></tt>'s move constructor, there
+are no effects.”  We recommend that approach as best practice for new
+code.</p>
 </div>
 <div class="section" id="implementing-std-legacy-move">
 <h1><a class="toc-backref" href="#id9">Implementing <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt></a></h1>
@@ -459,7 +459,7 @@ template &lt;class T&gt;
 typename conditional&lt;
     !has_nothrow_move_constructor&lt;T&gt;::value
     &amp;&amp; has_copy_constructor&lt;T&gt;::value,
-    T&amp;,
+    T const&amp;,
     T&amp;&amp;
 &gt;::type
 legacy_move(T&amp; x)
@@ -630,7 +630,7 @@ constructor (17.3.14).</td>
 constructor that is known
 not to throw any
 exceptions.</td>
-<td><tt class="docutils literal"><span class="pre">has_move_constructor&lt;T&gt;::value</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type.</td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span> <span class="pre">has_move_assign;</span></tt></td>
@@ -645,7 +645,7 @@ operator (17.3.13).</td>
 assignment operator that is
 known not to throw any
 exceptions.</td>
-<td><tt class="docutils literal"><span class="pre">has_move_assign&lt;T&gt;::value</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type.</td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span> <span class="pre">has_copy_constructor;</span></tt></td>
@@ -677,11 +677,37 @@ array of unknown bound, or
 </div>
 <div class="section" id="deque-modifiers-deque-modifiers">
 <h2><a class="toc-backref" href="#id18">23.3.2.3 deque modifiers [deque.modifiers]</a></h2>
-<p>Change paragraph 2 as follows:</p>
+<p>Context:</p>
+<pre class="literal-block">
+iterator insert(const_iterator position, const T&amp; x);
+iterator insert(const_iterator position, T&amp;&amp; x);
+void insert(const_iterator position, size_type n, const T&amp; x);
+template &lt;class InputIterator&gt;;
+   void insert(const_iterator position, ;
+               InputIterator first, InputIterator last);
+
+template &lt;class... Args&gt; void emplace_front(Args&amp;&amp;... args);
+template &lt;class... Args&gt; void emplace_back(Args&amp;&amp;... args);
+template &lt;class... Args&gt; iterator emplace(const_iterator position, Args&amp;&amp;... args);
+void push_front(const T&amp; x);
+void push_front(T&amp;&amp; x);
+void push_back(const T&amp; x);
+void push_back(T&amp;&amp; x);`
+</pre>
+<p>Change Paragraph 2 as follows:</p>
 <blockquote>
-2 Remarks: If an exception is thrown other than by the copy constructor,
-<span class="ins">move constructor, move assignment operator</span>
-or assignment operator of <tt class="docutils literal"><span class="pre">T</span></tt> there are no effects.</blockquote>
+2 Remarks: If an exception is thrown other than by the copy
+constructor<span class="ins">, move constructor, move assignment operator</span> or
+assignment operator of <tt class="docutils literal"><span class="pre">T</span></tt> there are no effects.  <span class="raw-html"><span
+class="ins">If an exception is thrown by the move constructor of a
+non-CopyConstructible <code>T</code>, the effects are
+unspecified.</span></span></blockquote>
+<hr class="docutils" />
+<p>Context:</p>
+<pre class="literal-block">
+iterator erase(const_iterator position);
+iterator erase(const_iterator first, const_iterator last);
+</pre>
 <p>Change paragraph 6 as follows:</p>
 <blockquote>
 6 Throws: Nothing unless an exception is thrown by the copy constructor,
@@ -700,7 +726,7 @@ void reserve(size_type n);
 not throw any exceptions.</span></blockquote>
 <p>Change paragraph 3 as follows:</p>
 <blockquote>
-Effects: A directive that informs a vector of a planned change in
+<span class="del">3</span><span class="ins">2</span> Effects: A directive that informs a vector of a planned change in
 size, so that it can manage the storage allocation
 accordingly. After <tt class="docutils literal"><span class="pre">reserve()</span></tt>, <tt class="docutils literal"><span class="pre">capacity()</span></tt> is greater or
 equal to the argument of reserve if reallocation happens; and
@@ -731,32 +757,24 @@ iterator insert(const_iterator position, T&amp;&amp; x);
 void insert(const_iterator position, size_type n, const T&amp; x);
 template &lt;class InputIterator&gt;
   void insert(const_iterator position, InputIterator first, InputIterator last);
-<span class="del">template &lt;class... Args&gt; void emplace_back(Args&amp;&amp;... args);</span>
+template &lt;class... Args&gt; void emplace_back(Args&amp;&amp;... args);
 template &lt;class... Args&gt; iterator emplace(const_iterator position, Args&amp;&amp;... args);
-<span class="del">void push_back(const T&amp; x);
-void push_back(T&amp;&amp; x);</span>
+void push_back(const T&amp; x);
+void push_back(T&amp;&amp; x);
 </pre>
 <p><span class="del">1 Requires: If value_type has a move constructor, that constructor shall
 not throw any exceptions.</span></p>
-<p><span class="del">2</span><span class="ins">1</span> Remarks: Causes reallocation if the new size is greater than the
-old capacity. If no reallocation happens, all the iterators and
-references before the insertion point remain valid.  If an exception
-is thrown other than by the copy constructor <span class="ins">move constructor,
-move assignment operator,</span> or assignment operator of <tt class="docutils literal"><span class="pre">T</span></tt> or by any
-InputIterator operation there are no effects.</p>
-<p><span class="del">3</span><span class="ins">2</span> Complexity: The complexity is linear in the number of elements
-inserted plus the distance to the end of the vector.</p>
-<pre class="literal-block">
-<span class="ins">void push_back(const T&amp; x);
-void push_back(T&amp;&amp; x);
-template &lt;class... Args&gt; void emplace_back(Args&amp;&amp;... args);</span>
-</pre>
-<p><span class="ins">2 Remarks: Causes reallocation if the new size is greater than
-the old capacity. If no reallocation happens, all iterators and
-references remain valid.  Otherwise, if an exception is thrown by
-the move constructor of a non-CopyConstructible type, the effects
-are unspecified.</span></p>
-<p><span class="ins">Complexity: O(1)</span></p>
+<p><span class="del">2</span><span class="ins">1</span> Remarks: Causes reallocation if the new size is
+greater than the old capacity. If no reallocation happens, all the
+iterators and references before the insertion point remain valid.
+If an exception is thrown other than by the copy constructor
+<span class="ins">move constructor, move assignment operator,</span> or assignment
+operator of <tt class="docutils literal"><span class="pre">T</span></tt> or by any InputIterator operation there are no
+effects.  <span class="raw-html"><span class="ins">if an exception is thrown by
+the move constructor of a non-CopyConstructible <code>T</code>, the
+effects are unspecified.</span></p>
+<p><span class="del">3</span><span class="ins">2</span> Complexity: The complexity is linear in the number
+of elements inserted plus the distance to the end of the vector.</p>
 </blockquote>
 <p><strong>Note to proposal reader:</strong> The strong guarantee of <tt class="docutils literal"><span class="pre">push_back</span></tt> for
 CopyConstructible <tt class="docutils literal"><span class="pre">T</span></tt>s is maintained by virtue of 23.2.1
