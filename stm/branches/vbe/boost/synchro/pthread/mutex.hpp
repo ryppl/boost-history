@@ -16,6 +16,7 @@
 
 //-----------------------------------------------------------------------------
 #include <pthread.h>
+#include <assert.h>
 //-----------------------------------------------------------------------------
 #include <boost/synchro/detail/config.hpp>
 //-----------------------------------------------------------------------------
@@ -28,15 +29,15 @@ namespace boost { namespace synchro {
 
     template<>
     inline void lock<pthread_mutex_t>(pthread_mutex_t& lockable) {
-        //int const res=
-        pthread_mutex_lock(&lockable);
+        int const res = pthread_mutex_lock(&lockable);
+        assert(res==0);
         //if (res!=0) throw lock_error();
     }
 
     template<>
     inline void unlock<pthread_mutex_t>(pthread_mutex_t& lockable) {
-        //int const res=
-        pthread_mutex_unlock(&lockable);
+        int const res= pthread_mutex_unlock(&lockable);
+        assert(res==0);
         //if (res!=0) throw lock_error();
     }
 
@@ -53,7 +54,7 @@ namespace boost { namespace synchro {
                 pthread_mutex_t& lockable, system_time const& abs_time) {
         struct timespec const timeout=detail::get_timespec(abs_time);
         int const res=pthread_mutex_timedlock(&lockable,&timeout);
-        //BOOST_ASSERT(!res || res==ETIMEDOUT);
+        assert(!res || res==ETIMEDOUT);
         return !res;
     }   
 #endif

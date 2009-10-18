@@ -24,6 +24,8 @@ namespace non_tx {
 
 }
 
+synchro::implicit_thread_specific_ptr<transaction::transaction_tss_storage> transaction::transaction_tss_storage_;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Static initialization
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,9 +35,6 @@ transaction::MutexThreadSetMap transaction::latmLockedLocksAndThreadIdsMap_;
 transaction::MutexThreadMap transaction::latmLockedLocksOfThreadMap_;
 transaction::MutexSet transaction::tmConflictingLocks_;
 transaction::DeletionBuffer transaction::deletionBuffer_;
-#ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
-transaction::ThreadTransactionsStack transaction::threadTransactionsStack_;
-#endif
 
 size_t transaction::global_clock_ = 0;
 size_t transaction::stalls_ = 0;
@@ -235,11 +234,6 @@ void transaction::initialize_thread()
       threadCurrentlyLockedLocks_[threadId] = new MutexSet;
    }
 #endif
-   ThreadTransactionsStack::iterator transactionsdIter = threadTransactionsStack_.find(threadId);
-   if (threadTransactionsStack_.end() == transactionsdIter)
-   {
-      threadTransactionsStack_[threadId] = new TransactionsStack;
-   }
 
    ThreadBoolContainer::iterator blockedIter = threadBlockedLists_.find(threadId);
 
@@ -333,12 +327,6 @@ void transaction::initialize_thread()
       threadCurrentlyLockedLocks_[threadId] = new MutexSet;
    }
 #endif
-
-   ThreadTransactionsStack::iterator transactionsdIter = threadTransactionsStack_.find(threadId);
-   if (threadTransactionsStack_.end() == transactionsdIter)
-   {
-      threadTransactionsStack_[threadId] = new TransactionsStack;
-   }
 
    if (threadMutexes_.end() == mutexIter)
    {

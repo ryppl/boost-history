@@ -30,6 +30,7 @@
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction.hpp>
 #include <boost/stm/transaction_bookkeeping.hpp>
+#include <boost/synchro/tss.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/datatypes.hpp>
 #include <boost/stm/detail/deleters.hpp>
@@ -130,8 +131,10 @@ public:
    typedef std::list<detail::deleter_type*> MemoryContainerList;
 #endif
 
+   struct transaction_tss_storage {
+       TransactionsStack transactions_;
+   };
 
-   typedef std::map<size_t, TransactionsStack*> ThreadTransactionsStack;
    typedef std::map<size_t, WriteContainer*> ThreadWriteContainer;
    typedef std::map<size_t, TxType*> ThreadTxTypeContainer;
 
@@ -199,7 +202,6 @@ public:
     {
         inline tss_context()
         : tx_()
-        , transactions_()
         #ifndef BOOST_STM_USE_BOOST_MUTEX
         #if WIN32
         , mutex_(PTHREAD_MUTEX_INITIALIZER)
@@ -212,8 +214,6 @@ public:
         , blocked_(false)
         #endif
         {
-            // the current transaction is 0
-            transactions_.push(0);
             #ifndef BOOST_STM_USE_BOOST_MUTEX
             pthread_mutex_init(&mutex_, 0);
             #endif
@@ -223,7 +223,6 @@ public:
         }
 
         tx_context tx_;
-        TransactionsStack transactions_;
         Mutex mutex_;
         #if PERFORMING_LATM
         int blocked_;
@@ -1050,7 +1049,7 @@ private:
       else
       {
          in.transaction_thread(threadId_);
-          
+
          //unlock(&transactionMutex_);
          lock_m.unlock();
          // is this really necessary? in the deferred case it is, but in direct it
@@ -1195,7 +1194,7 @@ private:
          //unlock_tx();
          lock.unlock();
 #else
-         
+
 #endif
 #if PERFORMING_WRITE_BLOOM
          wbloom().set_bv1(bloom().h1());
@@ -1672,20 +1671,6 @@ private:
    inline static MutexSet &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
 #endif
 
-    static ThreadTransactionsStack threadTransactionsStack_;
-    TransactionsStack& transactionsRef_;
-   public:
-    inline TransactionsStack& transactions() {return transactionsRef_;}
-    inline static TransactionsStack &transactions(thread_id_t id) {
-        synchro::lock_guard<Mutex> auto_general_lock_(*general_lock());
-        return *threadTransactionsStack_.find(id)->second;
-    }
-    inline static TransactionsStack &transactions_unsafe(thread_id_t id) {
-        //synchro::lock_guard<Mutex> auto_general_lock_(*general_lock());
-        return *threadTransactionsStack_.find(id)->second;
-    }
-    private:
-
 
 ////////////////////////////////////////
 #else //BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
@@ -1844,23 +1829,7 @@ private:
     }
 #endif
 
-    TransactionsStack& transactionsRef_;
-   public:
-    inline TransactionsStack& transactions() {return transactionsRef_;}
-    inline static TransactionsStack &transactions(thread_id_t id) {
-        synchro::lock_guard<Mutex> auto_general_lock_(*general_lock());
-        tss_context_map_type::iterator i = tss_context_map_.find(id);
-        return i->second->transactions_;
-    }
-    inline static TransactionsStack &transactions_unsafe(thread_id_t id) {
-        tss_context_map_type::iterator i = tss_context_map_.find(id);
-        return i->second->transactions_;
-    }
-   private:
-
 #endif
-
-
 
 ////////////////////////////////////////
 #else   // USE_SINGLE_THREAD_CONTEXT_MAP
@@ -1998,23 +1967,15 @@ private:
    inline static MutexSet &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
 #endif
 
-    static ThreadTransactionsStack threadTransactionsStack_;
-    TransactionsStack& transactionsRef_;
-   public:
-    inline TransactionsStack& transactions() {return transactionsRef_;}
-    inline static TransactionsStack &transactions(thread_id_t id) {
-        synchro::lock_guard<Mutex> auto_general_lock_(*general_lock());
-        return *threadTransactionsStack_.find(id)->second;
-    }
-    inline static TransactionsStack &transactions_unsafe(thread_id_t id) {
-        return *threadTransactionsStack_.find(id)->second;
-    }
-    private:
 
 ////////////////////////////////////////
 #endif
 
 
+    static synchro::implicit_thread_specific_ptr<transaction_tss_storage> transaction_tss_storage_;
+    transaction_tss_storage & transaction_tss_storage_ref_;
+   public:
+    inline TransactionsStack& transactions() {return transaction_tss_storage_ref_.transactions_;}
 
    // transaction specific data
    //int hasMutex_; // bool - 1 bit
@@ -2031,8 +1992,7 @@ private:
     #endif
 
 public:
-    inline static transaction* current_transaction() {return transactions(THREAD_ID).top();}
-
+    inline static transaction* current_transaction() {return transaction_tss_storage_->transactions_.top();}
 
 };
 

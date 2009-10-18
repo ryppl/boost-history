@@ -14,30 +14,17 @@
 #ifndef BOOST_STM_SYNCHO__HPP
 #define BOOST_STM_SYNCHO__HPP
 
-#include <boost/stm/detail/config.hpp>
-
-#ifdef BOOST_STM_USE_BOOST_SYNCHRO
-#include <boost/synchro.hpp>
-#endif
-
 //-----------------------------------------------------------------------------
-#include <stdarg.h>
 #include <pthread.h>
 //-----------------------------------------------------------------------------
-#include <list>
+#include <boost/stm/detail/config.hpp>
+//-----------------------------------------------------------------------------
+#ifdef BOOST_STM_USE_BOOST_SYNCHRO
+#include <boost/synchro.hpp>
+#else
 #include <stdexcept>
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-//#include <boost/stm/exceptions.hpp>
-//-----------------------------------------------------------------------------
-//#include <boost/stm/detail/memory_pool.hpp>
-//-----------------------------------------------------------------------------
-
-#ifdef BOOST_STM_USE_BOOST
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/thread_time.hpp>
 #endif
+//-----------------------------------------------------------------------------
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
    typedef pthread_mutex_t Mutex;
@@ -49,7 +36,7 @@ typedef pthread_mutex_t PLOCK;
 
 //-----------------------------------------------------------------------------
 
-namespace boost { 
+namespace boost {
 #ifndef BOOST_STM_USE_BOOST_SYNCHRO
 namespace synchro {
 
@@ -60,19 +47,19 @@ namespace synchro {
         ~lock_error() throw() {}
 
         virtual const char* what() const throw() {return "synchro::lock_error";}
-    };    
-    
+    };
+
     struct defer_lock_t
     {};
     struct try_to_lock_t
     {};
     struct adopt_lock_t
     {};
-    
+
     const defer_lock_t defer_lock={};
     const try_to_lock_t try_to_lock={};
     const adopt_lock_t adopt_lock={};
-        
+
     template< typename Lockable >
     inline void lock(Lockable& lockable) {
         lockable.lock();
@@ -97,7 +84,7 @@ namespace synchro {
     inline void unlock<pthread_mutex_t>(pthread_mutex_t& lockable) {
         pthread_mutex_unlock(&lockable);
     }
-    
+
     template<>
     inline bool try_lock<pthread_mutex_t>(pthread_mutex_t& lockable) {
         return pthread_mutex_trylock(&lockable);
@@ -124,7 +111,7 @@ namespace synchro {
         {
             synchro::unlock(m);
         }
-    };    
+    };
 
     template<typename Mutex>
     class lock_guard_if
@@ -150,8 +137,8 @@ namespace synchro {
         {
             if (cnd_) synchro::unlock(m);
         }
-    };    
-    
+    };
+
     template<typename Mutex>
     class unique_lock
     {
@@ -164,13 +151,13 @@ namespace synchro {
         unique_lock():
             m(0),is_locked(false)
         {}
-        
+
         explicit unique_lock(Mutex& m_):
             m(&m_),is_locked(false)
         {
             lock();
         }
-        
+
         unique_lock(Mutex& m_,adopt_lock_t):
             m(&m_),is_locked(true)
         {}
@@ -187,7 +174,7 @@ namespace synchro {
             std::swap(m,other.m);
             std::swap(is_locked,other.is_locked);
         }
-        
+
         ~unique_lock()
         {
             if(owns_lock())
@@ -222,7 +209,7 @@ namespace synchro {
             synchro::unlock(*m);
             is_locked=false;
         }
-            
+
         typedef void (unique_lock::*bool_type)();
         operator bool_type() const
         {
@@ -255,7 +242,7 @@ namespace synchro {
     void swap(unique_lock<Mutex>& lhs,unique_lock<Mutex>& rhs)
     {
         lhs.swap(rhs);
-    }   
+    }
 }
 #endif
 namespace stm {

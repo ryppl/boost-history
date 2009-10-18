@@ -444,8 +444,6 @@ inline transaction::transaction() :
    currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
 #endif
-   transactionsRef_(transactions_unsafe(threadId_)),
-
 ////////////////////////////////////////
 #else
 ////////////////////////////////////////
@@ -481,11 +479,9 @@ inline transaction::transaction() :
    currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
 ////////////////////////////////////////
-   transactionsRef_(transactions_unsafe(threadId_)),
-
 #endif
-
-   //hasMutex_(0), 
+    transaction_tss_storage_ref_(*transaction_tss_storage_),
+   //hasMutex_(0),
    priority_(0),
    state_(e_no_state),
    reads_(0),
@@ -706,8 +702,8 @@ inline transaction::~transaction()
       return;
    }
 
-    //if (!hasLock()) 
-    { 
+    //if (!hasLock())
+    {
        synchro::lock_guard<Mutex> lock(*mutex());
         abort();
     }
@@ -813,7 +809,7 @@ inline void transaction::invalidating_direct_end_transaction()
       direct_abort();
       //unlock_tx();
       synchro::unlock(*mutex());
-      
+
       //-----------------------------------------------------------------------
       // if this tx was writing, unlock the transaction mutex now
       //-----------------------------------------------------------------------
