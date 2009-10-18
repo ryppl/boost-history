@@ -6,48 +6,72 @@
 
 #include <boost/tree/algorithm.hpp>
 
-#define BOOST_TEST_MODULE cursor_algorithm test
+//#define BOOST_TEST_MODULE cursor_algorithm test
+
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
+#include <boost/test/parameterized_test.hpp>
+
+using namespace boost::unit_test;
 
 #include "fake_binary_tree.hpp"
 
 using namespace boost::tree;
 
-BOOST_FIXTURE_TEST_SUITE(binary_tree_search_test, fake_binary_tree_fixture<int>)
+template <class T>
+struct less_val
+: public std::binary_function <int, T, bool>
+{
+    bool operator() (const int x, const T& y) const
+    {
+        return x < y.val;
+    }
+};
 
-BOOST_AUTO_TEST_CASE( upper_bound_test )
+void upper_bound_test(int i)
+{
+    fake_binary_tree_fixture<int> f;
+    fake_binary_tree<int>::cursor c(f.fbt1, 0), d(f.fbt1, 0);
+
+    test_data_set mpo;
+    mock_cursor_data(mpo);
+
+    c = upper_bound(f.fbt1.root(), i);
+    test_data_set::index<inorder>::type::const_iterator ci 
+    = std::upper_bound(mpo.get<inorder>().begin(), mpo.get<inorder>().end(), i
+                     , less_val<test_data_set::value_type>());
+    BOOST_CHECK_EQUAL(*c, ci->val);
+}    
+
+void upper_bound_pred_test(int i)
 {   
-    fake_binary_tree<int>::cursor c(fbt1, 0), d(fbt1, 0);
+    fake_binary_tree_fixture<int> f;
+    fake_binary_tree<int>::cursor c(f.fbt1, 0), d(f.fbt1, 0);
 
-    c = upper_bound(fbt1.root(), 4); // (Left) Leaf
-    BOOST_CHECK_EQUAL(*c, 6);
-    c = upper_bound(fbt1.root(), 7); // (Right) Leaf
-    BOOST_CHECK_EQUAL(*c, 8);
-    c = upper_bound(fbt1.root(), 6); // Non-Leaf
-    BOOST_CHECK_EQUAL(*c, 7);
-    c = upper_bound(fbt1.root(), 8); // Non-Leaf: root
-    BOOST_CHECK_EQUAL(*c, 10);
+    test_data_set mpo;
+    mock_cursor_data(mpo);
 
-    c = upper_bound(fbt1.root(), 5); // Not in tree
-    BOOST_CHECK_EQUAL(*c, 6);
+    c = upper_bound(f.fbt1.root(), i, std::less<int>());
+    test_data_set::index<inorder>::type::const_iterator ci 
+    = std::upper_bound(mpo.get<inorder>().begin(), mpo.get<inorder>().end(), i
+                     , less_val<test_data_set::value_type>());
+    BOOST_CHECK_EQUAL(*c, ci->val);
 }
 
-BOOST_AUTO_TEST_CASE( upper_bound_pred_test )
-{   
-    fake_binary_tree<int>::cursor c(fbt1, 0), d(fbt1, 0);
+test_suite*
+init_unit_test_suite( int argc, char* argv[] )
+{
+    int params[] = { 4, 7, 6, 8, 5 };
+//    4: Left Leaf
+//    7: Right Leaf
+//    6: Non-Leaf
+//    8: Non-Leaf, Root
+//    5: Not in Tree
 
-    c = upper_bound(fbt1.root(), 4, std::less<int>()); // (Left) Leaf
-    BOOST_CHECK_EQUAL(*c, 6);
-    c = upper_bound(fbt1.root(), 7, std::less<int>()); // (Right) Leaf
-    BOOST_CHECK_EQUAL(*c, 8);
-    c = upper_bound(fbt1.root(), 6, std::less<int>()); // Non-Leaf
-    BOOST_CHECK_EQUAL(*c, 7);
-    c = upper_bound(fbt1.root(), 8, std::less<int>()); // Non-Leaf: root
-    BOOST_CHECK_EQUAL(*c, 10);
+    framework::master_test_suite().
+        add( BOOST_PARAM_TEST_CASE( &upper_bound_test, params, params+5 ) );
+    framework::master_test_suite().
+        add( BOOST_PARAM_TEST_CASE( &upper_bound_pred_test, params, params+5 ) );
 
-    c = upper_bound(fbt1.root(), 5, std::less<int>()); // Not in tree
-    BOOST_CHECK_EQUAL(*c, 6);
+    return 0;
 }
-
-BOOST_AUTO_TEST_SUITE_END()
