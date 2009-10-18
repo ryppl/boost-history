@@ -325,7 +325,9 @@ inline void boost::stm::transaction::add_tx_conflicting_lock(Mutex *inLock)
    if (!doing_tx_lock_protection()) return;
 
    {
-      var_auto_lock<PLOCK> autol(latm_lock(), general_lock(), inflight_lock(), 0);
+      synchro::lock_guard<Mutex> autolock_l(*latm_lock());
+      synchro::lock_guard<Mutex> autolock_g(*general_lock());
+      synchro::lock_guard<Mutex> autolock_i(*inflight_lock());
 
       if (get_tx_conflicting_locks().find(inLock) != get_tx_conflicting_locks().end()) return;
       get_tx_conflicting_locks().insert(inLock);

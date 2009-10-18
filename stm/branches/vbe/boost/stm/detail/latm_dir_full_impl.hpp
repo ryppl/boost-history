@@ -59,7 +59,7 @@ inline bool transaction::dir_do_core_full_pthread_lock_mutex
    if (latmLockedLocks_.empty())
    {
        
-    {
+    //{
       //synchro::lock_guard<Mutex> lock_g(*general_lock());
       synchro::lock(*general_lock());
       //synchro::lock_guard<Mutex> lock_i(*inflight_lock());
@@ -96,7 +96,7 @@ inline bool transaction::dir_do_core_full_pthread_lock_mutex
 
       synchro::unlock(*general_lock());
       synchro::unlock(*inflight_lock());
-    }
+    //}
 
       //-----------------------------------------------------------------------
       // now we must stall until all in-flight transactions are gone, otherwise
@@ -144,35 +144,35 @@ inline int transaction::dir_full_pthread_lock_mutex(Mutex *mutex)
    int waitTime = 0, aborted = 0;
    for (;;)
    {
-       {
+       //{
       // TBR int val = lock(mutex);
       // TBR if (0 != val) return val;
-      //synchro::lock(*mutex);
-      synchro::lock_guard<Mutex> lock_m(*mutex);
+      synchro::lock(*mutex);
+      //synchro::lock_guard<Mutex> lock_m(*mutex);
 
-      //synchro::lock(latmMutex_);
-      synchro::lock_guard<Mutex> lock_l(latmMutex_);
+      synchro::lock(latmMutex_);
+      //synchro::lock_guard<Mutex> lock_l(latmMutex_);
 
-      //try
-      //{
+      try
+      {
          //--------------------------------------------------------------------
          // if we are able to do the core lock work, break
          //--------------------------------------------------------------------
          if (dir_do_core_full_pthread_lock_mutex(mutex, waitTime, aborted)) break;
-      //}
-      //catch (...)
-      //{
-         //synchro::unlock(*mutex);
-         //synchro::unlock(latmMutex_);
-         //throw;
-      //}
+      }
+      catch (...)
+      {
+         synchro::unlock(*mutex);
+         synchro::unlock(latmMutex_);
+         throw;
+      }
 
       //-----------------------------------------------------------------------
       // we weren't able to do the core lock work, unlock our mutex and sleep
       //-----------------------------------------------------------------------
-      //synchro::unlock(*mutex);
-      //synchro::unlock(latmMutex_);
-        }
+      synchro::unlock(*mutex);
+      synchro::unlock(latmMutex_);
+        //}
 
       SLEEP(cm_lock_sleep_time());
       waitTime += cm_lock_sleep_time();
@@ -203,13 +203,14 @@ inline int transaction::dir_full_pthread_trylock_mutex(Mutex *mutex)
       synchro::unlock(*latm_lock());
 
       if (hadLock) return 0;
-      else return synchro::try_lock(*mutex);
+      else return synchro::try_lock(*mutex)?0:1;
    }
 
    //synchro::unique_lock<Mutex> lock_m(*mutex, synchro::try_to_lock);
    //if (lock_m) return true;
-   int val = synchro::try_lock(*mutex);
-   if (0 != val) return val;
+   //int val = synchro::try_lock(*mutex);
+   //if (0 != val) return val;
+   if (!synchro::try_lock(*mutex)) return 1;
 
    //synchro::lock(latmMutex_);
    synchro::lock_guard<Mutex> lock_l(latmMutex_);

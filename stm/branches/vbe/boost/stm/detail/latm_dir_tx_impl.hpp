@@ -252,8 +252,9 @@ inline int transaction::dir_tx_conflicting_lock_pthread_trylock_mutex(Mutex *mut
 
    bool txIsIrrevocable = false;
 
-   int val = synchro::try_lock(*mutex);
-   if (0 != val) return val;
+   //int val = synchro::try_lock(*mutex);
+   //if (0 != val) return val;
+   if (!synchro::try_lock(*mutex)) return 1;
 
    synchro::lock(latmMutex_);
 
@@ -297,7 +298,9 @@ inline int transaction::dir_tx_conflicting_lock_pthread_trylock_mutex(Mutex *mut
 //----------------------------------------------------------------------------
 inline int transaction::dir_tx_conflicting_lock_pthread_unlock_mutex(Mutex *mutex)
 {
-   var_auto_lock<PLOCK> autolock(latm_lock(), general_lock(), inflight_lock(), 0);
+   synchro::lock_guard<Mutex> autolock_l(*latm_lock());
+   synchro::lock_guard<Mutex> autolock_g(*general_lock());
+   synchro::lock_guard<Mutex> autolock_i(*inflight_lock());
    bool hasLock = true;
 
    if (transaction* t = get_inflight_tx_of_same_thread(true))

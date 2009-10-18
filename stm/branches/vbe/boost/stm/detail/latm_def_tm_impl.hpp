@@ -64,7 +64,8 @@ inline bool transaction::def_do_core_tm_conflicting_lock_pthread_lock_mutex
       // so we can abort all the in-flight transactions
       if (latmLockedLocks_.empty())
       {
-         var_auto_lock<PLOCK> autlock(general_lock(), inflight_lock(), 0);
+         synchro::lock_guard<Mutex> autolock_g(*general_lock());
+         synchro::lock_guard<Mutex> autolock_i(*inflight_lock());
 
          std::list<transaction*> txList;
 
@@ -127,11 +128,11 @@ inline int transaction::def_tm_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
    {
       // TRR int val = lock(mutex);
       // TRR if (0 != val) return val;
-       {
-       synchro::lock_guard<Mutex> lock_m(*latm_lock());
-       synchro::lock_guard<Mutex> lock_l(latmMutex_);
-       //synchro::lock(*mutex);
-       //synchro::lock(latmMutex_);
+       //{
+       //synchro::lock_guard<Mutex> lock_m(*latm_lock());
+       //synchro::lock_guard<Mutex> lock_l(latmMutex_);
+       synchro::lock(*mutex);
+       synchro::lock(latmMutex_);
 
       try
       {
@@ -151,9 +152,9 @@ inline int transaction::def_tm_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
       //-----------------------------------------------------------------------
       // we weren't able to do the core lock work, unlock our mutex and sleep
       //-----------------------------------------------------------------------
-      //synchro::unlock(*mutex);
-      //synchro::unlock(latmMutex_);
-      }
+      synchro::unlock(*mutex);
+      synchro::unlock(latmMutex_);
+      //}
 
       SLEEP(cm_lock_sleep_time());
       waitTime += cm_lock_sleep_time();
@@ -188,14 +189,15 @@ inline int transaction::def_tm_conflicting_lock_pthread_trylock_mutex(Mutex *mut
       }
 
       if (hadLock) return 0;
-      else return synchro::try_lock(*mutex);
+      else return synchro::try_lock(*mutex)?0:1;
    }
 
    //synchro::unique_lock<Mutex> lock_m(*mutex, synchro::try_to_lock);
    //if (lock_m) return true;
    
-   int val = synchro::try_lock(*mutex);
-   if (0 != val) return val;
+   //int val = synchro::try_lock(*mutex);
+   //if (0 != val) return val;
+   if (!synchro::try_lock(*mutex)) return 1;
 
    //synchro::lock(latmMutex_);
    synchro::lock_guard<Mutex> lock_l(latmMutex_);

@@ -16,6 +16,10 @@
 
 #include <boost/stm/detail/config.hpp>
 
+#ifdef BOOST_STM_USE_BOOST_SYNCHRO
+#include <boost/synchro.hpp>
+#endif
+
 //-----------------------------------------------------------------------------
 #include <stdarg.h>
 #include <pthread.h>
@@ -42,7 +46,9 @@
 #endif
 
 //-----------------------------------------------------------------------------
+
 namespace boost { 
+#ifndef BOOST_STM_USE_BOOST_SYNCHRO
 namespace synchro {
 
     class lock_error : public std::exception
@@ -116,7 +122,8 @@ namespace synchro {
         return !res;
     }
 #endif       
-    
+
+
     template<typename Mutex>
     class lock_guard
     {
@@ -165,7 +172,6 @@ namespace synchro {
             if (cnd_) synchro::unlock(m);
         }
     };    
-    
     
     template<typename Mutex>
     class unique_lock
@@ -396,6 +402,7 @@ namespace synchro {
 
     
 }
+#endif
 namespace stm {
 
 //-----------------------------------------------------------------------------

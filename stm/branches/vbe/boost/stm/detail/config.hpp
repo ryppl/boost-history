@@ -101,6 +101,7 @@
 // Define BOOST_STM_ALLOWS_DELETERS when you want STM manage with others deleters than delete
 #define BOOST_STM_ALLOWS_DELETERS 1
 
+#define BOOST_STM_USE_BOOST_SYNCHRO 1
 #endif // BOOST_STM_DETAIL_CONFIG_H
 
 

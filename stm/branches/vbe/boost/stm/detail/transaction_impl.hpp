@@ -230,7 +230,7 @@ inline void transaction::commit_deferred_update_tx()
    // otherwise, force the tx to commit its writes/reads
    //--------------------------------------------------------------------------
    #if 0
-   while (0 != synchro::try_lock(&transactionMutex_))
+   while (!synchro::try_lock(&transactionMutex_))
    {
       bookkeeping_.inc_lock_convoy_ms(1);
       SLEEP(1);
@@ -281,7 +281,7 @@ inline void transaction::commit_deferred_update_tx()
 //-----------------------------------------------------------------------------
 inline void transaction::lock_tx()
 {
-   while (0 != synchro::try_lock(*mutex()))
+   while (!synchro::try_lock(*mutex()))
    {
       SLEEP(1);
    }
@@ -573,7 +573,8 @@ inline bool transaction::restart()
 #ifdef LOGGING_BLOCKS
       if (++iterations > 100)
       {
-         var_auto_lock<PLOCK> autolock(latm_lock(), general_lock(), 0);
+         synchro::lock_guard<Mutex> autolock_l(*latm_lock());
+         synchro::lock_guard<Mutex> autolock_g(*general_lock());
          //unblock_threads_if_locks_are_empty();
          logFile_ << outputBlockedThreadsAndLockedLocks().c_str();
          SLEEP(10000);
@@ -904,7 +905,7 @@ inline void transaction::invalidating_deferred_end_transaction()
       return;
    }
 
-   while (0 != synchro::try_lock(transactionMutex_)) {
+   while (!synchro::try_lock(transactionMutex_)) {
     //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
     }
 
@@ -1849,7 +1850,7 @@ inline void transaction::deferredAbortWriteList() throw()
 //----------------------------------------------------------------------------
 inline size_t transaction::earliest_start_time_of_inflight_txes()
 {
-   var_auto_lock<PLOCK> a(inflight_lock(), 0);
+   synchro::lock_guard<Mutex> a(*inflight_lock());
 
    size_t secs = 0xffffffff;
 
@@ -1874,7 +1875,7 @@ inline void transaction::doIntervalDeletions()
 
    size_t earliestInFlightTx = earliest_start_time_of_inflight_txes();
 
-   var_auto_lock<PLOCK> a(&deletionBufferMutex_, 0);
+   synchro::lock_guard<Mutex> a(deletionBufferMutex_);
 
    for (DeletionBuffer::iterator i = deletionBuffer_.begin(); i != deletionBuffer_.end();)
    {
@@ -1902,7 +1903,7 @@ inline void transaction::directCommitTransactionDeletedMemory() throw()
 
    if (!deletedMemoryList().empty())
    {
-      var_auto_lock<PLOCK> a(&deletionBufferMutex_, 0);
+      synchro::lock_guard<Mutex> a(deletionBufferMutex_);
       deletionBuffer_.insert( std::pair<size_t, MemoryContainerList>
          (time(0), deletedMemoryList()) );
       deletedMemoryList().clear();

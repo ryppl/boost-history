@@ -184,11 +184,12 @@ inline int transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(Mutex *mut
       synchro::lock(*latm_lock());
       latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
       synchro::unlock(*latm_lock());
-      return synchro::try_lock(*mutex);
+      return synchro::try_lock(*mutex)?0:1;
    }
 
-   int val = synchro::try_lock(*mutex);
-   if (0 != val) return val;
+   //int val = synchro::try_lock(*mutex);
+   //if (0 != val) return val;
+   if (!synchro::try_lock(*mutex)) return 1;
 
    synchro::lock(latmMutex_);
 

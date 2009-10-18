@@ -102,7 +102,7 @@ private:
 
       for (size_t i = 0; i < timeOut; ++i)
       {
-         if (0 == synchro::try_lock(*lock_))
+         if (synchro::try_lock(*lock_))
          {
             hasLock_ = true;
             insert_into_threaded_lock_map(mutex);
