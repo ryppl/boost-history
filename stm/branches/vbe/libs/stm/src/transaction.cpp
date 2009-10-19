@@ -77,10 +77,13 @@ bool transaction::initialized_ = false;
    int const boost::stm::except_and_back_off_on_abort_notice_cm::kMaxIncreases_=0;
    int const boost::stm::except_and_back_off_on_abort_notice_cm::initialSleepTime_=0;
    int boost::stm::except_and_back_off_on_abort_notice_cm::kMaxSleepTime_=0;
+#else
+    BOOST_STM_CM_STATIC();
 #endif
 
+
 #else
-base_contention_manager *transaction::cm_ =
+base_contention_manager *poly_contention_manager::cm_ =
     new ExceptAndBackOffOnAbortNoticeCM(0, 0, 0);
 //    new DefaultContentionManager();
 //    new NoExceptionOnAbortNoticeOnReadWritesCM();

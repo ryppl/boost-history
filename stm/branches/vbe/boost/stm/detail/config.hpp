@@ -56,13 +56,18 @@
 //      BOOST_STM_CM_STATIC_CONF when you want a staticacly configured CM
 //      BOOST_STM_CM_DYNAMIC_CONF when you want a polymorphic CM configured at run time
 
-#define BOOST_STM_CM_STATIC_CONF 1
+//#define BOOST_STM_CM_STATIC_CONF 1
 //#define BOOST_STM_CM_DYNAMIC_CONF 1
 
 // Define only one of
 //      BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm when configuration manager is except_and_back_off_on_abort_notice_cm
 
-#define BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm 1
+//#define BOOST_STM_CM_STATIC_CONF <boost/stm/contention_managers/except_and_back_off_on_abort_notice_cm.hpp>
+//#define BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm 1
+
+#define BOOST_STM_CM_STATIC_INITIAL_SLEEP_TIME 0
+#define BOOST_STM_CM_STATIC_SLEEP_INCREASE 0
+#define BOOST_STM_CM_STATIC_MAX_INCREASES 0
 
 ///////////////////////////////////////////////////////////////////////////////
 // BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER

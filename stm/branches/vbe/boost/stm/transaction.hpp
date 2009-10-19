@@ -26,14 +26,15 @@
 #include <string>
 #include <vector>
 //-----------------------------------------------------------------------------
+#include <boost/synchro/tss.hpp>
+//-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction.hpp>
 #include <boost/stm/datatypes.hpp>
 #include <boost/stm/move.hpp>
 #include <boost/stm/transaction_bookkeeping.hpp>
-
-#include <boost/synchro/tss.hpp>
+#include <boost/stm/select_contention_manager.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/bloom_filter.hpp>
 #include <boost/stm/detail/deleters.hpp>
@@ -42,23 +43,8 @@
 #include <boost/stm/detail/vector_map.hpp>
 #include <boost/stm/detail/vector_set.hpp>
 
-
-#if defined(BOOST_STM_CM_STATIC_CONF)
-#if defined(BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm)
-#include <boost/stm/contention_managers/except_and_back_off_on_abort_notice_cm.hpp>
-#else
-#include <boost/stm/contention_managers/default.hpp>
-#endif
-#else
-#if defined(BOOST_STM_CM_DYNAMIC_CONF)
-#include <boost/stm/contention_managers/polymorphic.hpp>
-#endif
-#endif
-
-//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
-
 
 //-----------------------------------------------------------------------------
 // boolean which is used to invoke "begin_transaction()" upon transaction
@@ -68,11 +54,6 @@ namespace boost { namespace stm {
 //-----------------------------------------------------------------------------
 bool const begin_transaction = true;
 
-#if defined(BOOST_STM_CM_STATIC_CONF)
-#if defined(BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm)
-typedef except_and_back_off_on_abort_notice_cm contention_manager_type;
-#endif
-#endif
 
 
 typedef std::pair<base_transaction_object*, base_transaction_object*> tx_pair;
@@ -227,68 +208,6 @@ public:
    static void initialize();
    static void initialize_thread();
    static void terminate_thread();
-    #if defined(BOOST_STM_CM_STATIC_CONF)
-   //static contention_manager_type cm_;
-   //inline static void contention_manager(base_contention_manager *rhs) { delete cm_; cm_ = rhs; }
-   inline static contention_manager_type* get_contention_manager() {
-       static contention_manager_type cm_;return &cm_;
-   }
-   static void cm_abort_on_new(transaction const &t) {return contention_manager_type::abort_on_new(t); }
-   static void cm_abort_on_delete(transaction const &t,
-      base_transaction_object const &in) {return contention_manager_type::abort_on_delete(t,in); }
-
-   static void cm_abort_on_read(transaction const &t,
-      base_transaction_object const &in) {return contention_manager_type::abort_on_read(t,in); }
-   static void cm_abort_on_write(transaction &t,
-      base_transaction_object const &in) {return contention_manager_type::abort_on_write(t,in); }
-
-   static bool cm_abort_before_commit(transaction const &t) {return contention_manager_type::abort_before_commit(t); }
-
-   static bool cm_permission_to_abort
-      (transaction const &lhs, transaction const &rhs)
-   {return contention_manager_type::permission_to_abort(lhs,rhs); }
-
-   static bool cm_permission_to_abort
-      (transaction const &lhs, std::list<transaction*> &rhs)
-   {return contention_manager_type::permission_to_abort(lhs,rhs); }
-
-   static bool cm_allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted,
-      bool txIsIrrevocable, transaction const &rhs) {
-          return contention_manager_type::allow_lock_to_abort_tx(lockWaitTime,lockAborted,txIsIrrevocable,rhs); }
-
-   static int cm_lock_sleep_time() {return contention_manager_type::lock_sleep_time(); }
-
-   static void cm_perform_isolated_tx_wait_priority_promotion(transaction &t) {return contention_manager_type::perform_isolated_tx_wait_priority_promotion(t); }
-   static void cm_perform_irrevocable_tx_wait_priority_promotion(transaction &t) {return contention_manager_type::perform_irrevocable_tx_wait_priority_promotion(t); }
-
-    #else
-   static base_contention_manager *cm_;
-   inline static void contention_manager(base_contention_manager *rhs) { delete cm_; cm_ = rhs; }
-   inline static base_contention_manager* get_contention_manager() { return cm_; }
-   static void cm_abort_on_new(transaction const &t) {return cm_->abort_on_new(t); }
-   static void cm_abort_on_delete(transaction const &t,
-      base_transaction_object const &in) {return cm_->abort_on_delete(t,in); }
-
-   static void cm_abort_on_read(transaction const &t,
-      base_transaction_object const &in) {return cm_->abort_on_read(t,in); }
-   static void cm_abort_on_write(transaction &t,
-      base_transaction_object const &in) {return cm_->abort_on_write(t,in); }
-
-   static bool cm_abort_before_commit(transaction const &t) {return cm_->abort_before_commit(t); }
-
-   static bool cm_permission_to_abort
-      (transaction const &lhs, transaction const &rhs) {return cm_->permission_to_abort(lhs,rhs); }
-
-   static bool cm_allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted,
-      bool txIsIrrevocable, transaction const &rhs) {
-          return cm_->allow_lock_to_abort_tx(lockWaitTime,lockAborted,txIsIrrevocable,rhs); }
-
-   static int cm_lock_sleep_time() {return cm_->lock_sleep_time(); }
-
-   static void cm_perform_isolated_tx_wait_priority_promotion(transaction &t) {return cm_->perform_isolated_tx_wait_priority_promotion(t); }
-   static void cm_perform_irrevocable_tx_wait_priority_promotion(transaction &t) {return cm_->perform_irrevocable_tx_wait_priority_promotion(t); }
-
-    #endif
 
    inline static void enableLoggingOfAbortAndCommitSetSize() { bookkeeping_.setIsLoggingAbortAndCommitSize(true); }
    inline static void disableLoggingOfAbortAndCommitSetSize() { bookkeeping_.setIsLoggingAbortAndCommitSize(false); }

@@ -75,5 +75,15 @@ public:
    static int const initialSleepTime_;
 };
 
+typedef except_and_back_off_on_abort_notice_cm contention_manager_type;
+
+#define BOOST_STM_CM_STATIC() \
+   int boost::stm::except_and_back_off_on_abort_notice_cm::sleepTime_=BOOST_STM_CM_STATIC_INITIAL_SLEEP_TIME; \
+   int const boost::stm::except_and_back_off_on_abort_notice_cm::kSleepFactorIncrease_=BOOST_STM_CM_STATIC_SLEEP_INCREASE; \
+   int const boost::stm::except_and_back_off_on_abort_notice_cm::kMaxIncreases_=BOOST_STM_CM_STATIC_MAX_INCREASES; \
+   int const boost::stm::except_and_back_off_on_abort_notice_cm::initialSleepTime_=BOOST_STM_CM_STATIC_INITIAL_SLEEP_TIME; \
+   int boost::stm::except_and_back_off_on_abort_notice_cm::kMaxSleepTime_=BOOST_STM_CM_STATIC_SLEEP_INCREASE*BOOST_STM_CM_STATIC_INITIAL_SLEEP_TIME*BOOST_STM_CM_STATIC_MAX_INCREASES
+
+       
 }}
 #endif
