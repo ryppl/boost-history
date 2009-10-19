@@ -14,6 +14,8 @@
 [section TODO]
 
 General:
+* In most algorithms, calls to index(c) appear after a c.to_parent() operation, so for 
+  increased effciency, we need a to_parent_return_index(c) function.
 * Fix binary_tree_test (rotate)
 * Apply all binary_tree_test cchecks also to fake_binary_tree in order to check if semantics
   are mapped properly.

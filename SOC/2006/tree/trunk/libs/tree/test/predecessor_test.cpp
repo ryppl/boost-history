@@ -19,24 +19,20 @@ using namespace boost::tree;
 
 BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_fixture<int>)
 
-BOOST_AUTO_TEST_CASE( test_rightmost )
-{
-    fake_root_tracking_binary_tree<int> frbt1(fbt1);
-    fake_root_tracking_binary_tree<int>::cursor c = frbt1.root();
-    to_rightmost(c);
-    BOOST_CHECK(c.is_leaf());
-    BOOST_CHECK(c == frbt1.root().end().end().end());
-}
+//BOOST_AUTO_TEST_CASE( test_rightmost )
+//{
+//    fake_root_tracking_binary_tree<int> frbt1(fbt1);
+//    fake_root_tracking_binary_tree<int>::cursor c = frbt1.root();
+//    to_rightmost(c);
+//    BOOST_CHECK(c.is_leaf());
+//    BOOST_CHECK(c == frbt1.root().end().end().end());
+//}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, orders )
 {
     fake_root_tracking_binary_tree<int> frbt1(fbt1);
     fake_root_tracking_binary_tree<int>::cursor c = frbt1.root();
-    to_last(Order(), c);
-    // Replace by a fake_to_last function for dependency minimization's sake?
-    // preorder: fbt1.root_tracking_root().end().end().begin().begin().end().begin();
-    // inorder: fbt1.root_tracking_root().end().end().begin();
-    // postorder: fbt1.root_tracking_root().begin(); 
+    fake_to_last(Order(), c);
 
     test_data_set mpo;
     mock_cursor_data(mpo);
@@ -48,9 +44,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, orders )
     typename container_type::const_iterator ci = order_index.end();
 
     for (--ci; ci!=cib; --ci) {
+        BOOST_CHECK_EQUAL(*c, ci->val); //Change order of statements!
         boost::tree::predecessor(Order(), c);
-        BOOST_CHECK_EQUAL(*c, ci->val);
+        
     }
+    fake_root_tracking_binary_tree<int>::cursor d = frbt1.root();
+    fake_to_first(Order(), d);
+    BOOST_CHECK(c == d);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

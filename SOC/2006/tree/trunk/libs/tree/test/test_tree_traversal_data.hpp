@@ -69,6 +69,39 @@ void test_traversal_from_leaf4(Iterator a, Iterator b)
     BOOST_CHECK_EQUAL(*++a, 8);
     BOOST_CHECK(++a == b);
 
-} // namespace ascending
+}
+
+template <class Cursor>
+void fake_to_first(boost::tree::preorder, Cursor& c)
+{}
+
+template <class Cursor>
+void fake_to_first(boost::tree::inorder, Cursor& c)
+{
+    c.to_begin().to_begin();
+}
+
+template <class Cursor>
+void fake_to_first(boost::tree::postorder, Cursor& c)
+{
+    c.to_begin().to_begin();
+}
+
+template <class Cursor>
+void fake_to_last(boost::tree::preorder, Cursor& c)
+{
+    c.to_end().to_end().to_begin().to_begin().to_end();
+}
+
+template <class Cursor>
+void fake_to_last(boost::tree::inorder, Cursor& c)
+{
+    c.to_end().to_end();
+}
+
+template <class Cursor>
+void fake_to_last(boost::tree::postorder, Cursor& c)
+{}
+
 
 #endif // LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_DATA_HPP

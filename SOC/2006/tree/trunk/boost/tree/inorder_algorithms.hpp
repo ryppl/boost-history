@@ -69,16 +69,16 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 predecessor(inorder, MultiwayCursor& c)
 {
-    if (!c.is_leaf()) {
+    if (!c.to_begin().is_leaf()) {
         to_rightmost(c);
-        --c;
+        c.to_parent(); //TODO: The latter two lines should probably be to_last(inorder(),c)
         return;
     }
     
     while (!index(c) && !c.is_root())
         c.to_parent();
     if (!c.is_root())
-        --c;
+        c.to_parent();
     return;
 }
 

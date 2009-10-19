@@ -33,6 +33,8 @@ struct preorder {
 /**
  * @brief   Preorder successor
  * @param c Cursor to be set to its preorder successor
+ * 
+ * Note that this is the reverse postorder predecessor. 
  */
 template <typename Cursor>
 inline
@@ -66,7 +68,7 @@ successor(preorder, Cursor& c)
 
 /**
  * @brief   Preorder successor
- * @param c Cursor to be set to its preorder successor
+ * @param c Cursor to be set to its preorder successor 
  */
 template <typename Cursor>
 inline
@@ -106,8 +108,10 @@ successor(preorder, Cursor& c, Cursor& r)
 }
 
 /**
- * @brief    Preorder predecessor
- * @param c    Cursor to be set to its preorder predecessor
+ * @brief   Preorder predecessor
+ * @param c Cursor to be set to its preorder predecessor
+ * 
+ * Note that this is the reverse postorder successor. 
  */
 template <class Cursor>
 inline
@@ -117,26 +121,22 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 predecessor(preorder, Cursor& c)
 {
-    if (!c.is_root()) {
-        c.to_parent();
-        
-        // If a left child was given, just move to its parent.
-        if (!index(c))
-            return;
-        
-        // So this is a right child.
-        --c;
-    }
-    
-    // Same for root (=end) and right children:
-    while (!c.is_leaf())
-        if (!c.end().is_leaf())
-            c.to_end();
-        else
-            c.to_begin();
+    if (c.is_root())
+        return;
 
-    if (index(c))
-        --c;
+    if (!index(c)) { // Left child? Return parent.
+        c.to_parent();
+        return;
+    }
+        
+    // Right child.
+    --c;
+    while (!c.is_leaf()) {
+        c.to_end();
+        if (c.is_leaf())
+            --c;
+    }
+    c.to_parent();
     return;
 }
 

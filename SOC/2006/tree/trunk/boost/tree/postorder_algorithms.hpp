@@ -31,8 +31,10 @@ struct postorder {
 };
 
 /**
- * @brief    Postorder successor
- * @param c    Cursor to be set to its postorder successor
+ * @brief   Postorder successor
+ * @param c Cursor to be set to its postorder successor
+ * 
+ * Note that this is the reverse preorder predecessor. 
  */
 template <class Cursor>
 inline
@@ -62,8 +64,10 @@ successor(postorder, Cursor& c)
 }
 
 /**
- * @brief    Postorder predecessor
- * @param c    Cursor to be set to its postorder predecessor
+ * @brief   Postorder predecessor
+ * @param c Cursor to be set to its postorder predecessor
+ * 
+ * Note that this is the reverse preorder successor. 
  */
 template <class Cursor>
 inline
@@ -73,29 +77,18 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 predecessor(postorder, Cursor& c)
 {
-    if (c.is_root()) { // Root?
-        c.to_begin();
+    if (!c.to_end().is_leaf()) // Right
         return;
-    }
-    
-    if (!(++c).is_leaf()) { // Right
-        c.to_begin();
+    if (!(--c).is_leaf()) // Left
         return;
-    }
-    if (!(--c).is_leaf()) { // Left
-        c.to_begin();
-        return;
-    }
     
     // Move up in the hierarchy until we find a descendant that has a right
     // child (which is what we'll return) or we land at root.
     while (!c.is_root()) {
         c.to_parent();
         if (index(c))
-            if (!(--c).is_leaf()) {
-                c.to_begin();
+            if (!(--c).is_leaf())
                 return;
-            }
     }
     return;
 }

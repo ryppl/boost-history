@@ -30,10 +30,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_successor, Order, orders )
 {
     fake_root_tracking_binary_tree<int> frbt1(fbt1);
     fake_root_tracking_binary_tree<int>::cursor c = frbt1.root();
-    to_first(Order(), c);
-    // Replace by a fake_to_first function for dependency minimization's sake?
-    // preorder: fbt1.root_tracking_root().begin();
-    // in- and postorder: fbt1.root_tracking_root().begin().begin().begin(); 
+    fake_to_first(Order(), c);
 
     test_data_set mpo;
     mock_cursor_data(mpo);
@@ -48,6 +45,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_successor, Order, orders )
         BOOST_CHECK_EQUAL(*c, ci->val);
         boost::tree::successor(Order(), c);
     }
+
+    fake_root_tracking_binary_tree<int>::cursor d = frbt1.root();
+    fake_to_last(Order(), d);
+    BOOST_CHECK(c == d);
 }
 
 BOOST_AUTO_TEST_CASE( test_successor_ascending )

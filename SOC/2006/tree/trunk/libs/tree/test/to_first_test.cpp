@@ -26,7 +26,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_to_first, Order, orders )
     = mpo.get<Order>().begin();
     
     fake_binary_tree<int>::descending_cursor c = fbt1.descending_root();
+    fake_binary_tree<int>::descending_cursor d = fbt1.descending_root();
     boost::tree::to_first(Order(), c);
+    fake_to_first(Order(), d);
+    BOOST_CHECK(c == d);
     BOOST_CHECK_EQUAL(*c, ci->val);
 }
 
