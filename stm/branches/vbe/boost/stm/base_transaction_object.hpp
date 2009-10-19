@@ -58,7 +58,7 @@ class base_transaction_object
 public:
 
     base_transaction_object()
-        : transactionThread_(kInvalidThread)
+        : transactionThread_(invalid_thread_id())
         , newMemory_(0)
 #if PERFORMING_VALIDATION
         , version_(0)
@@ -70,7 +70,7 @@ public:
 
 #if 1
     base_transaction_object(const base_transaction_object &t)
-        : transactionThread_(kInvalidThread)
+        : transactionThread_(invalid_thread_id())
         , newMemory_(0)
 #if PERFORMING_VALIDATION
         , version_(0)
@@ -91,14 +91,14 @@ public:
     virtual ~base_transaction_object() {};
     virtual void cache_deallocate()=0;
 
-    void transaction_thread(size_t rhs) const { transactionThread_ = rhs; }
-    size_t const & transaction_thread() const { return transactionThread_; }
+    void transaction_thread(thread_id_t rhs) const { transactionThread_ = rhs; }
+    thread_id_t const & transaction_thread() const { return transactionThread_; }
 
-    void new_memory(size_t rhs) const { newMemory_ = rhs; }
-    size_t const & new_memory() const { return newMemory_; }
+    void new_memory(new_memory_t rhs) const { newMemory_ = rhs; }
+    new_memory_t const & new_memory() const { return newMemory_; }
 
 #if PERFORMING_VALIDATION
-    size_t version_;
+    version_t version_;
 #endif
 
 #if BOOST_STM_ALLOWS_EMBEDEEDS
@@ -107,20 +107,20 @@ public:
 #endif
 
 #if USE_STM_MEMORY_MANAGER
-    static void alloc_size(size_t size) { memory_.alloc_size(size); }
+    static void alloc_size(std::size_t size) { memory_.alloc_size(size); }
 #else
-    static void alloc_size(size_t size) { }
+    static void alloc_size(std::size_t size) { }
 #endif
 //protected:
 
 #if USE_STM_MEMORY_MANAGER
-    static void return_mem(void *mem, size_t size)
+    static void return_mem(void *mem, std::size_t size)
     {
         synchro::lock_guard<Mutex> lock(transactionObjectMutex_);
         memory_.returnChunk(mem, size);
     }
 
-    static void* retrieve_mem(size_t size)
+    static void* retrieve_mem(std::size_t size)
     {
         synchro::lock_guard<Mutex> lock(transactionObjectMutex_);
         void *mem = memory_.retrieveChunk(size);
@@ -144,9 +144,8 @@ private:
     // and deferred reads and writes behave very differently when using this
     // flag.
     //--------------------------------------------------------------------------
-    mutable size_t transactionThread_;
-
-    mutable size_t newMemory_;
+    mutable thread_id_t transactionThread_;
+    mutable new_memory_t newMemory_;
 #if USE_STM_MEMORY_MANAGER
     static Mutex transactionObjectMutex_;
     static MemoryPool<base_transaction_object> memory_;

@@ -124,7 +124,7 @@ inline int transaction::dir_tm_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
       transaction::must_be_in_tm_conflicting_lock_set(mutex);
       t->make_isolated();
       synchro::lock(*latm_lock());
-      latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
+      latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
       synchro::unlock(*latm_lock());
       synchro::lock(*mutex);
       return 0;
@@ -166,7 +166,7 @@ inline int transaction::dir_tm_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
       ++aborted;
    }
 
-   latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
+   latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
    synchro::unlock(latmMutex_);
 
    return 0;
@@ -182,7 +182,7 @@ inline int transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(Mutex *mut
       transaction::must_be_in_tm_conflicting_lock_set(mutex);
       t->make_isolated();
       synchro::lock(*latm_lock());
-      latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
+      latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
       synchro::unlock(*latm_lock());
       return synchro::try_lock(*mutex)?0:1;
    }
@@ -212,7 +212,7 @@ inline int transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(Mutex *mut
       throw;
    }
 
-   latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
+   latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
    synchro::unlock(latmMutex_);
    // note: we do not release the transactionsInFlightMutex - this will prevents
    // new transactions from starting until this lock is released

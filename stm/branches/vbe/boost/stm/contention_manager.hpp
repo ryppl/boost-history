@@ -232,9 +232,9 @@ public:
       if (txTryingToAbortIsIrrevocable) return true;
 
 #ifndef DISABLE_READ_SETS
-      if ((size_t)lockWaitTime > rhs.read_set_size() + 100 * rhs.writes())
+      if ((clock_t)lockWaitTime > rhs.read_set_size() + 100 * rhs.writes())
 #else
-      if ((size_t)lockWaitTime > 100 * rhs.writes())
+      if ((clock_t)lockWaitTime > 100 * rhs.writes())
 #endif
       {
          return true;

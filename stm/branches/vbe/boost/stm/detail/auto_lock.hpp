@@ -14,16 +14,27 @@
 #ifndef BOOST_STM_AUTO_LOCK_H
 #define BOOST_STM_AUTO_LOCK_H
 
+//---------------------------------------------------------------------------
 #include <pthread.h>
 #include <stdexcept>
+//---------------------------------------------------------------------------
 #include <string>
 #include <iostream>
 #include <map>
 #include <vector>
-#include <boost/stm/detail/datatypes.hpp>
-
+//---------------------------------------------------------------------------
+#include <boost/stm/detail/config.hpp>
+//---------------------------------------------------------------------------
+#include <boost/stm/datatypes.hpp>
 #ifdef PERFORMING_LATM
 #include <boost/stm/transaction.hpp>
+#else
+#endif
+//---------------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------------
+#ifdef PERFORMING_LATM
 #define BOOST_STM_LOCK(a) boost::stm::transaction::lock_(a)
 #define BOOST_STM_UNLOCK(a) boost::stm::transaction::unlock_(a)
 #else
@@ -32,11 +43,10 @@
 #endif
 
 //---------------------------------------------------------------------------
-//---------------------------------------------------------------------------
 namespace boost { namespace stm {
 
 
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 class timer_lock_exception : public std::exception
 {
@@ -52,11 +62,13 @@ private:
 
 typedef timer_lock_exception timer_err;
 
+//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class auto_lock
 {
 public:
-   typedef std::pair<size_t const, Mutex*> ThreadedLockPair;
-   typedef std::multimap<size_t const, Mutex*> ThreadedLockContainer;
+   typedef std::pair<thread_id_t const, Mutex*> ThreadedLockPair;
+   typedef std::multimap<thread_id_t const, Mutex*> ThreadedLockContainer;
    typedef ThreadedLockContainer::iterator ThreadedLockIter;
 
    auto_lock(Mutex &mutex) : hasLock_(false), lock_(0)
@@ -70,12 +82,12 @@ public:
    }
 
 
-   auto_lock(size_t timeOut, Mutex &mutex) : hasLock_(false), lock_(0)
+   auto_lock(milliseconds_t timeOut, Mutex &mutex) : hasLock_(false), lock_(0)
    {
       do_timed_auto_lock(timeOut, &mutex);
    }
 
-   auto_lock(size_t timeOut, Mutex *mutex) : hasLock_(false), lock_(0)
+   auto_lock(milliseconds_t timeOut, Mutex *mutex) : hasLock_(false), lock_(0)
    {
       do_timed_auto_lock(timeOut, mutex);
    }
@@ -94,13 +106,13 @@ public:
 
 private:
 
-   void do_timed_auto_lock(size_t timeOut, Mutex *mutex)
+   void do_timed_auto_lock(milliseconds_t timeOut, Mutex *mutex)
    {
       lock_ = mutex;
 
       if (thread_has_lock(mutex)) return;
 
-      for (size_t i = 0; i < timeOut; ++i)
+      for (milliseconds_t i = 0; i < timeOut; ++i)
       {
          if (synchro::try_lock(*lock_))
          {
@@ -118,7 +130,7 @@ private:
    void insert_into_threaded_lock_map(Mutex* mutex)
    {
       synchro::lock_guard<Mutex> lock_i(*global_lock());
-      threaded_locks().insert(ThreadedLockPair(THREAD_ID, mutex));
+      threaded_locks().insert(ThreadedLockPair(this_thread::get_id(), mutex));
    }
 
    void do_auto_lock(Mutex *mutex)
@@ -149,7 +161,7 @@ private:
       for (ThreadedLockIter i = threaded_locks().begin();
       i != threaded_locks().end(); ++i)
       {
-         if (i->first == THREAD_ID && i->second == rhs)
+         if (i->first == this_thread::get_id() && i->second == rhs)
          {
             return true;
          }
@@ -165,7 +177,7 @@ private:
       for (ThreadedLockIter i = threaded_locks().begin();
       i != threaded_locks().end(); ++i)
       {
-         if (i->first == THREAD_ID && i->second == rhs)
+         if (i->first == this_thread::get_id() && i->second == rhs)
          {
             threaded_locks().erase(i);
             break;
@@ -196,6 +208,8 @@ private:
    Mutex *lock_;
 };
 
+//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #define use_lock(L) if (bool __end=false); else \
     for (boost::stm::auto_lock ___l(L); !__end; __end=true)
 #define use_timed_lock(T, L) if (bool __end=false); else \
@@ -206,12 +220,9 @@ private:
 #define catch_lock_timeout(E) } catch (std::timer_lock_exception &E)
 #define lock_timeout } catch (std::timer_lock_exception &E)
 
-} // core namespace
-}
+}}
 
-
-
-#endif // AUTO_LOCK_H
+#endif // BOOST_STM_AUTO_LOCK_H
 
 
 

@@ -50,11 +50,11 @@ class memory_manager : public Base
 public:
     typedef memory_manager<Derived, Base> this_type;
 
-    void* operator new(size_t size, const nothrow_t&) throw () {
+    void* operator new(std::size_t size, const nothrow_t&) throw () {
         return base_memory_manager::retrieve_mem(size);
     }
     
-    void* operator new(size_t size) throw (std::bad_alloc) {
+    void* operator new(std::size_t size) throw (std::bad_alloc) {
         void* ptr= base_memory_manager::retrieve_mem(size);
         if (ptr==0) throw std::bad_alloc;
         return ptr;
@@ -62,7 +62,7 @@ public:
 
     void operator delete(void* mem) throw () {
         static Derived elem;
-        static size_t elemSize = sizeof(elem);
+        static std::size_t elemSize = sizeof(elem);
         base_memory_manager::return_mem(mem, elemSize);
    }
 };

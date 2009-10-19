@@ -468,21 +468,21 @@ inline void boost::stm::transaction::see_if_tx_must_block_due_to_tx_latm()
       MutexThreadMap::iterator l = latmLockedLocksOfThreadMap_.find(*k);
 
       if (l != latmLockedLocksOfThreadMap_.end() &&
-         THREAD_ID != l->second)
+         this_thread::get_id() != l->second)
       {
          MutexThreadSetMap::iterator locksAndThreadsIter = latmLockedLocksAndThreadIdsMap_.find(*k);
 
          if (locksAndThreadsIter == latmLockedLocksAndThreadIdsMap_.end())
          {
             ThreadIdSet s;
-            s.insert(THREAD_ID);
+            s.insert(this_thread::get_id());
 
             latmLockedLocksAndThreadIdsMap_.insert
             (std::make_pair<Mutex*, ThreadIdSet>(*k, s));
          }
          else
          {
-            locksAndThreadsIter->second.insert(THREAD_ID);
+            locksAndThreadsIter->second.insert(this_thread::get_id());
          }
 
          this->block(); break;
@@ -497,7 +497,7 @@ inline void boost::stm::transaction::see_if_tx_must_block_due_to_tx_latm()
 //
 //----------------------------------------------------------------------------
 inline int boost::stm::transaction::
-thread_id_occurance_in_locked_locks_map(size_t threadId)
+thread_id_occurance_in_locked_locks_map(thread_id_t threadId)
 {
    int count = 0;
 
@@ -529,7 +529,7 @@ inline boost::stm::transaction* boost::stm::transaction::get_inflight_tx_of_same
       // txs, then this lock is INSIDE this tx - don't abort the tx, just
       // make it isolated and ensure it is performing direct updating
       //--------------------------------------------------------------------
-      if (t->thread_id() == THREAD_ID)
+      if (t->thread_id() == this_thread::get_id())
       {
          //if (!hasTxInFlightMutex) synchro::unlock(*inflight_lock());
          return t;

@@ -36,7 +36,7 @@ transaction::MutexThreadMap transaction::latmLockedLocksOfThreadMap_;
 transaction::MutexSet transaction::tmConflictingLocks_;
 transaction::DeletionBuffer transaction::deletionBuffer_;
 
-size_t transaction::global_clock_ = 0;
+clock_t transaction::global_clock_ = 0;
 size_t transaction::stalls_ = 0;
 
 bool transaction::dynamicPriorityAssignment_ = false;
@@ -196,9 +196,9 @@ void transaction::initialize_thread()
    //          DO NOT REMOVE LOCK_ALL_MUTEXES / UNLOCK_ALL_MUTEXES!!
    //
    //--------------------------------------------------------------------------
-   lock_all_mutexes_but_this(THREAD_ID);
+   lock_all_mutexes_but_this(this_thread::get_id());
 
-   size_t threadId = THREAD_ID;
+   thread_id_t threadId = this_thread::get_id();
 
 #ifndef USE_SINGLE_THREAD_CONTEXT_MAP
 /////////////////////////////////
@@ -349,7 +349,7 @@ void transaction::initialize_thread()
    tss_context_map_type::iterator memIter = tss_context_map_.find(threadId);
    if (tss_context_map_.end() == memIter)
    {
-      tss_context_map_.insert(std::pair<size_t, tx_context*>(threadId, new tx_context));
+      tss_context_map_.insert(std::pair<thread_id_t, tx_context*>(threadId, new tx_context));
       memIter = tss_context_map_.find(threadId);
       memIter->second->txType = eNormalTx;
    }
@@ -360,7 +360,7 @@ void transaction::initialize_thread()
    tss_context_map_type::iterator memIter = tss_context_map_.find(threadId);
    if (tss_context_map_.end() == memIter)
    {
-      tss_context_map_.insert(std::pair<size_t, tss_context*>(threadId, new tss_context));
+      tss_context_map_.insert(std::pair<thread_id_t, tss_context*>(threadId, new tss_context));
       memIter = tss_context_map_.find(threadId);
       memIter->second->tx_.txType = eNormalTx;
    }
@@ -405,7 +405,7 @@ void transaction::initialize_thread()
    // this will unlock the mutex of the thread that was just added, but it
    // doesn't matter because that mutex will already be unlocked
    //--------------------------------------------------------------------------
-   unlock_all_mutexes_but_this(THREAD_ID);;
+   unlock_all_mutexes_but_this(this_thread::get_id());;
 
    //--------------------------------------------------------------------------
 
@@ -420,7 +420,7 @@ void transaction::terminate_thread()
    synchro::lock_guard<Mutex> lock_i(*inflight_lock());
    //synchro::lock(*inflight_lock());
 
-   size_t threadId = THREAD_ID;
+   thread_id_t threadId = this_thread::get_id();
 
 #ifndef USE_SINGLE_THREAD_CONTEXT_MAP
    ThreadWriteContainer::iterator writeIter = threadWriteLists_.find(threadId);

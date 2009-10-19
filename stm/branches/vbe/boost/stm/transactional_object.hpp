@@ -104,11 +104,11 @@ public:
     }
 
     #if USE_STM_MEMORY_MANAGER
-   void* operator new(size_t size, const std::nothrow_t&) throw ()
+   void* operator new(std::size_t size, const std::nothrow_t&) throw ()
    {
       return retrieve_mem(size);
    }
-    void* operator new(size_t size) throw (std::bad_alloc)
+    void* operator new(std::size_t size) throw (std::bad_alloc)
     {
         void* ptr= retrieve_mem(size);
         if (ptr==0) throw std::bad_alloc;
@@ -118,7 +118,7 @@ public:
    void operator delete(void* mem) throw ()
    {
       static transactional_object<T> elem;
-      static size_t elemSize = sizeof(elem);
+      static std::size_t elemSize = sizeof(elem);
       return_mem(mem, elemSize);
    }
     #endif

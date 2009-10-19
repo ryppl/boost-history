@@ -117,7 +117,7 @@ inline int transaction::def_full_pthread_lock_mutex(Mutex *mutex)
       t->commit_deferred_update_tx();
        { synchro::lock_guard<Mutex> lock_l(*latm_lock());
       //synchro::lock(*latm_lock());
-      latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
+      latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
       //synchro::unlock(*latm_lock());
        }
 
@@ -164,7 +164,7 @@ inline int transaction::def_full_pthread_lock_mutex(Mutex *mutex)
       ++aborted;
    }
 
-   latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
+   latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
    synchro::unlock(latmMutex_);
    return 0;
 }
@@ -185,7 +185,7 @@ inline int transaction::def_full_pthread_trylock_mutex(Mutex *mutex)
       t->commit_deferred_update_tx();
        { synchro::lock_guard<Mutex> lock_l(*latm_lock());
       //synchro::lock(*latm_lock());
-      latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
+      latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
       //synchro::unlock(*latm_lock());
        }
 
@@ -219,7 +219,7 @@ inline int transaction::def_full_pthread_trylock_mutex(Mutex *mutex)
       throw;
    }
 
-   latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
+   latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
    //synchro::unlock(latmMutex_);
    // note: we do not release the transactionsInFlightMutex - this will prevents
    // new transactions from starting until this lock is released

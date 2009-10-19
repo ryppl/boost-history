@@ -270,7 +270,7 @@ void logCommitsAndAborts(std::string const &typeOfRun)
 
    percentTotal = percentTotal / double(percentList.size());
 
-   uint32 abortCount = transaction::bookkeeping().getAbortReadSetList().size()
+   std::size_t abortCount = transaction::bookkeeping().getAbortReadSetList().size()
       + transaction::bookkeeping().getAbortWriteSetList().size();
 
    aborts << typeOfRun.c_str() << "  total_aborts: " << transaction::bookkeeping().totalAborts()

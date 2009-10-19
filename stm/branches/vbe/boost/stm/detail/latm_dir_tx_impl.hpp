@@ -55,7 +55,7 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
    synchro::lock(*inflight_lock());
 
    std::list<transaction *> txList;
-   std::set<size_t> txThreadId;
+   std::set<thread_id_t> txThreadId;
    //transaction *txToMakeIsolated = 0;
 
    for (InflightTxes::iterator i = transactionsInFlight_.begin();
@@ -64,7 +64,7 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
       transaction *t = (transaction*)*i;
 
       // if this tx is part of this thread, skip it (it's an LiT)
-      if (t->threadId_ == THREAD_ID) continue;
+      if (t->threadId_ == this_thread::get_id()) continue;
 
       if (t->get_tx_conflicting_locks().find(mutex) != t->get_tx_conflicting_locks().end())
       {
@@ -97,11 +97,11 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
       {
          latmLockedLocksAndThreadIdsMap_.insert
          (std::make_pair<Mutex*, ThreadIdSet>(mutex, txThreadId));
-         latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
+         latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
       }
       catch (...)
       {
-         for (std::set<size_t>::iterator it = txThreadId.begin();
+         for (std::set<thread_id_t>::iterator it = txThreadId.begin();
          txThreadId.end() != it; ++it)
          {
             if (0 == thread_id_occurance_in_locked_locks_map(*it))
@@ -234,7 +234,7 @@ inline int transaction::dir_tx_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
       ++aborted;
    }
 
-   latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
+   latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
    synchro::unlock(latmMutex_);
 
    // note: we do not release the transactionsInFlightMutex - this will prevents
@@ -285,7 +285,7 @@ inline int transaction::dir_tx_conflicting_lock_pthread_trylock_mutex(Mutex *mut
       throw;
    }
 
-   latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
+   latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
    synchro::unlock(latmMutex_);
 
    // note: we do not release the transactionsInFlightMutex - this will prevents

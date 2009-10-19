@@ -15,17 +15,22 @@
 #define BOOST_STM_MOVE__HPP
 
 //-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
+#if BUILD_MOVE_SEMANTICS
+#include <type_traits>
+#endif
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
 
+#if BUILD_MOVE_SEMANTICS
+bool const kDracoMoveSemanticsCompiled = true;
+#else
+bool const kDracoMoveSemanticsCompiled = false;
+#endif
+    
 #if BUILD_MOVE_SEMANTICS
 template <class T>
 inline typename std::remove_reference<T>::type&& draco_move(T &&t)

@@ -59,9 +59,9 @@ bool DefaultContentionManager::allow_lock_to_abort_tx
 {
    if (txTryingToAbortIsIrrevocable) return true;
 #ifndef DISABLE_READ_SETS
-   if ((size_t)lockWaitTime > rhs.read_set_size() + rhs.writes()) return true;
+   if ((clock_t)lockWaitTime > rhs.read_set_size() + rhs.writes()) return true;
 #else
-   if ((size_t)lockWaitTime > 100 + 100 * rhs.writes()) return true;
+   if ((clock_t)lockWaitTime > 100 + 100 * rhs.writes()) return true;
 #endif
 
    else return false;

@@ -14,6 +14,14 @@
 #ifndef BOOST_STM_DETAIL_CONFIG_H
 #define BOOST_STM_DETAIL_CONFIG_H
 
+#ifdef WIN32
+#define WINOS
+#elif WIN64
+#define WINOS
+#else
+#define UNIX
+#endif
+
 //#define DELAY_INVALIDATION_DOOMED_TXS_UNTIL_COMMIT
 //#define LOGGING_COMMITS_AND_ABORTS 1
 //#define PERFORMING_VALIDATION 1
@@ -33,7 +41,7 @@
 //      BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP: use of common tss_context as TSS
 //      OTHER: each TSS data has its specific TSS
 
-#define USE_SINGLE_THREAD_CONTEXT_MAP 1
+//#define USE_SINGLE_THREAD_CONTEXT_MAP 1
 //#define BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP 1
 
 

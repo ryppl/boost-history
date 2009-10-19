@@ -299,7 +299,7 @@ inline void transaction::unlock_tx()
 
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
-inline void transaction::lock_all_mutexes_but_this(size_t threadId)
+inline void transaction::lock_all_mutexes_but_this(thread_id_t threadId)
 {
 #ifdef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
@@ -319,7 +319,7 @@ inline void transaction::lock_all_mutexes_but_this(size_t threadId)
 }
 
 //--------------------------------------------------------------------------
-inline void transaction::unlock_all_mutexes_but_this(size_t threadId)
+inline void transaction::unlock_all_mutexes_but_this(thread_id_t threadId)
 {
 #ifdef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
@@ -394,7 +394,7 @@ inline void transaction::unlock_all_mutexes()
 //
 //--------------------------------------------------------------------------
 inline transaction::transaction() :
-   threadId_(THREAD_ID),
+   threadId_(this_thread::get_id()),
    //transactionMutexLocker_(),
    auto_general_lock_(*general_lock()),
 
@@ -622,13 +622,13 @@ inline bool transaction::can_go_inflight()
 {
    // if we're doing full lock protection, allow transactions
    // to start only if no locks are obtained or the only lock that
-   // is obtained is on THREAD_ID
+   // is obtained is on this_thread::get_id()
    if (transaction::doing_full_lock_protection())
    {
       for (MutexThreadMap::iterator j = latmLockedLocksOfThreadMap_.begin();
       j != latmLockedLocksOfThreadMap_.end(); ++j)
       {
-         if (THREAD_ID != j->second)
+         if (this_thread::get_id() != j->second)
          {
             return false;
          }
@@ -648,7 +648,7 @@ inline bool transaction::can_go_inflight()
             MutexThreadMap::iterator j = latmLockedLocksOfThreadMap_.find(*i);
 
             if (j != latmLockedLocksOfThreadMap_.end() &&
-               THREAD_ID != j->second)
+               this_thread::get_id() != j->second)
             {
                return false;
             }
@@ -1065,7 +1065,7 @@ inline void transaction::validating_deferred_end_transaction()
    // unlock this - we only needed it to check abort_before_commit()
    synchro::unlock(*inflight_lock());
 
-   uint32 ms = clock();
+   clock_t ms = clock();
 
    //--------------------------------------------------------------------------
    // as much as I'd like to transactionsInFlight_.erase() here, we have
@@ -1199,7 +1199,7 @@ inline void transaction::forceOtherInFlightTransactionsWritingThisWriteMemoryToA
          // if t's modifiedList is modifying memory we are also modifying, make t bail
          ///////////////////////////////////////////////////////////////////
 #ifdef USE_BLOOM_FILTER
-         if (t->bloom().exists((size_t)i->first))
+         if (t->bloom().exists((std::size_t)i->first))
 #else
          if (t->writeList().end() != t->writeList().find(i->first))
 #endif
@@ -1464,7 +1464,7 @@ inline void transaction::invalidating_deferred_commit()
          while (!forceOtherInFlightTransactionsAccessingThisWriteMemoryToAbort(wait, stallingOn))
          {
             ++stalling_;
-            size_t local_clock = global_clock();
+            clock_t local_clock = global_clock();
 
             synchro::unlock(*inflight_lock());
             synchro::unlock(*general_lock());
@@ -1804,7 +1804,7 @@ inline void transaction::directAbortWriteList()
       // memory is being destroyed, not updated. Do not perform copy_state()
       // on it.
       //
-      // However, deleted memory MUST reset its kInvalidThread
+      // However, deleted memory MUST reset its invalid_thread_id()
       // transaction_thread (which is performed in    void directAbortTransactionDeletedMemory() throw();
 
       //-----------------------------------------------------------------------
@@ -1812,7 +1812,7 @@ inline void transaction::directAbortWriteList()
 
       if (using_move_semantics()) i->first->move_state(i->second);
       else i->first->copy_state(i->second);
-      i->first->transaction_thread(kInvalidThread);
+      i->first->transaction_thread(invalid_thread_id());
 
       cache_release(i->second);
    }
@@ -1845,11 +1845,11 @@ inline void transaction::deferredAbortWriteList() throw()
 }
 
 //----------------------------------------------------------------------------
-inline size_t transaction::earliest_start_time_of_inflight_txes()
+inline clock_t transaction::earliest_start_time_of_inflight_txes()
 {
    synchro::lock_guard<Mutex> a(*inflight_lock());
 
-   size_t secs = 0xffffffff;
+   clock_t secs = 0xffffffff;
 
    for (InflightTxes::iterator j = transactionsInFlight_.begin();
    j != transactionsInFlight_.end(); ++j)
@@ -1870,7 +1870,7 @@ inline void transaction::doIntervalDeletions()
 {
    using namespace boost::stm;
 
-   size_t earliestInFlightTx = earliest_start_time_of_inflight_txes();
+   clock_t earliestInFlightTx = earliest_start_time_of_inflight_txes();
 
    synchro::lock_guard<Mutex> a(deletionBufferMutex_);
 
@@ -1901,7 +1901,7 @@ inline void transaction::directCommitTransactionDeletedMemory() throw()
    if (!deletedMemoryList().empty())
    {
       synchro::lock_guard<Mutex> a(deletionBufferMutex_);
-      deletionBuffer_.insert( std::pair<size_t, MemoryContainerList>
+      deletionBuffer_.insert( std::pair<clock_t, MemoryContainerList>
          (time(0), deletedMemoryList()) );
       deletedMemoryList().clear();
    }
@@ -1938,7 +1938,7 @@ inline void transaction::deferredCommitTransactionNewMemory()
    for (MemoryContainerList::iterator i = newMemoryList().begin(); i != newMemoryList().end(); ++i)
    {
       detail::reset(*i);
-      //(*i)->transaction_thread(kInvalidThread);
+      //(*i)->transaction_thread(invalid_thread_id());
       //(*i)->new_memory(0);
    }
 
@@ -1959,7 +1959,7 @@ inline void transaction::directCommitWriteState()
       // memory is being destroyed, not updated. Do not perform copyState()
       // on it.
       //-----------------------------------------------------------------------
-      i->first->transaction_thread(kInvalidThread);
+      i->first->transaction_thread(invalid_thread_id());
       i->first->new_memory(0);
 
       //-----------------------------------------------------------------------
@@ -1994,7 +1994,7 @@ inline void transaction::deferredCommitWriteState()
       if (using_move_semantics()) i->first->move_state(i->second);
       else i->first->copy_state(i->second);
 
-      i->first->transaction_thread(kInvalidThread);
+      i->first->transaction_thread(invalid_thread_id());
       i->first->new_memory(0);
 
 #if PERFORMING_VALIDATION
@@ -2121,7 +2121,7 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
             //////////////////////////////////////////////////////////////////////
             // if t's readList is reading memory we are modifying, make t bail
             //////////////////////////////////////////////////////////////////////
-            if (t->bloom().exists((size_t)i->first))
+            if (t->bloom().exists((std::size_t)i->first))
             {
                if (allow_stall && t->is_only_reading())// && t->reads() > work)
                {
@@ -2131,7 +2131,7 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
                }
                // if the conflict is not a write-write conflict, stall
 #if 0
-               if (allow_stall && !t->wbloom().exists((size_t)i->first))
+               if (allow_stall && !t->wbloom().exists((std::size_t)i->first))
                {
                   ++stalls_;
                   stallingOn = t;
@@ -2245,7 +2245,7 @@ inline void transaction::forceOtherInFlightTransactionsReadingThisWriteMemoryToA
          // if t's readList is reading memory we are modifying, make t bail
          //////////////////////////////////////////////////////////////////////
 #ifdef USE_BLOOM_FILTER
-         if (t->bloom().exists((size_t)i->first))
+         if (t->bloom().exists((std::size_t)i->first))
 #else
          if (t->readList().end() != t->readList().find(i->first))
 #endif

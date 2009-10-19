@@ -17,8 +17,9 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <cstddef>
 #include <pthread.h>
-#include <boost/stm/detail/datatypes.hpp>
+#include <boost/stm/datatypes.hpp>
 
 namespace boost { namespace stm {
 
@@ -27,11 +28,11 @@ class ThreadIdAndCommitId
 {
 public:
 
-   ThreadIdAndCommitId(uint32 const &threadId, uint32 const &commitId) :
+   ThreadIdAndCommitId(thread_id_t threadId, std::size_t const &commitId) :
       threadId_(threadId), commitId_(commitId) {}
 
-   uint32 threadId_;
-   uint32 commitId_;
+   thread_id_t threadId_;
+   std::size_t commitId_;
 
    bool operator==(ThreadIdAndCommitId const &rhs) const
    { return threadId_ == rhs.threadId_ && commitId_ == rhs.commitId_; }
@@ -52,9 +53,9 @@ class transaction_bookkeeping
 {
 public:
 
-   typedef std::map<uint32, uint32> thread_commit_map;
-   typedef std::map<ThreadIdAndCommitId, uint32> CommitHistory;
-   typedef std::map<ThreadIdAndCommitId, uint32> AbortHistory;
+   typedef std::map<thread_id_t, std::size_t> thread_commit_map;
+   typedef std::map<ThreadIdAndCommitId, std::size_t> CommitHistory;
+   typedef std::map<ThreadIdAndCommitId, std::size_t> AbortHistory;
 
    transaction_bookkeeping() : aborts_(0), writeAborts_(0), readAborts_(0),
       abortPermDenied_(0), commits_(0), handOffs_(0), newMemoryCommits_(0),
@@ -64,38 +65,38 @@ public:
       //abortTrackingMutex_ = PTHREAD_MUTEX_INITIALIZER;
    }
 
-   uint32 const & lockConvoyMs() const { return lockConvoyMs_; }
-   uint32 const & commitTimeMs() const { return commitTimeMs_; }
-   uint32 const & readAborts() const { return readAborts_; }
-   uint32 const & writeAborts() const { return writeAborts_; }
-   uint32 const & abortPermDenied() const { return abortPermDenied_; }
-   uint32 const totalAborts() const { return readAborts_ + writeAborts_ + abortPermDenied_; }
-   uint32 const & commits() const { return commits_; }
-   uint32 const & handOffs() const { return handOffs_; }
-   uint32 const & newMemoryAborts() const { return newMemoryAborts_; }
-   uint32 const & newMemoryCommits() const { return newMemoryCommits_; }
-   uint32 const & deletedMemoryAborts() const { return deletedMemoryAborts_; }
-   uint32 const & deletedMemoryCommits() const { return deletedMemoryCommits_; }
-   uint32 const & readChangedToWrite() const { return readChangedToWrite_; }
-   uint32 const & readStayedAsRead() const { return readStayedAsRead_; }
+   clock_t const & lockConvoyMs() const { return lockConvoyMs_; }
+   clock_t const & commitTimeMs() const { return commitTimeMs_; }
+   std::size_t const & readAborts() const { return readAborts_; }
+   std::size_t const & writeAborts() const { return writeAborts_; }
+   std::size_t const & abortPermDenied() const { return abortPermDenied_; }
+   std::size_t const totalAborts() const { return readAborts_ + writeAborts_ + abortPermDenied_; }
+   std::size_t const & commits() const { return commits_; }
+   std::size_t const & handOffs() const { return handOffs_; }
+   std::size_t const & newMemoryAborts() const { return newMemoryAborts_; }
+   std::size_t const & newMemoryCommits() const { return newMemoryCommits_; }
+   std::size_t const & deletedMemoryAborts() const { return deletedMemoryAborts_; }
+   std::size_t const & deletedMemoryCommits() const { return deletedMemoryCommits_; }
+   std::size_t const & readChangedToWrite() const { return readChangedToWrite_; }
+   std::size_t const & readStayedAsRead() const { return readStayedAsRead_; }
 
    void inc_read_aborts() { ++readAborts_; }
    void inc_write_aborts() { ++writeAborts_; }
 
-   void inc_thread_commits(uint32 threadId)
+   void inc_thread_commits(thread_id_t threadId)
    {
 #if 0
-      std::map<uint32, uint32>::iterator i = threadedCommits_.find(threadId);
+      std::map<thread_id_t, std::size_t>::iterator i = threadedCommits_.find(threadId);
 
       if (threadedCommits_.end() == i) threadedCommits_[threadId] = 1;
       else i->second = i->second + 1;
 #endif
    }
 
-   void inc_thread_aborts(uint32 threadId)
+   void inc_thread_aborts(thread_id_t threadId)
    {
 #if 0
-      std::map<uint32, uint32>::iterator i = threadedAborts_.find(threadId);
+      std::map<thread_id_t, std::size_t>::iterator i = threadedAborts_.find(threadId);
 
       if (threadedAborts_.end() == i)
       {
@@ -111,15 +112,15 @@ public:
    thread_commit_map const & threadedCommits() const { return threadedCommits_; }
    thread_commit_map const & threadedAborts() const { return threadedAborts_; }
 
-   void inc_lock_convoy_ms(uint32 const &rhs) { lockConvoyMs_ += rhs; }
-   void inc_commit_time_ms(uint32 const &rhs) { commitTimeMs_ += rhs; }
-   void inc_commits() { ++commits_; inc_thread_commits(THREAD_ID); }
-   void inc_abort_perm_denied(uint32 const &threadId) { ++abortPermDenied_; inc_thread_aborts(threadId); }
+   void inc_lock_convoy_ms(clock_t const &rhs) { lockConvoyMs_ += rhs; }
+   void inc_commit_time_ms(clock_t const &rhs) { commitTimeMs_ += rhs; }
+   void inc_commits() { ++commits_; inc_thread_commits(this_thread::get_id()); }
+   void inc_abort_perm_denied(thread_id_t const &threadId) { ++abortPermDenied_; inc_thread_aborts(threadId); }
    void inc_handoffs() { ++handOffs_; }
-   void inc_new_mem_aborts_by(uint32 const &rhs) { newMemoryAborts_ += rhs; }
-   void inc_new_mem_commits_by(uint32 const &rhs) { newMemoryCommits_ += rhs; }
-   void inc_del_mem_aborts_by(uint32 const &rhs) { deletedMemoryAborts_ += rhs; }
-   void inc_del_mem_commits_by(uint32 const &rhs) { deletedMemoryCommits_ += rhs; }
+   void inc_new_mem_aborts_by(std::size_t const &rhs) { newMemoryAborts_ += rhs; }
+   void inc_new_mem_commits_by(std::size_t const &rhs) { newMemoryCommits_ += rhs; }
+   void inc_del_mem_aborts_by(std::size_t const &rhs) { deletedMemoryAborts_ += rhs; }
+   void inc_del_mem_commits_by(std::size_t const &rhs) { deletedMemoryCommits_ += rhs; }
    void incrementReadChangedToWrite() { ++readChangedToWrite_; }
    void incrementReadStayedAsRead() { ++readStayedAsRead_; }
 
@@ -128,59 +129,59 @@ public:
    AbortHistory const& getAbortReadSetList() const { return abortedReadSetSize_; }
    AbortHistory const& getAbortWriteSetList() const { return abortedWriteSetSize_; }
 
-   void pushBackSizeOfReadSetWhenAborting(uint32 const &size)
+   void pushBackSizeOfReadSetWhenAborting(std::size_t const &size)
    {
       //lock(&abortTrackingMutex_);
 
-      ThreadIdAndCommitId tcId(THREAD_ID, ++aborts_);
+      ThreadIdAndCommitId tcId(this_thread::get_id(), ++aborts_);
 
       // if waiting for commit read from thread is already true, it means there
       // was no commit on the last abort, so drop it from the map
 
-      if (waitingForCommitReadFromThread[THREAD_ID])
+      if (waitingForCommitReadFromThread[this_thread::get_id()])
       {
-         abortedReadSetSize_.erase(ThreadIdAndCommitId(THREAD_ID, aborts_-1));
-         abortedWriteSetSize_.erase(ThreadIdAndCommitId(THREAD_ID, aborts_-1));
+         abortedReadSetSize_.erase(ThreadIdAndCommitId(this_thread::get_id(), aborts_-1));
+         abortedWriteSetSize_.erase(ThreadIdAndCommitId(this_thread::get_id(), aborts_-1));
       }
 
       abortedReadSetSize_[tcId] = size;
-      waitingForCommitReadFromThread[THREAD_ID] = true;
+      waitingForCommitReadFromThread[this_thread::get_id()] = true;
       //unlock(&abortTrackingMutex_);
    }
 
-   void pushBackSizeOfWriteSetWhenAborting(uint32 const &size)
+   void pushBackSizeOfWriteSetWhenAborting(std::size_t const &size)
    {
       //lock(&abortTrackingMutex_);
-      ThreadIdAndCommitId tcId(THREAD_ID, aborts_);
+      ThreadIdAndCommitId tcId(this_thread::get_id(), aborts_);
       abortedWriteSetSize_[tcId] = size;
-      waitingForCommitWriteFromThread[THREAD_ID] = true;
+      waitingForCommitWriteFromThread[this_thread::get_id()] = true;
       //unlock(&abortTrackingMutex_);
    }
 
-   void pushBackSizeOfReadSetWhenCommitting(uint32 const &size)
+   void pushBackSizeOfReadSetWhenCommitting(std::size_t const &size)
    {
       //lock(&abortTrackingMutex_);
-      ThreadIdAndCommitId tcId(THREAD_ID, aborts_);
+      ThreadIdAndCommitId tcId(this_thread::get_id(), aborts_);
 
       // only insert this commit if an abort made an entry at this commit point
-      if (waitingForCommitReadFromThread[THREAD_ID])
+      if (waitingForCommitReadFromThread[this_thread::get_id()])
       {
          committedReadSetSize_[tcId] = size;
-         waitingForCommitReadFromThread[THREAD_ID] = false;
+         waitingForCommitReadFromThread[this_thread::get_id()] = false;
       }
       //unlock(&abortTrackingMutex_);
    }
 
-   void pushBackSizeOfWriteSetWhenCommitting(uint32 const &size)
+   void pushBackSizeOfWriteSetWhenCommitting(std::size_t const &size)
    {
       //lock(&abortTrackingMutex_);
-      ThreadIdAndCommitId tcId(THREAD_ID, aborts_);
+      ThreadIdAndCommitId tcId(this_thread::get_id(), aborts_);
 
       // only insert this commit if an abort made an entry at this commit point
-      if (waitingForCommitWriteFromThread[THREAD_ID])
+      if (waitingForCommitWriteFromThread[this_thread::get_id()])
       {
          committedWriteSetSize_[tcId] = size;
-         waitingForCommitWriteFromThread[THREAD_ID] = false;
+         waitingForCommitWriteFromThread[this_thread::get_id()] = false;
       }
       //unlock(&abortTrackingMutex_);
    }
@@ -232,26 +233,26 @@ private:
    CommitHistory committedReadSetSize_;
    CommitHistory committedWriteSetSize_;
 
-   std::map<uint32, bool> waitingForCommitReadFromThread;
-   std::map<uint32, bool> waitingForCommitWriteFromThread;
+   std::map<thread_id_t, bool> waitingForCommitReadFromThread;
+   std::map<thread_id_t, bool> waitingForCommitWriteFromThread;
 
    thread_commit_map threadedCommits_;
    thread_commit_map threadedAborts_;
 
-   uint32 aborts_;
-   uint32 writeAborts_;
-   uint32 readAborts_;
-   uint32 abortPermDenied_;
-   uint32 commits_;
-   uint32 handOffs_;
-   uint32 newMemoryCommits_;
-   uint32 newMemoryAborts_;
-   uint32 deletedMemoryCommits_;
-   uint32 deletedMemoryAborts_;
-   uint32 readStayedAsRead_;
-   uint32 readChangedToWrite_;
-   uint32 commitTimeMs_;
-   uint32 lockConvoyMs_;
+   std::size_t aborts_;
+   std::size_t writeAborts_;
+   std::size_t readAborts_;
+   std::size_t abortPermDenied_;
+   std::size_t commits_;
+   std::size_t handOffs_;
+   std::size_t newMemoryCommits_;
+   std::size_t newMemoryAborts_;
+   std::size_t deletedMemoryCommits_;
+   std::size_t deletedMemoryAborts_;
+   std::size_t readStayedAsRead_;
+   std::size_t readChangedToWrite_;
+   clock_t commitTimeMs_;
+   clock_t lockConvoyMs_;
 
    //Mutex abortTrackingMutex_;
 };

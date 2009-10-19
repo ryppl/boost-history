@@ -29,20 +29,19 @@
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction.hpp>
+#include <boost/stm/datatypes.hpp>
+#include <boost/stm/move.hpp>
 #include <boost/stm/transaction_bookkeeping.hpp>
+
 #include <boost/synchro/tss.hpp>
 //-----------------------------------------------------------------------------
-#include <boost/stm/detail/datatypes.hpp>
-#include <boost/stm/detail/deleters.hpp>
 #include <boost/stm/detail/bloom_filter.hpp>
-#include <boost/stm/detail/vector_map.hpp>
-#include <boost/stm/detail/vector_set.hpp>
+#include <boost/stm/detail/deleters.hpp>
 #include <boost/stm/detail/monotonic_storage.hpp>
 #include <boost/stm/detail/transactions_stack.hpp>
+#include <boost/stm/detail/vector_map.hpp>
+#include <boost/stm/detail/vector_set.hpp>
 
-#if BUILD_MOVE_SEMANTICS
-#include <type_traits>
-#endif
 
 #if defined(BOOST_STM_CM_STATIC_CONF)
 #if defined(BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm)
@@ -60,11 +59,6 @@
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
 
-#if BUILD_MOVE_SEMANTICS
-bool const kDracoMoveSemanticsCompiled = true;
-#else
-bool const kDracoMoveSemanticsCompiled = false;
-#endif
 
 //-----------------------------------------------------------------------------
 // boolean which is used to invoke "begin_transaction()" upon transaction
@@ -80,24 +74,6 @@ typedef except_and_back_off_on_abort_notice_cm contention_manager_type;
 #endif
 #endif
 
-enum latm_type
-{
-    kMinLatmType = 0,
-    eFullLatmProtection = kMinLatmType,
-    eTmConflictingLockLatmProtection,
-    eTxConflictingLockLatmProtection,
-    kMaxLatmType
-};
-typedef latm_type LatmType;
-enum transaction_type
-{
-    kMinIrrevocableType = 0,
-    eNormalTx = kMinIrrevocableType,
-    eIrrevocableTx,
-    eIrrevocableAndIsolatedTx,
-    kMaxIrrevocableType
-};
-typedef transaction_type TxType;
 
 typedef std::pair<base_transaction_object*, base_transaction_object*> tx_pair;
 
@@ -113,11 +89,11 @@ public:
    //--------------------------------------------------------------------------
 
 #if PERFORMING_VALIDATION
-   typedef std::map<base_transaction_object*, size_t> ReadContainer;
+   typedef std::map<base_transaction_object*, version_t> ReadContainer;
 #else
    typedef std::set<base_transaction_object*> ReadContainer;
 #endif
-   typedef std::map<size_t, ReadContainer*> ThreadReadContainer;
+   typedef std::map<thread_id_t, ReadContainer*> ThreadReadContainer;
 
 #ifdef MAP_WRITE_CONTAINER
    typedef std::map<base_transaction_object*, base_transaction_object*> WriteContainer;
@@ -135,43 +111,43 @@ public:
        TransactionsStack transactions_;
    };
 
-   typedef std::map<size_t, WriteContainer*> ThreadWriteContainer;
-   typedef std::map<size_t, TxType*> ThreadTxTypeContainer;
+   typedef std::map<thread_id_t, WriteContainer*> ThreadWriteContainer;
+   typedef std::map<thread_id_t, TxType*> ThreadTxTypeContainer;
 
    typedef std::set<transaction*> TContainer;
    typedef std::set<transaction*> InflightTxes;
 
-   typedef std::multimap<size_t, MemoryContainerList > DeletionBuffer;
+   typedef std::multimap<clock_t, MemoryContainerList > DeletionBuffer;
 
    typedef std::set<Mutex*> MutexSet;
 
-   typedef std::set<size_t> ThreadIdSet;
+   typedef std::set<thread_id_t> ThreadIdSet;
 
-   typedef std::map<size_t, MemoryContainerList*> ThreadMemoryContainerList;
+   typedef std::map<thread_id_t, MemoryContainerList*> ThreadMemoryContainerList;
 
-   typedef std::pair<size_t, Mutex*> thread_mutex_pair;
+   typedef std::pair<thread_id_t, Mutex*> thread_mutex_pair;
     #ifndef MAP_THREAD_MUTEX_CONTAINER
-    typedef vector_map<size_t, Mutex*> ThreadMutexContainer;
+    typedef vector_map<thread_id_t, Mutex*> ThreadMutexContainer;
     #else
-    typedef std::map<size_t, Mutex*> ThreadMutexContainer;
+    typedef std::map<thread_id_t, Mutex*> ThreadMutexContainer;
     #endif
 
-   typedef std::map<size_t, MutexSet* > ThreadMutexSetContainer;
-   typedef std::map<size_t, bloom_filter*> ThreadBloomFilterList;
+   typedef std::map<thread_id_t, MutexSet* > ThreadMutexSetContainer;
+   typedef std::map<thread_id_t, bloom_filter*> ThreadBloomFilterList;
     #ifdef BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET
-    typedef std::map<size_t, boost::dynamic_bitset<>*> ThreadBitVectorList;
+    typedef std::map<thread_id_t, boost::dynamic_bitset<>*> ThreadBitVectorList;
     #else
-    typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
+    typedef std::map<thread_id_t, bit_vector*> ThreadBitVectorList;
     #endif
-   typedef std::pair<size_t, int*> thread_bool_pair;
+   typedef std::pair<thread_id_t, int*> thread_bool_pair;
     #ifndef MAP_THREAD_BOOL_CONTAINER
-   typedef vector_map<size_t, int*> ThreadBoolContainer;
+   typedef vector_map<thread_id_t, int*> ThreadBoolContainer;
     #else
-   typedef std::map<size_t, int*> ThreadBoolContainer;
+   typedef std::map<thread_id_t, int*> ThreadBoolContainer;
     #endif
 
    typedef std::map<Mutex*, ThreadIdSet > MutexThreadSetMap;
-   typedef std::map<Mutex*, size_t> MutexThreadMap;
+   typedef std::map<Mutex*, thread_id_t> MutexThreadMap;
 
    typedef std::set<transaction*> LockedTransactionContainer;
 
@@ -239,9 +215,9 @@ public:
     #endif
 
     #ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
-    typedef std::map<size_t, tx_context*> tss_context_map_type;
+    typedef std::map<thread_id_t, tx_context*> tss_context_map_type;
     #else
-    typedef std::map<size_t, tss_context*> tss_context_map_type;
+    typedef std::map<thread_id_t, tss_context*> tss_context_map_type;
     #endif
     #endif
 
@@ -558,7 +534,7 @@ public:
       // our write set
       //-----------------------------------------------------------------------
       if (1 == in.new_memory()) return in;
-      if (in.transaction_thread() == kInvalidThread) return in;
+      if (in.transaction_thread() == invalid_thread_id()) return in;
 
       base_transaction_object *inPtr = (base_transaction_object*)&in;
 
@@ -592,12 +568,12 @@ public:
    //
    //--------------------------------------------------------------------------
     #ifndef DISABLE_READ_SETS
-   inline size_t const read_set_size() const { return readListRef_.size(); }
+   inline std::size_t const read_set_size() const { return readListRef_.size(); }
     #endif
 
-   inline size_t const writes() const { return write_list()->size(); }
+   inline std::size_t const writes() const { return write_list()->size(); }
    inline bool written() const {return !write_list()->empty();}
-   inline size_t const reads() const { return reads_; }
+   inline std::size_t const reads() const { return reads_; }
 
    template <typename T> T const * read_ptr(T const * in)
    {
@@ -639,7 +615,7 @@ public:
         //----------------------------------------------------------------
         return i != readList().end();
         #else
-        return bloom().exists((size_t)&in);
+        return bloom().exists((std::size_t)&in);
         #endif
     }
 
@@ -831,13 +807,13 @@ public:
    //--------------------------------------------------------------------------
    void lock_and_abort();
 
-   inline size_t writeListSize() const { return write_list()->size(); }
+   inline std::size_t writeListSize() const { return write_list()->size(); }
 
-   inline size_t const &priority() const { return priority_; }
-   inline void set_priority(uint32 const &rhs) const { priority_ = rhs; }
+   inline priority_t const &priority() const { return priority_; }
+   inline void set_priority(priority_t const &rhs) const { priority_ = rhs; }
    inline void raise_priority()
    {
-      if (priority_ < size_t(-1))
+      if (priority_ < priority_t(-1))
       {
          ++priority_;
       }
@@ -850,8 +826,7 @@ public:
    bool irrevocable() const;
    bool isolated() const;
 
-   typedef size_t thread_id_t;
-   inline size_t const & thread_id() const { return threadId_; }
+   inline thread_id_t const & thread_id() const { return threadId_; }
 
 private:
 
@@ -922,7 +897,7 @@ private:
          synchro::lock_guard<Mutex> lock(*mutex());
 
 
-         if (in.transaction_thread() != kInvalidThread)
+         if (in.transaction_thread() != invalid_thread_id())
          {
             synchro::lock_guard<Mutex> guard(mutex(in.transaction_thread()));
             //Mutex& m=mutex(in.transaction_thread());
@@ -939,7 +914,7 @@ private:
             readList().insert((base_transaction_object*)readMem->second);
 #endif
 #if USE_BLOOM_FILTER
-            bloom().insert((size_t)readMem->second);
+            bloom().insert((std::size_t)readMem->second);
 #endif
             //unlock_tx();
 
@@ -952,7 +927,7 @@ private:
          readList().insert((base_transaction_object*)&in);
 #endif
 #if USE_BLOOM_FILTER
-         bloom().insert((size_t)&in);
+         bloom().insert((std::size_t)&in);
 #endif
          //unlock_tx();
          ++reads_;
@@ -964,7 +939,7 @@ private:
          // if we want direct write-read conflict to be done early, bail
          // if someone owns this
          //--------------------------------------------------------------------
-         if (in.transaction_thread() != kInvalidThread)
+         if (in.transaction_thread() != invalid_thread_id())
          {
             // let the contention manager decide to throw or not
             cm_abort_on_write(*this, (base_transaction_object&)(in));
@@ -977,7 +952,7 @@ private:
          readList().insert((base_transaction_object*)&in);
 #endif
 #if USE_BLOOM_FILTER
-         bloom().insert((size_t)&in);
+         bloom().insert((std::size_t)&in);
 #endif
          //unlock_tx();
          ++reads_;
@@ -1008,7 +983,7 @@ private:
 
       // we currently don't allow write stealing in direct update. if another
       // tx beat us to the memory, we abort
-      if (in.transaction_thread() != kInvalidThread)
+      if (in.transaction_thread() != invalid_thread_id())
       {
          //unlock(&transactionMutex_);
          throw aborted_tx("direct writer already exists.");
@@ -1017,7 +992,7 @@ private:
       in.transaction_thread(threadId_);
       writeList().insert(tx_pair((base_transaction_object*)&in, in.clone(this)));
 #if USE_BLOOM_FILTER
-      bloom().insert((size_t)&in);
+      bloom().insert((std::size_t)&in);
 #endif
       //unlock(&transactionMutex_);
       return in;
@@ -1041,7 +1016,7 @@ private:
       //lock(&transactionMutex_);
       synchro::unique_lock<Mutex> lock_m(transactionMutex_);
 
-      if (in.transaction_thread() != kInvalidThread)
+      if (in.transaction_thread() != invalid_thread_id())
       {
          //unlock(&transactionMutex_);
          cm_abort_on_write(*this, (base_transaction_object&)(in));
@@ -1078,7 +1053,7 @@ private:
       //lock(&transactionMutex_);
       synchro::unique_lock<Mutex> lock_m(transactionMutex_);
 
-      if (in.transaction_thread() != kInvalidThread)
+      if (in.transaction_thread() != invalid_thread_id())
       {
          //unlock(&transactionMutex_);
          cm_abort_on_write(*this, (base_transaction_object&)(in));
@@ -1117,7 +1092,7 @@ private:
 #if PERFORMING_WRITE_BLOOM
       if (writeList().empty() ||
          (writeList().size() > 16 &&
-         !wbloom().exists((size_t)&in))) return insert_and_return_read_memory(in);
+         !wbloom().exists((std::size_t)&in))) return insert_and_return_read_memory(in);
 #else
       if (writeList().empty()) return insert_and_return_read_memory(in);
 #endif
@@ -1145,7 +1120,7 @@ public:
       //----------------------------------------------------------------
       if (i != readList().end()) return in;
 #else
-      if (bloom().exists((size_t)&in)) return in;
+      if (bloom().exists((std::size_t)&in)) return in;
 #endif
       synchro::lock_guard<Mutex> lock(*mutex());
       //lock_tx();
@@ -1157,7 +1132,7 @@ public:
 #endif
 #endif
 #if USE_BLOOM_FILTER
-      bloom().insert((size_t)&in);
+      bloom().insert((std::size_t)&in);
 #endif
       //unlock_tx();
       ++reads_;
@@ -1177,7 +1152,7 @@ private:
       // if transactionThread_ is not invalid, then already writing to
       // non-global memory - so succeed.
       //----------------------------------------------------------------
-      if (in.transaction_thread() != kInvalidThread) return in;
+      if (in.transaction_thread() != invalid_thread_id()) return in;
 
       WriteContainer::iterator i = writeList().find
          (static_cast<base_transaction_object*>(&in));
@@ -1190,7 +1165,7 @@ private:
          //lock_tx();
          synchro::unique_lock<Mutex> lock(*mutex());
 #if USE_BLOOM_FILTER
-         bloom().insert((size_t)&in);
+         bloom().insert((std::size_t)&in);
          //unlock_tx();
          lock.unlock();
 #else
@@ -1227,11 +1202,11 @@ private:
       // if this memory is true memory, not transactional, we add it to our
       // deleted list and we're done
       //-----------------------------------------------------------------------
-      if (in.transaction_thread() != kInvalidThread)
+      if (in.transaction_thread() != invalid_thread_id())
       {
          { synchro::lock_guard<Mutex> lock(*mutex());
          //lock_tx();
-         bloom().insert((size_t)&in);
+         bloom().insert((std::size_t)&in);
          //unlock_tx();
          }
          writeList().insert(tx_pair((base_transaction_object*)&in, 0));
@@ -1245,7 +1220,7 @@ private:
       {
          { synchro::lock_guard<Mutex> lock(*mutex());
          //lock_tx();
-         bloom().insert((size_t)&in);
+         bloom().insert((std::size_t)&in);
          //unlock_tx();
          }
          // check the ENTIRE write container for this piece of memory in the
@@ -1279,8 +1254,8 @@ private:
    void invalidating_direct_commit();
 
    //--------------------------------------------------------------------------
-   static void lock_all_mutexes_but_this(size_t threadId);
-   static void unlock_all_mutexes_but_this(size_t threadId);
+   static void lock_all_mutexes_but_this(thread_id_t threadId);
+   static void unlock_all_mutexes_but_this(thread_id_t threadId);
 
    //--------------------------------------------------------------------------
    // side-effect: this unlocks all mutexes including its own. this is a slight
@@ -1321,7 +1296,7 @@ private:
    // direct and deferred transaction method for version / memory management
    //--------------------------------------------------------------------------
    void directCommitTransactionDeletedMemory() throw();
-   size_t earliest_start_time_of_inflight_txes();
+   clock_t earliest_start_time_of_inflight_txes();
    void doIntervalDeletions();
 
    void deferredCommitTransactionDeletedMemory() throw();
@@ -1390,7 +1365,7 @@ private:
    static bool dir_do_core_full_pthread_lock_mutex
       (Mutex *mutex, int lockWaitTime, int lockAborted);
 
-   static int thread_id_occurance_in_locked_locks_map(size_t threadId);
+   static int thread_id_occurance_in_locked_locks_map(thread_id_t threadId);
 
    static void wait_until_all_locks_are_released(bool);
 
@@ -1480,8 +1455,8 @@ private:
 
    //--------------------------------------------------------------------------
    static bool direct_updating_;
-   static size_t global_clock_;
-   inline static size_t& global_clock() {return global_clock_;}
+   static clock_t global_clock_;
+   inline static clock_t& global_clock() {return global_clock_;}
 
    static size_t stalls_;
 
@@ -1503,7 +1478,7 @@ private:
    // INITIALIZATION IS ORDER DEPENDENT UPON threadId_!!
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION
    //--------------------------------------------------------------------------
-   size_t threadId_;
+   thread_id_t threadId_;
 
    synchro::unique_lock<Mutex> auto_general_lock_;
 
@@ -1649,7 +1624,7 @@ private:
         threadObtainedLocks_.end() != i; ++i)
         {
             // if these are locks obtained by this thread (in a parent tx), don't block
-            if (i->first == THREAD_ID) continue;
+            if (i->first == this_thread::get_id()) continue;
 
             for (MutexSet::iterator j = i->second->begin(); j != i->second->end(); ++j)
             {
@@ -1804,7 +1779,7 @@ private:
         tss_context_map_.end() != i; ++i)
         {
             // if these are locks obtained by this thread (in a parent tx), don't block
-            if (i->first == THREAD_ID) continue;
+            if (i->first == this_thread::get_id()) continue;
 
             for (MutexSet::iterator j = i->second->obtainedLocks_.begin(); j != i->second->obtainedLocks_.end(); ++j)
             {
@@ -1943,7 +1918,7 @@ private:
         threadObtainedLocks_.end() != i; ++i)
         {
             // if these are locks obtained by this thread (in a parent tx), don't block
-            if (i->first == THREAD_ID) continue;
+            if (i->first == this_thread::get_id()) continue;
 
             for (MutexSet::iterator j = i->second->begin(); j != i->second->end(); ++j)
             {
@@ -1979,10 +1954,10 @@ private:
 
    // transaction specific data
    //int hasMutex_; // bool - 1 bit
-   mutable size_t priority_;
+   mutable priority_t priority_;
    transaction_state state_; // 2bits
-   size_t reads_;
-   mutable size_t startTime_;
+   std::size_t reads_;
+   mutable clock_t startTime_;
 
    inline transaction_state const & state() const { return state_; }
 

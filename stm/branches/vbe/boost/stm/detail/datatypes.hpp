@@ -15,40 +15,11 @@
 #define BOOST_STM_dataTypes_header_file
 
 /////////////////////////////////////////////////////////////////////////////
-#ifdef WIN32
-#define WINOS
-#elif WIN64
-#define WINOS
-#else
-#define UNIX
-#endif
 
 #include <stdlib.h>
 #include <pthread.h>
 
-#ifndef BOOST_STM_USE_BOOST_THREAD_ID
-#ifdef WINOS
-#pragma warning (disable:4786)
-#define THREAD_ID (size_t)pthread_self().p
-#else
-#define THREAD_ID (size_t) pthread_self()
-#endif
-#else
 
-#define THREAD_ID boost::this_thread::get_id()
-#endif
-
-
-#ifndef BOOST_STM_USE_BOOST_SLEEP
-#ifdef WINOS
-#define SLEEP(x) Sleep(x)
-#else
-#include <unistd.h>
-#define SLEEP(x) usleep(x*1000)
-#endif
-#else
-#define SLEEP(x) boost::this_thread::sleep(boost::posix_time::milliseconds(x))
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // types

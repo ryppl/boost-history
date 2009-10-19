@@ -46,15 +46,15 @@ class base_memory_manager
 {
     base_memory_manager();
 public:
-    static void alloc_size(size_t size) { memory_.alloc_size(size); }
+    static void alloc_size(std::size_t size) { memory_.alloc_size(size); }
 
-    static void return_mem(void *mem, size_t size)
+    static void return_mem(void *mem, std::size_t size)
     {
         synchro::lock_guard<Mutex> lock(transactionObjectMutex_);
         memory_.returnChunk(mem, size);
     }
 
-    static void* retrieve_mem(size_t size)
+    static void* retrieve_mem(std::size_t size)
     {
         synchro::lock_guard<Mutex> lock(transactionObjectMutex_);
         void *mem = memory_.retrieveChunk(size);
