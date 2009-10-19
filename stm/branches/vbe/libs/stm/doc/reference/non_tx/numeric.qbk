@@ -1,0 +1,56 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:non_tx_numeric_hpp Header `<boost/stm/non_tx/numeric.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm { namespace non_tx {
+
+        template <typename T> class numeric;
+
+        typedef numeric<bool> boolean;
+        typedef numeric<char> char_t;
+        typedef numeric<unsigned char> uchar_t;
+        typedef numeric<short> short_t;
+        typedef numeric<unsigned short> ushort_t;
+        typedef numeric<int> int_t;
+        typedef numeric<unsigned int> uint_t;
+        typedef numeric<long> long_t;
+        typedef numeric<unsigned long> ulong_t;
+        typedef numeric<float> float_t;
+        typedef numeric<double> double_t;
+
+    }}}
+
+
+[section Template Class `non_tx::numeric<>`]
+
+    template <typename T>
+    class numeric : public transaction_object< numeric<T> >
+    {
+    protected:
+        T val_;
+    public:
+        numeric();
+        template<class U> numeric(numeric<U> const& u);
+        template <typename U> numeric(U v);
+        
+        operator T() const;
+        operator T&();
+
+        T& ref();
+        T value();
+
+    };
+
+[endsect]
+
+[endsect]
+

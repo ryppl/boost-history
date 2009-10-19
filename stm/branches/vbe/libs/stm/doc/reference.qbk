@@ -8,25 +8,47 @@
 
 [section Reference]
 
-The following section presents the major design components identified in the background section and discusses how they are implemented within the __Boost_STM__ library.
+This section presents the interface of __Boost_STM__.
 
-[/include reference/stm.qbk]
+[include reference/stm.qbk]
+
+[section Basics]
+
 [/include reference/rt_configuration.qbk]
-[include reference/base_contention_manager.qbk]
 [include reference/base_transaction_object.qbk]
 [include reference/cache_fct.qbk]
-[/include reference/contention_manager/default_contention_manager.qbk]
-[/include reference/contention_manager/NoExceptionOnAbortNoticeOnReadWritesCM.qbk]
-[/include reference/contention_manager/ExceptAndBackOffOnAbortNoticeCM.qbk]
 [include reference/data_types.qbk]
 [include reference/exceptions.qbk]
 [include reference/language_like.qbk]
-[/include reference/synchro.qbk]
+[include reference/contention_manager.qbk]
 [include reference/transaction.qbk]
-[include reference/transaction_object.qbk]
-[/include reference/transaction_object_ptr.qbk]
-[include reference/smart_pointers.qbk]
 [include reference/transaction_bookkeeping.qbk]
+[endsect]
+
+[section Contention managers]
+[include reference/base_contention_manager.qbk]
+[/include reference/contention_managers/default.qbk]
+[/include reference/contention_managers/NoExceptionOnAbortNoticeOnReadWrites.qbk]
+[/include reference/contention_managers/ExceptAndBackOffOnAbortNotice.qbk]
+[endsect]
+
+[section Transactional objects]
+[include reference/shallow_transaction_object.qbk]
+[include reference/transaction_object.qbk]
+[include reference/transaction_object_ptr.qbk]
+[include reference/transactional_object.qbk]
+[include reference/smart_pointers.qbk]
+[include reference/tx/numeric.qbk]
+[include reference/tx/pointer.qbk]
+[include reference/tx/smart_ptr.qbk]
+[endsect]
+
+[section Non transactional objects]
+[include reference/non_tx/numeric.qbk]
+[include reference/non_tx/pointer.qbk]
+[include reference/non_tx/smart_ptr.qbk]
+[endsect]
+
 
 [endsect]
 

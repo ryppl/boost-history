@@ -1,0 +1,287 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Contention
+      managers</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="basics.html" title="Basics">
+<link rel="next" href="transactional_objects.html" title="Transactional
+      objects">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basics.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="transactional_objects.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.reference.contention_managers"></a><a href="contention_managers.html" title="Contention
+      managers">Contention
+      managers</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">base_contention_manager</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_">Abstract
+          Class <code class="computeroutput"><span class="identifier">base_contention_manager</span></code></a></span></dt></dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp" title="
+        Header &lt;boost/stm/base_contention_manager.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">base_contention_manager</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_">Abstract
+          Class <code class="computeroutput"><span class="identifier">base_contention_manager</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">base_contention_manager</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_" title="Abstract
+          Class base_contention_manager">Abstract
+          Class <code class="computeroutput"><span class="identifier">base_contention_manager</span></code></a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_destructor__base_contention_manager_">Virtual
+            destructor <code class="computeroutput"><span class="identifier">base_contention_manager</span></code></a></span></dt>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_new_">Virtual
+            function <code class="computeroutput"><span class="identifier">abort_on_new</span></code></a></span></dt>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_delete_">Virtual
+            function <code class="computeroutput"><span class="identifier">abort_on_delete</span></code></a></span></dt>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_read_">Virtual
+            function <code class="computeroutput"><span class="identifier">abort_on_read</span></code></a></span></dt>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_write_">Virtual
+            function <code class="computeroutput"><span class="identifier">abort_on_write</span></code></a></span></dt>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_before_commit_">Virtual
+            function <code class="computeroutput"><span class="identifier">abort_before_commit</span></code></a></span></dt>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__permission_to_abort_">Virtual
+            function <code class="computeroutput"><span class="identifier">permission_to_abort</span></code></a></span></dt>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__allow_lock_to_abort_tx_">Virtual
+            function <code class="computeroutput"><span class="identifier">allow_lock_to_abort_tx</span></code></a></span></dt>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__lock_sleep_time_">Virtual
+            function <code class="computeroutput"><span class="identifier">lock_sleep_time</span></code></a></span></dt>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__perform_isolated_tx_wait_priority_promotion_">Virtual
+            function <code class="computeroutput"><span class="identifier">perform_isolated_tx_wait_priority_promotion</span></code></a></span></dt>
+<dt><span class="section"><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__perform_irrevocable_tx_wait_priority_promotion_">Virtual
+            function <code class="computeroutput"><span class="identifier">perform_irrevocable_tx_wait_priority_promotion</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">base_contention_manager</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_new</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_delete</span><span class="special">(</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_read</span><span class="special">(</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_write</span><span class="special">(</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">abort_before_commit</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">permission_to_abort</span><span class="special">(</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">lhs</span><span class="special">,</span> 
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">allow_lock_to_abort_tx</span><span class="special">(</span>
+                <span class="keyword">int</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">lockWaitTime</span><span class="special">,</span> 
+                <span class="keyword">int</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">lockAborted</span><span class="special">,</span> 
+                <span class="keyword">bool</span> <span class="identifier">txIsIrrevocable</span><span class="special">,</span> 
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">int</span> <span class="identifier">lock_sleep_time</span><span class="special">();</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">perform_isolated_tx_wait_priority_promotion</span><span class="special">(</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="special">&amp;)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">perform_irrevocable_tx_wait_priority_promotion</span><span class="special">(</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="special">&amp;)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">base_contention_manager</span><span class="special">()</span> <span class="special">{};</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_destructor__base_contention_manager_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_destructor__base_contention_manager_" title="Virtual
+            destructor base_contention_manager">Virtual
+            destructor <code class="computeroutput"><span class="identifier">base_contention_manager</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">base_contention_manager</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_new_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_new_" title="Virtual
+            function abort_on_new">Virtual
+            function <code class="computeroutput"><span class="identifier">abort_on_new</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_new</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+              Supplies the behavior for transactional aborts when identified as doomed
+              from within a <code class="computeroutput"><span class="identifier">new_memory</span><span class="special">()</span></code> or <code class="computeroutput"><span class="identifier">new_memory_copy</span><span class="special">()</span></code> operation. The input parameter is
+              the doomed transaction. Throwing <code class="computeroutput"><span class="identifier">aborted_transaction_exceptions</span></code>
+              are the usual mechanism for aborting.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_delete_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_delete_" title="Virtual
+            function abort_on_delete">Virtual
+            function <code class="computeroutput"><span class="identifier">abort_on_delete</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_delete</span><span class="special">(</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+              Supplies the behavior for transactional aborts when identified as doomed
+              from within a <code class="computeroutput"><span class="identifier">delete_memory</span><span class="special">()</span></code> operation. The input parameters are
+              the doomed transaction and the object being deleted. Throwing <code class="computeroutput"><span class="identifier">aborted_transaction_exceptions</span></code> are
+              the usual mechanism for aborting.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_read_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_read_" title="Virtual
+            function abort_on_read">Virtual
+            function <code class="computeroutput"><span class="identifier">abort_on_read</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_read</span><span class="special">(</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+              Supplies the behavior for transactional aborts when identified as doomed
+              from within a <code class="computeroutput"><span class="identifier">read</span><span class="special">()</span></code> operation. The input parameters are
+              the doomed transaction and the object being read. Throwing <code class="computeroutput"><span class="identifier">aborted_transaction_exceptions</span></code> are
+              the usual mechanism for aborting.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_write_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_on_write_" title="Virtual
+            function abort_on_write">Virtual
+            function <code class="computeroutput"><span class="identifier">abort_on_write</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_write</span><span class="special">(</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+              Supplies the behavior for transactional aborts when identified as doomed
+              from within a <code class="computeroutput"><span class="identifier">write</span><span class="special">()</span></code> operation. The input parameters are
+              the doomed transaction and the object being written. Throwing <code class="computeroutput"><span class="identifier">aborted_transaction_exceptions</span></code> are
+              the usual mechanism for aborting.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_before_commit_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__abort_before_commit_" title="Virtual
+            function abort_before_commit">Virtual
+            function <code class="computeroutput"><span class="identifier">abort_before_commit</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">abort_before_commit</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+              This method is called prior to a transaction performing its commit
+              operation. The parameter passed in is the transaction preparing to
+              commit. The client code should return <code class="computeroutput"><span class="keyword">true</span></code>
+              if the transaction should abort before committing. Otherwise, client
+              implementation should return <code class="computeroutput"><span class="keyword">false</span></code>.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__permission_to_abort_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__permission_to_abort_" title="Virtual
+            function permission_to_abort">Virtual
+            function <code class="computeroutput"><span class="identifier">permission_to_abort</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">permission_to_abort</span><span class="special">(</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">lhs</span><span class="special">,</span> 
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+              This method is invoked when a transaction is requesting permission
+              to abort another transaction due to a memory inconsistency. Client
+              code should return <code class="computeroutput"><span class="keyword">true</span></code>
+              if the transaction should abort before committing. Otherwise, client
+              implementation should return <code class="computeroutput"><span class="keyword">false</span></code>.
+              The <code class="computeroutput"><span class="identifier">lhs</span></code> input parameter
+              is the transaction requesting to abort <code class="computeroutput"><span class="identifier">rhs</span></code>,
+              the <code class="computeroutput"><span class="identifier">rhs</span></code> input parameter
+              is the transaction which will be aborted if return <code class="computeroutput"><span class="keyword">true</span></code>.
+              Otherwise, if the method returns <code class="computeroutput"><span class="keyword">false</span></code>,
+              <code class="computeroutput"><span class="identifier">lhs</span></code> will be aborted.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__allow_lock_to_abort_tx_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__allow_lock_to_abort_tx_" title="Virtual
+            function allow_lock_to_abort_tx">Virtual
+            function <code class="computeroutput"><span class="identifier">allow_lock_to_abort_tx</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">allow_lock_to_abort_tx</span><span class="special">(</span>
+            <span class="keyword">int</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">lockWaitTime</span><span class="special">,</span> 
+            <span class="keyword">int</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">lockAborted</span><span class="special">,</span> 
+            <span class="keyword">bool</span> <span class="identifier">txIsIrrevocable</span><span class="special">,</span> 
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__lock_sleep_time_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__lock_sleep_time_" title="Virtual
+            function lock_sleep_time">Virtual
+            function <code class="computeroutput"><span class="identifier">lock_sleep_time</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">int</span> <span class="identifier">lock_sleep_time</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__perform_isolated_tx_wait_priority_promotion_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__perform_isolated_tx_wait_priority_promotion_" title="Virtual
+            function perform_isolated_tx_wait_priority_promotion">Virtual
+            function <code class="computeroutput"><span class="identifier">perform_isolated_tx_wait_priority_promotion</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">perform_isolated_tx_wait_priority_promotion</span><span class="special">(</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="special">&amp;)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+              virtual void perform_isolated_tx_wait_priority_promotion( boost::stm::transaction
+              &amp;) = 0;
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__perform_irrevocable_tx_wait_priority_promotion_"></a><a href="contention_managers.html#toward_boost_stm.reference.contention_managers.base_contention_manager_hpp.abstract_class__base_contention_manager_.virtual_function__perform_irrevocable_tx_wait_priority_promotion_" title="Virtual
+            function perform_irrevocable_tx_wait_priority_promotion">Virtual
+            function <code class="computeroutput"><span class="identifier">perform_irrevocable_tx_wait_priority_promotion</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">perform_irrevocable_tx_wait_priority_promotion</span><span class="special">(</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="special">&amp;)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basics.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="transactional_objects.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

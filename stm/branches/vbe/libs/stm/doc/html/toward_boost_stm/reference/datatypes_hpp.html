@@ -1,0 +1,221 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Header &lt;boost/stm/datatypes.hpp&gt;</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="cache_fct_hpp.html" title=" Header &lt;boost/stm/cache_fct.hpp&gt;">
+<link rel="next" href="exceptions_hpp.html" title=" Header &lt;boost/stm/exceptions.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="cache_fct_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="exceptions_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.reference.datatypes_hpp"></a><a href="datatypes_hpp.html" title=" Header &lt;boost/stm/datatypes.hpp&gt;"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">datatypes</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.enum__transaction_type_">Enum
+        <code class="computeroutput"><span class="identifier">transaction_type</span></code></a></span></dt>
+<dt><span class="section"><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.enum__latm_type_">Enum
+        <code class="computeroutput"><span class="identifier">latm_type</span></code></a></span></dt>
+<dt><span class="section"><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.enum__transaction_state_">Enum
+        <code class="computeroutput"><span class="identifier">transaction_state</span></code></a></span></dt>
+<dt><span class="section"><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.typedef__new_memory_t_">Typedef
+        <code class="computeroutput"><span class="identifier">new_memory_t</span></code></a></span></dt>
+<dt><span class="section"><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.typedef__priority_t_">Typedef
+        <code class="computeroutput"><span class="identifier">priority_t</span></code></a></span></dt>
+<dt><span class="section"><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.typedef__clock_t_">Typedef
+        <code class="computeroutput"><span class="identifier">clock_t</span></code></a></span></dt>
+<dt><span class="section"><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.typedef__version_t_">Typedef
+        <code class="computeroutput"><span class="identifier">version_t</span></code></a></span></dt>
+<dt><span class="section"><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.typedef__thread_id_t_">Typedef
+        <code class="computeroutput"><span class="identifier">thread_id_t</span></code></a></span></dt>
+<dt><span class="section"><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.function__invalid_thread_id___">Function
+        <code class="computeroutput"><span class="identifier">invalid_thread_id</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.function__this_thread__get_id___">Function
+        <code class="computeroutput"><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">get_id</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">enum</span> <span class="identifier">transaction_type</span><span class="special">;</span>
+    <span class="keyword">enum</span> <span class="identifier">latm_type</span><span class="special">;</span>
+    <span class="keyword">enum</span> <span class="identifier">transaction_state</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">new_memory_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">priority_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">clock_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">milliseconds_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">version_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">thread_id_t</span><span class="special">;</span>
+    <span class="identifier">thread_id_t</span> <span class="identifier">invalid_thread_id</span><span class="special">();</span>
+    <span class="keyword">namespace</span> <span class="identifier">this_thread</span> <span class="special">{</span>
+        <span class="identifier">thread_id_t</span> <span class="identifier">get_id</span><span class="special">();</span>
+    <span class="special">}</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.datatypes_hpp.enum__transaction_type_"></a><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.enum__transaction_type_" title="Enum
+        transaction_type">Enum
+        <code class="computeroutput"><span class="identifier">transaction_type</span></code></a>
+</h4></div></div></div>
+<p>
+          Type of transaction enumeration.
+        </p>
+<pre class="programlisting"> <span class="keyword">enum</span> <span class="identifier">transaction_type</span>
+ <span class="special">{</span>
+     <span class="identifier">eNormalTx</span><span class="special">,</span>
+     <span class="identifier">eIrrevocableTx</span><span class="special">,</span>
+     <span class="identifier">eIrrevocableAndIsolatedTx</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.datatypes_hpp.enum__latm_type_"></a><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.enum__latm_type_" title="Enum
+        latm_type">Enum
+        <code class="computeroutput"><span class="identifier">latm_type</span></code></a>
+</h4></div></div></div>
+<p>
+          Type of LATM enumeration.
+        </p>
+<pre class="programlisting"><span class="keyword">enum</span> <span class="identifier">latm_type</span>
+<span class="special">{</span>
+    <span class="identifier">eFullLatmProtection</span><span class="special">,</span>
+    <span class="identifier">eTmConflictingLockLatmProtection</span><span class="special">,</span>
+    <span class="identifier">eTxConflictingLockLatmProtection</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.datatypes_hpp.enum__transaction_state_"></a><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.enum__transaction_state_" title="Enum
+        transaction_state">Enum
+        <code class="computeroutput"><span class="identifier">transaction_state</span></code></a>
+</h4></div></div></div>
+<p>
+          Transaction states enumeration.
+        </p>
+<pre class="programlisting"><span class="keyword">enum</span> <span class="identifier">transaction_state</span>
+<span class="special">{</span>
+   <span class="identifier">e_no_state</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">,</span> <span class="comment">// no state is -1
+</span>   <span class="identifier">e_aborted</span><span class="special">,</span>      <span class="comment">// ensure aborted = 0
+</span>   <span class="identifier">e_committed</span><span class="special">,</span>    <span class="comment">// committed is positive
+</span>   <span class="identifier">e_hand_off</span><span class="special">,</span>      <span class="comment">// so is handoff in case bool conversion
+</span>   <span class="identifier">e_in_flight</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.datatypes_hpp.typedef__new_memory_t_"></a><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.typedef__new_memory_t_" title="Typedef
+        new_memory_t">Typedef
+        <code class="computeroutput"><span class="identifier">new_memory_t</span></code></a>
+</h4></div></div></div>
+<p>
+          This type should be bool, but for alignements purposes is a int.
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="identifier">new_memory_t</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.datatypes_hpp.typedef__priority_t_"></a><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.typedef__priority_t_" title="Typedef
+        priority_t">Typedef
+        <code class="computeroutput"><span class="identifier">priority_t</span></code></a>
+</h4></div></div></div>
+<p>
+          Type used for the user contention management with transaction priority.
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">priority_t</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.datatypes_hpp.typedef__clock_t_"></a><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.typedef__clock_t_" title="Typedef
+        clock_t">Typedef
+        <code class="computeroutput"><span class="identifier">clock_t</span></code></a>
+</h4></div></div></div>
+<p>
+          Type used to represent the time.
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">clock_t</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">milliseconds_t</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.datatypes_hpp.typedef__version_t_"></a><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.typedef__version_t_" title="Typedef
+        version_t">Typedef
+        <code class="computeroutput"><span class="identifier">version_t</span></code></a>
+</h4></div></div></div>
+<p>
+          Type used for validation using the version algorithm.
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">version_t</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.datatypes_hpp.typedef__thread_id_t_"></a><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.typedef__thread_id_t_" title="Typedef
+        thread_id_t">Typedef
+        <code class="computeroutput"><span class="identifier">thread_id_t</span></code></a>
+</h4></div></div></div>
+<p>
+          Thread id type, which is platform dependent.
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">platform_specific</span> <span class="identifier">thread_id_t</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.datatypes_hpp.function__invalid_thread_id___"></a><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.function__invalid_thread_id___" title="Function
+        invalid_thread_id()">Function
+        <code class="computeroutput"><span class="identifier">invalid_thread_id</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<p>
+          Invalid thread_id_t value.
+        </p>
+<pre class="programlisting"><span class="identifier">thread_id_t</span> <span class="identifier">invalid_thread_id</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.datatypes_hpp.function__this_thread__get_id___"></a><a href="datatypes_hpp.html#toward_boost_stm.reference.datatypes_hpp.function__this_thread__get_id___" title="Function
+        this_thread::get_id()">Function
+        <code class="computeroutput"><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">get_id</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<p>
+          thread_id_t for the current thread.
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">this_thread</span> <span class="special">{</span>
+    <span class="keyword">inline</span> <span class="identifier">thread_id_t</span> <span class="identifier">get_id</span><span class="special">()</span> <span class="special">{</span>
+<span class="special">}</span>
+</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="cache_fct_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="exceptions_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:select_contention_manager_hpp Header `<boost/stm/select_contention_manager.hpp>`]
+[/==========================================================================================]
+
+This file defines the contention manager depending on the compile directives:
+
+* BOOST_STM_CM_STATIC_CONF when you want a staticacly configured CM
+    * BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm when configuration manager is except_and_back_off_on_abort_notice_cm
+    
+* BOOST_STM_CM_DYNAMIC_CONF when you want a polymorphic CM configured at run time
+
+
+    typedef 'compilation_dependent_type' contention_manager_type;
+
+[endsect]
+

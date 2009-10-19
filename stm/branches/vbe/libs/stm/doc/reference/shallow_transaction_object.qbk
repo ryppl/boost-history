@@ -1,0 +1,71 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:shallow_transaction_object_hpp Header `<boost/stm/shallow_transaction_object.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm {
+        template <class Derived, typename Base=base_transaction_object>
+        class shallow_transaction_object; 
+    }}
+
+[section Template Class `shallow_transaction_object<>`]
+
+To further simplify the usage of __Boost_STM__, an intermediate template class was built which is meant to sit between the base_transaction_object and the user-defined transaction objects. The purpose of this intermediate class is to reduce the code overhead needed for user-defined transaction objects. To do this, the curiously recurring template pattern developed by James Coplien was used.
+
+With the templatized `shallow_transaction_object`, client-side transaction objects need only to derive from it and pass their class type as its template parameter. At compile-time the transaction_object generates the necessary code to override copy_state() and implement operator new and operator delete using __Boost_STM_s__ memory manager for all user-defined types derived from it.
+
+    template <class Derived, typename Base=base_transaction_object>
+    class shallow_transaction_object : public base_transaction_object {
+    public:
+
+        virtual base_transaction_object* clone(transaction* t) const;
+        virtual void cache_deallocate();
+
+        virtual void copy_state(base_transaction_object const * const rhs);
+        virtual void move_state(base_transaction_object * rhs);
+    };
+
+[section Virtual function `clone()`]
+
+        virtual base_transaction_object* clone(transaction* t) const;
+
+The clone() method calls to the free function cache_new_copy which allocates enough memory for the new object and then do a memcpy by default.
+
+[endsect]
+
+
+[section Virtual function `copy_state()`]
+
+       virtual void copy_state(base_transaction_object const * const rhs);
+
+The copy_state() method call to the free function cache_copy which do a memcpy by default.
+
+[endsect]
+
+[section Virtual function `move_state()`]
+
+       virtual void move_state(base_transaction_object * rhs);
+
+The move_state() method call to the free function cache_copy which do a memcpy by default.
+
+[endsect]
+
+[section Virtual function `cache_deallocate()`]
+
+        virtual void cache_deallocate();
+
+The cache_deallocate() method call to the free function cache_deallocate which do a memcpy by default.
+
+[endsect]
+[endsect]
+
+[endsect]
+

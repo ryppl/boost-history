@@ -1,0 +1,56 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:tx_pointer_hpp Header `<boost/stm/tx/pointer.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm { namespace tx {
+
+        template <typename T> class pointer;
+        template <typename C, typename R> class pointer_to_member;
+
+    }}}
+
+[section Template Class `tx::pointer<>`]
+
+    template <typename T>
+    class pointer : public transaction_object< pointer<T> >
+    {
+    protected:
+        T* val_;
+    public:
+        pointer();
+        template<class U> pointer(pointer<U> const& r);
+
+        template <typename U> pointer(U* v);
+        pointer(T* v);
+        ~pointer() {}
+
+        operator T*() const;
+        operator T*&();
+
+        T*& get();
+        T const * get() const;
+
+        T const * operator->() const;
+        T const & operator*() const;
+
+        T * operator->();
+        T & operator*();
+    };
+
+[endsect]
+
+[section Template Class `tx::pointer_to_member<>`]
+[endsect]
+
+
+[endsect]
+

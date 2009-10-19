@@ -34,8 +34,8 @@
         to do before review</a></span></dt>
 <dt><span class="section"><a href="todo.html#toward_boost_stm.appendices.todo.for_later_releases">For
         later releases</a></span></dt>
-<dd><dl><dt><span class="section"><a href="todo.html#toward_boost_stm.appendices.todo.for_later_releases.more_recherch_needed">More
-          recherch needed</a></span></dt></dl></dd>
+<dt><span class="section"><a href="todo.html#toward_boost_stm.appendices.todo.more_recherch_needed">More
+        recherch needed</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -44,29 +44,201 @@
         to do before review</a>
 </h4></div></div></div>
 <a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.interface"></a><h5>
-<a name="id4874703"></a>
+<a name="id4885315"></a>
           <a href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.interface">Interface</a>
         </h5>
+<p>
+          This section concern new or modified features atthe user level.
+        </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
 <span class="bold"><strong>DONE</strong></span> Adding transactional smart pointers.
           </li>
 <li>
-            Allows to have non transactional_object participating on transactions
-            (separate the information related to a transactional object from the
-            object itself and add two pointers to transactional_object_cache one
-            to the object itself and the other to the transactional_object.
+<span class="bold"><strong>PARTIALY DONE</strong></span> Allows to have non transactional_object
+            participating on transactions (separate the information related to a
+            transactional object from the object itself and add two pointers to transactional_object_cache
+            one to the object itself and the other to the transactional_object.
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Add throw_if_forced_to_abort_on_new
+            and as_new functions
           </li>
 <li>
 <span class="bold"><strong>DONE</strong></span> Managing Movable and non CopyConstructible
-            types.
+            types trough shallow copy (boost/stm/shallow_transactional_object.hpp).
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Replace LOCK/UNLOCK macros by BOOST_STM_LOCK/BOOST_STM_UNLOCK
+            and simplify the class auto_lock taking in accound the new languange-like
+            macros.
+          </li>
+<li>
+            Replace auto_lock by boost::stm::sync::unique_lock and redefine language-like
+            macros.
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Transaction Language-like macros
+            (boost/stm/language_like.hpp)
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Add current transaction
+            <div class="itemizedlist"><ul type="circle"><li>
+                (boost/synchro/tss.hpp)
+              </li></ul></div>
+</li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Transaparent transactional objects
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                boost/stm/tx/numeric.hpp,
+              </li>
+<li>
+                boost/stm/tx/pointer.hpp
+              </li>
+<li>
+                boost/stm/tx/smart_ptr.hpp
+              </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Manage with polymorphic pointers
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                Add clone as virtual function of base_transaction_object
+              </li>
+<li>
+                Replace the new T(in) by in.clone()
+              </li>
+<li>
+                boost/stm/transaction_object_ptr.hpp
+              </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Separe the memory management from
+            the user class and memory managers from the STM system
+            <div class="itemizedlist"><ul type="circle"><li>
+                Controlled by BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
+              </li></ul></div>
+</li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Add monotonic storage
+            <div class="itemizedlist"><ul type="circle"><li>
+                boost/stm/detail/monotonic_storage.hpp
+              </li></ul></div>
+</li>
+<li>
+<span class="bold"><strong>Partially DONE</strong></span> Embedded references Controlled
+            by BOOST_STM_ALLOWS_EMBEDEEDS
+          </li>
+<li>
+<span class="bold"><strong>Partially DONE</strong></span> Manage with arrays of
+            transactional objects (deleters)
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                Controlled by BOOST_STM_ALLOWS_DELETERS
+              </li>
+<li>
+                Add functions to make a deleter from a 'transactional objet'
+              </li>
+<li>
+                Modifications done in files transaction.hpp and transaction_impl.hpp
+              </li>
+<li>
+                create boost/stm/detail/deleters.hpp
+              </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>Partially DONE</strong></span> Manage with non-transactional
+            objects
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                create boost/stm/non_tx/numeric.hpp
+              </li>
+<li>
+                create boost/stm/non_tx/pointer.hpp
+              </li>
+<li>
+                create boost/stm/non_tx/smart_ptr.hpp
+              </li>
+<li>
+                create boost/stm/non_tx/detail/cache_map.hpp
+              </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>Partially DONE</strong></span> Static and polymorphic
+            contention managers
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                this could improve the performances as when we choose a static contention
+                manager there is no virtual calls
+              </li>
+<li>
+                boost/stm/contention_managers
+              </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>Partially DONE</strong></span> Memory managers (separate
+            memory manager from transaction_object) (see files on vbe branch) create
+            boost/stm/memory_managers/base_memory_manager.hpp create boost/stm/memory_managers/memory_manager.hpp
+          </li>
+<li>
+            Allow LATM to work with other mutex that pthread_mutex_t and create a
+            stm mutex class.
+          </li>
+</ul></div>
+<a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.adding_some_components_to_boost_to_preparing_boostification_of_stm"></a><h5>
+<a name="id4885642"></a>
+          <a href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.adding_some_components_to_boost_to_preparing_boostification_of_stm">Adding
+          some components to Boost to preparing Boostification of STM</a>
+        </h5>
+<p>
+          This section concern new generic features thatcan be added to Boost useful
+          to TBoost.STM but that are independent of STM.
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>DONE</strong></span> Provide a thread specific shared
+            pointer (Boost.Interthreads)
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Provide a transparent initialization
+            (Boost.Interthreads)
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Non transactional Synchro mechanism
+            (following as far as possible the Boost names)
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                Add free functions to lock,unlock, try_lock, ... (boost/synchro/lock.hpp,
+                boost/synchro/unlock.hpp, boost/synchro/try_lock.hpp ..) that work
+                either with pthread_mutex or boost::mutex (Boost.Synchro)
+              </li>
+<li>
+                Add lockers lock_guard, lock_guard_if, unique_lock (boost/synchro/locks.hpp)
+              </li>
+<li>
+                Create non transactional synchronization language-like macros (boost/synchro/language_like.hpp)
+              </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>PARTIALY DONE</strong></span> Provide a unique array/tuple
+            locker (Boost.Synchro)
           </li>
 </ul></div>
 <a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.boostifying_stm"></a><h5>
-<a name="id4874758"></a>
+<a name="id4885745"></a>
           <a href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.boostifying_stm">Boostifying
           STM</a>
         </h5>
+<p>
+          This section contains the actions to be done to Boostify TBoost.STM.
+        </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
 <span class="bold"><strong>DONE</strong></span> set boost directory architecture
@@ -83,42 +255,39 @@
             including all the STM interfaces
           </li>
 <li>
-<span class="bold"><strong>DONE</strong></span> Replace bit_vector by std::bitset
-            or boost::dynamic_bitset (BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET)
+<span class="bold"><strong>DONE</strong></span> Use boost::lock_guard when lock/unlock
           </li>
 <li>
-<span class="bold"><strong>DONE</strong></span> Replace Sleep by boost::this_thread::sleep
+<span class="bold"><strong>PARTIALY DONE</strong></span> Replace bit_vector by
+            std::bitset or boost::dynamic_bitset (BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET)
           </li>
 <li>
-<span class="bold"><strong>DONE</strong></span> Replace pthread_mutex by boost::mutex
+<span class="bold"><strong>PARTIALY DONE</strong></span> Replace Sleep by boost::this_thread::sleep
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Allow to use either pthread_mutex
+            or boost::mutex in the internal implementation
           </li>
 <li>
             Replace THREAD_ID by boost::thread_id
           </li>
 <li>
-<span class="bold"><strong>DONE</strong></span> Provide a unique array/tuple locker
-            (Boost.Synchro)
+<span class="bold"><strong>DONE</strong></span> Remove var_auto_lock as it is not
+            exception safe
           </li>
 <li>
             Replace var_auto_lock by boost::synchro::unique_array_locker
           </li>
 <li>
-            Replace auto_lock by boost::synchro::unique_locker and redefine use_lock
-            macros
+            Replace light_auto_lock by synchro::unique_lock
           </li>
 <li>
-            use lock_guard when lock/unlock
+            Replace specific lock/unlock functions by lockers generic ones lock_latm_general/unlock_latm_general
+            by synchro::lock_guard g(general_lock()); The same for lock_inflight_access,
+            lock_latm_access, lockThreadMutex(threadId)
           </li>
 <li>
             Adapt the pool to Boost.Pool
-          </li>
-<li>
-<span class="bold"><strong>DONE</strong></span> Provide a thread specific shared
-            pointer (Boost.Interthreads)
-          </li>
-<li>
-<span class="bold"><strong>DONE</strong></span> Provide a transparent initialization
-            (Boost.Interthreads)
           </li>
 <li>
             Replace thread specific access using the thread id by boost:interthreads::thread_specific_shared_ptr
@@ -139,9 +308,13 @@
           </li>
 </ul></div>
 <a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.implementation"></a><h5>
-<a name="id4874936"></a>
+<a name="id4885921"></a>
           <a href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.implementation">Implementation</a>
         </h5>
+<p>
+          This section contains the modifications neede to improve the internal implementation
+          of TBoost.STM.
+        </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
 <span class="bold"><strong>DONE</strong></span> Separate the data that is global,
@@ -153,29 +326,37 @@
             functions
           </li>
 <li>
-            Separate the interface from the implementation
+<span class="bold"><strong>DONE</strong></span> Refactor the new functions (new_memory_copy,
+            new_memory and new_shared_memory) to use throw_if_forced_to_abort_on_new
+            and as_new functions
           </li>
 <li>
-            Group all the cache containers (Read,Write,Delete,New) in only one cache
-            in order to improve the lookup performance when using smart pointers.
+            Separate the interface from the implementation
           </li>
 </ul></div>
 <a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.tests"></a><h5>
-<a name="id4874995"></a>
+<a name="id4885991"></a>
           <a href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.tests">Tests</a>
         </h5>
 <div class="itemizedlist"><ul type="disc"><li>
             Add unit tests
           </li></ul></div>
+<a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.examples"></a><h5>
+<a name="id4886022"></a>
+          <a href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.examples">Examples</a>
+        </h5>
+<div class="itemizedlist"><ul type="disc"><li>
+            Add unit tests
+          </li></ul></div>
 <a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.benchmarks"></a><h5>
-<a name="id4875026"></a>
+<a name="id4886052"></a>
           <a href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.benchmarks">Benchmarks</a>
         </h5>
 <div class="itemizedlist"><ul type="disc"><li>
             Add some specific benchmarks.
           </li></ul></div>
 <a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.documentation"></a><h5>
-<a name="id4875057"></a>
+<a name="id4886083"></a>
           <a href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.documentation">Documentation</a>
         </h5>
 <div class="itemizedlist"><ul type="disc">
@@ -278,34 +459,70 @@
         later releases">For
         later releases</a>
 </h4></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="todo.html#toward_boost_stm.appendices.todo.for_later_releases.more_recherch_needed">More
-          recherch needed</a></span></dt></dl></div>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            Integrate with STM test benchmarks as STAMP or STMBench7.
-          </li>
-<li>
-            Add close nested transactions.
-          </li>
-<li>
-            Allows configuration at compile-time and run-time.
-          </li>
-</ul></div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_stm.appendices.todo.for_later_releases.more_recherch_needed"></a><a href="todo.html#toward_boost_stm.appendices.todo.for_later_releases.more_recherch_needed" title="More
-          recherch needed">More
-          recherch needed</a>
-</h5></div></div></div>
-<div class="itemizedlist"><ul type="disc">
-<li>
-              Mixing STM updating policies.
-            </li>
-<li>
-              Mixing STM consistency checking.
-            </li>
-</ul></div>
+<p>
+          This section contains the tasks that need to be done but that we consider
+          could be done after acceptation.
+        </p>
+<a name="toward_boost_stm.appendices.todo.for_later_releases.integrate_with_stm_test_benchmarks_as_stamp_or_stmbench7"></a><h5>
+<a name="id4886325"></a>
+          <a href="todo.html#toward_boost_stm.appendices.todo.for_later_releases.integrate_with_stm_test_benchmarks_as_stamp_or_stmbench7">Integrate
+          with STM test benchmarks as STAMP or STMBench7</a>
+        </h5>
+<a name="toward_boost_stm.appendices.todo.for_later_releases.providing_closed_nested_transaction_that_are_not_flat"></a><h5>
+<a name="id4886352"></a>
+          <a href="todo.html#toward_boost_stm.appendices.todo.for_later_releases.providing_closed_nested_transaction_that_are_not_flat">Providing
+          Closed Nested transaction that are not flat</a>
+        </h5>
+<p>
+          Currently TBoost.STM provides closed nested transactions which are flat,
+          i.e. all the nested transactions are flatten on the outer transaction of
+          the thread.
+        </p>
+<a name="toward_boost_stm.appendices.todo.for_later_releases.allows_configuration_at_compile_time_and_run_time"></a><h5>
+<a name="id4886385"></a>
+          <a href="todo.html#toward_boost_stm.appendices.todo.for_later_releases.allows_configuration_at_compile_time_and_run_time">Allows
+          configuration at compile-time and run-time</a>
+        </h5>
+<a name="toward_boost_stm.appendices.todo.for_later_releases.add_explicit_outer_transaction"></a><h5>
+<a name="id4886410"></a>
+          <a href="todo.html#toward_boost_stm.appendices.todo.for_later_releases.add_explicit_outer_transaction">Add
+          explicit outer transaction</a>
+        </h5>
+<p>
+          Outer transactions a those that can not be nested in other transactions,
+          i.e. root transactions.
+        </p>
 </div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.appendices.todo.more_recherch_needed"></a><a href="todo.html#toward_boost_stm.appendices.todo.more_recherch_needed" title="More
+        recherch needed">More
+        recherch needed</a>
+</h4></div></div></div>
+<p>
+          This section contains the features that will be sohaitable to have but
+          that need a deep research.
+        </p>
+<a name="toward_boost_stm.appendices.todo.more_recherch_needed.transactional_condition_variables"></a><h5>
+<a name="id4886464"></a>
+          <a href="todo.html#toward_boost_stm.appendices.todo.more_recherch_needed.transactional_condition_variables">Transactional
+          condition variables</a>
+        </h5>
+<a name="toward_boost_stm.appendices.todo.more_recherch_needed.mixing_stm_updating_policies"></a><h5>
+<a name="id4886489"></a>
+          <a href="todo.html#toward_boost_stm.appendices.todo.more_recherch_needed.mixing_stm_updating_policies">Mixing
+          STM updating policies</a>
+        </h5>
+<a name="toward_boost_stm.appendices.todo.more_recherch_needed.mixing_stm_consistency_checking"></a><h5>
+<a name="id4886514"></a>
+          <a href="todo.html#toward_boost_stm.appendices.todo.more_recherch_needed.mixing_stm_consistency_checking">Mixing
+          STM consistency checking</a>
+        </h5>
+<a name="toward_boost_stm.appendices.todo.more_recherch_needed.suspend_resume_transactions"></a><h5>
+<a name="id4886539"></a>
+          <a href="todo.html#toward_boost_stm.appendices.todo.more_recherch_needed.suspend_resume_transactions">Suspend/resume
+          transactions</a>
+        </h5>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

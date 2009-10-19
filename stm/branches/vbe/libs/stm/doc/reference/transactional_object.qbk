@@ -1,0 +1,99 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:transactional_object_hpp Header `<boost/stm/transactional_object.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm {
+        template <class T> class transactional_object;
+
+        template <typename T>
+        static transactional_object<T>* tx_up_cast(T* ptr);
+
+        template <typename T, typename U>
+        static transactional_object<T>* tx_static_cast(transactional_object<U>* ptr);
+
+        template <typename T, typename U>
+        static transactional_object<T>* tx_dynamic_cast(transactional_object<U>* ptr);
+    }}
+
+[section Template Class `transactional_object<>`]
+
+Transactional object wrapper. A `transactional_object<T>` is a base_transaction_object wrapping an instance of type T. Provides the definition of the virtual functions
+
+* forward constructors to the wrapped type
+* `copy_state`: relaying on the cache_copy<T> generic function
+* `move_state` and
+* `cache_deallocate`: relaying on the cache_copy<T> generic function
+
+Defines in addition the functions `new` and `delete` when `BOOST_STM_USE_MEMORY_MANAGER` is defined
+
+If a class D inherits from B we have that `transactional_object<D>` dont inherits from `transactional_object<B>`, but
+we can static/dynamic cast them robustly.
+
+Evidently the `std::static_cast`/`std::dynamic_cast` do not works. We need to define the specific cast
+
+    transactional_object<D>* d=...;
+    transactional_object<B>* b=tx_static_cast<B>(d);
+
+    transactional_object<B>* b=...;
+    transactional_object<D>* d=tx_dynamic_cast<B>(b);
+
+Synopsis
+
+    template <typename T>
+    class transactional_object : public base_transaction_object {
+    public:
+        T value;
+
+        transactional_object();
+        transactional_object(const T*ptr);
+        transactional_object(transactional_object<T> const & r);
+        template <typename T1>
+        transactional_object(T1 const &p1);
+
+        template <typename T1, typename T2>
+        transactional_object(T1 const &p1, T2 const &p2);
+
+        transactional_object & operator=(transactional_object const & r);
+
+        virtual void copy_state(base_transaction_object const * const rhs);
+
+    #ifdef BOOST_STM_USE_UNASIGNED_COPY
+        virtual void cache_deallocate();
+    #endif
+
+    #if BOST_STM_USE_MEMORY_MANAGER
+       void* operator new(size_t size) throw ();
+       void operator delete(void* mem);
+    #endif
+
+    };
+
+[section Virtual function `copy_state()`]
+
+       virtual void copy_state(base_transaction_object const * const rhs);
+
+[endsect]
+
+[section Virtual function `move_state()`]
+
+       virtual void move_state(base_transaction_object * rhs);
+
+[endsect]
+
+[section Virtual function `cache_deallocate()`]
+
+        virtual void cache_deallocate()=0;
+
+[endsect]
+
+[endsect]
+[endsect]

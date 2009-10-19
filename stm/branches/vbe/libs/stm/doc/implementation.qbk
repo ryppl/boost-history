@@ -8,6 +8,8 @@
 
 [section:implementation Appendix C: Implementation Notes]
 
+This section discusses how the __Boost_STM__ major design components are implemented.
+
 [section Language-like macro blocks]
 
 Our language-like lock and transaction parallel constructs are implemented in __Boost_STM__ as automatic objects wrapped inside of preprocessor macros. Automatic objects are common in C++ and are helpful in ensuring correct lock and transaction behavior as they create deterministic termination points [5, 22]. These deterministic termination points are invoked when the scope containing the automatic object is exited, guaranteeing locks are released and transactions are terminated even in the event of uncaught exceptions. The preprocessor macros used for the locking and transaction constructs are shown in Figures 6 and 8, respectively.

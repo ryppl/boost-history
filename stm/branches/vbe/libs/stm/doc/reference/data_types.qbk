@@ -8,17 +8,28 @@
 
 
 [/==========================================================================================]
-[section:data_types_hpp Header `<boost/stm/data_types.hpp>`]
+[section:datatypes_hpp Header `<boost/stm/datatypes.hpp>`]
 [/==========================================================================================]
 
     namespace boost { namespace stm {
         enum transaction_type;
         enum latm_type;
         enum transaction_state;
+        typedef new_memory_t;
+        typedef priority_t;
+        typedef clock_t;
+        typedef milliseconds_t;
+        typedef version_t;
         typedef thread_id_t;
+        thread_id_t invalid_thread_id();
+        namespace this_thread {
+            thread_id_t get_id();
+        }
     }}
 
 [section Enum `transaction_type`]
+
+Type of transaction enumeration.
 
     enum transaction_type
     {
@@ -30,6 +41,8 @@
 [endsect]
 [section Enum `latm_type`]
 
+Type of LATM enumeration.
+
     enum latm_type
     {
         eFullLatmProtection,
@@ -39,6 +52,8 @@
 
 [endsect]
 [section Enum `transaction_state`]
+
+Transaction states enumeration.
 
     enum transaction_state
     {
@@ -50,10 +65,57 @@
     };
 
 [endsect]
+[section Typedef `new_memory_t`]
+
+This type should be bool, but for alignements purposes is a int.
+
+    typedef int new_memory_t;
+
+[endsect]
+[section Typedef `priority_t`]
+
+Type used for the user contention management with transaction priority.
+
+    typedef std::size_t priority_t;
+
+[endsect]
+[section Typedef `clock_t`]
+
+Type used to represent the time.
+
+    typedef std::size_t clock_t;
+    typedef std::size_t milliseconds_t;
+
+[endsect]
+[section Typedef `version_t`]
+
+Type used for validation using the version algorithm.
+
+    typedef std::size_t version_t;
+
+[endsect]
 [section Typedef `thread_id_t`]
+
+Thread id type, which is platform dependent.
 
     typedef platform_specific thread_id_t;
 
+[endsect]
+[section Function `invalid_thread_id()`]
+
+Invalid thread_id_t value.
+
+    thread_id_t invalid_thread_id();
+    
+[endsect]
+[section Function `this_thread::get_id()`]
+
+thread_id_t for the current thread.
+
+    namespace this_thread {
+        inline thread_id_t get_id() {
+    }
+    
 [endsect]
 [endsect]
 

@@ -9,6 +9,8 @@
 
 [section:ext_references References]
 
+[heading __Boost_STM__ relared]
+
 For an introduction to TM, please refer to
 [variablelist
 
@@ -98,4 +100,31 @@ Check for the last updates.
     []
 ]
 ]
+
+[heading STM related]
+
+[variablelist
+
+[
+    [ [@http://www.cs.wisc.edu/trans-memory/biblio/index.html [*Transactional Memory Categories]]]
+    []
+]
+
+[
+    [ [@http://tinystm.org/tinystm [*TinySTM Home page]]]
+    []
+]
+
+
+]
+
+
+
+
+ 
+
+
+
+
+
 [endsect]

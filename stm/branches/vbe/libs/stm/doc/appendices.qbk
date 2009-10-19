@@ -32,27 +32,100 @@
 
 [heading Interface]
 
+This section concern new or modified features atthe user level.
+
 * [*DONE] Adding transactional smart pointers.
-* Allows to have non transactional_object participating on transactions (separate the information related to a transactional object from the object itself and add two pointers to transactional_object_cache one to the object itself and the other to the transactional_object.
-* [*DONE] Managing Movable and non CopyConstructible types.
-* Replace auto_lock by boost::stm::synchro::unique_locker and redefine language-like macros.
+
+* [*PARTIALY DONE] Allows to have non transactional_object participating on transactions (separate the information related to a transactional object from the object itself and add two pointers to transactional_object_cache one to the object itself and the other to the transactional_object.
+
+* [*DONE] Add throw_if_forced_to_abort_on_new and as_new functions
+
+* [*DONE] Managing Movable and non CopyConstructible types trough shallow copy (boost/stm/shallow_transactional_object.hpp).
+
+* [*DONE] Replace LOCK/UNLOCK macros by BOOST_STM_LOCK/BOOST_STM_UNLOCK and simplify the class auto_lock taking in accound the new languange-like macros.
+
+* Replace auto_lock by boost::stm::sync::unique_lock and redefine language-like macros.
+
+* [*DONE] Transaction Language-like macros (boost/stm/language_like.hpp)
+    
+* [*DONE] Add current transaction
+    * (boost/synchro/tss.hpp)
+
+* [*DONE] Transaparent transactional objects 
+    * boost/stm/tx/numeric.hpp, 
+    * boost/stm/tx/pointer.hpp 
+    * boost/stm/tx/smart_ptr.hpp
+
+* [*DONE] Manage with polymorphic pointers 
+    * Add clone as virtual function of base_transaction_object
+    * Replace the new T(in) by in.clone() 
+    * boost/stm/transaction_object_ptr.hpp
+    
+* [*DONE] Separe the memory management from the user class and memory managers from the STM system
+    * Controlled by BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
+    
+* [*DONE] Add monotonic storage
+    * boost/stm/detail/monotonic_storage.hpp
+
+* [*Partially DONE] Embedded references
+    Controlled by BOOST_STM_ALLOWS_EMBEDEEDS 
+
+* [*Partially DONE] Manage with arrays of transactional objects (deleters) 
+    * Controlled by BOOST_STM_ALLOWS_DELETERS
+    * Add functions to make a deleter from a 'transactional objet'
+    * Modifications done in files transaction.hpp and transaction_impl.hpp 
+    * create boost/stm/detail/deleters.hpp
+    
+* [*Partially DONE] Manage with non-transactional objects 
+    * create boost/stm/non_tx/numeric.hpp 
+    * create boost/stm/non_tx/pointer.hpp 
+    * create boost/stm/non_tx/smart_ptr.hpp 
+    * create boost/stm/non_tx/detail/cache_map.hpp
+    
+* [*Partially DONE] Static and polymorphic contention managers
+    * this could improve the performances as when we choose a static contention manager there is no virtual calls
+    * boost/stm/contention_managers
+
+* [*Partially DONE] Memory managers (separate memory manager from transaction_object) (see files on vbe branch) 
+create boost/stm/memory_managers/base_memory_manager.hpp 
+create boost/stm/memory_managers/memory_manager.hpp
+
+* Allow LATM to work with other mutex that pthread_mutex_t and create a stm mutex class. 
+
+
+[heading Adding some components to Boost to preparing Boostification of STM]
+
+This section concern new generic features thatcan be added to Boost useful to TBoost.STM but that are independent of STM.
+
+* [*DONE] Provide a thread specific shared pointer (Boost.Interthreads)
+* [*DONE] Provide a transparent initialization (Boost.Interthreads)
+* [*DONE] Non transactional Synchro mechanism (following as far as possible the Boost names)
+    * Add free functions to lock,unlock, try_lock, ... (boost/synchro/lock.hpp, boost/synchro/unlock.hpp, boost/synchro/try_lock.hpp ..)  that work either with pthread_mutex or boost::mutex (Boost.Synchro)
+    * Add lockers lock_guard, lock_guard_if, unique_lock (boost/synchro/locks.hpp) 
+    * Create non transactional synchronization language-like macros (boost/synchro/language_like.hpp) 
+* [*PARTIALY DONE] Provide a unique array/tuple locker (Boost.Synchro)
 
 [heading Boostifying STM]
+
+This section contains the actions to be done to Boostify TBoost.STM.
 
 * [*DONE] set boost directory architecture
 * [*DONE] name files in lowercase
 * [*DONE] Add a config file with all the configuration macros
 * [*DONE] Add a stm file at the boost level including all the STM interfaces
-* [*DONE] Replace bit_vector by std::bitset or boost::dynamic_bitset (BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET)
-* [*DONE] Replace Sleep by boost::this_thread::sleep
-* [*DONE] Replace pthread_mutex by boost::mutex
+* [*DONE] Use boost::lock_guard when lock/unlock
+* [*PARTIALY DONE] Replace bit_vector by std::bitset or boost::dynamic_bitset (BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET)
+* [*PARTIALY DONE] Replace Sleep by boost::this_thread::sleep
+* [*DONE] Allow to use either pthread_mutex or boost::mutex in the internal implementation
 * Replace THREAD_ID by boost::thread_id
-* [*DONE] Provide a unique array/tuple locker (Boost.Synchro)
+* [*DONE] Remove var_auto_lock as it is not exception safe 
 * Replace var_auto_lock by boost::synchro::unique_array_locker
-* Use boost::lock_guard when lock/unlock
+* Replace light_auto_lock by synchro::unique_lock 
+* Replace specific lock/unlock functions by lockers generic ones 
+lock_latm_general/unlock_latm_general by synchro::lock_guard g(general_lock()); 
+The same for lock_inflight_access, lock_latm_access, lockThreadMutex(threadId)
+
 * Adapt the pool to Boost.Pool
-* [*DONE] Provide a thread specific shared pointer (Boost.Interthreads)
-* [*DONE] Provide a transparent initialization (Boost.Interthreads)
 * Replace thread specific access using the thread id by boost:interthreads::thread_specific_shared_ptr
 * Replace the initialization to the library Boost.Interthreads (decorations and decorators)
 * Replace draco_move by boost::move and its emulation
@@ -61,12 +134,18 @@
 
 [heading Implementation]
 
+This section contains the modifications neede to improve the internal implementation of TBoost.STM.
+
 * [*DONE] Separate the data that is global, thread specific but shared to other threads using a lock, thread local or specific to a transaction.
 * [*DONE] Define access to these data using functions
+* [*DONE] Refactor the new functions (new_memory_copy, new_memory and new_shared_memory) to use throw_if_forced_to_abort_on_new and as_new functions
 * Separate the interface from the implementation
-* Group all the cache containers (Read,Write,Delete,New) in only one cache in order to improve the lookup performance when using smart pointers.
 
 [heading Tests]
+
+* Add unit tests
+
+[heading Examples]
 
 * Add unit tests
 
@@ -109,21 +188,34 @@
 
 [section For later releases]
 
-* Integrate with STM test benchmarks as STAMP or STMBench7.
-* Add close nested transactions.
-* Allows configuration at compile-time and run-time.
+This section contains the tasks that need to be done but that we consider could be done after acceptation.
 
+[heading  Integrate with STM test benchmarks as STAMP or STMBench7]
+
+[heading  Providing Closed Nested transaction that are not flat]
+Currently __Boost_STM__ provides closed nested transactions which are flat, i.e. all the nested transactions are flatten on the outer transaction of the thread.
+
+[heading   Allows configuration at compile-time and run-time]
+
+[heading Add explicit outer transaction]
+Outer transactions a those that can not be nested in other transactions, i.e. root transactions.
+
+[endsect]
 [section More recherch needed]
 
-* Mixing STM updating policies.
-* Mixing STM consistency checking.
-* Providing Closed Nested transaction that are not flat.
-Currently __Boost_STM__ provides closed nested transactions which are flat, i.e. all the nested transactions are flatten on the outer transaction of the thread.
-* Suspend/resume transactions
-* Add explicit outer transaction (those that can not be nested in aother transactions, i.e. root transactions).
+This section contains the features that will be sohaitable to have but  that need a deep research.
+
+[heading Transactional condition variables] 
+
+[heading Mixing STM updating policies]
+
+[heading  Mixing STM consistency checking]
+
+[heading Suspend/resume transactions]
+
 
 [endsect]
-[endsect]
+
 
 [endsect]
 [endsect]

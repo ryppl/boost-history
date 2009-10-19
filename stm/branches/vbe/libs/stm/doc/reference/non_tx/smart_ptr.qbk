@@ -1,0 +1,130 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:non_tx_smart_ptr_hpp Header `<boost/stm/non_tx_smart_ptr.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm { namespace non_tx {
+        template <typename T> class rd_ptr;
+        template <typename T> rd_ptr<T> make_rd_ptr(transaction& tx, T* ptr);
+        template <typename T> rd_ptr<T> make_rd_ptr(transaction& tx, T& ref);
+        template <typename T> rd_ptr<T> make_rd_ptr(T* ptr);
+        template <typename T> rd_ptr<T> make_rd_ptr(T& ref);
+        template <typename T> void delete_ptr(rd_ptr<T> ptr);
+
+        template <typename T> class upgrd_ptr;
+        template <typename T> void delete_ptr(upgrd_ptr<T> const& ptr);
+        template <typename T> void delete_ptr(transaction& tx, upgrd_ptr<T> const& ptr);
+
+        template <typename T> class wr_ptr;
+    }}}
+
+These smart pointers points to an unspecified cache type which inherits from base_transactional object. This cache is obtained from an internal thread safe cache map.
+
+As the the non_tx smart pointers need to lookup on a cache they must be used only when you need to access to a non transactional variable on the context of a transaction. Otherwise, please use tx_ptr<> or the mixin transaction_object<>.
+
+[section Template Class `rd_ptr<>`]
+
+A rd_ptr<T> ("read pointer") points to an cache that the current transaction has opened for read only access. You can only call a const method through a read pointer.
+
+A rd_ptr<T> is constructed from an T pointer or reference.
+Once a rd_ptr<T> has been constructed, the associated cache is opened for
+reading.
+
+It is not safe to derreference a rd_ptr<T> after having assigned the same
+T to a wr_ptr<T>. If this is the case the readen value do not match
+the writen one. If it is possible to write on the same transaction use
+upgrd_ptr instead which is safe.
+
+    template <typename T>
+    class rd_ptr {
+    public:
+        rd_ptr(transaction &t, T const * ptr);
+
+        rd_ptr(transaction &t, T const & obj);
+
+        template<class Y>
+        explicit rd_ptr & operator=(Y const* ptr);
+
+        template<class Y>
+        explicit rd_ptr & operator=(Y const& ref);
+
+        const T* get() const;
+
+        const T & operator*() const;
+        const T* operator->() const;
+
+        operator unspecified_bool_type() const;
+    };
+
+[endsect]
+
+[section Template Class `upgrd_ptr<>`]
+
+A upgrd_ptr<T> ("upgradable pointer") points to an cache that the current transaction has opened for read only access. You can only call const method of the wrapped type through a upgradable pointer.
+
+A upgrd_ptr<T> is constructed from an T pointer or reference through a constructor
+having also the transaction as parameter. Once a upgrd_ptr<T> has been constructed, an a cache of T can is opened for reading.
+
+It is safe to derreference a upgrd_ptr<T> after having assigned the same
+T to a wr_ptr<T>.
+
+A upgrd_ptr<T> can be upgraded to a wr_ptr<T> through a constructor.
+
+    template <typename T>
+    class upgrd_ptr {
+    public:
+        upgrd_ptr(transaction &t, T* ptr);
+        upgrd_ptr(transaction &t, T& ref);
+
+        template<class Y> upgrd_ptr & operator=(Y* ptr);
+
+        template<class Y> upgrd_ptr & operator=(Y& ref);
+
+        const T* get() const;
+        inline T const & operator*() const;
+        inline T const * operator->() const;
+
+        operator unspecified_bool_type() const;
+
+        void write_ptr(detail::cache<T>* ptr);
+        T* write_ptr();
+    };
+
+
+[endsect]
+
+[section Template Class `wr_ptr<>`]
+
+A wr_ptr<T> ("write pointer") points to a cache that the current transaction has opened for writing.
+
+A wr_ptr<T> is initialized explicitly from an T pointer or reference.
+
+A wr_ptr<T> can also be explicitly constructed from a upgrd_ptr<T> as an upgrade-to-writable operation.
+
+
+    template <typename T>
+    class wr_ptr {
+    public:
+        wr_ptr(transaction &t, T* ptr);
+        wr_ptr(transaction &t, T& obj);
+
+        T* get();
+        inline T& operator*();
+        inline T* operator->();
+
+        operator unspecified_bool_type() const;
+    };
+
+[endsect]
+
+
+[endsect]
+
