@@ -250,6 +250,33 @@ successful in practice and is regarded by many as superior to the one
 in the standard.  Standardizing ``throw(false)`` gives everyone access
 to this optimization tool.
 
+Low-Hanging Fruit
+*****************
+
+There are a couple of additional features we think the committee
+should consider if this proposal is accepted.
+
+Implicit ``throw(false)`` for Destructors
+=========================================
+
+So few destructors can throw exceptions that the default
+exception-specification for destructors could be changed from nothing
+(i.e. ``throw(true)``) to ``throw(false)`` with only a tiny amount of code
+breakage.  Such code is already very dangerous, and where used
+properly, ought to be a well-known “caution area” that is reasonably
+easily migrated.
+
+operator ``may_throw(``\ *expression*\ ``)``
+============================================
+
+It seems that ``has_nothrow_``\ *xxx* traits are proliferating (and
+not just in this proposal).  Once we have ``throw(``\
+*bool-constant-expr*\ ``)`` available to make the information
+available, it makes sense to generalize the traits into an operator
+similar to ``sizeof`` and ``typeof`` that can give us answers about
+*any* expression.
+
+
 Proposed Changes to Standard Wording
 ************************************
 
@@ -310,8 +337,36 @@ A.13 Exception handling [gram.except]
   throw ( type-id-listopt )
   :ins:`throw(constant-expression)`
 
-20.6.2 Header <type_traits> synopsis [meta.type.synop]
-======================================================
+20.3 Utility components [utility]
+=================================
+
+Change Header ``<utility>`` synopsis as follows:
+
+.. parsed-literal::
+
+  // 20.3.2, forward/move: 
+  template <class T> struct identity; 
+  template <class T> T&& forward(typename identity<T>::type&&); 
+  template <class T> typename remove_reference<T>::type&& move(T&&);
+  :ins:`template <class T> typename conditional<
+    !has_nothrow_move_constructor<T>::value && has_copy_constructor<T>::value, 
+    T const&, T&&>::type legacy_move(T& x);`
+
+20.3.2 forward/move helpers [forward]
+=====================================
+
+Append the following:
+
+  .. parsed-literal::
+
+    :ins:`template <class T> typename conditional<
+      !has_nothrow_move_constructor<T>::value && has_copy_constructor<T>::value, 
+      T const&, T&&>::type legacy_move(T& x);`
+
+  :raw-html:`<span class="ins">10 <em>Returns:</em> <code>t</code></span>`
+
+20.6.2 Header ``<type_traits>`` synopsis [meta.type.synop]
+==========================================================
 
 .. parsed-literal::
 
