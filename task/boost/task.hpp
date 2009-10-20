@@ -16,7 +16,6 @@
 #include <boost/task/bounded_twolock_fifo.hpp>
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
-#include <boost/task/distrib_rr_ums.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/handle.hpp>

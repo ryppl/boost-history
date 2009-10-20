@@ -192,17 +192,8 @@ void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handl
 	{ throw task_interrupted(); }
 }
 
-template< typename T1, typename T2 >
-unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2)
-{
-	try
-	{ return wait_for_any( t1.get_future(), t2.get_future() ); }
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
-}
-
 template< typename Iterator >
-Iterator waitfor_any( Iterator begin, Iterator end)
+typename disable_if< is_handle_type< Iterator >, Iterator >::type waitfor_any( Iterator begin, Iterator end)
 {
 	try
 	{
@@ -211,6 +202,15 @@ Iterator waitfor_any( Iterator begin, Iterator end)
 			waiter.add( i->fut_);
 		return next( begin, waiter.wait() );
 	}
+	catch ( thread_interrupted const&)
+	{ throw task_interrupted(); }
+}
+
+template< typename T1, typename T2 >
+unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2)
+{
+	try
+	{ return wait_for_any( t1.get_future(), t2.get_future() ); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
