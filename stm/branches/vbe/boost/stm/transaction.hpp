@@ -101,6 +101,9 @@ public:
    typedef std::multimap<clock_t, MemoryContainerList > DeletionBuffer;
 
    typedef std::set<Mutex*> MutexSet;
+   typedef void* latm_mutex;
+   //typedef Mutex* latm_mutex;
+   typedef std::set<latm_mutex> latm_mutex_set;
 
    typedef std::set<thread_id_t> ThreadIdSet;
 
@@ -186,10 +189,10 @@ public:
         #endif
         #if PERFORMING_LATM
         #if USING_TRANSACTION_SPECIFIC_LATM
-        MutexSet conflictingMutex_;
+        latm_mutex_set conflictingMutex_;
         #endif
-        MutexSet obtainedLocks_;
-        MutexSet currentlyLockedLocks_;
+        latm_mutex_set obtainedLocks_;
+        latm_mutex_set currentlyLockedLocks_;
         #endif
     };
 
