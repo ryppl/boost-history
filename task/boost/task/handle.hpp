@@ -3,12 +3,15 @@
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
+//
+//  parts are based on boost.future by Anthony Williams
 
 #ifndef BOOST_TASK_HANDLE_H
 #define BOOST_TASK_HANDLE_H
 
 #include <boost/thread.hpp>
 #include <boost/thread/thread_time.hpp>
+#include <boost/utility/enable_if.hpp>
 
 #include <boost/task/context.hpp>
 #include <boost/task/future.hpp>
@@ -131,8 +134,18 @@ public:
 	}
 };
 
+template< typename T >
+struct is_handle_type
+{ BOOST_STATIC_CONSTANT( bool, value = false); };
+
+template< typename T >
+struct is_handle_type< handle< T > >
+{
+    BOOST_STATIC_CONSTANT( bool, value = true);
+};
+
 template< typename Iterator >
-void waitfor_all( Iterator begin, Iterator end)
+typename disable_if< is_handle_type< Iterator >, void >::type waitfor_all( Iterator begin, Iterator end)
 {
 	try
 	{
@@ -144,10 +157,10 @@ void waitfor_all( Iterator begin, Iterator end)
 }
 
 template< typename T1, typename T2 >
-void waitfor_all( T1 & t1, T2 & t2)
+void waitfor_all( handle< T1 > & t1, handle< T2 > & t2)
 {
 	try
-	{ wait_for_all( t1.fut_, t2.fut_); }
+	{ wait_for_all( t1.get_future(), t2.get_future()); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -156,7 +169,7 @@ template< typename T1, typename T2, typename T3 >
 void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3)
 {
 	try
-	{ wait_for_all( t1.fut_, t2.fut_, t3.fut_); }
+	{ wait_for_all( t1.get_future(), t2.get_future(), t3.get_future()); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -165,7 +178,7 @@ template< typename T1, typename T2, typename T3, typename T4 >
 void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4)
 {
 	try
-	{ wait_for_all( t1.fut_, t2.fut_, t3.fut_, t4.fut_); }
+	{ wait_for_all( t1.get_future(), t2.get_future(), t3.get_future(), t4.get_future()); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -174,7 +187,16 @@ template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5)
 {
 	try
-	{ wait_for_all( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); }
+	{ wait_for_all( t1.get_future(), t2.get_future(), t3.get_future(), t4.get_future(), t5.get_future()); }
+	catch ( thread_interrupted const&)
+	{ throw task_interrupted(); }
+}
+
+template< typename T1, typename T2 >
+unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2)
+{
+	try
+	{ return wait_for_any( t1.get_future(), t2.get_future() ); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -189,15 +211,6 @@ Iterator waitfor_any( Iterator begin, Iterator end)
 			waiter.add( i->fut_);
 		return next( begin, waiter.wait() );
 	}
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
-}
-
-template< typename T1, typename T2 >
-unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2)
-{
-	try
-	{ return wait_for_any( t1.get_future(), t2.get_future() ); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }

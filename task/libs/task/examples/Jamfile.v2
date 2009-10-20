@@ -25,20 +25,13 @@ project boost/task/example
     ;
 
 exe bind_to_processors : bind_to_processors.cpp ;
-exe buffer_multi : buffer_multi.cpp ;
-exe buffer_multi2 : buffer_multi2.cpp ;
-exe buffer_pool : buffer_pool.cpp ;
-exe buffer_pool_thread : buffer_pool_thread.cpp ;
-exe buffer_thread : buffer_thread.cpp ;
-exe fork_join : fork_join.cpp ;
+exe sub_tasks : sub_tasks.cpp ;
 exe interrupt : interrupt.cpp ;
-exe no_deadlock_pool : no_deadlock_pool.cpp ;
-exe no_deadlock_pool2 : no_deadlock_pool2.cpp ;
-exe no_deadlock_pool3 : no_deadlock_pool3.cpp ;
 exe priority : priority.cpp ;
-exe semaphore_thread : semaphore_thread.cpp ;
-exe semaphore_pool : semaphore_pool.cpp ;
-exe semaphore_pool_thread : semaphore_pool_thread.cpp ;
 exe shutdown_now : shutdown_now.cpp ;
 exe smart : smart.cpp ;
 exe submit : submit.cpp ;
+exe sync/fork_join_event : sync/fork_join_event.cpp ;
+exe sync/buffer_ping_pong : sync/buffer_ping_pong.cpp ;
+exe sync/semaphore_ping_pong : sync/semaphore_ping_pong.cpp ;
+exe sync/message_passing : sync/message_passing.cpp ;
