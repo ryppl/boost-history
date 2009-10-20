@@ -36,12 +36,16 @@ extern bool kDoRemoval;
 extern bool kDoLookup;
 extern bool kDoMove;
 extern bool kMoveSemantics;
-extern std::string bench;
 
 extern int kMaxThreads;
 extern int kMainThreadId;
 extern int kMaxArrSize;
 extern int kMaxArrIter;
+
+extern int kMaxIterations;
+extern std::string bench;
+extern std::string updateMethod;
+extern std::string latmType;
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -63,5 +67,7 @@ void idleUntilAllThreadsHaveReached(int const &threadId);
 void finishThread(int const &threadId);
 void finishThread();
 void logCommitsAndAborts(std::string const &typeOfRun);
+
+void set_default_environment();
 
 #endif // MAIN_H

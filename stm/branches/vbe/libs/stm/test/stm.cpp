@@ -32,7 +32,6 @@
 #include "smart.h"
 #include "pointer_test.h"
 #include "testatom.h"
-#if 0
 #include "testLinkedListWithLocks.h"
 #include "testHashMapAndLinkedListsWithLocks.h"
 #include "testHashMapWithLocks.h"
@@ -44,7 +43,6 @@
 #include "txLinearLock.h"
 #include "lotExample.h"
 #include "litExample.h"
-#endif
 
 using namespace boost; using namespace boost::stm; using namespace nMain; using namespace std;
 
@@ -76,6 +74,7 @@ std::string insertAmount = "5000";
 
 int kMaxThreads = 2;
 int kMainThreadId = kMaxThreads-1;
+std::string latmType;
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -111,8 +110,8 @@ void setupEnvironment(int argc, char **argv)
    {
       std::string first = argv[i];
 
-      if (first == "-def") transaction::do_deferred_updating();
-      else if (first == "-dir") transaction::do_direct_updating();
+      if (first == "-def") updateMethod="deferred";
+      else if (first == "-dir") updateMethod="direct";
       else if (first == "-lookup") kDoLookup = true;
       else if (first == "-remove") kDoRemoval = true;
       else if (first == "-inserts")
@@ -122,7 +121,6 @@ void setupEnvironment(int argc, char **argv)
       else if (first == "-threads")
       {
          kMaxThreads = atoi(argv[++i]);
-         kMainThreadId = kMaxThreads-1;
       }
       else if (first == "-moveSemantics")
       {
@@ -140,17 +138,7 @@ void setupEnvironment(int argc, char **argv)
       else if (first == "-latm")
       {
 #if PERFORMING_LATM
-
-         std::string latmType = argv[++i];
-         if (latmType == "full") transaction::do_full_lock_protection();
-         else if (latmType == "tm") transaction::do_tm_lock_protection();
-         else if (latmType == "tx") transaction::do_tx_lock_protection();
-         else
-         {
-            cout << "invalid LATM protection type, exiting" << endl;
-            cout << first << latmType << endl;
-            exit(0);
-         }
+         latmType = argv[++i];
 #endif
       }
       else
@@ -159,9 +147,25 @@ void setupEnvironment(int argc, char **argv)
          exit(0);
       }
    }
+
+   kMainThreadId = kMaxThreads-1;
+   if (updateMethod=="deferred") transaction::do_deferred_updating();
+   else if (updateMethod== "direct") transaction::do_direct_updating();
+
+#if PERFORMING_LATM
+    if (latmType == "full") transaction::do_full_lock_protection();
+    else if (latmType == "tm") transaction::do_tm_lock_protection();
+    else if (latmType == "tx") transaction::do_tx_lock_protection();
+    else
+    {
+            cout << "invalid LATM protection type, " << latmType << ". Exiting" << endl;
+            exit(0);
+    }
+#endif
+
 }
 
-int test_bank();
+//int test_bank();
 
 //-----------------------------------------------------------------------------
 // main
@@ -170,6 +174,7 @@ int main(int argc, char **argv)
 {
    transaction::enable_dynamic_priority_assignment();
 
+   set_default_environment();
    setupEnvironment(argc, argv);
 
    for (int i = 0; i < kMaxIterations; ++i)
@@ -184,7 +189,6 @@ int main(int argc, char **argv)
       else if ("smart" == bench) test_smart();
       else if ("pointer" == bench) pointer_test();
       else if ("accounts" == bench) testAccounts();
-#if 0
       else if ("linkedlist_w_locks" == bench) TestLinkedListWithLocks();
       else if ("hashmap_w_locks" == bench) TestHashMapWithLocks();
       else if ("list_hash_w_locks" == bench) TestHashMapAndLinkedListWithLocks();
@@ -196,7 +200,6 @@ int main(int argc, char **argv)
       else if ("tx_linear_lock" == bench) TestTxLinearLock();
       else if ("lot_example" == bench) TestLotExample();
       else if ("lit_example" == bench) TestLitExample();
-#endif
       else { usage(); return 0; }
    }
 

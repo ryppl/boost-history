@@ -429,7 +429,7 @@ void DoHashMapAndLinkedListInitialization()
 
    if (transaction::doing_tm_lock_protection())
    {
-      for (int k = 1; k < kBuckets; ++k)
+      for (int k = 1; k < kBuckets2; ++k)
       {
          transaction::tm_lock_conflict(globalHashMap->get_hash_lock(k));
       }

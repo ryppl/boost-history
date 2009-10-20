@@ -25,7 +25,7 @@ namespace LATM
 {
    namespace nHashMap
    {
-      int const kBuckets = 256;
+      int const kBuckets2 = 256;
    }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,33 +36,33 @@ public:
 
    bool lock_lookup(T &val)
    {
-      return buckets_[val % nHashMap::kBuckets].lock_lookup(val);
+      return buckets_[val % nHashMap::kBuckets2].lock_lookup(val);
    }
 
    bool lock_insert(list_node<T> &element)
    {
-      return buckets_[element.value() % nHashMap::kBuckets].lock_insert(element);
+      return buckets_[element.value() % nHashMap::kBuckets2].lock_insert(element);
    }
 
    bool lookup(T &val)
    {
-      return buckets_[val % nHashMap::kBuckets].lookup(val);
+      return buckets_[val % nHashMap::kBuckets2].lookup(val);
    }
 
    bool insert(list_node<T> &element)
    {
-      return buckets_[element.value() % nHashMap::kBuckets].insert(element);
+      return buckets_[element.value() % nHashMap::kBuckets2].insert(element);
    }
 
    bool remove(list_node<T> &v)
    {
-      return buckets_[v.value() % nHashMap::kBuckets].remove(v);
+      return buckets_[v.value() % nHashMap::kBuckets2].remove(v);
    }
 
    size_t walk_size()
    {
       size_t count = 0;
-      for (int i = 0; i < nHashMap::kBuckets; ++i)
+      for (int i = 0; i < nHashMap::kBuckets2; ++i)
       {
          count += buckets_[i].walk_size();
       }
@@ -73,7 +73,7 @@ public:
    ////////////////////////////////////////////////////////////////////////////
    void outputList(std::ofstream &o)
    {
-      for (int i = 0; i < nHashMap::kBuckets; ++i)
+      for (int i = 0; i < nHashMap::kBuckets2; ++i)
       {
          buckets_[i].outputList(o);
       }
@@ -82,7 +82,7 @@ public:
    Mutex* get_hash_lock(int val) { return buckets_[val].get_list_lock(); }
 
 private:
-   LATM::LinkedList<T> buckets_[nHashMap::kBuckets];
+   LATM::LinkedList<T> buckets_[nHashMap::kBuckets2];
 };
 
 } // namespace LATM
