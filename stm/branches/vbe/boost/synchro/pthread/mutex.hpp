@@ -25,26 +25,38 @@
 #include <boost/synchro/lockable.hpp>
 //-----------------------------------------------------------------------------
 
+#define BOOST_SYNCHRO_CHECK
+
+#ifdef BOOST_SYNCHRO_CHECK
+#define BOOST_STM_ASSERT(expr) assert(expr)
+
+# define BOOST_STM_VERIFY(expr) BOOST_STM_ASSERT(expr)
+
+#else
+
+#define BOOST_STM_ASSERT(expr) ((void)0)
+#define BOOST_STM_VERIFY(expr) ((void)(expr))
+#endif
 namespace boost { namespace synchro {
 
     template<>
     inline void lock<pthread_mutex_t>(pthread_mutex_t& lockable) {
         int const res = pthread_mutex_lock(&lockable);
-        assert(res==0);
+        BOOST_STM_VERIFY(res==0);
         //if (res!=0) throw lock_error();
     }
 
     template<>
     inline void unlock<pthread_mutex_t>(pthread_mutex_t& lockable) {
         int const res= pthread_mutex_unlock(&lockable);
-        assert(res==0);
+        BOOST_STM_VERIFY(res==0);
         //if (res!=0) throw lock_error();
     }
 
     template<>
     inline bool try_lock<pthread_mutex_t>(pthread_mutex_t& lockable) {
         int const res=pthread_mutex_trylock(&lockable);
-        //BOOST_ASSERT(!res || res==EBUSY);
+        //BOOST_STM_VERIFY(!res || res==EBUSY);
         return (!res);
     }
 
@@ -54,7 +66,7 @@ namespace boost { namespace synchro {
                 pthread_mutex_t& lockable, system_time const& abs_time) {
         struct timespec const timeout=detail::get_timespec(abs_time);
         int const res=pthread_mutex_timedlock(&lockable,&timeout);
-        assert(!res || res==ETIMEDOUT);
+        BOOST_STM_VERIFY(!res || res==ETIMEDOUT);
         return !res;
     }   
 #endif
