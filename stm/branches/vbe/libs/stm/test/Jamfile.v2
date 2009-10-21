@@ -36,129 +36,148 @@ project
 #{
 #    return
 #    [ run $(sources)  :  :  : <link>static ]
-##    [ run $(sources)  ../../../../libs/thread/build//boost_thread  :  :  :              : $(sources[1]:B)_lib ]
+##    [ run $(sources)  ../../../../libs/thread/build//boost_thread  :  :  :       : $(sources[1]:B)_lib ]
 #    ;
 #}
 
     static-lib all_my_tests
-    : stm.cpp testatom.cpp pointer_test.cpp  smart.cpp  globalIntArr.cpp testHashMapAndLinkedListsWithLocks.cpp irrevocableInt.cpp testHashMapWithLocks.cpp isolatedComposedIntLockInTx.cpp   testInt.cpp isolatedComposedIntLockInTx2.cpp  testLL_latm.cpp isolatedInt.cpp testLinkedList.cpp isolatedIntLockInTx.cpp testLinkedListWithLocks.cpp litExample.cpp testPerson.cpp lotExample.cpp testRBTree.cpp  transferFun.cpp nestedTxs.cpp txLinearLock.cpp testHT_latm.cpp usingLockTx.cpp testHashMap.cpp
+        : testatom.cpp pointer_test.cpp  smart.cpp  globalIntArr.cpp testHashMapAndLinkedListsWithLocks.cpp irrevocableInt.cpp testHashMapWithLocks.cpp isolatedComposedIntLockInTx.cpp   testInt.cpp isolatedComposedIntLockInTx2.cpp  testLL_latm.cpp isolatedInt.cpp testLinkedList.cpp isolatedIntLockInTx.cpp testLinkedListWithLocks.cpp litExample.cpp testPerson.cpp lotExample.cpp testRBTree.cpp  transferFun.cpp nestedTxs.cpp txLinearLock.cpp testHT_latm.cpp usingLockTx.cpp testHashMap.cpp
     ;
 
-    test-suite "draco"
+    exe stm
+        : stm.cpp .//all_my_tests/<link>static
+    :
+    ;
+
+    #[ run sources + : args * : input-files * : requirements * : target-name ? : default-build * ]
+
+    alias def_invalid
         :
-            [ run test_default.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench accounts -def -threads 4 -inserts 100 : : : test_accounts_def_t4_i100 ]
 
-            [ run test_accounts_dir_t2.cpp .//all_my_tests/<link>static  ]
-            [ run test_accounts_def_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench hashmap -def -threads 4 -inserts 100 : : : test_hashmap_def_t4_i100 ]
 
-            [ run test_hashmap_dir_t2_i1000.cpp .//all_my_tests/<link>static  ]
-            [ run test_hashmap_def_t2_i1000.cpp .//all_my_tests/<link>static  ]
-
-            ########### livelock. killed after 3:00 25% CPU
-            #[ run test_ht_dir_t2_i1000.cpp .//all_my_tests/<link>static  ]
 
             ########### fails
             # /bin/sh: line 4:  2944 Aborted                 (core dumped) "bin/test_ht_def_t2_i1000.test/gcc-3.4.4/debug/threading-multi/test_ht_def_t2_i1000.exe" > "bin/test_ht_def_t2_i1000.test/gcc-3.4.4/debug/threading-multi/test_ht_def_t2_i1000.output" 2>&1
             # Rounding max threads to the next multiple of 4 (4).
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
-            [ run test_ht_def_t2_i1000.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench ht -def -threads 2 -inserts 100 : : : test_ht_def_t2_i100 ]
 
-            [ run test_isolated_int_dir_t2.cpp .//all_my_tests/<link>static  ]
-            [ run test_isolated_int_def_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench isolated_int -def -threads 4 -inserts 100 : : : test_isolated_int_def_t2_i100 ]
 
-            [ run test_linkedlist_dir_t2_i1000.cpp .//all_my_tests/<link>static  ]
-            [ run test_linkedlist_def_t2_i1000.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench linkedlist -def -threads 4 -inserts 100 : : : test_linkedlist_def_t4_i100 ]
 
-            [ run test_ll_dir_t2_i1000.cpp .//all_my_tests/<link>static  ]
             ########### fails
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
-            [ run test_ll_def_t2_i1000.cpp .//all_my_tests/<link>static  ]
-
-            ########### fails with CHECK
-            #/bin/sh: line 4:  3764 Aborted                 (core dumped) "bin/test_tx_linear_lock_dir_t2.test/gcc-3.4.4/debug/threading-multi/test_tx_linear_lock_dir_t2.exe" > "bin/test_tx_linear_lock_dir_t2.test/gcc-3.4.4/debug/threading-multi/test_tx_linear_lock_dir_t2.output" 2>&1
-            #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
-            ########### deadlock. without CHECK
-            #[ run test_tx_linear_lock_dir_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench ll -def -threads 2 -inserts 100 : : : test_ll_def_t2_i100 ]
 
             ########### deadlock. killed after 0:26. 00% CPU
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
             #   19469 [sig] test_tx_linear_lock_def_t2 3768 _cygtls::handle_exceptions: Error while dumping state (probably corrupted stack)
-            #[ run test_tx_linear_lock_def_t2.cpp .//all_my_tests/<link>static  ]
-
-            [ run test_isolated_int_lock_dir_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench tx_linear_lock -def -threads 2 -inserts 100 : : : test_tx_linear_lock_def_t2_i100 ]
 
             ########### deadlock. killed after 0:26. 00% CPU
-            #[ run test_isolated_int_lock_def_t2.cpp .//all_my_tests/<link>static  ]
-
-            ########### deadlock. killed after 0:20. 00% CPU
-            #[ run test_isolated_composed_int_lock_dir_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench isolated_int_lock_in_tx -def -threads 2 -inserts 100 : : : test_isolated_int_lock_in_tx_def_t2_i100 ]
 
             ###########  fails
             # /bin/sh: line 4:  3660 Segmentation fault      (core dumped) "bin/test_isolated_composed_int_lock_def_t2.test/gcc-3.4.4/debug/threading-multi/test_isolated_composed_int_lock_def_t2.exe" > "bin/test_isolated_composed_int_lock_def_t2.test/gcc-3.4.4/debug/threading-multi/test_isolated_composed_int_lock_def_t2.output" 2>&1
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
-            #[ run test_isolated_composed_int_lock_def_t2.cpp .//all_my_tests/<link>static  ]
-
-            ###########  fails
-            # /bin/sh: line 4:  3172 Aborted                 (core dumped) "bin/test_isolated_composed_int_lock2_dir_t2.test/gcc-3.4.4/debug/threading-multi/test_isolated_composed_int_lock2_dir_t2.exe" > "bin/test_isolated_composed_int_lock2_dir_t2.test/gcc-3.4.4/debug/threading-multi/test_isolated_composed_int_lock2_dir_t2.output" 2>&1
-            #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
-            #      11 [sig] test_isolated_composed_int_lock_def_t2 3660 _cygtls::handle_except ions: Error while dumping state (probably corrupted stack)
-            [ run test_isolated_composed_int_lock2_dir_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench isolated_composed_int_lock -def -threads 2 -inserts 100 : : : test_isolated_composed_int_lock_def_t2_i100 ]
 
             ###########  fails
             # /bin/sh: line 4:  3172 Aborted                 (core dumped) "bin/test_isolated_composed_int_lock2_dir_t2.test/gcc-3.4.4/debug/threading-multi/test_isolated_composed_int_lock2_dir_t2.exe" > "bin/test_isolated_composed_int_lock2_dir_t2.test/gcc-3.4.4/debug/threading-multi/test_isolated_composed_int_lock2_dir_t2.output" 2>&1
             # ====== BEGIN OUTPUT ======
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
-            #[ run test_isolated_composed_int_lock2_def_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench isolated_composed_int_lock2 -def -threads 2 -inserts 100 : : : test_isolated_composed_int_lock2_def_t2_i100 ]
 
-            [ run test_irrevocable_int_dir_t2.cpp .//all_my_tests/<link>static  ]
-            [ run test_irrevocable_int_def_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench irrevocable_int -def -threads 4 -inserts 100 : : : test_irrevocable_int_def_t4_i100 ]
 
-            ########### deadlock. killed after 0:20. 00% CPU
-            #[ run test_lot_dir_t2.cpp .//all_my_tests/<link>static  ]
             ########### deadlock. killed after 0:26. 00% CPU
-            #[ run test_lot_def_t2.cpp .//all_my_tests/<link>static  ]
-
-            ########### deadlock. killed after 0:40. 00% CPU
-            #[ run test_lit_dir_t2.cpp .//all_my_tests/<link>static  ]
+            #[ run stm : -bench lot_example -def -threads 2 -inserts 100 : : : test_lot_example_def_t2_i100 ]
 
             ########### fails with CHECK
             # /bin/sh: line 4:  4072 Aborted                 (core dumped) "bin/test_lit_def_t2.test/gcc-3.4.4/debug/threading-multi/test_lit_def_t2.exe" > "bin/test_lit_def_t2.test/gcc-3.4.4/debug/threading-multi/test_lit_def_t2.output" 2>&1
             ########### deadlock sometimes without CHECK. killed after 0:40. 00% CPU
-            #[ run test_lit_def_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench lit_example -def -threads 2 -inserts 100 : : : test_lit_example_def_t2_i100 ]
 
-            ########### livelock. killed after 3:00. 50% CPU
-            #[ run test_nested_tx_dir_t2.cpp .//all_my_tests/<link>static  ]
             ########### livelock. killed after 3:50. 50% CPU
-            #[ run test_nested_tx_def_t2.cpp .//all_my_tests/<link>static  ]
+            #[ run stm : -bench nested_tx -def -threads 2 -inserts 100 : : : test_nested_tx_def_t2_i100 ]
 
-            [ run test_rbtree_dir_t2_i1000.cpp .//all_my_tests/<link>static  ]
-            [ run test_rbtree_def_t2_i1000.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench rbtree -def -threads 4 -inserts 100 : : : test_rbtree_def_t4_i100 ]
 
-            [ run test_smart_dir_t2.cpp .//all_my_tests/<link>static  ]
-            [ run test_smart_def_t2.cpp .//all_my_tests/<link>static  ]
-
-            ########### fails
-            #/bin/sh: line 4:   408 Aborted                 (core dumped) "bin/test_using_linkedlist_dir_t2_i1000.test/gcc-3.4.4/debug/threading-multi/test_using_linkedlist_dir_t2_i1000.exe" > "bin/test_using_linkedlist_dir_t2_i1000.test/gcc-3.4.4/debug/threading-multi/test_using_linkedlist_dir_t2_i1000.output" 2>&1
-            [ run test_using_linkedlist_dir_t2_i1000.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench smart -def -threads 4 -inserts 100 : : : test_smart_def_t4_i100 ]
 
             ########### fails
             # /bin/sh: line 4:  2376 Aborted                 (core dumped) "bin/test_using_linkedlist_def_t2_i1000.test/gcc-3.4.4/debug/threading-multi/test_using_linkedlist_def_t2_i1000.exe" > "bin/test_using_linkedlist_def_t2_i1000.test/gcc-3.4.4/debug/threading-multi/test_using_linkedlist_def_t2_i1000.output" 2>&1
-            [ run test_using_linkedlist_def_t2_i1000.cpp .//all_my_tests/<link>static  ]
-
-
-            [ run test_hashmap_w_locks_dir_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench using_linkedlist -def -threads 2 -inserts 100 : : : test_using_linkedlist_def_t2_i100 ]
 
             ########### fails
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
-            [ run test_hashmap_w_locks_def_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench hashmap_w_locks -def -threads 2 -inserts 100 : : : test_hashmap_w_locks_def_t2_i100 ]
 
-            [ run test_list_hash_w_locks_dir_t2.cpp .//all_my_tests/<link>static  ]
             ########### fails
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
-            [ run test_list_hash_w_locks_def_t2.cpp .//all_my_tests/<link>static  ]
+            [ run stm : -bench list_hash_w_locks -def -threads 2 -inserts 100 : : : test_list_hash_w_locks_def_t2_i100 ]
     ;
 
-    test-suite "examples"
+    alias dir_invalid
+        :
+            [ run stm : -bench accounts -dir -threads 4 -inserts 100 : : : test_accounts_dir_t4_i100 ]
+
+            [ run stm : -bench hashmap -dir -threads 4 -inserts 100 : : : test_hashmap_dir_t4_i100 ]
+
+            ########### livelock. killed after 3:00 25% CPU
+            [ run stm : -bench ht -dir -threads 2 -inserts 100 : : : test_ht_dir_t2_i100 ]
+
+            [ run stm : -bench isolated_int -dir -threads 4 -inserts 100 : : : test_isolated_int_dir_t2_i100 ]
+
+            [ run stm : -bench linkedlist -dir -threads 4 -inserts 100 : : : test_linkedlist_dir_t4_i100 ]
+
+            [ run stm : -bench ll -dir -threads 2 -inserts 100 : : : test_ll_dir_t2_i100 ]
+
+            ########### fails with CHECK
+            #/bin/sh: line 4:  3764 Aborted                 (core dumped) "bin/test_tx_linear_lock_dir_t2.test/gcc-3.4.4/debug/threading-multi/test_tx_linear_lock_dir_t2.exe" > "bin/test_tx_linear_lock_dir_t2.test/gcc-3.4.4/debug/threading-multi/test_tx_linear_lock_dir_t2.output" 2>&1
+            #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
+            ########### deadlock. without CHECK
+            [ run stm : -bench tx_linear_lock -dir -threads 2 -inserts 100 : : : test_tx_linear_lock_dir_t2_i100 ]
+
+            [ run stm : -bench isolated_int_lock_in_tx -dir -threads 2 -inserts 100 : : : test_isolated_int_lock_in_tx_dir_t2_i100 ]
+
+            ########### deadlock. killed after 0:20. 00% CPU
+            #[ run stm : -bench isolated_composed_int_lock -dir -threads 2 -inserts 100 : : : test_isolated_composed_int_lock_dir_t2_i100 ]
+
+            ###########  fails
+            # /bin/sh: line 4:  3172 Aborted                 (core dumped) "bin/test_isolated_composed_int_lock2_dir_t2.test/gcc-3.4.4/debug/threading-multi/test_isolated_composed_int_lock2_dir_t2.exe" > "bin/test_isolated_composed_int_lock2_dir_t2.test/gcc-3.4.4/debug/threading-multi/test_isolated_composed_int_lock2_dir_t2.output" 2>&1
+            #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
+            #      11 [sig] test_isolated_composed_int_lock_def_t2 3660 _cygtls::handle_except ions: Error while dumping state (probably corrupted stack)
+            [ run stm : -bench isolated_composed_int_lock2 -dir -threads 2 -inserts 100 : : : test_isolated_composed_int_lock2_dir_t2_i100 ]
+
+            [ run stm : -bench irrevocable_int -dir -threads 4 -inserts 100 : : : test_irrevocable_int_dir_t4_i100 ]
+
+            ########### deadlock. killed after 0:20. 00% CPU
+            #[ run stm : -bench lot_example -dir -threads 2 -inserts 100 : : : test_lot_example_dir_t2_i100 ]
+
+            ########### deadlock. killed after 0:40. 00% CPU
+            #[ run stm : -bench lit_example -dir -threads 2 -inserts 100 : : : test_lit_example_dir_t2_i100 ]
+
+            ########### livelock. killed after 3:00. 50% CPU
+            #[ run stm : -bench nested_tx -dir -threads 2 -inserts 100 : : : test_nested_tx_dir_t2_i100 ]
+
+            [ run stm : -bench rbtree -dir -threads 4 -inserts 100 : : : test_rbtree_dir_t4_i100 ]
+
+            [ run stm : -bench smart -dir -threads 4 -inserts 100 : : : test_smart_dir_t4_i100 ]
+
+            ########### fails
+            #/bin/sh: line 4:   408 Aborted                 (core dumped) "bin/test_using_linkedlist_dir_t2_i1000.test/gcc-3.4.4/debug/threading-multi/test_using_linkedlist_dir_t2_i1000.exe" > "bin/test_using_linkedlist_dir_t2_i1000.test/gcc-3.4.4/debug/threading-multi/test_using_linkedlist_dir_t2_i1000.output" 2>&1
+            [ run stm : -bench using_linkedlist -dir -threads 2 -inserts 100 : : : test_using_linkedlist_dir_t2_i100 ]
+
+            [ run stm : -bench hashmap_w_locks -dir -threads 4 -inserts 100 : : : test_hashmap_w_locks_dir_t4_i100 ]
+
+            [ run stm : -bench list_hash_w_locks -dir -threads 4 -inserts 100 : : : test_list_hash_w_locks_dir_t4_i100 ]
+    ;
+
+    alias examples
         :
             [ run ../example/bank.cpp ]
 
@@ -169,8 +188,10 @@ project
             [ run ../example/counter.cpp ]
             [ run ../example/numeric.cpp ]
             [ run ../example/counter_ptr.cpp ]
-
-            ########### fails
-            # /bin/sh: line 4:  2084 Segmentation fault      (core dumped) "bin/non_tx_counter.test/gcc-3.4.4/debug/threading-multi/non_tx_counter.exe" > "bin/non_tx_counter.test/gcc-3.4.4/debug/threading-multi/non_tx_counter.output" 2>&1
             [ run ../example/non_tx_counter.cpp ]
+    ;
+
+
+    alias all
+        : def_invalid dir_invalid examples
     ;
