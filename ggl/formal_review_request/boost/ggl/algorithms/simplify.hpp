@@ -12,12 +12,20 @@
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
 
-#include <ggl/algorithms/distance.hpp>
+#include <boost/concept/requires.hpp>
+#include <boost/concept_check.hpp>
+
 #include <ggl/core/cs.hpp>
 #include <ggl/core/ring_type.hpp>
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
-#include <ggl/strategies/agnostic/agn_simplify.hpp>
+
+#include <ggl/strategies/strategies.hpp>
+#include <ggl/strategies/agnostic/simplify_douglas_peucker.hpp>
+#include <ggl/strategies/concepts/simplify_concept.hpp>
+
+#include <ggl/algorithms/clear.hpp>
+
 
 
 /*!
@@ -49,115 +57,107 @@ namespace ggl
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail { namespace simplify {
 
-template<typename R, typename OutputIterator, typename S>
-inline void simplify_range_strategy(R const& range, OutputIterator out, double max_distance, S const& strategy)
+template<typename Range, typename Strategy>
+struct simplify_range_inserter
 {
-    if (boost::begin(range) == boost::end(range) || max_distance < 0)
+    template <typename OutputIterator>
+    static inline void apply(Range const& range, OutputIterator out,
+                    double max_distance, Strategy const& strategy)
     {
-        std::copy(boost::begin(range), boost::end(range), out);
-    }
-    else
-    {
-        typename boost::range_const_iterator<R>::type it = boost::begin(range) + 1;
-        if (it == boost::end(range) || it + 1 == boost::end(range))
+        if (boost::size(range) <= 2 || max_distance < 0)
         {
             std::copy(boost::begin(range), boost::end(range), out);
         }
         else
         {
-            strategy.simplify(range, out, max_distance);
+            strategy.apply(range, out, max_distance);
         }
     }
-}
+};
 
-template<typename R, typename OutputIterator>
-inline void simplify_range(R const& range, OutputIterator out, double max_distance)
+
+template<typename Range, typename Strategy>
+struct simplify_copy
 {
-    // Define default strategy
-    typedef typename point_type<R>::type point_type;
-    typedef typename cs_tag<point_type>::type cs_tag;
-    typedef typename strategy_distance_segment
-        <
-            cs_tag,
-            cs_tag,
-            point_type,
-            segment<const point_type>
-        >::type strategy_type;
-
-    strategy::simplify::douglas_peucker<R, OutputIterator, strategy_type> douglas;
-
-    simplify_range_strategy(range, out, max_distance, douglas);
-}
-
-template<typename R, typename OutputIterator, typename S>
-inline void simplify_ring(R const& r_in, OutputIterator out, double max_distance, S const& strategy)
-{
-    // Call do_container for a ring
-
-    // The first/last point (the closing point of the ring) should maybe be excluded because it
-    // lies on a line with second/one but last. Here it is never excluded.
-
-    // Note also that, especially if max_distance is too large, the output ring might be self intersecting
-    // while the input ring is not, although chances are low in normal polygons
-
-    // Finally the inputring might have 4 points (=correct), the output < 4(=wrong)
-    if (boost::size(r_in) <= 4 || max_distance < 0)
+    static inline void apply(Range const& range, Range& out,
+                    double max_distance, Strategy const& strategy)
     {
-        std::copy(boost::begin(r_in), boost::end(r_in), out);
+        std::copy
+            (
+                boost::begin(range), boost::end(range), std::back_inserter(out)
+            );
     }
-    else
-    {
-        simplify_range_strategy(r_in, out, max_distance, strategy);
-    }
-}
+};
 
-template<typename Y, typename S>
-inline void simplify_polygon(Y const& poly_in, Y& poly_out, double max_distance, S const& strategy)
+
+template<typename Range, typename Strategy, std::size_t Minimum>
+struct simplify_range
 {
-    typedef typename boost::range_iterator
-        <typename interior_type<Y>::type>::type iterator_type;
-    typedef typename boost::range_const_iterator
-        <typename interior_type<Y>::type>::type const_iterator_type;
-
-    poly_out.clear();
-
-    // Note that if there are inner rings, and distance is too large, they might intersect with the
-    // outer ring in the output, while it didn't in the input.
-    simplify_ring(exterior_ring(poly_in), std::back_inserter(exterior_ring(poly_out)),
-                  max_distance, strategy);
-
-    interior_rings(poly_out).resize(boost::size(interior_rings(poly_in)));
-
-    const_iterator_type it_in = boost::begin(interior_rings(poly_in));
-    iterator_type it_out = boost::begin(interior_rings(poly_out));
-
-    for (; it_in != boost::end(interior_rings(poly_in)); it_in++, it_out++)
+    static inline void apply(Range const& range, Range& out,
+                    double max_distance, Strategy const& strategy)
     {
-        simplify_ring(*it_in, std::back_inserter(*it_out), max_distance, strategy);
+        // Call do_container for a linestring / ring
+
+        // For a RING:
+            // The first/last point (the closing point of the ring) should maybe be excluded because it
+            // lies on a line with second/one but last. Here it is never excluded.
+
+            // Note also that, especially if max_distance is too large, the output ring might be self intersecting
+            // while the input ring is not, although chances are low in normal polygons
+
+            // Finally the inputring might have 4 points (=correct), the output < 4(=wrong)
+
+        if (boost::size(range) <= int(Minimum) || max_distance < 0.0)
+        {
+            simplify_copy<Range, Strategy>::apply
+                (
+                    range, out, max_distance, strategy
+                );
+        }
+        else
+        {
+            simplify_range_inserter<Range, Strategy>::apply
+                (
+                    range, std::back_inserter(out), max_distance, strategy
+                );
+        }
     }
-}
+};
 
-template<typename Y>
-inline void simplify_polygon(Y const& poly_in, Y& poly_out, double max_distance)
+template<typename Polygon, typename Strategy>
+struct simplify_polygon
 {
-    // Define default strategy
-    typedef typename ring_type<Y>::type ring_type;
-    typedef std::back_insert_iterator<ring_type> iterator_type;
+    static inline void apply(Polygon const& poly_in, Polygon& poly_out,
+                    double max_distance, Strategy const& strategy)
+    {
+        typedef typename ring_type<Polygon>::type ring_type;
 
-    typedef typename point_type<Y>::type point_type;
-    typedef typename cs_tag<point_type>::type cs_tag;
-    typedef typename strategy_distance_segment
-        <
-            cs_tag,
-            cs_tag,
-            point_type,
-            segment<const point_type>
-        >::type strategy_type;
+        typedef typename boost::range_iterator
+            <typename interior_type<Polygon>::type>::type iterator_type;
+        typedef typename boost::range_const_iterator
+            <typename interior_type<Polygon>::type>::type const_iterator_type;
 
-    strategy::simplify::douglas_peucker<ring_type, iterator_type, strategy_type> douglas;
+        // Note that if there are inner rings, and distance is too large,
+        // they might intersect with the outer ring in the output,
+        // while it didn't in the input.
+        simplify_range<ring_type, Strategy, 4>::apply(exterior_ring(poly_in),
+                        exterior_ring(poly_out),
+                        max_distance, strategy);
 
-    simplify_polygon(poly_in, poly_out, max_distance, douglas);
-}
+        interior_rings(poly_out).resize(boost::size(interior_rings(poly_in)));
+
+        iterator_type it_out = boost::begin(interior_rings(poly_out));
+
+        for (const_iterator_type it_in = boost::begin(interior_rings(poly_in));
+            it_in != boost::end(interior_rings(poly_in));
+            ++it_in, ++it_out)
+        {
+            simplify_range<ring_type, Strategy, 4>::apply(*it_in,
+                        *it_out, max_distance, strategy);
+        }
+    }
+};
+
 
 }} // namespace detail::simplify
 #endif // DOXYGEN_NO_DETAIL
@@ -167,117 +167,141 @@ inline void simplify_polygon(Y const& poly_in, Y& poly_out, double max_distance)
 namespace dispatch
 {
 
-template <typename Tag, typename G>
+template <typename Tag, typename Geometry, typename Strategy>
 struct simplify
 {
 };
 
-// Partial specializations
-template <typename R>
-struct simplify<linestring_tag, R>
+template <typename Point, typename Strategy>
+struct simplify<point_tag, Point, Strategy>
 {
-    template<typename OutputIterator, typename S>
-    static inline void apply(R const& range, OutputIterator out, double max_distance, S const& strategy)
+    static inline void apply(Point const& point, Point& out,
+                    double max_distance, Strategy const& strategy)
     {
-        strategy.simplify(range, out, max_distance);
+        copy_coordinates(point, out);
     }
+};
 
-    template<typename OutputIterator>
-    static inline void apply(R const& range, OutputIterator out, double max_distance)
-    {
-        // Define default strategy
-        typedef typename point_type<R>::type point_type;
-        typedef typename cs_tag<point_type>::type cs_tag;
-        typedef typename strategy_distance_segment
+
+template <typename Linestring, typename Strategy>
+struct simplify<linestring_tag, Linestring, Strategy>
+    : detail::simplify::simplify_range
             <
-                cs_tag,
-                cs_tag,
-                point_type,
-                segment<const point_type>
-           >::type strategy_type;
+                Linestring,
+                Strategy,
+                2
+            >
+{};
 
-        strategy::simplify::douglas_peucker<R, OutputIterator, strategy_type> douglas;
-
-        detail::simplify::simplify_range_strategy(range, out, max_distance, douglas);
-    }
-};
-
-template <typename R>
-struct simplify<ring_tag, R>
-{
-    /// Simplify a ring, using a strategy
-    template<typename S>
-    static inline void apply(R const& ring_in, R& ring_out, double max_distance, S const& strategy)
-    {
-        using detail::simplify::simplify_ring;
-        simplify_ring(ring_in, std::back_inserter(ring_out), max_distance, strategy);
-    }
-
-    /// Simplify a ring
-    static inline void apply(R const& ring_in, R& ring_out, double max_distance)
-    {
-        // Define default strategy
-        typedef typename point_type<R>::type point_type;
-        typedef typename cs_tag<point_type>::type cs_tag;
-        typedef typename strategy_distance_segment
+template <typename Ring, typename Strategy>
+struct simplify<ring_tag, Ring, Strategy>
+    : detail::simplify::simplify_range
             <
-                cs_tag,
-                cs_tag,
-                point_type,
-                segment<const point_type>
-            >::type strategy_type;
-        typedef std::back_insert_iterator<R> iterator_type;
+                Ring,
+                Strategy,
+                4
+            >
+{};
 
-        strategy::simplify::douglas_peucker<R, iterator_type, strategy_type> douglas;
+template <typename Polygon, typename Strategy>
+struct simplify<polygon_tag, Polygon, Strategy>
+    : detail::simplify::simplify_polygon
+            <
+                Polygon,
+                Strategy
+            >
+{};
 
-        detail::simplify::simplify_ring(ring_in, std::back_inserter(ring_out), max_distance, douglas);
-    }
-};
 
-template <typename P>
-struct simplify<polygon_tag, P>
+template <typename Tag, typename Geometry, typename Strategy>
+struct simplify_inserter
 {
-    /// Simplify a polygon, using a strategy
-    template<typename S>
-    static inline void apply(P const& poly_in, P& poly_out, double max_distance, S const& strategy)
-    {
-        detail::simplify::simplify_polygon(poly_in, poly_out, max_distance, strategy);
-    }
-
-    /// Simplify a polygon
-    static inline void apply(P const& poly_in, P& poly_out, double max_distance)
-    {
-        detail::simplify::simplify_polygon(poly_in, poly_out, max_distance);
-    }
 };
+
+
+template <typename Linestring, typename Strategy>
+struct simplify_inserter<linestring_tag, Linestring, Strategy>
+    : detail::simplify::simplify_range_inserter
+            <
+                Linestring,
+                Strategy
+            >
+{};
+
+template <typename Ring, typename Strategy>
+struct simplify_inserter<ring_tag, Ring, Strategy>
+    : detail::simplify::simplify_range_inserter
+            <
+                Ring,
+                Strategy
+            >
+{};
+
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
 
-// Model 1, using output iterator
+/*!
+    \brief Simplify a geometry
+    \ingroup simplify
+    \details This version of simplify simplifies a geometry using a specified strategy
+    where the output is of the same geometry type as the input.
+    \param geometry input geometry, to be simplified
+    \param out output geometry, simplified version of the input geometry
+    \param max_distance distance (in units of input coordinates) of a vertex to other segments to be removed
+    \param strategy simplify strategy to be used for simplification, might include point-distance strategy
+ */
+template<typename Geometry, typename Strategy>
+inline void simplify(Geometry const& geometry, Geometry& out,
+                     double max_distance, Strategy const& strategy)
+{
+    BOOST_CONCEPT_ASSERT( (ggl::concept::SimplifyStrategy<Strategy>) );
+
+    ggl::clear(out);
+
+    dispatch::simplify
+        <
+            typename tag<Geometry>::type,
+            Geometry,
+            Strategy
+        >::apply(geometry, out, max_distance, strategy);
+}
+
+
+
 
 /*!
     \brief Simplify a geometry
     \ingroup simplify
-    \details The simplify algorithm removes points, keeping the shape as much as possible.
-    This version of simplify uses an output iterator
-    \param geometry the geometry to be simplified, being a ggl::linestring, vector, iterator pair, or any other boost compatible range
-    \param out output iterator, outputs all simplified points
+    \details This version of simplify simplifies a geometry using the default strategy (Douglas Peucker),
+        where the output is of the same geometry type as the input.
+    \param geometry input geometry, to be simplified
+    \param out output geometry, simplified version of the input geometry
     \param max_distance distance (in units of input coordinates) of a vertex to other segments to be removed
-    \par Example:
-    The simplify algorithm can be used as following:
-    \dontinclude doxygen_examples.cpp
-    \skip example_simplify_linestring1
-    \line {
-    \until }
  */
-template<typename G, typename O>
-inline void simplify(const G& geometry, O out, double max_distance)
+template<typename Geometry>
+inline void simplify(Geometry const& geometry, Geometry& out,
+                     double max_distance)
 {
-    typedef dispatch::simplify<typename tag<G>::type, G> simplify_type;
-    simplify_type::apply(geometry, out, max_distance);
+    typedef typename point_type<Geometry>::type point_type;
+    typedef typename cs_tag<point_type>::type cs_tag;
+    typedef typename strategy_distance_segment
+        <
+            cs_tag,
+            cs_tag,
+            point_type,
+            ggl::segment<const point_type>
+        >::type ds_strategy_type;
+
+    typedef strategy::simplify::douglas_peucker
+        <
+            point_type, ds_strategy_type
+        > strategy_type;
+
+    simplify(geometry, out, max_distance, strategy_type());
 }
+
 
 /*!
     \brief Simplify a geometry
@@ -295,47 +319,64 @@ inline void simplify(const G& geometry, O out, double max_distance)
     \line {
     \until }
  */
-template<typename G, typename O, typename S>
-inline void simplify(const G& geometry, O out, double max_distance, S const& strategy)
+template<typename Geometry, typename OutputIterator, typename Strategy>
+inline void simplify_inserter(Geometry const& geometry, OutputIterator out,
+                              double max_distance, Strategy const& strategy)
 {
-    typedef dispatch::simplify<typename tag<G>::type, G> simplify_type;
-    simplify_type::apply(geometry, out, max_distance, strategy);
-}
+    BOOST_CONCEPT_ASSERT( (ggl::concept::SimplifyStrategy<Strategy>) );
 
-// Model 2, where output is same type as input
-
-/*!
-    \brief Simplify a geometry
-    \ingroup simplify
-    \details This version of simplify simplifies a geometry using the default strategy (Douglas Peucker),
-    where the output is of the same geometry type as the input.
-    \param geometry input geometry, to be simplified
-    \param out output geometry, simplified version of the input geometry
-    \param max_distance distance (in units of input coordinates) of a vertex to other segments to be removed
- */
-template<typename G>
-inline void simplify(const G& geometry, G& out, double max_distance)
-{
-    typedef dispatch::simplify<typename tag<G>::type, G> simplify_type;
-    simplify_type::apply(geometry, out, max_distance);
+    dispatch::simplify_inserter
+        <
+            typename tag<Geometry>::type,
+            Geometry,
+            Strategy
+        >::apply(geometry, out, max_distance, strategy);
 }
 
 /*!
     \brief Simplify a geometry
     \ingroup simplify
-    \details This version of simplify simplifies a geometry using a specified strategy
-    where the output is of the same geometry type as the input.
-    \param geometry input geometry, to be simplified
-    \param out output geometry, simplified version of the input geometry
+    \details The simplify algorithm removes points, keeping the shape as much as possible.
+    This version of simplify uses an output iterator
+    \param geometry the geometry to be simplified, being a ggl::linestring, vector, iterator pair, or any other boost compatible range
+    \param out output iterator, outputs all simplified points
     \param max_distance distance (in units of input coordinates) of a vertex to other segments to be removed
-    \param strategy simplify strategy to be used for simplification, might include point-distance strategy
+    \par Example:
+    The simplify algorithm can be used as following:
+    \dontinclude doxygen_examples.cpp
+    \skip example_simplify_linestring1
+    \line {
+    \until }
  */
-template<typename G, typename S>
-inline void simplify(const G& geometry, G& out, double max_distance, S const& strategy)
+template<typename Geometry, typename OutputIterator>
+inline void simplify_inserter(Geometry const& geometry, OutputIterator out,
+                              double max_distance)
 {
-    typedef dispatch::simplify<typename tag<G>::type, G> simplify_type;
-    simplify_type::apply(geometry, out, max_distance, strategy);
+    typedef typename point_type<Geometry>::type point_type;
+    typedef typename cs_tag<point_type>::type cs_tag;
+    typedef typename strategy_distance_segment
+        <
+            cs_tag,
+            cs_tag,
+            point_type,
+            ggl::segment<const point_type>
+        >::type ds_strategy_type;
+
+    //typedef typename ggl::as_range_type<Geometry>::type range_type;
+
+    typedef strategy::simplify::douglas_peucker
+        <
+            point_type, ds_strategy_type
+        > strategy_type;
+
+    dispatch::simplify_inserter
+        <
+            typename tag<Geometry>::type,
+            Geometry,
+            strategy_type
+        >::apply(geometry, out, max_distance, strategy_type());
 }
+
 
 } // namespace ggl
 

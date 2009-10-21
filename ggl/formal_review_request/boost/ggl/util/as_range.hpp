@@ -10,8 +10,10 @@
 #define GGL_UTIL_AS_RANGE_HPP
 
 #include <boost/type_traits.hpp>
+#include <boost/type_traits/remove_const.hpp>
 
 #include <ggl/core/exterior_ring.hpp>
+#include <ggl/core/is_multi.hpp>
 #include <ggl/core/ring_type.hpp>
 #include <ggl/core/tag.hpp>
 #include <ggl/core/tags.hpp>
@@ -22,14 +24,15 @@ namespace ggl {
 namespace dispatch
 {
 
-template <typename GeometryTag, typename Geometry>
+template <typename GeometryTag, bool IsMulti, typename Geometry>
 struct as_range_type
 {
     typedef Geometry type;
 };
 
+
 template <typename Geometry>
-struct as_range_type<polygon_tag, Geometry>
+struct as_range_type<polygon_tag, false, Geometry>
 {
     typedef typename ring_type<Geometry>::type type;
 };
@@ -39,7 +42,7 @@ struct as_range_type<polygon_tag, Geometry>
 template <typename GeometryTag, typename Geometry, typename Range>
 struct as_range
 {
-    static inline Range const& get(Geometry const& input)
+    static inline Range & get(Geometry & input)
     {
         return input;
     }
@@ -47,6 +50,25 @@ struct as_range
 
 template <typename Geometry, typename Range>
 struct as_range<polygon_tag, Geometry, Range>
+{
+    static inline Range & get(Geometry & input)
+    {
+        return exterior_ring(input);
+    }
+};
+
+
+template <typename GeometryTag, typename Geometry, typename Range>
+struct as_range_const
+{
+    static inline Range const& get(Geometry const& input)
+    {
+        return input;
+    }
+};
+
+template <typename Geometry, typename Range>
+struct as_range_const<polygon_tag, Geometry, Range>
 {
     static inline Range const& get(Geometry const& input)
     {
@@ -69,6 +91,7 @@ struct as_range_type
     typedef typename dispatch::as_range_type
         <
             typename tag<Geometry>::type,
+            is_multi<Geometry>::type::value,
             Geometry
         >::type type;
 };
@@ -81,6 +104,17 @@ or the outer ring
 */
 template <typename Range, typename Geometry>
 inline Range const& as_range(Geometry const& input)
+{
+    return dispatch::as_range_const
+        <
+            typename tag<Geometry>::type,
+            Geometry,
+            Range
+        >::get(input);
+}
+
+template <typename Range, typename Geometry>
+inline Range& as_range(Geometry& input)
 {
     return dispatch::as_range
         <

@@ -26,9 +26,14 @@ namespace ggl {
 namespace detail { namespace convex_hull {
 
 
-template <typename MultiGeometry, typename OutputIterator>
-struct convex_hull_multi
+template 
+<
+    typename MultiGeometry, 
+    order_selector Order
+>
+struct multi_inserter
 {
+    template <typename OutputIterator>
     static inline OutputIterator apply(MultiGeometry const& multi,
             OutputIterator out)
     {
@@ -50,8 +55,32 @@ struct convex_hull_multi
         }
         strategy.handle_input();
 
-        strategy.get(out);
+        strategy.get(out, Order == clockwise);
         return out;
+    }
+};
+
+
+
+template
+<
+    typename Geometry,
+    typename OutputGeometry
+>
+struct multi_hull_to_geometry
+{
+    static inline void apply(Geometry const& geometry, OutputGeometry& out)
+    {
+        multi_inserter
+            <
+                Geometry,
+                ggl::point_order<OutputGeometry>::value
+            >::apply(geometry,
+                std::back_inserter(
+                    ggl::as_range
+                        <
+                            typename ggl::as_range_type<OutputGeometry>::type
+                        >(out)));
     }
 };
 
@@ -66,23 +95,52 @@ struct convex_hull_multi
 namespace dispatch
 {
 
+
 // Specialize for multi's
 template
 <
     typename MultiTag,
-    typename MultiGeometry,
-    typename OutputIterator
+    order_selector Order,
+    typename MultiGeometry
 >
-struct convex_hull<MultiTag, true, MultiGeometry, OutputIterator>
-    : detail::convex_hull::convex_hull_multi<MultiGeometry, OutputIterator> 
+struct convex_hull_inserter<MultiTag, Order, true, MultiGeometry>
+    : detail::convex_hull::multi_inserter<MultiGeometry, Order> 
 {};
 
 
-// Specialize more for point
-template <typename MultiPoint, typename OutputIterator>
-struct convex_hull<multi_point_tag, true, MultiPoint, OutputIterator>
-    : detail::convex_hull::hull<MultiPoint, OutputIterator> 
+// Specialize for point
+template 
+<
+    order_selector Order,
+    typename MultiPoint
+>
+struct convex_hull_inserter<multi_point_tag, Order, true, MultiPoint>
+    : detail::convex_hull::hull_inserter<MultiPoint, Order> 
 {};
+
+
+// Versions outputting to a ring or polygon
+template <typename MultiTag, typename MultiGeometry, typename Output>
+struct convex_hull
+<
+    MultiTag, true,
+    MultiGeometry, Output
+>
+    : detail::convex_hull::multi_hull_to_geometry<MultiGeometry, Output>
+{};
+
+
+template <typename MultiGeometry, typename Output>
+struct convex_hull
+<
+    multi_point_tag, true,
+    MultiGeometry, Output
+>
+    : detail::convex_hull::hull_to_geometry<MultiGeometry, Output>
+{};
+
+
+
 
 
 } // namespace dispatch

@@ -6,48 +6,59 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_MULTI_CORRECT_HPP
-#define GGL_MULTI_CORRECT_HPP
+#ifndef GGL_MULTI_ALGORITHMS_CORRECT_HPP
+#define GGL_MULTI_ALGORITHMS_CORRECT_HPP
 
-#include <vector>
+#include <boost/range/functions.hpp>
+#include <boost/range/metafunctions.hpp>
+
 
 #include <ggl/algorithms/correct.hpp>
 
+#include <ggl/multi/core/tags.hpp>
 
-//FIX ME it is not yet adapted to tag-dispatching
 
 
 namespace ggl
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail
+namespace detail { namespace correct {
+
+template <typename MultiPolygon>
+struct correct_multi_polygon
 {
-    namespace correct
+    static inline void apply(MultiPolygon& mp)
     {
-        // correct a multi-polygon
-        template <typename O>
-        inline void correct_multi_polygon(O& o)
+        typedef typename boost::range_value<MultiPolygon>::type polygon_type;
+        for (typename boost::range_iterator<MultiPolygon>::type it 
+                    = boost::begin(mp); 
+            it != boost::end(mp); 
+            ++it)
         {
-            for (typename O::iterator it = o.begin(); it != o.end(); it++)
-            {
-                correct_polygon(*it);
-            }
+            correct_polygon<polygon_type>::apply(*it);
         }
     }
-}
+};
+
+}} // namespace detail::correct
 #endif
 
-template<typename Y,
-        template<typename,typename> class V, template<typename> class A>
-void correct(multi_polygon<Y, V, A>& mp)
+#ifndef DOXYGEN_NO_DISPATCH
+namespace dispatch
 {
-    detail::correct::correct_multi_polygon(mp);
-}
 
+template <typename Geometry>
+struct correct<multi_polygon_tag, Geometry>
+    : detail::correct::correct_multi_polygon<Geometry>
+{};
+
+
+} // namespace dispatch
+#endif // DOXYGEN_NO_DISPATCH
 
 
 } // namespace ggl
 
 
-#endif // GGL_MULTI_CORRECT_HPP
+#endif // GGL_MULTI_ALGORITHMS_CORRECT_HPP

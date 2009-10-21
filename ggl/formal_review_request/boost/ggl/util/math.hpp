@@ -19,8 +19,38 @@
 namespace ggl
 {
 
+
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail { namespace math {
+
+
+template <typename T, bool Floating>
+struct equals
+{
+    static inline bool apply(T const& a, T const& b)
+    {
+        return a == b;
+    }
+};
+
+template <typename T>
+struct equals<T, true>
+{
+    static inline bool apply(T const& a, T const& b)
+    {
+        // See http://www.parashift.com/c++-faq-lite/newbie.html#faq-29.17,
+        // FUTURE: replace by some boost tool or boost::test::close_at_tolerance
+        return std::abs(a - b) <= std::numeric_limits<T>::epsilon() * std::abs(a);
+    }
+};
+
+
+}} // namespace detail::math
+#endif
+
 namespace math
 {
+
 
 // Maybe replace this by boost equals or boost ublas numeric equals or so
 
@@ -39,16 +69,11 @@ template <typename T1, typename T2>
 inline bool equals(T1 const& a, T2 const& b)
 {
     typedef typename select_most_precise<T1, T2>::type select_type;
-
-    // TODO: select on is_fundemental. Otherwise (non-fundamental), take == operator
-    if (std::numeric_limits<select_type>::is_exact)
-    {
-        return a == b;
-    }
-    else
-    {
-        return std::abs(a - b) < std::numeric_limits<select_type>::epsilon();
-    }
+    return detail::math::equals
+        <
+            select_type,
+            boost::is_floating_point<select_type>::type::value
+        >::apply(a, b);
 }
 
 

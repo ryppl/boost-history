@@ -6,11 +6,11 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_GEOMETRY_STRATEGIES_SPHERICAL_SPH_AREA_HPP
-#define GGL_GEOMETRY_STRATEGIES_SPHERICAL_SPH_AREA_HPP
+#ifndef GGL_STRATEGIES_SPHERICAL_SPH_AREA_HPP
+#define GGL_STRATEGIES_SPHERICAL_SPH_AREA_HPP
 
 #include <ggl/geometries/segment.hpp>
-#include <ggl/strategies/spherical/haversine.hpp>
+#include <ggl/strategies/spherical/distance_haversine.hpp>
 #include <ggl/strategies/strategy_transform.hpp>
 
 #include <ggl/util/get_cs_as_radian.hpp>
@@ -164,4 +164,4 @@ struct strategy_area<geographic_tag, LL>
 
 } // namespace ggl
 
-#endif // GGL_GEOMETRY_STRATEGIES_SPHERICAL_SPH_AREA_HPP
+#endif // GGL_STRATEGIES_SPHERICAL_SPH_AREA_HPP

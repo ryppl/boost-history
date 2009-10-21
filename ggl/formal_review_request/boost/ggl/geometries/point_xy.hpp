@@ -52,10 +52,10 @@ public:
     { this->template set<1>(v); }
 
     /// Compare two points
-    inline bool operator<(point_xy const& other) const
-    {
-        return math::equals(x(), other.x()) ? y() < other.y() : x() < other.x();
-    }
+    //inline bool operator<(point_xy const& other) const
+    //{
+    //    return math::equals(x(), other.x()) ? y() < other.y() : x() < other.x();
+    //}
 
 };
 

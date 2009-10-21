@@ -1,13 +1,12 @@
 // Generic Geometry Library
 //
-// Copyright Bruno Lalande 2008, 2009
 // Copyright Barend Gehrels 1995-2009, Geodan Holding B.V. Amsterdam, the Netherlands.
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_CORE_POINT_TYPE_HPP
-#define GGL_CORE_POINT_TYPE_HPP
+#ifndef GGL_CORE_POINT_ORDER_HPP
+#define GGL_CORE_POINT_ORDER_HPP
 
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
@@ -19,20 +18,28 @@
 
 namespace ggl {
 
+
+enum order_selector { clockwise = 1, counterclockwise = 2, order_undetermined = 0 };
+
 namespace traits {
 
 /*!
-    \brief Traits class indicating the type of contained points
+    \brief Traits class indicating the order of contained points within a
+        ring or (multi)polygon, clockwise, counter clockwise or not known.
     \ingroup traits
     \par Geometries:
-        - all geometries except point
+        - ring
+        - polygon
+        - multi polygon
     \par Specializations should provide:
         - typedef P type (where P should fulfil the Point concept)
     \tparam G geometry
 */
 template <typename G>
-struct point_type
-{};
+struct point_order
+{
+    static const order_selector value = clockwise;
+};
 
 
 } // namespace traits
@@ -43,45 +50,28 @@ namespace core_dispatch
 {
 
 template <typename Tag, typename Geometry>
-struct point_type
+struct point_order
 {
-    // Default: call traits to get point type
-    typedef typename boost::remove_const
-        <
-            typename traits::point_type<Geometry>::type
-        >::type type;
+    static const order_selector value = clockwise;
 };
 
 
-// Specialization for point: the point itself
-template <typename Point>
-struct point_type<point_tag, Point>
-{
-    typedef Point type;
-};
-
-// Specializations for linestring/linear ring, via boost::range
-template <typename Linestring>
-struct point_type<linestring_tag, Linestring>
-{
-    typedef typename boost::range_value<Linestring>::type type;
-};
 
 template <typename Ring>
-struct point_type<ring_tag, Ring>
+struct point_order<ring_tag, Ring>
 {
-    typedef typename boost::range_value<Ring>::type type;
+    static const order_selector value = ggl::traits::point_order<Ring>::value;
 };
 
-// Specialization for polygon: the point-type is the point-type of its rings
+// Specialization for polygon: the order is the order of its rings
 template <typename Polygon>
-struct point_type<polygon_tag, Polygon>
+struct point_order<polygon_tag, Polygon>
 {
-    typedef typename point_type
+    static const order_selector value = core_dispatch::point_order
         <
             ring_tag,
             typename ring_type<polygon_tag, Polygon>::type
-        >::type type;
+        >::value ;
 };
 
 } // namespace core_dispatch
@@ -93,17 +83,16 @@ struct point_type<polygon_tag, Polygon>
     \ingroup core
 */
 template <typename Geometry>
-struct point_type
+struct point_order
 {
     typedef typename boost::remove_const<Geometry>::type ncg;
-    typedef typename core_dispatch::point_type<
-        typename tag<Geometry>::type, ncg>::type type;
-
-
-
-
+    static const order_selector value = core_dispatch::point_order
+        <
+            typename tag<Geometry>::type,
+            ncg
+        >::value;
 };
 
 } // namespace ggl
 
-#endif // GGL_CORE_POINT_TYPE_HPP
+#endif // GGL_CORE_POINT_ORDER_HPP

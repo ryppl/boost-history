@@ -9,8 +9,13 @@
 #ifndef GGL_STRATEGIES_TRANSFORM_INVERSE_TRANSFORMER_HPP
 #define GGL_STRATEGIES_TRANSFORM_INVERSE_TRANSFORMER_HPP
 
+// Remove the ublas checking, otherwise the inverse might fail 
+// (while nothing seems to be wrong)
+#define BOOST_UBLAS_TYPE_CHECK 0
+
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/io.hpp>
+
 #include <ggl/strategies/transform/matrix_transformers.hpp>
 
 namespace ggl

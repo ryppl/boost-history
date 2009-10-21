@@ -12,11 +12,11 @@
 #include <cstddef>
 
 #include <boost/concept/requires.hpp>
-#include <boost/numeric/conversion/cast.hpp>
 #include <boost/concept_check.hpp>
 
 #include <ggl/core/concepts/point_concept.hpp>
 
+#include <boost/numeric/conversion/cast.hpp>
 
 
 namespace ggl
@@ -28,7 +28,7 @@ namespace detail { namespace copy {
 template <typename Src, typename Dst, std::size_t D, std::size_t N>
 struct copy_coordinates
 {
-    static inline void copy(const Src& source, Dst& dest)
+    static inline void copy(Src const& source, Dst& dest)
     {
         typedef typename coordinate_type<Dst>::type coordinate_type;
 
@@ -40,10 +40,8 @@ struct copy_coordinates
 template <typename Src, typename Dst, std::size_t N>
 struct copy_coordinates<Src, Dst, N, N>
 {
-    static inline void copy(const Src& source, Dst& dest)
+    static inline void copy(Src const& , Dst& )
     {
-        boost::ignore_unused_variable_warning(source);
-        boost::ignore_unused_variable_warning(dest);
     }
 };
 
@@ -61,14 +59,20 @@ struct copy_coordinates<Src, Dst, N, N>
     \note If destination type differs from source type, they must have the same coordinate count
  */
 template <typename Src, typename Dst>
-inline void copy_coordinates(const Src& source, Dst& dest)
+inline void copy_coordinates(Src const& source, Dst& dest)
 {
     BOOST_CONCEPT_ASSERT( (concept::ConstPoint<Src>) );
     BOOST_CONCEPT_ASSERT( (concept::Point<Dst>) );
 
 
     //assert_dimension_equal<Dst, Src>();
-    detail::copy::copy_coordinates<Src, Dst, 0, dimension<Src>::value>::copy(source, dest);
+    detail::copy::copy_coordinates
+        <
+            Src,
+            Dst,
+            0,
+            dimension<Src>::type::value
+        >::copy(source, dest);
 }
 
 } // namespace ggl

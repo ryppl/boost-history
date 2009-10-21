@@ -16,6 +16,7 @@
 
 #include <ggl/core/tag.hpp>
 #include <ggl/core/tags.hpp>
+#include <ggl/core/point_order.hpp>
 
 #include <ggl/core/concepts/point_concept.hpp>
 
@@ -34,6 +35,7 @@ template
 <
     typename P,
     template<typename, typename> class V = std::vector,
+    bool ClockWise = true,
     template<typename> class A = std::allocator
 >
 class linear_ring : public V<P, A<P> >
@@ -49,12 +51,40 @@ template
 <
     typename P,
     template<typename, typename> class V,
+    bool ClockWise,
     template<typename> class A
 >
-struct tag< linear_ring<P, V, A> >
+struct tag< linear_ring<P, V, ClockWise, A> >
 {
     typedef ring_tag type;
 };
+
+
+template
+<
+    typename P,
+    template<typename, typename> class V,
+    template<typename> class A
+>
+struct point_order< linear_ring<P, V, false, A> >
+{
+    static const order_selector value = counterclockwise;
+};
+
+
+template
+<
+    typename P,
+    template<typename, typename> class V,
+    template<typename> class A
+>
+struct point_order< linear_ring<P, V, true, A> >
+{
+    static const order_selector value = clockwise;
+};
+
+
+
 
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS

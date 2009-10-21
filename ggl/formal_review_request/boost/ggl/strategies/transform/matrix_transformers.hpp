@@ -10,7 +10,8 @@
 #define GGL_STRATEGIES_MATRIX_TRANSFORMERS_HPP
 
 
-// Remove the ublas checking, otherwise the inverse might fail (while nothing seems to be wrong)
+// Remove the ublas checking, otherwise the inverse might fail 
+// (while nothing seems to be wrong)
 #define BOOST_UBLAS_TYPE_CHECK 0
 
 #include <boost/numeric/conversion/cast.hpp>

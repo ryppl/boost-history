@@ -6,64 +6,107 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_MULTI_SIMPLIFY_HPP
-#define GGL_MULTI_SIMPLIFY_HPP
+#ifndef GGL_MULTI_ALGORITHMS_SIMPLIFY_HPP
+#define GGL_MULTI_ALGORITHMS_SIMPLIFY_HPP
 
-#include <vector>
+#include <boost/range/functions.hpp>
+#include <boost/range/metafunctions.hpp>
+
+#include <ggl/multi/core/tags.hpp>
+#include <ggl/multi/core/is_multi.hpp>
+
+#include <ggl/multi/util/as_range.hpp>
 
 #include <ggl/algorithms/simplify.hpp>
 
-FIX ME it is not yet adapted to tag-dispatching
 
 namespace ggl
 {
 
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail { namespace simplify {
 
-        template<typename ML>
-        inline void simplify_multi_linestring(const ML& ml_in, ML& ml_out, double max_distance)
-        {
-            ml_out.resize(ml_in.size());
-            typename ML::const_iterator it_in = ml_in.begin();
-            typename ML::iterator it_out = ml_out.begin();
-            for (; it_in != ml_in.end(); it_in++, it_out++)
-            {
-                simplify_linestring(*it_in, *it_out, max_distance);
-            }
-        }
-
-
-        template<typename MY>
-        inline void simplify_multi_polygon(const MY& mp_in, MY& mp_out, double max_distance)
-        {
-            mp_out.resize(mp_in.size());
-            typename MY::const_iterator it_in = mp_in.begin();
-            typename MY::iterator it_out = mp_out.begin();
-            for (; it_in != mp_in.end(); it_in++, it_out++)
-            {
-                simplify(*it_in, *it_out, max_distance);
-            }
-        }
-
-
-
-template<typename L,
-        template<typename,typename> class V, template<typename> class A>
-inline void simplify(const multi_linestring<L, V, A>& ml_in,
-    multi_linestring<L, V, A>& ml_out, double max_distance)
+template<typename MultiGeometry, typename Strategy, typename Policy>
+struct simplify_multi
 {
-    simplify_multi_linestring(ml_in, ml_out, max_distance);
-}
+    static inline void apply(MultiGeometry const& multi, MultiGeometry& out,
+                    double max_distance, Strategy const& strategy)
+    {
+        out.resize(boost::size(multi));
 
-template<typename Y,
-        template<typename,typename> class V, template<typename> class A>
-inline void simplify(const multi_polygon<Y, V, A>& mp_in,
-            multi_polygon<Y, V, A>& mp_out, double max_distance)
+        typename boost::range_iterator<MultiGeometry>::type it_out 
+                = boost::begin(out);
+        for (typename boost::range_const_iterator<MultiGeometry>::type it_in 
+                    = boost::begin(multi); 
+            it_in != boost::end(multi); 
+            ++it_in, ++it_out)
+        {
+            Policy::apply(*it_in, *it_out, max_distance, strategy);
+        }
+    }
+};
+
+
+
+}} // namespace detail::simplify
+#endif // DOXYGEN_NO_DETAIL
+
+
+
+
+#ifndef DOXYGEN_NO_DISPATCH
+namespace dispatch
 {
-    simplify_multi_polygon(mp_in, mp_out, max_distance);
-}
+
+template <typename MultiPoint, typename Strategy>
+struct simplify<multi_point_tag, MultiPoint, Strategy>
+    : detail::simplify::simplify_copy
+        <
+            MultiPoint,
+            Strategy
+        >
+
+{};
+
+
+template <typename MultiLinestring, typename Strategy>
+struct simplify<multi_linestring_tag, MultiLinestring, Strategy>
+    : detail::simplify::simplify_multi
+        <
+            MultiLinestring,
+            Strategy,
+            detail::simplify::simplify_range
+                <
+                    typename boost::range_value<MultiLinestring>::type,
+                    Strategy,
+                    2
+                >
+        >
+
+{};
+
+
+template <typename MultiPolygon, typename Strategy>
+struct simplify<multi_polygon_tag, MultiPolygon, Strategy>
+    : detail::simplify::simplify_multi
+        <
+            MultiPolygon,
+            Strategy,
+            detail::simplify::simplify_polygon
+                <
+                    typename boost::range_value<MultiPolygon>::type,
+                    Strategy
+                >
+        >
+
+{};
+
+
+} // namespace dispatch
+#endif // DOXYGEN_NO_DISPATCH
 
 
 } // namespace ggl
 
 
-#endif // GGL_MULTI_SIMPLIFY_HPP
+#endif // GGL_MULTI_ALGORITHMS_SIMPLIFY_HPP

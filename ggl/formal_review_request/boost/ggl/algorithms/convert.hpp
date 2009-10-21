@@ -59,19 +59,29 @@ struct point_to_box<P, B, C, N, N>
 namespace dispatch
 {
 
-template <typename T1, typename T2, typename G1, typename G2>
+template 
+<
+    typename T1, typename T2, 
+    std::size_t Dimensions, 
+    typename G1, typename G2
+>
 struct convert
 {
 };
 
-template <typename T, typename G1, typename G2>
-struct convert<T, T, G1, G2>
+template 
+<
+    typename T, 
+    std::size_t Dimensions, 
+    typename G1, typename G2
+>
+struct convert<T, T, Dimensions, G1, G2>
 {
     // Same geometry type -> copy coordinates from G1 to G2
 };
 
-template <typename T, typename G>
-struct convert<T, T, G, G>
+template <typename T, std::size_t Dimensions, typename G>
+struct convert<T, T, Dimensions, G, G>
 {
     // Same geometry -> can be copied
 };
@@ -79,14 +89,11 @@ struct convert<T, T, G, G>
 
 // Partial specializations
 template <typename B, typename R>
-struct convert<box_tag, ring_tag, B, R>
+struct convert<box_tag, ring_tag, 2, B, R>
 {
     static inline void apply(B const& box, R& ring)
     {
         // go from box to ring -> add coordinates in correct order
-        // only valid for 2D
-        assert_dimension<B, 2>();
-
         ring.clear();
         typename point_type<B>::type point;
 
@@ -108,26 +115,29 @@ struct convert<box_tag, ring_tag, B, R>
 };
 
 template <typename B, typename P>
-struct convert<box_tag, polygon_tag, B, P>
+struct convert<box_tag, polygon_tag, 2, B, P>
 {
     static inline void apply(B const& box, P& polygon)
     {
         typedef typename ring_type<P>::type ring_type;
 
-        convert<box_tag, ring_tag, B, ring_type>::apply(box, exterior_ring(polygon));
+        convert<box_tag, ring_tag, 2, B, ring_type>::apply(box, exterior_ring(polygon));
     }
 };
 
-template <typename P, typename B>
-struct convert<point_tag, box_tag, P, B>
+template <typename P, std::size_t Dimensions, typename B>
+struct convert<point_tag, box_tag, Dimensions, P, B>
 {
     static inline void apply(P const& point, B& box)
     {
-        // go from point to box -> box with volume of zero, 2D or 3D
-        static const std::size_t N = dimension<P>::value;
-
-        detail::convert::point_to_box<P, B, min_corner, 0, N>::apply(point, box);
-        detail::convert::point_to_box<P, B, max_corner, 0, N>::apply(point, box);
+        detail::convert::point_to_box
+            <
+                P, B, min_corner, 0, Dimensions
+            >::apply(point, box);
+        detail::convert::point_to_box
+            <
+                P, B, max_corner, 0, Dimensions
+            >::apply(point, box);
     }
 };
 
@@ -147,10 +157,13 @@ struct convert<point_tag, box_tag, P, B>
 template <typename G1, typename G2>
 inline void convert(G1 const& geometry1, G2& geometry2)
 {
+    assert_dimension_equal<G1, G2>();
+
     dispatch::convert
         <
             typename tag<G1>::type,
             typename tag<G2>::type,
+            dimension<G1>::type::value,
             G1,
             G2
         >::apply(geometry1, geometry2);

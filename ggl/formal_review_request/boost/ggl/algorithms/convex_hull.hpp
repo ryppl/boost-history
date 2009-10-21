@@ -10,11 +10,12 @@
 #define GGL_ALGORITHMS_CONVEX_HULL_HPP
 
 
-#include <boost/concept/requires.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
 #include <ggl/core/cs.hpp>
 #include <ggl/core/is_multi.hpp>
+#include <ggl/core/point_order.hpp>
+#include <ggl/core/exterior_ring.hpp>
 
 #include <ggl/core/concepts/point_concept.hpp>
 
@@ -32,7 +33,7 @@ for any geometry restricted to linear interpolations.
 \see http://en.wikipedia.org/wiki/Convex_hull
 
 \par Performance
-2776 counties of US are "hulled" in 0.52 seconds (other libraries: 2.8 seconds, 2.4 seconds, 3.4 seconds, 1.1 seconds)
+2776 counties of US are "hulled" in 0.9 seconds (other libraries: 0.9, 4.1, 3.3, 1.4 seconds)
 
 \note The convex hull is always a ring, holes are not possible. Therefore it is modelled as an output iterator.
 This gives the most flexibility, the user can decide what to do with it.
@@ -46,9 +47,16 @@ namespace ggl {
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail { namespace convex_hull {
 
-template <typename Geometry, typename OutputIterator>
-struct hull
+template
+<
+    typename Geometry,
+    order_selector Order
+>
+struct hull_inserter
 {
+    // Member template function, to avoid inconvenient declaration
+    // of output-iterator-type
+    template <typename OutputIterator>
     static inline OutputIterator apply(Geometry const& geometry,
             OutputIterator out)
     {
@@ -60,11 +68,38 @@ struct hull
                 point_type
             >::type strategy_type;
 
-        strategy_type s(as_range<typename as_range_type<Geometry>::type>(geometry));
-        s.get(out);
+        strategy_type s(as_range
+                <
+                    typename as_range_type<Geometry>::type
+                >(geometry));
+        s.get(out, Order == clockwise);
         return out;
     }
 };
+
+template
+<
+    typename Geometry,
+    typename OutputGeometry
+>
+struct hull_to_geometry
+{
+    static inline void apply(Geometry const& geometry, OutputGeometry& out)
+    {
+        hull_inserter
+            <
+                Geometry,
+                ggl::point_order<OutputGeometry>::value
+            >::apply(geometry,
+                std::back_inserter(
+                    ggl::as_range
+                        <
+                            typename ggl::as_range_type<OutputGeometry>::type
+                        >(out)));
+    }
+};
+
+
 
 
 }} // namespace detail::convex_hull
@@ -76,51 +111,142 @@ namespace dispatch
 
 template
 <
-    typename GeometryTag,
+    typename Tag1,
     bool IsMulti,
-    typename Geometry,
-    typename OutputIterator
+    typename Polygon, typename Output
+>
+struct convex_hull
+{};
+
+
+template <typename Polygon, typename Output>
+struct convex_hull
+<
+    polygon_tag, false,
+    Polygon, Output
+>
+    : detail::convex_hull::hull_to_geometry<Polygon, Output>
+{};
+
+template <typename Polygon, typename Output>
+struct convex_hull
+<
+    ring_tag, false,
+    Polygon, Output
+>
+    : detail::convex_hull::hull_to_geometry<Polygon, Output>
+{};
+
+template <typename Polygon, typename Output>
+struct convex_hull
+<
+    linestring_tag, false,
+    Polygon, Output
+>
+    : detail::convex_hull::hull_to_geometry<Polygon, Output>
+{};
+
+
+
+template
+<
+    typename GeometryTag,
+    order_selector Order,
+    bool IsMulti,
+    typename GeometryIn
  >
-struct convex_hull {};
+struct convex_hull_inserter {};
 
-template <typename Linestring, typename OutputIterator>
-struct convex_hull<linestring_tag, false, Linestring, OutputIterator>
-    : detail::convex_hull::hull<Linestring, OutputIterator> 
+template <typename Linestring, order_selector Order>
+struct convex_hull_inserter
+<
+    linestring_tag,
+    Order, false,
+    Linestring
+>
+    : detail::convex_hull::hull_inserter<Linestring, Order>
 {};
 
-template <typename Ring, typename OutputIterator>
-struct convex_hull<ring_tag, false, Ring, OutputIterator>
-    : detail::convex_hull::hull<Ring, OutputIterator> 
+
+template <typename Ring, order_selector Order>
+struct convex_hull_inserter
+<
+    ring_tag,
+    Order, false,
+    Ring
+>
+    : detail::convex_hull::hull_inserter<Ring, Order>
 {};
 
-template <typename Polygon, typename OutputIterator>
-struct convex_hull<polygon_tag, false, Polygon, OutputIterator>
-    : detail::convex_hull::hull<Polygon, OutputIterator> 
+
+template <typename Polygon, order_selector Order>
+struct convex_hull_inserter
+<
+    polygon_tag,
+    Order, false,
+    Polygon
+>
+    : detail::convex_hull::hull_inserter<Polygon, Order>
 {};
+
+
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
+
+
 /*!
     \brief Calculate the convex hull of a geometry
     \ingroup convex_hull
+    \tparam Geometry1 the input geometry type
+    \tparam Geometry2: the output geometry type
     \param geometry the geometry to calculate convex hull from
-    \param out an output iterator outputing points of the convex hull
-    \return the output iterator
- */
-template<typename Geometry, typename OutputIterator>
-inline OutputIterator convex_hull(Geometry const& geometry, OutputIterator out)
-{
-    typedef typename boost::remove_const<Geometry>::type ncg_type;
+    \param out a geometry receiving points of the convex hull
+    \note the output may be:
+    - a polygon
+    - a ring
 
-    return dispatch::convex_hull
+ */
+template<typename Geometry1, typename Geometry2>
+inline void convex_hull(Geometry1 const& geometry,
+            Geometry2& out)
+{
+    dispatch::convex_hull
         <
-            typename tag<ncg_type>::type,
-            is_multi<ncg_type>::type::value,
-            Geometry,
-            OutputIterator
+            typename tag<Geometry1>::type,
+            is_multi<Geometry1>::type::value,
+            Geometry1,
+            Geometry2
         >::apply(geometry, out);
 }
+
+
+/*!
+    \brief Calculate the convex hull of a geometry, output-iterator version
+    \ingroup convex_hull
+    \tparam Geometry the input geometry type
+    \tparam OutputIterator: an output-iterator
+    \param geometry the geometry to calculate convex hull from
+    \param out an output iterator outputing points of the convex hull
+    \note This overloaded version outputs to an output iterator.
+    In this case, nothing is known about its point-type or
+        about its clockwise order. Therefore, the input point-type and order are copied
+
+ */
+template<typename Geometry, typename OutputIterator>
+inline OutputIterator convex_hull_inserter(Geometry const& geometry,
+            OutputIterator out)
+{
+    return dispatch::convex_hull_inserter
+        <
+            typename tag<Geometry>::type,
+            ggl::point_order<Geometry>::value,
+            is_multi<Geometry>::type::value,
+            Geometry
+        >::apply(geometry, out);
+}
+
 
 } // namespace ggl
 

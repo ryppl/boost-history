@@ -15,7 +15,6 @@
 // NOTE: maybe evaluate/rework this using new "compare" strategy
 // - implement "compare" for latlong (e.g. return true if distance-difference < 90 deg, so 170 < -170 but 90 > -180)
 
-#include <ggl/strategies/spherical/haversine.hpp>
 
 namespace ggl
 {

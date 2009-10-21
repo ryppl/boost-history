@@ -38,7 +38,7 @@ struct on_increasing_dimension
         coordinate_type const& left0 = ggl::get<0>(lhs);
         coordinate_type const& right0 = ggl::get<0>(rhs);
 
-        return math::equals(left0, right0)
+        return ggl::math::equals(left0, right0)
             ? ggl::get<1>(lhs) < ggl::get<1>(rhs)
             : left0 < right0;
     }

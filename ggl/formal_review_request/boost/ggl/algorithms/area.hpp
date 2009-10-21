@@ -14,12 +14,16 @@
 #include <boost/range/metafunctions.hpp>
 
 #include <ggl/algorithms/detail/calculate_null.hpp>
+
+#include <ggl/core/point_order.hpp>
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 #include <ggl/core/ring_type.hpp>
 #include <ggl/core/concepts/point_concept.hpp>
 #include <ggl/core/concepts/nsphere_concept.hpp>
+
 #include <ggl/strategies/strategies.hpp>
+
 #include <ggl/util/loop.hpp>
 #include <ggl/util/math.hpp>
 
@@ -98,16 +102,28 @@ struct circle_area
 };
 
 
-// Area of a linear linear_ring, assuming a closed linear_ring
-template<typename R, typename S>
+// Area of a linear linear_ring
+template
+<
+    typename R,
+    order_selector Order,
+    // closing_selector Closed -- for now assuming CLOSED, p(0) == p(n-1)
+    typename S
+>
 struct ring_area
+{};
+
+
+template<typename R, typename S>
+struct ring_area<R, clockwise, S>
 {
     typedef typename S::return_type type;
     static inline type apply(R const& ring, S const& strategy)
     {
         assert_dimension<R, 2>();
 
-        // A closed linear_ring has at least four points, if not there is no area
+        // A closed linear_ring has at least four points,
+        // if not, there is no (zero) area
         if (boost::size(ring) >= 4)
         {
             typename S::state_type state_type;
@@ -121,19 +137,23 @@ struct ring_area
     }
 };
 
+template<typename R, typename S>
+struct ring_area<R, counterclockwise, S>
+{
+    typedef typename S::return_type type;
+    static inline type apply(R const& ring, S const& strategy)
+    {
+        // Counter clockwise rings negate the area result
+        return -ring_area<R, clockwise, S>::apply(ring, strategy);
+    }
+};
+
+
 // Area of a polygon, either clockwise or anticlockwise
-template<typename Polygon, typename Strategy>
+template<typename Polygon, order_selector Order, typename Strategy>
 class polygon_area
 {
     typedef typename Strategy::return_type type;
-    static inline type call_abs(type const& v)
-    {
-#if defined(NUMERIC_ADAPTOR_INCLUDED)
-        return boost::abs(v);
-#else
-        return std::abs(v);
-#endif
-    }
 
 public:
     static inline type apply(Polygon const& poly,
@@ -141,19 +161,26 @@ public:
     {
         assert_dimension<Polygon, 2>();
 
-        typedef typename ring_type<Polygon>::type ring_type;
+        typedef ring_area
+                <
+                    typename ring_type<Polygon>::type,
+                    Order,
+                    Strategy
+                > ring_area_type;
+
         typedef typename boost::range_const_iterator
             <
                 typename interior_type<Polygon>::type
             >::type iterator_type;
 
-        type a = call_abs(
-            ring_area<ring_type, Strategy>::apply(exterior_ring(poly), strategy));
+        type a = ring_area_type::apply(exterior_ring(poly), strategy);
 
         for (iterator_type it = boost::begin(interior_rings(poly));
              it != boost::end(interior_rings(poly)); ++it)
         {
-            a -= call_abs(ring_area<ring_type, Strategy>::apply(*it, strategy));
+            // Add ring-area (area of hole should be negative
+            // (because other order))
+            a += ring_area_type::apply(*it, strategy);
         }
         return a;
     }
@@ -166,25 +193,35 @@ public:
 #ifndef DOXYGEN_NO_DISPATCH
 namespace dispatch {
 
-template <typename Tag, typename G, typename S>
-struct area : detail::calculate_null<typename S::return_type, G, S> {};
+template <typename Tag, typename Geometry, order_selector Order, typename Strategy>
+struct area
+    : detail::calculate_null
+        <
+            typename Strategy::return_type,
+            Geometry,
+            Strategy
+        > {};
 
 
-template <typename G, typename S>
-struct area<box_tag, G, S> : detail::area::box_area<G, S> {};
+template <typename Geometry, order_selector Order, typename Strategy>
+struct area<box_tag, Geometry, Order, Strategy>
+    : detail::area::box_area<Geometry, Strategy> {};
 
 
-template <typename G, typename S>
-struct area<nsphere_tag, G, S> : detail::area::circle_area<G, S> {};
+template <typename Geometry, order_selector Order, typename Strategy>
+struct area<nsphere_tag, Geometry, Order, Strategy>
+    : detail::area::circle_area<Geometry, Strategy> {};
 
 
 // Area of ring currently returns area of closed rings but it might be argued
 // that it is 0.0, because a ring is just a line.
-template <typename G, typename S>
-struct area<ring_tag, G, S> : detail::area::ring_area<G, S> {};
+template <typename Geometry, order_selector Order, typename Strategy>
+struct area<ring_tag, Geometry, Order, Strategy>
+    : detail::area::ring_area<Geometry, Order, Strategy> {};
 
-template <typename G, typename S>
-struct area<polygon_tag, G, S> : detail::area::polygon_area<G, S> {};
+template <typename Geometry, order_selector Order, typename Strategy>
+struct area<polygon_tag, Geometry, Order, Strategy>
+    : detail::area::polygon_area<Geometry, Order, Strategy> {};
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
@@ -207,7 +244,7 @@ struct area_result
     \ingroup area
     \details The function area returns the area of a polygon, ring, box or circle,
     using the default area-calculation strategy. Strategies are
-    provided for cartesian ans spherical points
+    provided for cartesian and spherical coordinate systems
     The geometries should correct, polygons should be closed and orientated clockwise, holes,
     if any, must be orientated counter clockwise
     \param geometry a geometry
@@ -222,6 +259,7 @@ inline typename area_result<Geometry>::return_type area(Geometry const& geometry
         <
             typename tag<Geometry>::type,
             Geometry,
+            ggl::point_order<Geometry>::value,
             strategy_type
         >::apply(geometry, strategy_type());
 }
@@ -243,6 +281,7 @@ inline typename Strategy::return_type area(
         <
             typename tag<Geometry>::type,
             Geometry,
+            ggl::point_order<Geometry>::value,
             Strategy
         >::apply(geometry, strategy);
 }

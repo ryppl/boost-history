@@ -36,7 +36,7 @@ struct point_point
 
     static inline bool apply(P1 const& p1, P2 const& p2)
     {
-        if (! math::equals(get<D>(p1), get<D>(p2)))
+        if (! ggl::math::equals(get<D>(p1), get<D>(p2)))
         {
             return true;
         }

@@ -59,7 +59,7 @@ struct radian_access<D, G, CS<degree> >
         return boost::numeric_cast
             <
                 coordinate_type
-            >(ggl::get<D>(geometry) * math::d2r);
+            >(ggl::get<D>(geometry) * ggl::math::d2r);
     }
 
     static inline void set(G& geometry, coordinate_type const& radians)
@@ -67,7 +67,7 @@ struct radian_access<D, G, CS<degree> >
         ggl::set<D>(geometry, boost::numeric_cast
             <
                 coordinate_type
-            >(radians * math::r2d));
+            >(radians * ggl::math::r2d));
     }
 
 };

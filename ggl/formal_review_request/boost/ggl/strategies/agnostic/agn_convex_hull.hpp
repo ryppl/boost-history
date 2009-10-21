@@ -9,18 +9,20 @@
 #ifndef GGL_STRATEGIES_AGNOSTIC_CONVEX_HULL_HPP
 #define GGL_STRATEGIES_AGNOSTIC_CONVEX_HULL_HPP
 
-#ifdef _MSC_VER
-#pragma warning( disable : 4101 )
-#endif
 
 #include <cstddef>
 #include <algorithm>
 #include <vector>
 
 #include <boost/range/functions.hpp>
+#include <boost/concept_check.hpp> // for ignore-variable
 
 #include <ggl/core/cs.hpp>
 #include <ggl/strategies/strategy_traits.hpp>
+
+#include <ggl/util/less.hpp>
+
+
 
 // TODO: Temporary, comparing tests, this can be removed in the end
 #if defined(GGL_USE_SMOOTH_SORT)
@@ -64,13 +66,17 @@ static inline void get_extremes(const Range& range,
 template <typename R>
 static inline void sort(R& range)
 {
-    #if defined(USE_SMOOTH_SORT)
-    smoothsort::sort(boost::begin(range), boost::end(range));
-    #elif defined(USE_MERGE_SORT)
-    comparing::merge_sort<thread_count>(boost::begin(range), boost::end(range), std::less<P>());
-    #else
-    std::sort(boost::begin(range), boost::end(range));
-    #endif
+    typedef typename boost::range_value<R>::type point_type;
+
+#if defined(USE_SMOOTH_SORT)
+    smoothsort::sort
+#elif defined(USE_MERGE_SORT)
+    comparing::merge_sort<thread_count>
+#else
+    std::sort
+#endif
+
+        (boost::begin(range), boost::end(range), ggl::less<point_type>());
 }
 
 } // namespace detail
@@ -111,27 +117,21 @@ public:
 
 
     template <typename OutputIterator>
-    inline void get(OutputIterator out)
+    inline void get(OutputIterator out, bool clockwise)
     {
-        for (iterator it = m_upper_hull.begin(); it != m_upper_hull.end(); ++it, ++out)
+        if (clockwise)
         {
-            *out = *it;
+            get_range_forward(m_upper_hull, out);
+            get_range_reverse(m_lower_hull, out);
         }
-
-        // STL Port does not accept iterating from rbegin+1 to rend
-        std::size_t size = m_lower_hull.size();
-        if (size > 0)
+        else
         {
-            rev_iterator it = m_lower_hull.rbegin() + 1;
-            for (std::size_t i = 1; i < size; ++i, ++it, ++out)
-            {
-                *out = *it;
-            }
+            get_range_forward(m_lower_hull, out);
+            get_range_reverse(m_upper_hull, out);
         }
     }
 
 
-    // Note /
     // TODO:
     // Consider if it is better to create an iterator over a multi, which is then used here,
     // instead of copying the range
@@ -181,8 +181,8 @@ private:
         detail::sort(lower_points);
         detail::sort(upper_points);
 
-        build_half_hull<1>(lower_points, m_lower_hull, *left_it, *right_it);
-        build_half_hull<-1>(upper_points, m_upper_hull, *left_it, *right_it);
+        build_half_hull<-1>(lower_points, m_lower_hull, *left_it, *right_it);
+        build_half_hull<1>(upper_points, m_upper_hull, *left_it, *right_it);
     }
 
 
@@ -195,6 +195,7 @@ private:
             container& upper_points)
     {
         typename strategy_side<cs_tag, P>::type side;
+        boost::ignore_unused_variable_warning(side);
 
         // Put points in one of the two output sequences
         for (RangeIterator it = boost::begin(range);
@@ -204,13 +205,15 @@ private:
             if (it != left_it && it != right_it)
             {
                 int dir = side.side(*left_it, *right_it, *it);
-                if ( dir < 0 )
+                switch(dir)
                 {
-                    upper_points.push_back(*it);
-                }
-                else
-                {
-                    lower_points.push_back(*it);
+                    case 1 : // left
+                        upper_points.push_back(*it);
+                        break;
+                    case -1 : // right
+                        lower_points.push_back(*it);
+                        break;
+                    // zero: on line left-right, never part of hull
                 }
             }
         }
@@ -233,6 +236,7 @@ private:
     inline void add_to_hull(const P& p, container& output)
     {
         typename strategy_side<cs_tag, P>::type side;
+        boost::ignore_unused_variable_warning(side);
 
         output.push_back(p);
         register std::size_t output_size = output.size();
@@ -258,6 +262,29 @@ private:
         }
     }
 
+    template <typename Range, typename OutputIterator>
+    inline void get_range_forward(Range const& range, OutputIterator out)
+    {
+        for (iterator it = range.begin(); it != range.end(); ++it, ++out)
+        {
+            *out = *it;
+        }
+    }
+
+    template <typename Range, typename OutputIterator>
+    inline void get_range_reverse(Range const& range, OutputIterator out)
+    {
+        // STL Port does not accept iterating from rbegin+1 to rend
+        std::size_t size = range.size();
+        if (size > 0)
+        {
+            rev_iterator it = range.rbegin() + 1;
+            for (std::size_t i = 1; i < size; ++i, ++it, ++out)
+            {
+                *out = *it;
+            }
+        }
+    }
 
 };
 

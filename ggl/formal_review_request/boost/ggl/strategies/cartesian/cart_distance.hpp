@@ -90,6 +90,7 @@ struct pythagoras
             CalculationType
         >::type calculation_type;
 
+    typedef P1 point_type;
     typedef cartesian_distance<calculation_type> return_type;
 
 
@@ -133,9 +134,10 @@ template
 >
 struct xy_point_segment
 {
+    typedef P point_type;
     typedef typename select_coordinate_type<P, Segment>::type coordinate_type;
     typedef cartesian_distance<coordinate_type> return_type;
-    typedef Strategy distance_strategy_type; // OBSOLETE!
+
     typedef Strategy point_strategy_type;
 
 
@@ -154,7 +156,7 @@ struct xy_point_segment
 
         typedef typename boost::remove_const
         <
-            typename point_type<Segment>::type
+            typename ggl::point_type<Segment>::type
         >::type segment_point_type;
 
         segment_point_type v, w;

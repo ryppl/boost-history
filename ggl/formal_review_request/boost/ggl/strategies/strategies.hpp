@@ -20,12 +20,14 @@
 #include <ggl/strategies/cartesian/cart_side.hpp>
 #include <ggl/strategies/cartesian/cart_within.hpp>
 
+#include <ggl/strategies/spherical/distance_haversine.hpp>
+#include <ggl/strategies/spherical/distance_cross_track.hpp>
+
 #include <ggl/strategies/spherical/sph_area.hpp>
-#include <ggl/strategies/spherical/haversine.hpp>
 #include <ggl/strategies/spherical/sph_envelope.hpp>
 
 #include <ggl/strategies/agnostic/agn_convex_hull.hpp>
-#include <ggl/strategies/agnostic/agn_simplify.hpp>
+#include <ggl/strategies/agnostic/simplify_douglas_peucker.hpp>
 #include <ggl/strategies/agnostic/agn_within.hpp>
 
 #include <ggl/strategies/strategy_transform.hpp>
