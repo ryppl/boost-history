@@ -36,7 +36,7 @@ namespace ggl { namespace dispatch {
 
 // Specializations of area dispatch structure, implement algorithm
 template<typename P, typename S>
-struct area<ring_tag, triangle<P>, S>
+struct area<ring_tag, triangle<P>, clockwise, S>
 {
     static inline double apply(triangle<P> const& t, S const&)
     {

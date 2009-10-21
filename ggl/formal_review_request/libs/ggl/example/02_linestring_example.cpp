@@ -84,7 +84,7 @@ int main(void)
 
     // The distance from a point to a linestring can be calculated
     point_2d p(1.9, 1.2);
-    std::cout << "distance of " << ggl::dsv(p) 
+    std::cout << "distance of " << ggl::dsv(p)
         << " to line: " << distance(p, ls) << std::endl;
 
     // A linestring is a vector. However, some algorithms consider "segments",
@@ -131,7 +131,7 @@ int main(void)
 
     {
         linestring_2d ls_copy;
-        std::unique_copy(ls.begin(), ls.end(), std::back_inserter(ls_copy), 
+        std::unique_copy(ls.begin(), ls.end(), std::back_inserter(ls_copy),
             point_equal<point_2d>());
         ls = ls_copy;
         std::cout << "uniquecopy: " << ggl::dsv(ls) << std::endl;
@@ -139,7 +139,7 @@ int main(void)
 
     // Lines can be simplified. This removes points, but preserves the shape
     linestring_2d ls_simplified;
-    simplify(ls, std::back_inserter(ls_simplified), 0.5);
+    simplify(ls, ls_simplified, 0.5);
     std::cout << "simplified: " << ggl::dsv(ls_simplified) << std::endl;
 
 
@@ -168,7 +168,7 @@ int main(void)
     intersection<std::vector<point_2d> >(cb, ls, std::back_inserter(vector_out));
 
     std::cout << "clipped output as vector:" << std::endl;
-    for (std::vector<std::vector<point_2d> >::const_iterator it 
+    for (std::vector<std::vector<point_2d> >::const_iterator it
             = vector_out.begin(); it != vector_out.end(); ++it)
     {
         std::cout << ggl::dsv(*it) << std::endl;
@@ -176,7 +176,7 @@ int main(void)
 
     // Calculate the convex hull of the linestring
     polygon_2d hull;
-    convex_hull(ls, std::back_inserter(hull.outer()));
+    convex_hull(ls, hull);
     std::cout << "Convex hull:" << ggl::dsv(hull) << std::endl;
 
     // All the above assumed 2D Cartesian linestrings. 3D is possible as well
@@ -189,12 +189,12 @@ int main(void)
     line3d.push_back(make<point_type>(7,8,9));
 
     // Not all algorithms work on 3d lines. For example convex hull does NOT.
-    // But for example length, distance, simplify, envelope and stream do.
+    // But, for example, length, distance, simplify, envelope and stream do.
     std::cout << "3D: length: " << length(line3d) << " line: " << ggl::dsv(line3d) << std::endl;
 
     // With DSV you can also use other delimiters, e.g. JSON style
-    std::cout << "JSON: " 
-        << ggl::dsv(ls, ", ", "[", "]", ", ", "[ ", " ]") 
+    std::cout << "JSON: "
+        << ggl::dsv(ls, ", ", "[", "]", ", ", "[ ", " ]")
         << std::endl;
 
     return 0;

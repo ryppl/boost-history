@@ -117,7 +117,7 @@ int main(void)
     }
 
     polygon_2d hull;
-    convex_hull(poly, std::back_inserter(hull.outer()));
+    convex_hull(poly, hull);
     std::cout << "Convex hull:" << ggl::dsv(hull) << std::endl;
 
     // If you really want:
