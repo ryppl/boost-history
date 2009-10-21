@@ -22,12 +22,13 @@
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-namespace boost { namespace stm {
-namespace non_tx {
-
+namespace boost { namespace stm { namespace non_tx {
 
 //-----------------------------------------------------------------------------
-// class numeric wraps a transactional_object providing builting operators
+// class numeric wraps a numeric builtin type providing
+// a transactional view on a transactional context
+// a non-transactional view on a non-transactional context
+// Note: the sizeof(numeric<T>)==sizeof(T)
 //-----------------------------------------------------------------------------
 
 template <typename T>

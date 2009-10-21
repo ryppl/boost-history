@@ -19,6 +19,7 @@
 #include <map>
 #include <boost/stm/base_transaction_object.hpp>
 #include <boost/stm/cache_fct.hpp>
+#include <boost/stm/synchro.hpp>
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -56,7 +57,8 @@ public:
     }
 
     inline T * get() {
-        return ptr_;
+        if(ptr_!=0) return ptr_;
+        else return value_;
     }
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
@@ -139,10 +141,12 @@ private:
 //-----------------------------------------------------------------------------
 class cache_map {
     typedef std::map<void*, base_transaction_object*> map_type;
+    static Mutex mtx_;
     static std::map<void*, base_transaction_object*> map_;
 public:
     template <typename T>
     static cache<T>* get(T* ptr) {
+        synchro::lock_guard<Mutex> lk(mtx_);
         map_type::iterator it = map_.find(ptr);
         cache<T>* res=0;
         if (it == map_.end()) {
@@ -155,6 +159,7 @@ public:
     }
     template <typename T>
     static cache<T>* get(T const* ptr) {
+        synchro::lock_guard<Mutex> lk(mtx_);
         map_type::iterator it = map_.find(const_cast<T*>(ptr));
         cache<T>* res=0;
         if (it == map_.end()) {

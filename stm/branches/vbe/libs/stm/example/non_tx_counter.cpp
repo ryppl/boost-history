@@ -27,59 +27,59 @@ int counter2;
 void inc() {
     thread_initializer thi;
 
-    use_atomic(t) {
+    atomic(t) {
         non_tx::wr_ptr<int> tx_counter(t, counter);
         ++(*tx_counter);
-    }
+    } end_atom
 }
 void decr() {
     thread_initializer thi;
 
-    use_atomic(_) {
+    atomic(_) {
         non_tx::wr_ptr<int> tx_counter(_, counter);
         --(*tx_counter);
-    }
+    } end_atom
 }
 bool check(int val) {
     //thread_initializer thi;
     bool res;
-    use_atomic(_) {
+    atomic(_) {
         non_tx::rd_ptr<int> tx_counter(_, counter);
         res =(*tx_counter==val);
-    }
+    } end_atom
     return res;
 }
 
 bool assign() {
     //thread_initializer thi;
-    use_atomic(_) {
+    atomic(_) {
         non_tx::wr_ptr<int> tx_counter(_, counter);
         non_tx::wr_ptr<int> tx_counter2(_, counter2);
         *tx_counter=1;
         *tx_counter2=*tx_counter;
-    }
+    } end_atom
     bool res;
-    use_atomic(_) {
+    atomic(_) {
         non_tx::rd_ptr<int> tx_counter(_, counter);
         non_tx::rd_ptr<int> tx_counter2(_, counter2);
         res =(*tx_counter==1) && (*tx_counter2==1) && (tx_counter==tx_counter2) ;
-    }
+    } end_atom
     return res;
 }
 
 bool test_const(int const& c) {
     //thread_initializer thi;
-    use_atomic(_) {
+    atomic(_) {
         non_tx::rd_ptr<int> tx_c(_, c);
         non_tx::wr_ptr<int> tx_counter2(_, counter2);
         *tx_counter2=*tx_c;
-    }
+    } end_atom
     bool res;
-    use_atomic(_) {
+    atomic(_) {
         non_tx::rd_ptr<int> tx_c(_, c);
         non_tx::wr_ptr<int> tx_counter2(_, counter2);
         res =(*tx_c==*tx_counter2) ;
-    }
+    } end_atom
     return res;
 }
 

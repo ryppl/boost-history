@@ -184,13 +184,11 @@ public:
             }
         }
 
-        return &ptr_->value;
+        return ptr_->get();
     }
 
     inline T const & operator*() const { return *get(); }
     inline T const * operator->() const { return get(); }
-
-    //operator const T*() const { return get(); }
 
     typedef detail::cache<T>* this_type::*unspecified_bool_type;
 
