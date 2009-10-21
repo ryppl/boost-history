@@ -8,13 +8,146 @@
 
 [section  Appendix E: Tests]
 
-
-[section XXX]
 [table
-    [[Name]                     [kind]          [Description]                                           [Result] [Ticket]]
-    [[XXX]          [compile]       [XXX]                  [Pass]   [#]]
+    [[Name]                         [Description]]
+    [[accounts]                     [XXXX]]
+    [[hashmap]                      [XXXX]]
+    [[isolated_int]                 [XXXX]]
+    [[irrevocable_int]              [XXXX]]
+    [[linkedlist]                   [XXXX]]
+    [[rbtree]                       [XXXX]]
+    [[smart]                        [XXXX]]
+
+    [[ht]                           [XXXX]]
+    [[ll]                           [XXXX]]
+    [[tx_linear_lock]               [XXXX]]
+    [[isolated_int_lock_in_tx]      [XXXX]]
+    [[isolated_composed_int_lock]   [XXXX]]
+    [[isolated_composed_int_lock2]  [XXXX]]
+    [[lot]                          [XXXX]]
+    [[lit]                          [XXXX]]
+    [[nested_tx]                    [XXXX]]
+    [[using_linkedlist]             [XXXX]]
+    [[hashmap_w_locks]              [XXXX]]
+    
+    [[bank]                         [Banck example using tx_ptr<>]]
+    [[list]                         [List implementation using tx_obj<> and tx_ptr<>]]
+    [[counter]                      [Counter tx_obj<>]]
+    [[numeric]                      [Access to a numeric tx object]]
+    [[counter_ptr]                  [Polymorphic transaction_object_ptr]]
+    [[non_tx_counter]               [Access to non transactional variables from a transactional world]]
+]
+
+[section Invalidation]
+
+[section Direct Updating]
+
+[section Pure transactional]
+
+[table
+    [[Name]                         [Result]        [Ticket]]
+    
+    [[accounts]                      [Pass]        [#XX]]
+    [[hashmap]                       [Pass]        [#XX]]
+    [[isolated_int]                  [Pass]        [#XX]]
+    [[irrevocable_int]               [Pass]        [#XX]]
+    [[linkedlist]                    [Pass]        [#XX]]
+    [[rbtree]                        [Pass]        [#XX]]
+    [[smart]                         [Pass]        [#XX]]
+]
+[endsect]
+[section LATM full]
+[table
+    [[Name]                         [Result]     [Ticket]]
+    
+    [[ht]                           [[*Fail]]    [#XX]]
+    [[ll]                           [Pass]       [#XX]]
+    [[tx_linear_lock]               [[*Fail]]    [#XX]]
+    [[isolated_int_lock_in_tx]      [Pass]       [#XX]]
+    [[isolated_composed_int_lock]   [[*Deadlock]][#XX]]
+    [[isolated_composed_int_lock2]  [[*Fail]]    [#XX]]
+    [[lot]                          [[*Deadlock]][#XX]]
+    [[lit]                          [[*Fail]]    [#XX]]
+    [[nested_tx]                    [[*Livelock]][#XX]]
+    [[using_linkedlist]             [[*Fail]]    [#XX]]
+    [[hashmap_w_locks]              [[*Fail]]    [#XX]]
+]
+[endsect]
+[section LATM TM]
+TBC.
+[endsect]
+[section LATM TX]
+TBC.
+[endsect]
+
+[endsect]
+
+[section Deferred Updating]
+
+[section Pure transactional]
+[table
+    [[Name]                         [Result]    [Ticket]]
+    [[accounts]                     [Pass]      [#XX]]
+    [[hashmap]                      [Pass]      [#XX]]
+    [[isolated_int]                 [Pass]      [#XX]]
+    [[irrevocable_int]              [Pass]      [#XX]]
+    [[linkedlist]                   [Pass]      [#XX]]
+    [[rbtree]                       [Pass]      [#XX]]
+    [[smart]                        [Pass]      [#XX]]
+    [[bank]                         [Pass]      [#XX]]
+    [[list]                         [[*Fails]]  [#XX]]
+    [[counter]                      [Pass]      [#XX]]
+    [[numeric]                      [Pass]      [#XX]]
+    [[counter_ptr]                  [Pass]      [#XX]]
+    [[non_tx_counter]               [Pass]      [#XX]]
 ]
 [endsect]
 
+[section LATM full]
+[table
+    [[Name]                         [Result]        [Ticket]]
+    [[ht]                           [[*Livelock]][#XX]]
+    [[ll]                           [[*Fail]]    [#XX]]
+    [[tx_linear_lock]               [[*Livelock]][#XX]]
+    [[isolated_int_lock_in_tx]      [[*Deadlock]][#XX]]
+    [[isolated_composed_int_lock]   [[*Fail]]   [#XX]]
+    [[isolated_composed_int_lock2]  [[*Fail]]   [#XX]]
+    [[lot]                          [[*Deadlock]][#XX]]
+    [[lit]                          [[*Deadlock]][#XX]]
+    [[nested_tx]                    [[*Livelock]][#XX]]
+    [[using_linkedlist]             [[*Fail]]     [#XX]]
+    [[hashmap_w_locks]              [[*Fail]]     [#XX]]
+]
+[endsect]
+[section LATM TM]
+TBC.
+[endsect]
+[section LATM TX]
+TBC.
+[endsect]
+
+[endsect]
+[endsect]
+
+[section Validation]
+[section Deferred Updating]
+[section Pure transactional]
+TBC.
+[endsect]
+[section LATM full]
+TBC.
+[endsect]
+[section LATM TM]
+TBC.
+[endsect]
+[section LATM TX]
+TBC.
+[endsect]
+[endsect]
+[section Direct Updating]
+Direct Updatingand validation are not implemented yet. 
+[endsect]
+
+[endsect]
 
 [endsect]

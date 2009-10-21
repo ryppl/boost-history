@@ -31,74 +31,1338 @@
       E: Tests">Appendix
       E: Tests</a>
 </h3></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.xxx">XXX</a></span></dt></dl></div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.appendices.appendix_e__tests.xxx"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.xxx" title="XXX">XXX</a>
-</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation">Invalidation</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating">Direct
+          Updating</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating">Deferred
+          Updating</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation">Validation</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating">Deferred
+          Updating</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.direct_updating">Direct
+          Updating</a></span></dt>
+</dl></dd>
+</dl></div>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
 <col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Name
+              </p>
+              </th>
+<th>
+              <p>
+                Description
+              </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                accounts
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                hashmap
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                isolated_int
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                irrevocable_int
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                linkedlist
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                rbtree
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                smart
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                ht
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                ll
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                tx_linear_lock
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                isolated_int_lock_in_tx
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                isolated_composed_int_lock
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                isolated_composed_int_lock2
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                lot
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                lit
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                nested_tx
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                using_linkedlist
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                hashmap_w_locks
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                bank
+              </p>
+              </td>
+<td>
+              <p>
+                Banck example using tx_ptr&lt;&gt;
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                list
+              </p>
+              </td>
+<td>
+              <p>
+                List implementation using tx_obj&lt;&gt; and tx_ptr&lt;&gt;
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                counter
+              </p>
+              </td>
+<td>
+              <p>
+                Counter tx_obj&lt;&gt;
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                numeric
+              </p>
+              </td>
+<td>
+              <p>
+                Access to a numeric tx object
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                counter_ptr
+              </p>
+              </td>
+<td>
+              <p>
+                Polymorphic transaction_object_ptr
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                non_tx_counter
+              </p>
+              </td>
+<td>
+              <p>
+                Access to non transactional variables from a transactional world
+              </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.invalidation"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation" title="Invalidation">Invalidation</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating">Direct
+          Updating</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating">Deferred
+          Updating</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating" title="Direct
+          Updating">Direct
+          Updating</a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.pure_transactional">Pure
+            transactional</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.latm_full">LATM
+            full</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.latm_tm">LATM
+            TM</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.latm_tx">LATM
+            TX</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.pure_transactional"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.pure_transactional" title="Pure
+            transactional">Pure
+            transactional</a>
+</h6></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
 <col>
 <col>
 <col>
 </colgroup>
 <thead><tr>
 <th>
-                <p>
-                  Name
-                </p>
-                </th>
+                    <p>
+                      Name
+                    </p>
+                    </th>
 <th>
-                <p>
-                  kind
-                </p>
-                </th>
+                    <p>
+                      Result
+                    </p>
+                    </th>
 <th>
-                <p>
-                  Description
-                </p>
-                </th>
-<th>
-                <p>
-                  Result
-                </p>
-                </th>
-<th>
-                <p>
-                  Ticket
-                </p>
-                </th>
+                    <p>
+                      Ticket
+                    </p>
+                    </th>
 </tr></thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>
-                <p>
-                  XXX
-                </p>
-                </td>
+                    <p>
+                      accounts
+                    </p>
+                    </td>
 <td>
-                <p>
-                  compile
-                </p>
-                </td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
 <td>
-                <p>
-                  XXX
-                </p>
-                </td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
 <td>
-                <p>
-                  Pass
-                </p>
-                </td>
+                    <p>
+                      hashmap
+                    </p>
+                    </td>
 <td>
-                <p>
-                  #
-                </p>
-                </td>
-</tr></tbody>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      isolated_int
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      irrevocable_int
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      linkedlist
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      rbtree
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      smart
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+</tbody>
 </table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.latm_full"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.latm_full" title="LATM
+            full">LATM
+            full</a>
+</h6></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Name
+                    </p>
+                    </th>
+<th>
+                    <p>
+                      Result
+                    </p>
+                    </th>
+<th>
+                    <p>
+                      Ticket
+                    </p>
+                    </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      ht
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fail</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      ll
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      tx_linear_lock
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fail</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      isolated_int_lock_in_tx
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      isolated_composed_int_lock
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Deadlock</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      isolated_composed_int_lock2
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fail</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      lot
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Deadlock</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      lit
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fail</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      nested_tx
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Livelock</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      using_linkedlist
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fail</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      hashmap_w_locks
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fail</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.latm_tm"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.latm_tm" title="LATM
+            TM">LATM
+            TM</a>
+</h6></div></div></div>
+<p>
+              TBC.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.latm_tx"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.direct_updating.latm_tx" title="LATM
+            TX">LATM
+            TX</a>
+</h6></div></div></div>
+<p>
+              TBC.
+            </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating" title="Deferred
+          Updating">Deferred
+          Updating</a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.pure_transactional">Pure
+            transactional</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.latm_full">LATM
+            full</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.latm_tm">LATM
+            TM</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.latm_tx">LATM
+            TX</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.pure_transactional"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.pure_transactional" title="Pure
+            transactional">Pure
+            transactional</a>
+</h6></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Name
+                    </p>
+                    </th>
+<th>
+                    <p>
+                      Result
+                    </p>
+                    </th>
+<th>
+                    <p>
+                      Ticket
+                    </p>
+                    </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      accounts
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      hashmap
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      isolated_int
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      irrevocable_int
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      linkedlist
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      rbtree
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      smart
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      bank
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      list
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fails</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      counter
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      numeric
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      counter_ptr
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      non_tx_counter
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      Pass
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.latm_full"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.latm_full" title="LATM
+            full">LATM
+            full</a>
+</h6></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Name
+                    </p>
+                    </th>
+<th>
+                    <p>
+                      Result
+                    </p>
+                    </th>
+<th>
+                    <p>
+                      Ticket
+                    </p>
+                    </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      ht
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Livelock</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      ll
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fail</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      tx_linear_lock
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Livelock</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      isolated_int_lock_in_tx
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Deadlock</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      isolated_composed_int_lock
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fail</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      isolated_composed_int_lock2
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fail</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      lot
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Deadlock</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      lit
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Deadlock</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      nested_tx
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Livelock</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      using_linkedlist
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fail</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      hashmap_w_locks
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>Fail</strong></span>
+                    </p>
+                    </td>
+<td>
+                    <p>
+                      #XX
+                    </p>
+                    </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.latm_tm"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.latm_tm" title="LATM
+            TM">LATM
+            TM</a>
+</h6></div></div></div>
+<p>
+              TBC.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.latm_tx"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.invalidation.deferred_updating.latm_tx" title="LATM
+            TX">LATM
+            TX</a>
+</h6></div></div></div>
+<p>
+              TBC.
+            </p>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.validation"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation" title="Validation">Validation</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating">Deferred
+          Updating</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.direct_updating">Direct
+          Updating</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating" title="Deferred
+          Updating">Deferred
+          Updating</a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.pure_transactional">Pure
+            transactional</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.latm_full">LATM
+            full</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.latm_tm">LATM
+            TM</a></span></dt>
+<dt><span class="section"><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.latm_tx">LATM
+            TX</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.pure_transactional"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.pure_transactional" title="Pure
+            transactional">Pure
+            transactional</a>
+</h6></div></div></div>
+<p>
+              TBC.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.latm_full"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.latm_full" title="LATM
+            full">LATM
+            full</a>
+</h6></div></div></div>
+<p>
+              TBC.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.latm_tm"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.latm_tm" title="LATM
+            TM">LATM
+            TM</a>
+</h6></div></div></div>
+<p>
+              TBC.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.latm_tx"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.deferred_updating.latm_tx" title="LATM
+            TX">LATM
+            TX</a>
+</h6></div></div></div>
+<p>
+              TBC.
+            </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.appendix_e__tests.validation.direct_updating"></a><a href="appendix_e__tests.html#toward_boost_stm.appendices.appendix_e__tests.validation.direct_updating" title="Direct
+          Updating">Direct
+          Updating</a>
+</h5></div></div></div>
+<p>
+            Direct Updatingand validation are not implemented yet.
+          </p>
+</div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
