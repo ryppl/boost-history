@@ -92,8 +92,8 @@
 <a name="l00084"></a>00084         <span class="keyword">typedef</span> <span class="keyword">typename</span> point_type&lt;B2&gt;::type point_type2;
 <a name="l00085"></a>00085 
 <a name="l00086"></a>00086         point_type1 lower_left, upper_right;
-<a name="l00087"></a>00087         assign_box_corner&lt;min_corner, min_corner&gt;(b1, lower_left);
-<a name="l00088"></a>00088         assign_box_corner&lt;max_corner, max_corner&gt;(b1, upper_right);
+<a name="l00087"></a>00087         detail::assign::assign_box_2d_corner&lt;min_corner, min_corner&gt;(b1, lower_left);
+<a name="l00088"></a>00088         detail::assign::assign_box_2d_corner&lt;max_corner, max_corner&gt;(b1, upper_right);
 <a name="l00089"></a>00089 
 <a name="l00090"></a>00090         point_type2 p1, p2;
 <a name="l00091"></a>00091         <span class="keywordflow">if</span> (strategy(lower_left, p1) &amp;&amp; strategy(upper_right, p2))

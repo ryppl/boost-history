@@ -316,10 +316,10 @@ for_each like implementation to:<ul>
         <a class="code" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">ggl::polygon&lt;P&gt;</a> poly;
         ggl::read_wkt(<span class="stringliteral">"POLYGON((0 0,0 7,4 2,2 0,0 0))"</span>, poly);
         perimeter&lt;P&gt;::summation peri;
-        <a class="code" href="group__loop.html#g1ff95a74f261e15dfa714146bdcbf23f" title="Loops through segments of a container and call specified functor for all segments...">ggl::loop</a>(poly.<a class="code" href="classggl_1_1polygon.html#be04d3ead04813a25be1a219076358a8">outer</a>(), perimeter&lt;P&gt;(), peri);
+        <a class="code" href="group__loop.html#g1ff95a74f261e15dfa714146bdcbf23f" title="Loops through segments of a container and call specified functor for all segments...">ggl::loop</a>(poly.<a class="code" href="classggl_1_1polygon.html#5faae375ec2c4b4547da615fa8864e74">outer</a>(), perimeter&lt;P&gt;(), peri);
         std::cout &lt;&lt; <span class="stringliteral">"Perimeter: "</span> &lt;&lt; peri.sum &lt;&lt; std::endl;
     }
-} <span class="comment">//:\\</span>
+} <span class="comment">//:\\ --</span>
 </pre></div> Second example, using a function functor and latlong coordinates  <div class="fragment"><pre class="fragment">{
     <span class="keyword">struct </span>summation
     {
@@ -348,7 +348,7 @@ for_each like implementation to:<ul>
 <span class="comment">        std::cout &lt;&lt; "Perimeter: " &lt;&lt; peri.sum/1000.0 &lt;&lt; " km" &lt;&lt; std::endl;</span>
 <span class="comment">        */</span>
     }
-} <span class="comment">//:\\</span>
+} <span class="comment">//:\\ --</span>
 </pre></div> </dd></dl>
 
 <p>Definition at line <a class="el" href="loop_8hpp_source.html#l00062">62</a> of file <a class="el" href="loop_8hpp_source.html">loop.hpp</a>.</p>

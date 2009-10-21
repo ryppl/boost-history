@@ -61,11 +61,11 @@
 <a name="l00019"></a>00019 <span class="preprocessor">#ifndef DOXYGEN_NO_DISPATCH</span>
 <a name="l00020"></a>00020 <span class="preprocessor"></span><span class="keyword">namespace </span>dispatch
 <a name="l00021"></a>00021 {
-<a name="l00022"></a>00022     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> MultiGeometry, <span class="keyword">typename</span> Strategy&gt;
-<a name="l00023"></a>00023     <span class="keyword">struct </span><a class="code" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3" title="Calculate area of a geometry.">area</a>&lt;multi_polygon_tag, MultiGeometry, Strategy&gt;
+<a name="l00022"></a>00022     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> MultiGeometry, order_selector Order, <span class="keyword">typename</span> Strategy&gt;
+<a name="l00023"></a>00023     <span class="keyword">struct </span><a class="code" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3" title="Calculate area of a geometry.">area</a>&lt;multi_polygon_tag, MultiGeometry, Order, Strategy&gt;
 <a name="l00024"></a>00024         : detail::multi_sum&lt;double, MultiGeometry, Strategy,
 <a name="l00025"></a>00025             detail::area::polygon_area&lt;
-<a name="l00026"></a>00026                 typename boost::range_value&lt;MultiGeometry&gt;::type, Strategy&gt; &gt;
+<a name="l00026"></a>00026                 typename boost::range_value&lt;MultiGeometry&gt;::type, Order, Strategy&gt; &gt;
 <a name="l00027"></a>00027     {};
 <a name="l00028"></a>00028 
 <a name="l00029"></a>00029 

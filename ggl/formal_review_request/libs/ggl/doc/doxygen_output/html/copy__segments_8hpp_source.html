@@ -59,7 +59,7 @@
 <a name="l00017"></a>00017 <span class="preprocessor">#include &lt;<a class="code" href="intersection__point_8hpp.html">ggl/algorithms/overlay/intersection_point.hpp</a>&gt;</span>
 <a name="l00018"></a>00018 
 <a name="l00019"></a>00019 <span class="preprocessor">#include &lt;<a class="code" href="ever__circling__iterator_8hpp.html">ggl/iterators/ever_circling_iterator.hpp</a>&gt;</span>
-<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;<a class="code" href="iterators_2point__const__iterator_8hpp.html">ggl/iterators/point_const_iterator.hpp</a>&gt;</span>
+<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;<a class="code" href="iterators_2vertex__iterator_8hpp.html">ggl/iterators/vertex_iterator.hpp</a>&gt;</span>
 <a name="l00021"></a>00021 
 <a name="l00022"></a>00022 
 <a name="l00023"></a>00023 <span class="keyword">namespace </span>ggl
@@ -78,7 +78,7 @@
 <a name="l00036"></a>00036             RangeOut&amp; current_output)
 <a name="l00037"></a>00037     {
 <a name="l00038"></a>00038 
-<a name="l00039"></a>00039         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__const__iterator.html" title="Meta-function which defines point-const-iterator type.">ggl::point_const_iterator&lt;Ring&gt;::type</a> iterator;
+<a name="l00039"></a>00039         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">ggl::vertex_iterator&lt;Ring, true&gt;::type</a> iterator;
 <a name="l00040"></a>00040         <span class="keyword">typedef</span> <a class="code" href="structggl_1_1ever__circling__iterator.html" title="Iterator which ever circles through a range.">ggl::ever_circling_iterator&lt;iterator&gt;</a> ec_iterator;
 <a name="l00041"></a>00041 
 <a name="l00042"></a>00042         <span class="comment">// The problem: sometimes we want to from "3" to "2" -&gt; end = "3" -&gt; end == begin</span>
@@ -105,8 +105,8 @@
 <a name="l00063"></a>00063         {
 <a name="l00064"></a>00064             <span class="comment">// TODO: use 'copy coordinates' to handle different point types</span>
 <a name="l00065"></a>00065 <span class="preprocessor">#ifdef GGL_DEBUG_INTERSECTION</span>
-<a name="l00066"></a>00066 <span class="preprocessor"></span>            std::cout &lt;&lt; <span class="stringliteral">"  add: ("</span> 
-<a name="l00067"></a>00067                 &lt;&lt; ggl::get&lt;0&gt;(*it) &lt;&lt; <span class="stringliteral">", "</span> &lt;&lt; ggl::get&lt;1&gt;(*it) &lt;&lt; <span class="stringliteral">")"</span> 
+<a name="l00066"></a>00066 <span class="preprocessor"></span>            std::cout &lt;&lt; <span class="stringliteral">"  add: ("</span>
+<a name="l00067"></a>00067                 &lt;&lt; ggl::get&lt;0&gt;(*it) &lt;&lt; <span class="stringliteral">", "</span> &lt;&lt; ggl::get&lt;1&gt;(*it) &lt;&lt; <span class="stringliteral">")"</span>
 <a name="l00068"></a>00068                 &lt;&lt; std::endl;
 <a name="l00069"></a>00069 <span class="preprocessor">#endif</span>
 <a name="l00070"></a>00070 <span class="preprocessor"></span>            current_output.push_back(*it);
@@ -133,7 +133,7 @@
 <a name="l00091"></a>00091                     seg_id.ring_index &lt; 0
 <a name="l00092"></a>00092                     ? <a class="code" href="group__access.html#gf92470d0612da7f0e118d296e7fcfe01" title="Function to get the exterior_ring ring of a polygon.">ggl::exterior_ring</a>(polygon)
 <a name="l00093"></a>00093                     : ggl::<a class="code" href="group__access.html#gfb1abbb52eaeb5391c51fb6c209ab758" title="Function to get the interior rings of a polygon (non const version).">interior_rings</a>(polygon)[seg_id.ring_index],
-<a name="l00094"></a>00094                     seg_id, to_index, 
+<a name="l00094"></a>00094                     seg_id, to_index,
 <a name="l00095"></a>00095                     current_output
 <a name="l00096"></a>00096                 );
 <a name="l00097"></a>00097     }

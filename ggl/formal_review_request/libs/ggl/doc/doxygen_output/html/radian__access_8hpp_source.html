@@ -101,7 +101,7 @@
 <a name="l00059"></a>00059         <span class="keywordflow">return</span> boost::numeric_cast
 <a name="l00060"></a>00060             &lt;
 <a name="l00061"></a>00061                 coordinate_type
-<a name="l00062"></a>00062             &gt;(ggl::get&lt;D&gt;(geometry) * <a class="code" href="namespaceggl_1_1math.html#769a1475e4e990429b75435c2bc3bf0e">math::d2r</a>);
+<a name="l00062"></a>00062             &gt;(ggl::get&lt;D&gt;(geometry) * <a class="code" href="namespaceggl_1_1math.html#769a1475e4e990429b75435c2bc3bf0e">ggl::math::d2r</a>);
 <a name="l00063"></a>00063     }
 <a name="l00064"></a>00064 
 <a name="l00065"></a>00065     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(G&amp; geometry, coordinate_type <span class="keyword">const</span>&amp; radians)
@@ -109,7 +109,7 @@
 <a name="l00067"></a>00067         ggl::set&lt;D&gt;(geometry, boost::numeric_cast
 <a name="l00068"></a>00068             &lt;
 <a name="l00069"></a>00069                 coordinate_type
-<a name="l00070"></a>00070             &gt;(radians * <a class="code" href="namespaceggl_1_1math.html#8e62ae7fbcc6b9adca9628da415f6a91">math::r2d</a>));
+<a name="l00070"></a>00070             &gt;(radians * <a class="code" href="namespaceggl_1_1math.html#8e62ae7fbcc6b9adca9628da415f6a91">ggl::math::r2d</a>));
 <a name="l00071"></a>00071     }
 <a name="l00072"></a>00072 
 <a name="l00073"></a>00073 };

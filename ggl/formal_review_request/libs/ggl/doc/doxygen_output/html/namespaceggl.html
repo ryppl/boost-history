@@ -172,9 +172,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1point.html">point</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Basic <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> class, having coordinates defined in a neutral way.  <a href="classggl_1_1point.html#_details">More...</a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1point__const__iterator.html">point_const_iterator</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1point__order.html">point_order</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Meta-function which defines point-const-iterator type.  <a href="structggl_1_1point__const__iterator.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Meta-function which defines <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> type of any geometry.  <a href="structggl_1_1point__order.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1point__tag.html">point_tag</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">OGC Point identifying <a class="el" href="structggl_1_1tag.html" title="Meta-function to get the tag of any geometry type.">tag</a>.  <a href="structggl_1_1point__tag.html#_details">More...</a><br></td></tr>
@@ -286,6 +286,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1topological__dimension.html">topological_dimension</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Meta-function returning the topological <a class="el" href="structggl_1_1dimension.html" title="Meta-function which defines coordinate dimensions, i.e. the number of axes of any...">dimension</a> of a geometry.  <a href="structggl_1_1topological__dimension.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1vertex__iterator.html">vertex_iterator</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Meta-function which defines <a class="el" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">vertex_iterator</a> type.  <a href="structggl_1_1vertex__iterator.html#_details">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Typedefs</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classggl_1_1box.html">box</a>&lt; <a class="el" href="classggl_1_1point__xy.html">point_2d</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceggl.html#0d9610ad977d0764a37b8e9f6ca94b30">box_2d</a></td></tr>
 
@@ -315,6 +318,12 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classggl_1_1nsphere.html">nsphere</a>&lt; <a class="el" href="classggl_1_1point.html">point_3d</a>, double &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceggl.html#86293a2a12226b524f011818d22fbcaa">sphere</a></td></tr>
 
+<tr><td colspan="2"><br><h2>Enumerations</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceggl.html#9a0f9a02ea40ca3ceab32afc4b08bf4d">order_selector</a> { <a class="el" href="namespaceggl.html#9a0f9a02ea40ca3ceab32afc4b08bf4d55fe53c1821ca13eb0eacb9084cb1d1c">clockwise</a> =  1, 
+<a class="el" href="namespaceggl.html#9a0f9a02ea40ca3ceab32afc4b08bf4d7242f3377ee5283786ecb2bc2d90015a">counterclockwise</a> =  2, 
+<a class="el" href="namespaceggl.html#9a0f9a02ea40ca3ceab32afc4b08bf4d79823f6595401a02e8f1cea6d3b34e84">order_undetermined</a> =  0
+ }</td></tr>
+
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename V &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#a8f29c6cbf3f88d5926a127c76976027">adapt_turns</a> (V &amp;intersection_points)</td></tr>
@@ -340,6 +349,9 @@
 ::return_type&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3">area</a> (Geometry const &amp;geometry)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate area of a geometry.  <a href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Range , typename Geometry &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">Range &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#99e0a8eac282cd44fbdb1a47666ea084">as_range</a> (Geometry &amp;input)</td></tr>
+
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Range , typename Geometry &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">Range const &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__utility.html#g1868bde329b825c540572ac0a73e4f2b">as_range</a> (Geometry const &amp;input)</td></tr>
 
@@ -375,10 +387,6 @@
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#ge58b5c7b493d0112202dc139af200c73">assign</a> (G &amp;geometry, T const &amp;c1, T const &amp;c2)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign two values to a 2D <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>  <a href="group__access.html#ge58b5c7b493d0112202dc139af200c73"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;std::size_t C1, std::size_t C2, typename B , typename P &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#e5791c5c360cbb58d16b18cb46323175">assign_box_corner</a> (B const &amp;<a class="el" href="classggl_1_1box.html">box</a>, P &amp;<a class="el" href="classggl_1_1point.html">point</a>)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Assign one <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> of a 2D <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a>.  <a href="#e5791c5c360cbb58d16b18cb46323175"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename B , typename P &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#a658e33964ece2cc6e48c622595ad271">assign_box_corners</a> (B const &amp;<a class="el" href="classggl_1_1box.html">box</a>, P &amp;lower_left, P &amp;lower_right, P &amp;upper_left, P &amp;upper_right)</td></tr>
 
@@ -387,6 +395,10 @@
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#gaa27514a7d1c16133d28dd5601cd32fd">assign_inverse</a> (G &amp;geometry)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign to a <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a> inverse infinite  <a href="group__access.html#gaa27514a7d1c16133d28dd5601cd32fd"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;std::size_t Corner, typename Box , typename Point &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#a79ece7bbc75c938c5a01eadd2522156">assign_point_to_box</a> (Point const &amp;<a class="el" href="classggl_1_1point.html">point</a>, Box &amp;<a class="el" href="classggl_1_1box.html">box</a>)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Assign a <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a> with the value of a <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>.  <a href="#a79ece7bbc75c938c5a01eadd2522156"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g2fba6ded1fb6ecc7dba897b55c70f2d0">assign_zero</a> (G &amp;geometry)</td></tr>
 
@@ -419,21 +431,22 @@
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__convert.html#ge07fa83176190049c856e35f77d0f569">convert</a> (G1 const &amp;geometry1, G2 &amp;geometry2)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Converts one geometry to another geometry.  <a href="group__convert.html#ge07fa83176190049c856e35f77d0f569"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry1 , typename Geometry2 &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__convex__hull.html#g2adc5b825bd5feadc7a723c040c36cb7">convex_hull</a> (Geometry1 const &amp;geometry, Geometry2 &amp;out)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the convex hull of a geometry.  <a href="group__convex__hull.html#g2adc5b825bd5feadc7a723c040c36cb7"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename OutputIterator &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">OutputIterator&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__convex__hull.html#gc1989428c0a32cd2fd48272cd6833e18">convex_hull</a> (Geometry const &amp;geometry, OutputIterator out)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">OutputIterator&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__convex__hull.html#g33e400e40f14217ab0239d33fa6def72">convex_hull_inserter</a> (Geometry const &amp;geometry, OutputIterator out)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the convex hull of a geometry.  <a href="group__convex__hull.html#gc1989428c0a32cd2fd48272cd6833e18"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the convex hull of a geometry, output-iterator version.  <a href="group__convex__hull.html#g33e400e40f14217ab0239d33fa6def72"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Src , typename Dst &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#173003fecd63871d3a6aee07f4ba7011">copy_coordinates</a> (const Src &amp;source, Dst &amp;dest)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#f8cee6dd577bebfd1dbbe4cc503304d4">copy_coordinates</a> (Src const &amp;source, Dst &amp;dest)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copies coordinates from source to destination <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>.  <a href="#173003fecd63871d3a6aee07f4ba7011"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copies coordinates from source to destination <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>.  <a href="#f8cee6dd577bebfd1dbbe4cc503304d4"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename SegmentIdentifier , typename RangeOut &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__overlay.html#g72698a9e6c8319f77d1481537096c890">copy_segments</a> (Geometry const &amp;geometry, SegmentIdentifier const &amp;seg_id, int to_index, RangeOut &amp;range_out)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Traverses through intersection points / geometries.  <a href="group__overlay.html#g72698a9e6c8319f77d1481537096c890"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Y , template&lt; typename, typename &gt; class V, template&lt; typename &gt; class A&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#c7a970b235ee8d6d13e20f3db52e9f1d">correct</a> (<a class="el" href="structggl_1_1multi__polygon.html">multi_polygon</a>&lt; Y, V, A &gt; &amp;mp)</td></tr>
-
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#de63f8bac74d1e2a56c2d2712eceb8af">correct</a> (G &amp;geometry)</td></tr>
 
@@ -594,9 +607,9 @@ Geometry2 &gt;::type&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a 
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to get radius.  <a href="group__access.html#gfcdd0e4038fec643354ccc1c83294172"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Section &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__sectionalize.html#g5c0732d32eb6c6154f615b3a3337f4b9">get_section</a> (Geometry const &amp;geometry, Section const &amp;<a class="el" href="structggl_1_1section.html">section</a>, typename <a class="el" href="structggl_1_1point__const__iterator.html">point_const_iterator</a>&lt; Geometry &gt;::type &amp;begin, typename <a class="el" href="structggl_1_1point__const__iterator.html">point_const_iterator</a>&lt; Geometry &gt;::type &amp;end)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a">get_section</a> (Geometry const &amp;geometry, Section const &amp;<a class="el" href="structggl_1_1section.html">section</a>, typename <a class="el" href="structggl_1_1vertex__iterator.html">vertex_iterator</a>&lt; Geometry, true &gt;::type &amp;begin, typename <a class="el" href="structggl_1_1vertex__iterator.html">vertex_iterator</a>&lt; Geometry, true &gt;::type &amp;end)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get iterators for a specified <a class="el" href="structggl_1_1section.html" title="Structure containing section information.">section</a>.  <a href="group__sectionalize.html#g5c0732d32eb6c6154f615b3a3337f4b9"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get iterators for a specified <a class="el" href="structggl_1_1section.html" title="Structure containing section information.">section</a>.  <a href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename P &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">const <a class="el" href="structggl_1_1interior__type.html">interior_type</a>&lt; P &gt;::type &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#ga81ef3b07a844489714e682f12e43746">interior_rings</a> (const P &amp;<a class="el" href="classggl_1_1polygon.html">polygon</a>)</td></tr>
 
@@ -742,34 +755,22 @@ C::value_type &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cl
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g5964359d6ef6dc6c8cf37ed319ee3c79">set_radius</a> (G &amp;geometry, const typename <a class="el" href="structggl_1_1radius__type.html">radius_type</a>&lt; G &gt;::type &amp;radius)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to set the radius of a circle / sphere / (ellipse).  <a href="group__access.html#g5964359d6ef6dc6c8cf37ed319ee3c79"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Y , template&lt; typename, typename &gt; class V, template&lt; typename &gt; class A&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#c140b663db67a986468754276b6b97a1">simplify</a> (const <a class="el" href="structggl_1_1multi__polygon.html">multi_polygon</a>&lt; Y, V, A &gt; &amp;mp_in, <a class="el" href="structggl_1_1multi__polygon.html">multi_polygon</a>&lt; Y, V, A &gt; &amp;mp_out, double max_distance)</td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g953e1055914400f9ad3191adc5b42270">simplify</a> (Geometry const &amp;geometry, Geometry &amp;out, double max_distance)</td></tr>
 
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename L , template&lt; typename, typename &gt; class V, template&lt; typename &gt; class A&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#1463cc489eb6db3a3739f9767f9d8c00">simplify</a> (const <a class="el" href="structggl_1_1multi__linestring.html">multi_linestring</a>&lt; L, V, A &gt; &amp;ml_in, <a class="el" href="structggl_1_1multi__linestring.html">multi_linestring</a>&lt; L, V, A &gt; &amp;ml_out, double max_distance)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="group__simplify.html#g953e1055914400f9ad3191adc5b42270"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Strategy &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d">simplify</a> (Geometry const &amp;geometry, Geometry &amp;out, double max_distance, Strategy const &amp;strategy)</td></tr>
 
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename S &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g00b5a49a676c29d790764ad67e9fdfbc">simplify</a> (const G &amp;geometry, G &amp;out, double max_distance, S const &amp;strategy)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename OutputIterator &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g4285888f1598725bca124878ac16c656">simplify_inserter</a> (Geometry const &amp;geometry, OutputIterator out, double max_distance)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="group__simplify.html#g00b5a49a676c29d790764ad67e9fdfbc"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g44130eb01685933927c05207a01a84f1">simplify</a> (const G &amp;geometry, G &amp;out, double max_distance)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="group__simplify.html#g4285888f1598725bca124878ac16c656"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename OutputIterator , typename Strategy &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a">simplify_inserter</a> (Geometry const &amp;geometry, OutputIterator out, double max_distance, Strategy const &amp;strategy)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="group__simplify.html#g44130eb01685933927c05207a01a84f1"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename O , typename S &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#gfac2ab8188c31cf7fab43e423884e0ed">simplify</a> (const G &amp;geometry, O out, double max_distance, S const &amp;strategy)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="group__simplify.html#gfac2ab8188c31cf7fab43e423884e0ed"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename O &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g188e72f668c33ac75ad08653625a7cbb">simplify</a> (const G &amp;geometry, O out, double max_distance)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="group__simplify.html#g188e72f668c33ac75ad08653625a7cbb"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename ML &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#d6ac58fa58247aa420c6114932046ff5">simplify_multi_linestring</a> (const ML &amp;ml_in, ML &amp;ml_out, double max_distance)</td></tr>
-
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename MY &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceggl.html#d17c1744a4d19447b5d976f7bf95930a">simplify_multi_polygon</a> (const MY &amp;mp_in, MY &amp;mp_out, double max_distance)</td></tr>
-
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Point1 , typename Point2 &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__arithmetic.html#g7c04cab8a69747a37549b75aefc227f9">subtract_point</a> (Point1 &amp;p1, Point2 const &amp;p2)</td></tr>
 
@@ -1031,6 +1032,34 @@ C::value_type &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cl
 
 </div>
 </div><p>
+<hr><h2>Enumeration Type Documentation</h2>
+<a class="anchor" name="9a0f9a02ea40ca3ceab32afc4b08bf4d"></a><!-- doxytag: member="ggl::order_selector" ref="9a0f9a02ea40ca3ceab32afc4b08bf4d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespaceggl.html#9a0f9a02ea40ca3ceab32afc4b08bf4d">ggl::order_selector</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+<dl compact><dt><b>Enumerator: </b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" name="9a0f9a02ea40ca3ceab32afc4b08bf4d55fe53c1821ca13eb0eacb9084cb1d1c"></a><!-- doxytag: member="clockwise" ref="9a0f9a02ea40ca3ceab32afc4b08bf4d55fe53c1821ca13eb0eacb9084cb1d1c" args="" -->clockwise</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" name="9a0f9a02ea40ca3ceab32afc4b08bf4d7242f3377ee5283786ecb2bc2d90015a"></a><!-- doxytag: member="counterclockwise" ref="9a0f9a02ea40ca3ceab32afc4b08bf4d7242f3377ee5283786ecb2bc2d90015a" args="" -->counterclockwise</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" name="9a0f9a02ea40ca3ceab32afc4b08bf4d79823f6595401a02e8f1cea6d3b34e84"></a><!-- doxytag: member="order_undetermined" ref="9a0f9a02ea40ca3ceab32afc4b08bf4d79823f6595401a02e8f1cea6d3b34e84" args="" -->order_undetermined</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dl>
+
+<p>Definition at line <a class="el" href="point__order_8hpp_source.html#l00022">22</a> of file <a class="el" href="point__order_8hpp_source.html">point_order.hpp</a>.</p>
+
+</div>
+</div><p>
 <hr><h2>Function Documentation</h2>
 <a class="anchor" name="c748276bc142deaad1ce28af84d4edf8"></a><!-- doxytag: member="ggl::assert_dimension_greater_equal" ref="c748276bc142deaad1ce28af84d4edf8" args="()" -->
 <div class="memitem">
@@ -1055,6 +1084,100 @@ template&lt;typename G , int D&gt; </div>
 
 </div>
 </div><p>
+<a class="anchor" name="a658e33964ece2cc6e48c622595ad271"></a><!-- doxytag: member="ggl::assign_box_corners" ref="a658e33964ece2cc6e48c622595ad271" args="(B const &amp;box, P &amp;lower_left, P &amp;lower_right, P &amp;upper_left, P &amp;upper_right)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename B , typename P &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void ggl::assign_box_corners           </td>
+          <td>(</td>
+          <td class="paramtype">B const &amp;&nbsp;</td>
+          <td class="paramname"> <em>box</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">P &amp;&nbsp;</td>
+          <td class="paramname"> <em>lower_left</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">P &amp;&nbsp;</td>
+          <td class="paramname"> <em>lower_right</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">P &amp;&nbsp;</td>
+          <td class="paramname"> <em>upper_left</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">P &amp;&nbsp;</td>
+          <td class="paramname"> <em>upper_right</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Assign the 4 points of a 2D <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a>. 
+<p>
+<dl class="note" compact><dt><b>Note:</b></dt><dd>The order can be crucial. Most logical is LOWER, UPPER and sub-order LEFT, RIGHT </dd></dl>
+
+<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00473">473</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="a79ece7bbc75c938c5a01eadd2522156"></a><!-- doxytag: member="ggl::assign_point_to_box" ref="a79ece7bbc75c938c5a01eadd2522156" args="(Point const &amp;point, Box &amp;box)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::size_t Corner, typename Box , typename Point &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void ggl::assign_point_to_box           </td>
+          <td>(</td>
+          <td class="paramtype">Point const &amp;&nbsp;</td>
+          <td class="paramname"> <em>point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Box &amp;&nbsp;</td>
+          <td class="paramname"> <em>box</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Assign a <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a> with the value of a <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>. 
+<p>
+<dl compact><dt><b>Template Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>Corner</em>&nbsp;</td><td>indicates which box-corner, min_corner (0) or max_corner (1) </td></tr>
+  </table>
+</dl>
+
+<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00489">489</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="de63f8bac74d1e2a56c2d2712eceb8af"></a><!-- doxytag: member="ggl::correct" ref="de63f8bac74d1e2a56c2d2712eceb8af" args="(G &amp;geometry)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1076,7 +1199,7 @@ template&lt;typename G &gt; </div>
 <p>
 <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="03__polygon__example_8cpp-example.html#a2">03_polygon_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="algorithms_2correct_8hpp_source.html#l00154">154</a> of file <a class="el" href="algorithms_2correct_8hpp_source.html">correct.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2correct_8hpp_source.html#l00182">182</a> of file <a class="el" href="algorithms_2correct_8hpp_source.html">correct.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -1202,7 +1325,7 @@ template&lt;typename Base , typename Point &gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="segment__iterator_8hpp_source.html#l00111">111</a> of file <a class="el" href="segment__iterator_8hpp_source.html">segment_iterator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="segment__iterator_8hpp_source.html#l00109">109</a> of file <a class="el" href="segment__iterator_8hpp_source.html">segment_iterator.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -1235,7 +1358,7 @@ template&lt;typename Base , typename Point &gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="segment__iterator_8hpp_source.html#l00118">118</a> of file <a class="el" href="segment__iterator_8hpp_source.html">segment_iterator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="segment__iterator_8hpp_source.html#l00116">116</a> of file <a class="el" href="segment__iterator_8hpp_source.html">segment_iterator.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -1259,31 +1382,7 @@ template&lt;typename C &gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="segment__iterator_8hpp_source.html#l00130">130</a> of file <a class="el" href="segment__iterator_8hpp_source.html">segment_iterator.hpp</a>.</p>
-
-</div>
-</div><p>
-<a class="anchor" name="c7a970b235ee8d6d13e20f3db52e9f1d"></a><!-- doxytag: member="ggl::correct" ref="c7a970b235ee8d6d13e20f3db52e9f1d" args="(multi_polygon&lt; Y, V, A &gt; &amp;mp)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Y , template&lt; typename, typename &gt; class V, template&lt; typename &gt; class A&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void ggl::correct           </td>
-          <td>(</td>
-          <td class="paramtype">multi_polygon&lt; Y, V, A &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>mp</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-<p>Definition at line <a class="el" href="multi_2algorithms_2correct_8hpp_source.html#l00043">43</a> of file <a class="el" href="multi_2algorithms_2correct_8hpp_source.html">correct.hpp</a>.</p>
+<p>Definition at line <a class="el" href="segment__iterator_8hpp_source.html#l00128">128</a> of file <a class="el" href="segment__iterator_8hpp_source.html">segment_iterator.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -1947,34 +2046,19 @@ template&lt;typename Y , template&lt; typename, typename &gt; class V, template&
 
 </div>
 </div><p>
-<a class="anchor" name="d6ac58fa58247aa420c6114932046ff5"></a><!-- doxytag: member="ggl::simplify_multi_linestring" ref="d6ac58fa58247aa420c6114932046ff5" args="(const ML &amp;ml_in, ML &amp;ml_out, double max_distance)" -->
+<a class="anchor" name="99e0a8eac282cd44fbdb1a47666ea084"></a><!-- doxytag: member="ggl::as_range" ref="99e0a8eac282cd44fbdb1a47666ea084" args="(Geometry &amp;input)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ML &gt; </div>
+template&lt;typename Range , typename Geometry &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void ggl::simplify_multi_linestring           </td>
+          <td class="memname">Range&amp; ggl::as_range           </td>
           <td>(</td>
-          <td class="paramtype">const ML &amp;&nbsp;</td>
-          <td class="paramname"> <em>ml_in</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
+          <td class="paramname"> <em>input</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
           <td></td>
-          <td class="paramtype">ML &amp;&nbsp;</td>
-          <td class="paramname"> <em>ml_out</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>max_distance</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
         </tr>
       </table>
 </div>
@@ -1982,217 +2066,11 @@ template&lt;typename ML &gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="multi_2algorithms_2simplify_8hpp_source.html#l00023">23</a> of file <a class="el" href="multi_2algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
+<p>Definition at line <a class="el" href="as__range_8hpp_source.html#l00117">117</a> of file <a class="el" href="as__range_8hpp_source.html">as_range.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="d17c1744a4d19447b5d976f7bf95930a"></a><!-- doxytag: member="ggl::simplify_multi_polygon" ref="d17c1744a4d19447b5d976f7bf95930a" args="(const MY &amp;mp_in, MY &amp;mp_out, double max_distance)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename MY &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void ggl::simplify_multi_polygon           </td>
-          <td>(</td>
-          <td class="paramtype">const MY &amp;&nbsp;</td>
-          <td class="paramname"> <em>mp_in</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">MY &amp;&nbsp;</td>
-          <td class="paramname"> <em>mp_out</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>max_distance</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-<p>Definition at line <a class="el" href="multi_2algorithms_2simplify_8hpp_source.html#l00036">36</a> of file <a class="el" href="multi_2algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
-
-</div>
-</div><p>
-<a class="anchor" name="1463cc489eb6db3a3739f9767f9d8c00"></a><!-- doxytag: member="ggl::simplify" ref="1463cc489eb6db3a3739f9767f9d8c00" args="(const multi_linestring&lt; L, V, A &gt; &amp;ml_in, multi_linestring&lt; L, V, A &gt; &amp;ml_out, double max_distance)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename L , template&lt; typename, typename &gt; class V, template&lt; typename &gt; class A&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void ggl::simplify           </td>
-          <td>(</td>
-          <td class="paramtype">const multi_linestring&lt; L, V, A &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>ml_in</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">multi_linestring&lt; L, V, A &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>ml_out</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>max_distance</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-<p>Definition at line <a class="el" href="multi_2algorithms_2simplify_8hpp_source.html#l00051">51</a> of file <a class="el" href="multi_2algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
-
-</div>
-</div><p>
-<a class="anchor" name="c140b663db67a986468754276b6b97a1"></a><!-- doxytag: member="ggl::simplify" ref="c140b663db67a986468754276b6b97a1" args="(const multi_polygon&lt; Y, V, A &gt; &amp;mp_in, multi_polygon&lt; Y, V, A &gt; &amp;mp_out, double max_distance)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Y , template&lt; typename, typename &gt; class V, template&lt; typename &gt; class A&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void ggl::simplify           </td>
-          <td>(</td>
-          <td class="paramtype">const multi_polygon&lt; Y, V, A &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>mp_in</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">multi_polygon&lt; Y, V, A &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>mp_out</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>max_distance</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-<p>Definition at line <a class="el" href="multi_2algorithms_2simplify_8hpp_source.html#l00059">59</a> of file <a class="el" href="multi_2algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
-
-</div>
-</div><p>
-<a class="anchor" name="e5791c5c360cbb58d16b18cb46323175"></a><!-- doxytag: member="ggl::assign_box_corner" ref="e5791c5c360cbb58d16b18cb46323175" args="(B const &amp;box, P &amp;point)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;std::size_t C1, std::size_t C2, typename B , typename P &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void ggl::assign_box_corner           </td>
-          <td>(</td>
-          <td class="paramtype">B const &amp;&nbsp;</td>
-          <td class="paramname"> <em>box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">P &amp;&nbsp;</td>
-          <td class="paramname"> <em>point</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Assign one <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> of a 2D <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a>. 
-<p>
-
-<p>Definition at line <a class="el" href="assign__box__corner_8hpp_source.html#l00029">29</a> of file <a class="el" href="assign__box__corner_8hpp_source.html">assign_box_corner.hpp</a>.</p>
-
-</div>
-</div><p>
-<a class="anchor" name="a658e33964ece2cc6e48c622595ad271"></a><!-- doxytag: member="ggl::assign_box_corners" ref="a658e33964ece2cc6e48c622595ad271" args="(B const &amp;box, P &amp;lower_left, P &amp;lower_right, P &amp;upper_left, P &amp;upper_right)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename B , typename P &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void ggl::assign_box_corners           </td>
-          <td>(</td>
-          <td class="paramtype">B const &amp;&nbsp;</td>
-          <td class="paramname"> <em>box</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">P &amp;&nbsp;</td>
-          <td class="paramname"> <em>lower_left</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">P &amp;&nbsp;</td>
-          <td class="paramname"> <em>lower_right</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">P &amp;&nbsp;</td>
-          <td class="paramname"> <em>upper_left</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">P &amp;&nbsp;</td>
-          <td class="paramname"> <em>upper_right</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Assign the 4 points of a 2D <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a>. 
-<p>
-<dl class="note" compact><dt><b>Note:</b></dt><dd>The order can be crucial. Most logical is LOWER, UPPER and sub-order LEFT, RIGHT </dd></dl>
-
-<p>Definition at line <a class="el" href="assign__box__corner_8hpp_source.html#l00049">49</a> of file <a class="el" href="assign__box__corner_8hpp_source.html">assign_box_corner.hpp</a>.</p>
-
-</div>
-</div><p>
-<a class="anchor" name="173003fecd63871d3a6aee07f4ba7011"></a><!-- doxytag: member="ggl::copy_coordinates" ref="173003fecd63871d3a6aee07f4ba7011" args="(const Src &amp;source, Dst &amp;dest)" -->
+<a class="anchor" name="f8cee6dd577bebfd1dbbe4cc503304d4"></a><!-- doxytag: member="ggl::copy_coordinates" ref="f8cee6dd577bebfd1dbbe4cc503304d4" args="(Src const &amp;source, Dst &amp;dest)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -2201,7 +2079,7 @@ template&lt;typename Src , typename Dst &gt; </div>
         <tr>
           <td class="memname">void ggl::copy_coordinates           </td>
           <td>(</td>
-          <td class="paramtype">const Src &amp;&nbsp;</td>
+          <td class="paramtype">Src const &amp;&nbsp;</td>
           <td class="paramname"> <em>source</em>, </td>
         </tr>
         <tr>
@@ -2230,7 +2108,7 @@ The function copy_coordinates copies coordinates from one <a class="el" href="cl
 </dl>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>If destination type differs from source type, they must have the same coordinate count </dd></dl>
 
-<p>Definition at line <a class="el" href="copy_8hpp_source.html#l00064">64</a> of file <a class="el" href="copy_8hpp_source.html">copy.hpp</a>.</p>
+<p>Definition at line <a class="el" href="copy_8hpp_source.html#l00062">62</a> of file <a class="el" href="copy_8hpp_source.html">copy.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -2334,7 +2212,7 @@ template&lt;typename Geometry &gt; </div>
 Main DSV-streaming function. 
 <p>
 <dl compact><dt><b>Examples: </b></dt><dd>
-<a class="el" href="01__point__example_8cpp-example.html#a3">01_point_example.cpp</a>, <a class="el" href="02__linestring__example_8cpp-example.html#a5">02_linestring_example.cpp</a>, <a class="el" href="03__polygon__example_8cpp-example.html#a3">03_polygon_example.cpp</a>, <a class="el" href="06__transformation__example_8cpp-example.html#a3">06_transformation_example.cpp</a>, <a class="el" href="c01__custom__point__example_8cpp-example.html#a4">c01_custom_point_example.cpp</a>, <a class="el" href="c02__custom__box__example_8cpp-example.html#a4">c02_custom_box_example.cpp</a>, <a class="el" href="c04__a__custom__triangle__example_8cpp-example.html#a1">c04_a_custom_triangle_example.cpp</a>, <a class="el" href="c04__b__custom__triangle__example_8cpp-example.html#a2">c04_b_custom_triangle_example.cpp</a>, <a class="el" href="x01__qt__example_8cpp-example.html#a4">x01_qt_example.cpp</a>, <a class="el" href="x03__a__soci__example_8cpp-example.html#a0">x03_a_soci_example.cpp</a>, and <a class="el" href="x03__b__soci__example_8cpp-example.html#a1">x03_b_soci_example.cpp</a>.</dl>
+<a class="el" href="01__point__example_8cpp-example.html#a3">01_point_example.cpp</a>, <a class="el" href="02__linestring__example_8cpp-example.html#a5">02_linestring_example.cpp</a>, <a class="el" href="03__polygon__example_8cpp-example.html#a3">03_polygon_example.cpp</a>, <a class="el" href="06__transformation__example_8cpp-example.html#a3">06_transformation_example.cpp</a>, <a class="el" href="c01__custom__point__example_8cpp-example.html#a4">c01_custom_point_example.cpp</a>, <a class="el" href="c02__custom__box__example_8cpp-example.html#a4">c02_custom_box_example.cpp</a>, <a class="el" href="c04__a__custom__triangle__example_8cpp-example.html#a1">c04_a_custom_triangle_example.cpp</a>, <a class="el" href="c04__b__custom__triangle__example_8cpp-example.html#a3">c04_b_custom_triangle_example.cpp</a>, <a class="el" href="x01__qt__example_8cpp-example.html#a4">x01_qt_example.cpp</a>, <a class="el" href="x03__a__soci__example_8cpp-example.html#a0">x03_a_soci_example.cpp</a>, and <a class="el" href="x03__b__soci__example_8cpp-example.html#a1">x03_b_soci_example.cpp</a>.</dl>
 <p>Definition at line <a class="el" href="write__dsv_8hpp_source.html#l00355">355</a> of file <a class="el" href="write__dsv_8hpp_source.html">write_dsv.hpp</a>.</p>
 
 </div>

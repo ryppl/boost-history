@@ -59,9 +59,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="structggl_1_1select__coordinate__type.html">select_coordinate_type</a><br class="typebreak">
 &lt; P, Segment &gt;::type&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#a1bf8289c8a5b0fc97ee2943476a69a7">coordinate_type</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef Strategy&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#2e1bc521c8c39e2dfcbf4724df4f8b58">distance_strategy_type</a></td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef Strategy&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#bb6549905e99ca61b13cfc644c91f672">point_strategy_type</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef P&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#cfb9d185bcc22815ec15d07389ad03b9">point_type</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="structggl_1_1cartesian__distance.html">cartesian_distance</a><br class="typebreak">
 &lt; <a class="el" href="structggl_1_1coordinate__type.html">coordinate_type</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#a54175d4c138cd7319c8552f43824621">return_type</a></td></tr>
@@ -88,8 +88,27 @@ Calculates <a class="el" href="namespaceggl_1_1strategy_1_1distance.html">distan
 <li><a class="el" href="structggl_1_1cartesian__distance.html" title="Encapsulate the results of distance calculation.">cartesian_distance</a> operator(P,P) </li></ul>
 </dd></dl>
 
-<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00134">134</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
+<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00135">135</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
 <hr><h2>Member Typedef Documentation</h2>
+<a class="anchor" name="cfb9d185bcc22815ec15d07389ad03b9"></a><!-- doxytag: member="ggl::strategy::distance::xy_point_segment::point_type" ref="cfb9d185bcc22815ec15d07389ad03b9" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename P , typename Segment , typename Strategy  = pythagoras&lt;P, typename point_type&lt;Segment&gt;::type&gt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef P <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html">ggl::strategy::distance::xy_point_segment</a>&lt; P, Segment, Strategy &gt;::<a class="el" href="structggl_1_1point__type.html">point_type</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00137">137</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="a1bf8289c8a5b0fc97ee2943476a69a7"></a><!-- doxytag: member="ggl::strategy::distance::xy_point_segment::coordinate_type" ref="a1bf8289c8a5b0fc97ee2943476a69a7" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -105,7 +124,7 @@ template&lt;typename P , typename Segment , typename Strategy  = pythagoras&lt;P
 
 <p>
 
-<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00136">136</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
+<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00138">138</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -124,26 +143,7 @@ template&lt;typename P , typename Segment , typename Strategy  = pythagoras&lt;P
 
 <p>
 
-<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00137">137</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
-
-</div>
-</div><p>
-<a class="anchor" name="2e1bc521c8c39e2dfcbf4724df4f8b58"></a><!-- doxytag: member="ggl::strategy::distance::xy_point_segment::distance_strategy_type" ref="2e1bc521c8c39e2dfcbf4724df4f8b58" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename P , typename Segment , typename Strategy  = pythagoras&lt;P, typename point_type&lt;Segment&gt;::type&gt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef Strategy <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html">ggl::strategy::distance::xy_point_segment</a>&lt; P, Segment, Strategy &gt;::<a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#2e1bc521c8c39e2dfcbf4724df4f8b58">distance_strategy_type</a>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00138">138</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
+<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00139">139</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -162,7 +162,7 @@ template&lt;typename P , typename Segment , typename Strategy  = pythagoras&lt;P
 
 <p>
 
-<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00139">139</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
+<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00141">141</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -196,7 +196,7 @@ template&lt;typename P , typename Segment , typename Strategy  = pythagoras&lt;P
 
 <p>
 
-<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00142">142</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
+<p>Definition at line <a class="el" href="cart__distance_8hpp_source.html#l00144">144</a> of file <a class="el" href="cart__distance_8hpp_source.html">cart_distance.hpp</a>.</p>
 
 </div>
 </div><p>

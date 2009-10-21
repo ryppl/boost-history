@@ -56,12 +56,20 @@
 <a href="classggl_1_1strategy_1_1distance_1_1haversine-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef P1&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8ee0701ef57352296292047e3dcc3330">point_type</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8fd848a2bbc5857c70fa6bce5ffac5d3">return_type</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8fd848a2bbc5857c70fa6bce5ffac5d3">return_type</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#85ea8852c843a8950010229d0da4504a">haversine</a> (double r=1.0)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#85ea8852c843a8950010229d0da4504a">haversine</a> (double r=1.0)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8fd848a2bbc5857c70fa6bce5ffac5d3">return_type</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#cfc29c7f64c6136784283fab579fa970">operator()</a> (const P1 &amp;p1, const P2 &amp;p2) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8fd848a2bbc5857c70fa6bce5ffac5d3">return_type</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#4e6620683b788431de8942b0376af7af">operator()</a> (P1 const &amp;p1, P2 const &amp;p2) const </td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -80,8 +88,46 @@ Distance calculation for spherical coordinates on a perfect sphere using <a clas
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a href="http://en.wikipedia.org/wiki/Great-circle_distance">http://en.wikipedia.org/wiki/Great-circle_distance</a> </dd></dl>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>It says: <em>The great circle <a class="el" href="namespaceggl_1_1strategy_1_1distance.html">distance</a> d between two points with coordinates {lat1,lon1} and {lat2,lon2} is given by: d=acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon1-lon2)) A mathematically equivalent formula, which is <a class="el" href="structggl_1_1less.html" title="Less predicate for usage in e.g. std::map.">less</a> subject to rounding error for short distances is: d=2*asin(sqrt((sin((lat1-lat2)/2))^2 + cos(lat1)*cos(lat2)*(sin((lon1-lon2)/2))^2))</em> </dd></dl>
 
-<p>Definition at line <a class="el" href="haversine_8hpp_source.html#l00048">48</a> of file <a class="el" href="haversine_8hpp_source.html">haversine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="distance__haversine_8hpp_source.html#l00048">48</a> of file <a class="el" href="distance__haversine_8hpp_source.html">distance_haversine.hpp</a>.</p>
 <hr><h2>Member Typedef Documentation</h2>
+<a class="anchor" name="8fd848a2bbc5857c70fa6bce5ffac5d3"></a><!-- doxytag: member="ggl::strategy::distance::haversine::return_type" ref="8fd848a2bbc5857c70fa6bce5ffac5d3" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename P1, typename P2 = P1&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef double <a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html">ggl::strategy::distance::haversine</a>&lt; P1, P2 &gt;::<a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8fd848a2bbc5857c70fa6bce5ffac5d3">return_type</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="distance__haversine_8hpp_source.html#l00051">51</a> of file <a class="el" href="distance__haversine_8hpp_source.html">distance_haversine.hpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="8ee0701ef57352296292047e3dcc3330"></a><!-- doxytag: member="ggl::strategy::distance::haversine::point_type" ref="8ee0701ef57352296292047e3dcc3330" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename P1, typename P2 = P1&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef P1 <a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html">ggl::strategy::distance::haversine</a>&lt; P1, P2 &gt;::<a class="el" href="structggl_1_1point__type.html">point_type</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="distance__haversine_8hpp_source.html#l00052">52</a> of file <a class="el" href="distance__haversine_8hpp_source.html">distance_haversine.hpp</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="8fd848a2bbc5857c70fa6bce5ffac5d3"></a><!-- doxytag: member="ggl::strategy::distance::haversine::return_type" ref="8fd848a2bbc5857c70fa6bce5ffac5d3" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -122,11 +168,68 @@ template&lt;typename P1, typename P2 = P1&gt; </div>
 
 <p>
 
+<p>Definition at line <a class="el" href="distance__haversine_8hpp_source.html#l00054">54</a> of file <a class="el" href="distance__haversine_8hpp_source.html">distance_haversine.hpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="85ea8852c843a8950010229d0da4504a"></a><!-- doxytag: member="ggl::strategy::distance::haversine::haversine" ref="85ea8852c843a8950010229d0da4504a" args="(double r=1.0)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename P1, typename P2 = P1&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html">ggl::strategy::distance::haversine</a>&lt; P1, P2 &gt;::<a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html">haversine</a>           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>r</em> = <code>1.0</code>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
 <p>Definition at line <a class="el" href="haversine_8hpp_source.html#l00054">54</a> of file <a class="el" href="haversine_8hpp_source.html">haversine.hpp</a>.</p>
 
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
+<a class="anchor" name="4e6620683b788431de8942b0376af7af"></a><!-- doxytag: member="ggl::strategy::distance::haversine::operator()" ref="4e6620683b788431de8942b0376af7af" args="(P1 const &amp;p1, P2 const &amp;p2) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename P1, typename P2 = P1&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8fd848a2bbc5857c70fa6bce5ffac5d3">return_type</a> <a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html">ggl::strategy::distance::haversine</a>&lt; P1, P2 &gt;::operator()           </td>
+          <td>(</td>
+          <td class="paramtype">P1 const &amp;&nbsp;</td>
+          <td class="paramname"> <em>p1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">P2 const &amp;&nbsp;</td>
+          <td class="paramname"> <em>p2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="distance__haversine_8hpp_source.html#l00058">58</a> of file <a class="el" href="distance__haversine_8hpp_source.html">distance_haversine.hpp</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="cfc29c7f64c6136784283fab579fa970"></a><!-- doxytag: member="ggl::strategy::distance::haversine::operator()" ref="cfc29c7f64c6136784283fab579fa970" args="(const P1 &amp;p1, const P2 &amp;p2) const " -->
 <div class="memitem">
 <div class="memproto">

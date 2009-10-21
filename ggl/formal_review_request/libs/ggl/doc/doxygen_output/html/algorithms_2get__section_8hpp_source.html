@@ -62,7 +62,7 @@
 <a name="l00020"></a>00020 <span class="preprocessor">#include &lt;<a class="code" href="exterior__ring_8hpp.html">ggl/core/exterior_ring.hpp</a>&gt;</span>
 <a name="l00021"></a>00021 <span class="preprocessor">#include &lt;<a class="code" href="interior__rings_8hpp.html">ggl/core/interior_rings.hpp</a>&gt;</span>
 <a name="l00022"></a>00022 
-<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;<a class="code" href="iterators_2point__const__iterator_8hpp.html">ggl/iterators/point_const_iterator.hpp</a>&gt;</span>
+<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;<a class="code" href="iterators_2vertex__iterator_8hpp.html">ggl/iterators/vertex_iterator.hpp</a>&gt;</span>
 <a name="l00024"></a>00024 
 <a name="l00025"></a>00025 <span class="preprocessor">#include &lt;<a class="code" href="segment_8hpp.html">ggl/geometries/segment.hpp</a>&gt;</span>
 <a name="l00026"></a>00026 
@@ -77,9 +77,9 @@
 <a name="l00035"></a>00035 {
 <a name="l00036"></a>00036 
 <a name="l00037"></a>00037 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Section&gt;
-<a name="l00038"></a>00038 <span class="keyword">struct </span><a class="code" href="group__sectionalize.html#g5c0732d32eb6c6154f615b3a3337f4b9" title="Get iterators for a specified section.">get_section</a>
+<a name="l00038"></a>00038 <span class="keyword">struct </span><a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>
 <a name="l00039"></a>00039 {
-<a name="l00040"></a>00040     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__const__iterator.html" title="Meta-function which defines point-const-iterator type.">ggl::point_const_iterator&lt;Geometry&gt;::type</a> iterator_type;
+<a name="l00040"></a>00040     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">ggl::vertex_iterator&lt;Geometry, true&gt;::type</a> iterator_type;
 <a name="l00041"></a>00041     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(Geometry <span class="keyword">const</span>&amp; geometry, Section <span class="keyword">const</span>&amp; section,
 <a name="l00042"></a>00042                 iterator_type&amp; begin, iterator_type&amp; end)
 <a name="l00043"></a>00043     {
@@ -89,9 +89,9 @@
 <a name="l00047"></a>00047 };
 <a name="l00048"></a>00048 
 <a name="l00049"></a>00049 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Polygon, <span class="keyword">typename</span> Section&gt;
-<a name="l00050"></a>00050 <span class="keyword">struct </span><a class="code" href="group__sectionalize.html#g5c0732d32eb6c6154f615b3a3337f4b9" title="Get iterators for a specified section.">get_section</a>&lt;polygon_tag, Polygon, Section&gt;
+<a name="l00050"></a>00050 <span class="keyword">struct </span><a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>&lt;polygon_tag, Polygon, Section&gt;
 <a name="l00051"></a>00051 {
-<a name="l00052"></a>00052     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__const__iterator.html" title="Meta-function which defines point-const-iterator type.">ggl::point_const_iterator&lt;Polygon&gt;::type</a> iterator_type;
+<a name="l00052"></a>00052     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">ggl::vertex_iterator&lt;Polygon, true&gt;::type</a> iterator_type;
 <a name="l00053"></a>00053     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(Polygon <span class="keyword">const</span>&amp; polygon, Section <span class="keyword">const</span>&amp; section,
 <a name="l00054"></a>00054                 iterator_type&amp; begin, iterator_type&amp; end)
 <a name="l00055"></a>00055     {
@@ -112,11 +112,11 @@
 <a name="l00070"></a>00070 
 <a name="l00071"></a>00071 
 <a name="l00084"></a>00084 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Section&gt;
-<a name="l00085"></a><a class="code" href="group__sectionalize.html#g5c0732d32eb6c6154f615b3a3337f4b9">00085</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__sectionalize.html#g5c0732d32eb6c6154f615b3a3337f4b9" title="Get iterators for a specified section.">get_section</a>(Geometry <span class="keyword">const</span>&amp; geometry, Section <span class="keyword">const</span>&amp; <a class="code" href="structggl_1_1section.html" title="Structure containing section information.">section</a>,
-<a name="l00086"></a>00086     <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__const__iterator.html" title="Meta-function which defines point-const-iterator type.">point_const_iterator&lt;Geometry&gt;::type</a>&amp; begin,
-<a name="l00087"></a>00087     <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__const__iterator.html" title="Meta-function which defines point-const-iterator type.">point_const_iterator&lt;Geometry&gt;::type</a>&amp; end)
+<a name="l00085"></a><a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a">00085</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>(Geometry <span class="keyword">const</span>&amp; geometry, Section <span class="keyword">const</span>&amp; <a class="code" href="structggl_1_1section.html" title="Structure containing section information.">section</a>,
+<a name="l00086"></a>00086     <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">vertex_iterator&lt;Geometry, true&gt;::type</a>&amp; begin,
+<a name="l00087"></a>00087     <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">vertex_iterator&lt;Geometry, true&gt;::type</a>&amp; end)
 <a name="l00088"></a>00088 {
-<a name="l00089"></a>00089     <a class="code" href="group__sectionalize.html#g5c0732d32eb6c6154f615b3a3337f4b9" title="Get iterators for a specified section.">dispatch::get_section</a>
+<a name="l00089"></a>00089     <a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">dispatch::get_section</a>
 <a name="l00090"></a>00090         &lt;
 <a name="l00091"></a>00091             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,
 <a name="l00092"></a>00092             Geometry,

@@ -106,12 +106,11 @@
 <li>difference_type
 : <a class="el" href="structggl_1_1segment__iterator.html#e3d45134f345df9ec7aa89f8e2e95bdf">ggl::segment_iterator&lt; Base, Point &gt;</a>
 <li>distance_strategy_type
-: <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#2e1bc521c8c39e2dfcbf4724df4f8b58">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
-, <a class="el" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html#8baa11b24fd260345ee451512c710350">ggl::strategy::simplify::douglas_peucker&lt; R, O_IT, PSDS &gt;</a>
+: <a class="el" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html#d9c2f3932590f7088e2cdf032c41458b">ggl::strategy::simplify::douglas_peucker&lt; R, O_IT, PSDS &gt;</a>
 </ul>
 <h3><a class="anchor" name="index_i">- i -</a></h3><ul>
 <li>inner_container_type
-: <a class="el" href="classggl_1_1polygon.html#5c966fd82091bfdbe8d6693059b37864">ggl::polygon&lt; Point, PointList, RingList, PointAlloc, RingAlloc &gt;</a>
+: <a class="el" href="classggl_1_1polygon.html#745719d755446c294264911892d97182">ggl::polygon&lt; Point, PointList, RingList, ClockWise, PointAlloc, RingAlloc &gt;</a>
 <li>iterator_category
 : <a class="el" href="structggl_1_1segment__iterator.html#8f0ff7afda611c09fb9df03c70c99d76">ggl::segment_iterator&lt; Base, Point &gt;</a>
 </ul>
@@ -125,9 +124,9 @@
 <h3><a class="anchor" name="index_n">- n -</a></h3><ul>
 <li>ncg
 : <a class="el" href="structggl_1_1coordinate__system.html#c53f29d9ef862a2f281a9bf516521c46">ggl::coordinate_system&lt; G &gt;</a>
-, <a class="el" href="structggl_1_1point__const__iterator.html#57e35b1429bdc4d2100c488d5894d4df">ggl::point_const_iterator&lt; Geometry &gt;</a>
 , <a class="el" href="structggl_1_1ring__type.html#9e7c22c3cd86a0d47f41e15c01b6a299">ggl::ring_type&lt; Geometry &gt;</a>
 , <a class="el" href="structggl_1_1point__type.html#6e4f57cc434784e7155016375d202b45">ggl::point_type&lt; Geometry &gt;</a>
+, <a class="el" href="structggl_1_1point__order.html#6a3c9d8f3b050a4f040c4f244fce6fd4">ggl::point_order&lt; Geometry &gt;</a>
 , <a class="el" href="structggl_1_1interior__type.html#304a4e5fbdbc3a5504b7c0561d32e646">ggl::interior_type&lt; G &gt;</a>
 , <a class="el" href="structggl_1_1coordinate__type.html#a2452b2ff15dcb3de239e970cce63bd7">ggl::coordinate_type&lt; G &gt;</a>
 </ul>
@@ -137,12 +136,17 @@
 <li>P2
 : <a class="el" href="structggl_1_1distance__result.html#09dd903d489dbfa0ec23306ec7b88d02">ggl::distance_result&lt; G1, G2 &gt;</a>
 <li>point_strategy_type
-: <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#bb6549905e99ca61b13cfc644c91f672">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
+: <a class="el" href="classggl_1_1strategy_1_1distance_1_1cross__track.html#bb01d09347d2f4f9bec8ab177592643e">ggl::strategy::distance::cross_track&lt; P, S &gt;</a>
+, <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#bb6549905e99ca61b13cfc644c91f672">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
 <li>point_type
-: <a class="el" href="structggl_1_1segment.html#47f8bba55326d5ae988dc3a5a9f146c7">ggl::segment&lt; P &gt;</a>
-, <a class="el" href="classggl_1_1polygon.html#8dda8bcf15991e114554c6dcfb9c7231">ggl::polygon&lt; Point, PointList, RingList, PointAlloc, RingAlloc &gt;</a>
+: <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#cfb9d185bcc22815ec15d07389ad03b9">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
+, <a class="el" href="structggl_1_1strategy_1_1distance_1_1pythagoras.html#4a6f6649a2e25a6c584c29a5c6a3bee0">ggl::strategy::distance::pythagoras&lt; P1, P2, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8ee0701ef57352296292047e3dcc3330">ggl::strategy::distance::haversine&lt; P1, P2 &gt;</a>
+, <a class="el" href="structggl_1_1segment.html#47f8bba55326d5ae988dc3a5a9f146c7">ggl::segment&lt; P &gt;</a>
+, <a class="el" href="classggl_1_1polygon.html#662c4458e3099e30097a3fc909d54941">ggl::polygon&lt; Point, PointList, RingList, ClockWise, PointAlloc, RingAlloc &gt;</a>
 , <a class="el" href="structggl_1_1area__result.html#d6428313802f153cd99b803ecde23872">ggl::area_result&lt; Geometry &gt;</a>
 , <a class="el" href="structggl_1_1segment__iterator.html#e388acc7d123761a41a0132ed0b19d29">ggl::segment_iterator&lt; Base, Point &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1distance_1_1cross__track.html#08edd81bdb1f8a1296dbaebfc1ca3932">ggl::strategy::distance::cross_track&lt; P, S &gt;</a>
 <li>pointer
 : <a class="el" href="structggl_1_1segment__iterator.html#fe664c6678e12e841a1c0be1e77e53a0">ggl::segment_iterator&lt; Base, Point &gt;</a>
 </ul>
@@ -156,17 +160,18 @@
 <li>return_type
 : <a class="el" href="classggl_1_1strategy_1_1distance_1_1ll__point__segment.html#f98549b351e37683bc7999d389f170f0">ggl::strategy::distance::ll_point_segment&lt; P, S &gt;</a>
 , <a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8fd848a2bbc5857c70fa6bce5ffac5d3">ggl::strategy::distance::haversine&lt; P1, P2 &gt;</a>
+, <a class="el" href="structggl_1_1area__result.html#4915057a85bc6a0c7292b3db1e4f33be">ggl::area_result&lt; Geometry &gt;</a>
 , <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#a54175d4c138cd7319c8552f43824621">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
 , <a class="el" href="structggl_1_1strategy_1_1distance_1_1pythagoras.html#0e3ccd19d8d1c63360ba93be700c39a4">ggl::strategy::distance::pythagoras&lt; P1, P2, CalculationType &gt;</a>
 , <a class="el" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#f2ef55e9d5310d400a6e43a25f6c989d">ggl::strategy::area::by_triangles&lt; PS, CalculationType &gt;</a>
-, <a class="el" href="structggl_1_1area__result.html#4915057a85bc6a0c7292b3db1e4f33be">ggl::area_result&lt; Geometry &gt;</a>
-, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__intersection__points.html#6e36f163958d94ece083a97f0e3d659c">ggl::policies::relate::segments_intersection_points&lt; S1, S2, ReturnType &gt;</a>
-, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__direction.html#84941aff66a66a38844da63b99590932">ggl::policies::relate::segments_direction&lt; S1, S2 &gt;</a>
-, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__de9im.html#93b91d42efd81a1b75c016fe886bd3b4">ggl::policies::relate::segments_de9im&lt; S1, S2 &gt;</a>
 , <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__tupled.html#fd5a4a56a3f161178b97885e9ae27738">ggl::policies::relate::segments_tupled&lt; Policy1, Policy2 &gt;</a>
+, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__intersection__points.html#6e36f163958d94ece083a97f0e3d659c">ggl::policies::relate::segments_intersection_points&lt; S1, S2, ReturnType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1distance_1_1cross__track.html#e62cf6b01d4e29e04700ef45e0b15db3">ggl::strategy::distance::cross_track&lt; P, S &gt;</a>
+, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__de9im.html#93b91d42efd81a1b75c016fe886bd3b4">ggl::policies::relate::segments_de9im&lt; S1, S2 &gt;</a>
 , <a class="el" href="classggl_1_1strategy_1_1area_1_1by__spherical__excess.html#9378e1ffdce5a34e96aa1ec3245ac718">ggl::strategy::area::by_spherical_excess&lt; P &gt;</a>
+, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__direction.html#84941aff66a66a38844da63b99590932">ggl::policies::relate::segments_direction&lt; S1, S2 &gt;</a>
 <li>ring_type
-: <a class="el" href="classggl_1_1polygon.html#1c6fe805fcbf99e4b70afe9202c820aa">ggl::polygon&lt; Point, PointList, RingList, PointAlloc, RingAlloc &gt;</a>
+: <a class="el" href="classggl_1_1polygon.html#6d7c8304fda2d2f1850cf2eb994c441a">ggl::polygon&lt; Point, PointList, RingList, ClockWise, PointAlloc, RingAlloc &gt;</a>
 </ul>
 <h3><a class="anchor" name="index_s">- s -</a></h3><ul>
 <li>S
@@ -201,7 +206,7 @@
 , <a class="el" href="structggl_1_1strategy_1_1transform_1_1inverse__transformer.html#a5b03bab846c70cc412672c5b8a15a33">ggl::strategy::transform::inverse_transformer&lt; P1, P2 &gt;</a>
 , <a class="el" href="structggl_1_1strategy_1_1transform_1_1map__transformer.html#cd9a362067f7a5825d01d040930a22c9">ggl::strategy::transform::map_transformer&lt; P1, P2, Mirror, SameScale, Dimension1, Dimension2 &gt;</a>
 <li>type
-: <a class="el" href="structggl_1_1as__range__type.html#0ca47e830e61d4f6c0b33c5e8eaa5c4e">ggl::as_range_type&lt; Geometry &gt;</a>
+: <a class="el" href="structggl_1_1as__range__type.html#2d2dc7b2cf9bc92752f111975eb47ac8">ggl::as_range_type&lt; Geometry &gt;</a>
 , <a class="el" href="structggl_1_1strategy__tag_3_01strategy_1_1distance_1_1xy__point__segment_3_01_point_00_01_segment_00_01_p_p_strategy_01_4_01_4.html#c06ed387f720d8a642e343b6d9b7f78c">ggl::strategy_tag&lt; strategy::distance::xy_point_segment&lt; Point, Segment, PPStrategy &gt; &gt;</a>
 , <a class="el" href="structggl_1_1strategy__tag_3_01strategy_1_1distance_1_1pythagoras_3_01_p1_00_01_p2_01_4_01_4.html#c2105145e587929fce337ec44821b5a8">ggl::strategy_tag&lt; strategy::distance::pythagoras&lt; P1, P2 &gt; &gt;</a>
 , <a class="el" href="structggl_1_1strategy__tag.html#5b87fe714131125577390960840bd65c">ggl::strategy_tag&lt; T &gt;</a>
@@ -217,7 +222,7 @@
 , <a class="el" href="structggl_1_1strategy__distance__segment.html#7f194ba200da0e6da72ac4e14a623a2f">ggl::strategy_distance_segment&lt; CsTag1, CsTag2, Point, Segment &gt;</a>
 , <a class="el" href="structggl_1_1strategy__distance.html#e95dff63729289b7ff265e4311fb54de">ggl::strategy_distance&lt; T1, T2, P1, P2 &gt;</a>
 , <a class="el" href="structggl_1_1strategy__area.html#1e4dc33e378ad99d5ba47807de230a3b">ggl::strategy_area&lt; T, P &gt;</a>
-, <a class="el" href="structggl_1_1point__const__iterator.html#c7e46433fc9d62ee9e7a4db10da7df50">ggl::point_const_iterator&lt; Geometry &gt;</a>
+, <a class="el" href="structggl_1_1vertex__iterator.html#5972cd0c976afccdc5a0a5400b998bdf">ggl::vertex_iterator&lt; Geometry, IsConst &gt;</a>
 , <a class="el" href="structggl_1_1traits_1_1tag_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_01_4.html#02acc738dfcd073102d0c33b600556f9">ggl::traits::tag&lt; ggl::detail::intersection::intersection_point&lt; P &gt; &gt;</a>
 , <a class="el" href="structggl_1_1traits_1_1coordinate__system_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_01_4.html#b77a740fb26f4ade02637e33c02ead68">ggl::traits::coordinate_system&lt; ggl::detail::intersection::intersection_point&lt; P &gt; &gt;</a>
 , <a class="el" href="structggl_1_1traits_1_1coordinate__type_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_01_4.html#7f398e2aac26bbcf7f62ddae080c8e28">ggl::traits::coordinate_type&lt; ggl::detail::intersection::intersection_point&lt; P &gt; &gt;</a>

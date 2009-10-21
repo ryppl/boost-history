@@ -43,22 +43,22 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Implements the <a class="el" href="namespaceggl_1_1strategy_1_1simplify.html">simplify</a> algorithm.  <a href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html#_details">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename S &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g00b5a49a676c29d790764ad67e9fdfbc">ggl::simplify</a> (const G &amp;geometry, G &amp;out, double max_distance, S const &amp;strategy)</td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g953e1055914400f9ad3191adc5b42270">ggl::simplify</a> (Geometry const &amp;geometry, Geometry &amp;out, double max_distance)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="#g00b5a49a676c29d790764ad67e9fdfbc"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g44130eb01685933927c05207a01a84f1">ggl::simplify</a> (const G &amp;geometry, G &amp;out, double max_distance)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="#g953e1055914400f9ad3191adc5b42270"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Strategy &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d">ggl::simplify</a> (Geometry const &amp;geometry, Geometry &amp;out, double max_distance, Strategy const &amp;strategy)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="#g44130eb01685933927c05207a01a84f1"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename O , typename S &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#gfac2ab8188c31cf7fab43e423884e0ed">ggl::simplify</a> (const G &amp;geometry, O out, double max_distance, S const &amp;strategy)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="#g752a5b4c8a40756da0e717c1ae4d2d8d"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename OutputIterator &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g4285888f1598725bca124878ac16c656">ggl::simplify_inserter</a> (Geometry const &amp;geometry, OutputIterator out, double max_distance)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="#gfac2ab8188c31cf7fab43e423884e0ed"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename O &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#g188e72f668c33ac75ad08653625a7cbb">ggl::simplify</a> (const G &amp;geometry, O out, double max_distance)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="#g4285888f1598725bca124878ac16c656"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename OutputIterator , typename Strategy &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a">ggl::simplify_inserter</a> (Geometry const &amp;geometry, OutputIterator out, double max_distance, Strategy const &amp;strategy)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="#g188e72f668c33ac75ad08653625a7cbb"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Simplify a geometry.  <a href="#gbe0df65c97527e83bcab80ec3232d45a"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <dl class="user" compact><dt><b>Source description:</b></dt><dd><ul>
@@ -75,22 +75,78 @@
 </li><li>POLYGON: simplifying a valid simple polygon (which never intersects itself) might result in an invalid polygon, where the simplified rings intersect themselves or one of the other outer or inner rings. Efficient simplification of a ring/polygon is still an "Open Problem" (<a href="http://maven.smith.edu/~orourke/TOPP/P24.html#Problem.24">http://maven.smith.edu/~orourke/TOPP/P24.html#Problem.24</a>) </li></ul>
 </dd></dl>
 <hr><h2>Function Documentation</h2>
-<a class="anchor" name="g188e72f668c33ac75ad08653625a7cbb"></a><!-- doxytag: member="ggl::simplify" ref="g188e72f668c33ac75ad08653625a7cbb" args="(const G &amp;geometry, O out, double max_distance)" -->
+<a class="anchor" name="g752a5b4c8a40756da0e717c1ae4d2d8d"></a><!-- doxytag: member="ggl::simplify" ref="g752a5b4c8a40756da0e717c1ae4d2d8d" args="(Geometry const &amp;geometry, Geometry &amp;out, double max_distance, Strategy const &amp;strategy)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename O &gt; </div>
+template&lt;typename Geometry , typename Strategy &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void ggl::simplify           </td>
           <td>(</td>
-          <td class="paramtype">const G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">O&nbsp;</td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
+          <td class="paramname"> <em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>max_distance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Strategy const &amp;&nbsp;</td>
+          <td class="paramname"> <em>strategy</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Simplify a geometry. 
+<p>
+This version of simplify simplifies a geometry using a specified <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> where the output is of the same geometry type as the input. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>geometry</em>&nbsp;</td><td>input geometry, to be simplified </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>out</em>&nbsp;</td><td>output geometry, simplified version of the input geometry </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>max_distance</em>&nbsp;</td><td>distance (in units of input coordinates) of a vertex to other segments to be removed </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="namespaceggl_1_1strategy.html">strategy</a></em>&nbsp;</td><td>simplify <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> to be used for simplification, might include point-distance <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Examples: </b></dt><dd>
+<a class="el" href="02__linestring__example_8cpp-example.html#a12">02_linestring_example.cpp</a>.</dl>
+<p>Definition at line <a class="el" href="algorithms_2simplify_8hpp_source.html#l00256">256</a> of file <a class="el" href="algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="g953e1055914400f9ad3191adc5b42270"></a><!-- doxytag: member="ggl::simplify" ref="g953e1055914400f9ad3191adc5b42270" args="(Geometry const &amp;geometry, Geometry &amp;out, double max_distance)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Geometry &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void ggl::simplify           </td>
+          <td>(</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
+          <td class="paramname"> <em>geometry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
           <td class="paramname"> <em>out</em>, </td>
         </tr>
         <tr>
@@ -111,44 +167,34 @@ template&lt;typename G , typename O &gt; </div>
 <p>
 Simplify a geometry. 
 <p>
-The simplify algorithm removes points, keeping the shape as much as possible. This version of simplify uses an output iterator <dl compact><dt><b>Parameters:</b></dt><dd>
+This version of simplify simplifies a geometry using the default <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> (Douglas Peucker), where the output is of the same geometry type as the input. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>geometry</em>&nbsp;</td><td>the geometry to be simplified, being a <a class="el" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">ggl::linestring</a>, vector, iterator pair, or any other boost compatible range </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>out</em>&nbsp;</td><td>output iterator, outputs all simplified points </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>geometry</em>&nbsp;</td><td>input geometry, to be simplified </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>out</em>&nbsp;</td><td>output geometry, simplified version of the input geometry </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>max_distance</em>&nbsp;</td><td>distance (in units of input coordinates) of a vertex to other segments to be removed </td></tr>
   </table>
 </dl>
-<dl class="user" compact><dt><b>Example:</b></dt><dd>The simplify algorithm can be used as following:  <div class="fragment"><pre class="fragment">{
-    <a class="code" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">ggl::linestring&lt;ggl::point_xy&lt;double&gt;</a> &gt; line, simplified;
-    ggl::read_wkt(<span class="stringliteral">"linestring(1.1 1.1, 2.5 2.1, 3.1 3.1, 4.9 1.1, 3.1 1.9)"</span>, line);
-    <a class="code" href="group__simplify.html#g188e72f668c33ac75ad08653625a7cbb" title="Simplify a geometry.">ggl::simplify</a>(line, std::back_inserter(simplified), 0.5);
-    std::cout
-        &lt;&lt; <span class="stringliteral">"  original line: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(line) &lt;&lt; std::endl
-        &lt;&lt; <span class="stringliteral">"simplified line: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(simplified) &lt;&lt; std::endl;
-}
-</pre></div> </dd></dl>
-<dl compact><dt><b>Examples: </b></dt><dd>
-<a class="el" href="02__linestring__example_8cpp-example.html#a12">02_linestring_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="algorithms_2simplify_8hpp_source.html#l00276">276</a> of file <a class="el" href="algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
+
+<p>Definition at line <a class="el" href="algorithms_2simplify_8hpp_source.html#l00284">284</a> of file <a class="el" href="algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="gfac2ab8188c31cf7fab43e423884e0ed"></a><!-- doxytag: member="ggl::simplify" ref="gfac2ab8188c31cf7fab43e423884e0ed" args="(const G &amp;geometry, O out, double max_distance, S const &amp;strategy)" -->
+<a class="anchor" name="gbe0df65c97527e83bcab80ec3232d45a"></a><!-- doxytag: member="ggl::simplify_inserter" ref="gbe0df65c97527e83bcab80ec3232d45a" args="(Geometry const &amp;geometry, OutputIterator out, double max_distance, Strategy const &amp;strategy)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename O , typename S &gt; </div>
+template&lt;typename Geometry , typename OutputIterator , typename Strategy &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void ggl::simplify           </td>
+          <td class="memname">void ggl::simplify_inserter           </td>
           <td>(</td>
-          <td class="paramtype">const G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">O&nbsp;</td>
+          <td class="paramtype">OutputIterator&nbsp;</td>
           <td class="paramname"> <em>out</em>, </td>
         </tr>
         <tr>
@@ -160,7 +206,7 @@ template&lt;typename G , typename O , typename S &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">S const &amp;&nbsp;</td>
+          <td class="paramtype">Strategy const &amp;&nbsp;</td>
           <td class="paramname"> <em>strategy</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -191,32 +237,31 @@ The simplify algorithm removes points, keeping the shape as much as possible. Th
     ggl::read_wkt(<span class="stringliteral">"linestring(1.1 1.1, 2.5 2.1, 3.1 3.1, 4.9 1.1, 3.1 1.9)"</span>, line);
 
     <span class="keyword">typedef</span> <a class="code" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html" title="Strategy for distance point to segment.">ggl::strategy::distance::xy_point_segment&lt;P, ggl::segment&lt;const P&gt;</a> &gt; DS;
-    <span class="keyword">typedef</span> std::ostream_iterator&lt;P&gt; OUT;
-    <span class="keyword">typedef</span> <a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html" title="Implements the simplify algorithm.">ggl::strategy::simplify::douglas_peucker&lt;L, OUT, DS&gt;</a> simplification;
-    <a class="code" href="group__simplify.html#g188e72f668c33ac75ad08653625a7cbb" title="Simplify a geometry.">ggl::simplify</a>(line, OUT(std::cout, <span class="stringliteral">"\n"</span>), 0.5, simplification());
+    <span class="keyword">typedef</span> <a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html" title="Implements the simplify algorithm.">ggl::strategy::simplify::douglas_peucker&lt;P, DS&gt;</a> simplification;
+    <a class="code" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a" title="Simplify a geometry.">ggl::simplify_inserter</a>(line, std::ostream_iterator&lt;P&gt;(std::cout, <span class="stringliteral">"\n"</span>), 0.5, simplification());
 }
 </pre></div> </dd></dl>
 
-<p>Definition at line <a class="el" href="algorithms_2simplify_8hpp_source.html#l00299">299</a> of file <a class="el" href="algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2simplify_8hpp_source.html#l00323">323</a> of file <a class="el" href="algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="g44130eb01685933927c05207a01a84f1"></a><!-- doxytag: member="ggl::simplify" ref="g44130eb01685933927c05207a01a84f1" args="(const G &amp;geometry, G &amp;out, double max_distance)" -->
+<a class="anchor" name="g4285888f1598725bca124878ac16c656"></a><!-- doxytag: member="ggl::simplify_inserter" ref="g4285888f1598725bca124878ac16c656" args="(Geometry const &amp;geometry, OutputIterator out, double max_distance)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G &gt; </div>
+template&lt;typename Geometry , typename OutputIterator &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void ggl::simplify           </td>
+          <td class="memname">void ggl::simplify_inserter           </td>
           <td>(</td>
-          <td class="paramtype">const G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">G &amp;&nbsp;</td>
+          <td class="paramtype">OutputIterator&nbsp;</td>
           <td class="paramname"> <em>out</em>, </td>
         </tr>
         <tr>
@@ -237,70 +282,24 @@ template&lt;typename G &gt; </div>
 <p>
 Simplify a geometry. 
 <p>
-This version of simplify simplifies a geometry using the default <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> (Douglas Peucker), where the output is of the same geometry type as the input. <dl compact><dt><b>Parameters:</b></dt><dd>
+The simplify algorithm removes points, keeping the shape as much as possible. This version of simplify uses an output iterator <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>geometry</em>&nbsp;</td><td>input geometry, to be simplified </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>out</em>&nbsp;</td><td>output geometry, simplified version of the input geometry </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>geometry</em>&nbsp;</td><td>the geometry to be simplified, being a <a class="el" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">ggl::linestring</a>, vector, iterator pair, or any other boost compatible range </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>out</em>&nbsp;</td><td>output iterator, outputs all simplified points </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>max_distance</em>&nbsp;</td><td>distance (in units of input coordinates) of a vertex to other segments to be removed </td></tr>
   </table>
 </dl>
+<dl class="user" compact><dt><b>Example:</b></dt><dd>The simplify algorithm can be used as following:  <div class="fragment"><pre class="fragment">{
+    <a class="code" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">ggl::linestring&lt;ggl::point_xy&lt;double&gt;</a> &gt; line, simplified;
+    ggl::read_wkt(<span class="stringliteral">"linestring(1.1 1.1, 2.5 2.1, 3.1 3.1, 4.9 1.1, 3.1 1.9)"</span>, line);
+    <a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d" title="Simplify a geometry.">ggl::simplify</a>(line, simplified, 0.5);
+    std::cout
+        &lt;&lt; <span class="stringliteral">"  original line: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(line) &lt;&lt; std::endl
+        &lt;&lt; <span class="stringliteral">"simplified line: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(simplified) &lt;&lt; std::endl;
+}
+</pre></div> </dd></dl>
 
-<p>Definition at line <a class="el" href="algorithms_2simplify_8hpp_source.html#l00317">317</a> of file <a class="el" href="algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
-
-</div>
-</div><p>
-<a class="anchor" name="g00b5a49a676c29d790764ad67e9fdfbc"></a><!-- doxytag: member="ggl::simplify" ref="g00b5a49a676c29d790764ad67e9fdfbc" args="(const G &amp;geometry, G &amp;out, double max_distance, S const &amp;strategy)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename G , typename S &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void ggl::simplify           </td>
-          <td>(</td>
-          <td class="paramtype">const G &amp;&nbsp;</td>
-          <td class="paramname"> <em>geometry</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">G &amp;&nbsp;</td>
-          <td class="paramname"> <em>out</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>max_distance</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">S const &amp;&nbsp;</td>
-          <td class="paramname"> <em>strategy</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Simplify a geometry. 
-<p>
-This version of simplify simplifies a geometry using a specified <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> where the output is of the same geometry type as the input. <dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>geometry</em>&nbsp;</td><td>input geometry, to be simplified </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>out</em>&nbsp;</td><td>output geometry, simplified version of the input geometry </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>max_distance</em>&nbsp;</td><td>distance (in units of input coordinates) of a vertex to other segments to be removed </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="namespaceggl_1_1strategy.html">strategy</a></em>&nbsp;</td><td>simplify <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> to be used for simplification, might include point-distance <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> </td></tr>
-  </table>
-</dl>
-
-<p>Definition at line <a class="el" href="algorithms_2simplify_8hpp_source.html#l00334">334</a> of file <a class="el" href="algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2simplify_8hpp_source.html#l00352">352</a> of file <a class="el" href="algorithms_2simplify_8hpp_source.html">simplify.hpp</a>.</p>
 
 </div>
 </div><p>

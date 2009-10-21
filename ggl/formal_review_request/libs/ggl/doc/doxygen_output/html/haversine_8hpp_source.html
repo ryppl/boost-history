@@ -75,7 +75,7 @@
 <a name="l00033"></a>00033     {
 <a name="l00034"></a>00034 
 <a name="l00047"></a>00047         <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P1, <span class="keyword">typename</span> P2 = P1&gt;
-<a name="l00048"></a><a class="code" href="classggl_1_1strategy_1_1distance_1_1haversine.html">00048</a>         <span class="keyword">class </span><a class="code" href="classggl_1_1strategy_1_1distance_1_1haversine.html" title="Distance calculation for spherical coordinates on a perfect sphere using haversine...">haversine</a>
+<a name="l00048"></a>00048         <span class="keyword">class </span>haversine
 <a name="l00049"></a>00049         {
 <a name="l00050"></a>00050             <span class="keyword">public</span> :
 <a name="l00051"></a>00051                 <span class="comment">//typedef spherical_distance return_type;</span>
@@ -85,7 +85,7 @@
 <a name="l00055"></a>00055                     : m_radius(r)
 <a name="l00056"></a>00056                 {}
 <a name="l00057"></a>00057 
-<a name="l00058"></a><a class="code" href="classggl_1_1strategy_1_1distance_1_1haversine.html#cfc29c7f64c6136784283fab579fa970">00058</a>                 <span class="keyword">inline</span> <a class="code" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8fd848a2bbc5857c70fa6bce5ffac5d3">return_type</a> <a class="code" href="classggl_1_1strategy_1_1distance_1_1haversine.html#cfc29c7f64c6136784283fab579fa970">operator()</a>(<span class="keyword">const</span> P1&amp; p1, <span class="keyword">const</span> P2&amp; p2)<span class="keyword"> const</span>
+<a name="l00058"></a><a class="code" href="classggl_1_1strategy_1_1distance_1_1haversine.html#cfc29c7f64c6136784283fab579fa970">00058</a>                 <span class="keyword">inline</span> <a class="code" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8fd848a2bbc5857c70fa6bce5ffac5d3">return_type</a> <a class="code" href="classggl_1_1strategy_1_1distance_1_1haversine.html#4e6620683b788431de8942b0376af7af">operator()</a>(<span class="keyword">const</span> P1&amp; p1, <span class="keyword">const</span> P2&amp; p2)<span class="keyword"> const</span>
 <a name="l00059"></a>00059 <span class="keyword">                </span>{
 <a name="l00060"></a>00060                     <span class="keywordflow">return</span> calc(get_as_radian&lt;0&gt;(p1), get_as_radian&lt;1&gt;(p1),
 <a name="l00061"></a>00061                                     get_as_radian&lt;0&gt;(p2), get_as_radian&lt;1&gt;(p2));

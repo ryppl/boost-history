@@ -47,9 +47,9 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Structure containing a collection of <a class="el" href="structggl_1_1sections.html" title="Structure containing a collection of sections.">sections</a>.  <a href="structggl_1_1sections.html#_details">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Section &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__sectionalize.html#g5c0732d32eb6c6154f615b3a3337f4b9">ggl::get_section</a> (Geometry const &amp;geometry, Section const &amp;section, typename point_const_iterator&lt; Geometry &gt;::type &amp;begin, typename point_const_iterator&lt; Geometry &gt;::type &amp;end)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a">ggl::get_section</a> (Geometry const &amp;geometry, Section const &amp;section, typename vertex_iterator&lt; Geometry, true &gt;::type &amp;begin, typename vertex_iterator&lt; Geometry, true &gt;::type &amp;end)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get iterators for a specified <a class="el" href="structggl_1_1section.html" title="Structure containing section information.">section</a>.  <a href="#g5c0732d32eb6c6154f615b3a3337f4b9"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get iterators for a specified <a class="el" href="structggl_1_1section.html" title="Structure containing section information.">section</a>.  <a href="#gb862f6c883bcc3baddda33c91298b48a"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Sections &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__sectionalize.html#g94c69212e1ba4829515eb5a31acd29e1">ggl::sectionalize</a> (Geometry const &amp;geometry, Sections &amp;sections)</td></tr>
 
@@ -61,7 +61,7 @@ into monotonic sections<p>
 <li>LINESTRING:</li><li>RING:</li><li>POLYGON:</li><li>BOX </li></ul>
 </dd></dl>
 <hr><h2>Function Documentation</h2>
-<a class="anchor" name="g5c0732d32eb6c6154f615b3a3337f4b9"></a><!-- doxytag: member="ggl::get_section" ref="g5c0732d32eb6c6154f615b3a3337f4b9" args="(Geometry const &amp;geometry, Section const &amp;section, typename point_const_iterator&lt; Geometry &gt;::type &amp;begin, typename point_const_iterator&lt; Geometry &gt;::type &amp;end)" -->
+<a class="anchor" name="gb862f6c883bcc3baddda33c91298b48a"></a><!-- doxytag: member="ggl::get_section" ref="gb862f6c883bcc3baddda33c91298b48a" args="(Geometry const &amp;geometry, Section const &amp;section, typename vertex_iterator&lt; Geometry, true &gt;::type &amp;begin, typename vertex_iterator&lt; Geometry, true &gt;::type &amp;end)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -82,13 +82,13 @@ template&lt;typename Geometry , typename Section &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">typename point_const_iterator&lt; Geometry &gt;::type &amp;&nbsp;</td>
+          <td class="paramtype">typename vertex_iterator&lt; Geometry, true &gt;::type &amp;&nbsp;</td>
           <td class="paramname"> <em>begin</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">typename point_const_iterator&lt; Geometry &gt;::type &amp;&nbsp;</td>
+          <td class="paramtype">typename vertex_iterator&lt; Geometry, true &gt;::type &amp;&nbsp;</td>
           <td class="paramname"> <em>end</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -165,7 +165,7 @@ Split a geometry into monotonic <a class="el" href="structggl_1_1sections.html" 
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="algorithms_2sectionalize_8hpp_source.html#l00556">556</a> of file <a class="el" href="algorithms_2sectionalize_8hpp_source.html">sectionalize.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2sectionalize_8hpp_source.html#l00553">553</a> of file <a class="el" href="algorithms_2sectionalize_8hpp_source.html">sectionalize.hpp</a>.</p>
 
 </div>
 </div><p>

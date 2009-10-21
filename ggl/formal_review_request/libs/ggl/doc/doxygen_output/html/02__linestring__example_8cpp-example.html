@@ -137,7 +137,7 @@ The intersection algorithm intersects two geometries which each other, deliverin
 
     <span class="comment">// The distance from a point to a linestring can be calculated</span>
     <a class="code" href="classggl_1_1point__xy.html" title="2D point in Cartesian coordinate system">point_2d</a> p(1.9, 1.2);
-    std::cout &lt;&lt; <span class="stringliteral">"distance of "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(p) 
+    std::cout &lt;&lt; <span class="stringliteral">"distance of "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(p)
         &lt;&lt; <span class="stringliteral">" to line: "</span> &lt;&lt; <a name="a10"></a><a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">distance</a>(p, ls) &lt;&lt; std::endl;
 
     <span class="comment">// A linestring is a vector. However, some algorithms consider "segments",</span>
@@ -184,7 +184,7 @@ The intersection algorithm intersects two geometries which each other, deliverin
 
     {
         <a class="code" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring_2d</a> ls_copy;
-        std::unique_copy(ls.begin(), ls.end(), std::back_inserter(ls_copy), 
+        std::unique_copy(ls.begin(), ls.end(), std::back_inserter(ls_copy),
             point_equal&lt;point_2d&gt;());
         ls = ls_copy;
         std::cout &lt;&lt; <span class="stringliteral">"uniquecopy: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(ls) &lt;&lt; std::endl;
@@ -192,7 +192,7 @@ The intersection algorithm intersects two geometries which each other, deliverin
 
     <span class="comment">// Lines can be simplified. This removes points, but preserves the shape</span>
     <a class="code" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring_2d</a> ls_simplified;
-    <a name="a12"></a><a class="code" href="group__simplify.html#g188e72f668c33ac75ad08653625a7cbb" title="Simplify a geometry.">simplify</a>(ls, std::back_inserter(ls_simplified), 0.5);
+    <a name="a12"></a><a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d" title="Simplify a geometry.">simplify</a>(ls, ls_simplified, 0.5);
     std::cout &lt;&lt; <span class="stringliteral">"simplified: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(ls_simplified) &lt;&lt; std::endl;
 
 
@@ -221,7 +221,7 @@ The intersection algorithm intersects two geometries which each other, deliverin
     intersection&lt;std::vector&lt;point_2d&gt; &gt;(cb, ls, std::back_inserter(vector_out));
 
     std::cout &lt;&lt; <span class="stringliteral">"clipped output as vector:"</span> &lt;&lt; std::endl;
-    <span class="keywordflow">for</span> (std::vector&lt;std::vector&lt;point_2d&gt; &gt;::const_iterator it 
+    <span class="keywordflow">for</span> (std::vector&lt;std::vector&lt;point_2d&gt; &gt;::const_iterator it
             = vector_out.begin(); it != vector_out.end(); ++it)
     {
         std::cout &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(*it) &lt;&lt; std::endl;
@@ -229,12 +229,12 @@ The intersection algorithm intersects two geometries which each other, deliverin
 
     <span class="comment">// Calculate the convex hull of the linestring</span>
     <a name="_a15"></a><a class="code" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon_2d</a> hull;
-    <a name="a16"></a><a class="code" href="group__convex__hull.html#gc1989428c0a32cd2fd48272cd6833e18" title="Calculate the convex hull of a geometry.">convex_hull</a>(ls, std::back_inserter(hull.<a name="a17"></a><a class="code" href="classggl_1_1polygon.html#be04d3ead04813a25be1a219076358a8">outer</a>()));
+    <a name="a16"></a><a class="code" href="group__convex__hull.html#g2adc5b825bd5feadc7a723c040c36cb7" title="Calculate the convex hull of a geometry.">convex_hull</a>(ls, hull);
     std::cout &lt;&lt; <span class="stringliteral">"Convex hull:"</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(hull) &lt;&lt; std::endl;
 
     <span class="comment">// All the above assumed 2D Cartesian linestrings. 3D is possible as well</span>
     <span class="comment">// Let's define a 3D point ourselves, this time using 'float'</span>
-    <span class="keyword">typedef</span> <a name="_a18"></a><a class="code" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point&lt;float, 3, cs::cartesian&gt;</a> <a name="_a19"></a><a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
+    <span class="keyword">typedef</span> <a name="_a17"></a><a class="code" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point&lt;float, 3, cs::cartesian&gt;</a> <a name="_a18"></a><a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
     <span class="keyword">typedef</span> <a class="code" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring&lt;point_type&gt;</a> line_type;
     line_type line3d;
     line3d.push_back(make&lt;point_type&gt;(1,2,3));
@@ -242,12 +242,12 @@ The intersection algorithm intersects two geometries which each other, deliverin
     line3d.push_back(make&lt;point_type&gt;(7,8,9));
 
     <span class="comment">// Not all algorithms work on 3d lines. For example convex hull does NOT.</span>
-    <span class="comment">// But for example length, distance, simplify, envelope and stream do.</span>
+    <span class="comment">// But, for example, length, distance, simplify, envelope and stream do.</span>
     std::cout &lt;&lt; <span class="stringliteral">"3D: length: "</span> &lt;&lt; <a class="code" href="group__length.html#g7e3572634111ae0252a474a7f435c5aa" title="Calculate length of a geometry.">length</a>(line3d) &lt;&lt; <span class="stringliteral">" line: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(line3d) &lt;&lt; std::endl;
 
     <span class="comment">// With DSV you can also use other delimiters, e.g. JSON style</span>
-    std::cout &lt;&lt; <span class="stringliteral">"JSON: "</span> 
-        &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(ls, <span class="stringliteral">", "</span>, <span class="stringliteral">"["</span>, <span class="stringliteral">"]"</span>, <span class="stringliteral">", "</span>, <span class="stringliteral">"[ "</span>, <span class="stringliteral">" ]"</span>) 
+    std::cout &lt;&lt; <span class="stringliteral">"JSON: "</span>
+        &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(ls, <span class="stringliteral">", "</span>, <span class="stringliteral">"["</span>, <span class="stringliteral">"]"</span>, <span class="stringliteral">", "</span>, <span class="stringliteral">"[ "</span>, <span class="stringliteral">" ]"</span>)
         &lt;&lt; std::endl;
 
     <span class="keywordflow">return</span> 0;

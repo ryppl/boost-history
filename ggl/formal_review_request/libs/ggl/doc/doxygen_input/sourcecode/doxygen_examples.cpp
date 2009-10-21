@@ -218,7 +218,7 @@ void example_simplify_linestring1()
 {
     ggl::linestring<ggl::point_xy<double> > line, simplified;
     ggl::read_wkt("linestring(1.1 1.1, 2.5 2.1, 3.1 3.1, 4.9 1.1, 3.1 1.9)", line);
-    ggl::simplify(line, std::back_inserter(simplified), 0.5);
+    ggl::simplify(line, simplified, 0.5);
     std::cout
         << "  original line: " << ggl::dsv(line) << std::endl
         << "simplified line: " << ggl::dsv(simplified) << std::endl;
@@ -233,9 +233,8 @@ void example_simplify_linestring2()
     ggl::read_wkt("linestring(1.1 1.1, 2.5 2.1, 3.1 3.1, 4.9 1.1, 3.1 1.9)", line);
 
     typedef ggl::strategy::distance::xy_point_segment<P, ggl::segment<const P> > DS;
-    typedef std::ostream_iterator<P> OUT;
-    typedef ggl::strategy::simplify::douglas_peucker<L, OUT, DS> simplification;
-    ggl::simplify(line, OUT(std::cout, "\n"), 0.5, simplification());
+    typedef ggl::strategy::simplify::douglas_peucker<P, DS> simplification;
+    ggl::simplify_inserter(line, std::ostream_iterator<P>(std::cout, "\n"), 0.5, simplification());
 }
 
 
@@ -454,7 +453,7 @@ namespace example_loop1
         ggl::loop(poly.outer(), perimeter<P>(), peri);
         std::cout << "Perimeter: " << peri.sum << std::endl;
     }
-} //:\\
+} //:\\ --
 
 
 namespace example_loop2
@@ -486,7 +485,7 @@ namespace example_loop2
         std::cout << "Perimeter: " << peri.sum/1000.0 << " km" << std::endl;
         */
     }
-} //:\\
+} //:\\ --
 
 
 
@@ -560,7 +559,7 @@ namespace example_own_point1
         test1(p);
         test2(p);
     }
-} //:\\
+} //:\\ --
 
 
 
@@ -619,7 +618,7 @@ namespace example_own_point2
         example_point_2 p(1,2);
         test3(p);
     }
-} //:\\
+} //:\\ --
 
 
 

@@ -121,13 +121,13 @@ std::string boolstr(<span class="keywordtype">bool</span> v)
 <span class="comment">    */</span>
 
     <span class="comment">// The number of points have to called per ring separately</span>
-    std::cout &lt;&lt; <span class="stringliteral">"number of points in outer ring: "</span> &lt;&lt; poly.<a name="a9"></a><a class="code" href="classggl_1_1polygon.html#be04d3ead04813a25be1a219076358a8">outer</a>().size() &lt;&lt; std::endl;
+    std::cout &lt;&lt; <span class="stringliteral">"number of points in outer ring: "</span> &lt;&lt; poly.<a name="a9"></a><a class="code" href="classggl_1_1polygon.html#5faae375ec2c4b4547da615fa8864e74">outer</a>().size() &lt;&lt; std::endl;
 
     <span class="comment">// Polygons can have one or more inner rings, also called holes, donuts, islands, interior rings.</span>
     <span class="comment">// Let's add one</span>
     {
-        poly.<a name="a10"></a><a class="code" href="classggl_1_1polygon.html#0d41c7b42a1444fdc759550644c7924e">inners</a>().resize(1);
-        <a name="_a11"></a><a class="code" href="classggl_1_1linear__ring.html" title="A linear_ring (linear linear_ring) is a closed line which should not be selfintersecting...">linear_ring&lt;point_2d&gt;</a>&amp; inner = poly.<a class="code" href="classggl_1_1polygon.html#0d41c7b42a1444fdc759550644c7924e">inners</a>().back();
+        poly.<a name="a10"></a><a class="code" href="classggl_1_1polygon.html#5a8564eeeaa4f244e6f70ab10395a63f">inners</a>().resize(1);
+        <a name="_a11"></a><a class="code" href="classggl_1_1linear__ring.html" title="A linear_ring (linear linear_ring) is a closed line which should not be selfintersecting...">linear_ring&lt;point_2d&gt;</a>&amp; inner = poly.<a class="code" href="classggl_1_1polygon.html#5a8564eeeaa4f244e6f70ab10395a63f">inners</a>().back();
 
         <span class="keyword">const</span> <span class="keywordtype">double</span> coor[][2] = { {4.0, 2.0}, {4.2, 1.4}, {4.8, 1.9}, {4.4, 2.2}, {4.0, 2.0} };
         <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">assign</a>(inner, coor);
@@ -169,7 +169,7 @@ std::string boolstr(<span class="keywordtype">bool</span> v)
     }
 
     <a class="code" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon_2d</a> hull;
-    <a name="a13"></a><a class="code" href="group__convex__hull.html#gc1989428c0a32cd2fd48272cd6833e18" title="Calculate the convex hull of a geometry.">convex_hull</a>(poly, std::back_inserter(hull.<a class="code" href="classggl_1_1polygon.html#be04d3ead04813a25be1a219076358a8">outer</a>()));
+    <a name="a13"></a><a class="code" href="group__convex__hull.html#g2adc5b825bd5feadc7a723c040c36cb7" title="Calculate the convex hull of a geometry.">convex_hull</a>(poly, hull);
     std::cout &lt;&lt; <span class="stringliteral">"Convex hull:"</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(hull) &lt;&lt; std::endl;
 
     <span class="comment">// If you really want:</span>

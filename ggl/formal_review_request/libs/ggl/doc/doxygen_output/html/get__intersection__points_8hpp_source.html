@@ -239,13 +239,13 @@
 <a name="l00197"></a>00197             <span class="keywordtype">bool</span>&amp; trivial)
 <a name="l00198"></a>00198     {
 <a name="l00199"></a>00199 
-<a name="l00200"></a>00200         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__const__iterator.html" title="Meta-function which defines point-const-iterator type.">ggl::point_const_iterator</a>
+<a name="l00200"></a>00200         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">ggl::vertex_iterator</a>
 <a name="l00201"></a>00201             &lt;
-<a name="l00202"></a>00202                 Geometry1
+<a name="l00202"></a>00202                 Geometry1, <span class="keyword">true</span>
 <a name="l00203"></a>00203             &gt;::type range1_iterator;
-<a name="l00204"></a>00204         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__const__iterator.html" title="Meta-function which defines point-const-iterator type.">ggl::point_const_iterator</a>
+<a name="l00204"></a>00204         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">ggl::vertex_iterator</a>
 <a name="l00205"></a>00205             &lt;
-<a name="l00206"></a>00206                 Geometry2
+<a name="l00206"></a>00206                 Geometry2, <span class="keyword">true</span>
 <a name="l00207"></a>00207             &gt;::type range2_iterator;
 <a name="l00208"></a>00208 
 <a name="l00209"></a>00209         <span class="keywordtype">int</span> <span class="keyword">const</span> dir1 = sec1.directions[0];
@@ -263,7 +263,7 @@
 <a name="l00221"></a>00221         <span class="comment">// skips to the begin-point, we loose the index or have to recalculate it)</span>
 <a name="l00222"></a>00222         <span class="comment">// So we mimic it here</span>
 <a name="l00223"></a>00223         range1_iterator it1, end1;
-<a name="l00224"></a>00224         <a class="code" href="group__sectionalize.html#g5c0732d32eb6c6154f615b3a3337f4b9" title="Get iterators for a specified section.">get_section</a>(geometry1, sec1, it1, end1);
+<a name="l00224"></a>00224         <a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>(geometry1, sec1, it1, end1);
 <a name="l00225"></a>00225 
 <a name="l00226"></a>00226         <span class="comment">// Mimic 1: Skip to point such that section interects other box</span>
 <a name="l00227"></a>00227         range1_iterator prev1 = it1++;
@@ -285,7 +285,7 @@
 <a name="l00243"></a>00243             <span class="keywordtype">int</span> ndi2 = sec2.non_duplicate_index;
 <a name="l00244"></a>00244 
 <a name="l00245"></a>00245             range2_iterator it2, end2;
-<a name="l00246"></a>00246             <a class="code" href="group__sectionalize.html#g5c0732d32eb6c6154f615b3a3337f4b9" title="Get iterators for a specified section.">get_section</a>(geometry2, sec2, it2, end2);
+<a name="l00246"></a>00246             <a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>(geometry2, sec2, it2, end2);
 <a name="l00247"></a>00247 
 <a name="l00248"></a>00248             range2_iterator prev2 = it2++;
 <a name="l00249"></a>00249 

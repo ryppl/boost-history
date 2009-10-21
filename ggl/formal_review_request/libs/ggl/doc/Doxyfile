@@ -98,6 +98,7 @@ INPUT                  = . .. ../../../boost/ggl/core \
 			../../../boost/ggl/multi/iterators \
 			../../../boost/ggl/policies/relate \
 			../../../boost/ggl/strategies \
+			../../../boost/ggl/strategies/concepts \
 			../../../boost/ggl/strategies/agnostic \
 			../../../boost/ggl/strategies/cartesian \
 			../../../boost/ggl/strategies/spherical \

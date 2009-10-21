@@ -72,9 +72,9 @@
 <a name="l00030"></a>00030 
 <a name="l00031"></a>00031 
 <a name="l00032"></a>00032 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> MultiPolygon, <span class="keyword">typename</span> Section&gt;
-<a name="l00033"></a>00033 <span class="keyword">struct </span><a class="code" href="group__sectionalize.html#g5c0732d32eb6c6154f615b3a3337f4b9" title="Get iterators for a specified section.">get_section</a>&lt;multi_polygon_tag, MultiPolygon, Section&gt;
+<a name="l00033"></a>00033 <span class="keyword">struct </span><a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>&lt;multi_polygon_tag, MultiPolygon, Section&gt;
 <a name="l00034"></a>00034 {
-<a name="l00035"></a>00035     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__const__iterator.html" title="Meta-function which defines point-const-iterator type.">ggl::point_const_iterator&lt;MultiPolygon&gt;::type</a> iterator_type;
+<a name="l00035"></a>00035     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">ggl::vertex_iterator&lt;MultiPolygon, true&gt;::type</a> iterator_type;
 <a name="l00036"></a>00036 
 <a name="l00037"></a>00037     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(MultiPolygon <span class="keyword">const</span>&amp; multi_polygon, Section <span class="keyword">const</span>&amp; section,
 <a name="l00038"></a>00038                 iterator_type&amp; begin, iterator_type&amp; end)

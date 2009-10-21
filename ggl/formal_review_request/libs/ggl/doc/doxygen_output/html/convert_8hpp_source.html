@@ -96,96 +96,109 @@
 <a name="l00059"></a>00059 <span class="preprocessor"></span><span class="keyword">namespace </span>dispatch
 <a name="l00060"></a>00060 {
 <a name="l00061"></a>00061 
-<a name="l00062"></a>00062 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">typename</span> G1, <span class="keyword">typename</span> G2&gt;
-<a name="l00063"></a>00063 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>
-<a name="l00064"></a>00064 {
-<a name="l00065"></a>00065 };
-<a name="l00066"></a>00066 
-<a name="l00067"></a>00067 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> G1, <span class="keyword">typename</span> G2&gt;
-<a name="l00068"></a>00068 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>&lt;T, T, G1, G2&gt;
+<a name="l00062"></a>00062 <span class="keyword">template</span> 
+<a name="l00063"></a>00063 &lt;
+<a name="l00064"></a>00064     <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, 
+<a name="l00065"></a>00065     std::size_t Dimensions, 
+<a name="l00066"></a>00066     <span class="keyword">typename</span> G1, <span class="keyword">typename</span> G2
+<a name="l00067"></a>00067 &gt;
+<a name="l00068"></a>00068 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>
 <a name="l00069"></a>00069 {
-<a name="l00070"></a>00070     <span class="comment">// Same geometry type -&gt; copy coordinates from G1 to G2</span>
-<a name="l00071"></a>00071 };
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> G&gt;
-<a name="l00074"></a>00074 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>&lt;T, T, G, G&gt;
-<a name="l00075"></a>00075 {
-<a name="l00076"></a>00076     <span class="comment">// Same geometry -&gt; can be copied</span>
-<a name="l00077"></a>00077 };
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080 <span class="comment">// Partial specializations</span>
-<a name="l00081"></a>00081 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> B, <span class="keyword">typename</span> R&gt;
-<a name="l00082"></a>00082 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>&lt;box_tag, ring_tag, B, R&gt;
-<a name="l00083"></a>00083 {
-<a name="l00084"></a>00084     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(B <span class="keyword">const</span>&amp; box, R&amp; ring)
-<a name="l00085"></a>00085     {
-<a name="l00086"></a>00086         <span class="comment">// go from box to ring -&gt; add coordinates in correct order</span>
-<a name="l00087"></a>00087         <span class="comment">// only valid for 2D</span>
-<a name="l00088"></a>00088         assert_dimension&lt;B, 2&gt;();
+<a name="l00070"></a>00070 };
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072 <span class="keyword">template</span> 
+<a name="l00073"></a>00073 &lt;
+<a name="l00074"></a>00074     <span class="keyword">typename</span> T, 
+<a name="l00075"></a>00075     std::size_t Dimensions, 
+<a name="l00076"></a>00076     <span class="keyword">typename</span> G1, <span class="keyword">typename</span> G2
+<a name="l00077"></a>00077 &gt;
+<a name="l00078"></a>00078 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>&lt;T, T, Dimensions, G1, G2&gt;
+<a name="l00079"></a>00079 {
+<a name="l00080"></a>00080     <span class="comment">// Same geometry type -&gt; copy coordinates from G1 to G2</span>
+<a name="l00081"></a>00081 };
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, std::<span class="keywordtype">size_t</span> Dimensions, <span class="keyword">typename</span> G&gt;
+<a name="l00084"></a>00084 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>&lt;T, T, Dimensions, G, G&gt;
+<a name="l00085"></a>00085 {
+<a name="l00086"></a>00086     <span class="comment">// Same geometry -&gt; can be copied</span>
+<a name="l00087"></a>00087 };
+<a name="l00088"></a>00088 
 <a name="l00089"></a>00089 
-<a name="l00090"></a>00090         ring.clear();
-<a name="l00091"></a>00091         <span class="keyword">typename</span> point_type&lt;B&gt;::type point;
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093         <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">ggl::assign</a>(point, get&lt;min_corner, 0&gt;(box), get&lt;min_corner, 1&gt;(box));
-<a name="l00094"></a>00094         <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">ggl::append</a>(ring, point);
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096         <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">ggl::assign</a>(point, get&lt;min_corner, 0&gt;(box), get&lt;max_corner, 1&gt;(box));
-<a name="l00097"></a>00097         <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">ggl::append</a>(ring, point);
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099         <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">ggl::assign</a>(point, get&lt;max_corner, 0&gt;(box), get&lt;max_corner, 1&gt;(box));
-<a name="l00100"></a>00100         <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">ggl::append</a>(ring, point);
-<a name="l00101"></a>00101 
-<a name="l00102"></a>00102         <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">ggl::assign</a>(point, get&lt;max_corner, 0&gt;(box), get&lt;min_corner, 1&gt;(box));
-<a name="l00103"></a>00103         <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">ggl::append</a>(ring, point);
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105         <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">ggl::assign</a>(point, get&lt;min_corner, 0&gt;(box), get&lt;min_corner, 1&gt;(box));
-<a name="l00106"></a>00106         <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">ggl::append</a>(ring, point);
-<a name="l00107"></a>00107     }
-<a name="l00108"></a>00108 };
-<a name="l00109"></a>00109 
-<a name="l00110"></a>00110 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> B, <span class="keyword">typename</span> P&gt;
-<a name="l00111"></a>00111 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>&lt;box_tag, polygon_tag, B, P&gt;
-<a name="l00112"></a>00112 {
-<a name="l00113"></a>00113     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(B <span class="keyword">const</span>&amp; box, P&amp; polygon)
-<a name="l00114"></a>00114     {
-<a name="l00115"></a>00115         <span class="keyword">typedef</span> <span class="keyword">typename</span> ring_type&lt;P&gt;::type ring_type;
+<a name="l00090"></a>00090 <span class="comment">// Partial specializations</span>
+<a name="l00091"></a>00091 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> B, <span class="keyword">typename</span> R&gt;
+<a name="l00092"></a>00092 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>&lt;box_tag, ring_tag, 2, B, R&gt;
+<a name="l00093"></a>00093 {
+<a name="l00094"></a>00094     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(B <span class="keyword">const</span>&amp; box, R&amp; ring)
+<a name="l00095"></a>00095     {
+<a name="l00096"></a>00096         <span class="comment">// go from box to ring -&gt; add coordinates in correct order</span>
+<a name="l00097"></a>00097         ring.clear();
+<a name="l00098"></a>00098         <span class="keyword">typename</span> point_type&lt;B&gt;::type point;
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100         <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">ggl::assign</a>(point, get&lt;min_corner, 0&gt;(box), get&lt;min_corner, 1&gt;(box));
+<a name="l00101"></a>00101         <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">ggl::append</a>(ring, point);
+<a name="l00102"></a>00102 
+<a name="l00103"></a>00103         <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">ggl::assign</a>(point, get&lt;min_corner, 0&gt;(box), get&lt;max_corner, 1&gt;(box));
+<a name="l00104"></a>00104         <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">ggl::append</a>(ring, point);
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106         <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">ggl::assign</a>(point, get&lt;max_corner, 0&gt;(box), get&lt;max_corner, 1&gt;(box));
+<a name="l00107"></a>00107         <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">ggl::append</a>(ring, point);
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109         <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">ggl::assign</a>(point, get&lt;max_corner, 0&gt;(box), get&lt;min_corner, 1&gt;(box));
+<a name="l00110"></a>00110         <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">ggl::append</a>(ring, point);
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112         <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">ggl::assign</a>(point, get&lt;min_corner, 0&gt;(box), get&lt;min_corner, 1&gt;(box));
+<a name="l00113"></a>00113         <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">ggl::append</a>(ring, point);
+<a name="l00114"></a>00114     }
+<a name="l00115"></a>00115 };
 <a name="l00116"></a>00116 
-<a name="l00117"></a>00117         convert&lt;box_tag, ring_tag, B, ring_type&gt;::apply(box, <a class="code" href="group__access.html#gf92470d0612da7f0e118d296e7fcfe01" title="Function to get the exterior_ring ring of a polygon.">exterior_ring</a>(polygon));
-<a name="l00118"></a>00118     }
-<a name="l00119"></a>00119 };
-<a name="l00120"></a>00120 
-<a name="l00121"></a>00121 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P, <span class="keyword">typename</span> B&gt;
-<a name="l00122"></a>00122 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>&lt;point_tag, box_tag, P, B&gt;
-<a name="l00123"></a>00123 {
-<a name="l00124"></a>00124     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(P <span class="keyword">const</span>&amp; point, B&amp; box)
-<a name="l00125"></a>00125     {
-<a name="l00126"></a>00126         <span class="comment">// go from point to box -&gt; box with volume of zero, 2D or 3D</span>
-<a name="l00127"></a>00127         <span class="keyword">static</span> <span class="keyword">const</span> std::size_t N = <a class="code" href="classcore__dispatch_1_1dimension.html">dimension&lt;P&gt;::value</a>;
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129         detail::convert::point_to_box&lt;P, B, min_corner, 0, N&gt;::apply(point, box);
-<a name="l00130"></a>00130         detail::convert::point_to_box&lt;P, B, max_corner, 0, N&gt;::apply(point, box);
-<a name="l00131"></a>00131     }
-<a name="l00132"></a>00132 };
-<a name="l00133"></a>00133 
-<a name="l00134"></a>00134 } <span class="comment">// namespace dispatch</span>
-<a name="l00135"></a>00135 <span class="preprocessor">#endif // DOXYGEN_NO_DISPATCH</span>
-<a name="l00136"></a>00136 <span class="preprocessor"></span>
-<a name="l00147"></a>00147 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> G1, <span class="keyword">typename</span> G2&gt;
-<a name="l00148"></a><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569">00148</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>(G1 <span class="keyword">const</span>&amp; geometry1, G2&amp; geometry2)
-<a name="l00149"></a>00149 {
-<a name="l00150"></a>00150     <a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">dispatch::convert</a>
-<a name="l00151"></a>00151         &lt;
-<a name="l00152"></a>00152             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;G1&gt;::type</a>,
-<a name="l00153"></a>00153             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;G2&gt;::type</a>,
-<a name="l00154"></a>00154             G1,
-<a name="l00155"></a>00155             G2
-<a name="l00156"></a>00156         &gt;::apply(geometry1, geometry2);
-<a name="l00157"></a>00157 }
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159 } <span class="comment">// namespace ggl</span>
-<a name="l00160"></a>00160 
-<a name="l00161"></a>00161 <span class="preprocessor">#endif // GGL_ALGORITHMS_CONVERT_HPP</span>
+<a name="l00117"></a>00117 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> B, <span class="keyword">typename</span> P&gt;
+<a name="l00118"></a>00118 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>&lt;box_tag, polygon_tag, 2, B, P&gt;
+<a name="l00119"></a>00119 {
+<a name="l00120"></a>00120     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(B <span class="keyword">const</span>&amp; box, P&amp; polygon)
+<a name="l00121"></a>00121     {
+<a name="l00122"></a>00122         <span class="keyword">typedef</span> <span class="keyword">typename</span> ring_type&lt;P&gt;::type ring_type;
+<a name="l00123"></a>00123 
+<a name="l00124"></a>00124         convert&lt;box_tag, ring_tag, 2, B, ring_type&gt;::apply(box, <a class="code" href="group__access.html#gf92470d0612da7f0e118d296e7fcfe01" title="Function to get the exterior_ring ring of a polygon.">exterior_ring</a>(polygon));
+<a name="l00125"></a>00125     }
+<a name="l00126"></a>00126 };
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P, std::<span class="keywordtype">size_t</span> Dimensions, <span class="keyword">typename</span> B&gt;
+<a name="l00129"></a>00129 <span class="keyword">struct </span><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>&lt;point_tag, box_tag, Dimensions, P, B&gt;
+<a name="l00130"></a>00130 {
+<a name="l00131"></a>00131     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(P <span class="keyword">const</span>&amp; point, B&amp; box)
+<a name="l00132"></a>00132     {
+<a name="l00133"></a>00133         detail::convert::point_to_box
+<a name="l00134"></a>00134             &lt;
+<a name="l00135"></a>00135                 P, B, <a class="code" href="namespaceggl.html#1ce1f1fae9b689b692d623ee76d20857">min_corner</a>, 0, Dimensions
+<a name="l00136"></a>00136             &gt;::apply(point, box);
+<a name="l00137"></a>00137         detail::convert::point_to_box
+<a name="l00138"></a>00138             &lt;
+<a name="l00139"></a>00139                 P, B, <a class="code" href="namespaceggl.html#0df0bc9b23e7d20e4596c25071039f0a">max_corner</a>, 0, Dimensions
+<a name="l00140"></a>00140             &gt;::apply(point, box);
+<a name="l00141"></a>00141     }
+<a name="l00142"></a>00142 };
+<a name="l00143"></a>00143 
+<a name="l00144"></a>00144 } <span class="comment">// namespace dispatch</span>
+<a name="l00145"></a>00145 <span class="preprocessor">#endif // DOXYGEN_NO_DISPATCH</span>
+<a name="l00146"></a>00146 <span class="preprocessor"></span>
+<a name="l00157"></a>00157 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> G1, <span class="keyword">typename</span> G2&gt;
+<a name="l00158"></a><a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569">00158</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">convert</a>(G1 <span class="keyword">const</span>&amp; geometry1, G2&amp; geometry2)
+<a name="l00159"></a>00159 {
+<a name="l00160"></a>00160     assert_dimension_equal&lt;G1, G2&gt;();
+<a name="l00161"></a>00161 
+<a name="l00162"></a>00162     <a class="code" href="group__convert.html#ge07fa83176190049c856e35f77d0f569" title="Converts one geometry to another geometry.">dispatch::convert</a>
+<a name="l00163"></a>00163         &lt;
+<a name="l00164"></a>00164             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;G1&gt;::type</a>,
+<a name="l00165"></a>00165             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;G2&gt;::type</a>,
+<a name="l00166"></a>00166             <a class="code" href="structggl_1_1dimension.html" title="Meta-function which defines coordinate dimensions, i.e. the number of axes of any...">dimension&lt;G1&gt;::type::value</a>,
+<a name="l00167"></a>00167             G1,
+<a name="l00168"></a>00168             G2
+<a name="l00169"></a>00169         &gt;::apply(geometry1, geometry2);
+<a name="l00170"></a>00170 }
+<a name="l00171"></a>00171 
+<a name="l00172"></a>00172 } <span class="comment">// namespace ggl</span>
+<a name="l00173"></a>00173 
+<a name="l00174"></a>00174 <span class="preprocessor">#endif // GGL_ALGORITHMS_CONVERT_HPP</span>
 </pre></div></div>
 <hr size="1">
 <table width="100%">

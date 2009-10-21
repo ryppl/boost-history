@@ -80,7 +80,7 @@
 <a name="l00038"></a>00038         coordinate_type <span class="keyword">const</span>&amp; left0 = ggl::get&lt;0&gt;(lhs);
 <a name="l00039"></a>00039         coordinate_type <span class="keyword">const</span>&amp; right0 = ggl::get&lt;0&gt;(rhs);
 <a name="l00040"></a>00040 
-<a name="l00041"></a>00041         <span class="keywordflow">return</span> <a class="code" href="group__boolean__relations.html#g122b1fd835cee0742da7c97dfdda94c5" title="Calculate if two geometries are equals.">math::equals</a>(left0, right0)
+<a name="l00041"></a>00041         <span class="keywordflow">return</span> <a class="code" href="group__boolean__relations.html#g122b1fd835cee0742da7c97dfdda94c5" title="Calculate if two geometries are equals.">ggl::math::equals</a>(left0, right0)
 <a name="l00042"></a>00042             ? ggl::get&lt;1&gt;(lhs) &lt; ggl::get&lt;1&gt;(rhs)
 <a name="l00043"></a>00043             : left0 &lt; right0;
 <a name="l00044"></a>00044     }

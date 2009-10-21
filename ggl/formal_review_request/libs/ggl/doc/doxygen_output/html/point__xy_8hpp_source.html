@@ -82,10 +82,10 @@
 <a name="l00051"></a><a class="code" href="classggl_1_1point__xy.html#28f49fc68898e678390593fb73afd7c6">00051</a>     <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classggl_1_1point__xy.html#a83e59f4d401b1a4c6f037979c57260f" title="Get y-value.">y</a>(T <span class="keyword">const</span>&amp; v)
 <a name="l00052"></a>00052     { this-&gt;<span class="keyword">template</span> set&lt;1&gt;(v); }
 <a name="l00053"></a>00053 
-<a name="l00055"></a><a class="code" href="classggl_1_1point__xy.html#3c5f9d94906145cc473019b8eaf66e7d">00055</a>     <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classggl_1_1point__xy.html#3c5f9d94906145cc473019b8eaf66e7d" title="Compare two points.">operator&lt;</a>(<a class="code" href="classggl_1_1point__xy.html" title="2D point in Cartesian coordinate system">point_xy</a> <span class="keyword">const</span>&amp; other)<span class="keyword"> const</span>
-<a name="l00056"></a>00056 <span class="keyword">    </span>{
-<a name="l00057"></a>00057         <span class="keywordflow">return</span> <a class="code" href="group__boolean__relations.html#g122b1fd835cee0742da7c97dfdda94c5" title="Calculate if two geometries are equals.">math::equals</a>(<a class="code" href="classggl_1_1point__xy.html#a7803d55e0758a659d618583b757b272" title="Get x-value.">x</a>(), other.<a class="code" href="classggl_1_1point__xy.html#a7803d55e0758a659d618583b757b272" title="Get x-value.">x</a>()) ? <a class="code" href="classggl_1_1point__xy.html#a83e59f4d401b1a4c6f037979c57260f" title="Get y-value.">y</a>() &lt; other.<a class="code" href="classggl_1_1point__xy.html#a83e59f4d401b1a4c6f037979c57260f" title="Get y-value.">y</a>() : <a class="code" href="classggl_1_1point__xy.html#a7803d55e0758a659d618583b757b272" title="Get x-value.">x</a>() &lt; other.<a class="code" href="classggl_1_1point__xy.html#a7803d55e0758a659d618583b757b272" title="Get x-value.">x</a>();
-<a name="l00058"></a>00058     }
+<a name="l00055"></a>00055     <span class="comment">//inline bool operator&lt;(point_xy const&amp; other) const</span>
+<a name="l00056"></a>00056     <span class="comment">//{</span>
+<a name="l00057"></a>00057     <span class="comment">//    return math::equals(x(), other.x()) ? y() &lt; other.y() : x() &lt; other.x();</span>
+<a name="l00058"></a>00058     <span class="comment">//}</span>
 <a name="l00059"></a>00059 
 <a name="l00060"></a>00060 };
 <a name="l00061"></a>00061 

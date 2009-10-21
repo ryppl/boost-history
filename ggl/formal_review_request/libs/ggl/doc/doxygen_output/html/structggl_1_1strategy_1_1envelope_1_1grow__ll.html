@@ -65,7 +65,7 @@
 
 <dl class="user" compact><dt><b>Algorithm:</b></dt><dd>The <a class="el" href="namespaceggl_1_1strategy_1_1envelope.html">envelope</a> of latlong-points cannot be implemented as for xy-points. Suppose the <a class="el" href="namespaceggl_1_1strategy_1_1envelope.html">envelope</a> of the Aleutian Islands must be calculated. The span from 170E to 170W, from -170 to 170. Of course the real <a class="el" href="namespaceggl_1_1strategy_1_1envelope.html">envelope</a> is not -170..170 but 170..-170. On the other hand, there might be geometries that indeed span from -170 to 170. If there are two points, it is not known. If there are points in between, we probably should take the shorter range. So we do that for the moment. We <a class="el" href="namespaceggl_1_1strategy_1_1envelope_1_1shift.html">shift</a> coordinates and do as if we live in a world with longitude coordinates from 0 - 360, where 0 is still at Greenwich. Longitude ranges are then calculated twice: one for real world, one for the shifted world. The shortest range is taken for the bounding <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a>. This might have coordinates &gt; 180 </dd></dl>
 
-<p>Definition at line <a class="el" href="sph__envelope_8hpp_source.html#l00062">62</a> of file <a class="el" href="sph__envelope_8hpp_source.html">sph_envelope.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sph__envelope_8hpp_source.html#l00061">61</a> of file <a class="el" href="sph__envelope_8hpp_source.html">sph_envelope.hpp</a>.</p>
 <hr><h2>Member Typedef Documentation</h2>
 <a class="anchor" name="8f49bd3eba8c415f56e24d4085e2b1be"></a><!-- doxytag: member="ggl::strategy::envelope::grow_ll::state_type" ref="8f49bd3eba8c415f56e24d4085e2b1be" args="" -->
 <div class="memitem">
@@ -82,7 +82,7 @@ template&lt;typename P , typename B &gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="sph__envelope_8hpp_source.html#l00155">155</a> of file <a class="el" href="sph__envelope_8hpp_source.html">sph_envelope.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sph__envelope_8hpp_source.html#l00154">154</a> of file <a class="el" href="sph__envelope_8hpp_source.html">sph_envelope.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -116,7 +116,7 @@ template&lt;typename P , typename B &gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="sph__envelope_8hpp_source.html#l00157">157</a> of file <a class="el" href="sph__envelope_8hpp_source.html">sph_envelope.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sph__envelope_8hpp_source.html#l00156">156</a> of file <a class="el" href="sph__envelope_8hpp_source.html">sph_envelope.hpp</a>.</p>
 
 </div>
 </div><p>
