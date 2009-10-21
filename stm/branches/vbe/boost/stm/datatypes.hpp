@@ -15,6 +15,8 @@
 #define BOOST_STM_DATATYPES__HPP
 
 //-----------------------------------------------------------------------------
+#include <pthread.h>
+//-----------------------------------------------------------------------------
 #include <cstddef>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
@@ -136,6 +138,15 @@ namespace boost { namespace stm {
 #endif
     
 }}
+
+#ifndef BOOST_STM_USE_BOOST_MUTEX
+   typedef pthread_mutex_t Mutex;
+#else
+   typedef boost::mutex Mutex;
+#endif
+
+typedef pthread_mutex_t PLOCK;
+
 #endif // BOOST_STM_DATATYPES__HPP
 
 
