@@ -27,48 +27,48 @@ stm::tx_obj<int> counter2(0);
 void inc() {
     thread_initializer thi;
 
-    use_atomic(_) {
+    atomic(_) {
         ++counter;
-    }
+    } end_atom
 }
 void decr() {
     thread_initializer thi;
 
-    use_atomic(_) {
+    atomic(_) {
         --counter;
-    }
+    } end_atom
 }
 bool check(int val) {
     //thread_initializer thi;
     bool res;
-    use_atomic(_) {
+    atomic(_) {
         res =(*counter==val);
-    }
+    } end_atom
     return res;
 }
 
 bool assign() {
     //thread_initializer thi;
-    use_atomic(_) {
+    atomic(_) {
         counter=1;
         counter2=counter;
-    }
+    } end_atom
     bool res;
-    use_atomic(_) {
+    atomic(_) {
         res =(*counter==1) && (*counter2==1) && (counter==counter2) ;
-    }
+    } end_atom
     return res;
 }
 
 bool test_const(stm::tx_obj<int> const& c) {
     //thread_initializer thi;
-    use_atomic(_) {
+    atomic(_) {
         counter2=c;
-    }
+    } end_atom
     bool res;
-    use_atomic(_) {
+    atomic(_) {
         res =(c==counter2) ;
-    }
+    } end_atom
     return res;
 }
 
