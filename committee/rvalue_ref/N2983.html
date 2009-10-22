@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.6: http://docutils.sourceforge.net/" />
 <title>Allowing Move Constructors to Throw</title>
 <meta name="author" content="David Abrahams, Rani Sharoni, Doug Gregor" />
 <meta name="organization" content="BoostPro Computing" />
@@ -293,7 +293,7 @@ h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
 ul.auto-toc {
   list-style-type: none }
 
-.ins {background-color:#A0FFA0;border-bottom: 1px solid black}
+.ins {background-color:#A0FFA0;text-decoration:underline}
 .del {background-color:#FFA0A0;text-decoration:line-through}
 
 .grammar { padding: 0 }
@@ -343,14 +343,22 @@ rst2html.py - -footnote-references=superscript \
 <li><a class="reference internal" href="#existing-practice" id="id13">Existing Practice</a></li>
 <li><a class="reference internal" href="#implicit-noexcept-true-for-destructors" id="id14">Implicit <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> for Destructors</a></li>
 <li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id15">Proposed Changes to Standard Wording</a><ul>
-<li><a class="reference internal" href="#exception-specifications-except-spec" id="id16">15.4 Exception specifications [except.spec]</a></li>
-<li><a class="reference internal" href="#utility-components-utility" id="id17">20.3 Utility components [utility]</a></li>
-<li><a class="reference internal" href="#forward-move-helpers-forward" id="id18">20.3.2 forward/move helpers [forward]</a></li>
-<li><a class="reference internal" href="#header-type-traits-synopsis-meta-type-synop" id="id19">20.6.2 Header <tt class="docutils literal"><span class="pre">&lt;type_traits&gt;</span></tt> synopsis [meta.type.synop]</a></li>
-<li><a class="reference internal" href="#type-properties-meta-unary-prop" id="id20">20.6.4.3 Type properties [meta.unary.prop]</a></li>
-<li><a class="reference internal" href="#deque-modifiers-deque-modifiers" id="id21">23.3.2.3 deque modifiers [deque.modifiers]</a></li>
-<li><a class="reference internal" href="#vector-capacity-vector-capacity" id="id22">23.3.6.2 vector capacity [vector.capacity]</a></li>
-<li><a class="reference internal" href="#vector-modifiers-vector-modifiers" id="id23">23.3.6.4 vector modifiers [vector.modifiers]</a></li>
+<li><a class="reference internal" href="#allocation-functions-basic-stc-dynamic-allocation" id="id16">3.7.4.1 Allocation functions [basic.stc.dynamic.allocation]</a></li>
+<li><a class="reference internal" href="#unary-expressions-expr-unary" id="id17">5.3 Unary expressions [expr.unary]</a></li>
+<li><a class="reference internal" href="#new-expr-new" id="id18">5.3.4 New [expr.new]</a></li>
+<li><a class="reference internal" href="#noexcept-operator-expr-unary-noexcept" id="id19">5.3.7 noexcept operator [expr.unary.noexcept]</a></li>
+<li><a class="reference internal" href="#variadic-templates-temp-variadic" id="id20">14.6.3 Variadic templates [temp.variadic]</a></li>
+<li><a class="reference internal" href="#type-dependent-expressions-temp-dep-expr" id="id21">14.7.2.2 Type-dependent expressions [temp.dep.expr]</a></li>
+<li><a class="reference internal" href="#value-dependent-expressions-temp-dep-constexpr" id="id22">14.7.2.3 Value-dependent expressions [temp.dep.constexpr]</a></li>
+<li><a class="reference internal" href="#exception-specifications-except-spec" id="id23">15.4 Exception specifications [except.spec]</a></li>
+<li><a class="reference internal" href="#type-unexpected-handler-unexpected-handler" id="id24">18.8.2.2 Type unexpected_handler [unexpected.handler]</a></li>
+<li><a class="reference internal" href="#utility-components-utility" id="id25">20.3 Utility components [utility]</a></li>
+<li><a class="reference internal" href="#forward-move-helpers-forward" id="id26">20.3.2 forward/move helpers [forward]</a></li>
+<li><a class="reference internal" href="#header-type-traits-synopsis-meta-type-synop" id="id27">20.6.2 Header <tt class="docutils literal"><span class="pre">&lt;type_traits&gt;</span></tt> synopsis [meta.type.synop]</a></li>
+<li><a class="reference internal" href="#type-properties-meta-unary-prop" id="id28">20.6.4.3 Type properties [meta.unary.prop]</a></li>
+<li><a class="reference internal" href="#deque-modifiers-deque-modifiers" id="id29">23.3.2.3 deque modifiers [deque.modifiers]</a></li>
+<li><a class="reference internal" href="#vector-capacity-vector-capacity" id="id30">23.3.6.2 vector capacity [vector.capacity]</a></li>
+<li><a class="reference internal" href="#vector-modifiers-vector-modifiers" id="id31">23.3.6.4 vector modifiers [vector.modifiers]</a></li>
 </ul>
 </li>
 </ul>
@@ -580,12 +588,99 @@ be appropriate for C++0x at this late date, so we're not proposing it.</p>
 </div>
 <div class="section" id="proposed-changes-to-standard-wording">
 <h1><a class="toc-backref" href="#id15">Proposed Changes to Standard Wording</a></h1>
+<div class="section" id="allocation-functions-basic-stc-dynamic-allocation">
+<h2><a class="toc-backref" href="#id16">3.7.4.1 Allocation functions [basic.stc.dynamic.allocation]</a></h2>
+<p>Modify paragraph 3 as follows:</p>
+<blockquote>
+3 An allocation function that fails to allocate storage can invoke the currently installed new-handler function (18.6.2.3), if any. [ <em>Note</em>: A program-supplied allocation function can obtain the address of the currently installed new_handler using the <tt class="docutils literal"><span class="pre">std::set_new_handler</span></tt> function (18.6.2.4). -- <em>end note</em> ] If an allocation function declared with an empty <em>exception-specification</em> (15.4), <span class="del">throw(),</span> fails to allocate storage, it shall return a null pointer. Any other allocation function that fails to allocate storage shall indicate failure only by throwing an exception of a type that would match a handler (15.3) of type <tt class="docutils literal"><span class="pre">std::bad_alloc</span></tt> (18.6.2.1).</blockquote>
+</div>
+<div class="section" id="unary-expressions-expr-unary">
+<h2><a class="toc-backref" href="#id17">5.3 Unary expressions [expr.unary]</a></h2>
+<p>Modify the grammar in paragraph 1 as follows:</p>
+<blockquote>
+<p>1 Expressions with unary operators group right-to-left.</p>
+<pre class="literal-block">
+unary-expression:
+  postfix-expression
+  ++ cast-expression
+  -- cast-expression
+  unary-operator cast-expression
+  sizeof unary-expression
+  sizeof ( type-id )
+  sizeof ... ( identifier )
+  alignof ( type-id )
+  new-expression
+  delete-expression
+  <span class="raw-html"><span class="ins"><i>noexcept-expression</i></span></span>
+</pre>
+</blockquote>
+</div>
+<div class="section" id="new-expr-new">
+<h2><a class="toc-backref" href="#id18">5.3.4 New [expr.new]</a></h2>
+<p>Modify paragraph 13 as follows:</p>
+<blockquote>
+13 [Note: unless an allocation function is declared with an empty exception-specification (15.4), <span class="del">throw(),</span> it indicates failure to allocate storage by throwing a <tt class="docutils literal"><span class="pre">std::bad_alloc</span></tt> exception (Clause 15, 18.6.2.1); it returns a non-null pointer otherwise. If the allocation function is declared with an empty <em>exception-specification</em>, <span class="del">throw(),</span> it returns null to indicate failure to allocate storage and a non-null pointer otherwise. -- <em>end note</em>] If the allocation function returns null, initialization shall not be done, the deallocation function shall not be called, and the value of the new-expression shall be null.</blockquote>
+</div>
+<div class="section" id="noexcept-operator-expr-unary-noexcept">
+<h2><a class="toc-backref" href="#id19">5.3.7 noexcept operator [expr.unary.noexcept]</a></h2>
+<p>(Add this new section)</p>
+<blockquote>
+<p>1 <span class="ins">The noexcept operator determines whether the evaluation of its operand, which is an unevaluated operand (Clause 5), can throw an exception ([except.throw]).</span></p>
+<pre class="literal-block">
+<span class="raw-html"><span class="ins"><i>noexcept-expression</i></span></span>
+  <span class="raw-html"><span class="ins">noexcept ( <i>expression</i> )</span></span>
+</pre>
+<p>2  <span class="raw-html"><span class="ins">The result of the noexcept operator is a constant of type <code>bool</code>.</span></span></p>
+<p>3 <span class="ins">The result of the noexcept operator is true if evaluating the expression would not require:</span></p>
+<ul class="simple">
+<li><span class="raw-html"><span class="ins">A call to a function that does not have an empty <i>exception-specification</i>.</span></span></li>
+<li><span class="raw-html"><span class="ins">A <i>throw-expression</i> ([except.throw])</span></span></li>
+<li><span class="raw-html"><span class="ins">A <code>dynamic_cast</code> to a reference type that is not a derived-to-base conversion ([expr.dynamic.cast]).</span></span></li>
+</ul>
+<p><span class="ins">Otherwise, the result is false.</span></p>
+</blockquote>
+</div>
+<div class="section" id="variadic-templates-temp-variadic">
+<h2><a class="toc-backref" href="#id20">14.6.3 Variadic templates [temp.variadic]</a></h2>
+<p>Modify the fifth bullet of paragraph 4 as follows:</p>
+<blockquote>
+<p>4 A <em>pack expansion</em> is a sequence of tokens that names one or more parameter packs, followed by an ellipsis. The sequence of tokens is called the <em>pattern of the expansion</em>; its syntax depends on the context in which the expansion occurs. Pack expansions can occur in the following contexts:</p>
+<blockquote>
+<ul class="simple">
+<li>In <span class="raw-html">a<span class="del">n</span> <span class="ins">dynamic-</span>exception-specification</span> (15.4); the pattern is a <em>type-id</em>.</li>
+</ul>
+</blockquote>
+</blockquote>
+</div>
+<div class="section" id="type-dependent-expressions-temp-dep-expr">
+<h2><a class="toc-backref" href="#id21">14.7.2.2 Type-dependent expressions [temp.dep.expr]</a></h2>
+<p>Add the following case to the list in paragraph 4:</p>
+<blockquote>
+<p>4 Expressions of the following forms are never type-dependent (because the type of the expression cannot be dependent):</p>
+<pre class="literal-block">
+<span class="raw-html"><span class="ins">noexcept ( <i>expression</i> )</span></span>
+</pre>
+</blockquote>
+</div>
+<div class="section" id="value-dependent-expressions-temp-dep-constexpr">
+<h2><a class="toc-backref" href="#id22">14.7.2.3 Value-dependent expressions [temp.dep.constexpr]</a></h2>
+<p>Modify paragraph 2 as follows:</p>
+<blockquote>
+<p>2 Expressions of the following form are value-dependent if the <em>unary-expression</em> <span class="raw-html"><span class="ins">or <i>expression</i></span></span> is type-dependent or the <em>type-id</em> is dependent:</p>
+<pre class="literal-block">
+sizeof <em>unary-expression</em>
+sizeof ( <em>type-id</em> )
+alignof ( <em>type-id</em> )
+<span class="raw-html"><span class="ins">noexcept ( <i>expression</i> )</span></span>
+</pre>
+</blockquote>
+</div>
 <div class="section" id="exception-specifications-except-spec">
-<h2><a class="toc-backref" href="#id16">15.4 Exception specifications [except.spec]</a></h2>
+<h2><a class="toc-backref" href="#id23">15.4 Exception specifications [except.spec]</a></h2>
 <p>Change paragraph 1 as follows:</p>
 <blockquote>
 <p>1 A function declaration lists exceptions that its function might directly
-or indirectly throw by using an exception-specification as a suffix of its
+or indirectly throw by using an <em>exception-specification</em> as a suffix of its
 declarator.</p>
 <blockquote>
 <p><span class="raw-html"><p><em>
@@ -595,14 +690,13 @@ exception-specification:
 <br />
 <span class="ins">noexcept-specification</span>
 </blockquote>
-<em></p></span></p>
+</em></p></span></p>
 <p><span class="raw-html"><p><span class="ins">
 <em>dynamic-exception-specification:</em>
 </span>
 <blockquote>
 <code>throw (</code> <em>type-id-list<span class="sub">opt</span></em> <code>)</code>
 </blockquote>
-</em>
 </p></span></p>
 <p><span class="raw-html"><p><em>
 type-id-list:
@@ -610,36 +704,49 @@ type-id-list:
 type-id ...<span class="sub">opt</span><br />
 type-id-list, type-id ...<span class="sub">opt</span>
 </blockquote>
-<em>
+</em>
 </p></span></p>
 <p><span class="raw-html"><p>
 <span class="ins"><em>noexcept-specification:</em></span>
 <blockquote>
 <span class="ins"><code>noexcept (</code> <em>constant-expression<span class="sub">opt</span></em> <code>)</code></span>
 </blockquote>
-</em>
 </p></span></p>
 </blockquote>
 </blockquote>
 <p>Add these paragraphs:</p>
 <blockquote>
-<p><span class="raw-html"><span class="ins">15 In a noexcept-specification, the
-constant-expression, if supplied, shall be a constant expression
-(5.19) that can be contextually converted to <code>bool</code>
+<p><span class="raw-html"><span class="ins">15 In a <i>noexcept-specification</i>, the
+<i>constant-expression</i>, if supplied, shall be a constant expression
+(5.19) that is contextually converted to <code>bool</code>
 (Clause 4).</span></span></p>
 <p><span class="raw-html"><span class="ins">16 If a function with the
-noexcept-specification <code>noexcept(true)</code> throws an
-exception, the behavior is undefined.  The exception-specification
+<i>noexcept-specification</i> <code>noexcept(true)</code> throws an
+exception, the behavior is undefined.  The <i>exception-specification</i>
 <code>noexcept(true)</code> is in all other respects equivalent to
-<code>throw()</code>.  The exception-specification
+<code>throw()</code>.  The <i>exception-specification</i>
 <code>noexcept(false)</code> is equivalent to omitting the exception
 specification altogether.</span></span></p>
 <p><span class="raw-html"><span class="ins">17 <code>noexcept()</code> is
-equivalent to <code>noexcept(true)</code>.</span></span></p>
+equivalent to the <i>noexcept-specification</i> <code>noexcept(true)</code>.</span></span></p>
 </blockquote>
+<!-- comment
+
+17.6.4.10 Restrictions on exception handling [res.on.exception.handling]
+========================================================================
+
+Modify footnote 192 (the first footnote in paragraph 2) as follows:
+
+  192) That is, the C library functions can all be treated as if they have :del:`a throw()` :ins:`an empty` exception-specification. This allows implementations to make performance optimizations based on the absence of exceptions at runtime. -->
+</div>
+<div class="section" id="type-unexpected-handler-unexpected-handler">
+<h2><a class="toc-backref" href="#id24">18.8.2.2 Type unexpected_handler [unexpected.handler]</a></h2>
+<p>Modify paragraph 1 as follows:</p>
+<blockquote>
+1 The type of a handler function to be called by <tt class="docutils literal"><span class="pre">unexpected()</span></tt> when a function attempts to throw an exception not listed in its <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i>.</span></blockquote>
 </div>
 <div class="section" id="utility-components-utility">
-<h2><a class="toc-backref" href="#id17">20.3 Utility components [utility]</a></h2>
+<h2><a class="toc-backref" href="#id25">20.3 Utility components [utility]</a></h2>
 <p>Change Header <tt class="docutils literal"><span class="pre">&lt;utility&gt;</span></tt> synopsis as follows:</p>
 <pre class="literal-block">
 // 20.3.2, forward/move:
@@ -652,7 +759,7 @@ template &lt;class T&gt; typename remove_reference&lt;T&gt;::type&amp;&amp; move
 </pre>
 </div>
 <div class="section" id="forward-move-helpers-forward">
-<h2><a class="toc-backref" href="#id18">20.3.2 forward/move helpers [forward]</a></h2>
+<h2><a class="toc-backref" href="#id26">20.3.2 forward/move helpers [forward]</a></h2>
 <p>Append the following:</p>
 <blockquote>
 <pre class="literal-block">
@@ -664,7 +771,7 @@ template &lt;class T&gt; typename remove_reference&lt;T&gt;::type&amp;&amp; move
 </blockquote>
 </div>
 <div class="section" id="header-type-traits-synopsis-meta-type-synop">
-<h2><a class="toc-backref" href="#id19">20.6.2 Header <tt class="docutils literal"><span class="pre">&lt;type_traits&gt;</span></tt> synopsis [meta.type.synop]</a></h2>
+<h2><a class="toc-backref" href="#id27">20.6.2 Header <tt class="docutils literal"><span class="pre">&lt;type_traits&gt;</span></tt> synopsis [meta.type.synop]</a></h2>
 <pre class="literal-block">
 template &lt;class T&gt; struct has_nothrow_assign;
 <span class="ins">template &lt;class T&gt; struct has_move_constructor;
@@ -681,7 +788,7 @@ template &lt;class T&gt; struct has_virtual_destructor;
 </pre>
 </div>
 <div class="section" id="type-properties-meta-unary-prop">
-<h2><a class="toc-backref" href="#id20">20.6.4.3 Type properties [meta.unary.prop]</a></h2>
+<h2><a class="toc-backref" href="#id28">20.6.4.3 Type properties [meta.unary.prop]</a></h2>
 <p>Add entries to table 43:</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -749,7 +856,7 @@ array of unknown bound, or
 </table>
 </div>
 <div class="section" id="deque-modifiers-deque-modifiers">
-<h2><a class="toc-backref" href="#id21">23.3.2.3 deque modifiers [deque.modifiers]</a></h2>
+<h2><a class="toc-backref" href="#id29">23.3.2.3 deque modifiers [deque.modifiers]</a></h2>
 <p>Context:</p>
 <pre class="literal-block">
 iterator insert(const_iterator position, const T&amp; x);
@@ -788,7 +895,7 @@ iterator erase(const_iterator first, const_iterator last);
 or assignment operator of <tt class="docutils literal"><span class="pre">T</span></tt>.</blockquote>
 </div>
 <div class="section" id="vector-capacity-vector-capacity">
-<h2><a class="toc-backref" href="#id22">23.3.6.2 vector capacity [vector.capacity]</a></h2>
+<h2><a class="toc-backref" href="#id30">23.3.6.2 vector capacity [vector.capacity]</a></h2>
 <p>Context:</p>
 <pre class="literal-block">
 void reserve(size_type n);
@@ -821,7 +928,7 @@ by the move constructor of a non-CopyConstructible
 <code>T</code></span></span> there are no effects.</blockquote>
 </div>
 <div class="section" id="vector-modifiers-vector-modifiers">
-<h2><a class="toc-backref" href="#id23">23.3.6.4 vector modifiers [vector.modifiers]</a></h2>
+<h2><a class="toc-backref" href="#id31">23.3.6.4 vector modifiers [vector.modifiers]</a></h2>
 <p>Change the section as follows:</p>
 <blockquote>
 <pre class="literal-block">

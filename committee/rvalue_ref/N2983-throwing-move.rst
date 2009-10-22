@@ -291,13 +291,107 @@ Proposed Changes to Standard Wording
 .. role:: raw-html(raw)
    :format: html
    
+3.7.4.1 Allocation functions [basic.stc.dynamic.allocation]
+===========================================================
+
+Modify paragraph 3 as follows:
+
+  3 An allocation function that fails to allocate storage can invoke the currently installed new-handler function (18.6.2.3), if any. [ *Note*: A program-supplied allocation function can obtain the address of the currently installed new_handler using the ``std::set_new_handler`` function (18.6.2.4). -- *end note* ] If an allocation function declared with an empty *exception-specification* (15.4), :del:`throw(),` fails to allocate storage, it shall return a null pointer. Any other allocation function that fails to allocate storage shall indicate failure only by throwing an exception of a type that would match a handler (15.3) of type ``std::bad_alloc`` (18.6.2.1).
+
+5.3 Unary expressions [expr.unary]
+==================================
+
+Modify the grammar in paragraph 1 as follows:
+
+  1 Expressions with unary operators group right-to-left.
+
+  .. parsed-literal::
+
+    unary-expression: 
+      postfix-expression
+      ++ cast-expression 
+      -- cast-expression 
+      unary-operator cast-expression 
+      sizeof unary-expression 
+      sizeof ( type-id ) 
+      sizeof ... ( identifier ) 
+      alignof ( type-id ) 
+      new-expression 
+      delete-expression
+      :raw-html:`<span class="ins"><i>noexcept-expression</i></span>`
+
+5.3.4 New [expr.new]
+====================
+
+Modify paragraph 13 as follows:
+
+  13 [Note: unless an allocation function is declared with an empty exception-specification (15.4), :del:`throw(),` it indicates failure to allocate storage by throwing a ``std::bad_alloc`` exception (Clause 15, 18.6.2.1); it returns a non-null pointer otherwise. If the allocation function is declared with an empty *exception-specification*, :del:`throw(),` it returns null to indicate failure to allocate storage and a non-null pointer otherwise. -- *end note*] If the allocation function returns null, initialization shall not be done, the deallocation function shall not be called, and the value of the new-expression shall be null.
+
+5.3.7 noexcept operator [expr.unary.noexcept]
+=============================================
+
+(Add this new section)
+
+  1 :ins:`The noexcept operator determines whether the evaluation of its operand, which is an unevaluated operand (Clause 5), can throw an exception ([except.throw]).`
+
+  .. parsed-literal::
+
+    :raw-html:`<span class="ins"><i>noexcept-expression</i></span>`
+      :raw-html:`<span class="ins">noexcept ( <i>expression</i> )</span>`
+
+  2  :raw-html:`<span class="ins">The result of the noexcept operator is a constant of type <code>bool</code>.</span>`
+
+  3 :ins:`The result of the noexcept operator is true if evaluating the expression would not require:`
+
+  * :raw-html:`<span class="ins">A call to a function that does not have an empty <i>exception-specification</i>.</span>`
+
+  * :raw-html:`<span class="ins">A <i>throw-expression</i> ([except.throw])</span>`
+
+  * :raw-html:`<span class="ins">A <code>dynamic_cast</code> to a reference type that is not a derived-to-base conversion ([expr.dynamic.cast]).</span>`
+
+  :ins:`Otherwise, the result is false.`
+
+14.6.3 Variadic templates [temp.variadic]
+=========================================
+
+Modify the fifth bullet of paragraph 4 as follows:
+
+  4 A *pack expansion* is a sequence of tokens that names one or more parameter packs, followed by an ellipsis. The sequence of tokens is called the *pattern of the expansion*; its syntax depends on the context in which the expansion occurs. Pack expansions can occur in the following contexts:
+
+    * In :raw-html:`a<span class="del">n</span> <span class="ins">dynamic-</span>exception-specification` (15.4); the pattern is a *type-id*.
+
+14.7.2.2 Type-dependent expressions [temp.dep.expr]
+===================================================
+
+Add the following case to the list in paragraph 4:
+
+  4 Expressions of the following forms are never type-dependent (because the type of the expression cannot be dependent):
+
+  .. parsed-literal::
+
+    :raw-html:`<span class="ins">noexcept ( <i>expression</i> )</span>`
+
+14.7.2.3 Value-dependent expressions [temp.dep.constexpr]
+=========================================================
+
+Modify paragraph 2 as follows:
+
+  2 Expressions of the following form are value-dependent if the *unary-expression* :raw-html:`<span class="ins">or <i>expression</i></span>` is type-dependent or the *type-id* is dependent:
+
+  .. parsed-literal::
+
+    sizeof *unary-expression*
+    sizeof ( *type-id* ) 
+    alignof ( *type-id* )
+    :raw-html:`<span class="ins">noexcept ( <i>expression</i> )</span>`
+
 15.4 Exception specifications [except.spec]
 ===========================================
 
 Change paragraph 1 as follows:
 
   1 A function declaration lists exceptions that its function might directly 
-  or indirectly throw by using an exception-specification as a suffix of its 
+  or indirectly throw by using an *exception-specification* as a suffix of its 
   declarator.
 
     :raw-html:`<p><em>
@@ -307,7 +401,7 @@ Change paragraph 1 as follows:
     <br />
     <span class="ins">noexcept-specification</span>
     </blockquote>
-    <em></p>`
+    </em></p>`
 
     :raw-html:`<p><span class="ins">
     <em>dynamic-exception-specification:</em>
@@ -315,7 +409,6 @@ Change paragraph 1 as follows:
     <blockquote>
     <code>throw (</code> <em>type-id-list<span class="sub">opt</span></em> <code>)</code>
     </blockquote>
-    </em>
     </p>`
 
     :raw-html:`<p><em>
@@ -324,7 +417,7 @@ Change paragraph 1 as follows:
     type-id ...<span class="sub">opt</span><br />
     type-id-list, type-id ...<span class="sub">opt</span>
     </blockquote>
-    <em>
+    </em>
     </p>`
 
     :raw-html:`<p>
@@ -332,27 +425,42 @@ Change paragraph 1 as follows:
     <blockquote>
     <span class="ins"><code>noexcept (</code> <em>constant-expression<span class="sub">opt</span></em> <code>)</code></span>
     </blockquote>
-    </em>
     </p>`
 
 
 Add these paragraphs:
 
-    :raw-html:`<span class="ins">15 In a noexcept-specification, the
-    constant-expression, if supplied, shall be a constant expression
-    (5.19) that can be contextually converted to <code>bool</code>
+    :raw-html:`<span class="ins">15 In a <i>noexcept-specification</i>, the
+    <i>constant-expression</i>, if supplied, shall be a constant expression
+    (5.19) that is contextually converted to <code>bool</code>
     (Clause 4).</span>`
 
     :raw-html:`<span class="ins">16 If a function with the
-    noexcept-specification <code>noexcept(true)</code> throws an
-    exception, the behavior is undefined.  The exception-specification
+    <i>noexcept-specification</i> <code>noexcept(true)</code> throws an
+    exception, the behavior is undefined.  The <i>exception-specification</i>
     <code>noexcept(true)</code> is in all other respects equivalent to
-    <code>throw()</code>.  The exception-specification
+    <code>throw()</code>.  The <i>exception-specification</i>
     <code>noexcept(false)</code> is equivalent to omitting the exception
     specification altogether.</span>`
 
     :raw-html:`<span class="ins">17 <code>noexcept()</code> is
-    equivalent to <code>noexcept(true)</code>.</span>`
+    equivalent to the <i>noexcept-specification</i> <code>noexcept(true)</code>.</span>`
+
+.. comment
+
+  17.6.4.10 Restrictions on exception handling [res.on.exception.handling]
+  ========================================================================
+
+  Modify footnote 192 (the first footnote in paragraph 2) as follows:
+
+    192) That is, the C library functions can all be treated as if they have :del:`a throw()` :ins:`an empty` exception-specification. This allows implementations to make performance optimizations based on the absence of exceptions at runtime.
+
+18.8.2.2 Type unexpected_handler [unexpected.handler]
+=====================================================
+
+Modify paragraph 1 as follows:
+
+  1 The type of a handler function to be called by ``unexpected()`` when a function attempts to throw an exception not listed in its :raw-html:`<i><span class="ins">dynamic-</span>exception-specification</i>.`
 
 20.3 Utility components [utility]
 =================================
