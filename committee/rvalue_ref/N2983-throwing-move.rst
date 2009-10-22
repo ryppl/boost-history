@@ -2,8 +2,8 @@
  Allowing Move Constructors to Throw
 =====================================
 
-:Author: David Abrahams, Rani Sharoni
-:Contact: dave@boostpro.com, rani_sharoni@hotmail.com
+:Author: David Abrahams, Rani Sharoni, Doug Gregor
+:Contact: dave@boostpro.com, rani_sharoni@hotmail.com, doug.gregor@gmail.com
 :organization: `BoostPro Computing`_
 :date: 2009-10-14
 
@@ -218,6 +218,17 @@ be *required* if there is a ban on throwing move constructors, the
 exception specification above is entirely optional; its presence or
 absence doesn't affect the correctness of a move constructor.
 
+operator ``noexcept(``\ *expression*\ ``)``
+*******************************************
+
+It seems that ``has_nothrow_``\ *xxx* traits are proliferating (and
+not just in this proposal).  Once we have ``noexcept(``\
+*bool-constant-expr*\ ``)`` available to make the information
+available, it makes sense to generalize the traits into an operator
+similar to ``sizeof`` and ``typeof`` that can give us answers about
+*any* expression.
+
+
 Interactions with Other Proposals
 *********************************
 
@@ -250,31 +261,16 @@ successful in practice and is regarded by many as superior to the one
 in the standard.  Standardizing ``noexcept(true)`` gives everyone access
 to this optimization tool.
 
-Low-Hanging Fruit
-*****************
-
-There are a couple of additional features we think the committee
-should consider if this proposal is accepted.
-
 Implicit ``noexcept(true)`` for Destructors
-===========================================
+*******************************************
 
 So few destructors can throw exceptions that the default
 exception-specification for destructors could be changed from nothing
-(i.e. ``noexcept(false)``) to ``noexcept(true)`` with only a tiny amount of code
-breakage.  Such code is already very dangerous, and where used
-properly, ought to be a well-known “caution area” that is reasonably
-easily migrated.
-
-operator ``noexcept(``\ *expression*\ ``)``
-============================================
-
-It seems that ``has_nothrow_``\ *xxx* traits are proliferating (and
-not just in this proposal).  Once we have ``throw(``\
-*bool-constant-expr*\ ``)`` available to make the information
-available, it makes sense to generalize the traits into an operator
-similar to ``sizeof`` and ``typeof`` that can give us answers about
-*any* expression.
+(i.e. ``noexcept(false)``) to ``noexcept(true)`` with only a tiny
+amount of code breakage.  Such code is already very dangerous, and
+where used properly, ought to be a well-known “caution area” that is
+reasonably easily migrated.  However, we don't think this change would
+be appropriate for C++0x at this late date, so we're not proposing it.
 
 
 Proposed Changes to Standard Wording
@@ -503,13 +499,13 @@ Remove paragraph 2:
 
 Change paragraph 3 as follows:
 
-    :del:`3`:ins:`2` Effects: A directive that informs a vector of a planned change in
-    size, so that it can manage the storage allocation
-    accordingly. After ``reserve()``, ``capacity()`` is greater or
-    equal to the argument of reserve if reallocation happens; and
-    equal to the previous value of ``capacity()`` otherwise.
-    Reallocation happens at this point if and only if the current
-    capacity is less than the argument of ``reserve()``. If an
+    :del:`3`:ins:`2` Effects: A directive that informs a vector of a
+    planned change in size, so that it can manage the storage
+    allocation accordingly. After ``reserve()``, ``capacity()`` is
+    greater or equal to the argument of reserve if reallocation
+    happens; and equal to the previous value of ``capacity()``
+    otherwise.  Reallocation happens at this point if and only if the
+    current capacity is less than the argument of ``reserve()``. If an
     exception is thrown :raw-html:`<span class="ins">other than by the
     move constructor of a non-CopyConstructible <code>T</code>` there
     are no effects.
