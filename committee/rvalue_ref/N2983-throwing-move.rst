@@ -388,7 +388,7 @@ Modify paragraph 2 as follows:
 15.4 Exception specifications [except.spec]
 ===========================================
 
-Change paragraph 1 as follows:
+Change the following paragraphs as follows:
 
   1 A function declaration lists exceptions that its function might directly 
   or indirectly throw by using an *exception-specification* as a suffix of its 
@@ -427,6 +427,13 @@ Change paragraph 1 as follows:
     </blockquote>
     </p>`
 
+  7 A function is said to *allow* an exception of type ``E`` if its :raw-html:`<i><span class="ins">dynamic-</span>exception-specification</i>` contains a type ``T`` for which a handler of type ``T`` would be a match (15.3) for an exception of type ``E``.
+
+  .. comment :raw-html:`<span class="ins">, if its <i>noexcept-specification</i> is <code>noexcept(false)</code>, or if the function has no <i>exception-specification</i>`.
+
+  11 A function with no *exception-specification* :raw-html:`<span class="ins">,or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>false</code>,</span>` allows all exceptions. :raw-html:`<span class="ins">An <i>exception-specification</i> is <i>empty</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>true</code>.</span>` A function with an empty *exception-specification* :raw-html:`<span class="del">, <code>throw()</code>,</span>` does not allow any exceptions.
+
+  14 In :raw-html:`a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i>,` a *type-id* followed by an ellipsis is a pack expansion (14.6.3).
 
 Add these paragraphs:
 

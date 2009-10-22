@@ -677,7 +677,7 @@ alignof ( <em>type-id</em> )
 </div>
 <div class="section" id="exception-specifications-except-spec">
 <h2><a class="toc-backref" href="#id23">15.4 Exception specifications [except.spec]</a></h2>
-<p>Change paragraph 1 as follows:</p>
+<p>Change the following paragraphs as follows:</p>
 <blockquote>
 <p>1 A function declaration lists exceptions that its function might directly
 or indirectly throw by using an <em>exception-specification</em> as a suffix of its
@@ -713,6 +713,10 @@ type-id-list, type-id ...<span class="sub">opt</span>
 </blockquote>
 </p></span></p>
 </blockquote>
+<p>7 A function is said to <em>allow</em> an exception of type <tt class="docutils literal"><span class="pre">E</span></tt> if its <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i></span> contains a type <tt class="docutils literal"><span class="pre">T</span></tt> for which a handler of type <tt class="docutils literal"><span class="pre">T</span></tt> would be a match (15.3) for an exception of type <tt class="docutils literal"><span class="pre">E</span></tt>.</p>
+<!-- comment :raw-html:`<span class="ins">, if its <i>noexcept-specification</i> is <code>noexcept(false)</code>, or if the function has no <i>exception-specification</i>`. -->
+<p>11 A function with no <em>exception-specification</em> <span class="raw-html"><span class="ins">,or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>false</code>,</span></span> allows all exceptions. <span class="raw-html"><span class="ins">An <i>exception-specification</i> is <i>empty</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>true</code>.</span></span> A function with an empty <em>exception-specification</em> <span class="raw-html"><span class="del">, <code>throw()</code>,</span></span> does not allow any exceptions.</p>
+<p>14 In <span class="raw-html">a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i>,</span> a <em>type-id</em> followed by an ellipsis is a pack expansion (14.6.3).</p>
 </blockquote>
 <p>Add these paragraphs:</p>
 <blockquote>
