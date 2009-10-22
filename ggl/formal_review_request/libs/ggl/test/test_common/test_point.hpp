@@ -29,32 +29,6 @@ struct test_point
 };
 
 
-// Struct set of metafunctions to read/write coordinates above, specialized per dimension
-template<int I>
-struct accessor {};
-
-template<>
-struct accessor<0>
-{
-    static inline const float& get(const test_point& p) { return p.c1; }
-    static inline void set(test_point& p, const float& value) { p.c1 = value; }
-};
-
-template<>
-struct accessor<1>
-{
-    static inline const float& get(const test_point& p) { return p.c2; }
-    static inline void set(test_point& p, const float& value) { p.c2 = value; }
-};
-
-template<>
-struct accessor<2>
-{
-    static inline const float& get(const test_point& p) { return p.c3; }
-    static inline void set(test_point& p, const float& value) { p.c3 = value; }
-};
-
-
 } // namespace test
 
 
@@ -72,18 +46,42 @@ struct coordinate_system<test::test_point> { typedef cs::cartesian type; };
 template<>
 struct dimension<test::test_point>: boost::mpl::int_<3> {};
 
-template<> struct access<test::test_point>
+template<> struct access<test::test_point, 0>
 {
-    template <int I>
     static inline const float& get(const test::test_point& p)
     {
-        return test::accessor<I>::get(p);
+        return p.c1;
     }
 
-    template <int I>
     static inline void set(test::test_point& p, const float& value)
     {
-        test::accessor<I>::set(p, value);
+        p.c1 = value;
+    }
+};
+
+template<> struct access<test::test_point, 1>
+{
+    static inline const float& get(const test::test_point& p)
+    {
+        return p.c2;
+    }
+
+    static inline void set(test::test_point& p, const float& value)
+    {
+        p.c2 = value;
+    }
+};
+
+template<> struct access<test::test_point, 2>
+{
+    static inline const float& get(const test::test_point& p)
+    {
+        return p.c3;
+    }
+
+    static inline void set(test::test_point& p, const float& value)
+    {
+        p.c3 = value;
     }
 };
 

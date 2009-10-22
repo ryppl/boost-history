@@ -87,7 +87,8 @@ void test_all()
     test_get_set<P>();
 
     // N-SPHERE, setting sphere center
-    test_get_set<ggl::nsphere<P, double> >();
+    test_get_set<ggl::nsphere<P, coordinate_type> >();
+
 
     // BOX, setting left/right/top/bottom
     ggl::box<P> b;
@@ -116,8 +117,9 @@ int test_main(int, char* [])
     test_get_set<int[2]>();
     test_get_set<float[2]>();
     test_get_set<double[2]>();
-
     test_get_set<double[3]>();
+
+    test_get_set<boost::tuple<double, double> >();
 
     test_all<ggl::point<int, 2, ggl::cs::cartesian> >();
     test_all<ggl::point<float, 2, ggl::cs::cartesian> >();

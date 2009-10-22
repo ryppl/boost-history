@@ -45,21 +45,32 @@ template<> struct coordinate_system<test::test_point_xy*>
 template<> struct dimension<test::test_point_xy*> : boost::mpl::int_<2> {};
 
 template<>
-struct access<test::test_point_xy*>
+struct access<test::test_point_xy*, 0>
 {
-    template <std::size_t I>
-    static double get(const test::test_point_xy* p)
+    static double get(test::test_point_xy const* p)
     {
-        return I == 0 ? p->x : p->y;
-        // Or implement an accessor with specializations
+        return p->x;
     }
 
-    template <int I>
-    static void set(test::test_point_xy* p, const double& value)
+    static void set(test::test_point_xy* p, double const& value)
     {
-        // Or (better) implement an accessor with specializations
-        if (I == 0) p->x = value;
-        else if (I == 1) p->y = value;
+        p->x = value;
+    }
+
+};
+
+
+template<>
+struct access<test::test_point_xy*, 1>
+{
+    static double get(test::test_point_xy const* p)
+    {
+        return p->y;
+    }
+
+    static void set(test::test_point_xy* p, double const& value)
+    {
+        p->y = value;
     }
 
 };

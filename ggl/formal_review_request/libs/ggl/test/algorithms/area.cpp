@@ -12,11 +12,13 @@
 
 #include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
 
+#include <ggl/geometries/point.hpp>
 #include <ggl/geometries/box.hpp>
 #include <ggl/geometries/nsphere.hpp>
 #include <ggl/geometries/linear_ring.hpp>
 #include <ggl/geometries/polygon.hpp>
 
+#include <algorithms/test_area.hpp>
 
 
 
@@ -33,21 +35,11 @@ void test_area_circle()
     BOOST_CHECK_CLOSE(d, 4 * 3.1415926535897932384626433832795, 0.001);
 }
 
-template <typename Geometry>
-void test_geometry(std::string const& wkt, double expected)
-{
-    Geometry geometry;
-    read_wkt(wkt, geometry);
-    double d = area(geometry);
-    BOOST_CHECK_CLOSE(d, expected, 0.001);
-}
-
-
 
 template <typename P>
 void test_all()
 {
-    test_area_circle<P, double>();
+    //test_area_circle<P, double>();
     test_geometry<ggl::box<P> >("POLYGON((0 0,2 2))", 4.0);
     test_geometry<ggl::box<P> >("POLYGON((2 2,0 0))", 4.0);
 
@@ -72,13 +64,9 @@ void test_all()
 
 int test_main(int, char* [])
 {
-    //test_all<int[2]>();
-    //test_all<float[2]>(); not yet because cannot be copied, for polygon
-    //test_all<double[2]>();
-
-    //test_all<point_xy<int> >();
-    //test_all<point_xy<float> >();
-    test_all<ggl::point_xy<double> >();
+    test_all<ggl::point<int, 2, ggl::cs::cartesian> >();
+    test_all<ggl::point<float, 2, ggl::cs::cartesian> >();
+    test_all<ggl::point<double, 2, ggl::cs::cartesian> >();
 
     return 0;
 }

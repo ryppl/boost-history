@@ -24,7 +24,7 @@
 // Sample point, having x/y
 struct my_point
 {
-    float x,y;
+    double x,y;
 };
 
 
@@ -42,23 +42,31 @@ template<> struct coordinate_system<my_point*>
 template<> struct dimension<my_point*> : boost::mpl::int_<2> {};
 
 template<>
-struct access<my_point*>
+struct access<my_point*, 0>
 {
-    template <std::size_t I>
-    static double get(const my_point* p)
+    static double get(my_point const* p)
     {
-        return I == 0 ? p->x : p->y;
-        // Or implement an accessor with specializations
+        return p->x;
     }
 
-    template <int I>
-    static void set(my_point* p, const double& value)
+    static void set(my_point* p, double const& value)
     {
-        // Or (better) implement an accessor with specializations
-        if (I == 0) p->x = value;
-        else if (I == 1) p->y = value;
+        p->x = value;
+    }
+};
+
+template<>
+struct access<my_point*, 1>
+{
+    static double get(my_point const* p)
+    {
+        return p->y;
     }
 
+    static void set(my_point* p, double const& value)
+    {
+        p->y = value;
+    }
 };
 
 }} // namespace ggl::traits
