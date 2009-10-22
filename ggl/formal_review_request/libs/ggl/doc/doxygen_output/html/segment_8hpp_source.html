@@ -62,78 +62,89 @@
 <a name="l00020"></a>00020 <span class="keyword">namespace </span>ggl
 <a name="l00021"></a>00021 {
 <a name="l00022"></a>00022 
-<a name="l00034"></a>00034 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> P&gt;
-<a name="l00035"></a><a class="code" href="structggl_1_1segment.html">00035</a> <span class="keyword">struct </span><a class="code" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">segment</a>
-<a name="l00036"></a>00036 {
-<a name="l00037"></a>00037 <span class="keyword">private</span>:
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039     BOOST_CONCEPT_ASSERT( (<span class="keyword">typename</span> boost::mpl::if_
-<a name="l00040"></a>00040         &lt;
-<a name="l00041"></a>00041             boost::is_const&lt;P&gt;,
-<a name="l00042"></a>00042             <a class="code" href="structggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;P&gt;</a>,
-<a name="l00043"></a>00043             <a class="code" href="structggl_1_1concept_1_1_point.html" title="Checks point concept, using Boost Concept Check Library and metafunctions.">concept::Point&lt;P&gt;</a>
-<a name="l00044"></a>00044         &gt;
-<a name="l00045"></a>00045     ) );
-<a name="l00046"></a>00046 
-<a name="l00047"></a>00047 <span class="keyword">public</span>:
-<a name="l00048"></a>00048 
-<a name="l00049"></a><a class="code" href="structggl_1_1segment.html#47f8bba55326d5ae988dc3a5a9f146c7">00049</a>     <span class="keyword">typedef</span> P <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
-<a name="l00050"></a>00050 
-<a name="l00051"></a><a class="code" href="structggl_1_1segment.html#3f8aa8a3542ebf499e4987ef3ccfd5b1">00051</a>     P&amp; <a class="code" href="structggl_1_1segment.html#3f8aa8a3542ebf499e4987ef3ccfd5b1">first</a>;
-<a name="l00052"></a><a class="code" href="structggl_1_1segment.html#e5aea8fdfbd0e0dece9b227a8a5cec33">00052</a>     P&amp; <a class="code" href="structggl_1_1segment.html#e5aea8fdfbd0e0dece9b227a8a5cec33">second</a>;
-<a name="l00053"></a>00053 
-<a name="l00054"></a><a class="code" href="structggl_1_1segment.html#e8e37a9f4eeacb317a1ce971da6cbd87">00054</a>     <span class="keyword">inline</span> <a class="code" href="structggl_1_1segment.html#e8e37a9f4eeacb317a1ce971da6cbd87">segment</a>(P&amp; p1, P&amp; p2)
-<a name="l00055"></a>00055         : <a class="code" href="structggl_1_1segment.html#3f8aa8a3542ebf499e4987ef3ccfd5b1">first</a>(p1), <a class="code" href="structggl_1_1segment.html#e5aea8fdfbd0e0dece9b227a8a5cec33">second</a>(p2)
-<a name="l00056"></a>00056     {}
-<a name="l00057"></a>00057 };
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 <span class="comment">// Traits specializations for segment above</span>
-<a name="l00060"></a>00060 <span class="preprocessor">#ifndef DOXYGEN_NO_TRAITS_SPECIALIZATIONS</span>
-<a name="l00061"></a>00061 <span class="preprocessor"></span><span class="keyword">namespace </span>traits
-<a name="l00062"></a>00062 {
-<a name="l00063"></a>00063 
-<a name="l00064"></a>00064 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P&gt;
-<a name="l00065"></a>00065 <span class="keyword">struct </span>tag&lt; segment&lt;P&gt; &gt;
-<a name="l00066"></a>00066 {
-<a name="l00067"></a>00067     <span class="keyword">typedef</span> segment_tag <a class="code" href="structggl_1_1traits_1_1tag.html#6a33811e99e92e16ae2529e6ecd8a1b6">type</a>;
-<a name="l00068"></a>00068 };
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P&gt;
-<a name="l00071"></a>00071 <span class="keyword">struct </span>point_type&lt;segment&lt;P&gt; &gt;
-<a name="l00072"></a>00072 {
-<a name="l00073"></a>00073     <span class="keyword">typedef</span> P type;
-<a name="l00074"></a>00074 };
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P, std::<span class="keywordtype">size_t</span> I, std::<span class="keywordtype">size_t</span> D&gt;
-<a name="l00077"></a>00077 <span class="keyword">struct </span>indexed_access&lt;segment&lt;P&gt;, I, D&gt;
-<a name="l00078"></a>00078 {
-<a name="l00079"></a>00079     <span class="keyword">typedef</span> segment&lt;P&gt; segment_type;
-<a name="l00080"></a>00080     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">ggl::coordinate_type&lt;segment_type&gt;::type</a> coordinate_type;
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082     <span class="keyword">static</span> <span class="keyword">inline</span> coordinate_type <span class="keyword">get</span>(segment_type <span class="keyword">const</span>&amp; s)
-<a name="l00083"></a>00083     {
-<a name="l00084"></a>00084         <span class="keywordflow">return</span> (I == 0 ? ggl::get&lt;D&gt;(s.first) : ggl::get&lt;D&gt;(s.second));
-<a name="l00085"></a>00085     }
-<a name="l00086"></a>00086 
-<a name="l00087"></a>00087     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(segment_type&amp; s, coordinate_type <span class="keyword">const</span>&amp; value)
-<a name="l00088"></a>00088     {
-<a name="l00089"></a>00089         <span class="keywordflow">if</span> (I == 0)
-<a name="l00090"></a>00090         {
-<a name="l00091"></a>00091             ggl::set&lt;D&gt;(s.first, value);
-<a name="l00092"></a>00092         }
-<a name="l00093"></a>00093         <span class="keywordflow">else</span>
-<a name="l00094"></a>00094         {
-<a name="l00095"></a>00095             ggl::set&lt;D&gt;(s.second, value);
-<a name="l00096"></a>00096         }
-<a name="l00097"></a>00097     }
-<a name="l00098"></a>00098 };
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100 } <span class="comment">// namespace traits</span>
-<a name="l00101"></a>00101 <span class="preprocessor">#endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS</span>
-<a name="l00102"></a>00102 <span class="preprocessor"></span>
-<a name="l00103"></a>00103 } <span class="comment">// namespace ggl</span>
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105 <span class="preprocessor">#endif // GGL_GEOMETRIES_SEGMENT_HPP</span>
+<a name="l00036"></a>00036 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> ConstOrNonConstPo<span class="keywordtype">int</span>&gt;
+<a name="l00037"></a><a class="code" href="classggl_1_1segment.html">00037</a> <span class="keyword">class </span><a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">segment</a>
+<a name="l00038"></a>00038 {
+<a name="l00039"></a>00039     BOOST_CONCEPT_ASSERT( (
+<a name="l00040"></a>00040         <span class="keyword">typename</span> boost::mpl::if_
+<a name="l00041"></a>00041             &lt;
+<a name="l00042"></a>00042                 boost::is_const&lt;ConstOrNonConstPoint&gt;,
+<a name="l00043"></a>00043                 <a class="code" href="structggl_1_1concept_1_1_point.html" title="Checks point concept, using Boost Concept Check Library and metafunctions.">concept::Point&lt;ConstOrNonConstPoint&gt;</a>,
+<a name="l00044"></a>00044                 <a class="code" href="structggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;ConstOrNonConstPoint&gt;</a>
+<a name="l00045"></a>00045             &gt;
+<a name="l00046"></a>00046     ) );
+<a name="l00047"></a>00047 
+<a name="l00048"></a>00048     <span class="keyword">typedef</span> ConstOrNonConstPoint <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
+<a name="l00049"></a>00049 
+<a name="l00050"></a>00050 <span class="keyword">public</span>:
+<a name="l00051"></a>00051 
+<a name="l00052"></a><a class="code" href="classggl_1_1segment.html#76c7f18dd19699ccb7353137b8981c65">00052</a>     <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>&amp; <a class="code" href="classggl_1_1segment.html#76c7f18dd19699ccb7353137b8981c65">first</a>;
+<a name="l00053"></a><a class="code" href="classggl_1_1segment.html#543b3806df8d74067157587323917a71">00053</a>     <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>&amp; <a class="code" href="classggl_1_1segment.html#543b3806df8d74067157587323917a71">second</a>;
+<a name="l00054"></a>00054 
+<a name="l00055"></a><a class="code" href="classggl_1_1segment.html#186525605856fad4270057e760d6c020">00055</a>     <span class="keyword">inline</span> <a class="code" href="classggl_1_1segment.html#186525605856fad4270057e760d6c020">segment</a>(<a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>&amp; p1, <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>&amp; p2)
+<a name="l00056"></a>00056         : <a class="code" href="classggl_1_1segment.html#76c7f18dd19699ccb7353137b8981c65">first</a>(p1)
+<a name="l00057"></a>00057         , <a class="code" href="classggl_1_1segment.html#543b3806df8d74067157587323917a71">second</a>(p2)
+<a name="l00058"></a>00058     {}
+<a name="l00059"></a>00059 };
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061 <span class="comment">// Traits specializations for segment above</span>
+<a name="l00062"></a>00062 <span class="preprocessor">#ifndef DOXYGEN_NO_TRAITS_SPECIALIZATIONS</span>
+<a name="l00063"></a>00063 <span class="preprocessor"></span><span class="keyword">namespace </span>traits
+<a name="l00064"></a>00064 {
+<a name="l00065"></a>00065 
+<a name="l00066"></a>00066 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ConstOrNonConstPo<span class="keywordtype">int</span>&gt;
+<a name="l00067"></a>00067 <span class="keyword">struct </span>tag&lt;segment&lt;ConstOrNonConstPoint&gt; &gt;
+<a name="l00068"></a>00068 {
+<a name="l00069"></a>00069     <span class="keyword">typedef</span> segment_tag <a class="code" href="structggl_1_1traits_1_1tag.html#6a33811e99e92e16ae2529e6ecd8a1b6">type</a>;
+<a name="l00070"></a>00070 };
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ConstOrNonConstPo<span class="keywordtype">int</span>&gt;
+<a name="l00073"></a>00073 <span class="keyword">struct </span>point_type&lt;segment&lt;ConstOrNonConstPoint&gt; &gt;
+<a name="l00074"></a>00074 {
+<a name="l00075"></a>00075     <span class="keyword">typedef</span> ConstOrNonConstPoint type;
+<a name="l00076"></a>00076 };
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ConstOrNonConstPo<span class="keywordtype">int</span>, std::<span class="keywordtype">size_t</span> Dimension&gt;
+<a name="l00079"></a>00079 <span class="keyword">struct </span>indexed_access&lt;segment&lt;ConstOrNonConstPoint&gt;, 0, Dimension&gt;
+<a name="l00080"></a>00080 {
+<a name="l00081"></a>00081     <span class="keyword">typedef</span> segment&lt;ConstOrNonConstPoint&gt; segment_type;
+<a name="l00082"></a>00082     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">ggl::coordinate_type&lt;segment_type&gt;::type</a> coordinate_type;
+<a name="l00083"></a>00083 
+<a name="l00084"></a>00084     <span class="keyword">static</span> <span class="keyword">inline</span> coordinate_type <span class="keyword">get</span>(segment_type <span class="keyword">const</span>&amp; s)
+<a name="l00085"></a>00085     {
+<a name="l00086"></a>00086         <span class="keywordflow">return</span> ggl::get&lt;Dimension&gt;(s.first);
+<a name="l00087"></a>00087     }
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(segment_type&amp; s, coordinate_type <span class="keyword">const</span>&amp; value)
+<a name="l00090"></a>00090     {
+<a name="l00091"></a>00091         ggl::set&lt;Dimension&gt;(s.first, value);
+<a name="l00092"></a>00092     }
+<a name="l00093"></a>00093 };
+<a name="l00094"></a>00094 
+<a name="l00095"></a>00095 
+<a name="l00096"></a>00096 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ConstOrNonConstPo<span class="keywordtype">int</span>, std::<span class="keywordtype">size_t</span> Dimension&gt;
+<a name="l00097"></a>00097 <span class="keyword">struct </span>indexed_access&lt;segment&lt;ConstOrNonConstPoint&gt;, 1, Dimension&gt;
+<a name="l00098"></a>00098 {
+<a name="l00099"></a>00099     <span class="keyword">typedef</span> segment&lt;ConstOrNonConstPoint&gt; segment_type;
+<a name="l00100"></a>00100     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">ggl::coordinate_type&lt;segment_type&gt;::type</a> coordinate_type;
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102     <span class="keyword">static</span> <span class="keyword">inline</span> coordinate_type <span class="keyword">get</span>(segment_type <span class="keyword">const</span>&amp; s)
+<a name="l00103"></a>00103     {
+<a name="l00104"></a>00104         <span class="keywordflow">return</span> ggl::get&lt;Dimension&gt;(s.second);
+<a name="l00105"></a>00105     }
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(segment_type&amp; s, coordinate_type <span class="keyword">const</span>&amp; value)
+<a name="l00108"></a>00108     {
+<a name="l00109"></a>00109         ggl::set&lt;Dimension&gt;(s.second, value);
+<a name="l00110"></a>00110     }
+<a name="l00111"></a>00111 };
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113 } <span class="comment">// namespace traits</span>
+<a name="l00114"></a>00114 <span class="preprocessor">#endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS</span>
+<a name="l00115"></a>00115 <span class="preprocessor"></span>
+<a name="l00116"></a>00116 } <span class="comment">// namespace ggl</span>
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118 <span class="preprocessor">#endif // GGL_GEOMETRIES_SEGMENT_HPP</span>
 </pre></div></div>
 <hr size="1">
 <table width="100%">

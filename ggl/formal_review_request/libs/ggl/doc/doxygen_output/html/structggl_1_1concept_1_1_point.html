@@ -88,20 +88,6 @@ In MPL, a metafunction that provides a type must expose is as "type" and a metaf
 {
     <span class="keyword">namespace </span>traits
     {
-        <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I&gt; <span class="keyword">struct </span>accessor;
-
-        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>accessor&lt;0&gt;
-        {
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">double</span> <span class="keyword">get</span>(<span class="keyword">const</span> example_point_1&amp; p) { <span class="keywordflow">return</span> p.x; }
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(example_point_1&amp; p, <span class="keyword">const</span> <span class="keywordtype">double</span>&amp; value) { p.x = value; }
-        };
-
-        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>accessor&lt;1&gt;
-        {
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">double</span> <span class="keyword">get</span>(<span class="keyword">const</span> example_point_1&amp; p) { <span class="keywordflow">return</span> p.y; }
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(example_point_1&amp; p, <span class="keyword">const</span> <span class="keywordtype">double</span>&amp; value) { p.y = value; }
-        };
-
         <span class="comment">// For legacy points, define the necessary structs coordinate (with typedef),</span>
         <span class="comment">// dimension (with value) and access (with get function).</span>
         <span class="comment">// Be sure to define them within the namespace ggl::traits</span>
@@ -109,15 +95,21 @@ In MPL, a metafunction that provides a type must expose is as "type" and a metaf
         <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>coordinate_type&lt;example_point_1&gt; { <span class="keyword">typedef</span> <span class="keywordtype">double</span> type; };
         <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>coordinate_system&lt;example_point_1&gt; { <span class="keyword">typedef</span> cs::cartesian type; };
         <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span><a class="code" href="classcore__dispatch_1_1dimension.html">dimension</a>&lt;example_point_1&gt;: boost::mpl::int_&lt;2&gt; {};
-        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>access&lt;example_point_1&gt;
+        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>access&lt;example_point_1, 0&gt;
         {
-            <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I&gt;
-            <span class="keyword">static</span> <span class="keywordtype">double</span> <span class="keyword">get</span>(<span class="keyword">const</span> example_point_1&amp; p)
-            { <span class="keywordflow">return</span> <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">accessor&lt;I&gt;::get</a>(p); }
+            <span class="keyword">static</span> <span class="keywordtype">double</span> <span class="keyword">get</span>(example_point_1 <span class="keyword">const</span>&amp; p)
+            { <span class="keywordflow">return</span> p.x; }
 
-            <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I&gt;
-            <span class="keyword">static</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(example_point_1&amp; p, <span class="keyword">const</span> <span class="keywordtype">double</span>&amp; value)
-            { <a class="code" href="group__access.html#g411ad2eab588e3fa0f0a3d35c79cbb4a" title="assign coordinate value to a point / sphere">accessor&lt;I&gt;::set</a>(p, value); }
+            <span class="keyword">static</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(example_point_1&amp; p, <span class="keywordtype">double</span> <span class="keyword">const</span>&amp; value)
+            { p.x = value; }
+        };
+        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>access&lt;example_point_1, 1&gt;
+        {
+            <span class="keyword">static</span> <span class="keywordtype">double</span> <span class="keyword">get</span>(example_point_1 <span class="keyword">const</span>&amp; p)
+            { <span class="keywordflow">return</span> p.y; }
+
+            <span class="keyword">static</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(example_point_1&amp; p, <span class="keywordtype">double</span> <span class="keyword">const</span>&amp; value)
+            { p.y = value; }
         };
     }
 }
@@ -160,24 +152,24 @@ In MPL, a metafunction that provides a type must expose is as "type" and a metaf
     };
 }
 
-<span class="comment">// WILL BE CONVERTED TO MACRO</span>
+<span class="comment">// MIGHT BE CONVERTED TO MACRO</span>
 <span class="keyword">namespace </span>ggl
 {
     <span class="keyword">namespace </span>traits
     {
         <span class="keyword">using namespace </span>example_own_point2;
 
-        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>tag&lt;example_point_2  &gt; { <span class="keyword">typedef</span> point_tag type; };
-        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>coordinate_type&lt;example_point_2 &gt; { <span class="keyword">typedef</span> <span class="keywordtype">float</span> type; };
-        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>coordinate_system&lt;example_point_2 &gt; { <span class="keyword">typedef</span> <a class="code" href="structggl_1_1cs_1_1cartesian.html" title="Cartesian coordinate system.">ggl::cs::cartesian</a> type; };
-        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span><a class="code" href="classcore__dispatch_1_1dimension.html">dimension</a>&lt;example_point_2 &gt; : boost::mpl::int_&lt;2&gt; {};
-        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>access&lt;example_point_2 &gt;
+        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>tag&lt;example_point_2&gt; { <span class="keyword">typedef</span> point_tag type; };
+        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>coordinate_type&lt;example_point_2&gt; { <span class="keyword">typedef</span> <span class="keywordtype">float</span> type; };
+        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span>coordinate_system&lt;example_point_2&gt; { <span class="keyword">typedef</span> <a class="code" href="structggl_1_1cs_1_1cartesian.html" title="Cartesian coordinate system.">ggl::cs::cartesian</a> type; };
+        <span class="keyword">template</span> &lt;&gt; <span class="keyword">struct </span><a class="code" href="classcore__dispatch_1_1dimension.html">dimension</a>&lt;example_point_2&gt; : boost::mpl::int_&lt;2&gt; {};
+        <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> Dimension&gt; <span class="keyword">struct </span>access&lt;example_point_2, Dimension&gt;
         {
-            <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I&gt;
-            <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <span class="keyword">get</span>(<span class="keyword">const</span> example_point_2&amp; p) { <span class="keywordflow">return</span> p.get&lt;I&gt;(); }
+            <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <span class="keyword">get</span>(example_point_2 <span class="keyword">const</span>&amp; p) 
+            { <span class="keywordflow">return</span> p.get&lt;Dimension&gt;(); }
 
-            <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I&gt;
-            <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(example_point_2&amp; p, <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; value) { p.get&lt;I&gt;() = value; }
+            <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(example_point_2&amp; p, <span class="keywordtype">float</span> <span class="keyword">const</span>&amp; value) 
+            { p.get&lt;Dimension&gt;() = value; }
         };
 
         <span class="comment">// The library user has</span>

@@ -90,31 +90,31 @@
 <a name="l00048"></a>00048 <span class="preprocessor">#endif // DOXYGEN_NO_DETAIL</span>
 <a name="l00049"></a>00049 <span class="preprocessor"></span>
 <a name="l00050"></a>00050 <span class="comment">// Assign the point-tag, preventing arrays of points getting a point-tag</span>
-<a name="l00051"></a>00051 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, std::<span class="keywordtype">size_t</span> N&gt;
-<a name="l00052"></a>00052 <span class="keyword">struct </span>tag&lt;T[N]&gt; : detail::c_array_tag&lt;boost::is_arithmetic&lt;T&gt;::value&gt; {};
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, std::<span class="keywordtype">size_t</span> N&gt;
-<a name="l00055"></a>00055 <span class="keyword">struct </span>coordinate_type&lt;T[N]&gt;
-<a name="l00056"></a>00056 {
-<a name="l00057"></a>00057     <span class="keyword">typedef</span> T type;
-<a name="l00058"></a>00058 };
-<a name="l00059"></a>00059 
-<a name="l00060"></a>00060 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, std::<span class="keywordtype">size_t</span> N&gt;
-<a name="l00061"></a>00061 <span class="keyword">struct </span><a class="code" href="classcore__dispatch_1_1dimension.html">dimension</a>&lt;T[N]&gt;: boost::mpl::int_&lt;N&gt; {};
-<a name="l00062"></a>00062 
-<a name="l00063"></a>00063 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, std::<span class="keywordtype">size_t</span> N&gt;
-<a name="l00064"></a>00064 <span class="keyword">struct </span>access&lt;T[N]&gt;
-<a name="l00065"></a>00065 {
-<a name="l00066"></a>00066     <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> I&gt;
-<a name="l00067"></a>00067     <span class="keyword">static</span> <span class="keyword">inline</span> T <span class="keyword">get</span>(<span class="keyword">const</span> T p[N])
+<a name="l00051"></a>00051 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> CoordinateType, std::<span class="keywordtype">size_t</span> DimensionCount&gt;
+<a name="l00052"></a>00052 <span class="keyword">struct </span>tag&lt;CoordinateType[DimensionCount]&gt; 
+<a name="l00053"></a>00053     : detail::c_array_tag&lt;boost::is_arithmetic&lt;CoordinateType&gt;::value&gt; {};
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> CoordinateType, std::<span class="keywordtype">size_t</span> DimensionCount&gt;
+<a name="l00056"></a>00056 <span class="keyword">struct </span>coordinate_type&lt;CoordinateType[DimensionCount]&gt;
+<a name="l00057"></a>00057 {
+<a name="l00058"></a>00058     <span class="keyword">typedef</span> CoordinateType type;
+<a name="l00059"></a>00059 };
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> CoordinateType, std::<span class="keywordtype">size_t</span> DimensionCount&gt;
+<a name="l00062"></a>00062 <span class="keyword">struct </span><a class="code" href="classcore__dispatch_1_1dimension.html">dimension</a>&lt;CoordinateType[DimensionCount]&gt;: boost::mpl::int_&lt;DimensionCount&gt; {};
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> CoordinateType, std::<span class="keywordtype">size_t</span> DimensionCount, std::<span class="keywordtype">size_t</span> Dimension&gt;
+<a name="l00065"></a>00065 <span class="keyword">struct </span>access&lt;CoordinateType[DimensionCount], Dimension&gt;
+<a name="l00066"></a>00066 {
+<a name="l00067"></a>00067     <span class="keyword">static</span> <span class="keyword">inline</span> CoordinateType <span class="keyword">get</span>(<span class="keyword">const</span> CoordinateType p[DimensionCount])
 <a name="l00068"></a>00068     {
-<a name="l00069"></a>00069         <span class="keywordflow">return</span> p[I];
+<a name="l00069"></a>00069         <span class="keywordflow">return</span> p[Dimension];
 <a name="l00070"></a>00070     }
 <a name="l00071"></a>00071 
-<a name="l00072"></a>00072     <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> I&gt;
-<a name="l00073"></a>00073     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(T p[N], <span class="keyword">const</span> T&amp; value)
+<a name="l00072"></a>00072     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(CoordinateType p[DimensionCount], 
+<a name="l00073"></a>00073         CoordinateType <span class="keyword">const</span>&amp; value)
 <a name="l00074"></a>00074     {
-<a name="l00075"></a>00075         p[I] = value;
+<a name="l00075"></a>00075         p[Dimension] = value;
 <a name="l00076"></a>00076     }
 <a name="l00077"></a>00077 };
 <a name="l00078"></a>00078 

@@ -45,27 +45,36 @@
   </div>
 </div>
 <div class="contents">
-<h1>ggl::area_result&lt; Geometry &gt; Struct Template Reference</h1><!-- doxytag: class="ggl::area_result" -->
+<h1>ggl::area_result&lt; Geometry &gt; Struct Template Reference<br>
+<small>
+[<a class="el" href="group__area.html">area calculation</a>]</small>
+</h1><!-- doxytag: class="ggl::area_result" -->Meta-function defining return type of area function.  
+<a href="#_details">More...</a>
+<p>
+
 <p>
 <a href="structggl_1_1area__result-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="structggl_1_1point__type.html">point_type</a>&lt; Geometry &gt;<br class="typebreak">
-::type&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1area__result.html#d6428313802f153cd99b803ecde23872">point_type</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef strategy_type::return_type&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1area__result.html#4915057a85bc6a0c7292b3db1e4f33be">return_type</a></td></tr>
+::<a class="el" href="structggl_1_1area__result.html#6f843780140b8fa0ac0a4a36c4c00d81">type</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1area__result.html#d6428313802f153cd99b803ecde23872">point_type</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="structggl_1_1strategy__area.html">strategy_area</a><br class="typebreak">
 &lt; typename <a class="el" href="structggl_1_1cs__tag.html">cs_tag</a>&lt; <a class="el" href="structggl_1_1point__type.html">point_type</a> &gt;<br class="typebreak">
-::type, <a class="el" href="structggl_1_1point__type.html">point_type</a> &gt;::type&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1area__result.html#ccb03cf635c157788a99c33d8f3c3a1e">strategy_type</a></td></tr>
+::<a class="el" href="structggl_1_1area__result.html#6f843780140b8fa0ac0a4a36c4c00d81">type</a>, <a class="el" href="structggl_1_1point__type.html">point_type</a> &gt;::<a class="el" href="structggl_1_1area__result.html#6f843780140b8fa0ac0a4a36c4c00d81">type</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1area__result.html#ccb03cf635c157788a99c33d8f3c3a1e">strategy_type</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef strategy_type::return_type&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1area__result.html#6f843780140b8fa0ac0a4a36c4c00d81">type</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <h3>template&lt;typename Geometry&gt;<br>
  struct ggl::area_result&lt; Geometry &gt;</h3>
 
+Meta-function defining return type of area function. 
+<p>
+<dl class="note" compact><dt><b>Note:</b></dt><dd>The <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> defines the return-type (so this situation is different from length, where distance is sqr/sqrt, but length always squared) </dd></dl>
 
-<p>Definition at line <a class="el" href="algorithms_2area_8hpp_source.html#l00231">231</a> of file <a class="el" href="algorithms_2area_8hpp_source.html">area.hpp</a>.</p>
+<p>Definition at line <a class="el" href="area__result_8hpp_source.html#l00028">28</a> of file <a class="el" href="area__result_8hpp_source.html">area_result.hpp</a>.</p>
 <hr><h2>Member Typedef Documentation</h2>
 <a class="anchor" name="d6428313802f153cd99b803ecde23872"></a><!-- doxytag: member="ggl::area_result::point_type" ref="d6428313802f153cd99b803ecde23872" args="" -->
 <div class="memitem">
@@ -74,7 +83,7 @@
 template&lt;typename Geometry&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="structggl_1_1point__type.html">point_type</a>&lt;Geometry&gt;::type <a class="el" href="structggl_1_1area__result.html">ggl::area_result</a>&lt; Geometry &gt;::<a class="el" href="structggl_1_1point__type.html">point_type</a>          </td>
+          <td class="memname">typedef <a class="el" href="structggl_1_1point__type.html">point_type</a>&lt;Geometry&gt;::<a class="el" href="structggl_1_1area__result.html#6f843780140b8fa0ac0a4a36c4c00d81">type</a> <a class="el" href="structggl_1_1area__result.html">ggl::area_result</a>&lt; Geometry &gt;::<a class="el" href="structggl_1_1point__type.html">point_type</a>          </td>
         </tr>
       </table>
 </div>
@@ -82,7 +91,7 @@ template&lt;typename Geometry&gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="algorithms_2area_8hpp_source.html#l00233">233</a> of file <a class="el" href="algorithms_2area_8hpp_source.html">area.hpp</a>.</p>
+<p>Definition at line <a class="el" href="area__result_8hpp_source.html#l00030">30</a> of file <a class="el" href="area__result_8hpp_source.html">area_result.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -93,7 +102,7 @@ template&lt;typename Geometry&gt; </div>
 template&lt;typename Geometry&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="structggl_1_1strategy__area.html">strategy_area</a>&lt; typename <a class="el" href="structggl_1_1cs__tag.html">cs_tag</a>&lt;<a class="el" href="structggl_1_1point__type.html">point_type</a>&gt;::type, <a class="el" href="structggl_1_1point__type.html">point_type</a> &gt;::type <a class="el" href="structggl_1_1area__result.html">ggl::area_result</a>&lt; Geometry &gt;::<a class="el" href="structggl_1_1strategy_1_1not__implemented.html">strategy_type</a>          </td>
+          <td class="memname">typedef <a class="el" href="structggl_1_1strategy__area.html">strategy_area</a>&lt; typename <a class="el" href="structggl_1_1cs__tag.html">cs_tag</a>&lt;<a class="el" href="structggl_1_1point__type.html">point_type</a>&gt;::<a class="el" href="structggl_1_1area__result.html#6f843780140b8fa0ac0a4a36c4c00d81">type</a>, <a class="el" href="structggl_1_1point__type.html">point_type</a> &gt;::<a class="el" href="structggl_1_1area__result.html#6f843780140b8fa0ac0a4a36c4c00d81">type</a> <a class="el" href="structggl_1_1area__result.html">ggl::area_result</a>&lt; Geometry &gt;::<a class="el" href="structggl_1_1strategy_1_1not__implemented.html">strategy_type</a>          </td>
         </tr>
       </table>
 </div>
@@ -101,18 +110,18 @@ template&lt;typename Geometry&gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="algorithms_2area_8hpp_source.html#l00238">238</a> of file <a class="el" href="algorithms_2area_8hpp_source.html">area.hpp</a>.</p>
+<p>Definition at line <a class="el" href="area__result_8hpp_source.html#l00035">35</a> of file <a class="el" href="area__result_8hpp_source.html">area_result.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="4915057a85bc6a0c7292b3db1e4f33be"></a><!-- doxytag: member="ggl::area_result::return_type" ref="4915057a85bc6a0c7292b3db1e4f33be" args="" -->
+<a class="anchor" name="6f843780140b8fa0ac0a4a36c4c00d81"></a><!-- doxytag: member="ggl::area_result::type" ref="6f843780140b8fa0ac0a4a36c4c00d81" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Geometry&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef strategy_type::return_type <a class="el" href="structggl_1_1area__result.html">ggl::area_result</a>&lt; Geometry &gt;::<a class="el" href="structggl_1_1area__result.html#4915057a85bc6a0c7292b3db1e4f33be">return_type</a>          </td>
+          <td class="memname">typedef strategy_type::return_type <a class="el" href="structggl_1_1area__result.html">ggl::area_result</a>&lt; Geometry &gt;::<a class="el" href="structggl_1_1area__result.html#6f843780140b8fa0ac0a4a36c4c00d81">type</a>          </td>
         </tr>
       </table>
 </div>
@@ -120,7 +129,7 @@ template&lt;typename Geometry&gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="algorithms_2area_8hpp_source.html#l00239">239</a> of file <a class="el" href="algorithms_2area_8hpp_source.html">area.hpp</a>.</p>
+<p>Definition at line <a class="el" href="area__result_8hpp_source.html#l00037">37</a> of file <a class="el" href="area__result_8hpp_source.html">area_result.hpp</a>.</p>
 
 </div>
 </div><p>

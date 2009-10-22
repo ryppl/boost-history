@@ -39,6 +39,9 @@
 <h1>area calculation</h1><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1area__result.html">ggl::area_result&lt; Geometry &gt;</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Meta-function defining return type of area function.  <a href="structggl_1_1area__result.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1strategy__area.html">ggl::strategy_area&lt; T, P &gt;</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Traits class binding an area <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> to a coordinate system.  <a href="structggl_1_1strategy__area.html#_details">More...</a><br></td></tr>
@@ -48,10 +51,9 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate area of a geometry using a <a class="el" href="namespaceggl_1_1strategy.html">strategy</a>.  <a href="#g7e0783c73b5f561707c50b445a01b833"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">area_result&lt; Geometry &gt;<br class="typebreak">
-::return_type&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3">ggl::area</a> (Geometry const &amp;geometry)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">area_result&lt; Geometry &gt;::type&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__area.html#gaffb471f2ef6dd4842563e533094fa0d">ggl::area</a> (Geometry const &amp;geometry)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate area of a geometry.  <a href="#g3ebfdefe9c756498730b6d93b83338b3"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate area of a geometry.  <a href="#gaffb471f2ef6dd4842563e533094fa0d"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <dl class="user" compact><dt><b>Performance</b></dt><dd>2776 * 1000 area calculations are done in 0.11 seconds (other libraries: 0.125 seconds, 0.125 seconds, 0.5 seconds)</dd></dl>
@@ -61,7 +63,7 @@
     <a class="code" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">ggl::polygon&lt;ggl::point_xy&lt;double&gt;</a> &gt; poly;
     ggl::read_wkt(<span class="stringliteral">"POLYGON((0 0,0 7,4 2,2 0,0 0))"</span>, poly);
     std::cout &lt;&lt; <span class="stringliteral">"Polygon area is "</span>
-        &lt;&lt; <a class="code" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3" title="Calculate area of a geometry.">ggl::area</a>(poly)
+        &lt;&lt; <a class="code" href="group__area.html#gaffb471f2ef6dd4842563e533094fa0d" title="Calculate area of a geometry.">ggl::area</a>(poly)
         &lt;&lt; <span class="stringliteral">" square units"</span> &lt;&lt; std::endl;
 
     <span class="comment">/*</span>
@@ -75,14 +77,14 @@
 }
 </pre></div> </dd></dl>
 <hr><h2>Function Documentation</h2>
-<a class="anchor" name="g3ebfdefe9c756498730b6d93b83338b3"></a><!-- doxytag: member="ggl::area" ref="g3ebfdefe9c756498730b6d93b83338b3" args="(Geometry const &amp;geometry)" -->
+<a class="anchor" name="gaffb471f2ef6dd4842563e533094fa0d"></a><!-- doxytag: member="ggl::area" ref="gaffb471f2ef6dd4842563e533094fa0d" args="(Geometry const &amp;geometry)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Geometry &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">area_result&lt;Geometry&gt;::return_type ggl::area           </td>
+          <td class="memname">area_result&lt;Geometry&gt;::type ggl::area           </td>
           <td>(</td>
           <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>          </td>
@@ -104,7 +106,7 @@ The function area returns the area of a <a class="el" href="classggl_1_1polygon.
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>the area </dd></dl>
 <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="03__polygon__example_8cpp-example.html#a6">03_polygon_example.cpp</a>, <a class="el" href="c04__a__custom__triangle__example_8cpp-example.html#a2">c04_a_custom_triangle_example.cpp</a>, <a class="el" href="c04__b__custom__triangle__example_8cpp-example.html#a1">c04_b_custom_triangle_example.cpp</a>, and <a class="el" href="x01__qt__example_8cpp-example.html#a2">x01_qt_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="algorithms_2area_8hpp_source.html#l00254">254</a> of file <a class="el" href="algorithms_2area_8hpp_source.html">area.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2area_8hpp_source.html#l00226">226</a> of file <a class="el" href="algorithms_2area_8hpp_source.html">area.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -146,7 +148,7 @@ This version of area calculation takes a <a class="el" href="namespaceggl_1_1str
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>the area </dd></dl>
 
-<p>Definition at line <a class="el" href="algorithms_2area_8hpp_source.html#l00277">277</a> of file <a class="el" href="algorithms_2area_8hpp_source.html">area.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2area_8hpp_source.html#l00249">249</a> of file <a class="el" href="algorithms_2area_8hpp_source.html">area.hpp</a>.</p>
 
 </div>
 </div><p>

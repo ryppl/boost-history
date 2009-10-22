@@ -76,13 +76,13 @@
 <a name="l00034"></a>00034 {
 <a name="l00035"></a><a class="code" href="structggl_1_1segment__iterator.html#2670ce6fa8403a2da8b1b79c9a62ef47">00035</a>     <span class="keyword">typedef</span> Base <a class="code" href="structggl_1_1segment__iterator.html#2670ce6fa8403a2da8b1b79c9a62ef47">base_type</a>;
 <a name="l00036"></a><a class="code" href="structggl_1_1segment__iterator.html#e388acc7d123761a41a0132ed0b19d29">00036</a>     <span class="keyword">typedef</span> Point <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
-<a name="l00037"></a><a class="code" href="structggl_1_1segment__iterator.html#410f1a0aa22f7f4fb6c0850213aba66d">00037</a>     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1segment.html">ggl::segment&lt;Point&gt;</a> <a class="code" href="structggl_1_1segment.html">segment_type</a>;
+<a name="l00037"></a><a class="code" href="structggl_1_1segment__iterator.html#410f1a0aa22f7f4fb6c0850213aba66d">00037</a>     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="classggl_1_1segment.html">ggl::segment&lt;Point&gt;</a> <a class="code" href="classggl_1_1segment.html">segment_type</a>;
 <a name="l00038"></a>00038 
 <a name="l00039"></a><a class="code" href="structggl_1_1segment__iterator.html#8f0ff7afda611c09fb9df03c70c99d76">00039</a>     <span class="keyword">typedef</span> std::input_iterator_tag <a class="code" href="structggl_1_1segment__iterator.html#8f0ff7afda611c09fb9df03c70c99d76">iterator_category</a>;
 <a name="l00040"></a><a class="code" href="structggl_1_1segment__iterator.html#e3d45134f345df9ec7aa89f8e2e95bdf">00040</a>     <span class="keyword">typedef</span> <span class="keyword">typename</span> std::iterator_traits&lt;Base&gt;::difference_type <a class="code" href="structggl_1_1segment__iterator.html#e3d45134f345df9ec7aa89f8e2e95bdf">difference_type</a>;
-<a name="l00041"></a><a class="code" href="structggl_1_1segment__iterator.html#e7521e2f53256bf6bd96b99079c92b4f">00041</a>     <span class="keyword">typedef</span> <a class="code" href="structggl_1_1segment.html">segment_type</a> <a class="code" href="structggl_1_1segment.html">value_type</a>;
-<a name="l00042"></a><a class="code" href="structggl_1_1segment__iterator.html#fe664c6678e12e841a1c0be1e77e53a0">00042</a>     <span class="keyword">typedef</span> <a class="code" href="structggl_1_1segment.html">segment_type</a>* <a class="code" href="structggl_1_1segment.html">pointer</a>;
-<a name="l00043"></a><a class="code" href="structggl_1_1segment__iterator.html#71b04f78cf84d967d8d11ec092d54dcc">00043</a>     <span class="keyword">typedef</span> <a class="code" href="structggl_1_1segment.html">segment_type</a>&amp; <a class="code" href="structggl_1_1segment.html">reference</a>;
+<a name="l00041"></a><a class="code" href="structggl_1_1segment__iterator.html#e7521e2f53256bf6bd96b99079c92b4f">00041</a>     <span class="keyword">typedef</span> <a class="code" href="classggl_1_1segment.html">segment_type</a> <a class="code" href="classggl_1_1segment.html">value_type</a>;
+<a name="l00042"></a><a class="code" href="structggl_1_1segment__iterator.html#fe664c6678e12e841a1c0be1e77e53a0">00042</a>     <span class="keyword">typedef</span> <a class="code" href="classggl_1_1segment.html">segment_type</a>* <a class="code" href="classggl_1_1segment.html">pointer</a>;
+<a name="l00043"></a><a class="code" href="structggl_1_1segment__iterator.html#71b04f78cf84d967d8d11ec092d54dcc">00043</a>     <span class="keyword">typedef</span> <a class="code" href="classggl_1_1segment.html">segment_type</a>&amp; <a class="code" href="classggl_1_1segment.html">reference</a>;
 <a name="l00044"></a>00044 
 <a name="l00045"></a><a class="code" href="structggl_1_1segment__iterator.html#64fa7cd0ce95c704f4a40bdc914cffbb">00045</a>     <span class="keyword">explicit</span> <a class="code" href="structggl_1_1segment__iterator.html#64fa7cd0ce95c704f4a40bdc914cffbb">segment_iterator</a>(Base <span class="keyword">const</span>&amp; end)
 <a name="l00046"></a>00046         : m_segment(p1 , p2)
@@ -105,7 +105,7 @@
 <a name="l00063"></a>00063         }
 <a name="l00064"></a>00064     }
 <a name="l00065"></a>00065 
-<a name="l00066"></a><a class="code" href="structggl_1_1segment__iterator.html#5f87341660aa48a2807c5d1a1392f4c2">00066</a>     <a class="code" href="structggl_1_1segment.html">reference</a> <a class="code" href="structggl_1_1segment__iterator.html#5f87341660aa48a2807c5d1a1392f4c2">operator*</a>()
+<a name="l00066"></a><a class="code" href="structggl_1_1segment__iterator.html#5f87341660aa48a2807c5d1a1392f4c2">00066</a>     <a class="code" href="classggl_1_1segment.html">reference</a> <a class="code" href="structggl_1_1segment__iterator.html#5f87341660aa48a2807c5d1a1392f4c2">operator*</a>()
 <a name="l00067"></a>00067     {
 <a name="l00068"></a>00068         BOOST_ASSERT(m_it != m_end &amp;&amp; m_prev != m_end);
 <a name="l00069"></a>00069 
@@ -115,7 +115,7 @@
 <a name="l00073"></a>00073         <span class="keywordflow">return</span> m_segment;
 <a name="l00074"></a>00074     }
 <a name="l00075"></a>00075 
-<a name="l00076"></a><a class="code" href="structggl_1_1segment__iterator.html#2b2dfc371bc599e81a16671a83fc16de">00076</a>     <a class="code" href="structggl_1_1segment.html">pointer</a> <a class="code" href="structggl_1_1segment__iterator.html#2b2dfc371bc599e81a16671a83fc16de">operator-&gt;</a>()
+<a name="l00076"></a><a class="code" href="structggl_1_1segment__iterator.html#2b2dfc371bc599e81a16671a83fc16de">00076</a>     <a class="code" href="classggl_1_1segment.html">pointer</a> <a class="code" href="structggl_1_1segment__iterator.html#2b2dfc371bc599e81a16671a83fc16de">operator-&gt;</a>()
 <a name="l00077"></a>00077     {
 <a name="l00078"></a>00078         <span class="keywordflow">return</span> &amp;(<a class="code" href="structggl_1_1segment__iterator.html#5f87341660aa48a2807c5d1a1392f4c2">operator*</a>());
 <a name="l00079"></a>00079     }

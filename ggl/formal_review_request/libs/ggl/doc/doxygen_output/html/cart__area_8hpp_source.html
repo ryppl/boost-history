@@ -63,7 +63,7 @@
 <a name="l00021"></a>00021 {
 <a name="l00022"></a>00022 <span class="keyword">namespace </span>strategy
 <a name="l00023"></a>00023 {
-<a name="l00024"></a><a class="code" href="namespaceggl_1_1strategy_1_1area.html">00024</a>     <span class="keyword">namespace </span><a class="code" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3" title="Calculate area of a geometry.">area</a>
+<a name="l00024"></a><a class="code" href="namespaceggl_1_1strategy_1_1area.html">00024</a>     <span class="keyword">namespace </span><a class="code" href="group__area.html#gaffb471f2ef6dd4842563e533094fa0d" title="Calculate area of a geometry.">area</a>
 <a name="l00025"></a>00025     {
 <a name="l00026"></a>00026 
 <a name="l00034"></a>00034         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> PS, <span class="keyword">typename</span> CalculationType = <span class="keywordtype">void</span>&gt;
@@ -97,7 +97,7 @@
 <a name="l00062"></a>00062                         <span class="comment">// Currently only 2D areas are supported</span>
 <a name="l00063"></a>00063                         assert_dimension&lt;PS, 2&gt;();
 <a name="l00064"></a>00064                     }
-<a name="l00065"></a>00065                     <span class="keyword">inline</span> <a class="code" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#f2ef55e9d5310d400a6e43a25f6c989d">return_type</a> <a class="code" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3" title="Calculate area of a geometry.">area</a>()<span class="keyword"> const</span>
+<a name="l00065"></a>00065                     <span class="keyword">inline</span> <a class="code" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#f2ef55e9d5310d400a6e43a25f6c989d">return_type</a> <a class="code" href="group__area.html#gaffb471f2ef6dd4842563e533094fa0d" title="Calculate area of a geometry.">area</a>()<span class="keyword"> const</span>
 <a name="l00066"></a>00066 <span class="keyword">                    </span>{
 <a name="l00067"></a>00067                         <a class="code" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#f2ef55e9d5310d400a6e43a25f6c989d">return_type</a> result = sum;
 <a name="l00068"></a>00068                         result *= 0.5;
@@ -108,7 +108,7 @@
 <a name="l00073"></a>00073             <span class="keyword">public</span> :
 <a name="l00074"></a><a class="code" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#b8c68b50c6f0909ab64c6c97f4dd8ea4">00074</a>                 <span class="keyword">typedef</span> summation <a class="code" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#b8c68b50c6f0909ab64c6c97f4dd8ea4">state_type</a>;
 <a name="l00075"></a>00075 
-<a name="l00076"></a><a class="code" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#44a2feaa28620a60ce740cfad2374894">00076</a>                 <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#44a2feaa28620a60ce740cfad2374894">operator()</a>(<a class="code" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">segment&lt;const PS&gt;</a> <span class="keyword">const</span>&amp; s,
+<a name="l00076"></a><a class="code" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#44a2feaa28620a60ce740cfad2374894">00076</a>                 <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#44a2feaa28620a60ce740cfad2374894">operator()</a>(<a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">segment&lt;const PS&gt;</a> <span class="keyword">const</span>&amp; s,
 <a name="l00077"></a>00077                             <a class="code" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#b8c68b50c6f0909ab64c6c97f4dd8ea4">state_type</a>&amp; state)<span class="keyword"> const</span>
 <a name="l00078"></a>00078 <span class="keyword">                </span>{
 <a name="l00079"></a>00079                     <span class="comment">// SUM += x2 * y1 - x1 * y2;</span>

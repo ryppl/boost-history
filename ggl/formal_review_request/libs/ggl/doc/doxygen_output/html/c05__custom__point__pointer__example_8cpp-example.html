@@ -63,7 +63,7 @@
 <span class="comment">// Sample point, having x/y</span>
 <span class="keyword">struct </span>my_point
 {
-    <span class="keywordtype">float</span> x,y;
+    <span class="keywordtype">double</span> x,y;
 };
 
 
@@ -81,23 +81,31 @@
 <span class="keyword">template</span>&lt;&gt; <span class="keyword">struct </span><a name="_a0"></a><a class="code" href="classcore__dispatch_1_1dimension.html">dimension</a>&lt;my_point*&gt; : boost::mpl::int_&lt;2&gt; {};
 
 <span class="keyword">template</span>&lt;&gt;
-<span class="keyword">struct </span>access&lt;my_point*&gt;
+<span class="keyword">struct </span>access&lt;my_point*, 0&gt;
 {
-    <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> I&gt;
-    <span class="keyword">static</span> <span class="keywordtype">double</span> <span class="keyword">get</span>(<span class="keyword">const</span> my_point* p)
+    <span class="keyword">static</span> <span class="keywordtype">double</span> <span class="keyword">get</span>(my_point <span class="keyword">const</span>* p)
     {
-        <span class="keywordflow">return</span> I == 0 ? p-&gt;x : p-&gt;y;
-        <span class="comment">// Or implement an accessor with specializations</span>
+        <span class="keywordflow">return</span> p-&gt;x;
     }
 
-    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I&gt;
-    <span class="keyword">static</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(my_point* p, <span class="keyword">const</span> <span class="keywordtype">double</span>&amp; value)
+    <span class="keyword">static</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(my_point* p, <span class="keywordtype">double</span> <span class="keyword">const</span>&amp; value)
     {
-        <span class="comment">// Or (better) implement an accessor with specializations</span>
-        <span class="keywordflow">if</span> (I == 0) p-&gt;x = value;
-        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (I == 1) p-&gt;y = value;
+        p-&gt;x = value;
+    }
+};
+
+<span class="keyword">template</span>&lt;&gt;
+<span class="keyword">struct </span>access&lt;my_point*, 1&gt;
+{
+    <span class="keyword">static</span> <span class="keywordtype">double</span> <span class="keyword">get</span>(my_point <span class="keyword">const</span>* p)
+    {
+        <span class="keywordflow">return</span> p-&gt;y;
     }
 
+    <span class="keyword">static</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(my_point* p, <span class="keywordtype">double</span> <span class="keyword">const</span>&amp; value)
+    {
+        p-&gt;y = value;
+    }
 };
 
 }} <span class="comment">// namespace ggl::traits</span>
@@ -116,7 +124,7 @@
         myline.push_back(p);
     }
 
-    std::cout &lt;&lt; <a name="a1"></a><a class="code" href="group__length.html#g7e3572634111ae0252a474a7f435c5aa" title="Calculate length of a geometry.">ggl::length</a>(myline) &lt;&lt; std::endl;
+    std::cout &lt;&lt; <a name="a1"></a><a class="code" href="group__length.html#g3ff05ea6b83363ce847770d3abe156bf" title="Calculate length of a geometry.">ggl::length</a>(myline) &lt;&lt; std::endl;
 
     <a name="_a2"></a><a class="code" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">ggl::box_2d</a> cb(<a name="_a3"></a><a class="code" href="classggl_1_1point__xy.html" title="2D point in Cartesian coordinate system">ggl::point_2d</a>(1.5, 1.5), <a class="code" href="classggl_1_1point__xy.html" title="2D point in Cartesian coordinate system">ggl::point_2d</a>(4.5, 4.5));
 
@@ -131,7 +139,7 @@
                     myline, std::back_inserter(clipped), strategy);
 
 
-    std::cout &lt;&lt; <a class="code" href="group__length.html#g7e3572634111ae0252a474a7f435c5aa" title="Calculate length of a geometry.">ggl::length</a>(clipped.front()) &lt;&lt; std::endl;
+    std::cout &lt;&lt; <a class="code" href="group__length.html#g3ff05ea6b83363ce847770d3abe156bf" title="Calculate length of a geometry.">ggl::length</a>(clipped.front()) &lt;&lt; std::endl;
 
     <span class="comment">// free</span>
     <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; myline.size(); i++)

@@ -500,20 +500,6 @@ namespace ggl
 {
     namespace traits
     {
-        template <int I> struct accessor;
-
-        template <> struct accessor<0>
-        {
-            inline static double get(const example_point_1& p) { return p.x; }
-            inline static void set(example_point_1& p, const double& value) { p.x = value; }
-        };
-
-        template <> struct accessor<1>
-        {
-            inline static double get(const example_point_1& p) { return p.y; }
-            inline static void set(example_point_1& p, const double& value) { p.y = value; }
-        };
-
         // For legacy points, define the necessary structs coordinate (with typedef),
         // dimension (with value) and access (with get function).
         // Be sure to define them within the namespace ggl::traits
@@ -521,15 +507,21 @@ namespace ggl
         template <> struct coordinate_type<example_point_1> { typedef double type; };
         template <> struct coordinate_system<example_point_1> { typedef cs::cartesian type; };
         template <> struct dimension<example_point_1>: boost::mpl::int_<2> {};
-        template <> struct access<example_point_1>
+        template <> struct access<example_point_1, 0>
         {
-            template <int I>
-            static double get(const example_point_1& p)
-            { return accessor<I>::get(p); }
+            static double get(example_point_1 const& p)
+            { return p.x; }
 
-            template <int I>
-            static void set(example_point_1& p, const double& value)
-            { accessor<I>::set(p, value); }
+            static void set(example_point_1& p, double const& value)
+            { p.x = value; }
+        };
+        template <> struct access<example_point_1, 1>
+        {
+            static double get(example_point_1 const& p)
+            { return p.y; }
+
+            static void set(example_point_1& p, double const& value)
+            { p.y = value; }
         };
     }
 }
@@ -575,24 +567,24 @@ namespace example_own_point2
     };
 }
 
-// WILL BE CONVERTED TO MACRO
+// MIGHT BE CONVERTED TO MACRO
 namespace ggl
 {
     namespace traits
     {
         using namespace example_own_point2;
 
-        template <> struct tag<example_point_2  > { typedef point_tag type; };
-        template <> struct coordinate_type<example_point_2 > { typedef float type; };
-        template <> struct coordinate_system<example_point_2 > { typedef ggl::cs::cartesian type; };
-        template <> struct dimension<example_point_2 > : boost::mpl::int_<2> {};
-        template <> struct access<example_point_2 >
+        template <> struct tag<example_point_2> { typedef point_tag type; };
+        template <> struct coordinate_type<example_point_2> { typedef float type; };
+        template <> struct coordinate_system<example_point_2> { typedef ggl::cs::cartesian type; };
+        template <> struct dimension<example_point_2> : boost::mpl::int_<2> {};
+        template <std::size_t Dimension> struct access<example_point_2, Dimension>
         {
-            template <int I>
-            static inline float get(const example_point_2& p) { return p.get<I>(); }
+            static inline float get(example_point_2 const& p) 
+            { return p.get<Dimension>(); }
 
-            template <int I>
-            static inline void set(example_point_2& p, const float& value) { p.get<I>() = value; }
+            static inline void set(example_point_2& p, float const& value) 
+            { p.get<Dimension>() = value; }
         };
 
         // The library user has

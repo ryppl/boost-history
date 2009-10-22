@@ -75,7 +75,7 @@ namespace ggl { <span class="keyword">namespace </span>dispatch {
 
 <span class="comment">// Specializations of area dispatch structure, implement algorithm</span>
 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> P, <span class="keyword">typename</span> S&gt;
-<span class="keyword">struct </span><a name="a1"></a><a class="code" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3" title="Calculate area of a geometry.">area</a>&lt;ring_tag, triangle&lt;P&gt;, <a name="a2"></a><a class="code" href="namespaceggl.html#9a0f9a02ea40ca3ceab32afc4b08bf4d55fe53c1821ca13eb0eacb9084cb1d1c">clockwise</a>, S&gt;
+<span class="keyword">struct </span><a name="a1"></a><a class="code" href="group__area.html#gaffb471f2ef6dd4842563e533094fa0d" title="Calculate area of a geometry.">area</a>&lt;ring_tag, triangle&lt;P&gt;, <a name="a2"></a><a class="code" href="namespaceggl.html#9a0f9a02ea40ca3ceab32afc4b08bf4d55fe53c1821ca13eb0eacb9084cb1d1c">clockwise</a>, S&gt;
 {
     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> apply(triangle&lt;P&gt; <span class="keyword">const</span>&amp; t, S <span class="keyword">const</span>&amp;)
     {
@@ -96,7 +96,7 @@ namespace ggl { <span class="keyword">namespace </span>dispatch {
     t[2] = boost::make_tuple(2.5, 2.5);
 
     std::cout &lt;&lt; <span class="stringliteral">"Triangle: "</span> &lt;&lt; <a name="a3"></a><a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(t) &lt;&lt; std::endl;
-    std::cout &lt;&lt; <span class="stringliteral">"Area: "</span> &lt;&lt; <a class="code" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3" title="Calculate area of a geometry.">ggl::area</a>(t) &lt;&lt; std::endl;
+    std::cout &lt;&lt; <span class="stringliteral">"Area: "</span> &lt;&lt; <a class="code" href="group__area.html#gaffb471f2ef6dd4842563e533094fa0d" title="Calculate area of a geometry.">ggl::area</a>(t) &lt;&lt; std::endl;
 
     <span class="comment">//ggl::point_xy&lt;double&gt; c;</span>
     boost::tuple&lt;double, double&gt; c;

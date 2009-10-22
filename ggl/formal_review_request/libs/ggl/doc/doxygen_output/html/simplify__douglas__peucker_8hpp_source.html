@@ -70,7 +70,7 @@
 <a name="l00028"></a>00028 <span class="keyword">namespace </span>ggl
 <a name="l00029"></a>00029 {
 <a name="l00030"></a>00030 
-<a name="l00031"></a>00031 <span class="keyword">namespace </span>strategy { <span class="keyword">namespace </span><a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d" title="Simplify a geometry.">simplify</a> {
+<a name="l00031"></a><a class="code" href="namespaceggl_1_1strategy_1_1simplify.html">00031</a> <span class="keyword">namespace </span>strategy { <span class="keyword">namespace </span><a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d" title="Simplify a geometry.">simplify</a> {
 <a name="l00032"></a>00032 
 <a name="l00033"></a>00033 
 <a name="l00034"></a>00034 <span class="preprocessor">#ifndef DOXYGEN_NO_DETAIL</span>
@@ -85,7 +85,7 @@
 <a name="l00049"></a>00049 
 <a name="l00050"></a>00050         <span class="keyword">inline</span> douglas_peucker_point(Point <span class="keyword">const</span>&amp; ap)
 <a name="l00051"></a>00051             : p(ap)
-<a name="l00052"></a>00052             , included(false)
+<a name="l00052"></a>00052             , included(<span class="keyword">false</span>)
 <a name="l00053"></a>00053         {}
 <a name="l00054"></a>00054 
 <a name="l00055"></a>00055         <span class="comment">// Necessary for proper compilation</span>
@@ -104,7 +104,7 @@
 <a name="l00083"></a>00083     <span class="keyword">typename</span> Point,
 <a name="l00084"></a>00084     <span class="keyword">typename</span> PointDistanceStrategy
 <a name="l00085"></a>00085 &gt;
-<a name="l00086"></a>00086 <span class="keyword">class </span>douglas_peucker
+<a name="l00086"></a><a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html">00086</a> <span class="keyword">class </span><a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html" title="Implements the simplify algorithm.">douglas_peucker</a>
 <a name="l00087"></a>00087 {
 <a name="l00088"></a>00088     <span class="keyword">typedef</span> detail::douglas_peucker_point&lt;Point&gt; dp_point_type;
 <a name="l00089"></a>00089     <span class="keyword">typedef</span> <span class="keyword">typename</span> std::vector&lt;dp_point_type&gt;::iterator iterator_type;
@@ -144,7 +144,7 @@
 <a name="l00123"></a>00123 <span class="preprocessor"></span>
 <a name="l00124"></a>00124 
 <a name="l00125"></a>00125         <span class="comment">// Find most distance point, compare to the current segment</span>
-<a name="l00126"></a>00126         <a class="code" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">ggl::segment&lt;const Point&gt;</a> s(begin-&gt;p, last-&gt;p);
+<a name="l00126"></a>00126         <a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">ggl::segment&lt;const Point&gt;</a> s(begin-&gt;p, last-&gt;p);
 <a name="l00127"></a>00127         return_type md(-1.0); <span class="comment">// any value &lt; 0</span>
 <a name="l00128"></a>00128         iterator_type candidate;
 <a name="l00129"></a>00129         <span class="keywordflow">for</span>(iterator_type it = begin + 1; it != last; ++it)
@@ -184,11 +184,11 @@
 <a name="l00163"></a>00163 
 <a name="l00164"></a>00164 <span class="keyword">public</span> :
 <a name="l00165"></a>00165 
-<a name="l00166"></a><a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html#d9c2f3932590f7088e2cdf032c41458b">00166</a>     <span class="keyword">typedef</span> PointDistanceStrategy <a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html#8baa11b24fd260345ee451512c710350">distance_strategy_type</a>;
+<a name="l00166"></a><a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html#c1a18c53b124af6e3f49e61589eef15d">00166</a>     <span class="keyword">typedef</span> PointDistanceStrategy <a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html#c1a18c53b124af6e3f49e61589eef15d">distance_strategy_type</a>;
 <a name="l00167"></a>00167 
 <a name="l00168"></a>00168 
 <a name="l00169"></a>00169     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Range, <span class="keyword">typename</span> OutputIterator&gt;
-<a name="l00170"></a><a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html#45491352f7c455ea801781c8b7c812d9">00170</a>     <span class="keyword">static</span> <span class="keyword">inline</span> OutputIterator <a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html#45491352f7c455ea801781c8b7c812d9">apply</a>(Range <span class="keyword">const</span>&amp; range, 
+<a name="l00170"></a><a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html#8ec9dbc06a92fb822cddba949e067ae2">00170</a>     <span class="keyword">static</span> <span class="keyword">inline</span> OutputIterator <a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html#8ec9dbc06a92fb822cddba949e067ae2">apply</a>(Range <span class="keyword">const</span>&amp; range, 
 <a name="l00171"></a>00171                     OutputIterator out, <span class="keywordtype">double</span> max_distance) 
 <a name="l00172"></a>00172     {
 <a name="l00173"></a>00173         PointDistanceStrategy strategy;

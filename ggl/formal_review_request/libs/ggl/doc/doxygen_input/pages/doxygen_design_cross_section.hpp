@@ -123,7 +123,8 @@ inline double get(P const& p)
 
 This enables us to call get<0>(a), for any point having the traits::access specialization, as shown in the distance algorithm at the start of this paragraph.
 So we wanted to enable classes with methods like .x(), and they are supported as long as there is a specialization of the access struct with a static get function returning .x() for dimension 0, and similar for 1 and .y().
-Alternatively we can have, in the traits class, the dimension as a template parameter in a member template function:
+
+Alternatively we could implement, in the traits class, the dimension as a template parameter in a member template function:
 
 \code
 template <>
@@ -137,7 +138,7 @@ struct access<mypoint>
 };
 \endcode
 
-This alternative gives in the end the same functionality, either using an if-clause (slower), or adding another level of indirection. <b>This last version is used in GGL</b>
+This alternative gives in the end the same functionality, either using an if-clause (slower), or adding another level of indirection.
 
 
 

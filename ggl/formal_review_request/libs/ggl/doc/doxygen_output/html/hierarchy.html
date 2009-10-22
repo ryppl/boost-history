@@ -53,7 +53,7 @@
 </ul>
 <li><a class="el" href="structggl_1_1area__result.html">ggl::area_result&lt; Geometry &gt;</a>
 <li><a class="el" href="structggl_1_1as__range__type.html">ggl::as_range_type&lt; Geometry &gt;</a>
-<li><a class="el" href="classggl_1_1box.html">ggl::box&lt; P &gt;</a>
+<li><a class="el" href="classggl_1_1box.html">ggl::box&lt; Point &gt;</a>
 <li><a class="el" href="structggl_1_1box__tag.html">ggl::box_tag</a>
 <li><a class="el" href="structggl_1_1cartesian__distance.html">ggl::cartesian_distance&lt; T &gt;</a>
 <li><a class="el" href="structggl_1_1cartesian__tag.html">ggl::cartesian_tag</a>
@@ -103,6 +103,7 @@
 <li><a class="el" href="structggl_1_1is__linear.html">ggl::is_linear&lt; Geometry &gt;</a>
 <li><a class="el" href="structggl_1_1is__multi.html">ggl::is_multi&lt; Geometry &gt;</a>
 <li><a class="el" href="structggl_1_1is__radian.html">ggl::is_radian&lt; CoordinateSystem &gt;</a>
+<li><a class="el" href="structggl_1_1length__result.html">ggl::length_result&lt; Geometry &gt;</a>
 <li><a class="el" href="structggl_1_1less.html">ggl::less&lt; P &gt;</a>
 <li><a class="el" href="classggl_1_1linear__ring.html">ggl::linear_ring&lt; P, V, ClockWise, A &gt;</a>
 <li><a class="el" href="classggl_1_1linestring.html">ggl::linestring&lt; P, V, A &gt;</a>
@@ -134,13 +135,14 @@
 <li><a class="el" href="structggl_1_1ring__type.html">ggl::ring_type&lt; Geometry &gt;</a>
 <li><a class="el" href="structggl_1_1section.html">ggl::section&lt; Box, DimensionCount &gt;</a>
 <li><a class="el" href="structggl_1_1sections.html">ggl::sections&lt; Box, DimensionCount &gt;</a>
-<li><a class="el" href="structggl_1_1segment.html">ggl::segment&lt; P &gt;</a>
+<li><a class="el" href="classggl_1_1segment.html">ggl::segment&lt; ConstOrNonConstPoint &gt;</a>
 <li><a class="el" href="structggl_1_1segment__identifier.html">ggl::segment_identifier</a>
 <li><a class="el" href="structggl_1_1segment__intersection__points.html">ggl::segment_intersection_points&lt; P &gt;</a>
 <li><a class="el" href="structggl_1_1segment__iterator.html">ggl::segment_iterator&lt; Base, Point &gt;</a>
 <li><a class="el" href="structggl_1_1segment__tag.html">ggl::segment_tag</a>
 <li><a class="el" href="structggl_1_1select__coordinate__type.html">ggl::select_coordinate_type&lt; T1, T2 &gt;</a>
 <li><a class="el" href="structggl_1_1select__most__precise.html">ggl::select_most_precise&lt; T1, T2 &gt;</a>
+<li><a class="el" href="structggl_1_1single__tag.html">ggl::single_tag&lt; Tag &gt;</a>
 <li><a class="el" href="structggl_1_1spherical__tag.html">ggl::spherical_tag</a>
 <li><a class="el" href="classggl_1_1strategy_1_1area_1_1by__spherical__excess.html">ggl::strategy::area::by_spherical_excess&lt; P &gt;</a>
 <li><a class="el" href="classggl_1_1strategy_1_1area_1_1by__triangles.html">ggl::strategy::area::by_triangles&lt; PS, CalculationType &gt;</a>
@@ -150,7 +152,6 @@
 <li><a class="el" href="classggl_1_1strategy_1_1convex__hull_1_1graham.html">ggl::strategy::convex_hull::graham&lt; P &gt;</a>
 <li><a class="el" href="classggl_1_1strategy_1_1distance_1_1cross__track.html">ggl::strategy::distance::cross_track&lt; P, S &gt;</a>
 <li><a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html">ggl::strategy::distance::haversine&lt; P1, P2 &gt;</a>
-<li><a class="el" href="classggl_1_1strategy_1_1distance_1_1ll__point__segment.html">ggl::strategy::distance::ll_point_segment&lt; P, S &gt;</a>
 <li><a class="el" href="structggl_1_1strategy_1_1distance_1_1pythagoras.html">ggl::strategy::distance::pythagoras&lt; P1, P2, CalculationType &gt;</a>
 <li><a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
 <li><a class="el" href="structggl_1_1strategy_1_1envelope_1_1combine__xy.html">ggl::strategy::envelope::combine_xy&lt; P, B &gt;</a>
@@ -163,7 +164,7 @@
 <li><a class="el" href="classggl_1_1strategy_1_1intersection_1_1liang__barsky.html">ggl::strategy::intersection::liang_barsky&lt; B, P &gt;</a>
 <li><a class="el" href="structggl_1_1strategy_1_1not__implemented.html">ggl::strategy::not_implemented</a>
 <li><a class="el" href="structggl_1_1strategy_1_1side_1_1xy__side.html">ggl::strategy::side::xy_side&lt; P, PS &gt;</a>
-<li><a class="el" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html">ggl::strategy::simplify::douglas_peucker&lt; R, O_IT, PSDS &gt;</a>
+<li><a class="el" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html">ggl::strategy::simplify::douglas_peucker&lt; Point, PointDistanceStrategy &gt;</a>
 <li><a class="el" href="structggl_1_1strategy_1_1transform_1_1copy__direct.html">ggl::strategy::transform::copy_direct&lt; P &gt;</a>
 <li><a class="el" href="structggl_1_1strategy_1_1transform_1_1copy__per__coordinate.html">ggl::strategy::transform::copy_per_coordinate&lt; P1, P2 &gt;</a>
 <li><a class="el" href="structggl_1_1strategy_1_1transform_1_1degree__radian__vv.html">ggl::strategy::transform::degree_radian_vv&lt; P1, P2, F &gt;</a>
@@ -209,8 +210,8 @@
 <li><a class="el" href="classggl_1_1svg__manipulator.html">ggl::svg_manipulator&lt; G &gt;</a>
 <li><a class="el" href="structggl_1_1tag.html">ggl::tag&lt; Geometry &gt;</a>
 <li><a class="el" href="structggl_1_1topological__dimension.html">ggl::topological_dimension&lt; Geometry &gt;</a>
-<li><a class="el" href="structggl_1_1traits_1_1access.html">ggl::traits::access&lt; G &gt;</a>
-<li><a class="el" href="structggl_1_1traits_1_1access_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_01_4.html">ggl::traits::access&lt; ggl::detail::intersection::intersection_point&lt; P &gt; &gt;</a>
+<li><a class="el" href="structggl_1_1traits_1_1access.html">ggl::traits::access&lt; Geometry, Dimension &gt;</a>
+<li><a class="el" href="structggl_1_1traits_1_1access_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_00_01_dimension_01_4.html">ggl::traits::access&lt; ggl::detail::intersection::intersection_point&lt; P &gt;, Dimension &gt;</a>
 <li><a class="el" href="structggl_1_1traits_1_1append__point.html">ggl::traits::append_point&lt; G, P &gt;</a>
 <li><a class="el" href="structggl_1_1traits_1_1clear.html">ggl::traits::clear&lt; G &gt;</a>
 <li><a class="el" href="structggl_1_1traits_1_1coordinate__system.html">ggl::traits::coordinate_system&lt; P &gt;</a>
@@ -220,7 +221,7 @@
 <li><a class="el" href="structggl_1_1traits_1_1cs__tag.html">ggl::traits::cs_tag&lt; CoordinateSystem &gt;</a>
 <li><a class="el" href="structggl_1_1traits_1_1dimension.html">ggl::traits::dimension&lt; P &gt;</a>
 <li><a class="el" href="structggl_1_1traits_1_1exterior__ring.html">ggl::traits::exterior_ring&lt; P &gt;</a>
-<li><a class="el" href="structggl_1_1traits_1_1indexed__access.html">ggl::traits::indexed_access&lt; G, I, D &gt;</a>
+<li><a class="el" href="structggl_1_1traits_1_1indexed__access.html">ggl::traits::indexed_access&lt; Geometry, Index, Dimension &gt;</a>
 <li><a class="el" href="structggl_1_1traits_1_1interior__rings.html">ggl::traits::interior_rings&lt; G &gt;</a>
 <li><a class="el" href="structggl_1_1traits_1_1interior__type.html">ggl::traits::interior_type&lt; G &gt;</a>
 <li><a class="el" href="structggl_1_1traits_1_1point__order.html">ggl::traits::point_order&lt; G &gt;</a>
@@ -230,7 +231,7 @@
 <li><a class="el" href="structggl_1_1traits_1_1ring__type.html">ggl::traits::ring_type&lt; G &gt;</a>
 <li><a class="el" href="structggl_1_1traits_1_1tag.html">ggl::traits::tag&lt; Geometry &gt;</a>
 <li><a class="el" href="structggl_1_1traits_1_1tag_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_01_4.html">ggl::traits::tag&lt; ggl::detail::intersection::intersection_point&lt; P &gt; &gt;</a>
-<li><a class="el" href="structggl_1_1traits_1_1use__std.html">ggl::traits::use_std&lt; G &gt;</a>
+<li><a class="el" href="structggl_1_1traits_1_1use__std.html">ggl::traits::use_std&lt; Geometry &gt;</a>
 <li><a class="el" href="structggl_1_1vertex__iterator.html">ggl::vertex_iterator&lt; Geometry, IsConst &gt;</a>
 <li><a class="el" href="classggl_1_1point.html">ggl::point&lt; T, 2, C &gt;</a>
 <ul>

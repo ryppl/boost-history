@@ -61,7 +61,7 @@
 <a name="l00019"></a>00019 {
 <a name="l00020"></a>00020 <span class="keyword">namespace </span>strategy
 <a name="l00021"></a>00021 {
-<a name="l00022"></a>00022     <span class="keyword">namespace </span><a class="code" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3" title="Calculate area of a geometry.">area</a>
+<a name="l00022"></a>00022     <span class="keyword">namespace </span><a class="code" href="group__area.html#gaffb471f2ef6dd4842563e533094fa0d" title="Calculate area of a geometry.">area</a>
 <a name="l00023"></a>00023     {
 <a name="l00024"></a>00024 
 <a name="l00025"></a>00025 
@@ -80,7 +80,7 @@
 <a name="l00055"></a>00055                         : m_sum(0)
 <a name="l00056"></a>00056                         , m_radius(radius)
 <a name="l00057"></a>00057                     {}
-<a name="l00058"></a>00058                     <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3" title="Calculate area of a geometry.">area</a>()<span class="keyword"> const</span>
+<a name="l00058"></a>00058                     <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="group__area.html#gaffb471f2ef6dd4842563e533094fa0d" title="Calculate area of a geometry.">area</a>()<span class="keyword"> const</span>
 <a name="l00059"></a>00059 <span class="keyword">                    </span>{
 <a name="l00060"></a>00060                         <span class="keywordflow">return</span> - m_sum * m_radius * m_radius;
 <a name="l00061"></a>00061                             <span class="comment">//constants::average_earth_radius * constants::average_earth_radius;</span>
@@ -100,9 +100,9 @@
 <a name="l00075"></a>00075                     , m_radius(radius)
 <a name="l00076"></a>00076                 {}
 <a name="l00077"></a>00077 
-<a name="l00078"></a><a class="code" href="classggl_1_1strategy_1_1area_1_1by__spherical__excess.html#b05fba0d842e52d836c6e603045e8f7b">00078</a>                 <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classggl_1_1strategy_1_1area_1_1by__spherical__excess.html#b05fba0d842e52d836c6e603045e8f7b">operator()</a>(<a class="code" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">segment&lt;const P&gt;</a> <span class="keyword">const</span>&amp; <a class="code" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">segment</a>, <a class="code" href="classggl_1_1strategy_1_1area_1_1by__spherical__excess.html#ca224a54396a8ff91a31831888ddc65e">state_type</a>&amp; state)<span class="keyword"> const</span>
+<a name="l00078"></a><a class="code" href="classggl_1_1strategy_1_1area_1_1by__spherical__excess.html#b05fba0d842e52d836c6e603045e8f7b">00078</a>                 <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classggl_1_1strategy_1_1area_1_1by__spherical__excess.html#b05fba0d842e52d836c6e603045e8f7b">operator()</a>(<a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">segment&lt;const P&gt;</a> <span class="keyword">const</span>&amp; <a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">segment</a>, <a class="code" href="classggl_1_1strategy_1_1area_1_1by__spherical__excess.html#ca224a54396a8ff91a31831888ddc65e">state_type</a>&amp; state)<span class="keyword"> const</span>
 <a name="l00079"></a>00079 <span class="keyword">                </span>{
-<a name="l00080"></a>00080                     <span class="keywordflow">if</span> (get&lt;0&gt;(segment.<a class="code" href="structggl_1_1segment.html#3f8aa8a3542ebf499e4987ef3ccfd5b1">first</a>) != get&lt;0&gt;(segment.<a class="code" href="structggl_1_1segment.html#e5aea8fdfbd0e0dece9b227a8a5cec33">second</a>))
+<a name="l00080"></a>00080                     <span class="keywordflow">if</span> (get&lt;0&gt;(segment.<a class="code" href="classggl_1_1segment.html#76c7f18dd19699ccb7353137b8981c65">first</a>) != get&lt;0&gt;(segment.<a class="code" href="classggl_1_1segment.html#543b3806df8d74067157587323917a71">second</a>))
 <a name="l00081"></a>00081                     {
 <a name="l00082"></a>00082                         <span class="keyword">typedef</span> <a class="code" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>
 <a name="l00083"></a>00083                             &lt;
@@ -125,11 +125,11 @@
 <a name="l00100"></a>00100                                     <a class="code" href="structggl_1_1dimension.html" title="Meta-function which defines coordinate dimensions, i.e. the number of axes of any...">dimension&lt;PR&gt;::value</a>,
 <a name="l00101"></a>00101                                     P, PR&gt;::type transform_strategy;
 <a name="l00102"></a>00102 
-<a name="l00103"></a>00103                         transform_strategy(segment.<a class="code" href="structggl_1_1segment.html#3f8aa8a3542ebf499e4987ef3ccfd5b1">first</a>, p1);
-<a name="l00104"></a>00104                         transform_strategy(segment.<a class="code" href="structggl_1_1segment.html#e5aea8fdfbd0e0dece9b227a8a5cec33">second</a>, p2);
+<a name="l00103"></a>00103                         transform_strategy(segment.<a class="code" href="classggl_1_1segment.html#76c7f18dd19699ccb7353137b8981c65">first</a>, p1);
+<a name="l00104"></a>00104                         transform_strategy(segment.<a class="code" href="classggl_1_1segment.html#543b3806df8d74067157587323917a71">second</a>, p2);
 <a name="l00105"></a>00105 
 <a name="l00106"></a>00106                         <span class="comment">// Distance p1 p2</span>
-<a name="l00107"></a>00107                         <span class="keywordtype">double</span> a = m_unit_sphere(segment.<a class="code" href="structggl_1_1segment.html#3f8aa8a3542ebf499e4987ef3ccfd5b1">first</a>, segment.<a class="code" href="structggl_1_1segment.html#e5aea8fdfbd0e0dece9b227a8a5cec33">second</a>);
+<a name="l00107"></a>00107                         <span class="keywordtype">double</span> a = m_unit_sphere(segment.<a class="code" href="classggl_1_1segment.html#76c7f18dd19699ccb7353137b8981c65">first</a>, segment.<a class="code" href="classggl_1_1segment.html#543b3806df8d74067157587323917a71">second</a>);
 <a name="l00108"></a>00108                         <span class="comment">// Sides on unit sphere to south pole</span>
 <a name="l00109"></a>00109                         <span class="keywordtype">double</span> b = 0.5 * <a class="code" href="namespaceggl_1_1math.html#54fc384779fa97a61e07149d880a599c">math::pi</a> - ggl::get&lt;1&gt;(p2);
 <a name="l00110"></a>00110                         <span class="keywordtype">double</span> c = 0.5 * <a class="code" href="namespaceggl_1_1math.html#54fc384779fa97a61e07149d880a599c">math::pi</a> - ggl::get&lt;1&gt;(p1);

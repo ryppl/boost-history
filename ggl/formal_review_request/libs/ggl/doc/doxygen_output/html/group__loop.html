@@ -39,22 +39,22 @@
 <h1>loops and for-each functionality</h1><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename F &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">F&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__loop.html#gbce8332305fc715d4587e7d78c21e4aa">ggl::for_each_point</a> (G &amp;geometry, F f)</td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Functor &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">Functor&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__loop.html#g66bf40f0ee4dc883d9d3b621aeb2e81d">ggl::for_each_point</a> (Geometry &amp;geometry, Functor f)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls functor for geometry.  <a href="#gbce8332305fc715d4587e7d78c21e4aa"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename F &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">F&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__loop.html#g71cb52ab6490726f9030b464aa2f5e8a">ggl::for_each_point</a> (G const &amp;geometry, F f)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls functor for geometry.  <a href="#g66bf40f0ee4dc883d9d3b621aeb2e81d"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Functor &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">Functor&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__loop.html#g0cdb7f23bf7395ba3f385e9cf01a601f">ggl::for_each_point</a> (Geometry const &amp;geometry, Functor f)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls functor for geometry.  <a href="#g71cb52ab6490726f9030b464aa2f5e8a"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename F &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">F&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__loop.html#gf3b5b3004fc802700882f9f4a184564a">ggl::for_each_segment</a> (G &amp;geometry, F f)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls functor for geometry.  <a href="#g0cdb7f23bf7395ba3f385e9cf01a601f"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Functor &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">Functor&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__loop.html#g529f5655aa7702e9f143263b484ff91b">ggl::for_each_segment</a> (Geometry &amp;geometry, Functor f)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls functor for segments on linestrings, rings, polygons, ...  <a href="#gf3b5b3004fc802700882f9f4a184564a"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename F &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">F&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__loop.html#gefcad88c6ee4e308e1003eff7752b3f3">ggl::for_each_segment</a> (const G &amp;geometry, F f)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls functor for segments on linestrings, rings, polygons, ...  <a href="#g529f5655aa7702e9f143263b484ff91b"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Functor &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">Functor&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__loop.html#ge8453eab0e9db146184d7ccef687a33e">ggl::for_each_segment</a> (Geometry const &amp;geometry, Functor f)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls functor for segments on linestrings, rings, polygons, ...  <a href="#gefcad88c6ee4e308e1003eff7752b3f3"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls functor for segments on linestrings, rings, polygons, ...  <a href="#ge8453eab0e9db146184d7ccef687a33e"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename R , typename F , typename S &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__loop.html#g1ff95a74f261e15dfa714146bdcbf23f">ggl::loop</a> (R const &amp;range, F const &amp;functor, S &amp;state)</td></tr>
 
@@ -62,22 +62,22 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 There are several algorithms provided which walk through the points or segments of linestrings and polygons. They are called for_each_point, for_each_segment, after the standard library, and <b>loop</b> which is more adapted and of which the functor could break out if necessary. Of the for_each algorithms there is a <b>const</b> and a non-const version provided. <hr><h2>Function Documentation</h2>
-<a class="anchor" name="g71cb52ab6490726f9030b464aa2f5e8a"></a><!-- doxytag: member="ggl::for_each_point" ref="g71cb52ab6490726f9030b464aa2f5e8a" args="(G const &amp;geometry, F f)" -->
+<a class="anchor" name="g0cdb7f23bf7395ba3f385e9cf01a601f"></a><!-- doxytag: member="ggl::for_each_point" ref="g0cdb7f23bf7395ba3f385e9cf01a601f" args="(Geometry const &amp;geometry, Functor f)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename F &gt; </div>
+template&lt;typename Geometry , typename Functor &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">F ggl::for_each_point           </td>
+          <td class="memname">Functor ggl::for_each_point           </td>
           <td>(</td>
-          <td class="paramtype">G const &amp;&nbsp;</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">F&nbsp;</td>
+          <td class="paramtype">Functor&nbsp;</td>
           <td class="paramname"> <em>f</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -100,26 +100,26 @@ Calls functor for geometry.
 </dl>
 <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="02__linestring__example_8cpp-example.html#a13">02_linestring_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="for__each_8hpp_source.html#l00214">214</a> of file <a class="el" href="for__each_8hpp_source.html">for_each.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2for__each_8hpp_source.html#l00280">280</a> of file <a class="el" href="algorithms_2for__each_8hpp_source.html">for_each.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="gbce8332305fc715d4587e7d78c21e4aa"></a><!-- doxytag: member="ggl::for_each_point" ref="gbce8332305fc715d4587e7d78c21e4aa" args="(G &amp;geometry, F f)" -->
+<a class="anchor" name="g66bf40f0ee4dc883d9d3b621aeb2e81d"></a><!-- doxytag: member="ggl::for_each_point" ref="g66bf40f0ee4dc883d9d3b621aeb2e81d" args="(Geometry &amp;geometry, Functor f)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename F &gt; </div>
+template&lt;typename Geometry , typename Functor &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">F ggl::for_each_point           </td>
+          <td class="memname">Functor ggl::for_each_point           </td>
           <td>(</td>
-          <td class="paramtype">G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">F&nbsp;</td>
+          <td class="paramtype">Functor&nbsp;</td>
           <td class="paramname"> <em>f</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -141,26 +141,26 @@ Calls functor for geometry.
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="for__each_8hpp_source.html#l00234">234</a> of file <a class="el" href="for__each_8hpp_source.html">for_each.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2for__each_8hpp_source.html#l00300">300</a> of file <a class="el" href="algorithms_2for__each_8hpp_source.html">for_each.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="gefcad88c6ee4e308e1003eff7752b3f3"></a><!-- doxytag: member="ggl::for_each_segment" ref="gefcad88c6ee4e308e1003eff7752b3f3" args="(const G &amp;geometry, F f)" -->
+<a class="anchor" name="ge8453eab0e9db146184d7ccef687a33e"></a><!-- doxytag: member="ggl::for_each_segment" ref="ge8453eab0e9db146184d7ccef687a33e" args="(Geometry const &amp;geometry, Functor f)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename F &gt; </div>
+template&lt;typename Geometry , typename Functor &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">F ggl::for_each_segment           </td>
+          <td class="memname">Functor ggl::for_each_segment           </td>
           <td>(</td>
-          <td class="paramtype">const G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">F&nbsp;</td>
+          <td class="paramtype">Functor&nbsp;</td>
           <td class="paramname"> <em>f</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -182,26 +182,26 @@ Calls functor for segments on linestrings, rings, polygons, ...
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="for__each_8hpp_source.html#l00247">247</a> of file <a class="el" href="for__each_8hpp_source.html">for_each.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2for__each_8hpp_source.html#l00320">320</a> of file <a class="el" href="algorithms_2for__each_8hpp_source.html">for_each.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="gf3b5b3004fc802700882f9f4a184564a"></a><!-- doxytag: member="ggl::for_each_segment" ref="gf3b5b3004fc802700882f9f4a184564a" args="(G &amp;geometry, F f)" -->
+<a class="anchor" name="g529f5655aa7702e9f143263b484ff91b"></a><!-- doxytag: member="ggl::for_each_segment" ref="g529f5655aa7702e9f143263b484ff91b" args="(Geometry &amp;geometry, Functor f)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename F &gt; </div>
+template&lt;typename Geometry , typename Functor &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">F ggl::for_each_segment           </td>
+          <td class="memname">Functor ggl::for_each_segment           </td>
           <td>(</td>
-          <td class="paramtype">G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">F&nbsp;</td>
+          <td class="paramtype">Functor&nbsp;</td>
           <td class="paramname"> <em>f</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -223,7 +223,7 @@ Calls functor for segments on linestrings, rings, polygons, ...
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="for__each_8hpp_source.html#l00261">261</a> of file <a class="el" href="for__each_8hpp_source.html">for_each.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2for__each_8hpp_source.html#l00341">341</a> of file <a class="el" href="algorithms_2for__each_8hpp_source.html">for_each.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -276,7 +276,7 @@ for_each like implementation to:<ul>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>range</em>&nbsp;</td><td>range (<a class="el" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring</a> iterator pair,vector,list,deque) containing points </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>functor</em>&nbsp;</td><td>functor which is called at each const <a class="el" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">segment</a> </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>functor</em>&nbsp;</td><td>functor which is called at each const <a class="el" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">segment</a> </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>state</em>&nbsp;</td><td>state, specified separately from the <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> functor </td></tr>
   </table>
 </dl>
@@ -285,7 +285,7 @@ for_each like implementation to:<ul>
 <li><em>V</em> <ul>
 <li>const_iterator begin()</li><li>const_iterator end()</li><li>value_type</li></ul>
 </li><li><em>F</em> <ul>
-<li><em>if it is a function functor</em>: bool <b>function</b> (const <a class="el" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">segment</a>&amp;, state&amp;)</li><li><em>if it is a class functor</em>: bool operator()(const segment&amp;, state&amp;) const</li></ul>
+<li><em>if it is a function functor</em>: bool <b>function</b> (const <a class="el" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">segment</a>&amp;, state&amp;)</li><li><em>if it is a class functor</em>: bool operator()(const segment&amp;, state&amp;) const</li></ul>
 </li><li><em>S</em> <ul>
 <li>no specific requirements here, requirments given by F </li></ul>
 </li></ul>
@@ -294,7 +294,7 @@ for_each like implementation to:<ul>
 <dl class="user" compact><dt><b>Examples:</b></dt><dd>First example, using a class functor  <div class="fragment"><pre class="fragment">{
     <span class="comment">// Class functor</span>
     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P&gt;
-    <span class="keyword">struct </span><a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">perimeter</a>
+    <span class="keyword">struct </span><a class="code" href="group__perimeter.html#g02588697f4c401400c3007d3ff091df9" title="Calculate perimeter of a geometry.">perimeter</a>
     {
         <span class="keyword">struct </span>summation
         {
@@ -302,10 +302,10 @@ for_each like implementation to:<ul>
             summation() : sum(0) {}
         };
 
-        <span class="keywordtype">bool</span> operator()(<span class="keyword">const</span> <a class="code" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">ggl::segment&lt;const P&gt;</a>&amp; segment, summation&amp; s)<span class="keyword"> const</span>
+        <span class="keywordtype">bool</span> operator()(<span class="keyword">const</span> <a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">ggl::segment&lt;const P&gt;</a>&amp; segment, summation&amp; s)<span class="keyword"> const</span>
 <span class="keyword">        </span>{
-            std::cout &lt;&lt; <span class="stringliteral">"from "</span> &lt;&lt; segment.<a class="code" href="structggl_1_1segment.html#3f8aa8a3542ebf499e4987ef3ccfd5b1">first</a> &lt;&lt; <span class="stringliteral">" to "</span> &lt;&lt; segment.<a class="code" href="structggl_1_1segment.html#e5aea8fdfbd0e0dece9b227a8a5cec33">second</a> &lt;&lt; std::endl;
-            s.sum += <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">ggl::distance</a>(segment.<a class="code" href="structggl_1_1segment.html#3f8aa8a3542ebf499e4987ef3ccfd5b1">first</a>, segment.<a class="code" href="structggl_1_1segment.html#e5aea8fdfbd0e0dece9b227a8a5cec33">second</a>);
+            std::cout &lt;&lt; <span class="stringliteral">"from "</span> &lt;&lt; segment.<a class="code" href="classggl_1_1segment.html#76c7f18dd19699ccb7353137b8981c65">first</a> &lt;&lt; <span class="stringliteral">" to "</span> &lt;&lt; segment.<a class="code" href="classggl_1_1segment.html#543b3806df8d74067157587323917a71">second</a> &lt;&lt; std::endl;
+            s.sum += <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">ggl::distance</a>(segment.<a class="code" href="classggl_1_1segment.html#76c7f18dd19699ccb7353137b8981c65">first</a>, segment.<a class="code" href="classggl_1_1segment.html#543b3806df8d74067157587323917a71">second</a>);
             <span class="keywordflow">return</span> <span class="keyword">true</span>;
         }
     };
@@ -329,10 +329,10 @@ for_each like implementation to:<ul>
 
     <span class="comment">// Function functor</span>
     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P&gt;
-    <span class="keywordtype">bool</span> <a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">perimeter</a>(<span class="keyword">const</span> <a class="code" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">ggl::segment&lt;const P&gt;</a>&amp; segment, summation&amp; s)
+    <span class="keywordtype">bool</span> <a class="code" href="group__perimeter.html#g02588697f4c401400c3007d3ff091df9" title="Calculate perimeter of a geometry.">perimeter</a>(<span class="keyword">const</span> <a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">ggl::segment&lt;const P&gt;</a>&amp; segment, summation&amp; s)
     {
-        std::cout &lt;&lt; <span class="stringliteral">"from "</span> &lt;&lt; segment.<a class="code" href="structggl_1_1segment.html#3f8aa8a3542ebf499e4987ef3ccfd5b1">first</a> &lt;&lt; <span class="stringliteral">" to "</span> &lt;&lt; segment.<a class="code" href="structggl_1_1segment.html#e5aea8fdfbd0e0dece9b227a8a5cec33">second</a> &lt;&lt; std::endl;
-        s.sum += <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">ggl::distance</a>(segment.<a class="code" href="structggl_1_1segment.html#3f8aa8a3542ebf499e4987ef3ccfd5b1">first</a>, segment.<a class="code" href="structggl_1_1segment.html#e5aea8fdfbd0e0dece9b227a8a5cec33">second</a>);
+        std::cout &lt;&lt; <span class="stringliteral">"from "</span> &lt;&lt; segment.<a class="code" href="classggl_1_1segment.html#76c7f18dd19699ccb7353137b8981c65">first</a> &lt;&lt; <span class="stringliteral">" to "</span> &lt;&lt; segment.<a class="code" href="classggl_1_1segment.html#543b3806df8d74067157587323917a71">second</a> &lt;&lt; std::endl;
+        s.sum += <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">ggl::distance</a>(segment.<a class="code" href="classggl_1_1segment.html#76c7f18dd19699ccb7353137b8981c65">first</a>, segment.<a class="code" href="classggl_1_1segment.html#543b3806df8d74067157587323917a71">second</a>);
         <span class="keywordflow">return</span> <span class="keyword">true</span>;
     }
 

@@ -87,7 +87,7 @@ Encapsulate the results of distance calculation.
 Distance calculation for xy points or xyz points is done by taking the square root. However, for distance comparison drawing the square root is not necessary. Therefore the distance strategies are allowed to return the squares of the distance. This structure contains the distance, and a boolean to indicate if it is squared. It has an automatic conversion to a double value, which does the square root if necessary. <dl class="note" compact><dt><b>Note:</b></dt><dd>Thanks to Phil Endecott for his suggestion to change the pair to the double-convertable <a href="http://article.gmane.org/gmane.comp.lib.boost.devel/172709/match=greatcircle_distance">http://article.gmane.org/gmane.comp.lib.boost.devel/172709/match=greatcircle_distance</a> <p>
 It might be templatized with a T </dd></dl>
 
-<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00035">35</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
+<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00039">39</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="441dcc3558edeb3bee94c667cfdfbd68"></a><!-- doxytag: member="ggl::cartesian_distance::cartesian_distance" ref="441dcc3558edeb3bee94c667cfdfbd68" args="(T const &amp;v)" -->
 <div class="memitem">
@@ -111,7 +111,7 @@ template&lt;typename T = double&gt; </div>
 Constructor with a value. 
 <p>
 
-<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00057">57</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
+<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00061">61</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -135,7 +135,7 @@ template&lt;typename T = double&gt; </div>
 
 <p>
 Automatic conversion to double or higher precision, taking squareroot if necessary 
-<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00061">61</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
+<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00065">65</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -159,7 +159,7 @@ template&lt;typename T = double&gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00071">71</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
+<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00083">83</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -183,7 +183,7 @@ template&lt;typename T = double&gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00075">75</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
+<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00087">87</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -207,7 +207,7 @@ template&lt;typename T = double&gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00079">79</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
+<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00091">91</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -230,7 +230,7 @@ template&lt;typename T = double&gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00104">104</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
+<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00116">116</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -255,7 +255,7 @@ template&lt;typename T = double&gt; </div>
 The "squared_value" method returns the internal squared value. 
 <p>
 
-<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00110">110</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
+<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00122">122</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -293,7 +293,7 @@ template&lt;typename CH , typename TR &gt; </div>
 Make streamable to enable std::cout &lt;&lt; <a class="el" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">ggl::distance( )</a>. 
 <p>
 
-<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00117">117</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
+<p>Definition at line <a class="el" href="distance__result_8hpp_source.html#l00129">129</a> of file <a class="el" href="distance__result_8hpp_source.html">distance_result.hpp</a>.</p>
 
 </div>
 </div><p>

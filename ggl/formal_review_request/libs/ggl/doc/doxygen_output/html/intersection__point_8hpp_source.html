@@ -251,50 +251,48 @@
 <a name="l00209"></a><a class="code" href="structggl_1_1traits_1_1tag_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_01_4.html#02acc738dfcd073102d0c33b600556f9">00209</a>         <span class="keyword">typedef</span> <a class="code" href="structggl_1_1point__tag.html" title="OGC Point identifying tag.">point_tag</a> <a class="code" href="structggl_1_1point__tag.html" title="OGC Point identifying tag.">type</a>;
 <a name="l00210"></a>00210     };
 <a name="l00211"></a>00211 
-<a name="l00212"></a>00212     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P&gt;
-<a name="l00213"></a><a class="code" href="structggl_1_1traits_1_1access_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_01_4.html">00213</a>     <span class="keyword">struct </span><a class="code" href="structggl_1_1traits_1_1access.html" title="Traits class which gives access (get,set) to points.">access</a>&lt;ggl::detail::<a class="code" href="group__overlay.html#g60644b53b334602956f0722e9dfb69b5" title="Intersects two geometries which each other.">intersection</a>::intersection_point&lt;P&gt; &gt;
+<a name="l00212"></a>00212     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P, std::<span class="keywordtype">size_t</span> Dimension&gt;
+<a name="l00213"></a><a class="code" href="structggl_1_1traits_1_1access_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_00_01_dimension_01_4.html">00213</a>     <span class="keyword">struct </span><a class="code" href="structggl_1_1traits_1_1access.html" title="Traits class which gives access (get,set) to points.">access</a>&lt;ggl::detail::<a class="code" href="group__overlay.html#g60644b53b334602956f0722e9dfb69b5" title="Intersects two geometries which each other.">intersection</a>::intersection_point&lt;P&gt;, Dimension&gt;
 <a name="l00214"></a>00214     {
-<a name="l00215"></a>00215         <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> Index&gt;
-<a name="l00216"></a><a class="code" href="structggl_1_1traits_1_1access_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_01_4.html#a25393c19c53fae14f51f6be484113b9">00216</a>         <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1traits_1_1coordinate__type.html" title="Traits class which indicate the coordinate type (double,float,...) of a point.">coordinate_type&lt;P&gt;::type</a> <span class="keyword">get</span>(
-<a name="l00217"></a>00217                 ggl::detail::intersection::intersection_point&lt;P&gt; <span class="keyword">const</span>&amp; p)
-<a name="l00218"></a>00218         {
-<a name="l00219"></a>00219             <span class="keywordflow">return</span> ggl::get&lt;Index&gt;(p.point);
-<a name="l00220"></a>00220         }
-<a name="l00221"></a>00221 
-<a name="l00222"></a>00222         <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> Index&gt;
-<a name="l00223"></a><a class="code" href="structggl_1_1traits_1_1access_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_01_4.html#bce25b446714591183532373ceeaf1f7">00223</a>         <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(ggl::detail::intersection::intersection_point&lt;P&gt;&amp; p,
-<a name="l00224"></a>00224                 <span class="keyword">typename</span> <a class="code" href="structggl_1_1traits_1_1coordinate__type.html" title="Traits class which indicate the coordinate type (double,float,...) of a point.">coordinate_type&lt;P&gt;::type</a> <span class="keyword">const</span>&amp; value)
-<a name="l00225"></a>00225         {
-<a name="l00226"></a>00226             ggl::set&lt;Index&gt;(p.point, value);
-<a name="l00227"></a>00227         }
-<a name="l00228"></a>00228     };
+<a name="l00215"></a><a class="code" href="structggl_1_1traits_1_1access_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_00_01_dimension_01_4.html#82a62232a7a2092e0a3850771871e9ee">00215</a>         <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1traits_1_1coordinate__type.html" title="Traits class which indicate the coordinate type (double,float,...) of a point.">coordinate_type&lt;P&gt;::type</a> <span class="keyword">get</span>(
+<a name="l00216"></a>00216                 ggl::detail::intersection::intersection_point&lt;P&gt; <span class="keyword">const</span>&amp; p)
+<a name="l00217"></a>00217         {
+<a name="l00218"></a>00218             <span class="keywordflow">return</span> ggl::get&lt;Dimension&gt;(p.point);
+<a name="l00219"></a>00219         }
+<a name="l00220"></a>00220 
+<a name="l00221"></a><a class="code" href="structggl_1_1traits_1_1access_3_01ggl_1_1detail_1_1intersection_1_1intersection__point_3_01_p_01_4_00_01_dimension_01_4.html#840ddd0e5e5719de54570e292d17cfb0">00221</a>         <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(ggl::detail::intersection::intersection_point&lt;P&gt;&amp; p,
+<a name="l00222"></a>00222                 <span class="keyword">typename</span> <a class="code" href="structggl_1_1traits_1_1coordinate__type.html" title="Traits class which indicate the coordinate type (double,float,...) of a point.">coordinate_type&lt;P&gt;::type</a> <span class="keyword">const</span>&amp; value)
+<a name="l00223"></a>00223         {
+<a name="l00224"></a>00224             ggl::set&lt;Dimension&gt;(p.point, value);
+<a name="l00225"></a>00225         }
+<a name="l00226"></a>00226     };
+<a name="l00227"></a>00227 
+<a name="l00228"></a>00228 }
 <a name="l00229"></a>00229 
-<a name="l00230"></a>00230 }
-<a name="l00231"></a>00231 
-<a name="l00232"></a>00232 
-<a name="l00233"></a>00233 <span class="preprocessor">#ifdef GGL_DEBUG_INTERSECTION</span>
-<a name="l00234"></a>00234 <span class="preprocessor"></span>
-<a name="l00235"></a>00235 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;
-<a name="l00236"></a>00236 <span class="keyword">inline</span> <span class="keywordtype">void</span> report_ip(V <span class="keyword">const</span>&amp; intersection_points)
-<a name="l00237"></a>00237 {
-<a name="l00238"></a>00238     <span class="keyword">typedef</span> <span class="keyword">typename</span> V::const_iterator iterator_type;
-<a name="l00239"></a>00239 
-<a name="l00240"></a>00240     <span class="keywordflow">for</span> (iterator_type it = intersection_points.begin();
-<a name="l00241"></a>00241          it != intersection_points.end();
-<a name="l00242"></a>00242          ++it)
-<a name="l00243"></a>00243     {
-<a name="l00244"></a>00244         <span class="keywordflow">if</span> (! it-&gt;flagged)
-<a name="l00245"></a>00245         {
-<a name="l00246"></a>00246             std::cout &lt;&lt; *it;
-<a name="l00247"></a>00247         }
-<a name="l00248"></a>00248     }
-<a name="l00249"></a>00249 }
-<a name="l00250"></a>00250 <span class="preprocessor">#endif // GGL_DEBUG_INTERSECTION</span>
-<a name="l00251"></a>00251 <span class="preprocessor"></span>
+<a name="l00230"></a>00230 
+<a name="l00231"></a>00231 <span class="preprocessor">#ifdef GGL_DEBUG_INTERSECTION</span>
+<a name="l00232"></a>00232 <span class="preprocessor"></span>
+<a name="l00233"></a>00233 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;
+<a name="l00234"></a>00234 <span class="keyword">inline</span> <span class="keywordtype">void</span> report_ip(V <span class="keyword">const</span>&amp; intersection_points)
+<a name="l00235"></a>00235 {
+<a name="l00236"></a>00236     <span class="keyword">typedef</span> <span class="keyword">typename</span> V::const_iterator iterator_type;
+<a name="l00237"></a>00237 
+<a name="l00238"></a>00238     <span class="keywordflow">for</span> (iterator_type it = intersection_points.begin();
+<a name="l00239"></a>00239          it != intersection_points.end();
+<a name="l00240"></a>00240          ++it)
+<a name="l00241"></a>00241     {
+<a name="l00242"></a>00242         <span class="keywordflow">if</span> (! it-&gt;flagged)
+<a name="l00243"></a>00243         {
+<a name="l00244"></a>00244             std::cout &lt;&lt; *it;
+<a name="l00245"></a>00245         }
+<a name="l00246"></a>00246     }
+<a name="l00247"></a>00247 }
+<a name="l00248"></a>00248 <span class="preprocessor">#endif // GGL_DEBUG_INTERSECTION</span>
+<a name="l00249"></a>00249 <span class="preprocessor"></span>
+<a name="l00250"></a>00250 
+<a name="l00251"></a>00251 } <span class="comment">// namespace ggl</span>
 <a name="l00252"></a>00252 
-<a name="l00253"></a>00253 } <span class="comment">// namespace ggl</span>
-<a name="l00254"></a>00254 
-<a name="l00255"></a>00255 <span class="preprocessor">#endif // GGL_ALGORITHMS_INTERSECTION_POINT_HPP</span>
+<a name="l00253"></a>00253 <span class="preprocessor">#endif // GGL_ALGORITHMS_INTERSECTION_POINT_HPP</span>
 </pre></div></div>
 <hr size="1">
 <table width="100%">

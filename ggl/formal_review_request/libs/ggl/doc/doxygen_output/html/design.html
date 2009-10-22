@@ -100,7 +100,8 @@ Calling traits::access&lt;point, 0&gt;::get(a) now returns us our x-coordinate. 
     <span class="keywordflow">return</span> <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">traits::access&lt;P, D&gt;::get</a>(p);
 }
 </pre></div><p>
-This enables us to call get&lt;0&gt;(a), for any point having the traits::access specialization, as shown in the distance algorithm at the start of this paragraph. So we wanted to enable classes with methods like .x(), and they are supported as long as there is a specialization of the access struct with a static get function returning .x() for dimension 0, and similar for 1 and .y(). Alternatively we can have, in the traits class, the dimension as a template parameter in a member template function:<p>
+This enables us to call get&lt;0&gt;(a), for any point having the traits::access specialization, as shown in the distance algorithm at the start of this paragraph. So we wanted to enable classes with methods like .x(), and they are supported as long as there is a specialization of the access struct with a static get function returning .x() for dimension 0, and similar for 1 and .y().<p>
+Alternatively we could implement, in the traits class, the dimension as a template parameter in a member template function:<p>
 <div class="fragment"><pre class="fragment"><span class="keyword">template</span> &lt;&gt;
 <span class="keyword">struct </span>access&lt;mypoint&gt;
 {
@@ -111,7 +112,7 @@ This enables us to call get&lt;0&gt;(a), for any point having the traits::access
     <span class="comment">//   per dimension</span>
 };
 </pre></div><p>
-This alternative gives in the end the same functionality, either using an if-clause (slower), or adding another level of indirection. <b>This last version is used in GGL</b><h2><a class="anchor" name="par4">
+This alternative gives in the end the same functionality, either using an if-clause (slower), or adding another level of indirection.<h2><a class="anchor" name="par4">
 Dimension agnosticism</a></h2>
 Now we can calculate the distance between points in 2D, points of any structure or class. However, we wanted to have 3D as well. So we have to make it dimension agnostic. This complicates our distance function. We can use a for-loop to walk through dimensions, but for loops have another performance than the addition which was there originally. However, we can make more usage of templates and make the distance algorithm as following, more complex but attractive for template fans: <div class="fragment"><pre class="fragment"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> P1, <span class="keyword">typename</span> P2, <span class="keywordtype">int</span> D&gt;
 <span class="keyword">struct </span>pythagoras

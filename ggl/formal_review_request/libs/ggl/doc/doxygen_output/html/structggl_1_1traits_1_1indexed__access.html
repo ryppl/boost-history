@@ -45,7 +45,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>ggl::traits::indexed_access&lt; G, I, D &gt; Struct Template Reference<br>
+<h1>ggl::traits::indexed_access&lt; Geometry, Index, Dimension &gt; Struct Template Reference<br>
 <small>
 [<a class="el" href="group__traits.html">traits: adapt geometries</a>]</small>
 </h1><!-- doxytag: class="ggl::traits::indexed_access" -->Traits class defining "get" and "set" to get and set <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> coordinate values.  
@@ -55,26 +55,26 @@
 <tr><td></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-<h3>template&lt;typename G, std::size_t I, std::size_t D&gt;<br>
- struct ggl::traits::indexed_access&lt; G, I, D &gt;</h3>
+<h3>template&lt;typename Geometry, std::size_t Index, std::size_t Dimension&gt;<br>
+ struct ggl::traits::indexed_access&lt; Geometry, Index, Dimension &gt;</h3>
 
 Traits class defining "get" and "set" to get and set <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> coordinate values. 
 <p>
 <dl compact><dt><b>Template Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>G</em>&nbsp;</td><td>geometry (<a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a>, <a class="el" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">segment</a>) </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>I</em>&nbsp;</td><td>index (min_corner/max_corner for <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a>, 0/1 for <a class="el" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">segment</a>) </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>D</em>&nbsp;</td><td><a class="el" href="structggl_1_1traits_1_1dimension.html" title="Traits class indicating the number of dimensions of a point.">dimension</a> </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Geometry</em>&nbsp;</td><td>geometry (<a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a>, <a class="el" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">segment</a>) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Index</em>&nbsp;</td><td>index (min_corner/max_corner for <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a>, 0/1 for <a class="el" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">segment</a>) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Dimension</em>&nbsp;</td><td><a class="el" href="structggl_1_1traits_1_1dimension.html" title="Traits class indicating the number of dimensions of a point.">dimension</a> </td></tr>
   </table>
 </dl>
 <dl class="user" compact><dt><b>Geometries:</b></dt><dd><ul>
-<li><a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a></li><li><a class="el" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">segment</a> </li></ul>
+<li><a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a></li><li><a class="el" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">segment</a> </li></ul>
 </dd></dl>
 <dl class="user" compact><dt><b>Specializations should provide:</b></dt><dd><ul>
-<li>static inline T get(const G&amp;)</li><li>static inline void set(G&amp;, const T&amp;) </li></ul>
+<li>static inline T get(const G&amp;)</li><li>static inline void set(G&amp;, T const&amp;) </li></ul>
 </dd></dl>
 
-<p>Definition at line <a class="el" href="access_8hpp_source.html#l00059">59</a> of file <a class="el" href="access_8hpp_source.html">access.hpp</a>.</p>
+<p>Definition at line <a class="el" href="access_8hpp_source.html#l00060">60</a> of file <a class="el" href="access_8hpp_source.html">access.hpp</a>.</p>
 </div>
 <hr size="1">
 <table width="100%">

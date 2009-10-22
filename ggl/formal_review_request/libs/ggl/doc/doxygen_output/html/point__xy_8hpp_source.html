@@ -81,62 +81,58 @@
 <a name="l00049"></a>00049 
 <a name="l00051"></a><a class="code" href="classggl_1_1point__xy.html#28f49fc68898e678390593fb73afd7c6">00051</a>     <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classggl_1_1point__xy.html#a83e59f4d401b1a4c6f037979c57260f" title="Get y-value.">y</a>(T <span class="keyword">const</span>&amp; v)
 <a name="l00052"></a>00052     { this-&gt;<span class="keyword">template</span> set&lt;1&gt;(v); }
-<a name="l00053"></a>00053 
-<a name="l00055"></a>00055     <span class="comment">//inline bool operator&lt;(point_xy const&amp; other) const</span>
-<a name="l00056"></a>00056     <span class="comment">//{</span>
-<a name="l00057"></a>00057     <span class="comment">//    return math::equals(x(), other.x()) ? y() &lt; other.y() : x() &lt; other.x();</span>
-<a name="l00058"></a>00058     <span class="comment">//}</span>
+<a name="l00053"></a>00053 };
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055 <span class="comment">// Adapt the point_xy to the concept</span>
+<a name="l00056"></a>00056 <span class="preprocessor">#ifndef DOXYGEN_NO_TRAITS_SPECIALIZATIONS</span>
+<a name="l00057"></a>00057 <span class="preprocessor"></span><span class="keyword">namespace </span>traits
+<a name="l00058"></a>00058 {
 <a name="l00059"></a>00059 
-<a name="l00060"></a>00060 };
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062 <span class="comment">// Adapt the point_xy to the concept</span>
-<a name="l00063"></a>00063 <span class="preprocessor">#ifndef DOXYGEN_NO_TRAITS_SPECIALIZATIONS</span>
-<a name="l00064"></a>00064 <span class="preprocessor"></span><span class="keyword">namespace </span>traits
-<a name="l00065"></a>00065 {
-<a name="l00066"></a>00066 
-<a name="l00067"></a>00067 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;
-<a name="l00068"></a>00068 <span class="keyword">struct </span>tag&lt;point_xy&lt;T, C&gt; &gt;
-<a name="l00069"></a>00069 {
-<a name="l00070"></a>00070     <span class="keyword">typedef</span> point_tag type;
-<a name="l00071"></a>00071 };
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;
-<a name="l00074"></a>00074 <span class="keyword">struct </span>coordinate_type&lt;point_xy&lt;T, C&gt; &gt;
-<a name="l00075"></a>00075 {
-<a name="l00076"></a>00076     <span class="keyword">typedef</span> T <a class="code" href="structggl_1_1coordinate__type.html#b723a443a97f7c4ed7c47ac96d7e29ee">type</a>;
-<a name="l00077"></a>00077 };
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;
-<a name="l00080"></a>00080 <span class="keyword">struct </span>coordinate_system&lt;point_xy&lt;T, C&gt; &gt;
-<a name="l00081"></a>00081 {
-<a name="l00082"></a>00082     <span class="keyword">typedef</span> C <a class="code" href="structggl_1_1coordinate__system.html#a307f40744cc79a4c29ba951dc88fcb4">type</a>;
-<a name="l00083"></a>00083 };
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;
-<a name="l00086"></a>00086 <span class="keyword">struct </span><a class="code" href="classcore__dispatch_1_1dimension.html">dimension</a>&lt;point_xy&lt;T, C&gt; &gt; : boost::mpl::int_&lt;2&gt; {};
-<a name="l00087"></a>00087 
-<a name="l00088"></a>00088 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;
-<a name="l00089"></a>00089 <span class="keyword">struct </span>access&lt;point_xy&lt;T, C&gt; &gt;
-<a name="l00090"></a>00090 {
-<a name="l00091"></a>00091     <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> I&gt;
-<a name="l00092"></a>00092     <span class="keyword">static</span> <span class="keyword">inline</span> T <span class="keyword">get</span>(point_xy&lt;T, C&gt; <span class="keyword">const</span>&amp; p)
-<a name="l00093"></a>00093     {
-<a name="l00094"></a>00094         <span class="keywordflow">return</span> p.template get&lt;I&gt;();
-<a name="l00095"></a>00095     }
-<a name="l00096"></a>00096 
-<a name="l00097"></a>00097     <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> I&gt;
-<a name="l00098"></a>00098     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(point_xy&lt;T, C&gt;&amp; p, T <span class="keyword">const</span>&amp; value)
-<a name="l00099"></a>00099     {
-<a name="l00100"></a>00100         p.template set&lt;I&gt;(value);
-<a name="l00101"></a>00101     }
-<a name="l00102"></a>00102 };
+<a name="l00060"></a>00060 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> CoordinateType, <span class="keyword">typename</span> CoordinateSystem&gt;
+<a name="l00061"></a>00061 <span class="keyword">struct </span>tag&lt;point_xy&lt;CoordinateType, CoordinateSystem&gt; &gt;
+<a name="l00062"></a>00062 {
+<a name="l00063"></a>00063     <span class="keyword">typedef</span> point_tag type;
+<a name="l00064"></a>00064 };
+<a name="l00065"></a>00065 
+<a name="l00066"></a>00066 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> CoordinateType, <span class="keyword">typename</span> CoordinateSystem&gt;
+<a name="l00067"></a>00067 <span class="keyword">struct </span>coordinate_type&lt;point_xy&lt;CoordinateType, CoordinateSystem&gt; &gt;
+<a name="l00068"></a>00068 {
+<a name="l00069"></a>00069     <span class="keyword">typedef</span> CoordinateType <a class="code" href="structggl_1_1coordinate__type.html#b723a443a97f7c4ed7c47ac96d7e29ee">type</a>;
+<a name="l00070"></a>00070 };
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> CoordinateType, <span class="keyword">typename</span> CoordinateSystem&gt;
+<a name="l00073"></a>00073 <span class="keyword">struct </span>coordinate_system&lt;point_xy&lt;CoordinateType, CoordinateSystem&gt; &gt;
+<a name="l00074"></a>00074 {
+<a name="l00075"></a>00075     <span class="keyword">typedef</span> CoordinateSystem <a class="code" href="structggl_1_1coordinate__system.html#a307f40744cc79a4c29ba951dc88fcb4">type</a>;
+<a name="l00076"></a>00076 };
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> CoordinateType, <span class="keyword">typename</span> CoordinateSystem&gt;
+<a name="l00079"></a>00079 <span class="keyword">struct </span><a class="code" href="classcore__dispatch_1_1dimension.html">dimension</a>&lt;point_xy&lt;CoordinateType, CoordinateSystem&gt; &gt; 
+<a name="l00080"></a>00080     : boost::mpl::int_&lt;2&gt; 
+<a name="l00081"></a>00081 {};
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> CoordinateType, <span class="keyword">typename</span> CoordinateSystem, std::<span class="keywordtype">size_t</span> Dimension&gt;
+<a name="l00084"></a>00084 <span class="keyword">struct </span>access&lt;point_xy&lt;CoordinateType, CoordinateSystem&gt;, Dimension &gt;
+<a name="l00085"></a>00085 {
+<a name="l00086"></a>00086     <span class="keyword">static</span> <span class="keyword">inline</span> CoordinateType <span class="keyword">get</span>(
+<a name="l00087"></a>00087         point_xy&lt;CoordinateType, CoordinateSystem&gt; <span class="keyword">const</span>&amp; p)
+<a name="l00088"></a>00088     {
+<a name="l00089"></a>00089         <span class="keywordflow">return</span> p.template get&lt;Dimension&gt;();
+<a name="l00090"></a>00090     }
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> <span class="keyword">set</span>(point_xy&lt;CoordinateType, CoordinateSystem&gt;&amp; p, 
+<a name="l00093"></a>00093         CoordinateType <span class="keyword">const</span>&amp; value)
+<a name="l00094"></a>00094     {
+<a name="l00095"></a>00095         p.template set&lt;Dimension&gt;(value);
+<a name="l00096"></a>00096     }
+<a name="l00097"></a>00097 };
+<a name="l00098"></a>00098 
+<a name="l00099"></a>00099 } <span class="comment">// namespace traits</span>
+<a name="l00100"></a>00100 <span class="preprocessor">#endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS</span>
+<a name="l00101"></a>00101 <span class="preprocessor"></span>
+<a name="l00102"></a>00102 } <span class="comment">// namespace ggl</span>
 <a name="l00103"></a>00103 
-<a name="l00104"></a>00104 } <span class="comment">// namespace traits</span>
-<a name="l00105"></a>00105 <span class="preprocessor">#endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS</span>
-<a name="l00106"></a>00106 <span class="preprocessor"></span>
-<a name="l00107"></a>00107 } <span class="comment">// namespace ggl</span>
-<a name="l00108"></a>00108 
-<a name="l00109"></a>00109 <span class="preprocessor">#endif // GGL_GEOMETRIES_POINT_XY_HPP</span>
+<a name="l00104"></a>00104 <span class="preprocessor">#endif // GGL_GEOMETRIES_POINT_XY_HPP</span>
 </pre></div></div>
 <hr size="1">
 <table width="100%">

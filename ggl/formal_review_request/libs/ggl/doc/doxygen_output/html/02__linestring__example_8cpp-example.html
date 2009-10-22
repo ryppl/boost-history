@@ -124,7 +124,7 @@ The intersection algorithm intersects two geometries which each other, deliverin
     std::cout &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(b) &lt;&lt; std::endl;
 
     <span class="comment">// The length of the line can be calulated</span>
-    std::cout &lt;&lt; <span class="stringliteral">"length: "</span> &lt;&lt; <a name="a8"></a><a class="code" href="group__length.html#g7e3572634111ae0252a474a7f435c5aa" title="Calculate length of a geometry.">length</a>(ls) &lt;&lt; std::endl;
+    std::cout &lt;&lt; <span class="stringliteral">"length: "</span> &lt;&lt; <a name="a8"></a><a class="code" href="group__length.html#g3ff05ea6b83363ce847770d3abe156bf" title="Calculate length of a geometry.">length</a>(ls) &lt;&lt; std::endl;
 
     <span class="comment">// All things from std::vector can be called, because a linestring is a vector</span>
     std::cout &lt;&lt; <span class="stringliteral">"number of points 1: "</span> &lt;&lt; ls.size() &lt;&lt; std::endl;
@@ -142,7 +142,7 @@ The intersection algorithm intersects two geometries which each other, deliverin
 
     <span class="comment">// A linestring is a vector. However, some algorithms consider "segments",</span>
     <span class="comment">// which are the line pieces between two points of a linestring.</span>
-    <span class="keywordtype">double</span> d = <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">distance</a>(p, <a name="_a11"></a><a class="code" href="structggl_1_1segment.html" title="Class segment: small containing two (templatized) point references.">segment&lt;point_2d &gt;</a>(ls.front(), ls.back()));
+    <span class="keywordtype">double</span> d = <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">distance</a>(p, <a name="_a11"></a><a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">segment&lt;point_2d &gt;</a>(ls.front(), ls.back()));
     std::cout &lt;&lt; <span class="stringliteral">"distance: "</span> &lt;&lt; d &lt;&lt; std::endl;
 
     <span class="comment">// Add some three points more, let's do it using a classic array.</span>
@@ -174,7 +174,7 @@ The intersection algorithm intersects two geometries which each other, deliverin
 
     <span class="comment">// The other way, using a vector instead of a linestring, is also possible</span>
     std::vector&lt;point_2d&gt; pv(ls.begin(), ls.end());
-    std::cout &lt;&lt; <span class="stringliteral">"length: "</span> &lt;&lt; <a class="code" href="group__length.html#g7e3572634111ae0252a474a7f435c5aa" title="Calculate length of a geometry.">length</a>(pv) &lt;&lt; std::endl;
+    std::cout &lt;&lt; <span class="stringliteral">"length: "</span> &lt;&lt; <a class="code" href="group__length.html#g3ff05ea6b83363ce847770d3abe156bf" title="Calculate length of a geometry.">length</a>(pv) &lt;&lt; std::endl;
 
     <span class="comment">// If there are double points in the line, you can use unique to remove them</span>
     <span class="comment">// So we add the last point, print, make a unique copy and print</span>
@@ -205,8 +205,8 @@ The intersection algorithm intersects two geometries which each other, deliverin
     {
         <a class="code" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring_2d</a> lscopy = ls;
         std::for_each(lscopy.begin(), lscopy.end(), translate_function&lt;point_2d&gt;);
-        <a name="a13"></a><a class="code" href="group__loop.html#g71cb52ab6490726f9030b464aa2f5e8a" title="Calls functor for geometry.">for_each_point</a>(lscopy, scale_functor&lt;point_2d&gt;());
-        <a class="code" href="group__loop.html#g71cb52ab6490726f9030b464aa2f5e8a" title="Calls functor for geometry.">for_each_point</a>(lscopy, translate_function&lt;point_2d&gt;);
+        <a name="a13"></a><a class="code" href="group__loop.html#g0cdb7f23bf7395ba3f385e9cf01a601f" title="Calls functor for geometry.">for_each_point</a>(lscopy, scale_functor&lt;point_2d&gt;());
+        <a class="code" href="group__loop.html#g0cdb7f23bf7395ba3f385e9cf01a601f" title="Calls functor for geometry.">for_each_point</a>(lscopy, translate_function&lt;point_2d&gt;);
         std::cout &lt;&lt; <span class="stringliteral">"modified line: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(lscopy) &lt;&lt; std::endl;
     }
 
@@ -243,7 +243,7 @@ The intersection algorithm intersects two geometries which each other, deliverin
 
     <span class="comment">// Not all algorithms work on 3d lines. For example convex hull does NOT.</span>
     <span class="comment">// But, for example, length, distance, simplify, envelope and stream do.</span>
-    std::cout &lt;&lt; <span class="stringliteral">"3D: length: "</span> &lt;&lt; <a class="code" href="group__length.html#g7e3572634111ae0252a474a7f435c5aa" title="Calculate length of a geometry.">length</a>(line3d) &lt;&lt; <span class="stringliteral">" line: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(line3d) &lt;&lt; std::endl;
+    std::cout &lt;&lt; <span class="stringliteral">"3D: length: "</span> &lt;&lt; <a class="code" href="group__length.html#g3ff05ea6b83363ce847770d3abe156bf" title="Calculate length of a geometry.">length</a>(line3d) &lt;&lt; <span class="stringliteral">" line: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(line3d) &lt;&lt; std::endl;
 
     <span class="comment">// With DSV you can also use other delimiters, e.g. JSON style</span>
     std::cout &lt;&lt; <span class="stringliteral">"JSON: "</span>

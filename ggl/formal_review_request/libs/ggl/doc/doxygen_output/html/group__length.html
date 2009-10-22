@@ -38,36 +38,40 @@
 <div class="contents">
 <h1>length calculation</h1><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Classes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1length__result.html">ggl::length_result&lt; Geometry &gt;</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Meta-function defining return type of length function.  <a href="structggl_1_1length__result.html#_details">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename S &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__length.html#ge20f9cdc37ebded2be03934edb05c3dd">ggl::length</a> (G const &amp;geometry, S const &amp;strategy)</td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Strategy &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">length_result&lt; Geometry &gt;::type&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__length.html#gc25f493cf56a02b9f0077e18a444bed8">ggl::length</a> (Geometry const &amp;geometry, Strategy const &amp;strategy)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate length of a geometry.  <a href="#ge20f9cdc37ebded2be03934edb05c3dd"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__length.html#g7e3572634111ae0252a474a7f435c5aa">ggl::length</a> (const G &amp;geometry)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate length of a geometry.  <a href="#gc25f493cf56a02b9f0077e18a444bed8"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">length_result&lt; Geometry &gt;::type&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__length.html#g3ff05ea6b83363ce847770d3abe156bf">ggl::length</a> (Geometry const &amp;geometry)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate length of a geometry.  <a href="#g7e3572634111ae0252a474a7f435c5aa"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate length of a geometry.  <a href="#g3ff05ea6b83363ce847770d3abe156bf"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 The length algorithm is implemented for the linestring and the multi_linestring geometry and results in the length of the linestring. If the points of a linestring have coordinates expressed in kilometers, the length of the line is expressed in kilometers as well. <dl class="user" compact><dt><b>Example:</b></dt><dd>Example showing length calculation  <div class="fragment"><pre class="fragment">{
     <a class="code" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">ggl::linestring&lt;ggl::point_xy&lt;double&gt;</a> &gt; line;
     ggl::read_wkt(<span class="stringliteral">"linestring(0 0,1 1,4 8,3 2)"</span>, line);
     std::cout &lt;&lt; <span class="stringliteral">"linestring length is "</span>
-        &lt;&lt; <a class="code" href="group__length.html#g7e3572634111ae0252a474a7f435c5aa" title="Calculate length of a geometry.">ggl::length</a>(line)
+        &lt;&lt; <a class="code" href="group__length.html#g3ff05ea6b83363ce847770d3abe156bf" title="Calculate length of a geometry.">ggl::length</a>(line)
         &lt;&lt; <span class="stringliteral">" units"</span> &lt;&lt; std::endl;
 }
 </pre></div> </dd></dl>
 <hr><h2>Function Documentation</h2>
-<a class="anchor" name="g7e3572634111ae0252a474a7f435c5aa"></a><!-- doxytag: member="ggl::length" ref="g7e3572634111ae0252a474a7f435c5aa" args="(const G &amp;geometry)" -->
+<a class="anchor" name="g3ff05ea6b83363ce847770d3abe156bf"></a><!-- doxytag: member="ggl::length" ref="g3ff05ea6b83363ce847770d3abe156bf" args="(Geometry const &amp;geometry)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G &gt; </div>
+template&lt;typename Geometry &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">double ggl::length           </td>
+          <td class="memname">length_result&lt;Geometry&gt;::type ggl::length           </td>
           <td>(</td>
-          <td class="paramtype">const G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td></td>
@@ -88,32 +92,32 @@ The function length returns the length of a geometry, using the default distance
     std::vector&lt;ggl::point_xy&lt;double&gt; &gt; line;
     ggl::read_wkt&lt;ggl::point_xy&lt;double&gt; &gt;(<span class="stringliteral">"linestring(0 0,1 1,4 8,3 2)"</span>, std::back_inserter(line));
     std::cout &lt;&lt; <span class="stringliteral">"linestring length is "</span>
-        &lt;&lt; <a class="code" href="group__length.html#g7e3572634111ae0252a474a7f435c5aa" title="Calculate length of a geometry.">ggl::length</a>(line)
+        &lt;&lt; <a class="code" href="group__length.html#g3ff05ea6b83363ce847770d3abe156bf" title="Calculate length of a geometry.">ggl::length</a>(line)
         &lt;&lt; <span class="stringliteral">" units"</span> &lt;&lt; std::endl;
 }
 </pre></div> </dd></dl>
 <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="02__linestring__example_8cpp-example.html#a8">02_linestring_example.cpp</a>, <a class="el" href="07__graph__route__example_8cpp-example.html#a4">07_graph_route_example.cpp</a>, and <a class="el" href="c05__custom__point__pointer__example_8cpp-example.html#a1">c05_custom_point_pointer_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="algorithms_2length_8hpp_source.html#l00139">139</a> of file <a class="el" href="algorithms_2length_8hpp_source.html">length.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2length_8hpp_source.html#l00147">147</a> of file <a class="el" href="algorithms_2length_8hpp_source.html">length.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="ge20f9cdc37ebded2be03934edb05c3dd"></a><!-- doxytag: member="ggl::length" ref="ge20f9cdc37ebded2be03934edb05c3dd" args="(G const &amp;geometry, S const &amp;strategy)" -->
+<a class="anchor" name="gc25f493cf56a02b9f0077e18a444bed8"></a><!-- doxytag: member="ggl::length" ref="gc25f493cf56a02b9f0077e18a444bed8" args="(Geometry const &amp;geometry, Strategy const &amp;strategy)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename S &gt; </div>
+template&lt;typename Geometry , typename Strategy &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">double ggl::length           </td>
+          <td class="memname">length_result&lt;Geometry&gt;::type ggl::length           </td>
           <td>(</td>
-          <td class="paramtype">G const &amp;&nbsp;</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">S const &amp;&nbsp;</td>
+          <td class="paramtype">Strategy const &amp;&nbsp;</td>
           <td class="paramname"> <em>strategy</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -149,7 +153,7 @@ The function length returns the length of a geometry, using specified <a class="
 }
 </pre></div> </dd></dl>
 
-<p>Definition at line <a class="el" href="algorithms_2length_8hpp_source.html#l00174">174</a> of file <a class="el" href="algorithms_2length_8hpp_source.html">length.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2length_8hpp_source.html#l00183">183</a> of file <a class="el" href="algorithms_2length_8hpp_source.html">length.hpp</a>.</p>
 
 </div>
 </div><p>

@@ -57,110 +57,97 @@
 <a name="l00015"></a>00015 <span class="preprocessor">#include &lt;boost/range/functions.hpp&gt;</span>
 <a name="l00016"></a>00016 <span class="preprocessor">#include &lt;boost/range/metafunctions.hpp&gt;</span>
 <a name="l00017"></a>00017 
-<a name="l00018"></a>00018 <span class="preprocessor">#include &lt;<a class="code" href="algorithms_2length_8hpp.html">ggl/algorithms/length.hpp</a>&gt;</span>
-<a name="l00019"></a>00019 <span class="preprocessor">#include &lt;<a class="code" href="cs_8hpp.html">ggl/core/cs.hpp</a>&gt;</span>
-<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;<a class="code" href="point__concept_8hpp.html">ggl/core/concepts/point_concept.hpp</a>&gt;</span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;<a class="code" href="strategies_8hpp.html">ggl/strategies/strategies.hpp</a>&gt;</span>
+<a name="l00018"></a>00018 <span class="preprocessor">#include &lt;<a class="code" href="cs_8hpp.html">ggl/core/cs.hpp</a>&gt;</span>
+<a name="l00019"></a>00019 <span class="preprocessor">#include &lt;<a class="code" href="point__concept_8hpp.html">ggl/core/concepts/point_concept.hpp</a>&gt;</span>
+<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;<a class="code" href="strategies_8hpp.html">ggl/strategies/strategies.hpp</a>&gt;</span>
+<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;<a class="code" href="length__result_8hpp.html">ggl/strategies/length_result.hpp</a>&gt;</span>
 <a name="l00022"></a>00022 
-<a name="l00028"></a>00028 <span class="keyword">namespace </span>ggl
-<a name="l00029"></a>00029 {
-<a name="l00030"></a>00030 
-<a name="l00031"></a>00031 <span class="preprocessor">#ifndef DOXYGEN_NO_DETAIL</span>
-<a name="l00032"></a>00032 <span class="preprocessor"></span><span class="keyword">namespace </span>detail { <span class="keyword">namespace </span><a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">perimeter</a> {
-<a name="l00033"></a>00033 
-<a name="l00034"></a>00034 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> R, <span class="keyword">typename</span> S&gt;
-<a name="l00035"></a>00035 <span class="keyword">struct </span>range_perimeter : detail::<a class="code" href="group__length.html#g7e3572634111ae0252a474a7f435c5aa" title="Calculate length of a geometry.">length</a>::range_length&lt;R, S&gt;
-<a name="l00036"></a>00036 {
-<a name="l00037"></a>00037 };
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039 <span class="comment">// might be merged with "range_area" with policy to sum/subtract interior rings</span>
-<a name="l00040"></a>00040 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Polygon, <span class="keyword">typename</span> S&gt;
-<a name="l00041"></a>00041 <span class="keyword">struct </span>polygon_perimeter
-<a name="l00042"></a>00042 {
-<a name="l00043"></a>00043     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> apply(Polygon <span class="keyword">const</span>&amp; poly, S <span class="keyword">const</span>&amp; strategy)
-<a name="l00044"></a>00044     {
-<a name="l00045"></a>00045         <span class="keyword">typedef</span> <span class="keyword">typename</span> ring_type&lt;Polygon&gt;::type ring_type;
-<a name="l00046"></a>00046         <span class="keyword">typedef</span> <span class="keyword">typename</span> boost::range_const_iterator
-<a name="l00047"></a>00047             &lt;
-<a name="l00048"></a>00048             <span class="keyword">typename</span> interior_type&lt;Polygon&gt;::type
-<a name="l00049"></a>00049             &gt;::type iterator_type;
-<a name="l00050"></a>00050 
-<a name="l00051"></a>00051         <span class="keywordtype">double</span> sum = std::abs(range_perimeter&lt;ring_type, S&gt;::apply(<a class="code" href="group__access.html#gf92470d0612da7f0e118d296e7fcfe01" title="Function to get the exterior_ring ring of a polygon.">exterior_ring</a>(poly), strategy));
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053         <span class="keywordflow">for</span> (iterator_type it = boost::begin(<a class="code" href="group__access.html#gfb1abbb52eaeb5391c51fb6c209ab758" title="Function to get the interior rings of a polygon (non const version).">interior_rings</a>(poly));
-<a name="l00054"></a>00054              it != boost::end(<a class="code" href="group__access.html#gfb1abbb52eaeb5391c51fb6c209ab758" title="Function to get the interior rings of a polygon (non const version).">interior_rings</a>(poly)); it++)
-<a name="l00055"></a>00055         {
-<a name="l00056"></a>00056             sum += std::abs(range_perimeter&lt;ring_type, S&gt;::apply(*it, strategy));
-<a name="l00057"></a>00057         }
-<a name="l00058"></a>00058         <span class="keywordflow">return</span> sum;
-<a name="l00059"></a>00059     }
-<a name="l00060"></a>00060 };
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062 }} <span class="comment">// namespace detail:;perimeter</span>
-<a name="l00063"></a>00063 <span class="preprocessor">#endif // DOXYGEN_NO_DETAIL</span>
-<a name="l00064"></a>00064 <span class="preprocessor"></span>
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066 <span class="preprocessor">#ifndef DOXYGEN_NO_DISPATCH</span>
-<a name="l00067"></a>00067 <span class="preprocessor"></span><span class="keyword">namespace </span>dispatch
-<a name="l00068"></a>00068 {
+<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;<a class="code" href="algorithms_2length_8hpp.html">ggl/algorithms/length.hpp</a>&gt;</span>
+<a name="l00024"></a>00024 <span class="preprocessor">#include &lt;<a class="code" href="calculate__null_8hpp.html">ggl/algorithms/detail/calculate_null.hpp</a>&gt;</span>
+<a name="l00025"></a>00025 <span class="preprocessor">#include &lt;<a class="code" href="calculate__sum_8hpp.html">ggl/algorithms/detail/calculate_sum.hpp</a>&gt;</span>
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027 
+<a name="l00033"></a>00033 <span class="keyword">namespace </span>ggl
+<a name="l00034"></a>00034 {
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036 <span class="preprocessor">#ifndef DOXYGEN_NO_DISPATCH</span>
+<a name="l00037"></a>00037 <span class="preprocessor"></span><span class="keyword">namespace </span>dispatch
+<a name="l00038"></a>00038 {
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040 <span class="comment">// Default perimeter is 0.0, specializations implement calculated values</span>
+<a name="l00041"></a>00041 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Strategy&gt;
+<a name="l00042"></a>00042 <span class="keyword">struct </span><a class="code" href="group__perimeter.html#g02588697f4c401400c3007d3ff091df9" title="Calculate perimeter of a geometry.">perimeter</a> : detail::calculate_null
+<a name="l00043"></a>00043     &lt;
+<a name="l00044"></a>00044         typename length_result&lt;Geometry&gt;::type, 
+<a name="l00045"></a>00045         Geometry, 
+<a name="l00046"></a>00046         Strategy
+<a name="l00047"></a>00047     &gt;
+<a name="l00048"></a>00048 {};
+<a name="l00049"></a>00049 
+<a name="l00050"></a>00050 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Strategy&gt;
+<a name="l00051"></a>00051 <span class="keyword">struct </span><a class="code" href="group__perimeter.html#g02588697f4c401400c3007d3ff091df9" title="Calculate perimeter of a geometry.">perimeter</a>&lt;ring_tag, Geometry, Strategy&gt;
+<a name="l00052"></a>00052     : detail::<a class="code" href="group__length.html#g3ff05ea6b83363ce847770d3abe156bf" title="Calculate length of a geometry.">length</a>::range_length&lt;Geometry, Strategy&gt;
+<a name="l00053"></a>00053 {};
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Polygon, <span class="keyword">typename</span> Strategy&gt;
+<a name="l00056"></a>00056 <span class="keyword">struct </span><a class="code" href="group__perimeter.html#g02588697f4c401400c3007d3ff091df9" title="Calculate perimeter of a geometry.">perimeter</a>&lt;polygon_tag, Polygon, Strategy&gt;
+<a name="l00057"></a>00057     : detail::calculate_polygon_sum
+<a name="l00058"></a>00058         &lt;
+<a name="l00059"></a>00059             typename length_result&lt;Polygon&gt;::type,
+<a name="l00060"></a>00060             Polygon, 
+<a name="l00061"></a>00061             Strategy, 
+<a name="l00062"></a>00062             detail::length::range_length
+<a name="l00063"></a>00063                 &lt;
+<a name="l00064"></a>00064                     typename ring_type&lt;Polygon&gt;::type, 
+<a name="l00065"></a>00065                     Strategy
+<a name="l00066"></a>00066                 &gt;
+<a name="l00067"></a>00067         &gt;
+<a name="l00068"></a>00068 {};
 <a name="l00069"></a>00069 
-<a name="l00070"></a>00070 <span class="comment">// Default perimeter is 0.0, specializations implement calculated values</span>
-<a name="l00071"></a>00071 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Strategy&gt;
-<a name="l00072"></a>00072 <span class="keyword">struct </span><a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">perimeter</a> : detail::calculate_null&lt;double, Geometry, Strategy&gt;
-<a name="l00073"></a>00073 {};
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Strategy&gt;
-<a name="l00076"></a>00076 <span class="keyword">struct </span><a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">perimeter</a>&lt;ring_tag, Geometry, Strategy&gt;
-<a name="l00077"></a>00077     : detail::<a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">perimeter</a>::range_perimeter&lt;Geometry, Strategy&gt;
-<a name="l00078"></a>00078 {};
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Strategy&gt;
-<a name="l00081"></a>00081 <span class="keyword">struct </span><a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">perimeter</a>&lt;polygon_tag, Geometry, Strategy&gt;
-<a name="l00082"></a>00082     : detail::<a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">perimeter</a>::polygon_perimeter&lt;Geometry, Strategy&gt;
-<a name="l00083"></a>00083 {};
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085 
-<a name="l00086"></a>00086 <span class="comment">// box,n-sphere: to be implemented</span>
-<a name="l00087"></a>00087 
-<a name="l00088"></a>00088 } <span class="comment">// namespace dispatch</span>
-<a name="l00089"></a>00089 <span class="preprocessor">#endif // DOXYGEN_NO_DISPATCH</span>
-<a name="l00090"></a>00090 <span class="preprocessor"></span>
-<a name="l00091"></a>00091 
-<a name="l00099"></a>00099 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Geometry&gt;
-<a name="l00100"></a><a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba">00100</a> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">perimeter</a>(Geometry <span class="keyword">const</span>&amp; geometry)
-<a name="l00101"></a>00101 {
-<a name="l00102"></a>00102     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry&gt;::type</a> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
-<a name="l00103"></a>00103     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag&lt;point_type&gt;::type</a> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag</a>;
-<a name="l00104"></a>00104     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1strategy__distance.html" title="Traits class binding a distance strategy to a (possibly two) coordinate system(s)...">strategy_distance</a>
-<a name="l00105"></a>00105         &lt;
-<a name="l00106"></a>00106             cs_tag,
-<a name="l00107"></a>00107             cs_tag,
-<a name="l00108"></a>00108             point_type,
-<a name="l00109"></a>00109             point_type
-<a name="l00110"></a>00110         &gt;::type strategy_type;
-<a name="l00111"></a>00111 
-<a name="l00112"></a>00112     <span class="keywordflow">return</span> <a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">dispatch::perimeter</a>
-<a name="l00113"></a>00113         &lt;
-<a name="l00114"></a>00114             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,
-<a name="l00115"></a>00115             Geometry,
-<a name="l00116"></a>00116             strategy_type
-<a name="l00117"></a>00117         &gt;::apply(geometry, strategy_type());
-<a name="l00118"></a>00118 }
-<a name="l00119"></a>00119 
-<a name="l00128"></a>00128 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Strategy&gt;
-<a name="l00129"></a><a class="code" href="group__perimeter.html#g840995936a96075829b48a29a4a33b19">00129</a> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">perimeter</a>(Geometry <span class="keyword">const</span>&amp; geometry, Strategy <span class="keyword">const</span>&amp; strategy)
-<a name="l00130"></a>00130 {
-<a name="l00131"></a>00131     <span class="keywordflow">return</span> <a class="code" href="group__perimeter.html#g7d52bc6ace3c3dbc9bdac84e6f0076ba" title="Calculate perimeter of a geometry.">dispatch::perimeter</a>
-<a name="l00132"></a>00132         &lt;
-<a name="l00133"></a>00133             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,
-<a name="l00134"></a>00134             Geometry,
-<a name="l00135"></a>00135             Strategy
-<a name="l00136"></a>00136         &gt;::apply(geometry, strategy);
-<a name="l00137"></a>00137 }
-<a name="l00138"></a>00138 
-<a name="l00139"></a>00139 } <span class="comment">// namespace ggl</span>
-<a name="l00140"></a>00140 
-<a name="l00141"></a>00141 <span class="preprocessor">#endif // GGL_ALGORITHMS_PERIMETER_HPP</span>
+<a name="l00070"></a>00070 
+<a name="l00071"></a>00071 <span class="comment">// box,n-sphere: to be implemented</span>
+<a name="l00072"></a>00072 
+<a name="l00073"></a>00073 } <span class="comment">// namespace dispatch</span>
+<a name="l00074"></a>00074 <span class="preprocessor">#endif // DOXYGEN_NO_DISPATCH</span>
+<a name="l00075"></a>00075 <span class="preprocessor"></span>
+<a name="l00076"></a>00076 
+<a name="l00084"></a>00084 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Geometry&gt;
+<a name="l00085"></a><a class="code" href="group__perimeter.html#g02588697f4c401400c3007d3ff091df9">00085</a> <span class="keyword">inline</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1length__result.html" title="Meta-function defining return type of length function.">length_result&lt;Geometry&gt;::type</a> <a class="code" href="group__perimeter.html#g02588697f4c401400c3007d3ff091df9" title="Calculate perimeter of a geometry.">perimeter</a>(
+<a name="l00086"></a>00086         Geometry <span class="keyword">const</span>&amp; geometry)
+<a name="l00087"></a>00087 {
+<a name="l00088"></a>00088     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry&gt;::type</a> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
+<a name="l00089"></a>00089     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag&lt;point_type&gt;::type</a> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag</a>;
+<a name="l00090"></a>00090     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1strategy__distance.html" title="Traits class binding a distance strategy to a (possibly two) coordinate system(s)...">strategy_distance</a>
+<a name="l00091"></a>00091         &lt;
+<a name="l00092"></a>00092             cs_tag,
+<a name="l00093"></a>00093             cs_tag,
+<a name="l00094"></a>00094             point_type,
+<a name="l00095"></a>00095             point_type
+<a name="l00096"></a>00096         &gt;::type strategy_type;
+<a name="l00097"></a>00097 
+<a name="l00098"></a>00098     <span class="keywordflow">return</span> <a class="code" href="group__perimeter.html#g02588697f4c401400c3007d3ff091df9" title="Calculate perimeter of a geometry.">dispatch::perimeter</a>
+<a name="l00099"></a>00099         &lt;
+<a name="l00100"></a>00100             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,
+<a name="l00101"></a>00101             Geometry,
+<a name="l00102"></a>00102             strategy_type
+<a name="l00103"></a>00103         &gt;::apply(geometry, strategy_type());
+<a name="l00104"></a>00104 }
+<a name="l00105"></a>00105 
+<a name="l00114"></a>00114 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Strategy&gt;
+<a name="l00115"></a><a class="code" href="group__perimeter.html#g78c3f8a2c3eed80533521425079cdf55">00115</a> <span class="keyword">inline</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1length__result.html" title="Meta-function defining return type of length function.">length_result&lt;Geometry&gt;::type</a> <a class="code" href="group__perimeter.html#g02588697f4c401400c3007d3ff091df9" title="Calculate perimeter of a geometry.">perimeter</a>(
+<a name="l00116"></a>00116         Geometry <span class="keyword">const</span>&amp; geometry, Strategy <span class="keyword">const</span>&amp; strategy)
+<a name="l00117"></a>00117 {
+<a name="l00118"></a>00118     <span class="keywordflow">return</span> <a class="code" href="group__perimeter.html#g02588697f4c401400c3007d3ff091df9" title="Calculate perimeter of a geometry.">dispatch::perimeter</a>
+<a name="l00119"></a>00119         &lt;
+<a name="l00120"></a>00120             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,
+<a name="l00121"></a>00121             Geometry,
+<a name="l00122"></a>00122             Strategy
+<a name="l00123"></a>00123         &gt;::apply(geometry, strategy);
+<a name="l00124"></a>00124 }
+<a name="l00125"></a>00125 
+<a name="l00126"></a>00126 } <span class="comment">// namespace ggl</span>
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128 <span class="preprocessor">#endif // GGL_ALGORITHMS_PERIMETER_HPP</span>
 </pre></div></div>
 <hr size="1">
 <table width="100%">

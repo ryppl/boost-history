@@ -70,7 +70,7 @@ Other often used algorithms are point-in-polygon: <div class="fragment"><pre cla
     boost::tuple&lt;double, double&gt; p = boost::make_tuple(3.7, 2.0);
     std::cout &lt;&lt; <span class="stringliteral">"Point p is in polygon? "</span> &lt;&lt; (<a class="code" href="group__boolean__relations.html#g95d6465a12b762c77df41369a039f6dc" title="Within check.">within</a>(p, poly) ? <span class="stringliteral">"YES"</span> : <span class="stringliteral">"NO"</span>)  &lt;&lt; std::endl;
 </pre></div><p>
-or area: <div class="fragment"><pre class="fragment">    std::cout &lt;&lt; <span class="stringliteral">"Area: "</span> &lt;&lt; <a class="code" href="group__area.html#g3ebfdefe9c756498730b6d93b83338b3" title="Calculate area of a geometry.">area</a>(poly) &lt;&lt; std::endl;
+or area: <div class="fragment"><pre class="fragment">    std::cout &lt;&lt; <span class="stringliteral">"Area: "</span> &lt;&lt; <a class="code" href="group__area.html#gaffb471f2ef6dd4842563e533094fa0d" title="Calculate area of a geometry.">area</a>(poly) &lt;&lt; std::endl;
 </pre></div><p>
 It is possible, by the nature of a template library, to mix the point types declared above: <div class="fragment"><pre class="fragment">    <span class="keywordtype">double</span> d2 = <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">distance</a>(a, p);
     std::cout &lt;&lt; <span class="stringliteral">"Distance a-p is:"</span> &lt;&lt; d2 &lt;&lt; std::endl;
