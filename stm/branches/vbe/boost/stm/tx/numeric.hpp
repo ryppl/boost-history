@@ -20,9 +20,14 @@
 //#include <boost/stm/non_tx/detail/cache_map.hpp>
 
 //-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
 namespace boost { namespace stm { namespace tx {
 
+//-----------------------------------------------------------------------------
+// mixing transactional object numeric class that wraps a numeric builtin type providing
+// a transparent transactional view on a transactional context
+// a non-transactional view on a non-transactional context
+// Note: the sizeof(numeric<T>)>>>>=sizeof(T)
+//-----------------------------------------------------------------------------
 template <typename T>
 class numeric : public transaction_object< numeric<T> >
 {

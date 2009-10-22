@@ -37,7 +37,7 @@ struct deleter {
 //-----------------------------------------------------------------------------
 template <typename T>
 struct base_transaction_object_deleter  : deleter {
-    T* ptr_;   
+    T* ptr_;
     base_transaction_object_deleter(T* ptr) : ptr_(ptr) {}
     virtual void reset() {
         static_cast<base_transaction_object*>(ptr_)->transaction_thread(invalid_thread_id());
@@ -51,7 +51,7 @@ struct base_transaction_object_deleter  : deleter {
 //-----------------------------------------------------------------------------
 template <typename T>
 struct base_transaction_object_array_deleter  : deleter {
-    T* ptr_;   
+    T* ptr_;
     std::size_t size_;
     base_transaction_object_array_deleter (T* ptr, std::size_t size) : ptr_(ptr), size_(size) {}
     virtual void reset() {
@@ -69,7 +69,7 @@ struct base_transaction_object_array_deleter  : deleter {
 //-----------------------------------------------------------------------------
 template <typename T>
 struct non_transaction_object_deleter  : deleter {
-    T* ptr_;   
+    T* ptr_;
     typedef typename T::binds_list binds_type;
     typedef typename T::binds_list::iterator binds_iterator;
 
@@ -87,12 +87,12 @@ struct non_transaction_object_deleter  : deleter {
 };
 
 //-----------------------------------------------------------------------------
-// For array of non transactional object types 
+// For array of non transactional object types
 //-----------------------------------------------------------------------------
 
 template <typename T>
 struct non_transaction_object_array_deleter : deleter {
-    T* ptr_;   
+    T* ptr_;
     std::size_t size_;
     typedef typename T::binds_list binds_type;
     typedef typename T::binds_list::iterator binds_iterator;
@@ -130,7 +130,7 @@ struct non_transaction_object_array_deleter : deleter {
     inline void release(deleter_type* ptr) {
         delete ptr;
     }
-    
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
     inline deleter_type* make(base_transaction_object* p) {
@@ -160,7 +160,7 @@ struct non_transaction_object_array_deleter : deleter {
     inline deleter_type* make_array(base_transaction_object const & r, std::size_t size) {
         return const_cast<deleter_type*>(&r);
     }
-    
+
 #else
 
 //-----------------------------------------------------------------------------
@@ -180,7 +180,7 @@ struct non_transaction_object_array_deleter : deleter {
         ptr->release();
         delete ptr;
     }
-    
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
     template <typename T>
@@ -199,7 +199,7 @@ struct non_transaction_object_array_deleter : deleter {
     inline deleter_type* make(T const& r) {
         return new base_transaction_object_deleter<T>(const_cast<T*>(&r));
     }
-    
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
     template <typename T>
@@ -218,7 +218,7 @@ struct non_transaction_object_array_deleter : deleter {
     inline deleter_type* make_array(T const& r, std::size_t size) {
         return new base_transaction_object_array_deleter<T>(const_cast<T*>(&r, size));
     }
-    
+
 #endif
 }}}
 

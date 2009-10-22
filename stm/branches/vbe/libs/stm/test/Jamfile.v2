@@ -187,6 +187,7 @@ project
 
             [ run ../example/counter.cpp ]
             [ run ../example/numeric.cpp ]
+            [ run ../example/tx/pointer.cpp ]
             [ run ../example/counter_ptr.cpp ]
             [ run ../example/non_tx_counter.cpp ]
     ;

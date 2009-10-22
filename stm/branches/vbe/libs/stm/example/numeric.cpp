@@ -25,110 +25,6 @@ using namespace boost;
 stm::tx::int_t counter(0);
 stm::tx::int_t counter2(0);
 
-struct A {
-    A() : i(0), ptr(&i) {
-        
-    }
-    stm::tx::int_t i;
-    stm::tx::pointer<stm::tx::int_t> const ptr;
-};
-
-struct B {
-    B() : a_ptr() {}
-    stm::tx::pointer<A> a_ptr;
-};
-
-
-A a;
-B b;
-
-bool test_ptr() {
-    {
-    const stm::tx::numeric<int> ci=10;
-    const stm::tx::numeric<int> cj = 10;
-    stm::tx::pointer<const stm::tx::numeric<int> > pc = &ci;
-    stm::tx::pointer<const stm::tx::numeric<int> > pc2 = &cj;
-    pc=&cj;
-    stm::tx::pointer<const stm::tx::numeric<int> > const cpc = pc;
-    //cpc=pc2; // this must not compile
-    stm::tx::pointer<stm::tx::pointer<const stm::tx::numeric<int> > > ppc;
-    }
-    {
-    const int ci=10;
-    const int cj = 10;
-    stm::tx::pointer<const int> pc = &ci;
-    stm::tx::pointer<const int> pc2 = &cj;
-    pc=&cj;
-    stm::tx::pointer<const int> const cpc = pc;
-    //cpc=pc2; // this must not compile
-    stm::tx::pointer<stm::tx::pointer<const int> > ppc;
-    }
-
-    stm::tx::numeric<int> i;
-    stm::tx::pointer<stm::tx::numeric<int> > p;
-    stm::tx::pointer<stm::tx::numeric<int> > const cp = &i;
-
-    atomic(_) {
-        b.a_ptr=&a;
-        b.a_ptr->i =1;
-    } end_atom
-    atomic(_) {
-        BOOST_STM_TX_RETURN(_, (b.a_ptr->i==1)&&(*b.a_ptr->ptr==1));
-    } end_atom
-    return false;
-}
-
-bool test_array() {
-    {
-    int v[2];
-    int * p;
-    p = &v[0];
-    p = v;
-    ++p;
-    }
-    stm::tx::numeric<int> v[2];
-    stm::tx::pointer<stm::tx::numeric<int> > p;
-    p = &v[0];
-    p = v;
-    ++p;
-    bool res=true;
-    return res;
-}
-
-bool test_array_ptr() {
-    {
-        int * v= new int[2];
-        int * p;
-        p = &v[0];
-        p = v;
-        ++p;
-    }
-    atomic(_) {
-        //stm::tx::pointer<stm::tx::numeric<int> > v= BOOST_STM_TX_NEW_ARRAY(_, 2, stm::tx::numeric<int>);
-        stm::tx::pointer<stm::tx::numeric<int> > v= BOOST_STM_NEW_ARRAY(2, stm::tx::numeric<int>);
-
-        stm::tx::pointer<stm::tx::numeric<int> > p;
-        p = &v[0];
-        p = v;
-        ++p;
-        bool res=true;
-        BOOST_STM_RETURN(res);
-    } end_atom
-    #if 0
-    {
-        stm::tx::pointer<stm::tx::numeric<int> > v= BOOST_STM_NEW_ARRAY(2, stm::tx::numeric<int>);
-
-        stm::tx::pointer<stm::tx::numeric<int> > p;
-        p = &v[0];
-        p = v;
-        ++p;
-    }
-    #endif
-        bool res=true;
-        BOOST_STM_RETURN(res);
-    return false;
-}
-
 void inc() {
     stm::thread_initializer thi;
 
@@ -230,7 +126,7 @@ bool test_const(stm::tx::numeric<int> const& c) {
     return false;
 }
 
-int test_counter() {
+int test_all() {
 
     thread  th1(inc);
     thread  th2(decr);
@@ -248,7 +144,6 @@ int test_counter() {
     fails += !test_assign();
     fails += !test_less();
     fails += !test_le();
-    fails += !test_ptr();
     fails += !test_const(counter);
     return fails;
 }
@@ -259,6 +154,6 @@ int main() {
     stm::transaction::initialize();
     stm::thread_initializer thi;
 
-    return test_counter();
+    return test_all();
 
 }

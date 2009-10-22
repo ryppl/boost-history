@@ -66,11 +66,11 @@ public:
 
     std::size_t size() const {
         std::size_t res=0;
-        use_atomic(_) {
+        atomic(_) {
             upgrd_ptr<std::size_t> s(_, size_);
             std::cout << "size_.get()" << s.get() << std::endl;
             res=*s;
-        }
+        }  end_atom
         return res;
     }
 
@@ -79,8 +79,8 @@ public:
     //--------------------------------------------------------------------------
     void insert(const T& val) {
         cerr << __LINE__ << " insert" << endl;
-     //   use_atomic(_) {
-        for (boost::stm::transaction _; !_.committed() && _.restart(); _.end()) {
+        atomic(_) {
+        //for (boost::stm::transaction _; !_.committed() && _.restart(); _.end()) {
         cerr << __LINE__ << " insert" << endl;
             upgrd_ptr<list_node<T> > prev(_, head_);
             upgrd_ptr<list_node<T> > curr(_, head_->next_);
@@ -103,6 +103,9 @@ public:
                 //++(*size_tx);
 
             }
+        } end_atom
+        catch (...) {
+        cerr << __LINE__ << " insert" << endl;
         }
         cerr << __LINE__ << " insert" << endl;
    }
@@ -110,7 +113,7 @@ public:
     // search function
     bool lookup(const T& val) const {
         bool found = false;
-        use_atomic(_) {
+        atomic(_) {
             rd_ptr<list_node<T> > curr(_, head_);
             curr = curr->next_;
             while (curr) {
@@ -119,6 +122,9 @@ public:
             }
 
             found = ((curr) && (curr->value_ == val));
+        }  end_atom
+        catch (...) {
+        cerr << __LINE__ << " lookup" << endl;
         }
         return found;
     }
@@ -126,7 +132,7 @@ public:
     // remove a node if its value == val
     void remove(const T& val)
     {
-        use_atomic(_) {
+        atomic(_) {
             // find the node whose val matches the request
             upgrd_ptr<list_node<T> > prev(_,head_);
             upgrd_ptr<list_node<T> > curr(_,prev->next_);
@@ -147,7 +153,7 @@ public:
                 prev = curr;
                 curr = prev->next_;
             }
-        }
+        }  end_atom
     }
 
 };
@@ -165,41 +171,46 @@ void create() {
         cerr << " create size " << l->size() << endl;
         //cerr << " insert " << l.get() << endl;
         //l->insert(1);
-    } catch (...) {
+    } end_atom
+    catch (...) {
         cerr << "aborted" << endl;
     }
-    //cerr << l->size() << endl;
+    cerr << " create pointer " << l.get() << endl;
 }
 void insert1() {
     //thread_initializer thi;
     atomic(_) {
         cerr << __LINE__ << " try" << endl;
         cerr << __LINE__ << " insert1 size " << l->size() << endl;
-        make_wr_ptr(_,l)->insert(1);
+        wr_ptr<test::list<int> > l_tx(_,l);
+        cerr << __LINE__ << " insert1 size " << l_tx->size() << endl;
+        int val = 1;
+        l_tx->insert(val);
         cerr << __LINE__ << " insert1 size " << l->size() << endl;
-    } catch(...) {
+    }  end_atom 
+    catch(...) {
         cerr << __LINE__ << " aborted" << endl;
     }
 }
 void insert2() {
     thread_initializer thi;
-    use_atomic(_) {
+    atomic(_) {
         make_wr_ptr(_,l)->insert(2);
-    }
+    } end_atom
 }
 
 void insert3() {
     thread_initializer thi;
-    use_atomic(_) {
+    atomic(_) {
         make_wr_ptr(_,l)->insert(3);
-    }
+    } end_atom
 }
 bool check_size(std::size_t val) {
     int res=true;
-    use_atomic(_) {
+    atomic(_) {
         //cerr << "size" <<make_rd_ptr(_,l)->size()<< endl;
         res = make_rd_ptr(_,l)->size()==val;
-    }
+    } end_atom
     return res;
 }
 int test1() {

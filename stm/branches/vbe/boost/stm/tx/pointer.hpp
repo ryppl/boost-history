@@ -23,9 +23,12 @@
 namespace boost { namespace stm { namespace tx {
 
 //-----------------------------------------------------------------------------
-// class pointer wraps a transactional_object providing builting operators
+// mixing transactional object smart pointer providing
+// typycal smart pointer operators +
+// a transparent transactional view on a transactional context.
+// a non-transactional view on a non-transactional context
+// Note: the sizeof(pointer<T>)>>>>=sizeof(T*)
 //-----------------------------------------------------------------------------
-
 template <typename T>
 class pointer : public transaction_object< pointer<T> >
 {
@@ -56,13 +59,12 @@ public:
                 tx->lock_and_abort();
                 throw aborted_transaction_exception("aborting transaction");
             }
-
             return tx->write(*this).val_;
         }
         return val_;
     }
 
-    T const * get() const {
+    T* get() const {
         transaction* tx=current_transaction();
         if (tx!=0) {
             if (tx->forced_to_abort()) {
@@ -74,10 +76,10 @@ public:
         return val_;
     }
 
-    T const * operator->() const {
+    T* operator->() const {
         return this->get();
     }
-    T const & operator*() const {
+    T& operator*() const {
         return *this->get();
     }
 
