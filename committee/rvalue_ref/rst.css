@@ -283,3 +283,11 @@ ul.auto-toc {
 
 .ins {background-color:#A0FFA0;border-bottom: 1px solid black}
 .del {background-color:#FFA0A0;text-decoration:line-through}
+
+.grammar { padding: 0 }
+
+.sub {
+	position: relative;
+	bottom: -0.5em;
+	font-size: 0.8em;
+}

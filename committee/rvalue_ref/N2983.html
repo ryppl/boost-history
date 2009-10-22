@@ -296,6 +296,14 @@ ul.auto-toc {
 .ins {background-color:#A0FFA0;border-bottom: 1px solid black}
 .del {background-color:#FFA0A0;text-decoration:line-through}
 
+.grammar { padding: 0 }
+
+.sub {
+	position: relative;
+	bottom: -0.5em;
+	font-size: 0.8em;
+}
+
 </style>
 </head>
 <body>
@@ -328,25 +336,24 @@ rst2html.py - -footnote-references=superscript \
 <li><a class="reference internal" href="#introduction" id="id6">Introduction</a></li>
 <li><a class="reference internal" href="#motivation" id="id7">Motivation</a></li>
 <li><a class="reference internal" href="#solution" id="id8">Solution</a></li>
-<li><a class="reference internal" href="#implementing-std-legacy-move" id="id9">Implementing <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt></a></li>
+<li><a class="reference internal" href="#implementing-std-move-if-noexcept" id="id9">Implementing <tt class="docutils literal"><span class="pre">std::move_if_noexcept</span></tt></a></li>
 <li><a class="reference internal" href="#an-optimization-hint" id="id10">An Optimization Hint</a></li>
 <li><a class="reference internal" href="#interactions-with-other-proposals" id="id11">Interactions with Other Proposals</a></li>
 <li><a class="reference internal" href="#existing-practice" id="id12">Existing Practice</a></li>
 <li><a class="reference internal" href="#low-hanging-fruit" id="id13">Low-Hanging Fruit</a><ul>
-<li><a class="reference internal" href="#implicit-throw-false-for-destructors" id="id14">Implicit <tt class="docutils literal"><span class="pre">throw(false)</span></tt> for Destructors</a></li>
-<li><a class="reference internal" href="#operator-may-throw-expression" id="id15">operator <tt class="docutils literal"><span class="pre">may_throw(</span></tt><em>expression</em><tt class="docutils literal"><span class="pre">)</span></tt></a></li>
+<li><a class="reference internal" href="#implicit-noexcept-true-for-destructors" id="id14">Implicit <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> for Destructors</a></li>
+<li><a class="reference internal" href="#operator-noexcept-expression" id="id15">operator <tt class="docutils literal"><span class="pre">noexcept(</span></tt><em>expression</em><tt class="docutils literal"><span class="pre">)</span></tt></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id16">Proposed Changes to Standard Wording</a><ul>
 <li><a class="reference internal" href="#exception-specifications-except-spec" id="id17">15.4 Exception specifications [except.spec]</a></li>
-<li><a class="reference internal" href="#a-13-exception-handling-gram-except" id="id18">A.13 Exception handling [gram.except]</a></li>
-<li><a class="reference internal" href="#utility-components-utility" id="id19">20.3 Utility components [utility]</a></li>
-<li><a class="reference internal" href="#forward-move-helpers-forward" id="id20">20.3.2 forward/move helpers [forward]</a></li>
-<li><a class="reference internal" href="#header-type-traits-synopsis-meta-type-synop" id="id21">20.6.2 Header <tt class="docutils literal"><span class="pre">&lt;type_traits&gt;</span></tt> synopsis [meta.type.synop]</a></li>
-<li><a class="reference internal" href="#type-properties-meta-unary-prop" id="id22">20.6.4.3 Type properties [meta.unary.prop]</a></li>
-<li><a class="reference internal" href="#deque-modifiers-deque-modifiers" id="id23">23.3.2.3 deque modifiers [deque.modifiers]</a></li>
-<li><a class="reference internal" href="#vector-capacity-vector-capacity" id="id24">23.3.6.2 vector capacity [vector.capacity]</a></li>
-<li><a class="reference internal" href="#vector-modifiers-vector-modifiers" id="id25">23.3.6.4 vector modifiers [vector.modifiers]</a></li>
+<li><a class="reference internal" href="#utility-components-utility" id="id18">20.3 Utility components [utility]</a></li>
+<li><a class="reference internal" href="#forward-move-helpers-forward" id="id19">20.3.2 forward/move helpers [forward]</a></li>
+<li><a class="reference internal" href="#header-type-traits-synopsis-meta-type-synop" id="id20">20.6.2 Header <tt class="docutils literal"><span class="pre">&lt;type_traits&gt;</span></tt> synopsis [meta.type.synop]</a></li>
+<li><a class="reference internal" href="#type-properties-meta-unary-prop" id="id21">20.6.4.3 Type properties [meta.unary.prop]</a></li>
+<li><a class="reference internal" href="#deque-modifiers-deque-modifiers" id="id22">23.3.2.3 deque modifiers [deque.modifiers]</a></li>
+<li><a class="reference internal" href="#vector-capacity-vector-capacity" id="id23">23.3.6.2 vector capacity [vector.capacity]</a></li>
+<li><a class="reference internal" href="#vector-modifiers-vector-modifiers" id="id24">23.3.6.4 vector modifiers [vector.modifiers]</a></li>
 </ul>
 </li>
 </ul>
@@ -410,7 +417,7 @@ the operation being move-enabled.  There, we know whether a throwing
 move can disturb existing guarantees.  We propose that instead of
 using <tt class="docutils literal"><span class="pre">std::move(x)</span></tt> in those cases, thus granting permission for
 the compiler to use <em>any</em> available move constructor, maintainers of
-these particular operations should use <tt class="docutils literal"><span class="pre">std::legacy_move(x)</span></tt>, which
+these particular operations should use <tt class="docutils literal"><span class="pre">std::move_if_noexcept(x)</span></tt>, which
 grants permission move <em>unless</em> it could throw and the type is
 copyable.  Unless <tt class="docutils literal"><span class="pre">x</span></tt> is a move-only type, or is known to have a
 nonthrowing move constructor, the operation would fall back to copying
@@ -437,7 +444,7 @@ void reserve(size_type n)
         try
         {
             for (;i &lt; s; ++i)
-                 new ((void*)(new_begin + i)) value_type( <strong>std::legacy_move(</strong> (*this)[i]) <strong>)</strong> );
+                 new ((void*)(new_begin + i)) value_type( <strong>std::move_if_noexcept(</strong> (*this)[i]) <strong>)</strong> );
         }
         catch(...)
         {
@@ -455,7 +462,7 @@ void reserve(size_type n)
     }
 }
 </pre>
-<p>We stress again that the use of <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt> as opposed to
+<p>We stress again that the use of <tt class="docutils literal"><span class="pre">std::move_if_noexcept</span></tt> as opposed to
 <tt class="docutils literal"><span class="pre">move</span></tt> would only be necessary under an <em>extremely</em> limited set of
 circumstances.  In particular, it would never be required in new code,
 which could simply give a <em>conditional</em> strong guarantee, e.g. “if an
@@ -463,23 +470,23 @@ exception is thrown other than by <tt class="docutils literal"><span class="pre"
 are no effects.”  We recommend that approach as best practice for new
 code.</p>
 </div>
-<div class="section" id="implementing-std-legacy-move">
-<h1><a class="toc-backref" href="#id9">Implementing <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt></a></h1>
-<p>One possible implementation of <tt class="docutils literal"><span class="pre">std::legacy_move</span></tt> might be:</p>
+<div class="section" id="implementing-std-move-if-noexcept">
+<h1><a class="toc-backref" href="#id9">Implementing <tt class="docutils literal"><span class="pre">std::move_if_noexcept</span></tt></a></h1>
+<p>One possible implementation of <tt class="docutils literal"><span class="pre">std::move_if_noexcept</span></tt> might be:</p>
 <pre class="literal-block">
 template &lt;class T&gt;
 typename conditional&lt;
-    !has_nothrow_move_constructor&lt;T&gt;::value
+    !nothrow_move_constructible&lt;T&gt;::value
     &amp;&amp; has_copy_constructor&lt;T&gt;::value,
     T const&amp;,
     T&amp;&amp;
 &gt;::type
-legacy_move(T&amp; x)
+move_if_noexcept(T&amp; x)
 {
     return std::move(x);
 }
 </pre>
-<p>We propose that <tt class="docutils literal"><span class="pre">has_nothrow_move_constructor&lt;T&gt;</span></tt> be a conservative
+<p>We propose that <tt class="docutils literal"><span class="pre">nothrow_move_constructible&lt;T&gt;</span></tt> be a conservative
 trait very much like <tt class="docutils literal"><span class="pre">has_nothrow_copy_constructor&lt;T&gt;</span></tt> from the
 current working draft; it would be identical to the proposed
 <tt class="docutils literal"><span class="pre">is_nothrow_constructible&lt;T,T&amp;&amp;&gt;</span></tt> from <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a>.  In other words, it
@@ -492,17 +499,17 @@ constructor can throw.</p>
 <p>To help the library deduce the correct result for these traits, we
 propose to add a new kind of exception-specification, spelled:</p>
 <pre class="literal-block">
-throw( <em>integral constant expression</em> )
+noexcept( <em>integral constant expression</em> )
 </pre>
 <p>The only impact of such an exception-specification is this: if a
-function decorated with <tt class="docutils literal"><span class="pre">throw(false)</span></tt> throws an exception, the
+function decorated with <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> throws an exception, the
 behavior is undefined.<a class="footnote-reference" href="#no-diagnostic" id="id4"><sup>3</sup></a> That effect is sufficient to
 allow these <em>xxx</em><tt class="docutils literal"><span class="pre">_nothrow_</span></tt><em>xxx</em> traits to report <tt class="docutils literal"><span class="pre">true</span></tt> for
-any operation decorated with <tt class="docutils literal"><span class="pre">throw(false)</span></tt>.  Class maintainers could
-label their move constructors <tt class="docutils literal"><span class="pre">throw(false)</span></tt> to indicate non-throwing
+any operation decorated with <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt>.  Class maintainers could
+label their move constructors <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> to indicate non-throwing
 behavior, and the library is permitted to take advantage of that
 labelling if it can be detected (via “compiler magic”).</p>
-<p>Note that the usefulness of <tt class="docutils literal"><span class="pre">throw(false)</span></tt> as an optimization hint
+<p>Note that the usefulness of <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> as an optimization hint
 goes way beyond the narrow case introduced by <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2855.html">N2855</a>.  In fact, it
 goes beyond move construction: when the compiler can detect
 non-throwing operations with certainty, it can optimize away a great
@@ -548,29 +555,29 @@ of this feature.  In particular, it can't express the hint shown for
 <h1><a class="toc-backref" href="#id12">Existing Practice</a></h1>
 <p>The Microsoft compiler has always treated empty
 exception-specifications as though they have the same meaning we
-propose for <tt class="docutils literal"><span class="pre">throw(false)</span></tt>.  That is, Microsoft omits the
+propose for <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt>.  That is, Microsoft omits the
 standard-mandated runtime behavior if the function throws, and it
 performs optimizations based on the assumption that the function
 doesn't throw.  This interpretation of <tt class="docutils literal"><span class="pre">throw()</span></tt> has proven to be
 successful in practice and is regarded by many as superior to the one
-in the standard.  Standardizing <tt class="docutils literal"><span class="pre">throw(false)</span></tt> gives everyone access
+in the standard.  Standardizing <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> gives everyone access
 to this optimization tool.</p>
 </div>
 <div class="section" id="low-hanging-fruit">
 <h1><a class="toc-backref" href="#id13">Low-Hanging Fruit</a></h1>
 <p>There are a couple of additional features we think the committee
 should consider if this proposal is accepted.</p>
-<div class="section" id="implicit-throw-false-for-destructors">
-<h2><a class="toc-backref" href="#id14">Implicit <tt class="docutils literal"><span class="pre">throw(false)</span></tt> for Destructors</a></h2>
+<div class="section" id="implicit-noexcept-true-for-destructors">
+<h2><a class="toc-backref" href="#id14">Implicit <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> for Destructors</a></h2>
 <p>So few destructors can throw exceptions that the default
 exception-specification for destructors could be changed from nothing
-(i.e. <tt class="docutils literal"><span class="pre">throw(true)</span></tt>) to <tt class="docutils literal"><span class="pre">throw(false)</span></tt> with only a tiny amount of code
+(i.e. <tt class="docutils literal"><span class="pre">noexcept(false)</span></tt>) to <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> with only a tiny amount of code
 breakage.  Such code is already very dangerous, and where used
 properly, ought to be a well-known “caution area” that is reasonably
 easily migrated.</p>
 </div>
-<div class="section" id="operator-may-throw-expression">
-<h2><a class="toc-backref" href="#id15">operator <tt class="docutils literal"><span class="pre">may_throw(</span></tt><em>expression</em><tt class="docutils literal"><span class="pre">)</span></tt></a></h2>
+<div class="section" id="operator-noexcept-expression">
+<h2><a class="toc-backref" href="#id15">operator <tt class="docutils literal"><span class="pre">noexcept(</span></tt><em>expression</em><tt class="docutils literal"><span class="pre">)</span></tt></a></h2>
 <p>It seems that <tt class="docutils literal"><span class="pre">has_nothrow_</span></tt><em>xxx</em> traits are proliferating (and
 not just in this proposal).  Once we have <tt class="docutils literal"><span class="pre">throw(</span></tt><em>bool-constant-expr</em><tt class="docutils literal"><span class="pre">)</span></tt> available to make the information
 available, it makes sense to generalize the traits into an operator
@@ -587,41 +594,59 @@ similar to <tt class="docutils literal"><span class="pre">sizeof</span></tt> and
 <p>1 A function declaration lists exceptions that its function might directly
 or indirectly throw by using an exception-specification as a suffix of its
 declarator.</p>
-<pre class="literal-block">
-exception-specification
-  throw ( type-id-listopt )
-  type-id-list:
-  type-id ...opt
-  type-id-list , type-id ...opt
-  <span class="ins">throw( constant-expression )</span>
-</pre>
+<blockquote>
+<p><span class="raw-html"><p><em>
+exception-specification:
+<blockquote class="grammar">
+<span class="ins">dynamic-exception-specification</span>
+<br />
+<span class="ins">noexcept-specification</span>
+</blockquote>
+<em></p></span></p>
+<p><span class="raw-html"><p><span class="ins">
+<em>dynamic-exception-specification:</em>
+</span>
+<blockquote>
+<code>throw (</code> <em>type-id-list<span class="sub">opt</span></em> <code>)</code>
+</blockquote>
+</em>
+</p></span></p>
+<p><span class="raw-html"><p><em>
+type-id-list:
+<blockquote>
+type-id ...<span class="sub">opt</span><br />
+type-id-list, type-id ...<span class="sub">opt</span>
+</blockquote>
+<em>
+</p></span></p>
+<p><span class="raw-html"><p>
+<span class="ins"><em>noexcept-specification:</em></span>
+<blockquote>
+<span class="ins"><code>noexcept (</code> <em>constant-expression<span class="sub">opt</span></em> <code>)</code></span>
+</blockquote>
+</em>
+</p></span></p>
+</blockquote>
 </blockquote>
 <p>Add these paragraphs:</p>
 <blockquote>
-<p><span class="raw-html"><span class="ins">15 In an exception-specification of
-the form <code>throw(</code> <em>constant-expression</em>
-<code>)</code>, the constant-expression shall be a constant
-expression (5.19) that can be contextually converted to
-<code>bool</code> (Clause 4).</span></span></p>
+<p><span class="raw-html"><span class="ins">15 In a noexcept-specification, the
+constant-expression, if supplied, shall be a constant expression
+(5.19) that can be contextually converted to <code>bool</code>
+(Clause 4).</span></span></p>
 <p><span class="raw-html"><span class="ins">16 If a function with the
-exception-specification <code>throw(false)</code> throws an
+noexcept-specification <code>noexcept(true)</code> throws an
 exception, the behavior is undefined.  The exception-specification
-<code>throw(false)</code> is in all other respects equivalent to
+<code>noexcept(true)</code> is in all other respects equivalent to
 <code>throw()</code>.  The exception-specification
-<code>throw(true)</code> is equivalent to omitting the exception
+<code>noexcept(false)</code> is equivalent to omitting the exception
 specification altogether.</span></span></p>
+<p><span class="raw-html"><span class="ins">17 <code>noexcept()</code> is
+equivalent to <code>noexcept(true)</code>.</span></span></p>
 </blockquote>
 </div>
-<div class="section" id="a-13-exception-handling-gram-except">
-<h2><a class="toc-backref" href="#id18">A.13 Exception handling [gram.except]</a></h2>
-<pre class="literal-block">
-exception-specification
-throw ( type-id-listopt )
-<span class="ins">throw(constant-expression)</span>
-</pre>
-</div>
 <div class="section" id="utility-components-utility">
-<h2><a class="toc-backref" href="#id19">20.3 Utility components [utility]</a></h2>
+<h2><a class="toc-backref" href="#id18">20.3 Utility components [utility]</a></h2>
 <p>Change Header <tt class="docutils literal"><span class="pre">&lt;utility&gt;</span></tt> synopsis as follows:</p>
 <pre class="literal-block">
 // 20.3.2, forward/move:
@@ -629,31 +654,31 @@ template &lt;class T&gt; struct identity;
 template &lt;class T&gt; T&amp;&amp; forward(typename identity&lt;T&gt;::type&amp;&amp;);
 template &lt;class T&gt; typename remove_reference&lt;T&gt;::type&amp;&amp; move(T&amp;&amp;);
 <span class="ins">template &lt;class T&gt; typename conditional&lt;
-  !has_nothrow_move_constructor&lt;T&gt;::value &amp;&amp; has_copy_constructor&lt;T&gt;::value,
-  T const&amp;, T&amp;&amp;&gt;::type legacy_move(T&amp; x);</span>
+  !nothrow_move_constructible&lt;T&gt;::value &amp;&amp; has_copy_constructor&lt;T&gt;::value,
+  T const&amp;, T&amp;&amp;&gt;::type move_if_noexcept(T&amp; x);</span>
 </pre>
 </div>
 <div class="section" id="forward-move-helpers-forward">
-<h2><a class="toc-backref" href="#id20">20.3.2 forward/move helpers [forward]</a></h2>
+<h2><a class="toc-backref" href="#id19">20.3.2 forward/move helpers [forward]</a></h2>
 <p>Append the following:</p>
 <blockquote>
 <pre class="literal-block">
 <span class="ins">template &lt;class T&gt; typename conditional&lt;
-  !has_nothrow_move_constructor&lt;T&gt;::value &amp;&amp; has_copy_constructor&lt;T&gt;::value,
-  T const&amp;, T&amp;&amp;&gt;::type legacy_move(T&amp; x);</span>
+  !nothrow_move_constructible&lt;T&gt;::value &amp;&amp; has_copy_constructor&lt;T&gt;::value,
+  T const&amp;, T&amp;&amp;&gt;::type move_if_noexcept(T&amp; x);</span>
 </pre>
-<p><span class="raw-html"><span class="ins">10 <em>Returns:</em> <code>t</code></span></span></p>
+<p><span class="raw-html"><span class="ins">10 <em>Returns:</em> <code>std::move(t)</code></span></span></p>
 </blockquote>
 </div>
 <div class="section" id="header-type-traits-synopsis-meta-type-synop">
-<h2><a class="toc-backref" href="#id21">20.6.2 Header <tt class="docutils literal"><span class="pre">&lt;type_traits&gt;</span></tt> synopsis [meta.type.synop]</a></h2>
+<h2><a class="toc-backref" href="#id20">20.6.2 Header <tt class="docutils literal"><span class="pre">&lt;type_traits&gt;</span></tt> synopsis [meta.type.synop]</a></h2>
 <pre class="literal-block">
 template &lt;class T&gt; struct has_nothrow_assign;
 <span class="ins">template &lt;class T&gt; struct has_move_constructor;
-template &lt;class T&gt; struct has_nothrow_move_constructor;
+template &lt;class T&gt; struct nothrow_move_constructible;
 
 template &lt;class T&gt; struct has_move_assign;
-template &lt;class T&gt; struct has_nothrow_move_assign;
+template &lt;class T&gt; struct nothrow_move_assignable;
 
 template &lt;class T&gt; struct has_copy_constructor;
 template &lt;class T&gt; struct has_default_constructor;
@@ -663,13 +688,13 @@ template &lt;class T&gt; struct has_virtual_destructor;
 </pre>
 </div>
 <div class="section" id="type-properties-meta-unary-prop">
-<h2><a class="toc-backref" href="#id22">20.6.4.3 Type properties [meta.unary.prop]</a></h2>
+<h2><a class="toc-backref" href="#id21">20.6.4.3 Type properties [meta.unary.prop]</a></h2>
 <p>Add entries to table 43:</p>
 <table border="1" class="docutils">
 <colgroup>
+<col width="31%" />
 <col width="34%" />
-<col width="29%" />
-<col width="37%" />
+<col width="34%" />
 </colgroup>
 <thead valign="bottom">
 <tr><th class="head">Template</th>
@@ -680,17 +705,14 @@ template &lt;class T&gt; struct has_virtual_destructor;
 <tbody valign="top">
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span> <span class="pre">has_move_constructor;</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> has a move
-constructor (17.3.14).</td>
+<td><tt class="docutils literal"><span class="pre">T</span></tt> has a move constructor
+(17.3.14).</td>
 <td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type.</td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span>
-<span class="pre">has_nothrow_move_constructor;</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> is a type with a move
-constructor that is known
-not to throw any
-exceptions.</td>
+<span class="pre">nothrow_move_constructible;</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">noexcept(</span> <span class="pre">T(</span> <span class="pre">make&lt;T&gt;()</span> <span class="pre">)</span> <span class="pre">)</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type.</td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
@@ -701,17 +723,14 @@ operator (17.3.13).</td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span>
-<span class="pre">has_nothrow_move_assign;</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> is a type with a move
-assignment operator that is
-known not to throw any
-exceptions.</td>
+<span class="pre">nothrow_move_assignable;</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">noexcept(</span> <span class="pre">*(T*)0</span> <span class="pre">=</span> <span class="pre">make&lt;T&gt;</span> <span class="pre">)</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type.</td>
 </tr>
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span> <span class="pre">has_copy_constructor;</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> has a copy
-constructor (12.8).</td>
+<td><tt class="docutils literal"><span class="pre">T</span></tt> has a copy constructor
+(12.8).</td>
 <td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type, an
 array of unknown bound, or
 (possibly cv-qualified) <tt class="docutils literal"><span class="pre">void.</span></tt></td>
@@ -719,8 +738,8 @@ array of unknown bound, or
 <tr><td><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">T&gt;</span>
 <span class="pre">struct</span>
 <span class="pre">has_default_constructor;</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">T</span></tt> has a default
-constructor (12.1).</td>
+<td><tt class="docutils literal"><span class="pre">T</span></tt> has a default constructor
+(12.1).</td>
 <td><tt class="docutils literal"><span class="pre">T</span></tt> shall be a complete type, an
 array of unknown bound, or
 (possibly cv-qualified) <tt class="docutils literal"><span class="pre">void.</span></tt></td>
@@ -737,7 +756,7 @@ array of unknown bound, or
 </table>
 </div>
 <div class="section" id="deque-modifiers-deque-modifiers">
-<h2><a class="toc-backref" href="#id23">23.3.2.3 deque modifiers [deque.modifiers]</a></h2>
+<h2><a class="toc-backref" href="#id22">23.3.2.3 deque modifiers [deque.modifiers]</a></h2>
 <p>Context:</p>
 <pre class="literal-block">
 iterator insert(const_iterator position, const T&amp; x);
@@ -776,15 +795,15 @@ iterator erase(const_iterator first, const_iterator last);
 or assignment operator of <tt class="docutils literal"><span class="pre">T</span></tt>.</blockquote>
 </div>
 <div class="section" id="vector-capacity-vector-capacity">
-<h2><a class="toc-backref" href="#id24">23.3.6.2 vector capacity [vector.capacity]</a></h2>
+<h2><a class="toc-backref" href="#id23">23.3.6.2 vector capacity [vector.capacity]</a></h2>
 <p>Context:</p>
 <pre class="literal-block">
 void reserve(size_type n);
 </pre>
 <p>Remove paragraph 2:</p>
 <blockquote>
-<span class="del">2 Requires: If value_type has a move constructor, that constructor shall
-not throw any exceptions.</span></blockquote>
+<span class="del">2 Requires: If value_type has a move constructor, that
+constructor shall not throw any exceptions.</span></blockquote>
 <p>Change paragraph 3 as follows:</p>
 <blockquote>
 <span class="del">3</span><span class="ins">2</span> Effects: A directive that informs a vector of a planned change in
@@ -809,7 +828,7 @@ by the move constructor of a non-CopyConstructible
 <code>T</code></span></span> there are no effects.</blockquote>
 </div>
 <div class="section" id="vector-modifiers-vector-modifiers">
-<h2><a class="toc-backref" href="#id25">23.3.6.4 vector modifiers [vector.modifiers]</a></h2>
+<h2><a class="toc-backref" href="#id24">23.3.6.4 vector modifiers [vector.modifiers]</a></h2>
 <p>Change the section as follows:</p>
 <blockquote>
 <pre class="literal-block">
@@ -876,7 +895,7 @@ from locations observable by the caller.</td></tr>
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>In particular, we are not proposing to mandate
-static checking: a <tt class="docutils literal"><span class="pre">throw(false)</span></tt> function can call a <tt class="docutils literal"><span class="pre">throw(true)</span></tt>
+static checking: a <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> function can call a <tt class="docutils literal"><span class="pre">noexcept(false)</span></tt>
 function without causing the program to become ill-formed or
 generating a diagnostic.  Generating a diagnostic in such cases
 can, of course, be implemented by any compiler as a matter of QOI.</td></tr>

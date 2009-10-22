@@ -88,7 +88,7 @@ the operation being move-enabled.  There, we know whether a throwing
 move can disturb existing guarantees.  We propose that instead of
 using ``std::move(x)`` in those cases, thus granting permission for
 the compiler to use *any* available move constructor, maintainers of
-these particular operations should use ``std::legacy_move(x)``, which
+these particular operations should use ``std::move_if_noexcept(x)``, which
 grants permission move *unless* it could throw and the type is
 copyable.  Unless ``x`` is a move-only type, or is known to have a
 nonthrowing move constructor, the operation would fall back to copying
@@ -118,7 +118,7 @@ However, ``std::vector::reserve`` could be move-enabled this way: [#default-cons
           try
           {
               for (;i < s; ++i)
-                   new ((void*)(new_begin + i)) value_type( **std::legacy_move(** (\*this)[i]) **)** );
+                   new ((void*)(new_begin + i)) value_type( **std::move_if_noexcept(** (\*this)[i]) **)** );
           }
           catch(...)
           {
@@ -137,7 +137,7 @@ However, ``std::vector::reserve`` could be move-enabled this way: [#default-cons
   }
 
 
-We stress again that the use of ``std::legacy_move`` as opposed to
+We stress again that the use of ``std::move_if_noexcept`` as opposed to
 ``move`` would only be necessary under an *extremely* limited set of
 circumstances.  In particular, it would never be required in new code,
 which could simply give a *conditional* strong guarantee, e.g. “if an
@@ -145,24 +145,24 @@ exception is thrown other than by ``T``\ 's move constructor, there
 are no effects.”  We recommend that approach as best practice for new
 code.
 
-Implementing ``std::legacy_move``
-*********************************
+Implementing ``std::move_if_noexcept``
+**************************************
 
-One possible implementation of ``std::legacy_move`` might be::
+One possible implementation of ``std::move_if_noexcept`` might be::
 
   template <class T>
   typename conditional<
-      !has_nothrow_move_constructor<T>::value
+      !nothrow_move_constructible<T>::value
       && has_copy_constructor<T>::value,
       T const&,
       T&&
   >::type
-  legacy_move(T& x)
+  move_if_noexcept(T& x)
   {
       return std::move(x);
   }
 
-We propose that ``has_nothrow_move_constructor<T>`` be a conservative
+We propose that ``nothrow_move_constructible<T>`` be a conservative
 trait very much like ``has_nothrow_copy_constructor<T>`` from the
 current working draft; it would be identical to the proposed
 ``is_nothrow_constructible<T,T&&>`` from N2953_.  In other words, it
@@ -178,18 +178,18 @@ propose to add a new kind of exception-specification, spelled:
 
 .. parsed-literal::
 
-   throw( *integral constant expression* )
+   noexcept( *integral constant expression* )
 
 The only impact of such an exception-specification is this: if a
-function decorated with ``throw(false)`` throws an exception, the
+function decorated with ``noexcept(true)`` throws an exception, the
 behavior is undefined. [#no-diagnostic]_ That effect is sufficient to
 allow these *xxx*\ ``_nothrow_``\ *xxx* traits to report ``true`` for
-any operation decorated with ``throw(false)``.  Class maintainers could
-label their move constructors ``throw(false)`` to indicate non-throwing
+any operation decorated with ``noexcept(true)``.  Class maintainers could
+label their move constructors ``noexcept(true)`` to indicate non-throwing
 behavior, and the library is permitted to take advantage of that
 labelling if it can be detected (via “compiler magic”).
 
-Note that the usefulness of ``throw(false)`` as an optimization hint
+Note that the usefulness of ``noexcept(true)`` as an optimization hint
 goes way beyond the narrow case introduced by N2855_.  In fact, it
 goes beyond move construction: when the compiler can detect
 non-throwing operations with certainty, it can optimize away a great
@@ -242,12 +242,12 @@ Existing Practice
 
 The Microsoft compiler has always treated empty
 exception-specifications as though they have the same meaning we
-propose for ``throw(false)``.  That is, Microsoft omits the
+propose for ``noexcept(true)``.  That is, Microsoft omits the
 standard-mandated runtime behavior if the function throws, and it
 performs optimizations based on the assumption that the function
 doesn't throw.  This interpretation of ``throw()`` has proven to be
 successful in practice and is regarded by many as superior to the one
-in the standard.  Standardizing ``throw(false)`` gives everyone access
+in the standard.  Standardizing ``noexcept(true)`` gives everyone access
 to this optimization tool.
 
 Low-Hanging Fruit
@@ -256,17 +256,17 @@ Low-Hanging Fruit
 There are a couple of additional features we think the committee
 should consider if this proposal is accepted.
 
-Implicit ``throw(false)`` for Destructors
-=========================================
+Implicit ``noexcept(true)`` for Destructors
+===========================================
 
 So few destructors can throw exceptions that the default
 exception-specification for destructors could be changed from nothing
-(i.e. ``throw(true)``) to ``throw(false)`` with only a tiny amount of code
+(i.e. ``noexcept(false)``) to ``noexcept(true)`` with only a tiny amount of code
 breakage.  Such code is already very dangerous, and where used
 properly, ought to be a well-known “caution area” that is reasonably
 easily migrated.
 
-operator ``may_throw(``\ *expression*\ ``)``
+operator ``noexcept(``\ *expression*\ ``)``
 ============================================
 
 It seems that ``has_nothrow_``\ *xxx* traits are proliferating (and
@@ -279,6 +279,8 @@ similar to ``sizeof`` and ``typeof`` that can give us answers about
 
 Proposed Changes to Standard Wording
 ************************************
+
+.. role:: sub
 
 .. role:: ins
 
@@ -302,40 +304,59 @@ Change paragraph 1 as follows:
   or indirectly throw by using an exception-specification as a suffix of its 
   declarator.
 
-  .. parsed-literal::
+    :raw-html:`<p><em>
+    exception-specification:
+    <blockquote class="grammar">
+    <span class="ins">dynamic-exception-specification</span>
+    <br />
+    <span class="ins">noexcept-specification</span>
+    </blockquote>
+    <em></p>`
 
-     exception-specification
-       throw ( type-id-listopt )
-       type-id-list:
-       type-id ...opt
-       type-id-list , type-id ...opt
-       :ins:`throw( constant-expression )`
+    :raw-html:`<p><span class="ins">
+    <em>dynamic-exception-specification:</em>
+    </span>
+    <blockquote>
+    <code>throw (</code> <em>type-id-list<span class="sub">opt</span></em> <code>)</code>
+    </blockquote>
+    </em>
+    </p>`
+
+    :raw-html:`<p><em>
+    type-id-list:
+    <blockquote>
+    type-id ...<span class="sub">opt</span><br />
+    type-id-list, type-id ...<span class="sub">opt</span>
+    </blockquote>
+    <em>
+    </p>`
+
+    :raw-html:`<p>
+    <span class="ins"><em>noexcept-specification:</em></span>
+    <blockquote>
+    <span class="ins"><code>noexcept (</code> <em>constant-expression<span class="sub">opt</span></em> <code>)</code></span>
+    </blockquote>
+    </em>
+    </p>`
 
 
 Add these paragraphs:
 
-    :raw-html:`<span class="ins">15 In an exception-specification of
-    the form <code>throw(</code> <em>constant-expression</em>
-    <code>)</code>, the constant-expression shall be a constant
-    expression (5.19) that can be contextually converted to
-    <code>bool</code> (Clause 4).</span>`
+    :raw-html:`<span class="ins">15 In a noexcept-specification, the
+    constant-expression, if supplied, shall be a constant expression
+    (5.19) that can be contextually converted to <code>bool</code>
+    (Clause 4).</span>`
 
     :raw-html:`<span class="ins">16 If a function with the
-    exception-specification <code>throw(false)</code> throws an
+    noexcept-specification <code>noexcept(true)</code> throws an
     exception, the behavior is undefined.  The exception-specification
-    <code>throw(false)</code> is in all other respects equivalent to
+    <code>noexcept(true)</code> is in all other respects equivalent to
     <code>throw()</code>.  The exception-specification
-    <code>throw(true)</code> is equivalent to omitting the exception
+    <code>noexcept(false)</code> is equivalent to omitting the exception
     specification altogether.</span>`
 
-A.13 Exception handling [gram.except]
-=====================================
-
-.. parsed-literal::
-
-  exception-specification
-  throw ( type-id-listopt )
-  :ins:`throw(constant-expression)`
+    :raw-html:`<span class="ins">17 <code>noexcept()</code> is
+    equivalent to <code>noexcept(true)</code>.</span>`
 
 20.3 Utility components [utility]
 =================================
@@ -349,8 +370,8 @@ Change Header ``<utility>`` synopsis as follows:
   template <class T> T&& forward(typename identity<T>::type&&); 
   template <class T> typename remove_reference<T>::type&& move(T&&);
   :ins:`template <class T> typename conditional<
-    !has_nothrow_move_constructor<T>::value && has_copy_constructor<T>::value, 
-    T const&, T&&>::type legacy_move(T& x);`
+    !nothrow_move_constructible<T>::value && has_copy_constructor<T>::value, 
+    T const&, T&&>::type move_if_noexcept(T& x);`
 
 20.3.2 forward/move helpers [forward]
 =====================================
@@ -360,10 +381,10 @@ Append the following:
   .. parsed-literal::
 
     :ins:`template <class T> typename conditional<
-      !has_nothrow_move_constructor<T>::value && has_copy_constructor<T>::value, 
-      T const&, T&&>::type legacy_move(T& x);`
+      !nothrow_move_constructible<T>::value && has_copy_constructor<T>::value, 
+      T const&, T&&>::type move_if_noexcept(T& x);`
 
-  :raw-html:`<span class="ins">10 <em>Returns:</em> <code>t</code></span>`
+  :raw-html:`<span class="ins">10 <em>Returns:</em> <code>std::move(t)</code></span>`
 
 20.6.2 Header ``<type_traits>`` synopsis [meta.type.synop]
 ==========================================================
@@ -372,10 +393,10 @@ Append the following:
 
     template <class T> struct has_nothrow_assign;
     :ins:`template <class T> struct has_move_constructor; 
-    template <class T> struct has_nothrow_move_constructor;
+    template <class T> struct nothrow_move_constructible;
 
     template <class T> struct has_move_assign; 
-    template <class T> struct has_nothrow_move_assign;
+    template <class T> struct nothrow_move_assignable;
 
     template <class T> struct has_copy_constructor; 
     template <class T> struct has_default_constructor; 
@@ -390,40 +411,41 @@ Append the following:
 
 Add entries to table 43:
 
-+--------------------------------+---------------------------+-----------------------------------+
-| Template                       |Condition                  |Preconditions                      |
-+================================+===========================+===================================+
-| ``template <class T>           |``T`` has a move           |``T`` shall be a complete type.    |
-| struct has_move_constructor;`` |constructor (17.3.14).     |                                   |
-+--------------------------------+---------------------------+-----------------------------------+
-| ``template <class T>           |``T`` is a type with a move|``T`` shall be a complete type.    |
-| struct                         |constructor that is known  |                                   |
-| has_nothrow_move_constructor;``|not to throw any           |                                   |
-|                                |exceptions.                |                                   |
-+--------------------------------+---------------------------+-----------------------------------+
-| ``template <class T>           |``T`` has a move assignment|``T`` shall be a complete type.    |
-| struct has_move_assign;``      |operator (17.3.13).        |                                   |
-+--------------------------------+---------------------------+-----------------------------------+
-| ``template <class T>           |``T`` is a type with a move|``T`` shall be a complete type.    |
-| struct                         |assignment operator that is|                                   |
-| has_nothrow_move_assign;``     |known not to throw any     |                                   |
-|                                |exceptions.                |                                   |
-+--------------------------------+---------------------------+-----------------------------------+
-| ``template <class T>           |``T`` has a copy           |``T`` shall be a complete type, an |
-| struct has_copy_constructor;`` |constructor (12.8).        |array of unknown bound, or         | 
-|                                |                           |(possibly cv-qualified) ``void.``  |
-|                                |                           |                                   |
-+--------------------------------+---------------------------+-----------------------------------+
-| ``template <class T>           |``T`` has a default        |``T`` shall be a complete type, an |
-| struct                         |constructor (12.1).        |array of unknown bound, or         |
-| has_default_constructor;``     |                           |(possibly cv-qualified) ``void.``  |
-|                                |                           |                                   |
-+--------------------------------+---------------------------+-----------------------------------+
-| ``template <class T>           |``T`` has a copy assignment|``T`` shall be a complete type, an |
-| struct has_copy_assign;``      |operator (12.8).           |array of unknown bound, or         |
-|                                |                           |(possibly cv-qualified) ``void``.  |
-|                                |                           |                                   |
-+--------------------------------+---------------------------+-----------------------------------+
++--------------------------------+-----------------------------------+-----------------------------------+
+| Template                       |Condition                          |Preconditions                      |
++================================+===================================+===================================+
+| ``template <class T>           |``T`` has a move constructor       |``T`` shall be a complete type.    |
+| struct has_move_constructor;`` |(17.3.14).                         |                                   |
++--------------------------------+-----------------------------------+-----------------------------------+
+| ``template <class T>           |``noexcept( T( make<T>() ) )``     |``T`` shall be a complete type.    |
+| struct                         |                                   |                                   |
+| nothrow_move_constructible;``  |                                   |                                   |
+|                                |                                   |                                   |
+|                                |                                   |                                   |
++--------------------------------+-----------------------------------+-----------------------------------+
+| ``template <class T>           |``T`` has a move assignment        |``T`` shall be a complete type.    |
+| struct has_move_assign;``      |operator (17.3.13).                |                                   |
++--------------------------------+-----------------------------------+-----------------------------------+
+| ``template <class T>           |``noexcept( *(T*)0 = make<T> )``   |``T`` shall be a complete type.    |
+| struct                         |                                   |                                   |
+| nothrow_move_assignable;``     |                                   |                                   |
+|                                |                                   |                                   |
++--------------------------------+-----------------------------------+-----------------------------------+
+| ``template <class T>           |``T`` has a copy constructor       |``T`` shall be a complete type, an | 
+| struct has_copy_constructor;`` |(12.8).                            |array of unknown bound, or         |
+|                                |                                   |(possibly cv-qualified) ``void.``  |
+|                                |                                   |                                   |
++--------------------------------+-----------------------------------+-----------------------------------+
+| ``template <class T>           |``T`` has a default constructor    |``T`` shall be a complete type, an |
+| struct                         |(12.1).                            |array of unknown bound, or         |
+| has_default_constructor;``     |                                   |(possibly cv-qualified) ``void.``  |
+|                                |                                   |                                   |
++--------------------------------+-----------------------------------+-----------------------------------+
+| ``template <class T>           |``T`` has a copy assignment        |``T`` shall be a complete type, an |
+| struct has_copy_assign;``      |operator (12.8).                   |array of unknown bound, or         |
+|                                |                                   |(possibly cv-qualified) ``void``.  |
+|                                |                                   |                                   |
++--------------------------------+-----------------------------------+-----------------------------------+
 
 23.3.2.3 deque modifiers [deque.modifiers]
 ==========================================
@@ -476,8 +498,8 @@ Context::
 
 Remove paragraph 2:
 
-    :del:`2 Requires: If value_type has a move constructor, that constructor shall
-    not throw any exceptions.`
+    :del:`2 Requires: If value_type has a move constructor, that
+    constructor shall not throw any exceptions.`
 
 Change paragraph 3 as follows:
 
@@ -573,7 +595,7 @@ Change paragraph 6 as follows:
    from locations observable by the caller.
 
 .. [#no-diagnostic] In particular, we are not proposing to mandate
-   static checking: a ``throw(false)`` function can call a ``throw(true)``
+   static checking: a ``noexcept(true)`` function can call a ``noexcept(false)``
    function without causing the program to become ill-formed or
    generating a diagnostic.  Generating a diagnostic in such cases
    can, of course, be implemented by any compiler as a matter of QOI.
