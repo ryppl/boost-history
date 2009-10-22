@@ -343,7 +343,7 @@ Modify paragraph 13 as follows:
 
   3 :ins:`The result of the noexcept operator is true if evaluating the expression would not require:`
 
-  * :raw-html:`<span class="ins">A call to a function that does not have an empty <i>exception-specification</i>.</span>`
+  * :raw-html:`<span class="ins">A call to a function that does not have an empty <i>exception-specification</i> ([except.spec]).</span>`
 
   * :raw-html:`<span class="ins">A <i>throw-expression</i> ([except.throw])</span>`
 
@@ -358,7 +358,7 @@ Modify the fifth bullet of paragraph 4 as follows:
 
   4 A *pack expansion* is a sequence of tokens that names one or more parameter packs, followed by an ellipsis. The sequence of tokens is called the *pattern of the expansion*; its syntax depends on the context in which the expansion occurs. Pack expansions can occur in the following contexts:
 
-    * In :raw-html:`a<span class="del">n</span> <span class="ins">dynamic-</span>exception-specification` (15.4); the pattern is a *type-id*.
+    * In :raw-html:`a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i>` (15.4); the pattern is a *type-id*.
 
 14.7.2.2 Type-dependent expressions [temp.dep.expr]
 ===================================================
@@ -431,7 +431,7 @@ Change the following paragraphs as follows:
 
   .. comment :raw-html:`<span class="ins">, if its <i>noexcept-specification</i> is <code>noexcept(false)</code>, or if the function has no <i>exception-specification</i>`.
 
-  11 A function with no *exception-specification* :raw-html:`<span class="ins">,or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>false</code>,</span>` allows all exceptions. :raw-html:`<span class="ins">An <i>exception-specification</i> is <i>empty</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>true</code>.</span>` A function with an empty *exception-specification* :raw-html:`<span class="del">, <code>throw()</code>,</span>` does not allow any exceptions.
+  11 A function with no *exception-specification* :raw-html:`<span class="ins">, or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>false</code>,</span>` allows all exceptions. :raw-html:`<span class="ins">An <i>exception-specification</i> is <i>empty</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>true</code>.</span>` A function with an empty *exception-specification* :raw-html:`<span class="del">, <code>throw()</code>,</span>` does not allow any exceptions.
 
   14 In :raw-html:`a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i>,` a *type-id* followed by an ellipsis is a pack expansion (14.6.3).
 

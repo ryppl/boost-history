@@ -633,7 +633,7 @@ unary-expression:
 <p>2  <span class="raw-html"><span class="ins">The result of the noexcept operator is a constant of type <code>bool</code>.</span></span></p>
 <p>3 <span class="ins">The result of the noexcept operator is true if evaluating the expression would not require:</span></p>
 <ul class="simple">
-<li><span class="raw-html"><span class="ins">A call to a function that does not have an empty <i>exception-specification</i>.</span></span></li>
+<li><span class="raw-html"><span class="ins">A call to a function that does not have an empty <i>exception-specification</i> ([except.spec]).</span></span></li>
 <li><span class="raw-html"><span class="ins">A <i>throw-expression</i> ([except.throw])</span></span></li>
 <li><span class="raw-html"><span class="ins">A <code>dynamic_cast</code> to a reference type that is not a derived-to-base conversion ([expr.dynamic.cast]).</span></span></li>
 </ul>
@@ -647,7 +647,7 @@ unary-expression:
 <p>4 A <em>pack expansion</em> is a sequence of tokens that names one or more parameter packs, followed by an ellipsis. The sequence of tokens is called the <em>pattern of the expansion</em>; its syntax depends on the context in which the expansion occurs. Pack expansions can occur in the following contexts:</p>
 <blockquote>
 <ul class="simple">
-<li>In <span class="raw-html">a<span class="del">n</span> <span class="ins">dynamic-</span>exception-specification</span> (15.4); the pattern is a <em>type-id</em>.</li>
+<li>In <span class="raw-html">a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i></span> (15.4); the pattern is a <em>type-id</em>.</li>
 </ul>
 </blockquote>
 </blockquote>
@@ -715,7 +715,7 @@ type-id-list, type-id ...<span class="sub">opt</span>
 </blockquote>
 <p>7 A function is said to <em>allow</em> an exception of type <tt class="docutils literal"><span class="pre">E</span></tt> if its <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i></span> contains a type <tt class="docutils literal"><span class="pre">T</span></tt> for which a handler of type <tt class="docutils literal"><span class="pre">T</span></tt> would be a match (15.3) for an exception of type <tt class="docutils literal"><span class="pre">E</span></tt>.</p>
 <!-- comment :raw-html:`<span class="ins">, if its <i>noexcept-specification</i> is <code>noexcept(false)</code>, or if the function has no <i>exception-specification</i>`. -->
-<p>11 A function with no <em>exception-specification</em> <span class="raw-html"><span class="ins">,or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>false</code>,</span></span> allows all exceptions. <span class="raw-html"><span class="ins">An <i>exception-specification</i> is <i>empty</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>true</code>.</span></span> A function with an empty <em>exception-specification</em> <span class="raw-html"><span class="del">, <code>throw()</code>,</span></span> does not allow any exceptions.</p>
+<p>11 A function with no <em>exception-specification</em> <span class="raw-html"><span class="ins">, or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>false</code>,</span></span> allows all exceptions. <span class="raw-html"><span class="ins">An <i>exception-specification</i> is <i>empty</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>true</code>.</span></span> A function with an empty <em>exception-specification</em> <span class="raw-html"><span class="del">, <code>throw()</code>,</span></span> does not allow any exceptions.</p>
 <p>14 In <span class="raw-html">a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i>,</span> a <em>type-id</em> followed by an ellipsis is a pack expansion (14.6.3).</p>
 </blockquote>
 <p>Add these paragraphs:</p>
