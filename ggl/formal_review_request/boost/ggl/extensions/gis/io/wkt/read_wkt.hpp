@@ -15,6 +15,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/concept/requires.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
 

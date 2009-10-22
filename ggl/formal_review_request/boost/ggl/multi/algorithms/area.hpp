@@ -19,12 +19,22 @@ namespace ggl {
 #ifndef DOXYGEN_NO_DISPATCH
 namespace dispatch
 {
-    template <typename MultiGeometry, order_selector Order, typename Strategy>
-    struct area<multi_polygon_tag, MultiGeometry, Order, Strategy>
-        : detail::multi_sum<double, MultiGeometry, Strategy,
-            detail::area::polygon_area<
-                typename boost::range_value<MultiGeometry>::type, Order, Strategy> >
-    {};
+template <typename MultiGeometry, order_selector Order, typename Strategy>
+struct area<multi_polygon_tag, MultiGeometry, Order, Strategy>
+    : detail::multi_sum
+        <
+            typename Strategy::return_type, 
+            MultiGeometry, 
+            Strategy,
+            area
+                <
+                    polygon_tag,
+                    typename boost::range_value<MultiGeometry>::type, 
+                    Order, 
+                    Strategy
+                > 
+    >
+{};
 
 
 } // namespace dispatch

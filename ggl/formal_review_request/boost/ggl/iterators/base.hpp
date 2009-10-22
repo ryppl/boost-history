@@ -12,6 +12,7 @@
 #include <boost/iterator.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/iterator/iterator_categories.hpp>
+#include <boost/mpl/if.hpp>
 
 #ifndef DOXYGEN_NO_DETAIL
 namespace ggl { namespace detail { namespace iterators {

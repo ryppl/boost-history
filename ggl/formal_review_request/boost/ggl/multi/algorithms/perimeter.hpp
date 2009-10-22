@@ -6,10 +6,13 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_MULTI_PERIMETER_HPP
-#define GGL_MULTI_PERIMETER_HPP
+#ifndef GGL_MULTI_ALGORITHMS_PERIMETER_HPP
+#define GGL_MULTI_ALGORITHMS_PERIMETER_HPP
 
 #include <ggl/algorithms/perimeter.hpp>
+
+#include <ggl/multi/core/tags.hpp>
+
 #include <ggl/multi/algorithms/detail/multi_sum.hpp>
 
 namespace ggl
@@ -18,10 +21,21 @@ namespace ggl
 #ifndef DOXYGEN_NO_DISPATCH
 namespace dispatch
 {
-    template <typename MG, typename S>
-    struct perimeter<multi_polygon_tag, MG, S>
-            : detail::multi_sum<double, MG, S,
-                    detail::perimeter::polygon_perimeter<typename boost::range_value<MG>::type, S> > {};
+template <typename MultiPolygon, typename Strategy>
+struct perimeter<multi_polygon_tag, MultiPolygon, Strategy>
+    : detail::multi_sum
+        <
+            typename length_result<MultiPolygon>::type, 
+            MultiPolygon, 
+            Strategy,
+            perimeter
+                <
+                    polygon_tag,
+                    typename boost::range_value<MultiPolygon>::type, 
+                    Strategy
+                >
+        > 
+{};
 
 } // namespace dispatch
 #endif
@@ -30,4 +44,4 @@ namespace dispatch
 } // namespace ggl
 
 
-#endif // GGL_MULTI_PERIMETER_HPP
+#endif // GGL_MULTI_ALGORITHMS_PERIMETER_HPP

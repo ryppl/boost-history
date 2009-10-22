@@ -16,12 +16,12 @@ namespace ggl
 namespace detail
 {
 
-template<typename ReturnValue, typename Geometry, typename Strategy>
+template<typename ReturnType, typename Geometry, typename Strategy>
 struct calculate_null
 {
-    static inline ReturnValue apply(Geometry const& , Strategy const&)
+    static inline ReturnType apply(Geometry const& , Strategy const&)
     {
-        return ReturnValue();
+        return ReturnType();
     }
 };
 

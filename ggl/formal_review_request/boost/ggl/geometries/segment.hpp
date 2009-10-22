@@ -21,38 +21,40 @@ namespace ggl
 {
 
 /*!
-\brief Class segment: small containing two (templatized) point references
+\brief Class segment: small class containing two (templatized) point references
 \ingroup Geometry
 \details From Wikipedia: In geometry, a line segment is a part of a line that is bounded
  by two distinct end points, and contains every point on the line between its end points.
 \note The structure is like std::pair, and can often be used interchangeable.
-So points are public available. We cannot derive from std::pair<P&, P&> because of
-reference assignments. Points are not const and might be changed by the algorithm
-(used in intersection_linestring).
-\tparam P point type of the segment
+Difference is that it refers to points, does not have points. 
+\note Like std::pair, points are public available. 
+\note type is const or non const, so ggl::segment<P> or ggl::segment<const P>
+\note We cannot derive from std::pair<P&, P&> because of
+reference assignments. 
+\tparam ConstOrNonConstPoint point type of the segment, maybe a point or a const point
 */
-template<typename P>
-struct segment
+template<typename ConstOrNonConstPoint>
+class segment
 {
-private:
-
-    BOOST_CONCEPT_ASSERT( (typename boost::mpl::if_
-        <
-            boost::is_const<P>,
-            concept::ConstPoint<P>,
-            concept::Point<P>
-        >
+    BOOST_CONCEPT_ASSERT( (
+        typename boost::mpl::if_
+            <
+                boost::is_const<ConstOrNonConstPoint>,
+                concept::Point<ConstOrNonConstPoint>,
+                concept::ConstPoint<ConstOrNonConstPoint>
+            >
     ) );
+
+    typedef ConstOrNonConstPoint point_type;
 
 public:
 
-    typedef P point_type;
+    point_type& first;
+    point_type& second;
 
-    P& first;
-    P& second;
-
-    inline segment(P& p1, P& p2)
-        : first(p1), second(p2)
+    inline segment(point_type& p1, point_type& p2)
+        : first(p1)
+        , second(p2)
     {}
 };
 
@@ -61,39 +63,50 @@ public:
 namespace traits
 {
 
-template <typename P>
-struct tag< segment<P> >
+template <typename ConstOrNonConstPoint>
+struct tag<segment<ConstOrNonConstPoint> >
 {
     typedef segment_tag type;
 };
 
-template <typename P>
-struct point_type<segment<P> >
+template <typename ConstOrNonConstPoint>
+struct point_type<segment<ConstOrNonConstPoint> >
 {
-    typedef P type;
+    typedef ConstOrNonConstPoint type;
 };
 
-template <typename P, std::size_t I, std::size_t D>
-struct indexed_access<segment<P>, I, D>
+template <typename ConstOrNonConstPoint, std::size_t Dimension>
+struct indexed_access<segment<ConstOrNonConstPoint>, 0, Dimension>
 {
-    typedef segment<P> segment_type;
+    typedef segment<ConstOrNonConstPoint> segment_type;
     typedef typename ggl::coordinate_type<segment_type>::type coordinate_type;
 
     static inline coordinate_type get(segment_type const& s)
     {
-        return (I == 0 ? ggl::get<D>(s.first) : ggl::get<D>(s.second));
+        return ggl::get<Dimension>(s.first);
     }
 
     static inline void set(segment_type& s, coordinate_type const& value)
     {
-        if (I == 0)
-        {
-            ggl::set<D>(s.first, value);
-        }
-        else
-        {
-            ggl::set<D>(s.second, value);
-        }
+        ggl::set<Dimension>(s.first, value);
+    }
+};
+
+
+template <typename ConstOrNonConstPoint, std::size_t Dimension>
+struct indexed_access<segment<ConstOrNonConstPoint>, 1, Dimension>
+{
+    typedef segment<ConstOrNonConstPoint> segment_type;
+    typedef typename ggl::coordinate_type<segment_type>::type coordinate_type;
+
+    static inline coordinate_type get(segment_type const& s)
+    {
+        return ggl::get<Dimension>(s.second);
+    }
+
+    static inline void set(segment_type& s, coordinate_type const& value)
+    {
+        ggl::set<Dimension>(s.second, value);
     }
 };
 

@@ -22,6 +22,7 @@
 #include <ggl/core/cs.hpp>
 #include <ggl/core/concepts/point_concept.hpp>
 #include <ggl/strategies/strategies.hpp>
+#include <ggl/strategies/length_result.hpp>
 
 /*!
 \defgroup length length calculation
@@ -39,6 +40,8 @@ Example showing length calculation
 namespace ggl
 {
 
+
+
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail { namespace length {
 
@@ -46,7 +49,8 @@ namespace detail { namespace length {
 template<typename Segment, typename Strategy>
 struct segment_length
 {
-    static inline double apply(Segment const& segment, Strategy const& strategy)
+    static inline typename length_result<Segment>::type apply(
+            Segment const& segment, Strategy const& strategy)
     {
         // BSG 10 APR 2009
         // TODO: the segment concept has to be such that it is easy to return a point from it.
@@ -62,21 +66,12 @@ struct segment_length
 template<typename Range, typename Strategy>
 struct range_length
 {
-    static inline double apply(Range const& range, Strategy const& strategy)
+    typedef typename length_result<Range>::type return_type;
+
+    static inline return_type apply(
+            Range const& range, Strategy const& strategy)
     {
-        typedef typename ggl::coordinate_type<Range>::type coordinate_type;
-
-        // Because result is square-rooted, for integer, the cast should
-        // go to double and NOT to T
-        typedef typename
-            boost::mpl::if_c
-            <
-                boost::is_integral<coordinate_type>::type::value,
-                double,
-                coordinate_type
-            >::type calculation_type;
-
-        calculation_type sum = 0.0;
+        return_type sum = return_type();
 
         typedef typename boost::range_const_iterator<Range>::type iterator_type;
         iterator_type it = boost::begin(range);
@@ -103,25 +98,38 @@ namespace dispatch
 {
 
 
-template <typename Tag, typename G, typename S>
-struct length : detail::calculate_null<double, G, S>
+template <typename Tag, typename Geometry, typename Strategy>
+struct length : detail::calculate_null
+    <
+        typename length_result<Geometry>::type, 
+        Geometry, 
+        Strategy
+    >
 {};
 
 
-template <typename G, typename S>
-struct length<linestring_tag, G, S>
-    : detail::length::range_length<G, S>
+template <typename Geometry, typename Strategy>
+struct length<linestring_tag, Geometry, Strategy>
+    : detail::length::range_length<Geometry, Strategy>
 {};
 
 
 // RING: length is currently 0.0 but it might be argued that it is the "perimeter"
-template <typename G, typename S>
-struct length<segment_tag, G, S> : detail::length::segment_length<G, S>
+
+
+template <typename Geometry, typename Strategy>
+struct length<segment_tag, Geometry, Strategy> 
+    : detail::length::segment_length<Geometry, Strategy>
 {};
 
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
+
+
+
+
+
 
 /*!
     \brief Calculate length of a geometry
@@ -135,10 +143,11 @@ struct length<segment_tag, G, S> : detail::length::segment_length<G, S>
     \line {
     \until }
  */
-template<typename G>
-inline double length(const G& geometry)
+template<typename Geometry>
+inline typename length_result<Geometry>::type length(
+        Geometry const& geometry)
 {
-    typedef typename point_type<G>::type point_type;
+    typedef typename point_type<Geometry>::type point_type;
     typedef typename cs_tag<point_type>::type cs_tag;
     typedef typename strategy_distance
         <
@@ -150,8 +159,8 @@ inline double length(const G& geometry)
 
     return dispatch::length
         <
-            typename tag<G>::type,
-            G,
+            typename tag<Geometry>::type,
+            Geometry,
             strategy_type
         >::apply(geometry, strategy_type());
 }
@@ -170,10 +179,16 @@ inline double length(const G& geometry)
     \line {
     \until }
  */
-template<typename G, typename S>
-inline double length(G const& geometry, S const& strategy)
+template<typename Geometry, typename Strategy>
+inline typename length_result<Geometry>::type length(
+        Geometry const& geometry, Strategy const& strategy)
 {
-    return dispatch::length<typename tag<G>::type, G, S>::apply(geometry, strategy);
+    return dispatch::length
+        <   
+            typename tag<Geometry>::type, 
+            Geometry, 
+            Strategy
+        >::apply(geometry, strategy);
 }
 
 } // namespace ggl

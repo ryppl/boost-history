@@ -48,31 +48,31 @@ struct c_array_tag<true>
 #endif // DOXYGEN_NO_DETAIL
 
 // Assign the point-tag, preventing arrays of points getting a point-tag
-template <typename T, std::size_t N>
-struct tag<T[N]> : detail::c_array_tag<boost::is_arithmetic<T>::value> {};
+template <typename CoordinateType, std::size_t DimensionCount>
+struct tag<CoordinateType[DimensionCount]> 
+    : detail::c_array_tag<boost::is_arithmetic<CoordinateType>::value> {};
 
-template <typename T, std::size_t N>
-struct coordinate_type<T[N]>
+template <typename CoordinateType, std::size_t DimensionCount>
+struct coordinate_type<CoordinateType[DimensionCount]>
 {
-    typedef T type;
+    typedef CoordinateType type;
 };
 
-template <typename T, std::size_t N>
-struct dimension<T[N]>: boost::mpl::int_<N> {};
+template <typename CoordinateType, std::size_t DimensionCount>
+struct dimension<CoordinateType[DimensionCount]>: boost::mpl::int_<DimensionCount> {};
 
-template <typename T, std::size_t N>
-struct access<T[N]>
+template <typename CoordinateType, std::size_t DimensionCount, std::size_t Dimension>
+struct access<CoordinateType[DimensionCount], Dimension>
 {
-    template <std::size_t I>
-    static inline T get(const T p[N])
+    static inline CoordinateType get(const CoordinateType p[DimensionCount])
     {
-        return p[I];
+        return p[Dimension];
     }
 
-    template <std::size_t I>
-    static inline void set(T p[N], const T& value)
+    static inline void set(CoordinateType p[DimensionCount], 
+        CoordinateType const& value)
     {
-        p[I] = value;
+        p[Dimension] = value;
     }
 };
 

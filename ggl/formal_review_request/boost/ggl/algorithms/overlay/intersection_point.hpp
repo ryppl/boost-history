@@ -209,21 +209,19 @@ namespace traits
         typedef point_tag type;
     };
 
-    template <typename P>
-    struct access<ggl::detail::intersection::intersection_point<P> >
+    template <typename P, std::size_t Dimension>
+    struct access<ggl::detail::intersection::intersection_point<P>, Dimension>
     {
-        template <int Index>
         static inline typename coordinate_type<P>::type get(
                 ggl::detail::intersection::intersection_point<P> const& p)
         {
-            return ggl::get<Index>(p.point);
+            return ggl::get<Dimension>(p.point);
         }
 
-        template <int Index>
         static inline void set(ggl::detail::intersection::intersection_point<P>& p,
                 typename coordinate_type<P>::type const& value)
         {
-            ggl::set<Index>(p.point, value);
+            ggl::set<Dimension>(p.point, value);
         }
     };
 

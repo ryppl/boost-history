@@ -80,40 +80,69 @@ private:
 #ifndef DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 namespace traits
 {
-template <typename T, std::size_t D, typename C>
-struct tag<point<T, D, C> >
+template
+<
+    typename CoordinateType,
+    std::size_t DimensionCount,
+    typename CoordinateSystem
+>
+struct tag<point<CoordinateType, DimensionCount, CoordinateSystem> >
 {
     typedef point_tag type;
 };
 
-template<typename T, std::size_t D, typename C>
-struct coordinate_type<point<T, D, C> >
+template
+<
+    typename CoordinateType,
+    std::size_t DimensionCount,
+    typename CoordinateSystem
+>
+struct coordinate_type<point<CoordinateType, DimensionCount, CoordinateSystem> >
 {
-    typedef T type;
+    typedef CoordinateType type;
 };
 
-template<typename T, std::size_t D, typename C>
-struct coordinate_system<point<T, D, C> >
+template
+<
+    typename CoordinateType,
+    std::size_t DimensionCount,
+    typename CoordinateSystem
+>
+struct coordinate_system<point<CoordinateType, DimensionCount, CoordinateSystem> >
 {
-    typedef C type;
+    typedef CoordinateSystem type;
 };
 
-template<typename T, std::size_t D, typename C>
-struct dimension<point<T, D, C> > : boost::mpl::int_<D> {};
+template
+<
+    typename CoordinateType,
+    std::size_t DimensionCount,
+    typename CoordinateSystem
+>
+struct dimension<point<CoordinateType, DimensionCount, CoordinateSystem> >
+    : boost::mpl::int_<DimensionCount>
+{};
 
-template<typename T, std::size_t D, typename C>
-struct access<point<T, D, C> >
+template
+<
+    typename CoordinateType,
+    std::size_t DimensionCount,
+    typename CoordinateSystem,
+    std::size_t Dimension
+>
+struct access<point<CoordinateType, DimensionCount, CoordinateSystem>, Dimension>
 {
-    template <std::size_t I>
-    static inline T get(point<T, D, C> const& p)
+    static inline CoordinateType get(
+        point<CoordinateType, DimensionCount, CoordinateSystem> const& p)
     {
-        return p.template get<I>();
+        return p.template get<Dimension>();
     }
 
-    template <std::size_t I>
-    static inline void set(point<T, D, C>& p, T const& value)
+    static inline void set(
+        point<CoordinateType, DimensionCount, CoordinateSystem>& p,
+        CoordinateType const& value)
     {
-        p.template set<I>(value);
+        p.template set<Dimension>(value);
     }
 };
 

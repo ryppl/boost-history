@@ -70,53 +70,51 @@ private:
 namespace traits
 {
 
-template <typename P, typename T>
-struct tag< nsphere<P, T> >
+template <typename Point, typename RadiusType>
+struct tag< nsphere<Point, RadiusType> >
 {
     typedef nsphere_tag type;
 };
 
-template <typename P, typename T>
-struct point_type<nsphere<P, T> >
+template <typename Point, typename RadiusType>
+struct point_type<nsphere<Point, RadiusType> >
 {
-    typedef P type;
+    typedef Point type;
 };
 
-template <typename P, typename T>
-struct radius_type<nsphere<P, T> >
+template <typename Point, typename RadiusType>
+struct radius_type<nsphere<Point, RadiusType> >
 {
-    typedef T type;
+    typedef RadiusType type;
 };
 
-template <typename P, typename T>
-struct access<nsphere<P, T> >
+template <typename Point, typename CoordinateType, std::size_t Dimension>
+struct access<nsphere<Point, CoordinateType>,  Dimension>
 {
-    typedef nsphere<P, T> nsphere_type;
+    typedef nsphere<Point, CoordinateType> nsphere_type;
 
-    template <std::size_t D>
-    static inline typename ggl::coordinate_type<nsphere_type>::type get(nsphere_type const& s)
+    static inline CoordinateType get(nsphere_type const& s)
     {
-        return ggl::get<D>(s.center());
+        return ggl::get<Dimension>(s.center());
     }
 
-    template <std::size_t D>
-    static inline void set(nsphere_type& s, typename ggl::coordinate_type<nsphere_type>::type const& value)
+    static inline void set(nsphere_type& s, CoordinateType const& value)
     {
-        ggl::set<D>(s.center(), value);
+        ggl::set<Dimension>(s.center(), value);
     }
 };
 
-template <typename P, typename T>
-struct radius_access<nsphere<P, T>, T, 0>
+template <typename Point, typename RadiusType>
+struct radius_access<nsphere<Point, RadiusType>, RadiusType, 0>
 {
-    typedef nsphere<P, T> nsphere_type;
+    typedef nsphere<Point, RadiusType> nsphere_type;
 
-    static inline T get(nsphere_type const& s)
+    static inline RadiusType get(nsphere_type const& s)
     {
         return s.radius();
     }
 
-    static inline void set(nsphere_type& s, T const& value)
+    static inline void set(nsphere_type& s, RadiusType const& value)
     {
         s.radius(value);
     }

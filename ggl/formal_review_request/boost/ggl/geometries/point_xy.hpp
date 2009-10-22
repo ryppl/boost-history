@@ -50,13 +50,6 @@ public:
     /// Set y-value
     inline void y(T const& v)
     { this->template set<1>(v); }
-
-    /// Compare two points
-    //inline bool operator<(point_xy const& other) const
-    //{
-    //    return math::equals(x(), other.x()) ? y() < other.y() : x() < other.x();
-    //}
-
 };
 
 // Adapt the point_xy to the concept
@@ -64,40 +57,42 @@ public:
 namespace traits
 {
 
-template <typename T, typename C>
-struct tag<point_xy<T, C> >
+template <typename CoordinateType, typename CoordinateSystem>
+struct tag<point_xy<CoordinateType, CoordinateSystem> >
 {
     typedef point_tag type;
 };
 
-template<typename T, typename C>
-struct coordinate_type<point_xy<T, C> >
+template<typename CoordinateType, typename CoordinateSystem>
+struct coordinate_type<point_xy<CoordinateType, CoordinateSystem> >
 {
-    typedef T type;
+    typedef CoordinateType type;
 };
 
-template<typename T, typename C>
-struct coordinate_system<point_xy<T, C> >
+template<typename CoordinateType, typename CoordinateSystem>
+struct coordinate_system<point_xy<CoordinateType, CoordinateSystem> >
 {
-    typedef C type;
+    typedef CoordinateSystem type;
 };
 
-template<typename T, typename C>
-struct dimension<point_xy<T, C> > : boost::mpl::int_<2> {};
+template<typename CoordinateType, typename CoordinateSystem>
+struct dimension<point_xy<CoordinateType, CoordinateSystem> > 
+    : boost::mpl::int_<2> 
+{};
 
-template<typename T, typename C>
-struct access<point_xy<T, C> >
+template<typename CoordinateType, typename CoordinateSystem, std::size_t Dimension>
+struct access<point_xy<CoordinateType, CoordinateSystem>, Dimension >
 {
-    template <std::size_t I>
-    static inline T get(point_xy<T, C> const& p)
+    static inline CoordinateType get(
+        point_xy<CoordinateType, CoordinateSystem> const& p)
     {
-        return p.template get<I>();
+        return p.template get<Dimension>();
     }
 
-    template <std::size_t I>
-    static inline void set(point_xy<T, C>& p, T const& value)
+    static inline void set(point_xy<CoordinateType, CoordinateSystem>& p, 
+        CoordinateType const& value)
     {
-        p.template set<I>(value);
+        p.template set<Dimension>(value);
     }
 };
 

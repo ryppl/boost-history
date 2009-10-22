@@ -33,29 +33,30 @@ namespace traits
     \par Geometries:
         - point
         - n-sphere (circle,sphere) for their center
-    \par Specializations should provide:
-        - static inline T get<I>(const G&)
-        - static inline void set<I>(G&, const T&)
-    \tparam G geometry
+    \par Specializations should provide, per Dimension
+        - static inline T get(const G&)
+        - static inline void set(G&, T const&)
+    \tparam Geometry geometry-type
+    \tparam Dimension dimension to access
 */
-template <typename G>
+template <typename Geometry, std::size_t Dimension>
 struct access {};
 
 
 /*!
     \brief Traits class defining "get" and "set" to get and set point coordinate values
-    \tparam G geometry (box, segment)
-    \tparam I index (min_corner/max_corner for box, 0/1 for segment)
-    \tparam D dimension
+    \tparam Geometry geometry (box, segment)
+    \tparam Index index (min_corner/max_corner for box, 0/1 for segment)
+    \tparam Dimension dimension
     \par Geometries:
         - box
         - segment
     \par Specializations should provide:
         - static inline T get(const G&)
-        - static inline void set(G&, const T&)
+        - static inline void set(G&, T const&)
     \ingroup traits
 */
-template <typename G, std::size_t I, std::size_t D>
+template <typename Geometry, std::size_t Index, std::size_t Dimension>
 struct indexed_access {};
 
 
@@ -72,7 +73,7 @@ struct indexed_access {};
     \par Specializations should provide:
         - value (defaults to true)
  */
-template <typename G>
+template <typename Geometry>
 struct use_std
 {
     static const bool value = true;
@@ -84,69 +85,95 @@ struct use_std
 #ifndef DOXYGEN_NO_DISPATCH
 namespace core_dispatch
 {
-template <typename Tag, typename G, typename T, std::size_t D>
+
+template 
+<
+    typename Tag, 
+    typename Geometry, 
+    typename 
+    CoordinateType, std::size_t Dimension
+>
 struct access
 {
     //static inline T get(const G& ) {}
-    //static inline void set(G& g, const T& value) {}
+    //static inline void set(G& g, T const& value) {}
 };
 
-template <typename Tag, typename G, typename T, std::size_t I, std::size_t D>
+template 
+<
+    typename Tag, 
+    typename Geometry, 
+    typename CoordinateType, 
+    std::size_t Index, 
+    std::size_t Dimension
+>
 struct indexed_access
 {
     //static inline T get(const G& ) {}
-    //static inline void set(G& g, const T& value) {}
+    //static inline void set(G& g, T const& value) {}
 };
 
-template <typename P, typename T, std::size_t D>
-struct access<point_tag, P, T, D>
+template <typename Point, typename CoordinateType, std::size_t Dimension>
+struct access<point_tag, Point, CoordinateType, Dimension>
 {
-    static inline T get(const P& p)
+    static inline CoordinateType get(Point const& point)
     {
-        return traits::access<P>::template get<D>(p);
+        return traits::access<Point, Dimension>::get(point);
     }
-    static inline void set(P& p, const T& value)
+    static inline void set(Point& p, CoordinateType const& value)
     {
-        traits::access<P>::template set<D>(p, value);
-    }
-};
-
-template <typename S, typename T, std::size_t D>
-struct access<nsphere_tag, S, T, D>
-{
-    static inline T get(const S& s)
-    {
-        return traits::access<S>::template get<D>(s);
-    }
-    static inline void set(S& s, const T& value)
-    {
-        traits::access<S>::template set<D>(s, value);
+        traits::access<Point, Dimension>::set(p, value);
     }
 };
 
-template <typename B, typename T, std::size_t I, std::size_t D>
-struct indexed_access<box_tag, B, T, I, D>
+template <typename Nsphere, typename CoordinateType, std::size_t Dimension>
+struct access<nsphere_tag, Nsphere, CoordinateType, Dimension>
 {
-    static inline T get(const B& b)
+    static inline CoordinateType get(Nsphere const& nsphere)
     {
-        return traits::indexed_access<B, I, D>::get(b);
+        return traits::access<Nsphere, Dimension>::get(nsphere);
     }
-    static inline void set(B& b, const T& value)
+    static inline void set(Nsphere& s, CoordinateType const& value)
     {
-        traits::indexed_access<B, I, D>::set(b, value);
+        traits::access<Nsphere, Dimension>::set(s, value);
     }
 };
 
-template <typename S, typename T, std::size_t I, std::size_t D>
-struct indexed_access<segment_tag, S, T, I, D>
+template 
+<
+    typename Box, 
+    typename CoordinateType, 
+    std::size_t Index, 
+    std::size_t Dimension
+>
+struct indexed_access<box_tag, Box, CoordinateType, Index, Dimension>
 {
-    static inline T get(const S& segment)
+    static inline CoordinateType get(Box const& box)
     {
-        return traits::indexed_access<S, I, D>::get(segment);
+        return traits::indexed_access<Box, Index, Dimension>::get(box);
     }
-    static inline void set(S& segment, const T& value)
+    static inline void set(Box& b, CoordinateType const& value)
     {
-        traits::indexed_access<S, I, D>::set(segment, value);
+        traits::indexed_access<Box, Index, Dimension>::set(b, value);
+    }
+};
+
+template 
+<
+    typename Segment, 
+    typename CoordinateType, 
+    std::size_t Index, 
+    std::size_t Dimension
+>
+struct indexed_access<segment_tag, Segment, CoordinateType, Index, Dimension>
+{
+    static inline CoordinateType get(Segment const& segment)
+    {
+        return traits::indexed_access<Segment, Index, Dimension>::get(segment);
+    }
+    static inline void set(Segment& segment, CoordinateType const& value)
+    {
+        traits::indexed_access<Segment, Index, Dimension>::set(segment, value);
     }
 };
 
@@ -188,10 +215,10 @@ inline typename coordinate_type<G>::type get(const G& geometry,
 
     typedef core_dispatch::access
         <
-        typename tag<G>::type,
-        ncg_type,
-        typename coordinate_type<ncg_type>::type,
-        D
+            typename tag<G>::type,
+            ncg_type,
+            typename coordinate_type<ncg_type>::type,
+            D
         > coord_access_type;
 
     return coord_access_type::get(geometry);
@@ -217,10 +244,10 @@ inline void set(G& geometry, const typename coordinate_type<G>::type& value,
 
     typedef core_dispatch::access
         <
-        typename tag<G>::type,
-        ncg_type,
-        typename coordinate_type<ncg_type>::type,
-        D
+            typename tag<G>::type,
+            ncg_type,
+            typename coordinate_type<ncg_type>::type,
+            D
         > coord_access_type;
 
     coord_access_type::set(geometry, value);

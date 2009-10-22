@@ -25,16 +25,16 @@ namespace ggl
     rectangle is used, use linear_ring or polygon.
     \note Boxes are for selections and for calculating the envelope of geometries. Not all algorithms
     are implemented for box. Boxes are also used in Spatial Indexes.
-    \tparam P point type. The box takes a point type as template parameter.
+    \tparam Point point type. The box takes a point type as template parameter.
     The point type can be any point type.
     It can be 2D but can also be 3D or more dimensional.
     The box can also take a latlong point type as template parameter.
  */
 
-template<typename P>
+template<typename Point>
 class box
 {
-    BOOST_CONCEPT_ASSERT( (concept::Point<P>) );
+    BOOST_CONCEPT_ASSERT( (concept::Point<Point>) );
 
 public:
 
@@ -43,22 +43,22 @@ public:
     /*!
         \brief Constructor taking the minimum corner point and the maximum corner point
     */
-    inline box(P const& min_corner, P const& max_corner)
+    inline box(Point const& min_corner, Point const& max_corner)
     {
         copy_coordinates(min_corner, m_min_corner);
         copy_coordinates(max_corner, m_max_corner);
     }
 
-    inline P const& min_corner() const { return m_min_corner; }
-    inline P const& max_corner() const { return m_max_corner; }
+    inline Point const& min_corner() const { return m_min_corner; }
+    inline Point const& max_corner() const { return m_max_corner; }
 
-    inline P& min_corner() { return m_min_corner; }
-    inline P& max_corner() { return m_max_corner; }
+    inline Point& min_corner() { return m_min_corner; }
+    inline Point& max_corner() { return m_max_corner; }
 
 private:
 
-    P m_min_corner;
-    P m_max_corner;
+    Point m_min_corner;
+    Point m_max_corner;
 };
 
 
@@ -67,38 +67,47 @@ private:
 namespace traits
 {
 
-template <typename P>
-struct tag< box<P> >
+template <typename Point>
+struct tag<box<Point> >
 {
     typedef box_tag type;
 };
 
-template <typename P>
-struct point_type<box<P> >
+template <typename Point>
+struct point_type<box<Point> >
 {
-    typedef P type;
+    typedef Point type;
 };
 
-template <typename P, std::size_t C, std::size_t D>
-struct indexed_access<box<P>, C, D>
+template <typename Point, std::size_t Dimension>
+struct indexed_access<box<Point>, min_corner, Dimension>
 {
-    typedef box<P> box_type;
+    typedef typename ggl::coordinate_type<Point>::type coordinate_type;
 
-    static inline typename ggl::coordinate_type<box_type>::type get(box_type const& b)
+    static inline coordinate_type get(box<Point> const& b)
     {
-        return (C == min_corner ? ggl::get<D>(b.min_corner()) : ggl::get<D>(b.max_corner()));
+        return ggl::get<Dimension>(b.min_corner());
     }
 
-    static inline void set(box_type& b, typename ggl::coordinate_type<box_type>::type const& value)
+    static inline void set(box<Point>& b, coordinate_type const& value)
     {
-        if (C == min_corner)
-        {
-            ggl::set<D>(b.min_corner(), value);
-        }
-        else
-        {
-            ggl::set<D>(b.max_corner(), value);
-        }
+        ggl::set<Dimension>(b.min_corner(), value);
+    }
+};
+
+template <typename Point, std::size_t Dimension>
+struct indexed_access<box<Point>, max_corner, Dimension>
+{
+    typedef typename ggl::coordinate_type<Point>::type coordinate_type;
+
+    static inline coordinate_type get(box<Point> const& b)
+    {
+        return ggl::get<Dimension>(b.max_corner());
+    }
+
+    static inline void set(box<Point>& b, coordinate_type const& value)
+    {
+        ggl::set<Dimension>(b.max_corner(), value);
     }
 };
 

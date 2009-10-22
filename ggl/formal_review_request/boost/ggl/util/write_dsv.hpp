@@ -1,7 +1,6 @@
 // Generic Geometry Library
 //
 // Copyright Barend Gehrels 1995-2009, Geodan Holding B.V. Amsterdam, the Netherlands.
-// Copyright Bruno Lalande 2008, 2009
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -61,47 +60,69 @@ struct dsv_settings
     {}
 };
 
-template <typename P, int Dimension, int Count>
+/*!
+\brief Stream coordinate of a point as \ref DSV
+*/
+template <typename Point, std::size_t Dimension, std::size_t Count>
 struct stream_coordinate
 {
     template <typename Char, typename Traits>
-    static inline void apply(std::basic_ostream<Char, Traits>& os, P const& p,
+    static inline void apply(std::basic_ostream<Char, Traits>& os,
+            Point const& point,
             dsv_settings const& settings)
     {
-        os << (Dimension > 0 ? settings.coordinate_separator : "") 
-            << get<Dimension>(p);
-        stream_coordinate<P, Dimension + 1, Count>::apply(os, p, settings);
+        os << (Dimension > 0 ? settings.coordinate_separator : "")
+            << get<Dimension>(point);
+
+        stream_coordinate
+            <
+                Point, Dimension + 1, Count
+            >::apply(os, point, settings);
     }
 };
 
-template <typename P, int Count>
-struct stream_coordinate<P, Count, Count>
+template <typename Point, std::size_t Count>
+struct stream_coordinate<Point, Count, Count>
 {
     template <typename Char, typename Traits>
-    static inline void apply(std::basic_ostream<Char, Traits>&, P const&,
+    static inline void apply(std::basic_ostream<Char, Traits>&,
+            Point const&,
             dsv_settings const& settings)
     {}
 };
 
 
-template <typename P, int Index, int Dimension, int Count>
-struct stream_box_corner
+/*!
+\brief Stream indexed coordinate of a box/segment as \ref DSV
+*/
+template
+<
+    typename Geometry,
+    std::size_t Index,
+    std::size_t Dimension,
+    std::size_t Count
+>
+struct stream_indexed
 {
     template <typename Char, typename Traits>
-    static inline void apply(std::basic_ostream<Char, Traits>& os, P const& p,
+    static inline void apply(std::basic_ostream<Char, Traits>& os,
+            Geometry const& geometry,
             dsv_settings const& settings)
     {
-        os << (Dimension > 0 ? settings.coordinate_separator : "") 
-            << get<Index, Dimension>(p);
-        stream_box_corner<P, Index, Dimension + 1, Count>::apply(os, p, settings);
+        os << (Dimension > 0 ? settings.coordinate_separator : "")
+            << get<Index, Dimension>(geometry);
+        stream_indexed
+            <
+                Geometry, Index, Dimension + 1, Count
+            >::apply(os, geometry, settings);
     }
 };
 
-template <typename P, int Index, int Count>
-struct stream_box_corner<P, Index, Count, Count>
+template <typename Geometry, std::size_t Index, std::size_t Count>
+struct stream_indexed<Geometry, Index, Count, Count>
 {
     template <typename Char, typename Traits>
-    static inline void apply(std::basic_ostream<Char, Traits>&, P const&,
+    static inline void apply(std::basic_ostream<Char, Traits>&, Geometry const&,
             dsv_settings const& settings)
     {}
 };
@@ -117,7 +138,8 @@ template <typename Point>
 struct dsv_point
 {
     template <typename Char, typename Traits>
-    static inline void apply(std::basic_ostream<Char, Traits>& os, Point const& p,
+    static inline void apply(std::basic_ostream<Char, Traits>& os,
+            Point const& p,
             dsv_settings const& settings)
     {
         os << settings.point_open;
@@ -138,8 +160,8 @@ struct dsv_range
 {
     template <typename Char, typename Traits>
     static inline void apply(std::basic_ostream<Char, Traits>& os,
-                Range const& range,
-                dsv_settings const& settings)
+            Range const& range,
+            dsv_settings const& settings)
     {
         typedef typename boost::range_const_iterator<Range>::type iterator_type;
 
@@ -191,13 +213,15 @@ struct dsv_poly
                 dsv_settings const& settings)
     {
         typedef typename ring_type<Polygon>::type ring;
-        typedef typename boost::range_const_iterator<
-                    typename interior_type<Polygon>::type>::type iterator;
+        typedef typename boost::range_const_iterator
+            <
+                typename interior_type<Polygon>::type
+            >::type iterator_type;
 
         os << settings.list_open;
 
         dsv_range<ring>::apply(os, exterior_ring(poly), settings);
-        for (iterator it = boost::begin(interior_rings(poly));
+        for (iterator_type it = boost::begin(interior_rings(poly));
             it != boost::end(interior_rings(poly));
             ++it)
         {
@@ -211,40 +235,40 @@ struct dsv_poly
         BOOST_CONCEPT_ASSERT( (concept::ConstPoint<typename point_type<Polygon>::type>) );
 };
 
-template <typename Box, std::size_t Index>
-struct dsv_box_corner
+template <typename Geometry, std::size_t Index>
+struct dsv_per_index
 {
-    typedef typename point_type<Box>::type point_type;
+    typedef typename point_type<Geometry>::type point_type;
 
     template <typename Char, typename Traits>
     static inline void apply(std::basic_ostream<Char, Traits>& os,
-            Box const& box,
+            Geometry const& geometry,
             dsv_settings const& settings)
     {
         os << settings.point_open;
-        stream_box_corner
+        stream_indexed
             <
-                Box, Index, 0, dimension<Box>::type::value
-            >::apply(os, box, settings);
+                Geometry, Index, 0, dimension<Geometry>::type::value
+            >::apply(os, geometry, settings);
         os << settings.point_close;
     }
 };
 
 
-template <typename Box>
-struct dsv_box
+template <typename Geometry>
+struct dsv_indexed
 {
-    typedef typename point_type<Box>::type point_type;
+    typedef typename point_type<Geometry>::type point_type;
 
     template <typename Char, typename Traits>
     static inline void apply(std::basic_ostream<Char, Traits>& os,
-            Box const& box,
+            Geometry const& geometry,
             dsv_settings const& settings)
     {
         os << settings.list_open;
-        dsv_box_corner<Box, 0>::apply(os, box, settings);
+        dsv_per_index<Geometry, 0>::apply(os, geometry, settings);
         os << settings.point_separator;
-        dsv_box_corner<Box, 1>::apply(os, box, settings);
+        dsv_per_index<Geometry, 1>::apply(os, geometry, settings);
         os << settings.list_close;
     }
 };
@@ -272,27 +296,23 @@ struct dsv<linestring_tag, false, Linestring>
 {};
 
 
-/*!
-\brief Specialization to stream a box as DSV
-*/
 template <typename Box>
 struct dsv<box_tag, false, Box>
-    : detail::dsv::dsv_box<Box>
+    : detail::dsv::dsv_indexed<Box>
+{};
+
+template <typename Segment>
+struct dsv<segment_tag, false, Segment>
+    : detail::dsv::dsv_indexed<Segment>
 {};
 
 
-/*!
-\brief Specialization to stream a ring as DSV
-*/
 template <typename Ring>
 struct dsv<ring_tag, false, Ring>
     : detail::dsv::dsv_range<Ring>
 {};
 
 
-/*!
-\brief Specialization to stream polygon as DSV
-*/
 template <typename Polygon>
 struct dsv<polygon_tag, false, Polygon>
     : detail::dsv::dsv_poly<Polygon>

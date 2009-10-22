@@ -11,6 +11,9 @@
 
 #include <deque>
 
+#include <boost/mpl/if.hpp>
+
+
 #include <ggl/algorithms/intersection_linestring.hpp>
 
 #include <ggl/algorithms/overlay/get_intersection_points.hpp>

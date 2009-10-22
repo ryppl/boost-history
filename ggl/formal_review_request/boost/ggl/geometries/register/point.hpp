@@ -12,7 +12,8 @@
 
 
 
-// This file implements a "macro party", nevertheless very useful for registration of custom geometry types
+// This file implements a "macro party", 
+// for registration of custom geometry types
 
 #ifndef DOXYGEN_NO_SPECIALIZATIONS
 
@@ -23,23 +24,23 @@
     template<> struct dimension<Point> : boost::mpl::int_<Dim> {}; \
     template<> struct coordinate_type<Point> { typedef CoordinateType type; }; \
     template<> struct coordinate_system<Point> { typedef CoordinateSystem type; }; \
-    template<int I> struct Point##accessor {};
+    template<std::size_t Dimension> struct Point##accessor {};
 
 
 // Non Const version
 #define GEOMETRY_DETAIL_SPECIALIZE_POINT_ACCESS(Point, CoordinateType) \
-    template<> struct access<Point> { \
-         template <int I> \
-        static inline CoordinateType get(const Point& p) { return Point##accessor<I>::get(p); } \
-        template <int I> \
-        static inline void set(Point& p, const CoordinateType& value) { Point##accessor<I>::set(p, value); } \
+    template<std::size_t Dimension> struct access<Point, Dimension> { \
+        static inline CoordinateType get(Point const& p) \
+        { return Point##accessor<Dimension>::get(p); } \
+        static inline void set(Point& p, CoordinateType const& value) \
+        { Point##accessor<Dimension>::set(p, value); } \
     };
 
 // Const version
 #define GEOMETRY_DETAIL_SPECIALIZE_POINT_ACCESS_CONST(Point, CoordinateType) \
-    template<> struct access<Point> { \
-         template <int I> \
-        static inline CoordinateType get(const Point& p) { return Point##accessor<I>::get(p); } \
+    template<std::size_t Dimension> struct access<Point, Dimension> { \
+        static inline CoordinateType get(Point const& p) \
+        { return Point##accessor<Dimension>::get(p); } \
     };
 
 
@@ -49,8 +50,8 @@
 #define GEOMETRY_DETAIL_SPECIALIZE_POINT_ACCESSOR(Point, Dim, CoordinateType, Get, Set) \
     template<> struct Point##accessor< Dim > \
     { \
-        static inline CoordinateType get(const Point& p) { return  p. Get; } \
-        static inline void set(Point& p, const CoordinateType& value) { p. Set = value; } \
+        static inline CoordinateType get(Point const& p) { return p. Get; } \
+        static inline void set(Point& p, CoordinateType const& value) { p. Set = value; } \
     };
 
 
@@ -58,7 +59,8 @@
 #define GEOMETRY_DETAIL_SPECIALIZE_POINT_ACCESSOR_CONST(Point, Dim, CoordinateType, Get) \
     template<> struct Point##accessor< Dim > \
     { \
-        static inline CoordinateType get(const Point& p) { return  p. Get; } \
+        static inline CoordinateType get(Point const& p) \
+        { return p. Get; } \
     };
 
 
@@ -66,8 +68,10 @@
 #define GEOMETRY_DETAIL_SPECIALIZE_POINT_ACCESSOR_GET_SET(Point, Dim, CoordinateType, Get, Set) \
     template<> struct Point##accessor< Dim > \
     { \
-        static inline CoordinateType get(const Point& p) { return  p. Get (); } \
-        static inline void set(Point& p, const CoordinateType& value) { p. Set ( value ); } \
+        static inline CoordinateType get(Point const& p) \
+        { return  p. Get (); } \
+        static inline void set(Point& p, CoordinateType const& value) \
+        { p. Set ( value ); } \
     };
 
 

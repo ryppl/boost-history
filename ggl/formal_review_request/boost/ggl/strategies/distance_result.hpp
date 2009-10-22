@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_GEOMETRY_STRATEGIES_DISTANCE_RESULT_HPP
-#define GGL_GEOMETRY_STRATEGIES_DISTANCE_RESULT_HPP
+#ifndef GGL_STRATEGIES_DISTANCE_RESULT_HPP
+#define GGL_STRATEGIES_DISTANCE_RESULT_HPP
 
 #include <utility>
 #include <cmath>
@@ -15,7 +15,11 @@
 #include <iostream>
 
 #include <boost/mpl/if.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <boost/type_traits.hpp>
+
+#include <ggl/util/select_most_precise.hpp>
+
 
 namespace ggl {
 
@@ -63,7 +67,15 @@ struct cartesian_distance
 #if defined(NUMERIC_ADAPTOR_INCLUDED)
             return boost::sqrt(m_squared_distance);
 #else
-            return std::sqrt((long double)m_squared_distance);
+            return boost::numeric_cast<cast_type>
+                (
+                    std::sqrt(
+                        boost::numeric_cast
+                            <
+                                typename select_most_precise<cast_type, double>::type
+                            >(m_squared_distance)
+                            )
+                );
 #endif
         }
 
@@ -262,4 +274,4 @@ inline bool close_to_zero(T const& value)
 } // namespace ggl
 
 
-#endif // GGL_GEOMETRY_STRATEGIES_DISTANCE_RESULT_HPP
+#endif // GGL_STRATEGIES_DISTANCE_RESULT_HPP

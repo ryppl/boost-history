@@ -10,6 +10,8 @@
 #ifndef GGL_MULTI_CORE_TAGS_HPP
 #define GGL_MULTI_CORE_TAGS_HPP
 
+#include <ggl/core/tags.hpp>
+
 namespace ggl
 {
 
@@ -24,6 +26,40 @@ struct multi_polygon_tag {};
 
 /// OGC Geometry Collection identifying tag
 struct geometry_collection_tag {};
+
+
+
+
+/*!
+    \brief Meta-function to get for a tag of a multi-geometry
+        the tag of the corresponding single-geometry
+*/
+template <typename Tag>
+struct single_tag
+{};
+
+#ifndef DOXYGEN_NO_DETAIL
+
+template <>
+struct single_tag<multi_point_tag>
+{
+    typedef point_tag type;
+};
+
+template <>
+struct single_tag<multi_linestring_tag>
+{
+    typedef linestring_tag type;
+};
+
+template <>
+struct single_tag<multi_polygon_tag>
+{
+    typedef polygon_tag type;
+};
+
+#endif
+
 
 } // namespace ggl
 
