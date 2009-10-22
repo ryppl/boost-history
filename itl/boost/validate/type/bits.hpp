@@ -66,11 +66,11 @@ struct is_set<bits<NaturalT> >
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
-template <>struct type_to_string<itl::bits<unsigned char> > {static std::string apply(){ return "bit8";  }};
+template <>struct type_to_string<itl::bits<unsigned char > >{static std::string apply(){ return "bit8";  }};
 template <>struct type_to_string<itl::bits<unsigned short> >{static std::string apply(){ return "bit16"; }};
-template <>struct type_to_string<itl::bits<unsigned int> >  {static std::string apply(){ return "bit32"; }};
-template <>struct type_to_string<itl::bits<unsigned long> > {static std::string apply(){ return "bitl32"; }};
-template <>struct type_to_string<itl::bits<unsigned long long> > {static std::string apply(){ return "bit64"; }};
+template <>struct type_to_string<itl::bits<unsigned int  > >{static std::string apply(){ return "bit32"; }};
+template <>struct type_to_string<itl::bits<unsigned long > >{static std::string apply(){ return "bitl32"; }};
+template <>struct type_to_string<itl::bits<unsigned long long> >{static std::string apply(){ return "bit64"; }};
 
 
 }} // namespace itl boost

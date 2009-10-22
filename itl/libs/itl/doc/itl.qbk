@@ -135,6 +135,7 @@ Distributed under the Boost Software License, Version 1.0.
 [def __biLRange__        [link boost_itl.function_reference.range ['*Range*]]]
 [def __biLSelection__    [link boost_itl.function_reference.selection ['*Selection*]]]
 [def __biLAddition__     [link boost_itl.function_reference.addition ['*Addition*]]]
+[def __biLadd__          [link boost_itl.function_reference.addition ['*add*]]]
 [def __biLSubtraction__  [link boost_itl.function_reference.subtraction ['*Subtraction*]]]
 [def __biLsubtraction__  [link boost_itl.function_reference.subtraction ['*subtraction*]]]
 [def __biLInsertion__    [link boost_itl.function_reference.insertion ['*Insertion*]]]
@@ -192,6 +193,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 [include introduction.qbk]
 [include examples.qbk]
+[include projects.qbk]
 [include concepts.qbk]
 [include semantics.qbk]
 [include interface.qbk]

@@ -26,6 +26,10 @@
 	[[basic]   [[link boost_itl.examples.overlap_counter Overlap counter]]
 	    [__itv_map__][The most simple application of an interval map: 
 	                  Counting the overlaps of added intervals.]]
+	[[basic]   [[link boost_itl.examples.std_copy Std copy]]
+	    [__itv_map__][Fill interval containers using `std::copy`.]]
+	[[basic]   [[link boost_itl.examples.std_transform Std transform]]
+	    [__itv_map__,\n__sep_itv_set__][Fill interval containers from user defined objects using `std::transform`.]]
 	[[advanced][[link boost_itl.examples.partys_height_average Party's height average]]
 	    [__itv_map__][Using /aggregate on overlap/ the average of party guests is computed.  
 	                  Associated values are user defined class objects, that implement
@@ -152,6 +156,83 @@ intervals.
 [import ../example/overlap_counter_/overlap_counter.cpp]
 [example_overlap_counter]
 [endsect]
+
+
+[section Std copy]
+
+The standard algorithm 
+[@http://www.cplusplus.com/reference/algorithm/copy/ `std::copy`]
+can be used to fill interval containers
+from standard containers of intervals or
+interval value pairs (segments). Because intervals
+do not represent ['*elements*] but ['*sets*], that
+can be empty or contain more than one element,
+the usage of `std::copy` differs from what we
+are familiar with using ['containers of elements].
+
+* Use `itl::inserter` from `#include <boost/itl/iterator.hpp>`
+  instead of `std::inserter` to call insertions on the target
+  interval container.
+  
+* As shown in the examples above and below this point, most of
+  the time we will not be interested to `insert` segments
+  into __itv_maps__ but to __biLadd__
+  them, in order to generate the desired aggregation results.
+  You can use `std::copy` with an `itl::adder` instead of an
+  `itl::inserter` to achieve this.
+
+[import ../example/std_copy_/std_copy.cpp]
+[example_std_copy]
+
+[endsect][/ Std copy]
+
+
+[section Std transform]
+
+Instead of writing loops, the standard algorithm 
+[@http://www.cplusplus.com/reference/algorithm/transform/ `std::transform`]
+can be used to fill interval containers
+from std containers of user defined objects.
+We need a function, that
+maps the ['user defined object] into the
+['segement type] of an interval map or the
+['interval type] of an interval set.
+Based on that we can use `std::transform`
+with an `itl::inserter` or `itl::adder`
+to transform the user objects into interval
+containers. 
+
+[import ../example/std_transform_/std_transform.cpp]
+[example_std_transform]
+
+To get clear about the different behaviors of interval containers 
+in the example, you may want to refer to the section about 
+[link boost_itl.introduction.interval_combining_styles interval combining styles]
+that uses the same data.
+
+[/
+Instead of `itl::inserter` we could also use an `std::inserter`
+with algorithms `std::copy` and `std::transform`.
+This is ['*depreciated*], because `std::inserter` is designed for
+containers of elements, where ['*exacty one*] element is inserted 
+via `std::inserter` if it is not already in the container. 
+In contrast to that, an interval or segemnt can represent zero, one, 
+or many elements of an interval container.
+
+You can use `std::inserter` *only*, if you actively take care of
+two preconditions:
+
+# None of the intervals or segements of the source containers
+  must be empty.
+  
+# A segment never carries a neutral value when your target 
+  interval map absorbs neutrons.
+
+Violating those preconditions leads to ['*undefined behavior*].
+]
+
+[endsect][/ std::transform]
+
 
 [section:partys_height_average Party's height average]
 

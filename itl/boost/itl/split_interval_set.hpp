@@ -325,10 +325,10 @@ template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>clas
 inline bool operator == (const split_interval_set<DomainT,Compare,Interval,Alloc>& lhs,
                          const split_interval_set<DomainT,Compare,Interval,Alloc>& rhs)
 {
-    //MEMO PORT: This implemetation worked with stlport, sgi and gnu 
+    //MEMO PORT: This implementation worked with stlport, sgi and gnu 
     // implementations of the stl. But using MSVC-implementation
     // results in runtime error! So I had to provide an independent
-    // safe implemetation.
+    // safe implementation.
     //return std::equal(lhs.begin(), lhs.end(), rhs.begin());
     return Set::lexicographical_equal(lhs, rhs);
 }

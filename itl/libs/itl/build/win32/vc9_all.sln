@@ -143,6 +143,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_map_order", "..\.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_std_copy", "..\..\example\std_copy_\vc9_std_copy.vcproj", "{8DC9BDE4-E5A4-4294-A12F-D75FD6990B84}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_std_transform", "..\..\example\std_transform_\vc9_std_transform.vcproj", "{8DC9BDE4-E5A4-4294-A12F-D75FD6990B85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -433,6 +435,10 @@ Global
 		{8DC9BDE4-E5A4-4294-A12F-D75FD6990B84}.Debug|Win32.Build.0 = Debug|Win32
 		{8DC9BDE4-E5A4-4294-A12F-D75FD6990B84}.Release|Win32.ActiveCfg = Release|Win32
 		{8DC9BDE4-E5A4-4294-A12F-D75FD6990B84}.Release|Win32.Build.0 = Release|Win32
+		{8DC9BDE4-E5A4-4294-A12F-D75FD6990B85}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8DC9BDE4-E5A4-4294-A12F-D75FD6990B85}.Debug|Win32.Build.0 = Debug|Win32
+		{8DC9BDE4-E5A4-4294-A12F-D75FD6990B85}.Release|Win32.ActiveCfg = Release|Win32
+		{8DC9BDE4-E5A4-4294-A12F-D75FD6990B85}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
