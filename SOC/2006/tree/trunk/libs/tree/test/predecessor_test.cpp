@@ -44,9 +44,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, orders )
     typename container_type::const_iterator ci = order_index.end();
 
     for (--ci; ci!=cib; --ci) {
-        BOOST_CHECK_EQUAL(*c, ci->val); //Change order of statements!
         boost::tree::predecessor(Order(), c);
-        
+        BOOST_CHECK_EQUAL(*c, ci->val);
     }
     fake_root_tracking_binary_tree<int>::cursor d = frbt1.root();
     fake_to_first(Order(), d);

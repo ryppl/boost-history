@@ -53,7 +53,11 @@ successor(inorder, MultiwayCursor& c)
 
     while (index(c) && !c.is_root())
         c.to_parent();
-    c.to_parent();
+
+    if (c.is_root())    // Move past the last inorder element
+        to_last(inorder(), c);
+    else
+        c.to_parent();
     return;
 }
 
@@ -69,12 +73,14 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 predecessor(inorder, MultiwayCursor& c)
 {
-    if (!c.to_begin().is_leaf()) {
-        to_rightmost(c);
-        c.to_parent(); //TODO: The latter two lines should probably be to_last(inorder(),c)
-        return;
+    if (!c.is_leaf()) {
+        if (!c.to_begin().is_leaf()) {
+            to_rightmost(c);
+            c.to_parent(); //TODO: The latter two lines should probably be to_last(inorder(),c)
+            return;
+        }
     }
-    
+
     while (!index(c) && !c.is_root())
         c.to_parent();
     if (!c.is_root())
@@ -93,11 +99,31 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 to_first(inorder, Cursor& c)
 {
+    return to_first(inorder(), c
+                  , typename cursor_vertical_traversal<Cursor>::type());
+}
+
+template <class Cursor>
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (void)) // return type
+to_first(inorder, Cursor& c, descending_vertical_traversal_tag)
+{
     Cursor d = c;
     while (!d.is_leaf()) {
         c = d;
         d.to_begin();
     }
+}
+
+template <class Cursor>
+BOOST_CONCEPT_REQUIRES(
+    ((AscendingCursor<Cursor>)),
+    (void)) // return type
+to_first(inorder, Cursor& c, ascending_vertical_traversal_tag)
+{
+    to_leftmost(c);
+    c.to_parent();
 }
 
 /**
@@ -108,7 +134,9 @@ to_first(inorder, Cursor& c)
  */
 template <class Cursor>
 void to_last(inorder, Cursor& c)
-{ }
+{
+    to_rightmost(c);
+}
 
 /*\@}*/
 

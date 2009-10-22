@@ -96,7 +96,7 @@ void fake_to_last(boost::tree::preorder, Cursor& c)
 template <class Cursor>
 void fake_to_last(boost::tree::inorder, Cursor& c)
 {
-    c.to_end().to_end();
+    c.to_end().to_end().to_end();
 }
 
 template <class Cursor>

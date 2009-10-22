@@ -160,7 +160,7 @@ to_first(preorder, Cursor& c)
  */
 template <class Cursor>
 void to_last(preorder, Cursor& c)
-{ }
+{}
 
 /*\@}*/
 
