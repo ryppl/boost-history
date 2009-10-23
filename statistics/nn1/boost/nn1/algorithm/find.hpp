@@ -17,9 +17,6 @@
 namespace boost{
 namespace nn1{
 
-    // Finds the nearest neighbour (nn1) in a sequence, and assigns the corres- 
-    // ponding distance to a variable.
-    //
     // Requirements:
     // Let F_x = F<X>, Y an abitrary type, 
     // F_x f(x);    
