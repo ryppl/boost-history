@@ -10,7 +10,6 @@
 
 #include <boost/task/detail/atomic.hpp>
 #include <boost/task/spin_mutex.hpp>
-#include <boost/task/spin_lock.hpp>
 #include <boost/task/utility.hpp>
 
 namespace boost {

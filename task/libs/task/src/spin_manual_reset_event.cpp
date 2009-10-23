@@ -10,7 +10,6 @@
 #include <boost/thread.hpp>
 
 #include <boost/task/detail/atomic.hpp>
-#include <boost/task/spin_lock.hpp>
 #include <boost/task/utility.hpp>
 
 namespace boost {
@@ -41,7 +40,7 @@ spin_manual_reset_event::set()
 void
 spin_manual_reset_event::reset()
 {
-	spin_lock< spin_mutex >	lk( enter_mtx_);
+	spin_mutex::scoped_lock	lk( enter_mtx_);
 	BOOST_ASSERT( lk);
 
 	detail::atomic_exchange( & state_,
@@ -52,7 +51,7 @@ void
 spin_manual_reset_event::wait()
 {
 	{
-		spin_lock< spin_mutex > lk( enter_mtx_);
+		spin_mutex::scoped_lock lk( enter_mtx_);
 		BOOST_ASSERT( lk);
 		detail::atomic_fetch_add( & waiters_, 1);
 	}
@@ -95,7 +94,7 @@ bool
 spin_manual_reset_event::try_wait()
 {
 	{
-		spin_lock< spin_mutex > lk( enter_mtx_);
+		spin_mutex::scoped_lock lk( enter_mtx_);
 		BOOST_ASSERT( lk);
 		detail::atomic_fetch_add( & waiters_, 1);
 	}
