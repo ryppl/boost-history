@@ -52,14 +52,18 @@ std::string bits<NaturalT>::as_string(const char off_on[2])const
     return sequence;
 }
 
+} // mini
+
 //[mini_bits_is_set
-template<class NaturalT>
-struct boost::itl::is_set<mini::bits<NaturalT> >
-{ 
-    typedef boost::itl::is_set<mini::bits<NaturalT> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true); 
-};
+namespace boost { namespace itl 
+{
+    template<class NaturalT>
+    struct is_set<mini::bits<NaturalT> >
+    { 
+        typedef is_set<mini::bits<NaturalT> > type;
+        BOOST_STATIC_CONSTANT(bool, value = true); 
+    };
+}}
 //]
 
-} // mini
 #endif

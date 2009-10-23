@@ -116,22 +116,23 @@ public:
 
     void show_segments()const
     {
-        ITL_const_FORALL(interval_bitmap_type, it_, _map)
+        for(typename interval_bitmap_type::const_iterator it_ = _map.begin();
+            it_ != _map.end(); ++it_)
         {
             interval_type   itv  = it_->first;
             bitset_type     bits = it_->second;
-            cout << itv << "->" << bits.as_string("01") << endl;
+            std::cout << itv << "->" << bits.as_string("01") << std::endl;
         }
     }
 
     void show_matrix(const char off_on[2] = " 1")const
     {
-        interval_bitmap_type::const_iterator iter = _map.begin();
+        typename interval_bitmap_type::const_iterator iter = _map.begin();
         while(iter != _map.end())
         {
             element_type fst = iter->first.first(), lst = iter->first.last();
             for(element_type chunk = fst; chunk <= lst; chunk++)
-                std::cout << iter->second.as_string(off_on) << endl;
+                std::cout << iter->second.as_string(off_on) << std::endl;
             ++iter;
         }
     }
@@ -139,13 +140,13 @@ public:
 
 //[large_bitset_impl_constants
 private:
-    BOOST_STATIC_CONSTANT( chunk_type, bit_count = (sizeof chunk_type)*CHAR_BIT );
-    BOOST_STATIC_CONSTANT( chunk_type, divisor   = bit_count                    );
-    BOOST_STATIC_CONSTANT( chunk_type, shift     = log2_<divisor>::value        );
-    BOOST_STATIC_CONSTANT( chunk_type, c1        = static_cast<chunk_type>(1)   );
-    BOOST_STATIC_CONSTANT( chunk_type, mask      = divisor - c1                 );
-    BOOST_STATIC_CONSTANT( chunk_type, all       = ~static_cast<chunk_type>(0)  );
-    BOOST_STATIC_CONSTANT( chunk_type, top       = c1 << (bit_count-c1)         );
+    BOOST_STATIC_CONSTANT( chunk_type, bit_count = sizeof(chunk_type)*CHAR_BIT );
+    BOOST_STATIC_CONSTANT( chunk_type, divisor   = bit_count                   );
+    BOOST_STATIC_CONSTANT( chunk_type, shift     = log2_<divisor>::value       );
+    BOOST_STATIC_CONSTANT( chunk_type, c1        = static_cast<chunk_type>(1)  );
+    BOOST_STATIC_CONSTANT( chunk_type, mask      = divisor - c1                );
+    BOOST_STATIC_CONSTANT( chunk_type, all       = ~static_cast<chunk_type>(0) );
+    BOOST_STATIC_CONSTANT( chunk_type, top       = c1 << (bit_count-c1)        );
     //]
     //[large_bitset_segment_modifier
     typedef void (large_bitset::*segment_modifier)(element_type, element_type, bitset_type);

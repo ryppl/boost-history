@@ -50,7 +50,7 @@ void test_small()
     large_bitset<nat, bits8> tall; // small is tall ...
         // ... it really is, because even this 'small' large_bitset 
         // can represent up to 2^32-1 == 4,294,967,295 bits.
-	    // BTW nat is defined as unsigned int.
+        // BTW nat is defined as unsigned int.
 
     cout << "----- Test function test_small() -----------\n";
     cout << "-- Switch on all bits in range [0,64] ------\n";
@@ -72,13 +72,13 @@ void test_small()
     tall -= interval<nat>::rightopen(0,10);
     tall.show_segments();
 
-	cout << "-- remove even bits in range [0,72) --------\n";
-	int bit;
-	for(bit=0; bit<72; bit++) if(!(bit%2)) tall -= bit;
+    cout << "-- remove even bits in range [0,72) --------\n";
+    int bit;
+    for(bit=0; bit<72; bit++) if(!(bit%2)) tall -= bit;
     tall.show_segments();
 
-	cout << "-- set    odd  bits in range [0,72) --------\n";
-	for(bit=0; bit<72; bit++) if(bit%2) tall += bit;
+    cout << "-- set    odd  bits in range [0,72) --------\n";
+    for(bit=0; bit<72; bit++) if(bit%2) tall += bit;
     tall.show_segments();
 
     cout << "--------------------------------------------\n\n";
