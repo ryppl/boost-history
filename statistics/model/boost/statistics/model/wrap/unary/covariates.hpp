@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::wrap::unary::covariates.hpp                                        //
+// statistics::model::wrap::unary::covariates.hpp                            //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -14,16 +14,16 @@ namespace statistics{
 namespace model{
         
     template<typename Rx>
-    class covariates_ : detail::base_<Rx>{
+    class covariates_wrapper : detail::base_<Rx>{
         typedef detail::base_<Rx> base_;
     public:
-        typedef Rx                  covariates_type;
-        typedef covariates_<Rx>     covariates_w_;
+        typedef Rx                          covariates_type;
+        typedef covariates_wrapper<Rx>      covariates_wrapper_type;
 
         // Construction
-        covariates_();
-        covariates_(const Rx& x);
-        covariates_(const covariates_&);
+        covariates_wrapper();
+        covariates_wrapper(const Rx& x);
+        covariates_wrapper(const covariates_wrapper&);
             
         // Access
         const Rx& covariates()const;
@@ -32,24 +32,26 @@ namespace model{
     // Implementation //
             
     template<typename Rx>
-    covariates_<Rx>::covariates_() : base_(){}
+    covariates_wrapper<Rx>::covariates_wrapper() : base_(){}
         
     template<typename Rx>
-    covariates_<Rx>::covariates_( const Rx& rx ) : base_(rx){}
+    covariates_wrapper<Rx>::covariates_wrapper( const Rx& rx ) : base_(rx){}
         
     template<typename Rx>
-    covariates_<Rx>::covariates_(const covariates_& that)
+    covariates_wrapper<Rx>::covariates_wrapper(const covariates_wrapper& that)
     :base_(that){}
 
     template<typename Rx>
-    const Rx& covariates_<Rx>::covariates()const{ return (this->value); }
+    const Rx& covariates_wrapper<Rx>::covariates()const{ 
+        return (this->value); 
+    }
                 
     // Free functions
         
     template<typename Rx>
-    covariates_<Rx> 
-    make_covariates(const Rx& rx){
-        typedef covariates_<Rx> result_type;
+    covariates_wrapper<Rx> 
+    make_covariates_wrapper(const Rx& rx){
+        typedef covariates_wrapper<Rx> result_type;
         return result_type(rx);
     }
 

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::wrap::aggregate::model_parameter.hpp                               //
+// statistics::model::wrap::aggregate::model_parameter.hpp                   //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -16,15 +16,15 @@ namespace model{
         
     template<typename M,typename P>
     class model_parameter_ : 
-        public model_<M>, 
-        public parameter_<P>
+        public model_wrapper<M>, 
+        public parameter_wrapper<P>
     {
-        typedef model_<M> model_;
-        typedef parameter_<P> parameter_;
+        typedef model_wrapper<M> model_;
+        typedef parameter_wrapper<P> parameter_;
 
     public:
 
-        typedef model_parameter_<M,P> model_parameter_w_;
+        typedef model_parameter_<M,P> model_parameter_type;
             
         // Construction
         model_parameter_();

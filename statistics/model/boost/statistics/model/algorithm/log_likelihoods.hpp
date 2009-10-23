@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::algorithm::log_likelihoods.hpp                                     //
+// statistics::model::algorithm::log_likelihoods.hpp                         //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //

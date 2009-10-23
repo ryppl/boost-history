@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// statistics::modeldoc::readme                                             //
+// statistics::model::doc::readme                                           //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -23,6 +23,8 @@ syntax of functions that takes these quantities as arguments.
 ii) STL-like algorithms for computing likelihoods or posterior distributions, 
 by aggretating the contributions of data-units in an (for now) iid setting.
 
+iii) An importance_sampler
+
 Examples can be found in statistics/survival/libs/example
 
 [ Compiler ]
@@ -36,6 +38,8 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 /sandbox/statistics/scalar_dist/ 
 /sandbox/statistics/joint_dist/ 
 /sandbox/statistics/binary_op/
+/sandbox/statistics/importance_sampling/
+/sandbox/statistics/importance_weights/
 
 [ History ]
 
@@ -71,17 +75,20 @@ parameter values, respectively.
 
 [ Concepts ]
 
-- Model
+- HasLogLikelihood
     m models Model iff
     Expression                                  Return type
     log_likelihood(make_model_data(m,x,y),p)    T
-- LPdf
+
+- HasLogUnnormalizedPdf
     d models LPdf iff
     Expression                                  Returns 
     log_unnormalized_pdf(d,p)                   T
 
-Those D such that is_scalar_dist<D> or joint_dist<D> evaluates to true model
-LPdf. Check directory unscope in either package.
+Note that : 
+- is_scalar_dist<D> => HasLogUnnormalizedPdf 
+- joint_dist<D> => HasLogUnnormalizedPdf 
+See unscope in either package.
 
 [ wrap ]
     Example of wrappers:

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::algorithm::log_posteriors.hpp                                      //
+// statistics::model::algorithm::log_posteriors.hpp                          //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -17,9 +17,7 @@ namespace statistics{
 namespace model{   
 
 // Evaluates the log-postetior for each parameter in [b_p,e_p)
-//
-// Warning : log_posteriors seems very suceptible to precision error.
-// log_posteriors2 appears to correct this problem.
+// Also see log_posteriors2
 template<
     typename T,typename D,typename M,typename Rx,typename Ry,typename ItP,
     typename ItLw

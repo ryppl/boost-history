@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::wrap::aggregate::model_dataset.hpp                                 //
+// statistics::model::wrap::aggregate::model_dataset.hpp                     //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -16,21 +16,21 @@ namespace model{
         
     template<typename M,typename Rx,typename Ry>
     class model_dataset_ : 
-        public  model_<M>, 
-        public dataset_<Rx,Ry>
+        public  model_wrapper<M>, 
+        public  dataset_<Rx,Ry>
     {
-        typedef model_<M> model_;
+        typedef model_wrapper<M> model_;
         typedef dataset_<Rx,Ry> dataset_;
     public:
-        typedef model_dataset_<M,Rx,Ry> model_dataset_w_;
+        typedef model_dataset_<M,Rx,Ry> model_dataset_type;
             
         // Construction
         model_dataset_();
         model_dataset_(model_ model,dataset_ dataset);
         model_dataset_(
             model_ model,
-            typename dataset_::covariates_w_ covs,
-            typename dataset_::responses_w_ resps
+            typename dataset_::covariates_wrapper_type covs,
+            typename dataset_::responses_wrapper_type resps
         );
         model_dataset_(const model_dataset_&);
             
@@ -39,17 +39,19 @@ namespace model{
     // Implementation //
             
     template<typename M,typename Rx,typename Ry>
-    model_dataset_<M,Rx,Ry>::model_dataset_() : model_(),dataset_(){}
+    model_dataset_<M,Rx,Ry>::model_dataset_() 
+    : model_(),dataset_(){}
         
     template<typename M,typename Rx,typename Ry>
     model_dataset_<M,Rx,Ry>::model_dataset_(
             model_ model,
-            typename dataset_::covariates_w_ covs,
-            typename dataset_::responses_w_ resps
+            typename dataset_::covariates_wrapper_type covs,
+            typename dataset_::responses_wrapper_type resps
     ) : model_( model ), dataset_ (covs,resps) {}
         
     template<typename M,typename Rx,typename Ry>
-    model_dataset_<M,Rx,Ry>::model_dataset_(const model_dataset_& that)
+    model_dataset_<M,Rx,Ry>::model_dataset_(
+        const model_dataset_& that)
     :model_( that ),dataset_( that ) {}
 
     // Free functions

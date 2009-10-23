@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::wrap::unary::responses.hpp                                          //
+// statistics::model::wrap::unary::responses.hpp                             //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -14,16 +14,16 @@ namespace statistics{
 namespace model{
         
     template<typename Ry>
-    class responses_ : detail::base_<Ry>{
+    class responses_wrapper : detail::base_<Ry>{
         typedef detail::base_<Ry> base_;
     public:
-        typedef Ry                 responses_type;
-        typedef responses_<Ry>     responses_w_;
+        typedef Ry                      responses_type;
+        typedef responses_wrapper<Ry>   responses_wrapper_type;
             
         // Construction
-        responses_();
-        responses_(const Ry& x);
-        responses_(const responses_&);
+        responses_wrapper();
+        responses_wrapper(const Ry& x);
+        responses_wrapper(const responses_wrapper&);
             
         // Access
         const Ry& responses()const;
@@ -32,24 +32,26 @@ namespace model{
     // Implementation //
             
     template<typename Ry>
-    responses_<Ry>::responses_() : base_(){}
+    responses_wrapper<Ry>::responses_wrapper() : base_(){}
         
     template<typename Ry>
-    responses_<Ry>::responses_( const Ry& ry ) : base_(ry){}
+    responses_wrapper<Ry>::responses_wrapper( const Ry& ry ) : base_(ry){}
         
     template<typename Ry>
-    responses_<Ry>::responses_(const responses_& that)
+    responses_wrapper<Ry>::responses_wrapper(const responses_wrapper& that)
     :base_(that){}
 
     template<typename Ry>
-    const Ry& responses_<Ry>::responses()const{ return (this->value); }
+    const Ry& responses_wrapper<Ry>::responses()const{ 
+        return (this->value); 
+    }
                 
     // Free functions
         
     template<typename Ry>
-    responses_<Ry> 
-    make_responses(const Ry& ry){
-        typedef responses_<Ry> result_type;
+    responses_wrapper<Ry> 
+    make_responses_wrapper(const Ry& ry){
+        typedef responses_wrapper<Ry> result_type;
         return result_type(ry);
     }
 

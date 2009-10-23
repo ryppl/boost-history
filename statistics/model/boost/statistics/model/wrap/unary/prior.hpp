@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// prior::wrap::unary::prior.hpp                                             //
+// statistics::model::prior::wrap::unary::prior.hpp                          //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -14,17 +14,17 @@ namespace statistics{
 namespace model{
         
     template<typename D>
-    class prior_ : detail::base_<D>{
+    class prior_wrapper : detail::base_<D>{
         typedef detail::base_<D> base_;
     public:
         typedef D                 prior_type;
-        typedef prior_<D>         prior_w_;
+        typedef prior_wrapper<D>  prior_wrapper_type;
 
             
         // Construction
-        prior_();
-        prior_(const D& d);
-        prior_(const prior_&);
+        prior_wrapper();
+        prior_wrapper(const D& d);
+        prior_wrapper(const prior_wrapper&);
             
         // Access
         const D& prior()const;
@@ -33,24 +33,24 @@ namespace model{
     // Implementation //
             
     template<typename D>
-    prior_<D>::prior_() : base_(){}
+    prior_wrapper<D>::prior_wrapper() : base_(){}
         
     template<typename D>
-    prior_<D>::prior_( const D& d ) : base_(d){}
+    prior_wrapper<D>::prior_wrapper( const D& d ) : base_(d){}
         
     template<typename D>
-    prior_<D>::prior_(const prior_& that)
+    prior_wrapper<D>::prior_wrapper(const prior_wrapper& that)
     :base_(that){}
 
     template<typename D>
-    const D& prior_<D>::prior()const{ return (this->value); }
+    const D& prior_wrapper<D>::prior()const{ return (this->value); }
                 
     // Free functions
         
     template<typename D>
-    prior_<D> 
-    make_prior(const D& d){
-        typedef prior_<D> result_type;
+    prior_wrapper<D> 
+    make_prior_wrapper(const D& d){
+        typedef prior_wrapper<D> result_type;
         return result_type(d);
     }
 

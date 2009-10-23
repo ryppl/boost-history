@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::wrap::aggregate::model_covariate_parameter.hpp                     //
+// statistics::model::wrap::aggregate::model_covariate_parameter.hpp         //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -17,31 +17,35 @@ namespace model{
     template<typename M,typename X,typename P>
     class model_covariate_parameter_ : 
         public model_parameter_<M,P>, 
-        public covariate_<X>
+        public covariate_wrapper<X>
     {
-        typedef model_parameter_<M,P>       model_parameter_;
-        typedef covariate_<X>               covariate_;
+        typedef model_parameter_<M,P>           model_parameter_;
+        typedef covariate_wrapper<X>            covariate_;
 
         public:
 
-        typedef model_covariate_parameter_<M,X,P> model_covariate_parameter_w_;
+        typedef model_covariate_parameter_<M,X,P> 
+                                model_covariate_parameter_type;
             
         // Construction
         model_covariate_parameter_();
         model_covariate_parameter_(model_parameter_ mp,covariate_ cov);
         model_covariate_parameter_(
-            typename model_parameter_::model_w_ model,
+            typename model_parameter_::model_wrapper_type model,
             covariate_ cov, 
-            typename model_parameter_::parameter_w_ par
+            typename model_parameter_::parameter_wrapper_type par
         );
-        model_covariate_parameter_(const model_covariate_parameter_&);
+        model_covariate_parameter_(
+            const model_covariate_parameter_&
+        );
             
     };
 
     // Implementation //
             
     template<typename M,typename X,typename P>
-    model_covariate_parameter_<M,X,P>::model_covariate_parameter_() 
+    model_covariate_parameter_<M,X,P>
+        ::model_covariate_parameter_() 
     : model_parameter_(),covariate_(){}
         
     template<typename M,typename X,typename P>
@@ -52,9 +56,9 @@ namespace model{
 
     template<typename M,typename X,typename P>
     model_covariate_parameter_<M,X,P>::model_covariate_parameter_( 
-        typename model_parameter_::model_w_ m, 
+        typename model_parameter_::model_wrapper_type m, 
         covariate_ cov, 
-        typename model_parameter_::parameter_w_ p
+        typename model_parameter_::parameter_wrapper_type p
     )
      : model_parameter_( m, p ), covariate_( cov ){}
         

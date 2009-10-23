@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::wrap::unary::model.hpp                                             //
+// statistics::model::wrap::unary::model.hpp                                 //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -14,16 +14,16 @@ namespace statistics{
 namespace model{
 
     template<typename M>
-    class model_ : detail::base_<M>{
+    class model_wrapper : detail::base_<M>{
         typedef detail::base_<M> base_;
     public:
-        typedef M                                   model_type;
-        typedef model_<M>                    model_w_;
+        typedef M                            model_type;
+        typedef model_wrapper<M>             model_wrapper_type;
             
         // Construction
-        model_();
-        model_(const M& m);
-        model_(const model_&);
+        model_wrapper();
+        model_wrapper(const M& m);
+        model_wrapper(const model_wrapper&);
             
         // Access
         const M& model()const;
@@ -32,24 +32,24 @@ namespace model{
     // Implementation //
             
     template<typename M>
-    model_<M>::model_() : base_(){}
+    model_wrapper<M>::model_wrapper() : base_(){}
         
     template<typename M>
-    model_<M>::model_( const M& m ) : base_(m){}
+    model_wrapper<M>::model_wrapper( const M& m ) : base_(m){}
         
     template<typename M>
-    model_<M>::model_(const model_& that)
+    model_wrapper<M>::model_wrapper(const model_wrapper& that)
     :base_(that){}
 
     template<typename M>
-    const M& model_<M>::model()const{ return (this->value); }
+    const M& model_wrapper<M>::model()const{ return (this->value); }
                 
     // Free functions
         
     template<typename M>
-    model_<M> 
-    make_model(const M& m){
-        typedef model_<M> result_type;
+    model_wrapper<M> 
+    make_model_wrapper(const M& m){
+        typedef model_wrapper<M> result_type;
         return result_type(m);
     }
 

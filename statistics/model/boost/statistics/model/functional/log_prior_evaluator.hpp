@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::functional::log_prior_evaluator.hpp                           //
+// statistics::model::functional::log_prior_evaluator.hpp                    //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -22,11 +22,11 @@ namespace model{
     class log_prior_evaluator{
         public:
         typedef T result_type;
-        typedef prior_<D> prior_type;
+        typedef prior_wrapper<D> prior_wrapper_type;
         
         // Constructor
         log_prior_evaluator();
-        log_prior_evaluator(const prior_type&);
+        log_prior_evaluator(const prior_wrapper_type&);
         log_prior_evaluator(const log_prior_evaluator&);
         log_prior_evaluator& operator=(const log_prior_evaluator&);
 
@@ -34,10 +34,10 @@ namespace model{
         template<typename P> result_type operator()(const P& p)const;
 
         // Access
-        const prior_type& prior()const;
+        const prior_wrapper_type& prior_wrapper()const;
         
         private:
-        prior_type p_;
+        prior_wrapper_type p_;
     };
 
     // Implementation //
@@ -48,7 +48,7 @@ namespace model{
     
     template<typename T,typename D>
     log_prior_evaluator<T,D>::log_prior_evaluator(
-        const prior_type& p
+        const prior_wrapper_type& p
     ):p_(p){}
 
     template<typename T,typename D>
@@ -73,15 +73,15 @@ namespace model{
     typename log_prior_evaluator<T,D>::result_type 
     log_prior_evaluator<T,D>::operator()(const P& p)const{
         return log_unnormalized_pdf(
-            (this->prior()).prior(),
+            (this->prior_wrapper()).prior(),
             p
         );
     }
 
     // Access
     template<typename T,typename D>
-    const typename log_prior_evaluator<T,D>::prior_type& 
-    log_prior_evaluator<T,D>::prior()const{
+    const typename log_prior_evaluator<T,D>::prior_wrapper_type& 
+    log_prior_evaluator<T,D>::prior_wrapper()const{
         return (this->p_);
     }
 

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::functional::log_likelihood_accumulator.hpp                         //
+// statistics::model::functional::log_likelihood_accumulator.hpp             //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_MODEL_FUNCTIONAL_LOG_LIKELIHOOD_ACCUMULATOR_HPP_ER_2009
 #define BOOST_STATISTICS_MODEL_FUNCTIONAL_LOG_LIKELIHOOD_ACCUMULATOR_HPP_ER_2009
+#include <boost/concept_check.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/operators.hpp>
@@ -14,6 +15,7 @@
 #include <boost/statistics/model/wrap/aggregate/model_data.hpp>
 #include <boost/joint_dist/unscope/log_unnormalized_pdf.hpp>
 #include <boost/scalar_dist/unscope/log_unnormalized_pdf.hpp>
+#include <boost/statistics/model/concept/log_likelihood.hpp>
 
 namespace boost{
 
@@ -42,7 +44,6 @@ class log_likelihood_accumulator : boost::addable<
 public:
     typedef T                        result_type;
     typedef model_parameter_<M,P>    model_parameter_type;
-
 
     // Construction
     log_likelihood_accumulator();
@@ -117,6 +118,11 @@ template<typename T,typename M,typename P>
 template<typename X,typename Y>
 typename log_likelihood_accumulator<T,M,P>::result_type 
 log_likelihood_accumulator<T,M,P>::operator()(const X& x,const Y& y){
+
+    // TODO see compile error by uncommenting, e.g. survival_model
+    // BOOST_CONCEPT_ASSERT(( 
+    //  HasLogLikelihood<T,M,X,Y,P>
+    // ));
 
     result_type l = log_likelihood<T>(
         make_model_data(

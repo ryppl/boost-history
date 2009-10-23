@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::include.hpp                                                        //
+// statistics::model::include.hpp                                            //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -11,6 +11,6 @@
 #include <boost/statistics/model/algorithm/include.hpp>
 #include <boost/statistics/model/wrap/include.hpp>
 #include <boost/statistics/model/functional/include.hpp>
-
+#include <boost/statistics/model/random/include.hpp>
 
 #endif

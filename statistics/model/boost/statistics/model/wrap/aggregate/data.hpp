@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::wrap::aggregate::data.hpp                                          //
+// statistics::model::wrap::aggregate::data.hpp                              //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -16,14 +16,14 @@ namespace model{
         
     template<typename X,typename Y>
     class data_ : 
-        public covariate_<X>, 
-        public response_<Y>
+        public covariate_wrapper<X>, 
+        public response_wrapper<Y>
     {
-        typedef covariate_<X> cov_;
-        typedef response_<Y> resp_;
+        typedef covariate_wrapper<X> cov_;
+        typedef response_wrapper<Y> resp_;
 
     public:
-        typedef data_<X,Y> data_w_;
+        typedef data_<X,Y> data__type;
         
         // Construction
         data_();
@@ -38,7 +38,8 @@ namespace model{
     data_<X,Y>::data_() : cov_(),resp_(){}
         
     template<typename X,typename Y>
-    data_<X,Y>::data_( cov_ cov, resp_ resp ) : cov_( cov ), resp_( resp ){}
+    data_<X,Y>::data_( cov_ cov, resp_ resp ) 
+    : cov_( cov ), resp_( resp ){}
         
     template<typename X,typename Y>
     data_<X,Y>::data_(const data_& that)

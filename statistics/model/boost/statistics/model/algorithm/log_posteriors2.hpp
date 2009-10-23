@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::algorithm::log_posteriors2.hpp                                      //
+// statistics::model::algorithm::log_posteriors2.hpp                         //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -8,6 +8,7 @@
 #ifndef BOOST_MODEL_ALGORITHM_LOG_POSTERIORS2_HPP_ER_2009
 #define BOOST_MODEL_ALGORITHM_LOG_POSTERIORS2_HPP_ER_2009
 #include <algorithm>
+#include <boost/iterator/iterator_traits.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/statistics/model/wrap/aggregate/prior_model_dataset.hpp>
 #include <boost/statistics/model/functional/log_prior_evaluator.hpp>
@@ -18,6 +19,7 @@ namespace statistics{
 namespace model{   
 
 // Evaluates the log-postetior for each parameter in [b_p,e_p)
+// Also see log_posteriors
 template<
     typename T,typename D,typename M,typename Rx,typename Ry,typename ItP,
     typename ItLw
@@ -56,7 +58,7 @@ template<
     typename ItLw,
     typename ItLw2
 >
-ItLw
+ItLw2
 log_posteriors2(
     prior_model_dataset_<D,M,Rx,Ry> pmd,
     ItP b_p,
@@ -68,6 +70,7 @@ log_posteriors2(
     typedef log_likelihood_evaluator<T,M,Rx,Ry> eval_;
     eval0_ e0(pmd);
     eval_ e(pmd);
+
     return std::transform(
         b_p,    //1
         e_p,

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::wrap::unary::parameter.hpp                                         //
+// statistics::model::wrap::unary::parameter.hpp                             //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -14,16 +14,16 @@ namespace statistics{
 namespace model{
         
     template<typename X>
-    class parameter_ : detail::base_<X>{
+    class parameter_wrapper : detail::base_<X>{
         typedef detail::base_<X> base_;
     public:
-        typedef X                 parameter_type;
-        typedef parameter_<X>     parameter_w_;
+        typedef X                       parameter_type;
+        typedef parameter_wrapper<X>    parameter_wrapper_type;
             
         // Construction
-        parameter_();
-        parameter_(const X& x);
-        parameter_(const parameter_&);
+        parameter_wrapper();
+        parameter_wrapper(const X& x);
+        parameter_wrapper(const parameter_wrapper&);
             
         // Access
         const X& parameter()const;
@@ -32,24 +32,24 @@ namespace model{
     // Implementation //
             
     template<typename X>
-    parameter_<X>::parameter_() : base_(){}
+    parameter_wrapper<X>::parameter_wrapper() : base_(){}
         
     template<typename X>
-    parameter_<X>::parameter_( const X& x ) : base_(x){}
+    parameter_wrapper<X>::parameter_wrapper( const X& x ) : base_(x){}
         
     template<typename X>
-    parameter_<X>::parameter_(const parameter_& that)
+    parameter_wrapper<X>::parameter_wrapper(const parameter_wrapper& that)
     :base_(that){}
 
     template<typename X>
-    const X& parameter_<X>::parameter()const{ return (this->value); }
+    const X& parameter_wrapper<X>::parameter()const{ return (this->value); }
                 
     // Free functions
         
     template<typename X>
-    parameter_<X> 
-    make_parameter(const X& x){
-        typedef parameter_<X> result_type;
+    parameter_wrapper<X> 
+    make_parameter_wrapper(const X& x){
+        typedef parameter_wrapper<X> result_type;
         return result_type(x);
     }
 

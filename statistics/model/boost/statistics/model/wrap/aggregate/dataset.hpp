@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// model::wrap::aggregate::dataset.hpp                                       //
+// statistics::model::wrap::aggregate::dataset.hpp                           //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -16,14 +16,14 @@ namespace model{
         
     template<typename Rx,typename Ry>
     class dataset_ : 
-        public covariates_<Rx>, 
-        public responses_<Ry>
+        public covariates_wrapper<Rx>, 
+        public responses_wrapper<Ry>
     {
-        typedef covariates_<Rx> covs_;
-        typedef responses_<Ry> resps_;
+        typedef covariates_wrapper<Rx> covs_;
+        typedef responses_wrapper<Ry> resps_;
 
         public:
-        typedef dataset_<Rx,Ry> dataset_w_;
+        typedef dataset_<Rx,Ry> dataset_type;
         
         // Construction
         dataset_();
