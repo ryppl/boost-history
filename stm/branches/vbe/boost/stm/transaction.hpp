@@ -32,13 +32,13 @@
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction.hpp>
 #include <boost/stm/datatypes.hpp>
-#include <boost/stm/move.hpp>
 #include <boost/stm/transaction_bookkeeping.hpp>
-#include <boost/stm/select_contention_manager.hpp>
+#include <boost/stm/contention_managers/select_contention_manager.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/bloom_filter.hpp>
 #include <boost/stm/detail/deleters.hpp>
 #include <boost/stm/detail/monotonic_storage.hpp>
+#include <boost/stm/detail/move.hpp>
 #include <boost/stm/detail/transactions_stack.hpp>
 #include <boost/stm/detail/vector_map.hpp>
 #include <boost/stm/detail/vector_set.hpp>
@@ -2089,14 +2089,8 @@ inline int transaction::unlock<Mutex*> (Mutex *lock) { return transaction::pthre
 
 #include <boost/stm/detail/transaction_impl.hpp>
 #include <boost/stm/detail/latm_general_impl.hpp>
-#include <boost/stm/detail/auto_lock.hpp>
-#include <boost/stm/tx_ptr.hpp>
-
-#if defined(BOOST_STM_CM_STATIC_CONF)
-#if defined(BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM)
-#include <boost/stm/detail/except_and_back_off_on_abort_notice_cm_impl.hpp>
-#endif
-#endif
+//#include <boost/stm/synch/auto_lock.hpp>
+//#include <boost/stm/tx_ptr.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 #endif // BOOST_STM_TRANSACTION__HPP

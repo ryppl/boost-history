@@ -18,6 +18,7 @@
 #include "main.h"
 #include "testHT_latm.h"
 #include <boost/stm/transaction.hpp>
+#include <boost/stm/synch/auto_lock.hpp>
 #include <pthread.h>
 
 #include <fstream>

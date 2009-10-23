@@ -12,7 +12,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/stm/transaction.hpp>
-#include <boost/stm/non_tx/smart_ptr.hpp>
+#include <boost/stm/non_tx/detail/cache_map.hpp>
 #include <boost/stm/contention_manager.hpp>
 #include <iostream>
 
