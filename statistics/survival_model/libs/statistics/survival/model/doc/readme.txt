@@ -29,7 +29,6 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 
 /boost_1_39_0/ 
 /sandbox/statistics/arithmetic/ 
-/sandbox/statistics/non_par/ 
 /sandbox/statistics/importance_sampling/ 
 /sandbox/statistics/importance_weights/ 
 /sandbox/statistics/joint_dist/ 
@@ -41,6 +40,7 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 /sandbox/statistics/arithmetic/ 
 /sandbox/statistics/iterator/ 
 /sandbox/statistics/dist_random/ 
+/sandbox/statistics/matrix_view/ 
 /sandbox/statistics/scalar_dist/ 
 /sandbox/statistics/standard_distribution/ 
 /sandbox/statistics/survival_data/ 

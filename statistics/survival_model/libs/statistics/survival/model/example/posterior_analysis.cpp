@@ -5,11 +5,9 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#include <ostream>
 #include <iomanip>
 #include <fstream>
 #include <stdexcept>
-#include <string> //needed?
 #include <vector>
 #include <limits>
 #include <algorithm>
@@ -39,7 +37,17 @@
 
 #include <libs/statistics/survival/model/example/posterior_analysis.h>
 
-void example_posterior_analysis(std::ostream& out){
+void example_posterior_analysis(
+    // TODO n_bath should be deduced from input (getline)
+    const long& n_batch,            // = 5e4; 
+    const long& n_batch_mod,        // = 1e3;
+    const long& n_proposal,         // = 1e4; 
+    const long& n_t_pars,           // = 1e4;
+    const double& entry_bound,      // = const_::inf_;
+    const std::string& in_path,     // = "/Users/erwann/projets/2009/Xcode/survival/build/Release/    
+    const std::string& out_path,    // = "/Users/erwann/projets/2009/Xcode/survival/build/Release/
+    std::ostream& out
+){
 
     out << "-> example_posterior_analysis : ";
     out.flush();
@@ -49,9 +57,9 @@ void example_posterior_analysis(std::ostream& out){
     // Samples proposal draws
     // Successively loads batches of records, and for each
     // Creates events at a given time
-    // Importance samples from the posterior as the target density
+    // Importance samples from the posterior density
     // Saves the Cook-Gelman (cg) statistics for each.
-    // Checks the cg data against U[0,1] using Kolmogorov Smirnov
+    // Checks the cg data against U[0,1] using the Kolmogorov Smirnov distance
     
     using namespace boost;
     using namespace statistics;
@@ -63,34 +71,45 @@ void example_posterior_analysis(std::ostream& out){
     typedef std::string                             str_;
     typedef double                                  val_;
     typedef std::vector<val_>                       vals_;
-    typedef surv::constant<val_>                    const_;
 
     // [ Input ]
     typedef boost::archive::text_iarchive           ia_;
     typedef std::ifstream                           ifs_;
 
-    const str_ input_path 
-        = "/Users/erwann/projets/2009/Xcode/survival/build/Release/";
-    const str_ prior_path   = input_path + "/prior";
-    const str_ x_vals_path  = input_path + "/x_vals";
-    const str_ pars_path    = input_path + "/pars";
-    const str_ batches_path = input_path + "/batches";
+    const str_ prior_path       = in_path + "prior";
+    const str_ xm_mngr_path     = in_path + "covariates_model_mngr";
+    const str_ pr_mngrs_path    = in_path + "par_records_mngrs_path";
 
-    // Covariates
-    typedef val_                                    x_;
-    typedef vals_                                   x_vals_;
-    typedef range_cycle<>                           range_cycle_;
-    typedef range_cycle_::apply<x_vals_>::type      x_cycle_;
-    x_vals_ x_vals;
+    // [ Model ]
+    typedef val_ x_;
+    typedef val_ par_;
+    typedef surv::model::exponential::model<val_>               model_;
+    typedef model::model_covariate_parameter_<model_,x_,par_>   mcp_;
+    typedef surv::data::default_covariates_model_mngr<
+        x_,
+        model_
+    > xm_mngr_;
+    xm_mngr_ xm_mngr;
     {
-        ifs_ ifs(x_vals_path.c_str());
+        ifs_ ifs(xm_mngr_path.c_str());
         ia_ ia(ifs);
-        ia >> x_vals;
+        ia >> xm_mngr;
     }
-    x_cycle_ x_cycle;
+    typedef val_ par_;
+    typedef surv::data::default_parameter_records_mngr<
+        val_,
+        par_
+    > pr_mngr_;
+    pr_mngr_ pr_mngr;
+    ifs_ ifs_pr_mngrs( pr_mngrs_path.c_str() );
+    if(!ifs_pr_mngrs.good()){
+        str_ str = "error opening : ";
+        str.append( pr_mngrs_path );
+        throw std::runtime_error(str);
+    }
+    ia_ ia_pr_mngrs( ifs_pr_mngrs );
 
-    // Prior
-    typedef math::normal_distribution<val_>         mprior_;
+    typedef math::normal_distribution<val_> mprior_;
     mprior_ mprior;
     {
         typedef math::meta_distribution_primitives<mprior_>::type  prim_;
@@ -101,110 +120,39 @@ void example_posterior_analysis(std::ostream& out){
         mprior = prim;
     }
 
-    // Records
-    // TODO n_bath should be deduced from input (getline)
-    const long n_batch                              = 5e4; 
-
-    typedef surv::data::record<val_>                record_;
-    typedef std::vector<record_>                    records_;
-    typedef range_size<records_>::type              size_type;
-    typedef range_iterator<records_>::type          it_record_;
-
-    records_ records;
-    ifs_ ifs_batches(batches_path.c_str());
-    if(!ifs_batches.good()){
-        str_ str = "error opening : ";
-        str.append( batches_path );
-        throw std::runtime_error(str);
-    }
-    ia_ ia_batches(ifs_batches);
-
-    // True pars
-    typedef val_                                    par_;
-    typedef vals_                                   pars_;
-    const long n_true_pars_kss = -1;//n_batch; 
-    pars_ true_pars;
-    true_pars.reserve(n_batch);
-    {
-        ifs_ ifs_pars(pars_path.c_str());
-        if(!ifs_pars.good()){
-            str_ str = "error opening : ";
-            str.append( pars_path );
-            throw std::runtime_error(str);
-        }
-        ia_ ia_pars(ifs_pars);
-
-        for(long i = 0; i< n_batch; i++){
-            val_ par;
-            ia_pars >> par;
-            true_pars.push_back(par);
-        }
-    }
-    if(n_true_pars_kss>0){   // Check that F_n(true_pars) agrees with mprior
-        BOOST_ASSERT( n_batch % n_true_pars_kss == 0);
-        vals_ true_pars_kss;
-        true_pars_kss.reserve(n_true_pars_kss);
-        e_cdf::sequential_kolmogorov_smirnov_distance(
-            mprior,
-            boost::begin(true_pars),
-            boost::end(true_pars),
-            n_true_pars_kss,
-            std::back_inserter(true_pars_kss)
-        );
-        out << "true pars kss : ";
-        std::copy(
-            boost::begin( true_pars_kss ),
-            boost::end( true_pars_kss ),
-            std::ostream_iterator<val_>(out," ")
-        );
-        out << std::endl;
-    }
-
     // [ Output ]
     typedef boost::archive::text_oarchive           oa_;
     typedef std::ofstream                           ofs_;
-
-    const char* t_pars_path = "./t_pars";
-    const char* cg_path     = "./cg";
-    const char* ks_path     = "./kss";
+    const str_ t_pars_path = out_path + "t_pars";
+    const str_ cg_path     = out_path + "cg";
+    const str_ ks_path     = out_path + "kss";
 
     // Cg
-    ofs_ ofs_cg( cg_path ); 
+    ofs_ ofs_cg( cg_path.c_str() ); 
     vals_ cgs; cgs.reserve(n_batch);
 
     // Targets
-    const long n_t_pars = 1e4;
+    typedef std::vector<par_> pars_;
     pars_ t_pars( n_t_pars );
-    ofs_ ofs_t_pars(t_pars_path);
+    ofs_ ofs_t_pars(t_pars_path.c_str());
     oa_ oa_t_pars(ofs_t_pars);
     
-    // [ Local ]
-
-    // Monitoring
-    const long n_batch_mod                          = 1e3;
-
     // Events
-    const val_ entry_bound                          = const_::inf_;
-    typedef surv::data::event<val_>                 event_;
-    typedef std::vector<event_>                     events_;
-    typedef range_iterator<events_>::type           it_event_;
+    typedef surv::data::responses_mngr<val_>        y_mngr_;
+    y_mngr_ y_mngr;
 
     // Urng
     typedef boost::mt19937                          urng_;
     urng_                                           urng;
 
-    // Unif
-    typedef math::uniform_distribution<val_>        munif_;
-    
     // Proposal
     typedef mprior_                                 mproposal_;
-    const long n_proposal = 1e4; 
     // This one size fits all proposal is likely to result in a small ESS. You
     // can monitor the ESS by calling out << pws. Ultimately, uniformity of
     // the Cook-Gelman will determine if either the computations are wrong
     // or if n_proposal is too small. n_proposal = 1e4 works fine for N(0,5).
-    mproposal_  mproposal = mprior; 
-    pars_ p_pars (n_proposal); 
+    mproposal_ mproposal = mprior; 
+    pars_ p_pars(n_proposal); 
     vals_ p_lpdfs(n_proposal);
 
     // Weights
@@ -212,18 +160,20 @@ void example_posterior_analysis(std::ostream& out){
     typedef model::importance_sampler<val_> model_is_;
     model_is_ model_is( max_log );
 
-    // typedef iw::prepare_weights<val_> pws_;
-    // pws_ pws( max_log );
     vals_ iws; 
     iws.reserve( n_proposal );
         
     // Model
     typedef surv::model::exponential::model<val_> model_;
-    model_ model;
-    typedef model::prior_model_dataset_<mprior_,model_,x_cycle_,events_> pmd_; 
+    typedef model::prior_model_dataset_<
+        mprior_,
+        xm_mngr_::model_wrapper_type::model_type,
+        xm_mngr_::covariates_type,
+        y_mngr_::responses_type
+    > pmd_; 
 
     {   // [ Proposal sample ]
-        const long n_p_pars_kss = -1;//n_batch; 
+        const long n_p_pars_kss = -1;   //n_batch; 
         boost::timer t;
 
         generate_function_n<math::fun_wrap::log_unnormalized_pdf_>(
@@ -234,52 +184,33 @@ void example_posterior_analysis(std::ostream& out){
             urng
         );
 
-        if(n_p_pars_kss>0){   // Check that F_n(p_pars) agrees with mproposal
-            BOOST_ASSERT( n_batch % n_p_pars_kss == 0 );
-            vals_ p_pars_kss;
-            p_pars_kss.reserve(n_p_pars_kss);
-            e_cdf::sequential_kolmogorov_smirnov_distance(
-                mproposal,
-                boost::begin(p_pars),
-                boost::end(p_pars),
-                n_p_pars_kss,
-                std::back_inserter(p_pars_kss)
-            );
-            out << "p_pars kss : ";
-            std::copy(
-                boost::begin( p_pars_kss ),
-                boost::end( p_pars_kss ),
-                std::ostream_iterator<val_>(out," ")
-            );
-            out << std::endl;
-        }
-
         BOOST_ASSERT( size(p_pars) == size(p_lpdfs) );
     }
 
     // Loops over batches
     for(unsigned i = 0; i<n_batch; i++){
-        records.clear();
-        ia_batches >> records;
-        events_ events; 
-        events.reserve( size(records) );
-        surv::data::events(
-            begin(records),
-            end(records),
-            entry_bound,
-            std::back_inserter(events)
+        ia_pr_mngrs >> pr_mngr;
+        y_mngr.clear_responses();
+        y_mngr.update_responses(
+            boost::begin( pr_mngr.records() ),
+            boost::end( pr_mngr.records() ),
+            entry_bound
         );
-        size_type n_event = size( events );
+        xm_mngr.update_covariates(
+            boost::size(
+                y_mngr.responses()
+            )
+        );
         
-        x_cycle = range_cycle_::make( x_vals, 0, n_event );
-        BOOST_ASSERT( size( x_cycle ) >= n_event );
-        x_cycle.advance_end( - ( size( x_cycle ) - n_event ) );
-        BOOST_ASSERT( size( x_cycle ) == n_event );
-
         {   // [ Posterior sample ]
             boost::timer t;
-            pmd_ pmd( mprior, model, x_cycle, events);
-            iws.resize( size( p_pars ) );
+            pmd_ pmd( 
+                mprior, 
+                xm_mngr.model_wrapper().model(), 
+                xm_mngr.covariates(), 
+                y_mngr.responses()
+            );
+            iws.resize( boost::size( p_pars ) );
 
             t_pars.clear();
             t_pars.resize( n_t_pars );
@@ -300,7 +231,7 @@ void example_posterior_analysis(std::ostream& out){
             val_ plt = e_cdf::proportion_less_than(
                 boost::begin( t_pars ),
                 boost::end( t_pars ),
-               true_pars[i]
+                pr_mngr.parameter_wrapper().parameter()
             );
             cgs.push_back( plt );
             ofs_cg << plt << ' ';
@@ -318,6 +249,7 @@ void example_posterior_analysis(std::ostream& out){
     }// loop over batches
 
     {   // Kolmorov Smirnov of the cgs
+        typedef math::uniform_distribution<val_> munif_;
         long n_ks = n_batch;
         BOOST_ASSERT( n_batch % n_ks == 0 );
         vals_ kss;
@@ -329,7 +261,7 @@ void example_posterior_analysis(std::ostream& out){
             n_ks,
             std::back_inserter(kss)
         );
-        ofs_ ofs_ks(ks_path);
+        ofs_ ofs_ks(ks_path.c_str());
         std::copy(
             boost::begin( kss ),
             boost::end( kss ),
