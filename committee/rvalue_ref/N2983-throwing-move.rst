@@ -207,8 +207,8 @@ written as follows:
 
     template <class First2, Second2>
     pair( pair<First2,Second2>&& rhs ) 
-          **throw( !is_nothrow_constructible<First,First2&&>::value
-                 || !is_nothrow_constructible<Second,Second2&&>::value )** [#is_nothrow_constructible]_
+          **noexcept( is_nothrow_constructible<First,First2&&>::value
+                      && is_nothrow_constructible<Second,Second2&&>::value )** [#is_nothrow_constructible]_
       : first( move(rhs.first) ), 
         second( move(rhs.second) )
     {}
@@ -339,17 +339,19 @@ Modify paragraph 13 as follows:
     :raw-html:`<span class="ins"><i>noexcept-expression</i></span>`
       :raw-html:`<span class="ins">noexcept ( <i>expression</i> )</span>`
 
-  2  :raw-html:`<span class="ins">The result of the noexcept operator is a constant of type <code>bool</code>.</span>`
+  2 :raw-html:`<span class="ins">The result of the <code>noexcept</code> operator is a constant of type <code>bool</code>.</span>`
 
-  3 :ins:`The result of the noexcept operator is true if evaluating the expression would not require:`
+  3 :raw-html:`<span class="ins">The result of the <code>noexcept</code> operator is <code>false</code> if in an evaluated context the <i>expression</i> would contain</span>`
 
-  * :raw-html:`<span class="ins">A call to a function that does not have an empty <i>exception-specification</i> ([except.spec]).</span>`
+  * :raw-html:`<span class="ins">a potentially evaluated call` [#implicit-call]_ :raw-html:`<span class="ins">to a function, member function, function pointer, or member function pointer that does not have an empty <i>exception-specification</i> ([except.spec]),</span>`
 
-  * :raw-html:`<span class="ins">A <i>throw-expression</i> ([except.throw])</span>`
+  * :raw-html:`<span class="ins">a potentially evaluated <i>throw-expression</i> ([except.throw]),</span>`
 
-  * :raw-html:`<span class="ins">A <code>dynamic_cast</code> to a reference type that is not a derived-to-base conversion ([expr.dynamic.cast]).</span>`
+  * :raw-html:`<span class="ins">a potentially evaluated <code>dynamic_cast</code> expression ([expr.dynamic.cast]) that requires a run-time check, or</span>`
 
-  :ins:`Otherwise, the result is false.`
+  * :raw-html:`<span class="ins">a potentially evaluated <code>typeid</code> expression ([expr.typeid]) applied to an expression whose type is a polymorphic class type ([class.virtual]).</span>`
+
+  :ins:`Otherwise, the result is true.`
 
 14.6.3 Variadic templates [temp.variadic]
 =========================================
@@ -427,6 +429,12 @@ Change the following paragraphs as follows:
     </blockquote>
     </p>`
 
+    :raw-html:`<span class="ins">In a <i>noexcept-specification</i>, the
+    <i>constant-expression</i>, if supplied, shall be a constant expression
+    ([expr.const]) that is contextually converted to <code>bool</code>
+    ([conv] Clause 4). In what follows, a <i>noexcept-specification</i>
+    <code>noexcept()</code> is equivalent to <code>noexcept(true)</code>.</span>`
+
   7 A function is said to *allow* an exception of type ``E`` if its :raw-html:`<i><span class="ins">dynamic-</span>exception-specification</i>` contains a type ``T`` for which a handler of type ``T`` would be a match (15.3) for an exception of type ``E``.
 
   .. comment :raw-html:`<span class="ins">, if its <i>noexcept-specification</i> is <code>noexcept(false)</code>, or if the function has no <i>exception-specification</i>`.
@@ -435,23 +443,17 @@ Change the following paragraphs as follows:
 
   14 In :raw-html:`a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i>,` a *type-id* followed by an ellipsis is a pack expansion (14.6.3).
 
-Add these paragraphs:
+Add the following new paragraph:
 
-    :raw-html:`<span class="ins">15 In a <i>noexcept-specification</i>, the
-    <i>constant-expression</i>, if supplied, shall be a constant expression
-    (5.19) that is contextually converted to <code>bool</code>
-    (Clause 4).</span>`
-
-    :raw-html:`<span class="ins">16 If a function with the
-    <i>noexcept-specification</i> <code>noexcept(true)</code> throws an
-    exception, the behavior is undefined.  The <i>exception-specification</i>
-    <code>noexcept(true)</code> is in all other respects equivalent to
-    <code>throw()</code>.  The <i>exception-specification</i>
-    <code>noexcept(false)</code> is equivalent to omitting the exception
-    specification altogether.</span>`
-
-    :raw-html:`<span class="ins">17 <code>noexcept()</code> is
-    equivalent to the <i>noexcept-specification</i> <code>noexcept(true)</code>.</span>`
+    :raw-html:`<span class="ins">15 If a function with a
+    <i>noexcept-specification</i> whose <i>constant-expression</i>
+    yields <code>true</code> throws an exception, the behavior is
+    undefined.  The <i>exception-specification</i> whose
+    <i>constant-expression</i> yields <code>true</code> is in all
+    other respects equivalent to the <i>exception-specification</i>
+    <code>throw()</code>.  The <i>exception-specification</i> whose
+    <i>constant-expression</i> yields <code>false</code> is equivalent
+    to omitting the <i>exception-specification</i> altogether.</span>`
 
 .. comment
 
@@ -719,3 +721,5 @@ Change paragraph 6 as follows:
    move constructors but with a default constructor and a non-throwing
    swap, by first default-constructing elements in the new array and
    swapping each element into place.
+
+.. [#implicit-call] :raw-html:`<span class="ins">This includes implicit calls, e.g., the call to an allocation function in a <i>new-expression</i>.</span>`
