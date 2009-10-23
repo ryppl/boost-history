@@ -11,5 +11,6 @@
 #include <boost/statistics/survival/data/random/batch.hpp>
 #include <boost/statistics/survival/data/random/default_batch.hpp>
 #include <boost/statistics/survival/data/random/failure_time.hpp>
+#include <boost/statistics/survival/data/random/simulate_batches.hpp>
 
 #endif

@@ -27,7 +27,7 @@ namespace random{
 
     // Given model and parameter, simulates records (et,ft) like this:
     // et is drawn from a random clock
-    // x random
+    // x is random
     // ft is drawn from the p(ft|x,p,model)
     //
     // Models RandomDistribution
@@ -47,12 +47,13 @@ namespace random{
         typedef typename RdX::result_type                   covariate_type;
 
         typedef statistics::model::model_parameter_<M,P>    model_parameter_;
-        typedef statistics::model::model_covariate_parameter_<M,covariate_type,P> 
+        typedef statistics
+            ::model::model_covariate_parameter_<M,covariate_type,P> 
                                                 model_covariate_parameter_;
 
         // Constructor
         batch();
-        batch( const M&, const P&,const RdC&,const RdX& );
+        batch( model_parameter_ mp,const RdC&,const RdX& );
         batch( const batch& );
         batch& operator=( const batch& );
 
@@ -81,8 +82,8 @@ namespace random{
     template<
         typename T,typename M,typename P, typename RdC,typename RdX,typename I>
     batch<T,M,P,RdC,RdX,I>::batch( 
-        const M& m,const P& p, const RdC& rdc,const RdX& rdx 
-    ):model_parameter_(m,p),rdc_(rdc),rdx_(rdx),x_(){}
+        model_parameter_ mp, const RdC& rdc,const RdX& rdx 
+    ):model_parameter_(mp),rdc_(rdc),rdx_(rdx),x_(){}
 
     template<
         typename T,typename M,typename P, typename RdC,typename RdX,typename I>

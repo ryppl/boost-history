@@ -10,6 +10,7 @@
 
 #include <boost/statistics/survival/data/data/event.hpp>
 #include <boost/statistics/survival/data/data/mean_event.hpp>
+#include <boost/statistics/survival/data/data/mngr/include.hpp>
 #include <boost/statistics/survival/data/data/record.hpp>
 
 #endif

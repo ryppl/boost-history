@@ -23,7 +23,6 @@ namespace statistics{
 namespace survival{
 namespace data{
 
-
     // Updates a collection of mean_events, one for each covariate value.
     //
     // Requirements
@@ -119,7 +118,6 @@ namespace data{
     mean_events_by_covariate<T,X,F>::tuples()const{
         return (this->tuples_);
     }
-
 
     template<typename T,typename X,typename F>
     template<typename It> 

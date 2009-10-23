@@ -7,7 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_SURVIVAL_DATA_META_RANDOM_INPUT_HPP_ER_2009
 #define BOOST_STATISTICS_SURVIVAL_DATA_META_RANDOM_INPUT_HPP_ER_2009
-#include <boost/statistics/survival/data/meta/failure_distribution.hpp>
+#include <boost/statistics/survival/data/meta/failure_random.hpp>
 
 namespace boost{
 namespace statistics{

@@ -15,13 +15,15 @@
 #include <boost/random/ref_distribution.hpp>
 #include <boost/statistics/survival/data/random/batch.hpp>
 
-
 namespace boost{
 namespace statistics{
 namespace survival{
 namespace data{
 namespace random{
 
+    // Same as batch, but
+    // x is drawn cyclically from a fixed set of values, referred to 
+    // as "x_values", and the clock produces times at fixed intervals.
     template<
         typename T,
         typename M,
@@ -54,27 +56,26 @@ namespace random{
         typedef typename type::model_parameter_ mp_;
 
         static rcov_ rcov(
-            Rx& rx,             // Not const Rx&? TODO see range_cycle
+            Rx& x_values,             // Not const Rx&? TODO see range_cycle
             size_type offset,
             size_type n
 
         ){
             return rcov_(
                 gcov_(
-                    meta_::make(rx,offset,n)
+                    meta_::make(x_values,offset,n)
                 )
             );
         }
         
         // rcov above must be called from outside.
         static type make(
-            const M& m,
-            const P& p,
+            mp_ mp,
             const clock_type& c,
             rcov_& rcov
         ){
             return type(
-                m,p,
+                mp,
                 rc_(c),
                 ref_rcov_(
                     rcov

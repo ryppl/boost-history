@@ -9,6 +9,7 @@
 #define BOOST_STATISTICS_SURVIVAL_DATA_ALGORTIHM_INCLUDE_HPP_ER_2009
 
 #include <boost/statistics/survival/data/algorithm/events.hpp>
+#include <boost/statistics/survival/data/algorithm/failure_times.hpp>
 #include <boost/statistics/survival/data/algorithm/vectorize_events.hpp>
 #include <boost/statistics/survival/data/algorithm/logit_log.hpp>
 #include <boost/statistics/survival/data/algorithm/mean_events_by_covariate.hpp>

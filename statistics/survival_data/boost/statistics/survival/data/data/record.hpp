@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// statistics::survival::data::record.hpp                                    //
+// statistics::survival::data::data::record.hpp                              //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_SURVIVAL_DATA_RECORDER_HPP_ER_2009
-#define BOOST_STATISTICS_SURVIVAL_DATA_RECORDER_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_DATA_DATA_RECORDER_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_DATA_DATA_RECORDER_HPP_ER_2009
 #include <ostream>
 #include <limits>
 #include <boost/operators.hpp>
@@ -42,7 +42,7 @@ public:
     template<typename Archive>
     void serialize(Archive & ar, const unsigned int version);
 
-    bool operator<(const record& other);
+    bool operator<(const record& other)const;
     
 protected:
     value_type entry_time_;     //t
@@ -51,9 +51,6 @@ protected:
 
 template<typename T>
 std::ostream& operator<<(std::ostream& out,const record<T>& r);
-
-template<typename T>
-bool operator<(const record<T>& a,const record<T>& b);
     
 template<typename T>
 typename record<T>::value_type 
@@ -117,7 +114,7 @@ std::ostream& operator<<(std::ostream& out,const record<T>& r){
 }
     
 template<typename T>
-bool record<T>::operator<(const record<T>& other){
+bool record<T>::operator<(const record<T>& other)const{
     return ( (this->entry_time()) < other.entry_time() );
 }
 

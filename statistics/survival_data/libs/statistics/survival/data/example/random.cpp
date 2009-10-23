@@ -30,16 +30,26 @@
 
 #include <boost/statistics/empirical_cdf/algorithm/sequential_kolmogorov_smirnov_distance.hpp>
 
-#include <boost/matrix_view/algorithm/transform_column.hpp> 
 #include <boost/dist_random/include.hpp>
 
 #include <boost/statistics/model/include.hpp>
 #include <boost/statistics/survival/data/include.hpp>
 #include <boost/statistics/survival/model/models/exponential/include.hpp>
 
+#include <libs/statistics/survival/data/example/random.h>
 
-void example_random(std::ostream& out){
-    out << "-> example_random : ";
+void example_random(
+    const unsigned&      n_records,          // = 1e2;
+    const unsigned&      n_batches,           // = 5e4;
+    const double&        mu,                // = 0.0;
+    const double&        sigma,             // = 5.0;
+    const double&        t,                 // = 0.0
+    const double&        delta_t,           // = 0.0
+    const std::string&   out_path,
+    std::ostream& out
+){
+    out << "-> example_random : "; 
+    out.flush();
     
     using namespace boost;
     using namespace statistics;
@@ -53,161 +63,140 @@ void example_random(std::ostream& out){
     // Each batch is saved using serialization
 
     // Types 
+    typedef std::string                                     str_;
     typedef double                                          val_;
     typedef std::vector<val_>                               vals_;
-    typedef range_iterator<vals_>::type                     iter_val_;
     typedef boost::mt19937                                  urng_;
 
     // Covariates values
     typedef val_                                            x_;
-    typedef vals_                                           x_vals_;
-    typedef range_cycle<>                                   range_cycle_;
-    typedef range_cycle_::apply<x_vals_>::type              x_cycle_;
-    typedef range_size<x_vals_>::type                       size_;
-
-    // Survival data
-    typedef surv::data::record<val_>                        record_;
-    typedef std::vector<record_>                            records_;
-    typedef std::vector<records_>                           records_batches_;
 
     // Model
     typedef math::normal_distribution<val_>                 mprior_;
     typedef val_                                            par_;
-    typedef std::vector<par_>                               pars_;
     typedef surv::model::exponential::model<val_>           model_;
-    
-    // Batch
-    typedef surv::data::random::meta_default_batch<
-        val_, model_, par_, x_vals_>                        meta_batch_;
+    typedef model::model_covariate_parameter_<model_,x_,par_> mcp_;
 
-    typedef meta_batch_::clock_type                         clock_;
-    typedef meta_batch_::type                               batch_;
-    typedef batch_::model_covariate_parameter_              mcp_;
-    typedef mcp_::model_parameter_w_                        mp_;
-    typedef variate_generator<urng_&,batch_>                vg_r; //record
-
-    // I/O
+    // Output
     typedef boost::archive::text_oarchive                   oa_;
-    typedef boost::archive::text_iarchive                   ia_;
     typedef std::ofstream                                   ofs_;
-
-    // Failure time distribution
-    typedef surv::data::meta_failure_distribution<model_>   meta_fd_;
-    typedef meta_fd_::type                                  fd_;
 
     // [Constants]
     const unsigned      k                   = 2;        // # number x values
-    const unsigned      n_record            = 1e2;
-    const unsigned      n_batch             = 5e4;
-    const unsigned      n_ks_data           = n_record/k;
-    const val_          mu                  = 0.0;
-    const val_          sigma               = 5.0;
-    const clock_        clock(0.0,0.0);
+    const unsigned      n_ks_data           = n_records/k;
 
-    BOOST_ASSERT( n_record % k == 0 );
-    BOOST_ASSERT( n_ks_data % (n_record/k) == 0 );
+    BOOST_ASSERT( n_records % k == 0 );
+    BOOST_ASSERT( n_ks_data % (n_records/k) == 0 );
     
     // [ os ]
-    const char* prior_path      = "./prior";
-    const char* x_vals_path     = "./x_vals";
-    const char* ks_path         = "./ks_data";
-    const char* batches_path    = "./batches";
-    const char* pars_path       = "./pars";
+    const str_ prior_path      = out_path + "prior";
+    const str_ ks_path         = out_path + "ks_data";
+    const str_ xpm_mngr_path   = out_path + "covariates_prior_model_mngr";
+    const str_ pr_mngrs_path   = out_path + "par_records_mngrs_path";
     
-    // [ Covariate values ]
-    vals_ x_vals;
-    {
-        using namespace boost::assign;
-        x_vals += -0.5, 0.5;
-    }
-    BOOST_ASSERT(size(x_vals) == k);
+    // [ covariates - model ]
+     typedef surv::data::default_covariates_model_mngr<x_,model_>  
+        xm_mngr_;
+     typedef surv::data::default_covariates_prior_model_mngr<x_,mprior_,model_>  
+        xpm_mngr_;
+    typedef surv::data::default_parameter_records_mngr<val_,par_> 
+        pr_mngr_;
 
-    {
-        ofs_    ofs(x_vals_path);
-        oa_     oa(ofs);
-        oa << x_vals;
-        ofs.flush();
-        ofs.close();
-    }
-
-    // [ Initialization ]
-    model_      model; 
     mprior_     mprior( mu, sigma ); 
-    urng_       urng;
+        
+    xm_mngr_ xm_mngr;
+    xpm_mngr_ xpm_mngr;
     {
-        ofs_    ofs(prior_path);
+        vals_ x_vals;
+        {
+            using namespace boost::assign;
+            x_vals += -0.5, 0.5;
+        }
+        BOOST_ASSERT(size(x_vals) == k);
+        typedef xpm_mngr_::prior_model_wrapper_type pm_;
+        xpm_mngr =  xpm_mngr_(
+            boost::begin( x_vals ),
+            boost::end( x_vals ),
+            pm_(mprior,model_())
+        );
+    }
+    {
+        ofs_    ofs(xpm_mngr_path.c_str());
         oa_     oa(ofs);
-        BOOST_AUTO(prim,make_distribution_primitives(mprior));
-        oa << prim;
+        oa      << xpm_mngr;
         ofs.flush();
         ofs.close();
     }
+
+    // [ par_records_mngr ]
+    pr_mngr_ pr_mngr;
+    
+    // [ Initialization ]
+    urng_       urng;
 
     // Buffers
-    records_ records; records.reserve(n_record);
-    pars_ true_pars; true_pars.reserve(n_batch);
     vals_ kss; 
     kss.reserve(n_ks_data);                             // kolmogorov-smirnov 
-    vals_ fts; fts.reserve(n_record / k);               // failure times
-    vals_ pars; pars.reserve(n_record);
+    vals_ fts; fts.reserve(n_records / k);              // failure times
+
+    {
+        ofs_    ofs_pr_mngrs(pr_mngrs_path.c_str());
+        surv::data::simulate_batches(
+            ofs_pr_mngrs,  
+            xpm_mngr, 
+            n_batches,
+            n_records,
+            t,
+            delta_t,
+            urng
+        );
+    }
+
+/*
     {
         // Simulate batches of records
-        ofs_    ofs_ks(ks_path);
-        ofs_    ofs_batches(batches_path);
-        ofs_    ofs_pars(pars_path);
-        oa_     oa_batches(ofs_batches);
-        oa_     oa_pars(ofs_pars);
+        ofs_    ofs_ks(ks_path.c_str());
+        ofs_    ofs_pr_mngrs(pr_mngrs_path.c_str());
+        oa_     oa_pr_mngrs(ofs_pr_mngrs);
         ofs_ks << "first and last ks of the failure times : " << std::endl;
-        for(unsigned i = 0; i<n_batch; i++){
-            records.clear();
+        for(unsigned i = 0; i<n_batches; i++){
+            //records.clear();
             par_ par = boost::sample(mprior,urng);
-            oa_pars << par; 
-            ofs_pars.flush();
-            meta_batch_::rcov_ r_x = meta_batch_::rcov(
-                x_vals,
-                0,
-                n_record
-            );
-            batch_ batch = meta_batch_::make(
-                model,
-                par,
-                clock, 
-                r_x
-            );
-            true_pars.push_back( par );
-            vg_r vg_r( urng, batch );
 
-            std::generate_n(
-                std::back_inserter( records ),
-                n_record,
-                vg_r
+            pr_mngr.clear_records();
+            pr_mngr.set_parameter( par );
+            pr_mngr.back_generate(
+                n_records,
+                xm_mngr,
+                t,
+                delta_t,
+                urng
             );
 
-            BOOST_ASSERT(
-                is_sorted(
-                    boost::begin( records ),
-                    boost::end( records )
-                )
-            );// clock is supposed to tick forward
+            {
+                oa_pr_mngrs << pr_mngr; 
+            }
             
-            oa_batches << records;
-            
+            // Verify that the empirical distribution of failure times agrees
+            // with their assumed distribution
+            typedef surv::data::meta_failure_distribution<model_>   meta_fd_;
+            typedef meta_fd_::type                                  fd_;
             if(n_ks_data>0){   
                 ofs_ks << (format("batch %1%, ")%i).str() << std::endl;
                 for(unsigned i = 0; i<k; i++){
                     ofs_ks << (format("x[%1%] : ")%i).str();
                     fts.clear();
-                    matrix_view::transform_column<k>(
-                        boost::begin(records),
-                        boost::end(records),
+                    
+                    surv::data::failure_times<k>(
+                        boost::begin(pr_mngr.records()),
+                        boost::end(pr_mngr.records()),
                         i,
-                        lambda::bind(&record_::failure_time,lambda::_1),
                         std::back_inserter(fts)
                     );
                     mcp_ mcp(
-                        batch.model(),
-                        x_vals[i],
-                        batch.parameter()
+                        xm_mngr.model_wrapper(),
+                        xm_mngr.x_values()[i],
+                        par
                     );
                     fd_ fail_dist = surv::data::make_failure_distribution(mcp);
 
@@ -222,7 +211,7 @@ void example_random(std::ostream& out){
                     );
  
                     if(n_ks_data>1){
-                        // Desired result: kss[0] < kss.back();
+                        // Desired result: kss[0] > kss.back();
                         ofs_ks << kss[0] << ',' << kss.back();
                     }
                     ofs_ks << std::endl;
@@ -231,7 +220,8 @@ void example_random(std::ostream& out){
             }
         } // batch loop
         ofs_ks.close();
-        ofs_pars.close();
-        ofs_batches.close();
+        ofs_pr_mngrs.close();
     } // records generation
+*/
+    
 }
