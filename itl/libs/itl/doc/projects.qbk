@@ -101,7 +101,7 @@ to code a wrapper `class large_bitset` around `IntervalBitmap`
 so that `large_bitset` looks and feels like a usual
 set class.
 
-[section Usage of a large_bitset]
+[section Using large_bitset]
 
 To quicken your appetite for a look at the implementation
 here are a few use cases first. Let's start large.
@@ -111,7 +111,7 @@ In the first example . . .
 [large_bitset_test_large_set_all]
 
 . . . we are testing the limits. First we set all bits and
-the we switch off the very last bit.
+then we switch off the very last bit.
 
 [large_bitset_test_large_erase_last]
 
@@ -135,23 +135,34 @@ In function `test_small()` we apply a few more operations . . .
 ``
 ----- Test function test_small() -----------
 -- Switch on all bits in range [0,64] ------
-[0,9)->11111111
+[0,8)->11111111
+[8,9)->10000000
 --------------------------------------------
 -- Turn off bits: 25,27,28 -----------------
 [0,3)->11111111
 [3,4)->10100111
-[4,9)->11111111
+[4,8)->11111111
+[8,9)->10000000
 --------------------------------------------
 -- Flip bits in range [24,30) --------------
 [0,3)->11111111
 [3,4)->01011011
-[4,9)->11111111
+[4,8)->11111111
+[8,9)->10000000
 --------------------------------------------
 -- Remove the first 10 bits ----------------
 [1,2)->00111111
 [2,3)->11111111
 [3,4)->01011011
-[4,9)->11111111
+[4,8)->11111111
+[8,9)->10000000
+-- remove even bits in range [0,72) --------
+[1,2)->00010101
+[2,3)->01010101
+[3,4)->01010001
+[4,8)->01010101
+-- set    odd  bits in range [0,72) --------
+[0,9)->01010101
 --------------------------------------------
 ``
 

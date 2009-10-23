@@ -35,6 +35,22 @@ exe party
         <include>$(BOOST_ROOT)
     ;
 
+exe std_copy
+    :
+        std_copy_/std_copy.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe std_transform
+    :
+        std_transform_/std_transform.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
 # Examples using boost_date_time
 exe boost_party
     :
@@ -89,6 +105,17 @@ exe user_groups
         <include>../../..
         <include>$(BOOST_ROOT)
     ;
+
+# Projects
+exe large_bitset
+    :
+        large_bitset_/large_bitset.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+
 
 exe itvset_shell
     :

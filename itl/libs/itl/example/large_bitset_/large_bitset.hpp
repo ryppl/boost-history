@@ -184,7 +184,7 @@ private:
                 lower = base+1;
             }
 
-            if(ceil_rest == 0)
+            if(ceil_rest == all)
                 upper = ceil+1;
             else
             {

@@ -63,24 +63,6 @@ struct copy_insertion
 template<> 
 inline std::string binary_template_to_string<copy_insertion>::apply() { return "ci"; }
 
-/*JODO
-template <typename SourceT, typename TargetT>
-struct trans_insertion
-{
-    void operator()(TargetT& collected, const SourceT& items)
-    {
-        collected.clear();
-        std::transform(items.begin(), items.end(), 
-                       itl::inserter(collected, collected.end()), itl::to_pair);
-    }
-};
-
-template<> 
-inline std::string binary_template_to_string<copy_insertion>::apply() { return "$ti"; }
-*/
-
-
-
 
 template <typename SourceT, typename TargetT>
 struct base_addition
