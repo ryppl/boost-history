@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// utility::arithmetic::utility_equal.hpp                                    //
+// arithmetic::equal.hpp                                                     //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_UTILITY_ARITHMETIC_EQUAL_HPP_ER_2009
-#define BOOST_UTILITY_ARITHMETIC_EQUAL_HPP_ER_2009
+#ifndef BOOST_ARITHMETIC_EQUAL_HPP_ER_2009
+#define BOOST_ARITHMETIC_EQUAL_HPP_ER_2009
 #include <cmath>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_float.hpp>
@@ -35,7 +35,7 @@ namespace arithmetic_tools{ //arithmetic already exists as class or namespace
         return (a == b);
     }
 
-}// arithmetic
+}// arithmetic_tools
 }// boost
 
 #endif
