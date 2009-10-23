@@ -16,72 +16,28 @@
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-#include <boost/stm/transaction.hpp>
-//#include <boost/stm/non_tx/detail/cache_map.hpp>
+#include <boost/stm/tx/object.hpp>
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm { namespace tx {
 
 //-----------------------------------------------------------------------------
-// mixing transactional object numeric class that wraps a numeric builtin type providing
+// transactional object numeric class that wraps a numeric builtin type providing
 // a transparent transactional view on a transactional context
 // a non-transactional view on a non-transactional context
 // Note: the sizeof(numeric<T>)>>>>=sizeof(T)
 //-----------------------------------------------------------------------------
 template <typename T>
-class numeric : public transaction_object< numeric<T> >
+class numeric : public object< numeric<T>, T >
 {
-protected:
-    T val_;
+    typedef object< numeric<T> ,T > base_type;
 public:
     //-----------------------------------------------------------------------------
-    numeric() : val_(0) {}
-
-    //
+    numeric() : base_type(0) {}
     template<class U>
-    numeric(numeric<U> const& r) : val_(r.value()) {}
-
-    // contructor from a implicitly convertible to T
+    numeric(numeric<U> const& r) : base_type(r) {}
     template <typename U>
-    numeric(U v) : val_(v) {}
-    //numeric(T v) : val_(v) {}
-    ~numeric() {}
-
-    #if 0
-    template<class U>
-    numeric& operator=(numeric<U> const& r) {
-        val_=r.value();
-    }
-    #endif
-
-    operator T() const { return value(); }
-    operator T&() { return ref(); }
-
-    T& ref() {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-
-            return tx->write(*this).val_;
-        }
-        return val_;
-    }
-
-    T value() const {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-            return tx->read(*this).val_;
-        }
-        return val_;
-    }
-
+    numeric(U v) : base_type(v) {}
 };
 
 

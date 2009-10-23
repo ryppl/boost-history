@@ -16,7 +16,7 @@
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-#include <boost/stm/transaction.hpp>
+#include <boost/stm/tx/object.hpp>
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -30,64 +30,31 @@ namespace boost { namespace stm { namespace tx {
 // Note: the sizeof(pointer<T>)>>>>=sizeof(T*)
 //-----------------------------------------------------------------------------
 template <typename T>
-class pointer : public transaction_object< pointer<T> >
+class pointer : public object< pointer<T> ,T* >
 {
-protected:
-    T* val_;
+    typedef object< pointer<T> , T* > base_type;
+    
 public:
     //-----------------------------------------------------------------------------
-    pointer() : val_(0) {}
-
-    //
+    pointer() : base_type(static_cast<T*>(0)) {}
     template<class U>
-    pointer(pointer<U> const& r) : val_(r.value()) {}
-
-    // contructor from a implicitly convertible to T
+    pointer(pointer<U> const& r) : base_type(r) {}
     template <typename U>
-    pointer(U* v) : val_(v) {}
-    pointer(T* v) : val_(v) {}
-    //
-    ~pointer() {}
-
-    operator T*() const { return get(); }
-    operator T*&() { return get(); }
-
-    T*& get() {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-            return tx->write(*this).val_;
-        }
-        return val_;
-    }
-
-    T* get() const {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-            return tx->read(*this).val_;
-        }
-        return val_;
-    }
+    pointer(U* v) : base_type(v) {}
+    //pointer(T* v) : base_type(v) {}
 
     T* operator->() const {
-        return this->get();
+        return this->value();
     }
     T& operator*() const {
-        return *this->get();
+        return *this->value();
     }
 
-    T * operator->() {
-        return this->get();
+    T* operator->() {
+        return this->ref();
     }
-    T & operator*() {
-        return *this->get();
+    T& operator*() {
+        return *this->ref();
     }
 
 };
@@ -95,47 +62,16 @@ public:
 template <typename C, typename R>
 class pointer_to_member : public transaction_object< pointer_to_member<C,R> >
 {
-protected:
-    R C::* val_;
+    typedef object< pointer_to_member<C,R> ,R C::*> base_type;
 public:
     //-----------------------------------------------------------------------------
-    pointer_to_member() : val_(0) {}
+    pointer_to_member() : base_type(static_cast<R C::*>(0)) {}
 
-    //
-    pointer_to_member(pointer_to_member const& r) : val_(r.value()) {}
-
-    // contructor from a implicitly convertible to T
-    pointer_to_member(R C::* v) : val_(v) {}
-    //
-
-    operator R C::*() const { return get(); }
-    operator R C::*&() { return get(); }
-
-    R C::*& get() {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-
-            return tx->write(*this).val_;
-        }
-        return val_;
-    }
-
-    R C::* const * get() const {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-            return tx->read(*this).val_;
-        }
-        return val_;
-    }
-
+    template <typename D, typename S>
+    pointer_to_member(pointer_to_member<D,S> const& r) : base_type(r) {}
+    template <typename D, typename S>
+    pointer_to_member(S D::* v) : base_type(v) {}
+    //pointer_to_member(R C::* v) : base_type(v) {}
 };
 
 #if 0
