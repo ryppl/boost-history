@@ -291,6 +291,11 @@ Proposed Changes to Standard Wording
 .. role:: raw-html(raw)
    :format: html
    
+2.12 Keywords [lex.key]
+=======================
+
+Add the new ``noexcept`` keyword to Table 3 - Keywords.
+
 3.7.4.1 Allocation functions [basic.stc.dynamic.allocation]
 ===========================================================
 
