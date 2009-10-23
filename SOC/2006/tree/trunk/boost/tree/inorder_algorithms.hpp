@@ -51,13 +51,14 @@ successor(inorder, MultiwayCursor& c)
         return;
     }
 
+    MultiwayCursor d = c;
     while (index(c) && !c.is_root())
         c.to_parent();
 
-    if (c.is_root())    // Move past the last inorder element
-        to_last(inorder(), c);
-    else
+    if (!c.is_root())
         c.to_parent();
+    else // Move past the last inorder element
+        c = d; //to_last(inorder(), c);
     return;
 }
 
@@ -76,7 +77,7 @@ predecessor(inorder, MultiwayCursor& c)
     if (!c.is_leaf()) {
         if (!c.to_begin().is_leaf()) {
             to_rightmost(c);
-            c.to_parent(); //TODO: The latter two lines should probably be to_last(inorder(),c)
+            c.to_parent();
             return;
         }
     }

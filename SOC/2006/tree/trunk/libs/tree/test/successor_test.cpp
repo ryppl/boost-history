@@ -49,7 +49,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_successor, Order, orders )
     fake_root_tracking_binary_tree<int>::cursor d = frbt1.root();
     fake_to_last(Order(), d);
     BOOST_CHECK(c == d);
-    //BOOST_CHECK_EQUAL(0,1);
 }
 
 BOOST_AUTO_TEST_CASE( test_successor_ascending )

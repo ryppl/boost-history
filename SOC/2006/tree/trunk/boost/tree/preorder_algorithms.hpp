@@ -63,6 +63,8 @@ successor(preorder, Cursor& c)
             if (!(++c).is_leaf())
                 return;
     }
+    
+    to_last(preorder(), c);
     return;
 }
 
@@ -160,7 +162,13 @@ to_first(preorder, Cursor& c)
  */
 template <class Cursor>
 void to_last(preorder, Cursor& c)
-{}
+{
+    while (!c.is_leaf())
+        if (c.to_end().is_leaf())
+            --c;
+    if (!index(c))
+        ++c;
+}
 
 /*\@}*/
 

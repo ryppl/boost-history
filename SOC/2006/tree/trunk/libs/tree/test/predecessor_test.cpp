@@ -19,16 +19,19 @@ using namespace boost::tree;
 
 BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_fixture<int>)
 
-//BOOST_AUTO_TEST_CASE( test_rightmost )
-//{
-//    fake_root_tracking_binary_tree<int> frbt1(fbt1);
-//    fake_root_tracking_binary_tree<int>::cursor c = frbt1.root();
-//    to_rightmost(c);
-//    BOOST_CHECK(c.is_leaf());
-//    BOOST_CHECK(c == frbt1.root().end().end().end());
-//}
+BOOST_AUTO_TEST_CASE( test_rightmost )
+{
+    fake_root_tracking_binary_tree<int> frbt1(fbt1);
+    fake_root_tracking_binary_tree<int>::cursor c = frbt1.root();
+    to_rightmost(c);
+    BOOST_CHECK(c.is_leaf());
+    BOOST_CHECK(c == frbt1.root().end().end().end());
+}
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, orders )
+typedef boost::mpl::list<boost::tree::preorder
+                        ,boost::tree::inorder> preandinorders;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, preandinorders )
 {
     fake_root_tracking_binary_tree<int> frbt1(fbt1);
     fake_root_tracking_binary_tree<int>::cursor c = frbt1.root();
@@ -40,10 +43,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, orders )
     typedef typename test_data_set::index<Order>::type container_type;
     const container_type& order_index = mpo.get<Order>();
 
-    typename container_type::const_iterator cib = order_index.begin();
-    typename container_type::const_iterator ci = order_index.end();
+    typename container_type::const_reverse_iterator ci = order_index.rbegin();
+    typename container_type::const_reverse_iterator cie = order_index.rend();
 
-    for (--ci; ci!=cib; --ci) {
+    for (; ci!=cie; ++ci) {
         boost::tree::predecessor(Order(), c);
         BOOST_CHECK_EQUAL(*c, ci->val);
     }
