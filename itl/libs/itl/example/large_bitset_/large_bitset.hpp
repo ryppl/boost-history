@@ -12,8 +12,8 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <iostream>                   // to organize output
 #include <boost/cstdint.hpp>          // portable long integers
 #include <boost/operators.hpp>        // to define operators with minimal effort
-#include "bits.hpp"                   // a minimal bitset implementation
 #include "meta_log.hpp"               // a meta logarithm
+#include "bits.hpp"                   // a minimal bitset implementation
 #include <boost/itl/interval_map.hpp> // base of large bitsets
 
 namespace mini // minimal implementations for example projects
@@ -139,17 +139,19 @@ public:
     //]
 
 //[large_bitset_impl_constants
-private:
-    BOOST_STATIC_CONSTANT( chunk_type, bit_count = sizeof(chunk_type)*CHAR_BIT );
-    BOOST_STATIC_CONSTANT( chunk_type, divisor   = bit_count                   );
-    BOOST_STATIC_CONSTANT( chunk_type, shift     = log2_<divisor>::value       );
-    BOOST_STATIC_CONSTANT( chunk_type, c1        = static_cast<chunk_type>(1)  );
-    BOOST_STATIC_CONSTANT( chunk_type, mask      = divisor - c1                );
-    BOOST_STATIC_CONSTANT( chunk_type, all       = ~static_cast<chunk_type>(0) );
-    BOOST_STATIC_CONSTANT( chunk_type, top       = c1 << (bit_count-c1)        );
+private:                                         // Example value
+    static const chunk_type                      //   8-bit case  
+        bit_count = sizeof(chunk_type)*CHAR_BIT, //   8           Size of the associated bitsets 
+        divisor   = bit_count                  , //   8           Divisor to find intervals for values
+        shift     = log2_<divisor>::value      , //   3           To express the division as bit shift
+        c1        = static_cast<chunk_type>(1) , //               Helps to avoid static_casts for long long
+        mask      = divisor - c1               , //   7=11100000  Helps to express the modulo operation as bit_and
+        all       = ~static_cast<chunk_type>(0), // 255=11111111  Helps to express a complete associated bitset
+        top       = c1 << (bit_count-c1)       ; // 128=00000001  Value of the most significant bit of associated bitsets
+                                                 //            !> Note: Most signigicant bit on the right.
     //]
-    //[large_bitset_segment_modifier
-    typedef void (large_bitset::*segment_modifier)(element_type, element_type, bitset_type);
+    //[large_bitset_segment_combiner
+    typedef void (large_bitset::*segment_combiner)(element_type, element_type, bitset_type);
     //]
 
     //[large_bitset_bitset_filler
@@ -158,60 +160,37 @@ private:
     //]
 
     //[large_bitset_segment_apply
-    large_bitset& segment_apply(segment_modifier modify, const interval_type& operand)
-    {
-        // Binary division: [base, ceil] == [first/divisor, last/divisor]
-        element_type base       = operand.first() >> shift;
-        element_type ceil       = operand.last()  >> shift;
-        // Binary modulo: [base_rest, ceil_rest] == [first%divisor, last%divisor]
-        element_type base_rest  = operand.first() &  mask;
-        element_type ceil_rest  = operand.last()  &  mask; 
+    large_bitset& segment_apply(segment_combiner combine, const interval_type& operand)
+    {                                                 // same as
+        element_type base = operand.first() >> shift, // operand.first()/ divisor
+                     ceil = operand.last()  >> shift, // operand.last() / divisor
+                base_rest = operand.first() &  mask , // operand.first()% divisor
+                ceil_rest = operand.last()  &  mask ; // operand.last() % divisor  
 
         if(base == ceil) // [first, last] are within one bitset (chunk)
-        {
-            //CL dbg_shift(base_rest, ceil_rest);
-            (this->*modify)(base, base+1, bitset_type(  to_upper_from(base_rest)
+            (this->*combine)(base, base+1, bitset_type(  to_upper_from(base_rest)
                                                       & from_lower_to(ceil_rest)));
-        }
         else // [first, last] spread over more than one bitset (chunk)
         {
-            element_type lower, upper;
+            element_type mid_low = base_rest == 0   ? base   : base+1, // first element of mid part 
+                         mid_up  = ceil_rest == all ? ceil+1 : ceil  ; // last  element of mid part
 
-            if(base_rest == 0)
-                lower = base;
-            else
-            {
-                (this->*modify)(base, base+1, bitset_type(to_upper_from(base_rest)));
-                lower = base+1;
-            }
-
-            if(ceil_rest == all)
-                upper = ceil+1;
-            else
-            {
-                (this->*modify)(ceil, ceil+1, bitset_type(from_lower_to(ceil_rest)));
-                upper = ceil;
-            }
-
-            if(lower < upper)
-                (this->*modify)(lower, upper, bitset_type(all));
+            if(base_rest > 0)    // Bitset of base interval has to be filled from base_rest to last
+                (this->*combine)(base, base+1, bitset_type(to_upper_from(base_rest)));
+            if(ceil_rest < all)  // Bitset of ceil interval has to be filled from first to ceil_rest
+                (this->*combine)(ceil, ceil+1, bitset_type(from_lower_to(ceil_rest)));
+            if(mid_low < mid_up) // For the middle part all bits have to set.
+                (this->*combine)(mid_low, mid_up, bitset_type(all));
         }
         return *this;
     }
     //]
 
     //[large_bitmap_combiners
-    void add_(element_type lower, element_type upper, bitset_type bits)
-    { _map += value_type(interval_type::rightopen(lower, upper), bits);    }
-
-    void subtract_(element_type lower, element_type upper, bitset_type bits)
-    { _map -= value_type(interval_type::rightopen(lower, upper), bits);    }
-
-    void intersect_(element_type lower, element_type upper, bitset_type bits)
-    { _map &= value_type(interval_type::rightopen(lower, upper), bits);    }
-
-    void flip_(element_type lower, element_type upper, bitset_type bits)
-    { _map ^= value_type(interval_type::rightopen(lower, upper), bits);    }
+    void       add_(DomainT lo, DomainT up, BitSetT bits){_map += value_type(interval_type::rightopen(lo,up), bits);}
+    void  subtract_(DomainT lo, DomainT up, BitSetT bits){_map -= value_type(interval_type::rightopen(lo,up), bits);}
+    void intersect_(DomainT lo, DomainT up, BitSetT bits){_map &= value_type(interval_type::rightopen(lo,up), bits);}
+    void      flip_(DomainT lo, DomainT up, BitSetT bits){_map ^= value_type(interval_type::rightopen(lo,up), bits);}
     //]
 
 //[large_bitmap_impl_map

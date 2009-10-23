@@ -116,7 +116,7 @@ void std_transform()
     // could be a  itl::inserter(segset, segset.end()), here: same effect 
                    to_interval);
 
-	cout << "Using std::transform to fill a separate_interval_set:\n\n";
+    cout << "Using std::transform to fill a separate_interval_set:\n\n";
     cout << "itl::adding   : " << segset << "\n\n";
 }
 

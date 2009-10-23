@@ -61,7 +61,7 @@ void std_copy()
     // We are going to 'std::copy' those segments into an interval_map:
     interval_map<int,int> segmap;
 
-	// Use an 'itl::inserter' from <boost/itl/interator.hpp> to call 
+    // Use an 'itl::inserter' from <boost/itl/interator.hpp> to call 
     // insertion on the interval container.
     std::copy(segments.begin(), segments.end(), 
               itl::inserter(segmap, segmap.end()));
