@@ -11,35 +11,33 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_STM_TX_OBJECT__HPP
-#define BOOST_STM_TX_OBJECT__HPP
+#ifndef BOOST_STM_NON_TX_OBJECT__HPP
+#define BOOST_STM_NON_TX_OBJECT__HPP
 
 //-----------------------------------------------------------------------------
 #include <boost/stm/transaction.hpp>
-#include <boost/stm/transaction_object.hpp>
+#include <boost/stm/non_tx/detail/cache_map.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-namespace boost { namespace stm { namespace tx {
+namespace boost { namespace stm { namespace non_tx {
 
 //-----------------------------------------------------------------------------
-// mixing transactional object class that wraps a object type providing
-// a transparent transactional view on a transactional context
+// class object wraps a non object type providing
+// a transactional view on a transactional context
 // a non-transactional view on a non-transactional context
-// Note: the sizeof(object<T>)>>>>=sizeof(T)
+// Note: the sizeof(object<T>)==sizeof(T)
 //-----------------------------------------------------------------------------
+
 template <typename Final, typename T>
-class object : public transaction_object< Final >
-{
+class object {
 protected:
     T val_;
 public:
-    typedef Final final_type;
-    typedef T value_type;
     //-----------------------------------------------------------------------------
     object() : val_() {}
 
-    //
+    // constructors
     template<typename F, typename U>
     object(object<F,U> const& r) : val_(r.value()) {}
 
@@ -47,11 +45,12 @@ public:
     template <typename U>
     object(U v) : val_(v) {}
 
+    //-----------------------------------------------------------------------------
+    // accessors        
     operator T() const { return value(); }
     operator T&() { return ref(); }
 
     //-----------------------------------------------------------------------------
-    // accessors        
     T& ref() {
         transaction* tx=current_transaction();
         if (tx!=0) {
@@ -60,7 +59,8 @@ public:
                 throw aborted_transaction_exception("aborting transaction");
             }
 
-            return tx->write(*this).val_;
+            detail::cache<T>* r(tx->write_ptr(detail::cache_map::get(&val_)));
+            return *(r->get());
         }
         return val_;
     }
@@ -73,7 +73,8 @@ public:
                 tx->lock_and_abort();
                 throw aborted_transaction_exception("aborting transaction");
             }
-            return tx->read(*this).val_;
+            detail::cache<T>* r(tx->read_ptr(detail::cache_map::get(&val_)));
+            return *(r->get());
         }
         return val_;
     }

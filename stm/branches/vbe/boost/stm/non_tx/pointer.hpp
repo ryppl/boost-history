@@ -15,10 +15,9 @@
 #define BOOST_STM_NON_TX_POINTER__HPP
 
 //-----------------------------------------------------------------------------
+#include <boost/stm/non_tx/object.hpp>
 //-----------------------------------------------------------------------------
-#include <boost/stm/transaction.hpp>
 
-//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm { namespace non_tx {
 
@@ -31,147 +30,51 @@ namespace boost { namespace stm { namespace non_tx {
 //-----------------------------------------------------------------------------
 
 template <typename T>
-class pointer
+class pointer : public object< pointer<T> ,T* >
 {
-protected:
-    T* val_;
+    typedef object< pointer<T> , T* > base_type;
+    
 public:
     //-----------------------------------------------------------------------------
-    pointer() : val_(0) {}
-
-    //
+    pointer() : base_type(static_cast<T*>(0)) {}
     template<class U>
-    pointer(pointer<U> const& r) : val_(r.value()) {}
-
-    // contructor from a implicitly convertible to T
+    pointer(pointer<U> const& r) : base_type(r) {}
     template <typename U>
-    pointer(U* v) : val_(v) {}
-    pointer(T* v) : val_(v) {}
-    //
-    ~pointer() {}
-
-    operator T*() const { return get(); }
-    operator T*&() { return get(); }
-
-    T*& get() {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-            detail::cache<T*>* r(tx->write_ptr(detail::cache_map::get(&val_)));
-            return *(r->get());
-
-        }
-        return val_;
-    }
-
-    T* get() const {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-            return tx->read(*this).val_;
-            detail::cache<T*>* r(tx->read_ptr(detail::cache_map::get(&val_)));
-            return *(r->get());
-        }
-        return val_;
-    }
+    pointer(U* v) : base_type(v) {}
+    //pointer(T* v) : base_type(v) {}
 
     T* operator->() const {
-        return this->get();
+        return this->value();
     }
-    T & operator*() const {
-        return *this->get();
+    T& operator*() const {
+        return *this->value();
     }
 
-    T * operator->() {
-        return this->get();
+    T* operator->() {
+        return this->ref();
     }
-    T & operator*() {
-        return *this->get();
+    T& operator*() {
+        return *this->ref();
     }
 
 };
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template <typename C, typename R>
-class pointer_to_member
+class pointer_to_member : public transaction_object< pointer_to_member<C,R> >
 {
-protected:
-    R C::* val_;
+    typedef object< pointer_to_member<C,R> ,R C::*> base_type;
 public:
     //-----------------------------------------------------------------------------
-    pointer_to_member() : val_(0) {}
+    pointer_to_member() : base_type(static_cast<R C::*>(0)) {}
 
-    //
-    pointer_to_member(pointer_to_member const& r) : val_(r.value()) {}
-
-    // contructor from a implicitly convertible to T
-    pointer_to_member(R C::* v) : val_(v) {}
-    //
-
-    operator R C::*() const { return get(); }
-    operator R C::*&() { return get(); }
-
-    R C::*& get() {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-
-            detail::cache<R C::*>* r(tx->write_ptr(detail::cache_map::get(&val_)));
-            return *(r->get());
-        }
-        return val_;
-    }
-
-    R C::* const * get() const {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-            detail::cache<R C::*>* r(tx->read_ptr(detail::cache_map::get(&val_)));
-            return *(r->get());
-        }
-        return val_;
-    }
-
+    template <typename D, typename S>
+    pointer_to_member(pointer_to_member<D,S> const& r) : base_type(r) {}
+    template <typename D, typename S>
+    pointer_to_member(S D::* v) : base_type(v) {}
+    //pointer_to_member(R C::* v) : base_type(v) {}
 };
-
-#if 0
-
-// two transactional pointers are equal if they point to the same cache on the current transaction.
-template <typename T, typename U>
-inline bool operator==(const pointer<T>& lhs, const pointer<U>& rhs) {
-    return lhs.ref()==rhs.ref();
-}
-
-template <typename T, typename U>
-inline bool operator==(const T& lhs, const pointer<U>& rhs) {
-    return lhs==rhs.ref();
-}
-
-template <typename T, typename U>
-inline bool operator==(const pointer<T>& lhs, const U& rhs) {
-    return lhs.ref()==rhs;
-}
-
-template <typename T, typename U>
-inline bool operator!=(const pointer<T>& lhs, const pointer<U>& rhs) {
-    return lhs.ref()!=rhs.ref();
-}
-
-template<class T> inline void swap(pointer<T> & a, pointer<T> & b) {
-    a.swap(b);
-}
-#endif
 
 }}}
 #endif
