@@ -348,11 +348,11 @@ Modify paragraph 13 as follows:
 
   3 :raw-html:`<span class="ins">The result of the <code>noexcept</code> operator is <code>false</code> if in an evaluated context the <i>expression</i> would contain</span>`
 
-  * :raw-html:`<span class="ins">a potentially evaluated call` [#implicit-call]_ :raw-html:`<span class="ins">to a function, member function, function pointer, or member function pointer that does not have an empty <i>exception-specification</i> ([except.spec]),</span>`
+  * :raw-html:`<span class="ins">a potentially evaluated call [<i>Footnote</i>: This includes implicit calls, e.g., the call to an allocation function in a <i>new-expression</i>. -- <i>end footnote</i>] to a function, member function, function pointer, or member function pointer that does not have an empty <i>exception-specification</i> ([except.spec]),</span>`
 
   * :raw-html:`<span class="ins">a potentially evaluated <i>throw-expression</i> ([except.throw]),</span>`
 
-  * :raw-html:`<span class="ins">a potentially evaluated <code>dynamic_cast</code> expression ([expr.dynamic.cast]) that requires a run-time check, or</span>`
+  * :raw-html:`<span class="ins">a potentially evaluated <code>dynamic_cast</code> expression <code>dynamic_cast&lt;T&gt;(v)</code>, where <code>T</code> is a reference type, that requires a run-time check ([expr.dynamic.cast]), or</span>`
 
   * :raw-html:`<span class="ins">a potentially evaluated <code>typeid</code> expression ([expr.typeid]) applied to an expression whose type is a polymorphic class type ([class.virtual]).</span>`
 
@@ -726,5 +726,3 @@ Change paragraph 6 as follows:
    move constructors but with a default constructor and a non-throwing
    swap, by first default-constructing elements in the new array and
    swapping each element into place.
-
-.. [#implicit-call] :raw-html:`<span class="ins">This includes implicit calls, e.g., the call to an allocation function in a <i>new-expression</i>.</span>`
