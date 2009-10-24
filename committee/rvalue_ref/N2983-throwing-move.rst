@@ -272,6 +272,7 @@ where used properly, ought to be a well-known “caution area” that is
 reasonably easily migrated.  However, we don't think this change would
 be appropriate for C++0x at this late date, so we're not proposing it.
 
+FIXME: Add some discussion about implementation freedom with noexcept(true).
 
 Proposed Changes to Standard Wording
 ************************************
@@ -290,7 +291,7 @@ Proposed Changes to Standard Wording
 
 .. role:: raw-html(raw)
    :format: html
-   
+
 2.12 Keywords [lex.key]
 =======================
 
@@ -301,7 +302,7 @@ Add the new ``noexcept`` keyword to Table 3 - Keywords.
 
 Modify paragraph 3 as follows:
 
-  3 An allocation function that fails to allocate storage can invoke the currently installed new-handler function (18.6.2.3), if any. [ *Note*: A program-supplied allocation function can obtain the address of the currently installed new_handler using the ``std::set_new_handler`` function (18.6.2.4). -- *end note* ] If an allocation function declared with an empty *exception-specification* (15.4), :del:`throw(),` fails to allocate storage, it shall return a null pointer. Any other allocation function that fails to allocate storage shall indicate failure only by throwing an exception of a type that would match a handler (15.3) of type ``std::bad_alloc`` (18.6.2.1).
+  3 An allocation function that fails to allocate storage can invoke the currently installed new-handler function (18.6.2.3), if any. [ *Note*: A program-supplied allocation function can obtain the address of the currently installed new_handler using the ``std::set_new_handler`` function (18.6.2.4). -- *end note* ] If an allocation function declared with :del:`an empty` :ins:`a non-throwing` *exception-specification* (15.4), :del:`throw(),` fails to allocate storage, it shall return a null pointer. Any other allocation function that fails to allocate storage shall indicate failure only by throwing an exception of a type that would match a handler (15.3) of type ``std::bad_alloc`` (18.6.2.1).
 
 5.3 Unary expressions [expr.unary]
 ==================================
@@ -312,32 +313,32 @@ Modify the grammar in paragraph 1 as follows:
 
   .. parsed-literal::
 
-    unary-expression: 
-      postfix-expression
-      ++ cast-expression 
-      -- cast-expression 
-      unary-operator cast-expression 
-      sizeof unary-expression 
-      sizeof ( type-id ) 
-      sizeof ... ( identifier ) 
-      alignof ( type-id ) 
-      new-expression 
-      delete-expression
+    *unary-expression*: 
+      *postfix-expression*
+      ++ *cast-expression* 
+      -- *cast-expression* 
+      *unary-operator* *cast-expression*
+      sizeof *unary-expression*
+      sizeof ( *type-id* ) 
+      sizeof ... ( *identifier* ) 
+      alignof ( *type-id* ) 
       :raw-html:`<span class="ins"><i>noexcept-expression</i></span>`
+      *new-expression*
+      *delete-expression*
 
 5.3.4 New [expr.new]
 ====================
 
 Modify paragraph 13 as follows:
 
-  13 [Note: unless an allocation function is declared with an empty exception-specification (15.4), :del:`throw(),` it indicates failure to allocate storage by throwing a ``std::bad_alloc`` exception (Clause 15, 18.6.2.1); it returns a non-null pointer otherwise. If the allocation function is declared with an empty *exception-specification*, :del:`throw(),` it returns null to indicate failure to allocate storage and a non-null pointer otherwise. -- *end note*] If the allocation function returns null, initialization shall not be done, the deallocation function shall not be called, and the value of the new-expression shall be null.
+  13 [*Note*: unless an allocation function is declared with :del:`an empty` :ins:`a non-throwing` *exception-specification* (15.4), :del:`throw(),` it indicates failure to allocate storage by throwing a ``std::bad_alloc`` exception (Clause 15, 18.6.2.1); it returns a non-null pointer otherwise. If the allocation function is declared with :del:`an empty` :ins:`a non-throwing` *exception-specification*, :del:`throw(),` it returns null to indicate failure to allocate storage and a non-null pointer otherwise. -- *end note*] If the allocation function returns null, initialization shall not be done, the deallocation function shall not be called, and the value of the new-expression shall be null.
 
 5.3.7 noexcept operator [expr.unary.noexcept]
 =============================================
 
 (Add this new section)
 
-  1 :ins:`The noexcept operator determines whether the evaluation of its operand, which is an unevaluated operand (Clause 5), can throw an exception ([except.throw]).`
+  1 :ins:`The noexcept operator determines whether the evaluation of its operand, which is an unevaluated operand ([expr] Clause 5), can throw an exception ([except.throw]).`
 
   .. parsed-literal::
 
@@ -348,7 +349,7 @@ Modify paragraph 13 as follows:
 
   3 :raw-html:`<span class="ins">The result of the <code>noexcept</code> operator is <code>false</code> if in an evaluated context the <i>expression</i> would contain</span>`
 
-  * :raw-html:`<span class="ins">a potentially evaluated call [<i>Footnote</i>: This includes implicit calls, e.g., the call to an allocation function in a <i>new-expression</i>. -- <i>end footnote</i>] to a function, member function, function pointer, or member function pointer that does not have an empty <i>exception-specification</i> ([except.spec]),</span>`
+  * :raw-html:`<span class="ins">a potentially evaluated call [<i>Footnote</i>: This includes implicit calls, e.g., the call to an allocation function in a <i>new-expression</i>. -- <i>end footnote</i>] to a function, member function, function pointer, or member function pointer that does not have a non-throwing <i>exception-specification</i> ([except.spec]),</span>`
 
   * :raw-html:`<span class="ins">a potentially evaluated <i>throw-expression</i> ([except.throw]),</span>`
 
@@ -401,50 +402,33 @@ Change the following paragraphs as follows:
   or indirectly throw by using an *exception-specification* as a suffix of its 
   declarator.
 
-    :raw-html:`<p><em>
-    exception-specification:
-    <blockquote class="grammar">
-    <span class="ins">dynamic-exception-specification</span>
-    <br />
-    <span class="ins">noexcept-specification</span>
-    </blockquote>
-    </em></p>`
+  .. parsed-literal::
 
-    :raw-html:`<p><span class="ins">
-    <em>dynamic-exception-specification:</em>
-    </span>
-    <blockquote>
-    <code>throw (</code> <em>type-id-list<span class="sub">opt</span></em> <code>)</code>
-    </blockquote>
-    </p>`
+    *exception-specification:*
+      :raw-html:`<span class="ins"><i>dynamic-exception-specification</i></span>`
+      :raw-html:`<span class="ins"><i>noexcept-specification</i></span>`
 
-    :raw-html:`<p><em>
-    type-id-list:
-    <blockquote>
-    type-id ...<span class="sub">opt</span><br />
-    type-id-list, type-id ...<span class="sub">opt</span>
-    </blockquote>
-    </em>
-    </p>`
+    :raw-html:`<span class="ins"><i>dynamic-exception-specification</i>:</span>`
+      :raw-html:`<span class="ins"><code>throw (</code> <em>type-id-list<sub>opt</sub></em> <code>)</code></span>`
 
-    :raw-html:`<p>
-    <span class="ins"><em>noexcept-specification:</em></span>
-    <blockquote>
-    <span class="ins"><code>noexcept (</code> <em>constant-expression<span class="sub">opt</span></em> <code>)</code></span>
-    </blockquote>
-    </p>`
+    *type-id-list*:
+      *type-id* :raw-html:`<code>...</code><sub><i>opt</i></sub>`
+      *type-id-list*, *type-id* :raw-html:`<code>...</code><sub><i>opt</i></sub>`
 
-    :raw-html:`<span class="ins">In a <i>noexcept-specification</i>, the
-    <i>constant-expression</i>, if supplied, shall be a constant expression
-    ([expr.const]) that is contextually converted to <code>bool</code>
-    ([conv] Clause 4). In what follows, a <i>noexcept-specification</i>
-    <code>noexcept()</code> is equivalent to <code>noexcept(true)</code>.</span>`
+    :raw-html:`<span class="ins"><em>noexcept-specification:</em></span>`
+      :raw-html:`<span class="ins"><code>noexcept (</code> <em>constant-expression<span class="sub">opt</span></em> <code>)</code></span>`
+
+  :raw-html:`<span class="ins">In a <i>noexcept-specification</i>, the
+  <i>constant-expression</i>, if supplied, shall be a constant expression
+  ([expr.const]) that is contextually converted to <code>bool</code>
+  ([conv] Clause 4). A <i>noexcept-specification</i>
+  <code>noexcept()</code> is equivalent to <code>noexcept(true)</code>.</span>`
 
   7 A function is said to *allow* an exception of type ``E`` if its :raw-html:`<i><span class="ins">dynamic-</span>exception-specification</i>` contains a type ``T`` for which a handler of type ``T`` would be a match (15.3) for an exception of type ``E``.
 
   .. comment :raw-html:`<span class="ins">, if its <i>noexcept-specification</i> is <code>noexcept(false)</code>, or if the function has no <i>exception-specification</i>`.
 
-  11 A function with no *exception-specification* :raw-html:`<span class="ins">, or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>false</code>,</span>` allows all exceptions. :raw-html:`<span class="ins">An <i>exception-specification</i> is <i>empty</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>true</code>.</span>` A function with an empty *exception-specification* :raw-html:`<span class="del">, <code>throw()</code>,</span>` does not allow any exceptions.
+  11 A function with no *exception-specification* :raw-html:`<span class="ins">, or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>false</code>,</span>` allows all exceptions. :raw-html:`<span class="ins">An <i>exception-specification</i> is <i>non-throwing</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>true</code>.</span>` A function with :del:`an empty` :ins:`a non-throwing` *exception-specification* :raw-html:`<span class="del">, <code>throw()</code>,</span>` does not allow any exceptions.
 
   14 In :raw-html:`a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i>,` a *type-id* followed by an ellipsis is a pack expansion (14.6.3).
 
@@ -453,10 +437,10 @@ Add the following new paragraph:
     :raw-html:`<span class="ins">15 If a function with a
     <i>noexcept-specification</i> whose <i>constant-expression</i>
     yields <code>true</code> throws an exception, the behavior is
-    undefined.  The <i>exception-specification</i> whose
+    undefined.  A <i>noexcept-specification</i> whose
     <i>constant-expression</i> yields <code>true</code> is in all
     other respects equivalent to the <i>exception-specification</i>
-    <code>throw()</code>.  The <i>exception-specification</i> whose
+    <code>throw()</code>.  A <i>noexcept-specification</i> whose
     <i>constant-expression</i> yields <code>false</code> is equivalent
     to omitting the <i>exception-specification</i> altogether.</span>`
 
@@ -467,7 +451,7 @@ Add the following new paragraph:
 
   Modify footnote 192 (the first footnote in paragraph 2) as follows:
 
-    192) That is, the C library functions can all be treated as if they have :del:`a throw()` :ins:`an empty` exception-specification. This allows implementations to make performance optimizations based on the absence of exceptions at runtime.
+    192) That is, the C library functions can all be treated as if they have :del:`a throw()` :ins:`:del:`an empty` :ins:`a non-throwing`` exception-specification. This allows implementations to make performance optimizations based on the absence of exceptions at runtime.
 
 18.8.2.2 Type unexpected_handler [unexpected.handler]
 =====================================================

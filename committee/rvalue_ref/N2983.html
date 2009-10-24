@@ -586,6 +586,7 @@ amount of code breakage.  Such code is already very dangerous, and
 where used properly, ought to be a well-known “caution area” that is
 reasonably easily migrated.  However, we don't think this change would
 be appropriate for C++0x at this late date, so we're not proposing it.</p>
+<p>FIXME: Add some discussion about implementation freedom with noexcept(true).</p>
 </div>
 <div class="section" id="proposed-changes-to-standard-wording">
 <h1><a class="toc-backref" href="#id15">Proposed Changes to Standard Wording</a></h1>
@@ -597,7 +598,7 @@ be appropriate for C++0x at this late date, so we're not proposing it.</p>
 <h2><a class="toc-backref" href="#id17">3.7.4.1 Allocation functions [basic.stc.dynamic.allocation]</a></h2>
 <p>Modify paragraph 3 as follows:</p>
 <blockquote>
-3 An allocation function that fails to allocate storage can invoke the currently installed new-handler function (18.6.2.3), if any. [ <em>Note</em>: A program-supplied allocation function can obtain the address of the currently installed new_handler using the <tt class="docutils literal"><span class="pre">std::set_new_handler</span></tt> function (18.6.2.4). -- <em>end note</em> ] If an allocation function declared with an empty <em>exception-specification</em> (15.4), <span class="del">throw(),</span> fails to allocate storage, it shall return a null pointer. Any other allocation function that fails to allocate storage shall indicate failure only by throwing an exception of a type that would match a handler (15.3) of type <tt class="docutils literal"><span class="pre">std::bad_alloc</span></tt> (18.6.2.1).</blockquote>
+3 An allocation function that fails to allocate storage can invoke the currently installed new-handler function (18.6.2.3), if any. [ <em>Note</em>: A program-supplied allocation function can obtain the address of the currently installed new_handler using the <tt class="docutils literal"><span class="pre">std::set_new_handler</span></tt> function (18.6.2.4). -- <em>end note</em> ] If an allocation function declared with <span class="del">an empty</span> <span class="ins">a non-throwing</span> <em>exception-specification</em> (15.4), <span class="del">throw(),</span> fails to allocate storage, it shall return a null pointer. Any other allocation function that fails to allocate storage shall indicate failure only by throwing an exception of a type that would match a handler (15.3) of type <tt class="docutils literal"><span class="pre">std::bad_alloc</span></tt> (18.6.2.1).</blockquote>
 </div>
 <div class="section" id="unary-expressions-expr-unary">
 <h2><a class="toc-backref" href="#id18">5.3 Unary expressions [expr.unary]</a></h2>
@@ -605,18 +606,18 @@ be appropriate for C++0x at this late date, so we're not proposing it.</p>
 <blockquote>
 <p>1 Expressions with unary operators group right-to-left.</p>
 <pre class="literal-block">
-unary-expression:
-  postfix-expression
-  ++ cast-expression
-  -- cast-expression
-  unary-operator cast-expression
-  sizeof unary-expression
-  sizeof ( type-id )
-  sizeof ... ( identifier )
-  alignof ( type-id )
-  new-expression
-  delete-expression
+<em>unary-expression</em>:
+  <em>postfix-expression</em>
+  ++ <em>cast-expression</em>
+  -- <em>cast-expression</em>
+  <em>unary-operator</em> <em>cast-expression</em>
+  sizeof <em>unary-expression</em>
+  sizeof ( <em>type-id</em> )
+  sizeof ... ( <em>identifier</em> )
+  alignof ( <em>type-id</em> )
   <span class="raw-html"><span class="ins"><i>noexcept-expression</i></span></span>
+  <em>new-expression</em>
+  <em>delete-expression</em>
 </pre>
 </blockquote>
 </div>
@@ -624,13 +625,13 @@ unary-expression:
 <h2><a class="toc-backref" href="#id19">5.3.4 New [expr.new]</a></h2>
 <p>Modify paragraph 13 as follows:</p>
 <blockquote>
-13 [Note: unless an allocation function is declared with an empty exception-specification (15.4), <span class="del">throw(),</span> it indicates failure to allocate storage by throwing a <tt class="docutils literal"><span class="pre">std::bad_alloc</span></tt> exception (Clause 15, 18.6.2.1); it returns a non-null pointer otherwise. If the allocation function is declared with an empty <em>exception-specification</em>, <span class="del">throw(),</span> it returns null to indicate failure to allocate storage and a non-null pointer otherwise. -- <em>end note</em>] If the allocation function returns null, initialization shall not be done, the deallocation function shall not be called, and the value of the new-expression shall be null.</blockquote>
+13 [<em>Note</em>: unless an allocation function is declared with <span class="del">an empty</span> <span class="ins">a non-throwing</span> <em>exception-specification</em> (15.4), <span class="del">throw(),</span> it indicates failure to allocate storage by throwing a <tt class="docutils literal"><span class="pre">std::bad_alloc</span></tt> exception (Clause 15, 18.6.2.1); it returns a non-null pointer otherwise. If the allocation function is declared with <span class="del">an empty</span> <span class="ins">a non-throwing</span> <em>exception-specification</em>, <span class="del">throw(),</span> it returns null to indicate failure to allocate storage and a non-null pointer otherwise. -- <em>end note</em>] If the allocation function returns null, initialization shall not be done, the deallocation function shall not be called, and the value of the new-expression shall be null.</blockquote>
 </div>
 <div class="section" id="noexcept-operator-expr-unary-noexcept">
 <h2><a class="toc-backref" href="#id20">5.3.7 noexcept operator [expr.unary.noexcept]</a></h2>
 <p>(Add this new section)</p>
 <blockquote>
-<p>1 <span class="ins">The noexcept operator determines whether the evaluation of its operand, which is an unevaluated operand (Clause 5), can throw an exception ([except.throw]).</span></p>
+<p>1 <span class="ins">The noexcept operator determines whether the evaluation of its operand, which is an unevaluated operand ([expr] Clause 5), can throw an exception ([except.throw]).</span></p>
 <pre class="literal-block">
 <span class="raw-html"><span class="ins"><i>noexcept-expression</i></span></span>
   <span class="raw-html"><span class="ins">noexcept ( <i>expression</i> )</span></span>
@@ -638,7 +639,7 @@ unary-expression:
 <p>2 <span class="raw-html"><span class="ins">The result of the <code>noexcept</code> operator is a constant of type <code>bool</code>.</span></span></p>
 <p>3 <span class="raw-html"><span class="ins">The result of the <code>noexcept</code> operator is <code>false</code> if in an evaluated context the <i>expression</i> would contain</span></span></p>
 <ul class="simple">
-<li><span class="raw-html"><span class="ins">a potentially evaluated call [<i>Footnote</i>: This includes implicit calls, e.g., the call to an allocation function in a <i>new-expression</i>. -- <i>end footnote</i>] to a function, member function, function pointer, or member function pointer that does not have an empty <i>exception-specification</i> ([except.spec]),</span></span></li>
+<li><span class="raw-html"><span class="ins">a potentially evaluated call [<i>Footnote</i>: This includes implicit calls, e.g., the call to an allocation function in a <i>new-expression</i>. -- <i>end footnote</i>] to a function, member function, function pointer, or member function pointer that does not have a non-throwing <i>exception-specification</i> ([except.spec]),</span></span></li>
 <li><span class="raw-html"><span class="ins">a potentially evaluated <i>throw-expression</i> ([except.throw]),</span></span></li>
 <li><span class="raw-html"><span class="ins">a potentially evaluated <code>dynamic_cast</code> expression <code>dynamic_cast&lt;T&gt;(v)</code>, where <code>T</code> is a reference type, that requires a run-time check ([expr.dynamic.cast]), or</span></span></li>
 <li><span class="raw-html"><span class="ins">a potentially evaluated <code>typeid</code> expression ([expr.typeid]) applied to an expression whose type is a polymorphic class type ([class.virtual]).</span></span></li>
@@ -688,45 +689,29 @@ alignof ( <em>type-id</em> )
 <p>1 A function declaration lists exceptions that its function might directly
 or indirectly throw by using an <em>exception-specification</em> as a suffix of its
 declarator.</p>
-<blockquote>
-<p><span class="raw-html"><p><em>
-exception-specification:
-<blockquote class="grammar">
-<span class="ins">dynamic-exception-specification</span>
-<br />
-<span class="ins">noexcept-specification</span>
-</blockquote>
-</em></p></span></p>
-<p><span class="raw-html"><p><span class="ins">
-<em>dynamic-exception-specification:</em>
-</span>
-<blockquote>
-<code>throw (</code> <em>type-id-list<span class="sub">opt</span></em> <code>)</code>
-</blockquote>
-</p></span></p>
-<p><span class="raw-html"><p><em>
-type-id-list:
-<blockquote>
-type-id ...<span class="sub">opt</span><br />
-type-id-list, type-id ...<span class="sub">opt</span>
-</blockquote>
-</em>
-</p></span></p>
-<p><span class="raw-html"><p>
-<span class="ins"><em>noexcept-specification:</em></span>
-<blockquote>
-<span class="ins"><code>noexcept (</code> <em>constant-expression<span class="sub">opt</span></em> <code>)</code></span>
-</blockquote>
-</p></span></p>
+<pre class="literal-block">
+<em>exception-specification:</em>
+  <span class="raw-html"><span class="ins"><i>dynamic-exception-specification</i></span></span>
+  <span class="raw-html"><span class="ins"><i>noexcept-specification</i></span></span>
+
+<span class="raw-html"><span class="ins"><i>dynamic-exception-specification</i>:</span></span>
+  <span class="raw-html"><span class="ins"><code>throw (</code> <em>type-id-list<sub>opt</sub></em> <code>)</code></span></span>
+
+<em>type-id-list</em>:
+  <em>type-id</em> <span class="raw-html"><code>...</code><sub><i>opt</i></sub></span>
+  <em>type-id-list</em>, <em>type-id</em> <span class="raw-html"><code>...</code><sub><i>opt</i></sub></span>
+
+<span class="raw-html"><span class="ins"><em>noexcept-specification:</em></span></span>
+  <span class="raw-html"><span class="ins"><code>noexcept (</code> <em>constant-expression<span class="sub">opt</span></em> <code>)</code></span></span>
+</pre>
 <p><span class="raw-html"><span class="ins">In a <i>noexcept-specification</i>, the
 <i>constant-expression</i>, if supplied, shall be a constant expression
 ([expr.const]) that is contextually converted to <code>bool</code>
-([conv] Clause 4). In what follows, a <i>noexcept-specification</i>
+([conv] Clause 4). A <i>noexcept-specification</i>
 <code>noexcept()</code> is equivalent to <code>noexcept(true)</code>.</span></span></p>
-</blockquote>
 <p>7 A function is said to <em>allow</em> an exception of type <tt class="docutils literal"><span class="pre">E</span></tt> if its <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i></span> contains a type <tt class="docutils literal"><span class="pre">T</span></tt> for which a handler of type <tt class="docutils literal"><span class="pre">T</span></tt> would be a match (15.3) for an exception of type <tt class="docutils literal"><span class="pre">E</span></tt>.</p>
 <!-- comment :raw-html:`<span class="ins">, if its <i>noexcept-specification</i> is <code>noexcept(false)</code>, or if the function has no <i>exception-specification</i>`. -->
-<p>11 A function with no <em>exception-specification</em> <span class="raw-html"><span class="ins">, or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>false</code>,</span></span> allows all exceptions. <span class="raw-html"><span class="ins">An <i>exception-specification</i> is <i>empty</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> is <code>true</code>.</span></span> A function with an empty <em>exception-specification</em> <span class="raw-html"><span class="del">, <code>throw()</code>,</span></span> does not allow any exceptions.</p>
+<p>11 A function with no <em>exception-specification</em> <span class="raw-html"><span class="ins">, or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>false</code>,</span></span> allows all exceptions. <span class="raw-html"><span class="ins">An <i>exception-specification</i> is <i>non-throwing</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>true</code>.</span></span> A function with <span class="del">an empty</span> <span class="ins">a non-throwing</span> <em>exception-specification</em> <span class="raw-html"><span class="del">, <code>throw()</code>,</span></span> does not allow any exceptions.</p>
 <p>14 In <span class="raw-html">a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i>,</span> a <em>type-id</em> followed by an ellipsis is a pack expansion (14.6.3).</p>
 </blockquote>
 <p>Add the following new paragraph:</p>
@@ -734,10 +719,10 @@ type-id-list, type-id ...<span class="sub">opt</span>
 <span class="raw-html"><span class="ins">15 If a function with a
 <i>noexcept-specification</i> whose <i>constant-expression</i>
 yields <code>true</code> throws an exception, the behavior is
-undefined.  The <i>exception-specification</i> whose
+undefined.  A <i>noexcept-specification</i> whose
 <i>constant-expression</i> yields <code>true</code> is in all
 other respects equivalent to the <i>exception-specification</i>
-<code>throw()</code>.  The <i>exception-specification</i> whose
+<code>throw()</code>.  A <i>noexcept-specification</i> whose
 <i>constant-expression</i> yields <code>false</code> is equivalent
 to omitting the <i>exception-specification</i> altogether.</span></span></blockquote>
 <!-- comment
@@ -747,7 +732,7 @@ to omitting the <i>exception-specification</i> altogether.</span></span></blockq
 
 Modify footnote 192 (the first footnote in paragraph 2) as follows:
 
-  192) That is, the C library functions can all be treated as if they have :del:`a throw()` :ins:`an empty` exception-specification. This allows implementations to make performance optimizations based on the absence of exceptions at runtime. -->
+  192) That is, the C library functions can all be treated as if they have :del:`a throw()` :ins:`:del:`an empty` :ins:`a non-throwing`` exception-specification. This allows implementations to make performance optimizations based on the absence of exceptions at runtime. -->
 </div>
 <div class="section" id="type-unexpected-handler-unexpected-handler">
 <h2><a class="toc-backref" href="#id25">18.8.2.2 Type unexpected_handler [unexpected.handler]</a></h2>
