@@ -377,7 +377,7 @@ static void DoHashMapAndLinkedListOutput(int threadsDoingHashMap, int threadsDoi
 
    if (runTime < 1) runTime = 1;
 
-   cout << "LATM: " << transaction::latm_protection_str() << endl << endl;
+   cout << "LATM: " << latm::instance().protection_str() << endl << endl;
    cout << "HT: DSTM_" << transaction::update_policy_string() << "   ";
    cout << "THRD: " << kMaxThreads << "   ";
    cout << "SIZE: " << totalInserts << "   ";
@@ -427,7 +427,7 @@ void DoHashMapAndLinkedListInitialization()
    globalLinkedList = new LATM::LinkedList<int>;
    transaction::initialize();
 
-   if (transaction::doing_tm_lock_protection())
+   if (latm::instance().doing_tm_lock_protection())
    {
       for (int k = 1; k < kBuckets2; ++k)
       {

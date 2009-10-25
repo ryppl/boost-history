@@ -140,9 +140,9 @@ void setupEnvironment(int argc, char **argv)
 #if PERFORMING_LATM
 
          std::string latmType = argv[++i];
-         if (latmType == "full") transaction::do_full_lock_protection();
-         else if (latmType == "tm") transaction::do_tm_lock_protection();
-         else if (latmType == "tx") transaction::do_tx_lock_protection();
+         if (latmType == "full") latm::do_full_lock_protection();
+         else if (latmType == "tm") latm::do_tm_lock_protection();
+         else if (latmType == "tx") latm::do_tx_lock_protection();
          else
          {
             cout << "invalid LATM protection type, exiting" << endl;

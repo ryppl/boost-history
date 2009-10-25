@@ -142,7 +142,7 @@ public:
 
       try_atomic(t)
       {
-         if (eTxConflictingLockLatmProtection == transaction::latm_protection())
+         if (eTxConflictingLockLatmProtection == latm::instance().protection())
          {
             t.add_tx_conflicting_lock(&list_lock_);
          }
@@ -165,7 +165,7 @@ public:
 
       try_atomic(t)
       {
-         if (eTxConflictingLockLatmProtection == transaction::latm_protection())
+         if (eTxConflictingLockLatmProtection == latm::instance().protection())
          {
             t.add_tx_conflicting_lock(&list_lock_);
          }

@@ -50,7 +50,7 @@ namespace boost { namespace stm {
 //
 //----------------------------------------------------------------------------
 inline bool transaction::dir_do_core_tm_conflicting_lock_pthread_lock_mutex
-(latm_mutex mutex, int lockWaitTime, int lockAborted)
+(latm::mutex_type* mutex, int lockWaitTime, int lockAborted)
 {
    //--------------------------------------------------------------------------
    // if this mutex is on the tmConflictingLocks_ set, then we need to stop
@@ -117,7 +117,7 @@ inline bool transaction::dir_do_core_tm_conflicting_lock_pthread_lock_mutex
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::dir_tm_conflicting_lock_pthread_lock_mutex(latm_mutex mutex)
+inline int transaction::dir_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex)
 {
    if (transaction* t = get_inflight_tx_of_same_thread(false))
    {
@@ -175,7 +175,7 @@ inline int transaction::dir_tm_conflicting_lock_pthread_lock_mutex(latm_mutex mu
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(latm_mutex mutex)
+inline int transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex)
 {
    if (transaction* t = get_inflight_tx_of_same_thread(false))
    {
@@ -222,7 +222,7 @@ inline int transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(latm_mutex
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::dir_tm_conflicting_lock_pthread_unlock_mutex(latm_mutex mutex)
+inline int transaction::dir_tm_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex)
 {
    synchro::lock(latmMutex_);
    bool hasLock = true;

@@ -31,10 +31,10 @@ synchro::implicit_thread_specific_ptr<transaction::transaction_tss_storage> tran
 // Static initialization
 ///////////////////////////////////////////////////////////////////////////////
 transaction::InflightTxes transaction::transactionsInFlight_;
-transaction::latm_mutex_set transaction::latmLockedLocks_;
-transaction::MutexThreadSetMap transaction::latmLockedLocksAndThreadIdsMap_;
-transaction::MutexThreadMap transaction::latmLockedLocksOfThreadMap_;
-transaction::latm_mutex_set transaction::tmConflictingLocks_;
+latm::mutex_set transaction::latmLockedLocks_;
+latm::mutex_thread_id_set_map transaction::latmLockedLocksAndThreadIdsMap_;
+latm::mutex_thread_id_map transaction::latmLockedLocksOfThreadMap_;
+latm::mutex_set transaction::tmConflictingLocks_;
 transaction::DeletionBuffer transaction::deletionBuffer_;
 
 clock_t transaction::global_clock_ = 0;
@@ -52,7 +52,6 @@ Mutex transaction::transactionMutex_;
 Mutex transaction::deletionBufferMutex_;
 Mutex transaction::latmMutex_;
 
-boost::stm::LatmType transaction::eLatmType_ = eFullLatmProtection;
 std::ofstream transaction::logFile_;
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
@@ -96,10 +95,10 @@ transaction_bookkeeping transaction::bookkeeping_;
 #ifndef USE_SINGLE_THREAD_CONTEXT_MAP
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
-transaction::thread_latm_mutex_set transaction::threadConflictingMutexes_;
+latm::thread_id_mutex_set_map transaction::threadConflictingMutexes_;
 #endif
-transaction::thread_latm_mutex_set transaction::threadObtainedLocks_;
-transaction::thread_latm_mutex_set transaction::threadCurrentlyLockedLocks_;
+latm::thread_id_mutex_set_map transaction::threadObtainedLocks_;
+latm::thread_id_mutex_set_map transaction::threadCurrentlyLockedLocks_;
 #endif
 transaction::ThreadWriteContainer transaction::threadWriteLists_;
 transaction::ThreadReadContainer transaction::threadReadLists_;
@@ -117,10 +116,10 @@ transaction::ThreadBoolContainer transaction::threadBlockedLists_;
 #ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
-transaction::thread_latm_mutex_set transaction::threadConflictingMutexes_;
+latm::thread_id_mutex_set_map transaction::threadConflictingMutexes_;
 #endif
-transaction::thread_latm_mutex_set transaction::threadObtainedLocks_;
-transaction::thread_latm_mutex_set transaction::threadCurrentlyLockedLocks_;
+latm::thread_id_mutex_set_map transaction::threadObtainedLocks_;
+latm::thread_id_mutex_set_map transaction::threadCurrentlyLockedLocks_;
 #endif
 transaction::ThreadMutexContainer transaction::threadMutexes_;
 transaction::ThreadBoolContainer transaction::threadBlockedLists_;
@@ -218,23 +217,23 @@ void transaction::initialize_thread()
 
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
-   thread_latm_mutex_set::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
+   latm::thread_id_mutex_set_map::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
    if (threadConflictingMutexes_.end() == conflictingMutexIter)
    {
-      threadConflictingMutexes_[threadId] = new latm_mutex_set;
+      threadConflictingMutexes_[threadId] = new latm::mutex_set;
    }
 #endif
 
-   thread_latm_mutex_set::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
+   latm::thread_id_mutex_set_map::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
    if (threadObtainedLocks_.end() == obtainedLocksIter)
    {
-      threadObtainedLocks_[threadId] = new latm_mutex_set;
+      threadObtainedLocks_[threadId] = new latm::mutex_set;
    }
 
-   thread_latm_mutex_set::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
+   latm::thread_id_mutex_set_map::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
    if (threadCurrentlyLockedLocks_.end() == currentlyLockedLocksIter)
    {
-      threadCurrentlyLockedLocks_[threadId] = new latm_mutex_set;
+      threadCurrentlyLockedLocks_[threadId] = new latm::mutex_set;
    }
 #endif
 
@@ -311,23 +310,23 @@ void transaction::initialize_thread()
    ThreadBoolContainer::iterator blockedIter = threadBlockedLists_.find(threadId);
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
-   thread_latm_mutex_set::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
+   latm::thread_id_mutex_set_map::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
    if (threadConflictingMutexes_.end() == conflictingMutexIter)
    {
-      threadConflictingMutexes_[threadId] = new latm_mutex_set;
+      threadConflictingMutexes_[threadId] = new latm::mutex_set;
    }
 #endif
 
-   thread_latm_mutex_set::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
+   latm::thread_id_mutex_set_map::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
    if (threadObtainedLocks_.end() == obtainedLocksIter)
    {
-      threadObtainedLocks_[threadId] = new latm_mutex_set;
+      threadObtainedLocks_[threadId] = new latm::mutex_set;
    }
 
-   thread_latm_mutex_set::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
+   latm::thread_id_mutex_set_map::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
    if (threadCurrentlyLockedLocks_.end() == currentlyLockedLocksIter)
    {
-      threadCurrentlyLockedLocks_[threadId] = new latm_mutex_set;
+      threadCurrentlyLockedLocks_[threadId] = new latm::mutex_set;
    }
 #endif
 
@@ -481,16 +480,16 @@ void transaction::terminate_thread()
 
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
-   thread_latm_mutex_set::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
+   latm::thread_id_mutex_set_map::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
    delete conflictingMutexIter->second;
    threadConflictingMutexes_.erase(conflictingMutexIter);
 #endif
 
-   thread_latm_mutex_set::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
+   latm::thread_id_mutex_set_map::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
    delete obtainedLocksIter->second;
    threadObtainedLocks_.erase(obtainedLocksIter);
 
-   thread_latm_mutex_set::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
+   latm::thread_id_mutex_set_map::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
    delete currentlyLockedLocksIter->second;
    threadCurrentlyLockedLocks_.erase(currentlyLockedLocksIter);
 #endif

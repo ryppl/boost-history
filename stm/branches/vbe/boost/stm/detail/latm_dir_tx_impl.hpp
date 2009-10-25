@@ -43,7 +43,7 @@ namespace boost { namespace stm {
 //
 //----------------------------------------------------------------------------
 inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
-(latm_mutex mutex, int lockWaitTime, int lockAborted, bool txIsIrrevocable)
+(latm::mutex_type* mutex, int lockWaitTime, int lockAborted, bool txIsIrrevocable)
 {
    //--------------------------------------------------------------------------
    // see if this mutex is part of any of the in-flight transactions conflicting
@@ -96,7 +96,7 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
       try
       {
          latmLockedLocksAndThreadIdsMap_.insert
-         (std::make_pair<latm_mutex, ThreadIdSet>(mutex, txThreadId));
+         (std::make_pair<latm::mutex_type*, ThreadIdSet>(mutex, txThreadId));
          latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
       }
       catch (...)
@@ -154,7 +154,7 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::dir_tx_conflicting_lock_pthread_lock_mutex(latm_mutex mutex)
+inline int transaction::dir_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex)
 {
    int waitTime = 0, aborted = 0;
 
@@ -245,7 +245,7 @@ inline int transaction::dir_tx_conflicting_lock_pthread_lock_mutex(latm_mutex mu
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::dir_tx_conflicting_lock_pthread_trylock_mutex(latm_mutex mutex)
+inline int transaction::dir_tx_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex)
 {
    //--------------------------------------------------------------------------
    throw "might not be possible to implement trylock for this";
@@ -296,7 +296,7 @@ inline int transaction::dir_tx_conflicting_lock_pthread_trylock_mutex(latm_mutex
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::dir_tx_conflicting_lock_pthread_unlock_mutex(latm_mutex mutex)
+inline int transaction::dir_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex)
 {
    synchro::lock_guard<Mutex> autolock_l(*latm_lock());
    synchro::lock_guard<Mutex> autolock_g(*general_lock());

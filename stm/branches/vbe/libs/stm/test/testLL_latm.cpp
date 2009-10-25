@@ -270,7 +270,7 @@ void TestLinkedListSetsWithLocks()
       // every 4th thread works on the same linked list that
       // the 3rd thread is working on, so only add that conflict
       //----------------------------------------------------------------
-      if (transaction::doing_tm_lock_protection() && 0 == (k+1) % 2)
+      if (latm::instance().doing_tm_lock_protection() && 0 == (k+1) % 2)
       {
          //transaction::add_tm_conflicting_lock(llist[index]->get_list_lock());
          //cout << "TM-lock conflict added: " << index << endl;

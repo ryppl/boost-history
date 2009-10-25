@@ -206,10 +206,10 @@ void DoHashMapInitialization()
    globalHashMap = new LATM::HashMap<int>;
    transaction::initialize();
 
-   transaction::do_full_lock_protection();
+   latm::do_full_lock_protection();
 
 #if 0
-   transaction::do_tm_conflicting_lock_protection();
+   latm::instance().do_tm_conflicting_lock_protection();
 
    for (int k = 1; k < kBuckets; ++k)
    {

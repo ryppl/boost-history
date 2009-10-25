@@ -168,7 +168,7 @@ static void* TestCount(void *threadId)
 void TestIsolatedIntLockInTx()
 {
    transaction::initialize();
-   transaction::do_full_lock_protection();
+   latm::do_full_lock_protection();
    //transaction::do_direct_updating();
 
    pthread_t *threads = new pthread_t[kMaxThreads];

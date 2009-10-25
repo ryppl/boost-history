@@ -50,7 +50,7 @@ namespace boost { namespace stm {
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 inline bool transaction::def_do_core_full_pthread_lock_mutex
-(latm_mutex mutex, int lockWaitTime, int lockAborted)
+(latm::mutex_type* mutex, int lockWaitTime, int lockAborted)
 {
    //--------------------------------------------------------------------------
    // if the lock-aware tm lock set is empty, lock the in-flight trans mutex
@@ -104,7 +104,7 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::def_full_pthread_lock_mutex(latm_mutex mutex)
+inline int transaction::def_full_pthread_lock_mutex(latm::mutex_type* mutex)
 {
    if (transaction* t = get_inflight_tx_of_same_thread(false))
    {
@@ -172,7 +172,7 @@ inline int transaction::def_full_pthread_lock_mutex(latm_mutex mutex)
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::def_full_pthread_trylock_mutex(latm_mutex mutex)
+inline int transaction::def_full_pthread_trylock_mutex(latm::mutex_type* mutex)
 {
    if (transaction* t = get_inflight_tx_of_same_thread(false))
    {
@@ -229,7 +229,7 @@ inline int transaction::def_full_pthread_trylock_mutex(latm_mutex mutex)
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::def_full_pthread_unlock_mutex(latm_mutex mutex)
+inline int transaction::def_full_pthread_unlock_mutex(latm::mutex_type* mutex)
 {
    bool hasLock = true;
    { synchro::lock_guard<Mutex> lock_l(latmMutex_);

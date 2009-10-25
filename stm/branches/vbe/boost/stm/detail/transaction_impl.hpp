@@ -520,7 +520,7 @@ inline std::string transaction::outputBlockedThreadsAndLockedLocks()
 
    o << "Threads and their conflicting mutexes:" << endl << endl;
 
-   for (thread_latm_mutex_set::iterator iter = threadConflictingMutexes_.begin();
+   for (latm::thread_id_mutex_set_map::iterator iter = threadConflictingMutexes_.begin();
    threadConflictingMutexes_.end() != iter; ++iter)
    {
       // if this mutex is found in the transaction's conflicting mutexes
@@ -530,7 +530,7 @@ inline std::string transaction::outputBlockedThreadsAndLockedLocks()
       o << iter->first << " blocked: " << blocked(iter->first) << endl;
       o << "\t";
 
-      for (latm_mutex_set::iterator inner = iter->second->begin(); inner != iter->second->end(); ++inner)
+      for (latm::mutex_set::iterator inner = iter->second->begin(); inner != iter->second->end(); ++inner)
       {
          o << *inner << " ";
       }
@@ -539,7 +539,7 @@ inline std::string transaction::outputBlockedThreadsAndLockedLocks()
 
    o << "Currently locked locks:" << endl << endl;
 
-   for (MutexThreadSetMap::iterator i = latmLockedLocksAndThreadIdsMap_.begin();
+   for (latm::mutex_thread_id_set_map::iterator i = latmLockedLocksAndThreadIdsMap_.begin();
    i != latmLockedLocksAndThreadIdsMap_.end(); ++i)
    {
       o << i->first << endl << "\t";
@@ -623,9 +623,9 @@ inline bool transaction::can_go_inflight()
    // if we're doing full lock protection, allow transactions
    // to start only if no locks are obtained or the only lock that
    // is obtained is on this_thread::get_id()
-   if (transaction::doing_full_lock_protection())
+   if (latm::instance().doing_full_lock_protection())
    {
-      for (MutexThreadMap::iterator j = latmLockedLocksOfThreadMap_.begin();
+      for (latm::mutex_thread_id_map::iterator j = latmLockedLocksOfThreadMap_.begin();
       j != latmLockedLocksOfThreadMap_.end(); ++j)
       {
          if (this_thread::get_id() != j->second)
@@ -637,15 +637,15 @@ inline bool transaction::can_go_inflight()
 
    // if we're doing tm lock protection, allow transactions
    // to start only if
-   else if (transaction::doing_tm_lock_protection())
+   else if (latm::instance().doing_tm_lock_protection())
    {
-      for (latm_mutex_set::iterator i = tmConflictingLocks_.begin(); i != tmConflictingLocks_.end(); ++i)
+      for (latm::mutex_set::iterator i = tmConflictingLocks_.begin(); i != tmConflictingLocks_.end(); ++i)
       {
          // if one of your conflicting locks is currently locked ...
          if (latmLockedLocks_.end() != latmLockedLocks_.find(*i))
          {
             // if it is locked by our thread, it is ok ... otherwise it is not
-            MutexThreadMap::iterator j = latmLockedLocksOfThreadMap_.find(*i);
+            latm::mutex_thread_id_map::iterator j = latmLockedLocksOfThreadMap_.find(*i);
 
             if (j != latmLockedLocksOfThreadMap_.end() &&
                this_thread::get_id() != j->second)

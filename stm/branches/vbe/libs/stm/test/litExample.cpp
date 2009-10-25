@@ -373,9 +373,9 @@ void TestLitExample()
       SLEEP(10);
    }
 
-   if (transaction::doing_full_lock_protection()) cout << "full_";
-   else if (transaction::doing_tm_lock_protection()) cout << "tm_";
-   else if (transaction::doing_tx_lock_protection()) cout << "tx_";
+   if (latm::instance().doing_full_lock_protection()) cout << "full_";
+   else if (latm::instance().doing_tm_lock_protection()) cout << "tm_";
+   else if (latm::instance().doing_tx_lock_protection()) cout << "tx_";
 
    cout << "run_time\t" << endTimer - startTimer << endl;
 }

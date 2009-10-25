@@ -140,7 +140,7 @@ public:
 
       transaction t;
 
-      if (eTxConflictingLockLatmProtection == transaction::latm_protection())
+      if (eTxConflictingLockLatmProtection == latm::instance().protection())
       {
          t.add_tx_conflicting_lock(&list_lock_);
       }
@@ -160,7 +160,7 @@ public:
 
       transaction t;
 
-      if (eTxConflictingLockLatmProtection == transaction::latm_protection())
+      if (eTxConflictingLockLatmProtection == latm::instance().protection())
       {
          t.add_tx_conflicting_lock(&list_lock_);
       }

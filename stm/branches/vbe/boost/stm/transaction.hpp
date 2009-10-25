@@ -35,6 +35,7 @@
 #include <boost/stm/transaction_bookkeeping.hpp>
 #include <boost/stm/contention_managers/select_contention_manager.hpp>
 #include <boost/stm/memory_managers/base_memory_manager.hpp>
+#include <boost/stm/latm.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/bloom_filter.hpp>
 #include <boost/stm/detail/deleters.hpp>
@@ -101,10 +102,6 @@ public:
 
    typedef std::multimap<clock_t, MemoryContainerList > DeletionBuffer;
 
-   //typedef std::set<Mutex*> MutexSet;
-   //typedef void* latm_mutex;
-   typedef Mutex* latm_mutex;
-   typedef std::set<latm_mutex> latm_mutex_set;
 
    typedef std::set<thread_id_t> ThreadIdSet;
 
@@ -117,8 +114,6 @@ public:
     typedef std::map<thread_id_t, Mutex*> ThreadMutexContainer;
     #endif
 
-   //typedef std::map<thread_id_t, MutexSet* > ThreadMutexSetContainer;
-   typedef std::map<thread_id_t, latm_mutex_set* > thread_latm_mutex_set;
    typedef std::map<thread_id_t, bloom_filter*> ThreadBloomFilterList;
     #ifdef BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET
     typedef std::map<thread_id_t, boost::dynamic_bitset<>*> ThreadBitVectorList;
@@ -131,10 +126,6 @@ public:
     #else
    typedef std::map<thread_id_t, int*> ThreadBoolContainer;
     #endif
-
-   typedef std::map<latm_mutex, ThreadIdSet > MutexThreadSetMap;
-   typedef std::map<latm_mutex, thread_id_t> MutexThreadMap;
-   //typedef std::map<Mutex*, thread_id_t> latm_mutex_thread_map;
 
    typedef std::set<transaction*> LockedTransactionContainer;
 
@@ -192,10 +183,10 @@ public:
         #endif
         #if PERFORMING_LATM
         #if USING_TRANSACTION_SPECIFIC_LATM
-        latm_mutex_set conflictingMutex_;
+        latm::mutex_set conflictingMutex_;
         #endif
-        latm_mutex_set obtainedLocks_;
-        latm_mutex_set currentlyLockedLocks_;
+        latm::mutex_set obtainedLocks_;
+        latm::mutex_set currentlyLockedLocks_;
         #endif
     };
 
@@ -314,16 +305,6 @@ public:
    //--------------------------------------------------------------------------
    // Lock Aware Transactional Memory support methods
    //--------------------------------------------------------------------------
-   inline static LatmType const latm_protection() { return eLatmType_; }
-   static std::string const latm_protection_str();
-   static void do_full_lock_protection();
-   static void do_tm_lock_protection();
-   static void do_tx_lock_protection();
-
-   static bool doing_full_lock_protection();
-   static bool doing_tm_lock_protection();
-   static bool doing_tx_lock_protection();
-
 
     #ifdef WIN32
    template <typename T>
@@ -363,11 +344,9 @@ public:
    inline static int unlock_(PLOCK *lock) { return pthread_unlock(lock); }
     #endif
 
-   static int pthread_lock(latm_mutex lock);
-   static int pthread_trylock(latm_mutex lock);
-   static int pthread_unlock(latm_mutex lock);
-
-
+   static int pthread_lock(latm::mutex_type* lock);
+   static int pthread_trylock(latm::mutex_type* lock);
+   static int pthread_unlock(latm::mutex_type* lock);
 
    //--------------------------------------------------------------------------
     #if PERFORMING_LATM
@@ -376,13 +355,13 @@ public:
    {
       tm_lock_conflict(&lock);
    }
-   static void tm_lock_conflict(latm_mutex lock);
+   static void tm_lock_conflict(latm::mutex_type* lock);
 
    static void clear_tm_conflicting_locks();
-   inline static latm_mutex_set get_tm_conflicting_locks() { return tmConflictingLocks_; }
+   inline static latm::mutex_set get_tm_conflicting_locks() { return tmConflictingLocks_; }
 
-   void must_be_in_conflicting_lock_set(latm_mutex inLock);
-   static void must_be_in_tm_conflicting_lock_set(latm_mutex inLock);
+   void must_be_in_conflicting_lock_set(latm::mutex_type* inLock);
+   static void must_be_in_tm_conflicting_lock_set(latm::mutex_type* inLock);
 
     #if USING_TRANSACTION_SPECIFIC_LATM
    void see_if_tx_must_block_due_to_tx_latm();
@@ -390,29 +369,29 @@ public:
    inline void lock_conflict(Mutex &lock)
    { add_tx_conflicting_lock(&lock); }
 
-   inline void lock_conflict(latm_mutex lock)
+   inline void lock_conflict(latm::mutex_type* lock)
    { add_tx_conflicting_lock(lock); }
 
    inline void add_tx_conflicting_lock(Mutex &lock)
    {
       add_tx_conflicting_lock(&lock);
    }
-   void add_tx_conflicting_lock(latm_mutex lock);
+   void add_tx_conflicting_lock(latm::mutex_type* lock);
 
    void clear_tx_conflicting_locks();
-   //latm_mutex_set get_tx_conflicting_locks() { return conflictingMutexRef_; }
+   //latm::mutex_set get_tx_conflicting_locks() { return conflictingMutexRef_; }
     #endif
 
-   void add_to_obtained_locks(latm_mutex mutex);
-   static void unblock_conflicting_threads(latm_mutex mutex);
-   static bool mutex_is_on_obtained_tx_list(latm_mutex mutex);
+   void add_to_obtained_locks(latm::mutex_type* mutex);
+   static void unblock_conflicting_threads(latm::mutex_type* mutex);
+   static bool mutex_is_on_obtained_tx_list(latm::mutex_type* mutex);
    static void unblock_threads_if_locks_are_empty();
    void clear_latm_obtained_locks();
 
-   void add_to_currently_locked_locks(latm_mutex  m);
-   void remove_from_currently_locked_locks(latm_mutex m);
-   bool is_currently_locked_lock(latm_mutex m);
-   bool is_on_obtained_locks_list(latm_mutex m);
+   void add_to_currently_locked_locks(latm::mutex_type*  m);
+   void remove_from_currently_locked_locks(latm::mutex_type* m);
+   bool is_currently_locked_lock(latm::mutex_type* m);
+   bool is_on_obtained_locks_list(latm::mutex_type* m);
     #endif
 
    //--------------------------------------------------------------------------
@@ -1274,21 +1253,21 @@ private:
    // deferred updating methods
    //--------------------------------------------------------------------------
    static bool def_do_core_tm_conflicting_lock_pthread_lock_mutex
-      (latm_mutex mutex, int lockWaitTime, int lockAborted);
+      (latm::mutex_type* mutex, int lockWaitTime, int lockAborted);
    static bool def_do_core_tx_conflicting_lock_pthread_lock_mutex
-      (latm_mutex mutex, int lockWaitTime, int lockAborted, bool txIsIrrevocable);
+      (latm::mutex_type* mutex, int lockWaitTime, int lockAborted, bool txIsIrrevocable);
    static bool def_do_core_full_pthread_lock_mutex
-      (latm_mutex mutex, int lockWaitTime, int lockAborted);
+      (latm::mutex_type* mutex, int lockWaitTime, int lockAborted);
 
    //--------------------------------------------------------------------------
    // direct updating methods
    //--------------------------------------------------------------------------
    static bool dir_do_core_tm_conflicting_lock_pthread_lock_mutex
-      (latm_mutex mutex, int lockWaitTime, int lockAborted);
+      (latm::mutex_type* mutex, int lockWaitTime, int lockAborted);
    static bool dir_do_core_tx_conflicting_lock_pthread_lock_mutex
-      (latm_mutex mutex, int lockWaitTime, int lockAborted, bool txIsIrrevocable);
+      (latm::mutex_type* mutex, int lockWaitTime, int lockAborted, bool txIsIrrevocable);
    static bool dir_do_core_full_pthread_lock_mutex
-      (latm_mutex mutex, int lockWaitTime, int lockAborted);
+      (latm::mutex_type* mutex, int lockWaitTime, int lockAborted);
 
    static int thread_id_occurance_in_locked_locks_map(thread_id_t threadId);
 
@@ -1297,32 +1276,32 @@ private:
    //--------------------------------------------------------------------------
    // deferred updating locking methods
    //--------------------------------------------------------------------------
-   static int def_full_pthread_lock_mutex(latm_mutex mutex);
-   static int def_full_pthread_trylock_mutex(latm_mutex mutex);
-   static int def_full_pthread_unlock_mutex(latm_mutex mutex);
+   static int def_full_pthread_lock_mutex(latm::mutex_type* mutex);
+   static int def_full_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static int def_full_pthread_unlock_mutex(latm::mutex_type* mutex);
 
-   static int def_tm_conflicting_lock_pthread_lock_mutex(latm_mutex mutex);
-   static int def_tm_conflicting_lock_pthread_trylock_mutex(latm_mutex mutex);
-   static int def_tm_conflicting_lock_pthread_unlock_mutex(latm_mutex mutex);
+   static int def_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
+   static int def_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static int def_tm_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
-   static int def_tx_conflicting_lock_pthread_lock_mutex(latm_mutex mutex);
-   static int def_tx_conflicting_lock_pthread_trylock_mutex(latm_mutex mutex);
-   static int def_tx_conflicting_lock_pthread_unlock_mutex(latm_mutex mutex);
+   static int def_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
+   static int def_tx_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static int def_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
    //--------------------------------------------------------------------------
    // direct updating locking methods
    //--------------------------------------------------------------------------
-   static int dir_full_pthread_lock_mutex(latm_mutex mutex);
-   static int dir_full_pthread_trylock_mutex(latm_mutex mutex);
-   static int dir_full_pthread_unlock_mutex(latm_mutex mutex);
+   static int dir_full_pthread_lock_mutex(latm::mutex_type* mutex);
+   static int dir_full_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static int dir_full_pthread_unlock_mutex(latm::mutex_type* mutex);
 
-   static int dir_tm_conflicting_lock_pthread_lock_mutex(latm_mutex mutex);
-   static int dir_tm_conflicting_lock_pthread_trylock_mutex(latm_mutex mutex);
-   static int dir_tm_conflicting_lock_pthread_unlock_mutex(latm_mutex mutex);
+   static int dir_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
+   static int dir_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static int dir_tm_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
-   static int dir_tx_conflicting_lock_pthread_lock_mutex(latm_mutex mutex);
-   static int dir_tx_conflicting_lock_pthread_trylock_mutex(latm_mutex mutex);
-   static int dir_tx_conflicting_lock_pthread_unlock_mutex(latm_mutex mutex);
+   static int dir_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
+   static int dir_tx_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static int dir_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
    //--------------------------------------------------------------------------
 
@@ -1330,11 +1309,11 @@ private:
    static DeletionBuffer deletionBuffer_;
    static std::ofstream logFile_;
 
-   static latm_mutex_set tmConflictingLocks_;
-   static latm_mutex_set latmLockedLocks_;
-   static MutexThreadSetMap latmLockedLocksAndThreadIdsMap_;
-   static MutexThreadMap latmLockedLocksOfThreadMap_;
-   static LatmType eLatmType_;
+   static latm::mutex_set tmConflictingLocks_;
+   static latm::mutex_set latmLockedLocks_;
+   static latm::mutex_thread_id_set_map latmLockedLocksAndThreadIdsMap_;
+   static latm::mutex_thread_id_map latmLockedLocksOfThreadMap_;
+   //static LatmType eLatmType_;
    static InflightTxes transactionsInFlight_;
 
    static Mutex deletionBufferMutex_;
@@ -1502,18 +1481,18 @@ private:
 
 
 #if PERFORMING_LATM
-    static thread_latm_mutex_set threadConflictingMutexes_;
-    static thread_latm_mutex_set threadObtainedLocks_;
-    static thread_latm_mutex_set threadCurrentlyLockedLocks_;
+    static latm::thread_id_mutex_set_map threadConflictingMutexes_;
+    static latm::thread_id_mutex_set_map threadObtainedLocks_;
+    static latm::thread_id_mutex_set_map threadCurrentlyLockedLocks_;
 
 #if USING_TRANSACTION_SPECIFIC_LATM
-    latm_mutex_set &conflictingMutexRef_;
-    inline latm_mutex_set& get_tx_conflicting_locks() { return conflictingMutexRef_; }
-    inline latm_mutex_set& get_tx_conflicting_locks(thread_id_t id) {
+    latm::mutex_set &conflictingMutexRef_;
+    inline latm::mutex_set& get_tx_conflicting_locks() { return conflictingMutexRef_; }
+    inline latm::mutex_set& get_tx_conflicting_locks(thread_id_t id) {
        return *threadConflictingMutexes_.find(threadId_)->second;
     }
     static void thread_conflicting_mutexes_set_all(int b) {
-        for (thread_latm_mutex_set::iterator iter = threadConflictingMutexes_.begin();
+        for (latm::thread_id_mutex_set_map::iterator iter = threadConflictingMutexes_.begin();
             threadConflictingMutexes_.end() != iter; ++iter)
         {
             blocked(iter->first) = b;
@@ -1521,7 +1500,7 @@ private:
     }
 
     static void thread_conflicting_mutexes_set_all_cnd(Mutex *mutex, int b) {
-        for (thread_latm_mutex_set::iterator iter = threadConflictingMutexes_.begin();
+        for (latm::thread_id_mutex_set_map::iterator iter = threadConflictingMutexes_.begin();
             threadConflictingMutexes_.end() != iter; ++iter)
         {
         // if this mutex is found in the transaction's conflicting mutexes
@@ -1537,21 +1516,21 @@ private:
    }
 #endif
 
-    latm_mutex_set &obtainedLocksRef_;
-    inline latm_mutex_set &obtainedLocksRef() {return obtainedLocksRef_;}
-    inline static latm_mutex_set &obtainedLocksRef(thread_id_t id) {return *threadObtainedLocks_.find(id)->second;}
+    latm::mutex_set &obtainedLocksRef_;
+    inline latm::mutex_set &obtainedLocksRef() {return obtainedLocksRef_;}
+    inline static latm::mutex_set &obtainedLocksRef(thread_id_t id) {return *threadObtainedLocks_.find(id)->second;}
 
     void block_if_conflict_mutex() {
         //--------------------------------------------------------------------------
         // iterate through all currently locked locks
         //--------------------------------------------------------------------------
-        for (thread_latm_mutex_set::iterator i = threadObtainedLocks_.begin();
+        for (latm::thread_id_mutex_set_map::iterator i = threadObtainedLocks_.begin();
         threadObtainedLocks_.end() != i; ++i)
         {
             // if these are locks obtained by this thread (in a parent tx), don't block
             if (i->first == this_thread::get_id()) continue;
 
-            for (latm_mutex_set::iterator j = i->second->begin(); j != i->second->end(); ++j)
+            for (latm::mutex_set::iterator j = i->second->begin(); j != i->second->end(); ++j)
             {
                 //-----------------------------------------------------------------------
                 // iterate through this transaction's conflicting mutex ref - if one of
@@ -1566,9 +1545,9 @@ private:
         }
    }
 
-   latm_mutex_set &currentlyLockedLocksRef_;
-   inline latm_mutex_set &currentlyLockedLocksRef() {return currentlyLockedLocksRef_;}
-   inline static latm_mutex_set &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
+   latm::mutex_set &currentlyLockedLocksRef_;
+   inline latm::mutex_set &currentlyLockedLocksRef() {return currentlyLockedLocksRef_;}
+   inline static latm::mutex_set &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
 #endif
 
 
@@ -1660,8 +1639,8 @@ private:
 #if PERFORMING_LATM
 
 #if USING_TRANSACTION_SPECIFIC_LATM
-    inline latm_mutex_set& get_tx_conflicting_locks() { return context_.conflictingMutex_; }
-    inline latm_mutex_set& get_tx_conflicting_locks(thread_id_t id) {
+    inline latm::mutex_set& get_tx_conflicting_locks() { return context_.conflictingMutex_; }
+    inline latm::mutex_set& get_tx_conflicting_locks(thread_id_t id) {
         tss_context_map_type::iterator i = tss_context_map_.find(id);
         return i->second->conflictingMutex_;
     }
@@ -1673,7 +1652,7 @@ private:
         }
     }
 
-    static void thread_conflicting_mutexes_set_all_cnd(latm_mutex mutex, int b) {
+    static void thread_conflicting_mutexes_set_all_cnd(latm::mutex_type* mutex, int b) {
         for (tss_context_map_type::iterator iter = tss_context_map_.begin();
             tss_context_map_.end() != iter; ++iter)
         {
@@ -1690,8 +1669,8 @@ private:
    }
 #endif
 
-    inline latm_mutex_set &obtainedLocksRef() {return context_.obtainedLocks_;}
-    inline static latm_mutex_set &obtainedLocksRef(thread_id_t id) {
+    inline latm::mutex_set &obtainedLocksRef() {return context_.obtainedLocks_;}
+    inline static latm::mutex_set &obtainedLocksRef(thread_id_t id) {
         tss_context_map_type::iterator i = tss_context_map_.find(id);
         return i->second->obtainedLocks_;
     }
@@ -1706,7 +1685,7 @@ private:
             // if these are locks obtained by this thread (in a parent tx), don't block
             if (i->first == this_thread::get_id()) continue;
 
-            for (latm_mutex_set::iterator j = i->second->obtainedLocks_.begin(); j != i->second->obtainedLocks_.end(); ++j)
+            for (latm::mutex_set::iterator j = i->second->obtainedLocks_.begin(); j != i->second->obtainedLocks_.end(); ++j)
             {
                 //-----------------------------------------------------------------------
                 // iterate through this transaction's conflicting mutex ref - if one of
@@ -1722,8 +1701,8 @@ private:
    }
 
 
-   inline latm_mutex_set &currentlyLockedLocksRef() {return context_.currentlyLockedLocks_;}
-   inline static latm_mutex_set &currentlyLockedLocksRef(thread_id_t id) {
+   inline latm::mutex_set &currentlyLockedLocksRef() {return context_.currentlyLockedLocks_;}
+   inline static latm::mutex_set &currentlyLockedLocksRef(thread_id_t id) {
         tss_context_map_type::iterator i = tss_context_map_.find(id);
         return i->second->currentlyLockedLocks_;
     }
@@ -1796,26 +1775,26 @@ private:
 
 
 #if PERFORMING_LATM
-    static thread_latm_mutex_set threadConflictingMutexes_;
-    static thread_latm_mutex_set threadObtainedLocks_;
-    static thread_latm_mutex_set threadCurrentlyLockedLocks_;
+    static latm::thread_id_mutex_set_map threadConflictingMutexes_;
+    static latm::thread_id_mutex_set_map threadObtainedLocks_;
+    static latm::thread_id_mutex_set_map threadCurrentlyLockedLocks_;
 
 #if USING_TRANSACTION_SPECIFIC_LATM
-    latm_mutex_set &conflictingMutexRef_;
-    inline latm_mutex_set& get_tx_conflicting_locks() { return conflictingMutexRef_; }
-    inline latm_mutex_set& get_tx_conflicting_locks(thread_id_t id) {
+    latm::mutex_set &conflictingMutexRef_;
+    inline latm::mutex_set& get_tx_conflicting_locks() { return conflictingMutexRef_; }
+    inline latm::mutex_set& get_tx_conflicting_locks(thread_id_t id) {
        return *threadConflictingMutexes_.find(threadId_)->second;
     }
     static void thread_conflicting_mutexes_set_all(int b) {
-        for (thread_latm_mutex_set::iterator iter = threadConflictingMutexes_.begin();
+        for (latm::thread_id_mutex_set_map::iterator iter = threadConflictingMutexes_.begin();
             threadConflictingMutexes_.end() != iter; ++iter)
         {
             blocked(iter->first) = b;
         }
     }
 
-    static void thread_conflicting_mutexes_set_all_cnd(latm_mutex mutex, int b) {
-        for (thread_latm_mutex_set::iterator iter = threadConflictingMutexes_.begin();
+    static void thread_conflicting_mutexes_set_all_cnd(latm::mutex_type* mutex, int b) {
+        for (latm::thread_id_mutex_set_map::iterator iter = threadConflictingMutexes_.begin();
             threadConflictingMutexes_.end() != iter; ++iter)
         {
         // if this mutex is found in the transaction's conflicting mutexes
@@ -1831,21 +1810,21 @@ private:
    }
 #endif
 
-    latm_mutex_set &obtainedLocksRef_;
-    inline latm_mutex_set &obtainedLocksRef() {return obtainedLocksRef_;}
-    inline static latm_mutex_set &obtainedLocksRef(thread_id_t id) {return *threadObtainedLocks_.find(id)->second;}
+    latm::mutex_set &obtainedLocksRef_;
+    inline latm::mutex_set &obtainedLocksRef() {return obtainedLocksRef_;}
+    inline static latm::mutex_set &obtainedLocksRef(thread_id_t id) {return *threadObtainedLocks_.find(id)->second;}
 
     void block_if_conflict_mutex() {
         //--------------------------------------------------------------------------
         // iterate through all currently locked locks
         //--------------------------------------------------------------------------
-        for (thread_latm_mutex_set::iterator i = threadObtainedLocks_.begin();
+        for (latm::thread_id_mutex_set_map::iterator i = threadObtainedLocks_.begin();
         threadObtainedLocks_.end() != i; ++i)
         {
             // if these are locks obtained by this thread (in a parent tx), don't block
             if (i->first == this_thread::get_id()) continue;
 
-            for (latm_mutex_set::iterator j = i->second->begin(); j != i->second->end(); ++j)
+            for (latm::mutex_set::iterator j = i->second->begin(); j != i->second->end(); ++j)
             {
                 //-----------------------------------------------------------------------
                 // iterate through this transaction's conflicting mutex ref - if one of
@@ -1862,9 +1841,9 @@ private:
 
 
 
-   latm_mutex_set &currentlyLockedLocksRef_;
-   inline latm_mutex_set &currentlyLockedLocksRef() {return currentlyLockedLocksRef_;}
-   inline static latm_mutex_set &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
+   latm::mutex_set &currentlyLockedLocksRef_;
+   inline latm::mutex_set &currentlyLockedLocksRef() {return currentlyLockedLocksRef_;}
+   inline static latm::mutex_set &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
 #endif
 
 

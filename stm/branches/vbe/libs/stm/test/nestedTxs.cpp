@@ -243,8 +243,8 @@ void NestedTxTest()
    transaction::initialize();
    transaction::initialize_thread();
 
-   //transaction::do_tm_lock_protection();
-   transaction::do_tx_lock_protection();
+   //latm::do_tm_lock_protection();
+   latm::do_tx_lock_protection();
 
    //transaction::tm_lock_conflict(&L);
    //transaction::tm_lock_conflict(&L2);
