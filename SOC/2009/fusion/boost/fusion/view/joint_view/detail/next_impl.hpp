@@ -37,8 +37,13 @@ namespace boost { namespace fusion { namespace extension
             typedef typename
                 mpl::if_<
                     equal_to
-                  , concat_iterator<concat_type>
-                  , joint_view_iterator<next_type, end_type, concat_type>
+                  , concat_iterator<typename it::category, concat_type>
+                  , joint_view_iterator<
+                        typename it::category
+                      , next_type
+                      , end_type
+                      , concat_type
+                    >
                 >::type
             type;
 
@@ -68,13 +73,12 @@ namespace boost { namespace fusion { namespace extension
         template <typename It>
         struct apply
         {
+            typedef typename detail::remove_reference<It>::type it;
+
             typedef
                 concat_iterator<
-                    typename result_of::next<
-                        typename detail::remove_reference<
-                            It
-                        >::type::begin_type
-                    >::type
+                    typename it::category
+                  , typename result_of::next<typename it::begin_type>::type
                 >
             type;
 

@@ -24,11 +24,12 @@ namespace boost { namespace fusion { namespace extension
         template <typename Seq>
         struct apply
         {
+            typedef typename detail::remove_reference<Seq>::type seq;
+
             typedef
                 concat_iterator<
-                    typename result_of::end<
-                        typename detail::remove_reference<Seq>::type::seq2_type
-                    >::type
+                    typename seq::category
+                  , typename result_of::end<typename seq::seq2_type>::type
                 >
             type;
 

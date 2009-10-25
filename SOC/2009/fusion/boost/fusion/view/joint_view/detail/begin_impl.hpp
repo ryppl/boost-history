@@ -43,8 +43,13 @@ namespace boost { namespace fusion { namespace extension
             typedef typename
                 mpl::if_<
                     equal_to
-                  , concat_iterator<concat_type>
-                  , joint_view_iterator<begin_type, end_type, concat_type>
+                  , concat_iterator<typename seq::category, concat_type>
+                  , joint_view_iterator<
+                        typename seq::category
+                      , begin_type
+                      , end_type
+                      , concat_type
+                    >
                 >::type
             type;
 

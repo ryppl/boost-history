@@ -25,7 +25,8 @@ namespace boost { namespace fusion { namespace extension
 
             typedef
                 filter_iterator<
-                    typename result_of::end<typename seq::seq_type>::type
+                    typename seq::category
+                  , typename result_of::end<typename seq::seq_type>::type
                   , typename result_of::end<typename seq::seq_type>::type
                   , typename seq::pred_type
                 >

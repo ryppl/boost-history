@@ -24,9 +24,9 @@ namespace boost { namespace fusion
     struct filter_view_iterator_tag;
     struct forward_traversal_tag;
 
-    template <typename Begin, typename End, typename Pred>
+    template <typename Category,typename Begin, typename End, typename Pred>
     struct filter_iterator
-      : iterator_base<filter_iterator<Begin, End, Pred> >
+      : iterator_base<filter_iterator<Category, Begin, End, Pred> >
     {
         typedef Pred pred_type;
         typedef
@@ -43,7 +43,7 @@ namespace boost { namespace fusion
         typedef End end_type;
 
         typedef filter_view_iterator_tag fusion_tag;
-        typedef forward_traversal_tag category;
+        typedef Category category;
 
         template<typename OtherIt>
         filter_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)

@@ -98,7 +98,7 @@ namespace boost { namespace fusion
         typedef transform_view_iterator2_tag fusion_tag;
         typedef typename
             mpl::eval_if<
-                IsAssociative
+                is_associative
               , mpl::inherit2<strictest_traversal,associative_sequence_tag>
               , mpl::identity<strictest_traversal>
             >::type
