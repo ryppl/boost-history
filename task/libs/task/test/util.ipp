@@ -23,8 +23,7 @@
 
 namespace pt = boost::posix_time;
 
-namespace
-{
+namespace {
 
 class execution_monitor
 {

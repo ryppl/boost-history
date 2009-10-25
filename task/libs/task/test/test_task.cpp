@@ -25,8 +25,6 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
-namespace {
-
 void zero_args_fn() {}
 int one_arg_fn( int i) { return i; }
 int two_args_fn( int i, std::string const& s) { return i; }
@@ -84,8 +82,6 @@ void test_case_5()
 	t1.swap( t2);
 	BOOST_CHECK_THROW( t1(), tsk::task_moved);
 	BOOST_CHECK_THROW( t2(), tsk::task_already_executed);
-}
-
 }
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])

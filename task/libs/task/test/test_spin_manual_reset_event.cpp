@@ -11,6 +11,7 @@
 #include <vector>
 
 #include <boost/bind.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/function.hpp>
 #include <boost/ref.hpp>
@@ -23,7 +24,7 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
-uint32_t wait_fn( uint32_t n, tsk::spin_manual_reset_event & ev)
+boost::uint32_t wait_fn( boost::uint32_t n, tsk::spin_manual_reset_event & ev)
 {
 	ev.wait();
 	return n;
@@ -32,16 +33,16 @@ uint32_t wait_fn( uint32_t n, tsk::spin_manual_reset_event & ev)
 // check wait in new thread
 void test_case_1()
 {
-	uint32_t n = 3;
+	boost::uint32_t n = 3;
 	tsk::spin_manual_reset_event ev;
 
-	tsk::handle< uint32_t > h1(
+	tsk::handle< boost::uint32_t > h1(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
 					n, boost::ref( ev) ),
 				tsk::new_thread() ) );
-	tsk::handle< uint32_t > h2(
+	tsk::handle< boost::uint32_t > h2(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
@@ -62,13 +63,13 @@ void test_case_1()
 
 	ev.reset();
 
-	tsk::handle< uint32_t > h3(
+	tsk::handle< boost::uint32_t > h3(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
 					n, boost::ref( ev) ),
 				tsk::new_thread() ) );
-	tsk::handle< uint32_t > h4(
+	tsk::handle< boost::uint32_t > h4(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
@@ -95,16 +96,16 @@ void test_case_2()
 		tsk::unbounded_onelock_fifo
 	> pool( tsk::poolsize( 3) );
 
-	uint32_t n = 3;
+	boost::uint32_t n = 3;
 	tsk::spin_manual_reset_event ev;
 
-	tsk::handle< uint32_t > h1(
+	tsk::handle< boost::uint32_t > h1(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
 					n, boost::ref( ev) ),
 				pool) );
-	tsk::handle< uint32_t > h2(
+	tsk::handle< boost::uint32_t > h2(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
@@ -125,13 +126,13 @@ void test_case_2()
 
 	ev.reset();
 
-	tsk::handle< uint32_t > h3(
+	tsk::handle< boost::uint32_t > h3(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
 					n, boost::ref( ev) ),
 				tsk::new_thread() ) );
-	tsk::handle< uint32_t > h4(
+	tsk::handle< boost::uint32_t > h4(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
@@ -153,16 +154,16 @@ void test_case_2()
 
 void test_case_3()
 {
-	uint32_t n = 3;
+	boost::uint32_t n = 3;
 	tsk::spin_manual_reset_event ev( true);
 
-	tsk::handle< uint32_t > h1(
+	tsk::handle< boost::uint32_t > h1(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
 					n, boost::ref( ev) ),
 				tsk::new_thread() ) );
-	tsk::handle< uint32_t > h2(
+	tsk::handle< boost::uint32_t > h2(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
@@ -177,13 +178,13 @@ void test_case_3()
 
 	ev.reset();
 
-	tsk::handle< uint32_t > h3(
+	tsk::handle< boost::uint32_t > h3(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
 					n, boost::ref( ev) ),
 				tsk::new_thread() ) );
-	tsk::handle< uint32_t > h4(
+	tsk::handle< boost::uint32_t > h4(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,

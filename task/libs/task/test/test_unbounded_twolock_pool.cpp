@@ -27,8 +27,6 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
-namespace {
-
 // check size and move op
 void test_case_1()
 {
@@ -408,8 +406,6 @@ void test_case_22()
 	BOOST_CHECK_EQUAL( buffer[0], 55);
 	BOOST_CHECK_EQUAL( buffer[1], 0);
 	BOOST_CHECK_EQUAL( buffer.size(), std::size_t( 2) );
-}
-
 }
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])

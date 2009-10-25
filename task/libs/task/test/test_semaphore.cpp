@@ -11,6 +11,7 @@
 #include <vector>
 
 #include <boost/bind.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/function.hpp>
 #include <boost/ref.hpp>
@@ -25,29 +26,25 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
-namespace {
-uint32_t wait_fn( uint32_t n, tsk::semaphore & sem)
+boost::uint32_t wait_fn( boost::uint32_t n, tsk::semaphore & sem)
 {
 	sem.wait();
 	return n;
 }
-}
-
-namespace {
 
 // check wait in new thread
 void test_case_1()
 {
-	uint32_t n = 3;
+	boost::uint32_t n = 3;
 	tsk::semaphore sem( 0);
 
-	tsk::handle< uint32_t > h1(
+	tsk::handle< boost::uint32_t > h1(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
 					n, boost::ref( sem) ),
 				tsk::new_thread() ) );
-	tsk::handle< uint32_t > h2(
+	tsk::handle< boost::uint32_t > h2(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
@@ -95,16 +92,16 @@ void test_case_2()
 		tsk::unbounded_onelock_fifo
 	> pool( tsk::poolsize( 3) );
 
-	uint32_t n = 3;
+	boost::uint32_t n = 3;
 	tsk::semaphore sem( 0);
 
-	tsk::handle< uint32_t > h1(
+	tsk::handle< boost::uint32_t > h1(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
 					n, boost::ref( sem) ),
 				pool) );
-	tsk::handle< uint32_t > h2(
+	tsk::handle< boost::uint32_t > h2(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
@@ -146,16 +143,16 @@ void test_case_2()
 
 void test_case_3()
 {
-	uint32_t n = 3;
+	boost::uint32_t n = 3;
 	tsk::semaphore sem( 2);
 
-	tsk::handle< uint32_t > h1(
+	tsk::handle< boost::uint32_t > h1(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
 					n, boost::ref( sem) ),
 				tsk::new_thread() ) );
-	tsk::handle< uint32_t > h2(
+	tsk::handle< boost::uint32_t > h2(
 			tsk::async(
 				tsk::make_task(
 					wait_fn,
@@ -167,8 +164,6 @@ void test_case_3()
 	BOOST_CHECK( h2.is_ready() );
 	BOOST_CHECK_EQUAL( h1.get(), n);
 	BOOST_CHECK_EQUAL( h2.get(), n);
-}
-
 }
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])

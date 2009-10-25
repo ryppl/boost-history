@@ -25,8 +25,6 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
-namespace {
-
 // check assignment
 void test_case_1()
 {
@@ -258,8 +256,6 @@ void test_case_17()
 	BOOST_CHECK( ! h1.is_ready() );
 	BOOST_CHECK( h2.is_ready() );
 	BOOST_CHECK_EQUAL( h2.get(), 55);
-}
-
 }
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])

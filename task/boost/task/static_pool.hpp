@@ -44,7 +44,7 @@ public:
 private:
 	typedef detail::pool_base< queue_type, ums_type >	base_type;
 
-	template< typename T, typename X, typename Z >
+	template< typename T, typename X >
 	friend class detail::worker_object;
 
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)

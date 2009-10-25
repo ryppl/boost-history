@@ -25,8 +25,6 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
-namespace {
-
 struct dummy_mutex
 {
 	bool is_locked;
@@ -184,8 +182,6 @@ void test_swap()
 	
 	BOOST_CHECK_EQUAL( lk1.mutex(), & mtx2);
 	BOOST_CHECK_EQUAL( lk2.mutex(), & mtx1);
-}
-
 }
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])

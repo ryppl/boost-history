@@ -23,12 +23,19 @@ uint32_t atomic_load( uint32_t const volatile * object)
 
 inline
 void atomic_exchange( uint32_t volatile * object, uint32_t desired)
-{ BOOST_INTERLOCKED_EXCHANGE( reinterpret_cast< long volatile * >( object), desired); }
+{
+	BOOST_INTERLOCKED_EXCHANGE(
+			reinterpret_cast< long volatile * >( object),
+			reinterpret_cast< long >( desired) );
+}
 
 inline
 bool atomic_compare_exchange_strong( uint32_t volatile * object, uint32_t * expected, uint32_t desired)
 {
-	uint32_t prev = BOOST_INTERLOCKED_COMPARE_EXCHANGE( object, desired, * expected);
+	uint32_t prev = BOOST_INTERLOCKED_COMPARE_EXCHANGE(
+			reinterpret_cast< long volatile * >( object),
+			reinterpret_cast< long >( desired),
+			reinterpret_cast< long >( * expected) );
 	if ( prev != * expected)
 	{
 		* expected = prev;
