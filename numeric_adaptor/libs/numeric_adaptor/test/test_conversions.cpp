@@ -7,50 +7,40 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
+#include <string>
 #include <boost/test/included/test_exec_monitor.hpp>
+#include <boost/test/floating_point_comparison.hpp>
 #include <boost/numeric_adaptor/numeric_adaptor.hpp>
-#include <boost/numeric_adaptor/ieee_policy.hpp>
 
 #if defined(HAVE_GMP)
-#  include <boost/numeric_adaptor/gmp_policy.hpp>
+#  include <boost/numeric_adaptor/gmp_value_type.hpp>
 #endif
 
 #if defined(HAVE_CLN)
-#  include <boost/numeric_adaptor/cln_policy.hpp>
+#  include <boost/numeric_adaptor/cln_value_type.hpp>
 #endif
 
 
-template <typename Policy>
+template <typename ValueType>
 void test_all()
 {
-    typedef boost::numeric_adaptor::numeric_adaptor<Policy> num;
+    double epsilon = 0.0001;
 
-    num n = 1234.5;
-    BOOST_CHECK_EQUAL(int(n), 1234);
-    BOOST_CHECK_EQUAL((unsigned int)(n), 1234);
-    BOOST_CHECK_EQUAL((unsigned short)(n), 1234);
-    BOOST_CHECK_EQUAL((unsigned long)(n), 1234);
-    BOOST_CHECK_EQUAL(float(n), 1234.5);
-    BOOST_CHECK_EQUAL(double(n), 1234.5);
-    BOOST_CHECK_EQUAL(std::string(n), "1234.5");
-
-    num n2 = "1234.5";
-    BOOST_CHECK_EQUAL(double(n2), 1234.5);
-
-    num n3("1234.5");
-    BOOST_CHECK_EQUAL(double(n3), 1234.5);
+    BOOST_CHECK_CLOSE((double)boost::to<ValueType>(std::string("123.456")), 123.456, epsilon);
 }
 
 int test_main(int, char*[])
 {
-    using namespace boost::numeric_adaptor;
-    test_all<ieee_policy<double> >();
+    test_all<float>();
+    test_all<double>();
+    test_all<long double>();
+
 #if defined(HAVE_GMP)
-    test_all<gmp_policy>();
+    test_all<boost::numeric_adaptor::gmp_value_type>();
 #endif
 
 #if defined(HAVE_CLN)
-    test_all<cln_policy>();
+    test_all<boost::numeric_adaptor::cln_value_type>();
 #endif
 
     return 0;

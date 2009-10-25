@@ -17,9 +17,24 @@
 #include <cmath>
 #include <boost/static_assert.hpp>
 #include <boost/math/special_functions/hypot.hpp>
+#include <boost/lexical_cast.hpp>
 
 
 namespace boost {
+
+
+namespace numeric_adaptor {
+
+
+template <class Target, class Source>
+struct to_traits
+{
+    static Target apply(const Source& source)
+    { return boost::lexical_cast<Target>(source); }
+};
+
+
+} // namespace numeric_adaptor
 
 
 template <class T>
@@ -49,6 +64,10 @@ T atan(T value)
 template <class T>
 T hypot(T a, T b)
 { return boost::math::hypot(a, b); }
+
+template <class Target, class Source>
+Target to(const Source& source)
+{ return numeric_adaptor::to_traits<Target, Source>::apply(source); }
 
 
 } // namespace boost

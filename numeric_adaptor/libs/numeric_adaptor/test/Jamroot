@@ -21,4 +21,4 @@ import testing ;
 run test_heron.cpp ;
 run test_arithmetic.cpp ;
 run test_trig.cpp ;
-#run test_conversions.cpp ;
+run test_conversions.cpp ;

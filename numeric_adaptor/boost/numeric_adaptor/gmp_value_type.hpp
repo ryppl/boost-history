@@ -175,8 +175,20 @@ struct gmp_value_type
     }
 
 
-
     mpf_t m_value;
+};
+
+
+template <>
+struct to_traits<gmp_value_type, std::string>
+{
+    static gmp_value_type apply(const std::string& source)
+    {
+        gmp_value_type result;
+        mpf_init(result.m_value);
+        mpf_set_str(result.m_value, source.c_str(), 10);
+        return result;
+    }
 };
 
 

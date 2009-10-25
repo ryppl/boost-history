@@ -137,9 +137,19 @@ struct cln_value_type
     }
 
 
-
-
     cln::cl_F m_value;
+};
+
+
+template <>
+struct to_traits<cln_value_type, std::string>
+{
+    static cln_value_type apply(const std::string& source)
+    {
+        cln_value_type result;
+        result.m_value = source.c_str();
+        return result;
+    }
 };
 
 
