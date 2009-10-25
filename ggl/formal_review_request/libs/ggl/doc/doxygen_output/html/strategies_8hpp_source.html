@@ -54,32 +54,33 @@
 <a name="l00012"></a>00012 
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="strategy__traits_8hpp.html">ggl/strategies/strategy_traits.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 
-<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="cart__area_8hpp.html">ggl/strategies/cartesian/cart_area.hpp</a>&gt;</span>
-<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="cart__centroid_8hpp.html">ggl/strategies/cartesian/cart_centroid.hpp</a>&gt;</span>
+<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="area__by__triangles_8hpp.html">ggl/strategies/cartesian/area_by_triangles.hpp</a>&gt;</span>
+<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="centroid__bashein__detmer_8hpp.html">ggl/strategies/cartesian/centroid_bashein_detmer.hpp</a>&gt;</span>
 <a name="l00017"></a>00017 <span class="preprocessor">#include &lt;<a class="code" href="cart__compare_8hpp.html">ggl/strategies/cartesian/cart_compare.hpp</a>&gt;</span>
 <a name="l00018"></a>00018 <span class="preprocessor">#include &lt;<a class="code" href="cart__distance_8hpp.html">ggl/strategies/cartesian/cart_distance.hpp</a>&gt;</span>
 <a name="l00019"></a>00019 <span class="preprocessor">#include &lt;<a class="code" href="cart__envelope_8hpp.html">ggl/strategies/cartesian/cart_envelope.hpp</a>&gt;</span>
 <a name="l00020"></a>00020 <span class="preprocessor">#include &lt;<a class="code" href="cart__side_8hpp.html">ggl/strategies/cartesian/cart_side.hpp</a>&gt;</span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;<a class="code" href="cart__within_8hpp.html">ggl/strategies/cartesian/cart_within.hpp</a>&gt;</span>
-<a name="l00022"></a>00022 
-<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;<a class="code" href="distance__haversine_8hpp.html">ggl/strategies/spherical/distance_haversine.hpp</a>&gt;</span>
-<a name="l00024"></a>00024 <span class="preprocessor">#include &lt;<a class="code" href="distance__cross__track_8hpp.html">ggl/strategies/spherical/distance_cross_track.hpp</a>&gt;</span>
-<a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="preprocessor">#include &lt;<a class="code" href="sph__area_8hpp.html">ggl/strategies/spherical/sph_area.hpp</a>&gt;</span>
-<a name="l00027"></a>00027 <span class="preprocessor">#include &lt;<a class="code" href="sph__envelope_8hpp.html">ggl/strategies/spherical/sph_envelope.hpp</a>&gt;</span>
-<a name="l00028"></a>00028 
-<a name="l00029"></a>00029 <span class="preprocessor">#include &lt;<a class="code" href="agn__convex__hull_8hpp.html">ggl/strategies/agnostic/agn_convex_hull.hpp</a>&gt;</span>
-<a name="l00030"></a>00030 <span class="preprocessor">#include &lt;<a class="code" href="simplify__douglas__peucker_8hpp.html">ggl/strategies/agnostic/simplify_douglas_peucker.hpp</a>&gt;</span>
-<a name="l00031"></a>00031 <span class="preprocessor">#include &lt;<a class="code" href="agn__within_8hpp.html">ggl/strategies/agnostic/agn_within.hpp</a>&gt;</span>
-<a name="l00032"></a>00032 
-<a name="l00033"></a>00033 <span class="preprocessor">#include &lt;<a class="code" href="strategy__transform_8hpp.html">ggl/strategies/strategy_transform.hpp</a>&gt;</span>
-<a name="l00034"></a>00034 
-<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;<a class="code" href="matrix__transformers_8hpp.html">ggl/strategies/transform/matrix_transformers.hpp</a>&gt;</span>
-<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;<a class="code" href="map__transformer_8hpp.html">ggl/strategies/transform/map_transformer.hpp</a>&gt;</span>
-<a name="l00037"></a>00037 <span class="preprocessor">#include &lt;<a class="code" href="inverse__transformer_8hpp.html">ggl/strategies/transform/inverse_transformer.hpp</a>&gt;</span>
-<a name="l00038"></a>00038 
+<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;<a class="code" href="point__in__poly__franklin_8hpp.html">ggl/strategies/cartesian/point_in_poly_franklin.hpp</a>&gt;</span>
+<a name="l00022"></a>00022 <span class="preprocessor">#include &lt;<a class="code" href="point__in__poly__crossings__multiply_8hpp.html">ggl/strategies/cartesian/point_in_poly_crossings_multiply.hpp</a>&gt;</span>
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024 <span class="preprocessor">#include &lt;<a class="code" href="distance__haversine_8hpp.html">ggl/strategies/spherical/distance_haversine.hpp</a>&gt;</span>
+<a name="l00025"></a>00025 <span class="preprocessor">#include &lt;<a class="code" href="distance__cross__track_8hpp.html">ggl/strategies/spherical/distance_cross_track.hpp</a>&gt;</span>
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027 <span class="preprocessor">#include &lt;<a class="code" href="area__huiller_8hpp.html">ggl/strategies/spherical/area_huiller.hpp</a>&gt;</span>
+<a name="l00028"></a>00028 <span class="preprocessor">#include &lt;<a class="code" href="sph__envelope_8hpp.html">ggl/strategies/spherical/sph_envelope.hpp</a>&gt;</span>
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030 <span class="preprocessor">#include &lt;<a class="code" href="agn__convex__hull_8hpp.html">ggl/strategies/agnostic/agn_convex_hull.hpp</a>&gt;</span>
+<a name="l00031"></a>00031 <span class="preprocessor">#include &lt;<a class="code" href="simplify__douglas__peucker_8hpp.html">ggl/strategies/agnostic/simplify_douglas_peucker.hpp</a>&gt;</span>
+<a name="l00032"></a>00032 <span class="preprocessor">#include &lt;<a class="code" href="point__in__poly__winding_8hpp.html">ggl/strategies/agnostic/point_in_poly_winding.hpp</a>&gt;</span>
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;<a class="code" href="strategy__transform_8hpp.html">ggl/strategies/strategy_transform.hpp</a>&gt;</span>
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;<a class="code" href="matrix__transformers_8hpp.html">ggl/strategies/transform/matrix_transformers.hpp</a>&gt;</span>
+<a name="l00037"></a>00037 <span class="preprocessor">#include &lt;<a class="code" href="map__transformer_8hpp.html">ggl/strategies/transform/map_transformer.hpp</a>&gt;</span>
+<a name="l00038"></a>00038 <span class="preprocessor">#include &lt;<a class="code" href="inverse__transformer_8hpp.html">ggl/strategies/transform/inverse_transformer.hpp</a>&gt;</span>
 <a name="l00039"></a>00039 
-<a name="l00040"></a>00040 <span class="preprocessor">#endif // GGL_STRATEGIES_HPP</span>
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041 <span class="preprocessor">#endif // GGL_STRATEGIES_HPP</span>
 </pre></div></div>
 <hr size="1">
 <table width="100%">

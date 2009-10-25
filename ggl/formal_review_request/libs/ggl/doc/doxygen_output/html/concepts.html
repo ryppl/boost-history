@@ -39,7 +39,7 @@
 <h1><a class="anchor" name="concepts">Concepts </a></h1>All geometries are handled as concepts. They are specified by a set of traits classes in the traits namespace.<p>
 This means that geometries provided by library users, or legacy geometries, or plain arrays, or boost tuples, all can be handled by the Generic Geometry Library. That is why it is called generic. Also std::vector of points or tuples can be handled as either a linestring or a linear ring (polygon without holes).<p>
 There are concepts for<ul>
-<li>points</li><li>box</li><li>n-sphere (meaning circle or sphere)</li><li>linestring</li><li>ring (linear ring, a polygon without holes)</li><li>polygon</li><li>segment</li></ul>
+<li>points</li><li>box</li><li>linestring</li><li>ring (linear ring, a polygon without holes)</li><li>polygon</li><li>segment</li></ul>
 <p>
 The library uses the generic functionality internally. So it should work with any geometry, as long as the necessary traits classes are provided.<p>
 For a valid point five traits classes are necessary:<ul>
@@ -55,7 +55,7 @@ For the rest a linestring is modelled as a range, so a std::vector, std::deque, 
 If that traits class is defined, there should also be two other traits classs<ul>
 <li>there should then be clear traits class to make a linestring empty</li><li>there should then be a append_point traits class to add a poitn to a linestring</li></ul>
 <p>
-There are also concepts for boxes, n-spheres, segments, rings and polygons.<p>
+There are also concepts for boxes, segments, rings and polygons.<p>
 The Generic Geometry Library uses Boost Concept Check Library (BCCL) and Meta Programming Language (MPL) to define and check concepts. The Generic Geometry Library uses the Boost Range Library to iterate through standard containers, boost arrays, c-arrays. </div>
 <hr size="1">
 <table width="100%">

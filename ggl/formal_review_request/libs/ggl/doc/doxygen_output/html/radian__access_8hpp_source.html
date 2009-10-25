@@ -122,7 +122,7 @@
 <a name="l00089"></a><a class="code" href="group__access.html#g8923ef58b174aa129ba64465cbcf95b5">00089</a> <span class="keyword">inline</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">coordinate_type&lt;G&gt;::type</a> <a class="code" href="group__access.html#g8923ef58b174aa129ba64465cbcf95b5" title="get a coordinate value of a point, result is in RADIAN">get_as_radian</a>(<span class="keyword">const</span> G&amp; geometry)
 <a name="l00090"></a>00090 {
 <a name="l00091"></a>00091     <span class="keywordflow">return</span> detail::radian_access&lt;D, G,
-<a name="l00092"></a>00092             <span class="keyword">typename</span> <a class="code" href="structggl_1_1coordinate__system.html" title="Meta-function which defines coordinate system for any geometry.">coordinate_system&lt;G&gt;::type</a>&gt;<a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">::get</a>(geometry);
+<a name="l00092"></a>00092             <span class="keyword">typename</span> <a class="code" href="structggl_1_1coordinate__system.html" title="Meta-function which defines coordinate system for any geometry.">coordinate_system&lt;G&gt;::type</a>&gt;<a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">::get</a>(geometry);
 <a name="l00093"></a>00093 }
 <a name="l00094"></a>00094 
 <a name="l00095"></a>00095 

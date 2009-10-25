@@ -55,7 +55,7 @@
 <a name="l00013"></a>00013 
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;boost/concept_check.hpp&gt;</span>
 <a name="l00015"></a>00015 
-<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="point__concept_8hpp.html">ggl/core/concepts/point_concept.hpp</a>&gt;</span>
+<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="point__concept_8hpp.html">ggl/geometries/concepts/point_concept.hpp</a>&gt;</span>
 <a name="l00017"></a>00017 <span class="preprocessor">#include &lt;<a class="code" href="segment_8hpp.html">ggl/geometries/segment.hpp</a>&gt;</span>
 <a name="l00018"></a>00018 
 <a name="l00019"></a>00019 
@@ -71,7 +71,7 @@
 <a name="l00033"></a>00033         <span class="keyword">typedef</span> <span class="keyword">typename</span> Strategy::point_type ptype;
 <a name="l00034"></a>00034         BOOST_CONCEPT_ASSERT
 <a name="l00035"></a>00035             (
-<a name="l00036"></a>00036                 (<a class="code" href="structggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;ptype&gt;</a>)
+<a name="l00036"></a>00036                 (<a class="code" href="classggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;ptype&gt;</a>)
 <a name="l00037"></a>00037             );
 <a name="l00038"></a>00038 
 <a name="l00039"></a>00039         <span class="comment">// 2) must define return_type</span>
@@ -80,7 +80,7 @@
 <a name="l00042"></a>00042         <span class="comment">// 3) must implement static method () with arguments</span>
 <a name="l00043"></a>00043         <span class="keyword">struct </span>apply_checker
 <a name="l00044"></a>00044         {
-<a name="l00045"></a>00045             <span class="keyword">static</span> <span class="keywordtype">void</span> check()
+<a name="l00045"></a>00045             <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">check</a>()
 <a name="l00046"></a>00046             {
 <a name="l00047"></a>00047                 Strategy s;
 <a name="l00048"></a>00048                 ptype *p1;
@@ -94,7 +94,7 @@
 <a name="l00056"></a>00056     <span class="keyword">public</span> :
 <a name="l00057"></a><a class="code" href="structggl_1_1concept_1_1_point_distance_strategy.html#902301c0010222a56dd61cf69d2ee893">00057</a>         <a class="code" href="structggl_1_1concept_1_1_point_distance_strategy.html#902301c0010222a56dd61cf69d2ee893">BOOST_CONCEPT_USAGE</a>(<a class="code" href="structggl_1_1concept_1_1_point_distance_strategy.html" title="Checks strategy for point-segment-distance.">PointDistanceStrategy</a>)
 <a name="l00058"></a>00058         {
-<a name="l00059"></a>00059             apply_checker::check();
+<a name="l00059"></a>00059             <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">apply_checker::check</a>();
 <a name="l00060"></a>00060         }
 <a name="l00061"></a>00061 };
 <a name="l00062"></a>00062 
@@ -108,7 +108,7 @@
 <a name="l00074"></a>00074         <span class="keyword">typedef</span> <span class="keyword">typename</span> Strategy::point_type ptype;
 <a name="l00075"></a>00075         BOOST_CONCEPT_ASSERT
 <a name="l00076"></a>00076             (
-<a name="l00077"></a>00077                 (<a class="code" href="structggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;ptype&gt;</a>)
+<a name="l00077"></a>00077                 (<a class="code" href="classggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;ptype&gt;</a>)
 <a name="l00078"></a>00078             );
 <a name="l00079"></a>00079 
 <a name="l00080"></a>00080         <span class="comment">// 2) must define return_type</span>
@@ -125,7 +125,7 @@
 <a name="l00091"></a>00091         <span class="comment">// 4) must implement static method () with arguments</span>
 <a name="l00092"></a>00092         <span class="keyword">struct </span>apply_checker
 <a name="l00093"></a>00093         {
-<a name="l00094"></a>00094             <span class="keyword">static</span> <span class="keywordtype">void</span> check()
+<a name="l00094"></a>00094             <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">check</a>()
 <a name="l00095"></a>00095             {
 <a name="l00096"></a>00096                 Strategy s;
 <a name="l00097"></a>00097                 ptype *p1;
@@ -138,7 +138,7 @@
 <a name="l00104"></a>00104     <span class="keyword">public</span> :
 <a name="l00105"></a><a class="code" href="structggl_1_1concept_1_1_point_segment_distance_strategy.html#91386bae305551b33feb8399bf3ea441">00105</a>         <a class="code" href="structggl_1_1concept_1_1_point_segment_distance_strategy.html#91386bae305551b33feb8399bf3ea441">BOOST_CONCEPT_USAGE</a>(<a class="code" href="structggl_1_1concept_1_1_point_segment_distance_strategy.html" title="Checks strategy for point-segment-distance.">PointSegmentDistanceStrategy</a>)
 <a name="l00106"></a>00106         {
-<a name="l00107"></a>00107             apply_checker::check();
+<a name="l00107"></a>00107             <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">apply_checker::check</a>();
 <a name="l00108"></a>00108         }
 <a name="l00109"></a>00109 };
 <a name="l00110"></a>00110 

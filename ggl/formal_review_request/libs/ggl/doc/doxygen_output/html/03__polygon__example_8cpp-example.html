@@ -87,12 +87,12 @@ std::string boolstr(<span class="keywordtype">bool</span> v)
             {3.4, 2.0}, {4.1, 3.0}, {5.3, 2.6}, {5.4, 1.2}, {4.9, 0.8}, {2.9, 0.7},
             {2.0, 1.3} <span class="comment">// closing point is opening point</span>
             };
-        <a name="a1"></a><a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">assign</a>(poly, coor);
+        <a name="a1"></a><a class="code" href="group__access.html#g97f76fc38f2c63c5da2136247a31cdb8" title="assign two values to a 2D point">assign</a>(poly, coor);
     }
 
     <span class="comment">// Polygons should be closed, and directed clockwise. If you're not sure if that is the case,</span>
     <span class="comment">// call the correct algorithm</span>
-    <a name="a2"></a><a class="code" href="namespaceggl.html#de63f8bac74d1e2a56c2d2712eceb8af">correct</a>(poly);
+    <a name="a2"></a><a class="code" href="namespaceggl.html#f5be8c0fed6b4db5244f20aaf6e97763">correct</a>(poly);
 
     <span class="comment">// Polygons can be streamed as text</span>
     <span class="comment">// (or more precisely: as DSV (delimiter separated values))</span>
@@ -100,7 +100,7 @@ std::string boolstr(<span class="keywordtype">bool</span> v)
 
     <span class="comment">// As with lines, bounding box of polygons can be calculated</span>
     <a name="_a4"></a><a class="code" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box_2d</a> b;
-    <a name="a5"></a><a class="code" href="group__envelope.html#g376bdcefa676ef2b705656b690767b36" title="Calculate envelope of a geometry, using a specified strategy.">envelope</a>(poly, b);
+    <a name="a5"></a><a class="code" href="group__envelope.html#g4676217c7bc60742c3dc7dad7bbfa2b8" title="Calculate envelope of a geometry, using a specified strategy.">envelope</a>(poly, b);
     std::cout &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(b) &lt;&lt; std::endl;
 
     <span class="comment">// The area of the polygon can be calulated</span>
@@ -108,7 +108,7 @@ std::string boolstr(<span class="keywordtype">bool</span> v)
 
     <span class="comment">// And the centroid, which is the center of gravity</span>
     <a name="_a7"></a><a class="code" href="classggl_1_1point__xy.html" title="2D point in Cartesian coordinate system">point_2d</a> cent;
-    <a name="a8"></a><a class="code" href="group__centroid.html#g2b743cdd7177313b561780ba87c633cd" title="Calculate centroid.">centroid</a>(poly, cent);
+    <a name="a8"></a><a class="code" href="group__centroid.html#gba3c6357cc1112519a4909cdbb4733e2" title="Calculate centroid using a specified strategy.">centroid</a>(poly, cent);
     std::cout &lt;&lt; <span class="stringliteral">"centroid: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(cent) &lt;&lt; std::endl;
 
     <span class="comment">// Actually in most cases you don't want the centroid, which is only defined for polygons.</span>
@@ -130,22 +130,22 @@ std::string boolstr(<span class="keywordtype">bool</span> v)
         <a name="_a11"></a><a class="code" href="classggl_1_1linear__ring.html" title="A linear_ring (linear linear_ring) is a closed line which should not be selfintersecting...">linear_ring&lt;point_2d&gt;</a>&amp; inner = poly.<a class="code" href="classggl_1_1polygon.html#5a8564eeeaa4f244e6f70ab10395a63f">inners</a>().back();
 
         <span class="keyword">const</span> <span class="keywordtype">double</span> coor[][2] = { {4.0, 2.0}, {4.2, 1.4}, {4.8, 1.9}, {4.4, 2.2}, {4.0, 2.0} };
-        <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">assign</a>(inner, coor);
+        <a class="code" href="group__access.html#g97f76fc38f2c63c5da2136247a31cdb8" title="assign two values to a 2D point">assign</a>(inner, coor);
     }
 
-    <a class="code" href="namespaceggl.html#de63f8bac74d1e2a56c2d2712eceb8af">correct</a>(poly);
+    <a class="code" href="namespaceggl.html#f5be8c0fed6b4db5244f20aaf6e97763">correct</a>(poly);
 
     std::cout &lt;&lt; <span class="stringliteral">"with inner ring:"</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(poly) &lt;&lt; std::endl;
     <span class="comment">// The area of the polygon is changed of course</span>
     std::cout &lt;&lt; <span class="stringliteral">"new area of polygon: "</span> &lt;&lt; <a class="code" href="group__area.html#gaffb471f2ef6dd4842563e533094fa0d" title="Calculate area of a geometry.">area</a>(poly) &lt;&lt; std::endl;
-    <a class="code" href="group__centroid.html#g2b743cdd7177313b561780ba87c633cd" title="Calculate centroid.">centroid</a>(poly, cent);
+    <a class="code" href="group__centroid.html#gba3c6357cc1112519a4909cdbb4733e2" title="Calculate centroid using a specified strategy.">centroid</a>(poly, cent);
     std::cout &lt;&lt; <span class="stringliteral">"new centroid: "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(cent) &lt;&lt; std::endl;
 
     <span class="comment">// You can test whether points are within a polygon</span>
     std::cout &lt;&lt; <span class="stringliteral">"point in polygon:"</span>
-        &lt;&lt; <span class="stringliteral">" p1: "</span>  &lt;&lt; boolstr(<a name="a12"></a><a class="code" href="group__boolean__relations.html#g95d6465a12b762c77df41369a039f6dc" title="Within check.">within</a>(make&lt;point_2d&gt;(3.0, 2.0), poly))
-        &lt;&lt; <span class="stringliteral">" p2: "</span>  &lt;&lt; boolstr(<a class="code" href="group__boolean__relations.html#g95d6465a12b762c77df41369a039f6dc" title="Within check.">within</a>(make&lt;point_2d&gt;(3.7, 2.0), poly))
-        &lt;&lt; <span class="stringliteral">" p3: "</span>  &lt;&lt; boolstr(<a class="code" href="group__boolean__relations.html#g95d6465a12b762c77df41369a039f6dc" title="Within check.">within</a>(make&lt;point_2d&gt;(4.4, 2.0), poly))
+        &lt;&lt; <span class="stringliteral">" p1: "</span>  &lt;&lt; boolstr(<a name="a12"></a><a class="code" href="group__boolean__relations.html#g599c2aa76cf2037eb40514e449ace28d" title="Within check.">within</a>(make&lt;point_2d&gt;(3.0, 2.0), poly))
+        &lt;&lt; <span class="stringliteral">" p2: "</span>  &lt;&lt; boolstr(<a class="code" href="group__boolean__relations.html#g599c2aa76cf2037eb40514e449ace28d" title="Within check.">within</a>(make&lt;point_2d&gt;(3.7, 2.0), poly))
+        &lt;&lt; <span class="stringliteral">" p3: "</span>  &lt;&lt; boolstr(<a class="code" href="group__boolean__relations.html#g599c2aa76cf2037eb40514e449ace28d" title="Within check.">within</a>(make&lt;point_2d&gt;(4.4, 2.0), poly))
         &lt;&lt; std::endl;
 
     <span class="comment">// You can call for_each or for_each_segment on polygons to, this will visit all points / segments</span>
@@ -179,11 +179,11 @@ std::string boolstr(<span class="keywordtype">bool</span> v)
     <span class="keyword">typedef</span> <a class="code" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon&lt;point_2d, std::vector, std::deque&gt;</a> polygon_type;
     polygon_type poly2;
     <a name="_a14"></a><a class="code" href="structggl_1_1ring__type.html" title="Meta-function which defines ring type of (multi)polygon geometry.">ring_type&lt;polygon_type&gt;::type</a>&amp; ring = <a name="a15"></a><a class="code" href="group__access.html#gf92470d0612da7f0e118d296e7fcfe01" title="Function to get the exterior_ring ring of a polygon.">exterior_ring</a>(poly2);
-    <a name="a16"></a><a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(ring, make&lt;point_2d&gt;(2.8, 1.9));
-    <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(ring, make&lt;point_2d&gt;(2.9, 2.4));
-    <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(ring, make&lt;point_2d&gt;(3.3, 2.2));
-    <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(ring, make&lt;point_2d&gt;(3.2, 1.8));
-    <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(ring, make&lt;point_2d&gt;(2.8, 1.9));
+    <a name="a16"></a><a class="code" href="group__access.html#ge6ff0cb391fb5a3c3a312defe15b4909" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(ring, make&lt;point_2d&gt;(2.8, 1.9));
+    <a class="code" href="group__access.html#ge6ff0cb391fb5a3c3a312defe15b4909" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(ring, make&lt;point_2d&gt;(2.9, 2.4));
+    <a class="code" href="group__access.html#ge6ff0cb391fb5a3c3a312defe15b4909" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(ring, make&lt;point_2d&gt;(3.3, 2.2));
+    <a class="code" href="group__access.html#ge6ff0cb391fb5a3c3a312defe15b4909" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(ring, make&lt;point_2d&gt;(3.2, 1.8));
+    <a class="code" href="group__access.html#ge6ff0cb391fb5a3c3a312defe15b4909" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(ring, make&lt;point_2d&gt;(2.8, 1.9));
     std::cout &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(poly2) &lt;&lt; std::endl;
 
     <span class="keywordflow">return</span> 0;

@@ -40,7 +40,7 @@
       <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
     </ul>
   </div>
-<h1>ggl/core/concepts/nsphere_concept.hpp</h1><a href="nsphere__concept_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">// Generic Geometry Library</span>
+<h1>ggl/geometries/concepts/nsphere_concept.hpp</h1><a href="nsphere__concept_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">// Generic Geometry Library</span>
 <a name="l00002"></a>00002 <span class="comment">//</span>
 <a name="l00003"></a>00003 <span class="comment">// Copyright Bruno Lalande 2008, 2009</span>
 <a name="l00004"></a>00004 <span class="comment">// Copyright Barend Gehrels 1995-2009, Geodan Holding B.V. Amsterdam, the Netherlands.</span>
@@ -55,7 +55,7 @@
 <a name="l00013"></a>00013 
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="coordinate__dimension_8hpp.html">ggl/core/coordinate_dimension.hpp</a>&gt;</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="access_8hpp.html">ggl/core/access.hpp</a>&gt;</span>
-<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="radius_8hpp.html">ggl/core/radius.hpp</a>&gt;</span>
+<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;ggl/core/radius.hpp&gt;</span>
 <a name="l00017"></a>00017 
 <a name="l00018"></a>00018 <span class="keyword">namespace </span>ggl { <span class="keyword">namespace </span>concept {
 <a name="l00019"></a>00019 
@@ -64,33 +64,33 @@
 <a name="l00028"></a>00028 {
 <a name="l00029"></a>00029     <span class="keyword">private</span> :
 <a name="l00030"></a>00030         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;S&gt;::type</a> P;
-<a name="l00031"></a>00031         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1radius__type.html">radius_type&lt;S&gt;::type</a> R;
+<a name="l00031"></a>00031         <span class="keyword">typedef</span> <span class="keyword">typename</span> radius_type&lt;S&gt;::type R;
 <a name="l00032"></a>00032 
 <a name="l00034"></a>00034         <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> D, <span class="keywordtype">size_t</span> N&gt;
 <a name="l00035"></a>00035         <span class="keyword">struct </span>dimension_checker
 <a name="l00036"></a>00036         {
-<a name="l00037"></a>00037             <span class="keyword">static</span> <span class="keywordtype">void</span> check()
+<a name="l00037"></a>00037             <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">check</a>()
 <a name="l00038"></a>00038             {
 <a name="l00039"></a>00039                 <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">coordinate_type&lt;S&gt;::type</a> T;
 <a name="l00040"></a>00040                 <span class="keyword">const</span> S* s = 0;
 <a name="l00041"></a>00041                 T coord(ggl::get&lt;D&gt;(*s));
 <a name="l00042"></a>00042                 (void)<span class="keyword">sizeof</span>(coord); <span class="comment">// To avoid "unused variable" warnings</span>
-<a name="l00043"></a>00043                 dimension_checker&lt;D + 1, N&gt;::check();
+<a name="l00043"></a>00043                 <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">dimension_checker&lt;D + 1, N&gt;::check</a>();
 <a name="l00044"></a>00044             }
 <a name="l00045"></a>00045         };
 <a name="l00046"></a>00046 
 <a name="l00047"></a>00047         <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> N&gt;
 <a name="l00048"></a>00048         <span class="keyword">struct </span>dimension_checker&lt;N, N&gt;
 <a name="l00049"></a>00049         {
-<a name="l00050"></a>00050             <span class="keyword">static</span> <span class="keywordtype">void</span> check() {}
+<a name="l00050"></a>00050             <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">check</a>() {}
 <a name="l00051"></a>00051         };
 <a name="l00052"></a>00052 
 <a name="l00053"></a>00053     <span class="keyword">public</span> :
 <a name="l00055"></a><a class="code" href="structggl_1_1concept_1_1_const_nsphere.html#cf6dfbdf9c9bceab4e3b481b95f1fb11">00055</a>         <a class="code" href="structggl_1_1concept_1_1_const_nsphere.html#cf6dfbdf9c9bceab4e3b481b95f1fb11" title="BCCL macro to check the ConstNsphere concept.">BOOST_CONCEPT_USAGE</a>(<a class="code" href="structggl_1_1concept_1_1_const_nsphere.html" title="Checks Nsphere concept (const version).">ConstNsphere</a>)
 <a name="l00056"></a>00056         {
 <a name="l00057"></a>00057             <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> N = <a class="code" href="structggl_1_1dimension.html" title="Meta-function which defines coordinate dimensions, i.e. the number of axes of any...">dimension&lt;S&gt;::value</a>;
-<a name="l00058"></a>00058             dimension_checker&lt;0, N&gt;::check();
-<a name="l00059"></a>00059             dimension_checker&lt;0, N&gt;::check();
+<a name="l00058"></a>00058             <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">dimension_checker&lt;0, N&gt;::check</a>();
+<a name="l00059"></a>00059             <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">dimension_checker&lt;0, N&gt;::check</a>();
 <a name="l00060"></a>00060 
 <a name="l00061"></a>00061             <span class="comment">// Check radius access</span>
 <a name="l00062"></a>00062             <span class="keyword">const</span> S* s = 0;
@@ -107,31 +107,31 @@
 <a name="l00077"></a>00077         BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_const_nsphere.html" title="Checks Nsphere concept (const version).">concept::ConstNsphere&lt;S&gt;</a>) );
 <a name="l00078"></a>00078 
 <a name="l00079"></a>00079         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;S&gt;::type</a> P;
-<a name="l00080"></a>00080         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1radius__type.html">radius_type&lt;S&gt;::type</a> R;
+<a name="l00080"></a>00080         <span class="keyword">typedef</span> <span class="keyword">typename</span> radius_type&lt;S&gt;::type R;
 <a name="l00081"></a>00081 
 <a name="l00083"></a>00083         <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> D, <span class="keywordtype">size_t</span> N&gt;
 <a name="l00084"></a>00084         <span class="keyword">struct </span>dimension_checker
 <a name="l00085"></a>00085         {
-<a name="l00086"></a>00086             <span class="keyword">static</span> <span class="keywordtype">void</span> check()
+<a name="l00086"></a>00086             <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">check</a>()
 <a name="l00087"></a>00087             {
 <a name="l00088"></a>00088                 S* s;
 <a name="l00089"></a>00089                 ggl::set&lt;D&gt;(*s, ggl::get&lt;D&gt;(*s));
-<a name="l00090"></a>00090                 dimension_checker&lt;D + 1, N&gt;::check();
+<a name="l00090"></a>00090                 <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">dimension_checker&lt;D + 1, N&gt;::check</a>();
 <a name="l00091"></a>00091             }
 <a name="l00092"></a>00092         };
 <a name="l00093"></a>00093 
 <a name="l00094"></a>00094         <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> N&gt;
 <a name="l00095"></a>00095         <span class="keyword">struct </span>dimension_checker&lt;N, N&gt;
 <a name="l00096"></a>00096         {
-<a name="l00097"></a>00097             <span class="keyword">static</span> <span class="keywordtype">void</span> check() {}
+<a name="l00097"></a>00097             <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">check</a>() {}
 <a name="l00098"></a>00098         };
 <a name="l00099"></a>00099 
 <a name="l00100"></a>00100     <span class="keyword">public</span> :
 <a name="l00102"></a><a class="code" href="structggl_1_1concept_1_1_nsphere.html#f7a6ea630944b84202eed0a9de90cff4">00102</a>         <a class="code" href="structggl_1_1concept_1_1_nsphere.html#f7a6ea630944b84202eed0a9de90cff4" title="BCCL macro to check the Nsphere concept.">BOOST_CONCEPT_USAGE</a>(<a class="code" href="structggl_1_1concept_1_1_nsphere.html" title="Checks nsphere concept, using Boost Concept Check Library and metafunctions.">Nsphere</a>)
 <a name="l00103"></a>00103         {
 <a name="l00104"></a>00104             <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> N = <a class="code" href="structggl_1_1dimension.html" title="Meta-function which defines coordinate dimensions, i.e. the number of axes of any...">dimension&lt;S&gt;::value</a>;
-<a name="l00105"></a>00105             dimension_checker&lt;0, N&gt;::check();
-<a name="l00106"></a>00106             dimension_checker&lt;0, N&gt;::check();
+<a name="l00105"></a>00105             <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">dimension_checker&lt;0, N&gt;::check</a>();
+<a name="l00106"></a>00106             <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">dimension_checker&lt;0, N&gt;::check</a>();
 <a name="l00107"></a>00107 
 <a name="l00108"></a>00108             <span class="comment">// Check radius access</span>
 <a name="l00109"></a>00109             S* s = 0;

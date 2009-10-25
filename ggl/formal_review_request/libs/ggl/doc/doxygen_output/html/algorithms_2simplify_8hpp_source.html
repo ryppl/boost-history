@@ -54,13 +54,13 @@
 <a name="l00012"></a>00012 <span class="preprocessor">#include &lt;boost/range/functions.hpp&gt;</span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;boost/range/metafunctions.hpp&gt;</span>
 <a name="l00014"></a>00014 
-<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;boost/concept/requires.hpp&gt;</span>
-<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;boost/concept_check.hpp&gt;</span>
-<a name="l00017"></a>00017 
-<a name="l00018"></a>00018 <span class="preprocessor">#include &lt;<a class="code" href="cs_8hpp.html">ggl/core/cs.hpp</a>&gt;</span>
-<a name="l00019"></a>00019 <span class="preprocessor">#include &lt;<a class="code" href="core_2ring__type_8hpp.html">ggl/core/ring_type.hpp</a>&gt;</span>
-<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;<a class="code" href="exterior__ring_8hpp.html">ggl/core/exterior_ring.hpp</a>&gt;</span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;<a class="code" href="interior__rings_8hpp.html">ggl/core/interior_rings.hpp</a>&gt;</span>
+<a name="l00015"></a>00015 
+<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="cs_8hpp.html">ggl/core/cs.hpp</a>&gt;</span>
+<a name="l00017"></a>00017 <span class="preprocessor">#include &lt;<a class="code" href="core_2ring__type_8hpp.html">ggl/core/ring_type.hpp</a>&gt;</span>
+<a name="l00018"></a>00018 <span class="preprocessor">#include &lt;<a class="code" href="exterior__ring_8hpp.html">ggl/core/exterior_ring.hpp</a>&gt;</span>
+<a name="l00019"></a>00019 <span class="preprocessor">#include &lt;<a class="code" href="interior__rings_8hpp.html">ggl/core/interior_rings.hpp</a>&gt;</span>
+<a name="l00020"></a>00020 
+<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;<a class="code" href="check_8hpp.html">ggl/geometries/concepts/check.hpp</a>&gt;</span>
 <a name="l00022"></a>00022 
 <a name="l00023"></a>00023 <span class="preprocessor">#include &lt;<a class="code" href="strategies_8hpp.html">ggl/strategies/strategies.hpp</a>&gt;</span>
 <a name="l00024"></a>00024 <span class="preprocessor">#include &lt;<a class="code" href="simplify__douglas__peucker_8hpp.html">ggl/strategies/agnostic/simplify_douglas_peucker.hpp</a>&gt;</span>
@@ -265,91 +265,101 @@
 <a name="l00256"></a><a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d">00256</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d" title="Simplify a geometry.">simplify</a>(Geometry <span class="keyword">const</span>&amp; geometry, Geometry&amp; out,
 <a name="l00257"></a>00257                      <span class="keywordtype">double</span> max_distance, Strategy <span class="keyword">const</span>&amp; strategy)
 <a name="l00258"></a>00258 {
-<a name="l00259"></a>00259     BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_simplify_strategy.html" title="Checks strategy for simplify.">ggl::concept::SimplifyStrategy&lt;Strategy&gt;</a>) );
+<a name="l00259"></a>00259     concept::check&lt;Geometry&gt;();
 <a name="l00260"></a>00260 
-<a name="l00261"></a>00261     <a class="code" href="group__access.html#g280e2b0e4bada6eac7b7370a4ded705f" title="Clears a linestring, linear ring or polygon (exterior+interiors) or multi*.">ggl::clear</a>(out);
+<a name="l00261"></a>00261     BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_simplify_strategy.html" title="Checks strategy for simplify.">ggl::concept::SimplifyStrategy&lt;Strategy&gt;</a>) );
 <a name="l00262"></a>00262 
-<a name="l00263"></a>00263     <a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d" title="Simplify a geometry.">dispatch::simplify</a>
-<a name="l00264"></a>00264         &lt;
-<a name="l00265"></a>00265             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,
-<a name="l00266"></a>00266             Geometry,
-<a name="l00267"></a>00267             Strategy
-<a name="l00268"></a>00268         &gt;::apply(geometry, out, max_distance, strategy);
-<a name="l00269"></a>00269 }
-<a name="l00270"></a>00270 
-<a name="l00271"></a>00271 
+<a name="l00263"></a>00263     <a class="code" href="group__access.html#g6834d3a54e36ad3c0b56065aaaf27771" title="Clears a linestring, linear ring or polygon (exterior+interiors) or multi*.">ggl::clear</a>(out);
+<a name="l00264"></a>00264 
+<a name="l00265"></a>00265     <a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d" title="Simplify a geometry.">dispatch::simplify</a>
+<a name="l00266"></a>00266         &lt;
+<a name="l00267"></a>00267             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,
+<a name="l00268"></a>00268             Geometry,
+<a name="l00269"></a>00269             Strategy
+<a name="l00270"></a>00270         &gt;::apply(geometry, out, max_distance, strategy);
+<a name="l00271"></a>00271 }
 <a name="l00272"></a>00272 
 <a name="l00273"></a>00273 
-<a name="l00283"></a>00283 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Geometry&gt;
-<a name="l00284"></a><a class="code" href="group__simplify.html#g953e1055914400f9ad3191adc5b42270">00284</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d" title="Simplify a geometry.">simplify</a>(Geometry <span class="keyword">const</span>&amp; geometry, Geometry&amp; out,
-<a name="l00285"></a>00285                      <span class="keywordtype">double</span> max_distance)
-<a name="l00286"></a>00286 {
-<a name="l00287"></a>00287     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry&gt;::type</a> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
-<a name="l00288"></a>00288     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag&lt;point_type&gt;::type</a> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag</a>;
-<a name="l00289"></a>00289     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1strategy__distance__segment.html" title="Traits class binding a distance-to-segment strategy to a (possibly two) coordinate...">strategy_distance_segment</a>
-<a name="l00290"></a>00290         &lt;
-<a name="l00291"></a>00291             cs_tag,
-<a name="l00292"></a>00292             cs_tag,
-<a name="l00293"></a>00293             point_type,
-<a name="l00294"></a>00294             <a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">ggl::segment&lt;const point_type&gt;</a>
-<a name="l00295"></a>00295         &gt;::type ds_strategy_type;
-<a name="l00296"></a>00296 
-<a name="l00297"></a>00297     <span class="keyword">typedef</span> <a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html" title="Implements the simplify algorithm.">strategy::simplify::douglas_peucker</a>
-<a name="l00298"></a>00298         &lt;
-<a name="l00299"></a>00299             point_type, ds_strategy_type
-<a name="l00300"></a>00300         &gt; strategy_type;
-<a name="l00301"></a>00301 
-<a name="l00302"></a>00302     <a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d" title="Simplify a geometry.">simplify</a>(geometry, out, max_distance, strategy_type());
-<a name="l00303"></a>00303 }
-<a name="l00304"></a>00304 
+<a name="l00274"></a>00274 
+<a name="l00275"></a>00275 
+<a name="l00285"></a>00285 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Geometry&gt;
+<a name="l00286"></a><a class="code" href="group__simplify.html#g953e1055914400f9ad3191adc5b42270">00286</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d" title="Simplify a geometry.">simplify</a>(Geometry <span class="keyword">const</span>&amp; geometry, Geometry&amp; out,
+<a name="l00287"></a>00287                      <span class="keywordtype">double</span> max_distance)
+<a name="l00288"></a>00288 {
+<a name="l00289"></a>00289     concept::check&lt;Geometry&gt;();
+<a name="l00290"></a>00290 
+<a name="l00291"></a>00291     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry&gt;::type</a> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
+<a name="l00292"></a>00292     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag&lt;point_type&gt;::type</a> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag</a>;
+<a name="l00293"></a>00293     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1strategy__distance__segment.html" title="Traits class binding a distance-to-segment strategy to a (possibly two) coordinate...">strategy_distance_segment</a>
+<a name="l00294"></a>00294         &lt;
+<a name="l00295"></a>00295             cs_tag,
+<a name="l00296"></a>00296             cs_tag,
+<a name="l00297"></a>00297             point_type,
+<a name="l00298"></a>00298             <a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">ggl::segment&lt;const point_type&gt;</a>
+<a name="l00299"></a>00299         &gt;::type ds_strategy_type;
+<a name="l00300"></a>00300 
+<a name="l00301"></a>00301     <span class="keyword">typedef</span> <a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html" title="Implements the simplify algorithm.">strategy::simplify::douglas_peucker</a>
+<a name="l00302"></a>00302         &lt;
+<a name="l00303"></a>00303             point_type, ds_strategy_type
+<a name="l00304"></a>00304         &gt; strategy_type;
 <a name="l00305"></a>00305 
-<a name="l00322"></a>00322 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> OutputIterator, <span class="keyword">typename</span> Strategy&gt;
-<a name="l00323"></a><a class="code" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a">00323</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a" title="Simplify a geometry.">simplify_inserter</a>(Geometry <span class="keyword">const</span>&amp; geometry, OutputIterator out,
-<a name="l00324"></a>00324                               <span class="keywordtype">double</span> max_distance, Strategy <span class="keyword">const</span>&amp; strategy)
-<a name="l00325"></a>00325 {
-<a name="l00326"></a>00326     BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_simplify_strategy.html" title="Checks strategy for simplify.">ggl::concept::SimplifyStrategy&lt;Strategy&gt;</a>) );
-<a name="l00327"></a>00327 
-<a name="l00328"></a>00328     <a class="code" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a" title="Simplify a geometry.">dispatch::simplify_inserter</a>
-<a name="l00329"></a>00329         &lt;
-<a name="l00330"></a>00330             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,
-<a name="l00331"></a>00331             Geometry,
-<a name="l00332"></a>00332             Strategy
-<a name="l00333"></a>00333         &gt;::apply(geometry, out, max_distance, strategy);
-<a name="l00334"></a>00334 }
-<a name="l00335"></a>00335 
-<a name="l00351"></a>00351 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> OutputIterator&gt;
-<a name="l00352"></a><a class="code" href="group__simplify.html#g4285888f1598725bca124878ac16c656">00352</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a" title="Simplify a geometry.">simplify_inserter</a>(Geometry <span class="keyword">const</span>&amp; geometry, OutputIterator out,
-<a name="l00353"></a>00353                               <span class="keywordtype">double</span> max_distance)
-<a name="l00354"></a>00354 {
-<a name="l00355"></a>00355     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry&gt;::type</a> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
-<a name="l00356"></a>00356     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag&lt;point_type&gt;::type</a> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag</a>;
-<a name="l00357"></a>00357     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1strategy__distance__segment.html" title="Traits class binding a distance-to-segment strategy to a (possibly two) coordinate...">strategy_distance_segment</a>
-<a name="l00358"></a>00358         &lt;
-<a name="l00359"></a>00359             cs_tag,
-<a name="l00360"></a>00360             cs_tag,
-<a name="l00361"></a>00361             point_type,
-<a name="l00362"></a>00362             <a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">ggl::segment&lt;const point_type&gt;</a>
-<a name="l00363"></a>00363         &gt;::type ds_strategy_type;
-<a name="l00364"></a>00364 
-<a name="l00365"></a>00365     <span class="comment">//typedef typename ggl::as_range_type&lt;Geometry&gt;::type range_type;</span>
-<a name="l00366"></a>00366 
-<a name="l00367"></a>00367     <span class="keyword">typedef</span> <a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html" title="Implements the simplify algorithm.">strategy::simplify::douglas_peucker</a>
+<a name="l00306"></a>00306     <a class="code" href="group__simplify.html#g752a5b4c8a40756da0e717c1ae4d2d8d" title="Simplify a geometry.">simplify</a>(geometry, out, max_distance, strategy_type());
+<a name="l00307"></a>00307 }
+<a name="l00308"></a>00308 
+<a name="l00309"></a>00309 
+<a name="l00326"></a>00326 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> OutputIterator, <span class="keyword">typename</span> Strategy&gt;
+<a name="l00327"></a><a class="code" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a">00327</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a" title="Simplify a geometry.">simplify_inserter</a>(Geometry <span class="keyword">const</span>&amp; geometry, OutputIterator out,
+<a name="l00328"></a>00328                               <span class="keywordtype">double</span> max_distance, Strategy <span class="keyword">const</span>&amp; strategy)
+<a name="l00329"></a>00329 {
+<a name="l00330"></a>00330     concept::check&lt;const Geometry&gt;();
+<a name="l00331"></a>00331     BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_simplify_strategy.html" title="Checks strategy for simplify.">ggl::concept::SimplifyStrategy&lt;Strategy&gt;</a>) );
+<a name="l00332"></a>00332 
+<a name="l00333"></a>00333     <a class="code" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a" title="Simplify a geometry.">dispatch::simplify_inserter</a>
+<a name="l00334"></a>00334         &lt;
+<a name="l00335"></a>00335             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,
+<a name="l00336"></a>00336             Geometry,
+<a name="l00337"></a>00337             Strategy
+<a name="l00338"></a>00338         &gt;::apply(geometry, out, max_distance, strategy);
+<a name="l00339"></a>00339 }
+<a name="l00340"></a>00340 
+<a name="l00356"></a>00356 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> OutputIterator&gt;
+<a name="l00357"></a><a class="code" href="group__simplify.html#g4285888f1598725bca124878ac16c656">00357</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a" title="Simplify a geometry.">simplify_inserter</a>(Geometry <span class="keyword">const</span>&amp; geometry, OutputIterator out,
+<a name="l00358"></a>00358                               <span class="keywordtype">double</span> max_distance)
+<a name="l00359"></a>00359 {
+<a name="l00360"></a>00360     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry&gt;::type</a> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
+<a name="l00361"></a>00361 
+<a name="l00362"></a>00362     <span class="comment">// Concept: output point type = point type of input geometry</span>
+<a name="l00363"></a>00363     concept::check&lt;const Geometry&gt;();
+<a name="l00364"></a>00364     concept::check&lt;point_type&gt;();
+<a name="l00365"></a>00365 
+<a name="l00366"></a>00366     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag&lt;point_type&gt;::type</a> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag</a>;
+<a name="l00367"></a>00367     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1strategy__distance__segment.html" title="Traits class binding a distance-to-segment strategy to a (possibly two) coordinate...">strategy_distance_segment</a>
 <a name="l00368"></a>00368         &lt;
-<a name="l00369"></a>00369             point_type, ds_strategy_type
-<a name="l00370"></a>00370         &gt; strategy_type;
-<a name="l00371"></a>00371 
-<a name="l00372"></a>00372     <a class="code" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a" title="Simplify a geometry.">dispatch::simplify_inserter</a>
-<a name="l00373"></a>00373         &lt;
-<a name="l00374"></a>00374             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,
-<a name="l00375"></a>00375             Geometry,
-<a name="l00376"></a>00376             strategy_type
-<a name="l00377"></a>00377         &gt;::apply(geometry, out, max_distance, strategy_type());
-<a name="l00378"></a>00378 }
-<a name="l00379"></a>00379 
-<a name="l00380"></a>00380 
-<a name="l00381"></a>00381 } <span class="comment">// namespace ggl</span>
-<a name="l00382"></a>00382 
-<a name="l00383"></a>00383 <span class="preprocessor">#endif // GGL_ALGORITHMS_SIMPLIFY_HPP</span>
+<a name="l00369"></a>00369             cs_tag,
+<a name="l00370"></a>00370             cs_tag,
+<a name="l00371"></a>00371             point_type,
+<a name="l00372"></a>00372             <a class="code" href="classggl_1_1segment.html" title="Class segment: small class containing two (templatized) point references.">ggl::segment&lt;const point_type&gt;</a>
+<a name="l00373"></a>00373         &gt;::type ds_strategy_type;
+<a name="l00374"></a>00374 
+<a name="l00375"></a>00375     <span class="comment">//typedef typename ggl::as_range_type&lt;Geometry&gt;::type range_type;</span>
+<a name="l00376"></a>00376 
+<a name="l00377"></a>00377     <span class="keyword">typedef</span> <a class="code" href="classggl_1_1strategy_1_1simplify_1_1douglas__peucker.html" title="Implements the simplify algorithm.">strategy::simplify::douglas_peucker</a>
+<a name="l00378"></a>00378         &lt;
+<a name="l00379"></a>00379             point_type, ds_strategy_type
+<a name="l00380"></a>00380         &gt; strategy_type;
+<a name="l00381"></a>00381 
+<a name="l00382"></a>00382     <a class="code" href="group__simplify.html#gbe0df65c97527e83bcab80ec3232d45a" title="Simplify a geometry.">dispatch::simplify_inserter</a>
+<a name="l00383"></a>00383         &lt;
+<a name="l00384"></a>00384             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,
+<a name="l00385"></a>00385             Geometry,
+<a name="l00386"></a>00386             strategy_type
+<a name="l00387"></a>00387         &gt;::apply(geometry, out, max_distance, strategy_type());
+<a name="l00388"></a>00388 }
+<a name="l00389"></a>00389 
+<a name="l00390"></a>00390 
+<a name="l00391"></a>00391 } <span class="comment">// namespace ggl</span>
+<a name="l00392"></a>00392 
+<a name="l00393"></a>00393 <span class="preprocessor">#endif // GGL_ALGORITHMS_SIMPLIFY_HPP</span>
 </pre></div></div>
 <hr size="1">
 <table width="100%">

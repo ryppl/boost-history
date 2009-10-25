@@ -66,9 +66,9 @@ It should be possible to use a very small part of the library, for example only 
 </pre></div><p>
 Other often used algorithms are point-in-polygon: <div class="fragment"><pre class="fragment">    <a class="code" href="namespaceggl.html#c40046fcbfc818fa12cc1e73e26e260b">ring_2d</a> poly;
     <span class="keywordtype">double</span> points[][2] = {{2.0, 1.3}, {4.1, 3.0}, {5.3, 2.6}, {2.9, 0.7}, {2.0, 1.3}};
-    <a class="code" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(poly, points);
+    <a class="code" href="group__access.html#ge6ff0cb391fb5a3c3a312defe15b4909" title="Appends one or more points to a linestring, linear-ring, polygon, multi.">append</a>(poly, points);
     boost::tuple&lt;double, double&gt; p = boost::make_tuple(3.7, 2.0);
-    std::cout &lt;&lt; <span class="stringliteral">"Point p is in polygon? "</span> &lt;&lt; (<a class="code" href="group__boolean__relations.html#g95d6465a12b762c77df41369a039f6dc" title="Within check.">within</a>(p, poly) ? <span class="stringliteral">"YES"</span> : <span class="stringliteral">"NO"</span>)  &lt;&lt; std::endl;
+    std::cout &lt;&lt; <span class="stringliteral">"Point p is in polygon? "</span> &lt;&lt; (<a class="code" href="group__boolean__relations.html#g599c2aa76cf2037eb40514e449ace28d" title="Within check.">within</a>(p, poly) ? <span class="stringliteral">"YES"</span> : <span class="stringliteral">"NO"</span>)  &lt;&lt; std::endl;
 </pre></div><p>
 or area: <div class="fragment"><pre class="fragment">    std::cout &lt;&lt; <span class="stringliteral">"Area: "</span> &lt;&lt; <a class="code" href="group__area.html#gaffb471f2ef6dd4842563e533094fa0d" title="Calculate area of a geometry.">area</a>(poly) &lt;&lt; std::endl;
 </pre></div><p>
@@ -82,9 +82,9 @@ The pieces above generate this output: <div align="center">
 It is also possible to use non-Cartesian points. For example: points on a sphere. When then an algorithm such as distance is used the library "inspects" that it is handling spherical points and calculates the distance over the sphere, instead of applying the Pythagorean theorem.<p>
 Finally an example from a totally different domain: developing window-based applications, for example using QtWidgets. We check if two rectangles overlap and if so, move the second one to another place: <div class="fragment"><pre class="fragment">    QRect r1(100, 200, 15, 15);
     QRect r2(110, 210, 20, 20);
-    <span class="keywordflow">if</span> (<a class="code" href="group__boolean__relations.html#ga306028410cb737d8533dc9efa310a1c" title="Determines overlap between two geometries.">overlaps</a>(r1, r2))
+    <span class="keywordflow">if</span> (<a class="code" href="group__boolean__relations.html#g6b41a75ce56023fe9def2613d0a4603f" title="Determines overlap between two geometries.">overlaps</a>(r1, r2))
     {
-        <a class="code" href="group__access.html#ge58b5c7b493d0112202dc139af200c73" title="assign two values to a 2D point">assign</a>(r2, 200, 300, 220, 320);
+        <a class="code" href="group__access.html#g97f76fc38f2c63c5da2136247a31cdb8" title="assign two values to a 2D point">assign</a>(r2, 200, 300, 220, 320);
     }
 </pre></div><p>
 Many more examples are on the page <b>Examples</b> </div>

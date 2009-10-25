@@ -101,12 +101,12 @@
 <a name="l00080"></a>00080     {
 <a name="l00081"></a>00081         <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">typename</span> interior_type&lt;polygon_tag, P&gt;::type&amp; <span class="keyword">get</span>(P&amp; polygon)
 <a name="l00082"></a>00082         {
-<a name="l00083"></a>00083             <span class="keywordflow">return</span> <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">traits::interior_rings&lt;P&gt;::get</a>(polygon);
+<a name="l00083"></a>00083             <span class="keywordflow">return</span> <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">traits::interior_rings&lt;P&gt;::get</a>(polygon);
 <a name="l00084"></a>00084         }
 <a name="l00085"></a>00085 
 <a name="l00086"></a>00086         <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">const</span> <span class="keyword">typename</span> interior_type&lt;polygon_tag, P&gt;::type&amp; <span class="keyword">get</span>(<span class="keyword">const</span> P&amp; polygon)
 <a name="l00087"></a>00087         {
-<a name="l00088"></a>00088             <span class="keywordflow">return</span> <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">traits::interior_rings&lt;P&gt;::get</a>(polygon);
+<a name="l00088"></a>00088             <span class="keywordflow">return</span> <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">traits::interior_rings&lt;P&gt;::get</a>(polygon);
 <a name="l00089"></a>00089         }
 <a name="l00090"></a>00090     };
 <a name="l00091"></a>00091 
@@ -131,14 +131,14 @@
 <a name="l00124"></a>00124 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P&gt;
 <a name="l00125"></a><a class="code" href="group__access.html#gfb1abbb52eaeb5391c51fb6c209ab758">00125</a> <span class="keyword">inline</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1interior__type.html" title="Meta-function defining container type of inner rings of (multi)polygon geometriy...">interior_type&lt;P&gt;::type</a>&amp; <a class="code" href="group__access.html#gfb1abbb52eaeb5391c51fb6c209ab758" title="Function to get the interior rings of a polygon (non const version).">interior_rings</a>(P&amp; <a class="code" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon</a>)
 <a name="l00126"></a>00126 {
-<a name="l00127"></a>00127     <span class="keywordflow">return</span> core_dispatch::interior_rings&lt;typename tag&lt;P&gt;::type, P&gt;<a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">::get</a>(polygon);
+<a name="l00127"></a>00127     <span class="keywordflow">return</span> core_dispatch::interior_rings&lt;typename tag&lt;P&gt;::type, P&gt;<a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">::get</a>(polygon);
 <a name="l00128"></a>00128 }
 <a name="l00129"></a>00129 
 <a name="l00130"></a>00130 
 <a name="l00139"></a>00139 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> P&gt;
 <a name="l00140"></a><a class="code" href="group__access.html#ga81ef3b07a844489714e682f12e43746">00140</a> <span class="keyword">inline</span> <span class="keyword">const</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1interior__type.html" title="Meta-function defining container type of inner rings of (multi)polygon geometriy...">interior_type&lt;P&gt;::type</a>&amp; <a class="code" href="group__access.html#gfb1abbb52eaeb5391c51fb6c209ab758" title="Function to get the interior rings of a polygon (non const version).">interior_rings</a>(<span class="keyword">const</span> P&amp; <a class="code" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon</a>)
 <a name="l00141"></a>00141 {
-<a name="l00142"></a>00142     <span class="keywordflow">return</span> core_dispatch::interior_rings&lt;typename tag&lt;P&gt;::type, P&gt;<a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">::get</a>(polygon);
+<a name="l00142"></a>00142     <span class="keywordflow">return</span> core_dispatch::interior_rings&lt;typename tag&lt;P&gt;::type, P&gt;<a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">::get</a>(polygon);
 <a name="l00143"></a>00143 }
 <a name="l00144"></a>00144 
 <a name="l00145"></a>00145 

@@ -24,7 +24,6 @@ or tuples can be handled as either a linestring or a linear ring (polygon withou
 There are concepts for
 - points
 - box
-- n-sphere (meaning circle or sphere)
 - linestring
 - ring (linear ring, a polygon without holes)
 - polygon
@@ -55,7 +54,7 @@ If that traits class is defined, there should also be two other traits classs
 - there should then be clear traits class to make a linestring empty
 - there should then be a append_point traits class to add a poitn to a linestring
 
-There are also concepts for boxes, n-spheres, segments, rings and polygons.
+There are also concepts for boxes, segments, rings and polygons.
 
 
 The Generic Geometry Library uses Boost Concept Check Library (BCCL) and Meta Programming Language (MPL) to define
@@ -102,7 +101,7 @@ The most convenient headerfile including all algorithms and strategies is geomet
 
 An often used headerfile is geometries.hpp:
 - \#include <ggl/geometries/geometries.hpp> This includes all default geometries: point, linestring,
-  polygon, linear_ring, box, circle/sphere. It is not included in the "geometry.hpp" headerfile because
+  polygon, linear_ring, box. It is not included in the "geometry.hpp" headerfile because
   users are allowed to use their own geometries. However, for library users who want to use the provided
   geometries it is most useful.
 
@@ -239,8 +238,11 @@ and in many databases:
 
 Besides this the Generic Geometry Library provides the following additional classes:
 - \ref ggl::box "box": Box, used for selections and for envelopes (bounding boxes)
-- \ref ggl::nsphere "n-sphere", meaning circle" and "sphere". Circle is convenient for selections
 - \ref ggl::segment "segment": Segment, helper class, used for e.g. intersections
+
+Finally geometry types can be added as extensions. This is e.g. done with an
+"n-sphere" meaning circle" and "sphere". Circle is convenient for selections.
+
 
 
 \section Algorithms

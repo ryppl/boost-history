@@ -53,8 +53,9 @@ and in many databases:<ul>
 <li>Oracle Spatial</li><li>SQL Server 2008</li><li>PostGreSQL</li><li>MySQL</li><li>MonetDB</li></ul>
 <p>
 Besides this the Generic Geometry Library provides the following additional classes:<ul>
-<li><a class="el" href="classggl_1_1box.html">box</a>: Box, used for selections and for envelopes (bounding boxes)</li><li><a class="el" href="classggl_1_1nsphere.html">n-sphere</a>, meaning circle" and "sphere". Circle is convenient for selections</li><li><a class="el" href="classggl_1_1segment.html">segment</a>: Segment, helper class, used for e.g. intersections</li></ul>
-<h2><a class="anchor" name="Algorithms">
+<li><a class="el" href="classggl_1_1box.html">box</a>: Box, used for selections and for envelopes (bounding boxes)</li><li><a class="el" href="classggl_1_1segment.html">segment</a>: Segment, helper class, used for e.g. intersections</li></ul>
+<p>
+Finally geometry types can be added as extensions. This is e.g. done with an "n-sphere" meaning circle" and "sphere". Circle is convenient for selections.<h2><a class="anchor" name="Algorithms">
 Algorithms</a></h2>
 The Generic Geometry Library implements the following OGC algorithms, which are applicable to most or all geometries<ul>
 <li><b>area:</b> Returns the area of surface-geometries</li><li><b>as_text:</b> Represents the geometry as a Well Known Text (named "wkt")</li><li><b>centroid:</b> Returns a point geometry: the centroid on surface-geometries</li><li><b>convex_hull:</b> Returns true if the geometry is simple (doesn't intersect itself)</li><li><b>coordinate_dimension:</b> Returns the number of geometry coordinate values</li><li><b>distance:</b> Returns the distance between two geometries</li><li><b>envelope:</b> Returns the bounding box of a geometry</li><li><b>intersection:</b> Returns a geometry containing the intersection between two geometries (currently only with boxes)</li><li><b>length:</b> Returns the length of curve-type geometries</li><li><b>num_points:</b> Returns the number of points</li><li><b>topological_dimension:</b> Returns the topological dimension</li><li><b>within:</b> Returns true if one geometry falls completely within another geometry</li></ul>

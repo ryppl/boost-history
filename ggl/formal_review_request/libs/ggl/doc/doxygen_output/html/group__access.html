@@ -39,38 +39,38 @@
 <h1>access: get/set coordinate values, make objects, clear geometries, append point(s)</h1><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename RoP &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g8cfdebdb885a95bacb1305744f0d0d7c">ggl::append</a> (G &amp;geometry, const RoP &amp;range_or_point, int ring_index=-1, int multi_index=0)</td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename RoP &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#ge6ff0cb391fb5a3c3a312defe15b4909">ggl::append</a> (Geometry &amp;geometry, RoP const &amp;range_or_point, int ring_index=-1, int multi_index=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Appends one or more points to a <a class="el" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring</a>, linear-ring, <a class="el" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon</a>, multi.  <a href="#g8cfdebdb885a95bacb1305744f0d0d7c"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename R &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#ge87a43e061a27e450e01f00c228ed472">ggl::assign</a> (G &amp;geometry, R const &amp;range)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Appends one or more points to a <a class="el" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring</a>, linear-ring, <a class="el" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon</a>, multi.  <a href="#ge6ff0cb391fb5a3c3a312defe15b4909"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename R &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#gbc56bc60ddc721443ab1e0460dd40bda">ggl::assign</a> (Geometry &amp;geometry, R const &amp;range)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign a range of points to a <a class="el" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring</a>, ring or <a class="el" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon</a>  <a href="#ge87a43e061a27e450e01f00c228ed472"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#gc534d6dd298802a12265e7e9c1c25a01">ggl::assign</a> (G &amp;geometry, T const &amp;c1, T const &amp;c2, T const &amp;c3, T const &amp;c4)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign a range of points to a <a class="el" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring</a>, ring or <a class="el" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon</a>  <a href="#gbc56bc60ddc721443ab1e0460dd40bda"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g0e5cdc21c975ed9e04db5a2ad7175895">ggl::assign</a> (Geometry &amp;geometry, T const &amp;c1, T const &amp;c2, T const &amp;c3, T const &amp;c4)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign center + radius to a sphere  <a href="#gc534d6dd298802a12265e7e9c1c25a01"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g4e53af2d63f19a7550b5fe0156efc433">ggl::assign</a> (G &amp;geometry, T const &amp;c1, T const &amp;c2, T const &amp;c3)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign center + radius to a sphere [for extension]  <a href="#g0e5cdc21c975ed9e04db5a2ad7175895"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#ga5796281b722f07af188cc8714003751">ggl::assign</a> (Geometry &amp;geometry, T const &amp;c1, T const &amp;c2, T const &amp;c3)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign three values to a 3D <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> or the center + radius to a circle  <a href="#g4e53af2d63f19a7550b5fe0156efc433"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#ge58b5c7b493d0112202dc139af200c73">ggl::assign</a> (G &amp;geometry, T const &amp;c1, T const &amp;c2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign three values to a 3D <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> [or the center + radius to a circle]  <a href="#ga5796281b722f07af188cc8714003751"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g97f76fc38f2c63c5da2136247a31cdb8">ggl::assign</a> (Geometry &amp;geometry, T const &amp;c1, T const &amp;c2)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign two values to a 2D <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>  <a href="#ge58b5c7b493d0112202dc139af200c73"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#gaa27514a7d1c16133d28dd5601cd32fd">ggl::assign_inverse</a> (G &amp;geometry)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign two values to a 2D <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>  <a href="#g97f76fc38f2c63c5da2136247a31cdb8"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g490821bd25a63cc584be1319375794f0">ggl::assign_inverse</a> (Geometry &amp;geometry)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign to a <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a> inverse infinite  <a href="#gaa27514a7d1c16133d28dd5601cd32fd"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g2fba6ded1fb6ecc7dba897b55c70f2d0">ggl::assign_zero</a> (G &amp;geometry)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign to a <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a> inverse infinite  <a href="#g490821bd25a63cc584be1319375794f0"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g3b95c5faaa108785681e58099b48dc35">ggl::assign_zero</a> (Geometry &amp;geometry)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign zero values to a <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a>, <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>  <a href="#g2fba6ded1fb6ecc7dba897b55c70f2d0"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g280e2b0e4bada6eac7b7370a4ded705f">ggl::clear</a> (G &amp;geometry)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign zero values to a <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a>, <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>  <a href="#g3b95c5faaa108785681e58099b48dc35"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g6834d3a54e36ad3c0b56065aaaf27771">ggl::clear</a> (Geometry &amp;geometry)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Clears a <a class="el" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring</a>, linear ring or <a class="el" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon</a> (exterior+interiors) or multi*.  <a href="#g280e2b0e4bada6eac7b7370a4ded705f"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Clears a <a class="el" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring</a>, linear ring or <a class="el" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon</a> (exterior+interiors) or multi*.  <a href="#g6834d3a54e36ad3c0b56065aaaf27771"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename P &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">const ring_type&lt; P &gt;::type &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#gf12f8fe7a53c5fc0fb45c2d24d0999c9">ggl::exterior_ring</a> (const P &amp;polygon)</td></tr>
 
@@ -86,15 +86,11 @@
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;std::size_t D, typename G &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">coordinate_type&lt; G &gt;::type&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f">ggl::get</a> (const G &amp;geometry, detail::signature_getset_dimension *dummy=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">get a coordinate value of a <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> / <a class="el" href="classggl_1_1nsphere.html" title="Class nsphere: defines a circle or a sphere: a point with radius.">nsphere</a>  <a href="#g6cf833a7f9622af2fc05fd94aa61153f"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">get a coordinate value of a <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>  <a href="#g6cf833a7f9622af2fc05fd94aa61153f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;std::size_t D, typename G &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">coordinate_type&lt; G &gt;::type&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g8923ef58b174aa129ba64465cbcf95b5">ggl::get_as_radian</a> (const G &amp;geometry)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">get a coordinate value of a <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>, result is in RADIAN  <a href="#g8923ef58b174aa129ba64465cbcf95b5"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;std::size_t I, typename G &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">radius_type&lt; G &gt;::type&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#gfcdd0e4038fec643354ccc1c83294172">ggl::get_radius</a> (const G &amp;geometry)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to get radius.  <a href="#gfcdd0e4038fec643354ccc1c83294172"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename P &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">const interior_type&lt; P &gt;::type &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#ga81ef3b07a844489714e682f12e43746">ggl::interior_rings</a> (const P &amp;polygon)</td></tr>
 
@@ -139,10 +135,6 @@
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g9fcd126a3429823c1b684e0bae01c491">ggl::set_from_radian</a> (G &amp;geometry, const typename coordinate_type&lt; G &gt;::type &amp;radians)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assign coordinate value (which is in <a class="el" href="classggl_1_1radian.html" title="Unit of plan angles: radians.">radian</a>) to a <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>  <a href="#g9fcd126a3429823c1b684e0bae01c491"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;std::size_t I, typename G &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__access.html#g5964359d6ef6dc6c8cf37ed319ee3c79">ggl::set_radius</a> (G &amp;geometry, const typename radius_type&lt; G &gt;::type &amp;radius)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to set the radius of a circle / sphere / (ellipse).  <a href="#g5964359d6ef6dc6c8cf37ed319ee3c79"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 There are many ways to edit geometries. It is possible to:<ul>
@@ -182,7 +174,7 @@ template&lt;std::size_t D, typename G &gt; </div>
 <div class="memdoc">
 
 <p>
-get a coordinate value of a <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> / <a class="el" href="classggl_1_1nsphere.html" title="Class nsphere: defines a circle or a sphere: a point with radius.">nsphere</a> 
+get a coordinate value of a <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> 
 <p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>coordinate value</dd></dl>
 <dl compact><dt><b>Template Parameters:</b></dt><dd>
@@ -199,7 +191,7 @@ get a coordinate value of a <a class="el" href="classggl_1_1point.html" title="B
 </dl>
 <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="07__graph__route__example_8cpp-example.html#a5">07_graph_route_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="access_8hpp_source.html#l00209">209</a> of file <a class="el" href="access_8hpp_source.html">access.hpp</a>.</p>
+<p>Definition at line <a class="el" href="access_8hpp_source.html#l00234">234</a> of file <a class="el" href="access_8hpp_source.html">access.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -253,7 +245,7 @@ assign coordinate value to a <a class="el" href="classggl_1_1point.html" title="
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="access_8hpp_source.html#l00238">238</a> of file <a class="el" href="access_8hpp_source.html">access.hpp</a>.</p>
+<p>Definition at line <a class="el" href="access_8hpp_source.html#l00263">263</a> of file <a class="el" href="access_8hpp_source.html">access.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -302,7 +294,7 @@ get a coordinate value of a <a class="el" href="classggl_1_1box.html" title="Cla
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="access_8hpp_source.html#l00269">269</a> of file <a class="el" href="access_8hpp_source.html">access.hpp</a>.</p>
+<p>Definition at line <a class="el" href="access_8hpp_source.html#l00294">294</a> of file <a class="el" href="access_8hpp_source.html">access.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -357,7 +349,7 @@ assign a coordinate value of a <a class="el" href="classggl_1_1box.html" title="
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="access_8hpp_source.html#l00299">299</a> of file <a class="el" href="access_8hpp_source.html">access.hpp</a>.</p>
+<p>Definition at line <a class="el" href="access_8hpp_source.html#l00324">324</a> of file <a class="el" href="access_8hpp_source.html">access.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -638,105 +630,22 @@ if coordinate system of <a class="el" href="classggl_1_1point.html" title="Basic
 
 </div>
 </div><p>
-<a class="anchor" name="gfcdd0e4038fec643354ccc1c83294172"></a><!-- doxytag: member="ggl::get_radius" ref="gfcdd0e4038fec643354ccc1c83294172" args="(const G &amp;geometry)" -->
+<a class="anchor" name="ge6ff0cb391fb5a3c3a312defe15b4909"></a><!-- doxytag: member="ggl::append" ref="ge6ff0cb391fb5a3c3a312defe15b4909" args="(Geometry &amp;geometry, RoP const &amp;range_or_point, int ring_index=&#45;1, int multi_index=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;std::size_t I, typename G &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">radius_type&lt;G&gt;::type ggl::get_radius           </td>
-          <td>(</td>
-          <td class="paramtype">const G &amp;&nbsp;</td>
-          <td class="paramname"> <em>geometry</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Function to get radius. 
-<p>
-<dl class="return" compact><dt><b>Returns:</b></dt><dd>radius of a circle / sphere / ellipse</dd></dl>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>geometry</em>&nbsp;</td><td>the geometry to get the radius from </td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Template Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>I</em>&nbsp;</td><td>index, for circle/sphere always zero, for ellipse major/minor axis, for ellipsoid one of the 3 equatorial radii </td></tr>
-  </table>
-</dl>
-
-<p>Definition at line <a class="el" href="radius_8hpp_source.html#l00123">123</a> of file <a class="el" href="radius_8hpp_source.html">radius.hpp</a>.</p>
-
-</div>
-</div><p>
-<a class="anchor" name="g5964359d6ef6dc6c8cf37ed319ee3c79"></a><!-- doxytag: member="ggl::set_radius" ref="g5964359d6ef6dc6c8cf37ed319ee3c79" args="(G &amp;geometry, const typename radius_type&lt; G &gt;::type &amp;radius)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;std::size_t I, typename G &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void ggl::set_radius           </td>
-          <td>(</td>
-          <td class="paramtype">G &amp;&nbsp;</td>
-          <td class="paramname"> <em>geometry</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const typename radius_type&lt; G &gt;::type &amp;&nbsp;</td>
-          <td class="paramname"> <em>radius</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Function to set the radius of a circle / sphere / (ellipse). 
-<p>
-<dl compact><dt><b>Template Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>I</em>&nbsp;</td><td>index, for circle/sphere always zero, for ellipse major/minor axis, for ellipsoid one of the 3 equatorial radii </td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>geometry</em>&nbsp;</td><td>the geometry to change </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>radius</em>&nbsp;</td><td>the radius to set </td></tr>
-  </table>
-</dl>
-
-<p>Definition at line <a class="el" href="radius_8hpp_source.html#l00140">140</a> of file <a class="el" href="radius_8hpp_source.html">radius.hpp</a>.</p>
-
-</div>
-</div><p>
-<a class="anchor" name="g8cfdebdb885a95bacb1305744f0d0d7c"></a><!-- doxytag: member="ggl::append" ref="g8cfdebdb885a95bacb1305744f0d0d7c" args="(G &amp;geometry, const RoP &amp;range_or_point, int ring_index=&#45;1, int multi_index=0)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename G , typename RoP &gt; </div>
+template&lt;typename Geometry , typename RoP &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void ggl::append           </td>
           <td>(</td>
-          <td class="paramtype">G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const RoP &amp;&nbsp;</td>
+          <td class="paramtype">RoP const &amp;&nbsp;</td>
           <td class="paramname"> <em>range_or_point</em>, </td>
         </tr>
         <tr>
@@ -773,20 +682,20 @@ Appends one or more points to a <a class="el" href="classggl_1_1linestring.html"
 </dl>
 <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="02__linestring__example_8cpp-example.html#a4">02_linestring_example.cpp</a>, and <a class="el" href="03__polygon__example_8cpp-example.html#a16">03_polygon_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="append_8hpp_source.html#l00180">180</a> of file <a class="el" href="append_8hpp_source.html">append.hpp</a>.</p>
+<p>Definition at line <a class="el" href="append_8hpp_source.html#l00157">157</a> of file <a class="el" href="append_8hpp_source.html">append.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="ge58b5c7b493d0112202dc139af200c73"></a><!-- doxytag: member="ggl::assign" ref="ge58b5c7b493d0112202dc139af200c73" args="(G &amp;geometry, T const &amp;c1, T const &amp;c2)" -->
+<a class="anchor" name="g97f76fc38f2c63c5da2136247a31cdb8"></a><!-- doxytag: member="ggl::assign" ref="g97f76fc38f2c63c5da2136247a31cdb8" args="(Geometry &amp;geometry, T const &amp;c1, T const &amp;c2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename T &gt; </div>
+template&lt;typename Geometry , typename T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void ggl::assign           </td>
           <td>(</td>
-          <td class="paramtype">G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
@@ -815,20 +724,20 @@ assign two values to a 2D <a class="el" href="classggl_1_1point.html" title="Bas
 <p>
 <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="01__point__example_8cpp-example.html#a5">01_point_example.cpp</a>, <a class="el" href="02__linestring__example_8cpp-example.html#a3">02_linestring_example.cpp</a>, <a class="el" href="03__polygon__example_8cpp-example.html#a1">03_polygon_example.cpp</a>, <a class="el" href="06__transformation__example_8cpp-example.html#a5">06_transformation_example.cpp</a>, and <a class="el" href="c01__custom__point__example_8cpp-example.html#a6">c01_custom_point_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00379">379</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
+<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00325">325</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="g4e53af2d63f19a7550b5fe0156efc433"></a><!-- doxytag: member="ggl::assign" ref="g4e53af2d63f19a7550b5fe0156efc433" args="(G &amp;geometry, T const &amp;c1, T const &amp;c2, T const &amp;c3)" -->
+<a class="anchor" name="ga5796281b722f07af188cc8714003751"></a><!-- doxytag: member="ggl::assign" ref="ga5796281b722f07af188cc8714003751" args="(Geometry &amp;geometry, T const &amp;c1, T const &amp;c2, T const &amp;c3)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename T &gt; </div>
+template&lt;typename Geometry , typename T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void ggl::assign           </td>
           <td>(</td>
-          <td class="paramtype">G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
@@ -859,23 +768,23 @@ template&lt;typename G , typename T &gt; </div>
 <div class="memdoc">
 
 <p>
-assign three values to a 3D <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> or the center + radius to a circle 
+assign three values to a 3D <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> [or the center + radius to a circle] 
 <p>
 
-<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00394">394</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
+<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00342">342</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="gc534d6dd298802a12265e7e9c1c25a01"></a><!-- doxytag: member="ggl::assign" ref="gc534d6dd298802a12265e7e9c1c25a01" args="(G &amp;geometry, T const &amp;c1, T const &amp;c2, T const &amp;c3, T const &amp;c4)" -->
+<a class="anchor" name="g0e5cdc21c975ed9e04db5a2ad7175895"></a><!-- doxytag: member="ggl::assign" ref="g0e5cdc21c975ed9e04db5a2ad7175895" args="(Geometry &amp;geometry, T const &amp;c1, T const &amp;c2, T const &amp;c3, T const &amp;c4)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename T &gt; </div>
+template&lt;typename Geometry , typename T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void ggl::assign           </td>
           <td>(</td>
-          <td class="paramtype">G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
@@ -912,23 +821,23 @@ template&lt;typename G , typename T &gt; </div>
 <div class="memdoc">
 
 <p>
-assign center + radius to a sphere 
+assign center + radius to a sphere [for extension] 
 <p>
 
-<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00409">409</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
+<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00359">359</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="ge87a43e061a27e450e01f00c228ed472"></a><!-- doxytag: member="ggl::assign" ref="ge87a43e061a27e450e01f00c228ed472" args="(G &amp;geometry, R const &amp;range)" -->
+<a class="anchor" name="gbc56bc60ddc721443ab1e0460dd40bda"></a><!-- doxytag: member="ggl::assign" ref="gbc56bc60ddc721443ab1e0460dd40bda" args="(Geometry &amp;geometry, R const &amp;range)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename R &gt; </div>
+template&lt;typename Geometry , typename R &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void ggl::assign           </td>
           <td>(</td>
-          <td class="paramtype">G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
@@ -951,20 +860,20 @@ assign a range of points to a <a class="el" href="classggl_1_1linestring.html" t
 <p>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>The point-type of the range might be different from the point-type of the geometry </dd></dl>
 
-<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00426">426</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
+<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00378">378</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="gaa27514a7d1c16133d28dd5601cd32fd"></a><!-- doxytag: member="ggl::assign_inverse" ref="gaa27514a7d1c16133d28dd5601cd32fd" args="(G &amp;geometry)" -->
+<a class="anchor" name="g490821bd25a63cc584be1319375794f0"></a><!-- doxytag: member="ggl::assign_inverse" ref="g490821bd25a63cc584be1319375794f0" args="(Geometry &amp;geometry)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G &gt; </div>
+template&lt;typename Geometry &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void ggl::assign_inverse           </td>
           <td>(</td>
-          <td class="paramtype">G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td></td>
@@ -978,20 +887,20 @@ assign to a <a class="el" href="classggl_1_1box.html" title="Class box: defines 
 <p>
 The assign_inverse function initialize a 2D or 3D <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a> with large coordinates, the min corner is very large, the max corner is very small. This is a convenient starting <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> to collect the minimum bounding <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a> of a geometry. <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="07__graph__route__example_8cpp-example.html#a11">07_graph_route_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00441">441</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
+<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00395">395</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="g2fba6ded1fb6ecc7dba897b55c70f2d0"></a><!-- doxytag: member="ggl::assign_zero" ref="g2fba6ded1fb6ecc7dba897b55c70f2d0" args="(G &amp;geometry)" -->
+<a class="anchor" name="g3b95c5faaa108785681e58099b48dc35"></a><!-- doxytag: member="ggl::assign_zero" ref="g3b95c5faaa108785681e58099b48dc35" args="(Geometry &amp;geometry)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G &gt; </div>
+template&lt;typename Geometry &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void ggl::assign_zero           </td>
           <td>(</td>
-          <td class="paramtype">G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td></td>
@@ -1005,25 +914,25 @@ assign zero values to a <a class="el" href="classggl_1_1box.html" title="Class b
 <p>
 The assign_zero function initializes a 2D or 3D <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> or <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a> with coordinates of zero <dl compact><dt><b>Template Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>G</em>&nbsp;</td><td>the geometry type </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Geometry</em>&nbsp;</td><td>the geometry type </td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="07__graph__route__example_8cpp-example.html#a3">07_graph_route_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00457">457</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
+<p>Definition at line <a class="el" href="assign_8hpp_source.html#l00413">413</a> of file <a class="el" href="assign_8hpp_source.html">assign.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="g280e2b0e4bada6eac7b7370a4ded705f"></a><!-- doxytag: member="ggl::clear" ref="g280e2b0e4bada6eac7b7370a4ded705f" args="(G &amp;geometry)" -->
+<a class="anchor" name="g6834d3a54e36ad3c0b56065aaaf27771"></a><!-- doxytag: member="ggl::clear" ref="g6834d3a54e36ad3c0b56065aaaf27771" args="(Geometry &amp;geometry)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G &gt; </div>
+template&lt;typename Geometry &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void ggl::clear           </td>
           <td>(</td>
-          <td class="paramtype">G &amp;&nbsp;</td>
+          <td class="paramtype">Geometry &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td></td>
@@ -1038,7 +947,7 @@ Clears a <a class="el" href="classggl_1_1linestring.html" title="A linestring (n
 Generic function to clear a geometry<p>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>points and boxes cannot be cleared, instead they can be set to zero by "assign_zero" </dd></dl>
 
-<p>Definition at line <a class="el" href="clear_8hpp_source.html#l00147">147</a> of file <a class="el" href="clear_8hpp_source.html">clear.hpp</a>.</p>
+<p>Definition at line <a class="el" href="clear_8hpp_source.html#l00124">124</a> of file <a class="el" href="clear_8hpp_source.html">clear.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -1080,7 +989,7 @@ the Generic Geometry Library uses concepts for all its geometries. Therefore it 
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>the geometry </dd></dl>
 
-<p>Definition at line <a class="el" href="make_8hpp_source.html#l00028">28</a> of file <a class="el" href="make_8hpp_source.html">make.hpp</a>.</p>
+<p>Definition at line <a class="el" href="make_8hpp_source.html#l00030">30</a> of file <a class="el" href="make_8hpp_source.html">make.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -1120,9 +1029,9 @@ template&lt;typename G , typename T &gt; </div>
 <p>
 Make a geometry. 
 <p>
-<dl class="return" compact><dt><b>Returns:</b></dt><dd>a 3D <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>, a circle </dd></dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>a 3D <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="make_8hpp_source.html#l00046">46</a> of file <a class="el" href="make_8hpp_source.html">make.hpp</a>.</p>
+<p>Definition at line <a class="el" href="make_8hpp_source.html#l00050">50</a> of file <a class="el" href="make_8hpp_source.html">make.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -1153,7 +1062,7 @@ The make_inverse function initialize a 2D or 3D <a class="el" href="classggl_1_1
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>the <a class="el" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">box</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="make_8hpp_source.html#l00091">91</a> of file <a class="el" href="make_8hpp_source.html">make.hpp</a>.</p>
+<p>Definition at line <a class="el" href="make_8hpp_source.html#l00101">101</a> of file <a class="el" href="make_8hpp_source.html">make.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -1184,7 +1093,7 @@ The make_zero function initializes a 2D or 3D <a class="el" href="classggl_1_1po
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>the geometry </dd></dl>
 
-<p>Definition at line <a class="el" href="make_8hpp_source.html#l00110">110</a> of file <a class="el" href="make_8hpp_source.html">make.hpp</a>.</p>
+<p>Definition at line <a class="el" href="make_8hpp_source.html#l00122">122</a> of file <a class="el" href="make_8hpp_source.html">make.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -1223,7 +1132,7 @@ get number of points
 <dl class="note" compact><dt><b>Note:</b></dt><dd>For linestrings/rings also boost::size or .size() could be used, however, for polygons this is <a class="el" href="structggl_1_1less.html" title="Less predicate for usage in e.g. std::map.">less</a> obvious. So this function is provided. Besides that it is described by OGC (numPoints) </dd></dl>
 <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="02__linestring__example_8cpp-example.html#a9">02_linestring_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="algorithms_2num__points_8hpp_source.html#l00132">132</a> of file <a class="el" href="algorithms_2num__points_8hpp_source.html">num_points.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2num__points_8hpp_source.html#l00129">129</a> of file <a class="el" href="algorithms_2num__points_8hpp_source.html">num_points.hpp</a>.</p>
 
 </div>
 </div><p>

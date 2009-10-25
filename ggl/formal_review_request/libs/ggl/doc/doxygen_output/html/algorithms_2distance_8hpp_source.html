@@ -308,36 +308,39 @@
 <a name="l00328"></a><a class="code" href="group__distance.html#gd122aa78e960f37b9d61bb02c6913f55">00328</a> <span class="keyword">inline</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1distance__result.html" title="Shortcut to define return type of distance strategy.">distance_result&lt;Geometry1, Geometry2&gt;::type</a> <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">distance</a>(
 <a name="l00329"></a>00329                 Geometry1 <span class="keyword">const</span>&amp; geometry1, Geometry2 <span class="keyword">const</span>&amp; geometry2)
 <a name="l00330"></a>00330 {
-<a name="l00331"></a>00331     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry1&gt;::type</a> point1_type;
-<a name="l00332"></a>00332     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry2&gt;::type</a> point2_type;
+<a name="l00331"></a>00331     concept::check&lt;const Geometry1&gt;();
+<a name="l00332"></a>00332     concept::check&lt;const Geometry2&gt;();
 <a name="l00333"></a>00333 
-<a name="l00334"></a>00334     <span class="comment">// Define a point-point-distance-strategy</span>
-<a name="l00335"></a>00335     <span class="comment">// for either the normal case, either the reversed case</span>
-<a name="l00336"></a>00336     <span class="keyword">typedef</span> <span class="keyword">typename</span> boost::mpl::if_c
-<a name="l00337"></a>00337         &lt;
-<a name="l00338"></a>00338             <a class="code" href="structggl_1_1reverse__dispatch.html">ggl::reverse_dispatch&lt;Geometry1, Geometry2&gt;::type::value</a>,
-<a name="l00339"></a>00339             <span class="keyword">typename</span> <a class="code" href="structggl_1_1strategy__distance.html" title="Traits class binding a distance strategy to a (possibly two) coordinate system(s)...">strategy_distance</a>
-<a name="l00340"></a>00340                 &lt;
-<a name="l00341"></a>00341                     <span class="keyword">typename</span> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag&lt;point2_type&gt;::type</a>,
-<a name="l00342"></a>00342                     <span class="keyword">typename</span> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag&lt;point1_type&gt;::type</a>,
-<a name="l00343"></a>00343                     point2_type,
-<a name="l00344"></a>00344                     point1_type
-<a name="l00345"></a>00345                 &gt;::type,
-<a name="l00346"></a>00346             <span class="keyword">typename</span> <a class="code" href="structggl_1_1strategy__distance.html" title="Traits class binding a distance strategy to a (possibly two) coordinate system(s)...">strategy_distance</a>
-<a name="l00347"></a>00347                 &lt;
-<a name="l00348"></a>00348                     <span class="keyword">typename</span> cs_tag&lt;point1_type&gt;::type,
-<a name="l00349"></a>00349                     <span class="keyword">typename</span> cs_tag&lt;point2_type&gt;::type,
-<a name="l00350"></a>00350                     point1_type,
-<a name="l00351"></a>00351                     point2_type
-<a name="l00352"></a>00352                 &gt;::type
-<a name="l00353"></a>00353         &gt;::type strategy;
-<a name="l00354"></a>00354 
-<a name="l00355"></a>00355     <span class="keywordflow">return</span> <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">distance</a>(geometry1, geometry2, strategy());
-<a name="l00356"></a>00356 }
+<a name="l00334"></a>00334     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry1&gt;::type</a> point1_type;
+<a name="l00335"></a>00335     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry2&gt;::type</a> point2_type;
+<a name="l00336"></a>00336 
+<a name="l00337"></a>00337     <span class="comment">// Define a point-point-distance-strategy</span>
+<a name="l00338"></a>00338     <span class="comment">// for either the normal case, either the reversed case</span>
+<a name="l00339"></a>00339     <span class="keyword">typedef</span> <span class="keyword">typename</span> boost::mpl::if_c
+<a name="l00340"></a>00340         &lt;
+<a name="l00341"></a>00341             <a class="code" href="structggl_1_1reverse__dispatch.html">ggl::reverse_dispatch&lt;Geometry1, Geometry2&gt;::type::value</a>,
+<a name="l00342"></a>00342             <span class="keyword">typename</span> <a class="code" href="structggl_1_1strategy__distance.html" title="Traits class binding a distance strategy to a (possibly two) coordinate system(s)...">strategy_distance</a>
+<a name="l00343"></a>00343                 &lt;
+<a name="l00344"></a>00344                     <span class="keyword">typename</span> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag&lt;point2_type&gt;::type</a>,
+<a name="l00345"></a>00345                     <span class="keyword">typename</span> <a class="code" href="structggl_1_1cs__tag.html" title="Meta-function returning coordinate system tag (cs family) of any geometry.">cs_tag&lt;point1_type&gt;::type</a>,
+<a name="l00346"></a>00346                     point2_type,
+<a name="l00347"></a>00347                     point1_type
+<a name="l00348"></a>00348                 &gt;::type,
+<a name="l00349"></a>00349             <span class="keyword">typename</span> <a class="code" href="structggl_1_1strategy__distance.html" title="Traits class binding a distance strategy to a (possibly two) coordinate system(s)...">strategy_distance</a>
+<a name="l00350"></a>00350                 &lt;
+<a name="l00351"></a>00351                     <span class="keyword">typename</span> cs_tag&lt;point1_type&gt;::type,
+<a name="l00352"></a>00352                     <span class="keyword">typename</span> cs_tag&lt;point2_type&gt;::type,
+<a name="l00353"></a>00353                     point1_type,
+<a name="l00354"></a>00354                     point2_type
+<a name="l00355"></a>00355                 &gt;::type
+<a name="l00356"></a>00356         &gt;::type strategy;
 <a name="l00357"></a>00357 
-<a name="l00358"></a>00358 } <span class="comment">// namespace ggl</span>
-<a name="l00359"></a>00359 
-<a name="l00360"></a>00360 <span class="preprocessor">#endif // GGL_ALGORITHMS_DISTANCE_HPP</span>
+<a name="l00358"></a>00358     <span class="keywordflow">return</span> <a class="code" href="group__distance.html#g22a618786d2601e9201896a8346c161b" title="Calculate distance between two geometries with a specified strategy.">distance</a>(geometry1, geometry2, strategy());
+<a name="l00359"></a>00359 }
+<a name="l00360"></a>00360 
+<a name="l00361"></a>00361 } <span class="comment">// namespace ggl</span>
+<a name="l00362"></a>00362 
+<a name="l00363"></a>00363 <span class="preprocessor">#endif // GGL_ALGORITHMS_DISTANCE_HPP</span>
 </pre></div></div>
 <hr size="1">
 <table width="100%">

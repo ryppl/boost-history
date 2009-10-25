@@ -167,7 +167,7 @@ The output screen looks like: <div align="center">
 {
     ggl_vertex_property()
     {
-        <a name="a3"></a><a class="code" href="group__access.html#g2fba6ded1fb6ecc7dba897b55c70f2d0" title="assign zero values to a box, point">ggl::assign_zero</a>(location);
+        <a name="a3"></a><a class="code" href="group__access.html#g3b95c5faaa108785681e58099b48dc35" title="assign zero values to a box, point">ggl::assign_zero</a>(location);
     }
     ggl_vertex_property(Point <span class="keyword">const</span>&amp; loc)
     {
@@ -216,7 +216,7 @@ The output screen looks like: <div align="center">
             = boost::add_vertex(graph);
 
         <span class="comment">// Set the property (= location)</span>
-        boost::put(<a name="a5"></a><a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">boost::get</a>(vertex_ggl_property, graph), new_vertex,
+        boost::put(<a name="a5"></a><a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">boost::get</a>(vertex_ggl_property, graph), new_vertex,
             ggl_vertex_property&lt;typename M::key_type&gt;(key));
 
         <span class="comment">// Add to the map, using POINT as key</span>
@@ -290,10 +290,10 @@ The output screen looks like: <div align="center">
     {
         <span class="comment">// Get properties of edge and of vertex</span>
         ggl_edge_property&lt;Route&gt; <span class="keyword">const</span>&amp; edge_prop =
-            <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">boost::get</a>(<a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">boost::get</a>(edge_ggl_property, graph), opt_edge.first);
+            <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">boost::get</a>(<a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">boost::get</a>(edge_ggl_property, graph), opt_edge.first);
 
         ggl_vertex_property&lt;typename ggl::point_type&lt;Route&gt;::type&gt; <span class="keyword">const</span>&amp; vertex_prop =
-            <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">boost::get</a>(<a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">boost::get</a>(vertex_ggl_property, graph), vertex2);
+            <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">boost::get</a>(<a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">boost::get</a>(vertex_ggl_property, graph), vertex2);
 
         <span class="comment">// Depending on how edge connects to vertex, copy it forward or backward</span>
         <span class="keywordflow">if</span> (<a name="a7"></a><a class="code" href="group__boolean__relations.html#g122b1fd835cee0742da7c97dfdda94c5" title="Calculate if two geometries are equals.">ggl::equals</a>(edge_prop.line().front(), vertex_prop.location))
@@ -349,7 +349,7 @@ The output screen looks like: <div align="center">
 
     <span class="comment">// Init a bounding box, lateron used to define SVG map</span>
     <a name="_a10"></a><a class="code" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">ggl::box_2d</a> box;
-    <a name="a11"></a><a class="code" href="group__access.html#gaa27514a7d1c16133d28dd5601cd32fd" title="assign to a box inverse infinite">ggl::assign_inverse</a>(box);
+    <a name="a11"></a><a class="code" href="group__access.html#g490821bd25a63cc584be1319375794f0" title="assign to a box inverse infinite">ggl::assign_inverse</a>(box);
 
     <span class="comment">// Read the cities</span>
     <span class="keyword">typedef</span> boost::tuple&lt;point_type, std::string, vertex_type&gt; city_type;
@@ -386,8 +386,8 @@ The output screen looks like: <div align="center">
         <span class="comment">// Call Dijkstra (without named-parameter to be compatible with all VC)</span>
         boost::dijkstra_shortest_paths(graph, city1.get&lt;2&gt;(),
                 &amp;predecessors[0], &amp;costs[0],
-                <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">boost::get</a>(edge_ggl_property, graph),
-                <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">boost::get</a>(boost::vertex_index, graph),
+                <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">boost::get</a>(edge_ggl_property, graph),
+                <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">boost::get</a>(boost::vertex_index, graph),
                 std::less&lt;double&gt;(), std::plus&lt;double&gt;(),
                 (std::numeric_limits&lt;double&gt;::max)(), <span class="keywordtype">double</span>(),
                 boost::dijkstra_visitor&lt;boost::null_visitor&gt;());

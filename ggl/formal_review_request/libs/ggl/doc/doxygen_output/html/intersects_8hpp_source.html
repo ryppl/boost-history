@@ -51,46 +51,50 @@
 <a name="l00009"></a>00009 <span class="preprocessor">#ifndef GGL_ALGORITHMS_INTERSECTS_HPP</span>
 <a name="l00010"></a>00010 <span class="preprocessor"></span><span class="preprocessor">#define GGL_ALGORITHMS_INTERSECTS_HPP</span>
 <a name="l00011"></a>00011 <span class="preprocessor"></span>
-<a name="l00012"></a>00012 <span class="preprocessor">#include &lt;<a class="code" href="intersection__linestring_8hpp.html">ggl/algorithms/intersection_linestring.hpp</a>&gt;</span>
+<a name="l00012"></a>00012 <span class="preprocessor">#include &lt;<a class="code" href="check_8hpp.html">ggl/geometries/concepts/check.hpp</a>&gt;</span>
 <a name="l00013"></a>00013 
-<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="get__intersection__points_8hpp.html">ggl/algorithms/overlay/get_intersection_points.hpp</a>&gt;</span>
-<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="self__intersection__points_8hpp.html">ggl/algorithms/overlay/self_intersection_points.hpp</a>&gt;</span>
-<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="adapt__turns_8hpp.html">ggl/algorithms/overlay/adapt_turns.hpp</a>&gt;</span>
-<a name="l00017"></a>00017 <span class="preprocessor">#include &lt;<a class="code" href="enrich__intersection__points_8hpp.html">ggl/algorithms/overlay/enrich_intersection_points.hpp</a>&gt;</span>
-<a name="l00018"></a>00018 <span class="preprocessor">#include &lt;<a class="code" href="traverse_8hpp.html">ggl/algorithms/overlay/traverse.hpp</a>&gt;</span>
-<a name="l00019"></a>00019 
-<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;<a class="code" href="assign_8hpp.html">ggl/algorithms/assign.hpp</a>&gt;</span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;<a class="code" href="convert_8hpp.html">ggl/algorithms/convert.hpp</a>&gt;</span>
-<a name="l00022"></a>00022 <span class="preprocessor">#include &lt;<a class="code" href="algorithms_2within_8hpp.html">ggl/algorithms/within.hpp</a>&gt;</span>
-<a name="l00023"></a>00023 
-<a name="l00024"></a>00024 
+<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="intersection__linestring_8hpp.html">ggl/algorithms/intersection_linestring.hpp</a>&gt;</span>
+<a name="l00015"></a>00015 
+<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="get__intersection__points_8hpp.html">ggl/algorithms/overlay/get_intersection_points.hpp</a>&gt;</span>
+<a name="l00017"></a>00017 <span class="preprocessor">#include &lt;<a class="code" href="self__intersection__points_8hpp.html">ggl/algorithms/overlay/self_intersection_points.hpp</a>&gt;</span>
+<a name="l00018"></a>00018 <span class="preprocessor">#include &lt;<a class="code" href="adapt__turns_8hpp.html">ggl/algorithms/overlay/adapt_turns.hpp</a>&gt;</span>
+<a name="l00019"></a>00019 <span class="preprocessor">#include &lt;<a class="code" href="enrich__intersection__points_8hpp.html">ggl/algorithms/overlay/enrich_intersection_points.hpp</a>&gt;</span>
+<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;<a class="code" href="traverse_8hpp.html">ggl/algorithms/overlay/traverse.hpp</a>&gt;</span>
+<a name="l00021"></a>00021 
+<a name="l00022"></a>00022 <span class="preprocessor">#include &lt;<a class="code" href="assign_8hpp.html">ggl/algorithms/assign.hpp</a>&gt;</span>
+<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;<a class="code" href="convert_8hpp.html">ggl/algorithms/convert.hpp</a>&gt;</span>
+<a name="l00024"></a>00024 <span class="preprocessor">#include &lt;<a class="code" href="algorithms_2within_8hpp.html">ggl/algorithms/within.hpp</a>&gt;</span>
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="keyword">namespace </span>ggl
-<a name="l00027"></a>00027 {
-<a name="l00028"></a>00028 
-<a name="l00039"></a>00039 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Geometry&gt;
-<a name="l00040"></a><a class="code" href="group__overlay.html#g5e7b5d7c8e010077237751f3a6b289ec">00040</a> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="group__overlay.html#g5e7b5d7c8e010077237751f3a6b289ec" title="Determine if there is at least one intersection (crossing or self-tangency).">intersects</a>(Geometry <span class="keyword">const</span>&amp; geometry)
-<a name="l00041"></a>00041 {
-<a name="l00042"></a>00042     <span class="keyword">typedef</span> <span class="keyword">typename</span> boost::remove_const&lt;Geometry&gt;::type ncg_type;
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044     <span class="keyword">typedef</span> std::vector&lt;ggl::detail::intersection::intersection_point
-<a name="l00045"></a>00045         &lt;<span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">ggl::point_type&lt;Geometry&gt;::type</a>&gt; &gt; ip_vector;
-<a name="l00046"></a>00046 
-<a name="l00047"></a>00047     ip_vector ips;
-<a name="l00048"></a>00048 
-<a name="l00049"></a>00049     dispatch::self_intersection_points
-<a name="l00050"></a>00050             &lt;
-<a name="l00051"></a>00051                 <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;ncg_type&gt;::type</a>,
-<a name="l00052"></a>00052                 <a class="code" href="structggl_1_1is__multi.html" title="Meta-function defining &amp;quot;true&amp;quot; for multi geometries (multi_point, etc).">is_multi&lt;ncg_type&gt;::type::value</a>,
-<a name="l00053"></a>00053                 ncg_type,
-<a name="l00054"></a>00054                 ip_vector
-<a name="l00055"></a>00055             &gt;::apply(geometry, <span class="keyword">true</span>, ips);
-<a name="l00056"></a>00056     <span class="keywordflow">return</span> ips.size() &gt; 0;
-<a name="l00057"></a>00057 }
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 } <span class="comment">// ggl</span>
-<a name="l00060"></a>00060 
-<a name="l00061"></a>00061 <span class="preprocessor">#endif //GGL_ALGORITHMS_INTERSECTS_HPP</span>
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027 
+<a name="l00028"></a>00028 <span class="keyword">namespace </span>ggl
+<a name="l00029"></a>00029 {
+<a name="l00030"></a>00030 
+<a name="l00041"></a>00041 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Geometry&gt;
+<a name="l00042"></a><a class="code" href="group__overlay.html#g5e7b5d7c8e010077237751f3a6b289ec">00042</a> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="group__overlay.html#g5e7b5d7c8e010077237751f3a6b289ec" title="Determine if there is at least one intersection (crossing or self-tangency).">intersects</a>(Geometry <span class="keyword">const</span>&amp; geometry)
+<a name="l00043"></a>00043 {
+<a name="l00044"></a>00044     concept::check&lt;const Geometry&gt;();
+<a name="l00045"></a>00045 
+<a name="l00046"></a>00046     <span class="keyword">typedef</span> <span class="keyword">typename</span> boost::remove_const&lt;Geometry&gt;::type ncg_type;
+<a name="l00047"></a>00047 
+<a name="l00048"></a>00048     <span class="keyword">typedef</span> std::vector&lt;ggl::detail::intersection::intersection_point
+<a name="l00049"></a>00049         &lt;<span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">ggl::point_type&lt;Geometry&gt;::type</a>&gt; &gt; ip_vector;
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051     ip_vector ips;
+<a name="l00052"></a>00052 
+<a name="l00053"></a>00053     dispatch::self_intersection_points
+<a name="l00054"></a>00054             &lt;
+<a name="l00055"></a>00055                 <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;ncg_type&gt;::type</a>,
+<a name="l00056"></a>00056                 <a class="code" href="structggl_1_1is__multi.html" title="Meta-function defining &amp;quot;true&amp;quot; for multi geometries (multi_point, etc).">is_multi&lt;ncg_type&gt;::type::value</a>,
+<a name="l00057"></a>00057                 ncg_type,
+<a name="l00058"></a>00058                 ip_vector
+<a name="l00059"></a>00059             &gt;::apply(geometry, <span class="keyword">true</span>, ips);
+<a name="l00060"></a>00060     <span class="keywordflow">return</span> ips.size() &gt; 0;
+<a name="l00061"></a>00061 }
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063 } <span class="comment">// ggl</span>
+<a name="l00064"></a>00064 
+<a name="l00065"></a>00065 <span class="preprocessor">#endif //GGL_ALGORITHMS_INTERSECTS_HPP</span>
 </pre></div></div>
 <hr size="1">
 <table width="100%">

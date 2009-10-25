@@ -50,7 +50,7 @@ The most convenient headerfile including all algorithms and strategies is geomet
 <li>#include &lt;ggl/ggl.hpp&gt; It is not absolutely necessary to include this headerfile, it is also possible to include the algorithm headerfiles separately. However, it is convenient and used in most cases.</li></ul>
 <p>
 An often used headerfile is <a class="el" href="geometries_8hpp.html">geometries.hpp</a>:<ul>
-<li>#include &lt;<a class="el" href="geometries_8hpp.html">ggl/geometries/geometries.hpp</a>&gt; This includes all default geometries: point, linestring, polygon, linear_ring, box, circle/sphere. It is not included in the "geometry.hpp" headerfile because users are allowed to use their own geometries. However, for library users who want to use the provided geometries it is most useful.</li></ul>
+<li>#include &lt;<a class="el" href="geometries_8hpp.html">ggl/geometries/geometries.hpp</a>&gt; This includes all default geometries: point, linestring, polygon, linear_ring, box. It is not included in the "geometry.hpp" headerfile because users are allowed to use their own geometries. However, for library users who want to use the provided geometries it is most useful.</li></ul>
 <p>
 For users using only Cartesian points, with floating point coordinates (double), in 2D or 3D, you can use instead:<ul>
 <li>#include &lt;<a class="el" href="cartesian2d_8hpp.html">ggl/geometries/cartesian2d.hpp</a>&gt; This includes all 2D Cartesian geometries: point_2d, linestring_2d, etc. Using this headerfile the library seems to be a non-template library, so it is convenient for users that are not so into the template world.</li></ul>

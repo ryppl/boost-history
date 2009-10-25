@@ -43,22 +43,22 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Traits class binding envelope <a class="el" href="namespaceggl_1_1strategy.html">strategy</a> to a coordinate system.  <a href="structggl_1_1strategy__envelope.html#_details">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename B &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__envelope.html#g89671917cfb1753f65d4bcc2fc334bf9">ggl::envelope</a> (G const &amp;geometry, B &amp;mbr)</td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Box &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__envelope.html#gd12dc40a65c8b7d39e77d6f802d1cb67">ggl::envelope</a> (Geometry const &amp;geometry, Box &amp;mbr)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate envelope of a geometry.  <a href="#g89671917cfb1753f65d4bcc2fc334bf9"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename G , typename B , typename S &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__envelope.html#g376bdcefa676ef2b705656b690767b36">ggl::envelope</a> (G const &amp;geometry, B &amp;mbr, S const &amp;strategy)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate envelope of a geometry.  <a href="#gd12dc40a65c8b7d39e77d6f802d1cb67"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry , typename Box , typename Strategy &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__envelope.html#g4676217c7bc60742c3dc7dad7bbfa2b8">ggl::envelope</a> (Geometry const &amp;geometry, Box &amp;mbr, Strategy const &amp;strategy)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate envelope of a geometry, using a specified <a class="el" href="namespaceggl_1_1strategy.html">strategy</a>.  <a href="#g376bdcefa676ef2b705656b690767b36"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename B , typename G &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">B&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__envelope.html#g938cf2804a87e138cbf4b5b65314a3e4">ggl::make_envelope</a> (G const &amp;geometry)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate envelope of a geometry, using a specified <a class="el" href="namespaceggl_1_1strategy.html">strategy</a>.  <a href="#g4676217c7bc60742c3dc7dad7bbfa2b8"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Box , typename Geometry &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">Box&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__envelope.html#gb8343582b49458d16bca165b493f678d">ggl::make_envelope</a> (Geometry const &amp;geometry)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate and return envelope of a geometry.  <a href="#g938cf2804a87e138cbf4b5b65314a3e4"></a><br></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename B , typename G , typename S &gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">B&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__envelope.html#g0b2b7b9ef2bc07f4b45695606f3d292d">ggl::make_envelope</a> (G const &amp;geometry, S const &amp;strategy)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate and return envelope of a geometry.  <a href="#gb8343582b49458d16bca165b493f678d"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Box , typename Geometry , typename Strategy &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">Box&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__envelope.html#g41b5f1545e745767f7afa6b1b889d279">ggl::make_envelope</a> (Geometry const &amp;geometry, Strategy const &amp;strategy)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate and return envelope of a geometry.  <a href="#g0b2b7b9ef2bc07f4b45695606f3d292d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate and return envelope of a geometry.  <a href="#g41b5f1545e745767f7afa6b1b889d279"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <dl class="user" compact><dt><b>Source descriptions:</b></dt><dd><ul>
@@ -78,34 +78,34 @@ The envelope algorithm calculates the bounding box, or envelope, of a geometry. 
     <a class="code" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">ggl::linestring&lt;ggl::point_xy&lt;double&gt;</a> &gt; line;
     ggl::read_wkt(<span class="stringliteral">"linestring(0 0,1 1,4 8,3 2)"</span>, line);
     <a class="code" href="classggl_1_1box.html" title="Class box: defines a box made of two describing points.">ggl::box&lt;ggl::point_xy&lt;double&gt;</a> &gt; box;
-    <a class="code" href="group__envelope.html#g376bdcefa676ef2b705656b690767b36" title="Calculate envelope of a geometry, using a specified strategy.">ggl::envelope</a>(line, box);
+    <a class="code" href="group__envelope.html#g4676217c7bc60742c3dc7dad7bbfa2b8" title="Calculate envelope of a geometry, using a specified strategy.">ggl::envelope</a>(line, box);
 
     std::cout &lt;&lt; <span class="stringliteral">"envelope is "</span> &lt;&lt; <a class="code" href="namespaceggl.html#3399b7516122f515a1ea5ee5fdf49ce4" title="Main DSV-streaming function.">ggl::dsv</a>(box) &lt;&lt; std::endl;
 }
 </pre></div> </dd></dl>
 <hr><h2>Function Documentation</h2>
-<a class="anchor" name="g376bdcefa676ef2b705656b690767b36"></a><!-- doxytag: member="ggl::envelope" ref="g376bdcefa676ef2b705656b690767b36" args="(G const &amp;geometry, B &amp;mbr, S const &amp;strategy)" -->
+<a class="anchor" name="g4676217c7bc60742c3dc7dad7bbfa2b8"></a><!-- doxytag: member="ggl::envelope" ref="g4676217c7bc60742c3dc7dad7bbfa2b8" args="(Geometry const &amp;geometry, Box &amp;mbr, Strategy const &amp;strategy)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename B , typename S &gt; </div>
+template&lt;typename Geometry , typename Box , typename Strategy &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void ggl::envelope           </td>
           <td>(</td>
-          <td class="paramtype">G const &amp;&nbsp;</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">B &amp;&nbsp;</td>
+          <td class="paramtype">Box &amp;&nbsp;</td>
           <td class="paramname"> <em>mbr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">S const &amp;&nbsp;</td>
+          <td class="paramtype">Strategy const &amp;&nbsp;</td>
           <td class="paramname"> <em>strategy</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -129,26 +129,26 @@ Calculate envelope of a geometry, using a specified <a class="el" href="namespac
 </dl>
 <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="02__linestring__example_8cpp-example.html#a7">02_linestring_example.cpp</a>, and <a class="el" href="03__polygon__example_8cpp-example.html#a5">03_polygon_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="algorithms_2envelope_8hpp_source.html#l00250">250</a> of file <a class="el" href="algorithms_2envelope_8hpp_source.html">envelope.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2envelope_8hpp_source.html#l00216">216</a> of file <a class="el" href="algorithms_2envelope_8hpp_source.html">envelope.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="g89671917cfb1753f65d4bcc2fc334bf9"></a><!-- doxytag: member="ggl::envelope" ref="g89671917cfb1753f65d4bcc2fc334bf9" args="(G const &amp;geometry, B &amp;mbr)" -->
+<a class="anchor" name="gd12dc40a65c8b7d39e77d6f802d1cb67"></a><!-- doxytag: member="ggl::envelope" ref="gd12dc40a65c8b7d39e77d6f802d1cb67" args="(Geometry const &amp;geometry, Box &amp;mbr)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename G , typename B &gt; </div>
+template&lt;typename Geometry , typename Box &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void ggl::envelope           </td>
           <td>(</td>
-          <td class="paramtype">G const &amp;&nbsp;</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">B &amp;&nbsp;</td>
+          <td class="paramtype">Box &amp;&nbsp;</td>
           <td class="paramname"> <em>mbr</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -199,26 +199,26 @@ Calculate envelope of a geometry.
 }
 </pre></div> </dd></dl>
 
-<p>Definition at line <a class="el" href="algorithms_2envelope_8hpp_source.html#l00275">275</a> of file <a class="el" href="algorithms_2envelope_8hpp_source.html">envelope.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2envelope_8hpp_source.html#l00245">245</a> of file <a class="el" href="algorithms_2envelope_8hpp_source.html">envelope.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="g0b2b7b9ef2bc07f4b45695606f3d292d"></a><!-- doxytag: member="ggl::make_envelope" ref="g0b2b7b9ef2bc07f4b45695606f3d292d" args="(G const &amp;geometry, S const &amp;strategy)" -->
+<a class="anchor" name="g41b5f1545e745767f7afa6b1b889d279"></a><!-- doxytag: member="ggl::make_envelope" ref="g41b5f1545e745767f7afa6b1b889d279" args="(Geometry const &amp;geometry, Strategy const &amp;strategy)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename B , typename G , typename S &gt; </div>
+template&lt;typename Box , typename Geometry , typename Strategy &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">B ggl::make_envelope           </td>
+          <td class="memname">Box ggl::make_envelope           </td>
           <td>(</td>
-          <td class="paramtype">G const &amp;&nbsp;</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">S const &amp;&nbsp;</td>
+          <td class="paramtype">Strategy const &amp;&nbsp;</td>
           <td class="paramname"> <em>strategy</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -240,20 +240,20 @@ Calculate and return envelope of a geometry.
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="algorithms_2envelope_8hpp_source.html#l00296">296</a> of file <a class="el" href="algorithms_2envelope_8hpp_source.html">envelope.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2envelope_8hpp_source.html#l00269">269</a> of file <a class="el" href="algorithms_2envelope_8hpp_source.html">envelope.hpp</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="g938cf2804a87e138cbf4b5b65314a3e4"></a><!-- doxytag: member="ggl::make_envelope" ref="g938cf2804a87e138cbf4b5b65314a3e4" args="(G const &amp;geometry)" -->
+<a class="anchor" name="gb8343582b49458d16bca165b493f678d"></a><!-- doxytag: member="ggl::make_envelope" ref="gb8343582b49458d16bca165b493f678d" args="(Geometry const &amp;geometry)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename B , typename G &gt; </div>
+template&lt;typename Box , typename Geometry &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">B ggl::make_envelope           </td>
+          <td class="memname">Box ggl::make_envelope           </td>
           <td>(</td>
-          <td class="paramtype">G const &amp;&nbsp;</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
           <td class="paramname"> <em>geometry</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td></td>
@@ -271,7 +271,7 @@ Calculate and return envelope of a geometry.
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="algorithms_2envelope_8hpp_source.html#l00315">315</a> of file <a class="el" href="algorithms_2envelope_8hpp_source.html">envelope.hpp</a>.</p>
+<p>Definition at line <a class="el" href="algorithms_2envelope_8hpp_source.html#l00291">291</a> of file <a class="el" href="algorithms_2envelope_8hpp_source.html">envelope.hpp</a>.</p>
 
 </div>
 </div><p>

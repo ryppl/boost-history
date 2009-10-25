@@ -49,11 +49,14 @@
 <p>
 <a href="structggl_1_1strategy_1_1side_1_1xy__side-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
-<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1strategy_1_1side_1_1xy__side.html#ef3dcea77c310bdd72a534539ef72edd">side</a> (const P &amp;p0, const P &amp;p1, const P &amp;p2)</td></tr>
+<tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="structggl_1_1select__coordinate__type.html">select_coordinate_type</a><br class="typebreak">
+&lt; P, PS &gt;::type&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1strategy_1_1side_1_1xy__side.html#fc00b4def4ecbec875fdcccbd03f9a6f">coordinate_type</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="structggl_1_1select__coordinate__type.html">select_coordinate_type</a><br class="typebreak">
-&lt; P, PS &gt;::type&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1strategy_1_1side_1_1xy__side.html#b35869205a5eefee505f491bc1a53f4a">side</a> (const <a class="el" href="classggl_1_1segment.html">segment</a>&lt; const PS &gt; &amp;s, const P &amp;p)</td></tr>
+<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1strategy_1_1side_1_1xy__side.html#50f319e6cb75040a906468adcad6d1c9">side</a> (PS const &amp;p0, PS const &amp;p1, P const &amp;p2)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="structggl_1_1coordinate__type.html">coordinate_type</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structggl_1_1strategy_1_1side_1_1xy__side.html#3bfdcd774cb32a1e97a5b94a6f3b7f5b">side</a> (<a class="el" href="classggl_1_1segment.html">segment</a>&lt; const PS &gt; const &amp;s, P const &amp;p)</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -61,24 +64,44 @@
  struct ggl::strategy::side::xy_side&lt; P, PS &gt;</h3>
 
 
-<p>Definition at line <a class="el" href="cart__side_8hpp_source.html#l00029">29</a> of file <a class="el" href="cart__side_8hpp_source.html">cart_side.hpp</a>.</p>
-<hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="b35869205a5eefee505f491bc1a53f4a"></a><!-- doxytag: member="ggl::strategy::side::xy_side::side" ref="b35869205a5eefee505f491bc1a53f4a" args="(const segment&lt; const PS &gt; &amp;s, const P &amp;p)" -->
+<p>Definition at line <a class="el" href="cart__side_8hpp_source.html#l00028">28</a> of file <a class="el" href="cart__side_8hpp_source.html">cart_side.hpp</a>.</p>
+<hr><h2>Member Typedef Documentation</h2>
+<a class="anchor" name="fc00b4def4ecbec875fdcccbd03f9a6f"></a><!-- doxytag: member="ggl::strategy::side::xy_side::coordinate_type" ref="fc00b4def4ecbec875fdcccbd03f9a6f" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename P , typename PS &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="structggl_1_1select__coordinate__type.html">select_coordinate_type</a>&lt;P, PS&gt;::type <a class="el" href="structggl_1_1strategy_1_1side_1_1xy__side.html">ggl::strategy::side::xy_side</a>&lt; P, PS &gt;::side           </td>
+          <td class="memname">typedef <a class="el" href="structggl_1_1select__coordinate__type.html">select_coordinate_type</a>&lt;P, PS&gt;::type <a class="el" href="structggl_1_1strategy_1_1side_1_1xy__side.html">ggl::strategy::side::xy_side</a>&lt; P, PS &gt;::<a class="el" href="structggl_1_1coordinate__type.html">coordinate_type</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="cart__side_8hpp_source.html#l00030">30</a> of file <a class="el" href="cart__side_8hpp_source.html">cart_side.hpp</a>.</p>
+
+</div>
+</div><p>
+<hr><h2>Member Function Documentation</h2>
+<a class="anchor" name="3bfdcd774cb32a1e97a5b94a6f3b7f5b"></a><!-- doxytag: member="ggl::strategy::side::xy_side::side" ref="3bfdcd774cb32a1e97a5b94a6f3b7f5b" args="(segment&lt; const PS &gt; const &amp;s, P const &amp;p)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename P , typename PS &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="structggl_1_1coordinate__type.html">coordinate_type</a> <a class="el" href="structggl_1_1strategy_1_1side_1_1xy__side.html">ggl::strategy::side::xy_side</a>&lt; P, PS &gt;::side           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classggl_1_1segment.html">segment</a>&lt; const PS &gt; &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classggl_1_1segment.html">segment</a>&lt; const PS &gt; const &amp;&nbsp;</td>
           <td class="paramname"> <em>s</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const P &amp;&nbsp;</td>
+          <td class="paramtype">P const &amp;&nbsp;</td>
           <td class="paramname"> <em>p</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -96,7 +119,7 @@ template&lt;typename P , typename PS &gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="ef3dcea77c310bdd72a534539ef72edd"></a><!-- doxytag: member="ggl::strategy::side::xy_side::side" ref="ef3dcea77c310bdd72a534539ef72edd" args="(const P &amp;p0, const P &amp;p1, const P &amp;p2)" -->
+<a class="anchor" name="50f319e6cb75040a906468adcad6d1c9"></a><!-- doxytag: member="ggl::strategy::side::xy_side::side" ref="50f319e6cb75040a906468adcad6d1c9" args="(PS const &amp;p0, PS const &amp;p1, P const &amp;p2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -105,19 +128,19 @@ template&lt;typename P , typename PS &gt; </div>
         <tr>
           <td class="memname">static int <a class="el" href="structggl_1_1strategy_1_1side_1_1xy__side.html">ggl::strategy::side::xy_side</a>&lt; P, PS &gt;::side           </td>
           <td>(</td>
-          <td class="paramtype">const P &amp;&nbsp;</td>
+          <td class="paramtype">PS const &amp;&nbsp;</td>
           <td class="paramname"> <em>p0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const P &amp;&nbsp;</td>
+          <td class="paramtype">PS const &amp;&nbsp;</td>
           <td class="paramname"> <em>p1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const P &amp;&nbsp;</td>
+          <td class="paramtype">P const &amp;&nbsp;</td>
           <td class="paramname"> <em>p2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -131,7 +154,7 @@ template&lt;typename P , typename PS &gt; </div>
 
 <p>
 
-<p>Definition at line <a class="el" href="cart__side_8hpp_source.html#l00049">49</a> of file <a class="el" href="cart__side_8hpp_source.html">cart_side.hpp</a>.</p>
+<p>Definition at line <a class="el" href="cart__side_8hpp_source.html#l00055">55</a> of file <a class="el" href="cart__side_8hpp_source.html">cart_side.hpp</a>.</p>
 
 </div>
 </div><p>

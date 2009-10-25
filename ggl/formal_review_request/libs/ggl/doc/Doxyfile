@@ -86,7 +86,8 @@ INPUT                  = . .. ../../../boost/ggl/core \
 			../../../boost/ggl/algorithms/detail \
 			../../../boost/ggl/algorithms/overlay \
 			../../../boost/ggl/arithmetic \
-			../../../boost/ggl/core/concepts \
+			../../../boost/ggl/geometries/concepts \
+			../../../boost/ggl/geometries/concepts/detail \
 			../../../boost/ggl/geometries \
 			../../../boost/ggl/geometries/adapted \
 			../../../boost/ggl/geometries/register \

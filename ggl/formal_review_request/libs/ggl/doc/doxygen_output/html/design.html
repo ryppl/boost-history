@@ -97,7 +97,7 @@ which is then specialized for our ‘mypoint’ type, implementing a static method c
 </pre></div><p>
 Calling traits::access&lt;point, 0&gt;::get(a) now returns us our x-coordinate. Nice? It is too verbose for a function like this, used so often in the library. We can shorten the syntax by adding an extra function: template &lt;int D, typename P&gt; <div class="fragment"><pre class="fragment"><span class="keyword">inline</span> <span class="keywordtype">double</span> <span class="keyword">get</span>(P <span class="keyword">const</span>&amp; p)
 {
-    <span class="keywordflow">return</span> <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point / nsphere">traits::access&lt;P, D&gt;::get</a>(p);
+    <span class="keywordflow">return</span> <a class="code" href="group__access.html#g6cf833a7f9622af2fc05fd94aa61153f" title="get a coordinate value of a point">traits::access&lt;P, D&gt;::get</a>(p);
 }
 </pre></div><p>
 This enables us to call get&lt;0&gt;(a), for any point having the traits::access specialization, as shown in the distance algorithm at the start of this paragraph. So we wanted to enable classes with methods like .x(), and they are supported as long as there is a specialization of the access struct with a static get function returning .x() for dimension 0, and similar for 1 and .y().<p>

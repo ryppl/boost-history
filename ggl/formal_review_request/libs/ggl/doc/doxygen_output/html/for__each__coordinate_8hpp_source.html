@@ -52,7 +52,7 @@
 <a name="l00010"></a>00010 <span class="preprocessor"></span><span class="preprocessor">#define GGL_UTIL_FOR_EACH_COORDINATE_HPP</span>
 <a name="l00011"></a>00011 <span class="preprocessor"></span>
 <a name="l00012"></a>00012 <span class="preprocessor">#include &lt;boost/concept/requires.hpp&gt;</span>
-<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="point__concept_8hpp.html">ggl/core/concepts/point_concept.hpp</a>&gt;</span>
+<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="point__concept_8hpp.html">ggl/geometries/concepts/point_concept.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 
 <a name="l00015"></a>00015 <span class="keyword">namespace </span>ggl
 <a name="l00016"></a>00016 {
@@ -91,7 +91,7 @@
 <a name="l00049"></a>00049 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Po<span class="keywordtype">int</span>, <span class="keyword">typename</span> Op&gt;
 <a name="l00050"></a><a class="code" href="namespaceggl.html#578a218a60843891321b599d222090db">00050</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="namespaceggl.html#578a218a60843891321b599d222090db">for_each_coordinate</a>(Point&amp; <a class="code" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a>, Op operation)
 <a name="l00051"></a>00051 {
-<a name="l00052"></a>00052     BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_point.html" title="Checks point concept, using Boost Concept Check Library and metafunctions.">concept::Point&lt;Point&gt;</a>) );
+<a name="l00052"></a>00052     BOOST_CONCEPT_ASSERT( (<a class="code" href="classggl_1_1concept_1_1_point.html" title="Checks point concept.">concept::Point&lt;Point&gt;</a>) );
 <a name="l00053"></a>00053 
 <a name="l00054"></a>00054     <span class="keyword">typedef</span> <span class="keyword">typename</span> detail::coordinates_scanner
 <a name="l00055"></a>00055         &lt;

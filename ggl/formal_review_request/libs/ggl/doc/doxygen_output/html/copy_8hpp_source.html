@@ -56,7 +56,7 @@
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;boost/concept/requires.hpp&gt;</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include &lt;boost/concept_check.hpp&gt;</span>
 <a name="l00016"></a>00016 
-<a name="l00017"></a>00017 <span class="preprocessor">#include &lt;<a class="code" href="point__concept_8hpp.html">ggl/core/concepts/point_concept.hpp</a>&gt;</span>
+<a name="l00017"></a>00017 <span class="preprocessor">#include &lt;<a class="code" href="point__concept_8hpp.html">ggl/geometries/concepts/point_concept.hpp</a>&gt;</span>
 <a name="l00018"></a>00018 
 <a name="l00019"></a>00019 <span class="preprocessor">#include &lt;boost/numeric/conversion/cast.hpp&gt;</span>
 <a name="l00020"></a>00020 
@@ -94,8 +94,8 @@
 <a name="l00061"></a>00061 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Src, <span class="keyword">typename</span> Dst&gt;
 <a name="l00062"></a><a class="code" href="namespaceggl.html#f8cee6dd577bebfd1dbbe4cc503304d4">00062</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="namespaceggl.html#f8cee6dd577bebfd1dbbe4cc503304d4" title="Copies coordinates from source to destination point.">copy_coordinates</a>(Src <span class="keyword">const</span>&amp; source, Dst&amp; dest)
 <a name="l00063"></a>00063 {
-<a name="l00064"></a>00064     BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;Src&gt;</a>) );
-<a name="l00065"></a>00065     BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_point.html" title="Checks point concept, using Boost Concept Check Library and metafunctions.">concept::Point&lt;Dst&gt;</a>) );
+<a name="l00064"></a>00064     BOOST_CONCEPT_ASSERT( (<a class="code" href="classggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;Src&gt;</a>) );
+<a name="l00065"></a>00065     BOOST_CONCEPT_ASSERT( (<a class="code" href="classggl_1_1concept_1_1_point.html" title="Checks point concept.">concept::Point&lt;Dst&gt;</a>) );
 <a name="l00066"></a>00066 
 <a name="l00067"></a>00067 
 <a name="l00068"></a>00068     <span class="comment">//assert_dimension_equal&lt;Dst, Src&gt;();</span>

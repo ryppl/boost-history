@@ -131,8 +131,8 @@
 <a name="l00097"></a><a class="code" href="structggl_1_1strategy_1_1distance_1_1pythagoras.html#da96ada6f45642ee8e773e660cf6fb1a">00097</a>     <span class="keyword">inline</span> <a class="code" href="structggl_1_1cartesian__distance.html" title="Encapsulate the results of distance calculation.">return_type</a> <a class="code" href="structggl_1_1strategy_1_1distance_1_1pythagoras.html#da96ada6f45642ee8e773e660cf6fb1a">operator()</a>(P1 <span class="keyword">const</span>&amp; p1, P2 <span class="keyword">const</span>&amp; p2)<span class="keyword"> const</span>
 <a name="l00098"></a>00098 <span class="keyword">    </span>{
 <a name="l00099"></a>00099 
-<a name="l00100"></a>00100         BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;P1&gt;</a>) );
-<a name="l00101"></a>00101         BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;P2&gt;</a>) );
+<a name="l00100"></a>00100         BOOST_CONCEPT_ASSERT( (<a class="code" href="classggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;P1&gt;</a>) );
+<a name="l00101"></a>00101         BOOST_CONCEPT_ASSERT( (<a class="code" href="classggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;P2&gt;</a>) );
 <a name="l00102"></a>00102 
 <a name="l00103"></a>00103         <span class="comment">// Calculate distance using Pythagoras</span>
 <a name="l00104"></a>00104         <span class="comment">// (Leave comment above for Doxygen)</span>
@@ -194,12 +194,12 @@
 <a name="l00171"></a>00171 
 <a name="l00172"></a>00172         Strategy strategy;
 <a name="l00173"></a>00173 
-<a name="l00174"></a>00174         <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">coordinate_type</a> c1 = <a class="code" href="group__arithmetic.html#gb4e975a3003134e51c2764f9b6701556" title="Computes the dot product of 2 points.">dot_product</a>(w, v);
+<a name="l00174"></a>00174         <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">coordinate_type</a> c1 = <a class="code" href="group__arithmetic.html#gdbe9df76626ecc2871dbffa8cfe7f0e4" title="Computes the dot product of 2 points.">dot_product</a>(w, v);
 <a name="l00175"></a>00175         <span class="keywordflow">if</span> (c1 &lt;= 0)
 <a name="l00176"></a>00176         {
 <a name="l00177"></a>00177             <span class="keywordflow">return</span> strategy(p, s.first);
 <a name="l00178"></a>00178         }
-<a name="l00179"></a>00179         <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">coordinate_type</a> c2 = <a class="code" href="group__arithmetic.html#gb4e975a3003134e51c2764f9b6701556" title="Computes the dot product of 2 points.">dot_product</a>(v, v);
+<a name="l00179"></a>00179         <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">coordinate_type</a> c2 = <a class="code" href="group__arithmetic.html#gdbe9df76626ecc2871dbffa8cfe7f0e4" title="Computes the dot product of 2 points.">dot_product</a>(v, v);
 <a name="l00180"></a>00180         <span class="keywordflow">if</span> (c2 &lt;= c1)
 <a name="l00181"></a>00181         {
 <a name="l00182"></a>00182             <span class="keywordflow">return</span> strategy(p, s.second);

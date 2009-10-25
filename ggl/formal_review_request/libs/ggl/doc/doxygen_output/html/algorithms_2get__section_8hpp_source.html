@@ -52,70 +52,70 @@
 <a name="l00010"></a>00010 <span class="preprocessor"></span><span class="preprocessor">#define GGL_ALGORITHMS_GET_SECTION_HPP</span>
 <a name="l00011"></a>00011 <span class="preprocessor"></span>
 <a name="l00012"></a>00012 
-<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;boost/concept_check.hpp&gt;</span>
-<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;boost/concept/requires.hpp&gt;</span>
-<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;boost/range/functions.hpp&gt;</span>
-<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;boost/range/metafunctions.hpp&gt;</span>
-<a name="l00017"></a>00017 
-<a name="l00018"></a>00018 
-<a name="l00019"></a>00019 <span class="preprocessor">#include &lt;<a class="code" href="access_8hpp.html">ggl/core/access.hpp</a>&gt;</span>
-<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;<a class="code" href="exterior__ring_8hpp.html">ggl/core/exterior_ring.hpp</a>&gt;</span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;<a class="code" href="interior__rings_8hpp.html">ggl/core/interior_rings.hpp</a>&gt;</span>
+<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;boost/range/functions.hpp&gt;</span>
+<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;boost/range/metafunctions.hpp&gt;</span>
+<a name="l00015"></a>00015 
+<a name="l00016"></a>00016 
+<a name="l00017"></a>00017 <span class="preprocessor">#include &lt;<a class="code" href="access_8hpp.html">ggl/core/access.hpp</a>&gt;</span>
+<a name="l00018"></a>00018 <span class="preprocessor">#include &lt;<a class="code" href="exterior__ring_8hpp.html">ggl/core/exterior_ring.hpp</a>&gt;</span>
+<a name="l00019"></a>00019 <span class="preprocessor">#include &lt;<a class="code" href="interior__rings_8hpp.html">ggl/core/interior_rings.hpp</a>&gt;</span>
+<a name="l00020"></a>00020 
+<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;<a class="code" href="iterators_2vertex__iterator_8hpp.html">ggl/iterators/vertex_iterator.hpp</a>&gt;</span>
 <a name="l00022"></a>00022 
-<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;<a class="code" href="iterators_2vertex__iterator_8hpp.html">ggl/iterators/vertex_iterator.hpp</a>&gt;</span>
+<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;<a class="code" href="segment_8hpp.html">ggl/geometries/segment.hpp</a>&gt;</span>
 <a name="l00024"></a>00024 
-<a name="l00025"></a>00025 <span class="preprocessor">#include &lt;<a class="code" href="segment_8hpp.html">ggl/geometries/segment.hpp</a>&gt;</span>
+<a name="l00025"></a>00025 
 <a name="l00026"></a>00026 
-<a name="l00027"></a>00027 
-<a name="l00028"></a>00028 
-<a name="l00029"></a>00029 <span class="keyword">namespace </span>ggl
-<a name="l00030"></a>00030 {
-<a name="l00031"></a>00031 
-<a name="l00032"></a>00032 
-<a name="l00033"></a>00033 <span class="preprocessor">#ifndef DOXYGEN_NO_DISPATCH</span>
-<a name="l00034"></a>00034 <span class="preprocessor"></span><span class="keyword">namespace </span>dispatch
-<a name="l00035"></a>00035 {
-<a name="l00036"></a>00036 
-<a name="l00037"></a>00037 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Section&gt;
-<a name="l00038"></a>00038 <span class="keyword">struct </span><a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>
-<a name="l00039"></a>00039 {
-<a name="l00040"></a>00040     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">ggl::vertex_iterator&lt;Geometry, true&gt;::type</a> iterator_type;
-<a name="l00041"></a>00041     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(Geometry <span class="keyword">const</span>&amp; geometry, Section <span class="keyword">const</span>&amp; section,
-<a name="l00042"></a>00042                 iterator_type&amp; begin, iterator_type&amp; end)
-<a name="l00043"></a>00043     {
-<a name="l00044"></a>00044         begin = boost::begin(geometry) + section.begin_index;
-<a name="l00045"></a>00045         end = boost::begin(geometry) + section.end_index + 1;
-<a name="l00046"></a>00046     }
-<a name="l00047"></a>00047 };
-<a name="l00048"></a>00048 
-<a name="l00049"></a>00049 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Polygon, <span class="keyword">typename</span> Section&gt;
-<a name="l00050"></a>00050 <span class="keyword">struct </span><a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>&lt;polygon_tag, Polygon, Section&gt;
-<a name="l00051"></a>00051 {
-<a name="l00052"></a>00052     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">ggl::vertex_iterator&lt;Polygon, true&gt;::type</a> iterator_type;
-<a name="l00053"></a>00053     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(Polygon <span class="keyword">const</span>&amp; polygon, Section <span class="keyword">const</span>&amp; section,
-<a name="l00054"></a>00054                 iterator_type&amp; begin, iterator_type&amp; end)
-<a name="l00055"></a>00055     {
-<a name="l00056"></a>00056         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1ring__type.html" title="Meta-function which defines ring type of (multi)polygon geometry.">ggl::ring_type&lt;Polygon&gt;::type</a> ring_type;
-<a name="l00057"></a>00057         ring_type <span class="keyword">const</span>&amp; ring = section.ring_index &lt; 0
-<a name="l00058"></a>00058             ? <a class="code" href="group__access.html#gf92470d0612da7f0e118d296e7fcfe01" title="Function to get the exterior_ring ring of a polygon.">ggl::exterior_ring</a>(polygon)
-<a name="l00059"></a>00059             : ggl::<a class="code" href="group__access.html#gfb1abbb52eaeb5391c51fb6c209ab758" title="Function to get the interior rings of a polygon (non const version).">interior_rings</a>(polygon)[section.ring_index];
-<a name="l00060"></a>00060 
-<a name="l00061"></a>00061         begin = boost::begin(ring) + section.begin_index;
-<a name="l00062"></a>00062         end = boost::begin(ring) + section.end_index + 1;
-<a name="l00063"></a>00063     }
-<a name="l00064"></a>00064 };
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066 } <span class="comment">// namespace dispatch</span>
-<a name="l00067"></a>00067 <span class="preprocessor">#endif</span>
-<a name="l00068"></a>00068 <span class="preprocessor"></span>
+<a name="l00027"></a>00027 <span class="keyword">namespace </span>ggl
+<a name="l00028"></a>00028 {
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030 
+<a name="l00031"></a>00031 <span class="preprocessor">#ifndef DOXYGEN_NO_DISPATCH</span>
+<a name="l00032"></a>00032 <span class="preprocessor"></span><span class="keyword">namespace </span>dispatch
+<a name="l00033"></a>00033 {
+<a name="l00034"></a>00034 
+<a name="l00035"></a>00035 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Section&gt;
+<a name="l00036"></a>00036 <span class="keyword">struct </span><a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>
+<a name="l00037"></a>00037 {
+<a name="l00038"></a>00038     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">ggl::vertex_iterator&lt;Geometry, true&gt;::type</a> iterator_type;
+<a name="l00039"></a>00039     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(Geometry <span class="keyword">const</span>&amp; geometry, Section <span class="keyword">const</span>&amp; section,
+<a name="l00040"></a>00040                 iterator_type&amp; begin, iterator_type&amp; end)
+<a name="l00041"></a>00041     {
+<a name="l00042"></a>00042         begin = boost::begin(geometry) + section.begin_index;
+<a name="l00043"></a>00043         end = boost::begin(geometry) + section.end_index + 1;
+<a name="l00044"></a>00044     }
+<a name="l00045"></a>00045 };
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Polygon, <span class="keyword">typename</span> Section&gt;
+<a name="l00048"></a>00048 <span class="keyword">struct </span><a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>&lt;polygon_tag, Polygon, Section&gt;
+<a name="l00049"></a>00049 {
+<a name="l00050"></a>00050     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">ggl::vertex_iterator&lt;Polygon, true&gt;::type</a> iterator_type;
+<a name="l00051"></a>00051     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> apply(Polygon <span class="keyword">const</span>&amp; polygon, Section <span class="keyword">const</span>&amp; section,
+<a name="l00052"></a>00052                 iterator_type&amp; begin, iterator_type&amp; end)
+<a name="l00053"></a>00053     {
+<a name="l00054"></a>00054         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1ring__type.html" title="Meta-function which defines ring type of (multi)polygon geometry.">ggl::ring_type&lt;Polygon&gt;::type</a> ring_type;
+<a name="l00055"></a>00055         ring_type <span class="keyword">const</span>&amp; ring = section.ring_index &lt; 0
+<a name="l00056"></a>00056             ? <a class="code" href="group__access.html#gf92470d0612da7f0e118d296e7fcfe01" title="Function to get the exterior_ring ring of a polygon.">ggl::exterior_ring</a>(polygon)
+<a name="l00057"></a>00057             : ggl::<a class="code" href="group__access.html#gfb1abbb52eaeb5391c51fb6c209ab758" title="Function to get the interior rings of a polygon (non const version).">interior_rings</a>(polygon)[section.ring_index];
+<a name="l00058"></a>00058 
+<a name="l00059"></a>00059         begin = boost::begin(ring) + section.begin_index;
+<a name="l00060"></a>00060         end = boost::begin(ring) + section.end_index + 1;
+<a name="l00061"></a>00061     }
+<a name="l00062"></a>00062 };
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064 } <span class="comment">// namespace dispatch</span>
+<a name="l00065"></a>00065 <span class="preprocessor">#endif</span>
+<a name="l00066"></a>00066 <span class="preprocessor"></span>
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068 
 <a name="l00069"></a>00069 
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071 
-<a name="l00084"></a>00084 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Section&gt;
-<a name="l00085"></a><a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a">00085</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>(Geometry <span class="keyword">const</span>&amp; geometry, Section <span class="keyword">const</span>&amp; <a class="code" href="structggl_1_1section.html" title="Structure containing section information.">section</a>,
-<a name="l00086"></a>00086     <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">vertex_iterator&lt;Geometry, true&gt;::type</a>&amp; begin,
-<a name="l00087"></a>00087     <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">vertex_iterator&lt;Geometry, true&gt;::type</a>&amp; end)
-<a name="l00088"></a>00088 {
+<a name="l00082"></a>00082 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Geometry, <span class="keyword">typename</span> Section&gt;
+<a name="l00083"></a><a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a">00083</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">get_section</a>(Geometry <span class="keyword">const</span>&amp; geometry, Section <span class="keyword">const</span>&amp; <a class="code" href="structggl_1_1section.html" title="Structure containing section information.">section</a>,
+<a name="l00084"></a>00084     <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">vertex_iterator&lt;Geometry, true&gt;::type</a>&amp; begin,
+<a name="l00085"></a>00085     <span class="keyword">typename</span> <a class="code" href="structggl_1_1vertex__iterator.html" title="Meta-function which defines vertex_iterator type.">vertex_iterator&lt;Geometry, true&gt;::type</a>&amp; end)
+<a name="l00086"></a>00086 {
+<a name="l00087"></a>00087     concept::check&lt;const Geometry&gt;();
+<a name="l00088"></a>00088 
 <a name="l00089"></a>00089     <a class="code" href="group__sectionalize.html#gb862f6c883bcc3baddda33c91298b48a" title="Get iterators for a specified section.">dispatch::get_section</a>
 <a name="l00090"></a>00090         &lt;
 <a name="l00091"></a>00091             <span class="keyword">typename</span> <a class="code" href="structggl_1_1geometry__not__recognized__tag.html" title="&amp;quot;default&amp;quot; tag">tag&lt;Geometry&gt;::type</a>,

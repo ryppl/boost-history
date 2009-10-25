@@ -40,7 +40,7 @@
       <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
     </ul>
   </div>
-<h1>ggl/core/concepts/segment_concept.hpp</h1><a href="segment__concept_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">// Generic Geometry Library</span>
+<h1>ggl/geometries/concepts/segment_concept.hpp</h1><a href="segment__concept_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">// Generic Geometry Library</span>
 <a name="l00002"></a>00002 <span class="comment">//</span>
 <a name="l00003"></a>00003 <span class="comment">// Copyright Bruno Lalande 2008, 2009</span>
 <a name="l00004"></a>00004 <span class="comment">// Copyright Barend Gehrels 1995-2009, Geodan Holding B.V. Amsterdam, the Netherlands.</span>
@@ -49,13 +49,13 @@
 <a name="l00007"></a>00007 <span class="comment">// http://www.boost.org/LICENSE_1_0.txt)</span>
 <a name="l00008"></a>00008 
 <a name="l00009"></a>00009 
-<a name="l00010"></a>00010 <span class="preprocessor">#ifndef GGL_CORE_CONCEPTS_SEGMENT_CONCEPT_HPP</span>
-<a name="l00011"></a>00011 <span class="preprocessor"></span><span class="preprocessor">#define GGL_CORE_CONCEPTS_SEGMENT_CONCEPT_HPP</span>
+<a name="l00010"></a>00010 <span class="preprocessor">#ifndef GGL_GEOMETRIES_CONCEPTS_SEGMENT_CONCEPT_HPP</span>
+<a name="l00011"></a>00011 <span class="preprocessor"></span><span class="preprocessor">#define GGL_GEOMETRIES_CONCEPTS_SEGMENT_CONCEPT_HPP</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;boost/concept_check.hpp&gt;</span>
 <a name="l00015"></a>00015 
-<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="point__concept_8hpp.html">ggl/core/concepts/point_concept.hpp</a>&gt;</span>
+<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="point__concept_8hpp.html">ggl/geometries/concepts/point_concept.hpp</a>&gt;</span>
 <a name="l00017"></a>00017 
 <a name="l00018"></a>00018 
 <a name="l00019"></a>00019 
@@ -67,84 +67,84 @@
 <a name="l00025"></a>00025 <span class="keyword">namespace </span>ggl { <span class="keyword">namespace </span>concept {
 <a name="l00026"></a>00026 
 <a name="l00027"></a>00027 
-<a name="l00032"></a>00032 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> S&gt;
-<a name="l00033"></a><a class="code" href="structggl_1_1concept_1_1_segment.html">00033</a> <span class="keyword">struct </span><a class="code" href="structggl_1_1concept_1_1_segment.html" title="Checks segment concept, using Boost Concept Check Library and metafunctions.">Segment</a>
+<a name="l00032"></a>00032 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Geometry&gt;
+<a name="l00033"></a><a class="code" href="classggl_1_1concept_1_1_segment.html">00033</a> <span class="keyword">class </span><a class="code" href="classggl_1_1concept_1_1_segment.html" title="Checks segment concept.">Segment</a>
 <a name="l00034"></a>00034 {
-<a name="l00035"></a>00035     <span class="keyword">private</span> :
-<a name="l00036"></a>00036         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;S&gt;::type</a> P;
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038         BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_point.html" title="Checks point concept, using Boost Concept Check Library and metafunctions.">concept::Point&lt;P&gt;</a>) );
+<a name="l00035"></a>00035     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry&gt;::type</a> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037     BOOST_CONCEPT_ASSERT( (<a class="code" href="classggl_1_1concept_1_1_point.html" title="Checks point concept.">concept::Point&lt;point_type&gt;</a>) );
+<a name="l00038"></a>00038 
 <a name="l00039"></a>00039 
-<a name="l00040"></a>00040 
-<a name="l00042"></a>00042         <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> C, <span class="keywordtype">size_t</span> D, <span class="keywordtype">size_t</span> N&gt;
-<a name="l00043"></a>00043         <span class="keyword">struct </span>dimension_checker
+<a name="l00040"></a>00040     <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> Index, <span class="keywordtype">size_t</span> Dimension, <span class="keywordtype">size_t</span> DimensionCount&gt;
+<a name="l00041"></a>00041     <span class="keyword">struct </span>dimension_checker
+<a name="l00042"></a>00042     {
+<a name="l00043"></a>00043         <span class="keyword">static</span> <span class="keywordtype">void</span> apply()
 <a name="l00044"></a>00044         {
-<a name="l00045"></a>00045             <span class="keyword">static</span> <span class="keywordtype">void</span> check()
-<a name="l00046"></a>00046             {
-<a name="l00047"></a>00047                 S* s;
-<a name="l00048"></a>00048                 ggl::set&lt;C, D&gt;(*s, ggl::get&lt;C, D&gt;(*s));
-<a name="l00049"></a>00049                 dimension_checker&lt;C, D + 1, N&gt;::check();
-<a name="l00050"></a>00050             }
-<a name="l00051"></a>00051         };
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053         <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> C, <span class="keywordtype">size_t</span> N&gt;
-<a name="l00054"></a>00054         <span class="keyword">struct </span>dimension_checker&lt;C, N, N&gt;
-<a name="l00055"></a>00055         {
-<a name="l00056"></a>00056             <span class="keyword">static</span> <span class="keywordtype">void</span> check() {}
-<a name="l00057"></a>00057         };
+<a name="l00045"></a>00045             Geometry* s;
+<a name="l00046"></a>00046             ggl::set&lt;Index, Dimension&gt;(*s, ggl::get&lt;Index, Dimension&gt;(*s));
+<a name="l00047"></a>00047             dimension_checker&lt;Index, Dimension + 1, DimensionCount&gt;::apply();
+<a name="l00048"></a>00048         }
+<a name="l00049"></a>00049     };
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051     <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> Index, <span class="keywordtype">size_t</span> DimensionCount&gt;
+<a name="l00052"></a>00052     <span class="keyword">struct </span>dimension_checker&lt;Index, DimensionCount, DimensionCount&gt;
+<a name="l00053"></a>00053     {
+<a name="l00054"></a>00054         <span class="keyword">static</span> <span class="keywordtype">void</span> apply() {}
+<a name="l00055"></a>00055     };
+<a name="l00056"></a>00056 
+<a name="l00057"></a>00057 <span class="keyword">public</span> :
 <a name="l00058"></a>00058 
-<a name="l00059"></a>00059     <span class="keyword">public</span> :
-<a name="l00061"></a><a class="code" href="structggl_1_1concept_1_1_segment.html#d2e340dff544a40ed257a1823dfd4749">00061</a>         <a class="code" href="structggl_1_1concept_1_1_segment.html#d2e340dff544a40ed257a1823dfd4749" title="BCCL macro to check the Segment concept.">BOOST_CONCEPT_USAGE</a>(<a class="code" href="structggl_1_1concept_1_1_segment.html" title="Checks segment concept, using Boost Concept Check Library and metafunctions.">Segment</a>)
-<a name="l00062"></a>00062         {
-<a name="l00063"></a>00063             <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> N = <a class="code" href="structggl_1_1dimension.html" title="Meta-function which defines coordinate dimensions, i.e. the number of axes of any...">dimension&lt;P&gt;::value</a>;
-<a name="l00064"></a>00064             dimension_checker&lt;0, 0, N&gt;::check();
-<a name="l00065"></a>00065             dimension_checker&lt;1, 0, N&gt;::check();
-<a name="l00066"></a>00066         }
-<a name="l00067"></a>00067 };
-<a name="l00068"></a>00068 
-<a name="l00069"></a>00069 
-<a name="l00076"></a>00076 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> S&gt;
-<a name="l00077"></a><a class="code" href="structggl_1_1concept_1_1_const_segment.html">00077</a> <span class="keyword">struct </span><a class="code" href="structggl_1_1concept_1_1_const_segment.html" title="Checks Segment concept (const version).">ConstSegment</a>
-<a name="l00078"></a>00078 {
-<a name="l00079"></a>00079     <span class="keyword">private</span> :
-<a name="l00080"></a>00080         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;S&gt;::type</a> P;
-<a name="l00081"></a>00081         <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">coordinate_type&lt;S&gt;::type</a> T;
+<a name="l00059"></a><a class="code" href="classggl_1_1concept_1_1_segment.html#06e37d7f85929c034fc42e6c930440ff">00059</a>     <a class="code" href="classggl_1_1concept_1_1_segment.html#06e37d7f85929c034fc42e6c930440ff">BOOST_CONCEPT_USAGE</a>(<a class="code" href="classggl_1_1concept_1_1_segment.html" title="Checks segment concept.">Segment</a>)
+<a name="l00060"></a>00060     {
+<a name="l00061"></a>00061         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> n = <a class="code" href="structggl_1_1dimension.html" title="Meta-function which defines coordinate dimensions, i.e. the number of axes of any...">dimension&lt;point_type&gt;::type::value</a>;
+<a name="l00062"></a>00062         dimension_checker&lt;0, 0, n&gt;::apply();
+<a name="l00063"></a>00063         dimension_checker&lt;1, 0, n&gt;::apply();
+<a name="l00064"></a>00064     }
+<a name="l00065"></a>00065 };
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067 
+<a name="l00074"></a>00074 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Geometry&gt;
+<a name="l00075"></a><a class="code" href="classggl_1_1concept_1_1_const_segment.html">00075</a> <span class="keyword">class </span><a class="code" href="classggl_1_1concept_1_1_const_segment.html" title="Checks Segment concept (const version).">ConstSegment</a>
+<a name="l00076"></a>00076 {
+<a name="l00077"></a>00077     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type&lt;Geometry&gt;::type</a> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">point_type</a>;
+<a name="l00078"></a>00078     <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">coordinate_type&lt;Geometry&gt;::type</a> <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">coordinate_type</a>;
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080     BOOST_CONCEPT_ASSERT( (<a class="code" href="classggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;point_type&gt;</a>) );
+<a name="l00081"></a>00081 
 <a name="l00082"></a>00082 
-<a name="l00083"></a>00083         BOOST_CONCEPT_ASSERT( (<a class="code" href="structggl_1_1concept_1_1_const_point.html" title="Checks point concept (const version).">concept::ConstPoint&lt;P&gt;</a>) );
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085 
-<a name="l00087"></a>00087         <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> C, <span class="keywordtype">size_t</span> D, <span class="keywordtype">size_t</span> N&gt;
-<a name="l00088"></a>00088         <span class="keyword">struct </span>dimension_checker
-<a name="l00089"></a>00089         {
-<a name="l00090"></a>00090             <span class="keyword">static</span> <span class="keywordtype">void</span> check()
-<a name="l00091"></a>00091             {
-<a name="l00092"></a>00092                 <span class="keyword">const</span> S* s = 0;
-<a name="l00093"></a>00093                 T coord(ggl::get&lt;C, D&gt;(*s));
-<a name="l00094"></a>00094                 boost::ignore_unused_variable_warning(coord);
-<a name="l00095"></a>00095                 dimension_checker&lt;C, D + 1, N&gt;::check();
-<a name="l00096"></a>00096             }
-<a name="l00097"></a>00097         };
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099         <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> C, <span class="keywordtype">size_t</span> N&gt;
-<a name="l00100"></a>00100         <span class="keyword">struct </span>dimension_checker&lt;C, N, N&gt;
-<a name="l00101"></a>00101         {
-<a name="l00102"></a>00102             <span class="keyword">static</span> <span class="keywordtype">void</span> check() {}
-<a name="l00103"></a>00103         };
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105     <span class="keyword">public</span> :
-<a name="l00107"></a><a class="code" href="structggl_1_1concept_1_1_const_segment.html#79691668dde1be67b7a497a6b1cd31ce">00107</a>         <a class="code" href="structggl_1_1concept_1_1_const_segment.html#79691668dde1be67b7a497a6b1cd31ce" title="BCCL macro to check the ConstSegment concept.">BOOST_CONCEPT_USAGE</a>(<a class="code" href="structggl_1_1concept_1_1_const_segment.html" title="Checks Segment concept (const version).">ConstSegment</a>)
-<a name="l00108"></a>00108         {
-<a name="l00109"></a>00109             <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> N = <a class="code" href="structggl_1_1dimension.html" title="Meta-function which defines coordinate dimensions, i.e. the number of axes of any...">dimension&lt;P&gt;::value</a>;
-<a name="l00110"></a>00110             dimension_checker&lt;0, 0, N&gt;::check();
-<a name="l00111"></a>00111             dimension_checker&lt;1, 0, N&gt;::check();
-<a name="l00112"></a>00112         }
-<a name="l00113"></a>00113 };
+<a name="l00083"></a>00083     <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> Index, <span class="keywordtype">size_t</span> Dimension, <span class="keywordtype">size_t</span> DimensionCount&gt;
+<a name="l00084"></a>00084     <span class="keyword">struct </span>dimension_checker
+<a name="l00085"></a>00085     {
+<a name="l00086"></a>00086         <span class="keyword">static</span> <span class="keywordtype">void</span> apply()
+<a name="l00087"></a>00087         {
+<a name="l00088"></a>00088             <span class="keyword">const</span> Geometry* s = 0;
+<a name="l00089"></a>00089             <a class="code" href="structggl_1_1coordinate__type.html" title="Meta-function which defines coordinate type (int, float, double, etc) of any geometry...">coordinate_type</a> coord(ggl::get&lt;Index, Dimension&gt;(*s));
+<a name="l00090"></a>00090             boost::ignore_unused_variable_warning(coord);
+<a name="l00091"></a>00091             dimension_checker&lt;Index, Dimension + 1, DimensionCount&gt;::apply();
+<a name="l00092"></a>00092         }
+<a name="l00093"></a>00093     };
+<a name="l00094"></a>00094 
+<a name="l00095"></a>00095     <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> Index, <span class="keywordtype">size_t</span> DimensionCount&gt;
+<a name="l00096"></a>00096     <span class="keyword">struct </span>dimension_checker&lt;Index, DimensionCount, DimensionCount&gt;
+<a name="l00097"></a>00097     {
+<a name="l00098"></a>00098         <span class="keyword">static</span> <span class="keywordtype">void</span> apply() {}
+<a name="l00099"></a>00099     };
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101 <span class="keyword">public</span> :
+<a name="l00102"></a>00102 
+<a name="l00103"></a><a class="code" href="classggl_1_1concept_1_1_const_segment.html#5c373393cd5b2420fa38c81526f8863c">00103</a>     <a class="code" href="classggl_1_1concept_1_1_const_segment.html#5c373393cd5b2420fa38c81526f8863c">BOOST_CONCEPT_USAGE</a>(<a class="code" href="classggl_1_1concept_1_1_const_segment.html" title="Checks Segment concept (const version).">ConstSegment</a>)
+<a name="l00104"></a>00104     {
+<a name="l00105"></a>00105         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> n = <a class="code" href="structggl_1_1dimension.html" title="Meta-function which defines coordinate dimensions, i.e. the number of axes of any...">dimension&lt;point_type&gt;::type::value</a>;
+<a name="l00106"></a>00106         dimension_checker&lt;0, 0, n&gt;::apply();
+<a name="l00107"></a>00107         dimension_checker&lt;1, 0, n&gt;::apply();
+<a name="l00108"></a>00108     }
+<a name="l00109"></a>00109 };
+<a name="l00110"></a>00110 
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112 }} <span class="comment">// namespace ggl::concept</span>
+<a name="l00113"></a>00113 
 <a name="l00114"></a>00114 
-<a name="l00115"></a>00115 
-<a name="l00116"></a>00116 }} <span class="comment">// namespace ggl::concept</span>
-<a name="l00117"></a>00117 
-<a name="l00118"></a>00118 
-<a name="l00119"></a>00119 <span class="preprocessor">#endif // GGL_CORE_CONCEPTS_SEGMENT_CONCEPT_HPP</span>
+<a name="l00115"></a>00115 <span class="preprocessor">#endif // GGL_GEOMETRIES_CONCEPTS_SEGMENT_CONCEPT_HPP</span>
 </pre></div></div>
 <hr size="1">
 <table width="100%">

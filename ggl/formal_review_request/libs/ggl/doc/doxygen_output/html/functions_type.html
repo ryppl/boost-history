@@ -83,8 +83,8 @@
 <li>coordinate_system
 : <a class="el" href="classggl_1_1point.html#e3cedeca07933bd026e910ee8bb4547b">ggl::point&lt; T, D, C &gt;</a>
 <li>coordinate_type
-: <a class="el" href="classggl_1_1point.html#114e475fd2f5f30fac7f60ef732dd402">ggl::point&lt; T, D, C &gt;</a>
-, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__tupled.html#e814cd145873164ae0b9c0c094e20687">ggl::policies::relate::segments_tupled&lt; Policy1, Policy2 &gt;</a>
+: <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__de9im.html#552bc7eddefee9641c7da37c71e2dc54">ggl::policies::relate::segments_de9im&lt; S1, S2 &gt;</a>
+, <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#a1bf8289c8a5b0fc97ee2943476a69a7">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
 , <a class="el" href="structggl_1_1strategy_1_1transform_1_1scale__transformer_3_01_p1_00_01_p2_00_013_00_013_01_4.html#9e9ba88969a37c5754ca1c3e78cbc369">ggl::strategy::transform::scale_transformer&lt; P1, P2, 3, 3 &gt;</a>
 , <a class="el" href="structggl_1_1strategy_1_1transform_1_1scale__transformer_3_01_p1_00_01_p2_00_012_00_012_01_4.html#b6de86a8e58ced2952f1fa8674ddba9b">ggl::strategy::transform::scale_transformer&lt; P1, P2, 2, 2 &gt;</a>
 , <a class="el" href="structggl_1_1strategy_1_1transform_1_1translate__transformer_3_01_p1_00_01_p2_00_013_00_013_01_4.html#0c99fdac62697111b767ecf7c60a5b28">ggl::strategy::transform::translate_transformer&lt; P1, P2, 3, 3 &gt;</a>
@@ -92,11 +92,11 @@
 , <a class="el" href="classggl_1_1strategy_1_1transform_1_1ublas__transformer_3_01_p1_00_01_p2_00_013_00_013_01_4.html#f18e27122021194c07a471589ba9307d">ggl::strategy::transform::ublas_transformer&lt; P1, P2, 3, 3 &gt;</a>
 , <a class="el" href="structggl_1_1strategy_1_1transform_1_1ublas__transformer_3_01_p1_00_01_p2_00_013_00_012_01_4.html#d6b0c10cc71f3cd2d4dad47f5c94a9f2">ggl::strategy::transform::ublas_transformer&lt; P1, P2, 3, 2 &gt;</a>
 , <a class="el" href="classggl_1_1strategy_1_1transform_1_1ublas__transformer_3_01_p1_00_01_p2_00_012_00_012_01_4.html#ffa7fb0b1ff1d5fd75be30486c0d46a8">ggl::strategy::transform::ublas_transformer&lt; P1, P2, 2, 2 &gt;</a>
-, <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#a1bf8289c8a5b0fc97ee2943476a69a7">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
-, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__de9im.html#552bc7eddefee9641c7da37c71e2dc54">ggl::policies::relate::segments_de9im&lt; S1, S2 &gt;</a>
-, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__intersection__points.html#bcb088829827c05640c84ca1c324361a">ggl::policies::relate::segments_intersection_points&lt; S1, S2, ReturnType &gt;</a>
+, <a class="el" href="structggl_1_1strategy_1_1side_1_1xy__side.html#fc00b4def4ecbec875fdcccbd03f9a6f">ggl::strategy::side::xy_side&lt; P, PS &gt;</a>
 , <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__direction.html#1f7851f1ffd68cf77e1dad3cbe9ce5e3">ggl::policies::relate::segments_direction&lt; S1, S2 &gt;</a>
-, <a class="el" href="classggl_1_1nsphere.html#a3595c7d5427261600efdc0e37ded8bb">ggl::nsphere&lt; P, T &gt;</a>
+, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__tupled.html#e814cd145873164ae0b9c0c094e20687">ggl::policies::relate::segments_tupled&lt; Policy1, Policy2 &gt;</a>
+, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__intersection__points.html#bcb088829827c05640c84ca1c324361a">ggl::policies::relate::segments_intersection_points&lt; S1, S2, ReturnType &gt;</a>
+, <a class="el" href="classggl_1_1point.html#114e475fd2f5f30fac7f60ef732dd402">ggl::point&lt; T, D, C &gt;</a>
 <li>ct
 : <a class="el" href="classggl_1_1strategy_1_1transform_1_1ublas__transformer_3_01_p1_00_01_p2_00_013_00_013_01_4.html#951814d986884cb4de41d5ac69f49935">ggl::strategy::transform::ublas_transformer&lt; P1, P2, 3, 3 &gt;</a>
 , <a class="el" href="classggl_1_1strategy_1_1transform_1_1ublas__transformer_3_01_p1_00_01_p2_00_012_00_012_01_4.html#d4da01249b3437d063dc5fba25fec65f">ggl::strategy::transform::ublas_transformer&lt; P1, P2, 2, 2 &gt;</a>
@@ -139,61 +139,68 @@
 : <a class="el" href="classggl_1_1strategy_1_1distance_1_1cross__track.html#bb01d09347d2f4f9bec8ab177592643e">ggl::strategy::distance::cross_track&lt; P, S &gt;</a>
 , <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#bb6549905e99ca61b13cfc644c91f672">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
 <li>point_type
-: <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#cfb9d185bcc22815ec15d07389ad03b9">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
+: <a class="el" href="classggl_1_1strategy_1_1within_1_1franklin.html#cc0727d9dab9cc7dc5f53c1503ecbc30">ggl::strategy::within::franklin&lt; Point, PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1within_1_1crossings__multiply.html#6482df62b2e25a93ca704fd04c8b811f">ggl::strategy::within::crossings_multiply&lt; Point, PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#c6e3759d94d2d67f964a720cc6cbcc7f">ggl::strategy::centroid::bashein_detmer&lt; Point, PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#cfb9d185bcc22815ec15d07389ad03b9">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
+, <a class="el" href="structggl_1_1strategy_1_1distance_1_1pythagoras.html#4a6f6649a2e25a6c584c29a5c6a3bee0">ggl::strategy::distance::pythagoras&lt; P1, P2, CalculationType &gt;</a>
 , <a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8ee0701ef57352296292047e3dcc3330">ggl::strategy::distance::haversine&lt; P1, P2 &gt;</a>
 , <a class="el" href="structggl_1_1area__result.html#d6428313802f153cd99b803ecde23872">ggl::area_result&lt; Geometry &gt;</a>
 , <a class="el" href="structggl_1_1segment__iterator.html#e388acc7d123761a41a0132ed0b19d29">ggl::segment_iterator&lt; Base, Point &gt;</a>
 , <a class="el" href="classggl_1_1polygon.html#662c4458e3099e30097a3fc909d54941">ggl::polygon&lt; Point, PointList, RingList, ClockWise, PointAlloc, RingAlloc &gt;</a>
-, <a class="el" href="structggl_1_1strategy_1_1distance_1_1pythagoras.html#4a6f6649a2e25a6c584c29a5c6a3bee0">ggl::strategy::distance::pythagoras&lt; P1, P2, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1within_1_1winding.html#496cb869cb747a80d470ebac9c892eaf">ggl::strategy::within::winding&lt; Point, PointOfSegment, CalculationType &gt;</a>
 , <a class="el" href="classggl_1_1strategy_1_1distance_1_1cross__track.html#08edd81bdb1f8a1296dbaebfc1ca3932">ggl::strategy::distance::cross_track&lt; P, S &gt;</a>
 <li>pointer
 : <a class="el" href="structggl_1_1segment__iterator.html#fe664c6678e12e841a1c0be1e77e53a0">ggl::segment_iterator&lt; Base, Point &gt;</a>
 </ul>
 <h3><a class="anchor" name="index_r">- r -</a></h3><ul>
-<li>radius_type
-: <a class="el" href="classggl_1_1nsphere.html#9027e4f6129198cd158727edda7ee4eb">ggl::nsphere&lt; P, T &gt;</a>
-<li>rconst
-: <a class="el" href="structggl_1_1radius__type.html#b95c57fb55a39b4b10e4d8da5754b671">ggl::radius_type&lt; G &gt;</a>
 <li>reference
 : <a class="el" href="structggl_1_1segment__iterator.html#71b04f78cf84d967d8d11ec092d54dcc">ggl::segment_iterator&lt; Base, Point &gt;</a>
 <li>return_type
-: <a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8fd848a2bbc5857c70fa6bce5ffac5d3">ggl::strategy::distance::haversine&lt; P1, P2 &gt;</a>
+: <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__de9im.html#93b91d42efd81a1b75c016fe886bd3b4">ggl::policies::relate::segments_de9im&lt; S1, S2 &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1distance_1_1haversine.html#8fd848a2bbc5857c70fa6bce5ffac5d3">ggl::strategy::distance::haversine&lt; P1, P2 &gt;</a>
 , <a class="el" href="classggl_1_1strategy_1_1distance_1_1cross__track.html#e62cf6b01d4e29e04700ef45e0b15db3">ggl::strategy::distance::cross_track&lt; P, S &gt;</a>
-, <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#a54175d4c138cd7319c8552f43824621">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
-, <a class="el" href="structggl_1_1strategy_1_1distance_1_1pythagoras.html#0e3ccd19d8d1c63360ba93be700c39a4">ggl::strategy::distance::pythagoras&lt; P1, P2, CalculationType &gt;</a>
-, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__de9im.html#93b91d42efd81a1b75c016fe886bd3b4">ggl::policies::relate::segments_de9im&lt; S1, S2 &gt;</a>
-, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__tupled.html#fd5a4a56a3f161178b97885e9ae27738">ggl::policies::relate::segments_tupled&lt; Policy1, Policy2 &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1area_1_1huiller.html#c5f08a5725174c6b864b71cf92825d80">ggl::strategy::area::huiller&lt; PointOfSegment, CalculationType &gt;</a>
 , <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__intersection__points.html#6e36f163958d94ece083a97f0e3d659c">ggl::policies::relate::segments_intersection_points&lt; S1, S2, ReturnType &gt;</a>
+, <a class="el" href="structggl_1_1strategy_1_1distance_1_1pythagoras.html#0e3ccd19d8d1c63360ba93be700c39a4">ggl::strategy::distance::pythagoras&lt; P1, P2, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#9e2a9c4543b03696554ffd7389326c83">ggl::strategy::area::by_triangles&lt; PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__tupled.html#fd5a4a56a3f161178b97885e9ae27738">ggl::policies::relate::segments_tupled&lt; Policy1, Policy2 &gt;</a>
+, <a class="el" href="structggl_1_1strategy_1_1distance_1_1xy__point__segment.html#a54175d4c138cd7319c8552f43824621">ggl::strategy::distance::xy_point_segment&lt; P, Segment, Strategy &gt;</a>
 , <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__direction.html#84941aff66a66a38844da63b99590932">ggl::policies::relate::segments_direction&lt; S1, S2 &gt;</a>
-, <a class="el" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#f2ef55e9d5310d400a6e43a25f6c989d">ggl::strategy::area::by_triangles&lt; PS, CalculationType &gt;</a>
-, <a class="el" href="classggl_1_1strategy_1_1area_1_1by__spherical__excess.html#9378e1ffdce5a34e96aa1ec3245ac718">ggl::strategy::area::by_spherical_excess&lt; P &gt;</a>
 <li>ring_type
 : <a class="el" href="classggl_1_1polygon.html#6d7c8304fda2d2f1850cf2eb994c441a">ggl::polygon&lt; Point, PointList, RingList, ClockWise, PointAlloc, RingAlloc &gt;</a>
 </ul>
 <h3><a class="anchor" name="index_s">- s -</a></h3><ul>
 <li>S
 : <a class="el" href="structggl_1_1distance__result.html#a8148b389a0cec2b42c5de450d52a3b3">ggl::distance_result&lt; G1, G2 &gt;</a>
+<li>segment_point_type
+: <a class="el" href="classggl_1_1strategy_1_1within_1_1winding.html#2e557a6a08f8f5b3c27a1d63ff6f6b9b">ggl::strategy::within::winding&lt; Point, PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#866f5cb46f21a2303db08eca59174d3a">ggl::strategy::centroid::bashein_detmer&lt; Point, PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1within_1_1crossings__multiply.html#504d328948460685cb7cdaeadb36a4e2">ggl::strategy::within::crossings_multiply&lt; Point, PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#42e99ae092f8ee5ef36b9ed01d92bfec">ggl::strategy::area::by_triangles&lt; PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1within_1_1franklin.html#603efd6a0b874edba04ffe851eab4d1c">ggl::strategy::within::franklin&lt; Point, PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1area_1_1huiller.html#d56eacf0dfcb3398349db73ccefd5d4f">ggl::strategy::area::huiller&lt; PointOfSegment, CalculationType &gt;</a>
 <li>segment_type
 : <a class="el" href="structggl_1_1segment__iterator.html#410f1a0aa22f7f4fb6c0850213aba66d">ggl::segment_iterator&lt; Base, Point &gt;</a>
 <li>segment_type1
-: <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__direction.html#6d294de7005beda339acd766c4634053">ggl::policies::relate::segments_direction&lt; S1, S2 &gt;</a>
+: <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__de9im.html#54550d451a6a983ef03643c1d03298cc">ggl::policies::relate::segments_de9im&lt; S1, S2 &gt;</a>
+, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__direction.html#6d294de7005beda339acd766c4634053">ggl::policies::relate::segments_direction&lt; S1, S2 &gt;</a>
 , <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__intersection__points.html#dd6bd0155c8cf7da5fddbe2833920135">ggl::policies::relate::segments_intersection_points&lt; S1, S2, ReturnType &gt;</a>
-, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__de9im.html#54550d451a6a983ef03643c1d03298cc">ggl::policies::relate::segments_de9im&lt; S1, S2 &gt;</a>
 , <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__tupled.html#a85d9e4477a04f1263e99c63b56bca1b">ggl::policies::relate::segments_tupled&lt; Policy1, Policy2 &gt;</a>
 <li>segment_type2
-: <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__direction.html#411feeef724397e06f71dd1cabbda7e0">ggl::policies::relate::segments_direction&lt; S1, S2 &gt;</a>
+: <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__tupled.html#192979bbc532077e533e31a827ed473d">ggl::policies::relate::segments_tupled&lt; Policy1, Policy2 &gt;</a>
 , <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__intersection__points.html#5765d55937d6cb6edc3a1cfe053f6f96">ggl::policies::relate::segments_intersection_points&lt; S1, S2, ReturnType &gt;</a>
-, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__tupled.html#192979bbc532077e533e31a827ed473d">ggl::policies::relate::segments_tupled&lt; Policy1, Policy2 &gt;</a>
 , <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__de9im.html#fd7fc33e6182aa0a02079261b98af377">ggl::policies::relate::segments_de9im&lt; S1, S2 &gt;</a>
+, <a class="el" href="structggl_1_1policies_1_1relate_1_1segments__direction.html#411feeef724397e06f71dd1cabbda7e0">ggl::policies::relate::segments_direction&lt; S1, S2 &gt;</a>
 <li>state_type
 : <a class="el" href="structggl_1_1strategy_1_1envelope_1_1grow__ll.html#8f49bd3eba8c415f56e24d4085e2b1be">ggl::strategy::envelope::grow_ll&lt; P, B &gt;</a>
-, <a class="el" href="classggl_1_1strategy_1_1area_1_1by__spherical__excess.html#ca224a54396a8ff91a31831888ddc65e">ggl::strategy::area::by_spherical_excess&lt; P &gt;</a>
-, <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#c9134908bec29b94168f6d733a6b2c89">ggl::strategy::centroid::bashein_detmer&lt; CentroidPointType, SegmentPointType, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1area_1_1huiller.html#c9e2f27901d3523ef53982a8eb4fecc8">ggl::strategy::area::huiller&lt; PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1within_1_1crossings__multiply.html#7c676d88046afd8fd3507e12a80e038c">ggl::strategy::within::crossings_multiply&lt; Point, PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1within_1_1franklin.html#aaf6013cc8941519815cb2c95e80a00c">ggl::strategy::within::franklin&lt; Point, PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#64767add38e4bc164acbb78ae620b0d6">ggl::strategy::centroid::bashein_detmer&lt; Point, PointOfSegment, CalculationType &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1within_1_1winding.html#fd7b5eac646626cf446823a10bb5ba95">ggl::strategy::within::winding&lt; Point, PointOfSegment, CalculationType &gt;</a>
 , <a class="el" href="structggl_1_1strategy_1_1envelope_1_1combine__xy.html#182ce543f6c73a393e327a281bd5833b">ggl::strategy::envelope::combine_xy&lt; P, B &gt;</a>
-, <a class="el" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#b8c68b50c6f0909ab64c6c97f4dd8ea4">ggl::strategy::area::by_triangles&lt; PS, CalculationType &gt;</a>
-, <a class="el" href="classggl_1_1strategy_1_1centroid_1_1geolib1995.html#1dd6664e9b804f79ad472e51501568c8">ggl::strategy::centroid::geolib1995&lt; PC, PS &gt;</a>
-, <a class="el" href="structggl_1_1strategy_1_1within_1_1franklin.html#ae1dd9c468a086bdaaa4b1235fc26bce">ggl::strategy::within::franklin&lt; P, PS &gt;</a>
-, <a class="el" href="classggl_1_1strategy_1_1within_1_1winding.html#aa5dc8bd530eed3ac8420ccccd2c8e65">ggl::strategy::within::winding&lt; P, PS &gt;</a>
+, <a class="el" href="classggl_1_1strategy_1_1area_1_1by__triangles.html#174de254696923b84060d14b2fdc9dab">ggl::strategy::area::by_triangles&lt; PointOfSegment, CalculationType &gt;</a>
 <li>strategy_type
 : <a class="el" href="structggl_1_1area__result.html#ccb03cf635c157788a99c33d8f3c3a1e">ggl::area_result&lt; Geometry &gt;</a>
 </ul>
@@ -203,7 +210,8 @@
 , <a class="el" href="structggl_1_1strategy_1_1transform_1_1inverse__transformer.html#a5b03bab846c70cc412672c5b8a15a33">ggl::strategy::transform::inverse_transformer&lt; P1, P2 &gt;</a>
 , <a class="el" href="structggl_1_1strategy_1_1transform_1_1map__transformer.html#cd9a362067f7a5825d01d040930a22c9">ggl::strategy::transform::map_transformer&lt; P1, P2, Mirror, SameScale, Dimension1, Dimension2 &gt;</a>
 <li>type
-: <a class="el" href="structggl_1_1as__range__type.html#2d2dc7b2cf9bc92752f111975eb47ac8">ggl::as_range_type&lt; Geometry &gt;</a>
+: <a class="el" href="structggl_1_1select__calculation__type.html#9148fdfb664c15d4aaeaafdfad3bdc1c">ggl::select_calculation_type&lt; Point1, Point2, CalculationType &gt;</a>
+, <a class="el" href="structggl_1_1as__range__type.html#2d2dc7b2cf9bc92752f111975eb47ac8">ggl::as_range_type&lt; Geometry &gt;</a>
 , <a class="el" href="structggl_1_1strategy__tag_3_01strategy_1_1distance_1_1xy__point__segment_3_01_point_00_01_segment_00_01_p_p_strategy_01_4_01_4.html#c06ed387f720d8a642e343b6d9b7f78c">ggl::strategy_tag&lt; strategy::distance::xy_point_segment&lt; Point, Segment, PPStrategy &gt; &gt;</a>
 , <a class="el" href="structggl_1_1strategy__tag_3_01strategy_1_1distance_1_1pythagoras_3_01_p1_00_01_p2_01_4_01_4.html#c2105145e587929fce337ec44821b5a8">ggl::strategy_tag&lt; strategy::distance::pythagoras&lt; P1, P2 &gt; &gt;</a>
 , <a class="el" href="structggl_1_1strategy__tag.html#5b87fe714131125577390960840bd65c">ggl::strategy_tag&lt; T &gt;</a>
@@ -228,7 +236,6 @@
 , <a class="el" href="structggl_1_1tag.html#278f0697dbc88a94726215f401e87179">ggl::tag&lt; Geometry &gt;</a>
 , <a class="el" href="structggl_1_1traits_1_1tag.html#6a33811e99e92e16ae2529e6ecd8a1b6">ggl::traits::tag&lt; Geometry &gt;</a>
 , <a class="el" href="structggl_1_1ring__type.html#1abf25579f5becec23712a15acd96fdc">ggl::ring_type&lt; Geometry &gt;</a>
-, <a class="el" href="structggl_1_1radius__type.html#e37bf955b532d0501081d1abcdbdfb9c">ggl::radius_type&lt; G &gt;</a>
 , <a class="el" href="structggl_1_1point__type.html#bc8ee2fc6afa22b4e6278c6e9bddb0a6">ggl::point_type&lt; Geometry &gt;</a>
 , <a class="el" href="structggl_1_1interior__type.html#19d6b1e60f06a96228093f34f279f6ad">ggl::interior_type&lt; G &gt;</a>
 , <a class="el" href="structggl_1_1cs__tag.html#9ec856ee2b9c2e704cae3d50346a457a">ggl::cs_tag&lt; G &gt;</a>

@@ -45,7 +45,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>ggl::strategy::centroid::bashein_detmer&lt; CentroidPointType, SegmentPointType, CalculationType &gt; Class Template Reference</h1><!-- doxytag: class="ggl::strategy::centroid::bashein_detmer" -->Centroid calculation using algorith Bashein / Detmer.  
+<h1>ggl::strategy::centroid::bashein_detmer&lt; Point, PointOfSegment, CalculationType &gt; Class Template Reference</h1><!-- doxytag: class="ggl::strategy::centroid::bashein_detmer" -->Centroid calculation using algorith Bashein / Detmer.  
 <a href="#_details">More...</a>
 <p>
 
@@ -53,28 +53,34 @@
 <a href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><b>sums</b></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><b>sums</b></td></tr>
 
 <tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef sums&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#c9134908bec29b94168f6d733a6b2c89">state_type</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef Point&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#c6e3759d94d2d67f964a720cc6cbcc7f">point_type</a></td></tr>
 
-<tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#328f86d7cd18dbaa435df19c924f98fe">operator()</a> (<a class="el" href="classggl_1_1segment.html">segment</a>&lt; const SegmentPointType &gt; const &amp;s, <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#c9134908bec29b94168f6d733a6b2c89">state_type</a> &amp;state) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef PointOfSegment&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#866f5cb46f21a2303db08eca59174d3a">segment_point_type</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef sums&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#64767add38e4bc164acbb78ae620b0d6">state_type</a></td></tr>
+
+<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#7c1beca9bdd8bed9867a54bb938e45a5">apply</a> (PointOfSegment const &amp;p1, PointOfSegment const &amp;p2, sums &amp;state)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#9cf07c9edf759e3ff9ed1c5c08dff55b">result</a> (sums const &amp;state, Point &amp;centroid)</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-<h3>template&lt;typename CentroidPointType, typename SegmentPointType = CentroidPointType, typename CalculationType = void&gt;<br>
- class ggl::strategy::centroid::bashein_detmer&lt; CentroidPointType, SegmentPointType, CalculationType &gt;</h3>
+<h3>template&lt;typename Point, typename PointOfSegment = Point, typename CalculationType = void&gt;<br>
+ class ggl::strategy::centroid::bashein_detmer&lt; Point, PointOfSegment, CalculationType &gt;</h3>
 
 Centroid calculation using algorith Bashein / Detmer. 
 <p>
 Calculates <a class="el" href="namespaceggl_1_1strategy_1_1centroid.html">centroid</a> using triangulation method published by Bashein / Detmer <dl compact><dt><b>Template Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>PC</em>&nbsp;</td><td><a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> type of <a class="el" href="namespaceggl_1_1strategy_1_1centroid.html">centroid</a> to calculate </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>PS</em>&nbsp;</td><td><a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> type of segments, defaults to PC </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Point</em>&nbsp;</td><td><a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> type of <a class="el" href="namespaceggl_1_1strategy_1_1centroid.html">centroid</a> to calculate </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>PointOfSegment</em>&nbsp;</td><td><a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> type of segments, defaults to Point </td></tr>
   </table>
 </dl>
-<dl class="user" compact><dt><b>Concepts for PC and PS:</b></dt><dd><ul>
+<dl class="user" compact><dt><b>Concepts for Point and PointOfSegment:</b></dt><dd><ul>
 <li>specialized point_traits class </li></ul>
 </dd></dl>
 <dl class="author" compact><dt><b>Author:</b></dt><dd>Adapted from "Centroid of a Polygon" by Gerard Bashein and Paul R. Detmer<em>, in "Graphics Gems IV", Academic Press, 1994</em> </dd></dl>
@@ -83,24 +89,24 @@ Without holes:<ul>
 <li>this: POINT(4.06923363095238 1.65055803571429)</li><li>geolib: POINT(4.07254 1.66819)</li><li>MySQL: POINT(3.6636363636364 1.6272727272727)'</li><li>PostGIS: POINT(4.06923363095238 1.65055803571429)</li><li>Oracle: 4.06923363095238 1.65055803571429</li><li>SQL Server: POINT(4.06923362245959 1.65055804168294)</li></ul>
 <p>
 Statements:<ul>
-<li><b>MySQL/PostGIS</b>: select AsText(Centroid(GeomFromText('POLYGON((2 1.3,2.4 1.7,2.8 1.8,3.4 1.2 ,3.7 1.6,3.4 2,4.1 3,5.3 2.6,5.4 1.2,4.9 0.8,2.9 0.7,2 1.3))')))</li><li><b>Oracle:</b> select sdo_geom.sdo_centroid(sdo_geometry(2003, null, null, sdo_elem_info_array(1, 1003, 1), sdo_ordinate_array(2,1.3,2.4,1.7,2.8,1.8 ,3.4,1.2,3.7,1.6,3.4,2,4.1,3,5.3,2.6,5.4,1.2,4.9,0.8,2.9,0.7,2,1.3)) , mdsys.sdo_dim_array(mdsys.sdo_dim_element('x',0,10,.00000005) ,mdsys.sdo_dim_element('y',0,10,.00000005))) from dual</li><li><b>SQL</b> Server 2008: select geometry::STGeomFromText('POLYGON((2 1.3,2.4 1.7,2.8 1.8,3.4 1.2 ,3.7 1.6,3.4 2,4.1 3,5.3 2.6,5.4 1.2,4.9 0.8,2.9 0.7,2 1.3))',0) .STCentroid() .STAsText()</li></ul>
+<li><b>MySQL/PostGIS</b>: select AsText(Centroid(GeomFromText( 'POLYGON((2 1.3,2.4 1.7,2.8 1.8,3.4 1.2,3.7 1.6,3.4 2,4.1 3,5.3 2.6 ,5.4 1.2,4.9 0.8,2.9 0.7,2 1.3))')))</li><li><b>Oracle:</b> select sdo_geom.sdo_centroid(sdo_geometry(2003, null, null, sdo_elem_info_array(1, 1003, 1), sdo_ordinate_array( 2,1.3,2.4,1.7,2.8,1.8,3.4,1.2,3.7,1.6,3.4,2,4.1,3,5.3,2.6 ,5.4,1.2,4.9,0.8,2.9,0.7,2,1.3)) , mdsys.sdo_dim_array(mdsys.sdo_dim_element('x',0,10,.00000005) ,mdsys.sdo_dim_element('y',0,10,.00000005))) from dual</li><li><b>SQL</b> Server 2008: select geometry::STGeomFromText( 'POLYGON((2 1.3,2.4 1.7,2.8 1.8,3.4 1.2,3.7 1.6,3.4 2,4.1 3,5.3 2.6 ,5.4 1.2,4.9 0.8,2.9 0.7,2 1.3))',0) .STCentroid() .STAsText()</li></ul>
 <p>
 With holes:<ul>
 <li>this: POINT(4.04663 1.6349)</li><li>geolib: POINT(4.04675 1.65735)</li><li>MySQL: POINT(3.6090580503834 1.607573932092)</li><li>PostGIS: POINT(4.0466265060241 1.63489959839357)</li><li>Oracle: 4.0466265060241 1.63489959839357</li><li>SQL Server: POINT(4.0466264962959677 1.6348996057331333)</li></ul>
 <p>
 Statements:<ul>
-<li><b>MySQL/PostGIS</b>: select AsText(Centroid(GeomFromText('POLYGON((2 1.3,2.4 1.7,2.8 1.8,3.4 1.2 ,3.7 1.6,3.4 2,4.1 3,5.3 2.6,5.4 1.2,4.9 0.8,2.9 0.7,2 1.3) ,(4 2,4.2 1.4,4.8 1.9,4.4 2.2,4 2))')));</li><li><b>Oracle:</b> select sdo_geom.sdo_centroid(sdo_geometry(2003, null, null , sdo_elem_info_array(1, 1003, 1, 25, 2003, 1) , sdo_ordinate_array(2,1.3,2.4,1.7,2.8,1.8,3.4,1.2,3.7,1.6,3.4,2,4.1,3,5.3 ,2.6,5.4,1.2,4.9,0.8,2.9,0.7,2,1.3,4,2, 4.2,1.4, 4.8,1.9, 4.4,2.2, 4,2)) , mdsys.sdo_dim_array(mdsys.sdo_dim_element('x',0,10,.00000005) ,mdsys.sdo_dim_element('y',0,10,.00000005))) from dual </li></ul>
+<li><b>MySQL/PostGIS</b>: select AsText(Centroid(GeomFromText( 'POLYGON((2 1.3,2.4 1.7,2.8 1.8,3.4 1.2 ,3.7 1.6,3.4 2,4.1 3,5.3 2.6,5.4 1.2,4.9 0.8,2.9 0.7,2 1.3) ,(4 2,4.2 1.4,4.8 1.9,4.4 2.2,4 2))')));</li><li><b>Oracle:</b> select sdo_geom.sdo_centroid(sdo_geometry(2003, null, null , sdo_elem_info_array(1, 1003, 1, 25, 2003, 1) , sdo_ordinate_array(2,1.3,2.4,1.7,2.8,1.8,3.4,1.2,3.7,1.6,3.4, 2,4.1,3,5.3,2.6,5.4,1.2,4.9,0.8,2.9,0.7,2,1.3,4,2, 4.2,1.4, 4.8,1.9, 4.4,2.2, 4,2)) , mdsys.sdo_dim_array(mdsys.sdo_dim_element('x',0,10,.00000005) ,mdsys.sdo_dim_element('y',0,10,.00000005))) from dual </li></ul>
 
-<p>Definition at line <a class="el" href="cart__centroid_8hpp_source.html#l00180">180</a> of file <a class="el" href="cart__centroid_8hpp_source.html">cart_centroid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="centroid__bashein__detmer_8hpp_source.html#l00097">97</a> of file <a class="el" href="centroid__bashein__detmer_8hpp_source.html">centroid_bashein_detmer.hpp</a>.</p>
 <hr><h2>Member Typedef Documentation</h2>
-<a class="anchor" name="c9134908bec29b94168f6d733a6b2c89"></a><!-- doxytag: member="ggl::strategy::centroid::bashein_detmer::state_type" ref="c9134908bec29b94168f6d733a6b2c89" args="" -->
+<a class="anchor" name="64767add38e4bc164acbb78ae620b0d6"></a><!-- doxytag: member="ggl::strategy::centroid::bashein_detmer::state_type" ref="64767add38e4bc164acbb78ae620b0d6" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename CentroidPointType , typename SegmentPointType  = CentroidPointType, typename CalculationType  = void&gt; </div>
+template&lt;typename Point , typename PointOfSegment  = Point, typename CalculationType  = void&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef sums <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html">ggl::strategy::centroid::bashein_detmer</a>&lt; CentroidPointType, SegmentPointType, CalculationType &gt;::<a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#c9134908bec29b94168f6d733a6b2c89">state_type</a>          </td>
+          <td class="memname">typedef sums <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html">ggl::strategy::centroid::bashein_detmer</a>&lt; Point, PointOfSegment, CalculationType &gt;::<a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#64767add38e4bc164acbb78ae620b0d6">state_type</a>          </td>
         </tr>
       </table>
 </div>
@@ -108,33 +114,77 @@ template&lt;typename CentroidPointType , typename SegmentPointType  = CentroidPo
 
 <p>
 
-<p>Definition at line <a class="el" href="cart__centroid_8hpp_source.html#l00247">247</a> of file <a class="el" href="cart__centroid_8hpp_source.html">cart_centroid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="centroid__bashein__detmer_8hpp_source.html#l00145">145</a> of file <a class="el" href="centroid__bashein__detmer_8hpp_source.html">centroid_bashein_detmer.hpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="c6e3759d94d2d67f964a720cc6cbcc7f"></a><!-- doxytag: member="ggl::strategy::centroid::bashein_detmer::point_type" ref="c6e3759d94d2d67f964a720cc6cbcc7f" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Point , typename PointOfSegment  = Point, typename CalculationType  = void&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef Point <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html">ggl::strategy::centroid::bashein_detmer</a>&lt; Point, PointOfSegment, CalculationType &gt;::<a class="el" href="structggl_1_1point__type.html">point_type</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="centroid__bashein__detmer_8hpp_source.html#l00146">146</a> of file <a class="el" href="centroid__bashein__detmer_8hpp_source.html">centroid_bashein_detmer.hpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="866f5cb46f21a2303db08eca59174d3a"></a><!-- doxytag: member="ggl::strategy::centroid::bashein_detmer::segment_point_type" ref="866f5cb46f21a2303db08eca59174d3a" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Point , typename PointOfSegment  = Point, typename CalculationType  = void&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef PointOfSegment <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html">ggl::strategy::centroid::bashein_detmer</a>&lt; Point, PointOfSegment, CalculationType &gt;::<a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#866f5cb46f21a2303db08eca59174d3a">segment_point_type</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="centroid__bashein__detmer_8hpp_source.html#l00147">147</a> of file <a class="el" href="centroid__bashein__detmer_8hpp_source.html">centroid_bashein_detmer.hpp</a>.</p>
 
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="328f86d7cd18dbaa435df19c924f98fe"></a><!-- doxytag: member="ggl::strategy::centroid::bashein_detmer::operator()" ref="328f86d7cd18dbaa435df19c924f98fe" args="(segment&lt; const SegmentPointType &gt; const &amp;s, state_type &amp;state) const " -->
+<a class="anchor" name="7c1beca9bdd8bed9867a54bb938e45a5"></a><!-- doxytag: member="ggl::strategy::centroid::bashein_detmer::apply" ref="7c1beca9bdd8bed9867a54bb938e45a5" args="(PointOfSegment const &amp;p1, PointOfSegment const &amp;p2, sums &amp;state)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename CentroidPointType , typename SegmentPointType  = CentroidPointType, typename CalculationType  = void&gt; </div>
+template&lt;typename Point , typename PointOfSegment  = Point, typename CalculationType  = void&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html">ggl::strategy::centroid::bashein_detmer</a>&lt; CentroidPointType, SegmentPointType, CalculationType &gt;::operator()           </td>
+          <td class="memname">static void <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html">ggl::strategy::centroid::bashein_detmer</a>&lt; Point, PointOfSegment, CalculationType &gt;::apply           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classggl_1_1segment.html">segment</a>&lt; const SegmentPointType &gt; const &amp;&nbsp;</td>
-          <td class="paramname"> <em>s</em>, </td>
+          <td class="paramtype">PointOfSegment const &amp;&nbsp;</td>
+          <td class="paramname"> <em>p1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html#c9134908bec29b94168f6d733a6b2c89">state_type</a> &amp;&nbsp;</td>
+          <td class="paramtype">PointOfSegment const &amp;&nbsp;</td>
+          <td class="paramname"> <em>p2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">sums &amp;&nbsp;</td>
           <td class="paramname"> <em>state</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td> const</td>
+          <td></td><td></td><td><code> [static]</code></td>
         </tr>
       </table>
 </div>
@@ -142,7 +192,40 @@ template&lt;typename CentroidPointType , typename SegmentPointType  = CentroidPo
 
 <p>
 
-<p>Definition at line <a class="el" href="cart__centroid_8hpp_source.html#l00249">249</a> of file <a class="el" href="cart__centroid_8hpp_source.html">cart_centroid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="centroid__bashein__detmer_8hpp_source.html#l00149">149</a> of file <a class="el" href="centroid__bashein__detmer_8hpp_source.html">centroid_bashein_detmer.hpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="9cf07c9edf759e3ff9ed1c5c08dff55b"></a><!-- doxytag: member="ggl::strategy::centroid::bashein_detmer::result" ref="9cf07c9edf759e3ff9ed1c5c08dff55b" args="(sums const &amp;state, Point &amp;centroid)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Point , typename PointOfSegment  = Point, typename CalculationType  = void&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool <a class="el" href="classggl_1_1strategy_1_1centroid_1_1bashein__detmer.html">ggl::strategy::centroid::bashein_detmer</a>&lt; Point, PointOfSegment, CalculationType &gt;::result           </td>
+          <td>(</td>
+          <td class="paramtype">sums const &amp;&nbsp;</td>
+          <td class="paramname"> <em>state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Point &amp;&nbsp;</td>
+          <td class="paramname"> <em>centroid</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="centroid__bashein__detmer_8hpp_source.html#l00175">175</a> of file <a class="el" href="centroid__bashein__detmer_8hpp_source.html">centroid_bashein_detmer.hpp</a>.</p>
 
 </div>
 </div><p>

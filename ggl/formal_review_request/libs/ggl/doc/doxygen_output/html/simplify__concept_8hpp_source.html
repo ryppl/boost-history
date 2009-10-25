@@ -81,7 +81,7 @@
 <a name="l00043"></a>00043         <span class="comment">//    - floating point value</span>
 <a name="l00044"></a>00044         <span class="keyword">struct </span>apply_checker
 <a name="l00045"></a>00045         {
-<a name="l00046"></a>00046             <span class="keyword">static</span> <span class="keywordtype">void</span> check()
+<a name="l00046"></a>00046             <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">check</a>()
 <a name="l00047"></a>00047             {
 <a name="l00048"></a>00048                 std::vector&lt;typename ds_type::point_type&gt; *v;
 <a name="l00049"></a>00049                 Strategy::apply(*v, std::back_inserter(*v), 1.0);
@@ -91,7 +91,7 @@
 <a name="l00053"></a>00053     <span class="keyword">public</span> :
 <a name="l00054"></a><a class="code" href="structggl_1_1concept_1_1_simplify_strategy.html#457fbf2fa1075f00c6d8090d47e1fc3d">00054</a>         <a class="code" href="structggl_1_1concept_1_1_simplify_strategy.html#457fbf2fa1075f00c6d8090d47e1fc3d">BOOST_CONCEPT_USAGE</a>(<a class="code" href="structggl_1_1concept_1_1_simplify_strategy.html" title="Checks strategy for simplify.">SimplifyStrategy</a>)
 <a name="l00055"></a>00055         {
-<a name="l00056"></a>00056             apply_checker::check();
+<a name="l00056"></a>00056             <a class="code" href="group__core.html#gaced8195f8f52790d78ac0fc62a5bb68" title="Checks, in compile-time, the concept of any geometry.">apply_checker::check</a>();
 <a name="l00057"></a>00057 
 <a name="l00058"></a>00058         }
 <a name="l00059"></a>00059 };
