@@ -6,6 +6,7 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+
 #include <ggl_test_common.hpp>
 
 #include <ggl/algorithms/area.hpp>
@@ -14,26 +15,13 @@
 
 #include <ggl/geometries/point.hpp>
 #include <ggl/geometries/box.hpp>
-#include <ggl/geometries/nsphere.hpp>
 #include <ggl/geometries/linear_ring.hpp>
 #include <ggl/geometries/polygon.hpp>
 
+//#define GGL_TEST_DEBUG
+
 #include <algorithms/test_area.hpp>
 
-
-
-template <typename P, typename T>
-void test_area_circle()
-{
-    ggl::nsphere<P, T> c;
-
-    ggl::set<0>(c.center(), 0);
-    ggl::set<1>(c.center(), 0);
-    c.radius(2);
-
-    double d = ggl::area(c);
-    BOOST_CHECK_CLOSE(d, 4 * 3.1415926535897932384626433832795, 0.001);
-}
 
 
 template <typename P>
@@ -61,12 +49,43 @@ void test_all()
             ("POLYGON((0 0,0 7,4 2,2 0,0 0), (1 1,2 1,2 2,1 2,1 1))", -15.0);
 }
 
+template <typename Point>
+void test_spherical()
+{
+    ggl::polygon<Point> geometry;
+
+    // unit-sphere has area of 4-PI. Polygon covering 1/8 of it:
+    double expected = 4.0 * ggl::math::pi / 8.0;
+    ggl::read_wkt("POLYGON((0 0,0 90,90 0,0 0))", geometry);
+
+    double area = ggl::area(geometry);
+    BOOST_CHECK_CLOSE(area, expected, 0.0001);
+
+    // With strategy, radius 2 -> 4 pi r^2 
+    ggl::strategy::area::huiller
+        <
+            typename ggl::point_type<Point>::type
+        > strategy(2.0); 
+
+    area = ggl::area(geometry, strategy);
+    BOOST_CHECK_CLOSE(area, 2.0 * 2.0 * expected, 0.0001);
+}
+
 
 int test_main(int, char* [])
 {
     test_all<ggl::point<int, 2, ggl::cs::cartesian> >();
     test_all<ggl::point<float, 2, ggl::cs::cartesian> >();
     test_all<ggl::point<double, 2, ggl::cs::cartesian> >();
+
+    test_spherical<ggl::point<double, 2, ggl::cs::spherical<ggl::degree> > >();
+
+#if defined(HAVE_CLN)
+    test_all<ggl::point_xy<boost::numeric_adaptor::cln_value_type> >();
+#endif
+#if defined(HAVE_GMP)
+    test_all<ggl::point_xy<boost::numeric_adaptor::gmp_value_type> >();
+#endif
 
     return 0;
 }

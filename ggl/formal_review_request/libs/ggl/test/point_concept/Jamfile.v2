@@ -8,6 +8,7 @@
 
 test-suite ggl-point-concept
     :
+    [ compile concept_checker.cpp ]
     [ compile well_formed_point.cpp ]
     [ compile well_formed_point_traits.cpp ]
     [ compile array_point.cpp ]

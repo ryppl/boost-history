@@ -40,7 +40,6 @@ void test_all()
     test_geometry<ggl::box<P> , ggl::box_tag>();
     test_geometry<ggl::segment<P> , ggl::segment_tag>();
     test_geometry<ggl::segment<const P> , ggl::segment_tag>();
-    test_geometry<ggl::nsphere<P, double> , ggl::nsphere_tag>();
 
     test_geometry<std::vector<P>, ggl::linestring_tag>();
     test_geometry<std::deque<P>, ggl::linestring_tag>();

@@ -11,7 +11,7 @@
 
 #include <boost/concept/requires.hpp>
 
-#include <ggl/core/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/point_concept.hpp>
 
 namespace ggl
 {

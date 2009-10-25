@@ -19,9 +19,9 @@ void test_area(Geometry const& geometry, long double expected_area)
 #ifdef GGL_TEST_DEBUG
     std::ostringstream out;
     out << typeid(typename ggl::coordinate_type<Geometry>::type).name()
-        << std::endl
+        << " "
         << typeid(typename ggl::area_result<Geometry>::type).name()
-        << std::endl
+        << " "
         << "area : " << ggl::area(geometry)
         << std::endl;
     std::cout << out.str();
@@ -44,8 +44,8 @@ void test_area(Geometry const& geometry, long double expected_area)
         > strategy2;
 
     area = ggl::area(geometry, strategy2);
-}
 
+}
 
 template <typename Geometry>
 void test_geometry(std::string const& wkt, double expected_area)

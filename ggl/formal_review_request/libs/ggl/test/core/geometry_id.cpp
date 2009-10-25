@@ -40,7 +40,6 @@ void test_all()
     test_geometry<ggl::box<P> , 94>();
     test_geometry<ggl::segment<P> , 92>();
     test_geometry<ggl::segment<const P> , 92>();
-    test_geometry<ggl::nsphere<P, double> , 91>();
 
     test_geometry<std::vector<P>, 2>();
     test_geometry<std::deque<P>, 2>();

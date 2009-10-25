@@ -22,7 +22,6 @@
 
 #include <ggl/core/cs.hpp>
 #include <ggl/geometries/point.hpp>
-#include <ggl/geometries/nsphere.hpp>
 #include <ggl/geometries/segment.hpp>
 #include <ggl/geometries/box.hpp>
 
@@ -85,9 +84,6 @@ void test_all()
 
     // POINT, setting coordinate
     test_get_set<P>();
-
-    // N-SPHERE, setting sphere center
-    test_get_set<ggl::nsphere<P, coordinate_type> >();
 
 
     // BOX, setting left/right/top/bottom
