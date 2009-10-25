@@ -53,9 +53,6 @@ struct ring_tag {};
 /// Convenience 2D or 3D box (mbr) identifying tag
 struct box_tag {};
 
-/// Convenience 2D (circle) or 3D (sphere) n-sphere identifying tag
-struct nsphere_tag {};
-
 /// Convenience segment (2-points) identifying tag
 struct segment_tag {};
 

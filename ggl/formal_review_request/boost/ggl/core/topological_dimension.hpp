@@ -55,13 +55,6 @@ template <>
 struct top_dim<polygon_tag>    : boost::mpl::int_<2> {};
 
 
-// nsphere: 2, but there is discussion. Is it CLOSED? Then 2, but
-// then it should be called "disk"...
-template <>
-struct top_dim<nsphere_tag>    : boost::mpl::int_<2> {};
-
-
-
 
 } // namespace core_dispatch
 #endif

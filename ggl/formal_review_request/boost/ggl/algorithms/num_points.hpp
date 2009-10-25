@@ -17,6 +17,8 @@
 #include <ggl/core/is_linear.hpp>
 #include <ggl/core/interior_rings.hpp>
 
+#include <ggl/geometries/concepts/check.hpp>
+
 
 namespace ggl
 {
@@ -102,11 +104,6 @@ struct num_points<segment_tag, false, Geometry>
 {
 };
 
-template <typename Geometry>
-struct num_points<nsphere_tag, false, Geometry>
-        : detail::num_points::other_count<Geometry, 1>
-{
-};
 
 template <typename Geometry>
 struct num_points<polygon_tag, false, Geometry>
@@ -131,6 +128,8 @@ struct num_points<polygon_tag, false, Geometry>
 template <typename Geometry>
 inline std::size_t num_points(Geometry const& geometry)
 {
+    concept::check<const Geometry>();
+
     typedef typename boost::remove_const<Geometry>::type ncg_type;
 
     return dispatch::num_points

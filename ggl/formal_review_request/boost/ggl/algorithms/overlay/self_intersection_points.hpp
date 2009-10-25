@@ -19,6 +19,8 @@
 #include <ggl/core/coordinate_dimension.hpp>
 #include <ggl/core/is_multi.hpp>
 
+#include <ggl/geometries/concepts/check.hpp>
+
 #include <ggl/algorithms/overlay/get_intersection_points.hpp>
 
 
@@ -149,6 +151,8 @@ template <typename Geometry, typename IntersectionPoints>
 inline bool get_intersection_points(Geometry const& geometry,
             IntersectionPoints& intersection_points)
 {
+    concept::check<Geometry>();
+
     typedef typename boost::remove_const<Geometry>::type ncg_type;
 
     return dispatch::self_intersection_points

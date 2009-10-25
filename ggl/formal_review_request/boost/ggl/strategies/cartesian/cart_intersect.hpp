@@ -12,8 +12,9 @@
 #include <algorithm>
 
 #include <ggl/core/exception.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
-#include <ggl/core/concepts/segment_concept.hpp>
+
+#include <ggl/geometries/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/segment_concept.hpp>
 
 #include <ggl/util/math.hpp>
 #include <ggl/util/select_coordinate_type.hpp>

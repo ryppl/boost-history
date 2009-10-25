@@ -18,7 +18,7 @@
 #include <ggl/core/tags.hpp>
 #include <ggl/core/point_order.hpp>
 
-#include <ggl/core/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/point_concept.hpp>
 
 
 namespace ggl

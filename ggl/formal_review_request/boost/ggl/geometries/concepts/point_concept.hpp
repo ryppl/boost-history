@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_CORE_CONCEPTS_POINT_CONCEPT_HPP
-#define GGL_CORE_CONCEPTS_POINT_CONCEPT_HPP
+#ifndef GGL_GEOMETRIES_CONCEPTS_POINT_CONCEPT_HPP
+#define GGL_GEOMETRIES_CONCEPTS_POINT_CONCEPT_HPP
 
 #include <cstddef>
 
@@ -20,14 +20,14 @@
 
 /*!
 \defgroup concepts concept checking
-Concepts are used to check if pointtypes provide required implementation. Concept checking
+Concepts are used to apply if pointtypes provide required implementation. Concept checking
 is done using BCCL (Boost Concept Check Library) and MPL (Meta Programming Library)
 */
 
 namespace ggl { namespace concept {
 
 /*!
-    \brief Checks point concept, using Boost Concept Check Library and metafunctions
+    \brief Checks point concept
     \ingroup concepts
     \details The concept is separated into 4 metafunctions:
     - \ref ggl::traits::coordinate_type "coordinate_type": provides the type of the coordinates of a point
@@ -57,41 +57,40 @@ namespace ggl { namespace concept {
     \until //:\\
 */
 
-template <typename X>
-struct Point
+template <typename Geometry>
+class Point
 {
-private:
 
-    typedef typename coordinate_type<X>::type ctype;
-    typedef typename coordinate_system<X>::type csystem;
+    typedef typename coordinate_type<Geometry>::type ctype;
+    typedef typename coordinate_system<Geometry>::type csystem;
 
-    enum { ccount = dimension<X>::value };
+    enum { ccount = dimension<Geometry>::value };
 
-    /// Internal structure to check if access is OK for all dimensions
-    template <typename P, std::size_t I, std::size_t Count>
+
+    template <typename P, std::size_t Dimension, std::size_t DimensionCount>
     struct dimension_checker
     {
-        static void check()
+        static void apply()
         {
             P* p;
-            ggl::set<I>(*p, ggl::get<I>(*p));
-            dimension_checker<P, I+1, Count>::check();
+            ggl::set<Dimension>(*p, ggl::get<Dimension>(*p));
+            dimension_checker<P, Dimension+1, DimensionCount>::apply();
         }
     };
 
-    /// Internal structure to check if access is OK for all dimensions
-    template <typename P, std::size_t Count>
-    struct dimension_checker<P, Count, Count>
+
+    template <typename P, std::size_t DimensionCount>
+    struct dimension_checker<P, DimensionCount, DimensionCount>
     {
-        static void check() {}
+        static void apply() {}
     };
 
 public:
 
-    /// BCCL macro to check the Point concept
+    /// BCCL macro to apply the Point concept
     BOOST_CONCEPT_USAGE(Point)
     {
-        dimension_checker<X, 0, ccount>::check();
+        dimension_checker<Geometry, 0, ccount>::apply();
     }
 };
 
@@ -99,48 +98,47 @@ public:
 /*!
     \brief Checks point concept (const version)
     \ingroup concepts
-    \details The ConstPoint concept check the same as the Point concept,
-    but does not check write access.
+    \details The ConstPoint concept apply the same as the Point concept,
+    but does not apply write access.
 */
-template <typename X>
-struct ConstPoint
+template <typename Geometry>
+class ConstPoint
 {
-private:
 
-    typedef typename coordinate_type<X>::type ctype;
-    typedef typename coordinate_system<X>::type csystem;
+    typedef typename coordinate_type<Geometry>::type ctype;
+    typedef typename coordinate_system<Geometry>::type csystem;
 
-    enum { ccount = dimension<X>::value };
+    enum { ccount = dimension<Geometry>::value };
 
-    /// Internal structure to check if access is OK for all dimensions
-    template <typename P, std::size_t I, std::size_t Count>
+
+    template <typename P, std::size_t Dimension, std::size_t DimensionCount>
     struct dimension_checker
     {
-        static void check()
+        static void apply()
         {
             const P* p = 0;
-            ctype coord(ggl::get<I>(*p));
+            ctype coord(ggl::get<Dimension>(*p));
             boost::ignore_unused_variable_warning(coord);
-            dimension_checker<P, I+1, Count>::check();
+            dimension_checker<P, Dimension+1, DimensionCount>::apply();
         }
     };
 
-    /// Internal structure to check if access is OK for all dimensions
-    template <typename P, std::size_t Count>
-    struct dimension_checker<P, Count, Count>
+
+    template <typename P, std::size_t DimensionCount>
+    struct dimension_checker<P, DimensionCount, DimensionCount>
     {
-        static void check() {}
+        static void apply() {}
     };
 
 public:
 
-    /// BCCL macro to check the ConstPoint concept
+    /// BCCL macro to apply the ConstPoint concept
     BOOST_CONCEPT_USAGE(ConstPoint)
     {
-        dimension_checker<X, 0, ccount>::check();
+        dimension_checker<Geometry, 0, ccount>::apply();
     }
 };
 
 }} // namespace ggl::concept
 
-#endif // GGL_CORE_CONCEPTS_POINT_CONCEPT_HPP
+#endif // GGL_GEOMETRIES_CONCEPTS_POINT_CONCEPT_HPP

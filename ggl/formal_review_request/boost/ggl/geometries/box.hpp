@@ -11,8 +11,10 @@
 
 #include <cstddef>
 
-#include <ggl/algorithms/assign.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
+#include <boost/concept/assert.hpp>
+
+#include <ggl/geometries/concepts/point_concept.hpp>
+
 #include <ggl/util/copy.hpp>
 
 namespace ggl

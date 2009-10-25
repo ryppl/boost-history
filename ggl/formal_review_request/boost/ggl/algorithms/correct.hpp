@@ -9,6 +9,7 @@
 #ifndef GGL_ALGORITHMS_CORRECT_HPP
 #define GGL_ALGORITHMS_CORRECT_HPP
 
+#include <cstddef>
 #include <algorithm>
 #include <functional>
 
@@ -20,7 +21,7 @@
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 
-#include <ggl/core/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/check.hpp>
 
 #include <ggl/algorithms/area.hpp>
 #include <ggl/algorithms/disjoint.hpp>
@@ -33,7 +34,7 @@ namespace ggl
 namespace detail { namespace correct {
 
 
-template <typename Box, int Dimension, int DimensionCount>
+template <typename Box, std::size_t Dimension, std::size_t DimensionCount>
 struct correct_box_loop
 {
     typedef typename coordinate_type<Box>::type coordinate_type;
@@ -58,7 +59,7 @@ struct correct_box_loop
 
 
 
-template <typename Box, int DimensionCount>
+template <typename Box, std::size_t DimensionCount>
 struct correct_box_loop<Box, DimensionCount, DimensionCount>
 {
     static inline void apply(Box& box)
@@ -156,32 +157,34 @@ struct correct_polygon
 namespace dispatch
 {
 
-template <typename Tag, typename G>
+template <typename Tag, typename Geometry>
 struct correct {};
 
-template <typename B>
-struct correct<box_tag, B>
-    : detail::correct::correct_box<B>
+template <typename Box>
+struct correct<box_tag, Box>
+    : detail::correct::correct_box<Box>
 {};
 
-template <typename R>
-struct correct<ring_tag, R>
-    : detail::correct::correct_ring<R, std::less<double> >
+template <typename Ring>
+struct correct<ring_tag, Ring>
+    : detail::correct::correct_ring<Ring, std::less<double> >
 {};
 
-template <typename P>
-struct correct<polygon_tag, P>
-    : detail::correct::correct_polygon<P>
+template <typename Polygon>
+struct correct<polygon_tag, Polygon>
+    : detail::correct::correct_polygon<Polygon>
 {};
 
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
-template <typename G>
-inline void correct(G& geometry)
+template <typename Geometry>
+inline void correct(Geometry& geometry)
 {
-    dispatch::correct<typename tag<G>::type, G>::apply(geometry);
+    concept::check<const Geometry>();
+
+    dispatch::correct<typename tag<Geometry>::type, Geometry>::apply(geometry);
 }
 
 } // namespace ggl

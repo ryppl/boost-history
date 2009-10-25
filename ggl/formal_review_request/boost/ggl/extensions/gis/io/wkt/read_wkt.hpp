@@ -14,7 +14,6 @@
 #include <boost/tokenizer.hpp>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/concept/requires.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
@@ -27,11 +26,11 @@
 
 #include <ggl/core/access.hpp>
 #include <ggl/core/coordinate_dimension.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
 #include <ggl/core/exception.hpp>
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 
+#include <ggl/geometries/concepts/check.hpp>
 
 
 #include <ggl/extensions/gis/io/wkt/detail/wkt.hpp>
@@ -517,10 +516,7 @@ struct read_wkt<point_tag, Point>
             detail::wkt::point_parser,
             detail::wkt::prefix_point
         >
-{
-private :
-    BOOST_CONCEPT_ASSERT( (concept::Point<Point>) );
-};
+{};
 
 
 template <typename L>
@@ -594,6 +590,7 @@ Small example showing how to use read_wkt to build a polygon
 template <typename Geometry>
 inline void read_wkt(std::string const& wkt, Geometry& geometry)
 {
+    ggl::concept::check<Geometry>();
     dispatch::read_wkt<typename tag<Geometry>::type, Geometry>::apply(wkt, geometry);
 }
 
@@ -611,18 +608,20 @@ Small example showing how to use read_wkt with an output iterator
 \line {
 \until }
 */
-template <typename P, typename Out>
+template <typename Point, typename Out>
 inline void read_wkt(std::string const& wkt, Out out)
 {
+    ggl::concept::check<Point>();
+
     // Todo: maybe take this from the string, or do not call initialize, such that
     // any coordinate string is parsed and outputted
     std::string const& tag = "linestring";
 
     detail::wkt::tokenizer tokens(wkt, boost::char_separator<char>(" ", ",()"));
     detail::wkt::tokenizer::iterator it;
-    if (detail::wkt::initialize<P>(tokens, tag, wkt, it))
+    if (detail::wkt::initialize<Point>(tokens, tag, wkt, it))
     {
-        detail::wkt::container_inserter<P>::apply(it, tokens.end(), wkt, out);
+        detail::wkt::container_inserter<Point>::apply(it, tokens.end(), wkt, out);
     }
 }
 

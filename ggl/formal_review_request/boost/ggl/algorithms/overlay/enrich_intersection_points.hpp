@@ -17,7 +17,7 @@
 #include <iostream>
 #endif
 
-#include <boost/concept_check.hpp>
+#include <boost/assert.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
 

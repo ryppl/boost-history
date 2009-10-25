@@ -18,12 +18,10 @@
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/concept/requires.hpp>
 
 #include <ggl/core/access.hpp>
 #include <ggl/core/coordinate_dimension.hpp>
 #include <ggl/core/coordinate_type.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 #include <ggl/extensions/gis/io/wkb/detail/endian.hpp>
@@ -177,9 +175,6 @@ struct point_parser
         }
         return false;
     }
-
-private:
-    BOOST_CONCEPT_ASSERT((concept::Point<P>));
 };
 
 template <typename C>

@@ -16,10 +16,11 @@
 #include <boost/range/metafunctions.hpp>
 
 #include <ggl/algorithms/convert.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 #include <ggl/core/ring_type.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
 #include <ggl/geometries/linear_ring.hpp>
 
 #include <ggl/extensions/gis/io/wkt/detail/wkt.hpp>
@@ -99,9 +100,6 @@ struct wkt_point
         stream_coordinate<Point, 0, dimension<Point>::type::value>::apply(os, p);
         os << ")";
     }
-
-    private:
-        BOOST_CONCEPT_ASSERT( (concept::ConstPoint<Point>) );
 };
 
 /*!
@@ -128,16 +126,18 @@ struct wkt_range
             ++it)
         {
             os << (first ? "" : ",");
-            stream_coordinate<point, 0, dimension<point>::type::value>::apply(os, *it);
+            stream_coordinate
+                <
+                    point_type, 0, dimension<point_type>::type::value
+                >::apply(os, *it);
             first = false;
         }
 
         os << SuffixPolicy::apply();
     }
 
-    private:
-        typedef typename boost::range_value<Range>::type point;
-        BOOST_CONCEPT_ASSERT( (concept::ConstPoint<point>) );
+private:
+    typedef typename boost::range_value<Range>::type point_type;
 };
 
 /*!
@@ -182,9 +182,6 @@ struct wkt_poly
         }
         os << ")";
     }
-
-    private:
-        BOOST_CONCEPT_ASSERT( (concept::ConstPoint<typename point_type<Polygon>::type>) );
 };
 
 
@@ -207,7 +204,6 @@ struct wkt_box
     }
 
     private:
-        BOOST_CONCEPT_ASSERT( (concept::ConstPoint<point_type>) );
 
         inline wkt_box()
         {
@@ -344,6 +340,8 @@ Small example showing how to use the wkt helper function
 template <typename Geometry>
 inline wkt_manipulator<Geometry> wkt(Geometry const& geometry)
 {
+    concept::check<const Geometry>();
+
     return wkt_manipulator<Geometry>(geometry);
 }
 
@@ -352,6 +350,8 @@ inline wkt_manipulator<Geometry> wkt(Geometry const& geometry)
 template <typename Geometry>
 inline wkt_manipulator<Geometry> make_wkt(Geometry const& geometry)
 {
+    concept::check<const Geometry>();
+
     return wkt_manipulator<Geometry>(geometry);
 }
 

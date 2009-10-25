@@ -10,8 +10,6 @@
 #define GGL_ALGORITHMS_GET_SECTION_HPP
 
 
-#include <boost/concept_check.hpp>
-#include <boost/concept/requires.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
 
@@ -86,6 +84,8 @@ inline void get_section(Geometry const& geometry, Section const& section,
     typename vertex_iterator<Geometry, true>::type& begin,
     typename vertex_iterator<Geometry, true>::type& end)
 {
+    concept::check<const Geometry>();
+
     dispatch::get_section
         <
             typename tag<Geometry>::type,

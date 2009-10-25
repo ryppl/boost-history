@@ -24,8 +24,12 @@
 \brief Streams a geometry as Well-Known Text
 \ingroup wkt
 */
-template<typename CH, typename TR, typename G>
-inline std::basic_ostream<CH,TR>& operator<<(std::basic_ostream<CH,TR> &os, const G& geometry)
+template<typename Char, typename Traits, typename Geometry>
+inline std::basic_ostream<Char,Traits>& operator<<
+    (
+        std::basic_ostream<Char,Traits> &os, 
+        Geometry const& geometry
+    )
 {
     os << ggl::wkt(geometry);
     return os;

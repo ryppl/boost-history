@@ -18,7 +18,7 @@
 #include <ggl/core/interior_rings.hpp>
 #include <ggl/core/point_type.hpp>
 #include <ggl/core/ring_type.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/point_concept.hpp>
 #include <ggl/geometries/linear_ring.hpp>
 
 namespace ggl

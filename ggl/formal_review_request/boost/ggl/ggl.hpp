@@ -11,14 +11,6 @@
 
 // Shortcut to include all header files
 
-#include <ggl/core/concepts/point_concept.hpp>
-#include <ggl/core/concepts/ring_concept.hpp>
-#include <ggl/core/concepts/linestring_concept.hpp>
-#include <ggl/core/concepts/polygon_concept.hpp>
-
-#include <ggl/core/concepts/box_concept.hpp>
-#include <ggl/core/concepts/nsphere_concept.hpp>
-#include <ggl/core/concepts/segment_concept.hpp>
 
 #include <ggl/core/cs.hpp>
 #include <ggl/core/tag.hpp>
@@ -60,6 +52,8 @@
 #include <ggl/algorithms/transform.hpp>
 #include <ggl/algorithms/within.hpp>
 
+// check includes all concepts
+#include <ggl/geometries/concepts/check.hpp>
 
 #include <ggl/util/copy.hpp>
 #include <ggl/util/for_each_coordinate.hpp>

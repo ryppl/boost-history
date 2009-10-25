@@ -32,7 +32,6 @@ namespace traits
     \ingroup traits
     \par Geometries:
         - point
-        - n-sphere (circle,sphere) for their center
     \par Specializations should provide, per Dimension
         - static inline T get(const G&)
         - static inline void set(G&, T const&)
@@ -79,6 +78,45 @@ struct use_std
     static const bool value = true;
 };
 
+
+
+/*!
+    \brief Traits class, optional, might be implemented to clear a geometry
+    \details If a geometry type should not use the std ".clear()" then it can specialize
+    the "use_std" traits class to false, it should then implement (a.o.) clear
+    \ingroup traits
+    \par Geometries:
+        - linestring
+        - linear_ring
+    \par Specializations should provide:
+        - apply
+ */
+template <typename Geometry>
+struct clear
+{};
+
+
+
+/*!
+    \brief Traits class, optional, might be implemented to append a point
+    \details If a geometry type should not use the std "push_back" then it can specialize
+    the "use_std" traits class to false, it should then implement (a.o.) append_point
+    \ingroup traits
+    \par Geometries:
+        - linestring
+        - linear_ring
+    \par Specializations should provide:
+        - run
+ */
+template <typename Geometry, typename Point>
+struct append_point
+{
+};
+
+
+
+
+
 } // namespace traits
 
 
@@ -86,11 +124,11 @@ struct use_std
 namespace core_dispatch
 {
 
-template 
+template
 <
-    typename Tag, 
-    typename Geometry, 
-    typename 
+    typename Tag,
+    typename Geometry,
+    typename
     CoordinateType, std::size_t Dimension
 >
 struct access
@@ -99,12 +137,12 @@ struct access
     //static inline void set(G& g, T const& value) {}
 };
 
-template 
+template
 <
-    typename Tag, 
-    typename Geometry, 
-    typename CoordinateType, 
-    std::size_t Index, 
+    typename Tag,
+    typename Geometry,
+    typename CoordinateType,
+    std::size_t Index,
     std::size_t Dimension
 >
 struct indexed_access
@@ -126,24 +164,11 @@ struct access<point_tag, Point, CoordinateType, Dimension>
     }
 };
 
-template <typename Nsphere, typename CoordinateType, std::size_t Dimension>
-struct access<nsphere_tag, Nsphere, CoordinateType, Dimension>
-{
-    static inline CoordinateType get(Nsphere const& nsphere)
-    {
-        return traits::access<Nsphere, Dimension>::get(nsphere);
-    }
-    static inline void set(Nsphere& s, CoordinateType const& value)
-    {
-        traits::access<Nsphere, Dimension>::set(s, value);
-    }
-};
-
-template 
+template
 <
-    typename Box, 
-    typename CoordinateType, 
-    std::size_t Index, 
+    typename Box,
+    typename CoordinateType,
+    std::size_t Index,
     std::size_t Dimension
 >
 struct indexed_access<box_tag, Box, CoordinateType, Index, Dimension>
@@ -158,11 +183,11 @@ struct indexed_access<box_tag, Box, CoordinateType, Index, Dimension>
     }
 };
 
-template 
+template
 <
-    typename Segment, 
-    typename CoordinateType, 
-    std::size_t Index, 
+    typename Segment,
+    typename CoordinateType,
+    std::size_t Index,
     std::size_t Dimension
 >
 struct indexed_access<segment_tag, Segment, CoordinateType, Index, Dimension>
@@ -197,7 +222,7 @@ struct signature_getset_index_dimension {};
 
 
 /*!
-    \brief get a coordinate value of a point / nsphere
+    \brief get a coordinate value of a point
     \return coordinate value
     \ingroup access
     \tparam D dimension

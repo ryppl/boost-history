@@ -18,6 +18,9 @@
 #include <ggl/core/coordinate_dimension.hpp>
 #include <ggl/core/is_multi.hpp>
 #include <ggl/core/reverse_dispatch.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
+
 #include <ggl/util/math.hpp>
 #include <ggl/util/select_coordinate_type.hpp>
 
@@ -184,6 +187,9 @@ template <typename Geometry1, typename Geometry2>
 inline bool disjoint(const Geometry1& geometry1,
             const Geometry2& geometry2)
 {
+    concept::check<const Geometry1>();
+    concept::check<const Geometry2>();
+
     assert_dimension_equal<Geometry1, Geometry2>();
 
     typedef typename boost::remove_const<Geometry1>::type ncg1_type;

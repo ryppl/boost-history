@@ -16,8 +16,12 @@
 #include <boost/range/metafunctions.hpp>
 
 #include <ggl/algorithms/append.hpp>
+#include <ggl/algorithms/assign.hpp>
 #include <ggl/algorithms/for_each.hpp>
+
 #include <ggl/core/cs.hpp>
+#include <ggl/geometries/concepts/check.hpp>
+
 #include <ggl/geometries/segment.hpp>
 #include <ggl/strategies/strategies.hpp>
 
@@ -59,20 +63,20 @@ struct point_to_box<P, B, C, N, N>
 namespace dispatch
 {
 
-template 
+template
 <
-    typename T1, typename T2, 
-    std::size_t Dimensions, 
+    typename T1, typename T2,
+    std::size_t Dimensions,
     typename G1, typename G2
 >
 struct convert
 {
 };
 
-template 
+template
 <
-    typename T, 
-    std::size_t Dimensions, 
+    typename T,
+    std::size_t Dimensions,
     typename G1, typename G2
 >
 struct convert<T, T, Dimensions, G1, G2>
@@ -157,6 +161,9 @@ struct convert<point_tag, box_tag, Dimensions, P, B>
 template <typename G1, typename G2>
 inline void convert(G1 const& geometry1, G2& geometry2)
 {
+    concept::check<const G1>();
+    concept::check<G2>();
+
     assert_dimension_equal<G1, G2>();
 
     dispatch::convert

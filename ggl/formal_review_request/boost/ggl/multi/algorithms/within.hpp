@@ -9,7 +9,9 @@
 #ifndef GGL_MULTI_ALGORITHMS_WITHIN_HPP
 #define GGL_MULTI_ALGORITHMS_WITHIN_HPP
 
-#include <vector>
+
+#include <boost/range/functions.hpp>
+#include <boost/range/metafunctions.hpp>
 
 #include <ggl/algorithms/within.hpp>
 #include <ggl/multi/core/tags.hpp>
@@ -21,33 +23,33 @@ namespace ggl
 namespace detail { namespace within {
 
 
-template<typename P, typename I, typename S>
-inline bool point_in_multi_polygon(const P& p, const I& m, const S& strategy)
+template
+<
+    typename Geometry, 
+    typename MultiGeometry, 
+    typename Strategy, 
+    typename Policy
+>
+struct geometry_in_multi
 {
-    for (typename I::const_iterator i = m.begin(); i != m.end(); i++)
+    static inline bool apply(Geometry const& geometry, 
+            MultiGeometry const& multi, 
+            Strategy const& strategy)
     {
-        // Point within a multi-polygon: true if within one of the polygons
-        if (point_in_polygon(p, *i, strategy))
+        for (typename boost::range_const_iterator<MultiGeometry>::type it
+                    = boost::begin(multi); 
+            it != boost::end(multi); 
+            ++it)
         {
-            return true;
+            // Geometry within a multi: true if within one of them
+            if (Policy::apply(geometry, *it, strategy))
+            {
+                return true;
+            }
         }
+        return false;
     }
-    return false;
-}
-
-
-template<typename I, typename C>
-inline bool multi_polygon_in_circle(const I& m, const C& c)
-{
-    for (typename I::const_iterator i = m.begin(); i != m.end(); i++)
-    {
-        if (! polygon_in_circle(*i, c))
-        {
-            return false;
-        }
-    }
-    return true;
-}
+};
 
 }} // namespace detail::within
 #endif // DOXYGEN_NO_DETAIL
@@ -56,45 +58,21 @@ inline bool multi_polygon_in_circle(const I& m, const C& c)
 namespace dispatch
 {
 
-/*
-template <typename M, typename B>
-struct within<multi_polygon_tag, box_tag, M, B>
-{
-    static inline bool apply(const M& m, const B& b)
-    {
-        return detail::within::multi_polygon_in_box(m, b);
-    }
-};
-*/
-
-template <typename M, typename C>
-struct within<multi_polygon_tag, nsphere_tag, M, C>
-{
-    static inline bool apply(const M& m, const C& c)
-    {
-        return detail::within::multi_polygon_in_circle(m, c);
-    }
-};
-
-template <typename P, typename M>
-struct within<point_tag, multi_polygon_tag, P, M>
-{
-    template <typename S>
-    static inline bool apply(const P& p, const M& m, const S& strategy)
-    {
-        return detail::within::point_in_multi_polygon(p, m, strategy);
-    }
-
-    static inline bool apply(const P& p, const M& m)
-    {
-        typedef typename point_type<M>::type PM;
-        typename strategy_within<
-                    typename cs_tag<P>::type, typename cs_tag<PM>::type, P, PM
-                        >::type strategy;
-        return apply(p, m, strategy);
-    }
-
-};
+template <typename Point, typename MultiPolygon, typename Strategy>
+struct within<point_tag, multi_polygon_tag, Point, MultiPolygon, Strategy>
+    : detail::within::geometry_in_multi
+        <
+            Point, 
+            MultiPolygon, 
+            Strategy,
+            detail::within::point_in_polygon
+                    <
+                        Point, 
+                        typename boost::range_value<MultiPolygon>::type,
+                        Strategy
+                    >
+        >
+{};
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH

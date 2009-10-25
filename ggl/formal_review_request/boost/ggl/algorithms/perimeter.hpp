@@ -9,15 +9,11 @@
 #ifndef GGL_ALGORITHMS_PERIMETER_HPP
 #define GGL_ALGORITHMS_PERIMETER_HPP
 
-#include <cmath>
-#include <iterator>
-
-#include <boost/range/functions.hpp>
-#include <boost/range/metafunctions.hpp>
 
 #include <ggl/core/cs.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
-#include <ggl/strategies/strategies.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
+
 #include <ggl/strategies/length_result.hpp>
 
 #include <ggl/algorithms/length.hpp>
@@ -77,14 +73,18 @@ struct perimeter<polygon_tag, Polygon, Strategy>
 /*!
     \brief Calculate perimeter of a geometry
     \ingroup perimeter
-    \details The function perimeter returns the perimeter of a geometry, using the default distance-calculation-strategy
-    \param geometry the geometry, be it a ggl::ring, vector, iterator pair, or any other boost compatible range
+    \details The function perimeter returns the perimeter of a geometry,
+        using the default distance-calculation-strategy
+    \param geometry the geometry, be it a ggl::ring, vector, iterator pair,
+        or any other boost compatible range
     \return the perimeter
  */
 template<typename Geometry>
 inline typename length_result<Geometry>::type perimeter(
         Geometry const& geometry)
 {
+    concept::check<const Geometry>();
+
     typedef typename point_type<Geometry>::type point_type;
     typedef typename cs_tag<point_type>::type cs_tag;
     typedef typename strategy_distance
@@ -106,8 +106,10 @@ inline typename length_result<Geometry>::type perimeter(
 /*!
     \brief Calculate perimeter of a geometry
     \ingroup perimeter
-    \details The function perimeter returns the perimeter of a geometry, using specified strategy
-    \param geometry the geometry, be it a ggl::ring, vector, iterator pair, or any other boost compatible range
+    \details The function perimeter returns the perimeter of a geometry,
+        using specified strategy
+    \param geometry the geometry, be it a ggl::ring, vector, iterator pair,
+        or any other boost compatible range
     \param strategy strategy to be used for distance calculations.
     \return the perimeter
  */
@@ -115,6 +117,8 @@ template<typename Geometry, typename Strategy>
 inline typename length_result<Geometry>::type perimeter(
         Geometry const& geometry, Strategy const& strategy)
 {
+    concept::check<const Geometry>();
+
     return dispatch::perimeter
         <
             typename tag<Geometry>::type,

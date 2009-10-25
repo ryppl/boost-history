@@ -21,7 +21,6 @@ typedef linear_ring<point_3d> ring_3d;
 typedef polygon<point_3d> polygon_3d;
 typedef box<point_3d> box_3d;
 
-typedef nsphere<point_3d, double> sphere;
 }
 
 

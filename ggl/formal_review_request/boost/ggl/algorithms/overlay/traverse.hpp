@@ -17,6 +17,8 @@
 
 #include <ggl/algorithms/overlay/copy_segments.hpp>
 
+#include <ggl/geometries/concepts/check.hpp>
+
 #ifdef GGL_DEBUG_INTERSECTION
 #include <ggl/extensions/gis/io/wkt/write_wkt.hpp>
 #endif
@@ -305,6 +307,10 @@ inline void traverse(Geometry1 const& geometry1,
             bool trivial,
             OutputIterator out)
 {
+    concept::check<const Geometry1>();
+    concept::check<const Geometry2>();
+
+
     typedef typename boost::range_iterator
                 <IntersectionPoints>::type ip_iterator;
 

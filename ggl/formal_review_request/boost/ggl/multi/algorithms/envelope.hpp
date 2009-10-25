@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_MULTI_ENVELOPE_HPP
-#define GGL_MULTI_ENVELOPE_HPP
+#ifndef GGL_MULTI_ALGORITHMS_ENVELOPE_HPP
+#define GGL_MULTI_ALGORITHMS_ENVELOPE_HPP
 
 #include <vector>
 
@@ -28,7 +28,8 @@ namespace detail { namespace envelope {
 template<typename MultiLinestring, typename Box, typename Strategy>
 struct envelope_multi_linestring
 {
-    static inline void apply(MultiLinestring const& mp, Box& mbr, Strategy const& strategy)
+    static inline void apply(MultiLinestring const& mp, Box& mbr,
+        Strategy const& strategy)
     {
         typename Strategy::state_type state(mbr);
         for (typename boost::range_const_iterator<MultiLinestring>::type
@@ -46,7 +47,8 @@ struct envelope_multi_linestring
 template<typename MultiPolygon, typename Box, typename Strategy>
 struct envelope_multi_polygon
 {
-    static inline void apply(MultiPolygon const& mp, Box& mbr, Strategy const& strategy)
+    static inline void apply(MultiPolygon const& mp, Box& mbr,
+        Strategy const& strategy)
     {
         typename Strategy::state_type state(mbr);
         for (typename boost::range_const_iterator<MultiPolygon>::type
@@ -69,20 +71,20 @@ struct envelope_multi_polygon
 namespace dispatch
 {
 
-template <typename M, typename B, typename S>
-struct envelope<multi_point_tag, box_tag, M, B, S>
-    : detail::envelope::envelope_range<M, B, S>
+template <typename Multi, typename Box, typename Strategy>
+struct envelope<multi_point_tag, box_tag, Multi, Box, Strategy>
+    : detail::envelope::envelope_range<Multi, Box, Strategy>
 {};
 
-template <typename M, typename B, typename S>
-struct envelope<multi_linestring_tag, box_tag, M, B, S>
-    : detail::envelope::envelope_multi_linestring<M, B, S>
+template <typename Multi, typename Box, typename Strategy>
+struct envelope<multi_linestring_tag, box_tag, Multi, Box, Strategy>
+    : detail::envelope::envelope_multi_linestring<Multi, Box, Strategy>
 {};
 
 
-template <typename M, typename B, typename S>
-struct envelope<multi_polygon_tag, box_tag, M, B, S>
-    : detail::envelope::envelope_multi_polygon<M, B, S>
+template <typename Multi, typename Box, typename Strategy>
+struct envelope<multi_polygon_tag, box_tag, Multi, Box, Strategy>
+    : detail::envelope::envelope_multi_polygon<Multi, Box, Strategy>
 {};
 
 
@@ -95,4 +97,4 @@ struct envelope<multi_polygon_tag, box_tag, M, B, S>
 } // namespace ggl
 
 
-#endif // GGL_MULTI_ENVELOPE_HPP
+#endif // GGL_MULTI_ALGORITHMS_ENVELOPE_HPP

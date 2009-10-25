@@ -11,6 +11,8 @@
 
 #include <ggl/algorithms/assign.hpp>
 
+#include <ggl/geometries/concepts/check.hpp>
+
 namespace ggl
 {
 
@@ -27,6 +29,8 @@ namespace ggl
 template <typename G, typename T>
 inline G make(T const& c1, T const& c2)
 {
+    concept::check<G>();
+
     G geometry;
     dispatch::assign
         <
@@ -40,11 +44,13 @@ inline G make(T const& c1, T const& c2)
 /*!
     \brief Make a geometry
     \ingroup access
-    \return a 3D point, a circle
+    \return a 3D point
  */
 template <typename G, typename T>
 inline G make(T const& c1, T const& c2, T const& c3)
 {
+    concept::check<G>();
+
     G geometry;
     dispatch::assign
         <
@@ -58,6 +64,8 @@ inline G make(T const& c1, T const& c2, T const& c3)
 template <typename G, typename T>
 inline G make(T const& c1, T const& c2, T const& c3, T const& c4)
 {
+    concept::check<G>();
+
     G geometry;
     dispatch::assign
         <
@@ -73,6 +81,8 @@ inline G make(T const& c1, T const& c2, T const& c3, T const& c4)
 template <typename G, typename R>
 inline G make(R const& range)
 {
+    concept::check<G>();
+
     G geometry;
     append(geometry, range);
     return geometry;
@@ -90,6 +100,8 @@ inline G make(R const& range)
 template <typename G>
 inline G make_inverse()
 {
+    concept::check<G>();
+
     G geometry;
     dispatch::assign_inverse
         <
@@ -109,6 +121,8 @@ inline G make_inverse()
 template <typename G>
 inline G make_zero()
 {
+    concept::check<G>();
+
     G geometry;
     dispatch::assign_zero
         <

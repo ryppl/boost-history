@@ -12,7 +12,10 @@
 #include <memory>
 #include <vector>
 
-#include <ggl/core/concepts/linestring_concept.hpp>
+#include <boost/concept/requires.hpp>
+
+#include <ggl/geometries/concepts/linestring_concept.hpp>
+
 #include <ggl/multi/core/tags.hpp>
 
 namespace ggl

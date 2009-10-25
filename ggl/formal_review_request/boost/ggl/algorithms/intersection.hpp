@@ -13,6 +13,7 @@
 
 #include <boost/mpl/if.hpp>
 
+#include <ggl/geometries/concepts/check.hpp>
 
 #include <ggl/algorithms/intersection_linestring.hpp>
 
@@ -428,6 +429,8 @@ inline OutputIterator intersection(Geometry1 const& geometry1,
             Geometry2 const& geometry2,
             OutputIterator out)
 {
+    concept::check<const Geometry1>();
+    concept::check<const Geometry2>();
 
     return boost::mpl::if_c
         <

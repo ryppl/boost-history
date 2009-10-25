@@ -14,6 +14,8 @@
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 
+#include <ggl/geometries/concepts/check.hpp>
+
 #include <ggl/algorithms/overlay/intersection_point.hpp>
 
 #include <ggl/iterators/ever_circling_iterator.hpp>
@@ -196,6 +198,8 @@ inline void copy_segments(Geometry const& geometry,
             SegmentIdentifier const& seg_id, int to_index,
             RangeOut& range_out)
 {
+    concept::check<const Geometry>();
+
     dispatch::copy_segments
         <
             typename tag<Geometry>::type,

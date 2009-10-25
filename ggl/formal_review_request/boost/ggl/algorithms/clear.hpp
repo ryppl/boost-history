@@ -9,72 +9,53 @@
 #ifndef GGL_ALGORITHMS_CLEAR_HPP
 #define GGL_ALGORITHMS_CLEAR_HPP
 
+#include <boost/type_traits/remove_const.hpp>
+
 #include <ggl/core/access.hpp>
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 
+#include <ggl/geometries/concepts/check.hpp>
+
+
 namespace ggl
 {
-
-// This traits is currently NOT defined in ../core/ but here, just because it default
-// does not have to be implemented
-namespace traits
-{
-
-/*!
-    \brief Traits class, optional, might be implemented to clear a geometry
-    \details If a geometry type should not use the std ".clear()" then it can specialize
-    the "use_std" traits class to false, it should then implement (a.o.) clear
-    \ingroup traits
-    \par Geometries:
-        - linestring
-        - linear_ring
-    \par Specializations should provide:
-        - apply
- */
-template <typename G>
-struct clear
-{
-};
-
-} // namespace traits
-
 
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail { namespace clear {
 
-template <typename G>
+template <typename Geometry>
 struct use_std_clear
 {
-    static inline void apply(G& geometry)
+    static inline void apply(Geometry& geometry)
     {
         geometry.clear();
     }
 };
 
-template <typename G>
+template <typename Geometry>
 struct use_traits_clear
 {
-    static inline void apply(G& geometry)
+    static inline void apply(Geometry& geometry)
     {
-        traits::clear<G>::apply(geometry);
+        traits::clear<Geometry>::apply(geometry);
     }
 };
 
-template <typename P>
+template <typename Polygon>
 struct polygon_clear
 {
-    static inline void apply(P& polygon)
+    static inline void apply(Polygon& polygon)
     {
         interior_rings(polygon).clear();
         exterior_ring(polygon).clear();
     }
 };
 
-template <typename G>
+template <typename Geometry>
 struct no_action
 {
-    static inline void apply(G& geometry)
+    static inline void apply(Geometry& geometry)
     {
     }
 };
@@ -86,50 +67,46 @@ struct no_action
 namespace dispatch
 {
 
-template <typename Tag, bool Std, typename G>
+template <typename Tag, bool UseStd, typename Geometry>
 struct clear
 {};
 
 // True (default for all geometry types, unless otherwise implemented in traits)
 // uses std::clear
-template <typename Tag, typename G>
-struct clear<Tag, true, G>
-    : detail::clear::use_std_clear<G>
+template <typename Tag, typename Geometry>
+struct clear<Tag, true, Geometry>
+    : detail::clear::use_std_clear<Geometry>
 {};
 
-// If any geometry specializes use_std<G> to false, specialize to use the traits clear.
-template <typename Tag, typename G>
-struct clear<Tag, false, G>
-    : detail::clear::use_traits_clear<G>
+// If any geometry specializes use_std<Geometry> to false, specialize to use the traits clear.
+template <typename Tag, typename Geometry>
+struct clear<Tag, false, Geometry>
+    : detail::clear::use_traits_clear<Geometry>
 {};
 
-// Point/box/nsphere/segment do not have clear. So specialize to do nothing.
-template <typename G>
-struct clear<point_tag, true, G>
-    : detail::clear::no_action<G>
+// Point/box/segment do not have clear. So specialize to do nothing.
+template <typename Geometry>
+struct clear<point_tag, true, Geometry>
+    : detail::clear::no_action<Geometry>
 {};
 
-template <typename G>
-struct clear<box_tag, true, G>
-    : detail::clear::no_action<G>
+template <typename Geometry>
+struct clear<box_tag, true, Geometry>
+    : detail::clear::no_action<Geometry>
 {};
 
-template <typename G>
-struct clear<segment_tag, true, G>
-    : detail::clear::no_action<G>
+template <typename Geometry>
+struct clear<segment_tag, true, Geometry>
+    : detail::clear::no_action<Geometry>
 {};
 
 
-template <typename G>
-struct clear<nsphere_tag, true, G>
-    : detail::clear::no_action<G>
-{};
 
 
 // Polygon can (indirectly) use std for clear
-template <typename P>
-struct clear<polygon_tag, true, P>
-    : detail::clear::polygon_clear<P>
+template <typename Polygon>
+struct clear<polygon_tag, true, Polygon>
+    : detail::clear::polygon_clear<Polygon>
 {};
 
 
@@ -143,16 +120,19 @@ struct clear<polygon_tag, true, P>
     \ingroup access
     \note points and boxes cannot be cleared, instead they can be set to zero by "assign_zero"
 */
-template <typename G>
-inline void clear(G& geometry)
+template <typename Geometry>
+inline void clear(Geometry& geometry)
 {
-    typedef typename boost::remove_const<G>::type ncg_type;
+    concept::check<Geometry>();
 
     dispatch::clear
         <
-        typename tag<G>::type,
-        traits::use_std<ncg_type>::value,
-        ncg_type
+            typename tag<Geometry>::type,
+            traits::use_std
+                <
+                    typename boost::remove_const<Geometry>::type
+                >::value,
+            Geometry
         >::apply(geometry);
 }
 

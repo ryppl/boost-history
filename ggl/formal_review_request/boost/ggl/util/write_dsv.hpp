@@ -11,17 +11,18 @@
 #include <iostream>
 #include <string>
 
-#include <boost/concept/assert.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
 
 #include <ggl/algorithms/convert.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
+
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 #include <ggl/core/ring_type.hpp>
 #include <ggl/core/is_multi.hpp>
-#include <ggl/geometries/linear_ring.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
+
 
 
 
@@ -146,9 +147,6 @@ struct dsv_point
         stream_coordinate<Point, 0, dimension<Point>::type::value>::apply(os, p, settings);
         os << settings.point_close;
     }
-
-    private:
-        BOOST_CONCEPT_ASSERT( (concept::ConstPoint<Point>) );
 };
 
 /*!
@@ -180,7 +178,7 @@ struct dsv_range
 
             stream_coordinate
                 <
-                    point, 0, dimension<point>::type::value
+                    point_type, 0, dimension<point_type>::type::value
                 >::apply(os, *it, settings);
             os << settings.point_close;
 
@@ -190,9 +188,8 @@ struct dsv_range
         os << settings.list_close;
     }
 
-    private:
-        typedef typename boost::range_value<Range>::type point;
-        BOOST_CONCEPT_ASSERT( (concept::ConstPoint<point>) );
+private:
+    typedef typename boost::range_value<Range>::type point_type;
 };
 
 /*!
@@ -230,9 +227,6 @@ struct dsv_poly
         }
         os << settings.list_close;
     }
-
-    private:
-        BOOST_CONCEPT_ASSERT( (concept::ConstPoint<typename point_type<Polygon>::type>) );
 };
 
 template <typename Geometry, std::size_t Index>
@@ -382,6 +376,8 @@ inline dsv_manipulator<Geometry> dsv(Geometry const& geometry
     , std::string const& list_separator = ", "
     )
 {
+    concept::check<const Geometry>();
+
     return dsv_manipulator<Geometry>(geometry,
         detail::dsv::dsv_settings(coordinate_separator,
             point_open, point_close, point_separator,

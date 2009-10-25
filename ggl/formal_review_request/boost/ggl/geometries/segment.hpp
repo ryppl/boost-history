@@ -15,7 +15,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_const.hpp>
 
-#include <ggl/core/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/point_concept.hpp>
 
 namespace ggl
 {
@@ -26,11 +26,11 @@ namespace ggl
 \details From Wikipedia: In geometry, a line segment is a part of a line that is bounded
  by two distinct end points, and contains every point on the line between its end points.
 \note The structure is like std::pair, and can often be used interchangeable.
-Difference is that it refers to points, does not have points. 
-\note Like std::pair, points are public available. 
+Difference is that it refers to points, does not have points.
+\note Like std::pair, points are public available.
 \note type is const or non const, so ggl::segment<P> or ggl::segment<const P>
 \note We cannot derive from std::pair<P&, P&> because of
-reference assignments. 
+reference assignments.
 \tparam ConstOrNonConstPoint point type of the segment, maybe a point or a const point
 */
 template<typename ConstOrNonConstPoint>

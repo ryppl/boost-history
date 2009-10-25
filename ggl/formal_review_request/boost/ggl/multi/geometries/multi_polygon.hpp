@@ -12,9 +12,12 @@
 #include <memory>
 #include <vector>
 
+#include <boost/concept/requires.hpp>
+
 #include <ggl/multi/core/tags.hpp>
-#include <ggl/core/concepts/polygon_concept.hpp>
 #include <ggl/multi/core/tags.hpp>
+
+#include <ggl/geometries/concepts/polygon_concept.hpp>
 
 namespace ggl
 {

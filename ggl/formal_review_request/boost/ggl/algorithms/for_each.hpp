@@ -12,15 +12,14 @@
 /*!
 \defgroup loop loops and for-each functionality
 There are several algorithms provided which walk through the points or segments
-of linestrings and polygons. They are called for_each_point, for_each_segment, after
-the standard library, and \b loop which is more adapted and of which the functor
-could break out if necessary.
+of linestrings and polygons. They are called for_each_point, for_each_segment,
+after the standard library, and \b loop which is more adapted
+and of which the functor could break out if necessary.
 Of the for_each algorithms there is a \b const and a non-const version provided.
 */
 
 #include <algorithm>
 
-#include <boost/concept/requires.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
@@ -28,7 +27,9 @@ Of the for_each algorithms there is a \b const and a non-const version provided.
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 #include <ggl/core/is_multi.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
+
 #include <ggl/geometries/segment.hpp>
 #include <ggl/iterators/vertex_iterator.hpp>
 
@@ -104,7 +105,10 @@ struct fe_range_per_segment
                 typename c_nc<Range, IsConst>::type& range,
                 Functor f)
     {
-        typedef typename ggl::vertex_iterator<Range, IsConst>::type iterator_type;
+        typedef typename ggl::vertex_iterator
+            <
+                Range, IsConst
+            >::type iterator_type;
 
         typedef typename c_nc
             <
@@ -134,14 +138,14 @@ struct fe_polygon_per_point
     {
         typedef typename c_nc_range
             <
-                typename interior_type<Polygon>::type, 
+                typename interior_type<Polygon>::type,
                 IsConst
             >::type iterator_type;
 
         typedef fe_range_per_point
                 <
-                    typename ring_type<Polygon>::type, 
-                    Functor, 
+                    typename ring_type<Polygon>::type,
+                    Functor,
                     IsConst
                 > per_ring;
 
@@ -169,14 +173,14 @@ struct fe_polygon_per_segment
     {
         typedef typename c_nc_range
             <
-                typename interior_type<Polygon>::type, 
+                typename interior_type<Polygon>::type,
                 IsConst
             >::type iterator_type;
 
         typedef fe_range_per_segment
             <
-                typename ring_type<Polygon>::type, 
-                Functor, 
+                typename ring_type<Polygon>::type,
+                Functor,
                 IsConst
             > per_ring;
 
@@ -202,12 +206,12 @@ struct fe_polygon_per_segment
 namespace dispatch
 {
 
-template 
+template
 <
-    typename Tag, 
-    bool IsMulti, 
-    typename Geometry, 
-    typename Functor, 
+    typename Tag,
+    bool IsMulti,
+    typename Geometry,
+    typename Functor,
     bool IsConst
 >
 struct for_each_point {};
@@ -235,12 +239,12 @@ struct for_each_point<polygon_tag, false, Polygon, Functor, IsConst>
 
 
 
-template 
+template
 <
-    typename Tag, 
-    bool IsMulti, 
-    typename Geometry, 
-    typename Functor, 
+    typename Tag,
+    bool IsMulti,
+    typename Geometry,
+    typename Functor,
     bool IsConst
 >
 struct for_each_segment {};
@@ -279,12 +283,14 @@ struct for_each_segment<polygon_tag, false, Polygon, Functor, IsConst>
 template<typename Geometry, typename Functor>
 inline Functor for_each_point(Geometry const& geometry, Functor f)
 {
+    concept::check<const Geometry>();
+
     return dispatch::for_each_point
         <
-            typename tag<Geometry>::type, 
+            typename tag<Geometry>::type,
             is_multi<Geometry>::type::value,
-            Geometry, 
-            Functor, 
+            Geometry,
+            Functor,
             true
         >::apply(geometry, f);
 }
@@ -299,12 +305,14 @@ inline Functor for_each_point(Geometry const& geometry, Functor f)
 template<typename Geometry, typename Functor>
 inline Functor for_each_point(Geometry& geometry, Functor f)
 {
+    concept::check<Geometry>();
+
     return dispatch::for_each_point
         <
-            typename tag<Geometry>::type, 
+            typename tag<Geometry>::type,
             is_multi<Geometry>::type::value,
-            Geometry, 
-            Functor, 
+            Geometry,
+            Functor,
             false
         >::apply(geometry, f);
 }
@@ -314,17 +322,20 @@ inline Functor for_each_point(Geometry& geometry, Functor f)
     \ingroup loop
     \param geometry geometry to loop through
     \param f functor to use
-    \details Calls the functor all \b const segments of the specified \b const geometry
+    \details Calls the functor all \b const segments of the
+        specified \b const geometry
 */
 template<typename Geometry, typename Functor>
 inline Functor for_each_segment(Geometry const& geometry, Functor f)
 {
+    concept::check<const Geometry>();
+
     return dispatch::for_each_segment
         <
-            typename tag<Geometry>::type, 
+            typename tag<Geometry>::type,
             is_multi<Geometry>::type::value,
-            Geometry, 
-            Functor, 
+            Geometry,
+            Functor,
             true
         >::apply(geometry, f);
 }
@@ -340,12 +351,14 @@ inline Functor for_each_segment(Geometry const& geometry, Functor f)
 template<typename Geometry, typename Functor>
 inline Functor for_each_segment(Geometry& geometry, Functor f)
 {
+    concept::check<Geometry>();
+
     return dispatch::for_each_segment
         <
-            typename tag<Geometry>::type, 
+            typename tag<Geometry>::type,
             is_multi<Geometry>::type::value,
-            Geometry, 
-            Functor, 
+            Geometry,
+            Functor,
             false
         >::apply(geometry, f);
 }

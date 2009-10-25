@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_ADAPT_TURNS_HPP
-#define GGL_ADAPT_TURNS_HPP
+#ifndef GGL_ALGORITHMS_OVERLAY_ADAPT_TURNS_HPP
+#define GGL_ALGORITHMS_OVERLAY_ADAPT_TURNS_HPP
 
 #include <algorithm>
 
@@ -553,4 +553,4 @@ inline void adapt_turns(V& intersection_points)
 
 } // namespace ggl
 
-#endif // GGL_ADAPT_TURNS_HPP
+#endif // GGL_ALGORITHMS_OVERLAY_ADAPT_TURNS_HPP

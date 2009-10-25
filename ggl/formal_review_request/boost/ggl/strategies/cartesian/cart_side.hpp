@@ -11,7 +11,6 @@
 
 
 
-#include <ggl/geometries/point_xy.hpp>
 #include <ggl/geometries/segment.hpp>
 
 #include <ggl/util/select_coordinate_type.hpp>
@@ -28,27 +27,34 @@ namespace strategy
         template <typename P, typename PS>
         struct xy_side
         {
+            typedef typename select_coordinate_type<P, PS>::type coordinate_type;
 
             // Check at which side of a segment a point lies:
             // left of segment (> 0), right of segment (< 0), on segment (0)
             // In fact this is twice the area of a triangle
-            static inline typename select_coordinate_type<P, PS>::type
-                side(const segment<const PS>& s, const P& p)
+            static inline coordinate_type
+                side(segment<const PS> const& s, P const& p)
             {
-                typedef typename select_coordinate_type<P, PS>::type T;
+                coordinate_type const x = get<0>(p);
+                coordinate_type const y = get<1>(p);
+
+                coordinate_type const sx1 = get<0, 0>(s);
+                coordinate_type const sy1 = get<0, 1>(s);
+                coordinate_type const sx2 = get<1, 0>(s);
+                coordinate_type const sy2 = get<1, 1>(s);
 
                 // Todo: might be changed to subtract_point
-                T dx = get<1, 0>(s) - get<0, 0>(s);
-                T dy = get<1, 1>(s) - get<0, 1>(s);
-                T dpx = get<0>(p) - get<0, 0>(s);
-                T dpy = get<1>(p) - get<0, 1>(s);
+                coordinate_type dx = sx2 - sx1;
+                coordinate_type dy = sy2 - sy1;
+                coordinate_type dpx = x - sx1;
+                coordinate_type dpy = y - sy1;
                 return dx * dpy - dy * dpx;
             }
 
 
-            static inline int side(const P& p0, const P& p1, const P& p2)
+            static inline int side(PS const& p0, PS const& p1, P const& p2)
             {
-                typename coordinate_type<P>::type s = side(segment<const P>(p0, p1), p2);
+                coordinate_type s = side(segment<const PS>(p0, p1), p2);
                 return s > 0 ? 1 : s < 0 ? -1 : 0;
             }
         };

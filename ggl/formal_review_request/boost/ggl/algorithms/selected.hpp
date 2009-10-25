@@ -12,15 +12,15 @@
 #include <cmath>
 #include <cstddef>
 
-#include <boost/concept/requires.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
 
 #include <ggl/algorithms/within.hpp>
 #include <ggl/core/access.hpp>
 #include <ggl/core/topological_dimension.hpp>
-#include <ggl/core/concepts/nsphere_concept.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
+
 
 /*!
 \defgroup selected selection: check if a geometry is "selected" by a point
@@ -209,9 +209,7 @@ struct use_within
 {
     static inline bool apply(G const& geometry, P const& selection_point, T const& search_radius)
     {
-        // Note the reversion, point-in-poly -> first point, then poly
-        // Selected-at-point -> first geometry, then point
-        return dispatch::within<point_tag, Tag, P, G>::apply(selection_point, geometry);
+        return ggl::within(selection_point, geometry);
     }
 };
 
@@ -249,8 +247,8 @@ struct selected<Tag, G, 2, P, T> : detail::selected::use_within<Tag, G, P, T> { 
 /*!
     \brief Checks if one geometry is selected by a point lying within or in the neighborhood of that geometry
     \ingroup selected
-    \tparam G type of geometry to check
-    \tparam P type of point to check
+    \tparam Geometry type of geometry to check
+    \tparam Point type of point to check
     \tparam T type of search radius
     \param geometry geometry which might be located in the neighborhood
     \param selection_point point to select the geometry
@@ -258,16 +256,21 @@ struct selected<Tag, G, 2, P, T> : detail::selected::use_within<Tag, G, P, T> { 
     \return true if point is within or close to the other geometry
 
  */
-template<typename G, typename P, typename T>
-inline bool selected(G const& geometry, P const& selection_point, T const& search_radius)
+template<typename Geometry, typename Point, typename RadiusType>
+inline bool selected(Geometry const& geometry,
+        Point const& selection_point,
+        RadiusType const& search_radius)
 {
+    concept::check<const Geometry>();
+    concept::check<const Point>();
+
     typedef dispatch::selected
         <
-        typename tag<G>::type,
-        G,
-        topological_dimension<G>::value,
-        P,
-        T
+            typename tag<Geometry>::type,
+            Geometry,
+            topological_dimension<Geometry>::value,
+            Point,
+            RadiusType
         > selector_type;
 
     return selector_type::apply(geometry, selection_point, search_radius);

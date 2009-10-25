@@ -27,7 +27,6 @@
 #include <ggl/geometries/polygon.hpp>
 #include <ggl/geometries/segment.hpp>
 #include <ggl/geometries/box.hpp>
-#include <ggl/geometries/nsphere.hpp>
 
 
 namespace ggl {
@@ -74,12 +73,6 @@ struct replace_point_type<polygon_tag, Geometry, NewPointType>
     typedef polygon<NewPointType> type;
 };
 
-template <typename Geometry, typename NewPointType>
-struct replace_point_type<nsphere_tag, Geometry, NewPointType>
-{
-    typedef typename ggl::coordinate_type<Geometry>::type coortype;
-    typedef nsphere<NewPointType, coortype> type;
-};
 
 } // namespace core_dispatch
 #endif // DOXYGEN_NO_DISPATCH

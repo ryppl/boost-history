@@ -15,7 +15,7 @@
 #include <boost/concept/requires.hpp>
 
 #include <ggl/core/coordinate_type.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/point_concept.hpp>
 #include <ggl/util/for_each_coordinate.hpp>
 
 /*!
@@ -43,7 +43,7 @@ struct value_operation
 {
     C m_value;
 
-    inline value_operation(const C& value)
+    inline value_operation(C const &value)
         : m_value(value)
     {}
 
@@ -60,7 +60,7 @@ struct point_operation
     typedef typename coordinate_type<PointSrc>::type coordinate_type;
     PointSrc const& m_source_point;
 
-    inline point_operation(const PointSrc& point)
+    inline point_operation(PointSrc const& point)
         : m_source_point(point)
     {}
 

@@ -18,7 +18,7 @@
 #include <ggl/arithmetic/arithmetic.hpp>
 #include <ggl/core/access.hpp>
 #include <ggl/core/coordinate_dimension.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
+
 #include <ggl/util/copy.hpp>
 #include <ggl/util/math.hpp>
 #include <ggl/util/select_coordinate_type.hpp>

@@ -12,13 +12,13 @@
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
 
-#include <boost/concept/requires.hpp>
-#include <boost/concept_check.hpp>
 
 #include <ggl/core/cs.hpp>
 #include <ggl/core/ring_type.hpp>
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
 
 #include <ggl/strategies/strategies.hpp>
 #include <ggl/strategies/agnostic/simplify_douglas_peucker.hpp>
@@ -256,6 +256,8 @@ template<typename Geometry, typename Strategy>
 inline void simplify(Geometry const& geometry, Geometry& out,
                      double max_distance, Strategy const& strategy)
 {
+    concept::check<Geometry>();
+
     BOOST_CONCEPT_ASSERT( (ggl::concept::SimplifyStrategy<Strategy>) );
 
     ggl::clear(out);
@@ -284,6 +286,8 @@ template<typename Geometry>
 inline void simplify(Geometry const& geometry, Geometry& out,
                      double max_distance)
 {
+    concept::check<Geometry>();
+
     typedef typename point_type<Geometry>::type point_type;
     typedef typename cs_tag<point_type>::type cs_tag;
     typedef typename strategy_distance_segment
@@ -323,6 +327,7 @@ template<typename Geometry, typename OutputIterator, typename Strategy>
 inline void simplify_inserter(Geometry const& geometry, OutputIterator out,
                               double max_distance, Strategy const& strategy)
 {
+    concept::check<const Geometry>();
     BOOST_CONCEPT_ASSERT( (ggl::concept::SimplifyStrategy<Strategy>) );
 
     dispatch::simplify_inserter
@@ -353,6 +358,11 @@ inline void simplify_inserter(Geometry const& geometry, OutputIterator out,
                               double max_distance)
 {
     typedef typename point_type<Geometry>::type point_type;
+
+    // Concept: output point type = point type of input geometry
+    concept::check<const Geometry>();
+    concept::check<point_type>();
+
     typedef typename cs_tag<point_type>::type cs_tag;
     typedef typename strategy_distance_segment
         <

@@ -11,9 +11,6 @@
 
 
 
-#include <ggl/geometries/point_xy.hpp>
-#include <ggl/geometries/segment.hpp>
-
 #include <ggl/algorithms/combine.hpp>
 
 

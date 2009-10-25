@@ -152,7 +152,7 @@ struct cs_tag
 {
     typedef typename traits::cs_tag
         <
-        typename ggl::coordinate_system<G>::type
+            typename ggl::coordinate_system<G>::type
         >::type type;
 };
 

@@ -11,6 +11,7 @@
 
 #include <ggl/core/access.hpp>
 
+#include <ggl/geometries/concepts/check.hpp>
 
 namespace ggl
 {
@@ -32,9 +33,12 @@ namespace ggl
     where is stated that "inside" is not an "overlap", this is probably true and should then be implemented as such.
 
  */
-template <typename B>
-inline bool overlaps(const B& b1, const B& b2)
+template <typename Geometry1, typename Geometry2>
+inline bool overlaps(Geometry1 const& b1, Geometry2 const& b2)
 {
+    concept::check<const Geometry1>();
+    concept::check<const Geometry2>();
+
     return !(
             get<max_corner, 0>(b1) <= get<min_corner, 0>(b2) ||
             get<min_corner, 0>(b1) >= get<max_corner, 0>(b2) ||

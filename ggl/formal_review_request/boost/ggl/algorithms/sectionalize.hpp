@@ -13,7 +13,7 @@
 #include <vector>
 
 #include <boost/concept_check.hpp>
-#include <boost/concept/requires.hpp>
+
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
 
@@ -22,6 +22,9 @@
 
 #include <ggl/core/access.hpp>
 #include <ggl/core/exterior_ring.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
+
 
 #include <ggl/util/math.hpp>
 #include <ggl/geometries/segment.hpp>
@@ -552,6 +555,8 @@ struct sectionalize<polygon_tag, Polygon, Sections, DimensionCount, MaxCount>
 template<typename Geometry, typename Sections>
 inline void sectionalize(Geometry const& geometry, Sections& sections)
 {
+    concept::check<const Geometry>();
+
     // A maximum of 10 segments per section seems to give the fastest results
     static const std::size_t max_segments_per_section = 10;
     typedef dispatch::sectionalize

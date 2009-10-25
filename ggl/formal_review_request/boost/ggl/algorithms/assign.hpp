@@ -20,9 +20,11 @@
 #include <ggl/algorithms/clear.hpp>
 #include <ggl/core/access.hpp>
 #include <ggl/core/exterior_ring.hpp>
-#include <ggl/core/radius.hpp>
 #include <ggl/core/tags.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
+
+
 #include <ggl/util/copy.hpp>
 #include <ggl/util/for_each_coordinate.hpp>
 
@@ -287,62 +289,6 @@ struct assign<box_tag, B, 2>
 
 
 
-
-
-template <typename S>
-struct assign<nsphere_tag, S, 2>
-{
-    typedef typename coordinate_type<S>::type coordinate_type;
-    typedef typename radius_type<S>::type radius_type;
-
-    /// 2-value version for an n-sphere is valid for circle and sets the center
-    template <typename T>
-    static inline void apply(S& sphercle, T const& c1, T const& c2)
-    {
-        set<0>(sphercle, boost::numeric_cast<coordinate_type>(c1));
-        set<1>(sphercle, boost::numeric_cast<coordinate_type>(c2));
-    }
-
-    template <typename T, typename R>
-    static inline void apply(S& sphercle, T const& c1,
-        T const& c2, R const& radius)
-    {
-        set<0>(sphercle, boost::numeric_cast<coordinate_type>(c1));
-        set<1>(sphercle, boost::numeric_cast<coordinate_type>(c2));
-        set_radius<0>(sphercle, boost::numeric_cast<radius_type>(radius));
-    }
-};
-
-template <typename S>
-struct assign<nsphere_tag, S, 3>
-{
-    typedef typename coordinate_type<S>::type coordinate_type;
-    typedef typename radius_type<S>::type radius_type;
-
-    /// 4-value version for an n-sphere is valid for a sphere and sets the center and the radius
-    template <typename T>
-    static inline void apply(S& sphercle, T const& c1, T const& c2, T const& c3)
-    {
-        set<0>(sphercle, boost::numeric_cast<coordinate_type>(c1));
-        set<1>(sphercle, boost::numeric_cast<coordinate_type>(c2));
-        set<2>(sphercle, boost::numeric_cast<coordinate_type>(c3));
-    }
-
-    /// 4-value version for an n-sphere is valid for a sphere and sets the center and the radius
-    template <typename T, typename R>
-    static inline void apply(S& sphercle, T const& c1,
-        T const& c2, T const& c3, R const& radius)
-    {
-
-        set<0>(sphercle, boost::numeric_cast<coordinate_type>(c1));
-        set<1>(sphercle, boost::numeric_cast<coordinate_type>(c2));
-        set<2>(sphercle, boost::numeric_cast<coordinate_type>(c3));
-        set_radius<0>(sphercle, boost::numeric_cast<radius_type>(radius));
-    }
-
-};
-
-
 template <typename GeometryTag, typename Geometry>
 struct assign_zero {};
 
@@ -375,44 +321,50 @@ struct assign_inverse<box_tag, Box>
     \brief assign two values to a 2D point
     \ingroup access
  */
-template <typename G, typename T>
-inline void assign(G& geometry, T const& c1, T const& c2)
+template <typename Geometry, typename T>
+inline void assign(Geometry& geometry, T const& c1, T const& c2)
 {
+    concept::check<Geometry>();
+
     dispatch::assign
         <
-            typename tag<G>::type,
-            G,
-            ggl::dimension<G>::type::value
+            typename tag<Geometry>::type,
+            Geometry,
+            ggl::dimension<Geometry>::type::value
         >::apply(geometry, c1, c2);
 }
 
 /*!
-    \brief assign three values to a 3D point or the center + radius to a circle
+    \brief assign three values to a 3D point [or the center + radius to a circle]
     \ingroup access
  */
-template <typename G, typename T>
-inline void assign(G& geometry, T const& c1, T const& c2, T const& c3)
+template <typename Geometry, typename T>
+inline void assign(Geometry& geometry, T const& c1, T const& c2, T const& c3)
 {
+    concept::check<Geometry>();
+
     dispatch::assign
         <
-            typename tag<G>::type,
-            G,
-            ggl::dimension<G>::type::value
+            typename tag<Geometry>::type,
+            Geometry,
+            ggl::dimension<Geometry>::type::value
         >::apply(geometry, c1, c2, c3);
 }
 
 /*!
-    \brief assign center + radius to a sphere
+    \brief assign center + radius to a sphere [for extension]
     \ingroup access
  */
-template <typename G, typename T>
-inline void assign(G& geometry, T const& c1, T const& c2, T const& c3, T const& c4)
+template <typename Geometry, typename T>
+inline void assign(Geometry& geometry, T const& c1, T const& c2, T const& c3, T const& c4)
 {
+    concept::check<Geometry>();
+
     dispatch::assign
         <
-            typename tag<G>::type,
-            G,
-            ggl::dimension<G>::type::value
+            typename tag<Geometry>::type,
+            Geometry,
+            ggl::dimension<Geometry>::type::value
         >::apply(geometry, c1, c2, c3, c4);
 }
 
@@ -422,9 +374,11 @@ inline void assign(G& geometry, T const& c1, T const& c2, T const& c3, T const& 
     \note The point-type of the range might be different from the point-type of the geometry
     \ingroup access
  */
-template <typename G, typename R>
-inline void assign(G& geometry, R const& range)
+template <typename Geometry, typename R>
+inline void assign(Geometry& geometry, R const& range)
 {
+    concept::check<Geometry>();
+
     clear(geometry);
     ggl::append(geometry, range, -1, 0);
 }
@@ -437,13 +391,15 @@ inline void assign(G& geometry, R const& range)
     collect the minimum bounding box of a geometry.
     \ingroup access
  */
-template <typename G>
-inline void assign_inverse(G& geometry)
+template <typename Geometry>
+inline void assign_inverse(Geometry& geometry)
 {
+    concept::check<Geometry>();
+
     dispatch::assign_inverse
         <
-            typename tag<G>::type,
-            G
+            typename tag<Geometry>::type,
+            Geometry
         >::apply(geometry);
 }
 
@@ -451,15 +407,17 @@ inline void assign_inverse(G& geometry)
     \brief assign zero values to a box, point
     \ingroup access
     \details The assign_zero function initializes a 2D or 3D point or box with coordinates of zero
-    \tparam G the geometry type
+    \tparam Geometry the geometry type
  */
-template <typename G>
-inline void assign_zero(G& geometry)
+template <typename Geometry>
+inline void assign_zero(Geometry& geometry)
 {
+    concept::check<Geometry>();
+
     dispatch::assign_zero
         <
-            typename tag<G>::type,
-            G
+            typename tag<Geometry>::type,
+            Geometry
         >::apply(geometry);
 }
 
@@ -469,9 +427,14 @@ inline void assign_zero(G& geometry)
     \ingroup assign
     \note The order can be crucial. Most logical is LOWER, UPPER and sub-order LEFT, RIGHT
 */
-template <typename B, typename P>
-inline void assign_box_corners(B const& box, P& lower_left, P& lower_right, P& upper_left, P& upper_right)
+template <typename Box, typename Point>
+inline void assign_box_corners(Box const& box,
+        Point& lower_left, Point& lower_right,
+        Point& upper_left, Point& upper_right)
 {
+    concept::check<const Box>();
+    concept::check<Point>();
+
     detail::assign::assign_box_2d_corner<min_corner, min_corner>(box, lower_left);
     detail::assign::assign_box_2d_corner<max_corner, min_corner>(box, lower_right);
     detail::assign::assign_box_2d_corner<min_corner, max_corner>(box, upper_left);
@@ -488,6 +451,9 @@ inline void assign_box_corners(B const& box, P& lower_left, P& lower_right, P& u
 template <std::size_t Corner, typename Box, typename Point>
 inline void assign_point_to_box(Point const& point, Box& box)
 {
+    concept::check<const Point>();
+    concept::check<Box>();
+
     detail::assign::assign_point_to_box
         <
             Box, Point, Corner, 0, dimension<Box>::type::value

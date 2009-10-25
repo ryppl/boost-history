@@ -19,39 +19,55 @@ namespace ggl {
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail { namespace centroid {
 
-template<typename MultiPolygon, typename Point, typename Strategy>
-struct centroid_multi_polygon
+template
+<
+    typename Multi, 
+    typename Point,
+    typename Strategy 
+>
+struct centroid_multi_point
 {
-    static inline void apply(MultiPolygon const& multi, Point& c, Strategy const& strategy)
+    static inline bool apply(Multi const& multi, Point& centroid,
+            Strategy const& strategy, typename Strategy::state_type& state)
     {
-        typedef typename boost::range_const_iterator<MultiPolygon>::type iterator;
+        assign_zero(centroid);
+        int n = 0;
 
-        typename Strategy::state_type state;
-
-        for (iterator it = boost::begin(multi); it != boost::end(multi); ++it)
+        for (typename boost::range_const_iterator<Multi>::type 
+                it = boost::begin(multi); 
+            it != boost::end(multi); 
+            ++it)
         {
-// TODO: make THIS the building block!
-            typedef typename boost::range_value<MultiPolygon>::type polygon_type;
-            polygon_type const& poly = *it;
-            if (ring_ok(exterior_ring(poly), c))
-            {
-
-                loop(exterior_ring(poly), strategy, state);
-
-                typedef typename boost::range_const_iterator
-                    <
-                        typename interior_type<polygon_type>::type
-                    >::type iterator_type;
-
-                for (iterator_type it = boost::begin(interior_rings(poly));
-                     it != boost::end(interior_rings(poly));
-                     ++it)
-                {
-                    loop(*it, strategy, state);
-                }
-            }
+            add_point(centroid, *it);
+            n++;
         }
-        state.centroid(c);
+        divide_value(centroid, n);
+
+        return false;
+    }
+};
+
+
+template
+<
+    typename Multi, 
+    typename Point,
+    typename Strategy, 
+    typename Policy
+>
+struct centroid_multi
+{
+    static inline bool apply(Multi const& multi, Point& centroid,
+            Strategy const& strategy, typename Strategy::state_type& state)
+    {
+        for (typename boost::range_const_iterator<Multi>::type 
+                it = boost::begin(multi); 
+            it != boost::end(multi); 
+            ++it)
+        {
+            Policy::apply(*it, centroid, strategy, state);
+        }
+        return true;
     }
 };
 
@@ -65,10 +81,39 @@ struct centroid_multi_polygon
 #ifndef DOXYGEN_NO_DISPATCH
 namespace dispatch
 {
-    template <typename MultiPolygon, typename Point, typename Strategy>
-    struct centroid<multi_polygon_tag, MultiPolygon, Point, Strategy>
-        : detail::centroid::centroid_multi_polygon<MultiPolygon, Point, Strategy>
-    {};
+
+template <typename MultiPolygon, typename Point, typename Strategy>
+struct centroid<multi_polygon_tag, 2, MultiPolygon, Point, Strategy>
+    : detail::centroid::centroid_multi
+        <
+            MultiPolygon, 
+            Point,
+            Strategy,
+            detail::centroid::centroid_polygon
+                <
+                    typename boost::range_value<MultiPolygon>::type,
+                    Point,
+                    Strategy
+                >
+        >
+{};
+
+
+template
+<
+    std::size_t Dimensions,
+    typename MultiPoint, 
+    typename Point, 
+    typename Strategy
+>
+struct centroid<multi_point_tag, Dimensions, MultiPoint, Point, Strategy>
+    : detail::centroid::centroid_multi_point
+        <
+            MultiPoint, 
+            Point,
+            Strategy
+        >
+{};
 
 
 } // namespace dispatch

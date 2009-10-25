@@ -12,14 +12,14 @@
 #include <iostream>
 #include <string>
 
-#include <boost/concept/assert.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
 
-#include <ggl/core/concepts/point_concept.hpp>
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 #include <ggl/core/ring_type.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
 
 /*!
 \defgroup svg x Extension svg: Stream SVG (Scalable Vector Graphics)
@@ -44,9 +44,6 @@ struct svg_point
             << "\" r=\"" << (size < 0 ? 5 : size)
             << "\" style=\"" << style << "\"/>";
     }
-
-    private:
-        BOOST_CONCEPT_ASSERT( (concept::ConstPoint<Point>) );
 };
 
 
@@ -66,10 +63,6 @@ struct svg_box
             << "\" width=\"" << width << "\" height=\"" << height
             << "\" style=\"" << style << "\"/>";
     }
-
-    private:
-        typedef typename ggl::point_type<Box>::type point_type;
-        BOOST_CONCEPT_ASSERT( (concept::ConstPoint<point_type>) );
 };
 
 
@@ -98,10 +91,6 @@ struct svg_range
         }
         os << "\" style=\"" << style << Policy::style() << "\"/>";
     }
-
-    private:
-        typedef typename boost::range_value<Range>::type point;
-        BOOST_CONCEPT_ASSERT( (concept::ConstPoint<point>) );
 };
 
 
@@ -149,12 +138,6 @@ struct svg_poly
         os << " z \" style=\"" << style << "\"/></g>";
 
     }
-
-    private:
-        BOOST_CONCEPT_ASSERT
-            (
-                (concept::ConstPoint<typename point_type<Polygon>::type>)
-            );
 };
 
 
@@ -255,6 +238,8 @@ private:
 template <typename Geometry>
 inline svg_manipulator<Geometry> svg(Geometry const& t, std::string const& style, int size = -1)
 {
+    concept::check<const Geometry>();
+
     return svg_manipulator<Geometry>(t, style, size);
 }
 

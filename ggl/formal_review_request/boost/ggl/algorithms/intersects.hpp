@@ -9,6 +9,8 @@
 #ifndef GGL_ALGORITHMS_INTERSECTS_HPP
 #define GGL_ALGORITHMS_INTERSECTS_HPP
 
+#include <ggl/geometries/concepts/check.hpp>
+
 #include <ggl/algorithms/intersection_linestring.hpp>
 
 #include <ggl/algorithms/overlay/get_intersection_points.hpp>
@@ -39,6 +41,8 @@ namespace ggl
 template <typename Geometry>
 inline bool intersects(Geometry const& geometry)
 {
+    concept::check<const Geometry>();
+
     typedef typename boost::remove_const<Geometry>::type ncg_type;
 
     typedef std::vector<ggl::detail::intersection::intersection_point

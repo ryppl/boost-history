@@ -43,10 +43,6 @@ struct geometry_id<polygon_tag>    : boost::mpl::int_<3> {};
 
 
 template <>
-struct geometry_id<nsphere_tag>    : boost::mpl::int_<91> {};
-
-
-template <>
 struct geometry_id<segment_tag>    : boost::mpl::int_<92> {};
 
 

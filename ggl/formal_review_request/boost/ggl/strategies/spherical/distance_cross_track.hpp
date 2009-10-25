@@ -11,7 +11,6 @@
 
 
 #include <ggl/core/cs.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
 #include <ggl/core/access.hpp>
 #include <ggl/core/radian_access.hpp>
 
@@ -49,13 +48,13 @@ namespace strategy
                 typedef P point_type;
                 typedef typename strategy_distance
                     <
-                        typename ggl::cs_tag<P>::type, 
+                        typename ggl::cs_tag<P>::type,
                         typename ggl::cs_tag<P>::type,
                         P, P
                     >::type point_strategy_type;
 
 
-                inline cross_track(double r = 1.0) 
+                inline cross_track(double r = 1.0)
                     : m_radius(r)
                     , m_strategy(1.0) // Keep this 1.0 and not r
                 {}

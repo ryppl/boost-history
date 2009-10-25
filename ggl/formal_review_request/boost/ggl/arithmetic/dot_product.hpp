@@ -11,7 +11,8 @@
 
 #include <boost/concept/requires.hpp>
 
-#include <ggl/core/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/point_concept.hpp>
+#include <ggl/util/select_coordinate_type.hpp>
 
 namespace ggl
 {
@@ -23,8 +24,9 @@ namespace detail
 template <typename P1, typename P2, std::size_t Dimension, std::size_t DimensionCount>
 struct dot_product_maker
 {
-    static inline typename coordinate_type<P1>::type
-        apply(P1 const& p1, P2 const& p2)
+    typedef typename select_coordinate_type<P1, P2>::type coordinate_type;
+
+    static inline coordinate_type apply(P1 const& p1, P2 const& p2)
     {
         return get<Dimension>(p1) * get<Dimension>(p2)
             + dot_product_maker<P1, P2, Dimension+1, DimensionCount>::apply(p1, p2);
@@ -34,8 +36,9 @@ struct dot_product_maker
 template <typename P1, typename P2, std::size_t DimensionCount>
 struct dot_product_maker<P1, P2, DimensionCount, DimensionCount>
 {
-    static inline typename coordinate_type<P1>::type
-        apply(P1 const& p1, P2 const& p2)
+    typedef typename select_coordinate_type<P1, P2>::type coordinate_type;
+
+    static inline coordinate_type apply(P1 const& p1, P2 const& p2)
     {
         return get<DimensionCount>(p1) * get<DimensionCount>(p2);
     }
@@ -53,7 +56,8 @@ struct dot_product_maker<P1, P2, DimensionCount, DimensionCount>
     \return the dot product
  */
 template <typename P1, typename P2>
-inline typename coordinate_type<P1>::type dot_product(P1 const& p1, P2 const& p2)
+inline typename select_coordinate_type<P1, P2>::type dot_product(
+        P1 const& p1, P2 const& p2)
 {
     BOOST_CONCEPT_ASSERT( (concept::ConstPoint<P1>) );
     BOOST_CONCEPT_ASSERT( (concept::ConstPoint<P2>) );

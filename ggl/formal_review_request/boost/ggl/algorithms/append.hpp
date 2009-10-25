@@ -12,114 +12,93 @@
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
 #include <boost/type_traits/remove_const.hpp>
-#include <boost/concept_check.hpp>
 
 #include <ggl/core/access.hpp>
 #include <ggl/core/point_type.hpp>
 #include <ggl/core/tags.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
+
 #include <ggl/util/copy.hpp>
 
 namespace ggl
 {
 
-namespace traits
-{
-
-/*!
-    \brief Traits class, optional, might be implemented to append a point
-    \details If a geometry type should not use the std "push_back" then it can specialize
-    the "use_std" traits class to false, it should then implement (a.o.) append_point
-    \ingroup traits
-    \par Geometries:
-        - linestring
-        - linear_ring
-    \par Specializations should provide:
-        - run
- */
-template <typename G, typename P>
-struct append_point
-{
-};
-
-} // namespace traits
-
 
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail { namespace append {
 
-template <typename G, typename P, bool Std>
+template <typename Geometry, typename Point, bool UseStd>
 struct append_point {};
 
-template <typename G, typename P>
-struct append_point<G, P, true>
+template <typename Geometry, typename Point>
+struct append_point<Geometry, Point, true>
 {
-    static inline void apply(G& geometry, P const& point, int , int )
+    static inline void apply(Geometry& geometry, Point const& point, int , int )
     {
-        typename point_type<G>::type point_type;
+        typename point_type<Geometry>::type point_type;
 
         copy_coordinates(point, point_type);
         geometry.push_back(point_type);
     }
 };
 
-template <typename G, typename P>
-struct append_point<G, P, false>
+template <typename Geometry, typename Point>
+struct append_point<Geometry, Point, false>
 {
-    static inline void apply(G& geometry, P const& point, int ring_index, int multi_index)
+    static inline void apply(Geometry& geometry, Point const& point, int ring_index, int multi_index)
     {
-        traits::append_point<G, P>::apply(geometry, point, ring_index, multi_index);
+        traits::append_point<Geometry, Point>::apply(geometry, point, ring_index, multi_index);
     }
 };
 
-template <typename G, typename R, bool Std>
+template <typename Geometry, typename Range, bool UseStd>
 struct append_range
 {
-    typedef typename boost::range_value<R>::type point_type;
+    typedef typename boost::range_value<Range>::type point_type;
 
-    static inline void apply(G& geometry, R const& range, int ring_index, int multi_index)
+    static inline void apply(Geometry& geometry, Range const& range, int ring_index, int multi_index)
     {
-        for (typename boost::range_const_iterator<R>::type it = boost::begin(range);
+        for (typename boost::range_const_iterator<Range>::type it = boost::begin(range);
              it != boost::end(range); ++it)
         {
-            append_point<G, point_type, Std>::apply(geometry, *it, ring_index, multi_index);
+            append_point<Geometry, point_type, UseStd>::apply(geometry, *it, ring_index, multi_index);
         }
     }
 };
 
-template <typename P, typename T, bool Std>
+template <typename Polygon, typename Point, bool Std>
 struct point_to_poly
 {
-    typedef typename ring_type<P>::type range_type;
+    typedef typename ring_type<Polygon>::type range_type;
 
-    static inline void apply(P& polygon, T const& point, int ring_index, int multi_index)
+    static inline void apply(Polygon& polygon, Point const& point, int ring_index, int )
     {
-        boost::ignore_unused_variable_warning(multi_index);
-
         if (ring_index == -1)
         {
-            append_point<range_type, T, Std>::apply(exterior_ring(polygon), point, -1, -1);
+            append_point<range_type, Point, Std>::apply(exterior_ring(polygon), point, -1, -1);
         }
         else if (ring_index < boost::size(interior_rings(polygon)))
         {
-            append_point<range_type, T, Std>::apply(interior_rings(polygon)[ring_index], point, -1, -1);
+            append_point<range_type, Point, Std>::apply(interior_rings(polygon)[ring_index], point, -1, -1);
         }
     }
 };
 
-template <typename P, typename R, bool Std>
+template <typename Polygon, typename Range, bool Std>
 struct range_to_poly
 {
-    typedef typename ring_type<P>::type ring_type;
+    typedef typename ring_type<Polygon>::type ring_type;
 
-    static inline void apply(P& polygon, R const& range, int ring_index, int multi_index)
+    static inline void apply(Polygon& polygon, Range const& range, int ring_index, int )
     {
         if (ring_index == -1)
         {
-            append_range<ring_type, R, Std>::apply(exterior_ring(polygon), range, -1, -1);
+            append_range<ring_type, Range, Std>::apply(exterior_ring(polygon), range, -1, -1);
         }
         else if (ring_index < boost::size(interior_rings(polygon)))
         {
-            append_range<ring_type, R, Std>::apply(interior_rings(polygon)[ring_index], range, -1, -1);
+            append_range<ring_type, Range, Std>::apply(interior_rings(polygon)[ring_index], range, -1, -1);
         }
     }
 };
@@ -150,8 +129,6 @@ struct append<point_tag, TagRoP, P, RoP, Std> {};
 template <typename TagRoP, typename B, typename RoP, bool Std>
 struct append<box_tag, TagRoP, B, RoP, Std> {};
 
-template <typename TagRoP, typename N, typename RoP, bool Std>
-struct append<nsphere_tag, TagRoP, N, RoP, Std> {};
 
 template <typename P, typename TAG_R, typename R, bool Std>
 struct append<polygon_tag, TAG_R, P, R, Std>
@@ -176,15 +153,17 @@ struct append<polygon_tag, point_tag, P, T, Std>
         interior ring index
     \param multi_index reserved for multi polygons
  */
-template <typename G, typename RoP>
-inline void append(G& geometry, const RoP& range_or_point,
+template <typename Geometry, typename RoP>
+inline void append(Geometry& geometry, RoP const& range_or_point,
             int ring_index = -1, int multi_index = 0)
 {
-    typedef typename boost::remove_const<G>::type ncg_type;
+    concept::check<Geometry>();
+
+    typedef typename boost::remove_const<Geometry>::type ncg_type;
 
     dispatch::append
         <
-            typename tag<G>::type,
+            typename tag<Geometry>::type,
             typename tag<RoP>::type,
             ncg_type,
             RoP,

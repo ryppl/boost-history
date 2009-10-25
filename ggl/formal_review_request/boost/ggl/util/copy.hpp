@@ -14,7 +14,7 @@
 #include <boost/concept/requires.hpp>
 #include <boost/concept_check.hpp>
 
-#include <ggl/core/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/point_concept.hpp>
 
 #include <boost/numeric/conversion/cast.hpp>
 

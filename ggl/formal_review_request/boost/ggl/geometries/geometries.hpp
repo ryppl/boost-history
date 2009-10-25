@@ -19,7 +19,6 @@
 #include <ggl/geometries/polygon.hpp>
 
 #include <ggl/geometries/box.hpp>
-#include <ggl/geometries/nsphere.hpp>
 #include <ggl/geometries/segment.hpp>
 
 #endif // GGL_GEOMETRIES_HPP

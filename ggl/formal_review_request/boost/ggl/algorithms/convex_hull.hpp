@@ -17,7 +17,7 @@
 #include <ggl/core/point_order.hpp>
 #include <ggl/core/exterior_ring.hpp>
 
-#include <ggl/core/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/check.hpp>
 
 
 #include <ggl/strategies/strategies.hpp>
@@ -27,20 +27,22 @@
 /*!
 \defgroup convex_hull convex hull calculation
 \par Source descriptions:
-- OGC description: Returns a geometric object that represents the convex hull of this geometric
-object. Convex hulls, being dependent on straight lines, can be accurately represented in linear interpolations
-for any geometry restricted to linear interpolations.
+- OGC description: Returns a geometric object that represents the convex hull of
+    this geometric object. Convex hulls, being dependent on straight lines, can
+    be accurately represented in linear interpolations
+    for any geometry restricted to linear interpolations.
 \see http://en.wikipedia.org/wiki/Convex_hull
 
 \par Performance
 2776 counties of US are "hulled" in 0.9 seconds (other libraries: 0.9, 4.1, 3.3, 1.4 seconds)
 
-\note The convex hull is always a ring, holes are not possible. Therefore it is modelled as an output iterator.
-This gives the most flexibility, the user can decide what to do with it.
+\note The convex hull is always a ring, holes are not possible. Therefore it is
+    can also be used in combination with an output iterator.
 \par Geometries:
 In the images below the convex hull is painted in red.
 - POINT: will not compile
-- POLYGON: will deliver a polygon without holes \image html convexhull_polygon_polygon.png
+- POLYGON: will deliver a polygon without holes
+    \image html convexhull_polygon_polygon.png
 */
 namespace ggl {
 
@@ -212,6 +214,9 @@ template<typename Geometry1, typename Geometry2>
 inline void convex_hull(Geometry1 const& geometry,
             Geometry2& out)
 {
+    concept::check<const Geometry1>();
+    concept::check<Geometry2>();
+
     dispatch::convex_hull
         <
             typename tag<Geometry1>::type,
@@ -231,13 +236,18 @@ inline void convex_hull(Geometry1 const& geometry,
     \param out an output iterator outputing points of the convex hull
     \note This overloaded version outputs to an output iterator.
     In this case, nothing is known about its point-type or
-        about its clockwise order. Therefore, the input point-type and order are copied
+        about its clockwise order. Therefore, the input point-type
+        and order are copied
 
  */
 template<typename Geometry, typename OutputIterator>
 inline OutputIterator convex_hull_inserter(Geometry const& geometry,
             OutputIterator out)
 {
+    // Concept: output point type = point type of input geometry
+    concept::check<const Geometry>();
+    concept::check<typename point_type<Geometry>::type>();
+
     return dispatch::convex_hull_inserter
         <
             typename tag<Geometry>::type,

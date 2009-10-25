@@ -13,10 +13,11 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <ggl/arithmetic/arithmetic.hpp>
 #include <ggl/core/coordinate_dimension.hpp>
-#include <ggl/core/concepts/box_concept.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/check.hpp>
+
+#include <ggl/arithmetic/arithmetic.hpp>
+
 #include <ggl/util/select_coordinate_type.hpp>
 
 /*!
@@ -175,6 +176,9 @@ struct combine<box_tag, BoxOut, BoxIn>
 template <typename Box, typename Geometry>
 inline void combine(Box& box, Geometry const& geometry)
 {
+    concept::check<const Geometry>();
+    concept::check<Box>();
+
     assert_dimension_equal<Box, Geometry>();
     dispatch::combine
         <

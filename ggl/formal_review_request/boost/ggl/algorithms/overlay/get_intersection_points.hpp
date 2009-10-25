@@ -26,6 +26,8 @@
 #include <ggl/core/interior_rings.hpp>
 #include <ggl/core/ring_type.hpp>
 
+#include <ggl/geometries/concepts/check.hpp>
+
 #include <ggl/util/math.hpp>
 
 #include <ggl/geometries/box.hpp>
@@ -682,6 +684,9 @@ template <typename Geometry1, typename Geometry2, typename IntersectionPoints>
 inline bool get_intersection_points(Geometry1 const& geometry1,
             Geometry2 const& geometry2, IntersectionPoints& intersection_points)
 {
+    concept::check<const Geometry1>();
+    concept::check<const Geometry2>();
+
     assert_dimension_equal<Geometry1, Geometry2>();
 
     typedef typename boost::remove_const<Geometry1>::type ncg1_type;

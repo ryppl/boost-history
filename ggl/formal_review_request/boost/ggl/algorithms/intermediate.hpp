@@ -16,7 +16,7 @@
 #include <boost/range/metafunctions.hpp>
 
 #include <ggl/core/cs.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
+#include <ggl/geometries/concepts/check.hpp>
 #include <ggl/strategies/strategies.hpp>
 
 /*!
@@ -52,19 +52,20 @@ struct calculate_coordinate<Src, Dst, DimensionCount, DimensionCount>
     }
 };
 
-template<typename R, typename Iterator>
+template<typename Range, typename Iterator>
 struct range_intermediate
 {
-    static inline void apply(R const& range, bool start_and_end, Iterator out)
+    static inline void apply(Range const& range,
+            bool start_and_end, Iterator out)
     {
-        typedef typename point_type<R>::type point_type;
-        typedef typename boost::range_const_iterator<R>::type iterator_type;
+        typedef typename point_type<Range>::type point_type;
+        typedef typename boost::range_const_iterator<Range>::type iterator_type;
 
         iterator_type it = boost::begin(range);
 
         if (start_and_end)
         {
-            (*out++) = *it;
+            *out++ = *it;
         }
 
         iterator_type prev = it++;
@@ -78,12 +79,12 @@ struct range_intermediate
                     0,
                     dimension<point_type>::type::value
                 >::apply(*prev, *it, p);
-            *(out++) = p;
+            *out++ = p;
         }
 
         if (start_and_end)
         {
-            (*out++) = *prev;
+            *out++ = *prev;
         }
     }
 };
@@ -115,10 +116,18 @@ struct intermediate<linestring_tag, G, Iterator>
     \brief Calculate intermediate of a geometry
     \ingroup intermediate
  */
-template<typename G, typename Iterator>
-inline void intermediate(const G& geometry, bool start_and_end, Iterator out)
+template<typename Geometry, typename Iterator>
+inline void intermediate(Geometry const& geometry,
+        bool start_and_end, Iterator out)
 {
-    dispatch::intermediate<typename tag<G>::type, G, Iterator>::apply(geometry, start_and_end, out);
+    concept::check<const Geometry>();
+
+    dispatch::intermediate
+        <
+            typename tag<Geometry>::type,
+            Geometry,
+            Iterator
+        >::apply(geometry, start_and_end, out);
 }
 
 } // namespace ggl

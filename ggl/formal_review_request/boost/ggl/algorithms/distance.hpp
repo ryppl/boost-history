@@ -328,6 +328,9 @@ template <typename Geometry1, typename Geometry2>
 inline typename distance_result<Geometry1, Geometry2>::type distance(
                 Geometry1 const& geometry1, Geometry2 const& geometry2)
 {
+    concept::check<const Geometry1>();
+    concept::check<const Geometry2>();
+
     typedef typename point_type<Geometry1>::type point1_type;
     typedef typename point_type<Geometry2>::type point2_type;
 

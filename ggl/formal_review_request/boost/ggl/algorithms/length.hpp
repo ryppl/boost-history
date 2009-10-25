@@ -18,16 +18,20 @@
 #include <boost/type_traits.hpp>
 
 
-#include <ggl/algorithms/detail/calculate_null.hpp>
 #include <ggl/core/cs.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
+
+#include <ggl/algorithms/detail/calculate_null.hpp>
+
 #include <ggl/strategies/strategies.hpp>
 #include <ggl/strategies/length_result.hpp>
 
 /*!
 \defgroup length length calculation
-The length algorithm is implemented for the linestring and the multi_linestring geometry and results
-in the length of the linestring. If the points of a linestring have coordinates expressed in kilometers,
+The length algorithm is implemented for the linestring and the multi_linestring
+geometry and results in the length of the linestring. If the points of
+a linestring have coordinates expressed in kilometers,
 the length of the line is expressed in kilometers as well.
 \par Example:
 Example showing length calculation
@@ -53,15 +57,18 @@ struct segment_length
             Segment const& segment, Strategy const& strategy)
     {
         // BSG 10 APR 2009
-        // TODO: the segment concept has to be such that it is easy to return a point from it.
+        // TODO: the segment concept has to be such that it is easy
+        // to return a point from it.
         // Now it only accesses per coordinate
         return strategy(segment.first, segment.second);
     }
 };
 
 /*!
-\brief Internal, calculates length of a linestring using iterator pairs and specified strategy
-\note for_each could be used here, now that point_type is changed by boost range iterator
+\brief Internal, calculates length of a linestring using iterator pairs and
+    specified strategy
+\note for_each could be used here, now that point_type is changed by boost
+    range iterator
 */
 template<typename Range, typename Strategy>
 struct range_length
@@ -80,7 +87,8 @@ struct range_length
             iterator_type previous = it++;
             while(it != boost::end(range))
             {
-                // Add point-point distance using the return type belonging to strategy
+                // Add point-point distance using the return type belonging
+                // to strategy
                 sum += strategy(*previous, *it);
                 previous = it++;
             }
@@ -101,8 +109,8 @@ namespace dispatch
 template <typename Tag, typename Geometry, typename Strategy>
 struct length : detail::calculate_null
     <
-        typename length_result<Geometry>::type, 
-        Geometry, 
+        typename length_result<Geometry>::type,
+        Geometry,
         Strategy
     >
 {};
@@ -114,11 +122,11 @@ struct length<linestring_tag, Geometry, Strategy>
 {};
 
 
-// RING: length is currently 0.0 but it might be argued that it is the "perimeter"
+// RING: length is currently 0; it might be argued that it is the "perimeter"
 
 
 template <typename Geometry, typename Strategy>
-struct length<segment_tag, Geometry, Strategy> 
+struct length<segment_tag, Geometry, Strategy>
     : detail::length::segment_length<Geometry, Strategy>
 {};
 
@@ -134,8 +142,10 @@ struct length<segment_tag, Geometry, Strategy>
 /*!
     \brief Calculate length of a geometry
     \ingroup length
-    \details The function length returns the length of a geometry, using the default distance-calculation-strategy
-    \param geometry the geometry, being a ggl::linestring, vector, iterator pair, or any other boost compatible range
+    \details The function length returns the length of a geometry, using the
+        default distance-calculation-strategy
+    \param geometry the geometry, being a ggl::linestring, vector,
+        iterator pair, or any other boost compatible range
     \return the length
     Example showing length calculation on a vector
     \dontinclude doxygen_examples.cpp
@@ -147,6 +157,8 @@ template<typename Geometry>
 inline typename length_result<Geometry>::type length(
         Geometry const& geometry)
 {
+    concept::check<const Geometry>();
+
     typedef typename point_type<Geometry>::type point_type;
     typedef typename cs_tag<point_type>::type cs_tag;
     typedef typename strategy_distance
@@ -168,12 +180,15 @@ inline typename length_result<Geometry>::type length(
 /*!
     \brief Calculate length of a geometry
     \ingroup length
-    \details The function length returns the length of a geometry, using specified strategy
-    \param geometry the geometry, being a ggl::linestring, vector, iterator pair, or any other boost compatible range
+    \details The function length returns the length of a geometry,
+        using specified strategy
+    \param geometry the geometry, being a ggl::linestring, vector,
+        iterator pair, or any other boost compatible range
     \param strategy strategy to be used for distance calculations.
     \return the length
     \par Example:
-    Example showing length calculation using iterators and the Vincenty strategy
+    Example showing length calculation using iterators
+        and the Vincenty strategy
     \dontinclude doxygen_examples.cpp
     \skip example_length_linestring_iterators3
     \line {
@@ -183,10 +198,12 @@ template<typename Geometry, typename Strategy>
 inline typename length_result<Geometry>::type length(
         Geometry const& geometry, Strategy const& strategy)
 {
+    concept::check<const Geometry>();
+
     return dispatch::length
-        <   
-            typename tag<Geometry>::type, 
-            Geometry, 
+        <
+            typename tag<Geometry>::type,
+            Geometry,
             Strategy
         >::apply(geometry, strategy);
 }

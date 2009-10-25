@@ -13,9 +13,9 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
+#include <ggl/geometries/concepts/check.hpp>
+
 #include <ggl/arithmetic/arithmetic.hpp>
-#include <ggl/core/concepts/box_concept.hpp>
-#include <ggl/core/concepts/point_concept.hpp>
 
 // Buffer functions
 // Was before: "grow" but then only for box
@@ -108,9 +108,12 @@ struct buffer<box_tag, box_tag, BoxIn, T, BoxOut>
         BOX + distance -> BOX: it is allowed that "geometry_out" the same object as "geometry_in"
  */
 template <typename Input, typename Output, typename T>
-inline void buffer(const Input& geometry_in, Output& geometry_out,
+inline void buffer(Input const& geometry_in, Output& geometry_out,
             T const& distance, T const& chord_length = -1)
 {
+    concept::check<const Input>();
+    concept::check<Output>();
+
     dispatch::buffer
         <
             typename tag<Input>::type,
@@ -131,8 +134,11 @@ inline void buffer(const Input& geometry_in, Output& geometry_out,
     \note See also: buffer
  */
 template <typename Output, typename Input, typename T>
-Output make_buffer(const Input& geometry, T const& distance, T const& chord_length = -1)
+Output make_buffer(Input const& geometry, T const& distance, T const& chord_length = -1)
 {
+    concept::check<const Input>();
+    concept::check<Output>();
+
     Output geometry_out;
 
     dispatch::buffer

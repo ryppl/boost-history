@@ -22,7 +22,6 @@ typedef linear_ring<point_2d> ring_2d;
 typedef polygon<point_2d> polygon_2d;
 typedef box<point_2d> box_2d;
 typedef segment<point_2d> segment_2d;
-typedef nsphere<point_2d, double> circle;
 
 } // namespace ggl
 

@@ -110,6 +110,8 @@ struct equals<box_tag, false, B1, B2, DimensionCount>
 template <typename Geometry1, typename Geometry2>
 inline bool equals(Geometry1 const& geometry1, Geometry2 const& geometry2)
 {
+    concept::check<const Geometry1>();
+    concept::check<const Geometry2>();
     assert_dimension_equal<Geometry1, Geometry2>();
 
 // TODO: assert types equal:

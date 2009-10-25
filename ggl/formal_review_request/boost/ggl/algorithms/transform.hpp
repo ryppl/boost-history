@@ -16,11 +16,15 @@
 #include <boost/range/metafunctions.hpp>
 
 #include <ggl/algorithms/clear.hpp>
+#include <ggl/algorithms/assign.hpp>
+
 #include <ggl/core/cs.hpp>
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 #include <ggl/core/ring_type.hpp>
-#include <ggl/geometries/segment.hpp>
+
+#include <ggl/geometries/concepts/check.hpp>
+
 #include <ggl/strategies/strategies.hpp>
 
 
@@ -257,12 +261,15 @@ struct transform<box_tag, box_tag, B1, B2>
 template <typename G1, typename G2, typename S>
 inline bool transform(G1 const& geometry1, G2& geometry2, S const& strategy)
 {
+    concept::check<const G1>();
+    concept::check<G2>();
+
     typedef dispatch::transform
         <
-        typename tag<G1>::type,
-        typename tag<G2>::type,
-        G1,
-        G2
+            typename tag<G1>::type,
+            typename tag<G2>::type,
+            G1,
+            G2
         > transform_type;
 
     return transform_type::apply(geometry1, geometry2, strategy);
@@ -280,6 +287,9 @@ inline bool transform(G1 const& geometry1, G2& geometry2, S const& strategy)
 template <typename G1, typename G2>
 inline bool transform(G1 const& geometry1, G2& geometry2)
 {
+    concept::check<const G1>();
+    concept::check<G2>();
+
     typename detail::transform::select_strategy<G1, G2>::type strategy;
     return transform(geometry1, geometry2, strategy);
 }
