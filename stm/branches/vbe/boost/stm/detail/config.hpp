@@ -27,7 +27,7 @@
 //#define PERFORMING_VALIDATION 1
 #define PERFORMING_LATM 1
 #define PERFORMING_COMPOSITION 1
-//#define USE_STM_MEMORY_MANAGER 1
+#define USE_STM_MEMORY_MANAGER 1
 #define BUILD_MOVE_SEMANTICS 0
 #define USING_TRANSACTION_SPECIFIC_LATM 1
 #define USE_BLOOM_FILTER 1
@@ -62,7 +62,7 @@
 // Define only one of
 //      BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm when configuration manager is except_and_back_off_on_abort_notice_cm
 
-//#define BOOST_STM_CM_STATIC_CONF <boost/stm/contention_managers/except_and_back_off_on_abort_notice_cm.hpp>
+#define BOOST_STM_CM_STATIC_CONF <boost/stm/contention_managers/except_and_back_off_on_abort_notice_cm.hpp>
 //#define BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm 1
 
 #define BOOST_STM_CM_STATIC_INITIAL_SLEEP_TIME 0

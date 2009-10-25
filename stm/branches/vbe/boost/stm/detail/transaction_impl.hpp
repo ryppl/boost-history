@@ -520,7 +520,7 @@ inline std::string transaction::outputBlockedThreadsAndLockedLocks()
 
    o << "Threads and their conflicting mutexes:" << endl << endl;
 
-   for (ThreadMutexSetContainer::iterator iter = threadConflictingMutexes_.begin();
+   for (thread_latm_mutex_set::iterator iter = threadConflictingMutexes_.begin();
    threadConflictingMutexes_.end() != iter; ++iter)
    {
       // if this mutex is found in the transaction's conflicting mutexes
@@ -530,7 +530,7 @@ inline std::string transaction::outputBlockedThreadsAndLockedLocks()
       o << iter->first << " blocked: " << blocked(iter->first) << endl;
       o << "\t";
 
-      for (MutexSet::iterator inner = iter->second->begin(); inner != iter->second->end(); ++inner)
+      for (latm_mutex_set::iterator inner = iter->second->begin(); inner != iter->second->end(); ++inner)
       {
          o << *inner << " ";
       }
@@ -639,7 +639,7 @@ inline bool transaction::can_go_inflight()
    // to start only if
    else if (transaction::doing_tm_lock_protection())
    {
-      for (MutexSet::iterator i = tmConflictingLocks_.begin(); i != tmConflictingLocks_.end(); ++i)
+      for (latm_mutex_set::iterator i = tmConflictingLocks_.begin(); i != tmConflictingLocks_.end(); ++i)
       {
          // if one of your conflicting locks is currently locked ...
          if (latmLockedLocks_.end() != latmLockedLocks_.find(*i))

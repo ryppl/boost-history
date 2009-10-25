@@ -50,7 +50,7 @@ namespace boost { namespace stm {
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 inline bool transaction::dir_do_core_full_pthread_lock_mutex
-(Mutex *mutex, int lockWaitTime, int lockAborted)
+(latm_mutex mutex, int lockWaitTime, int lockAborted)
 {
    //--------------------------------------------------------------------------
    // if the lock-aware tm lock set is empty, lock the in-flight trans mutex
@@ -121,7 +121,7 @@ inline bool transaction::dir_do_core_full_pthread_lock_mutex
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::dir_full_pthread_lock_mutex(Mutex *mutex)
+inline int transaction::dir_full_pthread_lock_mutex(latm_mutex mutex)
 {
    if (transaction* t = get_inflight_tx_of_same_thread(false))
    {
@@ -187,7 +187,7 @@ inline int transaction::dir_full_pthread_lock_mutex(Mutex *mutex)
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::dir_full_pthread_trylock_mutex(Mutex *mutex)
+inline int transaction::dir_full_pthread_trylock_mutex(latm_mutex mutex)
 {
    if (transaction* t = get_inflight_tx_of_same_thread(false))
    {
@@ -244,7 +244,7 @@ inline int transaction::dir_full_pthread_trylock_mutex(Mutex *mutex)
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::dir_full_pthread_unlock_mutex(Mutex *mutex)
+inline int transaction::dir_full_pthread_unlock_mutex(latm_mutex mutex)
 {
    bool hasLock = true;
     {

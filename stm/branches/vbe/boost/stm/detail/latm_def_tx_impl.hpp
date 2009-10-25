@@ -42,7 +42,7 @@ namespace boost { namespace stm {
 //
 //----------------------------------------------------------------------------
 inline bool transaction::def_do_core_tx_conflicting_lock_pthread_lock_mutex
-(Mutex *mutex, int lockWaitTime, int lockAborted, bool txIsIrrevocable)
+(latm_mutex mutex, int lockWaitTime, int lockAborted, bool txIsIrrevocable)
 {
    //--------------------------------------------------------------------------
    // see if this mutex is part of any of the in-flight transactions conflicting
@@ -94,7 +94,7 @@ inline bool transaction::def_do_core_tx_conflicting_lock_pthread_lock_mutex
 
       try {
          latmLockedLocksAndThreadIdsMap_.insert
-         (std::make_pair<Mutex*, ThreadIdSet>(mutex, txThreadId));
+         (std::make_pair<latm_mutex, ThreadIdSet>(mutex, txThreadId));
       }
       catch (...)
       {
@@ -121,7 +121,7 @@ inline bool transaction::def_do_core_tx_conflicting_lock_pthread_lock_mutex
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::def_tx_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
+inline int transaction::def_tx_conflicting_lock_pthread_lock_mutex(latm_mutex mutex)
 {
    int waitTime = 0, aborted = 0;
 
@@ -211,7 +211,7 @@ inline int transaction::def_tx_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::def_tx_conflicting_lock_pthread_trylock_mutex(Mutex *mutex)
+inline int transaction::def_tx_conflicting_lock_pthread_trylock_mutex(latm_mutex mutex)
 {
    //--------------------------------------------------------------------------
 
@@ -264,7 +264,7 @@ inline int transaction::def_tx_conflicting_lock_pthread_trylock_mutex(Mutex *mut
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::def_tx_conflicting_lock_pthread_unlock_mutex(Mutex *mutex)
+inline int transaction::def_tx_conflicting_lock_pthread_unlock_mutex(latm_mutex mutex)
 {
    synchro::lock_guard<Mutex> autolock_l(*latm_lock());
    synchro::lock_guard<Mutex> autolock_g(*general_lock());

@@ -13,7 +13,7 @@
 
 #include <boost/stm/transaction.hpp>
 #include <boost/stm/non_tx/detail/cache_map.hpp>
-#include <boost/stm/contention_manager.hpp>
+#include <boost/stm/contention_managers/contention_manager.hpp>
 #include <iostream>
 
 using namespace std;
@@ -31,10 +31,10 @@ synchro::implicit_thread_specific_ptr<transaction::transaction_tss_storage> tran
 // Static initialization
 ///////////////////////////////////////////////////////////////////////////////
 transaction::InflightTxes transaction::transactionsInFlight_;
-transaction::MutexSet transaction::latmLockedLocks_;
+transaction::latm_mutex_set transaction::latmLockedLocks_;
 transaction::MutexThreadSetMap transaction::latmLockedLocksAndThreadIdsMap_;
 transaction::MutexThreadMap transaction::latmLockedLocksOfThreadMap_;
-transaction::MutexSet transaction::tmConflictingLocks_;
+transaction::latm_mutex_set transaction::tmConflictingLocks_;
 transaction::DeletionBuffer transaction::deletionBuffer_;
 
 clock_t transaction::global_clock_ = 0;
@@ -55,14 +55,13 @@ Mutex transaction::latmMutex_;
 boost::stm::LatmType transaction::eLatmType_ = eFullLatmProtection;
 std::ofstream transaction::logFile_;
 
-#if USE_STM_MEMORY_MANAGER
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-Mutex base_transaction_object::transactionObjectMutex_ = PTHREAD_MUTEX_INITIALIZER;
+Mutex base_memory_manager::transactionObjectMutex_ = PTHREAD_MUTEX_INITIALIZER;
 #else
-boost::mutex base_transaction_object::transactionObjectMutex_;
+boost::mutex base_memory_manager::transactionObjectMutex_;
 #endif
-boost::stm::MemoryPool<base_transaction_object> base_transaction_object::memory_(16384);
-#endif
+boost::stm::MemoryPool<void*> base_memory_manager::memory_(16384);
+
 
 bool transaction::initialized_ = false;
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,10 +96,10 @@ transaction_bookkeeping transaction::bookkeeping_;
 #ifndef USE_SINGLE_THREAD_CONTEXT_MAP
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
-transaction::ThreadMutexSetContainer transaction::threadConflictingMutexes_;
+transaction::thread_latm_mutex_set transaction::threadConflictingMutexes_;
 #endif
-transaction::ThreadMutexSetContainer transaction::threadObtainedLocks_;
-transaction::ThreadMutexSetContainer transaction::threadCurrentlyLockedLocks_;
+transaction::thread_latm_mutex_set transaction::threadObtainedLocks_;
+transaction::thread_latm_mutex_set transaction::threadCurrentlyLockedLocks_;
 #endif
 transaction::ThreadWriteContainer transaction::threadWriteLists_;
 transaction::ThreadReadContainer transaction::threadReadLists_;
@@ -118,10 +117,10 @@ transaction::ThreadBoolContainer transaction::threadBlockedLists_;
 #ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
-transaction::ThreadMutexSetContainer transaction::threadConflictingMutexes_;
+transaction::thread_latm_mutex_set transaction::threadConflictingMutexes_;
 #endif
-transaction::ThreadMutexSetContainer transaction::threadObtainedLocks_;
-transaction::ThreadMutexSetContainer transaction::threadCurrentlyLockedLocks_;
+transaction::thread_latm_mutex_set transaction::threadObtainedLocks_;
+transaction::thread_latm_mutex_set transaction::threadCurrentlyLockedLocks_;
 #endif
 transaction::ThreadMutexContainer transaction::threadMutexes_;
 transaction::ThreadBoolContainer transaction::threadBlockedLists_;
@@ -139,7 +138,7 @@ transaction::tss_context_map_type transaction::tss_context_map_;
 ///////////////////////////////////////////////////////////////////////////////
 void transaction::initialize()
 {
-   base_transaction_object::alloc_size(16384);
+   base_memory_manager::alloc_size(16384);
 
    if (initialized_) return;
    initialized_ = true;
@@ -219,23 +218,23 @@ void transaction::initialize_thread()
 
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
-   ThreadMutexSetContainer::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
+   thread_latm_mutex_set::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
    if (threadConflictingMutexes_.end() == conflictingMutexIter)
    {
-      threadConflictingMutexes_[threadId] = new MutexSet;
+      threadConflictingMutexes_[threadId] = new latm_mutex_set;
    }
 #endif
 
-   ThreadMutexSetContainer::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
+   thread_latm_mutex_set::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
    if (threadObtainedLocks_.end() == obtainedLocksIter)
    {
-      threadObtainedLocks_[threadId] = new MutexSet;
+      threadObtainedLocks_[threadId] = new latm_mutex_set;
    }
 
-   ThreadMutexSetContainer::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
+   thread_latm_mutex_set::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
    if (threadCurrentlyLockedLocks_.end() == currentlyLockedLocksIter)
    {
-      threadCurrentlyLockedLocks_[threadId] = new MutexSet;
+      threadCurrentlyLockedLocks_[threadId] = new latm_mutex_set;
    }
 #endif
 
@@ -312,23 +311,23 @@ void transaction::initialize_thread()
    ThreadBoolContainer::iterator blockedIter = threadBlockedLists_.find(threadId);
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
-   ThreadMutexSetContainer::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
+   thread_latm_mutex_set::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
    if (threadConflictingMutexes_.end() == conflictingMutexIter)
    {
-      threadConflictingMutexes_[threadId] = new MutexSet;
+      threadConflictingMutexes_[threadId] = new latm_mutex_set;
    }
 #endif
 
-   ThreadMutexSetContainer::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
+   thread_latm_mutex_set::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
    if (threadObtainedLocks_.end() == obtainedLocksIter)
    {
-      threadObtainedLocks_[threadId] = new MutexSet;
+      threadObtainedLocks_[threadId] = new latm_mutex_set;
    }
 
-   ThreadMutexSetContainer::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
+   thread_latm_mutex_set::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
    if (threadCurrentlyLockedLocks_.end() == currentlyLockedLocksIter)
    {
-      threadCurrentlyLockedLocks_[threadId] = new MutexSet;
+      threadCurrentlyLockedLocks_[threadId] = new latm_mutex_set;
    }
 #endif
 
@@ -482,16 +481,16 @@ void transaction::terminate_thread()
 
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
-   ThreadMutexSetContainer::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
+   thread_latm_mutex_set::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
    delete conflictingMutexIter->second;
    threadConflictingMutexes_.erase(conflictingMutexIter);
 #endif
 
-   ThreadMutexSetContainer::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
+   thread_latm_mutex_set::iterator obtainedLocksIter = threadObtainedLocks_.find(threadId);
    delete obtainedLocksIter->second;
    threadObtainedLocks_.erase(obtainedLocksIter);
 
-   ThreadMutexSetContainer::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
+   thread_latm_mutex_set::iterator currentlyLockedLocksIter = threadCurrentlyLockedLocks_.find(threadId);
    delete currentlyLockedLocksIter->second;
    threadCurrentlyLockedLocks_.erase(currentlyLockedLocksIter);
 #endif

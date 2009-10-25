@@ -11,7 +11,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/stm/contention_manager.hpp>
+#include <boost/stm/contention_managers/contention_manager.hpp>
 #include <boost/stm/transaction.hpp>
 #include <pthread.h>
 

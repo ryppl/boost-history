@@ -21,6 +21,8 @@
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction_object.hpp>
 #include <boost/stm/cache_fct.hpp>
+#include <boost/stm/memory_managers/memory_manager.hpp>
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
@@ -34,17 +36,28 @@ namespace non_tx { namespace detail {
 //-----------------------------------------------------------------------------
 
 template <typename T>
-class cache : public base_transaction_object {
+class cache : public
+#ifdef USE_STM_MEMORY_MANAGER2
+    memory_manager<cache<T>, base_transaction_object>
+#else
+    base_transaction_object
+#endif
+{
+#ifdef USE_STM_MEMORY_MANAGER2
+    typedef memory_manager<cache<T>, base_transaction_object> base_type;
+#else
+    typedef base_transaction_object base_type;
+#endif
 public:
     T* const value_;
     mutable T* ptr_;
 
     inline cache(T& ref)
-        : base_transaction_object()
+        : base_type()
         , value_(&ref), ptr_(0) {}
 
     inline cache(T* ptr)
-        : base_transaction_object()
+        : base_type()
         , value_(ptr), ptr_(0) {}
 
     inline ~cache() {
@@ -103,24 +116,21 @@ public:
 #if USE_STM_MEMORY_MANAGER
    void* operator new(std::size_t size, const std::nothrow_t&) throw ()
    {
-      return retrieve_mem(size);
+      return base_memory_manager::retrieve_mem(size);
    }
     void* operator new(std::size_t size) throw (std::bad_alloc)
     {
-        void* ptr= retrieve_mem(size);
-        if (ptr==0) throw std::bad_alloc;
+        void* ptr= base_memory_manager::retrieve_mem(size);
+        if (ptr==0) throw std::bad_alloc();
         return ptr;
     }
 
    void operator delete(void* mem) throw ()
    {
-      static cache<T> elem;
-      static std::size_t elemSize = sizeof(elem);
-      return_mem(mem, elemSize);
+      base_memory_manager::return_mem(mem, sizeof(cache<T>));
    }
 #endif
-
-
+   
 private:
     //cache(cache<T> const & r);
 

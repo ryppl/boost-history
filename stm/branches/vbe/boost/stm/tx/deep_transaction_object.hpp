@@ -17,6 +17,6 @@
 //-----------------------------------------------------------------------------
 #include <boost/stm/transaction_object.hpp>
 //-----------------------------------------------------------------------------
-#endif // BOOST_STM_SHALLOW_TRANSACTION_OBJECT__HPP
+#endif // BOOST_STM_TX_DEEP_TRANSACTION_OBJECT__HPP
 
 

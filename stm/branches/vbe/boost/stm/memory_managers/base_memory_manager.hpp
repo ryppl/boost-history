@@ -47,7 +47,9 @@ class base_memory_manager
 {
     base_memory_manager();
 public:
-    static void alloc_size(std::size_t size) { memory_.alloc_size(size); }
+    static void alloc_size(std::size_t size) { 
+        memory_.alloc_size(size); 
+    }
 
     static void return_mem(void *mem, std::size_t size)
     {

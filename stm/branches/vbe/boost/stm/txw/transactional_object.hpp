@@ -14,7 +14,10 @@
 #ifndef BOOST_STM_TXW_TRANSACTIONAL_OBJECT__HPP
 #define BOOST_STM_TXW_TRANSACTIONAL_OBJECT__HPP
 
+//-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction.hpp>
+#include <boost/stm/memory_managers/memory_manager.hpp>
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
@@ -42,27 +45,39 @@ namespace boost { namespace stm {
 //-----------------------------------------------------------------------------
 
 template <typename T>
-class transactional_object : public base_transaction_object {
+class transactional_object : public
+#ifdef USE_STM_MEMORY_MANAGER2
+    memory_manager<transactional_object<T>, base_transaction_object>
+#else
+    base_transaction_object
+#endif
+{
+#ifdef USE_STM_MEMORY_MANAGER2
+    typedef memory_manager<transactional_object<T>, base_transaction_object> base_type;
+#else
+    typedef base_transaction_object base_type;
+#endif
 public:
+
     T value;
 
     transactional_object() {}
     transactional_object(const T*ptr)
-        : base_transaction_object()
+        : base_type()
         , value(*ptr) {}
 
     transactional_object(transactional_object<T> const & r)
-        : base_transaction_object(r)
+        : base_type(r)
         , value(r.value) {}
 
     template <typename T1>
     transactional_object(T1 const &p1)
-        : base_transaction_object()
+        : base_type()
         , value(p1) {}
 
     template <typename T1, typename T2>
     transactional_object(T1 const &p1, T2 const &p2)
-        : base_transaction_object()
+        : base_type()
         , value(p1,p2) {}
 
     transactional_object & operator=(transactional_object const & r)  // =default never throws
@@ -106,20 +121,18 @@ public:
     #if USE_STM_MEMORY_MANAGER
    void* operator new(std::size_t size, const std::nothrow_t&) throw ()
    {
-      return retrieve_mem(size);
+      return base_memory_manager::retrieve_mem(size);
    }
     void* operator new(std::size_t size) throw (std::bad_alloc)
     {
-        void* ptr= retrieve_mem(size);
-        if (ptr==0) throw std::bad_alloc;
+        void* ptr= base_memory_manager::retrieve_mem(size);
+        if (ptr==0) throw std::bad_alloc();
         return ptr;
     }
 
    void operator delete(void* mem) throw ()
    {
-      static transactional_object<T> elem;
-      static std::size_t elemSize = sizeof(elem);
-      return_mem(mem, elemSize);
+      base_memory_manager::return_mem(mem, sizeof(transactional_object<T>));
    }
     #endif
 

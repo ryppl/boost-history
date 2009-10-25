@@ -25,9 +25,7 @@
 #include <boost/stm/base_transaction_object.hpp>
 #include <boost/stm/cache_fct.hpp>
 #include <boost/stm/datatypes.hpp>
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
+#include <boost/stm/memory_managers/memory_manager.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
@@ -56,8 +54,18 @@ class transaction;
 //-----------------------------------------------------------------------------
 
 template <class Derived, typename Base=base_transaction_object>
-class shallow_transaction_object : public base_transaction_object
+class shallow_transaction_object : public
+#ifdef USE_STM_MEMORY_MANAGER
+    memory_manager<shallow_transaction_object<Derived,Base>, Base>
+#else
+    Base
+#endif
 {
+#ifdef USE_STM_MEMORY_MANAGER
+    typedef memory_manager<transaction_object<Derived,Base>, Base> base_type;
+#else
+    typedef Base base_type;
+#endif
 public:
 
     //--------------------------------------------------------------------------
@@ -82,27 +90,6 @@ public:
    {
       static_cast<Derived &>(*this) = draco_move
          (*(static_cast<Derived*>(rhs)));
-   }
-#endif
-
-
-#if USE_STM_MEMORY_MANAGER
-   void* operator new(std::size_t size, const std::nothrow_t&) throw ()
-   {
-      return retrieve_mem(size);
-   }
-    void* operator new(std::size_t size) throw (std::bad_alloc)
-    {
-        void* ptr= retrieve_mem(size);
-        if (ptr==0) throw std::bad_alloc;
-        return ptr;
-    }
-
-   void operator delete(void* mem) throw ()
-   {
-      static Derived elem;
-      static std::size_t elemSize = sizeof(elem);
-      return_mem(mem, elemSize);
    }
 #endif
 

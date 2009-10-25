@@ -26,9 +26,7 @@
 #include <boost/stm/base_transaction_object.hpp>
 #include <boost/stm/cache_fct.hpp>
 #include <boost/stm/datatypes.hpp>
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
+#include <boost/stm/memory_managers/memory_manager.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
@@ -56,8 +54,18 @@ class transaction;
 // the single issue is the forward constructors from transaction_object<D, B> to B
 //-----------------------------------------------------------------------------
 template <class Derived, typename Base=base_transaction_object>
-class transaction_object : public base_transaction_object
+class transaction_object : public
+#ifdef USE_STM_MEMORY_MANAGER2
+    memory_manager<transaction_object<Derived,Base>, Base>
+#else
+    Base
+#endif
 {
+#ifdef USE_STM_MEMORY_MANAGER2
+    typedef memory_manager<transaction_object<Derived,Base>, Base> base_type;
+#else
+    typedef Base base_type;
+#endif
 public:
     typedef transaction_object<Derived, Base> this_type;
 
@@ -107,20 +115,18 @@ public:
 #if USE_STM_MEMORY_MANAGER
    void* operator new(std::size_t size, const std::nothrow_t&) throw ()
    {
-      return retrieve_mem(size);
+      return base_memory_manager::retrieve_mem(size);
    }
     void* operator new(std::size_t size) throw (std::bad_alloc)
     {
-        void* ptr= retrieve_mem(size);
-        if (ptr==0) throw std::bad_alloc;
+        void* ptr= base_memory_manager::retrieve_mem(size);
+        if (ptr==0) throw std::bad_alloc();
         return ptr;
     }
 
    void operator delete(void* mem) throw ()
    {
-      static Derived elem;
-      static std::size_t elemSize = sizeof(elem);
-      return_mem(mem, elemSize);
+      base_memory_manager::return_mem(mem, sizeof(Derived));
    }
 #endif
 };

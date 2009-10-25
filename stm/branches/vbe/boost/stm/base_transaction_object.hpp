@@ -24,6 +24,7 @@
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/datatypes.hpp>
+
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/memory_pool.hpp>
 //-----------------------------------------------------------------------------
@@ -106,29 +107,7 @@ public:
     std::list<base_transaction_object*>& embeddeds() {return embeddeds_;}
     void bind(base_transaction_object* bto) {embeddeds_.push_back(bto);}
 #endif
-
-#if USE_STM_MEMORY_MANAGER
-    static void alloc_size(std::size_t size) { memory_.alloc_size(size); }
-#else
-    static void alloc_size(std::size_t size) { }
-#endif
-//protected:
-
-#if USE_STM_MEMORY_MANAGER
-    static void return_mem(void *mem, std::size_t size)
-    {
-        synchro::lock_guard<Mutex> lock(transactionObjectMutex_);
-        memory_.returnChunk(mem, size);
-    }
-
-    static void* retrieve_mem(std::size_t size)
-    {
-        synchro::lock_guard<Mutex> lock(transactionObjectMutex_);
-        void *mem = memory_.retrieveChunk(size);
-        return mem;
-    }
-#endif
-
+  
 private:
 
     //--------------------------------------------------------------------------
@@ -147,10 +126,6 @@ private:
     //--------------------------------------------------------------------------
     mutable thread_id_t transactionThread_;
     mutable new_memory_t newMemory_;
-#if USE_STM_MEMORY_MANAGER
-    static Mutex transactionObjectMutex_;
-    static MemoryPool<base_transaction_object> memory_;
-#endif
 #if BOOST_STM_ALLOWS_EMBEDEEDS
     std::list<base_transaction_object*> embeddeds_;
 #endif
