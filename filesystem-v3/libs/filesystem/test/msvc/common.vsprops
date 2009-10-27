@@ -9,7 +9,7 @@
 	<Tool
 		Name="VCCLCompilerTool"
 		AdditionalIncludeDirectories="../../../../.."
-		PreprocessorDefinitions="BOOST_SYSTEM_NO_LIB;BOOST_FILESYSTEM_NO_LIB"
+		PreprocessorDefinitions="BOOST_SYSTEM_NO_DEPRECATED;BOOST_SYSTEM_NO_LIB;BOOST_FILESYSTEM_NO_LIB"
 		ExceptionHandling="2"
 	/>
 	<Tool

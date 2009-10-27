@@ -12,14 +12,15 @@
 
 <body>
 
-<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="710">
+<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="933">
   <tr>
     <td width="277">
 <a href="../../../index.htm">
 <img src="../../../boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86" border="0"></a></td>
-    <td width="410" align="middle">
-    <font size="7">Filesystem Library</font>
-    </td>
+    <td width="633" align="middle">
+    <font size="7">Filesystem Library<br>
+    Version 3<br>
+&nbsp;</font></td>
   </tr>
 </table>
 
@@ -38,15 +39,11 @@
 
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
   <tr>
-    <td width="26%" valign="top"><a href="#Introduction">Introduction</a><br>
+    <td width="33%" valign="top"><a href="#Introduction">Introduction</a><br>
     <a href="#Definitions">Definitions</a><br>
-    <a href="#Requirements">Requirements</a><br>
-&nbsp;&nbsp;&nbsp;
-<a href="#Requirements-on-programs">Requirements on programs</a><br>
-&nbsp; &nbsp;&nbsp;<a href="#Requirements-on-implementations">Requirementson implementations</a><br>
     <a href="#Header-filesystem-synopsis">
     Header &lt;filesystem&gt; synopsis</a><br>
-    <a href="#Path-traits">Path traits</a><br>
+    <a href="#Error-handling">Error reporting</a><br>
     <a href="#Class-template-path">
     Class path</a><br>
     &nbsp;&nbsp;&nbsp;
@@ -64,38 +61,27 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-deprecated-functions">path deprecated functions</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-non-member-functions">path non-member functions</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-inserter-extractor">path inserter and extractor</a><span style="background-color: #FFFFFF"><br>
-</span> &nbsp;<a href="#Class-template-basic_filesystem_error">Class template 
-    basic_filesystem_error</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_filesystem_error-constructors">basic_filesystem_error 
+</span> &nbsp;<a href="#Class-filesystem_error">Class filesystem_error</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#filesystem_error-members">filesystem_error 
     constructors</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_filesystem_error-observers">basic_filesystem_error observers</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#Class-template-directory_entry">Class template 
-    directory_entry</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; f<a href="#filesystem_error-path1">ilesystem_error path1</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#filesystem_error-path2">filesystem_error path2</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#filesystem_error-what">filesystem_error what</a><br>
+<a href="#Class-directory_entry">Class directory_entry</a><br>
+&nbsp;&nbsp;&nbsp;
 <a href="#directory_entry-constructors">directory_entry constructors</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#directory_entry-modifiers">directory_entry modifiers</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#directory_entry-observers">directory_entry observers</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#directory_entry-comparisons">directory_entry comparisons</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#Class-template-directory_iterator">Class template 
-    directory_iterator</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#directory_entry-modifiers">directory_entry modifiers</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#directory_entry-observers">directory_entry observers</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#directory_entry-comparisons">directory_entry comparisons</a><br>
+<a href="#Class-directory_iterator">Class  directory_iterator</a><br>
+&nbsp;&nbsp;&nbsp;
 <a href="#directory_iterator-constructors">directory_iterator 
     constructors</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#Class-template-recursive_directory_iterator">Class template 
-    recursive_directory_iterator</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#file_status">Class 
+<a href="#Class-template-recursive_directory_iterator">Class recursive_directory_iterator</a><br>
+    <a href="#file_status">Class 
     file_status</a><br>
     &nbsp;</td>
-    <td width="35%" valign="top">&nbsp;</td>
-    <td width="89%" valign="top">
+    <td width="33%" valign="top">
     <a href="#Operational-functions">
     Operational functions</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#complete">complete</a><br>
@@ -123,7 +109,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#status">status</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#status_known">status_known</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#symlink_status">symlink_status</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#system_complete">system_complete</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp <a href="#system_complete">system_complete</a></td>
+    <td width="34%" valign="top">
     <a href="#header-fstream">Additions 
     to header &lt;fstream&gt;</a><br>
 <a href="#Suggestions-for-fstream">Suggestions for <code>&lt;fstream&gt;</code></a><code><br>
@@ -137,7 +124,7 @@
 </table>
 
 <h2><a name="Introduction">Introduction</a></h2>
-<p>Some library behavior is specified by reference to ISO/IEC 9945:2003, <i>
+<p>Some behavior is specified by reference to ISO/IEC 9945:2003, <i>
 <a href="http://www.unix.org/single_unix_specification/">POSIX</a></i>. How such behavior is actually implemented is unspecified.</p>
 <blockquote>
 <p>[<i>Note:</i> This constitutes an &quot;as if&quot; rule for implementation of 
@@ -154,12 +141,12 @@ reasonable behavior, the implementation shall report an error in an
 implementation-defined manner.</p>
 <blockquote>
 <p>[<i>Note:</i> Such errors might be reported by an #error directive, a <code>
-static_assert</code>, a <code>basic_filesystem_error</code> exception, a special 
+static_assert</code>, a <code>filesystem_error</code> exception, a special 
 return value, or some other manner. <i>--end note</i>]</p>
 </blockquote>
 <p>Specific operating systems such as <i>OpenMVS</i>,
 <i>UNIX</i>, and <i>Windows</i> are mentioned only for purposes of illustration or to 
-give guidance to implementors. No slight to other operating systems is implied 
+give guidance to implementers. No slight to other operating systems is implied 
 or intended.</p>
 <p>The <i>Effects</i> and <i>Postconditions</i> of functions described in this 
 reference 
@@ -216,82 +203,6 @@ solidus.</p>
 when multiple threads, processes, or computers interleave access and 
 modification of 
 the same object within a file system.</p>
-<h3><a name="Requirements">Requirements</a></h3>
-<h4><a name="Requirements-on-programs">Requirements on programs</a></h4>
-<p>The arguments for template parameters named <code>Path</code>, <code>path</code>, 
-or <code>path</code> described in this clause shall be of type <code>path</code>, 
-or a class derived from <code>path</code>, unless otherwise 
-specified.</p>
-<h4><a name="Requirements-on-implementations">Requirements on implementations</a></h4>
-<p>Some function templates described in this clause have a template parameter 
-named <code>Path</code>, <code>path</code>, or <code>path</code>. When called 
-with a function argument <code>s</code> of type <code>char*</code> or <code>
-std::string</code>, the implementation shall treat the argument as if it were 
-coded <code>path(s)</code>. When called with a function argument <code>s</code> 
-of type <code>wchar_t*</code> or <code>std::wstring</code>, the implementation 
-shall treat the argument as if it were coded <code>wpath(s)</code>. For 
-functions with two arguments, implementations shall not supply this treatment 
-when <code>path</code> and <code>path</code> are different types.</p>
-<blockquote>
-<p>[<i>Note:</i> This &quot;do-the-right-thing&quot; rule allows users to write <code>exists(&quot;foo&quot;)</code>, 
-taking advantage of class <code>path</code>'s string conversion 
-constructor,&nbsp; rather 
-than the lengthier and more error prone <code>exists(path(&quot;foo&quot;))</code>. This 
-is particularly important for the simple, script-like, programs which are an 
-important use case for the library. Calling two argument functions with 
-different types is a very rare usage, and may well be a coding error, so 
-automatic conversion is not supported for such cases.</p>
-<p>The implementation technique is unspecified. One possible implementation 
-technique, using
-<code>exists()</code> as an example, is:</p>
-  <blockquote>
-    <pre>template &lt;class Path&gt;
-  typename boost::enable_if&lt;is_path&lt;Path&gt;,bool&gt;::type exists(const path&amp; p);
-inline bool exists(const path&amp; p) { return exists&lt;path&gt;(p); }
-inline bool exists(const wpath&amp; p) { return exists&lt;wpath&gt;(p); }</pre>
-  </blockquote>
-  <p>&nbsp;The <code>enable_if</code> will fail for a C string or <code>
-  std::basic_string</code> argument, which will then be automatically converted 
-  to a <code>path</code> object via the appropriate <code>path</code> conversion 
-  constructor.&nbsp;&nbsp; <i>-- end note</i>]</p>
-  <p><span style="background-color: #E0E0E0"><i>The two overloads are not given 
-  in the normative text because:</i></span></p>
-  <ul>
-    <li><span style="background-color: #E0E0E0"><i>Better techniques for 
-    achieving the desired affect may be developed, perhaps enabled by core 
-    language changes like Concepts.</i></span></li>
-    <li><span style="background-color: #E0E0E0"><i>Implementations may prefer 
-    techniques that work with legacy compilers that do not support enable_if.</i></span></li>
-    <li><span style="background-color: #E0E0E0"><i>Spelling out the overloads 
-    makes the text longer and harder to read without adding much benefit.</i></span></li>
-    <li><span style="background-color: #E0E0E0"><i>More overloads will probably 
-    be needed for char16_t and char32_t (or whatever they end up being called), 
-    making it even less attractive to actually spell out each one. </i></span>
-    </li>
-  </ul>
-</blockquote>
-<p>Implementations of functions described in this clause are permitted to call the applications 
-program interface (API) provided by the operating system. If such an operating 
-system API call results in an error, implementations 
-shall report the error by throwing exception <code>basic_filesystem_error</code>, 
-unless otherwise specified.</p>
-<blockquote>
-<p>[<i>Note: </i>Such exceptions and the conditions that cause them to be thrown 
-are not explicitly described in each <i>Throws</i> element within this clause. 
-Because hardware failures, network failures, race conditions, and a plethora of 
-other errors occur frequently in file system operations, users should be aware 
-that <span style="background-color: #FFFFFF">unless otherwise specified</span> any file system operation, not matter how apparently innocuous, may throw 
-an exception. <i>-- end note</i>]</p>
-</blockquote>
-<p><span style="background-color: #FFFFFF">Functions commonly used in contexts 
-where errors are not exceptional have overloads taking an additional argument of 
-type </span><code><span style="background-color: #FFFFFF">error_code&amp; ec</span></code><span style="background-color: #FFFFFF">. Such overloaded functions shall not throw exceptions. If an error occurs, 
-<code>ec</code> shall be set to the 
-error code reported by the operating system, otherwise <code>ec</code> shall be set to 0. If 
-an overload without an argument of type </span><code>
-<span style="background-color: #FFFFFF">error_code&amp; ec</span></code><span style="background-color: #FFFFFF"> returns void, the other overload (with an argument of type </span><code>
-<span style="background-color: #FFFFFF">error_code&amp; ec</span></code><span style="background-color: #FFFFFF">) returns an <code>
-error_code</code> with the value of ec.</span></p>
 <h3><a name="Header-filesystem-synopsis">Header <code>&lt;boost/filesystem&gt;</code> synopsis</a></h3>
 <pre>  namespace boost
   {
@@ -299,36 +210,31 @@ error_code</code> with the value of ec.</span></p>
     {
       class <a href="#Class-template-path">path</a>;
 
-      void swap(path &amp; lhs, path &amp; rhs);
+      void swap(path&amp; lhs, path&amp; rhs);
 
-      bool operator==(const path &amp; lhs, const path &amp; rhs);
-      bool operator!=(const path &amp; lhs, const path &amp; rhs);
-      bool operator&lt; (const path &amp; lhs, const path &amp; rhs);
-      bool operator&lt;=(const path &amp; lhs, const path &amp; rhs);
-      bool operator&gt; (const path &amp; lhs, const path &amp; rhs);
-      bool operator&gt;=(const path &amp; lhs, const path &amp; rhs);
+      bool operator==(const path&amp; lhs, const path&amp; rhs);
+      bool operator!=(const path&amp; lhs, const path&amp; rhs);
+      bool operator&lt; (const path&amp; lhs, const path&amp; rhs);
+      bool operator&lt;=(const path&amp; lhs, const path&amp; rhs);
+      bool operator&gt; (const path&amp; lhs, const path&amp; rhs);
+      bool operator&gt;=(const path&amp; lhs, const path&amp; rhs);
 
-      bool operator/ (const path &amp; lhs, const path &amp; rhs);
+      path operator/ (const path&amp; lhs, const path&amp; rhs);
 
-      std::ostream &amp;  operator&lt;&lt;( std::ostream &amp; os, const path &amp; p );
-      std::wostream &amp; operator&lt;&lt;( std::wostream &amp; os, const path &amp; p );
-      std::istream &amp;  operator&gt;&gt;( std::istream &amp; is, path &amp; p );
-      std::wistream &amp; operator&gt;&gt;( std::wistream &amp; is, path &amp; p )
+      std::ostream&amp;  operator&lt;&lt;( std::ostream&amp; os, const path&amp; p );
+      std::wostream&amp; operator&lt;&lt;( std::wostream&amp; os, const path&amp; p );
+      std::istream&amp;  operator&gt;&gt;( std::istream&amp; is, path&amp; p );
+      std::wistream&amp; operator&gt;&gt;( std::wistream&amp; is, path&amp; p )
 
-      <span style="background-color: #FFFFFF">class filesystem_error;</span><span style="background-color: #FFFF00">
+      <span style="background-color: #FFFFFF">class <a href="#Class-filesystem_error">filesystem_error</a>;</span><span style="background-color: #FFFF00">
 </span>      
-      class <a href="#Class-template-basic_filesystem_error">basic_filesystem_error</a>;
+      <span style="background-color: #FFFFFF">class <a href="#Class-directory_entry">directory_entry</a>;
 
-      typedef filesystem_error filesystem_error;
-      typedef basic_filesystem_error&lt;wpath&gt; wfilesystem_error;
-
-      <span style="background-color: #FFFFFF">class <a href="#Class-template-directory_entry">directory_entry</a>;
-
-</span>      class <a href="#Class-template-directory_iterator">directory_iterator</a>;
+</span>      class <a href="#Class-directory_iterator">directory_iterator</a>;
 
       class <a href="#Class-template-recursive_directory_iterator">recursive_directory_iterator</a>;
 
-      enum file_type { status_unknown, file_not_found, regular_file, directory_file,
+      enum <a name="file_type">file_type</a> { status_unknown, file_not_found, regular_file, directory_file,
                        symlink_file, block_file, character_file, fifo_file, socket_file,
                        type_unknown
                      };
@@ -338,8 +244,8 @@ error_code</code> with the value of ec.</span></p>
       <span style="background-color: #FFFFFF">struct <a name="space_info">space_info</a>  // returned by </span><a href="#space" style="text-decoration: none"><span style="background-color: #FFFFFF">space</span></a><span style="background-color: #FFFFFF"> function
       {
         uintmax_t capacity;
-        uintmax_t free;
-        uintmax_t available;
+        uintmax_t free; 
+        uintmax_t available; // free space available to a non-privileged process
       };
 
       BOOST_SCOPED_ENUM_START(<a name="copy_option">copy_option</a>)
@@ -351,119 +257,73 @@ error_code</code> with the value of ec.</span></p>
 
       // <a href="#Operational-functions">operational functions</a>
 
-</span>      path         complete(const path&amp; p, const path&amp; base, system::error_code&amp; ec=throws());
-      path         complete(const path&amp; p, system::error_code&amp; ec=throws());
-      void         copy_file(const path &amp; from, const path &amp; to,
-                             BOOST_SCOPED_ENUM(copy_option) option, system::error_code&amp; ec=throws());
-      void         copy_file(const path &amp; from, const path &amp; to, system::error_code&amp; ec=throws());
-      bool         create_directories(const path&amp; p, system::error_code&amp; ec=throws());
-      bool         create_directory(const path&amp; p, system::error_code&amp; ec=throws());
-      void         create_hard_link(const path&amp; p, const path&amp; new_link, system::error_code&amp; ec=throws());
-<span style="background-color: #FFFFFF">      void         create_symlink(const path&amp; </span><span style="background-color: #FFFFFF">p, const path&amp; new_link</span>, system::error_code&amp; ec=throws()<span style="background-color: #FFFFFF">);
-</span>      path         current_path(system::error_code&amp; ec=throws());
-      void         current_path(const path&amp; p, system::error_code&amp; ec=throws());
-      bool         exists(file_status s);
-      bool         exists(const path&amp; p, system::error_code&amp; ec=throws());
-      bool         equivalent(const path&amp; p1, const path&amp; p2, system::error_code&amp; ec=throws());
-      <span style="background-color: #FFFFFF; ">uintmax_t</span>    file_size(const path&amp; p, system::error_code&amp; ec=throws());
-      const path&amp;  initial_path(system::error_code&amp; ec=throws());
-      bool         is_directory(file_status s);
-      bool         is_directory(const path&amp; p, system::error_code&amp; ec=throws());
-      bool         is_empty(const path&amp; p, system::error_code&amp; ec=throws());
-      bool         is_other(file_status s);
-      bool         is_other(const path&amp; p, system::error_code&amp; ec=throws());
-      bool         is_regular_file(file_status s); 
-      bool         is_regular_file(const path&amp; p, system::error_code&amp; ec=throws());
-      bool         is_symlink(file_status s);
-      bool         is_symlink(const path&amp; p, system::error_code&amp; ec=throws());
-      std::time_t  last_write_time(const path&amp; p, system::error_code&amp; ec=throws());
-      void         last_write_time(const path&amp; p, const std::time_t new_time, system::error_code&amp; ec=throws());
-      bool         remove(const path&amp; p, system::error_code&amp; ec=throws());
-      uintmax_t    remove_all(const path&amp; p, system::error_code&amp; ec=throws());
-      void         rename(const path&amp; from, const path&amp; to, system::error_code&amp; ec=throws());
-<span style="background-color: #FFFFFF">      space_info   space(const path&amp; p</span>, system::error_code&amp; ec=throws()<span style="background-color: #FFFFFF">);</span><span style="background-color: #FFFF00">
-</span>      file_status  status(const path&amp; p, system::error_code&amp; ec=throws());
-      bool         status_known(file_status s);
-      file_status  symlink_status(const path&amp; p, system::error_code&amp; ec=throws());
-      path         system_complete(const path&amp; p, system::error_code&amp; ec=throws());
+</span>      path         <a href="#complete">complete</a>(const path&amp; p, const path&amp; base, system::error_code&amp; ec=throws());
+      path         <a href="#complete">complete</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to,
+                             BOOST_SCOPED_ENUM(<a href="#copy_option">copy_option</a>) option, system::error_code&amp; ec=throws());
+      void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec=throws());
+      bool         <a href="#create_directories">create_directories</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      bool         <a href="#create_directory">create_directory</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      void         <a href="#create_hard_link">create_hard_link</a>(const path&amp; p, const path&amp; new_link, system::error_code&amp; ec=throws());
+<span style="background-color: #FFFFFF">      void         <a href="#create_symlink">create_symlink</a>(const path&amp; </span><span style="background-color: #FFFFFF">p, const path&amp; new_link</span>, system::error_code&amp; ec=throws()<span style="background-color: #FFFFFF">);
+</span>      path         <a href="#current_path">current_path</a>(system::error_code&amp; ec=throws());
+      void         <a href="#current_path">current_path</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      bool         <a href="#exists2">exists</a>(file_status s);
+      bool         <a href="#exists2">exists</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      bool         <a href="#equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2, system::error_code&amp; ec=throws());
+      <span style="background-color: #FFFFFF; ">uintmax_t</span>    <a href="#file_size">file_size</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      const path&amp;  <a href="#initial_path">initial_path</a>(system::error_code&amp; ec=throws());
+      bool         <a href="#is_directory">is_directory</a>(file_status s);
+      bool         <a href="#is_directory2">is_directory</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      bool         <a href="#is_empty">is_empty</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      bool         <a href="#is_other">is_other</a>(file_status s);
+      bool         <a href="#is_other2">is_other</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      bool         <a href="#is_regular_file">is_regular_file</a>(file_status s); 
+      bool         i<a href="#is_regular_file2">s_regular_file</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      bool         <a href="#is_symlink">is_symlink</a>(file_status s);
+      bool         <a href="#is_symlink2">is_symlink</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      std::time_t  <a href="#last_write_time">last_write_time</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time, system::error_code&amp; ec=throws());
+      bool         <a href="#remove">remove</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      uintmax_t    <a href="#remove_all">remove_all</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      void         <a href="#rename">rename</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec=throws());
+<span style="background-color: #FFFFFF">      <a href="#space_info">space_info</a>   <a href="#space">space</a>(const path&amp; p</span>, system::error_code&amp; ec=throws()<span style="background-color: #FFFFFF">);</span><span style="background-color: #FFFF00">
+</span>      <a href="#file_status">file_status</a>  <a href="#status">status</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      bool         <a href="#status_known">status_known</a>(file_status s);
+      <a href="#file_status">file_status</a>  <a href="#symlink_status">symlink_status</a>(const path&amp; p, system::error_code&amp; ec=throws());
+      path         <a href="#system_complete">system_complete</a>(const path&amp; p, system::error_code&amp; ec=throws());
 
     } // namespace filesystem
   } // namespace boost</pre>
-<h3><a name="Error-handling">Error handling</a></h3>
-<p><span style="background-color: #FFFF00">To be supplied. See links from 
-Operational functions.</span></p>
-<h3><a name="Path-traits">Path traits</a></h3>
-<p>This subclause defines requirements on classes representing path behavior 
-traits, and defines two classes that satisfy those requirements for paths based 
-on <code>string</code> and <code>wstring</code>.. It also defines several path 
-additional path traits structure templates, and defines several specializations 
-of them.</p>
-<p>Class template <code>path</code> defined in this clause requires additional 
-types, values, and behavior to complete the definition of its semantics.</p>
-<p>For purposes of exposition, Traits behaves as if it is a class with private 
-members bool m_locked, initialized false, and std::locale m_locale, initialized  </p>
-<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
-  <tr>
-    <td width="50%" align="center" colspan="2"><b><i>
-    <a name="Path-Behavior-Traits-Requirements">Path Behavior Traits 
-    Requirements</a></i></b></td>
-  </tr>
-  <tr>
-    <td width="38%" align="center"><b><i>Expression</i></b></td>
-    <td width="62%" align="center"><b><i>Requirements</i></b></td>
-  </tr>
-  <tr>
-    <td width="38%" valign="top"><code>Traits::external_string_type</code></td>
-    <td width="62%">A typedef which is a specialization of <code>basic_string</code>. 
-    The <code>value_type</code> is a character type used by the operating system 
-    to represent pathnames.</td>
-  </tr>
-  <tr>
-    <td width="38%" valign="top"><code>Traits::internal_string_type</code></td>
-    <td width="62%">A typedef which is a specialization of <code>basic_string</code>. 
-    The <code>value_type</code> is a character type to be used by the program to 
-    represent pathnames. Required be the same type as the <code>path 
-    String</code> template parameter. </td>
-  </tr>
-  <tr>
-    <td width="38%" valign="top"><code>Traits::to_external( p, is )</code></td>
-    <td width="62%"><code>is</code>, converted by the <code>m_locale</code>
-    <code>codecvt</code> facet to <code>external_string_type</code>.</td>
-  </tr>
-  <tr>
-    <td width="38%" valign="top"><code>Traits::to_internal( p, xs )</code></td>
-    <td width="62%"><code>xs</code>, converted by the <code>m_locale</code>
-    <code>codecvt</code> facet to to <code>internal_string_type</code>.</td>
-  </tr>
-  <tr>
-    <td width="38%" valign="top"><code>Traits::imbue(loc)</code></td>
-    <td width="62%"><i>Effects:</i> if <code>m_locked</code>, throw. Otherwise,
-    <code>m_locked = true; m_locale = loc;<br>
-    </code><i>Returns:</i> <code>void</code><b><br>
-    </b><i>Throws:</i> <code>basic_filesystem_error</code></td>
-  </tr>
-  <tr>
-    <td width="38%" valign="top"><code>Traits::imbue(loc, std::nothrow)</code></td>
-    <td width="62%"><i>Effects:</i> <code>if (!m_locked) m_locale = loc; bool 
-    temp(m_locked); m_locked = true;<br>
-    </code><i>Returns:</i> <code>temp</code></td>
-  </tr>
-</table>
-<p>Type <code>is_path</code> shall be a <i>UnaryTypeTrait</i> (TR1, 4.1). 
-The primary template shall be derived directly or indirectly from <code>
-std::tr1::false_type</code>. Type <code>is_path</code> shall be 
-specialized for <code>path</code>, <code>wpath</code>, and any 
-user-specialized <code>path</code> types, and such specializations shall 
-be derived directly or indirectly from <code>std::tr1::true_type</code>.</p>
-<p>Structure templates <code>slash</code>, <code>dot</code>, and <code>
-<span style="background-color: #FFFFFF">colon</span></code><span style="background-color: #FFFFFF">
-</span>are supplied with 
-values of type <code>char</code>. If a user-specialized <code>path</code> 
-has a <code>
-value_type</code> type which is not convertible from <code>char</code>, the 
-templates&nbsp; <code>slash</code> and <code>dot</code> shall be specialized to 
-provide <code>value</code> with type which is convertible to <code>
-path::value_type</code>.</p>
+<h3><a name="Error-handling">Error reporting</a></h3>
+<p>Functions in this library may throw exceptions as described in this section. 
+Such exceptions are not explicitly described in each function's <i>Throws</i> 
+element.</p>
+<p>Certain functions in this library are specified as having an argument of type
+<code>system::error_code&amp; ec</code>. This argument determines how errors are 
+reported by the implementation when a call to an operating system or other 
+underlying API results in an error that prevents the library function from 
+meeting its specifications:</p>
+<ul>
+  <li>If <code>&amp;ec == &amp;throws()</code>, the function throws an exception of type
+  <code><a href="#Class-filesystem_error">filesystem_error</a>.</code></li>
+  <li>Otherwise, the function sets <code>ec</code> to an error_code representing 
+  the error that occurred.</li>
+</ul>
+<p>If an error does not occur and <code>&amp;ec != &amp;throws()</code>, <code>ec.clear()</code> 
+is called.</p>
+<p>Certain failures are reported by throwing an exception, regardless of the 
+value of the <code>ec</code> argument:</p>
+<ul>
+  <li>Failure to allocate storage is reported as described in the C++ standard, 
+  17.6.4.10 [res.on.exception.handling].</li>
+  <li>Class <code>path</code> failures are reported by throwing an exception of 
+  type <code>system_error</code>.</li>
+</ul>
+<p>[<i>Note: </i>Because hardware failures, network failures, race conditions, and a plethora of 
+other errors occur frequently in file system operations, users should be aware 
+that any filesystem operational function, no matter how innocuous, may encounter 
+an error.&nbsp; <i>-- end note</i>]</p>
 <h3><a name="Class-template-path">Class <code>path</code></a></h3>
 <p>An object of class <code>path</code> represents a <a href="#Path">path</a>, 
 and contains a <a href="#Pathname">pathname</a> in the
@@ -875,7 +735,7 @@ appends</a></h4>
 <blockquote>
 <p><i>Postcondition:</i> <code>this-&gt;empty()</code> is true.</p>
 </blockquote>
-<pre><code><span style="background-color: #FFFFFF">void swap( path &amp; rhs );</span></code></pre>
+<pre><code><span style="background-color: #FFFFFF">void swap( path&amp; rhs );</span></code></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF"> 
   Swaps the contents of the two paths.</span></p>
@@ -895,7 +755,7 @@ appends</a></h4>
   directory_iterator</code>. It is made public to allow additional uses. <i>-- end 
   note</i>]</p>
 </blockquote>
-<pre>path&amp; replace_extension(const path &amp; new_extension = path());</pre>
+<pre>path&amp; replace_extension(const path&amp; new_extension = path());</pre>
 <blockquote>
   <p><i>Postcondition: </i> <code>extension() == <i>replacement</i></code>, 
   where <code><i>replacement</i></code> is <code>new_extension</code> if <code>
@@ -1353,7 +1213,7 @@ void swap( path&lt;String, Traits&gt; &amp; lhs, path&lt;String, Traits&gt; &amp
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
   </span> <code><span style="background-color: #FFFFFF">os</span></code></p>
 </blockquote>
-<h3><a name="Class-template-basic_filesystem_error">Class template <code>basic_filesystem_error</code></a></h3>
+<h3><a name="Class-filesystem_error">Class <code>filesystem_error</code></a></h3>
 <pre>  namespace boost
   {
     namespace filesystem
@@ -1361,24 +1221,23 @@ void swap( path&lt;String, Traits&gt; &amp; lhs, path&lt;String, Traits&gt; &amp
       class basic_filesystem_error : public <span style="background-color: #FFFFFF">system</span>_error
       {
       public:
-        typedef Path path_type;
 
-        explicit basic_filesystem_error(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, error_code ec);
-        basic_filesystem_error(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, const path_type&amp; p1, error_code ec);
-        basic_filesystem_error(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, const path_type&amp; p1, const path_type&amp; p2, error_code ec);
+        <a href="#filesystem_error-2-arg">filesystem_error</a>(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, system::error_code ec);
+        <a href="#filesystem_error-3-arg">filesystem_error</a>(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, const path&amp; p1, system::error_code ec);
+        <a href="#filesystem_error-4-arg">filesystem_error</a>(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, const path&amp; p1, const path&amp; p2, system::error_code ec);
 
-        const path_type&amp; path1() const;
-        const path_type&amp; path2() const;
+        const path&amp; <a href="#filesystem_error-path1">path1</a>() const;
+        const path&amp; <a href="#filesystem_error-path2">path2</a>() const;
 
-        const char * what() const;
+        const char * <a href="#filesystem_error-what">what</a>() const;
       };
     } // namespace filesystem
   } // namespace boost</pre>
 <p>The class template <code>basic_filesystem_error</code> defines the type of 
 objects thrown as exceptions to report file system errors from functions described in this 
 clause.</p>
-<h4> <a name="basic_filesystem_error-constructors"> <code>basic_filesystem_error</code> constructors</a></h4>
-<pre>explicit basic_filesystem_error(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, error_code ec);</pre>
+<h4> <a name="filesystem_error-members"> <code>filesystem_error</code> members</a></h4>
+<pre><a name="filesystem_error-2-arg">filesystem_error</a>(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, error_code ec);</pre>
 <blockquote>
   <p><i>Postconditions:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="46%">
@@ -1406,7 +1265,7 @@ clause.</p>
     </tr>
   </table>
 </blockquote>
-<pre>basic_filesystem_error(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, const path_type&amp; p1, error_code ec);</pre>
+<pre><a name="filesystem_error-3-arg">filesystem_error</a>(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, const path_type&amp; p1, error_code ec);</pre>
 <blockquote>
   <p><i>Postconditions:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="46%">
@@ -1435,7 +1294,7 @@ clause.</p>
     </tr>
   </table>
 </blockquote>
-<pre>basic_filesystem_error(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, const path_type&amp; p1, const path_type&amp; p2, error_code ec);</pre>
+<pre><a name="filesystem_error-4-arg">filesystem_error</a>(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, const path_type&amp; p1, const path_type&amp; p2, error_code ec);</pre>
 <blockquote>
   <p><i>Postconditions:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="46%">
@@ -1466,32 +1325,25 @@ clause.</p>
     </tr>
   </table>
 </blockquote>
-<h4> <a name="basic_filesystem_error-observers"> <code>basic_filesystem_error</code> observers</a></h4>
-<pre>const path_type&amp; path1() const;</pre>
+<pre>const path&amp; <a name="filesystem_error-path1">path1</a>() const;</pre>
 <blockquote>
   <p><i>Returns:</i> Reference to copy of <code>p1</code> stored by the 
   constructor, or, if none, an empty path.</p>
 </blockquote>
-<pre>const path_type&amp; path2() const;</pre>
+<pre>const path&amp; <a name="filesystem_error-path2">path2</a>() const;</pre>
 <blockquote>
   <p><i>Returns:</i> Reference to copy of <code>p2</code> stored by the 
   constructor, or, if none, an empty path.</p>
 </blockquote>
-<pre>const char * what() const;</pre>
+<pre>const char* <a name="filesystem_error-what">what</a>() const;</pre>
 <blockquote>
-  <p><i>Returns: </i>A string containing <code>runtime_error::what()</code> and 
-  the result of calling <code>system_message()</code> with a first argument of
-  <code>code()</code>. The exact format is unspecified.</p>
-<p>The implementation shall supply a specialization <code>template&lt;&gt; const char 
-* filesystem_error::what() const</code> that returns a string 
-containing <code>runtime_error::what(),</code> the result of calling <code>
-system_message()</code> with a first argument of <code>code()</code>, and if 
-non-empty, <code>path1().file_string()</code> and <code>path2.file_string()</code>. 
-The exact format is unspecified.</p>
-<p>Implementations and users are permitted to provide other specializations of 
-the <code>what</code> member function.</p>
+  <p><i>Returns: </i>A string containing <code>runtime_error::what()</code>. The exact format is unspecified. 
+  Implementations are encouraged but not required to include <code>
+  path1.native_string()</code>if not empty, <code>path2.native_string()</code>if 
+  not empty, and <code>system_error::what()</code> strings in the returned 
+  string.</p>
 </blockquote>
-<h3><a name="Class-template-directory_entry">Class template <code>directory_entry</code></a></h3>
+<h3><a name="Class-directory_entry">Class <code>directory_entry</code></a></h3>
 <pre>  namespace boost
   {
     namespace filesystem
@@ -1499,36 +1351,21 @@ the <code>what</code> member function.</p>
       class directory_entry
       {
       public:
-        typedef Path path_type;
-        typedef typename Path::string_type string_type;
 
         // <a href="#directory_entry-constructors">constructors</a>
         directory_entry();
-        explicit directory_entry(const path_type&amp; p,
-          <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
+        explicit directory_entry(const path_type&amp; p, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
 
         // <a href="#directory_entry-modifiers">modifiers</a>
         void assign(const path_type&amp; p, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
         void replace_filename(const string_type&amp; s, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
 
         // <a href="#directory_entry-observers">observers</a>
-        const path&amp; path() const;
-        operator const path() const;
-<span style="background-color: #FFFFFF">
-        file_status  status() const;
-        file_status  status(error_code&amp; ec) const;
-        file_status  symlink_status() const;
-        file_status  symlink_status(error_code&amp; ec) const;
+        const path&amp;  path() const;
+<span style="background-color: #FFFFFF">        file_status  status(system::error_code&amp; ec=throws()) const;
+        file_status  symlink_status(system::error_code&amp; ec=throws()) const;
 </span><span style="background-color: #FFFF00">
-</span>        // <a href="#directory_entry-comparisons">comparisons</a>
-        bool operator&lt;(const directory_entry&lt;Path&gt;&amp; rhs);
-        bool operator==(const directory_entry&lt;Path&gt;&amp; rhs);
-        bool operator!=(const directory_entry&lt;Path&gt;&amp; rhs);
-        bool operator&gt;(const directory_entry&lt;Path&gt;&amp; rhs);
-        bool operator&lt;=(const directory_entry&lt;Path&gt;&amp; rhs);
-        bool operator&gt;=(const directory_entry&lt;Path&gt;&amp; rhs);
-
-      private:
+</span>      private:
         path_type            m_path;           // for exposition only
         mutable <span style="background-color: #FFFFFF">file_status</span>  m_status;         // for exposition only; stat()-like
         mutable <span style="background-color: #FFFFFF">file_status</span>  m_symlink_status; // for exposition only; lstat()-like
@@ -1642,28 +1479,11 @@ Unix variants that provide status during directory iteration.</i></span></p>
   </table>
 </blockquote>
 <h4> <a name="directory_entry-observers"> <code>directory_entry</code> observers</a></h4>
-<pre>const path&amp; path() const;
-operator const path() const;</pre>
+<pre>const path&amp; path() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path</code></p>
 </blockquote>
-<pre><span style="background-color: #FFFFFF">file_status status() const;</span></pre>
-<blockquote>
-<p><span style="font-style: italic; background-color: #FFFFFF">Effects:</span><span style="background-color: #FFFFFF"> 
-As if,</span></p>
-  <blockquote>
-    <pre><span style="background-color: #FFFFFF">if ( !status_known( m_status ) )
-{
-  if ( status_known(m_symlink_status) &amp;&amp; !is_symlink(m_symlink_status) )
-    { m_status = m_symlink_status; }
-  else { m_status = status(m_path); }
-}</span></pre>
-  </blockquote>
-  <p><span style="background-color: #FFFFFF"><i>Throws:</i> See <code>status</code> 
-  function.</span></p>
-  <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>m_status</code></span></p>
-</blockquote>
-<pre><span style="background-color: #FFFFFF">file_status status(error_code&amp; ec) const;</span></pre>
+<pre><span style="background-color: #FFFFFF">file_status status(system::error_code&amp; ec=throws()) const;</span></pre>
 <blockquote>
 <p><span style="font-style: italic; background-color: #FFFFFF">Effects:</span><span style="background-color: #FFFFFF"> 
 As if,</span></p>
@@ -1674,26 +1494,11 @@ As if,</span></p>
     { m_status = m_symlink_status; }
   else { m_status = status(m_path, ec); }
 }
-else ec = 0;</span></pre>
+else if ( &amp;ec != &amp;boost::throws() ) ec.clear();</span></pre>
   </blockquote>
   <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>m_status</code></span></p>
 </blockquote>
-<pre><span style="background-color: #FFFFFF">file_status symlink_status() const;</span></pre>
-<blockquote>
-<p><span style="font-style: italic; background-color: #FFFFFF">Effects:</span><span style="background-color: #FFFFFF"> 
-As if,</span></p>
-  <blockquote>
-    <pre><span style="background-color: #FFFFFF">if ( !status_known( m_symlink_status ) )
-{
-  m_symlink_status = symlink_status(m_path);
-}</span></pre>
-  </blockquote>
-  <p><span style="background-color: #FFFFFF"><i>Throws:</i> See <code>symlink_status</code> 
-  function.</span></p>
-  <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>
-  m_symlink_status</code></span></p>
-</blockquote>
-<pre><span style="background-color: #FFFFFF">file_status symlink_status(error_code&amp; ec) const;</span></pre>
+<pre><span style="background-color: #FFFFFF">file_status  symlink_status(system::error_code&amp; ec=throws()) const;</span></pre>
 <blockquote>
 <p><span style="font-style: italic; background-color: #FFFFFF">Effects:</span><span style="background-color: #FFFFFF"> 
 As if,</span></p>
@@ -1702,28 +1507,28 @@ As if,</span></p>
 {
   m_symlink_status = symlink_status(m_path, ec);
 }
-else ec = 0;</span></pre>
+else if ( &amp;ec != &amp;boost::throws() ) ec.clear();</span></pre>
   </blockquote>
-  <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>m_symlink_status</code></span></p>
+  <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>
+  m_symlink_status</code></span></p>
 </blockquote>
-<h3><a name="Class-template-directory_iterator">Class template <code>directory_iterator</code></a></h3>
+<h3><a name="Class-directory_iterator">Class <code>directory_iterator</code></a></h3>
 <pre>  namespace boost
   {
     namespace filesystem
     {
-      template &lt;class Path&gt;
-      class directory_iterator :
-        public iterator&lt;input_iterator_tag, directory_entry&lt;Path&gt; &gt;
+      class directory_iterator
+        : public boost::iterator_facade&lt; directory_iterator,
+                                         directory_entry,
+                                         boost::single_pass_traversal_tag &gt;
       {
       public:
         typedef Path path_type;
 
         // <a href="#directory_iterator-constructors">constructors</a>
-        directory_iterator();
-        explicit directory_iterator(const path dp);
-        directory_iterator(const path dp, error_code&amp; ec);
-        directory_iterator(const directory_iterator&amp; bdi);
-        directory_iterator&amp; operator=(const directory_iterator&amp; bdi);
+        directory_iterator();  // creates the &quot;end&quot; iterator
+        explicit directory_iterator(const path&amp; p, system::error_code&amp; ec=throws());
+
        ~directory_iterator();
 
         // other members as required by
@@ -1733,28 +1538,28 @@ else ec = 0;</span></pre>
     } // namespace filesystem
   } // namespace boost</pre>
 <p> <code>directory_iterator</code> satisfies the requirements of an 
-input iterator (C++ Std, 24.1.1, Input iterators [lib.input.iterators]).</p>
+input iterator (C++ Std, 24.2.1, Input iterators [input.iterators]).</p>
 <p>A <code>directory_iterator</code> reads successive elements from the directory for 
 which it was constructed, as if by calling <i>POSIX</i>
 <code>
 <a href="http://www.opengroup.org/onlinepubs/000095399/functions/readdir_r.html">readdir_r()</a></code>. After a <code>directory_iterator</code> is constructed, and every time 
 <code>operator++</code> is called, 
-it reads and stores a value of <code>directory_entry&lt;Path&gt;</code> 
-and possibly stores associated status values. 
+it reads a directory element and stores information about it in a object of type <code>
+<a href="#Class-directory_entry">directory_entry</a></code>. 
 <code>operator++</code> is not equality preserving; that is, <code>i == j</code> does not imply that
 <code>++i == ++j</code>. </p>
 <blockquote>
 <p>[<i>Note:</i> The practical consequence of not preserving equality is that directory iterators 
-can be used only for single-pass algorithms. <i>--end note</i>]</p>
+can only be used for single-pass algorithms. <i>--end note</i>]</p>
 </blockquote>
 <p>If the end of the directory elements is reached, the iterator becomes equal to 
 the end iterator value. The constructor <code>directory_iterator()</code> 
 with no arguments always constructs an end iterator object, which is the only 
 legitimate iterator to be used for the end condition. The result of <code>
 operator*</code> on an end iterator is not defined. For any other iterator value 
-a <code>const directory_entry&lt;Path&gt;&amp;</code> is returned. The result of
+a <code>const directory_entry&amp;</code> is returned. The result of
 <code>operator-&gt;</code> on an end iterator is not defined. For any other 
-iterator value a <code>const directory_entry&lt;Path&gt;*</code> is 
+iterator value a <code>const directory_entry*</code> is 
 returned. </p>
 <p>Two end iterators are always equal. An end iterator is not equal to a non-end 
 iterator.</p>
@@ -1769,39 +1574,6 @@ directory_iterator</code> is a reference to a <code>path</code>
 object composed of the directory argument from which the iterator was 
 constructed with filename of the directory entry appended as if by <code>
 operator/=</code>. </p>
-<blockquote>
-<p>[<i><a name="Example-program">Example</a>: </i>This program accepts an 
-optional command line argument, and if that argument is a directory pathname, 
-iterates over the contents of the directory. For each directory entry, the name 
-is output, and if the entry is for a regular file, the size of the file is 
-output.</p>
-  <blockquote>
-    <pre>#include &lt;iostream&gt;
-#include &lt;filesystem&gt;
-
-using std::tr2::sys;
-using std::cout;
-
-int main(int argc, char* argv[])
-{
-  std::string p(argc &lt;= 1 ? &quot;.&quot; : argv[1]);
-
-  if (is_directory(p))
-  {
-    for (directory_iterator itr(p); itr!=directory_iterator(); ++itr)
-    {
-      cout &lt;&lt; itr-&gt;path().filename() &lt;&lt; ' '; // display filename only
-      if (is_regular_file(itr-&gt;status())) cout &lt;&lt; &quot; [&quot; &lt;&lt; file_size(itr-&gt;path()) &lt;&lt; ']';
-      cout &lt;&lt; '\n';
-    }
-  }
-  else cout &lt;&lt; (exists(p) : &quot;Found: &quot; : &quot;Not found: &quot;) &lt;&lt; p &lt;&lt; '\n';
-
-  return 0;
-}</pre>
-  </blockquote>
-  <p><i>-- end example</i>]</p>
-</blockquote>
 <p>Directory iteration shall not yield directory entries for the current (<i>dot</i>) 
 and parent (<i>dot dot</i>) directories.</p>
 <p>The order of directory entries obtained by dereferencing successive 
@@ -1832,8 +1604,7 @@ result in an iterator whose value is the removed or added directory entry. See
 
 </blockquote>
 
-<p><code>explicit directory_iterator(const path dp);</code></p>
-
+<pre><code>explicit directory_iterator(</code>const path&amp; p, system::error_code&amp; ec=throws()<code>);</code></pre>
 <blockquote>
 
 <p><i>Effects:</i> Constructs a iterator representing the first 
@@ -1843,31 +1614,19 @@ entry in the directory resolved to by <code>dp</code>, otherwise, the end iterat
 directory_iterator(&quot;.&quot;)</code> rather than <code>directory_iterator(&quot;&quot;)</code>.
 <i>-- end note</i>]</p>
 </blockquote>
-<pre><code>directory_iterator(const path dp, error_code&amp; ec );</code></pre>
-<blockquote>
-
-<p><i>Effects:</i> Constructs a iterator representing the first 
-entry in the directory resolved to by <code>dp</code>, otherwise, the end iterator. 
-If an error occurs while establishing the results, the iterator constructed 
-represents the end iterator and <code>ec</code> is set to the error code 
-reported by the operating system, otherwise to 0.</p>
-
-</blockquote>
-<h3><a name="Class-template-recursive_directory_iterator">Class template <code>recursive_directory_iterator</code></a></h3>
+<h3><a name="Class-template-recursive_directory_iterator">Class <code>recursive_directory_iterator</code></a></h3>
 <pre>  namespace boost
   {
     namespace filesystem
     {
-      template &lt;class Path&gt;
       class recursive_directory_iterator :
-        public iterator&lt;input_iterator_tag, directory_entry&lt;Path&gt; &gt;
+        public iterator&lt;input_iterator_tag, directory_entry &gt;
       {
       public:
-        typedef Path path_type;
 
         // constructors
         recursive_directory_iterator();
-        explicit recursive_directory_iterator(const path dp);
+        explicit recursive_directory_iterator(const path&amp; dp);
         recursive_directory_iterator(const recursive_directory_iterator&amp; brdi);
         recursive_directory_iterator&amp; operator=(const recursive_directory_iterator&amp; brdi);
        ~recursive_directory_iterator();
@@ -1880,7 +1639,7 @@ reported by the operating system, otherwise to 0.</p>
         void no_push();
 
         // other members as required by
-        //  C++ Std, 24.1.1 Input iterators [lib.input.iterators]
+        //  C++ Std, 24.1.2 Input iterators [input.iterators]
 
       private:
         int m_level; // for exposition only
@@ -1920,27 +1679,27 @@ as a <code>directory_iterator</code> unless otherwise specified.</p>
       public:
         explicit file_status( file_type v = status_unknown );
 
-        file_type type() const;
+        <a href="#file_type">file_type</a> type() const;
         void type( file_type v );
       };
     } // namespace filesystem
   } // namespace boost</pre>
-<p>A <code>file_status</code> object stores information about the status of a 
+<p>An object of type <code>file_status</code> stores information about the status of a 
 file. The internal form of the stored information is unspecified.</p>
 <blockquote>
   <p><i>[Note: </i>The class may be extended in the future to store 
   additional status information. <i>--end note]</i></p>
 </blockquote>
 <h4>Members</h4>
-<pre>explicit file_status( file_type v = status_unknown );</pre>
+<pre>explicit file_status( <a href="#file_type">file_type</a> v = status_unknown );</pre>
 <blockquote>
   <p><i>Effects:</i> Stores <code>v</code>.</p>
 </blockquote>
 <pre>file_type type() const;</pre>
 <blockquote>
-  <p><i>Returns: </i>The stored <code>file_type</code>.</p>
+  <p><i>Returns: </i>The stored <a href="#file_type"> <code>file_type</code>.</a></p>
 </blockquote>
-<pre>void type( file_type v );</pre>
+<pre>void type( <a href="#file_type">file_type</a> v );</pre>
 <blockquote>
   <p><i>Effects:</i> Stores <code>v</code>, replacing the previously stored 
   value.</p>
@@ -2000,7 +1759,7 @@ note</i>] </p>
 <blockquote>
 <p><i>Returns:</i> <code>path(p, initial_path(), ec)</code>.</p>
 </blockquote>
-<pre>void <a name="copy_file">copy_file</a>(const path &amp; from, const path &amp; to,
+<pre>void <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to,
                BOOST_SCOPED_ENUM(<a href="#copy_option">copy_option</a>) option, system::error_code&amp; ec=throws());</pre>
 <blockquote>
   <p><i>Effects:</i> The contents and attributes of the file <code>from</code> 
@@ -2010,7 +1769,7 @@ note</i>] </p>
   (option==<a href="file:///C:/boost/trunk/libs/filesystem/doc/reference.html#copy_option">copy_option</a>::fail_if_exists 
   &amp;&amp; exists(to))</code></p>
 </blockquote>
-<pre>void copy_file(const path &amp; from, const path &amp; to, system::error_code&amp; ec=throws());</pre>
+<pre>void copy_file(const path&amp; from, const path&amp; to, system::error_code&amp; ec=throws());</pre>
 <blockquote>
   <p><i>Effects: </i><code>copy_file(from, to, 
   copy_option::fail_if_exists, ec)</code>.</p>
@@ -2106,7 +1865,7 @@ note</i>] </p>
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
   <code>status_known(s) &amp;&amp; s.type() != file_not_found</code></span></p>
 </blockquote>
-<pre>bool <a name="exists">exists</a>(const path&amp; p, system::error_code&amp; ec=throws());</pre>
+<pre>bool <a name="exists2">exists</a>(const path&amp; p, system::error_code&amp; ec=throws());</pre>
 <blockquote>
   <p><i>Returns:</i> <code>exists( status(p, ec) )</code></p>
 </blockquote>
@@ -2171,7 +1930,7 @@ note</i>] </p>
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF"> </span>
   <code><span style="background-color: #FFFFFF">s.type() == directory_file</span></code></p>
 </blockquote>
-<pre><code>bool is_directory(const path&amp; p, system::error_code&amp; ec=throws());</code></pre>
+<pre><code>bool <a name="is_directory2">is_directory</a>(const path&amp; p, system::error_code&amp; ec=throws());</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_directory( status(p, ec) )</code></p>
 </blockquote>
@@ -2194,7 +1953,7 @@ note</i>] </p>
   <code>is_other()</code> will remain unchanged even if additional <code>is_xxx()</code> 
   functions are added in the future. <i>-- end note</i>]</span></p>
 </blockquote>
-<pre><code>bool is_other(const path&amp; p, system::error_code&amp; ec=throws());</code></pre>
+<pre><code>bool <a name="is_other2">is_other</a>(const path&amp; p, system::error_code&amp; ec=throws());</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_other( status(p, ec) )</code></p>
 </blockquote>
@@ -2203,7 +1962,7 @@ note</i>] </p>
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
   <code>s.type() == regular_file</code></span></p>
 </blockquote>
-<pre><code>bool is_regular_file(const path&amp; p, system::error_code&amp; ec=throws());</code></pre>
+<pre><code>bool <a name="is_regular_file2">is_regular_file</a>(const path&amp; p, system::error_code&amp; ec=throws());</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_regular_file( status(p, ec) )</code></p>
 </blockquote>
@@ -2212,7 +1971,7 @@ note</i>] </p>
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF"> </span>
   <code><span style="background-color: #FFFFFF">s.type() == symlink_file</span></code></p>
 </blockquote>
-<pre><code>bool is_symlink(const path&amp; p, system::error_code&amp; ec=throws());</code></pre>
+<pre><code>bool <a name="is_symlink2">is_symlink</a>(const path&amp; p, system::error_code&amp; ec=throws());</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_symlink( symlink_status(p, ec) )</code></p>
 </blockquote>
@@ -2224,7 +1983,7 @@ note</i>] </p>
   as if by <i>POSIX</i> <code>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>.</p>
 </blockquote>
-<pre>void last_write_time(const path&amp; p, const std::time_t new_time<code>, system::error_code&amp; ec=throws()</code>);</pre>
+<pre>void <a name="last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time<code>, system::error_code&amp; ec=throws()</code>);</pre>
 <blockquote>
   <p><i>Effects:</i> Sets the time of last data modification of the file 
   resolved to by <code>p</code> 
@@ -2412,37 +2171,56 @@ fail on a directory.
 <table border="1" cellpadding="5" cellspacing="1" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td>
-    <h4>Deprecated convenience functions</h4>
-    <p>The following functions have been replaced by <code>path</code> 
-    member functions <code>extension()</code>, <code>stem()</code>, and <code>
-    replace_extension()</code>.</p>
-<pre>typename Path::string_type extension(const Path &amp; p);</pre>
+    <h4><span style="background-color: #FFFF00">Deprecated convenience functions</span></h4>
+    <p><span style="background-color: #FFFF00">The following functions have been replaced by
+    </span> <code><span style="background-color: #FFFF00">path</span></code><span style="background-color: #FFFF00"> 
+    member functions </span> <code><span style="background-color: #FFFF00">extension()</span></code><span style="background-color: #FFFF00">,
+    </span> <code><span style="background-color: #FFFF00">stem()</span></code><span style="background-color: #FFFF00">, and
+    </span> <code>
+    <span style="background-color: #FFFF00">replace_extension()</span></code><span style="background-color: #FFFF00">.</span></p>
+<pre><span style="background-color: #FFFF00">typename </span><span style="background-color: #FFFF00">Path::string_type</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">extension(const</span><span style="background-color: #FFFF00"> path&amp; p);</span></pre>
 <blockquote>
-  <p><i>Returns:</i> if <code>p.filename()</code> contains a <i>dot</i>, returns 
-  the substring of <code>p.filename()</code> starting at the rightmost <i>dot</i> 
-  and ending at the string's end. Otherwise, returns an empty string. </p>
-  <p>[<i>Note:<b> </b></i>The <i>dot</i> is included in the return value so that 
-  it is possible to distinguish between no extension and an empty extension. </p>
-  <p>Implementations are permitted but not required to define additional 
+  <p><i><span style="background-color: #FFFF00">Returns:</span></i><span style="background-color: #FFFF00"> if
+  </span> <code><span style="background-color: #FFFF00">p.filename()</span></code><span style="background-color: #FFFF00"> contains a
+  </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00">, returns 
+  the </span><span style="background-color: #FFFF00">substring</span><span style="background-color: #FFFF00"> of
+  </span> <code><span style="background-color: #FFFF00">p.filename()</span></code><span style="background-color: #FFFF00"> starting at the rightmost
+  </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00"> 
+  and ending at the string's end. Otherwise, returns an empty string. </span> </p>
+  <p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span><b><span style="background-color: #FFFF00">
+  </span> </b></i><span style="background-color: #FFFF00">The </span> <i>
+  <span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00"> is included in the return value so that 
+  it is possible to distinguish between no extension and an empty extension.
+  </span> </p>
+  <p><span style="background-color: #FFFF00">Implementations are permitted but not required to define additional 
   behavior for file systems which append additional elements to extensions, such 
-  as alternate data stream or partitioned dataset names. <i>-- end note</i>]</p>
+  as alternate data stream or partitioned dataset names. </span> <i>
+  <span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
 </blockquote>
-<pre>typename Path::string_type basename(const Path &amp; p);</pre>
+<pre><span style="background-color: #FFFF00">typename </span><span style="background-color: #FFFF00">Path::string_type</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">basename(const</span><span style="background-color: #FFFF00"> path&amp; p);</span></pre>
 <blockquote>
-  <p><i>Returns:</i> if <code>p.filename()</code> contains a <i>dot</i>, returns 
-  the substring of <code>p.filename()</code> starting at its beginning and 
-  ending at the last <i>dot</i> (the <i>dot</i> is not included). Otherwise, 
-  returns <code>
-  p.filename()</code>.</p>
+  <p><i><span style="background-color: #FFFF00">Returns:</span></i><span style="background-color: #FFFF00"> if
+  </span> <code><span style="background-color: #FFFF00">p.filename()</span></code><span style="background-color: #FFFF00"> contains a
+  </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00">, returns 
+  the </span><span style="background-color: #FFFF00">substring</span><span style="background-color: #FFFF00"> of
+  </span> <code><span style="background-color: #FFFF00">p.filename()</span></code><span style="background-color: #FFFF00"> starting at its beginning and 
+  ending at the last </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00"> (the
+  </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00"> is not included). Otherwise, 
+  returns </span> <code>
+  <span style="background-color: #FFFF00">p.filename()</span></code><span style="background-color: #FFFF00">.</span></p>
 </blockquote>
-<pre>template &lt;class Path&gt;
-  Path change_extension(const Path &amp; p, const typename Path::string_type &amp; new_extension);</pre>
+<pre><span style="background-color: #FFFF00">template &lt;class Path&gt;
+  Path </span><span style="background-color: #FFFF00">change_extension(const</span><span style="background-color: #FFFF00"> path&amp; p, const typename </span><span style="background-color: #FFFF00">Path::string_type</span><span style="background-color: #FFFF00"> &amp; </span><span style="background-color: #FFFF00">new_extension</span><span style="background-color: #FFFF00">);</span></pre>
 <blockquote>
-  <p><i>Postcondition:</i> <code>basename(<i>return_value</i>) == basename(p) &amp;&amp; 
-  extension(<i>return_value</i>) == new_extension</code> </p>
-  <p>[<i>Note:</i> It follows from the semantics of <code>extension()</code> 
-  that <code>new_extension</code> should include <i>dot</i> to achieve 
-  reasonable results. <i>-- end note</i>]</p>
+  <p><i><span style="background-color: #FFFF00">Postcondition:</span></i><span style="background-color: #FFFF00">
+  </span> <code><span style="background-color: #FFFF00">basename(<i>return_value</i>) == basename(p) &amp;&amp; 
+  extension(<i>return_value</i>) == new_extension</span></code><span style="background-color: #FFFF00">
+  </span> </p>
+  <p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00"> It follows from the semantics of
+  </span> <code><span style="background-color: #FFFF00">extension()</span></code><span style="background-color: #FFFF00"> 
+  that </span> <code><span style="background-color: #FFFF00">new_extension</span></code><span style="background-color: #FFFF00"> should include
+  </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00"> to achieve 
+  reasonable results. </span> <i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
 </blockquote>
     </td>
   </tr>
@@ -3131,7 +2909,7 @@ final document.</p>
   <tr>
     <td width="16%" valign="top">[<a name="ISO_POSIX">ISO-POSIX</a>]</td>
     <td width="84%">ISO/IEC 9945:2003, IEEE&nbsp;Std&nbsp;1003.1-2001, and The Open Group 
-    Base Specifications, Issue 6. Also known as The Single Unix<font face="Times New Roman">Â® 
+    Base Specifications, Issue 6. Also known as The Single Unix<font face="Times New Roman">® 
     Specification, Version 3. Available from each of the organizations involved 
     in its creation. For example, read online or download from
     <a href="http://www.unix.org/single_unix_specification/">
@@ -3151,7 +2929,7 @@ final document.</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->17 October 2009<!--webbot bot="Timestamp" endspan i-checksum="32672" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->18 October 2009<!--webbot bot="Timestamp" endspan i-checksum="32674" --></p>
 
 </body>
 

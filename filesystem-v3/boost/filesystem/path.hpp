@@ -40,7 +40,7 @@
      notational convenience.
    * Are generic versions of string(), native_string() needed? IE:
         template< class T >
-        T string( const error_code ec = throws() );
+        T string(const error_code ec = throws());
      TODO: Yes; all member functions need to be usable in generic code.
    * Assuming generic versions of string(), native_string(), are the w flavors needed?
      No. KISS. basic_string<char> is special because it is the predominent
@@ -83,6 +83,9 @@ namespace boost
 {
 namespace filesystem
 {
+# ifdef BOOST_FILESYSTEM_PATH_CTOR_COUNT
+  extern long path_constructor_count;
+# endif
 
   //------------------------------------------------------------------------------------//
   //                                                                                    //
@@ -172,9 +175,9 @@ namespace filesystem
     //  supplies a conversion locale. For example:
     //
     //      template< class ForwardIterator, class WStringConvert >
-    //      path( ForwardIterator begin, ForwardIterator end,
+    //      path(ForwardIterator begin, ForwardIterator end,
     //            const std::locale & loc,
-    //            system::error_code & ec = boost::throws() );
+    //            system::error_code & ec = boost::throws());
     // 
     //  This alternative was rejected as too complex for the limited benefits;
     //  it nearly doubles the size of the interface, and adds a lot of
@@ -210,45 +213,48 @@ namespace filesystem
 
     path(){}                                          
 
-    path( const path & p ) : m_path(p.m_path) {}
+    path(const path& p) : m_path(p.m_path) {}
 
     template <class ContiguousIterator>
-    path( ContiguousIterator begin, ContiguousIterator end )
+    path(ContiguousIterator begin, ContiguousIterator end)
     { 
-      if ( begin != end )
-        path_traits::convert( &*begin, &*begin+std::distance(begin, end),
-          m_path, codecvt() );
+      if (begin != end)
+        path_traits::convert(&*begin, &*begin+std::distance(begin, end),
+          m_path, codecvt());
     }
 
     template <class Source>
-    path( Source const & pathable )
+    path(Source const & pathable)
     {
-      path_traits::dispatch( pathable, m_path, codecvt() );
+#   ifdef BOOST_FILESYSTEM_PATH_CTOR_COUNT
+      ++path_constructor_count;
+#   endif
+      path_traits::dispatch(pathable, m_path, codecvt());
     }
 
     //  -----  assignments  -----
 
-    path & operator=( const path & p )
+    path& operator=(const path& p)
     {
       m_path = p.m_path;
       return *this;
     }
 
     template <class ContiguousIterator>
-    path & assign( ContiguousIterator begin, ContiguousIterator end )
+    path& assign(ContiguousIterator begin, ContiguousIterator end)
     { 
       m_path.clear();
-      if ( begin != end )
-        path_traits::convert( &*begin, &*begin+std::distance(begin, end),
-          m_path, codecvt() );
+      if (begin != end)
+        path_traits::convert(&*begin, &*begin+std::distance(begin, end),
+          m_path, codecvt());
       return *this;
     }
 
     template <class Source>
-    path & operator=( Source const & source )
+    path& operator=(Source const & source)
     {
       m_path.clear();
-      path_traits::dispatch( source, m_path, codecvt() );
+      path_traits::dispatch(source, m_path, codecvt());
       return *this;
     }
 
@@ -257,28 +263,28 @@ namespace filesystem
     //  if a separator is added, it is the preferred separator for the platform;
     //  slash for POSIX, backslash for Windows
 
-    path & operator/=( const path & p );
+    path& operator/=(const path& p);
 
     template <class ContiguousIterator>
-    path & append( ContiguousIterator begin, ContiguousIterator end );
+    path& append(ContiguousIterator begin, ContiguousIterator end);
 
     template <class Source>
-    path & operator/=( Source const & source );
+    path& operator/=(Source const & source);
 
     //  -----  modifiers  -----
 
     void    clear()             { m_path.clear(); }
-    void    swap( path & rhs )  { m_path.swap( rhs.m_path ); }
-    path &  remove_filename();
-    path &  replace_extension( const path & new_extension = path() );
+    void    swap(path& rhs)     { m_path.swap(rhs.m_path); }
+    path&  remove_filename();
+    path&  replace_extension(const path& new_extension = path());
 
 #   ifdef BOOST_WINDOWS_API
 
-    path & localize();  // change slash to backslash
+    path& localize();  // change slash to backslash
 
 #   else // BOOST_POSIX_API
 
-    path & localize() { return *this; }  // POSIX m_path already localized
+    path& localize() { return *this; }  // POSIX m_path already localized
 
 #   endif
 
@@ -302,9 +308,9 @@ namespace filesystem
     //                 portable:  backslashes are converted to slashes
 
 //    template< class T >  
-//    T string( system::error_code & ec = boost::throws() ) const  // internal (i.e. original) format
+//    T string(system::error_code & ec = boost::throws()) const  // internal (i.e. original) format
 //    {
-//      return path_traits::convert<T>( m_path, ec );
+//      return path_traits::convert<T>(m_path, ec);
 //    }
 
     //  -----  native format observers  -----
@@ -312,8 +318,8 @@ namespace filesystem
     //  access to the internal representation string is efficient and often convenient,
     //  but may result in less than fully portable code.
 
-    const string_type &  native() const { return m_path; }          // Throws: nothing
-    const value_type *   c_str() const  { return m_path.c_str(); }  // Throws: nothing
+    const string_type&  native() const { return m_path; }          // Throws: nothing
+    const value_type*   c_str() const  { return m_path.c_str(); }  // Throws: nothing
 
 #   ifdef BOOST_WINDOWS_API
 
@@ -326,9 +332,9 @@ namespace filesystem
     const std::wstring   native_wstring() const
     { 
       std::wstring tmp;
-      if ( !m_path.empty() )
-        path_traits::convert( &*m_path.begin(), &*m_path.begin()+m_path.size(),
-          tmp, codecvt() );
+      if (!m_path.empty())
+        path_traits::convert(&*m_path.begin(), &*m_path.begin()+m_path.size(),
+          tmp, codecvt());
       return tmp;
     }
 
@@ -380,7 +386,7 @@ namespace filesystem
 
     //  -----  imbue  -----
 
-    static std::locale imbue( const std::locale & loc );
+    static std::locale imbue(const std::locale & loc);
 
     //  -----  codecvt  -----
 
@@ -405,7 +411,7 @@ namespace filesystem
 
 # if !defined(BOOST_FILESYSTEM_NO_DEPRECATED)
     //  recently deprecated functions supplied by default
-    path &  remove_leaf()            { return remove_filename(); }
+    path&   remove_leaf()            { return remove_filename(); }
     path    leaf() const             { return filename(); }
     path    branch_path() const      { return parent_path(); }
     bool    has_leaf() const         { return !m_path.empty(); }
@@ -423,15 +429,15 @@ namespace filesystem
     const string_type external_directory_string() const { return native(); }
 
     //  older functions no longer supported
-    //typedef bool (*name_check)( const std::string & name );
-    //basic_path( const string_type & str, name_check ) { operator/=( str ); }
-    //basic_path( const typename string_type::value_type * s, name_check )
-    //  { operator/=( s );}
+    //typedef bool (*name_check)(const std::string & name);
+    //basic_path(const string_type& str, name_check) { operator/=(str); }
+    //basic_path(const typename string_type::value_type* s, name_check)
+    //  { operator/=(s);}
     //static bool default_name_check_writable() { return false; } 
-    //static void default_name_check( name_check ) {}
+    //static void default_name_check(name_check) {}
     //static name_check default_name_check() { return 0; }
-    //basic_path & canonize();
-    //basic_path & normalize();
+    //basic_path& canonize();
+    //basic_path& normalize();
 # endif
 
 //--------------------------------------------------------------------------------------//
@@ -454,23 +460,23 @@ namespace filesystem
     //  Returns: If separator is to be appended, m_path.size() before append. Otherwise 0.
     //  Note: An append is never performed if size()==0, so a returned 0 is unambiguous.
 
-    void m_erase_redundant_separator( string_type::size_type sep_pos );
+    void m_erase_redundant_separator(string_type::size_type sep_pos);
     
     void m_portable();
 
-    //path &  m_normalize();
+    //path&  m_normalize();
 
     // Was qualified; como433beta8 reports:
     //    warning #427-D: qualified name is not allowed in member declaration 
     friend class iterator;
-    friend bool operator<( const path & lhs, const path & rhs );
+    friend bool operator<(const path& lhs, const path& rhs);
 
-    static bool m_path_lex_compare( iterator first1, iterator last1,
-      iterator first2, iterator last2 );
+    static bool m_path_lex_compare(iterator first1, iterator last1,
+      iterator first2, iterator last2);
 
     // see path::iterator::increment/decrement comment below
-    static void m_path_iterator_increment( path::iterator & it );
-    static void m_path_iterator_decrement( path::iterator & it );
+    static void m_path_iterator_increment(path::iterator & it);
+    static void m_path_iterator_decrement(path::iterator & it);
 
     static const codecvt_type *&  wchar_t_codecvt_facet();
 
@@ -493,20 +499,20 @@ namespace filesystem
   private:
     friend class boost::iterator_core_access;
     friend class boost::filesystem::path;
-    friend void m_path_iterator_increment( path::iterator & it );
-    friend void m_path_iterator_decrement( path::iterator & it );
+    friend void m_path_iterator_increment(path::iterator & it);
+    friend void m_path_iterator_decrement(path::iterator & it);
 
-    const path & dereference() const { return m_element; }
+    const path& dereference() const { return m_element; }
 
-    bool equal( const iterator & rhs ) const
+    bool equal(const iterator & rhs) const
     {
       return m_path_ptr == rhs.m_path_ptr && m_pos == rhs.m_pos;
     }
 
     // iterator_facade derived classes don't seem to like implementations in
     // separate translation unit dll's, so forward to class path static members
-    void increment() { m_path_iterator_increment( *this ); }
-    void decrement() { m_path_iterator_decrement( *this ); }
+    void increment() { m_path_iterator_increment(*this); }
+    void decrement() { m_path_iterator_decrement(*this); }
 
     path                    m_element;   // current element
     const path *            m_path_ptr;  // path being iterated over
@@ -525,16 +531,16 @@ namespace filesystem
   class scoped_path_locale
   {
   public:
-    scoped_path_locale( const std::locale & loc )
+    scoped_path_locale(const std::locale & loc)
                       : m_saved_locale(loc)
     {
-      path::imbue( loc );
+      path::imbue(loc);
     }
 
     ~scoped_path_locale()   // never throws()
     {
-      try { path::imbue( m_saved_locale ); }
-      catch ( ... ) {}
+      try { path::imbue(m_saved_locale); }
+      catch (...) {}
     };
 
   private:
@@ -549,63 +555,67 @@ namespace filesystem
 
   //  relational operators act as if comparing native format strings
 
-  inline bool operator<( const path & lhs, const path & rhs )
+  inline bool operator<(const path& lhs, const path& rhs)
   {
     // because path iterators yield paths, std::lexicographical_compare 
     // infinately recurses, so use a path aware version
     return path::m_path_lex_compare(
-      lhs.begin(), lhs.end(), rhs.begin(), rhs.end() );
+      lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
   }
 
-  inline bool operator<=( const path & lhs, const path & rhs ) { return !(rhs < lhs); }
-  inline bool operator> ( const path & lhs, const path & rhs ) { return rhs < lhs; }
-  inline bool operator>=( const path & lhs, const path & rhs ) { return !(lhs < rhs);  }
+  inline bool operator<=(const path& lhs, const path& rhs) { return !(rhs < lhs); }
+  inline bool operator> (const path& lhs, const path& rhs) { return rhs < lhs; }
+  inline bool operator>=(const path& lhs, const path& rhs) { return !(lhs < rhs);  }
 
   // operator==() efficiency is a concern; a user reported the original version 2
   // !(lhs < rhs) && !(rhs < lhs) implementation caused a serious performance problem
   // for a map of 10,000 paths.
 
 # ifdef BOOST_WINDOWS_API
-  inline bool operator==( const path & lhs, const path::value_type * rhs )
+  inline bool operator==(const path& lhs, const path::value_type* rhs)
   {
-    const path::value_type * l(lhs.c_str());
-    while ( (*l == *rhs || (*l == L'\\' && *rhs == L'/') || (*l == L'/' && *rhs == L'\\'))
-      && *l ) { ++l; ++rhs; }
+    const path::value_type* l(lhs.c_str());
+    while ((*l == *rhs || (*l == L'\\' && *rhs == L'/') || (*l == L'/' && *rhs == L'\\'))
+      && *l) { ++l; ++rhs; }
     return *l == *rhs || (*l == L'\\' && *rhs == L'/') || (*l == L'/' && *rhs == L'\\');  
   }
-  inline bool operator==( const path & lhs, const path & rhs ) { return lhs == rhs.c_str(); }
-  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs == rhs.c_str(); }
-  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return rhs == lhs.c_str(); }
-  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return rhs == lhs; }
+  inline bool operator==(const path& lhs, const path& rhs)              { return lhs == rhs.c_str(); }
+  inline bool operator==(const path& lhs, const path::string_type& rhs) { return lhs == rhs.c_str(); }
+  inline bool operator==(const path::string_type& lhs, const path& rhs) { return rhs == lhs.c_str(); }
+  inline bool operator==(const path::value_type* lhs, const path& rhs)  { return rhs == lhs; }
 # else   // BOOST_POSIX_API
-  inline bool operator==( const path & lhs, const path & rhs ) { return lhs.native() == rhs.native(); }
-  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs.native() == rhs; }
-  inline bool operator==( const path & lhs, const path::value_type * rhs )  { return lhs.native() == rhs; }
-  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return lhs == rhs.native(); }
-  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return lhs == rhs.native(); }
+  inline bool operator==(const path& lhs, const path& rhs)              { return lhs.native() == rhs.native(); }
+  inline bool operator==(const path& lhs, const path::string_type& rhs) { return lhs.native() == rhs; }
+  inline bool operator==(const path& lhs, const path::value_type* rhs)  { return lhs.native() == rhs; }
+  inline bool operator==(const path::string_type& lhs, const path& rhs) { return lhs == rhs.native(); }
+  inline bool operator==(const path::value_type* lhs, const path& rhs)  { return lhs == rhs.native(); }
 # endif
 
-  inline bool operator!=( const path & lhs, const path & rhs ) { return !(lhs == rhs); }
+  inline bool operator!=(const path& lhs, const path& rhs)              { return !(lhs == rhs); }
+  inline bool operator!=(const path& lhs, const path::string_type& rhs) { return !(lhs == rhs); }
+  inline bool operator!=(const path& lhs, const path::value_type* rhs)  { return !(lhs == rhs); }
+  inline bool operator!=(const path::string_type& lhs, const path& rhs) { return !(lhs == rhs); }
+  inline bool operator!=(const path::value_type* lhs, const path& rhs)  { return !(lhs == rhs); }
 
-  inline void swap( path & lhs, path & rhs )                   { lhs.swap( rhs ); }
+  inline void swap(path& lhs, path& rhs)                   { lhs.swap(rhs); }
 
-  inline path operator/( const path & lhs, const path & rhs )  { return path( lhs ) /= rhs; }
+  inline path operator/(const path& lhs, const path& rhs)  { return path(lhs) /= rhs; }
 
   //  inserters and extractors
 
-  inline std::ostream & operator<<( std::ostream & os, const path & p )
+  inline std::ostream & operator<<(std::ostream & os, const path& p)
   {
     os << p.native_string();
     return os;
   }
   
-  inline std::wostream & operator<<( std::wostream & os, const path & p )
+  inline std::wostream & operator<<(std::wostream & os, const path& p)
   {
     os << p.native_wstring();
     return os;
   }
   
-  inline std::istream & operator>>( std::istream & is, path & p )
+  inline std::istream & operator>>(std::istream & is, path& p)
   {
     std::string str;
     is >> str;
@@ -613,7 +623,7 @@ namespace filesystem
     return is;
   }
   
-  inline std::wistream & operator>>( std::wistream & is, path & p )
+  inline std::wistream & operator>>(std::wistream & is, path& p)
   {
     std::wstring str;
     is >> str;
@@ -623,40 +633,40 @@ namespace filesystem
 
   //  name_checks
 
-  BOOST_FILESYSTEM_DECL bool portable_posix_name( const std::string & name );
-  BOOST_FILESYSTEM_DECL bool windows_name( const std::string & name );
-  BOOST_FILESYSTEM_DECL bool portable_name( const std::string & name );
-  BOOST_FILESYSTEM_DECL bool portable_directory_name( const std::string & name );
-  BOOST_FILESYSTEM_DECL bool portable_file_name( const std::string & name );
-  BOOST_FILESYSTEM_DECL bool native( const std::string & name );
+  BOOST_FILESYSTEM_DECL bool portable_posix_name(const std::string & name);
+  BOOST_FILESYSTEM_DECL bool windows_name(const std::string & name);
+  BOOST_FILESYSTEM_DECL bool portable_name(const std::string & name);
+  BOOST_FILESYSTEM_DECL bool portable_directory_name(const std::string & name);
+  BOOST_FILESYSTEM_DECL bool portable_file_name(const std::string & name);
+  BOOST_FILESYSTEM_DECL bool native(const std::string & name);
  
 //--------------------------------------------------------------------------------------//
 //                     class path member template implementation                        //
 //--------------------------------------------------------------------------------------//
 
   template <class ContiguousIterator>
-  path & path::append( ContiguousIterator begin, ContiguousIterator end )
+  path& path::append(ContiguousIterator begin, ContiguousIterator end)
   { 
-    if ( begin == end )
+    if (begin == end)
       return *this;
-    string_type::size_type sep_pos( m_append_separator_if_needed() );
-    if ( begin != end )
-      path_traits::convert( &*begin, &*begin+std::distance(begin, end),
-        m_path, codecvt() );
-    if ( sep_pos )
-      m_erase_redundant_separator( sep_pos );
+    string_type::size_type sep_pos(m_append_separator_if_needed());
+    if (begin != end)
+      path_traits::convert(&*begin, &*begin+std::distance(begin, end),
+        m_path, codecvt());
+    if (sep_pos)
+      m_erase_redundant_separator(sep_pos);
     return *this;
   }
 
   template <class Source>
-  path & path::operator/=( Source const & source )
+  path& path::operator/=(Source const & source)
   {
-    if ( path_traits::empty( source ) )
+    if (path_traits::empty(source))
       return *this;
-    string_type::size_type sep_pos( m_append_separator_if_needed() );
-    path_traits::dispatch( source, m_path, codecvt() );
-    if ( sep_pos )
-      m_erase_redundant_separator( sep_pos );
+    string_type::size_type sep_pos(m_append_separator_if_needed());
+    path_traits::dispatch(source, m_path, codecvt());
+    if (sep_pos)
+      m_erase_redundant_separator(sep_pos);
     return *this;
   }
 
