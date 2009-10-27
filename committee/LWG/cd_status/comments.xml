@@ -4466,9 +4466,9 @@ para 3
 </rationale>
 </comment>
 
-<comment nb="UK" num="98" uknum="402" type="Te" owner="LWG" issue="1055" disp="" date="" extdoc="">
+<comment nb="UK" num="98" uknum="402" type="Te" owner="LWG" issue="1055" disp="modified" date="" extdoc="">
 <section>
-20.5.6
+7.2 &#182; 5
 </section>
 <para></para>
 <description>
@@ -4484,11 +4484,9 @@ para 3
         Add a TransformationTrait to 20.5.6 that
         returns the underlying type of an enumeration type.
 </suggestion>
-<notes>Originlly submitted as section: 7.2 &#182; 5</notes>
+<notes>Correct section is 20.5.6</notes>
 <rationale>
-Section reference corrected from 7.2.<BR/>
-Note that the <TT>EnumerationType</TT> concept (14.9.4 paragraph 41)
-has a member <TT>underlying_type</TT> that provides this information.
+Name of trait changed to underlying_type.>
 </rationale>
 </comment>
 
@@ -7528,7 +7526,7 @@ Removed the reference.
 </rationale>
 </comment>
 
-<comment nb="UK" num="152" uknum="80" type="Te" owner="LWG" issue="1064" disp="" date="" extdoc="">
+<comment nb="UK" num="152" uknum="80" type="Te" owner="LWG" issue="1064" disp="rejected" date="" extdoc="">
 <section>
 17.3.12
 </section>
@@ -7543,10 +7541,9 @@ Removed the reference.
 <suggestion>
         Clarify terms and usage
 </suggestion>
-<notes>we think we're removing this; Howard to create LWG issue.
-Howard, see [func.referenceclosure.cons]
+<notes>
 </notes>
-<rationale>
+<rationale>This will not affect user or implementer code.
 </rationale>
 </comment>
 
@@ -7764,7 +7761,7 @@ handler functions and replacement functions. There is no redundancy.
 </rationale>
 </comment>
 
-<comment nb="UK" num="163" uknum="219" type="Te" owner="LWG" issue="997" disp="" date="" extdoc="">
+<comment nb="UK" num="163" uknum="219" type="Te" owner="LWG" issue="997" disp="accepted" date="" extdoc="">
 <section>
 17.5.2.4
 </section>
@@ -7878,7 +7875,7 @@ members
 </rationale>
 </comment>
 
-<comment nb="UK" num="168" uknum="406" type="Te" owner="LWG" issue="1065" disp="" date="" extdoc="">
+<comment nb="UK" num="168" uknum="406" type="Te" owner="LWG" issue="1065" disp="modified" date="" extdoc="">
 <section>
 17.6.2.2
 </section>
@@ -7906,7 +7903,7 @@ members
 </rationale>
 </comment>
 
-<comment nb="UK" num="169" uknum="95" type="Te" owner="LWG" issue="992" disp="" date="" extdoc="">
+<comment nb="UK" num="169" uknum="95" type="Te" owner="LWG" issue="992" disp="rejected" date="" extdoc="">
 <section>
 17.6.2.2
 </section>
@@ -7924,10 +7921,10 @@ members
 <notes>Bill Plauger to open issue. If the wording is too broad we need to add an 
     exception to the standard C library.</notes>
 <rationale>
-</rationale>
+</rationale>This comment is informative and not normative by the use of the word "are" instead of the word "shall." 
 </comment>
 
-<comment nb="UK" num="170" uknum="96" type="Te" owner="LWG" issue="1002" disp="" date="" extdoc="">
+<comment nb="UK" num="170" uknum="96" type="Te" owner="LWG" issue="1002" disp="rejected" date="" extdoc="">
 <section>
 17.6.2.3
 </section>
@@ -7951,7 +7948,7 @@ members
         &lt;std&gt; but no definitions.
 </suggestion>
 <notes>Alisdair to open issue. We prefer &lt;std&gt; only.</notes>
-<rationale>
+<rationale>No consensus for change. 
 </rationale>
 </comment>
 
@@ -8030,7 +8027,7 @@ N2886</a>
 </rationale>
 </comment>
 
-<comment nb="JP" num="23" uknum="" type="te" owner="LWG" issue="1003" disp="" date="" extdoc="">
+<comment nb="JP" num="23" uknum="" type="te" owner="LWG" issue="1003" disp="modified" date="" extdoc="">
 <section>
 17.6.2.4
 </section>
@@ -8059,7 +8056,8 @@ LWG is interested in
 N2814</a>, but we're concerned whether CWG will accept 
 language recommendations.<BR/><BR/>
 add &lt;type_traits&gt; only. Alisdair will draft an issue.</notes>
-<rationale>
+<rationale>See Martin Tasker's paper Fixing Freestanding which provides the
+wording to include <type_traits> into freestanding implementations. 
 </rationale>
 </comment>
 
@@ -8088,7 +8086,7 @@ add &lt;type_traits&gt; only. Alisdair will draft an issue.</notes>
 </rationale>
 </comment>
 
-<comment nb="UK" num="175" uknum="101" type="Te" owner="LWG" issue="1157" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="175" uknum="101" type="Te" owner="LWG" issue="1157" disp="" date="" extdoc="">
 <section>
 17.6.4.2.1
 </section>
@@ -8171,7 +8169,7 @@ sometimes circumscribed by a prohibition on throwing exceptions.
 </rationale>
 </comment>
 
-<comment nb="UK" num="179" uknum="105" type="Te" owner="LWG" issue="1004" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="179" uknum="105" type="Te" owner="LWG" issue="1004" disp="modified" date="" extdoc="">
 <section>
 17.6.4.8
 </section>
@@ -8188,8 +8186,8 @@ sometimes circumscribed by a prohibition on throwing exceptions.
 <suggestion>
         Replace the word 'throws' with 'propogates'
 </suggestion>
-<notes>Agreed. Alisdair will draft an issue.</notes>
-<rationale>
+<notes></notes>
+<rationale>Replace "propagates" in the proposed resolution with the phrase "exits via".
 </rationale>
 </comment>
 
@@ -8621,7 +8619,7 @@ Footnote 221
 </rationale>
 </comment>
 
-<comment nb="UK" num="189" uknum="273" type="Te" owner="LWG" issue="1066" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="189" uknum="273" type="Te" owner="LWG" issue="1066" disp="modified" date="" extdoc="">
 <section>
 18.4, 18.7
 </section>
@@ -8643,7 +8641,7 @@ Footnote 221
 </rationale>
 </comment>
 
-<comment nb="JP" num="27" uknum="" type="te" owner="LWG" issue="1066" disp="" date="" extdoc="">
+<comment nb="JP" num="27" uknum="" type="te" owner="LWG" issue="1066" disp="accepted" date="" extdoc="">
 <section>
 18.4, 18.9,
 18.7.2.2,
@@ -8746,7 +8744,7 @@ Reworded, but not with "installed".
 </rationale>
 </comment>
 
-<comment nb="UK" num="193" uknum="272" type="Te" owner="LWG" issue="994" disp="" date="" extdoc="">
+<comment nb="UK" num="193" uknum="272" type="Te" owner="LWG" issue="994" disp="modified" date="" extdoc="">
 <section>
 18.5.2.2
 </section>
@@ -8849,7 +8847,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="JP" num="30" uknum="" type="te" owner="LWG" issue="1132" disp="" date="" extdoc="">
+<comment nb="JP" num="30" uknum="" type="te" owner="LWG" issue="1132" disp="rejected" date="" extdoc="">
 <section>
 18.7.6
 </section>
@@ -8865,8 +8863,8 @@ All concepts-related text has been removed from the draft.
 <suggestion>
         Consider nested_exception to support tree structure.
 </suggestion>
-<notes>Howard will ping Bill Plauger to request more information.</notes>
-<rationale>
+<notes></notes>
+<rationale>The committee agrees that nested_exception is not a good match for this usage model. The committee did not see a way of improving this within the timeframe allowed.
 </rationale>
 </comment>
 
@@ -9030,7 +9028,7 @@ the scope of the standard.
 </rationale>
 </comment>
 
-<comment nb="US" num="65" uknum="" type="te" owner="LWG" issue="1075" disp="" date="" extdoc="">
+<comment nb="US" num="65" uknum="" type="te" owner="LWG" issue="1075" disp="modified" date="" extdoc="">
 <section>
 20
 </section>
@@ -9066,25 +9064,9 @@ the scope of the standard.
         "http://wiki.corp.google.com/twiki/bin/edit/Main/ConstructibleAsElement?topicparent=Main.CppStandardIssues">
         ?</a></u></font>.</font>
 </suggestion>
-<notes>
-The statement made in the comment was already aired prior to the last vote. 
-Without further input, the committee cannot remove a feature that was voted 
-into the draft. We will look at this comment in the light of N2829, which 
-attempts to make scoped allocators less intrusive.<BR/><BR/>
-Later: US 
-65, remove scoped allocators: straw poll, 4 pro - 9 con - 3 abstain, no 
-consensus for removing scoped allocators.<BR/><BR/>
-D2840: straw 
-poll, this is the direction we want to go: 11 pro - 0 con - 5 abstain, 
-we have consensus. Straw poll, put on format motions page for this 
-meeting (pro) or review and consider at next meeting (con): 7 pro - 1 
-con - many abstain, consensus for moving as formal motion at this 
-meeting.<BR/><BR/>
-D2840 was renamed
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
-N2840</a> and was accepted into the WP in Summit.
-<BR/><BR/>Post Summit: Alan moved from NAD to Open.</notes>
-<rationale>
+<notes> 
+</notes>
+<rationale>Scoped allocators have been revised significantly.
 </rationale>
 </comment>
 
@@ -9420,7 +9402,7 @@ Section reference corrected from 20.2.12.
 </rationale>
 </comment>
 
-<comment nb="UK" num="204" uknum="239" type="Te" owner="LWG" issue="1020" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="204" uknum="239" type="Te" owner="LWG" issue="1020" disp="rejected" date="" extdoc="">
 <section>
 20.5.7 [meta.trans.other]
 </section>
@@ -9437,10 +9419,10 @@ Table 41
         Restore aligned_union template that was
         removed by LWG issue 856.
 </suggestion>
-<notes>Agree. The need for aligned_union is compelling enough to reinstate.</notes>
+<notes></notes>
 <rationale>
 Section reference corrected from 20.5.
-</rationale>
+</rationale>Paper N2843 proposes an extension to the [[align]] attribute that further diminishes the need for this template.
 </comment>
 
 <comment nb="US" num="69" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -9480,14 +9462,12 @@ Forward to project editor.</notes>
         class tempalate integral_constant: constexpr operator
         value_type() { return value; }
 </suggestion>
-<notes>Agree: Add a constexpr conversion operator to class template 
-    integral_constant:
-    <code>constexpr operator value_type() { return value; }</code></notes>
+<notes></notes>
 <rationale>
 </rationale>
 </comment>
 
-<comment nb="UK" num="206" uknum="255" type="Te" owner="LWG" issue="975" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="206" uknum="255" type="Te" owner="LWG" issue="975" disp="modified" date="" extdoc="">
 <section>
 20.5.5
 </section>
@@ -10262,7 +10242,7 @@ Section reference corrected from 20.7.18.
 </rationale>
 </comment>
 
-<comment nb="US" num="74.1" uknum="" type="te" owner="LWG" issue="1075" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
+<comment nb="US" num="74.1" uknum="" type="te" owner="LWG" issue="1075" disp="modified" date="2009-03-06" extdoc="">
 <section>
 20.8
 </section>
@@ -10311,13 +10291,8 @@ Section reference corrected from 20.7.18.
         MoveConstructible, DefaultConstructible, or Constructible,
         as appropriate.
 </suggestion>
-<notes>
-Resolved by
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
-N2840</a>, accepted in New Jersey.<BR/><BR/>
-See <a href="#US65">US 65</a> for detailed notes.
-<BR/><BR/>Post Summit: Alan moved from NAD to Open.</notes>
-<rationale>
+<notes></notes>
+<rationale>Scoped allocators have been revised significantly. 
 </rationale>
 </comment>
 
@@ -10431,7 +10406,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="US" num="77" uknum="" type="te" owner="LWG" issue="1166" disp="" date="" extdoc="">
+<comment nb="US" num="77" uknum="" type="te" owner="LWG" issue="1166" disp="modified" date="" extdoc="">
 <section>
 20.8.4
 </section>
@@ -10468,10 +10443,10 @@ All concepts-related text has been removed from the draft.
 <notes>
 </notes>
 <rationale>
-</rationale>
+</rationale>Addressed by N2982. 
 </comment>
 
-<comment nb="US" num="78" uknum="" type="te" owner="LWG" issue="1031" disp="" date="" extdoc="">
+<comment nb="US" num="78" uknum="" type="te" owner="LWG" issue="1031" disp="rejected" date="" extdoc="">
 <section>
 20.8.12,
         20.8.13.2
@@ -10498,7 +10473,7 @@ available. We believe that the shared pointer must use the default deleter for t
 Peter Dimov comments: this is basically a request for shared_ptr&lt;&gt;::release 
 in disguise, with all the associated problems. Not a good idea.
 </notes>
-<rationale>
+<rationale>There are non-trivial design issues which would need to be implemented and tested in the field for usability prior to standardization. 
 </rationale>
 </comment>
 
@@ -11535,7 +11510,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="218" uknum="228" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="218" uknum="228" type="Te" owner="LWG" issue="1170" disp="" date="" extdoc="">
 <section>
 21.3.1
 </section>
@@ -11654,7 +11629,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="JP" num="50" uknum="" type="te" owner="LWG" issue="991" disp="" date="" extdoc="">
+<comment nb="JP" num="50" uknum="" type="te" owner="LWG" issue="991" disp="accepted" date="" extdoc="">
 <section>
 22.1.3.2.2
 </section>
@@ -11763,7 +11738,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="FI" num="6" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="6" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 22.2.1.5
         <BR/><BR/>See also
@@ -11790,10 +11765,10 @@ All concepts-related text has been removed from the draft.
         <tt>There should be a built-in means to find a codecvt
         with a pair of character set names.</tt>
 </suggestion>
-<notes>Martin Sebor interested in solving this problem (also POSIX group), but 
-    addressing it controversial because it's probably too late in the process 
-    for what looks like a new feature.</notes>
-<rationale>
+<notes></notes>
+<rationale>There is interest (Martin Sebor, POSIX folks) in solving this problem, but 
+    addressing it is controversial because it's probably too late in the process 
+    for what looks like a new feature.
 </rationale>
 </comment>
 
@@ -12259,7 +12234,7 @@ Table 81
 </rationale>
 </comment>
 
-<comment nb="UK" num="226" uknum="336" type="Te" owner="LWG" issue="1035" disp="" date="" extdoc="">
+<comment nb="UK" num="226" uknum="336" type="Te" owner="LWG" issue="1035" disp="rejected" date="" extdoc="">
 <section>
 23.1.1
 </section>
@@ -12279,9 +12254,8 @@ Table 81
         will have to also reference array, which will then have to
         say which of these points it satisfies.
 </suggestion>
-<notes>Agree. The proposed resolution is 
-    incomplete. Further work required.</notes>
-<rationale>
+<notes></notes>
+<rationale>No consensus for change.
 </rationale>
 </comment>
 
@@ -12603,7 +12577,7 @@ sequence containers.
 </rationale>
 </comment>
 
-<comment nb="UK" num="239" uknum="447" type="Te" owner="LWG" issue="1041" disp="" date="" extdoc="">
+<comment nb="UK" num="239" uknum="447" type="Te" owner="LWG" issue="1041" disp="rejected" date="" extdoc="">
 <section>
 23.1.4
 </section>
@@ -12625,8 +12599,7 @@ sequence containers.
         following q prior to the element being erased. If no such
         element exists,returns a.end().
 </suggestion>
-<notes>We look forward to a paper on this topic. We recommend no action until a 
-    paper is available. The paper would need to address exception safety.</notes>
+<notes>No consensus to make the change at this time. </notes>
 <rationale>
 </rationale>
 </comment>
@@ -12691,7 +12664,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="241" uknum="286" type="Te" owner="LWG" issue="" disp="duplicate" date="" extdoc="">
+<comment nb="UK" num="241" uknum="286" type="Te" owner="LWG" issue="" disp="duplicate" date="" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 <section>
 23.2.1
 </section>
@@ -12755,7 +12728,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="244" uknum="153" type="Te" owner="LWG" issue="1042" disp="modified" date="" extdoc="">
+<comment nb="UK" num="244" uknum="153" type="Te" owner="LWG" issue="1042" disp="rejected" date="" extdoc="">
 <section>
 23.2.1,
 23.2.6
@@ -12783,10 +12756,9 @@ All concepts-related text has been removed from the draft.
         Contiguous { C c; true = equal_ranges( data( c), data(c) +
         size(c), begin(c)); } };
 </suggestion>
-<notes>Agree with the issue but not the details of the proposed solution. Walter to 
-    provide wording for the new concept.</notes>
+<notes></notes>
 <rationale>
-All concepts-related text has been removed from the draft.
+All concepts-related text has been removed from the draft. The problem was solved by removal of concepts. 
 </rationale>
 </comment>
 
@@ -12910,7 +12882,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="246" uknum="350" type="Te" owner="LWG" issue="1091" disp="" date="" extdoc="">
+<comment nb="UK" num="246" uknum="350" type="Te" owner="LWG" issue="1091" disp="modified" date="" extdoc="">
 <section>
 23.3.2.2
 </section>
@@ -12933,7 +12905,7 @@ All concepts-related text has been removed from the draft.
 <notes>
 </notes>
 <rationale>This comment was submitted as editorial, but the project editor
-has classified it as technical.
+has classified it as technical. Solved by removing concepts.
 </rationale>
 </comment>
 
@@ -13013,7 +12985,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="251" uknum="51" type="Te" owner="LWG" issue="1009" disp="" date="" extdoc="">
+<comment nb="UK" num="251" uknum="51" type="Te" owner="LWG" issue="1009" disp="rejected" date="" extdoc="">
 <section>
 24.1.1
 </section>
@@ -13037,9 +13009,9 @@ All concepts-related text has been removed from the draft.
         and postincrement_result type from Interator concept to the
         ForwardIterator concept
 </suggestion>
-<notes>Alisdair will open an issue.
+<notes>
 </notes>
-<rationale>
+<rationale>Without concepts we do not feel that input iterator post increment is broken. 
 </rationale>
 </comment>
 
@@ -13111,7 +13083,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="255" uknum="56" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="255" uknum="56" type="Te" owner="LWG" issue="" disp="modified" date="" extdoc="">
 <section>
 24.1.4
 </section>
@@ -13779,7 +13751,7 @@ Done
 </rationale>
 </comment>
 
-<comment nb="UK" num="277" uknum="20" type="Te" owner="LWG" issue="1012" disp="" date="" extdoc="">
+<comment nb="UK" num="277" uknum="20" type="Te" owner="LWG" issue="1012" disp="modified" date="" extdoc="">
 <section>
 24.4.1.2.1
 </section>
@@ -13837,7 +13809,7 @@ sufficiently high priority for iterator types.
 </rationale>
 </comment>
 
-<comment nb="UK" num="279" uknum="24" type="Te" owner="LWG" issue="1051" disp="" date="" extdoc="">
+<comment nb="UK" num="279" uknum="24" type="Te" owner="LWG" issue="1051" disp="rejected" date="" extdoc="">
 <section>
 24.4.1.2.12,
         24.4.3.2.12
@@ -13859,7 +13831,7 @@ sufficiently high priority for iterator types.
 iterator adapters.
 </notes>
 <rationale>
-</rationale>
+Without concepts we can no longer restrict this member in a trivial way.</rationale>
 </comment>
 
 <comment nb="UK" num="280" uknum="22" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
@@ -13909,7 +13881,7 @@ resolution.
 </rationale>
 </comment>
 
-<comment nb="UK" num="282" uknum="5" type="Te" owner="LWG" issue="901" disp="" date="" extdoc="">
+<comment nb="UK" num="282" uknum="5" type="Te" owner="LWG" issue="901" disp="modified" date="" extdoc="">
 <section>
 24.4.2.1,
         24.4.2.2.2,
@@ -13931,9 +13903,9 @@ n/a
         !CopyConstructible&lt;Cont::value_type&gt; and mark it
         =delete.
 </suggestion>
-<notes>deferred to discussion of N2831.
+<notes> 
 </notes>
-<rationale>
+<rationale>Both comment and issue have been resolved by the adoption of N2844 (rvalue references safety fix).
 </rationale>
 </comment>
 
@@ -14056,7 +14028,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="287" uknum="25" type="Te" owner="LWG" issue="788" disp="" date="" extdoc="">
+<comment nb="UK" num="287" uknum="25" type="Te" owner="LWG" issue="788" disp="modified" date="" extdoc="">
 <section>
 24.5.1.1
 </section>
@@ -14078,9 +14050,7 @@ All concepts-related text has been removed from the draft.
         the stream, or the iterator takes on the end-of-stream
         value if the stream is empty
 </suggestion>
-<notes>Martin will address with existing LWG
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#788">
-issue 788</a>.
+<notes>
 </notes>
 <rationale>
 </rationale>
@@ -14281,7 +14251,7 @@ programs.
 </rationale>
 </comment>
 
-<comment nb="UK" num="295" uknum="173" type="Te" owner="LWG" issue="1053" disp="" date="" extdoc="">
+<comment nb="UK" num="295" uknum="173" type="Te" owner="LWG" issue="1053" disp="rejected" date="" extdoc="">
 <section>
 25
 </section>
@@ -14298,12 +14268,9 @@ programs.
 <suggestion>
         Adopt n2743, or an update of that paper.
 </suggestion>
-<notes>Summit: NAD, this change would break code that takes the address 
-of an algorithm.
-<BR/>
-Post-Summit: Issue opened at Alisdair's request. See issue for more information.
+<notes>
 </notes>
-<rationale>
+<rationale>Too inventive, too late, would really need a paper.
 </rationale>
 </comment>
 
@@ -14692,7 +14659,7 @@ submitter.]
 </rationale>
 </comment>
 
-<comment nb="JP" num="64" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="64" uknum="" type="te" owner="LWG" issue="1243" disp="rejected" date="" extdoc="">
 <section>
 26.5.2
 </section>
@@ -14707,9 +14674,9 @@ submitter.]
         valarray&lt;T&gt;&amp; operator+=
         (initializer_list&lt;T&gt;);
 </suggestion>
-<notes>
+<notes>Recommend NAD. The operator+= overload of basic_string behaves as-if calling append, which is completely different in meaning as the existing operator+= overloads in valarray which just sum the value or values to the existing elements. The suggestion to add a corresponding append function to valarray was not considered as appropriate and the request was withdrawn (c++std-lib-24968). 
 </notes>
-<rationale>
+<rationale>Request has been withdrawn by NB. 
 </rationale>
 </comment>
 
@@ -15373,7 +15340,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="JP" num="73" uknum="" type="te" owner="LWG" issue="1150" disp="" date="" extdoc="">
+<comment nb="JP" num="73" uknum="" type="te" owner="LWG" issue="1150" disp="rejected" date="" extdoc="">
 <section>
 27.8.1.14
 </section>
@@ -15390,7 +15357,7 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>
 </notes>
-<rationale>
+<rationale>This problem may be solved in TR2 by the filesystem library with a file path class with templated constructor. 
 </rationale>
 </comment>
 
@@ -15507,7 +15474,7 @@ p6
 </rationale>
 </comment>
 
-<comment nb="UK" num="316" uknum="345" type="Te" owner="LWG" issue="723" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="316" uknum="345" type="Te" owner="LWG" issue="723" disp="modified" date="" extdoc="">
 <section>
 28.4 ff
 </section>
@@ -15521,13 +15488,13 @@ p6
         Add the missing r-value constructors to
         regex classes.
 </suggestion>
-<notes>We agree and await assistance from the UK.
+<notes>
 </notes>
-<rationale>
+<rationale>Updated wording to reflect new "swap rules".
 </rationale>
 </comment>
 
-<comment nb="UK" num="317" uknum="278" type="Te" owner="LWG" issue="1014" disp="" date="" extdoc="">
+<comment nb="UK" num="317" uknum="278" type="Te" owner="LWG" issue="1014" disp="modifed" date="" extdoc="">
 <section>
 28.8
 </section>
@@ -15549,11 +15516,11 @@ p6
 </suggestion>
 <notes>UK317, JP74: Alisdair will open an issue.
 </notes>
-<rationale>
+<rationale>The requested constructor was already present. The requested operator= was added.
 </rationale>
 </comment>
 
-<comment nb="JP" num="74" uknum="" type="te" owner="LWG" issue="1014" disp="" date="" extdoc="">
+<comment nb="JP" num="74" uknum="" type="te" owner="LWG" issue="1014" disp="accepted" date="" extdoc="">
 <section>
 28.8
 </section>
@@ -15594,7 +15561,7 @@ para 22
 </rationale>
 </comment>
 
-<comment nb="UK" num="319" uknum="280" type="Te" owner="LWG" issue="909" disp="" date="" extdoc="">
+<comment nb="UK" num="319" uknum="280" type="Te" owner="LWG" issue="909" disp="accepted" date="" extdoc="">
 <section>
 28.12.2
 </section>
@@ -15685,7 +15652,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="312" uknum="157" type="Te" owner="LWG" issue="1145" disp="" date="" extdoc="">
+<comment nb="UK" num="312" uknum="157" type="Te" owner="LWG" issue="1145" disp="modified" date="" extdoc="">
 <section>
 29
 </section>
@@ -15711,7 +15678,7 @@ All concepts-related text has been removed from the draft.
 resolvable with a footnote for clarity stating that the header is 
 defined where it exists.
 </notes>
-<rationale>
+<rationale>Solved by N2992
 </rationale>
 </comment>
 
@@ -15911,7 +15878,7 @@ spelling. Move to review state. Hans to ask additional review from cpp-threads.
 </rationale>
 </comment>
 
-<comment nb="US" num="88" uknum="" type="te" owner="LWG" issue="1146" disp="" date="" extdoc="">
+<comment nb="US" num="88" uknum="" type="te" owner="LWG" issue="1146" disp="modified" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -15932,10 +15899,10 @@ additional notes for US 88.<BR/><BR/>
 See wiki for further comments.
 </notes>
 <rationale>
-</rationale>
+</rationale>Solved by N2992. 
 </comment>
 
-<comment nb="US" num="89" uknum="" type="te" owner="LWG" issue="937" disp="" date="" extdoc="">
+<comment nb="US" num="89" uknum="" type="te" owner="editor"" issue="937" disp="" date="" extdoc="">
 <section>
 29.3.1
 </section>
@@ -15956,11 +15923,11 @@ Table 122
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#927">Issue 937</a>. Direct the editor to turn the types into typedefs as proposed in the comment. Paper approved by committee used 
 typedefs, this appears to have been introduced as an editorial change. 
 Rationale: for compatibility with C.</notes>
-<rationale>
+<rationale>Pass on to the editor.
 </rationale>
 </comment>
 
-<comment nb="US" num="90" uknum="" type="te" owner="LWG" issue="908, 1147" disp="" date="" extdoc="">
+<comment nb="US" num="90" uknum="" type="te" owner="LWG" issue="908, 1147" disp="modified" date="" extdoc="">
 <section>
 29.4
 </section>
@@ -15978,11 +15945,11 @@ Rationale: for compatibility with C.</notes>
 <notes>Create an issue. Assigned to Lawrence Crowl. Should 
 explicitly consider the process shared issue.
 </notes>
-<rationale>
+<rationale>Solved by N2992. 
 </rationale>
 </comment>
 
-<comment nb="US" num="91" uknum="" type="te" owner="LWG" issue="1043" disp="accepted" date="" extdoc="">
+<comment nb="US" num="91" uknum="" type="te" owner="LWG" issue="1043" disp="modified" date="" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2925.html">
 <section>
 29.4
 </section>
@@ -15999,9 +15966,7 @@ explicitly consider the process shared issue.
         the attached paper under "atomic RMW status of failed
         compare_exchange"</font>
 </suggestion>
-<notes>Create an issue, goes to review. Attention: Howard. 
-Group agrees with the resolution as proposed by Anthony Williams in the 
-attached note.
+<notes>
 </notes>
 <rationale>
 </rationale>
@@ -16086,7 +16051,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="320" uknum="117" type="Te" owner="LWG" issue="1139" disp="" date="" extdoc="">
+<comment nb="UK" num="320" uknum="117" type="Te" owner="LWG" issue="1139" disp="modified" date="" extdoc="">
 <section>
 30
 </section>
@@ -16102,7 +16067,7 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>Duplicate of <a href="#US93">US 93</a>.
 </notes>
-<rationale>
+<rationale>All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -16377,7 +16342,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="325" uknum="174" type="Te" owner="LWG" issue="1044" disp="" date="" extdoc="">
+<comment nb="UK" num="325" uknum="174" type="Te" owner="LWG" issue="1044" disp="accepted" date="" extdoc="">
 <section>
 30.3.3
 </section>
@@ -16616,7 +16581,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="331" uknum="192" type="Te" owner="LWG" issue="1160" disp="" date="" extdoc="">
+<comment nb="UK" num="331" uknum="192" type="Te" owner="LWG" issue="1160" disp="modified" date="" extdoc="">
 <section>
 30.5.3
 </section>
@@ -16637,7 +16602,7 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>Create an issue. Assigned to Detlef. Suggested resolution probably makes 
     sense.</notes>
-<rationale>
+<rationale>Solved by N2997.
 </rationale>
 </comment>
 
@@ -16741,7 +16706,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="336" uknum="437" type="Te" owner="LWG" issue="1161" disp="" date="" extdoc="">
+<comment nb="UK" num="336" uknum="437" type="Te" owner="LWG" issue="1161" disp="modified" date="" extdoc="">
 <section>
 30.5.4
 </section>
@@ -16766,7 +16731,7 @@ All concepts-related text has been removed from the draft.
         operator which transfers ownership.
 </suggestion>
 <notes>Create an issue. Detlef will look into it.</notes>
-<rationale>
+<rationale>Solved by N2997. 
 </rationale>
 </comment>
 
@@ -16790,7 +16755,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="337" uknum="198" type="Te" owner="LWG" issue="1162" disp="" date="" extdoc="">
+<comment nb="UK" num="337" uknum="198" type="Te" owner="LWG" issue="1162" disp="modified" date="" extdoc="">
 <section>
 30.5.5
 </section>
@@ -16807,10 +16772,10 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>Create an issue. Detlef will look into it.</notes>
 <rationale>
-</rationale>
+</rationale>Solved by N2997. 
 </comment>
 
-<comment nb="UK" num="338" uknum="223" type="Te" owner="LWG" issue="1163" disp="" date="" extdoc="">
+<comment nb="UK" num="338" uknum="223" type="Te" owner="LWG" issue="1163" disp="modified" date="" extdoc="">
 <section>
 30.5.5
 </section>
@@ -16843,7 +16808,7 @@ All concepts-related text has been removed from the draft.
         state.
 </suggestion>
 <notes>Create an issue. Detlef will look into it.</notes>
-<rationale>
+<rationale>Solved by N2997. 
 </rationale>
 </comment>
 
@@ -16894,7 +16859,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="341" uknum="122" type="Te" owner="LWG" issue="1164" disp="" date="" extdoc="">
+<comment nb="UK" num="341" uknum="122" type="Te" owner="LWG" issue="1164" disp="rejected" date="" extdoc="">
 <section>
 30.5.6
 </section>
@@ -16912,7 +16877,7 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>Create an issue. Detlef will look into it. Probably ready as it.</notes>
 <rationale>
-</rationale>
+</rationale>No longer applicable, by virtue of the changed rvalue rules and swap signatures. 
 </comment>
 
 <comment nb="UK" num="342" uknum="123" type="Te" owner="LWG" issue="1088" disp="" date="" extdoc="">
@@ -16936,7 +16901,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="343" uknum="439" type="Te" owner="LWG" issue="1165" disp="" date="" extdoc="">
+<comment nb="UK" num="343" uknum="439" type="Te" owner="LWG" issue="1165" disp="modified" date="" extdoc="">
 <section>
 30.5.6
 </section>
@@ -16958,7 +16923,7 @@ All concepts-related text has been removed from the draft.
 <notes>Create an issue. Detlef will look into it. Will solicit feedback from Pablo. 
     Note that &#8220;rhs&#8221; argument should also be an rvalue reference in any case.</notes>
 <rationale>
-</rationale>
+</rationale>Solved by N2997. 
 </comment>
 
 <comment nb="JP" num="81" uknum="" type="ed" owner="LWG" issue="1139" disp="modified" date="" extdoc="">
@@ -17079,7 +17044,7 @@ p2
 </rationale>
 </comment>
 
-<comment nb="DE" num="24" uknum="" type="te" owner="LWG" issue="922" disp="" date="" extdoc="">
+<comment nb="DE" num="24" uknum="" type="te" owner="LWG" issue="922" disp="modified" date="" extdoc="">
 <section>
 Annex B
 </section>
