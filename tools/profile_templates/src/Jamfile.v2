@@ -8,7 +8,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 project src : :
-    requirements <include>$(BOOST_ROOT) <link>static ;
+    requirements <link>static ;
 
-exe postprocess : postprocess.cpp $(BOOST_ROOT)/libs/regex/build//boost_regex : <variant>release ;
-exe filter : filter.cpp $(BOOST_ROOT)/libs/regex/build//boost_regex : <variant>release ;
+exe postprocess : postprocess.cpp /boost//regex : <variant>release ;
+exe filter : filter.cpp /boost//regex : <variant>release ;
