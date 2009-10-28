@@ -1,11 +1,11 @@
-#ifndef BOOST_ENABLE_SHARED_FROM_THIS2_HPP_INCLUDED
-#define BOOST_ENABLE_SHARED_FROM_THIS2_HPP_INCLUDED
+#ifndef BOOST_ENABLE_SHARED_FROM_RAW_HPP_INCLUDED
+#define BOOST_ENABLE_SHARED_FROM_RAW_HPP_INCLUDED
 
 //
-//  enable_shared_from_this2.hpp
+//  enable_shared_from_raw.hpp
 //
 //  Copyright 2002, 2009 Peter Dimov
-//  Copyright 2008 Frank Mori Hess
+//  Copyright 2008-2009 Frank Mori Hess
 //
 //  Distributed under the Boost Software License, Version 1.0.
 //  See accompanying file LICENSE_1_0.txt or copy at
@@ -14,103 +14,87 @@
 
 #include <boost/config.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 #include <boost/assert.hpp>
 #include <boost/detail/workaround.hpp>
 
 namespace boost
 {
+template<typename T> boost::shared_ptr<T> shared_from_raw(T *);
 
 namespace detail
 {
-
-class esft2_deleter_wrapper
-{
-private:
-
-    shared_ptr<void> deleter_;
-
-public:
-
-    esft2_deleter_wrapper()
-    {
-    }
-
-    template< class T > void set_deleter( shared_ptr<T> const & deleter )
-    {
-        deleter_ = deleter;
-    }
-
-    template< class T> void operator()( T* )
-    {
-        BOOST_ASSERT( deleter_.use_count() <= 1 );
-        deleter_.reset();
-    }
-};
+template< class X, class Y > inline void sp_enable_shared_from_this( boost::shared_ptr<X> * ppx, Y const * py, boost::enable_shared_from_raw const * pe );
 
 } // namespace detail
 
-template< class T > class enable_shared_from_this2
+class enable_shared_from_raw
 {
 protected:
 
-    enable_shared_from_this2()
+    enable_shared_from_raw()
     {
     }
 
-    enable_shared_from_this2( enable_shared_from_this2 const & )
+    enable_shared_from_raw( enable_shared_from_raw const & )
     {
     }
 
-    enable_shared_from_this2 & operator=( enable_shared_from_this2 const & )
+    enable_shared_from_raw & operator=( enable_shared_from_raw const & )
     {
         return *this;
     }
 
-    ~enable_shared_from_this2()
+    ~enable_shared_from_raw()
     {
         BOOST_ASSERT( shared_this_.use_count() <= 1 ); // make sure no dangling shared_ptr objects exist
     }
 
 private:
 
-    mutable weak_ptr<T> weak_this_;
-    mutable shared_ptr<T> shared_this_;
-
-public:
-
-    shared_ptr<T> shared_from_this()
-    {
-        init_weak_once();
-        return shared_ptr<T>( weak_this_ );
-    }
-
-    shared_ptr<T const> shared_from_this() const
-    {
-        init_weak_once();
-        return shared_ptr<T>( weak_this_ );
-    }
+    mutable weak_ptr<void> weak_this_;
+    mutable shared_ptr<void> shared_this_;
 
 private:
 
     void init_weak_once() const
     {
-        if( weak_this_._empty() )
+        if( weak_this_.expired() )
         {
-            shared_this_.reset( static_cast< T* >( 0 ), detail::esft2_deleter_wrapper() );
+            shared_this_.reset( static_cast<void*>(0), detail::esft2_deleter_wrapper() );
             weak_this_ = shared_this_;
         }
     }
 
-public: // actually private, but avoids compiler template friendship issues
+#ifdef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+public:
+#else
+private:
+    template<class Y> friend class shared_ptr;
+    template<typename T> friend boost::shared_ptr<T> shared_from_raw(T *);
+    template< class X, class Y > friend inline void detail::sp_enable_shared_from_this( boost::shared_ptr<X> * ppx, Y const * py, boost::enable_shared_from_raw const * pe );
+#endif
+
+    shared_ptr<void> shared_from_this()
+    {
+        init_weak_once();
+        return shared_ptr<void>( weak_this_ );
+    }
+
+    shared_ptr<const void> shared_from_this() const
+    {
+        init_weak_once();
+        return shared_ptr<const void>( weak_this_ );
+    }
 
     // Note: invoked automatically by shared_ptr; do not call
     template<class X, class Y> void _internal_accept_owner( shared_ptr<X> * ppx, Y * py ) const
     {
         BOOST_ASSERT( ppx != 0 );
 
-        if( weak_this_.use_count() == 0 )
+        if( weak_this_.expired() )
         {
-            weak_this_ = shared_ptr<T>( *ppx, py );
+            weak_this_ = *ppx;
         }
         else if( shared_this_.use_count() != 0 )
         {
@@ -127,6 +111,23 @@ public: // actually private, but avoids compiler template friendship issues
     }
 };
 
+template<typename T>
+boost::shared_ptr<T> shared_from_raw(T *p)
+{
+    return boost::shared_ptr<T>(p->enable_shared_from_raw::shared_from_this(), p);
+}
+
+namespace detail
+{
+    template< class X, class Y > inline void sp_enable_shared_from_this( boost::shared_ptr<X> * ppx, Y const * py, boost::enable_shared_from_raw const * pe )
+    {
+        if( pe != 0 )
+        {
+            pe->_internal_accept_owner( ppx, const_cast< Y* >( py ) );
+        }
+    }
+} // namepsace detail
+
 } // namespace boost
 
-#endif  // #ifndef BOOST_ENABLE_SHARED_FROM_THIS2_HPP_INCLUDED
+#endif  // #ifndef BOOST_ENABLE_SHARED_FROM_RAW_HPP_INCLUDED
