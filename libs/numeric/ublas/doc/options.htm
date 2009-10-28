@@ -5,11 +5,15 @@
 <meta name="generator" content="HTML Tidy for Linux (vers 6 November 2007), see www.w3.org" />
 <!-- tidy options: -w 120 -asxhtml -clean - - vertical-space yes -f index.htm.err -m index.htm -->
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<link rel="stylesheet" href="../../../../boost.css" type="text/css"/>
 <link rel="stylesheet" href="ublas.css" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.3.2.min.js" async="async" ></script>
+<script type="text/javascript" src="js/jquery.toc-gw.js" async="async" ></script>
 <title>Boost Basic Linear Algebra - Configuration Options</title>
 </head>
 <body>
 <h1><img src="../../../../boost.png" align="middle" alt="logo"/>Boost Basic Linear Algebra - Configuration Options</h1>
+<div class="toc" id="toc"></div>
 
 <div class="navigation">
 <a href="index.htm">back to uBLAS home</a>
@@ -28,14 +32,14 @@ adds a lot of very useful runtime check. However these are very slow!
 
 <p class="credit">The patch and description was provided by Nasos Iliopoulos.</p>
 
-<p>
-An immediate effect of this define is the elimination of the need for
-noalias in types <tt>vector&lt;T&gt;</tt> and
-<tt>matrix&lt;T&gt;</tt>, when assigned to the same type. Although
-this patch implements move semantics for bounded_ and c_ (vector and
-matrix) types, they don't have any effect at those types, due to their
-underlying storage. I included it for possible future exploitation.
-</p>
+<p>An immediate effect of this option is the elimination of the need
+for noalias in types <tt>vector&lt;T&gt;</tt> and <tt>matrix&lt;T&gt;</tt>,
+when assigned to the same type. This option doesn't have an effect on
+bounded and c types. Although it is rare, not all compilers support copy
+elision (that allows for move semantics), so a test must be performed to
+make sure that there is a benefit when it is enabled. A small
+demonstration and test can be found in
+<a href="../test/manual/test_move_semantics.cpp"><tt>test_move_semantics.cpp</tt></a></p>
 
 <p>
 In the <a href="../test/manual/test_move_semantics.cpp">test
@@ -234,5 +238,10 @@ Last modified: Wed Sep 16 23:16:45 CEST 2009
 <!-- hhmts end -->
 </p>
 </div>
+<script type="text/javascript">
+(function($) {
+    $('#toc').toc();
+})(jQuery);
+</script>
 </body>
 </html>
