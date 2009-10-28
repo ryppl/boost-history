@@ -7999,7 +7999,7 @@ members
 </rationale>
 </comment>
 
-<comment nb="UK" num="173" uknum="450" type="Te" owner="LWG" issue="Doc" disp="" date="" extdoc="">
+<comment nb="UK" num="173" uknum="450" type="Te" owner="LWG" issue="Doc" disp="accepted" date="" extdoc="">
 <section>
 17.6.2.4
 </section>
@@ -8014,15 +8014,10 @@ table 15
         Add 18.8, initializer lists,
         &lt;initializer_list&gt;, to the end of the table.
 </suggestion>
-<notes>
-LWG is interested in 
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2814.pdf">
-N2814</a>, but we're concerned whether CWG will accept 
-language recommendations.
+<notes>Handled by the free-standing paper.
 
-<i>Pre-Frankfurt</i> See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2886.pdf">
-N2886</a>
-</notes>
+See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2932.pdf">
+N2932</a></notes>
 <rationale>
 </rationale>
 </comment>
@@ -8767,7 +8762,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment nb="UK" num="194" uknum="443" type="Te" owner="LWG" issue="Doc" disp="" date="" extdoc="">
+<comment nb="UK" num="194" uknum="443" type="Te" owner="LWG" issue="Doc" disp="accepted" date="" extdoc="">
 <section>
 18.6
 </section>
@@ -8787,8 +8782,8 @@ to terminate the program. Bill
 </suggestion>
 <notes>Handled by the free-standing paper.
 
-See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2886.pdf">
-N2886</a>
+See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2932.pdf">
+N2932</a>
 </notes>
 <rationale>
 </rationale>
@@ -8888,7 +8883,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="195" uknum="451" type="Te" owner="LWG" issue="Doc" disp="" date="" extdoc="">
+<comment nb="UK" num="195" uknum="451" type="Te" owner="LWG" issue="Doc" disp="modified" date="" extdoc="">
 <section>
 18.8
 </section>
@@ -8910,10 +8905,11 @@ All concepts-related text has been removed from the draft.
 N2900</a>
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="196" uknum="452" type="Te" owner="LWG" issue="Doc" disp="" date="" extdoc="">
+<comment nb="UK" num="196" uknum="452" type="Te" owner="LWG" issue="Doc" disp="modified" date="" extdoc="">
 <section>
 18.8.3
 </section>
@@ -8936,6 +8932,7 @@ N2900</a>
 N2900</a>
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -9926,7 +9923,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="208" uknum="338" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
+<comment nb="UK" num="208" uknum="338" type="Te" owner="LWG" issue="978" disp="accepted" date="" extdoc="">
 <section>
 20.6.17
 </section>
@@ -9942,7 +9939,7 @@ All concepts-related text has been removed from the draft.
         .
 </suggestion>
 <notes>Done</notes>
-<rationale>NAD. Consensus is that this is an expansion beyond the scope of C++0X.
+<rationale>
 </rationale>
 </comment>
 
@@ -10343,6 +10340,7 @@ All concepts-related text has been removed from the draft.
     containing only those parts of N2834 in Frankfurt.
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -11558,7 +11556,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="220" uknum="339" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="220" uknum="339" type="Te" owner="LWG" issue="825" disp="modified" date="" extdoc="">
 <section>
 21.3.8.9
 </section>
@@ -11582,6 +11580,7 @@ All concepts-related text has been removed from the draft.
     was producing confusing results with strings, but this difference will be 
     fixed by N2831 if it's accepted.</notes>
 <rationale>
+N2844 changed the rvalue reference binding rules. That paper includes generic templates operator<< and operator>> that adapt rvalue streams. 
 </rationale>
 </comment>
 
@@ -12160,7 +12159,7 @@ Table 79
 </rationale>
 </comment>
 
-<comment nb="UK" num="223" uknum="285" type="Te" owner="LWG" issue="Doc" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
+<comment nb="UK" num="223" uknum="285" type="Te" owner="LWG" issue="Doc" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 <section>
 23.1.1
 </section>
@@ -12181,6 +12180,7 @@ Table 79
 <notes>Agree. Proposed wording will be presented 
     in N2829 or D2840.</notes>
 <rationale>
+http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2900.html
 </rationale>
 </comment>
 
@@ -15847,7 +15847,7 @@ highly compatible with C.
 </rationale>
 </comment>
 
-<comment nb="UK" num="313" uknum="220" type="Te" owner="LWG" issue="926" disp="" date="" extdoc="">
+<comment nb="UK" num="313" uknum="220" type="Te" owner="LWG" issue="926" disp="modified" date="" extdoc="">
 <section>
 29.1
 </section>
@@ -15875,7 +15875,7 @@ UK 313 Update and LWG
 spelling. Move to review state. Hans to ask additional review from cpp-threads.
 </notes>
 <rationale>
-</rationale>
+</rationale>Solved by N2992.
 </comment>
 
 <comment nb="US" num="88" uknum="" type="te" owner="LWG" issue="1146" disp="modified" date="" extdoc="">
@@ -16297,7 +16297,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="US" num="97" uknum="" type="te" owner="LWG" issue="Doc" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2802.html">
+<comment nb="US" num="97" uknum="" type="te" owner="LWG" issue="Doc" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2802.html">
 <section>
 30.2.1.3
 </section>
@@ -16315,6 +16315,7 @@ All concepts-related text has been removed from the draft.
 <notes>Create an issue. To be discussed in full library group.<BR/><BR/>
     Later: straw poll 10-0, put N2802 Alternative 2 on formal motions page.</notes>
 <rationale>
+N2802 Alternative 2 was accepted at the Summit meeting.
 </rationale>
 </comment>
 
@@ -16458,7 +16459,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="329" uknum="203" type="Te" owner="LWG" issue="1046" disp="" date="" extdoc="">
+<comment nb="UK" num="329" uknum="203" type="Te" owner="LWG" issue="1046" disp="modified" date="" extdoc="">
 <section>
 30.5
 </section>
@@ -16509,7 +16510,7 @@ to avoid deadlock async() would almost certainly be specified to
 launch in a different thread from the thread that executed
 async(), but I don't think it was a specific design constraint.
 </notes>
-<rationale>
+<rationale>N2996 (Herb's and Lawrence's paper on Async)
 </rationale>
 </comment>
 
@@ -16677,7 +16678,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="335" uknum="436" type="Te" owner="LWG" issue="1048" disp="" date="" extdoc="">
+<comment nb="UK" num="335" uknum="436" type="Te" owner="LWG" issue="1048" disp="modified" date="" extdoc="">
 <section>
 30.5.4
 </section>
@@ -16702,7 +16703,7 @@ All concepts-related text has been removed from the draft.
         Then we can say: if(uf.waitable()) uf.wait();
 </suggestion>
 <notes>Create an issue. Requires input from Howard. Probably NAD.</notes>
-<rationale>
+<rationale>Solved by N2997. 
 </rationale>
 </comment>
 
@@ -16880,7 +16881,7 @@ All concepts-related text has been removed from the draft.
 </rationale>No longer applicable, by virtue of the changed rvalue rules and swap signatures. 
 </comment>
 
-<comment nb="UK" num="342" uknum="123" type="Te" owner="LWG" issue="1088" disp="" date="" extdoc="">
+<comment nb="UK" num="342" uknum="123" type="Te" owner="LWG" issue="1088" disp="modified" date="" extdoc="">
 <section>
 30.5.6
 </section>
@@ -16897,7 +16898,7 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>Create an issue. Move to review, attention: Howard. Detlef will also look 
     into it.</notes>
-<rationale>
+<rationale>Solved by N2997.
 </rationale>
 </comment>
 
