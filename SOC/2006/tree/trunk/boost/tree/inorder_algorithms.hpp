@@ -43,23 +43,25 @@ inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<MultiwayCursor>))
     ((RootTrackingCursor<MultiwayCursor>)),
-    (void)) // return type
+    (bool)) // return type
 successor(inorder, MultiwayCursor& c)
 {
     if (!c.to_end().is_leaf()) {
         to_first(inorder(),c);
-        return;
+        return true;
     }
 
-    MultiwayCursor d = c;
+    //MultiwayCursor d = c;
     while (index(c) && !c.is_root())
         c.to_parent();
 
-    if (!c.is_root())
+    if (!c.is_root()) {
         c.to_parent();
+        return true;
+    }
     else // Move past the last inorder element
-        c = d; //to_last(inorder(), c);
-    return;
+        return false; //c = d; //to_last(inorder(), c);
+    return true;
 }
 
 /**
@@ -71,22 +73,23 @@ inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<MultiwayCursor>))
     ((RootTrackingCursor<MultiwayCursor>)),
-    (void)) // return type
+    (bool)) // return type
 predecessor(inorder, MultiwayCursor& c)
 {
-    if (!c.is_leaf()) {
-        if (!c.to_begin().is_leaf()) {
-            to_rightmost(c);
-            c.to_parent();
-            return;
-        }
-    }
+	if (!c.to_begin().is_leaf()) {
+		to_last(inorder(), c);
+		return true;
+	}
 
     while (!index(c) && !c.is_root())
         c.to_parent();
-    if (!c.is_root())
+
+    if (!c.is_root()) {
         c.to_parent();
-    return;
+        return true;
+    }
+    else // Move past the last inorder element
+        return false; //c = d; //to_last(inorder(), c);
 }
 
 /**
@@ -128,15 +131,74 @@ to_first(inorder, Cursor& c, ascending_vertical_traversal_tag)
 }
 
 /**
- * @brief   One position past the last element of a subtree in inorder 
- *          traversal
+ * @brief   Last element of a subtree in inorder traversal
  * @param c Subtree root cursor that will be set to the last inorder 
  *          position in the subtree.
  */
 template <class Cursor>
-void to_last(inorder, Cursor& c)
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (void)) // return type
+to_last(inorder, Cursor& c)
+{
+    return to_last(inorder(), c
+                  , typename cursor_vertical_traversal<Cursor>::type());
+}
+
+template <class Cursor>
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (void)) // return type
+to_last(inorder, Cursor& c, descending_vertical_traversal_tag)
+{
+    Cursor d = c;
+    while (!d.is_leaf()) {
+        c = d;
+        d.to_end();
+    }
+}
+
+template <class Cursor>
+BOOST_CONCEPT_REQUIRES(
+    ((AscendingCursor<Cursor>)),
+    (void)) // return type
+to_last(inorder, Cursor& c, ascending_vertical_traversal_tag)
 {
     to_rightmost(c);
+    c.to_parent();
+}
+
+/**
+ * @brief   One position past the last element of a subtree in inorder 
+ *          traversal
+ * @param c Subtree root cursor that will be set past the last inorder 
+ *          position in the subtree.
+ */
+template <class Cursor>
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (void)) // return type
+to_past(inorder, Cursor& c)
+{
+    to_rightmost(c);
+}
+
+template <class Cursor>
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (void)) // return type
+last_to_past(inorder, Cursor& c)
+{
+    c.to_end();
+}
+
+template <class Cursor>
+BOOST_CONCEPT_REQUIRES(
+    ((AscendingCursor<Cursor>)),
+    (void)) // return type
+past_to_last(inorder, Cursor& c)
+{
+    c.to_parent();
 }
 
 /*\@}*/

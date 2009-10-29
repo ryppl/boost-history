@@ -53,8 +53,12 @@ for_each(Order, Cursor is, Op f, ascending_vertical_traversal_tag)
     root_tracking_cursor<Cursor> s(is);
     root_tracking_cursor<Cursor> s2(is);
     to_first(Order(), s);
-    to_last(Order(), s2);
-    return detail::for_each(Order(), s, s2, f, ascending_vertical_traversal_tag());
+//    to_last(Order(), s2);
+//    return detail::for_each(Order(), s, s2, f, ascending_vertical_traversal_tag());
+    do {
+        f(*s);
+    } while (successor(Order(), s));
+    return f;
 }
 
 template <class Order, class InCursor, class OutCursor, class Op>

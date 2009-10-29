@@ -41,15 +41,15 @@ inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>))
     ((RootTrackingCursor<Cursor>)),
-    (void)) // return type
+    (bool)) // return type
 successor(postorder, Cursor& c)
 {
     if (c.is_root())
-        return;
+        return false;
 
     if (index(c)) { // Right child? Return parent.
         c.to_parent();
-        return;
+        return true;
     }
         
     // Left child.
@@ -60,7 +60,7 @@ successor(postorder, Cursor& c)
             ++c;
     }
     c.to_parent();
-    return;
+    return true;
 }
 
 /**
@@ -74,23 +74,23 @@ inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>))
     ((RootTrackingCursor<Cursor>)),
-    (void)) // return type
+    (bool)) // return type
 predecessor(postorder, Cursor& c)
 {
     if (!c.to_end().is_leaf()) // Right
-        return;
+        return true;
     if (!(--c).is_leaf()) // Left
-        return;
+        return true;
     
     // Move up in the hierarchy until we find a descendant that has a right
     // child (which is what we'll return) or we land at root.
     while (!c.is_root()) {
         c.to_parent();
-        if (index(c))
+        if (!c.is_root() && index(c))
             if (!(--c).is_leaf())
-                return;
+                return true;
     }
-    return;
+    return false;
 }
 
 /**

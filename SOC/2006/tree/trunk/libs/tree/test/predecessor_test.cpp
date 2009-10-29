@@ -28,10 +28,10 @@ BOOST_AUTO_TEST_CASE( test_rightmost )
     BOOST_CHECK(c == frbt1.root().end().end().end());
 }
 
-typedef boost::mpl::list<boost::tree::preorder
-                        ,boost::tree::inorder> preandinorders;
+//typedef boost::mpl::list<boost::tree::preorder
+//                        ,boost::tree::inorder> preandinorders;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, preandinorders )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, orders )
 {
     fake_root_tracking_binary_tree<int> frbt1(fbt1);
     fake_root_tracking_binary_tree<int>::cursor c = frbt1.root();
@@ -46,13 +46,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, preandinorders )
     typename container_type::const_reverse_iterator ci = order_index.rbegin();
     typename container_type::const_reverse_iterator cie = order_index.rend();
 
+    //BOOST_CHECK_EQUAL(*c, ci->val);
+    --cie;
     for (; ci!=cie; ++ci) {
-        boost::tree::predecessor(Order(), c);
         BOOST_CHECK_EQUAL(*c, ci->val);
+        BOOST_CHECK_EQUAL(boost::tree::predecessor(Order(), c), true);
     }
+
     fake_root_tracking_binary_tree<int>::cursor d = frbt1.root();
     fake_to_first(Order(), d);
     BOOST_CHECK(c == d);
+    
+    BOOST_CHECK_EQUAL(boost::tree::predecessor(Order(), c), false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

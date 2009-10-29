@@ -41,14 +41,19 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_successor, Order, orders )
     typename container_type::const_iterator ci = order_index.begin();
     typename container_type::const_iterator cie = order_index.end();
 
+    --cie;
     for (; ci!=cie; ++ci) {
         BOOST_CHECK_EQUAL(*c, ci->val);
-        boost::tree::successor(Order(), c);
+        BOOST_CHECK_EQUAL(boost::tree::successor(Order(), c), true);
     }
+
+    BOOST_CHECK_EQUAL(*c, ci->val);
 
     fake_root_tracking_binary_tree<int>::cursor d = frbt1.root();
     fake_to_last(Order(), d);
     BOOST_CHECK(c == d);
+    
+    BOOST_CHECK_EQUAL(boost::tree::successor(Order(), c), false);
 }
 
 BOOST_AUTO_TEST_CASE( test_successor_ascending )

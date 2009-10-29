@@ -41,16 +41,16 @@ inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>))
     ((RootTrackingCursor<Cursor>)),
-    (void)) // return type
+    (bool)) // return type
 successor(preorder, Cursor& c)
 {
     // If we have a left child, go there.
     if (!c.to_begin().is_leaf())
-        return;
+        return true;
     
     // No left child. So if we have a right child, go there.
     if (!(++c).is_leaf())
-        return;
+        return true;
     
     // (Here's where we'd need to check if this is the end().)
     
@@ -61,11 +61,11 @@ successor(preorder, Cursor& c)
         c.to_parent();
         if (!c.is_root() && !index(c))
             if (!(++c).is_leaf())
-                return;
+                return true;
     }
     
-    to_last(preorder(), c);
-    return;
+    //to_last(preorder(), c);
+    return false;
 }
 
 /**
@@ -120,15 +120,15 @@ inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>))
     ((RootTrackingCursor<Cursor>)),
-    (void)) // return type
+    (bool)) // return type
 predecessor(preorder, Cursor& c)
 {
     if (c.is_root())
-        return;
+        return false;
 
     if (!index(c)) { // Left child? Return parent.
         c.to_parent();
-        return;
+        return true;
     }
         
     // Right child.
@@ -139,7 +139,7 @@ predecessor(preorder, Cursor& c)
             --c;
     }
     c.to_parent();
-    return;
+    return true;
 }
 
 /**
@@ -166,8 +166,9 @@ void to_last(preorder, Cursor& c)
     while (!c.is_leaf())
         if (c.to_end().is_leaf())
             --c;
-    if (!index(c))
-        ++c;
+    //if (!index(c))
+    //    ++c;
+    c.to_parent();
 }
 
 /*\@}*/
