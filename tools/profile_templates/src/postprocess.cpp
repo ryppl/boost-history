@@ -175,7 +175,7 @@ int main(int argc, char** argv) {
         while(std::getline(input, line)) {
             boost::smatch match;
             if(boost::regex_match(line, match, enter_message)) {
-                max_match_length = boost::numeric_cast<int>((std::max)(max_match_length, match[1].length()));
+                max_match_length = (std::max)(max_match_length, boost::numeric_cast<int>(match[1].length()));
                 ++messages[match[1]];
                 ++total_matches;
             }
