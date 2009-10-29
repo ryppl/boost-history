@@ -28,6 +28,7 @@
 #include <boost/stm/datatypes.hpp>
 #ifdef PERFORMING_LATM
 #include <boost/stm/transaction.hpp>
+#include <boost/stm/latm.hpp>
 #else
 #endif
 //---------------------------------------------------------------------------
@@ -67,27 +68,27 @@ typedef timer_lock_exception timer_err;
 class auto_lock
 {
 public:
-   typedef std::pair<thread_id_t const, Mutex*> ThreadedLockPair;
-   typedef std::multimap<thread_id_t const, Mutex*> ThreadedLockContainer;
+   typedef std::pair<thread_id_t const, latm::mutex_type*> ThreadedLockPair;
+   typedef std::multimap<thread_id_t const, latm::mutex_type*> ThreadedLockContainer;
    typedef ThreadedLockContainer::iterator ThreadedLockIter;
 
-   auto_lock(Mutex &mutex) : hasLock_(false), lock_(0)
+   auto_lock(latm::mutex_type &mutex) : hasLock_(false), lock_(0)
    {
       do_auto_lock(&mutex);
    }
 
-   auto_lock(Mutex *mutex) : hasLock_(false), lock_(0)
+   auto_lock(latm::mutex_type *mutex) : hasLock_(false), lock_(0)
    {
       do_auto_lock(mutex);
    }
 
 
-   auto_lock(milliseconds_t timeOut, Mutex &mutex) : hasLock_(false), lock_(0)
+   auto_lock(milliseconds_t timeOut, latm::mutex_type &mutex) : hasLock_(false), lock_(0)
    {
       do_timed_auto_lock(timeOut, &mutex);
    }
 
-   auto_lock(milliseconds_t timeOut, Mutex *mutex) : hasLock_(false), lock_(0)
+   auto_lock(milliseconds_t timeOut, latm::mutex_type *mutex) : hasLock_(false), lock_(0)
    {
       do_timed_auto_lock(timeOut, mutex);
    }
@@ -106,7 +107,7 @@ public:
 
 private:
 
-   void do_timed_auto_lock(milliseconds_t timeOut, Mutex *mutex)
+   void do_timed_auto_lock(milliseconds_t timeOut, latm::mutex_type *mutex)
    {
       lock_ = mutex;
 
@@ -127,13 +128,13 @@ private:
       throw timer_lock_exception( "lock timed out" );
    }
 
-   void insert_into_threaded_lock_map(Mutex* mutex)
+   void insert_into_threaded_lock_map(latm::mutex_type* mutex)
    {
       synchro::lock_guard<Mutex> lock_i(*global_lock());
       threaded_locks().insert(ThreadedLockPair(this_thread::get_id(), mutex));
    }
 
-   void do_auto_lock(Mutex *mutex)
+   void do_auto_lock(latm::mutex_type *mutex)
    {
       lock_ = mutex;
       if (thread_has_lock(mutex)) return;
@@ -154,7 +155,7 @@ private:
       }
    }
 
-   bool thread_has_lock(Mutex *rhs)
+   bool thread_has_lock(latm::mutex_type *rhs)
    {
       synchro::lock_guard<Mutex> lock_g(*global_lock());
 
@@ -170,7 +171,7 @@ private:
       return false;
    }
 
-   void remove_thread_has_lock(Mutex *rhs)
+   void remove_thread_has_lock(latm::mutex_type *rhs)
    {
       synchro::lock_guard<Mutex> lock_g(*global_lock());
 
@@ -205,7 +206,7 @@ private:
    //auto_lock& operator=(auto_lock const &);
 
    bool hasLock_;
-   Mutex *lock_;
+   latm::mutex_type *lock_;
 };
 
 //---------------------------------------------------------------------------

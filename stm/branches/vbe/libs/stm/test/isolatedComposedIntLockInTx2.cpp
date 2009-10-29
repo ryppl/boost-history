@@ -38,11 +38,11 @@
 static boost::stm::native_trans<int> gInt;
 static boost::stm::native_trans<int> gInt2;
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-static Mutex lock1 = PTHREAD_MUTEX_INITIALIZER;
-//static Mutex lock2 = PTHREAD_MUTEX_INITIALIZER;
+static boost::stm::latm::mutex_type lock1 = PTHREAD_MUTEX_INITIALIZER;
+//static boost::stm::latm::mutex_type lock2 = PTHREAD_MUTEX_INITIALIZER;
 #else
-static Mutex lock1;
-//static Mutex lock2;
+static boost::stm::latm::mutex_type lock1;
+//static boost::stm::latm::mutex_type lock2;
 #endif
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;

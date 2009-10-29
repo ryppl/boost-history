@@ -35,15 +35,15 @@
 
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-static Mutex L = PTHREAD_MUTEX_INITIALIZER;
-static Mutex L2 = PTHREAD_MUTEX_INITIALIZER;
-static Mutex L3 = PTHREAD_MUTEX_INITIALIZER;
-//static Mutex L4 = PTHREAD_MUTEX_INITIALIZER;
+static boost::stm::latm::mutex_type L = PTHREAD_MUTEX_INITIALIZER;
+static boost::stm::latm::mutex_type L2 = PTHREAD_MUTEX_INITIALIZER;
+static boost::stm::latm::mutex_type L3 = PTHREAD_MUTEX_INITIALIZER;
+//static boost::stm::latm::mutex_type L4 = PTHREAD_MUTEX_INITIALIZER;
 #else
-static Mutex L;
-static Mutex L2;
-static Mutex L3;
-//static Mutex L4;
+static boost::stm::latm::mutex_type L;
+static boost::stm::latm::mutex_type L2;
+static boost::stm::latm::mutex_type L3;
+//static boost::stm::latm::mutex_type L4;
 #endif
 
 using namespace boost::stm;

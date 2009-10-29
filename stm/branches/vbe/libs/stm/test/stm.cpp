@@ -53,9 +53,9 @@ time_t endTimer = 0;
 eWorkType gWorkLoadType;
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-static Mutex finishLock = PTHREAD_MUTEX_INITIALIZER;
+static boost::stm::latm::mutex_type finishLock = PTHREAD_MUTEX_INITIALIZER;
 #else
-static Mutex finishLock;
+static boost::stm::latm::mutex_type finishLock;
 #endif
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

@@ -37,18 +37,18 @@
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
 
-static Mutex L1 = PTHREAD_MUTEX_INITIALIZER;
-static Mutex L2 = PTHREAD_MUTEX_INITIALIZER;
-static Mutex L3 = PTHREAD_MUTEX_INITIALIZER;
-//static Mutex L8 = PTHREAD_MUTEX_INITIALIZER;
-//static Mutex L9 = PTHREAD_MUTEX_INITIALIZER;
+static boost::stm::latm::mutex_type L1 = PTHREAD_MUTEX_INITIALIZER;
+static boost::stm::latm::mutex_type L2 = PTHREAD_MUTEX_INITIALIZER;
+static boost::stm::latm::mutex_type L3 = PTHREAD_MUTEX_INITIALIZER;
+//static boost::stm::latm::mutex_type L8 = PTHREAD_MUTEX_INITIALIZER;
+//static boost::stm::latm::mutex_type L9 = PTHREAD_MUTEX_INITIALIZER;
 
 #else
-static Mutex L1;
-static Mutex L2;
-static Mutex L3;
-//static Mutex L8;
-//static Mutex L9;
+static boost::stm::latm::mutex_type L1;
+static boost::stm::latm::mutex_type L2;
+static boost::stm::latm::mutex_type L3;
+//static boost::stm::latm::mutex_type L8;
+//static boost::stm::latm::mutex_type L9;
 
 #endif
 ////////////////////////////////////////////////////////////////////////////

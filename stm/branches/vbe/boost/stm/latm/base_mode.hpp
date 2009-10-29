@@ -16,6 +16,7 @@
 
 #include <boost/stm/detail/config.hpp>
 #include <boost/stm/latm/datatypes.hpp>
+#include <boost/stm/datatypes.hpp>
 #include <boost/synchro.hpp>
 
 namespace boost { namespace stm { namespace latm {
@@ -28,7 +29,7 @@ public:
     latm::mutex_thread_id_set_map latmLockedLocksAndThreadIdsMap_;
     latm::mutex_thread_id_map latmLockedLocksOfThreadMap_;
 
-    mutex_type latmMutex_;
+    Mutex latmMutex_;
 
 
     latm::mutex_set get_tm_conflicting_locks() { return tmConflictingLocks_; }

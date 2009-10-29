@@ -22,8 +22,11 @@ using namespace std;
 namespace boost { namespace stm {
 namespace non_tx {
     std::map<void*, base_transaction_object*> detail::cache_map::map_;
+#ifndef BOOST_STM_USE_BOOST_MUTEX
     Mutex detail::cache_map::mtx_=PTHREAD_MUTEX_INITIALIZER;
-
+#else    
+    Mutex detail::cache_map::mtx_;
+#endif
 }
 
 synchro::implicit_thread_specific_ptr<transaction::transaction_tss_storage> transaction::transaction_tss_storage_;

@@ -20,6 +20,8 @@
 #include <map>
 #if BOOST_STM_LATM_GENERIC    
 #include <boost/stm/synchro/poly/lock.hpp>
+#else
+#include <pthread.h>
 #endif
 
 namespace boost { namespace stm { namespace latm {
@@ -27,7 +29,7 @@ namespace boost { namespace stm { namespace latm {
 #if BOOST_STM_LATM_GENERIC    
     typedef boost::synchro::poly::exclusive_lock mutex_type;
 #else    
-    typedef Mutex mutex_type;
+    typedef pthread_mutex_t mutex_type;
 #endif    
 
     typedef std::set<thread_id_t> thread_id_set;

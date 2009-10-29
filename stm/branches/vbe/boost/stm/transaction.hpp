@@ -322,7 +322,7 @@ public:
    //--------------------------------------------------------------------------
     #if PERFORMING_LATM
    //--------------------------------------------------------------------------
-   inline static void tm_lock_conflict(Mutex &lock)
+   inline static void tm_lock_conflict(latm::mutex_type &lock)
    {
       tm_lock_conflict(&lock);
    }
@@ -337,13 +337,13 @@ public:
     #if USING_TRANSACTION_SPECIFIC_LATM
    void see_if_tx_must_block_due_to_tx_latm();
 
-   inline void lock_conflict(Mutex &lock)
+   inline void lock_conflict(latm::mutex_type &lock)
    { add_tx_conflicting_lock(&lock); }
 
    inline void lock_conflict(latm::mutex_type* lock)
    { add_tx_conflicting_lock(lock); }
 
-   inline void add_tx_conflicting_lock(Mutex &lock)
+   inline void add_tx_conflicting_lock(latm::mutex_type &lock)
    {
       add_tx_conflicting_lock(&lock);
    }
@@ -717,9 +717,9 @@ private:
    void unlock_tx();
 
    //inline static latm_mutex* latm_lock() { return &latmMutex_; }
-   inline static latm::mutex_type* latm_lock() { return &latm::instance().latmMutex_; }
-   inline static PLOCK* general_lock() { return &transactionMutex_; }
-   inline static PLOCK* inflight_lock() { return &transactionsInFlightMutex_; }
+   inline static Mutex* latm_lock() { return &latm::instance().latmMutex_; }
+   inline static Mutex* general_lock() { return &transactionMutex_; }
+   inline static Mutex* inflight_lock() { return &transactionsInFlightMutex_; }
 
    bool irrevocableTxInFlight();
    bool isolatedTxInFlight();

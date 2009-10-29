@@ -101,7 +101,7 @@ public:
 
    ~LinkedList() { quick_clear(); }
 
-   Mutex* get_list_lock() { return &list_lock_; }
+   boost::stm::latm::mutex_type* get_list_lock() { return &list_lock_; }
 
    //--------------------------------------------------------------------------
    //--------------------------------------------------------------------------
@@ -515,7 +515,7 @@ private:
    }
 
    list_node<T> head_;
-   Mutex list_lock_;
+   boost::stm::latm::mutex_type list_lock_;
 };
 
 } // LockAwareTransactions

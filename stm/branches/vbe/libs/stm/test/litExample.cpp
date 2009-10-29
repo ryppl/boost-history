@@ -36,15 +36,15 @@
 #include "main.h"
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-static Mutex L2 = PTHREAD_MUTEX_INITIALIZER;
-static Mutex L3 = PTHREAD_MUTEX_INITIALIZER;
-static Mutex L4 = PTHREAD_MUTEX_INITIALIZER;
-//static Mutex L8 = PTHREAD_MUTEX_INITIALIZER;
+static boost::stm::latm::mutex_type L2 = PTHREAD_MUTEX_INITIALIZER;
+static boost::stm::latm::mutex_type L3 = PTHREAD_MUTEX_INITIALIZER;
+static boost::stm::latm::mutex_type L4 = PTHREAD_MUTEX_INITIALIZER;
+//static boost::stm::latm::mutex_type L8 = PTHREAD_MUTEX_INITIALIZER;
 #else
-static Mutex L2;
-static Mutex L3;
-static Mutex L4;
-//static Mutex L8;
+static boost::stm::latm::mutex_type L2;
+static boost::stm::latm::mutex_type L3;
+static boost::stm::latm::mutex_type L4;
+//static boost::stm::latm::mutex_type L8;
 #endif
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;

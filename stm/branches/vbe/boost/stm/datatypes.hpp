@@ -140,12 +140,12 @@ namespace boost { namespace stm {
 }}
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-   typedef pthread_mutex_t Mutex;
+    typedef pthread_mutex_t Mutex;
+    //typedef pthread_mutex_t PLOCK;
 #else
-   typedef boost::mutex Mutex;
+    typedef boost::mutex Mutex;
 #endif
 
-typedef pthread_mutex_t PLOCK;
 
 #endif // BOOST_STM_DATATYPES__HPP
 
