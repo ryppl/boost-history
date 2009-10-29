@@ -35,8 +35,8 @@
 
 //---------------------------------------------------------------------------
 #ifdef PERFORMING_LATM
-#define BOOST_STM_LOCK(a) boost::stm::transaction::lock_(a)
-#define BOOST_STM_UNLOCK(a) boost::stm::transaction::unlock_(a)
+#define BOOST_STM_LOCK(a) boost::stm::lock(a)
+#define BOOST_STM_UNLOCK(a) boost::stm::unlock(a)
 #else
 #define BOOST_STM_LOCK(a) boost::synchro::lock(a)
 #define BOOST_STM_UNLOCK(a) boost::synchro::unlock(a)
@@ -138,7 +138,7 @@ private:
       lock_ = mutex;
       if (thread_has_lock(mutex)) return;
 
-      BOOST_STM_LOCK(mutex);
+      BOOST_STM_LOCK(*mutex);
       hasLock_ = true;
 
       insert_into_threaded_lock_map(mutex);
@@ -149,7 +149,7 @@ private:
       if (hasLock_)
       {
          hasLock_ = false;
-         BOOST_STM_UNLOCK(lock_);
+         BOOST_STM_UNLOCK(*lock_);
          remove_thread_has_lock(lock_);
       }
    }

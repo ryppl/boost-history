@@ -132,6 +132,14 @@
 #define BOOST_STM_LATM_STATIC_MODE 1
 #endif
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Define BOOST_STM_LATM_GENERIC when you want Boost.STM to manage with arbitrary mutex
+
+//#define BOOST_STM_LATM_GENERIC 1
+
+
+///////////////////////////////////////////////////////////////////////////////
 #endif // BOOST_STM_DETAIL_CONFIG_H
 
 

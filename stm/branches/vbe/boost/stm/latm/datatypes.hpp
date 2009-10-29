@@ -18,13 +18,16 @@
 #include <boost/stm/datatypes.hpp>
 #include <set>
 #include <map>
+#if BOOST_STM_LATM_GENERIC    
+#include <boost/stm/synchro/poly/lock.hpp>
+#endif
 
 namespace boost { namespace stm { namespace latm {
     struct static_mode {};
 #if BOOST_STM_LATM_GENERIC    
-   //typedef synchro::poly::mutex mutex_type;
+    typedef boost::synchro::poly::exclusive_lock mutex_type;
 #else    
-   typedef Mutex mutex_type;
+    typedef Mutex mutex_type;
 #endif    
 
     typedef std::set<thread_id_t> thread_id_set;

@@ -330,8 +330,8 @@ inline void boost::stm::transaction::pthread_lock(latm::mutex_type* mutex)
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
-#if 0
-inline int boost::stm::transaction::pthread_trylock(latm::mutex_type* mutex)
+
+inline bool boost::stm::transaction::pthread_trylock(latm::mutex_type* mutex)
 {
    //using namespace boost::stm;
 
@@ -350,7 +350,7 @@ inline int boost::stm::transaction::pthread_trylock(latm::mutex_type* mutex)
       throw "invalid LATM type";
    }
 }
-#endif
+
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 inline void boost::stm::transaction::pthread_unlock(latm::mutex_type* mutex)

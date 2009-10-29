@@ -306,46 +306,17 @@ public:
    // Lock Aware Transactional Memory support methods
    //--------------------------------------------------------------------------
 
-    #ifdef WIN32
-   template <typename T>
-   inline static int lock_(T *lock) { throw "unsupported lock type"; }
-
-   template <typename T>
-   inline static int trylock_(T *lock) { throw "unsupported lock type"; }
-
-   template <typename T>
-   inline static int unlock_(T *lock) { throw "unsupported lock type"; }
-
-   template <>
-   inline static int lock_(Mutex &lock) { return pthread_lock(&lock); }
-
-   template <>
-   inline static int lock_(Mutex *lock) { return pthread_lock(lock); }
-
-   template <>
-   inline static int trylock_(Mutex &lock) { return pthread_trylock(&lock); }
-
-   template <>
-   inline static int trylock_(Mutex *lock) { return pthread_trylock(lock); }
-
-   template <>
-   inline static int unlock_(Mutex &lock) { return pthread_unlock(&lock); }
-
-   template <>
-   inline static int unlock_(Mutex *lock) { return pthread_unlock(lock); }
-    #else
    inline static void lock_(latm::mutex_type &lock) { pthread_lock(&lock); }
    inline static void lock_(latm::mutex_type *lock) { pthread_lock(lock); }
 
-   //inline static int trylock_(latm::mutex_type &lock) { return pthread_trylock(&lock); }
-   //inline static int trylock_(latm::mutex_type *lock) { return pthread_trylock(lock); }
+   inline static bool trylock_(latm::mutex_type &lock) { return pthread_trylock(&lock); }
+   inline static bool trylock_(latm::mutex_type *lock) { return pthread_trylock(lock); }
 
    inline static void unlock_(latm::mutex_type &lock) { pthread_unlock(&lock); }
    inline static void unlock_(latm::mutex_type *lock) { pthread_unlock(lock); }
-    #endif
 
    static void pthread_lock(latm::mutex_type* lock);
-   //static int pthread_trylock(latm::mutex_type* lock);
+   static bool pthread_trylock(latm::mutex_type* lock);
    static void pthread_unlock(latm::mutex_type* lock);
 
    //--------------------------------------------------------------------------
@@ -1280,30 +1251,30 @@ private:
    // deferred updating locking methods
    //--------------------------------------------------------------------------
    static void def_full_pthread_lock_mutex(latm::mutex_type* mutex);
-   static int def_full_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static bool def_full_pthread_trylock_mutex(latm::mutex_type* mutex);
    static void def_full_pthread_unlock_mutex(latm::mutex_type* mutex);
 
    static void def_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
-   static int def_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static bool def_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
    static void def_tm_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
    static void def_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
-   static int def_tx_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static bool def_tx_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
    static void def_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
    //--------------------------------------------------------------------------
    // direct updating locking methods
    //--------------------------------------------------------------------------
    static void dir_full_pthread_lock_mutex(latm::mutex_type* mutex);
-   static int dir_full_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static bool dir_full_pthread_trylock_mutex(latm::mutex_type* mutex);
    static void dir_full_pthread_unlock_mutex(latm::mutex_type* mutex);
 
    static void dir_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
-   static int dir_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static bool dir_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
    static void dir_tm_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
    static void dir_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
-   static int dir_tx_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
+   static bool dir_tx_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
    static void dir_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
    //--------------------------------------------------------------------------
@@ -1879,6 +1850,10 @@ public:
 };
 
 inline transaction* current_transaction() {return transaction::current_transaction();}
+
+inline void lock(latm::mutex_type& lock) {transaction::pthread_lock(&lock);}
+inline bool try_lock(latm::mutex_type& lock) {return transaction::pthread_trylock(&lock);} 
+inline void unlock(latm::mutex_type& lock) {transaction::pthread_unlock(&lock);}
 
 
 template <class T> T* cache_allocate(transaction* t) {

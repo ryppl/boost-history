@@ -175,7 +175,7 @@ inline void transaction::dir_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline int transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex)
+inline bool transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex)
 {
    if (transaction* t = get_inflight_tx_of_same_thread(false))
    {
@@ -184,12 +184,12 @@ inline int transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(latm::mute
       synchro::lock(*latm_lock());
       latm::instance().latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
       synchro::unlock(*latm_lock());
-      return synchro::try_lock(*mutex)?0:1;
+      return synchro::try_lock(*mutex);
    }
 
    //int val = synchro::try_lock(*mutex);
    //if (0 != val) return val;
-   if (!synchro::try_lock(*mutex)) return 1;
+   if (!synchro::try_lock(*mutex)) return false;
 
    synchro::lock(latm::instance().latmMutex_);
 
@@ -202,7 +202,8 @@ inline int transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(latm::mute
       {
          synchro::unlock(*mutex);
          synchro::unlock(latm::instance().latmMutex_);
-         return -1;
+         //return -1;
+         return false;
       }
    }
    catch (...)
@@ -216,7 +217,7 @@ inline int transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(latm::mute
    synchro::unlock(latm::instance().latmMutex_);
    // note: we do not release the transactionsInFlightMutex - this will prevents
    // new transactions from starting until this lock is released
-   return 0;
+   return true;
 }
 
 //----------------------------------------------------------------------------
