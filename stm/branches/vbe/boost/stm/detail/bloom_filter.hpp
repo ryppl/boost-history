@@ -42,6 +42,10 @@ namespace boost { namespace stm {
 //---------------------------------------------------------------------------
 class bloom_filter
 {
+    std::size_t in_range(std::size_t in) {
+        //return in & bitwiseAndOp;
+        return in % def_bit_vector_size;
+    }
 public:
     bloom_filter()
 #ifdef BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET
@@ -56,8 +60,8 @@ public:
    {
       h1_ = h2_ = 0;
       hashlittle2((void*)&rhs, size_of_size_t, &h1_, &h2_);
-      bit_vector1_.set( h1_ & bitwiseAndOp );
-      bit_vector2_.set( h2_ & bitwiseAndOp );
+      bit_vector1_.set( in_range(h1_) );
+      bit_vector2_.set( in_range(h2_) );
    }
 
    //------------------------------------------------------------------------
@@ -66,8 +70,8 @@ public:
    {
       h1_ = h2_ = 0;
       hashlittle2((void*)&rhs, size_of_size_t, &h1_, &h2_);
-      return bit_vector1_.test( h1_ & bitwiseAndOp ) &&
-         bit_vector2_.test( h2_ & bitwiseAndOp );
+      return bit_vector1_.test( in_range(h1_) ) &&
+         bit_vector2_.test( in_range(h2_) );
    }
 
    //------------------------------------------------------------------------
@@ -81,14 +85,23 @@ public:
    std::size_t h1() const { return h1_; }
    std::size_t h2() const { return h2_; }
 
-   void set_bv1(std::size_t rhs) { bit_vector1_.set( rhs & bitwiseAndOp ); }
-   void set_bv2(std::size_t rhs) { bit_vector2_.set( rhs & bitwiseAndOp ); }
+   void set_bv1(std::size_t rhs) { 
+       bit_vector1_.set( in_range(rhs)); 
+    }
+   void set_bv2(std::size_t rhs) { 
+       bit_vector2_.set( in_range(rhs)); 
+    }
    //------------------------------------------------------------------------
    //------------------------------------------------------------------------
    void clear()
    {
+#ifdef BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET       
+      bit_vector1_.resize(def_bit_vector_size);
+      bit_vector2_.resize(def_bit_vector_size);
+#else
       bit_vector1_.clear();
       bit_vector2_.clear();
+#endif
    }
 
 private:
