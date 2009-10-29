@@ -246,9 +246,9 @@ void NestedTxTest()
    //latm::do_tm_lock_protection();
    latm::do_tx_lock_protection();
 
-   //transaction::tm_lock_conflict(&L);
-   //transaction::tm_lock_conflict(&L2);
-   //transaction::tm_lock_conflict(&L3);
+   transaction::tm_lock_conflict(&L);
+   transaction::tm_lock_conflict(&L2);
+   transaction::tm_lock_conflict(&L3);
 
    nested2();
    nested1();

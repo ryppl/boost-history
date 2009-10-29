@@ -194,7 +194,7 @@ static void* tx2(void *threadId)
    {
       for (transaction t;;t.restart())
         try {
-          t.add_tx_conflicting_lock(L2);
+          t.lock_conflict(L2);
           inc2();
           t.end(); break;
         } catch (aborted_tx&) {}
@@ -229,7 +229,7 @@ static void* tx3(void *threadId)
       for (transaction t;;t.restart())
         try {
 
-          t.add_tx_conflicting_lock(L3);
+          t.lock_conflict(L3);
           inc3();
           t.end(); break;
         } catch (aborted_tx&) {}
@@ -334,8 +334,8 @@ void TestLitExample()
    arr8 = new native_trans<int>[kMaxArrSize];
 
    transaction::initialize();
-   transaction::tm_lock_conflict(L2);
-   transaction::tm_lock_conflict(L3);
+   //transaction::tm_lock_conflict(L2);
+   //transaction::tm_lock_conflict(L3);
 
    if (kTxIntenseWork == gWorkLoadType) txFactor = 5;
    if (kLockIntenseWork == gWorkLoadType) lockFactor = 10;

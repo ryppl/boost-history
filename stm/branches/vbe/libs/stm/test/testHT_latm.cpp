@@ -272,7 +272,7 @@ void TestHashTableSetsWithLocks()
       //----------------------------------------------------------------
       if (latm::instance().doing_tm_lock_protection() && 0 == (k+1) % 2)
       {
-         //transaction::add_tm_conflicting_lock(llist[index]->get_list_lock());
+         //transaction::tm_lock_conflict(llist[index]->get_list_lock());
          //cout << "TM-lock conflict added: " << index << endl;
       }
    }

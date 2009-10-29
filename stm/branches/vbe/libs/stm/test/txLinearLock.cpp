@@ -42,8 +42,8 @@ static void* Test1(void *threadId)
    {
       for (transaction t; ; t.restart())
       {
-         t.add_tx_conflicting_lock(&lock1);
-         t.add_tx_conflicting_lock(&lock2);
+         t.lock_conflict(&lock1);
+         t.lock_conflict(&lock2);
 
          try
          {

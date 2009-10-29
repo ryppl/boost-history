@@ -18,10 +18,16 @@
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
 
-#if defined(BOOST_STM_LATM_STATIC_CONF)
-#include BOOST_STM_LATM_STATIC_CONF
+#if defined(BOOST_STM_LATM_STATIC_FULL_MODE)
+#include <boost/stm/latm/static_full_mode.hpp>
+#elif defined(BOOST_STM_LATM_STATIC_TM_MODE)
+#include <boost/stm/latm/static_tm_mode.hpp>
+#elif defined(BOOST_STM_LATM_STATIC_TX_MODE)
+#include <boost/stm/latm/static_tx_mode.hpp>
+#elif defined(BOOST_STM_LATM_DYNAMIC_MODE)
+#include <boost/stm/latm/dynamic_mode.hpp>
 #else
-#include <boost/stm/latm/dynamic.hpp>
+#include <boost/stm/latm/all_in_one_mode.hpp>
 #endif
 
 #endif // BOOST_STM_LATM_SELECTOR__HPP

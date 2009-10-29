@@ -58,23 +58,31 @@ static void* Test1(void *threadId)
 
    for (int i = startingValue; i < endingValue/2; ++i)
    {
+      std::cout<< __LINE__ << " i= " << i << std::endl;
+      int count=0;
       for (transaction t; ; t.restart())
       {
-         t.add_tx_conflicting_lock(&lock1);
+          count++;
+        std::cout<< __LINE__ << " i="<<i << " end= " << endingValue/2 << " count= " << count << std::endl;
+         t.lock_conflict(&lock1);
          try
          {
+             std::cout<< __LINE__ << " lock" << std::endl;
             transaction::lock_(lock1);
             ++gInt.value();
-            cout << "\t" << gInt.value() << endl;
+            cout << __LINE__ << "\t" << gInt.value() << endl;
+             std::cout<< __LINE__ << " unlock" << std::endl;
             transaction::unlock_(lock1);
 
             SLEEP(50);
             // do nothing on purpose, allowing other threads time to see
             // intermediate state IF they can get lock1 (they shouldn't)
 
+             std::cout<< __LINE__ << " lock" << std::endl;
             transaction::lock_(lock1);
             --gInt.value();
-            cout << "\t" << gInt.value() << endl;
+            cout << __LINE__ << "\t" << gInt.value() << endl;
+             std::cout<< __LINE__ << " unlock" << std::endl;
             transaction::unlock_(lock1);
 
             t.end();
@@ -82,9 +90,12 @@ static void* Test1(void *threadId)
 
             break;
          }
-         catch (aborted_tx&) {}
+         catch (aborted_tx&) {
+             std::cout<< __LINE__ << " aborted_tx " << i << std::endl;
+        }
       }
    }
+    std::cout<< __LINE__ << std::endl;
 
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
@@ -92,59 +103,23 @@ static void* Test1(void *threadId)
    endTimer = time(0);
    finishThread(start);
 
+    std::cout<< __LINE__ << std::endl;
    if (*(int*)threadId != kMainThreadId)
    {
       transaction::terminate_thread();
-      pthread_exit(threadId);
+    std::cout<< __LINE__ << std::endl;
+      //pthread_exit(threadId);
    }
 
    return 0;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-#if 0
-static void* Test2(void *threadId)
-{
-   transaction::initialize_thread();
-   int start = *(int*)threadId;
-
-   int startingValue = start * 100000;
-   int endingValue = startingValue + kMaxInserts;
-
-   for (int i = startingValue; i < 100*endingValue; ++i)
-   {
-      try
-      {
-         transaction t;
-         t.add_tx_conflicting_lock(&lock1);
-         int val = t.r(gInt).value();
-         //transaction::lock(lock2);
-         cout << val << endl;
-         //transaction::unlock(lock2);
-         t.end();
-         SLEEP(10); // do nothing on purpose
-      } catch (aborted_tx&) {}
-   }
-
-   //--------------------------------------------------------------------------
-   // last thread out sets the endTimer
-   //--------------------------------------------------------------------------
-   endTimer = time(0);
-   finishThread(start);
-
-   if (*(int*)threadId != kMainThreadId)
-   {
-      transaction::terminate_thread();
-      pthread_exit(threadId);
-   }
-
-   return 0;
-}
-#endif
 ///////////////////////////////////////////////////////////////////////////////
 static void* Test3(void *threadId)
 {
+   if (*(int*)threadId != kMainThreadId) {
    transaction::initialize_thread();
+   }
    int start = *(int*)threadId;
 
    int startingValue = 0;
@@ -170,12 +145,12 @@ static void* Test3(void *threadId)
    // last thread out sets the endTimer
    //--------------------------------------------------------------------------
    endTimer = time(0);
-   finishThread(start);
 
    if (*(int*)threadId != kMainThreadId)
    {
+   finishThread(start);
       transaction::terminate_thread();
-      pthread_exit(threadId);
+      //pthread_exit(threadId);
    }
 
    return 0;
@@ -185,6 +160,7 @@ static void* Test3(void *threadId)
 void TestIsolatedComposedIntLockInTx2()
 {
    transaction::initialize();
+   transaction::initialize_thread();
 
    pthread_t *threads = new pthread_t[kMaxThreads];
    int *threadId = new int[kMaxThreads];
@@ -206,8 +182,10 @@ void TestIsolatedComposedIntLockInTx2()
 
    int mainThreadId = kMaxThreads-1;
 
-   Test3((void*)&mainThreadId);
+   //Test3((void*)&mainThreadId);
 
+   finishThread(mainThreadId);
+    transaction::terminate_thread();
    while (true)
    {
       if (threadsFinished.value() == kMaxThreads) break;
@@ -217,3 +195,43 @@ void TestIsolatedComposedIntLockInTx2()
    cout << "gInt : " << gInt.value() << endl;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+#if 0
+static void* Test2(void *threadId)
+{
+   transaction::initialize_thread();
+   int start = *(int*)threadId;
+
+   int startingValue = start * 100000;
+   int endingValue = startingValue + kMaxInserts;
+
+   for (int i = startingValue; i < 100*endingValue; ++i)
+   {
+      try
+      {
+         transaction t;
+         t.lock_conflict(&lock1);
+         int val = t.r(gInt).value();
+         //transaction::lock(lock2);
+         cout << val << endl;
+         //transaction::unlock(lock2);
+         t.end();
+         SLEEP(10); // do nothing on purpose
+      } catch (aborted_tx&) {}
+   }
+
+   //--------------------------------------------------------------------------
+   // last thread out sets the endTimer
+   //--------------------------------------------------------------------------
+   endTimer = time(0);
+
+   if (*(int*)threadId != kMainThreadId)
+   {
+   finishThread(start);
+      transaction::terminate_thread();
+      pthread_exit(threadId);
+   }
+
+   return 0;
+}
+#endif

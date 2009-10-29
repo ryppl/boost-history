@@ -427,13 +427,10 @@ void DoHashMapAndLinkedListInitialization()
    globalLinkedList = new LATM::LinkedList<int>;
    transaction::initialize();
 
-   if (latm::instance().doing_tm_lock_protection())
-   {
       for (int k = 1; k < kBuckets2; ++k)
       {
          transaction::tm_lock_conflict(globalHashMap->get_hash_lock(k));
       }
-   }
 
    threadsFinished.value() = 0;
    threadsStarted.value() = 0;

@@ -12,6 +12,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/stm/transaction.hpp>
+#include <boost/stm/latm.hpp>
 #include <boost/stm/non_tx/detail/cache_map.hpp>
 #include <boost/stm/contention_managers/contention_manager.hpp>
 #include <iostream>
@@ -31,11 +32,32 @@ synchro::implicit_thread_specific_ptr<transaction::transaction_tss_storage> tran
 // Static initialization
 ///////////////////////////////////////////////////////////////////////////////
 transaction::InflightTxes transaction::transactionsInFlight_;
-latm::mutex_set transaction::latmLockedLocks_;
-latm::mutex_thread_id_set_map transaction::latmLockedLocksAndThreadIdsMap_;
-latm::mutex_thread_id_map transaction::latmLockedLocksOfThreadMap_;
-latm::mutex_set transaction::tmConflictingLocks_;
+//latm::mutex_set transaction::latmLockedLocks_;
+//latm::mutex_thread_id_set_map transaction::latmLockedLocksAndThreadIdsMap_;
+//latm::mutex_thread_id_map transaction::latmLockedLocksOfThreadMap_;
+//latm::mutex_set transaction::tmConflictingLocks_;
 transaction::DeletionBuffer transaction::deletionBuffer_;
+
+//////////////
+// LATM
+/////////////
+namespace latm {
+#if defined(BOOST_STM_LATM_STATIC_FULL_MODE)
+latm_mode mode::instance_;
+#elif defined(BOOST_STM_LATM_STATIC_TM_MODE)
+latm_mode mode::instance_;
+#elif defined(BOOST_STM_LATM_STATIC_TX_MODE)
+latm_mode mode::instance_;
+#elif defined(BOOST_STM_LATM_DYNAMIC_MODE)
+full_mode<abstract_mode> mode::full_;
+tm_mode<abstract_mode> mode::tm_;
+tx_mode<abstract_mode> mode::tx_;
+latm_mode* mode::instance_=&mode::full_;
+#else
+latm_mode mode::instance_;
+#endif
+}
+
 
 clock_t transaction::global_clock_ = 0;
 size_t transaction::stalls_ = 0;
@@ -45,12 +67,12 @@ bool transaction::direct_updating_ = false;
 bool transaction::directLateWriteReadConflict_ = false;
 bool transaction::usingMoveSemantics_ = false;
 
-pthread_mutexattr_t transaction::transactionMutexAttribute_;
+//pthread_mutexattr_t transaction::transactionMutexAttribute_;
 
 Mutex transaction::transactionsInFlightMutex_;
 Mutex transaction::transactionMutex_;
 Mutex transaction::deletionBufferMutex_;
-Mutex transaction::latmMutex_;
+//Mutex transaction::latmMutex_;
 
 std::ofstream transaction::logFile_;
 
@@ -150,7 +172,7 @@ void transaction::initialize()
    pthread_mutex_init(&transactionMutex_, 0);
    pthread_mutex_init(&transactionsInFlightMutex_, 0);
    pthread_mutex_init(&deletionBufferMutex_, 0);
-   pthread_mutex_init(&latmMutex_, 0);
+   pthread_mutex_init(&latm::instance().latmMutex_, 0);
 
    //pthread_mutex_init(&transactionMutex_, &transactionMutexAttribute_);
    //pthread_mutex_init(&transactionsInFlightMutex_, &transactionMutexAttribute_);

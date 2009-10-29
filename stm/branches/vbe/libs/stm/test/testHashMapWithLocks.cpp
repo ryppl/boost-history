@@ -213,7 +213,7 @@ void DoHashMapInitialization()
 
    for (int k = 1; k < kBuckets; ++k)
    {
-      transaction::add_tm_conflicting_lock(globalHashMap->get_hash_lock(k));
+      transaction::tm_lock_conflict(globalHashMap->get_hash_lock(k));
    }
 #endif
 

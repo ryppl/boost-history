@@ -223,8 +223,8 @@ static void* tx3(void *threadId)
       for (transaction t;;t.restart())
         try {
 
-          t.add_tx_conflicting_lock(L1);
-          t.add_tx_conflicting_lock(L2);
+          t.lock_conflict(L1);
+          t.lock_conflict(L2);
 
           for (int i = 0; i < kMaxArrSize; ++i)
           {

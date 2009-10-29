@@ -144,7 +144,7 @@ public:
       {
          if (eTxConflictingLockLatmProtection == latm::instance().protection())
          {
-            t.add_tx_conflicting_lock(&list_lock_);
+            t.lock_conflict(&list_lock_);
          }
 
          return internal_insert(node, t);
@@ -167,7 +167,7 @@ public:
       {
          if (eTxConflictingLockLatmProtection == latm::instance().protection())
          {
-            t.add_tx_conflicting_lock(&list_lock_);
+            t.lock_conflict(&list_lock_);
          }
 
          return internal_lookup(val, t);

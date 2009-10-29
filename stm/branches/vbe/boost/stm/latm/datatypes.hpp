@@ -20,6 +20,7 @@
 #include <map>
 
 namespace boost { namespace stm { namespace latm {
+    struct static_mode {};
 #if BOOST_STM_LATM_GENERIC    
    //typedef synchro::poly::mutex mutex_type;
 #else    

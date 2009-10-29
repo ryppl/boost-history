@@ -539,8 +539,8 @@ inline std::string transaction::outputBlockedThreadsAndLockedLocks()
 
    o << "Currently locked locks:" << endl << endl;
 
-   for (latm::mutex_thread_id_set_map::iterator i = latmLockedLocksAndThreadIdsMap_.begin();
-   i != latmLockedLocksAndThreadIdsMap_.end(); ++i)
+   for (latm::mutex_thread_id_set_map::iterator i = latm::instance().latmLockedLocksAndThreadIdsMap_.begin();
+   i != latm::instance().latmLockedLocksAndThreadIdsMap_.end(); ++i)
    {
       o << i->first << endl << "\t";
 
@@ -616,6 +616,7 @@ inline bool transaction::restart()
    return true;
 }
 
+#if 0
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 inline bool transaction::can_go_inflight()
@@ -658,7 +659,7 @@ inline bool transaction::can_go_inflight()
 
    return true;
 }
-
+#endif
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 inline void transaction::put_tx_inflight()
@@ -670,7 +671,7 @@ inline void transaction::put_tx_inflight()
       //lock(inflight_lock());
       synchro::lock_guard<Mutex> lock_i(*inflight_lock());
 
-      if (can_go_inflight() && !isolatedTxInFlight())
+      if (latm::instance().can_go_inflight() && !isolatedTxInFlight())
       {
          transactionsInFlight_.insert(this);
          state_ = e_in_flight;

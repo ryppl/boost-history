@@ -334,19 +334,19 @@ public:
    template <>
    inline static int unlock_(Mutex *lock) { return pthread_unlock(lock); }
     #else
-   inline static int lock_(PLOCK &lock) { return pthread_lock(&lock); }
-   inline static int lock_(PLOCK *lock) { return pthread_lock(lock); }
+   inline static void lock_(latm::mutex_type &lock) { pthread_lock(&lock); }
+   inline static void lock_(latm::mutex_type *lock) { pthread_lock(lock); }
 
-   inline static int trylock_(PLOCK &lock) { return pthread_trylock(&lock); }
-   inline static int trylock_(PLOCK *lock) { return pthread_trylock(lock); }
+   //inline static int trylock_(latm::mutex_type &lock) { return pthread_trylock(&lock); }
+   //inline static int trylock_(latm::mutex_type *lock) { return pthread_trylock(lock); }
 
-   inline static int unlock_(PLOCK &lock) { return pthread_unlock(&lock); }
-   inline static int unlock_(PLOCK *lock) { return pthread_unlock(lock); }
+   inline static void unlock_(latm::mutex_type &lock) { pthread_unlock(&lock); }
+   inline static void unlock_(latm::mutex_type *lock) { pthread_unlock(lock); }
     #endif
 
-   static int pthread_lock(latm::mutex_type* lock);
-   static int pthread_trylock(latm::mutex_type* lock);
-   static int pthread_unlock(latm::mutex_type* lock);
+   static void pthread_lock(latm::mutex_type* lock);
+   //static int pthread_trylock(latm::mutex_type* lock);
+   static void pthread_unlock(latm::mutex_type* lock);
 
    //--------------------------------------------------------------------------
     #if PERFORMING_LATM
@@ -356,12 +356,12 @@ public:
       tm_lock_conflict(&lock);
    }
    static void tm_lock_conflict(latm::mutex_type* lock);
-
+   
    static void clear_tm_conflicting_locks();
-   inline static latm::mutex_set get_tm_conflicting_locks() { return tmConflictingLocks_; }
+   //inline static latm::mutex_set get_tm_conflicting_locks() { return tmConflictingLocks_; }
 
    void must_be_in_conflicting_lock_set(latm::mutex_type* inLock);
-   static void must_be_in_tm_conflicting_lock_set(latm::mutex_type* inLock);
+   //static void must_be_in_tm_conflicting_lock_set(latm::mutex_type* inLock);
 
     #if USING_TRANSACTION_SPECIFIC_LATM
    void see_if_tx_must_block_due_to_tx_latm();
@@ -380,6 +380,8 @@ public:
 
    void clear_tx_conflicting_locks();
    //latm::mutex_set get_tx_conflicting_locks() { return conflictingMutexRef_; }
+   
+  
     #endif
 
    void add_to_obtained_locks(latm::mutex_type* mutex);
@@ -743,7 +745,8 @@ private:
    void lock_tx();
    void unlock_tx();
 
-   inline static PLOCK* latm_lock() { return &latmMutex_; }
+   //inline static latm_mutex* latm_lock() { return &latmMutex_; }
+   inline static latm::mutex_type* latm_lock() { return &latm::instance().latmMutex_; }
    inline static PLOCK* general_lock() { return &transactionMutex_; }
    inline static PLOCK* inflight_lock() { return &transactionsInFlightMutex_; }
 
@@ -754,7 +757,7 @@ private:
    bool canAbortAllInFlightTxs();
    bool abortAllInFlightTxs();
    void put_tx_inflight();
-   bool can_go_inflight();
+   //static bool can_go_inflight();
    static transaction* get_inflight_tx_of_same_thread(bool);
 
 #if !PERFORMING_VALIDATION
@@ -1276,32 +1279,32 @@ private:
    //--------------------------------------------------------------------------
    // deferred updating locking methods
    //--------------------------------------------------------------------------
-   static int def_full_pthread_lock_mutex(latm::mutex_type* mutex);
+   static void def_full_pthread_lock_mutex(latm::mutex_type* mutex);
    static int def_full_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static int def_full_pthread_unlock_mutex(latm::mutex_type* mutex);
+   static void def_full_pthread_unlock_mutex(latm::mutex_type* mutex);
 
-   static int def_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
+   static void def_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
    static int def_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static int def_tm_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
+   static void def_tm_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
-   static int def_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
+   static void def_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
    static int def_tx_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static int def_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
+   static void def_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
    //--------------------------------------------------------------------------
    // direct updating locking methods
    //--------------------------------------------------------------------------
-   static int dir_full_pthread_lock_mutex(latm::mutex_type* mutex);
+   static void dir_full_pthread_lock_mutex(latm::mutex_type* mutex);
    static int dir_full_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static int dir_full_pthread_unlock_mutex(latm::mutex_type* mutex);
+   static void dir_full_pthread_unlock_mutex(latm::mutex_type* mutex);
 
-   static int dir_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
+   static void dir_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
    static int dir_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static int dir_tm_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
+   static void dir_tm_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
-   static int dir_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
+   static void dir_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
    static int dir_tx_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static int dir_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
+   static void dir_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
 
    //--------------------------------------------------------------------------
 
@@ -1309,18 +1312,18 @@ private:
    static DeletionBuffer deletionBuffer_;
    static std::ofstream logFile_;
 
-   static latm::mutex_set tmConflictingLocks_;
-   static latm::mutex_set latmLockedLocks_;
-   static latm::mutex_thread_id_set_map latmLockedLocksAndThreadIdsMap_;
-   static latm::mutex_thread_id_map latmLockedLocksOfThreadMap_;
+   //static latm::mutex_set tmConflictingLocks_;
+   //static latm::mutex_set latmLockedLocks_;
+   //static latm::mutex_thread_id_set_map latmLockedLocksAndThreadIdsMap_;
+   //static latm::mutex_thread_id_map latmLockedLocksOfThreadMap_;
    //static LatmType eLatmType_;
    static InflightTxes transactionsInFlight_;
 
    static Mutex deletionBufferMutex_;
    static Mutex transactionMutex_;
    static Mutex transactionsInFlightMutex_;
-   static Mutex latmMutex_;
-   static pthread_mutexattr_t transactionMutexAttribute_;
+   //static Mutex latmMutex_;
+   //static pthread_mutexattr_t transactionMutexAttribute_;
 
    static bool initialized_;
    static bool directLateWriteReadConflict_;
@@ -2015,27 +2018,6 @@ struct thread_initializer {
     ~thread_initializer() {transaction::terminate_thread();}
 };
 
-#if 0
-
-template <>
-inline int transaction::lock<Mutex> (Mutex &lock) { return transaction::pthread_lock(&lock); }
-
-template <>
-inline int transaction::lock<Mutex*> (Mutex *lock) { return transaction::pthread_lock(lock); }
-
-template <>
-inline int transaction::trylock<Mutex> (Mutex &lock) { return transaction::pthread_trylock(&lock); }
-
-template <>
-inline int transaction::trylock<Mutex*> (Mutex *lock) { return transaction::pthread_trylock(lock); }
-
-template <>
-inline int transaction::unlock<Mutex> (Mutex &lock) { return transaction::pthread_unlock(&lock); }
-
-template <>
-inline int transaction::unlock<Mutex*> (Mutex *lock) { return transaction::pthread_unlock(lock); }
-
-#endif
 
 //---------------------------------------------------------------------------
 // do not remove if (). It is necessary a necessary fix for compilers
