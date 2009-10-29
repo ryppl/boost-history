@@ -1,4 +1,4 @@
-/* Boost odeint/euler.hpp header file
+/* Boost odeint/concepts/state_concept.hpp header file
  
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
@@ -11,8 +11,8 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef BOOST_NUMERIC_ODEINT_CONCEPTS_HPP
-#define BOOST_NUMERIC_ODEINT_CONCEPTS_HPP
+#ifndef BOOST_NUMERIC_ODEINT_CONCEPTS_STATE_CONCEPT_HPP
+#define BOOST_NUMERIC_ODEINT_CONCEPTS_STATE_CONCEPT_HPP
 
 #include <boost/concept_check.hpp>
 
@@ -20,6 +20,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+    /* Concept StateType */
     template<class X>
     struct StateType {
 
@@ -36,6 +37,7 @@ namespace odeint {
         }
 
     private:
+
         X state;
         iterator it;
 
@@ -43,6 +45,27 @@ namespace odeint {
         void same_type( T const&, T const& );
 
     };
+
+
+    /* Concept Resizable */
+    template<class X>
+    struct Resizable {
+
+    public:
+
+	//BOOST_CONCEPT_ASSERT((StateType<X>));
+
+	BOOST_CONCEPT_USAGE(Resizable)
+	{
+	    state.resize(1); // state has resize function
+	    size_t n = 2;
+	    state.resize(n);
+	}
+
+    private:
+	X state;
+
+	};
 
 } // namespace odeint
 } // namespace numeric
