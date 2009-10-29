@@ -21,7 +21,12 @@
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
-
+#if defined(BOOST_STM_USE_BOOST_THREAD_ID) || defined(BOOST_STM_USE_BOOST_SLEEP)
+#include <boost/thread/thread.hpp>
+#endif
+#if defined(BOOST_STM_USE_BOOST_THREAD_ID) 
+#include <boost/thread/mutex.hpp>
+#endif
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
@@ -141,7 +146,6 @@ namespace boost { namespace stm {
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
     typedef pthread_mutex_t Mutex;
-    //typedef pthread_mutex_t PLOCK;
 #else
     typedef boost::mutex Mutex;
 #endif
