@@ -2,18 +2,19 @@
 import distutils.sysconfig
 from SCons.Script import AddOption, COMMAND_LINE_TARGETS, BUILD_TARGETS
 
-def BoostLibrary(env, lib, sources):
+def BoostLibrary(env, lib, sources, make_aliases = True, **kw):
     if env["LINK_DYNAMIC"]:
-        lib_node = env.SharedLibrary("boost_" + lib + env["BOOST_SUFFIX"], sources)
+        lib_node = env.SharedLibrary("boost_" + lib + env["BOOST_SUFFIX"], sources, **kw)
     else:
-        lib_node = env.StaticLibrary("boost_" + lib + env["BOOST_SUFFIX"], sources)
+        lib_node = env.StaticLibrary("boost_" + lib + env["BOOST_SUFFIX"], sources, **kw)
 
-    if env.GetOption("stage"):
-        env.Alias(lib, env.Install(env.Dir("$stagedir", "#"), lib_node))
-    env.Default(env.Alias(lib, lib_node))
+    if make_aliases:
+        if env.GetOption("stage"):
+            env.Alias(lib, env.Install(env.Dir("$stagedir", "#"), lib_node))
+        env.Default(env.Alias(lib, lib_node))
 
-    if env.GetOption("install"):
-        env.Alias(lib, env.Install("$prefix/lib", lib_node))
+        if env.GetOption("install"):
+            env.Alias(lib, env.Install("$prefix/lib", lib_node))
     return lib_node
 
 def BoostUseLib(env, lib):

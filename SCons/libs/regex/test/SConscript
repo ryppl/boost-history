@@ -30,7 +30,7 @@ threaded_env = env.Clone()
 threaded_env.Append(CPPDEFINES = "TEST_THREADS", OBJPREFIX = "threaded_")
 threaded_env.BoostUseLib("thread")
 threaded_env.BoostRunTest("regex_regress_threaded", regress_sources)
-env.BoostRunTest("posix_api_check", "c_compiler_checks/posix_api_check.c")
+env.BoostRunTest("posix_api_check", "c_compiler_checks/posix_api_check.c", LINK = "$CXX")
 env.BoostCompileTest("wide_posix_api_check", "c_compiler_checks/wide_posix_api_check.c")
 env.BoostRunTest("posix_api_check_cpp", "c_compiler_checks/posix_api_check.cpp", OBJPREFIX = "cpp_")
 env.BoostRunTest("wide_posix_api_check_cpp", "c_compiler_checks/wide_posix_api_check.cpp", OBJPREFIX = "cpp_")
@@ -47,3 +47,8 @@ env.BoostCompileTests(Split("""
     concepts/concept_check
     concepts/icu_concept_check
     """))
+regex_extra_env = env.Clone()
+regex_extra_env.Append(CPPDEFINES = ["BOOST_REGEX_MATCH_EXTRA"])
+regex_extra = regex_extra_env.BoostLibrary("regex_extra",
+    Glob("../src/*.cpp"), OBJPREFIX = "captures_", make_aliases = False)
+regex_extra_env.BoostRunTest("captures/captures_test", LIBS = [regex_extra])
