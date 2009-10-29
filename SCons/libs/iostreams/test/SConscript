@@ -1,0 +1,69 @@
+# vi: syntax=python:et:ts=4
+Import("env")
+
+env.AppendUnique(
+        LIBPATH = [Dir(env.subst("$BOOST_CURRENT_VARIANT_DIR/test/src").replace("/dynamic/", "/static/"))],
+        LIBS = ["boost_unit_test_framework" + env["BOOST_SUFFIX"]]
+    )
+if env["LINK_DYNAMIC"]:
+    env.Append(CPPDEFINES = ["BOOST_TEST_DYN_LINK"])
+
+env.BoostRunTests(Split("""
+    array_test
+    auto_close_test
+    buffer_size_test
+    close_test
+"""))
+env.BoostRunTest("code_converter_test", Split("""
+    code_converter_test.cpp
+    detail/utf8_codecvt_facet.cpp
+    """))
+env.BoostRunTests(Split("""
+    combine_test
+    compose_test
+    component_access_test
+    copy_test
+    counter_test
+    direct_adapter_test
+    example_test
+    execute_test
+    file_test
+    file_descriptor_test
+    filtering_stream_test
+    finite_state_filter_test
+    flush_test
+    """))
+regex_env = env.Clone()
+regex_env.BoostUseLib("regex")
+regex_env.BoostRunTest("grep_test")
+env.BoostRunTests(Split("""
+    invert_test
+    line_filter_test
+    mapped_file_test
+    newline_test
+    null_test
+    operation_sequence_test
+    pipeline_test
+    """))
+regex_env.BoostRunTest("regex_filter_test")
+env.BoostRunTests(Split("""
+    restrict_test
+    seekable_file_test
+    seekable_filter_test
+    sequence_test
+    slice_test
+    stdio_filter_test
+    stream_offset_32bit_test
+    stream_offset_64bit_test
+    symmetric_filter_test
+    tee_test
+    wide_stream_test
+    """))
+
+bzip2_env = env.Clone()
+if bzip2_env.CheckBZip2():
+    bzip2_env.BoostRunTest("bzip2_test")
+
+zlib_env = env.Clone()
+if zlib_env.CheckZLib():
+    zlib_env.BoostRunTests(["gzip_test", "zlib_test"])
