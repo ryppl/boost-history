@@ -18,8 +18,18 @@ itl_rational provides adapter code for boost::rational.
 #endif
 
 #include <boost/rational.hpp>
+#include <boost/itl/type_traits/is_continuous.hpp>
 
-#define ITL_NEEDS_RATIONAL_IS_CONTINUOUS
+namespace boost{namespace itl
+{
+	template<class Integral> 
+	struct is_continuous<boost::rational<Integral> >
+	{
+		typedef is_continuous<boost::rational<Integral> > type;
+		BOOST_STATIC_CONSTANT(bool, value = true);
+	};
+}} // namespace itl boost
+
 
 #endif
 

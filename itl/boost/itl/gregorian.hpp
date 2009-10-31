@@ -13,29 +13,39 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <sstream>
 
 #include <boost/date_time/gregorian/gregorian.hpp>
-
-#ifdef ITL_NEUTRONS_PROVIDED
-#pragma message("error: No neutral element provided for type boost::gregorian::date")
-#pragma message(".. please #include <boost/itl/gregorian.hpp> PRIOR TO other itl/* classes")
-#endif
-
-#ifdef ITL_DIFFERENCE_TYPES_PROVIDED
-#pragma message("error: No difference type provided for type boost::gregorian::date")
-#pragma message(".. please #include <boost/itl/gregorian.hpp> PRIOR TO other itl/* classes")
-#endif
-
-#ifdef ITL_SIZE_TYPES_PROVIDED
-#pragma message("error: No size type provided for type boost::gregorian::date")
-#pragma message(".. please #include <boost/itl/gregorian.hpp> PRIOR TO other itl/* classes")
-#endif
-
-#define ITL_NEEDS_GREGORIAN_DATE_NEUTRON_VALUE
-#define ITL_NEEDS_GREGORIAN_DATE_DIFFERENCE_TYPE
-#define ITL_NEEDS_GREGORIAN_DATE_SIZE_TYPE
+#include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/difference.hpp>
+#include <boost/itl/type_traits/size.hpp>
 
 namespace boost{namespace itl
 {
+    template<> 
+    inline boost::gregorian::date neutron<boost::gregorian::date>::value()
+    { 
+        return boost::gregorian::date(boost::gregorian::min_date_time); 
+    }
 
+    template<> 
+    struct neutron<boost::gregorian::date_duration>
+    {
+        static boost::gregorian::date_duration value()
+        { 
+            return boost::gregorian::date(boost::gregorian::min_date_time) 
+                 - boost::gregorian::date(boost::gregorian::min_date_time); 
+        }
+    };
+
+    template<> 
+    struct difference<boost::gregorian::date> 
+    { typedef boost::gregorian::date_duration type; };  
+
+    template<> 
+    struct size<boost::gregorian::date> 
+    { typedef boost::gregorian::date_duration type; };  
+
+
+
+    // ------------------------------------------------------------------------
     boost::gregorian::date operator ++(boost::gregorian::date& x)
     {
         return x += boost::gregorian::date::duration_type::unit();

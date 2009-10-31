@@ -20,14 +20,14 @@ namespace mini
 template<class NaturalT> class bits
 {
 public:
-    typedef NaturalT chunk_type;
-    BOOST_STATIC_CONSTANT( int,      bit_count = CHAR_BIT*sizeof(NaturalT) );
-    BOOST_STATIC_CONSTANT( NaturalT, n1 = static_cast<NaturalT>(1)         );
+    typedef NaturalT word_type;
+    static const int       digits = CHAR_BIT*sizeof(NaturalT);
+    static const word_type w1     = static_cast<NaturalT>(1) ;
 
     bits():_bits(){}
-    explicit bits(NaturalT value):_bits(value){}
+    explicit bits(word_type value):_bits(value){}
 
-    NaturalT number()const{ return _bits; }
+    word_type word()const{ return _bits; }
     bits& operator |= (const bits& value){_bits |= value._bits; return *this;}
     bits& operator &= (const bits& value){_bits &= value._bits; return *this;}
     bits& operator ^= (const bits& value){_bits ^= value._bits; return *this;}
@@ -35,11 +35,11 @@ public:
     bool operator  <  (const bits& value)const{return _bits < value._bits;}
     bool operator  == (const bits& value)const{return _bits == value._bits;}
 
-    bool contains(NaturalT element)const{ return ((n1 << element) & _bits) != 0; } 
+    bool contains(word_type element)const{ return ((w1 << element) & _bits) != 0; } 
     std::string as_string(const char off_on[2] = " 1")const;
 
 private:
-    NaturalT _bits;
+    word_type _bits;
 };
 //]
 
@@ -47,7 +47,7 @@ template<class NaturalT>
 std::string bits<NaturalT>::as_string(const char off_on[2])const
 {
     std::string sequence;
-    for(int bit=0; bit < bit_count; bit++)
+    for(int bit=0; bit < digits; bit++)
         sequence += contains(bit) ? off_on[1] : off_on[0];
     return sequence;
 }

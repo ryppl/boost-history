@@ -196,7 +196,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\..\..\boost\itl\interval_map.hpp"
+				RelativePath=".\bits.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\large_bitset.hpp"
 				>
 			</File>
 		</Filter>

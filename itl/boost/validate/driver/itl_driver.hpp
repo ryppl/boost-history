@@ -43,11 +43,18 @@ namespace boost{namespace itl
         enum NeutronHandlerTypes { partial_absorber, partial_enricher, total_absorber, total_enricher, NeutronHandlerTypes_size };
     }
 
+    namespace FreeChoice 
+    {
+        enum FreeChoice { _1, _2, _3, _4, _5, FreeChoice_size };
+    }
+
+
     namespace inform
     {
         enum informs { never=0, rarely, frequently };
     }
-    
+
+
     class itl_driver
     {
     public:
@@ -227,6 +234,15 @@ namespace boost{namespace itl
             type_names[NeutronHandlerType::total_enricher]          = "total_enricher"; 
             _neutronizerChoice.setTypeNames(type_names);
         }
+        void setFreeChoiceNames()
+        {
+            std::vector<std::string> type_names(FreeChoice::FreeChoice_size);
+            type_names[FreeChoice::_1]        = "_1"; 
+            type_names[FreeChoice::_2]        = "_2"; 
+            type_names[FreeChoice::_3]        = "_3"; 
+            type_names[FreeChoice::_4]        = "_4"; 
+            _codomainChoice.setTypeNames(type_names);
+        }
 
         algebra_validater* choiceError(const std::string& location, int value, const ChoiceT& choice)
         {
@@ -254,6 +270,7 @@ namespace boost{namespace itl
         ChoiceT            _domainChoice;
         ChoiceT            _codomainChoice;
         ChoiceT            _neutronizerChoice;
+		ChoiceT            _freeChoice;
 
     private:
         algebra_validater* _validater;

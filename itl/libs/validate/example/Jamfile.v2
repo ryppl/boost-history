@@ -47,6 +47,17 @@ exe labat_map_copy_conformity
         <include>$(BOOST_ROOT)
     ;
 
+# msvc9 compilation time: 1:05  
+exe labat_itv_bitset
+    :
+        labat_itv_bitset_/labat_itv_bitset.cpp
+		gentorprofile.obj
+		/boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
 # msvc9 compilation time: 1:28  
 exe labat_itl_set
     :

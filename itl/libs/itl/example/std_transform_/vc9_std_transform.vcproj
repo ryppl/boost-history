@@ -197,6 +197,14 @@
 				RelativePath="..\..\..\..\boost\itl\interval_map.hpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\..\boost\itl\separate_interval_set.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\itl\split_interval_map.hpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Ressourcendateien"

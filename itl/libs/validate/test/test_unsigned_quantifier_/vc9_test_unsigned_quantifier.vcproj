@@ -195,42 +195,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\..\..\boost\validate\law.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\validate\lawvalidater.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\validate\lawviolations.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\validate\laws\monoid.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\validate\laws\order.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\validate\laws\pushouts.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\validate\laws\set_laws.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\validate\typevalidater.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\validate\unsigned_quantifier_validater.hpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Ressourcendateien"

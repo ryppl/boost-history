@@ -10,7 +10,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #define BOOST_LIBS_ITL_EXAMPLE_LARGE_BITSET__LARGE_BITSET_HPP_JOFA_091019
 //[large_bitset_includes
 #include <iostream>                   // to organize output
-#include <boost/cstdint.hpp>          // portable long integers
+#include <boost/cstdint.hpp>          // portable boost integers
 #include <boost/operators.hpp>        // to define operators with minimal effort
 #include "meta_log.hpp"               // a meta logarithm
 #include "bits.hpp"                   // a minimal bitset implementation
@@ -21,23 +21,23 @@ namespace mini // minimal implementations for example projects
 //]
 
 //[large_bitset_natural_typedefs
-typedef unsigned int    nat; 
-typedef unsigned char   nat0; // nati i: number of duplications of a byte
-typedef unsigned short  nat1;
-typedef unsigned long   nat2; 
-typedef boost::uint64_t nat3; 
+typedef boost::uint8_t  nat8; // nati i: number bits
+typedef boost::uint16_t nat16;
+typedef boost::uint32_t nat32; 
+typedef boost::uint64_t nat64; 
+typedef nat32           nat; 
 
-typedef bits<nat0> bits8;
-typedef bits<nat1> bits16;
-typedef bits<nat2> bits32;
-typedef bits<nat3> bits64;
+typedef bits<nat8>  bits8;
+typedef bits<nat16> bits16;
+typedef bits<nat32> bits32;
+typedef bits<nat64> bits64;
 //]
 
 //[large_bitset_class_template_header
 template 
 <
-    typename    DomainT = nat3, 
-    typename    BitSetT = mini::bits<nat3>, 
+    typename    DomainT = nat64, 
+    typename    BitSetT = bits64, 
     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
     template<class, ITL_COMPARE>class Interval = boost::itl::interval,
     ITL_ALLOC   Alloc   = std::allocator
@@ -77,14 +77,14 @@ public:
     typedef DomainT                                      domain_type;
     typedef DomainT                                      element_type;
     typedef BitSetT                                      bitset_type;
-    typedef typename BitSetT::chunk_type                 chunk_type;
+    typedef typename BitSetT::word_type                  word_type;
     typedef typename interval_bitmap_type::interval_type interval_type;
     typedef typename interval_bitmap_type::value_type    value_type;
     //]
 //[large_bitset_operators
 public:
-    bool          operator ==(const large_bitset& rhs) { return _map == rhs._map; }
-    bool          operator < (const large_bitset& rhs) { return _map <  rhs._map; }
+    bool     operator ==(const large_bitset& rhs)const { return _map == rhs._map; }
+    bool     operator < (const large_bitset& rhs)const { return _map <  rhs._map; }
 
     large_bitset& operator +=(const large_bitset& rhs) {_map += rhs._map; return *this;}
     large_bitset& operator |=(const large_bitset& rhs) {_map |= rhs._map; return *this;}
@@ -139,37 +139,37 @@ public:
     //]
 
 //[large_bitset_impl_constants
-private:                                         // Example value
-    static const chunk_type                      //   8-bit case  
-        bit_count = sizeof(chunk_type)*CHAR_BIT, //   8           Size of the associated bitsets 
-        divisor   = bit_count                  , //   8           Divisor to find intervals for values
-        shift     = log2_<divisor>::value      , //   3           To express the division as bit shift
-        c1        = static_cast<chunk_type>(1) , //               Helps to avoid static_casts for long long
-        mask      = divisor - c1               , //   7=11100000  Helps to express the modulo operation as bit_and
-        all       = ~static_cast<chunk_type>(0), // 255=11111111  Helps to express a complete associated bitset
-        top       = c1 << (bit_count-c1)       ; // 128=00000001  Value of the most significant bit of associated bitsets
-                                                 //            !> Note: Most signigicant bit on the right.
+private:                                      // Example value
+    static const word_type                    //   8-bit case  
+        digits  = sizeof(word_type)*CHAR_BIT, //   8           Size of the associated bitsets 
+        divisor = digits                    , //   8           Divisor to find intervals for values
+        shift   = log2_<divisor>::value     , //   3           To express the division as bit shift
+        w1      = static_cast<word_type>(1) , //               Helps to avoid static_casts for long long
+        mask    = divisor - w1              , //   7=11100000  Helps to express the modulo operation as bit_and
+        all     = ~static_cast<word_type>(0), // 255=11111111  Helps to express a complete associated bitset
+        top     = w1 << (digits-w1)      ;    // 128=00000001  Value of the most significant bit of associated bitsets
+                                              //            !> Note: Most signigicant bit on the right.
     //]
     //[large_bitset_segment_combiner
     typedef void (large_bitset::*segment_combiner)(element_type, element_type, bitset_type);
     //]
 
     //[large_bitset_bitset_filler
-    chunk_type from_lower_to(chunk_type bit){return bit==bit_count-c1 ? all : (1<<(bit+1))-1;}
-    chunk_type to_upper_from(chunk_type bit){return bit==bit_count-c1 ? top : ~((1<<bit)-1); }
+    word_type from_lower_to(word_type bit){return bit==digits-w1 ? all : (1<<(bit+1))-1;}
+    word_type to_upper_from(word_type bit){return bit==digits-w1 ? top : ~((1<<bit)-1); }
     //]
 
     //[large_bitset_segment_apply
     large_bitset& segment_apply(segment_combiner combine, const interval_type& operand)
-    {                                                 // same as
-        element_type base = operand.first() >> shift, // operand.first()/ divisor
-                     ceil = operand.last()  >> shift, // operand.last() / divisor
-                base_rest = operand.first() &  mask , // operand.first()% divisor
-                ceil_rest = operand.last()  &  mask ; // operand.last() % divisor  
+    {                                                   // same as
+        element_type   base = operand.first() >> shift, // operand.first()/ divisor
+                       ceil = operand.last()  >> shift; // operand.last() / divisor
+        word_type base_rest = operand.first() &  mask , // operand.first()% divisor
+                  ceil_rest = operand.last()  &  mask ; // operand.last() % divisor  
 
         if(base == ceil) // [first, last] are within one bitset (chunk)
             (this->*combine)(base, base+1, bitset_type(  to_upper_from(base_rest)
-                                                      & from_lower_to(ceil_rest)));
+                                                       & from_lower_to(ceil_rest)));
         else // [first, last] spread over more than one bitset (chunk)
         {
             element_type mid_low = base_rest == 0   ? base   : base+1, // first element of mid part 

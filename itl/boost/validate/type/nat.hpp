@@ -13,47 +13,51 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <stdio.h>
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/type_traits/type_to_string.hpp>
+#include <boost/itl/type_traits/value_size.hpp>
 
 #define ITL_LOCATION(message) location(__FILE__,__LINE__,message)
 
 namespace boost{namespace itl
 {
 
-class nat
+class cnat
 {
 public:
-    nat(): _value(0) {}
-    nat(int val): _value(val<0 ? 0 : val){}
-    nat(const nat& val): _value(val._value){}
+    cnat(): _value(0) {}
+    cnat(int val): _value(val<0 ? 0 : val){}
+    cnat(const cnat& val): _value(val._value){}
 
     int value()const { return _value; }
 
-    nat& operator++(){ ++_value; return *this; }
-    const nat operator++(int){ nat that = *this; ++_value; return that; }
+    cnat& operator++(){ ++_value; return *this; }
+    const cnat operator++(int){ cnat that = *this; ++_value; return that; }
 
-    nat& operator--(){ if(_value > 0)--_value; return *this; }
-    const nat operator--(int){ nat that = *this; --_value; return that; }
+    cnat& operator--(){ if(_value > 0)--_value; return *this; }
+    const cnat operator--(int){ cnat that = *this; --_value; return that; }
 
-    nat& operator += (const nat& right){ _value += right._value; return *this; }
+    cnat& operator += (const cnat& right){ _value += right._value; return *this; }
 
-    nat& operator -= (const nat& right)
+    cnat& operator -= (const cnat& right)
     { 
         _value = right._value > _value ? 0 : (_value - right._value); 
         return *this; 
     }
 
-    nat& operator ^= (const nat& right) //JODO should not be required
+	/*CL
+    cnat& operator ^= (const cnat& right) //JODO should not be required
     { 
         _value ^= right._value; 
         return *this; 
     }
-    nat& operator &= (const nat& right) //JODO should not be required
+    cnat& operator &= (const cnat& right) //JODO should not be required
     { 
         _value &= right._value; 
         return *this; 
     }
+	*/
 
-    operator int()const{ return (_value); }
+    //CL operator int()const{ return (_value); }
+    operator unsigned int()const{ return (_value); }
 
     std::string as_string()const { return to_string<int>::apply(_value); }
 
@@ -61,17 +65,20 @@ private:
     int _value;
 };
 
-//inline nat operator + (const nat& left, const nat& right){return nat(left)+=right;}
-//inline nat operator - (const nat& left, const nat& right){return nat(left)-=right;}
+//inline cnat operator + (const cnat& left, const cnat& right){return cnat(left)+=right;}
+//inline cnat operator - (const cnat& left, const cnat& right){return cnat(left)-=right;}
 
-inline bool operator == (const boost::itl::nat& left, const boost::itl::nat& right){ return left.value() == right.value(); }
-inline bool operator <  (const boost::itl::nat& left, const boost::itl::nat& right){ return left.value() < right.value(); }
+inline bool operator == (const boost::itl::cnat& left, const boost::itl::cnat& right){ return left.value() == right.value(); }
+inline bool operator <  (const boost::itl::cnat& left, const boost::itl::cnat& right){ return left.value() < right.value(); }
 
-template<>inline std::string type_to_string<nat>::apply() { return "nat"; }
+template<>inline std::string type_to_string<cnat>::apply() { return "cnat"; }
+
+template<> inline std::size_t value_size<cnat>::apply(const cnat& value) 
+{ return value; }
 
 template<class CharType, class CharTraits>
 std::basic_ostream<CharType, CharTraits> &operator<<
-(std::basic_ostream<CharType, CharTraits> &stream, itl::nat const& right)
+(std::basic_ostream<CharType, CharTraits> &stream, itl::cnat const& right)
 {
     return stream << right.value();
 }

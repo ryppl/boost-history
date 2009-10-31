@@ -24,14 +24,16 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/split_interval_set.hpp>
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/split_interval_map.hpp>
-#include <boost/validate/type/nat.hpp>
+#include <boost/itl_xt/interval_bitset.hpp>
+
+#include <limits>
+#include <bitset>
 
 
 using namespace std;
 using namespace boost;
 using namespace unit_test;
 using namespace boost::itl;
-
 
 BOOST_AUTO_TEST_CASE(casual_test)
 {
@@ -40,19 +42,14 @@ BOOST_AUTO_TEST_CASE(casual_test)
     typedef interval_map<int,int>       IntervalMapT;
     typedef split_interval_map<int,int> SplitIntervalMapT;
     typedef interval_map<int,int>       IntervalMapT;
-    typedef vector<pair<interval<int>,int> > IntervalVecT;
 
-    IntervalVecT ivec;
-    ivec.push_back(make_pair(interval<int>::rightopen(1,3),1));
-    ivec.push_back(make_pair(interval<int>::rightopen(2,4),1));
+	interval_bitset<nat> ibs;
 
-    SplitIntervalMapT sim1, sim2;
-    sim1.insert(make_pair(interval<int>::rightopen(1,3),1));
-    sim1.insert(make_pair(interval<int>::rightopen(2,4),1));
+	ibs += interval<nat>::rightopen(0,64);
+	int sz = ibs.size();
+	cout << ibs.size() << endl;
 
-    IntervalMapT jim1;
-    std::copy(ivec.begin(), ivec.end(), itl::adder(jim1, jim1.end()));
-    //std::copy(ivec.begin(), ivec.end(), std::inserter(jim2, jim2.end()));
-    cout << jim1 << endl;
+	bool contains = ibs.contains(interval<nat>(11,63));
+	cout << "contains=" << contains << endl;
 }
 

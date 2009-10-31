@@ -39,15 +39,6 @@ namespace boost{ namespace itl
         BOOST_STATIC_CONSTANT(bool, value = true);
     };
 
-#ifdef ITL_NEEDS_RATIONAL_IS_CONTINUOUS
-#define ITL_HAS_RATIONAL_IS_CONTINUOUS
-    template<class Integral> 
-    struct is_continuous<boost::rational<Integral> >
-    {
-        typedef is_continuous<boost::rational<Integral> > type;
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-#endif
 
     template <class Type> struct is_continuous
     {

@@ -62,7 +62,7 @@ amount of code because most of the properties we need
 are provided by an __itv_map__ of `bitsets`:
 
 ``
-typedef interval_map<NaturalT, SomeBitSet<N>, partial_absorber,
+typedef interval_map<IntegralT, SomeBitSet<N>, partial_absorber,
                      std::less, inplace_bit_add, inplace_bit_and> IntervalBitmap;
 ``
 
@@ -92,7 +92,9 @@ periodic patterns.
 
 An `IntervalBitmap` can represent
 `N*(2^M-1)` elements, if `M` is the number of bits of the 
-unsigned integral type `NaturalT`.
+integral type `IntegralT`. Unlike bitsets, that usually
+represent ['*unsigned*] integral numbers, large_bitset may 
+range over negative numbers as well.
 There are fields where such large
 bitsets implementations are needed. E.g. for the compact
 representation of large file allocation tables.
@@ -104,7 +106,11 @@ set class.
 [section Using large_bitset]
 
 To quicken your appetite for a look at the implementation
-here are a few use cases first. Let's start large.
+here are a few use cases first. Within the examples that follow,
+we will use `nat`[^['k]] for unsigned integrals 
+and `bits`[^['k]] for bitsets containing [^['k]] bits.
+
+Let's start large.
 In the first example . . . 
 
 [import ../example/large_bitset_/large_bitset.cpp]
@@ -218,14 +224,16 @@ typedef interval_map<DomainT, BitSetT, partial_absorber,
 `DomainT` is supposed to be an unsigned integral
 type, the bitset type `BitSetT` will be a wrapper class around an
 unsigned integral type. `BitSetT` has to implement bitwise operators
-that will be called by the functors `inplace_bit_add` and `inplace_bit_and`.
+that will be called by the functors `inplace_bit_add<BitSetT>` 
+and `inplace_bit_and<BitSetT>`.
 The type trait of interval_map is `partial_absorber`, which means
 that it is /partial/ and that empty `BitSetTs` are not stored in
 the map. This is desired and keeps the `interval_map` minimal, storing
 only bitsets, that contain at least one bit switched on. 
-Functor `inplace_bit_add` for parameter `Combine` indicates that we
+Functor template `inplace_bit_add` for parameter `Combine` indicates that we
 do not expect `operator +=` as addition but the bitwise operator
-`|=`. For parameter `Section` we expect the bitwise `&=` operator.
+`|=`. For template parameter `Section` which is instaniated by 
+`inplace_bit_and` we expect the bitwise `&=` operator.
 
 [endsect][/ section The interval_bitmap]
 
@@ -300,7 +308,7 @@ And now let's code `large_bitset`.
 The first template parameter `DomainT` will be instantiated with
 an unsigned integral type that defines the kind of numbers that can
 be elements of the set. Since we want to go for a large set we
-use `nat3` as default which is a 64 bit unsigned integer ranging
+use `nat64` as default which is a 64 bit unsigned integer ranging
 from `0` to `2^64-1`. As bitset parameter we also choose a 64-bit
 default. Parameters `Combine` and `Interval` are necessary to
 be passed to dependent type expressions. An allocator can be
@@ -480,8 +488,7 @@ implemented here:
 This completes the implementation of class template `large_bitset`.
 Using only a small amount of mostly schematic code,
 we have been able to provide a pretty powerful, self compressing
-and generally usable set type for all 
-unsigned integral domain types. 
+and generally usable set type for all integral domain types. 
 
 [endsect][/ large_bitset: Private implementation]
 

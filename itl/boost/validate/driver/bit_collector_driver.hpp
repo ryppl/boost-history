@@ -13,7 +13,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <iostream>
 #include <stdio.h>
 #include <time.h>
-#include <boost/validate/type/bits.hpp>
+#include <boost/itl_xt/bits.hpp>
 #include <boost/validate/validater/collector_validater.hpp>
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>

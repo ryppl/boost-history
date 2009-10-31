@@ -9,6 +9,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #define BOOST_ITL_ITERATOR_HPP_JOFA_091003
 
 #include <iterator>
+#include <boost/config/warning_disable.hpp>
 
 namespace boost{namespace itl
 {

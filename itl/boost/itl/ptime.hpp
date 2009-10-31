@@ -20,28 +20,25 @@ w.r.t. addition (neutron()).
 #include <sstream>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-
-#ifdef ITL_NEUTRONS_PROVIDED
-#pragma message("error: No neutral element provided for type boost::posix_time::ptime")
-#pragma message(".. please #include <boost/itl/ptime.hpp> PRIOR TO other itl/* classes")
-#endif
-
-#ifdef ITL_DIFFERENCE_TYPES_PROVIDED
-#pragma message("error: No difference type provided for type boost::posix_time::ptime")
-#pragma message(".. please #include <boost/itl/ptime.hpp> PRIOR TO other itl/* classes")
-#endif
-
-#ifdef ITL_SIZE_TYPES_PROVIDED
-#pragma message("error: No size type provided for type boost::posix_time::ptime")
-#pragma message(".. please #include <boost/itl/ptime.hpp> PRIOR TO other itl/* classes")
-#endif
-
-#define ITL_NEEDS_POSIX_TIME_PTIME_NEUTRON_VALUE
-#define ITL_NEEDS_POSIX_TIME_PTIME_DIFFERENCE_TYPE
-#define ITL_NEEDS_POSIX_TIME_PTIME_SIZE_TYPE
+#include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/difference.hpp>
+#include <boost/itl/type_traits/size.hpp>
 
 namespace boost{namespace itl
 {
+    template<> 
+    inline boost::posix_time::ptime neutron<boost::posix_time::ptime>::value()
+    { 
+        return boost::posix_time::ptime(boost::posix_time::min_date_time); 
+    }
+
+    template<> 
+    struct difference<boost::posix_time::ptime> 
+    { typedef boost::posix_time::time_duration type; };  
+
+    template<> 
+    struct size<boost::posix_time::ptime> 
+    { typedef boost::posix_time::time_duration type; };  
 
     // ------------------------------------------------------------------------
     boost::posix_time::ptime operator ++(boost::posix_time::ptime& x)

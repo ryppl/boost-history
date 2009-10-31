@@ -191,10 +191,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\test_partial_interval_quantifier_shared.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\test_type_lists.hpp"
 				>
 			</File>

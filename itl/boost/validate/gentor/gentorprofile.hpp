@@ -30,8 +30,8 @@ namespace boost{namespace itl
 
         void set_range_int(int lwb, int upb) 
         { _range_int = interval<int>::rightopen(lwb, upb); }
-        void set_range_nat(nat lwb, nat upb) 
-        { _range_nat = interval<nat>::rightopen(lwb, upb); }
+        void set_range_nat(cnat lwb, cnat upb) 
+        { _range_nat = interval<cnat>::rightopen(lwb, upb); }
         void set_range_double(double lwb, double upb) 
         { _range_double = interval<double>::rightopen(lwb, upb); }
         void set_range_ContainerSize(int lwb, int upb) 
@@ -51,7 +51,7 @@ namespace boost{namespace itl
         void set_debug_slowdown(double factor){ _debug_slowdown = factor; }
 
         interval<int>       range_int()             { return _range_int; }
-        interval<nat>       range_nat()             { return _range_nat; }
+        interval<cnat>      range_nat()             { return _range_nat; }
         interval<double>    range_double()          { return _range_double; }
         interval<int>       range_ContainerSize()   { return _range_ContainerSize; }
         interval<int>       range_interval_int()    { return _range_interval_int; }
@@ -75,7 +75,7 @@ namespace boost{namespace itl
 
     private:
         interval<int>       _range_int;
-        interval<nat>       _range_nat;
+        interval<cnat>       _range_nat;
         interval<double>    _range_double;
         interval<int>       _range_ContainerSize;
 
@@ -109,7 +109,7 @@ namespace boost{namespace itl
     // specific interface ---------------------------------------------------------
     public:
         void set_range_int(int lwb, int upb)           { m_profile.set_range_int(lwb, upb); }
-        void set_range_nat(nat lwb, nat upb)           { m_profile.set_range_nat(lwb, upb); }
+        void set_range_nat(cnat lwb, cnat upb)         { m_profile.set_range_nat(lwb, upb); }
         void set_range_double(double lwb, double upb)  { m_profile.set_range_double(lwb, upb); }
         void set_range_ContainerSize(int lwb, int upb) { m_profile.set_range_ContainerSize(lwb, upb); }
         void set_range_interval_int(int lwb, int upb)  { m_profile.set_range_interval_int(lwb, upb); }
@@ -122,7 +122,7 @@ namespace boost{namespace itl
         void set_laws_per_cycle(int count)              { m_profile.set_laws_per_cycle(count); }
 
         interval<int>       range_int()                { return m_profile.range_int();           }
-        interval<nat>       range_nat()                { return m_profile.range_nat();           }
+        interval<cnat>      range_nat()                { return m_profile.range_nat();           }
         interval<double>    range_double()             { return m_profile.range_double();        }
         interval<int>       range_ContainerSize(){ return m_profile.range_ContainerSize(); }
         interval<int>       range_interval_int()       { return m_profile.range_interval_int();  }
@@ -164,9 +164,19 @@ namespace boost{namespace itl
     };
 
     template<>
-    struct GentorProfileSgl_numeric_range<nat>
+    struct GentorProfileSgl_numeric_range<unsigned int>
     {
-        static interval<nat> get() 
+        static interval<unsigned int> get() 
+        {
+			interval<cnat> inter_val = GentorProfileSgl::it()->range_nat();
+			return interval<unsigned int>::rightopen(inter_val.lower(), inter_val.upper());
+		}
+    };
+
+    template<>
+    struct GentorProfileSgl_numeric_range<cnat>
+    {
+        static interval<cnat> get() 
         { return GentorProfileSgl::it()->range_nat(); }
     };
 

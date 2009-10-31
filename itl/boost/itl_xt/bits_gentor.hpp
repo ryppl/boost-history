@@ -11,11 +11,10 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl_xt/gentorit.hpp>
 #include <boost/itl_xt/numbergentor.hpp>
-#include <boost/validate/type/bits.hpp>
+#include <boost/itl_xt/bits.hpp>
 
 namespace boost{namespace itl
 {
-
 
 template <class NaturalT> 
 class bits_gentor: public RandomGentorAT<itl::bits<NaturalT> >
@@ -36,7 +35,6 @@ private:
     NumberGentorT<NaturalT> _natural_gentor;
     itl::interval<NaturalT> _value_range;
 };
-
 
 }} // namespace itl boost
 

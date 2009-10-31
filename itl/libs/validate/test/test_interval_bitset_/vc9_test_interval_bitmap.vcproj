@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="vc9_fastest_interval_set_infix"
-	ProjectGUID="{A731623C-94BC-4666-A419-35D1623E906E}"
-	RootNamespace="Fastest_interval_set_infix"
+	Name="vc9_test_interval_bitset"
+	ProjectGUID="{BF42574F-66E2-42DD-90D9-3A8FCE6F4760}"
+	RootNamespace="vc9_test_interval_bitset"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../../../../bin/debug/"
-			IntermediateDirectory="../../../../bin/obj/$(ProjectName)/debug/"
+			OutputDirectory="../../../../bin/debug"
+			IntermediateDirectory="../../../../bin/obj/$(ProjectName)/debug"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -40,6 +40,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/bigobj"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../../../; ../../../../boost_1_35_0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
@@ -62,7 +63,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../../../../bin/debug/$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../../../lib; ../../../../stage/lib"
 				GenerateDebugInformation="true"
@@ -95,8 +95,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../../../../bin/release/"
-			IntermediateDirectory="../../../../bin/obj/$(ProjectName)/release/"
+			OutputDirectory="../../../../bin/release"
+			IntermediateDirectory="../../../../bin/obj/$(ProjectName)/release"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -118,8 +118,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../../../../; ../../../../boost_1_35_0"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -137,13 +139,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../../../../bin/release/$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../lib; ../../../../stage/lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				TargetMachine="1"
@@ -180,7 +182,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\fastest_interval_set_infix.cpp"
+				RelativePath="..\..\src\gentor\gentorprofile.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\test_interval_bitset_\test_interval_bitset.cpp"
 				>
 			</File>
 		</Filter>
@@ -189,10 +195,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\test_type_lists.hpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Ressourcendateien"
@@ -200,6 +202,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<File
+			RelativePath=".\ReadMe.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

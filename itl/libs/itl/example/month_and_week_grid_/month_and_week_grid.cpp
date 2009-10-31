@@ -10,16 +10,16 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +-----------------------------------------------------------------------------*/
 /** Example month_and_week_grid.cpp \file month_and_week_grid.cpp
 
-    As split_interval_set preserves all interval borders on insertion
-    and intersection operations. So given a split_interval_set
+    A split_interval_set preserves all interval borders on insertion
+    and intersection operations. So given a split_interval_set ...
     \code
     x =  {[1,     3)}
     x.add(     [2,     4)) then
     x == {[1,2)[2,3)[3,4)}
     \endcode
-    Using this property we can intersect split_interval_maps in
-    order to iterate over intervals accounting for all occurring
-    changes of interval borders.
+    ... using this property we can intersect splitting interval containers
+	in order to iterate over intervals accounting for all changes of 
+	interval borders.
 
     In this example we provide an intersection of two split_interval_sets
     representing a month and week time grid. 
@@ -33,7 +33,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 // and a few lines of adapter code.
 #include <boost/itl/gregorian.hpp> 
 
-#include <boost/itl/split_interval_map.hpp>
+#include <boost/itl/split_interval_set.hpp>
 
 using namespace std;
 using namespace boost::gregorian;

@@ -6,8 +6,8 @@ Copyright (c) 2009-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_XT_TEST_BITS_HPP_JOFA_091009
-#define BOOST_ITL_XT_TEST_BITS_HPP_JOFA_091009
+#ifndef BOOST_ITL_LIBS_VALIDATE_TEST_BITS_HPP_JOFA_091009
+#define BOOST_ITL_LIBS_VALIDATE_TEST_BITS_HPP_JOFA_091009
 
 #include <boost/itl/type_traits/type_to_string.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
@@ -20,7 +20,9 @@ namespace boost{namespace itl
 template<class NaturalT> class bits
 {
 public:
-    typedef NaturalT chunk_type;
+    typedef NaturalT    chunk_type;
+    typedef NaturalT    element_type;
+	typedef std::size_t size_type;
 
     bits():_bits(){}
     explicit bits(NaturalT value):_bits(value){}
@@ -32,6 +34,12 @@ public:
     bits  operator ~  ()const { return bits(~_bits); }
     bool operator  <  (const bits& value)const{return _bits < value._bits;}
     bool operator  == (const bits& value)const{return _bits == value._bits;}
+
+	bool contains(element_type element)const{return 0 !=(_bits & element);} 
+	bool contains(const bits& value)const; //JODO
+	bool contained_in(const bits& value)const; //JODO
+
+	size_type cardinality()const{}
 
 private:
     NaturalT _bits;

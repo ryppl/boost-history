@@ -26,6 +26,9 @@ test-suite "itl"
       # msvc9 compilation time: 1:03  
       [ run test_map_copy_conformity_/test_map_copy_conformity.cpp ../src/gentor/gentorprofile.cpp ]
       
+      # msvc9 compilation time: 1:05  
+      [ run test_interval_bitset_/test_interval_bitset.cpp ../src/gentor/gentorprofile.cpp ]
+      
       # msvc9 compilation time: 1:28  
       [ run test_itl_set_/test_itl_set.cpp ../src/gentor/gentorprofile.cpp ]
       
