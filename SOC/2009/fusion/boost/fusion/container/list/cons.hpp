@@ -178,10 +178,10 @@ namespace boost { namespace fusion
           , cdr(cdr_args)
         {}
 #   else
-        template<typename... CdrArgs>
+        template<typename OtherCar,typename... CdrArgs>
         explicit
-        cons(Car&& car,CdrArgs&&... cdr_args)
-          : car(std::forward<Car>(car))
+        cons(OtherCar&& other_car,CdrArgs&&... cdr_args)
+          : car(std::forward<OtherCar>(other_car))
           , cdr(std::forward<CdrArgs>(cdr_args)...)
         {}
 #   endif

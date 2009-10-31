@@ -9,6 +9,7 @@
 
 #include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
+#include <boost/fusion/support/category_of.hpp>
 
 #include <cstddef>
 

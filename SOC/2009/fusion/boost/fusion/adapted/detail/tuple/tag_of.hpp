@@ -8,6 +8,7 @@
 
 #include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
+#include <boost/fusion/support/category_of.hpp>
 
 #ifdef BOOST_FUSION_ADAPTED_STD_TUPLE
 #   ifdef BOOST_NO_0X_HDR_TUPLE

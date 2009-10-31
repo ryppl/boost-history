@@ -22,8 +22,9 @@ namespace boost { namespace fusion
         struct make_cons
         {
             typedef
-                cons<typename traits::deduce<Car>::type
-                   , typename traits::deduce<Cdr>::type
+                cons<
+					typename traits::deduce<Car>::type
+                 , typename traits::deduce<Cdr>::type
                 >
             type;
         };
