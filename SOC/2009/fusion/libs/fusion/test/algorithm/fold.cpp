@@ -101,24 +101,6 @@ struct appender
     }
 };
 
-struct lvalue_adder
-{
-    template<typename Sig>
-    struct result;
-
-    template<typename Self,typename T0, typename T1>
-    struct result<Self(T0, T1&)>
-    {
-        typedef T1& type;
-    };
-
-    template<typename T0, typename T1>
-    T0 operator()(T0 const& lhs, T1& rhs) const
-    {
-        return lhs + rhs;
-    }
-};
-
 int add(int lhs, int rhs)
 {
     return lhs + rhs;
@@ -166,11 +148,6 @@ main()
     {
         BOOST_TEST(fusion::fold(fusion::make_vector('a','b','c','d','e'), std::string(""), appender())
                    == "abcde");
-    }
-
-    {
-        vector<int, int> vec(1,2);
-        BOOST_TEST(fusion::fold(vec, 0, lvalue_adder()) == 3);
     }
 
     {
