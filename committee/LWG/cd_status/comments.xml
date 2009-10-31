@@ -1,6 +1,6 @@
 <?xml  version="1.0"?>
 
-<document date="2009-08-03"
+<document date="2009-10-31"
   rev="2"
   docno="PL22.16 09/0129 = WG21 N2939"
 >
@@ -2031,7 +2031,7 @@ p2
 
 <comment nb="CH" num="1" uknum="" type="te" owner="CWG" issue="794" disp="" date="" extdoc="">
 <section>
-4.11 and 5.2.9
+4.9
 </section>
 <para>
 </para>
@@ -2049,7 +2049,7 @@ p2
         explicit conversion the other way around.
 </suggestion>
 <rationale>
-Section reference corrected from 4.9.
+Section reference should be 4.11 and 5.2.9.
 </rationale>
 </comment>
 
@@ -2532,7 +2532,7 @@ an <TT>operator()</TT> defined.&#8221;  This creates no dependency on
 5.1.1
 </section>
 <para>
-13
+12
 </para>
 <description>
         If one or more
@@ -2553,7 +2553,7 @@ an <TT>operator()</TT> defined.&#8221;  This creates no dependency on
         variables referenced has ended is undefined.
 </suggestion>
 <rationale>
-Paragraph reference corrected from 12.
+Paragraph reference should be 13.
 </rationale>
 </comment>
 
@@ -7994,7 +7994,7 @@ members
         at_quick_exit
 </suggestion>
 <notes>Done</notes>
-<rationale>NAD. We do not belive at_exit and at_quick_exit should be required by 
+<rationale>We do not belive at_exit and at_quick_exit should be required by 
     freestanding implementations.
 </rationale>
 </comment>
@@ -8052,7 +8052,7 @@ N2814</a>, but we're concerned whether CWG will accept
 language recommendations.<BR/><BR/>
 add &lt;type_traits&gt; only. Alisdair will draft an issue.</notes>
 <rationale>See Martin Tasker's paper Fixing Freestanding which provides the
-wording to include <type_traits> into freestanding implementations. 
+wording to include &lt;type_traits&gt; into freestanding implementations. 
 </rationale>
 </comment>
 
@@ -8241,8 +8241,8 @@ refers to collective relations in a group. "Between" is correct here.
         Add restriction that exception
         specification of virtual functions cannot be tightened.
 </suggestion>
-<notes>Done</notes>
-<rationale>NAD, the standard already has the desired restriction.
+<notes></notes>
+<rationale>The standard already has the desired restriction.
 </rationale>
 </comment>
 
@@ -8287,7 +8287,7 @@ Footnote 188
         Make this footnote normative
 </suggestion>
 <notes>Done</notes>
-<rationale>NAD. We cannot mandate all standard-library functions that might use some 
+<rationale>The standard library cannot mandate all standard-library functions that might use some 
     third-party library.
 </rationale>
 </comment>
@@ -8808,7 +8808,7 @@ N2932</a>
         Consider other types.
 </suggestion>
 <notes>Done</notes>
-<rationale>NAD. There is already guidance in the CD. It is the caller's responsibility 
+<rationale>There is already guidance in the CD. It is the caller's responsibility 
     to internationalize MB character string.
 </rationale>
 </comment>
@@ -8955,7 +8955,7 @@ All concepts-related text has been removed from the draft.
         semantics that the passed string may be moved.
 </suggestion>
 <notes>Done</notes>
-<rationale>NAD. Implementations are permitted to add the requested signature under the 
+<rationale>Implementations are permitted to add the requested signature under the 
     as-if rule. See clause 17.
 </rationale>
 </comment>
@@ -8997,7 +8997,7 @@ All concepts-related text has been removed from the draft.
         message easy to recognize what exception was thrown.
 </suggestion>
 <notes>Done</notes>
-<rationale>NAD. This is a quality of implementation issue that is beyond
+<rationale>This is a quality of implementation issue that is beyond
 the scope of the standard.
 </rationale>
 </comment>
@@ -9334,7 +9334,7 @@ All concepts-related text has been removed from the draft.
 
 <comment nb="US" num="68" uknum="" type="te/ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
-20.1.12
+20.2.12
 </section>
 <para>
 IntegralLike
@@ -9351,7 +9351,7 @@ IntegralLike
 <notes>Editorial. The correct section is 20.1.12, not 20.2.12. Forward to project 
     editor.</notes>
 <rationale>
-Section reference corrected from 20.2.12.
+Section reference should be 20.1.12.
 </rationale>
 </comment>
 
@@ -9401,7 +9401,7 @@ Section reference corrected from 20.2.12.
 
 <comment nb="UK" num="204" uknum="239" type="Te" owner="LWG" issue="1020" disp="rejected" date="" extdoc="">
 <section>
-20.5.7 [meta.trans.other]
+20.5
 </section>
 <para>
 Table 41
@@ -9418,7 +9418,7 @@ Table 41
 </suggestion>
 <notes></notes>
 <rationale>
-Section reference corrected from 20.5.
+Section reference should be 20.5.7 [meta.trans.other].
 </rationale>Paper N2843 proposes an extension to the [[align]] attribute that further diminishes the need for this template.
 </comment>
 
@@ -9575,7 +9575,7 @@ Table 41
 
 <comment nb="US" num="70" uknum="" type="te" owner="LWG" issue="1018" disp="modified" date="" extdoc="">
 <section>
-20.5
+20.6
 </section>
 <para>
 </para>
@@ -9597,7 +9597,7 @@ Table 41
     proposing specific changes, we would be happy to review it at the next 
     meeting.</notes>
 <rationale>
-Section reference corrected from 20.6.
+Section reference should be 20.5.
 All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
@@ -10043,7 +10043,7 @@ All concepts-related text has been removed from the draft.
 
 <comment nb="DE" num="20" uknum="" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
-20.6.12
+20.7.12
 </section>
 <para>
 </para>
@@ -10058,13 +10058,13 @@ All concepts-related text has been removed from the draft.
 <notes>Agree. Forward to the project editor.
 </notes>
 <rationale>
-Section reference corrected from 20.7.12.
+Section reference should be 20.6.12.
 </rationale>
 </comment>
 
 <comment nb="US" num="72" uknum="" type="te" owner="LWG" issue="817" disp="" date="" extdoc="">
 <section>
-20.6.12.1.3 [func.bind.bind]
+20.7.12
 </section>
 <para>
 </para>
@@ -10082,13 +10082,13 @@ and BoundArgs must be changed to MoveConstructible. I see no need for a
 paper.
 </notes>
 <rationale>
-Section reference corrected from 20.7.12.
+Section reference should be 20.6.12.1.3 [func.bind.bind].
 </rationale>
 </comment>
 
 <comment nb="DE" num="21" uknum="" type="te" owner="LWG" issue="817" disp="accepted" date="" extdoc="">
 <section>
-20.6.12.1.3 [func.bind.bind]
+20.7.12.1.3
 </section>
 <para>
 </para>
@@ -10108,13 +10108,13 @@ N2691 [func.bind.bind] and N2800 [func.bind.bind]. Ask the project
 editor to review the changes.
 </notes>
 <rationale>
-Section reference corrected from 20.7.12.1.3.
+Section reference should be 20.6.12.1.3 [func.bind.bind].
 </rationale>
 </comment>
 
 <comment nb="UK" num="211" uknum="428" type="Te" owner="LWG" issue="1021" disp="accepted" date="" extdoc="">
 <section>
-20.6.12.2.3 [unique.ptr.single.asgn]
+20.7.12.2.3
 </section>
 <para>
 11
@@ -10133,13 +10133,13 @@ Section reference corrected from 20.7.12.1.3.
 <notes>Agree.
 </notes>
 <rationale>
-Section reference corrected from 20.7.12.2.3.
+Section reference should be 20.6.12.2.3 [unique.ptr.single.asgn].
 </rationale>
 </comment>
 
 <comment nb="UK" num="212" uknum="270" type="Te" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
-20.6.13.7 [util.dynamic.safety]
+20.7.13.7
 </section>
 <para>
 </para>
@@ -10162,13 +10162,13 @@ resolution. We believe it belongs either a subsection of either 20
 [memory].
 </notes>
 <rationale>
-Section reference corrected from 20.7.13.7.
+Section reference should be 20.6.13.7 [util.dynamic.safety].
 </rationale>
 </comment>
 
 <comment nb="DE" num="22" uknum="" type="te" owner="LWG" issue="1023" disp="accepted" date="" extdoc="">
 <section>
-20.6.16.2 [func.wrap.func]
+20.7.16.2
 </section>
 <para>
 </para>
@@ -10189,7 +10189,7 @@ and we suggest that std::function be presented in the same way as
 std::reference_wrapper.
 </notes>
 <rationale>
-Section reference corrected from 20.7.16.2.
+Section reference should be 20.6.16.2 [func.wrap.func].
 </rationale>
 </comment>
 
@@ -10508,7 +10508,7 @@ Requires</em> clause. Note that unique_ptr [unique.ptr] needs concepts.
 
 <comment nb="JP" num="44" uknum="" type="te" owner="LWG" issue="1030" disp="accepted" date="" extdoc="">
 <section>
-20.7.13.6 [util.smartptr.shared.atomic]
+20.8.13.6
 </section>
 <para>
 </para>
@@ -10530,7 +10530,7 @@ functions need a requirement that p (or v) is a pointer to a valid
 object.
 </notes>
 <rationale>
-Section reference corrected from 20.8.13.6.
+Section reference should be 20.7.13.6 [util.smartptr.shared.atomic].
 </rationale>
 </comment>
 
@@ -10566,7 +10566,7 @@ All concepts-related text has been removed from the draft.
 
 <comment nb="US" num="80" uknum="" type="ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
-20.8.2.1 [time.traits.is_fp]
+20.9.2.1
 </section>
 <para>
 Heading
@@ -10586,7 +10586,7 @@ Heading
     ([time.traits.is_fp]) are wrong. Forward to project editor.
 </notes>
 <rationale>
-Section reference corrected from 20.9.2.1.
+Section reference should be 20.8.2.1 [time.traits.is_fp].
 </rationale>
 </comment>
 
@@ -11528,7 +11528,7 @@ All concepts-related text has been removed from the draft.
         See my recommendations for "23.2.1,
         23.2.6".
 </suggestion>
-<notes>NAD. basic_string elements have to be POD and PODs may not have 
+<notes>basic_string elements have to be POD and PODs may not have 
     overloaded operator&amp;. Need to check whether this is true in light of relaxed 
     POD constraints.</notes>
 <rationale>
@@ -11580,7 +11580,7 @@ All concepts-related text has been removed from the draft.
     was producing confusing results with strings, but this difference will be 
     fixed by N2831 if it's accepted.</notes>
 <rationale>
-N2844 changed the rvalue reference binding rules. That paper includes generic templates operator<< and operator>> that adapt rvalue streams. 
+N2844 changed the rvalue reference binding rules. That paper includes generic templates operator&lt;&lt; and operator&gt;&gt; that adapt rvalue streams. 
 </rationale>
 </comment>
 
@@ -12723,8 +12723,7 @@ All concepts-related text has been removed from the draft.
 <notes>Done</notes>
 <rationale>After discussing D2844, it was decided 
     to remove all the r-value-ref <code>swap</code> overloads from containers. 
-    Therefore adding them to <code>array</code> has no benefit. So the final 
-    disposition is NAD.
+    Therefore adding them to <code>array</code> has no benefit.
 </rationale>
 </comment>
 
@@ -12933,7 +12932,7 @@ has classified it as technical. Solved by removing concepts.
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD. We believe the separate header to have value.
+<rationale>We believe the separate header to have value.
 </rationale>
 </comment>
 
@@ -13148,7 +13147,7 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD, postdecrement_result is deduced.
+<rationale>postdecrement_result is deduced.
 </rationale>
 </comment>
 
@@ -13194,7 +13193,7 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD unless Alisdair comes back with more motivation.
+<rationale>Rejected, unless Alisdair comes back with more motivation.
 </rationale>
 </comment>
 
@@ -13244,7 +13243,7 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD, violates complexity requirements.
+<rationale>Violates complexity requirements.
 </rationale>
 </comment>
 
@@ -13264,7 +13263,7 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD, subscript reference isn't used.<BR/><BR/>
+<rationale>Subscript reference isn't used.<BR/><BR/>
 In c++std-lib-23104, Daniel Kr&#252;gler commented, &#8220;this
 [proposed change] would disable "auto-deduction" of the return
 type of any operator[] as described by
@@ -13569,7 +13568,7 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD, beyond the scope of the Standard for C++0x because we are not 
+<rationale>Beyond the scope of the Standard for C++0x because we are not 
 supplying range-based algorithms.
 </rationale>
 </comment>
@@ -13673,7 +13672,7 @@ supplying range-based algorithms.
 <notes>
 Done
 </notes>
-<rationale>NAD, no consensus.
+<rationale>No consensus.
 </rationale>
 </comment>
 
@@ -13725,7 +13724,7 @@ Done
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD, withdrawn by submitter.
+<rationale>Withdrawn by submitter.
 </rationale>
 </comment>
 
@@ -13747,7 +13746,7 @@ Done
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD, not editorial, withdrawn by submitter.
+<rationale>Not editorial, withdrawn by submitter.
 </rationale>
 </comment>
 
@@ -13804,7 +13803,7 @@ Done
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD, we don't believe that copy elision is a 
+<rationale>We don't believe that copy elision is a 
 sufficiently high priority for iterator types.
 </rationale>
 </comment>
@@ -13931,7 +13930,7 @@ n/a
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD. This is compatible with C++03; and we lack a 
+<rationale>This is compatible with C++03; and we lack a 
 consensus for change.
 </rationale>
 </comment>
@@ -14144,10 +14143,10 @@ All concepts-related text has been removed from the draft.
 <suggestion>
         ostream_iterator operator++(int);
 </suggestion>
-<notes>NAD. This is compatible with C++03; and we lack a 
-consensus for change.
+<notes>
 </notes>
-<rationale>
+<rationale>This is compatible with C++03; and we lack a 
+consensus for change.
 </rationale>
 </comment>
 
@@ -14244,7 +14243,7 @@ consensus for change.
         istreambuf_iterator(basic_streambuf&lt;charT,traits&gt;* s)
         throw();
 </suggestion>
-<notes>NAD. This could potentially [break] C++03-conforming 
+<notes>This could potentially [break] C++03-conforming 
 programs.
 </notes>
 <rationale>
@@ -15841,7 +15840,7 @@ defined where it exists.
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD: We believe the current 
+<rationale>We believe the current 
 syntax is most appropriate for an interface that is intended to be 
 highly compatible with C.
 </rationale>
@@ -15902,7 +15901,7 @@ See wiki for further comments.
 </rationale>Solved by N2992. 
 </comment>
 
-<comment nb="US" num="89" uknum="" type="te" owner="editor"" issue="937" disp="" date="" extdoc="">
+<comment nb="US" num="89" uknum="" type="te" owner="editor" issue="937" disp="" date="" extdoc="">
 <section>
 29.3.1
 </section>
@@ -15989,7 +15988,7 @@ explicitly consider the process shared issue.
 </suggestion>
 <notes>Done
 </notes>
-<rationale>NAD. We can not see the issue being suggested by the comment.
+<rationale>We can not see the issue being suggested by the comment.
 </rationale>
 </comment>
 
@@ -16157,7 +16156,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 1152
-<comment nb="US" num="96" uknum="" type="te" owner="LWG" issue="1158" disp="rejected" date="" extdoc="">
+<comment nb="US" num="96" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 30.1.4
 </section>
@@ -16174,10 +16173,10 @@ All concepts-related text has been removed from the draft.
         cannot be set, and is guaranteed to have no negative clock
         jumps.
 </suggestion>
-<notes>There is a good definition. NAD. There are other problems here (see issue 
+<notes> NAD. There are other problems here (see issue 
     <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#859">859</a>). Create an issue, together with UK 322. Detlef will write the issue, 
     but not proposed wording. Refer also to sections [time.clock.req] and [time.clock.monotonic].</notes>
-<rationale>
+<rationale>There is a good definition. Also, see library issue 1158.
 </rationale>
 </comment>
 
