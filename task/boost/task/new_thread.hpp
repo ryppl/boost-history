@@ -65,7 +65,9 @@ public:
 	template< typename R >
 	handle< R > operator()( task< R > t)
 	{
-		shared_future< R > f( t.get_future() );
+		shared_ptr< shared_future< R > > f(
+			new shared_future< R >(
+				t.get_future() ) );
 		context ctx1, ctx2;
 		handle< R > h( f, ctx1);
 		callable ca( boost::move( t), ctx2);

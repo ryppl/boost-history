@@ -26,16 +26,16 @@ template< typename R >
 class handle
 {
 private:
-	shared_future< R >	fut_;
-	context				ctx_;
+	shared_ptr< shared_future< R > >	fut_;
+	context								ctx_;
 
 public:
 	handle() :
-		fut_(), ctx_()
+		fut_( new shared_future< R >() ), ctx_()
 	{}
 
 	handle(
-			shared_future< R > fut,
+			shared_ptr< shared_future< R > > const& fut,
 			context const& ctx) :
 		fut_( fut),
 		ctx_( ctx)
@@ -69,7 +69,7 @@ public:
 	R get()
 	{
 		try
-		{ return fut_.get(); }
+		{ return fut_->get(); }
 		catch ( future_uninitialized const&)
 		{ throw task_uninitialized(); }
 		catch ( broken_promise const&)
@@ -79,18 +79,18 @@ public:
 	}
 
 	bool is_ready() const
-	{ return fut_.is_ready(); }
+	{ return fut_->is_ready(); }
 
 	bool has_value() const
-	{ return fut_.has_value(); }
+	{ return fut_->has_value(); }
 
 	bool has_exception() const
-	{ return fut_.has_exception(); }
+	{ return fut_->has_exception(); }
 
 	void wait() const
 	{
 		try
-		{ fut_.wait(); }
+		{ fut_->wait(); }
 		catch ( future_uninitialized const&)
 		{ throw task_uninitialized(); }
 		catch ( broken_promise const&)
@@ -103,7 +103,7 @@ public:
 	bool wait_for( Duration const& rel_time) const
 	{
 		try
-		{ return fut_.timed_wait( rel_time); }
+		{ return fut_->timed_wait( rel_time); }
 		catch ( future_uninitialized const&)
 		{ throw task_uninitialized(); }
 		catch ( broken_promise const&)
@@ -115,7 +115,7 @@ public:
 	bool wait_until( system_time const& abs_time) const
 	{
 		try
-		{ return fut_.timed_wait_until( abs_time); }
+		{ return fut_->timed_wait_until( abs_time); }
 		catch ( future_uninitialized const&)
 		{ throw task_uninitialized(); }
 		catch ( broken_promise const&)
@@ -125,7 +125,7 @@ public:
 	}
 
 	shared_future< R > & get_future()
-	{ return fut_; }
+	{ return * fut_; }
 
 	void swap( handle< R > & other)
 	{

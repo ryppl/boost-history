@@ -8,6 +8,7 @@
 #define BOOST_TASK_OWN_THREAD_H
 
 #include <boost/config.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/thread/detail/move.hpp>
 
 #include <boost/task/callable.hpp>
@@ -26,7 +27,9 @@ struct own_thread
 	template< typename R >
 	handle< R > operator()( task< R > t)
 	{
-		shared_future< R > f( t.get_future() );
+		shared_ptr< shared_future< R > > f(
+			new shared_future< R >(
+				t.get_future() ) );
 		context ctx;
 		handle< R > h( f, ctx);
 		callable ca( boost::move( t), ctx);

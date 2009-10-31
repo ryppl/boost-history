@@ -10,7 +10,9 @@
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
 #include <boost/function.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/thread/detail/move.hpp>
+#include <boost/weak_ptr.hpp>
 
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
@@ -24,6 +26,17 @@
 
 namespace boost {
 namespace task {
+namespace {
+
+template< typename R >
+bool future_ready( weak_ptr< shared_future< R > > wptr)
+{
+	shared_ptr< shared_future< R > > sptr = wptr.lock();
+	BOOST_ASSERT( sptr);
+	return sptr->is_ready();
+}
+
+}
 
 struct as_sub_task
 {
@@ -33,11 +46,13 @@ struct as_sub_task
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
-			shared_future< R > f( t.get_future() );
+			shared_ptr< shared_future< R > > f(
+				new shared_future< R >(
+					t.get_future() ) );
 			function< bool() > wcb(
 				bind(
-					& shared_future< R >::is_ready,
-					f) );
+					( bool (*) ( weak_ptr< shared_future< R > >) ) & future_ready,
+					weak_ptr< shared_future< R > >( f) ) );
 			t.set_wait_callback(
 				bind(
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,

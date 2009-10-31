@@ -14,6 +14,7 @@
 #include <boost/config.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/detail/move.hpp>
 
@@ -277,7 +278,9 @@ public:
 		if ( closed_() )
 			throw task_rejected("pool is closed");
 
-		shared_future< R > f( t.get_future() );
+		shared_ptr< shared_future< R > > f(
+			new shared_future< R >(
+				t.get_future() ) );
 		context ctx;
 		handle< R > h( f, ctx);
 		queue_.put( callable( boost::move( t), ctx) );
@@ -290,7 +293,9 @@ public:
 		if ( closed_() )
 			throw task_rejected("pool is closed");
 
-		shared_future< R > f( t.get_future() );
+		shared_ptr< shared_future< R > > f(
+			new shared_future< R >(
+				t.get_future() ) );
 		context ctx;
 		handle< R > h( f, ctx);
 		queue_.put(

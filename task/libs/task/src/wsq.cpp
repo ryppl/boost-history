@@ -10,18 +10,19 @@
 
 #include <boost/task/detail/atomic.hpp>
 
-namespace boost {
-namespace task {
-namespace detail {
+namespace boost { namespace task {
+namespace detail
+{
 
-wsq::wsq() :
-	initial_size_( 32),
-	array_( new callable[ initial_size_]),
-	capacity_( initial_size_),
-	mask_( initial_size_ - 1),
-	head_idx_( 0),
-	tail_idx_( 0),
-	mtx_()
+wsq::wsq()
+:
+initial_size_( 32),
+array_( new callable[ initial_size_]),
+capacity_( initial_size_),
+mask_( initial_size_ - 1),
+head_idx_( 0),
+tail_idx_( 0),
+mtx_()
 {}
 
 bool
@@ -73,7 +74,7 @@ wsq::try_take( callable & ca)
 	atomic_exchange( & tail_idx_, tail);
 	if ( head_idx_ <= tail)
 	{
-		ca = array_[tail & mask_];
+		ca.swap( array_[tail & mask_]);
 		return true;
 	}
 	else
@@ -81,7 +82,7 @@ wsq::try_take( callable & ca)
 		lock_guard< recursive_mutex > lk( mtx_);
 		if ( head_idx_ <= tail)
 		{
-			ca = array_[tail & mask_];
+			ca.swap( array_[tail & mask_]);
 			return true;
 		}
 		else
@@ -102,7 +103,7 @@ wsq::try_steal( callable & ca)
 		atomic_exchange( & head_idx_, head + 1);
 		if ( head < tail_idx_)
 		{
-			ca = array_[head & mask_];
+			ca.swap( array_[head & mask_]);
 			return true;
 		}
 		else
