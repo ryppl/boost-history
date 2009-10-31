@@ -66,7 +66,7 @@ T hypot(T a, T b)
 { return boost::math::hypot(a, b); }
 
 template <class Target, class Source>
-Target to(const Source& source)
+Target to(Source source)
 { return numeric_adaptor::to_traits<Target, Source>::apply(source); }
 
 

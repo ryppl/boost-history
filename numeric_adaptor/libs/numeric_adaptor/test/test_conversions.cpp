@@ -27,6 +27,7 @@ void test_all()
     double epsilon = 0.0001;
 
     BOOST_CHECK_CLOSE((double)boost::to<ValueType>(std::string("123.456")), 123.456, epsilon);
+    BOOST_CHECK_CLOSE((double)boost::to<ValueType>("123.456"), 123.456, epsilon);
 }
 
 int test_main(int, char*[])

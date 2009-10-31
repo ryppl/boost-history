@@ -180,14 +180,23 @@ struct gmp_value_type
 
 
 template <>
+struct to_traits<gmp_value_type, const char*>
+{
+    static gmp_value_type apply(const char* source)
+    {
+        gmp_value_type result;
+        mpf_init(result.m_value);
+        mpf_set_str(result.m_value, source, 10);
+        return result;
+    }
+};
+
+template <>
 struct to_traits<gmp_value_type, std::string>
 {
     static gmp_value_type apply(const std::string& source)
     {
-        gmp_value_type result;
-        mpf_init(result.m_value);
-        mpf_set_str(result.m_value, source.c_str(), 10);
-        return result;
+        return to_traits<gmp_value_type, const char*>::apply(source.c_str());
     }
 };
 
