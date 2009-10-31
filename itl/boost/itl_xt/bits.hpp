@@ -23,6 +23,19 @@ namespace boost{namespace itl
 
 typedef short bit_range_type;
 
+namespace bitcount
+{
+	template<typename WordT, bit_range_type Digits>
+	struct count
+	{
+		typedef WordT                   word_type;
+		typedef count<word_type,Digits> type;
+
+		static bit_range_type apply(WordT value);
+	};
+}
+
+
 template<class NaturalT> class bits
 	: equality_comparable  < bits<NaturalT>
     , less_than_comparable < bits<NaturalT>
@@ -125,15 +138,6 @@ static unsigned char table[] =
 	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
 	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
 	3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
-};
-
-template<typename WordT, bit_range_type Digits>
-struct count
-{
-	typedef WordT                   word_type;
-	typedef count<word_type,Digits> type;
-
-	static bit_range_type apply(WordT value);
 };
 
 template<>
