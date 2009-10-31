@@ -117,7 +117,7 @@ public:
 	size_type interval_count()const { return _map.interval_count(); }
 	size_type iterative_size()const { return _map.iterative_size(); }
 
-	bool contains(element_type element)const{_map(element>>shift).contains(element & mask);}
+	bool contains(element_type element)const{ return _map(element>>shift).contains(element & mask); }
 	bool contains(const segment_type& segment)const;
 	bool contains(const interval_bitset& sub)const      { return _map.contains(sub._map); }
 	bool contained_in(const interval_bitset& super)const{ return _map.contained_in(super._map); }
@@ -295,7 +295,7 @@ void interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::show_segments()con
 }
 
 template<class DomainT,	class BitSetT, ITL_COMPARE Compare, template<class, ITL_COMPARE>class Interval, ITL_ALLOC Alloc> 
-void interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::show_matrix(const char off_on[2] = " 1")const
+void interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::show_matrix(const char off_on[2])const
 {
     typename interval_bitmap_type::const_iterator iter = _map.begin();
     while(iter != _map.end())

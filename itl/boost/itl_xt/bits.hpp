@@ -114,7 +114,7 @@ int inclusion_compare(itl::bits<NaturalT> left, itl::bits<NaturalT> right)
     if(0 ==(left.word() & right.word())) return inclusion::unrelated;
     else if(left.word() < right.word() ) return inclusion::subset;
     else if(left.word() > right.word() ) return inclusion::superset;
-    else                                     return inclusion::equal;
+    else                                 return inclusion::equal;
 }
 
 
@@ -179,21 +179,21 @@ struct count<nat32, 32>
 
 };
 
-template<>
-struct count<unsigned int, 32>
-{
-	typedef unsigned int            word_type;
-	typedef count<word_type,32> type;
-
-	static bit_range_type apply(word_type value)
-	{ 
-		return table[ value        & 0xfful]
-			 + table[(value >>  8) & 0xfful]
-			 + table[(value >> 16) & 0xfful]
-			 + table[(value >> 24) & 0xfful];
-	}
-
-};
+//template<>
+//struct count<unsigned int, 32>
+//{
+//	typedef unsigned int            word_type;
+//	typedef count<word_type,32> type;
+//
+//	static bit_range_type apply(word_type value)
+//	{ 
+//		return table[ value        & 0xfful]
+//			 + table[(value >>  8) & 0xfful]
+//			 + table[(value >> 16) & 0xfful]
+//			 + table[(value >> 24) & 0xfful];
+//	}
+//
+//};
 
 template<>
 struct count<nat64, 64>
