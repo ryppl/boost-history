@@ -18,8 +18,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     x == {[1,2)[2,3)[3,4)}
     \endcode
     ... using this property we can intersect splitting interval containers
-	in order to iterate over intervals accounting for all changes of 
-	interval borders.
+    in order to iterate over intervals accounting for all changes of 
+    interval borders.
 
     In this example we provide an intersection of two split_interval_sets
     representing a month and week time grid. 

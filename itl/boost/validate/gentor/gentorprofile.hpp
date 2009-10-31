@@ -168,9 +168,9 @@ namespace boost{namespace itl
     {
         static interval<unsigned int> get() 
         {
-			interval<cnat> inter_val = GentorProfileSgl::it()->range_nat();
-			return interval<unsigned int>::rightopen(inter_val.lower(), inter_val.upper());
-		}
+            interval<cnat> inter_val = GentorProfileSgl::it()->range_nat();
+            return interval<unsigned int>::rightopen(inter_val.lower(), inter_val.upper());
+        }
     };
 
     template<>

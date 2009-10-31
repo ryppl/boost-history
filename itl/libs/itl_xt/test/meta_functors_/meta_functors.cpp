@@ -162,7 +162,7 @@ public:
     int value()const { return _value; }
 
     std::string as_string()const
-	{ return itl::to_string<int>::apply(_value); }
+    { return itl::to_string<int>::apply(_value); }
 
 private:
     int _value;

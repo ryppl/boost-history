@@ -43,13 +43,13 @@ BOOST_AUTO_TEST_CASE(casual_test)
     typedef split_interval_map<int,int> SplitIntervalMapT;
     typedef interval_map<int,int>       IntervalMapT;
 
-	interval_bitset<nat> ibs;
+    interval_bitset<nat> ibs;
 
-	ibs += interval<nat>::rightopen(0,64);
-	int sz = ibs.size();
-	cout << ibs.size() << endl;
+    ibs += interval<nat>::rightopen(0,64);
+    int sz = ibs.size();
+    cout << ibs.size() << endl;
 
-	bool contains = ibs.contains(interval<nat>(11,63));
-	cout << "contains=" << contains << endl;
+    bool contains = ibs.contains(interval<nat>(11,63));
+    cout << "contains=" << contains << endl;
 }
 

@@ -270,7 +270,7 @@ namespace boost{namespace itl
         ChoiceT            _domainChoice;
         ChoiceT            _codomainChoice;
         ChoiceT            _neutronizerChoice;
-		ChoiceT            _freeChoice;
+        ChoiceT            _freeChoice;
 
     private:
         algebra_validater* _validater;

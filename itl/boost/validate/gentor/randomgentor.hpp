@@ -549,7 +549,7 @@ namespace boost{namespace itl
   //      //    itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
   //      //    gentor.setDomainGentor(itvGentor);
   //      //}
-		////JODO 
+        ////JODO 
   //      static void apply(RandomGentor<interval_bitset<IntegralT,BitSetT> >& gentor) 
   //      {
   //          gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());

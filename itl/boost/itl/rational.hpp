@@ -22,12 +22,12 @@ itl_rational provides adapter code for boost::rational.
 
 namespace boost{namespace itl
 {
-	template<class Integral> 
-	struct is_continuous<boost::rational<Integral> >
-	{
-		typedef is_continuous<boost::rational<Integral> > type;
-		BOOST_STATIC_CONSTANT(bool, value = true);
-	};
+    template<class Integral> 
+    struct is_continuous<boost::rational<Integral> >
+    {
+        typedef is_continuous<boost::rational<Integral> > type;
+        BOOST_STATIC_CONSTANT(bool, value = true);
+    };
 }} // namespace itl boost
 
 

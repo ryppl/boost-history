@@ -25,19 +25,19 @@ typedef short bit_range_type;
 
 namespace bitcount
 {
-	template<typename WordT, bit_range_type Digits>
-	struct count
-	{
-		typedef WordT                   word_type;
-		typedef count<word_type,Digits> type;
+    template<typename WordT, bit_range_type Digits>
+    struct count
+    {
+        typedef WordT                   word_type;
+        typedef count<word_type,Digits> type;
 
-		static bit_range_type apply(WordT value);
-	};
+        static bit_range_type apply(WordT value);
+    };
 }
 
 
 template<class NaturalT> class bits
-	: equality_comparable  < bits<NaturalT>
+    : equality_comparable  < bits<NaturalT>
     , less_than_comparable < bits<NaturalT>
     , incrementable        < bits<NaturalT>
     , decrementable        < bits<NaturalT>
@@ -54,30 +54,30 @@ template<class NaturalT> class bits
     , xorable2             < bits<NaturalT>, bit_range_type
       > > > > > > > > > > >  >  >  >
     //^ & - | + ^ & - | + ++ -- < ==
-	//element   container
+    //element   container
 {
 public:
     typedef NaturalT         word_type;
-	typedef bit_range_type   bit_type;
+    typedef bit_range_type   bit_type;
     typedef bit_type         element_type; // pretty short: 0 <= max < digits
     typedef bit_type         size_type;
-	BOOST_STATIC_CONSTANT(bit_type, digits = std::numeric_limits<NaturalT>::digits);
+    BOOST_STATIC_CONSTANT(bit_type, digits = std::numeric_limits<NaturalT>::digits);
 
     bits():_bits(){}
     explicit bits(word_type value):_bits(value){}
 
     word_type word()const{ return _bits; }
 
-	bits&       add(bit_type value){_bits |=  (1 << value); return *this; }
-	bits&  subtract(bit_type value){_bits &= ~(1 << value); return *this; }
-	bits& intersect(bit_type value){_bits &=  (1 << value); return *this; }
-	bits&      flip(bit_type value){_bits ^=  (1 << value); return *this; }
+    bits&       add(bit_type value){_bits |=  (1 << value); return *this; }
+    bits&  subtract(bit_type value){_bits &= ~(1 << value); return *this; }
+    bits& intersect(bit_type value){_bits &=  (1 << value); return *this; }
+    bits&      flip(bit_type value){_bits ^=  (1 << value); return *this; }
 
-	bits& operator += (bit_type value){ return       add(value); }
-	bits& operator |= (bit_type value){ return       add(value); }
-	bits& operator -= (bit_type value){ return  subtract(value); }
-	bits& operator &= (bit_type value){ return intersect(value); }
-	bits& operator ^= (bit_type value){ return      flip(value); }
+    bits& operator += (bit_type value){ return       add(value); }
+    bits& operator |= (bit_type value){ return       add(value); }
+    bits& operator -= (bit_type value){ return  subtract(value); }
+    bits& operator &= (bit_type value){ return intersect(value); }
+    bits& operator ^= (bit_type value){ return      flip(value); }
 
     bits& operator += (const bits& value){_bits |= value._bits; return *this;}
     bits& operator |= (const bits& value){_bits |= value._bits; return *this;}
@@ -87,11 +87,11 @@ public:
     bool operator  <  (const bits& value)const{return _bits < value._bits;}
     bool operator  == (const bits& value)const{return _bits == value._bits;}
 
-	bool empty()const { return _bits == 0; }
-	bool contains(element_type element)const { return 0 != ((1 << element) & _bits); }
-	bool contains(const bits& sub)const { return inclusion::subset==inclusion_compare(sub,*this); }
-	size_type cardinality()const{ return bitcount::count<word_type, digits>::apply(_bits); }
-	size_type size()const       { return cardinality(); }
+    bool empty()const { return _bits == 0; }
+    bool contains(element_type element)const { return 0 != ((1 << element) & _bits); }
+    bool contains(const bits& sub)const { return inclusion::subset==inclusion_compare(sub,*this); }
+    size_type cardinality()const{ return bitcount::count<word_type, digits>::apply(_bits); }
+    size_type size()const       { return cardinality(); }
 
 private:
     word_type _bits;
@@ -130,89 +130,89 @@ namespace bitcount
 
 static unsigned char table[] =
 {
-	0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
-	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-	3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
+    0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+    1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+    1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+    2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+    1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+    2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+    2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+    3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
 };
 
 template<>
 struct count<nat8, 8>
 {
-	typedef nat8               word_type;
-	typedef count<word_type,8> type;
+    typedef nat8               word_type;
+    typedef count<word_type,8> type;
 
-	static bit_range_type apply(word_type value){ return table[value];}
+    static bit_range_type apply(word_type value){ return table[value];}
 };
 
 template<>
 struct count<nat16, 16>
 {
-	typedef nat16               word_type;
-	typedef count<word_type,16> type;
+    typedef nat16               word_type;
+    typedef count<word_type,16> type;
 
-	static bit_range_type apply(word_type value)
-	{ 
-		return table[ value        & 0xff]
-			 + table[(value >>  8) & 0xff];
-	}
+    static bit_range_type apply(word_type value)
+    { 
+        return table[ value        & 0xff]
+             + table[(value >>  8) & 0xff];
+    }
 };
 
 
 template<>
 struct count<nat32, 32>
 {
-	typedef nat32               word_type;
-	typedef count<word_type,32> type;
+    typedef nat32               word_type;
+    typedef count<word_type,32> type;
 
-	static bit_range_type apply(word_type value)
-	{ 
-		return table[ value        & 0xfful]
-			 + table[(value >>  8) & 0xfful]
-			 + table[(value >> 16) & 0xfful]
-			 + table[(value >> 24) & 0xfful];
-	}
+    static bit_range_type apply(word_type value)
+    { 
+        return table[ value        & 0xfful]
+             + table[(value >>  8) & 0xfful]
+             + table[(value >> 16) & 0xfful]
+             + table[(value >> 24) & 0xfful];
+    }
 
 };
 
 //template<>
 //struct count<unsigned int, 32>
 //{
-//	typedef unsigned int            word_type;
-//	typedef count<word_type,32> type;
+//    typedef unsigned int            word_type;
+//    typedef count<word_type,32> type;
 //
-//	static bit_range_type apply(word_type value)
-//	{ 
-//		return table[ value        & 0xfful]
-//			 + table[(value >>  8) & 0xfful]
-//			 + table[(value >> 16) & 0xfful]
-//			 + table[(value >> 24) & 0xfful];
-//	}
+//    static bit_range_type apply(word_type value)
+//    { 
+//        return table[ value        & 0xfful]
+//             + table[(value >>  8) & 0xfful]
+//             + table[(value >> 16) & 0xfful]
+//             + table[(value >> 24) & 0xfful];
+//    }
 //
 //};
 
 template<>
 struct count<nat64, 64>
 {
-	typedef nat64               word_type;
-	typedef count<word_type,64> type;
+    typedef nat64               word_type;
+    typedef count<word_type,64> type;
 
-	static bit_range_type compute(word_type value)	
-	{ 
-		return table[ value        & 0xffull]
-			 + table[(value >>  8) & 0xffull]
-			 + table[(value >> 16) & 0xffull]
-			 + table[(value >> 24) & 0xffull]
-			 + table[(value >> 32) & 0xffull]
-			 + table[(value >> 40) & 0xffull]
-			 + table[(value >> 48) & 0xffull]
-			 + table[(value >> 56) & 0xffull];
-			 ;
-	}
+    static bit_range_type compute(word_type value)    
+    { 
+        return table[ value        & 0xffull]
+             + table[(value >>  8) & 0xffull]
+             + table[(value >> 16) & 0xffull]
+             + table[(value >> 24) & 0xffull]
+             + table[(value >> 32) & 0xffull]
+             + table[(value >> 40) & 0xffull]
+             + table[(value >> 48) & 0xffull]
+             + table[(value >> 56) & 0xffull];
+             ;
+    }
 };
 
 } // namespace bitcount

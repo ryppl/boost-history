@@ -54,15 +54,15 @@ namespace boost{namespace itl
             switch(freeChoice)
             {
             case FreeChoice::_1:
-				return new itl_set_validater< interval_bitset<int, bits<unsigned char> > >; 
+                return new itl_set_validater< interval_bitset<int, bits<unsigned char> > >; 
             case FreeChoice::_2:
-				return new itl_order_validater< interval_bitset<int, bits<unsigned short> > >; 
+                return new itl_order_validater< interval_bitset<int, bits<unsigned short> > >; 
             case FreeChoice::_3:
-				return new itl_set_validater< interval_bitset<int, bits<unsigned int> > >; 
+                return new itl_set_validater< interval_bitset<int, bits<unsigned int> > >; 
             case FreeChoice::_4:
-				return new itl_order_validater< interval_bitset<int, bits<unsigned long> > >; 
+                return new itl_order_validater< interval_bitset<int, bits<unsigned long> > >; 
             case FreeChoice::_5:
-				return new itl_order_validater< interval_bitset<int, bits<unsigned long long> > >; 
+                return new itl_order_validater< interval_bitset<int, bits<unsigned long long> > >; 
             default: return choiceError(ITL_LOCATION("freeChoice:\n"), freeChoice, _freeChoice);
             } //switch()
 

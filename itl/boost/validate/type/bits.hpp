@@ -22,7 +22,7 @@ template<class NaturalT> class bits
 public:
     typedef NaturalT    chunk_type;
     typedef NaturalT    element_type;
-	typedef std::size_t size_type;
+    typedef std::size_t size_type;
 
     bits():_bits(){}
     explicit bits(NaturalT value):_bits(value){}
@@ -35,11 +35,11 @@ public:
     bool operator  <  (const bits& value)const{return _bits < value._bits;}
     bool operator  == (const bits& value)const{return _bits == value._bits;}
 
-	bool contains(element_type element)const{return 0 !=(_bits & element);} 
-	bool contains(const bits& value)const; //JODO
-	bool contained_in(const bits& value)const; //JODO
+    bool contains(element_type element)const{return 0 !=(_bits & element);} 
+    bool contains(const bits& value)const; //JODO
+    bool contained_in(const bits& value)const; //JODO
 
-	size_type cardinality()const{}
+    size_type cardinality()const{}
 
 private:
     NaturalT _bits;

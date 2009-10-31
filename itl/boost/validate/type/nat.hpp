@@ -43,7 +43,7 @@ public:
         return *this; 
     }
 
-	/*CL
+    /*CL
     cnat& operator ^= (const cnat& right) //JODO should not be required
     { 
         _value ^= right._value; 
@@ -54,7 +54,7 @@ public:
         _value &= right._value; 
         return *this; 
     }
-	*/
+    */
 
     //CL operator int()const{ return (_value); }
     operator unsigned int()const{ return (_value); }
