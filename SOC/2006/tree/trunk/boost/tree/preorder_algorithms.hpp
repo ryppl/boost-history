@@ -33,6 +33,8 @@ struct preorder {
 /**
  * @brief   Preorder successor
  * @param c Cursor to be set to its preorder successor
+ * @return	true if the operation succeeded;
+ * 			false if c already was the last element in preorder
  * 
  * Note that this is the reverse postorder predecessor. 
  */
@@ -63,8 +65,7 @@ successor(preorder, Cursor& c)
             if (!(++c).is_leaf())
                 return true;
     }
-    
-    //to_last(preorder(), c);
+
     return false;
 }
 
@@ -112,6 +113,8 @@ successor(preorder, Cursor& c, Cursor& r)
 /**
  * @brief   Preorder predecessor
  * @param c Cursor to be set to its preorder predecessor
+ * @return	true if the operation succeeded;
+ * 			false if c already was the first element in preorder
  * 
  * Note that this is the reverse postorder successor. 
  */
@@ -146,6 +149,8 @@ predecessor(preorder, Cursor& c)
  * @brief   First element of a subtree in preorder traversal
  * @param c Subtree root cursor that will be set to the first preorder 
  *          position in the subtree.
+ *
+ * Note that this is equivalent to the reverse postorder to_last.
  */
 template <class Cursor>
 BOOST_CONCEPT_REQUIRES(
@@ -155,10 +160,11 @@ to_first(preorder, Cursor& c)
 {}
 
 /**
- * @brief   One position past the last element of a subtree in preorder 
- *          traversal
+ * @brief   Last element of a subtree in preorder traversal
  * @param c Subtree root cursor that will be set to the last preorder 
  *          position in the subtree.
+ *
+ * Note that this is equivalent to the reverse postorder to_first.
  */
 template <class Cursor>
 void to_last(preorder, Cursor& c)
@@ -166,8 +172,6 @@ void to_last(preorder, Cursor& c)
     while (!c.is_leaf())
         if (c.to_end().is_leaf())
             --c;
-    //if (!index(c))
-    //    ++c;
     c.to_parent();
 }
 

@@ -34,9 +34,13 @@ struct inorder {
 };
 
 /**
- * @brief    Inorder successor
- * @param c    MultiwayCursor to be set to its inorder successor
- * @ingroup    traversal
+ * @brief	Inorder successor
+ * @param c	MultiwayCursor to be set to its inorder successor
+ * @return	true if the operation succeeded;
+ * 			false if c already was the last element in inorder
+ * @ingroup	traversal
+ *
+ * Note that this is equivalent to the reverse inorder successor.
  */
 template <class MultiwayCursor>
 inline
@@ -51,7 +55,6 @@ successor(inorder, MultiwayCursor& c)
         return true;
     }
 
-    //MultiwayCursor d = c;
     while (index(c) && !c.is_root())
         c.to_parent();
 
@@ -59,14 +62,18 @@ successor(inorder, MultiwayCursor& c)
         c.to_parent();
         return true;
     }
-    else // Move past the last inorder element
-        return false; //c = d; //to_last(inorder(), c);
+    else
+        return false;
     return true;
 }
 
 /**
- * @brief    Inorder predecessor
- * @param c    MultiwayCursor to be set to its inorder predecessor
+ * @brief	Inorder predecessor
+ * @param c	MultiwayCursor to be set to its inorder predecessor
+ * @return	true if the operation succeeded;
+ * 			false if c already was the first element in inorder
+ *
+ * Note that this is equivalent to the reverse inorder predecessor.
  */
 template <class MultiwayCursor>
 inline
@@ -88,14 +95,16 @@ predecessor(inorder, MultiwayCursor& c)
         c.to_parent();
         return true;
     }
-    else // Move past the last inorder element
-        return false; //c = d; //to_last(inorder(), c);
+    else
+        return false;
 }
 
 /**
  * @brief   First element of a subtree in inorder traversal
  * @param c Subtree root cursor that will be set to the first inorder 
  *          position in the subtree.
+ *
+ * Note that this is equivalent to the reverse inorder to_last.
  */
 template <class Cursor>
 BOOST_CONCEPT_REQUIRES(
@@ -134,6 +143,8 @@ to_first(inorder, Cursor& c, ascending_vertical_traversal_tag)
  * @brief   Last element of a subtree in inorder traversal
  * @param c Subtree root cursor that will be set to the last inorder 
  *          position in the subtree.
+ *
+ * Note that this is equivalent to the reverse inorder to_first.
  */
 template <class Cursor>
 BOOST_CONCEPT_REQUIRES(

@@ -33,8 +33,10 @@ struct postorder {
 /**
  * @brief   Postorder successor
  * @param c Cursor to be set to its postorder successor
+ * @return	true if the operation succeeded;
+ * 			false if c already was the last element in postorder
  * 
- * Note that this is the reverse preorder predecessor. 
+ * Note that this is equivalent to the reverse preorder predecessor.
  */
 template <class Cursor>
 inline
@@ -66,8 +68,10 @@ successor(postorder, Cursor& c)
 /**
  * @brief   Postorder predecessor
  * @param c Cursor to be set to its postorder predecessor
+ * @return	true if the operation succeeded;
+ * 			false if c already was the first element in postorder
  * 
- * Note that this is the reverse preorder successor. 
+ * Note that this is equivalent to the reverse preorder successor.
  */
 template <class Cursor>
 inline
@@ -97,6 +101,8 @@ predecessor(postorder, Cursor& c)
  * @brief   First element of a subtree in postorder traversal
  * @param c Subtree root cursor that will be set to the first postorder 
  *          position in the subtree.
+ *
+ * Note that this is equivalent to the reverse preorder to_last.
  */
 template <class Cursor>
 BOOST_CONCEPT_REQUIRES(
@@ -113,16 +119,16 @@ to_first(postorder, Cursor& c)
             c = d;
             d.to_begin();
         } else {
-            //--c;
             return;
         }
 }
 
 /**
- * @brief   One position past the last element of a subtree in postorder 
- *          traversal
+ * @brief   Last element of a subtree in postorder traversal
  * @param c Subtree root cursor that will be set to the last postorder 
  *          position in the subtree.
+ *
+ * Note that this is equivalent to the reverse preorder to_first.
  */
 template <class Cursor>
 void to_last(postorder, Cursor& c)

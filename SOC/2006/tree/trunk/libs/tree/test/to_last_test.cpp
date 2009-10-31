@@ -36,4 +36,25 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_to_last, Order, orders )
 //    BOOST_CHECK_EQUAL(*c, cie->val);
 }
 
+BOOST_AUTO_TEST_CASE( test_to_past )
+{
+    fake_root_tracking_binary_tree<int> frbt1(fbt1);
+    fake_root_tracking_binary_tree<int>::cursor c = frbt1.root();
+    fake_root_tracking_binary_tree<int>::cursor d = frbt1.root();
+
+    boost::tree::to_past(inorder(), c);
+    fake_to_past(inorder(), d);
+    BOOST_CHECK(c == d);
+
+	c = frbt1.root();
+    fake_to_last(inorder(), c);
+    boost::tree::last_to_past(inorder(), c);
+    BOOST_CHECK(c == d);
+
+    d = frbt1.root();
+    fake_to_last(inorder(), d);
+    boost::tree::past_to_last(inorder(), c);
+    BOOST_CHECK(c == d);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

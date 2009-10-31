@@ -46,12 +46,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, orders )
     typename container_type::const_reverse_iterator ci = order_index.rbegin();
     typename container_type::const_reverse_iterator cie = order_index.rend();
 
-    //BOOST_CHECK_EQUAL(*c, ci->val);
     --cie;
     for (; ci!=cie; ++ci) {
         BOOST_CHECK_EQUAL(*c, ci->val);
         BOOST_CHECK_EQUAL(boost::tree::predecessor(Order(), c), true);
     }
+
+    BOOST_CHECK_EQUAL(*c, ci->val);
 
     fake_root_tracking_binary_tree<int>::cursor d = frbt1.root();
     fake_to_first(Order(), d);
