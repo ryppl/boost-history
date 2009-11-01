@@ -39,7 +39,7 @@ namespace boost { namespace fusion
                     BOOST_FUSION_MAX_SEQ_SIZE,BOOST_FUSION_N)
         {
             typedef
-                BOOST_FUSION_SEQ_NAME<
+                BOOST_FUSION_SEQ_NAME(BOOST_FUSION_N)<
                     EXPAND_TEMPLATE_ARGUMENTS_BINARY(
                             BOOST_FUSION_N,
                             typename detail::deduce_ref<,

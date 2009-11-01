@@ -8,9 +8,14 @@
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_MAKE_LIST_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_MAKE_LIST_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/container/list/list.hpp>
 
-#define BOOST_FUSION_SEQ_NAME list
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   define BOOST_FUSION_SEQ_NAME(N) list
+#else
+#   define BOOST_FUSION_SEQ_NAME list
+#endif
 #define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_LIST_SIZE
 #include <boost/fusion/container/generation/detail/make_seq.hpp>
 #undef BOOST_FUSION_MAX_SEQ_SIZE

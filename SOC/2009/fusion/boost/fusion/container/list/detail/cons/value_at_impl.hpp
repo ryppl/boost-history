@@ -28,8 +28,8 @@ namespace boost { namespace fusion { namespace extension
             typedef typename
                 mpl::eval_if<
                     N
-                  , mpl::identity<typename seq::car_type>
                   , apply<typename seq::cdr_type, mpl::int_<N::value-1> >
+                  , mpl::identity<typename seq::car_type>
                 >::type
             type;
         };

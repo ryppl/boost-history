@@ -12,13 +12,14 @@
 
 #include <boost/preprocessor/iterate.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/empty.hpp>
 
 namespace boost { namespace fusion
 {
     namespace result_of
     {
         VARIADIC_TEMPLATE_WITH_DEFAULT(BOOST_FUSION_MAX_SEQ_SIZE)
-        struct BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME);
+        struct BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME(BOOST_PP_EMPTY()));
     }
 
 #define BOOST_PP_FILENAME_1 <boost/fusion/container/generation/detail/pp/make_seq.hpp>
@@ -34,12 +35,12 @@ namespace boost { namespace fusion
     namespace result_of
     {
         VARIADIC_TEMPLATE(BOOST_FUSION_N)
-        struct BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)
+        struct BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME(BOOST_PP_EMPTY()))
             EXPAND_TEMPLATE_ARGUMENTS_SPECIALIZATION(
                 BOOST_FUSION_MAX_SEQ_SIZE,BOOST_FUSION_N)
         {
             typedef
-                BOOST_FUSION_SEQ_NAME<
+                BOOST_FUSION_SEQ_NAME(BOOST_FUSION_N)<
                     EXPAND_TEMPLATE_ARGUMENTS_BINARY(
                             BOOST_FUSION_N,
                             typename traits::deduce<,
@@ -55,17 +56,17 @@ namespace boost { namespace fusion
 #if BOOST_FUSION_N
         typename
 #endif
-        result_of::BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)<
+        result_of::BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME(BOOST_PP_EMPTY()))<
             EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_CLREF(BOOST_FUSION_N)
         >::type
-    BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)(
+    BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME(BOOST_PP_EMPTY()))(
         EXPAND_TEMPLATE_ARGUMENTS_PARAMETERS_A_R_ELSE_CLREF(BOOST_FUSION_N))
     {
         return
 #if BOOST_FUSION_N
             typename
 #endif
-            result_of::BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)<
+            result_of::BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME(BOOST_PP_EMPTY()))<
                 EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_CLREF(BOOST_FUSION_N)
             >::type(EXPAND_PARAMETERS_A(BOOST_FUSION_N));
     }
