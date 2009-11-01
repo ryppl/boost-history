@@ -9,7 +9,6 @@
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_HPP
 
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/container/list/list_fwd.hpp>
 #   include <boost/fusion/sequence/intrinsic/size.hpp>
 #endif
 #include <boost/fusion/support/tag_of.hpp>
@@ -25,6 +24,10 @@
 namespace boost { namespace fusion
 {
     struct sequence_facade_tag;
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+    struct list_tag;
+    struct cons_tag;
+#endif
 
     namespace extension
     {
@@ -57,6 +60,10 @@ namespace boost { namespace fusion
                         typename traits::tag_of<Seq>::type
                       , list_tag
                     >
+                  , is_same<
+                        typename traits::tag_of<Seq>::type
+                      , cons_tag
+                    >
                 >));
             BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value);
             BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value);
@@ -73,6 +80,10 @@ namespace boost { namespace fusion
                   , is_same<
                         typename traits::tag_of<Seq>::type
                       , list_tag
+                    >
+                  , is_same<
+                        typename traits::tag_of<Seq>::type
+                      , cons_tag
                     >
                 >));
             BOOST_FUSION_INDEX_CHECK(N,size<Seq>::value);
