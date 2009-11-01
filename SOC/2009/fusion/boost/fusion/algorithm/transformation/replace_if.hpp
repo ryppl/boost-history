@@ -40,17 +40,17 @@ namespace boost { namespace fusion
     template <typename Seq, typename F, typename NewValue>
     inline typename result_of::replace_if<
         BOOST_FUSION_R_ELSE_CLREF(Seq)
-      , BOOST_FUSION_R_ELSE_CLREF(F)
+      , BOOST_FUSION_RREF_ELSE_OBJ(F)
       , BOOST_FUSION_R_ELSE_CLREF(NewValue)
     >::type
     replace_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
-            BOOST_FUSION_R_ELSE_CLREF(F) pred,
+            BOOST_FUSION_RREF_ELSE_OBJ(F) pred,
             BOOST_FUSION_R_ELSE_CLREF(NewValue) new_value)
     {
         typedef
             result_of::replace_if<
                 BOOST_FUSION_R_ELSE_CLREF(Seq)
-              , BOOST_FUSION_R_ELSE_CLREF(F)
+              , BOOST_FUSION_RREF_ELSE_OBJ(F)
               , BOOST_FUSION_R_ELSE_CLREF(NewValue)
             >
         result;
@@ -63,10 +63,10 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename F, typename NewValue>
-    inline typename result_of::replace_if<Seq&, F const&, NewValue const&>::type
-    replace_if(Seq& seq,F const& pred,NewValue const& new_value)
+    inline typename result_of::replace_if<Seq&, F, NewValue const&>::type
+    replace_if(Seq& seq,F pred,NewValue const& new_value)
     {
-        typedef result_of::replace_if<Seq&, F const&, NewValue const&> result;
+        typedef result_of::replace_if<Seq&, F, NewValue const&> result;
 
         return typename result::type(seq,
                 typename result::replacer(pred,new_value));

@@ -31,9 +31,9 @@ namespace boost { namespace fusion
     inline typename
         result_of::none<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
-          , BOOST_FUSION_R_ELSE_CLREF(F)
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)
         >::type
-    none(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
+    none(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
         return !fusion::any(
                 BOOST_FUSION_FORWARD(Seq,seq),
@@ -42,8 +42,8 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename F>
-    inline typename result_of::none<Seq&, F const&>::type
-    none(Seq& seq, F const& f)
+    inline typename result_of::none<Seq&, F>::type
+    none(Seq& seq, F f)
     {
         return !fusion::any(seq,f);
     }

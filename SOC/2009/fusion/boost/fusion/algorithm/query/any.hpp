@@ -19,23 +19,23 @@ namespace boost { namespace fusion
 {
     namespace detail
     {
-        template<typename FRef>
+        template<typename F>
         struct any_helper
         {
             typedef bool result_type;
 
-            any_helper(FRef f)
+            any_helper(F f)
               : f(f)
             {}
 
             template<typename E>
             inline bool
-            operator()(BOOST_FUSION_R_ELSE_CLREF(E) e)const
+            operator()(BOOST_FUSION_R_ELSE_CLREF(E) e)
             {
                 return !f(BOOST_FUSION_FORWARD(E,e));
             }
 
-            FRef f;
+            F f;
         };
     }
 
@@ -55,21 +55,21 @@ namespace boost { namespace fusion
     inline typename
         result_of::any<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
-          , BOOST_FUSION_R_ELSE_CLREF(F)
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)
         >::type
-    any(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
+    any(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
         return !fusion::all(
                 BOOST_FUSION_FORWARD(Seq,seq),
-                detail::any_helper<BOOST_FUSION_R_ELSE_CLREF(F)>(f));
+                detail::any_helper<BOOST_FUSION_RREF_ELSE_OBJ(F)>(f));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename F>
-    inline typename result_of::any<Seq&,F const&>::type
-    any(Seq& seq, F const& f)
+    inline typename result_of::any<Seq&,F>::type
+    any(Seq& seq, F f)
     {
-        return !fusion::all(seq,detail::any_helper<F const&>(f));
+        return !fusion::all(seq,detail::any_helper<F>(f));
     }
 #endif
 }}

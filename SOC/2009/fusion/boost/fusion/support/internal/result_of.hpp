@@ -53,10 +53,10 @@ namespace boost { namespace fusion { namespace detail
     //T(C::*cv&)()cv&
     //& -> &&
 
-    template<typename FRef>
+    template<typename F>
     struct is_po_callable
     {
-        typedef typename identity<FRef>::type identity_f;
+        typedef typename identity<F>::type identity_f;
         typedef typename is_pointer<identity_f>::type is_pointer;
         typedef typename remove_pointer<identity_f>::type f;
 
@@ -144,7 +144,7 @@ namespace boost { namespace fusion { namespace detail
     };
 #endif
 
-    template<typename FRef>
+    template<typename F>
     struct preevaluate
     {
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) && !defined(BOOST_NO_DECLTYPE)
@@ -152,7 +152,7 @@ namespace boost { namespace fusion { namespace detail
 #else
         typedef
             preevaluate_impl<
-                typename remove_pointer<typename identity<FRef>::type>::type
+                typename remove_pointer<typename identity<F>::type>::type
             >
         gen;
         typedef typename gen::type type;
@@ -161,15 +161,17 @@ namespace boost { namespace fusion { namespace detail
     };
 
     //cschmidt: boost::result_of does not like ref-qualified
-    //'class type' functions
-    template<typename FRef>
+    //'class type' functors
+    template<typename F>
     struct get_func_base
     {
+        typedef is_po_callable<F> is_po_callable_;
+
         typedef typename
             mpl::if_<
-                typename is_po_callable<FRef>::type
-              , FRef
-              , typename is_po_callable<FRef>::f
+                typename is_po_callable_::type
+              , typename is_po_callable_::f&
+              , typename is_po_callable_::identity_f
             >::type
         type;
     };

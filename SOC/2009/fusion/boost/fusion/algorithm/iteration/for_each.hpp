@@ -34,10 +34,10 @@ namespace boost { namespace fusion
     inline typename
         result_of::for_each<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
-          , BOOST_FUSION_R_ELSE_CLREF(F)
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)
         >::type
     for_each(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
-             BOOST_FUSION_R_ELSE_CLREF(F) f)
+            BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
         detail::for_each_unrolled<
             result_of::size<BOOST_FUSION_R_ELSE_CLREF(Seq)>::value
@@ -47,8 +47,8 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename F>
-    inline typename result_of::for_each<Seq&,F const&>::type
-    for_each(Seq& seq,F const& f)
+    inline typename result_of::for_each<Seq&,F>::type
+    for_each(Seq& seq,F f)
     {
         detail::for_each_unrolled<result_of::size<Seq>::value>::call(
                 fusion::begin(seq),f);

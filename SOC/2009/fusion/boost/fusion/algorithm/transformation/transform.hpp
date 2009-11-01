@@ -82,16 +82,16 @@ namespace boost { namespace fusion
     inline typename
         result_of::transform<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
-          , BOOST_FUSION_R_ELSE_CLREF(F)
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)
           , IsAssociative
         >::type
     transform(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
-            BOOST_FUSION_R_ELSE_CLREF(F) f)
+            BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
         return typename
             result_of::transform<
                 BOOST_FUSION_R_ELSE_CLREF(Seq)
-              , BOOST_FUSION_R_ELSE_CLREF(F)
+              , BOOST_FUSION_RREF_ELSE_OBJ(F)
               , IsAssociative
             >::type(BOOST_FUSION_FORWARD(Seq,seq), BOOST_FUSION_FORWARD(F,f));
     }
@@ -100,46 +100,39 @@ namespace boost { namespace fusion
     inline typename
         result_of::transform<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
-          , BOOST_FUSION_R_ELSE_CLREF(F)
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)
         >::type
     transform(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
-            BOOST_FUSION_R_ELSE_CLREF(F) f)
+            BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
         return typename
             result_of::transform<
                 BOOST_FUSION_R_ELSE_CLREF(Seq)
-              , BOOST_FUSION_R_ELSE_CLREF(F)
+              , BOOST_FUSION_RREF_ELSE_OBJ(F)
             >::type(BOOST_FUSION_FORWARD(Seq,seq), BOOST_FUSION_FORWARD(F,f));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename IsAssociative,typename Seq, typename F>
-    inline typename result_of::transform<Seq&, F const&>::type
-    transform(Seq& seq, F const& f)
+    inline typename result_of::transform<Seq&, F>::type
+    transform(Seq& seq, F f)
     {
 #ifdef BOOST_MSVC
 #   pragma warning(push)
 #   pragma warning(disable: 4180)
 #endif
         return typename
-            result_of::transform<Seq&, F const&,IsAssociative>::type(seq, f);
+            result_of::transform<Seq&, F,IsAssociative>::type(seq, f);
 #ifdef BOOST_MSVC
 #   pragma warning(pop)
 #endif
     }
 
     template <typename Seq, typename F>
-    inline typename result_of::transform<Seq&, F const&>::type
-    transform(Seq& seq, F const& f)
+    inline typename result_of::transform<Seq&, F>::type
+    transform(Seq& seq, F f)
     {
-#ifdef BOOST_MSVC
-#   pragma warning(push)
-#   pragma warning(disable: 4180)
-#endif
-        return typename result_of::transform<Seq&, F const&>::type(seq, f);
-#ifdef BOOST_MSVC
-#   pragma warning(pop)
-#endif
+        return typename result_of::transform<Seq&, F>::type(seq, f);
     }
 #endif
 
@@ -149,18 +142,18 @@ namespace boost { namespace fusion
         result_of::transform<\
             Seq1 SEQ1_CV_REF_MODIFIER\
           , Seq2 SEQ2_CV_REF_MODIFIER\
-          , BOOST_FUSION_R_ELSE_CLREF(F)\
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)\
           , IsAssociative\
         >::type\
     transform(Seq1 SEQ1_CV_REF_MODIFIER seq1\
           , Seq2 SEQ2_CV_REF_MODIFIER seq2\
-          , BOOST_FUSION_R_ELSE_CLREF(F) f)\
+          , BOOST_FUSION_RREF_ELSE_OBJ(F) f)\
     {\
         return typename\
             result_of::transform<\
                 Seq1 SEQ1_CV_REF_MODIFIER\
               , Seq2 SEQ2_CV_REF_MODIFIER\
-              , BOOST_FUSION_R_ELSE_CLREF(F)\
+              , BOOST_FUSION_RREF_ELSE_OBJ(F)\
               , IsAssociative\
             >::type(BOOST_FUSION_FORWARD(Seq1 SEQ1_CV_REF_MODIFIER,seq1)\
                   , BOOST_FUSION_FORWARD(Seq2 SEQ2_CV_REF_MODIFIER,seq2)\
@@ -172,17 +165,17 @@ namespace boost { namespace fusion
         result_of::transform<\
             Seq1 SEQ1_CV_REF_MODIFIER\
           , Seq2 SEQ2_CV_REF_MODIFIER\
-          , BOOST_FUSION_R_ELSE_CLREF(F)\
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)\
         >::type\
     transform(Seq1 SEQ1_CV_REF_MODIFIER seq1\
           , Seq2 SEQ2_CV_REF_MODIFIER seq2\
-          , BOOST_FUSION_R_ELSE_CLREF(F) f)\
+          , BOOST_FUSION_RREF_ELSE_OBJ(F) f)\
     {\
         return typename\
             result_of::transform<\
                 Seq1 SEQ1_CV_REF_MODIFIER\
               , Seq2 SEQ2_CV_REF_MODIFIER\
-              , BOOST_FUSION_R_ELSE_CLREF(F)\
+              , BOOST_FUSION_RREF_ELSE_OBJ(F)\
             >::type(BOOST_FUSION_FORWARD(Seq1 SEQ1_CV_REF_MODIFIER,seq1)\
                   , BOOST_FUSION_FORWARD(Seq2 SEQ2_CV_REF_MODIFIER,seq2)\
                   , BOOST_FUSION_FORWARD(F,f));\

@@ -36,6 +36,7 @@
 //get a lot of problems with older compilers. On top of that, fusion
 //types are not meant to be volatile anyway.
 #ifdef BOOST_NO_RVALUE_REFERENCES
+#   define BOOST_FUSION_RREF_ELSE_OBJ(OBJECT) OBJECT
 #   define BOOST_FUSION_R_ELSE_LREF(OBJECT) OBJECT&
 #   define BOOST_FUSION_R_ELSE_CLREF(OBJECT) OBJECT const&
 
@@ -47,6 +48,7 @@
         MACRO(const&,ARG)\
         MACRO(&,ARG)
 #else
+#   define BOOST_FUSION_RREF_ELSE_OBJ(OBJECT) OBJECT&&
 #   define BOOST_FUSION_R_ELSE_LREF(OBJECT) OBJECT&&
 #   define BOOST_FUSION_R_ELSE_CLREF(OBJECT) OBJECT&&
 

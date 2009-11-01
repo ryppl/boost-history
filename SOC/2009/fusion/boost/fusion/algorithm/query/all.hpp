@@ -35,9 +35,9 @@ namespace boost { namespace fusion
     inline typename
         result_of::all<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
-          , BOOST_FUSION_R_ELSE_CLREF(F)
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)
         >::type
-    all(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
+    all(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
         return
             detail::unrolled_all<
@@ -49,8 +49,8 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename F>
-    inline typename result_of::all<Seq&, F const&>::type
-    all(Seq& seq, F const& f)
+    inline typename result_of::all<Seq&, F>::type
+    all(Seq& seq, F f)
     {
         return
             detail::unrolled_all<

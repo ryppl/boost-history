@@ -18,23 +18,23 @@ namespace boost { namespace fusion
 {
     namespace detail
     {
-        template<typename FRef>
+        template<typename F>
         struct count_if_helper
         {
             typedef int result_type;
 
-            count_if_helper(FRef f)
+            count_if_helper(F f)
               : f(f)
             {}
 
             template<typename E>
             inline int
-            operator()(int count, BOOST_FUSION_R_ELSE_CLREF(E) e)const
+            operator()(int count, BOOST_FUSION_R_ELSE_CLREF(E) e)
             {
                 return f(BOOST_FUSION_FORWARD(E,e)) ? ++count : count;
             }
 
-            FRef f;
+            F f;
         };
     }
 
@@ -54,23 +54,23 @@ namespace boost { namespace fusion
     inline typename
         result_of::count_if<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
-          , BOOST_FUSION_R_ELSE_CLREF(F)
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)
         >::type
-    count_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
+    count_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
         return fold(BOOST_FUSION_FORWARD(Seq,seq),
             0,
-            detail::count_if_helper<BOOST_FUSION_R_ELSE_CLREF(F)>(f));
+            detail::count_if_helper<BOOST_FUSION_RREF_ELSE_OBJ(F)>(f));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename F>
-    inline typename result_of::count_if<Seq&,F const&>::type
-    count_if(Seq& seq, F const& f)
+    inline typename result_of::count_if<Seq&,F>::type
+    count_if(Seq& seq, F f)
     {
         return fold(seq,
             0,
-            detail::count_if_helper<F const&>(f));
+            detail::count_if_helper<F>(f));
     }
 #endif
 }}

@@ -24,7 +24,7 @@ namespace boost { namespace fusion { namespace detail
     struct for_each_unrolled
     {
         template<typename It0, typename F>
-        static void call(It0 const& it0, BOOST_FUSION_R_ELSE_CLREF(F) f)
+        static void call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             typedef typename result_of::next<It0 const&>::type It1;
             It1 it1(fusion::next(it0));
@@ -48,7 +48,7 @@ namespace boost { namespace fusion { namespace detail
     struct for_each_unrolled<3>
     {
         template<typename It0, typename F>
-        static void call(It0 const& it0, BOOST_FUSION_R_ELSE_CLREF(F) f)
+        static void call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             typedef typename result_of::next<It0 const&>::type It1;
             It1 it1(fusion::next(it0));
@@ -63,7 +63,7 @@ namespace boost { namespace fusion { namespace detail
     struct for_each_unrolled<2>
     {
         template<typename It0, typename F>
-        static void call(It0 const& it0, BOOST_FUSION_R_ELSE_CLREF(F) f)
+        static void call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             f(fusion::deref(it0));
             f(fusion::deref(fusion::next(it0)));
@@ -74,7 +74,7 @@ namespace boost { namespace fusion { namespace detail
     struct for_each_unrolled<1>
     {
         template<typename It0, typename F>
-        static void call(It0 const& it0, BOOST_FUSION_R_ELSE_CLREF(F) f)
+        static void call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             f(fusion::deref(it0));
         }
@@ -84,7 +84,7 @@ namespace boost { namespace fusion { namespace detail
     struct for_each_unrolled<0>
     {
         template<typename It, typename F>
-        static void call(It const&, BOOST_FUSION_R_ELSE_CLREF(F))
+        static void call(It const&, BOOST_FUSION_RREF_ELSE_OBJ(F))
         {}
     };
 }}}

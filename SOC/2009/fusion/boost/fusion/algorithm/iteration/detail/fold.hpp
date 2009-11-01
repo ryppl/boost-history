@@ -36,7 +36,7 @@ namespace boost { namespace fusion { namespace detail
         static Result
         call(BOOST_FUSION_R_ELSE_CLREF(State) state,
                 It0 const& it0,
-                BOOST_FUSION_R_ELSE_CLREF(F) f)
+                BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             typedef typename result_of::next<It0 const&>::type It1;
             It1 it1 = fusion::next(it0);
@@ -71,7 +71,7 @@ namespace boost { namespace fusion { namespace detail
         static Result
         call(BOOST_FUSION_R_ELSE_CLREF(State) state,
                 It0 const& it0,
-                BOOST_FUSION_R_ELSE_CLREF(F) f)
+                BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             typedef typename result_of::next<It0 const&>::type It1;
             It1 it1 = fusion::next(it0);
@@ -98,7 +98,7 @@ namespace boost { namespace fusion { namespace detail
         static Result
         call(BOOST_FUSION_R_ELSE_CLREF(State) state,
                 It0 const& it0,
-                BOOST_FUSION_R_ELSE_CLREF(F) f)
+                BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             return f(
                     f(BOOST_FUSION_FORWARD(State,state),fusion::deref(it0)),
@@ -113,7 +113,7 @@ namespace boost { namespace fusion { namespace detail
         static Result
         call(BOOST_FUSION_R_ELSE_CLREF(State) state,
                 It0 const& it0,
-                BOOST_FUSION_R_ELSE_CLREF(F) f)
+                BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             return f(BOOST_FUSION_FORWARD(State,state),fusion::deref(it0));
         }
@@ -126,7 +126,7 @@ namespace boost { namespace fusion { namespace detail
         static Result
         call(BOOST_FUSION_R_ELSE_CLREF(State) state,
                 It0 const&,
-                BOOST_FUSION_R_ELSE_CLREF(F))
+                BOOST_FUSION_RREF_ELSE_OBJ(F))
         {
             return state;
         }
@@ -218,10 +218,10 @@ namespace boost { namespace fusion { namespace detail
         typedef StateRef type;
     };
 
-    template<typename StateRef, typename It0, typename FRef, int SeqSize>
+    template<typename StateRef, typename It0, typename F, int SeqSize>
     struct result_of_unrolled_fold_first
     {
-        typedef typename get_func_base<FRef>::type f;
+        typedef typename get_func_base<F>::type f;
 
         typedef typename
             result_of_unrolled_fold<
@@ -233,10 +233,10 @@ namespace boost { namespace fusion { namespace detail
         type;
     };
 
-    template<int SeqSize, typename StateRef, typename It0, typename FRef>
+    template<int SeqSize, typename StateRef, typename It0, typename F>
     struct fold_impl
     {
-        typedef preevaluate<FRef> preevaluater;
+        typedef preevaluate<F> preevaluater;
 
         typedef typename
             mpl::eval_if<
@@ -245,29 +245,29 @@ namespace boost { namespace fusion { namespace detail
               , result_of_unrolled_fold_first<
                     StateRef
                   , It0
-                  , FRef
+                  , F
                   , SeqSize
                 >
             >::type
         type;
 
         static type
-        call(StateRef state, It0 const& it0, FRef f)
+        call(StateRef state, It0 const& it0, F f)
         {
             return unrolled_fold<type, SeqSize>::call(
                     BOOST_FUSION_FORWARD(StateRef,state),
                     it0,
-                    BOOST_FUSION_FORWARD(FRef,f));
+                    BOOST_FUSION_FORWARD(F,f));
         }
     };
 
-    template<typename StateRef, typename It0, typename FRef>
-    struct fold_impl<0,StateRef,It0,FRef>
+    template<typename StateRef, typename It0, typename F>
+    struct fold_impl<0,StateRef,It0,F>
     {
         typedef StateRef type;
 
         static StateRef
-        call(StateRef state, It0 const&, FRef)
+        call(StateRef state, It0 const&, F)
         {
             return state;
         }

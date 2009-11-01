@@ -24,7 +24,7 @@ namespace boost { namespace fusion { namespace detail
     {
         template <typename It0, typename F>
         static bool
-        call(It0 const& it0, BOOST_FUSION_R_ELSE_CLREF(F) f)
+        call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             if(!f(fusion::deref(it0)))
             {
@@ -63,7 +63,7 @@ namespace boost { namespace fusion { namespace detail
     {
         template <typename It0, typename F>
         static bool
-        call(It0 const& it0, BOOST_FUSION_R_ELSE_CLREF(F) f)
+        call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             if(!f(fusion::deref(it0)))
             {
@@ -88,7 +88,7 @@ namespace boost { namespace fusion { namespace detail
     {
         template <typename It0, typename F>
         static bool
-        call(It0 const& it0, BOOST_FUSION_R_ELSE_CLREF(F) f)
+        call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             if(!f(fusion::deref(it0)))
             {
@@ -106,7 +106,7 @@ namespace boost { namespace fusion { namespace detail
     {
         template <typename It0, typename F>
         static bool
-        call(It0 const& it0, BOOST_FUSION_R_ELSE_CLREF(F) f)
+        call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             return f(fusion::deref(it0));
         }
@@ -121,7 +121,7 @@ namespace boost { namespace fusion { namespace detail
         constexpr
 #endif
         bool
-        call(It0 const& it0, F const& f)
+        call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
             return true;
         }

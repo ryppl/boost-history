@@ -39,7 +39,7 @@ namespace boost { namespace fusion
 #endif
                 >::type
               , typename begin<Seq>::type
-              , typename detail::add_lref<F>::type
+              , F
             >
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
@@ -52,36 +52,29 @@ namespace boost { namespace fusion
         result_of::fold<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
           , BOOST_FUSION_R_ELSE_CLREF(State)
-          , BOOST_FUSION_R_ELSE_CLREF(F)
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)
         >::type
     fold(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
          BOOST_FUSION_R_ELSE_CLREF(State) state,
-         BOOST_FUSION_R_ELSE_CLREF(F) f)
+         BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
         return
             result_of::fold<
                 BOOST_FUSION_R_ELSE_CLREF(Seq)
               , BOOST_FUSION_R_ELSE_CLREF(State)
-              , BOOST_FUSION_R_ELSE_CLREF(F)
+              , BOOST_FUSION_RREF_ELSE_OBJ(F)
             >::call(state, fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)), f);
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename State, typename F>
-    inline typename result_of::fold<Seq&,State const&,F const&>::type
+    inline typename result_of::fold<Seq&,State const&,F>::type
     fold(Seq& seq,
          State const& state,
-         F const& f)
+         F f)
     {
-#ifdef BOOST_MSVC
-#   pragma warning(push)
-#   pragma warning(disable: 4180)
-#endif
-        return result_of::fold<Seq&,State const&,F const&>::call(
+        return result_of::fold<Seq&,State const&,F>::call(
                 state, fusion::begin(seq), f);
-#ifdef BOOST_MSVC
-#   pragma warning(pop)
-#endif
     }
 #endif
 }}
