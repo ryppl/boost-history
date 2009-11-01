@@ -45,19 +45,6 @@ struct cln_value_type
         m_value = cln::cl_float(v, cln::float_format(256));
     }
 
-    cln_value_type(char const* s)
-        : m_value(cln::cl_float(0.0, cln::float_format(256)))
-    {
-        // Conversions from `const char *' are provided [...]
-        m_value = s;
-    }
-
-    cln_value_type(std::string const& s)
-        : m_value(cln::cl_float(0.0, cln::float_format(256)))
-    {
-        m_value = s.c_str();
-    }
-
 
     cln_value_type(cln::cl_F const& v)
         : m_value(v)
@@ -149,15 +136,6 @@ struct to_traits<cln_value_type, const char*>
         cln_value_type result;
         result.m_value = source;
         return result;
-    }
-};
-
-template <>
-struct to_traits<cln_value_type, std::string>
-{
-    static cln_value_type apply(const std::string& source)
-    {
-        return to_traits<cln_value_type, const char*>::apply(source.c_str());
     }
 };
 

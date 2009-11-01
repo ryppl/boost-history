@@ -15,6 +15,7 @@
 
 
 #include <cmath>
+#include <string>
 #include <boost/static_assert.hpp>
 #include <boost/math/special_functions/hypot.hpp>
 #include <boost/lexical_cast.hpp>
@@ -31,6 +32,13 @@ struct to_traits
 {
     static Target apply(const Source& source)
     { return boost::lexical_cast<Target>(source); }
+};
+
+template <class Target>
+struct to_traits<Target, std::string>
+{
+    static Target apply(const std::string& source)
+    { return to_traits<Target, const char*>::apply(source.c_str()); }
 };
 
 

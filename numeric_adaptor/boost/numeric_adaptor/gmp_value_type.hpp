@@ -37,18 +37,6 @@ struct gmp_value_type
         mpf_set_d(m_value, v);
     }
 
-    gmp_value_type(char const* s)
-    {
-        mpf_init(m_value);
-        mpf_set_str(m_value, s, 10);
-    }
-
-    gmp_value_type(std::string const& s)
-    {
-        mpf_init(m_value);
-        mpf_set_str(m_value, s.c_str(), 10);
-    }
-
 
     gmp_value_type(mpf_t& v)
     {
@@ -188,15 +176,6 @@ struct to_traits<gmp_value_type, const char*>
         mpf_init(result.m_value);
         mpf_set_str(result.m_value, source, 10);
         return result;
-    }
-};
-
-template <>
-struct to_traits<gmp_value_type, std::string>
-{
-    static gmp_value_type apply(const std::string& source)
-    {
-        return to_traits<gmp_value_type, const char*>::apply(source.c_str());
     }
 };
 
