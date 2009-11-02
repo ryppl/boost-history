@@ -5,13 +5,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <ggl_test_common.hpp>
+#include <algorithms/test_within.hpp>
 
-#include <ggl/algorithms/within.hpp>
-
-#include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
-
-#include <ggl/algorithms/assign.hpp>
 
 #include <ggl/geometries/box.hpp>
 #include <ggl/geometries/cartesian2d.hpp>
@@ -21,7 +16,6 @@
 #include <ggl/geometries/point_xy.hpp>
 #include <ggl/geometries/polygon.hpp>
 
-#include <algorithms/test_within.hpp>
 
 template <typename P>
 void test_all()

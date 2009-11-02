@@ -44,7 +44,7 @@ struct test_distance
         Point p1, p2;
         ggl::assign(p1, lon1, lat1);
         ggl::assign(p2, lon2, lat2);
-        typename haversine_type::return_type d1 = strategy(p1, p2);
+        typename haversine_type::return_type d1 = strategy.apply(p1, p2);
 
         BOOST_CHECK_CLOSE((double) d1, expected, tolerance);
     }
@@ -56,7 +56,7 @@ void test_all()
     double const average_earth_radius = 6372795.0;
 
     // earth to unit-sphere -> divide by earth circumference, then it is from 0-1,
-    // then multiply with 2 PI, so effectively just divide by earth raius
+    // then multiply with 2 PI, so effectively just divide by earth radius
     double e2u = 1.0 / average_earth_radius;
 
     // ~ Amsterdam/Paris

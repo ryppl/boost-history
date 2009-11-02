@@ -22,7 +22,6 @@
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 
 #include <ggl/ggl.hpp>
-#include <ggl/util/less.hpp>
 #include <ggl/geometries/cartesian2d.hpp>
 
 
@@ -74,13 +73,7 @@ void read_wkt(std::string const& filename, std::vector<Tuple>& tuples, Box& box)
                 Tuple tuple(geometry, name);
 
                 tuples.push_back(tuple);
-                ggl::combine(box, ggl::make_envelope<Box>(geometry,
-                        // Todo: necessary for latlong, but should not be, solve this
-                            ggl::strategy::envelope::combine_xy
-                                <
-                                    typename ggl::point_type<Geometry>::type,
-                                    Box
-                                >()));
+                ggl::combine(box, ggl::make_envelope<Box>(geometry));
             }
         }
     }

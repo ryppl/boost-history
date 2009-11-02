@@ -8,7 +8,13 @@
 #ifndef GGL_TEST_AREA_HPP
 #define GGL_TEST_AREA_HPP
 
-// Test-functionality, shared between single and multi tests
+
+#include <ggl_test_common.hpp>
+
+#include <ggl/algorithms/area.hpp>
+#include <ggl/strategies/strategies.hpp>
+
+#include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
 
 
 template <typename Geometry>

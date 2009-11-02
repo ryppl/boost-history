@@ -6,26 +6,19 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-
-#include <ggl_test_common.hpp>
-
-
-#include <ggl/algorithms/centroid.hpp>
-
-#include <ggl/algorithms/distance.hpp>
-
-#include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
+#include <algorithms/test_centroid.hpp>
 
 #include <ggl/geometries/geometries.hpp>
 #include <ggl/geometries/adapted/c_array_cartesian.hpp>
 #include <ggl/geometries/adapted/tuple_cartesian.hpp>
 
-#include <algorithms/test_centroid.hpp>
-
-
 template <typename P>
 void test_2d()
 {
+    test_centroid<ggl::linestring<P> >("LINESTRING(1 1, 2 2, 3 3)", 2.0, 2.0);
+    test_centroid<ggl::linestring<P> >("LINESTRING(0 0,0 4, 4 4)", 1.0, 3.0);
+    test_centroid<ggl::linestring<P> >("LINESTRING(0 0,3 3,0 6,3 9,0 12)", 1.5, 6.0);
+
     test_centroid<ggl::linear_ring<P> >(
         "POLYGON((2 1.3,2.4 1.7,2.8 1.8,3.4 1.2"
         ",3.7 1.6,3.4 2,4.1 3,5.3 2.6,5.4 1.2,4.9 0.8,2.9 0.7,2 1.3))",
@@ -55,13 +48,13 @@ void test_2d()
     test_centroid<P>("POINT(3 3)", 3, 3);
 }
 
+
 template <typename P>
 void test_3d()
 {
     test_centroid<ggl::box<P> >("POLYGON((1 2 3,5 6 7))", 3, 4, 5);
     test_centroid<P>("POINT(1 2 3)", 1, 2, 3);
 }
-
 
 
 int test_main(int, char* [])
@@ -72,12 +65,11 @@ int test_main(int, char* [])
 
     test_3d<boost::tuple<double, double, double> >();
 
-
 #if defined(HAVE_CLN)
-    test_2d<ggl::point_xy<boost::numeric_adaptor::cln_value_type> >();
+    //test_2d<ggl::point_xy<boost::numeric_adaptor::cln_value_type> >();
 #endif
 #if defined(HAVE_GMP)
-    test_2d<ggl::point_xy<boost::numeric_adaptor::gmp_value_type> >();
+    //test_2d<ggl::point_xy<boost::numeric_adaptor::gmp_value_type> >();
 #endif
 
     return 0;

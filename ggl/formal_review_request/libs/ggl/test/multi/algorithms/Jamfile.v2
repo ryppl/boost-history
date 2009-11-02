@@ -12,6 +12,7 @@ test-suite ggl-multi-algorithms
     [ run multi_centroid.cpp ]
     [ run multi_convex_hull.cpp ]
     [ run multi_correct.cpp ]
+    [ run multi_envelope.cpp ]
     [ run multi_for_each.cpp ]
     [ run multi_length.cpp ]
     [ run multi_perimeter.cpp ]

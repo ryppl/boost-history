@@ -8,7 +8,11 @@
 #ifndef GGL_TEST_LENGTH_HPP
 #define GGL_TEST_LENGTH_HPP
 
-// Test-functionality, shared between single and multi tests
+#include <ggl_test_common.hpp>
+
+#include <ggl/algorithms/length.hpp>
+#include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
+#include <ggl/strategies/strategies.hpp>
 
 
 template <typename Geometry>

@@ -8,7 +8,18 @@
 #ifndef GGL_TEST_CONVEX_HULL_HPP
 #define GGL_TEST_CONVEX_HULL_HPP
 
-// Test-functionality, shared between single and multi tests
+#include <ggl_test_common.hpp>
+
+#include <ggl/algorithms/convex_hull.hpp>
+#include <ggl/algorithms/area.hpp>
+#include <ggl/algorithms/num_points.hpp>
+
+#include <ggl/strategies/strategies.hpp>
+
+#include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
+#include <ggl/extensions/gis/io/wkt/write_wkt.hpp>
+
+#include <ggl/geometries/polygon.hpp>
 
 
 template <typename Geometry, typename Hull>
@@ -65,13 +76,28 @@ void test_geometry_order(std::string const& wkt,
 
     // Test version with ring as output
     ggl::clear(hull);
-    convex_hull(geometry, hull.outer());
+    ggl::convex_hull(geometry, hull.outer());
     test_convex_hull(geometry, hull, size_original, size_hull, expected_area, false);
 
     // Test version with polygon as output
     ggl::clear(hull);
-    convex_hull(geometry, hull);
+    ggl::convex_hull(geometry, hull);
     test_convex_hull(geometry, hull, size_original, size_hull, expected_area, false);
+
+    // Test version with strategy
+    ggl::clear(hull);
+    ggl::strategy::convex_hull::graham_andrew
+        <
+            Geometry, 
+            typename ggl::point_type<Geometry>::type
+        > graham;
+    ggl::convex_hull(geometry, hull.outer(), graham);
+    test_convex_hull(geometry, hull, size_original, size_hull, expected_area, false);
+
+    // Test version with output iterator and strategy
+    ggl::clear(hull);
+    ggl::convex_hull_inserter(geometry, std::back_inserter(hull.outer()), graham);
+    test_convex_hull(geometry, hull, size_original, size_hull, expected_area, ! Clockwise);
 }
 
 template <typename Geometry>

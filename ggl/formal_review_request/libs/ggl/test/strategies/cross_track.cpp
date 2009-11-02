@@ -29,7 +29,7 @@ void test_distance(double lon1, double lat1,
     typedef ggl::strategy::distance::cross_track
         <
             Point,
-            ggl::segment<const Point>
+            Point
         > strategy_type;
 
 
@@ -45,8 +45,7 @@ void test_distance(double lon1, double lat1,
     ggl::assign(p1, lon1, lat1);
     ggl::assign(p2, lon2, lat2);
     ggl::assign(p3, lon3, lat3);
-    typename strategy_type::return_type d 
-        = strategy(p1, ggl::segment<const Point>(p2, p3));
+    typename strategy_type::return_type d = strategy.apply(p1, p2, p3);
 
     BOOST_CHECK_CLOSE((double) d, expected, tolerance);
 }

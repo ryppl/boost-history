@@ -10,7 +10,7 @@
 #include <ggl_test_common.hpp>
 
 #include <ggl/algorithms/assign.hpp>
-#include <ggl/strategies/cartesian/cart_distance.hpp>
+#include <ggl/strategies/cartesian/distance_pythagoras.hpp>
 
 
 #include <ggl/geometries/point.hpp>
@@ -28,7 +28,7 @@ void test_null_distance_3d()
     P2 p2;
     ggl::assign(p2, 1, 2, 3);
     BOOST_CHECK_EQUAL(double(
-            typename ggl::coordinate_type<P1>::type(pythagoras(p1, p2))), 0);
+            typename ggl::coordinate_type<P1>::type(pythagoras.apply(p1, p2))), 0);
 }
 
 template <typename P1, typename P2>
@@ -42,13 +42,13 @@ void test_axis_3d()
     P2 p2;
     ggl::assign(p2, 1, 0, 0);
     BOOST_CHECK_EQUAL(double(
-            typename ggl::coordinate_type<P1>::type(pythagoras(p1, p2))), 1);
+            typename ggl::coordinate_type<P1>::type(pythagoras.apply(p1, p2))), 1);
     ggl::assign(p2, 0, 1, 0);
     BOOST_CHECK_EQUAL(double(
-            typename ggl::coordinate_type<P1>::type(pythagoras(p1, p2))), 1);
+            typename ggl::coordinate_type<P1>::type(pythagoras.apply(p1, p2))), 1);
     ggl::assign(p2, 0, 0, 1);
     BOOST_CHECK_EQUAL(double(
-            typename ggl::coordinate_type<P1>::type(pythagoras(p1, p2))), 1);
+            typename ggl::coordinate_type<P1>::type(pythagoras.apply(p1, p2))), 1);
 }
 
 template <typename P1, typename P2>
@@ -61,7 +61,7 @@ void test_arbitrary_3d()
     P2 p2;
     ggl::assign(p2, 9, 8, 7);
     BOOST_CHECK_CLOSE(double(
-            typename ggl::coordinate_type<P1>::type(pythagoras(p1, p2))),
+            typename ggl::coordinate_type<P1>::type(pythagoras.apply(p1, p2))),
             sqrt((double)116), 0.001);
 }
 
@@ -74,7 +74,8 @@ void test_big_2d_with(AssignType const& x1, AssignType const& y1,
         <
             point_type,
             point_type,
-            CalculationType> pythagoras_type;
+            CalculationType
+        > pythagoras_type;
 
     pythagoras_type pythagoras;
 
@@ -82,7 +83,7 @@ void test_big_2d_with(AssignType const& x1, AssignType const& y1,
     point_type p1, p2;
     ggl::assign(p1, x1, y1);
     ggl::assign(p2, x2, y2);
-    typename pythagoras_type::return_type d1 = pythagoras(p1, p2);
+    typename pythagoras_type::return_type d1 = pythagoras.apply(p1, p2);
 
     /*
     std::cout << typeid(CalculationType).name()

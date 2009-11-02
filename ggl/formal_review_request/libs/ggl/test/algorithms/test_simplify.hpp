@@ -10,7 +10,12 @@
 
 // Test-functionality, shared between single and multi tests
 
+#include <ggl_test_common.hpp>
+#include <ggl/algorithms/simplify.hpp>
+#include <ggl/algorithms/distance.hpp>
+#include <ggl/strategies/strategies.hpp>
 
+#include <ggl/extensions/gis/io/wkt/wkt.hpp>
 
 template <typename Tag, typename Geometry>
 struct test_inserter
@@ -61,7 +66,7 @@ void test_geometry(std::string const& wkt, std::string const& expected, double d
     typedef ggl::strategy::distance::xy_point_segment
         <
             point_type,
-            ggl::segment<const point_type>
+            point_type
         > strategy;
     typedef ggl::strategy::simplify::douglas_peucker
         <

@@ -15,13 +15,11 @@
 
 #include <ggl_test_common.hpp>
 
-#include <ggl/iterators/segment_iterator.hpp>
-
-
 #include <ggl/core/coordinate_type.hpp>
 #include <ggl/geometries/cartesian2d.hpp>
 #include <ggl/geometries/point.hpp>
 #include <ggl/geometries/segment.hpp>
+#include <ggl/iterators/segment_iterator.hpp>
 #include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
 
 template <typename C>

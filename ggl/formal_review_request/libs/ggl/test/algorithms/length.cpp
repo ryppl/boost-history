@@ -5,15 +5,11 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <ggl_test_common.hpp>
+#include <algorithms/test_length.hpp>
 
-#include <ggl/algorithms/length.hpp>
-
-#include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
 
 #include <ggl/geometries/geometries.hpp>
 
-#include <algorithms/test_length.hpp>
 
 
 namespace ggl { namespace traits {

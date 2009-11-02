@@ -10,17 +10,15 @@
 #include <iterator>
 #include <string>
 
+#include <algorithms/test_convex_hull.hpp>
 
-#include <ggl_test_common.hpp>
-
-#include <ggl/algorithms/area.hpp>
-#include <ggl/algorithms/convex_hull.hpp>
-#include <ggl/algorithms/num_points.hpp>
 #include <ggl/geometries/geometries.hpp>
 
 #include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
 
 #include <ggl/multi/core/point_type.hpp>
+
+#include <ggl/multi/iterators/range_type.hpp>
 
 #include <ggl/multi/algorithms/num_points.hpp>
 #include <ggl/multi/algorithms/convex_hull.hpp>
@@ -32,7 +30,6 @@
 #include <ggl/multi/geometries/multi_polygon.hpp>
 
 
-#include <algorithms/test_convex_hull.hpp>
 
 
 template <typename P>

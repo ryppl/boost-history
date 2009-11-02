@@ -6,13 +6,11 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#include <ggl_test_common.hpp>
-
-#include <ggl/algorithms/for_each.hpp>
+#include <algorithms/test_for_each.hpp>
 
 #include <ggl/geometries/geometries.hpp>
 
-#include <algorithms/test_for_each.hpp>
+
 
 template <typename P>
 void test_all()

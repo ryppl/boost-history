@@ -9,34 +9,27 @@
 #include <cstddef>
 #include <string>
 
-#include <ggl_test_common.hpp>
-
-#include <ggl/algorithms/convex_hull.hpp>
-
-
-#include <ggl/algorithms/area.hpp>
-#include <ggl/algorithms/num_points.hpp>
-
-#include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
-#include <ggl/extensions/gis/io/wkt/write_wkt.hpp>
+#include <algorithms/test_convex_hull.hpp>
 
 #include <ggl/geometries/geometries.hpp>
 
-#include <algorithms/test_convex_hull.hpp>
 
 
 template <typename P>
-void test_all()
+void test_all(bool do_rectangular = true)
 {
     // from sample linestring
     
     test_geometry<ggl::linestring<P> >(
         "linestring(1.1 1.1, 2.5 2.1, 3.1 3.1, 4.9 1.1, 3.1 1.9)", 5, 4, 3.8);
 
-    // rectangular, with concavity
-    test_geometry<ggl::polygon<P> >(
-        "polygon((1 1, 5 1, 5 4, 4 4, 4 3, 3 3, 3 4, 1 4, 1 1))",
-                9, 5, 12.0);
+    if (do_rectangular)
+    {
+        // rectangular, with concavity
+        test_geometry<ggl::polygon<P> >(
+            "polygon((1 1, 1 4, 3 4, 3 3, 4 3, 4 4, 5 4, 5 1, 1 1))",
+                    9, 5, 12.0);
+    }
 
     // from sample polygon, with concavity
     test_geometry<ggl::polygon<P> >(
@@ -55,9 +48,14 @@ int test_main(int, char* [])
     test_all<ggl::point_xy<boost::numeric_adaptor::cln_value_type> >();
 #endif
 #if defined(HAVE_GMP)
-    // GMP compiles but gives errors in results
-    // TODO: find out what's going wrong here
-    // test_all<ggl::point_xy<boost::numeric_adaptor::gmp_value_type> >();
+    // GMP compiles, but gives 'errors' in results (6 points in hull instead of 5)
+    // This is because of a vertex on the line, which is OK for the convex hull,
+    // but not OK for the strictly convex hull.
+    // Actually this is unexpected from a high-precision arithmetic library, the
+    // problem is the comparison (something is non-zero which should be calculated
+    // zero, in the direction).
+
+    test_all<ggl::point_xy<boost::numeric_adaptor::gmp_value_type> >(false);
 #endif
 
     return 0;

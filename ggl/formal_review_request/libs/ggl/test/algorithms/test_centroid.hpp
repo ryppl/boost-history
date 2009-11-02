@@ -10,6 +10,15 @@
 
 // Test-functionality, shared between single and multi tests
 
+#include <ggl_test_common.hpp>
+
+#include <ggl/strategies/strategies.hpp>
+#include <ggl/algorithms/centroid.hpp>
+#include <ggl/algorithms/distance.hpp>
+
+#include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
+
+
 template<std::size_t D>
 struct check_result
 {
@@ -48,7 +57,7 @@ void test_with_other_calculation_type(Geometry const& geometry, Point& c1)
     // Calculate it with user defined strategy
     point_type c2;
     ggl::centroid(geometry, c2,
-        ggl::strategy::centroid::bashein_detmer<point_type, point_type, CalculationType>());
+        ggl::strategy::centroid_::bashein_detmer<point_type, point_type, CalculationType>());
 
     std::cout << typeid(CalculationType).name() << ": " << std::setprecision(20)
         << ggl::get<0>(c2) << " " << ggl::get<1>(c2)

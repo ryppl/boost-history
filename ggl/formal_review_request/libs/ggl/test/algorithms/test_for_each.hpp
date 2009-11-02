@@ -8,8 +8,12 @@
 #ifndef GGL_TEST_FOR_EACH_HPP
 #define GGL_TEST_FOR_EACH_HPP
 
-// Test-functionality, shared between single and multi tests
+#include <ggl_test_common.hpp>
+
+#include <ggl/algorithms/for_each.hpp>
+
 #include <ggl/algorithms/distance.hpp>
+#include <ggl/strategies/strategies.hpp>
 #include <ggl/extensions/gis/io/wkt/wkt.hpp>
 #include <ggl/util/write_dsv.hpp>
 

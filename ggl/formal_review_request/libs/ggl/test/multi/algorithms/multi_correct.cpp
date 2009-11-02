@@ -8,6 +8,9 @@
 #include <ggl_test_common.hpp>
 
 #include <ggl/algorithms/correct.hpp>
+
+#include <ggl/strategies/strategies.hpp>
+
 #include <ggl/multi/algorithms/correct.hpp>
 
 #include <ggl/extensions/gis/io/wkt/wkt.hpp>
@@ -15,6 +18,7 @@
 #include <ggl/geometries/box.hpp>
 #include <ggl/geometries/linear_ring.hpp>
 #include <ggl/geometries/linestring.hpp>
+#include <ggl/geometries/point_xy.hpp>
 #include <ggl/geometries/point.hpp>
 #include <ggl/geometries/polygon.hpp>
 #include <ggl/multi/geometries/multi_polygon.hpp>

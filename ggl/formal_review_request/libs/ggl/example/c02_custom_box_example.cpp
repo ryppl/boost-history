@@ -14,7 +14,7 @@
 #include <ggl/algorithms/within.hpp>
 #include <ggl/geometries/register/point.hpp>
 #include <ggl/geometries/register/box.hpp>
-
+#include <ggl/strategies/strategies.hpp>
 #include <ggl/util/write_dsv.hpp>
 
 struct my_point

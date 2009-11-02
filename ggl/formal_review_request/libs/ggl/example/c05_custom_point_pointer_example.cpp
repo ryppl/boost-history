@@ -13,13 +13,10 @@
 #include <ggl/algorithms/distance.hpp>
 #include <ggl/algorithms/length.hpp>
 #include <ggl/algorithms/make.hpp>
-
-#include <ggl/algorithms/intersection_linestring.hpp>
 #include <ggl/algorithms/intersection.hpp>
-
 #include <ggl/geometries/cartesian2d.hpp>
-
 #include <ggl/geometries/adapted/std_as_linestring.hpp>
+#include <ggl/strategies/strategies.hpp>
 
 // Sample point, having x/y
 struct my_point

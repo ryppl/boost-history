@@ -14,9 +14,8 @@
 
 #include <ggl/algorithms/area.hpp>
 #include <ggl/algorithms/centroid.hpp>
-
 #include <ggl/geometries/register/ring.hpp>
-
+#include <ggl/strategies/strategies.hpp>
 #include <ggl/util/write_dsv.hpp>
 
 

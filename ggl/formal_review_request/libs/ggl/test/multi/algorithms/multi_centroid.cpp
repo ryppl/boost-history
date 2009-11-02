@@ -7,29 +7,20 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#include <ggl_test_common.hpp>
+#include <algorithms/test_centroid.hpp>
 
+#include <ggl/multi/algorithms/centroid.hpp>
+#include <ggl/multi/strategies/centroid.hpp>
+#include <ggl/multi/strategies/cartesian/centroid_average.hpp>
 
-#include <ggl/algorithms/assign.hpp>
-#include <ggl/algorithms/centroid.hpp>
-#include <ggl/algorithms/distance.hpp>
-#include <ggl/algorithms/make.hpp>
-#include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
 #include <ggl/geometries/geometries.hpp>
 
 #include <ggl/multi/geometries/multi_point.hpp>
 #include <ggl/multi/geometries/multi_polygon.hpp>
-
-#include <ggl/multi/algorithms/centroid.hpp>
-
 #include <ggl/extensions/gis/io/wkt/read_wkt_multi.hpp>
 
-#include <algorithms/test_centroid.hpp>
 
 // #define REPORT_RESULTS
-
-
-
 
 
 template <typename P>

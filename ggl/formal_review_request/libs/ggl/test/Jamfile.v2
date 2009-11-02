@@ -1,17 +1,26 @@
-# Generic Geometry Library unit tests
+# test/Jamfile.v2 controls building of Generic Geometry Library unit tests
 #
-# Copyright Bruno Lalande 2008
-# Copyright Barend Gehrels, Geodan Holding B.V. Amsterdam, the Netherlands.
+# Copyright (c) 2009 Mateusz Loskot <mateusz@loskot.net>
+#
 # Use, modification and distribution is subject to the Boost Software License,
 # Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-project 
-    : requirements
-        <include>../../../boost
-        <include>.
-        <toolset>gcc:<cxxflags>-pedantic
-    ;
-
 import testing ;
 
+project ggl-test
+    :
+    requirements
+        <include>.
+    ;
+
+build-project core ;
+build-project point_concept ; 
+# build-project geometries ;
+build-project arithmetic ;
+build-project algorithms ;
+build-project iterators ;
+build-project strategies ;
+build-project policies ;
+# build-project util ;
+build-project multi ;

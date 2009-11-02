@@ -8,27 +8,37 @@
 #ifndef GGL_TEST_WITHIN_HPP
 #define GGL_TEST_WITHIN_HPP
 
-// Test-functionality, shared between single and multi tests
+
+#include <ggl_test_common.hpp>
+
+#include <ggl/core/ring_type.hpp>
+#include <ggl/algorithms/within.hpp>
+#include <ggl/strategies/strategies.hpp>
+#include <ggl/geometries/linear_ring.hpp>
+#include <ggl/geometries/polygon.hpp>
+
+#include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
 
 
-template <typename Point, typename Geometry>
-void test_geometry(std::string const& wkt_point,
-        std::string const& wkt_geometry, bool expected)
+template <typename Geometry1, typename Geometry2>
+void test_geometry(std::string const& wkt1,
+        std::string const& wkt2, bool expected)
 {
-    Geometry geometry;
-    Point point;
+    Geometry1 geometry1;
+    Geometry2 geometry2;
 
-    ggl::read_wkt(wkt_geometry, geometry);
-    ggl::read_wkt(wkt_point, point);
+    ggl::read_wkt(wkt1, geometry1);
+    ggl::read_wkt(wkt2, geometry2);
 
-    bool detected = ggl::within(point, geometry);
+    bool detected = ggl::within(geometry1, geometry2);
 
     BOOST_CHECK_MESSAGE(detected == expected,
-        "within: " << wkt_point
-        << " in " << wkt_geometry
+        "within: " << wkt1
+        << " in " << wkt2
         << " -> Expected: " << expected
         << " detected: " << detected);
 }
+
 
 template <typename Point, bool CW>
 void test_ordered_ring(std::string const& wkt_point,
@@ -67,7 +77,7 @@ void test_ordered_ring(std::string const& wkt_point,
             << " detected: " << detected);
     }
 
-    
+
     ggl::strategy::within::crossings_multiply<Point> cm;
     detected = ggl::within(point, ring, cm);
     if (! on_border)
@@ -82,7 +92,7 @@ void test_ordered_ring(std::string const& wkt_point,
 
 template <typename Point>
 void test_ring(std::string const& wkt_point,
-        std::string const& wkt_geometry, 
+        std::string const& wkt_geometry,
         bool expected, bool on_border)
 {
     test_ordered_ring<Point, true>(wkt_point, wkt_geometry, expected, on_border);

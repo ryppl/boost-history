@@ -7,11 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#include <ggl_test_common.hpp>
-
-#include <ggl/algorithms/area.hpp>
-
-#include <ggl/extensions/gis/io/wkt/read_wkt.hpp>
+#include <algorithms/test_area.hpp>
 
 #include <ggl/geometries/point.hpp>
 #include <ggl/geometries/box.hpp>
@@ -20,7 +16,6 @@
 
 //#define GGL_TEST_DEBUG
 
-#include <algorithms/test_area.hpp>
 
 
 

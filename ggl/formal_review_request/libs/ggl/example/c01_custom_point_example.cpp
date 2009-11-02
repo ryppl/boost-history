@@ -13,6 +13,7 @@
 #include <ggl/algorithms/distance.hpp>
 #include <ggl/algorithms/make.hpp>
 #include <ggl/geometries/register/point.hpp>
+#include <ggl/strategies/strategies.hpp>
 #include <ggl/util/write_dsv.hpp>
 
 // Sample point, defining three color values

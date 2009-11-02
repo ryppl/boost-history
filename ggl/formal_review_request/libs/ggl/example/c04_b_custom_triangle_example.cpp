@@ -17,10 +17,10 @@
 #include <ggl/algorithms/centroid.hpp>
 #include <ggl/geometries/adapted/tuple.hpp>
 #include <ggl/geometries/adapted/tuple_cartesian.hpp>
-
+#include <ggl/geometries/register/ring.hpp>
+#include <ggl/strategies/strategies.hpp>
 #include <ggl/util/write_dsv.hpp>
 
-#include <ggl/geometries/register/ring.hpp>
 
 
 template <typename P>

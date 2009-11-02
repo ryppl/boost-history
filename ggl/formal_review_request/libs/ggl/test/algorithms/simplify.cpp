@@ -8,17 +8,13 @@
 
 #include <iterator>
 
-#include <ggl_test_common.hpp>
 
-#include <ggl/algorithms/simplify.hpp>
-#include <ggl/algorithms/distance.hpp>
+#include <algorithms/test_simplify.hpp>
 #include <ggl/geometries/geometries.hpp>
-#include <ggl/extensions/gis/io/wkt/wkt.hpp>
 
 
 #include <test_common/test_point.hpp>
 
-#include <algorithms/test_simplify.hpp>
 
 
 

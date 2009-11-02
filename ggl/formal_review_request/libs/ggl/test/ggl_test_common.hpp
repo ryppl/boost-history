@@ -10,10 +10,22 @@
 #ifndef GGL_TEST_GGL_TEST_COMMON_HPP
 #define GGL_TEST_GGL_TEST_COMMON_HPP
 
+#if defined(_MSC_VER)
+// We deliberately mix float/double's  so turn off warnings
+#pragma warning( disable : 4244 )
+//#pragma warning( disable : 4305 )
+#endif // defined(_MSC_VER)
+
+
 // Just include some always-included files
 
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/test/included/test_exec_monitor.hpp>
+
+
+#if defined(HAVE_CLN) || defined(HAVE_GMP)
+#  include <boost/numeric_adaptor/numeric_adaptor.hpp>
+#endif
 
 
 #if defined(HAVE_GMP)
@@ -21,10 +33,6 @@
 #endif
 #if defined(HAVE_CLN)
 #  include <boost/numeric_adaptor/cln_value_type.hpp>
-#endif
-
-#if defined(HAVE_CLN) || defined(HAVE_GMP)
-#  include <boost/numeric_adaptor/numeric_adaptor.hpp>
 #endif
 
 
