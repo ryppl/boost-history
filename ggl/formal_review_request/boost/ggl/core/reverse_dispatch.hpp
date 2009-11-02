@@ -26,8 +26,6 @@ namespace detail
 {
 
 // Different geometries: reverse_dispatch if second ID < first ID
-// Note: if "boost::mpl::greater is used, with geometry_id instead of geometry_id::type::value,
-// it is not working correctly!!!! TODO: find out why not.
 template <std::size_t GeometryId1, std::size_t GeometryId2>
 struct reverse_dispatch : boost::mpl::if_c
 <

@@ -78,7 +78,7 @@ struct point_to_poly
         {
             append_point<range_type, Point, Std>::apply(exterior_ring(polygon), point, -1, -1);
         }
-        else if (ring_index < boost::size(interior_rings(polygon)))
+        else if (ring_index < int(num_interior_rings(polygon)))
         {
             append_point<range_type, Point, Std>::apply(interior_rings(polygon)[ring_index], point, -1, -1);
         }
@@ -96,7 +96,7 @@ struct range_to_poly
         {
             append_range<ring_type, Range, Std>::apply(exterior_ring(polygon), range, -1, -1);
         }
-        else if (ring_index < boost::size(interior_rings(polygon)))
+        else if (ring_index < int(num_interior_rings(polygon)))
         {
             append_range<ring_type, Range, Std>::apply(interior_rings(polygon)[ring_index], range, -1, -1);
         }

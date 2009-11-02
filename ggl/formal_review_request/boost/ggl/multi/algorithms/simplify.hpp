@@ -15,7 +15,7 @@
 #include <ggl/multi/core/tags.hpp>
 #include <ggl/multi/core/is_multi.hpp>
 
-#include <ggl/multi/util/as_range.hpp>
+#include <ggl/multi/iterators/range_type.hpp>
 
 #include <ggl/algorithms/simplify.hpp>
 

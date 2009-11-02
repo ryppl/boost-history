@@ -22,12 +22,11 @@
 #include <ggl/core/cs.hpp>
 #include <ggl/geometries/concepts/check.hpp>
 
-#include <ggl/geometries/segment.hpp>
-#include <ggl/strategies/strategies.hpp>
 
 /*!
 \defgroup convert convert geometries from one type to another
-\details Convert from one geometry type to another type, for example from BOX to POLYGON
+\details Convert from one geometry type to another type, 
+    for example from BOX to POLYGON
 */
 
 namespace ggl
@@ -36,24 +35,44 @@ namespace ggl
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail { namespace convert {
 
-template <typename P, typename B, std::size_t C, std::size_t D, std::size_t N>
+template 
+<
+    typename Point, 
+    typename Box, 
+    std::size_t Index, 
+    std::size_t Dimension, 
+    std::size_t DimensionCount
+>
 struct point_to_box
 {
-    static inline void apply(P const& point, B& box)
+    static inline void apply(Point const& point, Box& box)
     {
-        typedef typename coordinate_type<B>::type coordinate_type;
+        typedef typename coordinate_type<Box>::type coordinate_type;
 
-        set<C, D>(box, boost::numeric_cast<coordinate_type>(get<D>(point)));
-        point_to_box<P, B, C, D + 1, N>::apply(point, box);
+        set<Index, Dimension>(box, 
+                boost::numeric_cast<coordinate_type>(get<Dimension>(point)));
+        point_to_box
+            <
+                Point, Box, 
+                Index, Dimension + 1, DimensionCount
+            >::apply(point, box);
     }
 };
 
-template <typename P, typename B, std::size_t C, std::size_t N>
-struct point_to_box<P, B, C, N, N>
+
+template 
+<
+    typename Point, 
+    typename Box, 
+    std::size_t Index, 
+    std::size_t DimensionCount
+>
+struct point_to_box<Point, Box, Index, DimensionCount, DimensionCount>
 {
-    static inline void apply(P const& point, B& box)
+    static inline void apply(Point const& point, Box& box)
     {}
 };
+
 
 }} // namespace detail::convert
 #endif // DOXYGEN_NO_DETAIL
@@ -65,41 +84,52 @@ namespace dispatch
 
 template
 <
-    typename T1, typename T2,
+    typename Tag1, typename Tag2,
     std::size_t Dimensions,
-    typename G1, typename G2
+    typename Geometry1, typename Geometry2
 >
 struct convert
 {
 };
 
+
 template
 <
-    typename T,
+    typename Tag,
     std::size_t Dimensions,
-    typename G1, typename G2
+    typename Geometry1, typename Geometry2
 >
-struct convert<T, T, Dimensions, G1, G2>
+struct convert<Tag, Tag, Dimensions, Geometry1, Geometry2>
 {
     // Same geometry type -> copy coordinates from G1 to G2
+    // Actually: we try now to just copy it
+    static inline void apply(Geometry1 const& source, Geometry2& destination)
+    {
+        destination = source;
+    }
 };
 
-template <typename T, std::size_t Dimensions, typename G>
-struct convert<T, T, Dimensions, G, G>
+
+template <typename Tag, std::size_t Dimensions, typename Geometry>
+struct convert<Tag, Tag, Dimensions, Geometry, Geometry>
 {
-    // Same geometry -> can be copied
+    // Same geometry -> can be copied (if copyable)
+    static inline void apply(Geometry const& source, Geometry& destination)
+    {
+        destination = source;
+    }
 };
 
 
 // Partial specializations
-template <typename B, typename R>
-struct convert<box_tag, ring_tag, 2, B, R>
+template <typename Box, typename Ring>
+struct convert<box_tag, ring_tag, 2, Box, Ring>
 {
-    static inline void apply(B const& box, R& ring)
+    static inline void apply(Box const& box, Ring& ring)
     {
         // go from box to ring -> add coordinates in correct order
         ring.clear();
-        typename point_type<B>::type point;
+        typename point_type<Box>::type point;
 
         ggl::assign(point, get<min_corner, 0>(box), get<min_corner, 1>(box));
         ggl::append(ring, point);
@@ -118,32 +148,70 @@ struct convert<box_tag, ring_tag, 2, B, R>
     }
 };
 
-template <typename B, typename P>
-struct convert<box_tag, polygon_tag, 2, B, P>
-{
-    static inline void apply(B const& box, P& polygon)
-    {
-        typedef typename ring_type<P>::type ring_type;
 
-        convert<box_tag, ring_tag, 2, B, ring_type>::apply(box, exterior_ring(polygon));
+template <typename Box, typename Polygon>
+struct convert<box_tag, polygon_tag, 2, Box, Polygon>
+{
+    static inline void apply(Box const& box, Polygon& polygon)
+    {
+        typedef typename ring_type<Polygon>::type ring_type;
+
+        convert
+            <
+                box_tag, ring_tag, 
+                2, Box, ring_type
+            >::apply(box, exterior_ring(polygon));
     }
 };
 
-template <typename P, std::size_t Dimensions, typename B>
-struct convert<point_tag, box_tag, Dimensions, P, B>
+
+template <typename Point, std::size_t Dimensions, typename Box>
+struct convert<point_tag, box_tag, Dimensions, Point, Box>
 {
-    static inline void apply(P const& point, B& box)
+    static inline void apply(Point const& point, Box& box)
     {
         detail::convert::point_to_box
             <
-                P, B, min_corner, 0, Dimensions
+                Point, Box, min_corner, 0, Dimensions
             >::apply(point, box);
         detail::convert::point_to_box
             <
-                P, B, max_corner, 0, Dimensions
+                Point, Box, max_corner, 0, Dimensions
             >::apply(point, box);
     }
 };
+
+
+template <typename Ring, typename Polygon>
+struct convert<ring_tag, polygon_tag, 2, Ring, Polygon>
+{
+    static inline void apply(Ring const& ring, Polygon& polygon)
+    {
+        typedef typename ring_type<Polygon>::type ring_type;
+        convert
+            <
+                ring_tag, ring_tag, 2, 
+                Ring, ring_type
+            >::apply(ring, exterior_ring(polygon));
+    }
+};
+
+
+template <typename Polygon, typename Ring>
+struct convert<polygon_tag, ring_tag, 2, Polygon, Ring>
+{
+    static inline void apply(Polygon const& polygon, Ring& ring)
+    {
+        typedef typename ring_type<Polygon>::type ring_type;
+
+        convert
+            <
+                ring_tag, ring_tag, 2, 
+                ring_type, Ring
+            >::apply(exterior_ring(polygon), ring);
+    }
+};
+
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
@@ -153,26 +221,23 @@ struct convert<point_tag, box_tag, Dimensions, P, B>
     \details The convert algorithm converts one geometry, e.g. a BOX, to another geometry, e.g. a RING. This only
     if it is possible and applicable.
     \ingroup convert
-    \tparam G1 first geometry type
-    \tparam G2 second geometry type
-    \param geometry1 first geometry
-    \param geometry2 second geometry
+    \tparam Geometry1 first geometry type 
+    \tparam Geometry2 second geometry type 
+    \param geometry1 first geometry (source)
+    \param geometry2 second geometry (target)
  */
-template <typename G1, typename G2>
-inline void convert(G1 const& geometry1, G2& geometry2)
+template <typename Geometry1, typename Geometry2>
+inline void convert(Geometry1 const& geometry1, Geometry2& geometry2)
 {
-    concept::check<const G1>();
-    concept::check<G2>();
-
-    assert_dimension_equal<G1, G2>();
+    concept::check_concepts_and_equal_dimensions<const Geometry1, Geometry2>();
 
     dispatch::convert
         <
-            typename tag<G1>::type,
-            typename tag<G2>::type,
-            dimension<G1>::type::value,
-            G1,
-            G2
+            typename tag<Geometry1>::type,
+            typename tag<Geometry2>::type,
+            dimension<Geometry1>::type::value,
+            Geometry1,
+            Geometry2
         >::apply(geometry1, geometry2);
 }
 

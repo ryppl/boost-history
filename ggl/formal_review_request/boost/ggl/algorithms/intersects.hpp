@@ -9,9 +9,14 @@
 #ifndef GGL_ALGORITHMS_INTERSECTS_HPP
 #define GGL_ALGORITHMS_INTERSECTS_HPP
 
+
+/*!
+\defgroup intersects intersects, test a geometry self-intersects or two geometries intersect
+*/
+
+
 #include <ggl/geometries/concepts/check.hpp>
 
-#include <ggl/algorithms/intersection_linestring.hpp>
 
 #include <ggl/algorithms/overlay/get_intersection_points.hpp>
 #include <ggl/algorithms/overlay/self_intersection_points.hpp>
@@ -33,7 +38,7 @@ namespace ggl
         (crossing or self-tangency)
     \note This function can be called for one geometry (self-intersection) and
         also for two geometries (intersection)
-    \ingroup overlay
+    \ingroup intersects
     \tparam Geometry geometry type
     \param geometry geometry
     \return TRUE if there are intersections, else FALSE

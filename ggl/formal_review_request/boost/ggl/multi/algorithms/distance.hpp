@@ -20,6 +20,7 @@
 #include <ggl/multi/core/point_type.hpp>
 
 #include <ggl/algorithms/distance.hpp>
+#include <ggl/util/select_coordinate_type.hpp>
 
 
 namespace ggl {
@@ -39,9 +40,18 @@ struct distance_single_to_multi
         using namespace boost;
 
         return_type mindist = make_distance_result<return_type>(
-                        numeric::bounds<typename select_coordinate_type<Geometry, MultiGeometry>::type>::highest());
-        typedef typename range_const_iterator<MultiGeometry>::type iterator;
-        for(iterator it = begin(multi); it != end(multi); ++it)
+                numeric::bounds
+                    <
+                        typename select_coordinate_type
+                            <
+                                Geometry,
+                                MultiGeometry
+                            >::type
+                    >::highest());
+
+        for(typename range_const_iterator<MultiGeometry>::type it = begin(multi);
+                it != end(multi);
+                ++it)
         {
             return_type dist = ggl::distance(geometry, *it);
             if (dist < mindist)
@@ -64,10 +74,15 @@ struct distance_multi_to_multi
     {
         using namespace boost;
 
-        return_type mindist
-            = make_distance_result<return_type>(
-                numeric::bounds<typename select_coordinate_type<Multi1,
-                            Multi2>::type>::highest());
+        return_type mindist = make_distance_result<return_type>(
+                numeric::bounds
+                    <
+                        typename select_coordinate_type
+                            <
+                                Multi1,
+                                Multi2
+                            >::type
+                    >::highest());
 
         for(typename range_const_iterator<Multi1>::type it = begin(multi1);
                 it != end(multi1);

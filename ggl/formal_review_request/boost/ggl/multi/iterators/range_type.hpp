@@ -5,8 +5,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_MULTI_UTIL_AS_RANGE_HPP
-#define GGL_MULTI_UTIL_AS_RANGE_HPP
+#ifndef GGL_MULTI_ITERATORS_RANGE_TYPE_HPP
+#define GGL_MULTI_ITERATORS_RANGE_TYPE_HPP
 
 
 #include <boost/range/functions.hpp>
@@ -14,7 +14,7 @@
 
 #include <ggl/multi/core/is_multi.hpp>
 
-#include <ggl/util/as_range.hpp>
+#include <ggl/iterators/range_type.hpp>
 
 namespace ggl {
 
@@ -22,14 +22,31 @@ namespace ggl {
 namespace dispatch
 {
 
-template <typename Tag, typename Geometry>
-struct as_range_type<Tag, true, Geometry>
+// multi-point acts itself as a range
+template <typename Geometry>
+struct range_type<multi_point_tag, Geometry>
 {
-    typedef typename ggl::as_range_type
+    typedef Geometry type;
+};
+
+
+template <typename Geometry>
+struct range_type<multi_linestring_tag, Geometry>
+{
+    typedef typename boost::range_value<Geometry>::type type;
+};
+
+
+template <typename Geometry>
+struct range_type<multi_polygon_tag, Geometry>
+{
+    // Call its single-version
+    typedef typename ggl::ring_type
         <
             typename boost::range_value<Geometry>::type
-        > type;
+        >::type type;
 };
+
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
@@ -37,4 +54,4 @@ struct as_range_type<Tag, true, Geometry>
 
 } // namespace ggl
 
-#endif // GGL_MULTI_UTIL_AS_RANGE_HPP
+#endif // GGL_MULTI_ITERATORS_RANGE_TYPE_HPP

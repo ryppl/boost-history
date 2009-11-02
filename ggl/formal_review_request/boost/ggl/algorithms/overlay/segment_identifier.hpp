@@ -16,7 +16,6 @@
 #include <ggl/core/coordinate_dimension.hpp>
 
 #include <ggl/strategies/distance_result.hpp>
-#include <ggl/strategies/strategy_traits.hpp>
 
 namespace ggl
 {

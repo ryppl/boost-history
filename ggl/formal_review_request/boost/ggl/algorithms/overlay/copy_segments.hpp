@@ -19,7 +19,8 @@
 #include <ggl/algorithms/overlay/intersection_point.hpp>
 
 #include <ggl/iterators/ever_circling_iterator.hpp>
-#include <ggl/iterators/vertex_iterator.hpp>
+
+#include <ggl/iterators/range_type.hpp>
 
 
 namespace ggl
@@ -37,8 +38,8 @@ struct copy_segments_ring
             SegmentIdentifier const& seg_id, int to_index,
             RangeOut& current_output)
     {
+        typedef typename boost::range_const_iterator<Ring>::type iterator;
 
-        typedef typename ggl::vertex_iterator<Ring, true>::type iterator;
         typedef ggl::ever_circling_iterator<iterator> ec_iterator;
 
         // The problem: sometimes we want to from "3" to "2" -> end = "3" -> end == begin

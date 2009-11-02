@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_ALGORITHMS_MERGE_INTERSECTION_POINTS_HPP
-#define GGL_ALGORITHMS_MERGE_INTERSECTION_POINTS_HPP
+#ifndef GGL_ALGORITHMS_OVERLAY_MERGE_INTERSECTION_POINTS_HPP
+#define GGL_ALGORITHMS_OVERLAY_MERGE_INTERSECTION_POINTS_HPP
 
 #include <algorithm>
 
@@ -19,6 +19,7 @@
 #include <ggl/core/coordinate_type.hpp>
 
 #include <ggl/algorithms/equals.hpp>
+#include <ggl/algorithms/overlay/intersection_point.hpp>
 
 
 namespace ggl
@@ -79,7 +80,6 @@ inline void remove_collinearities(V& intersection_points)
             bool has_flag = false;
 
             // Note, this is done n*m, in case of collinearity, but it is only done if not trivial
-            // or if there
             bool middle = false;
             for (tvit_type tvit = boost::begin(it->info);
                 ! middle && tvit != boost::end(it->info);
@@ -251,4 +251,4 @@ inline void merge_intersection_points(IntersectionPoints& intersection_points)
 
 } // namespace ggl
 
-#endif // GGL_ALGORITHMS_MERGE_INTERSECTION_POINTS_HPP
+#endif // GGL_ALGORITHMS_OVERLAY_MERGE_INTERSECTION_POINTS_HPP

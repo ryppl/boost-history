@@ -6,11 +6,11 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_STRATEGIES_MATRIX_TRANSFORMERS_HPP
-#define GGL_STRATEGIES_MATRIX_TRANSFORMERS_HPP
+#ifndef GGL_STRATEGIES_TRANSFORM_MATRIX_TRANSFORMERS_HPP
+#define GGL_STRATEGIES_TRANSFORM_MATRIX_TRANSFORMERS_HPP
 
 
-// Remove the ublas checking, otherwise the inverse might fail 
+// Remove the ublas checking, otherwise the inverse might fail
 // (while nothing seems to be wrong)
 #define BOOST_UBLAS_TYPE_CHECK 0
 
@@ -359,4 +359,4 @@ struct rotate_transformer : detail::rad_rotate_transformer<P1, P2>
 
 } // namespace ggl
 
-#endif // GGL_STRATEGIES_MATRIX_TRANSFORMERS_HPP
+#endif // GGL_STRATEGIES_TRANSFORM_MATRIX_TRANSFORMERS_HPP

@@ -32,19 +32,16 @@ namespace traits
         - polygon
     \par Specializations should provide:
         - typedef XXX type (e.g. linear_ring<P>)
-    \tparam G geometry
+    \tparam Geometry geometry
 */
-template <typename G>
+template <typename Geometry>
 struct ring_type
 {
     // should define type
 };
 
 
-
-
 } // namespace traits
-
 
 
 
@@ -53,18 +50,20 @@ namespace core_dispatch
 {
 
 
-template <typename GeometryTag, typename Geometry> struct ring_type
+template <typename GeometryTag, typename Geometry>
+struct ring_type
 {};
-
 
 
 template <typename Polygon>
 struct ring_type<polygon_tag, Polygon>
 {
-    typedef typename traits::ring_type<Polygon>::type type;
+    typedef typename traits::ring_type
+        <
+            typename boost::remove_const<Polygon>::type
+        >::type type;
+
 };
-
-
 
 
 } // namespace core_dispatch
@@ -73,22 +72,21 @@ struct ring_type<polygon_tag, Polygon>
 
 /*!
     \brief Meta-function which defines ring type of (multi)polygon geometry
-    \details a polygon contains one exterior ring and zero or more interior rings (holes).
-        The type of those rings is assumed to be equal. This meta function retrieves the type
-        of such rings.
+    \details a polygon contains one exterior ring
+        and zero or more interior rings (holes).
+        This meta function retrieves the type of the rings
+    \note Exterior ring and interior rings must have the same ring-type.
     \ingroup core
 */
 template <typename Geometry>
 struct ring_type
 {
-    typedef typename boost::remove_const<Geometry>::type ncg;
     typedef typename core_dispatch::ring_type
         <
-            typename tag<Geometry>::type, ncg
+            typename tag<Geometry>::type,
+            Geometry
         >::type type;
 };
-
-
 
 
 }

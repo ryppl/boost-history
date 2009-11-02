@@ -33,22 +33,32 @@ class WithinStrategy
     // 3) must define point_type, of polygon (segments)
     typedef typename Strategy::segment_point_type spoint_type;
 
-    // 4) must implement a static method apply with the following signature
-    typedef bool (*ApplyType)(point_type const&,
-            spoint_type const&, spoint_type const&,
-            state_type &);
 
-    // 5) must implement a static method result with the following signature
-    typedef bool (*ResultType)(state_type const&) ;
+    struct check_methods
+    {
+        static void apply()
+        {
+            Strategy const* str;
+
+            state_type* st;
+            point_type const* p;
+            spoint_type const* sp;
+
+            // 4) must implement a method apply
+            //    having a point, two segment-points, and state
+            str->apply(*p, *sp, *sp, *st);
+
+            // 5) must implement a method result
+            str->result(*st);
+            boost::ignore_unused_variable_warning(str);
+        }
+    };
+
 
 public :
     BOOST_CONCEPT_USAGE(WithinStrategy)
     {
-        ApplyType a = &Strategy::apply;
-        ResultType r = &Strategy::result;
-
-        boost::ignore_unused_variable_warning(a);
-        boost::ignore_unused_variable_warning(r);
+        check_methods::apply();
     }
 };
 

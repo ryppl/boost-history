@@ -15,8 +15,8 @@
 #include <ggl/core/access.hpp>
 #include <ggl/core/coordinate_dimension.hpp>
 
+#include <ggl/strategies/distance.hpp>
 #include <ggl/strategies/distance_result.hpp>
-#include <ggl/strategies/strategy_traits.hpp>
 
 #include <ggl/algorithms/overlay/segment_identifier.hpp>
 

@@ -18,7 +18,7 @@
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
 
-#include <ggl/iterators/vertex_iterator.hpp>
+#include <ggl/iterators/range_type.hpp>
 
 #include <ggl/geometries/segment.hpp>
 
@@ -35,7 +35,11 @@ namespace dispatch
 template <typename Tag, typename Geometry, typename Section>
 struct get_section
 {
-    typedef typename ggl::vertex_iterator<Geometry, true>::type iterator_type;
+    typedef typename boost::range_const_iterator
+        <
+            typename ggl::range_type<Geometry>::type
+        >::type iterator_type;
+
     static inline void apply(Geometry const& geometry, Section const& section,
                 iterator_type& begin, iterator_type& end)
     {
@@ -47,7 +51,11 @@ struct get_section
 template <typename Polygon, typename Section>
 struct get_section<polygon_tag, Polygon, Section>
 {
-    typedef typename ggl::vertex_iterator<Polygon, true>::type iterator_type;
+    typedef typename boost::range_const_iterator
+        <
+            typename ggl::range_type<Polygon>::type
+        >::type iterator_type;
+
     static inline void apply(Polygon const& polygon, Section const& section,
                 iterator_type& begin, iterator_type& end)
     {
@@ -81,8 +89,14 @@ struct get_section<polygon_tag, Polygon, Section>
  */
 template <typename Geometry, typename Section>
 inline void get_section(Geometry const& geometry, Section const& section,
-    typename vertex_iterator<Geometry, true>::type& begin,
-    typename vertex_iterator<Geometry, true>::type& end)
+    typename boost::range_const_iterator
+        <
+            typename ggl::range_type<Geometry>::type
+        >::type& begin,
+    typename boost::range_const_iterator
+        <
+            typename ggl::range_type<Geometry>::type
+        >::type& end)
 {
     concept::check<const Geometry>();
 

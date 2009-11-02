@@ -10,26 +10,34 @@
 #define GGL_STRATEGIES_HPP
 
 
-#include <ggl/strategies/strategy_traits.hpp>
+#include <ggl/strategies/tags.hpp>
+
+#include <ggl/strategies/area.hpp>
+#include <ggl/strategies/centroid.hpp>
+#include <ggl/strategies/compare.hpp>
+#include <ggl/strategies/convex_hull.hpp>
+#include <ggl/strategies/distance.hpp>
+#include <ggl/strategies/parse.hpp>
+#include <ggl/strategies/point_in_poly.hpp>
+#include <ggl/strategies/side.hpp>
+#include <ggl/strategies/transform.hpp>
 
 #include <ggl/strategies/cartesian/area_by_triangles.hpp>
 #include <ggl/strategies/cartesian/centroid_bashein_detmer.hpp>
-#include <ggl/strategies/cartesian/cart_compare.hpp>
-#include <ggl/strategies/cartesian/cart_distance.hpp>
-#include <ggl/strategies/cartesian/cart_envelope.hpp>
-#include <ggl/strategies/cartesian/cart_side.hpp>
+#include <ggl/strategies/cartesian/distance_pythagoras.hpp>
+#include <ggl/strategies/cartesian/distance_projected_point.hpp>
 #include <ggl/strategies/cartesian/point_in_poly_franklin.hpp>
 #include <ggl/strategies/cartesian/point_in_poly_crossings_multiply.hpp>
-
-#include <ggl/strategies/spherical/distance_haversine.hpp>
-#include <ggl/strategies/spherical/distance_cross_track.hpp>
+#include <ggl/strategies/cartesian/side_by_triangle.hpp>
 
 #include <ggl/strategies/spherical/area_huiller.hpp>
-#include <ggl/strategies/spherical/sph_envelope.hpp>
+#include <ggl/strategies/spherical/distance_haversine.hpp>
+#include <ggl/strategies/spherical/distance_cross_track.hpp>
+#include <ggl/strategies/spherical/compare_circular.hpp>
 
-#include <ggl/strategies/agnostic/agn_convex_hull.hpp>
-#include <ggl/strategies/agnostic/simplify_douglas_peucker.hpp>
+#include <ggl/strategies/agnostic/hull_graham_andrew.hpp>
 #include <ggl/strategies/agnostic/point_in_poly_winding.hpp>
+#include <ggl/strategies/agnostic/simplify_douglas_peucker.hpp>
 
 #include <ggl/strategies/strategy_transform.hpp>
 

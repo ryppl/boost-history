@@ -19,8 +19,11 @@
 
 #include <ggl/geometries/concepts/check.hpp>
 
+#include <ggl/iterators/range_type.hpp>
 
-#include <ggl/strategies/strategies.hpp>
+#include <ggl/strategies/convex_hull.hpp>
+#include <ggl/strategies/concepts/convex_hull_concept.hpp>
+
 #include <ggl/util/as_range.hpp>
 
 
@@ -34,15 +37,38 @@
 \see http://en.wikipedia.org/wiki/Convex_hull
 
 \par Performance
-2776 counties of US are "hulled" in 0.9 seconds (other libraries: 0.9, 4.1, 3.3, 1.4 seconds)
+2776 counties of US are "hulled" in 0.9 seconds
+(http://trac.osgeo.org/ggl/wiki/Performance#Convexhull1)
 
 \note The convex hull is always a ring, holes are not possible. Therefore it is
     can also be used in combination with an output iterator.
-\par Geometries:
+
+\par Geometries supported:
 In the images below the convex hull is painted in red.
-- POINT: will not compile
-- POLYGON: will deliver a polygon without holes
-    \image html convexhull_polygon_polygon.png
+
+- \b point: will not compile
+
+- \b linestring:
+
+- \b polygon: will deliver a polygon without holes
+    \image html svg_convex_hull_country.png
+
+- \b multi_point:
+    \image html svg_convex_hull_cities.png
+
+- \b multi_linestring:
+
+- \b multi_polygon:
+
+\par Output geometries supported:
+
+- \b polygon
+
+- \b ring
+
+- inserter version (with output iterator) can output to any array supporting
+    points of same type as the input geometry type
+
 */
 namespace ggl {
 
@@ -52,29 +78,22 @@ namespace detail { namespace convex_hull {
 template
 <
     typename Geometry,
-    order_selector Order
+    order_selector Order,
+    typename Strategy
 >
 struct hull_inserter
 {
+
     // Member template function, to avoid inconvenient declaration
-    // of output-iterator-type
+    // of output-iterator-type, from hull_to_geometry
     template <typename OutputIterator>
     static inline OutputIterator apply(Geometry const& geometry,
-            OutputIterator out)
+            OutputIterator out, Strategy const& strategy)
     {
-        typedef typename point_type<Geometry>::type point_type;
+        typename Strategy::state_type state;
 
-        typedef typename strategy_convex_hull
-            <
-                typename cs_tag<point_type>::type,
-                point_type
-            >::type strategy_type;
-
-        strategy_type s(as_range
-                <
-                    typename as_range_type<Geometry>::type
-                >(geometry));
-        s.get(out, Order == clockwise);
+        strategy.apply(geometry, state);
+        strategy.result(state, out, Order == clockwise);
         return out;
     }
 };
@@ -82,72 +101,50 @@ struct hull_inserter
 template
 <
     typename Geometry,
-    typename OutputGeometry
+    typename OutputGeometry,
+    typename Strategy
 >
 struct hull_to_geometry
 {
-    static inline void apply(Geometry const& geometry, OutputGeometry& out)
+    static inline void apply(Geometry const& geometry, OutputGeometry& out,
+            Strategy const& strategy)
     {
         hull_inserter
             <
                 Geometry,
-                ggl::point_order<OutputGeometry>::value
+                ggl::point_order<OutputGeometry>::value,
+                Strategy
             >::apply(geometry,
                 std::back_inserter(
+                    // Handle both ring and polygon the same:
                     ggl::as_range
                         <
-                            typename ggl::as_range_type<OutputGeometry>::type
-                        >(out)));
+                            typename ggl::range_type<OutputGeometry>::type
+                        >(out)), strategy);
     }
 };
-
-
 
 
 }} // namespace detail::convex_hull
 #endif // DOXYGEN_NO_DETAIL
 
+
 #ifndef DOXYGEN_NO_DISPATCH
 namespace dispatch
 {
+
 
 template
 <
     typename Tag1,
     bool IsMulti,
-    typename Polygon, typename Output
+    typename Geometry,
+    typename Output,
+    typename Strategy
 >
 struct convex_hull
+    : detail::convex_hull::hull_to_geometry<Geometry, Output, Strategy>
 {};
-
-
-template <typename Polygon, typename Output>
-struct convex_hull
-<
-    polygon_tag, false,
-    Polygon, Output
->
-    : detail::convex_hull::hull_to_geometry<Polygon, Output>
-{};
-
-template <typename Polygon, typename Output>
-struct convex_hull
-<
-    ring_tag, false,
-    Polygon, Output
->
-    : detail::convex_hull::hull_to_geometry<Polygon, Output>
-{};
-
-template <typename Polygon, typename Output>
-struct convex_hull
-<
-    linestring_tag, false,
-    Polygon, Output
->
-    : detail::convex_hull::hull_to_geometry<Polygon, Output>
-{};
-
 
 
 template
@@ -155,47 +152,39 @@ template
     typename GeometryTag,
     order_selector Order,
     bool IsMulti,
-    typename GeometryIn
+    typename GeometryIn, typename Strategy
  >
-struct convex_hull_inserter {};
-
-template <typename Linestring, order_selector Order>
 struct convex_hull_inserter
-<
-    linestring_tag,
-    Order, false,
-    Linestring
->
-    : detail::convex_hull::hull_inserter<Linestring, Order>
+    : detail::convex_hull::hull_inserter<GeometryIn, Order, Strategy>
 {};
-
-
-template <typename Ring, order_selector Order>
-struct convex_hull_inserter
-<
-    ring_tag,
-    Order, false,
-    Ring
->
-    : detail::convex_hull::hull_inserter<Ring, Order>
-{};
-
-
-template <typename Polygon, order_selector Order>
-struct convex_hull_inserter
-<
-    polygon_tag,
-    Order, false,
-    Polygon
->
-    : detail::convex_hull::hull_inserter<Polygon, Order>
-{};
-
 
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
+
+template<typename Geometry1, typename Geometry2, typename Strategy>
+inline void convex_hull(Geometry1 const& geometry,
+            Geometry2& out, Strategy const& strategy)
+{
+    concept::check_concepts_and_equal_dimensions
+        <
+            const Geometry1,
+            Geometry2
+        >();
+
+    BOOST_CONCEPT_ASSERT( (ggl::concept::ConvexHullStrategy<Strategy>) );
+
+
+    dispatch::convex_hull
+        <
+            typename tag<Geometry1>::type,
+            is_multi<Geometry1>::type::value,
+            Geometry1,
+            Geometry2,
+            Strategy
+        >::apply(geometry, out, strategy);
+}
 
 
 /*!
@@ -205,25 +194,48 @@ struct convex_hull_inserter
     \tparam Geometry2: the output geometry type
     \param geometry the geometry to calculate convex hull from
     \param out a geometry receiving points of the convex hull
-    \note the output may be:
-    - a polygon
-    - a ring
-
  */
 template<typename Geometry1, typename Geometry2>
 inline void convex_hull(Geometry1 const& geometry,
             Geometry2& out)
 {
-    concept::check<const Geometry1>();
-    concept::check<Geometry2>();
-
-    dispatch::convex_hull
+    concept::check_concepts_and_equal_dimensions
         <
-            typename tag<Geometry1>::type,
-            is_multi<Geometry1>::type::value,
-            Geometry1,
+            const Geometry1,
             Geometry2
-        >::apply(geometry, out);
+        >();
+
+    //typedef typename range_type<Geometry1>::type range_type;
+    typedef typename point_type<Geometry2>::type point_type;
+
+    typedef typename strategy_convex_hull
+        <
+            typename cs_tag<point_type>::type,
+            Geometry1,
+            point_type
+        >::type strategy_type;
+
+    convex_hull(geometry, out, strategy_type());
+}
+
+
+template<typename Geometry, typename OutputIterator, typename Strategy>
+inline OutputIterator convex_hull_inserter(Geometry const& geometry,
+            OutputIterator out, Strategy const& strategy)
+{
+    // Concept: output point type = point type of input geometry
+    concept::check<const Geometry>();
+    concept::check<typename point_type<Geometry>::type>();
+
+    BOOST_CONCEPT_ASSERT( (ggl::concept::ConvexHullStrategy<Strategy>) );
+
+    return dispatch::convex_hull_inserter
+        <
+            typename tag<Geometry>::type,
+            ggl::point_order<Geometry>::value,
+            is_multi<Geometry>::type::value,
+            Geometry, Strategy
+        >::apply(geometry, out, strategy);
 }
 
 
@@ -248,13 +260,17 @@ inline OutputIterator convex_hull_inserter(Geometry const& geometry,
     concept::check<const Geometry>();
     concept::check<typename point_type<Geometry>::type>();
 
-    return dispatch::convex_hull_inserter
+    typedef typename range_type<Geometry>::type range_type;
+    typedef typename point_type<Geometry>::type point_type;
+
+    typedef typename strategy_convex_hull
         <
-            typename tag<Geometry>::type,
-            ggl::point_order<Geometry>::value,
-            is_multi<Geometry>::type::value,
-            Geometry
-        >::apply(geometry, out);
+            typename cs_tag<point_type>::type,
+            Geometry,
+            point_type
+        >::type strategy_type;
+
+    return convex_hull_inserter(geometry, out, strategy_type());
 }
 
 

@@ -5,13 +5,14 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_AREA_RESULT_HPP
-#define GGL_AREA_RESULT_HPP
+#ifndef GGL_STRATEGIES_AREA_RESULT_HPP
+#define GGL_STRATEGIES_AREA_RESULT_HPP
 
 
+#include <ggl/core/cs.hpp>
 #include <ggl/core/coordinate_type.hpp>
+#include <ggl/strategies/area.hpp>
 #include <ggl/util/select_most_precise.hpp>
-#include <ggl/strategies/strategies.hpp>
 
 
 namespace ggl
@@ -41,4 +42,4 @@ struct area_result
 } // namespace ggl
 
 
-#endif // GGL_AREA_RESULT_HPP
+#endif // GGL_STRATEGIES_AREA_RESULT_HPP

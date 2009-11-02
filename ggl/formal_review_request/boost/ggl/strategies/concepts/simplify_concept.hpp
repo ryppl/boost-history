@@ -37,16 +37,20 @@ struct SimplifyStrategy
                 (concept::PointSegmentDistanceStrategy<ds_type>)
             );
 
-        // 2) must implement static method apply with arguments
-        //    - Range
-        //    - OutputIterator
-        //    - floating point value
         struct apply_checker
         {
             static void check()
             {
-                std::vector<typename ds_type::point_type> *v;
-                Strategy::apply(*v, std::back_inserter(*v), 1.0);
+                Strategy *str;
+                std::vector<typename ds_type::point_type> const* v1;
+                std::vector<typename ds_type::point_type> * v2;
+
+                // 2) must implement method apply with arguments
+                //    - Range
+                //    - OutputIterator
+                //    - floating point value
+                str->apply(*v1, std::back_inserter(*v2), 1.0);
+                boost::ignore_unused_variable_warning(str);
             }
         };
 

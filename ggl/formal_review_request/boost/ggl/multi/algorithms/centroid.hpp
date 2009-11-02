@@ -10,8 +10,11 @@
 #define GGL_MULTI_ALGORITHMS_CENTROID_HPP
 
 #include <ggl/algorithms/centroid.hpp>
+#include <ggl/algorithms/num_points.hpp>
 #include <ggl/multi/core/point_type.hpp>
 #include <ggl/multi/algorithms/detail/multi_sum.hpp>
+#include <ggl/multi/algorithms/num_points.hpp>
+
 
 namespace ggl {
 
@@ -19,35 +22,35 @@ namespace ggl {
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail { namespace centroid {
 
+
+/*!
+    \brief Building block of a multi-point, to be used as Policy in the
+        more generec centroid_multi
+*/
 template
 <
-    typename Multi, 
     typename Point,
     typename Strategy 
 >
-struct centroid_multi_point
+struct centroid_multi_point_state
 {
-    static inline bool apply(Multi const& multi, Point& centroid,
+    static inline void apply(Point const& point, 
             Strategy const& strategy, typename Strategy::state_type& state)
     {
-        assign_zero(centroid);
-        int n = 0;
-
-        for (typename boost::range_const_iterator<Multi>::type 
-                it = boost::begin(multi); 
-            it != boost::end(multi); 
-            ++it)
-        {
-            add_point(centroid, *it);
-            n++;
-        }
-        divide_value(centroid, n);
-
-        return false;
+        strategy.apply(point, state);
     }
 };
 
 
+
+/*!
+    \brief Generic implementation which calls a policy to calculate the
+        centroid of the total of its single-geometries
+    \details The Policy is, in general, the single-version, with state. So
+        detail::centroid::centroid_polygon_state is used as a policy for this
+        detail::centroid::centroid_multi
+
+*/
 template
 <
     typename Multi, 
@@ -57,17 +60,26 @@ template
 >
 struct centroid_multi
 {
-    static inline bool apply(Multi const& multi, Point& centroid,
-            Strategy const& strategy, typename Strategy::state_type& state)
+    static inline void apply(Multi const& multi, Point& centroid,
+            Strategy const& strategy)
     {
+        // If there is nothing in any of the ranges, it is not possible 
+        // to calculate the centroid
+        if (ggl::num_points(multi) == 0)
+        {
+            throw centroid_exception();
+        }
+
+        typename Strategy::state_type state;
+
         for (typename boost::range_const_iterator<Multi>::type 
                 it = boost::begin(multi); 
             it != boost::end(multi); 
             ++it)
         {
-            Policy::apply(*it, centroid, strategy, state);
+            Policy::apply(*it, strategy, state);
         }
-        return true;
+        Strategy::result(state, centroid);
     }
 };
 
@@ -82,17 +94,21 @@ struct centroid_multi
 namespace dispatch
 {
 
-template <typename MultiPolygon, typename Point, typename Strategy>
-struct centroid<multi_polygon_tag, 2, MultiPolygon, Point, Strategy>
+template 
+<
+    typename MultiPolygon, 
+    typename Point, 
+    typename Strategy
+>
+struct centroid<multi_polygon_tag, MultiPolygon, Point, Strategy>
     : detail::centroid::centroid_multi
         <
             MultiPolygon, 
             Point,
             Strategy,
-            detail::centroid::centroid_polygon
+            detail::centroid::centroid_polygon_state
                 <
                     typename boost::range_value<MultiPolygon>::type,
-                    Point,
                     Strategy
                 >
         >
@@ -101,17 +117,21 @@ struct centroid<multi_polygon_tag, 2, MultiPolygon, Point, Strategy>
 
 template
 <
-    std::size_t Dimensions,
     typename MultiPoint, 
     typename Point, 
     typename Strategy
 >
-struct centroid<multi_point_tag, Dimensions, MultiPoint, Point, Strategy>
-    : detail::centroid::centroid_multi_point
+struct centroid<multi_point_tag, MultiPoint, Point, Strategy>
+    : detail::centroid::centroid_multi
         <
             MultiPoint, 
             Point,
-            Strategy
+            Strategy,
+            detail::centroid::centroid_multi_point_state
+                <
+                    typename boost::range_value<MultiPoint>::type,
+                    Strategy
+                >
         >
 {};
 
@@ -124,3 +144,4 @@ struct centroid<multi_point_tag, Dimensions, MultiPoint, Point, Strategy>
 
 
 #endif // GGL_MULTI_ALGORITHMS_CENTROID_HPP
+

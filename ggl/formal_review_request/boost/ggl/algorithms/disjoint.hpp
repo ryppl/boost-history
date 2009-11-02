@@ -9,6 +9,14 @@
 #ifndef GGL_ALGORITHMS_DISJOINT_HPP
 #define GGL_ALGORITHMS_DISJOINT_HPP
 
+
+/*!
+\defgroup disjoint disjoint, not any spatial relation
+\details disjoint means spatially disjoint, there is no overlap of interiors
+    and boundaries, the intersection of interiors or boundaries is empty.
+*/
+
+
 #include <boost/mpl/if.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
@@ -29,84 +37,110 @@
 namespace ggl
 {
 
+
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail { namespace disjoint {
 
-template <typename P1, typename P2, std::size_t D, std::size_t N>
+
+template
+<
+    typename Point1, typename Point2,
+    std::size_t Dimension, std::size_t DimensionCount
+>
 struct point_point
 {
-    typedef typename select_coordinate_type<P1, P2>::type coordinate_type;
-
-    static inline bool apply(P1 const& p1, P2 const& p2)
+    static inline bool apply(Point1 const& p1, Point2 const& p2)
     {
-        if (! ggl::math::equals(get<D>(p1), get<D>(p2)))
+        if (! ggl::math::equals(get<Dimension>(p1), get<Dimension>(p2)))
         {
             return true;
         }
-        return point_point<P1, P2, D + 1, N>::apply(p1, p2);
+        return point_point
+            <
+                Point1, Point2,
+                Dimension + 1, DimensionCount
+            >::apply(p1, p2);
     }
 };
 
-template <typename P1, typename P2, std::size_t N>
-struct point_point<P1, P2, N, N>
+
+template <typename Point1, typename Point2, std::size_t DimensionCount>
+struct point_point<Point1, Point2, DimensionCount, DimensionCount>
 {
-    static inline bool apply(P1 const& , P2 const& )
+    static inline bool apply(Point1 const& , Point2 const& )
     {
         return false;
     }
 };
 
 
-template <typename P, typename B, std::size_t D, std::size_t N>
+template
+<
+    typename Point, typename Box,
+    std::size_t Dimension, std::size_t DimensionCount
+>
 struct point_box
 {
-    static inline bool apply(P const& point, B const& box)
+    static inline bool apply(Point const& point, Box const& box)
     {
-        if (get<D>(point) < get<min_corner, D>(box)
-            || get<D>(point) > get<max_corner, D>(box))
+        if (get<Dimension>(point) < get<min_corner, Dimension>(box)
+            || get<Dimension>(point) > get<max_corner, Dimension>(box))
         {
             return true;
         }
-        return point_box<P, B, D + 1, N>::apply(point, box);
+        return point_box
+            <
+                Point, Box,
+                Dimension + 1, DimensionCount
+            >::apply(point, box);
     }
 };
 
-template <typename P, typename B, std::size_t N>
-struct point_box<P, B, N, N>
+
+template <typename Point, typename Box, std::size_t DimensionCount>
+struct point_box<Point, Box, DimensionCount, DimensionCount>
 {
-    static inline bool apply(P const& , B const& )
+    static inline bool apply(Point const& , Box const& )
     {
         return false;
     }
 };
 
 
-template <typename B1, typename B2, std::size_t D, std::size_t N>
+template
+<
+    typename Box1, typename Box2,
+    std::size_t Dimension, std::size_t DimensionCount
+>
 struct box_box
 {
-    static inline bool apply(B1 const& box1, B2 const& box2)
+    static inline bool apply(Box1 const& box1, Box2 const& box2)
     {
-        if (get<max_corner, D>(box1) < get<min_corner, D>(box2))
+        if (get<max_corner, Dimension>(box1) < get<min_corner, Dimension>(box2))
         {
             return true;
         }
-        if (get<min_corner, D>(box1) > get<max_corner, D>(box2))
+        if (get<min_corner, Dimension>(box1) > get<max_corner, Dimension>(box2))
         {
             return true;
         }
-        return box_box<B1, B2, D + 1, N>::apply(box1, box2);
+        return box_box
+            <
+                Box1, Box2,
+                Dimension + 1, DimensionCount
+            >::apply(box1, box2);
     }
 };
 
-template <typename B1, typename B2, std::size_t N>
-struct box_box<B1, B2, N, N>
+
+template <typename Box1, typename Box2, std::size_t DimensionCount>
+struct box_box<Box1, Box2, DimensionCount, DimensionCount>
 {
-    static inline bool apply(B1 const& , B2 const& )
+    static inline bool apply(Box1 const& , Box2 const& )
     {
         return false;
     }
 };
-
 
 
 }} // namespace detail::disjoint
@@ -117,6 +151,7 @@ struct box_box<B1, B2, N, N>
 namespace dispatch
 {
 
+
 template
 <
     typename GeometryTag1, typename GeometryTag2,
@@ -125,26 +160,25 @@ template
     std::size_t DimensionCount
 >
 struct disjoint
-{
-};
+{};
+
 
 template <typename P1, typename P2, std::size_t DimensionCount>
 struct disjoint<point_tag, point_tag, P1, P2, false, false, DimensionCount>
     : detail::disjoint::point_point<P1, P2, 0, DimensionCount>
-{
-};
+{};
+
 
 template <typename B1, typename B2, std::size_t DimensionCount>
 struct disjoint<box_tag, box_tag, B1, B2, false, false, DimensionCount>
     : detail::disjoint::box_box<B1, B2, 0, DimensionCount>
-{
-};
+{};
+
 
 template <typename P, typename B, std::size_t DimensionCount>
 struct disjoint<point_tag, box_tag, P, B, false, false, DimensionCount>
     : detail::disjoint::point_box<P, B, 0, DimensionCount>
-{
-};
+{};
 
 
 template
@@ -176,7 +210,7 @@ struct disjoint_reversed
 
 /*!
     \brief Calculate if two geometries are disjoint
-    \ingroup boolean_relations
+    \ingroup disjoint
     \tparam Geometry1 first geometry type
     \tparam Geometry2 second geometry type
     \param geometry1 first geometry
@@ -187,10 +221,11 @@ template <typename Geometry1, typename Geometry2>
 inline bool disjoint(const Geometry1& geometry1,
             const Geometry2& geometry2)
 {
-    concept::check<const Geometry1>();
-    concept::check<const Geometry2>();
-
-    assert_dimension_equal<Geometry1, Geometry2>();
+    concept::check_concepts_and_equal_dimensions
+        <
+            const Geometry1,
+            const Geometry2
+        >();
 
     typedef typename boost::remove_const<Geometry1>::type ncg1_type;
     typedef typename boost::remove_const<Geometry2>::type ncg2_type;

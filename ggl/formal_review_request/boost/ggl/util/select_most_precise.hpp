@@ -13,10 +13,6 @@
 #include <boost/type_traits.hpp>
 
 
-/*!
-\defgroup utility utility: utilities
-*/
-
 namespace ggl
 {
 
@@ -92,7 +88,7 @@ struct select_floating_point<false, true, T1, T2>
 
 
 /*!
-    \brief Traits class to select, of two types, the most accurate type for
+    \brief Meta-function to select, of two types, the most accurate type for
         calculations
     \ingroup utility
     \details select_most_precise classes, compares two types on compile time.
@@ -104,7 +100,7 @@ struct select_floating_point<false, true, T1, T2>
         type from two types. It takes the most accurate, but does not promote
         afterwards.
     \note This traits class is completely independant from GGL and might be a
-        separate (small) library in Boost
+        separate addition to Boost
     \note If the input is a non-fundamental type, it might be a calculation
         type such as a GMP-value or another high precision value. Therefore,
         if one is non-fundamental, that one is chosen.

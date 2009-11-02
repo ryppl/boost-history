@@ -167,8 +167,6 @@ struct dsv_range
 
         os << settings.list_open;
 
-        // TODO: check EMPTY here
-
         for (iterator_type it = boost::begin(range);
             it != boost::end(range);
             ++it)
@@ -317,26 +315,18 @@ struct dsv<polygon_tag, false, Polygon>
 #endif // DOXYGEN_NO_DISPATCH
 
 
-/*!
-\brief Generic geometry template manipulator class, takes corresponding output class from traits class
-\ingroup dsv
-\details Stream manipulator, streams geometry classes as \ref DSV streams
-\par Example:
-Small example showing how to use the dsv class
-\dontinclude doxygen_examples.cpp
-\skip example_as_dsv_point
-\line {
-\until }
-\note the template parameter must be specified. If that is inconvient, users might use streamdsv
-which streams geometries as manipulators, or the object generator make_dsv
-*/
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail { namespace dsv {
+
+
+
 template <typename Geometry>
 class dsv_manipulator
 {
 public:
 
     inline dsv_manipulator(Geometry const& g,
-            detail::dsv::dsv_settings const& settings)
+            dsv_settings const& settings)
         : m_geometry(g)
         , m_settings(settings)
     {}
@@ -358,15 +348,24 @@ public:
 
 private:
     Geometry const& m_geometry;
-    detail::dsv::dsv_settings m_settings;
+    dsv_settings m_settings;
 };
+
+}} // namespace detail::dsv
+#endif // DOXYGEN_NO_DETAIL
+
 
 /*!
 \brief Main DSV-streaming function
-\ingroup dsv
+\details DSV stands for Delimiter Separated Values. Geometries can be streamed
+    as DSV. There are defaults for all separators.
+\note Useful for examples and testing purposes
+\note With this function GeoJSON objects can be created, using the right
+    delimiters
+\ingroup utility
 */
 template <typename Geometry>
-inline dsv_manipulator<Geometry> dsv(Geometry const& geometry
+inline detail::dsv::dsv_manipulator<Geometry> dsv(Geometry const& geometry
     , std::string const& coordinate_separator = ", "
     , std::string const& point_open = "("
     , std::string const& point_close = ")"
@@ -378,7 +377,7 @@ inline dsv_manipulator<Geometry> dsv(Geometry const& geometry
 {
     concept::check<const Geometry>();
 
-    return dsv_manipulator<Geometry>(geometry,
+    return detail::dsv::dsv_manipulator<Geometry>(geometry,
         detail::dsv::dsv_settings(coordinate_separator,
             point_open, point_close, point_separator,
             list_open, list_close, list_separator));

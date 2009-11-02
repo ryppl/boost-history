@@ -24,7 +24,7 @@
 
 #include <ggl/algorithms/detail/calculate_null.hpp>
 
-#include <ggl/strategies/strategies.hpp>
+#include <ggl/strategies/distance.hpp>
 #include <ggl/strategies/length_result.hpp>
 
 /*!
@@ -60,7 +60,7 @@ struct segment_length
         // TODO: the segment concept has to be such that it is easy
         // to return a point from it.
         // Now it only accesses per coordinate
-        return strategy(segment.first, segment.second);
+        return strategy.apply(segment.first, segment.second);
     }
 };
 
@@ -89,7 +89,7 @@ struct range_length
             {
                 // Add point-point distance using the return type belonging
                 // to strategy
-                sum += strategy(*previous, *it);
+                sum += strategy.apply(*previous, *it);
                 previous = it++;
             }
         }

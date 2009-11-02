@@ -6,89 +6,93 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_STRATEGY_CARTESIAN_WITHIN_HPP
-#define GGL_STRATEGY_CARTESIAN_WITHIN_HPP
+#ifndef GGL_STRATEGIES_CARTESIAN_POINT_IN_POLY_FRANKLIN_HPP
+#define GGL_STRATEGIES_CARTESIAN_POINT_IN_POLY_FRANKLIN_HPP
 
 
-
-#include <ggl/geometries/segment.hpp>
-
+#include <ggl/core/coordinate_type.hpp>
+#include <ggl/util/select_calculation_type.hpp>
 
 
 namespace ggl
-{
-namespace strategy
-{
-    namespace within
-    {
-        /*!
-            \brief Within detection using cross counting
 
-            \author adapted from Randolph Franklin algorithm
-            \author Barend and Maarten, 1995
-            \author Revised for templatized library, Barend Gehrels, 2007
-            \return true if point is in ring, works for closed rings in both directions
-            \note Does NOT work correctly for point ON border
-         */
+{
+namespace strategy { namespace within {
 
-        template<typename P, typename PS = P>
-        struct franklin
+/*!
+    \brief Within detection using cross counting
+
+    \author adapted from Randolph Franklin algorithm
+    \author Barend and Maarten, 1995
+    \author Revised for templatized library, Barend Gehrels, 2007
+    \return true if point is in ring, works for closed rings in both directions
+    \note Does NOT work correctly for point ON border
+ */
+
+template
+<
+    typename Point,
+    typename PointOfSegment = Point,
+    typename CalculationType = void
+>
+class franklin
+{
+    typedef typename select_calculation_type
+        <
+            Point,
+            PointOfSegment,
+            CalculationType
+        >::type calculation_type;
+
+        /*! subclass to keep state */
+        class crossings
         {
-            private :
-                /*! subclass to keep state */
-                struct crossings
-                {
-                    P p;
-                    bool crosses;
-                    explicit crossings(const P& ap)
-                        : p(ap)
-                        , crosses(false)
-                    {}
-                    bool within() const
-                    {
-                        return crosses;
-                    }
-                };
+            bool crosses;
 
-            public :
+        public :
 
-                typedef crossings state_type;
-
-                inline bool operator()(const segment<const PS>& s, state_type& state) const
-                {
-                    /* Algorithm:
-                    if (
-                        ( (y2 <= py && py < y1)
-                            || (y1 <= py && py < y2) )
-                        && (px < (x1 - x2)
-                                * (py - y2)
-                                    / (y1 - y2) + x2)
-                        )
-                            crosses = ! crosses
-                    */
-
-
-                    if (
-                        ((get<1, 1>(s) <= get<1>(state.p) && get<1>(state.p) < get<0, 1>(s))
-                            || (get<0, 1>(s) <= get<1>(state.p) && get<1>(state.p) < get<1, 1>(s)))
-                        && (get<0>(state.p) < (get<0, 0>(s) - get<1, 0>(s))
-                            * (get<1>(state.p) - get<1, 1>(s))
-                                    / (get<0, 1>(s) - get<1, 1>(s)) + get<1, 0>(s))
-                        )
-                    {
-                        state.crosses = ! state.crosses;
-                    }
-                    return true;
-                }
+            friend class franklin;
+            inline crossings()
+                : crosses(false)
+            {}
         };
 
+public :
+
+    typedef Point point_type;
+    typedef PointOfSegment segment_point_type;
+    typedef crossings state_type;
+
+    static inline bool apply(Point const& point,
+            PointOfSegment const& seg1, PointOfSegment const& seg2,
+            crossings& state)
+    {
+        calculation_type const& px = get<0>(point);
+        calculation_type const& py = get<1>(point);
+        calculation_type const& x1 = get<0>(seg1);
+        calculation_type const& y1 = get<1>(seg1);
+        calculation_type const& x2 = get<0>(seg2);
+        calculation_type const& y2 = get<1>(seg2);
+
+        if (
+            ( (y2 <= py && py < y1) || (y1 <= py && py < y2) )
+            && (px < (x1 - x2) * (py - y2) / (y1 - y2) + x2)
+            )
+        {
+            state.crosses = ! state.crosses;
+        }
+        return true;
+    }
+
+    static inline bool result(crossings const& state)
+    {
+        return state.crosses;
+    }
+};
 
 
-    } // namespace within
 
-
-
-} // namespace strategy
+}} // namespace strategy::within
 
 
 
@@ -97,4 +101,4 @@ namespace strategy
 } // namespace ggl
 
 
-#endif // GGL_STRATEGY_CARTESIAN_WITHIN_HPP
+#endif // GGL_STRATEGIES_CARTESIAN_POINT_IN_POLY_FRANKLIN_HPP

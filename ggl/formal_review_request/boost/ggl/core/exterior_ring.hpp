@@ -17,25 +17,29 @@
 #include <ggl/core/ring_type.hpp>
 #include <ggl/core/tag.hpp>
 #include <ggl/core/tags.hpp>
+#include <ggl/util/add_const_if_c.hpp>
 
 
 namespace ggl {
 
 namespace traits {
 
+
 /*!
     \brief Traits class defining access to exterior_ring of a polygon
     \details Should define const and non const access
     \ingroup traits
-    \tparam G geometry
+    \tparam Polygon the polygon type
     \par Geometries:
         - polygon
     \par Specializations should provide:
         - static inline RING& get(POLY& )
         - static inline const RING& get(const POLY& )
 */
-template <typename P>
-struct exterior_ring {};
+template <typename Polygon>
+struct exterior_ring
+{};
+
 
 } // namespace traits
 
@@ -44,22 +48,34 @@ struct exterior_ring {};
 namespace core_dispatch
 {
 
-template <typename T, typename G>
+
+template <typename Tag, typename Geometry, bool IsConst>
 struct exterior_ring {};
 
-template <typename P>
-struct exterior_ring<polygon_tag, P>
-{
-    static inline typename ring_type<polygon_tag, P>::type& get(P& polygon)
-    {
-        return traits::exterior_ring<P>::get(polygon);
-    }
 
-    static inline const typename ring_type<polygon_tag, P>::type& get(const P& polygon)
+template <typename Polygon, bool IsConst>
+struct exterior_ring<polygon_tag, Polygon, IsConst>
+{
+    static inline typename add_const_if_c
+        <
+            IsConst,
+            typename ggl::ring_type
+                    <
+                        Polygon
+                    >::type
+        >::type& apply(typename add_const_if_c
+            <
+                IsConst,
+                Polygon
+            >::type& polygon)
     {
-        return traits::exterior_ring<P>::get(polygon);
+        return traits::exterior_ring
+            <
+                typename boost::remove_const<Polygon>::type
+            >::get(polygon);
     }
 };
+
 
 } // namespace core_dispatch
 #endif // DOXYGEN_NO_DISPATCH
@@ -73,24 +89,36 @@ struct exterior_ring<polygon_tag, P>
     \param polygon the polygon to get the exterior ring from
     \return a reference to the exterior ring
 */
-template <typename P>
-inline typename ring_type<P>::type& exterior_ring(P& polygon)
+template <typename Polygon>
+inline typename ring_type<Polygon>::type& exterior_ring(Polygon& polygon)
 {
-    return core_dispatch::exterior_ring<typename tag<P>::type, P>::get(polygon);
+    return core_dispatch::exterior_ring
+        <
+            typename tag<Polygon>::type,
+            Polygon,
+            false
+        >::apply(polygon);
 }
+
 
 /*!
     \brief Function to get the exterior ring of a polygon (const version)
     \ingroup access
     \note OGC compliance: instead of ExteriorRing
-    \tparam P polygon type
+    \tparam Polygon polygon type
     \param polygon the polygon to get the exterior ring from
     \return a const reference to the exterior ring
 */
-template <typename P>
-inline const typename ring_type<P>::type& exterior_ring(const P& polygon)
+template <typename Polygon>
+inline const typename ring_type<Polygon>::type& exterior_ring(
+        Polygon const& polygon)
 {
-    return core_dispatch::exterior_ring<typename tag<P>::type, P>::get(polygon);
+    return core_dispatch::exterior_ring
+        <
+            typename tag<Polygon>::type,
+            Polygon,
+            true
+        >::apply(polygon);
 }
 
 

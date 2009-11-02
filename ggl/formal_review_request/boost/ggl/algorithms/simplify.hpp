@@ -20,7 +20,6 @@
 
 #include <ggl/geometries/concepts/check.hpp>
 
-#include <ggl/strategies/strategies.hpp>
 #include <ggl/strategies/agnostic/simplify_douglas_peucker.hpp>
 #include <ggl/strategies/concepts/simplify_concept.hpp>
 
@@ -29,25 +28,37 @@
 
 
 /*!
-\defgroup simplify simplification (generalization)
+\defgroup simplify simplify: remove points from a geometry, keeping shape (simplification or generalization)
 \par Source description:
-- Wikipedia: given a 'curve' composed of line segments to find a curve not too dissimilar but that has fewer points
+- Wikipedia: given a 'curve' composed of line segments to find a curve
+    not too dissimilar but that has fewer points
 
 \see http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm
 
 \par Performance
-Performance is measured on simplification of a collection of rings, such that 10% of the points is kept.
-- 2776 counties of US are simplified in 0.8 seconds (2.5 seconds or 11.5 seconds in 2 other libraries)
-- 3918 zipcode areas of the Netherlands are simplified in 0.03 seconds (0.1 seconds or 0.45 seconds in 2 other libraries)
-
+- Performance is measured on simplification of a collection of rings,
+    such that 10% of the points is kept.
+- 2776 counties of US are simplified in 0.7 seconds
+(http://trac.osgeo.org/ggl/wiki/Performance#Simplify1)
 
 \par Geometries
-- LINESTRING:
-\image html simplify_linestring.png
-- POLYGON: simplifying a valid simple polygon (which never intersects itself) might result in an invalid polygon,
-where the simplified rings intersect themselves or one of the other outer or inner rings.
+- \b linestring:
+\image html svg_simplify_road.png
+This US Road originally contained 34 points, the simplified version contains 7 points
+
+- \b polygon:
+\image html svg_simplify_country.png
+This country (Belgium) originally contained 55 points, the simplified version contains 24 points
+
+\note simplifying a valid simple polygon (which never intersects itself)
+    might result in an invalid polygon, where the simplified rings intersect
+    themselves or one of the other outer or inner rings.
 Efficient simplification of a ring/polygon is still an "Open Problem"
 (http://maven.smith.edu/~orourke/TOPP/P24.html#Problem.24)
+
+- \b multi_linestring
+- \b multi_polygon
+
 
 */
 
@@ -98,14 +109,18 @@ struct simplify_range
     {
         // Call do_container for a linestring / ring
 
-        // For a RING:
-            // The first/last point (the closing point of the ring) should maybe be excluded because it
-            // lies on a line with second/one but last. Here it is never excluded.
+        /* For a RING:
+            The first/last point (the closing point of the ring) should maybe
+            be excluded because it lies on a line with second/one but last.
+            Here it is never excluded.
 
-            // Note also that, especially if max_distance is too large, the output ring might be self intersecting
-            // while the input ring is not, although chances are low in normal polygons
+            Note also that, especially if max_distance is too large,
+            the output ring might be self intersecting while the input ring is
+            not, although chances are low in normal polygons
 
-            // Finally the inputring might have 4 points (=correct), the output < 4(=wrong)
+            Finally the inputring might have 4 points (=correct),
+                the output < 4(=wrong)
+        */
 
         if (boost::size(range) <= int(Minimum) || max_distance < 0.0)
         {
@@ -144,7 +159,9 @@ struct simplify_polygon
                         exterior_ring(poly_out),
                         max_distance, strategy);
 
-        interior_rings(poly_out).resize(boost::size(interior_rings(poly_in)));
+        // Note: here a resizeable container is assumed.
+        // Maybe we should make this part of the concept.
+        interior_rings(poly_out).resize(num_interior_rings(poly_in));
 
         iterator_type it_out = boost::begin(interior_rings(poly_out));
 
@@ -243,14 +260,14 @@ struct simplify_inserter<ring_tag, Ring, Strategy>
 
 
 /*!
-    \brief Simplify a geometry
+    \brief Simplify a geometry using a specified strategy
     \ingroup simplify
-    \details This version of simplify simplifies a geometry using a specified strategy
-    where the output is of the same geometry type as the input.
     \param geometry input geometry, to be simplified
     \param out output geometry, simplified version of the input geometry
-    \param max_distance distance (in units of input coordinates) of a vertex to other segments to be removed
-    \param strategy simplify strategy to be used for simplification, might include point-distance strategy
+    \param max_distance distance (in units of input coordinates) of a vertex
+        to other segments to be removed
+    \param strategy simplify strategy to be used for simplification, might
+        include point-distance strategy
  */
 template<typename Geometry, typename Strategy>
 inline void simplify(Geometry const& geometry, Geometry& out,
@@ -276,11 +293,18 @@ inline void simplify(Geometry const& geometry, Geometry& out,
 /*!
     \brief Simplify a geometry
     \ingroup simplify
-    \details This version of simplify simplifies a geometry using the default strategy (Douglas Peucker),
-        where the output is of the same geometry type as the input.
+    \note This version of simplify simplifies a geometry using the default
+        strategy (Douglas Peucker),
     \param geometry input geometry, to be simplified
     \param out output geometry, simplified version of the input geometry
-    \param max_distance distance (in units of input coordinates) of a vertex to other segments to be removed
+    \param max_distance distance (in units of input coordinates) of a vertex
+        to other segments to be removed
+    \par Example:
+    The simplify algorithm can be used as following:
+    \dontinclude doxygen_examples.cpp
+    \skip example_simplify_linestring1
+    \line {
+    \until }
  */
 template<typename Geometry>
 inline void simplify(Geometry const& geometry, Geometry& out,
@@ -295,7 +319,7 @@ inline void simplify(Geometry const& geometry, Geometry& out,
             cs_tag,
             cs_tag,
             point_type,
-            ggl::segment<const point_type>
+            point_type
         >::type ds_strategy_type;
 
     typedef strategy::simplify::douglas_peucker
@@ -308,16 +332,17 @@ inline void simplify(Geometry const& geometry, Geometry& out,
 
 
 /*!
-    \brief Simplify a geometry
+    \brief Simplify a geometry, using an output iterator
+        and a specified strategy
     \ingroup simplify
-    \details The simplify algorithm removes points, keeping the shape as much as possible.
-    This version of simplify uses an output iterator and a simplify strategy
-    \param geometry the geometry to be simplified, being a ggl::linestring, vector, iterator pair, or any other boost compatible range
+    \param geometry input geometry, to be simplified
     \param out output iterator, outputs all simplified points
-    \param max_distance distance (in units of input coordinates) of a vertex to other segments to be removed
-    \param strategy simplify strategy to be used for simplification, might include point-distance strategy
+    \param max_distance distance (in units of input coordinates) of a vertex
+        to other segments to be removed
+    \param strategy simplify strategy to be used for simplification,
+        might include point-distance strategy
     \par Example:
-    The simplify algorithm with strategy can be used as following:
+    simplify_inserter with strategy is used as following:
     \dontinclude doxygen_examples.cpp
     \skip example_simplify_linestring2
     \line {
@@ -339,19 +364,12 @@ inline void simplify_inserter(Geometry const& geometry, OutputIterator out,
 }
 
 /*!
-    \brief Simplify a geometry
+    \brief Simplify a geometry, using an output iterator
     \ingroup simplify
-    \details The simplify algorithm removes points, keeping the shape as much as possible.
-    This version of simplify uses an output iterator
-    \param geometry the geometry to be simplified, being a ggl::linestring, vector, iterator pair, or any other boost compatible range
+    \param geometry input geometry, to be simplified
     \param out output iterator, outputs all simplified points
-    \param max_distance distance (in units of input coordinates) of a vertex to other segments to be removed
-    \par Example:
-    The simplify algorithm can be used as following:
-    \dontinclude doxygen_examples.cpp
-    \skip example_simplify_linestring1
-    \line {
-    \until }
+    \param max_distance distance (in units of input coordinates) of a vertex
+        to other segments to be removed
  */
 template<typename Geometry, typename OutputIterator>
 inline void simplify_inserter(Geometry const& geometry, OutputIterator out,
@@ -369,10 +387,8 @@ inline void simplify_inserter(Geometry const& geometry, OutputIterator out,
             cs_tag,
             cs_tag,
             point_type,
-            ggl::segment<const point_type>
+            point_type
         >::type ds_strategy_type;
-
-    //typedef typename ggl::as_range_type<Geometry>::type range_type;
 
     typedef strategy::simplify::douglas_peucker
         <

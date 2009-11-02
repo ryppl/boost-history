@@ -25,7 +25,7 @@
 
 #include <ggl/geometries/concepts/check.hpp>
 
-#include <ggl/strategies/strategies.hpp>
+#include <ggl/strategies/transform.hpp>
 
 
 /*!
@@ -152,7 +152,7 @@ struct transform_polygon
             return false;
         }
 
-        interior_rings(poly2).resize(boost::size(interior_rings(poly1)));
+        interior_rings(poly2).resize(num_interior_rings(poly1));
 
         typedef typename boost::range_const_iterator<interior1_type>::type iterator1_type;
         typedef typename boost::range_iterator<interior2_type>::type iterator2_type;

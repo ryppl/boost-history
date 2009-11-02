@@ -13,8 +13,9 @@
 #include <ggl/core/coordinate_type.hpp>
 #include <ggl/util/select_most_precise.hpp>
 
+
 /*!
-\defgroup utility utility: utilities
+\defgroup utility utility: utility meta-functions and functions
 */
 
 namespace ggl
@@ -22,7 +23,8 @@ namespace ggl
 
 
 /*!
-    \brief Utility selecting the most precise coordinate type of two geometries
+    \brief Meta-function selecting the most precise coordinate type
+        of two geometries
     \ingroup utility
  */
 template <typename T1, typename T2>
@@ -35,6 +37,8 @@ struct select_coordinate_type
         >::type type;
 };
 
+
 } // namespace ggl
+
 
 #endif // GGL_UTIL_SELECT_COORDINATE_TYPE_HPP

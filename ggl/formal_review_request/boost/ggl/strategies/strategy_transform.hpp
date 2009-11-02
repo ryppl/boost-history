@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_STRATEGY_TRANSFORM_HPP
-#define GGL_STRATEGY_TRANSFORM_HPP
+#ifndef GGL_STRATEGIES_STRATEGY_TRANSFORM_HPP
+#define GGL_STRATEGIES_STRATEGY_TRANSFORM_HPP
 
 #include <cstddef>
 #include <cmath>
@@ -355,4 +355,4 @@ struct strategy_transform<cartesian_tag, spherical_tag, CoordSys1, CoordSys2, 3,
 
 } // namespace ggl
 
-#endif // GGL_STRATEGY_TRANSFORM_HPP
+#endif // GGL_STRATEGIES_STRATEGY_TRANSFORM_HPP

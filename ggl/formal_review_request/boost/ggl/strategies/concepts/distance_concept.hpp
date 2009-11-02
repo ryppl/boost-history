@@ -29,25 +29,32 @@ struct PointDistanceStrategy
 {
     private :
 
-        // 1) must define point_type
-        typedef typename Strategy::point_type ptype;
+        // 1) must define first_point_type
+        typedef typename Strategy::first_point_type ptype1;
         BOOST_CONCEPT_ASSERT
             (
-                (concept::ConstPoint<ptype>)
+                (concept::ConstPoint<ptype1>)
             );
 
-        // 2) must define return_type
+        // 2) must define second_point_type
+        typedef typename Strategy::second_point_type ptype2;
+        BOOST_CONCEPT_ASSERT
+            (
+                (concept::ConstPoint<ptype2>)
+            );
+
+        // 3) must define return_type
         typedef typename Strategy::return_type rtype;
 
-        // 3) must implement static method () with arguments
+        // 4) must implement apply with arguments
         struct apply_checker
         {
             static void check()
             {
-                Strategy s;
-                ptype *p1;
-                ptype *p2;
-                rtype r = s(*p1, *p2);
+                Strategy* s;
+                ptype1 *p1;
+                ptype2 *p2;
+                rtype r = s->apply(*p1, *p2);
 
                 boost::ignore_unused_variable_warning(r);
             }
@@ -77,10 +84,17 @@ struct PointSegmentDistanceStrategy
                 (concept::ConstPoint<ptype>)
             );
 
-        // 2) must define return_type
+        // 2) must define segment_point_type
+        typedef typename Strategy::segment_point_type sptype;
+        BOOST_CONCEPT_ASSERT
+            (
+                (concept::ConstPoint<sptype>)
+            );
+
+        // 3) must define return_type
         typedef typename Strategy::return_type rtype;
 
-        // 3) must define underlying point-distance-strategy
+        // 4) must define underlying point-distance-strategy
         typedef typename Strategy::point_strategy_type stype;
         BOOST_CONCEPT_ASSERT
             (
@@ -88,15 +102,17 @@ struct PointSegmentDistanceStrategy
             );
 
 
-        // 4) must implement static method () with arguments
+        // 5) must implement method apply with arguments
         struct apply_checker
         {
             static void check()
             {
-                Strategy s;
-                ptype *p1;
-                ptype *p2;
-                rtype r = s(*p1, ggl::segment<const ptype>(*p1, *p2));
+                Strategy *s;
+                ptype *p;
+                sptype *sp1;
+                sptype *sp2;
+
+                rtype r = s->apply(*p, *sp1, *sp2);
                 boost::ignore_unused_variable_warning(r);
             }
         };

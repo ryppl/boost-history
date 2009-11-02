@@ -14,19 +14,16 @@
 
 #include <ggl/util/select_coordinate_type.hpp>
 
-/*!
-\defgroup utility utility: utilities
-*/
 
 namespace ggl
 {
 
 
 /*!
-    \brief Utility selecting the "calculation" type
+    \brief Meta-function selecting the "calculation" type
     \details Based on two input point types, and an input calculation type,
-        (which usually defaults to void), this meta-function selects the
-        most appropriate:
+        (which defaults to void in the calling function), this meta-function
+        selects the most appropriate:
         - if calculation type is specified, that one is used,
         - if it is void, the most precise of the two points is used
     \ingroup utility
@@ -47,6 +44,8 @@ struct select_calculation_type
         >::type type;
 };
 
+
 } // namespace ggl
+
 
 #endif // GGL_UTIL_SELECT_CALCULATION_TYPE_HPP

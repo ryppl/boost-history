@@ -23,9 +23,7 @@
 #include <ggl/util/math.hpp>
 
 /*!
-
-\defgroup boolean_relations boolean relationships (equals, disjoint, overlaps, etc)
-
+\defgroup equals equals, test if two geometries are spatially equal
 */
 
 namespace ggl
@@ -110,13 +108,7 @@ struct equals<box_tag, false, B1, B2, DimensionCount>
 template <typename Geometry1, typename Geometry2>
 inline bool equals(Geometry1 const& geometry1, Geometry2 const& geometry2)
 {
-    concept::check<const Geometry1>();
-    concept::check<const Geometry2>();
-    assert_dimension_equal<Geometry1, Geometry2>();
-
-// TODO: assert types equal:
-// typename tag<ncg1_type>::type, typename tag<ncg2_type>::type,
-// (LATER): NO! a linestring can be spatially equal to a multi_linestring
+    concept::check_concepts_and_equal_dimensions<const Geometry1, const Geometry2>();
 
     typedef typename boost::remove_const<Geometry1>::type ncg1_type;
     typedef typename boost::remove_const<Geometry2>::type ncg2_type;

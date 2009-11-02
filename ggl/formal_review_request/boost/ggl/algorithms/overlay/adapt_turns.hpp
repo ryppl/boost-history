@@ -18,6 +18,8 @@
 
 #include <ggl/core/coordinate_type.hpp>
 
+#include <ggl/strategies/side.hpp>
+
 #include <ggl/algorithms/equals.hpp>
 
 
@@ -29,29 +31,12 @@ namespace ggl
 namespace detail { namespace intersection {
 
 
-
-// TEMP: another COPY of side
-// TODO: solve this inside SIDE!!!
-template <typename P1, typename P2, typename P>
-inline int the_side(P1 const& p1, P2 const& p2, P const& p)
-{
-    typedef typename select_coordinate_type<P, P1>::type T;
-
-    T dx = get<0>(p2) - get<0>(p1);
-    T dy = get<1>(p2) - get<1>(p1);
-    T dpx = get<0>(p) - get<0>(p1);
-    T dpy = get<1>(p) - get<1>(p1);
-    T product =  dx * dpy - dy * dpx;
-    return product > 0 ? 1 : product < 0 ? -1 : 0;
-}
-
 template <typename T>
 inline void join_adapt(T& info, int direction)
 {
     info.first->direction = direction;
     info.second->direction = direction;
 }
-
 
 
 template <typename T>
@@ -85,6 +70,7 @@ inline void both_same(T const& pi, T & pk, T const& qu, T& qw, int dir_p, int di
     }
 }
 
+
 template <typename T>
 inline void crossing(T const& pi, T & pk, T const& qu, T& qw, int dir_p, int dir_q, int direction)
 {
@@ -104,7 +90,6 @@ inline void crossing(T const& pi, T & pk, T const& qu, T& qw, int dir_p, int dir
         }
     }
 }
-
 
 
 template <typename T>
@@ -127,6 +112,7 @@ inline void collinear(T const& pi, T & pk, T const& qu, T& qw, int dir_p, int di
     }
 
 }
+
 
 template <typename T, typename P>
 inline void assign_pq(T const& info, P& p, P& q)
@@ -154,6 +140,7 @@ inline void assign_pq(T const& info, P& p, P& q)
         }
     }
 }
+
 
 template <typename Info, typename Point>
 inline void touch_in_the_middle(Info& info, Point const& point)
@@ -192,7 +179,13 @@ inline void touch_in_the_middle(Info& info, Point const& point)
         && qu->direction == qw->direction
         && qu->seg_id.source_index == qw->seg_id.source_index)
     {
-        int dir_q = the_side(qu->other_point, point, qw->other_point);
+        typedef typename strategy_side
+            <
+                typename cs_tag<Point>::type
+            >::type side;
+
+
+        int dir_q = side::apply(qu->other_point, point, qw->other_point);
 
 #ifdef GGL_DEBUG_INTERSECTION
         std::cout << "Both "
@@ -220,8 +213,6 @@ inline void touch_in_the_middle(Info& info, Point const& point)
         }
     }
 }
-
-
 
 
 template <typename Info>
@@ -260,6 +251,7 @@ inline void arrive_in_the_middle(Info& info)
         }
     }
 }
+
 
 template <typename Info>
 inline void start_in_the_middle(Info& info, bool opposite)
@@ -347,7 +339,6 @@ inline void adapt_turns(V& intersection_points)
                         opposite = true;
                     }
                 }
-
 
                 if (count_m == 2 && count_s == 2)
                 {
@@ -454,8 +445,14 @@ inline void adapt_turns(V& intersection_points)
                     }
                 }
 
-                int dir_p = the_side(p.first, it->point, p.second);
-                int dir_q = the_side(q.first, it->point, q.second);
+                typedef typename strategy_side
+                    <
+                        typename cs_tag<ip_type>::type
+                    >::type side;
+
+
+                int dir_p = side::apply(p.first, it->point, p.second);
+                int dir_q = side::apply(q.first, it->point, q.second);
 
 #ifdef GGL_DEBUG_INTERSECTION
                 std::cout << "Pi//Qu : " << *pi.first << std::endl;
@@ -518,8 +515,6 @@ inline void adapt_turns(V& intersection_points)
                         tvit->direction = 0;
                     }
                 }
-
-
              }
         }
     }
@@ -531,10 +526,8 @@ inline void adapt_turns(V& intersection_points)
 }
 
 
-
 }} // namespace detail::intersection
 #endif //DOXYGEN_NO_DETAIL
-
 
 
 template <typename V>

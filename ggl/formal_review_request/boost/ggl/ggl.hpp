@@ -57,7 +57,6 @@
 
 #include <ggl/util/copy.hpp>
 #include <ggl/util/for_each_coordinate.hpp>
-#include <ggl/util/loop.hpp>
 #include <ggl/util/math.hpp>
 #include <ggl/util/select_most_precise.hpp>
 #include <ggl/util/select_coordinate_type.hpp>

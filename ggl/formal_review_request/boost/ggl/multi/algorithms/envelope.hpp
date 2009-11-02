@@ -25,38 +25,36 @@ namespace ggl
 namespace detail { namespace envelope {
 
 
-template<typename MultiLinestring, typename Box, typename Strategy>
+template<typename MultiLinestring, typename Box>
 struct envelope_multi_linestring
 {
-    static inline void apply(MultiLinestring const& mp, Box& mbr,
-        Strategy const& strategy)
+    static inline void apply(MultiLinestring const& mp, Box& mbr)
     {
-        typename Strategy::state_type state(mbr);
+        assign_inverse(mbr);
         for (typename boost::range_const_iterator<MultiLinestring>::type
                     it = mp.begin();
             it != mp.end();
             ++it)
         {
-            envelope_range_state(*it, strategy, state);
+            envelope_range_additional(*it, mbr);
         }
     }
 };
 
 
 // version for multi_polygon: outer linear_ring's of all polygons
-template<typename MultiPolygon, typename Box, typename Strategy>
+template<typename MultiPolygon, typename Box>
 struct envelope_multi_polygon
 {
-    static inline void apply(MultiPolygon const& mp, Box& mbr,
-        Strategy const& strategy)
+    static inline void apply(MultiPolygon const& mp, Box& mbr)
     {
-        typename Strategy::state_type state(mbr);
+        assign_inverse(mbr);
         for (typename boost::range_const_iterator<MultiPolygon>::type
                     it = mp.begin();
             it != mp.end();
             ++it)
         {
-            envelope_range_state(exterior_ring(*it), strategy, state);
+            envelope_range_additional(exterior_ring(*it), mbr);
         }
     }
 };
@@ -71,20 +69,32 @@ struct envelope_multi_polygon
 namespace dispatch
 {
 
-template <typename Multi, typename Box, typename Strategy>
-struct envelope<multi_point_tag, box_tag, Multi, Box, Strategy>
-    : detail::envelope::envelope_range<Multi, Box, Strategy>
+template 
+<
+    typename Multi, typename Box, 
+    typename StrategyLess, typename StrategyGreater
+>
+struct envelope<multi_point_tag, box_tag, Multi, Box, StrategyLess, StrategyGreater>
+    : detail::envelope::envelope_range<Multi, Box>
 {};
 
-template <typename Multi, typename Box, typename Strategy>
-struct envelope<multi_linestring_tag, box_tag, Multi, Box, Strategy>
-    : detail::envelope::envelope_multi_linestring<Multi, Box, Strategy>
+template 
+<
+    typename Multi, typename Box, 
+    typename StrategyLess, typename StrategyGreater
+>
+struct envelope<multi_linestring_tag, box_tag, Multi, Box, StrategyLess, StrategyGreater>
+    : detail::envelope::envelope_multi_linestring<Multi, Box>
 {};
 
 
-template <typename Multi, typename Box, typename Strategy>
-struct envelope<multi_polygon_tag, box_tag, Multi, Box, Strategy>
-    : detail::envelope::envelope_multi_polygon<Multi, Box, Strategy>
+template 
+<
+    typename Multi, typename Box, 
+    typename StrategyLess, typename StrategyGreater
+>
+struct envelope<multi_polygon_tag, box_tag, Multi, Box, StrategyLess, StrategyGreater>
+    : detail::envelope::envelope_multi_polygon<Multi, Box>
 {};
 
 

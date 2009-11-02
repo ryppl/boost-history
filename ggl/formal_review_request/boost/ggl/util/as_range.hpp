@@ -14,105 +14,52 @@
 
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/is_multi.hpp>
-#include <ggl/core/ring_type.hpp>
 #include <ggl/core/tag.hpp>
 #include <ggl/core/tags.hpp>
 
+#include <ggl/util/add_const_if_c.hpp>
+
+
 namespace ggl {
+
 
 #ifndef DOXYGEN_NO_DISPATCH
 namespace dispatch
 {
 
-template <typename GeometryTag, bool IsMulti, typename Geometry>
-struct as_range_type
-{
-    typedef Geometry type;
-};
 
-
-template <typename Geometry>
-struct as_range_type<polygon_tag, false, Geometry>
-{
-    typedef typename ring_type<Geometry>::type type;
-};
-
-
-
-template <typename GeometryTag, typename Geometry, typename Range>
+template <typename GeometryTag, typename Geometry, typename Range, bool IsConst>
 struct as_range
 {
-    static inline Range & get(Geometry & input)
+    static inline typename add_const_if_c<IsConst, Range>::type& get(
+            typename add_const_if_c<IsConst, Geometry>::type& input)
     {
         return input;
     }
 };
 
-template <typename Geometry, typename Range>
-struct as_range<polygon_tag, Geometry, Range>
+
+template <typename Geometry, typename Range, bool IsConst>
+struct as_range<polygon_tag, Geometry, Range, IsConst>
 {
-    static inline Range & get(Geometry & input)
+    static inline typename add_const_if_c<IsConst, Range>::type& get(
+            typename add_const_if_c<IsConst, Geometry>::type& input)
     {
         return exterior_ring(input);
     }
 };
 
-
-template <typename GeometryTag, typename Geometry, typename Range>
-struct as_range_const
-{
-    static inline Range const& get(Geometry const& input)
-    {
-        return input;
-    }
-};
-
-template <typename Geometry, typename Range>
-struct as_range_const<polygon_tag, Geometry, Range>
-{
-    static inline Range const& get(Geometry const& input)
-    {
-        return exterior_ring(input);
-    }
-};
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
 
 /*!
-\brief Meta-function utility returning either type itself, or outer ring
-    \details Utility to handle polygon's outer ring as a range
-\ingroup utility
-*/
-template <typename Geometry>
-struct as_range_type
-{
-    typedef typename dispatch::as_range_type
-        <
-            typename tag<Geometry>::type,
-            is_multi<Geometry>::type::value,
-            Geometry
-        >::type type;
-};
-
-/*!
 \brief Function getting either the range (ring, linestring) itself
-or the outer ring
-    \details Utility to handle polygon's outer ring as a range
+or the outer ring (polygon)
+\details Utility to handle polygon's outer ring as a range
 \ingroup utility
 */
-template <typename Range, typename Geometry>
-inline Range const& as_range(Geometry const& input)
-{
-    return dispatch::as_range_const
-        <
-            typename tag<Geometry>::type,
-            Geometry,
-            Range
-        >::get(input);
-}
-
 template <typename Range, typename Geometry>
 inline Range& as_range(Geometry& input)
 {
@@ -120,10 +67,32 @@ inline Range& as_range(Geometry& input)
         <
             typename tag<Geometry>::type,
             Geometry,
-            Range
+            Range,
+            false
         >::get(input);
 }
 
+
+/*!
+\brief Function getting either the range (ring, linestring) itself
+or the outer ring (polygon), const version
+\details Utility to handle polygon's outer ring as a range
+\ingroup utility
+*/
+template <typename Range, typename Geometry>
+inline Range const& as_range(Geometry const& input)
+{
+    return dispatch::as_range
+        <
+            typename tag<Geometry>::type,
+            Geometry,
+            Range,
+            true
+        >::get(input);
+}
+
+
 } // namespace ggl
+
 
 #endif // GGL_UTIL_AS_RANGE_HPP

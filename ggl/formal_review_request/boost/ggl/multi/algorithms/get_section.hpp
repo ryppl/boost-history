@@ -32,7 +32,10 @@ namespace dispatch
 template <typename MultiPolygon, typename Section>
 struct get_section<multi_polygon_tag, MultiPolygon, Section>
 {
-    typedef typename ggl::vertex_iterator<MultiPolygon, true>::type iterator_type;
+    typedef typename boost::range_const_iterator
+        <
+            typename ggl::range_type<MultiPolygon>::type
+        >::type iterator_type;
 
     static inline void apply(MultiPolygon const& multi_polygon, Section const& section,
                 iterator_type& begin, iterator_type& end)

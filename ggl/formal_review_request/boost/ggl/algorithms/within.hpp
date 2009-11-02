@@ -25,9 +25,41 @@
 
 #include <ggl/geometries/concepts/check.hpp>
 
-#include <ggl/strategies/strategies.hpp>
+#include <ggl/strategies/point_in_poly.hpp>
 #include <ggl/strategies/concepts/within_concept.hpp>
 
+
+/*!
+\defgroup within within detection, a.o. point-in-polygon
+
+\par Source descriptions:
+- OGC: Returns 1 (TRUE) if this geometric object is "spatially within"
+        another Geometry.
+
+\par Performance
+- 2776 within determinations using bounding box and polygon are done
+    in 0.05 seconds (http://trac.osgeo.org/ggl/wiki/Performance#Within1)
+- note that using another strategy the performance can be increased:
+  - winding            : 0.093 s
+  - franklin           : 0.062 s
+  - Crossings-multiply : 0.047 s
+- but note also that the last two do not detect point-on-border cases
+
+
+\par Example:
+The within algorithm is used as following:
+\dontinclude doxygen_examples.cpp
+\skip example_within
+\line {
+\until }
+\par Geometries:
+- POINT + POLYGON: The well-known point-in-polygon, returning true if
+    a point falls within a polygon (and not
+within one of its holes) \image html within_polygon.png
+- POINT + RING: returns true if point is completely within
+    a ring \image html within_ring.png
+
+*/
 
 
 namespace ggl
@@ -42,12 +74,12 @@ namespace detail { namespace within {
     \ingroup boolean_relations
     \note Should have strategy for e.g. Wrangel
  */
-template 
+template
 <
-    typename Point, 
-    typename Box, 
+    typename Point,
+    typename Box,
     typename Strategy,
-    std::size_t Dimension, 
+    std::size_t Dimension,
     std::size_t DimensionCount
 >
 struct point_in_box
@@ -64,19 +96,19 @@ struct point_in_box
 
         return point_in_box
             <
-                Point, 
-                Box, 
+                Point,
+                Box,
                 Strategy,
-                Dimension + 1, 
+                Dimension + 1,
                 DimensionCount
             >::apply(p, b, s);
     }
 };
 
-template 
+template
 <
-    typename Point, 
-    typename Box, 
+    typename Point,
+    typename Box,
     typename Strategy,
     std::size_t DimensionCount
 >
@@ -89,12 +121,12 @@ struct point_in_box<Point, Box, Strategy, DimensionCount, DimensionCount>
 };
 
 
-template 
+template
 <
-    typename Box1, 
-    typename Box2, 
+    typename Box1,
+    typename Box2,
     typename Strategy,
-    std::size_t Dimension, 
+    std::size_t Dimension,
     std::size_t DimensionCount
 >
 struct box_in_box
@@ -111,19 +143,19 @@ struct box_in_box
 
         return box_in_box
             <
-                Box1, 
-                Box2, 
+                Box1,
+                Box2,
                 Strategy,
-                Dimension + 1, 
+                Dimension + 1,
                 DimensionCount
             >::apply(b1, b2, s);
     }
 };
 
-template 
+template
 <
-    typename Box1, 
-    typename Box2, 
+    typename Box1,
+    typename Box2,
     typename Strategy,
     std::size_t DimensionCount
 >
@@ -141,7 +173,7 @@ struct point_in_ring
 {
     BOOST_CONCEPT_ASSERT( (ggl::concept::WithinStrategy<Strategy>) );
 
-    static inline bool apply(Point const& point, Ring const& ring, 
+    static inline bool apply(Point const& point, Ring const& ring,
             Strategy const& strategy)
     {
         if (boost::size(ring) < 4)
@@ -173,14 +205,14 @@ struct point_in_polygon
 {
     BOOST_CONCEPT_ASSERT( (ggl::concept::WithinStrategy<Strategy>) );
 
-    static inline bool apply(Point const& point, Polygon const& poly, 
+    static inline bool apply(Point const& point, Polygon const& poly,
             Strategy const& strategy)
     {
 
         typedef point_in_ring
             <
-                Point, 
-                typename ring_type<Polygon>::type, 
+                Point,
+                typename ring_type<Polygon>::type,
                 Strategy
             > per_ring;
 
@@ -191,7 +223,7 @@ struct point_in_polygon
                     <
                         typename interior_type<Polygon>::type
                     >::type it = boost::begin(interior_rings(poly));
-                 it != boost::end(interior_rings(poly)); 
+                 it != boost::end(interior_rings(poly));
                  ++it)
             {
                 if (per_ring::apply(point, *it, strategy))
@@ -213,15 +245,15 @@ struct point_in_polygon
 namespace dispatch
 {
 
-template 
+template
 <
-    typename Tag1, 
-    typename Tag2, 
-    typename Geometry1, 
+    typename Tag1,
+    typename Tag2,
+    typename Geometry1,
     typename Geometry2,
     typename Strategy
 >
-struct within 
+struct within
 {};
 
 
@@ -268,36 +300,13 @@ struct within<point_tag, polygon_tag, Point, Polygon, Strategy>
 
 
 /*!
-    \brief Within check
-    \details Examine if one geometry is within another geometry 
-        (a.o. point in polygon)
-    \ingroup boolean_relations
+    \brief Within, examine if a geometry is within another geometry
+    \ingroup within
     \param geometry1 geometry which might be within the second geometry
     \param geometry2 geometry which might contain the first geometry
-    \return true if geometry1 is completely contained within geometry2, 
+    \return true if geometry1 is completely contained within geometry2,
         else false
     \note The default strategy is used for within detection
-
-\par Source descriptions:
-- OGC: Returns 1 (TRUE) if this geometric object is "spatially within" 
-        another Geometry.
-
-\par Performance
-2776 within determinations using bounding box and polygon are done 
-    in 0.09 seconds (other libraries: 0.14 seconds, 3.0 seconds, 3.8)
-
-\par Example:
-The within algorithm is used as following:
-\dontinclude doxygen_examples.cpp
-\skip example_within
-\line {
-\until }
-\par Geometries:
-- POINT + POLYGON: The well-known point-in-polygon, returning true if 
-    a point falls within a polygon (and not
-within one of its holes) \image html within_polygon.png
-- POINT + RING: returns true if point is completely within 
-    a ring \image html within_ring.png
 
  */
 template<typename Geometry1, typename Geometry2>
@@ -328,12 +337,13 @@ inline bool within(Geometry1 const& geometry1, Geometry2 const& geometry2)
 }
 
 /*!
-    \brief Within check using a strategy
-    \ingroup boolean_relations
+    \brief Within, examine if a geometry is within another geometry,
+        using a specified strategy
+    \ingroup within
     \param geometry1 geometry which might be within the second geometry
     \param geometry2 geometry which might contain the first geometry
     \param strategy strategy to be used
-    \return true if geometry1 is completely contained within geometry2, 
+    \return true if geometry1 is completely contained within geometry2,
         else false
  */
 template<typename Geometry1, typename Geometry2, typename Strategy>

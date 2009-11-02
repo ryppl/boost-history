@@ -108,6 +108,7 @@ struct check<box_tag, Geometry, false>
 namespace concept {
 
 
+#ifndef DOXYGEN_NO_DETAIL
 namespace detail {
 
 /*!
@@ -124,6 +125,7 @@ struct checker : dispatch::check
 {};
 
 }
+#endif // DOXYGEN_NO_DETAIL
 
 
 /*!
@@ -137,6 +139,19 @@ inline void check()
     boost::ignore_unused_variable_warning(c);
 }
 
+
+/*!
+    \brief Checks, in compile-time, the concept of two geometries, and if they
+        have equal dimensions
+    \ingroup core
+*/
+template <typename Geometry1, typename Geometry2>
+inline void check_concepts_and_equal_dimensions()
+{
+    check<Geometry1>();
+    check<Geometry2>();
+    assert_dimension_equal<Geometry1, Geometry2>();
+}
 
 
 } // namespace concept

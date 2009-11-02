@@ -24,6 +24,11 @@
 #include <utility>
 
 
+#include <ggl/core/access.hpp>
+#include <ggl/core/tag.hpp>
+#include <ggl/core/tags.hpp>
+
+
 namespace ggl
 {
 #ifndef DOXYGEN_NO_DETAIL

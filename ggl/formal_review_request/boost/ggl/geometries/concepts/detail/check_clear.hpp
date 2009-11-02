@@ -16,11 +16,13 @@
 #include <ggl/core/access.hpp>
 
 
-
 namespace ggl { namespace concept {
 
+
+#ifndef DOXYGEN_NO_DETAIL
 namespace detail
 {
+
     template <typename Geometry, bool UseStd>
     struct check_clear
     {};
@@ -34,6 +36,7 @@ namespace detail
         }
     };
 
+
     template <typename Geometry>
     struct check_clear<Geometry, false>
     {
@@ -46,9 +49,8 @@ namespace detail
         }
     };
 
-
 }
-
+#endif // DOXYGEN_NO_DETAIL
 
 
 }} // namespace ggl::concept

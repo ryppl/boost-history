@@ -6,14 +6,17 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_STRATEGY_CARTESIAN_CENTROID_BASHEIN_DETMER_HPP
-#define GGL_STRATEGY_CARTESIAN_CENTROID_BASHEIN_DETMER_HPP
+#ifndef GGL_STRATEGIES_CARTESIAN_CENTROID_BASHEIN_DETMER_HPP
+#define GGL_STRATEGIES_CARTESIAN_CENTROID_BASHEIN_DETMER_HPP
 
 
 #include <boost/mpl/if.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/type_traits.hpp>
 
+#include <ggl/core/coordinate_type.hpp>
+#include <ggl/core/point_type.hpp>
+#include <ggl/strategies/centroid.hpp>
 #include <ggl/util/select_coordinate_type.hpp>
 #include <ggl/util/copy.hpp>
 
@@ -21,7 +24,10 @@
 namespace ggl
 {
 
-namespace strategy { namespace centroid {
+// Note: when calling the namespace "centroid", it sometimes,
+// somehow, in gcc, gives compilation problems (confusion with function centroid).
+
+namespace strategy { namespace centroid_ {
 
 
 
@@ -201,14 +207,32 @@ public :
 
 
 #ifndef DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
-template <typename Point, typename PointOfSegment>
-struct strategy_centroid<cartesian_tag, Point, PointOfSegment>
+
+// Register this strategy for rings and polygons, in two dimensions
+template <typename Point, typename Geometry>
+struct strategy_centroid<cartesian_tag, ring_tag, 2, Point, Geometry>
 {
-    typedef strategy::centroid::bashein_detmer<Point, PointOfSegment> type;
+    typedef strategy::centroid_::bashein_detmer
+        <
+            Point,
+            typename point_type<Geometry>::type
+        > type;
 };
+
+template <typename Point, typename Geometry>
+struct strategy_centroid<cartesian_tag, polygon_tag, 2, Point, Geometry>
+{
+    typedef strategy::centroid_::bashein_detmer
+        <
+            Point,
+            typename point_type<Geometry>::type
+        > type;
+};
+
 #endif
+
 
 } // namespace ggl
 
 
-#endif // GGL_STRATEGY_CARTESIAN_CENTROID_BASHEIN_DETMER_HPP
+#endif // GGL_STRATEGIES_CARTESIAN_CENTROID_BASHEIN_DETMER_HPP

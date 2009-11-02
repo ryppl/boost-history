@@ -6,8 +6,13 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_ALGORITHMS_GET_INTERSECTION_POINTS_HPP
-#define GGL_ALGORITHMS_GET_INTERSECTION_POINTS_HPP
+#ifndef GGL_ALGORITHMS_OVERLAY_GET_INTERSECTION_POINTS_HPP
+#define GGL_ALGORITHMS_OVERLAY_GET_INTERSECTION_POINTS_HPP
+
+/*!
+\defgroup overlay overlay helper operations (getting intersection points, etc)
+*/
+
 
 #include <cstddef>
 
@@ -31,6 +36,8 @@
 #include <ggl/util/math.hpp>
 
 #include <ggl/geometries/box.hpp>
+
+#include <ggl/iterators/range_type.hpp>
 
 #include <ggl/strategies/cartesian/cart_intersect.hpp>
 #include <ggl/strategies/intersection_result.hpp>
@@ -199,13 +206,13 @@ public :
             bool& trivial)
     {
 
-        typedef typename ggl::vertex_iterator
+        typedef typename boost::range_const_iterator
             <
-                Geometry1, true
+                typename ggl::range_type<Geometry1>::type
             >::type range1_iterator;
-        typedef typename ggl::vertex_iterator
+        typedef typename boost::range_const_iterator
             <
-                Geometry2, true
+                typename ggl::range_type<Geometry2>::type
             >::type range2_iterator;
 
         int const dir1 = sec1.directions[0];
@@ -471,7 +478,7 @@ struct get_ips_cs
             // 1) EITHER the two points are lying on one side of the box (! 0 && the same)
             // 2) OR same in Y-direction
             // 3) OR all points are inside the box (0)
-            if (! (
+            /*if (! (
                 (current_side[0] != 0 && current_side[0] == previous_side[0])
                 || (current_side[1] != 0 && current_side[1] == previous_side[1])
                 || (current_side[0] == 0
@@ -479,7 +486,8 @@ struct get_ips_cs
                         && previous_side[0] == 0
                         && previous_side[1] == 0)
                   )
-                )
+                )*/
+            if (true)
             {
                 segment_identifier seg_id(source_id1,
                             multi_index, ring_index, index);
@@ -489,7 +497,7 @@ struct get_ips_cs
                         segment_type, box_segment_type, IntersectionPoints
                     > relater;
 
-                // Todo: depending on code some relations can be left out
+                // Depending on code some relations can be left out
                 relater::apply(segment, left, seg_id,
                         segment_identifier(source_id2, -1, -1, 0),
                         intersection_points, trivial);
@@ -507,14 +515,24 @@ struct get_ips_cs
         }
     }
 
-
+private:
     template<std::size_t Index, typename Point>
     static inline int get_side(Box const& box, Point const& point)
     {
-        // Note: border has to be included because of boundary cases
+        // Inside -> 0
+        // Outside -> -1 (left/below) or 1 (right/above)
+        // On border -> -2 (left/lower) or 2 (right/upper)
+        // The only purpose of the value is to not be the same,
+        // and to denote if it is inside (0)
 
-        if (get<Index>(point) <= get<min_corner, Index>(box)) return -1;
-        else if (get<Index>(point) >= get<max_corner, Index>(box)) return 1;
+        typename coordinate_type<Point>::type const& c = get<Index>(point);
+        typename coordinate_type<Box>::type const& left = get<min_corner, Index>(box);
+        typename coordinate_type<Box>::type const& right = get<max_corner, Index>(box);
+
+        if (ggl::math::equals(c, left)) return -2;
+        else if (ggl::math::equals(c, right)) return 2;
+        else if (c < left) return -1;
+        else if (c > right) return 1;
         else return 0;
     }
 
@@ -619,6 +637,21 @@ struct get_intersection_points
         >
 {};
 
+template<typename Polygon, typename Ring, typename IntersectionPoints>
+struct get_intersection_points
+    <
+        polygon_tag, ring_tag, false, false,
+        Polygon, Ring,
+        IntersectionPoints
+    >
+    : detail::get_intersection_points::get_ips_generic
+        <
+            Polygon,
+            Ring,
+            IntersectionPoints
+        >
+{};
+
 template
 <
     typename LineString1,
@@ -684,10 +717,7 @@ template <typename Geometry1, typename Geometry2, typename IntersectionPoints>
 inline bool get_intersection_points(Geometry1 const& geometry1,
             Geometry2 const& geometry2, IntersectionPoints& intersection_points)
 {
-    concept::check<const Geometry1>();
-    concept::check<const Geometry2>();
-
-    assert_dimension_equal<Geometry1, Geometry2>();
+    concept::check_concepts_and_equal_dimensions<const Geometry1, const Geometry2>();
 
     typedef typename boost::remove_const<Geometry1>::type ncg1_type;
     typedef typename boost::remove_const<Geometry2>::type ncg2_type;
@@ -724,4 +754,4 @@ inline bool get_intersection_points(Geometry1 const& geometry1,
 
 } // namespace ggl
 
-#endif // GGL_ALGORITHMS_GET_INTERSECTION_POINTS_HPP
+#endif // GGL_ALGORITHMS_OVERLAY_GET_INTERSECTION_POINTS_HPP

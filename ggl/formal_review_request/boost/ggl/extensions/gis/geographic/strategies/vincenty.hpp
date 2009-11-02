@@ -10,7 +10,7 @@
 #define GGL_EXTENSIONS_GIS_GEOGRAPHIC_STRATEGIES_VINCENTY_HPP
 
 
-#include <ggl/strategies/strategy_traits.hpp>
+#include <ggl/strategies/distance.hpp>
 #include <ggl/core/radian_access.hpp>
 #include <ggl/core/coordinate_type.hpp>
 
@@ -42,11 +42,13 @@ namespace strategy
         {
             public :
                 //typedef spherical_distance return_type;
+                typedef P1 first_point_type;
+                typedef P2 second_point_type;
                 typedef double return_type;
 
-                inline return_type operator()(const P1& p1, const P2& p2) const
+                inline return_type apply(P1 const& p1, P2 const& p2) const
                 {
-                    return calc(get_as_radian<0>(p1), get_as_radian<1>(p1),
+                    return calculate(get_as_radian<0>(p1), get_as_radian<1>(p1),
                                     get_as_radian<0>(p2), get_as_radian<1>(p2));
                 }
 
@@ -55,7 +57,7 @@ namespace strategy
                 typedef typename coordinate_type<P2>::type T2;
                 ggl::detail::ellipsoid m_ellipsoid;
 
-                inline return_type calc(const T1& lon1, const T1& lat1, const T2& lon2, const T2& lat2) const
+                inline return_type calculate(T1 const& lon1, T1 const& lat1, T2 const& lon2, T2 const& lat2) const
                 {
                     // lambda: difference in longitude on an auxiliary sphere
                     double L = lon2 - lon1;

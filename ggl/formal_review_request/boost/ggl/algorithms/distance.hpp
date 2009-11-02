@@ -17,9 +17,12 @@
 #include <ggl/core/cs.hpp>
 #include <ggl/core/is_multi.hpp>
 #include <ggl/core/reverse_dispatch.hpp>
+
 #include <ggl/geometries/segment.hpp>
+#include <ggl/geometries/concepts/check.hpp>
+
+#include <ggl/strategies/distance.hpp>
 #include <ggl/strategies/distance_result.hpp>
-#include <ggl/strategies/strategies.hpp>
 
 /*!
 \defgroup distance distance calculation
@@ -64,7 +67,7 @@ struct point_to_point
     static inline typename Strategy::return_type apply(P1 const& p1,
                 P2 const& p2, Strategy const& strategy)
     {
-        return strategy(p1, p2);
+        return strategy.apply(p1, p2);
     }
 };
 
@@ -80,10 +83,10 @@ struct point_to_segment
             typename cs_tag<Point>::type,
             typename cs_tag<Segment>::type,
             Point,
-            Segment
+            typename point_type<Segment>::type
             >::type segment_strategy;
 
-        return segment_strategy(point, segment);
+        return segment_strategy.apply(point, segment.first, segment.second);
     }
 };
 
@@ -109,18 +112,18 @@ struct point_to_linestring
         iterator_type prev = it++;
         if (it == boost::end(linestring))
         {
-            return pp_strategy(point, *boost::begin(linestring));
+            return pp_strategy.apply(point, *boost::begin(linestring));
         }
 
 
         // start with first segment distance
-        return_type d = ps_strategy(point, segment_type(*prev, *it));
+        return_type d = ps_strategy.apply(point, *prev, *it);
 
         // check if other segments are closer
         prev = it++;
         while(it != boost::end(linestring))
         {
-            return_type ds = ps_strategy(point, segment_type(*prev, *it));
+            return_type ds = ps_strategy.apply(point, *prev, *it);
             if (ggl::close_to_zero(ds))
             {
                 return return_type(0);
@@ -182,13 +185,13 @@ struct distance
             Linestring const& linestring,
             Strategy const& strategy)
     {
-        typedef segment<const typename point_type<Linestring>::type> segment_type;
+        //typedef segment<const > segment_type;
         typedef typename ggl::strategy_distance_segment
                     <
                             typename cs_tag<Point>::type,
-                            typename cs_tag<segment_type>::type,
+                            typename cs_tag<Linestring>::type,
                             Point,
-                            segment_type
+                            typename point_type<Linestring>::type
                     >::type ps_strategy_type;
 
         return detail::distance::point_to_linestring

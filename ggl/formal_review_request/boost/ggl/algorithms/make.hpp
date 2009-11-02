@@ -22,6 +22,7 @@ namespace ggl
     \details the Generic Geometry Library uses concepts for all its geometries. Therefore it does not rely
     on constructors. The "make" functions are object generators creating geometries. There are overloads
     with two, three, four or six values, which are implemented depending on the geometry specified.
+    \note It does not work with array-point types, like int[2]
     \tparam G the geometry type
     \tparam T the coordinate type
     \return the geometry

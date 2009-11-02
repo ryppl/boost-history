@@ -10,7 +10,7 @@
 #define GGL_EXTENSIONS_GIS_GEOGRAPHIC_STRATEGIES_ANDOYER_HPP
 
 
-#include <ggl/strategies/strategy_traits.hpp>
+#include <ggl/strategies/distance.hpp>
 #include <ggl/core/radian_access.hpp>
 #include <ggl/core/coordinate_type.hpp>
 
@@ -46,6 +46,8 @@ namespace strategy
         {
             public :
                 //typedef spherical_distance return_type;
+                typedef P1 first_point_type;
+                typedef P2 second_point_type;
                 typedef double return_type;
 
                 andoyer()
@@ -55,7 +57,7 @@ namespace strategy
                     : m_ellipsoid(f)
                 {}
 
-                inline return_type operator()(const P1& p1, const P2& p2) const
+                inline return_type apply(const P1& p1, const P2& p2) const
                 {
                     return calc(get_as_radian<0>(p1), get_as_radian<1>(p1),
                                     get_as_radian<0>(p2), get_as_radian<1>(p2));

@@ -56,13 +56,15 @@ namespace math
 
 /*!
     \brief returns true if both arguments are equal.
-
-    equals returns true if both arguments are equal.
+    \ingroup utility
     \param a first argument
     \param b second argument
     \return true if a == b
-    \note If both a and b are of an integral type, comparison is done by ==. If one of the types
-    is floating point, comparison is done by abs and comparing with epsilon.
+    \note If both a and b are of an integral type, comparison is done by ==.
+    If one of the types is floating point, comparison is done by abs and
+    comparing with epsilon. If one of the types is non-fundamental, it might
+    be a high-precision number and comparison is done using the == operator
+    of that class.
 */
 
 template <typename T1, typename T2>
@@ -85,6 +87,7 @@ double const r2d = 1.0 / d2r;
 
 /*!
     \brief Calculates the haversine of an angle
+    \ingroup utility
     \note See http://en.wikipedia.org/wiki/Haversine_formula
     haversin(alpha) = sin2(alpha/2)
 */
@@ -98,7 +101,7 @@ inline T hav(T const& theta)
 
 /*!
 \brief Short utility to return the square
-
+\ingroup utility
 \param value Value to calculate the square from
 \return The squared value
 */

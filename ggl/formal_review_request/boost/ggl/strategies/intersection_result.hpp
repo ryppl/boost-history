@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_INTERSECTION_RESULT_HPP
-#define GGL_INTERSECTION_RESULT_HPP
+#ifndef GGL_STRATEGIES_INTERSECTION_RESULT_HPP
+#define GGL_STRATEGIES_INTERSECTION_RESULT_HPP
 
 #if defined(HAVE_MATRIX_AS_STRING)
 #include <string>
@@ -164,4 +164,4 @@ struct segment_intersection_points
 } // namespace ggl
 
 
-#endif // GGL_INTERSECTION_RESULT_HPP
+#endif // GGL_STRATEGIES_INTERSECTION_RESULT_HPP

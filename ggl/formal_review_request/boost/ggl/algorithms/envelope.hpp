@@ -17,11 +17,7 @@
 #include <ggl/algorithms/convert.hpp>
 #include <ggl/core/cs.hpp>
 #include <ggl/core/exterior_ring.hpp>
-
 #include <ggl/geometries/concepts/check.hpp>
-
-
-#include <ggl/strategies/strategies.hpp>
 
 /*!
 \defgroup envelope envelope calculation
@@ -39,7 +35,6 @@ The envelope algorithm calculates the bounding box, or envelope, of a geometry.
 There are two versions:
 - envelope, taking a reference to a box as second parameter
 - make_envelope, returning a newly constructed box (type as a template parameter in the function call)
-- either of them has an optional strategy
 
 \par Geometries:
 - POINT: a box with zero area, the maximum and the minimum point of the box are
@@ -69,10 +64,10 @@ namespace detail { namespace envelope {
 
 
 /// Calculate envelope of an 2D or 3D point
-template<typename Point, typename Box, typename Strategy>
+template<typename Point, typename Box>
 struct envelope_point
 {
-    static inline void apply(Point const& p, Box& mbr, Strategy const&)
+    static inline void apply(Point const& p, Box& mbr)
     {
         // Envelope of a point is an empty box, a box with zero volume, located
         // at the point.
@@ -83,12 +78,12 @@ struct envelope_point
 
 
 /// Calculate envelope of an 2D or 3D segment
-template<typename Segment, typename Box, typename Strategy>
+template<typename Segment, typename Box>
 struct envelope_segment
 {
-    static inline void apply(Segment const& s, Box& mbr, Strategy const&)
+    static inline void apply(Segment const& s, Box& mbr)
     {
-        // TODO: remove s.first/s.second, use strategies
+        // TODO: remove s.first/s.second
         ggl::assign_inverse(mbr);
         ggl::combine(mbr, s.first);
         ggl::combine(mbr, s.second);
@@ -96,10 +91,9 @@ struct envelope_segment
 };
 
 
-/// Version with state iterating through range (also used in multi*)
-template<typename Range, typename Strategy>
-inline void envelope_range_state(Range const& range,
-        Strategy const& strategy, typename Strategy::state_type& state)
+/// Iterate through range (also used in multi*)
+template<typename Range, typename Box>
+inline void envelope_range_additional(Range const& range, Box& mbr)
 {
     typedef typename boost::range_const_iterator<Range>::type iterator_type;
 
@@ -107,22 +101,21 @@ inline void envelope_range_state(Range const& range,
         it != boost::end(range);
         ++it)
     {
-        strategy(*it, state);
+        ggl::combine(mbr, *it);
     }
 }
 
 
 
 /// Generic range dispatching struct
-template <typename Range, typename Box, typename Strategy>
+template <typename Range, typename Box>
 struct envelope_range
 {
     /// Calculate envelope of range using a strategy
-    static inline void apply(Range const& range, Box& mbr,
-            Strategy const& strategy)
+    static inline void apply(Range const& range, Box& mbr)
     {
-        typename Strategy::state_type state(mbr);
-        envelope_range_state(range, strategy, state);
+        assign_inverse(mbr);
+        envelope_range_additional(range, mbr);
     }
 };
 
@@ -137,65 +130,87 @@ template
 <
     typename Tag1, typename Tag2,
     typename Geometry, typename Box,
-    typename Strategy
+    typename StrategyLess, typename StrategyGreater
 >
 struct envelope {};
 
 
-template <typename Point, typename Box, typename Strategy>
-struct envelope<point_tag, box_tag, Point, Box, Strategy>
-    : detail::envelope::envelope_point<Point, Box, Strategy>
+template
+<
+    typename Point, typename Box,
+    typename StrategyLess, typename StrategyGreater
+>
+struct envelope<point_tag, box_tag, Point, Box, StrategyLess, StrategyGreater>
+    : detail::envelope::envelope_point<Point, Box>
 {};
 
 
-template <typename Box, typename Strategy>
-struct envelope<box_tag, box_tag, Box, Box, Strategy>
+template
+<
+    typename BoxIn, typename BoxOut,
+    typename StrategyLess, typename StrategyGreater
+>
+struct envelope<box_tag, box_tag, BoxIn, BoxOut, StrategyLess, StrategyGreater>
 {
     /*!
         \brief Calculate envelope of a box
         \details The envelope of a box is itself, provided
         for consistency, on itself it is not useful.
      */
-    static inline void apply(Box const& box, Box& mbr, Strategy const&)
+    static inline void apply(BoxIn const& box, BoxOut& mbr)
     {
         mbr = box;
     }
 };
 
 
-template <typename Segment, typename Box, typename Strategy>
-struct envelope<segment_tag, box_tag, Segment, Box, Strategy>
-    : detail::envelope::envelope_segment<Segment, Box, Strategy>
+template
+<
+    typename Segment, typename Box,
+    typename StrategyLess, typename StrategyGreater
+>
+struct envelope<segment_tag, box_tag, Segment, Box, StrategyLess, StrategyGreater>
+    : detail::envelope::envelope_segment<Segment, Box>
 {};
 
 
 
-template <typename Linestring, typename Box, typename Strategy>
-struct envelope<linestring_tag, box_tag, Linestring, Box, Strategy>
-    : detail::envelope::envelope_range<Linestring, Box, Strategy>
+template
+<
+    typename Linestring, typename Box,
+    typename StrategyLess, typename StrategyGreater
+>
+struct envelope<linestring_tag, box_tag, Linestring, Box, StrategyLess, StrategyGreater>
+    : detail::envelope::envelope_range<Linestring, Box>
 {};
 
 
-template <typename Ring, typename Box, typename Strategy>
-struct envelope<ring_tag, box_tag, Ring, Box, Strategy>
-    : detail::envelope::envelope_range<Ring, Box, Strategy>
+template
+<
+    typename Ring, typename Box,
+    typename StrategyLess, typename StrategyGreater
+>
+struct envelope<ring_tag, box_tag, Ring, Box, StrategyLess, StrategyGreater>
+    : detail::envelope::envelope_range<Ring, Box>
 {};
 
 
-template <typename Polygon, typename Box, typename Strategy>
-struct envelope<polygon_tag, box_tag, Polygon, Box, Strategy>
+template
+<
+    typename Polygon, typename Box,
+    typename StrategyLess, typename StrategyGreater
+>
+struct envelope<polygon_tag, box_tag, Polygon, Box, StrategyLess, StrategyGreater>
 {
-    static inline void apply(Polygon const& poly, Box& mbr,
-            Strategy const& strategy)
+    static inline void apply(Polygon const& poly, Box& mbr)
     {
         // For polygon, inspecting outer ring is sufficient
 
         detail::envelope::envelope_range
             <
                 typename ring_type<Polygon>::type,
-                Box,
-                Strategy
-            >::apply(exterior_ring(poly), mbr, strategy);
+                Box
+            >::apply(exterior_ring(poly), mbr);
     }
 
 };
@@ -203,30 +218,6 @@ struct envelope<polygon_tag, box_tag, Polygon, Box, Strategy>
 
 } // namespace dispatch
 #endif
-
-
-/*!
-\brief Calculate envelope of a geometry, using a specified strategy
-\ingroup envelope
-\param geometry the geometry
-\param mbr the box receiving the envelope
-\param strategy strategy to be used
-*/
-template<typename Geometry, typename Box, typename Strategy>
-inline void envelope(Geometry const& geometry,
-        Box& mbr, Strategy const& strategy)
-{
-    concept::check<const Geometry>();
-    concept::check<Box>();
-
-    dispatch::envelope
-        <
-            typename tag<Geometry>::type, typename tag<Box>::type,
-            Geometry, Box, Strategy
-        >::apply(geometry, mbr, strategy);
-}
-
-
 
 
 /*!
@@ -247,38 +238,12 @@ inline void envelope(Geometry const& geometry, Box& mbr)
     concept::check<const Geometry>();
     concept::check<Box>();
 
-    typename strategy_envelope
-        <
-            typename cs_tag<typename point_type<Geometry>::type>::type,
-            typename cs_tag<typename point_type<Box>::type>::type,
-            typename point_type<Geometry>::type,
-            Box
-        >::type strategy;
-
-    envelope(geometry, mbr, strategy);
-}
-
-
-/*!
-\brief Calculate and return envelope of a geometry
-\ingroup envelope
-\param geometry the geometry
-\param strategy the strategy to be used
-*/
-template<typename Box, typename Geometry, typename Strategy>
-inline Box make_envelope(Geometry const& geometry, Strategy const& strategy)
-{
-    concept::check<const Geometry>();
-    concept::check<Box>();
-
-    Box box;
     dispatch::envelope
         <
             typename tag<Geometry>::type, typename tag<Box>::type,
-            Geometry, Box, Strategy
-        >::apply(geometry, box, strategy);
-
-    return box;
+            Geometry, Box,
+            void, void
+        >::apply(geometry, mbr);
 }
 
 
@@ -293,16 +258,15 @@ inline Box make_envelope(Geometry const& geometry)
     concept::check<const Geometry>();
     concept::check<Box>();
 
-    typename strategy_envelope
+    Box mbr;
+    dispatch::envelope
         <
-            typename cs_tag<typename point_type<Geometry>::type>::type,
-            typename cs_tag<typename point_type<Box>::type>::type,
-            typename point_type<Geometry>::type,
-            Box
-        >::type strategy;
-    return make_envelope<Box>(geometry, strategy);
+            typename tag<Geometry>::type, typename tag<Box>::type,
+            Geometry, Box,
+            void, void
+        >::apply(geometry, mbr);
+    return mbr;
 }
-
 
 } // namespace ggl
 

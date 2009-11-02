@@ -20,7 +20,7 @@
 
 /*!
 \defgroup concepts concept checking
-Concepts are used to apply if pointtypes provide required implementation. Concept checking
+Concepts are used to apply if geometry types or strategies provide required implementation. Concept checking
 is done using BCCL (Boost Concept Check Library) and MPL (Meta Programming Library)
 */
 

@@ -36,6 +36,10 @@ struct intersection
     // todo: implement this
 };
 
+
+} // namespace dispatch
+#endif
+
 } // namespace ggl
 
 

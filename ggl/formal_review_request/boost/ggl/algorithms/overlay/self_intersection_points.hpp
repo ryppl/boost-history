@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_ALGORITHMS_SELF_INTERSECTION_POINTS_HPP
-#define GGL_ALGORITHMS_SELF_INTERSECTION_POINTS_HPP
+#ifndef GGL_ALGORITHMS_OVERLAY_SELF_INTERSECTION_POINTS_HPP
+#define GGL_ALGORITHMS_OVERLAY_SELF_INTERSECTION_POINTS_HPP
 
 #include <cstddef>
 
@@ -168,4 +168,4 @@ inline bool get_intersection_points(Geometry const& geometry,
 
 } // namespace ggl
 
-#endif // GGL_ALGORITHMS_SELF_INTERSECTION_POINTS_HPP
+#endif // GGL_ALGORITHMS_OVERLAY_SELF_INTERSECTION_POINTS_HPP

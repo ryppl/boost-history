@@ -17,6 +17,8 @@
 
 #include <ggl/algorithms/overlay/copy_segments.hpp>
 
+#include <ggl/strategies/side.hpp>
+
 #include <ggl/geometries/concepts/check.hpp>
 
 #ifdef GGL_DEBUG_INTERSECTION
@@ -46,28 +48,20 @@ template
 >
 struct on_direction
 {
-    on_direction(IntersectionPoint const& ip, int direction)
+    typedef typename strategy_side
+        <
+            typename cs_tag<IntersectionPoint>::type
+        >::type side;
+
+    inline on_direction(IntersectionPoint const& ip, int direction)
         : m_ip(ip)
         , m_direction(direction)
     {}
 
-    // TEMP: convenient COPY of side
-    template <typename P1, typename P2, typename P>
-    static inline int side(P1 const& p1, P2 const& p2, P const& p)
-    {
-        typedef typename select_coordinate_type<P, P1>::type T;
-
-        T dx = get<0>(p2) - get<0>(p1);
-        T dy = get<1>(p2) - get<1>(p1);
-        T dpx = get<0>(p) - get<0>(p1);
-        T dpy = get<1>(p) - get<1>(p1);
-        T product =  dx * dpy - dy * dpx;
-        return product > 0 ? 1 : product < 0 ? -1 : 0;
-    }
 
     inline bool operator()(IntersectionInfo const& first, IntersectionInfo const& second) const
     {
-        int dir = side(m_ip, first->other_point, second->other_point);
+        int dir = side::apply(m_ip, first->other_point, second->other_point);
         return m_direction == dir;
     }
 

@@ -10,19 +10,15 @@
 #define GGL_ALGORITHMS_FOR_EACH_HPP
 
 /*!
-\defgroup loop loops and for-each functionality
-There are several algorithms provided which walk through the points or segments
+\defgroup for_each for_each: applying a functor for each point or segment
+There are two algorithms provided which walk through the points or segments
 of linestrings and polygons. They are called for_each_point, for_each_segment,
-after the standard library, and \b loop which is more adapted
-and of which the functor could break out if necessary.
-Of the for_each algorithms there is a \b const and a non-const version provided.
+after the standard library
+\note For both for_each algorithms there is a \b const and a non-const version provided.
 */
 
 #include <algorithm>
 
-#include <boost/mpl/if.hpp>
-#include <boost/range/functions.hpp>
-#include <boost/range/metafunctions.hpp>
 
 #include <ggl/core/exterior_ring.hpp>
 #include <ggl/core/interior_rings.hpp>
@@ -31,7 +27,10 @@ Of the for_each algorithms there is a \b const and a non-const version provided.
 #include <ggl/geometries/concepts/check.hpp>
 
 #include <ggl/geometries/segment.hpp>
-#include <ggl/iterators/vertex_iterator.hpp>
+
+#include <ggl/util/add_const_if_c.hpp>
+#include <ggl/util/range_iterator_const_if_c.hpp>
+
 
 namespace ggl
 {
@@ -40,79 +39,58 @@ namespace ggl
 namespace detail { namespace for_each {
 
 
-// There is probably something in boost type_traits
-// or MPL with this functionality
-template <typename Type, bool IsConst>
-struct c_nc
-{
-    typedef typename boost::mpl::if_c
-        <
-            IsConst,
-            const Type,
-            Type
-        >::type type;
-};
-
-// Utility to adapt a boost-range for const/non const
-template <typename Range, bool IsConst>
-struct c_nc_range
-{
-    typedef typename boost::mpl::if_c
-        <
-            IsConst,
-            typename boost::range_const_iterator<Range>::type,
-            typename boost::range_iterator<Range>::type
-        >::type type;
-};
-
-
 template <typename Point, typename Functor, bool IsConst>
 struct fe_point_per_point
 {
     static inline Functor apply(
-                typename c_nc<Point, IsConst>::type& point, Functor f)
+                typename add_const_if_c<IsConst, Point>::type& point, Functor f)
     {
         f(point);
         return f;
     }
 };
 
+
 template <typename Point, typename Functor, bool IsConst>
 struct fe_point_per_segment
 {
     static inline Functor apply(
-                typename c_nc<Point, IsConst>::type& point, Functor f)
+                typename add_const_if_c<IsConst, Point>::type& point, Functor f)
     {
         return f;
     }
 };
 
+
 template <typename Range, typename Functor, bool IsConst>
 struct fe_range_per_point
 {
     static inline Functor apply(
-                    typename c_nc<Range, IsConst>::type& range,
+                    typename add_const_if_c<IsConst, Range>::type& range,
                     Functor f)
     {
         return (std::for_each(boost::begin(range), boost::end(range), f));
     }
 };
 
+
 template <typename Range, typename Functor, bool IsConst>
 struct fe_range_per_segment
 {
     static inline Functor apply(
-                typename c_nc<Range, IsConst>::type& range,
+                typename add_const_if_c<IsConst, Range>::type& range,
                 Functor f)
     {
-        typedef typename ggl::vertex_iterator
+        typedef typename range_iterator_const_if_c
             <
-                Range, IsConst
+                IsConst,
+                Range
             >::type iterator_type;
 
-        typedef typename c_nc
+        typedef typename add_const_if_c
             <
-                typename point_type<Range>::type, IsConst
+                IsConst,
+                typename point_type<Range>::type
             >::type point_type;
 
         iterator_type it = boost::begin(range);
@@ -133,13 +111,13 @@ template <typename Polygon, typename Functor, bool IsConst>
 struct fe_polygon_per_point
 {
     static inline Functor apply(
-                typename c_nc<Polygon, IsConst>::type& poly,
+                typename add_const_if_c<IsConst, Polygon>::type& poly,
                 Functor f)
     {
-        typedef typename c_nc_range
+        typedef typename range_iterator_const_if_c
             <
-                typename interior_type<Polygon>::type,
-                IsConst
+                IsConst,
+                typename interior_type<Polygon>::type
             >::type iterator_type;
 
         typedef fe_range_per_point
@@ -168,13 +146,13 @@ template <typename Polygon, typename Functor, bool IsConst>
 struct fe_polygon_per_segment
 {
     static inline Functor apply(
-                typename c_nc<Polygon, IsConst>::type& poly,
+                typename add_const_if_c<IsConst, Polygon>::type& poly,
                 Functor f)
     {
-        typedef typename c_nc_range
+        typedef typename range_iterator_const_if_c
             <
-                typename interior_type<Polygon>::type,
-                IsConst
+                IsConst,
+                typename interior_type<Polygon>::type
             >::type iterator_type;
 
         typedef fe_range_per_segment
@@ -198,6 +176,7 @@ struct fe_polygon_per_segment
 
 };
 
+
 }} // namespace detail::for_each
 #endif // DOXYGEN_NO_DETAIL
 
@@ -216,27 +195,29 @@ template
 >
 struct for_each_point {};
 
+
 template <typename Point, typename Functor, bool IsConst>
 struct for_each_point<point_tag, false, Point, Functor, IsConst>
     : detail::for_each::fe_point_per_point<Point, Functor, IsConst>
 {};
+
 
 template <typename Linestring, typename Functor, bool IsConst>
 struct for_each_point<linestring_tag, false, Linestring, Functor, IsConst>
     : detail::for_each::fe_range_per_point<Linestring, Functor, IsConst>
 {};
 
+
 template <typename Ring, typename Functor, bool IsConst>
 struct for_each_point<ring_tag, false, Ring, Functor, IsConst>
     : detail::for_each::fe_range_per_point<Ring, Functor, IsConst>
 {};
 
+
 template <typename Polygon, typename Functor, bool IsConst>
 struct for_each_point<polygon_tag, false, Polygon, Functor, IsConst>
     : detail::for_each::fe_polygon_per_point<Polygon, Functor, IsConst>
 {};
-
-
 
 
 template
@@ -254,15 +235,18 @@ struct for_each_segment<point_tag, false, Point, Functor, IsConst>
     : detail::for_each::fe_point_per_segment<Point, Functor, IsConst>
 {};
 
+
 template <typename Linestring, typename Functor, bool IsConst>
 struct for_each_segment<linestring_tag, false, Linestring, Functor, IsConst>
     : detail::for_each::fe_range_per_segment<Linestring, Functor, IsConst>
 {};
 
+
 template <typename Ring, typename Functor, bool IsConst>
 struct for_each_segment<ring_tag, false, Ring, Functor, IsConst>
     : detail::for_each::fe_range_per_segment<Ring, Functor, IsConst>
 {};
+
 
 template <typename Polygon, typename Functor, bool IsConst>
 struct for_each_segment<polygon_tag, false, Polygon, Functor, IsConst>
@@ -272,6 +256,7 @@ struct for_each_segment<polygon_tag, false, Polygon, Functor, IsConst>
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
+
 
 /*!
     \brief Calls functor for geometry
@@ -295,6 +280,7 @@ inline Functor for_each_point(Geometry const& geometry, Functor f)
         >::apply(geometry, f);
 }
 
+
 /*!
     \brief Calls functor for geometry
     \ingroup loop
@@ -316,6 +302,7 @@ inline Functor for_each_point(Geometry& geometry, Functor f)
             false
         >::apply(geometry, f);
 }
+
 
 /*!
     \brief Calls functor for segments on linestrings, rings, polygons, ...
@@ -363,6 +350,8 @@ inline Functor for_each_segment(Geometry& geometry, Functor f)
         >::apply(geometry, f);
 }
 
+
 } // namespace ggl
+
 
 #endif // GGL_ALGORITHMS_FOR_EACH_HPP

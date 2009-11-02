@@ -6,162 +6,154 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_STRATEGIES_SPHERICAL_SPH_AREA_HPP
-#define GGL_STRATEGIES_SPHERICAL_SPH_AREA_HPP
+#ifndef GGL_STRATEGIES_SPHERICAL_AREA_HUILLER_HPP
+#define GGL_STRATEGIES_SPHERICAL_AREA_HUILLER_HPP
 
-#include <ggl/geometries/segment.hpp>
+
 #include <ggl/strategies/spherical/distance_haversine.hpp>
-#include <ggl/strategies/strategy_transform.hpp>
 
-#include <ggl/util/get_cs_as_radian.hpp>
+#include <ggl/core/radian_access.hpp>
+
 
 namespace ggl
 {
-namespace strategy
+
+namespace strategy { namespace area {
+
+
+
+/*!
+    \brief Area calculation by spherical excess / Huiller's formula
+    \tparam P type of points of rings/polygons
+    \author Barend Gehrels. Adapted from:
+    - http://www.soe.ucsc.edu/~pang/160/f98/Gems/GemsIV/sph_poly.c
+    - http://williams.best.vwh.net/avform.htm
+    \note The version in Gems didn't account for polygons crossing the 180 meridian.
+    \note This version works for convex and non-convex polygons, for 180 meridian
+    crossing polygons and for polygons with holes. However, some cases (especially
+    180 meridian cases) must still be checked.
+    \note The version which sums angles, which is often seen, doesn't handle non-convex
+    polygons correctly.
+    \note The version which sums longitudes, see
+    http://trs-new.jpl.nasa.gov/dspace/bitstream/2014/40409/1/07-03.pdf, is simple
+    and works well in most cases but not in 180 meridian crossing cases. This probably
+    could be solved.
+*/
+template
+<
+    typename PointOfSegment,
+    typename CalculationType = void
+>
+class huiller
 {
-    namespace area
+protected :
+    struct excess_sum
     {
+        double sum;
+        double radius;
+
+        // Distances are calculated on unit sphere here
+        strategy::distance::haversine<PointOfSegment, PointOfSegment>
+                distance_over_unit_sphere;
 
 
-
-        /*!
-            \brief Area calculation by spherical excess
-            \tparam P type of points of rings/polygons
-            \author Barend Gehrels. Adapted from:
-            - http://www.soe.ucsc.edu/~pang/160/f98/Gems/GemsIV/sph_poly.c
-            - http://williams.best.vwh.net/avform.htm
-            \note The version in Gems didn't account for polygons crossing the 180 meridian.
-            \note This version works for convex and non-convex polygons, for 180 meridian
-            crossing polygons and for polygons with holes. However, some cases (especially
-            180 meridian cases) must still be checked.
-            \note The version which sums angles, which is often seen, doesn't handle non-convex
-            polygons correctly.
-            \note The version which sums longitudes, see
-            http://trs-new.jpl.nasa.gov/dspace/bitstream/2014/40409/1/07-03.pdf, is simple
-            and works well in most cases but not in 180 meridian crossing cases. This probably
-            could be solved.
-        */
-        template<typename P>
-        class by_spherical_excess
+        inline excess_sum(double sphere_radius = 1.0)
+            : sum(0)
+            , radius(sphere_radius)
+            , distance_over_unit_sphere(1)
+        {}
+        inline double area() const
         {
-            private :
-                struct excess_sum
-                {
-                    double m_sum;
-                    double m_radius;
+            return - sum * radius * radius;
+        }
+    };
 
-                    // TODO: make this 1.0 & implement other construct to let user specify
-                    inline excess_sum(double radius = 1.0) //constants::average_earth_radius)
-                        : m_sum(0)
-                        , m_radius(radius)
-                    {}
-                    inline double area() const
-                    {
-                        return - m_sum * m_radius * m_radius;
-                            //constants::average_earth_radius * constants::average_earth_radius;
-                    }
-                };
+public :
+    typedef double return_type;
+    typedef PointOfSegment segment_point_type;
+    typedef excess_sum state_type;
 
-                // Distances are calculated on unit sphere here
-                strategy::distance::haversine<P, P> m_unit_sphere;
-                double m_radius;
+    inline huiller(double radius = 1.0)
+        : m_radius(radius)
+    {}
 
-            public :
-                typedef double return_type;
-                typedef excess_sum state_type;
+    inline state_type init() const
+    {
+        return excess_sum(m_radius);
+    }
 
-                by_spherical_excess(double radius = 1.0)
-                    : m_unit_sphere(1)
-                    , m_radius(radius)
-                {}
+    static inline void apply(PointOfSegment const& p1,
+                PointOfSegment const& p2,
+                excess_sum& state)
+    {
+        if (! ggl::math::equals(get<0>(p1), get<0>(p2)))
+        {
+            // Distance p1 p2
+            double a = state.distance_over_unit_sphere.apply(p1, p2);
 
-                inline bool operator()(segment<const P> const& segment, state_type& state) const
-                {
-                    if (get<0>(segment.first) != get<0>(segment.second))
-                    {
-                        typedef point
-                            <
-                                typename coordinate_type<P>::type,
-                                2,
-                                typename ggl::detail::get_cs_as_radian
-                                    <
-                                        typename coordinate_system<P>::type
-                                    >::type
-                            > PR;
-                        PR p1, p2;
+            // Sides on unit sphere to south pole
+            double b = 0.5 * math::pi - ggl::get_as_radian<1>(p2);
+            double c = 0.5 * math::pi - ggl::get_as_radian<1>(p1);
 
-                        // Select transformation strategy and transform to radians (if necessary)
-                        typename strategy_transform<
-                                    typename cs_tag<P>::type,
-                                    typename cs_tag<PR>::type,
-                                    typename coordinate_system<P>::type,
-                                    typename coordinate_system<PR>::type,
-                                    dimension<P>::value,
-                                    dimension<PR>::value,
-                                    P, PR>::type transform_strategy;
+            // Semi parameter
+            double s = 0.5 * (a + b + c);
 
-                        transform_strategy(segment.first, p1);
-                        transform_strategy(segment.second, p2);
+            // E: spherical excess, using l'Huiller's formula
+            // [tg(e / 4)]2   =   tg[s / 2]  tg[(s-a) / 2]  tg[(s-b) / 2]  tg[(s-c) / 2]
+            double E = 4.0 * atan(sqrt(std::abs(tan(s / 2)
+                    * tan((s - a) / 2)
+                    * tan((s - b) / 2)
+                    * tan((s - c) / 2))));
 
-                        // Distance p1 p2
-                        double a = m_unit_sphere(segment.first, segment.second);
-                        // Sides on unit sphere to south pole
-                        double b = 0.5 * math::pi - ggl::get<1>(p2);
-                        double c = 0.5 * math::pi - ggl::get<1>(p1);
-                        // Semi parameter
-                        double s = 0.5 * (a + b + c);
+            E = std::abs(E);
 
-                        // E: spherical excess, using l'Huiller's formula
-                        // [tg(e / 4)]2   =   tg[s / 2]  tg[(s-a) / 2]  tg[(s-b) / 2]  tg[(s-c) / 2]
-                        double E = 4.0 * atan(sqrt(fabs(tan(s / 2)
-                                * tan((s - a) / 2)
-                                * tan((s - b) / 2)
-                                * tan((s - c) / 2))));
+            // In right direction: positive, add area. In left direction: negative, subtract area.
+            // Longitude comparisons are not so obvious. If one is negative, other is positive,
+            // we have to take the dateline into account.
+            // TODO: check this / enhance this, should be more robust. See also the "grow" for ll
+            // TODO: use minmax or "smaller"/"compare" strategy for this
+            double lon1 = ggl::get_as_radian<0>(p1) < 0
+                ? ggl::get_as_radian<0>(p1) + math::two_pi
+                : ggl::get_as_radian<0>(p1);
 
-                        E = fabs(E);
+            double lon2 = ggl::get_as_radian<0>(p2) < 0
+                ? ggl::get_as_radian<0>(p2) + math::two_pi
+                : ggl::get_as_radian<0>(p2);
 
-                        // In right direction: positive, add area. In left direction: negative, subtract area.
-                        // Longitude comparisons are not so obvious. If one is negative, other is positive,
-                        // we have to take the date into account.
-                        // TODO: check this / enhance this, should be more robust. See also the "grow" for ll
-                        // TODO: use minmax or "smaller"/"compare" strategy for this
-                        double lon1 = ggl::get<0>(p1) < 0
-                            ? ggl::get<0>(p1) + math::two_pi
-                            : ggl::get<0>(p1);
-                        double lon2 = ggl::get<0>(p2) < 0
-                            ? ggl::get<0>(p2) + math::two_pi
-                            : ggl::get<0>(p2);
+            if (lon2 < lon1)
+            {
+                E = -E;
+            }
 
-                        if (lon2 < lon1)
-                        {
-                            E= -E;
-                        }
+            state.sum += E;
+        }
+    }
 
-                        state.m_sum += E;
-                    }
-                    return true;
-                }
-        };
+    static inline return_type result(excess_sum const& state)
+    {
+        return state.area();
+    }
 
-    } // namespace area
+private :
+    /// Radius of the sphere
+    double m_radius;
+};
 
-} // namespace strategy
+
+}} // namespace strategy::area
+
 
 
 #ifndef DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
-template <typename LL>
-struct strategy_area<spherical_tag, LL>
+
+template <typename Point>
+struct strategy_area<spherical_tag, Point>
 {
-    typedef strategy::area::by_spherical_excess<LL> type;
+    typedef strategy::area::huiller<Point> type;
 };
 
-template <typename LL>
-struct strategy_area<geographic_tag, LL>
-{
-    typedef strategy::area::by_spherical_excess<LL> type;
-};
 #endif
 
 } // namespace ggl
 
-#endif // GGL_STRATEGIES_SPHERICAL_SPH_AREA_HPP
+#endif // GGL_STRATEGIES_SPHERICAL_AREA_HUILLER_HPP

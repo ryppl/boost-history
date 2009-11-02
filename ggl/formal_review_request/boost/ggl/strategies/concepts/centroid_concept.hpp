@@ -17,7 +17,7 @@ namespace ggl { namespace concept {
 
 
 /*!
-    \brief Checks strategy for area
+    \brief Checks strategy for centroid
     \ingroup concepts
 */
 template <typename Strategy>
@@ -37,17 +37,18 @@ class CentroidStrategy
     {
         static void apply()
         {
-            state_type *s;
+            Strategy *str;
+            state_type *st;
 
             // 4) must implement a static method apply,
             // getting two segment-points
-            spoint_type *sp;
-            Strategy::apply(*sp, *sp, *s);
+            spoint_type const* sp;
+            str->apply(*sp, *sp, *st);
 
             // 5) must implement a static method result
             //  getting the centroid
             point_type *c;
-            bool r = Strategy::result(*s, *c);
+            bool r = str->result(*st, *c);
             boost::ignore_unused_variable_warning(r);
         }
     };

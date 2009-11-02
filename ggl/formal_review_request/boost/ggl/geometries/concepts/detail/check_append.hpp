@@ -16,9 +16,9 @@
 #include <ggl/core/access.hpp>
 
 
-
 namespace ggl { namespace concept {
 
+#ifndef DOXYGEN_NO_DETAIL
 namespace detail
 {
 
@@ -35,6 +35,7 @@ namespace detail
         }
     };
 
+
     template <typename Geometry, typename Point>
     struct check_append<Geometry, Point, false>
     {
@@ -48,7 +49,7 @@ namespace detail
         }
     };
 }
-
+#endif // DOXYGEN_NO_DETAIL
 
 
 }} // namespace ggl::concept

@@ -37,17 +37,17 @@ class AreaStrategy
     {
         static void apply()
         {
-            Strategy const* st;
+            Strategy const* str;
 
             // 4) must implement an init-method
-            state_type s = st->init();
+            state_type st = str->init();
 
-            // 5) must implement a static method apply with the following signature
-            spoint_type *sp;
-            Strategy::apply(*sp, *sp, s);
+            // 5) must implement a method apply with the following signature
+            spoint_type const* sp;
+            str->apply(*sp, *sp, st);
 
             // 6) must implement a static method result with the following signature
-            return_type r = Strategy::result(s);
+            return_type r = str->result(st);
             boost::ignore_unused_variable_warning(r);
         }
     };

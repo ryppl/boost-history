@@ -12,12 +12,15 @@
 #include <utility>
 #include <cmath>
 #include <limits>
-#include <iostream>
+// #include <iostream>
 
 #include <boost/mpl/if.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/type_traits.hpp>
 
+#include <ggl/core/cs.hpp>
+#include <ggl/core/point_type.hpp>
+#include <ggl/strategies/distance.hpp>
 #include <ggl/util/select_most_precise.hpp>
 
 
@@ -237,6 +240,32 @@ namespace detail
     }
 }
 #endif
+
+
+
+/*!
+    \brief Shortcut to define return type of distance strategy
+    \ingroup distance
+    \tparam Geometry1 first geometry
+    \tparam Geometry2 second geometry
+ */
+template <typename Geometry1, typename Geometry2 = Geometry1>
+struct distance_result
+{
+    typedef typename point_type<Geometry1>::type point_type1;
+    typedef typename point_type<Geometry2>::type point_type2;
+    typedef typename strategy_distance
+        <
+            typename cs_tag<point_type1>::type,
+            typename cs_tag<point_type2>::type,
+            point_type1,
+            point_type2
+        >::type strategy_type;
+    typedef typename strategy_type::return_type type;
+};
+
+
+
 
 
 /*!

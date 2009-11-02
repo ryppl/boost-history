@@ -9,61 +9,60 @@
 #ifndef GGL_ALGORITHMS_INTERSECTION_HPP
 #define GGL_ALGORITHMS_INTERSECTION_HPP
 
-#include <deque>
 
 #include <boost/mpl/if.hpp>
 
+#include <ggl/core/reverse_dispatch.hpp>
 #include <ggl/geometries/concepts/check.hpp>
-
-#include <ggl/algorithms/intersection_linestring.hpp>
-
-#include <ggl/algorithms/overlay/get_intersection_points.hpp>
-#include <ggl/algorithms/overlay/merge_intersection_points.hpp>
-#include <ggl/algorithms/overlay/adapt_turns.hpp>
-#include <ggl/algorithms/overlay/enrich_intersection_points.hpp>
-#include <ggl/algorithms/overlay/traverse.hpp>
-
-#include <ggl/algorithms/assign.hpp>
-#include <ggl/algorithms/convert.hpp>
-#include <ggl/algorithms/within.hpp>
+#include <ggl/algorithms/overlay/clip_linestring.hpp>
+#include <ggl/algorithms/overlay/assemble.hpp>
 
 
 
 /*!
-\defgroup overlay overlay operations (intersection, union, clipping)
-\details The intersection of two geometries A and B is the geometry containing all points of A also belonging to B,
-but no other elements. The so-called clip is an intersection of a geometry with a box.
+\defgroup intersection intersection operations
+    (clipping, polygon-polygon intersection)
+\details The intersection of two geometries A and B is the geometry containing
+    all points of A also belonging to B, but no other elements. The so-called
+    clip is an intersection of a geometry with a box.
 \par Source description:
-- OGC: Returns a geometric object that represents the Point set intersection of this geometric object with another Geometry.
+- OGC: Returns a geometric object that represents the Point set intersection of
+    this geometric object with another Geometry.
 \see http://en.wikipedia.org/wiki/Intersection_(set_theory)
 \note Any intersection can result in no geometry at all
 
-\note Used strategies still have to be modelled. Working only for cartesian
+\par Performance
+- 2776 counties of US are intersected with a 100-points ellipse in 1.1 seconds
+(http://trac.osgeo.org/ggl/wiki/Performance#Interesection)
+- 2776 counties of US are clipped in 0.2 seconds
+(http://trac.osgeo.org/ggl/wiki/Performance#Clip)
+
+
 \par Geometries:
-The intersection result is painted with a red outline.
-- clip: POLYGON + BOX -> output iterator of polygons
-\image html clip_polygon.png
-- clip: LINESTRING + BOX -> output iterator of linestrings
-\image html clip_linestring.png
-\note There are some difficulties to model an intersection in the template world. The intersection of two segments can
-result into nothing, into a point, into another segment. At compiletime the result type is not known. An output iterator
-iterating points is appropriate here.
-\image html clip_segment_segment.png
-An intersection of two linestrings can result into nothing, one or more points, one or more segments or one or more
-linestrings. So an output iterator will NOT do here.
-So the output might be changed into a unified algorithm where the output is a multi-geometry.
-For the current clip-only operations the output iterator will do.
+- \b polygon + \b box (clip) -> \b polygon(s)
+\image html svg_intersection_polygon_box.png
+\image html svg_intersection_countries.png
+- \b ring + \b box (clip) -> \b polygon(s)
+\image html svg_intersection_ring_box.png
+- \b ring + \b ring -> \b polygon(s)
+\image html svg_intersection_ring_ring.png
+- \b polygon + \b ring -> \b polygon(s)
+\image html svg_intersection_polygon_ring.png
+- combinations above -> \b ring(s).
+    <i>If the output is an ouput iterator of rings, holes are omitted</i>
+- \b linestring + \b box (clip)
+\image html svg_intersection_roads.png
 
 \par Example:
 Example showing clipping of linestring with box
 \dontinclude doxygen_examples.cpp
-\skip example_intersection_linestring1
+\skip example_clip_linestring1
 \line {
 \until }
 \par Example:
 Example showing clipping of vector, outputting vectors, with box
 \dontinclude doxygen_examples.cpp
-\skip example_intersection_linestring2
+\skip example_clip_linestring2
 \line {
 \until }
 \par Example:
@@ -79,192 +78,91 @@ namespace ggl
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace intersection {
+namespace detail { namespace overlay {
 
 
+
+// Specializations for "take_one" for intersection
+// "one" should be the inner one
+
+// for ring and box
 template
 <
-    typename Polygon1, typename Polygon2,
-    typename OutputIterator, typename GeometryOut
+    typename Tag1, typename Geometry1,
+    typename Tag2, typename Geometry2,
+    typename GeometryOut
 >
-struct intersection_polygon_polygon
+struct take_if_1_is_in_2<Tag1, Geometry1, Tag2, Geometry2, GeometryOut, -1>
 {
-    static inline OutputIterator apply(Polygon1 const& polygon1,
-                Polygon2 const& polygon2, OutputIterator out)
+    static inline void apply(Geometry1 const& geometry1,
+                Geometry2 const& geometry2,
+                GeometryOut& out
+                )
     {
-        typedef detail::intersection::intersection_point
-            <
-                typename ggl::point_type<GeometryOut>::type
-            > ip_type;
-        typedef std::deque<ip_type> ips_container;
-
-        typedef typename ggl::ring_type<GeometryOut>::type ring_type;
-
-        ips_container ips;
-
-        bool trivial = ggl::get_intersection_points(polygon1, polygon2, ips);
-
-        if (ips.size() <= 0)
-        {
-            // If there are no IP-s, check if one point is in other polygon
-            // assume both polygons having points
-            if (ggl::within(ggl::exterior_ring(polygon1).front(), polygon2))
-            {
-                // Assume same type (output = input)
-                // TODO: solve this (we go to specialize again...)
-                *out = polygon1;
-                out++;
-            }
-            else if (ggl::within(ggl::exterior_ring(polygon2).front(), polygon1))
-            {
-                *out = polygon2;
-                out++;
-            }
-        }
-        else
-        {
-            if (! trivial)
-            {
-                ggl::merge_intersection_points(ips);
-                ggl::adapt_turns(ips);
-
-            }
-
-            ggl::enrich_intersection_points(ips, trivial);
-
-
-            std::vector<ring_type> v;
-            ggl::traverse<ring_type>
-                (
-                    polygon1,
-                    polygon2,
-                    -1,
-                    ips,
-                    trivial,
-                    std::back_inserter(v)
-                );
-
-
-            // TODO:
-            // assemble rings / inner rings / to polygons
-            for (typename std::vector<ring_type>::const_iterator it = v.begin();
-                it != v.end(); ++it)
-            {
-                // How can we avoid the double copy here! It is really bad!
-                // We have to create a polygon, then copy it to the output iterator.
-                // Having an output-vector would have been better: append it to the vector!
-                // So output iterators are not that good.
-                GeometryOut poly;
-                poly.outer() = *it;
-                *out = poly;
-                out++;
-            }
-        }
-
-
-        return out;
+        ggl::convert(geometry1, out);
     }
 };
 
 
+template
+<
+    typename Geometry1,
+    typename Tag2, typename Geometry2,
+    typename GeometryOut
+>
+struct take_if_1_is_in_2<polygon_tag, Geometry1, Tag2, Geometry2, GeometryOut, -1>
+{
+    static inline void apply(Geometry1 const& geometry1,
+                Geometry2 const& geometry2,
+                GeometryOut& out
+                )
+    {
+        ggl::convert(exterior_ring(geometry1), out);
+    }
+};
 
 
 template
 <
-    typename Polygon, typename Box,
-    typename OutputIterator, typename GeometryOut
+    typename Geometry, typename GeometryOut, typename Container
 >
-struct intersection_polygon_box
+struct add_holes<polygon_tag, Geometry, GeometryOut, Container, -1>
 {
-    static inline OutputIterator apply(Polygon const& polygon,
-                Box const& box, OutputIterator out)
+
+    static inline void apply(Geometry const& geometry,
+                GeometryOut& out,
+                Container const& holes
+                )
     {
-        typedef typename ggl::point_type<GeometryOut>::type point_type;
-        typedef detail::intersection::intersection_point<point_type> ip_type;
-        typedef std::deque<ip_type> ips_container;
+        std::vector<sortable> v;
+        sort_interior_rings(holes, v, -1);
 
-        typedef typename ggl::ring_type<GeometryOut>::type ring_type;
+        // For an intersection, if a ring is containing an inner ring,
+        // take the outer
 
-        ips_container ips;
+        std::size_t const n = boost::size(v);
 
-        bool trivial = ggl::get_intersection_points(polygon, box, ips);
-
-        // TODO: share this all with polygon_polygon using an "assemble" function!
-        // It is only different in the 'within' calls, can be sorted out with specialization
-
-
-        if (ips.size() <= 0)
+        for (std::size_t i = 0; i < n; i++)
         {
-            // If there are no IP-s, check if one point is in other polygon
-            // assume both polygons having points
-            if (ggl::within(ggl::exterior_ring(polygon).front(), box))
+            // So, only if no inners:
+            if (v[i].index_of_parent == -1)
             {
-                // Assume same type (output = input)
-                // TODO: solve this (we go to specialize again...)
-                *out = polygon;
-                out++;
-            }
-            else
-            {
-                typename ggl::point_type<Box>::type p;
-                ggl::set<0>(p, ggl::get<min_corner, 0>(box));
-                ggl::set<1>(p, ggl::get<min_corner, 1>(box));
-                if (ggl::within(p, polygon))
+                typename ggl::point_type<GeometryOut>::type point;
+                ggl::point_on_border(holes[v[i].index], point);
+                if (ggl::within(point, geometry))
                 {
-                    GeometryOut boxpoly;
-                    ggl::convert(box, boxpoly);
-                    *out = boxpoly;
-                    out++;
+                    typename ring_type<GeometryOut>::type hole;
+                    ggl::convert(holes[v[i].index], hole);
+                    ggl::interior_rings(out).push_back(hole);
                 }
             }
         }
-        else
-        {
-            if (trivial)
-            {
-                ggl::merge_intersection_points(ips);
-            }
-
-            ggl::enrich_intersection_points(ips, trivial);
-
-            std::vector<ring_type> v;
-            ggl::traverse<ring_type>
-                (
-                    polygon,
-                    box,
-                    -1,
-                    ips,
-                    trivial,
-                    std::back_inserter(v)
-                );
-
-            // TODO:
-            // assemble rings / inner rings / to polygons
-            for (typename std::vector<ring_type>::const_iterator it = v.begin();
-                it != v.end(); ++it)
-            {
-                // How can we avoid the double copy here! It is really bad!
-                // We have to create a polygon, then copy it to the output iterator.
-                // Having an output-vector would have been better: append it to the vector!
-                // So output iterators are not that good.
-                GeometryOut poly;
-                poly.outer() = *it;
-                *out = poly;
-                out++;
-            }
-        }
-
-
-        return out;
     }
 };
 
 
-}} // namespace detail::intersection
+}} // namespace detail::overlay
 #endif // DOXYGEN_NO_DETAIL
-
-
-
 
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -278,7 +176,7 @@ template
     typename OutputIterator,
     typename GeometryOut
 >
-struct intersection {};
+struct intersection_inserter {};
 
 
 template
@@ -286,7 +184,7 @@ template
     typename Segment1, typename Segment2,
     typename OutputIterator, typename GeometryOut
 >
-struct intersection
+struct intersection_inserter
     <
         segment_tag, segment_tag, point_tag,
         Segment1, Segment2,
@@ -326,7 +224,7 @@ template
     typename Linestring, typename Box,
     typename OutputIterator, typename GeometryOut
 >
-struct intersection
+struct intersection_inserter
     <
         linestring_tag, box_tag, linestring_tag,
         Linestring, Box,
@@ -348,14 +246,14 @@ template
     typename Polygon1, typename Polygon2,
     typename OutputIterator, typename GeometryOut
 >
-struct intersection
+struct intersection_inserter
     <
         polygon_tag, polygon_tag, polygon_tag,
         Polygon1, Polygon2,
         OutputIterator, GeometryOut
     >
-    : detail::intersection::intersection_polygon_polygon
-        <Polygon1, Polygon2, OutputIterator, GeometryOut>
+    : detail::overlay::overlay_and_assemble
+        <Polygon1, Polygon2, OutputIterator, GeometryOut, -1>
 {};
 
 
@@ -365,14 +263,14 @@ template
     typename Polygon, typename Box,
     typename OutputIterator, typename GeometryOut
 >
-struct intersection
+struct intersection_inserter
 <
     polygon_tag, box_tag, polygon_tag,
     Polygon, Box,
     OutputIterator, GeometryOut
 >
-    : detail::intersection::intersection_polygon_box
-        <Polygon, Box, OutputIterator, GeometryOut>
+    : detail::overlay::overlay_and_assemble
+        <Polygon, Box, OutputIterator, GeometryOut, -1>
 {};
 
 
@@ -380,17 +278,18 @@ struct intersection
 template
 <
     typename GeometryTag1, typename GeometryTag2, typename GeometryTag3,
-    typename G1, typename G2,
+    typename Geometry1, typename Geometry2,
     typename OutputIterator, typename GeometryOut
 >
-struct intersection_reversed
+struct intersection_inserter_reversed
 {
-    static inline OutputIterator apply(G1 const& g1, G2 const& g2, OutputIterator out)
+    static inline OutputIterator apply(Geometry1 const& g1,
+                Geometry2 const& g2, OutputIterator out)
     {
-        return intersection
+        return intersection_inserter
             <
                 GeometryTag2, GeometryTag1, GeometryTag3,
-                G2, G1,
+                Geometry2, Geometry1,
                 OutputIterator, GeometryOut
             >::apply(g2, g1, out);
     }
@@ -403,20 +302,17 @@ struct intersection_reversed
 
 /*!
     \brief Intersects two geometries which each other
-    \ingroup overlay
-    \details A sequence of points is intersected (clipped) by the specified box
-    and the resulting linestring, or pieces of linestrings, are sent to the specified output operator.
+    \ingroup intersection
+    \details The two input geometries are intersected and the resulting linestring(s),
+    ring(s) or polygon(s) are sent to the specified output operator.
     \tparam GeometryOut output geometry type, must be specified
     \tparam Geometry1 first geometry type
     \tparam Geometry2 second geometry type
     \tparam OutputIterator output iterator
-    \param geometry1 first geometry (currently only a BOX)
-    \param geometry2 second geometry (range, linestring, polygon)
+    \param geometry1 first geometry
+    \param geometry2 second geometry
     \param out the output iterator, outputting linestrings or polygons
     \return the output iterator
-    \note For linestrings: the default clipping strategy, Liang-Barsky, is used. The algorithm is currently only
-    implemented for 2D xy points. It could be generic for most ll cases, but not across the 180
-    meridian so that issue is still on the todo-list.
 */
 template
 <
@@ -435,7 +331,7 @@ inline OutputIterator intersection(Geometry1 const& geometry1,
     return boost::mpl::if_c
         <
             reverse_dispatch<Geometry1, Geometry2>::type::value,
-            dispatch::intersection_reversed
+            dispatch::intersection_inserter_reversed
             <
                 typename tag<Geometry1>::type,
                 typename tag<Geometry2>::type,
@@ -444,7 +340,7 @@ inline OutputIterator intersection(Geometry1 const& geometry1,
                 Geometry2,
                 OutputIterator, GeometryOut
             >,
-            dispatch::intersection
+            dispatch::intersection_inserter
             <
                 typename tag<Geometry1>::type,
                 typename tag<Geometry2>::type,
@@ -456,6 +352,8 @@ inline OutputIterator intersection(Geometry1 const& geometry1,
         >::type::apply(geometry1, geometry2, out);
 }
 
+
 } // ggl
+
 
 #endif //GGL_ALGORITHMS_INTERSECTION_HPP

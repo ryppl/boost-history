@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef GGL_STRATEGY_CARTESIAN_INTERSECTION_HPP
-#define GGL_STRATEGY_CARTESIAN_INTERSECTION_HPP
+#ifndef GGL_STRATEGIES_CARTESIAN_INTERSECTION_HPP
+#define GGL_STRATEGIES_CARTESIAN_INTERSECTION_HPP
 
 #include <algorithm>
 
@@ -351,4 +351,4 @@ private :
 } // namespace ggl
 
 
-#endif // GGL_STRATEGY_CARTESIAN_INTERSECTION_HPP
+#endif // GGL_STRATEGIES_CARTESIAN_INTERSECTION_HPP

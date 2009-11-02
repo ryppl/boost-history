@@ -24,7 +24,7 @@
 #include <ggl/algorithms/detail/calculate_null.hpp>
 #include <ggl/algorithms/detail/calculate_sum.hpp>
 
-#include <ggl/strategies/strategies.hpp>
+#include <ggl/strategies/area.hpp>
 #include <ggl/strategies/area_result.hpp>
 
 #include <ggl/strategies/concepts/area_concept.hpp>
@@ -36,7 +36,7 @@
 
 \par Performance
 2776 * 1000 area calculations are done in 0.11 seconds
-(other libraries: 0.125 seconds, 0.125 seconds, 0.5 seconds)
+(http://trac.osgeo.org/ggl/wiki/Performance#Area1)
 
 \par Coordinate systems and strategies
 Area calculation can be done in Cartesian and in spherical/geographic
@@ -70,12 +70,11 @@ struct box_area
     static inline return_type apply(Box const& box, Strategy const&)
     {
         // Currently only works for 2D Cartesian boxes
-        // Todo: use extreme-strategy
         assert_dimension<Box, 2>();
 
-        return_type const dx = get<max_corner, 0>(box) 
+        return_type const dx = get<max_corner, 0>(box)
                 - get<min_corner, 0>(box);
-        return_type const dy = get<max_corner, 1>(box) 
+        return_type const dy = get<max_corner, 1>(box)
                 - get<min_corner, 1>(box);
 
         return dx * dy;
@@ -235,7 +234,7 @@ inline typename area_result<Geometry>::type area(Geometry const& geometry)
 }
 
 /*!
-    \brief Calculate area of a geometry using a strategy
+    \brief Calculate area of a geometry using a specified strategy
     \ingroup area
     \details This version of area calculation takes a strategy
     \param geometry a geometry
