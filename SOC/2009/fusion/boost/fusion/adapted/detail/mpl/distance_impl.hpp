@@ -14,10 +14,10 @@
 namespace boost { namespace fusion { namespace extension
 {
     template <typename>
-    struct distance_to_impl;
+    struct distance_impl;
 
     template <>
-    struct distance_to_impl<mpl_iterator_tag>
+    struct distance_impl<mpl_iterator_tag>
     {
         template <typename It1, typename It2>
         struct apply

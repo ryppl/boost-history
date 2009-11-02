@@ -1,20 +1,13 @@
 /*=============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2001-2007 Joel de Guzman
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_CONS_FWD_HPP
-#define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_CONS_FWD_HPP
+#ifndef BOOST_FUSION_INCLUDE_NVIEW_HPP
+#define BOOST_FUSION_INCLUDE_NVIEW_HPP
 
-namespace boost { namespace fusion
-{
-    struct cons_tag;
-    struct nil;
-
-    template <typename Car, typename Cdr>
-    struct cons;
-}}
+#include <boost/fusion/view/nview.hpp>
 
 #endif

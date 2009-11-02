@@ -72,6 +72,30 @@ namespace boost { namespace fusion
 #undef BOOST_FUSION_CV_REF_SPECIALIZATION
 
         template <typename T, int N>
+        struct deduce<T[N]>
+        {
+            typedef const T(&type)[N];
+        };
+
+        template <typename T, int N>
+        struct deduce<const T[N]>
+        {
+            typedef const T(&type)[N];
+        };
+
+        template <typename T, int N>
+        struct deduce<volatile T[N]>
+        {
+            typedef const volatile T(&type)[N];
+        };
+
+        template <typename T, int N>
+        struct deduce<const volatile T[N]>
+        {
+            typedef const volatile T(&type)[N];
+        };
+
+        template <typename T, int N>
         struct deduce<T(&)[N]>
         {
             typedef T(&type)[N];

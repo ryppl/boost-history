@@ -15,7 +15,7 @@ namespace boost { namespace fusion
 {
     namespace traits
     {
-        template<typename Seq, typename Dummy=void>
+        template<typename Seq, typename Enable=void>
         struct tag_of;
     }
 }}

@@ -10,12 +10,14 @@
 #include <boost/fusion/support/tag_of.hpp>
 
 #include <boost/mpl/iterator_tags.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/is_sequence.hpp>
+#include <boost/mpl/always.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost
@@ -24,6 +26,7 @@ namespace boost
     {
         struct mpl_sequence_tag;
         struct mpl_iterator_tag;
+        struct non_fusion_tag;
 
         namespace detail
         {
@@ -33,19 +36,12 @@ namespace boost
             struct category_is
               : mpl::equal_to<typename T::category, Category>
             {};
-        }
 
-        namespace traits
-        {
+            template <typename T, typename Enable>
+            struct tag_of_fallback;
+
             template<typename T>
-            struct tag_of<
-                T
-              , typename disable_if<
-                    typename detail::has_fusion_tag<
-                        typename detail::identity<T>::type
-                    >::type
-                >::type
-            >
+            struct tag_of_fallback<T, typename enable_if<typename mpl::always<mpl::true_>::apply<T>::type>::type>
             {
                 typedef typename detail::identity<T>::type identity_t;
 
@@ -72,7 +68,7 @@ namespace boost
                                 >
                             >
                           , mpl::identity<mpl_iterator_tag>
-                          , tag_of<T, bool>
+                          , mpl::identity<non_fusion_tag>
                         >
                     >::type
                 type;

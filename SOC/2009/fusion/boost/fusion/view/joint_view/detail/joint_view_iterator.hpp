@@ -9,25 +9,23 @@
 #ifndef BOOST_FUSION_VIEW_JOINT_VIEW_DETAIL_JOINT_VIEW_ITERATOR_HPP
 #define BOOST_FUSION_VIEW_JOINT_VIEW_DETAIL_JOINT_VIEW_ITERATOR_HPP
 
-#include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
 
 namespace boost { namespace fusion
 {
     struct joint_view_iterator_tag;
     struct concat_iterator_tag;
-    struct forward_traversal_tag;
 
     template <typename Category, typename Begin, typename End, typename Concat>
     struct joint_view_iterator
       : iterator_base<joint_view_iterator<Category, Begin, End, Concat> >
     {
-        typedef joint_view_iterator_tag fusion_tag;
-        typedef Category category;
-
         typedef Begin begin_type;
         typedef End end_type;
         typedef Concat concat_type;
+
+        typedef joint_view_iterator_tag fusion_tag;
+        typedef Category category;
 
         joint_view_iterator(Begin const& first, Concat const& concat)
           : first(first)

@@ -22,7 +22,6 @@
 namespace boost { namespace fusion
 {
     struct filter_view_iterator_tag;
-    struct forward_traversal_tag;
 
     template <typename Category,typename Begin, typename End, typename Pred>
     struct filter_iterator

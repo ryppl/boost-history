@@ -29,11 +29,17 @@ namespace boost { namespace fusion
         {
             typedef typename IdentityT::fusion_tag type;
         };
+
+        template <typename T, typename Enable=void>
+        struct tag_of_fallback
+        {
+            typedef non_fusion_tag type;
+        };
     }
 
     namespace traits
     {
-        template <typename T, typename Dummy>
+        template <typename T, typename Enable>
         struct tag_of
         {
             typedef typename detail::identity<T>::type identity_t;
@@ -42,7 +48,7 @@ namespace boost { namespace fusion
                 mpl::eval_if<
                     detail::has_fusion_tag<identity_t>
                   , detail::get_fusion_tag<identity_t>
-                  , mpl::identity<non_fusion_tag>
+                  , detail::tag_of_fallback<T>
                 >::type
             type;
         };
