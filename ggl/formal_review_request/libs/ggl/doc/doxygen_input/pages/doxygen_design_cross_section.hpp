@@ -461,7 +461,7 @@ struct geographic
 
 So Cartesian is simple, for geographic we can also select if its coordinates stored in degrees or in radians.
 
-The distance function now will change: it will select the computation method for the corresponding coordinate system and then call the dispatch struct for distance. We call the computation method specialized for coordinate systems a strategy. So the new version of the distance function is:
+The distance function now will change: it will select the computation method for the corresponding coordinate system and then call the dispatch struct for distance. We call the computation method specialized for coordinate systems a \b strategy. So the new version of the distance function is:
 
 \code
 template <typename G1, typename G2>
@@ -488,16 +488,14 @@ double distance(G1 const& g1, G2 const& g2)
 The strategy_distance mentioned here is a struct with specializations for different coordinate systems.
 
 \code
-template <typename T1, typename T2,
-    typename P1, typename P2, int D>
+template <typename T1, typename T2, typename P1, typename P2, int D>
 struct strategy_distance
 {
     typedef void type;
 };
 
 template <typename P1, typename P2, int D>
-struct strategy_distance
-<cartesian, cartesian, P1, P2, D>
+struct strategy_distance<cartesian, cartesian, P1, P2, D>
 {
     typedef pythagoras<P1, P2, D> type;
 };
@@ -519,8 +517,10 @@ struct strategy_distance<spherical, spherical, P1, P2, D>
 \endcode
 
 For geography, we have some alternatives for distance calculation. There is the Andoyer method[*], fast and precise, and there is the Vincenty method[*], slower and more precise, and there are some less precise approaches as well.
-We have to define one strategy as the default strategy.
-Besides that, we modify our design again and add an overload for the distance algorithm, taking a strategy. That enables us to call distance with any strategy, not just the default strategy but also specified strategies.
+
+Per coordinate system, one strategy is defined as the default strategy.
+To be able to use any strategy, we modify our design again and add an overload for the distance algorithm, taking a strategy. That enables us to call distance with another strategy.
+
 This new overload distance function also has the advantage that the strategy can be constructed outside the distance function. Because it was constructed inside above, it could not have construction parameters. But for Andoyer or Vincenty, or the haversine formula, it certainly makes sense to have a constructor taking the radius of the earth as a parameter.
 So the distance overloaded function is:
 
@@ -537,7 +537,9 @@ double distance(G1 const& g1, G2 const& g2, S const& strategy)
 }
 \endcode
 
-The strategy has to have a method apply taking two points as argument. [[[for points!]]]
+The strategy has to have a method apply taking two points as argument (for points). It is not required that it is a static method. A strategy
+might define a constructor, where a configuration value is passed and stored as a member variable. In those cases a static
+method would be inconvenient. It can be implemented as a normal method (with the const qualifier).
 
 We do not list all implementations here, Vincenty would cover half a page of mathematics, but you will understand the idea. We can call distance like this:
 \code

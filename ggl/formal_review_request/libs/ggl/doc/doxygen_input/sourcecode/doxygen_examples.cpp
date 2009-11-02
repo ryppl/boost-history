@@ -33,14 +33,12 @@ void example_area_polygon()
         << ggl::area(poly)
         << " square units" << std::endl;
 
-    /*
-    Extension, other coordinate system:
-    ggl::polygon<ggl::point_ll<float, ggl::cs::geographic<ggl::degree> > > poly_ll;
-    ggl::read_wkt("POLYGON((4 51,4 52,5 52,5 51,4 51))", poly_ll);
-    std::cout << "Polygon area is "
-        << ggl::area(poly_ll)/(1000*1000)
-        << " square kilometers " << std::endl;
-    */
+    // Other coordinate system, spherical or geographic (extension)
+    ggl::polygon<ggl::point<float, 2, ggl::cs::spherical<ggl::degree> > > sph_poly;
+    ggl::read_wkt("POLYGON((0 0,0 45,45 0,0 0))", sph_poly);
+    std::cout << "Area is "
+        << ggl::area(sph_poly)
+        << " on unit sphere " << std::endl;
 }
 
 void example_as_wkt_point()
@@ -70,10 +68,10 @@ void example_centroid_polygon()
 {
     ggl::polygon<ggl::point_xy<double> > poly;
     ggl::read_wkt("POLYGON((0 0,0 7,4 2,2 0,0 0))", poly);
-    // Center of polygon might have different type then points of polygon
+    // Center of polygon might have different type than points of polygon
     ggl::point_xy<float> center;
     ggl::centroid(poly, center);
-    std::cout << "Centroid: " << center.x() << "," << center.y() << std::endl;
+    std::cout << "Centroid: " << ggl::dsv(center) << std::endl;
 }
 
 
@@ -155,22 +153,19 @@ void example_point_ll_convert()
     */
 }
 
-void example_intersection_linestring1()
+void example_clip_linestring1()
 {
     typedef ggl::point_xy<double> P;
     ggl::linestring<P> line;
     ggl::read_wkt("linestring(1.1 1.1, 2.5 2.1, 3.1 3.1, 4.9 1.1, 3.1 1.9)", line);
     ggl::box<P> cb(P(1.5, 1.5), P(4.5, 2.5));
     std::cout << "Clipped linestring(s) " << std::endl;
-    /*
-    TODO: does not work because streamwkt is now extension and not included
-        so make other construct
-    ggl::intersection<ggl::linestring<P> > (cb, line,
-            std::ostream_iterator<ggl::linestring<P> >(std::cout, "\n"));
-    */
+
+    std::vector<ggl::linestring<P> > intersection;
+    ggl::intersection<ggl::linestring<P> >(cb, line, std::back_inserter(intersection));
 }
 
-void example_intersection_linestring2()
+void example_clip_linestring2()
 {
     typedef ggl::point_xy<double> P;
     std::vector<P> vector_in;
@@ -232,7 +227,7 @@ void example_simplify_linestring2()
 
     ggl::read_wkt("linestring(1.1 1.1, 2.5 2.1, 3.1 3.1, 4.9 1.1, 3.1 1.9)", line);
 
-    typedef ggl::strategy::distance::xy_point_segment<P, ggl::segment<const P> > DS;
+    typedef ggl::strategy::distance::xy_point_segment<P, P> DS;
     typedef ggl::strategy::simplify::douglas_peucker<P, DS> simplification;
     ggl::simplify_inserter(line, std::ostream_iterator<P>(std::cout, "\n"), 0.5, simplification());
 }
@@ -424,69 +419,6 @@ void example_point_ll_construct()
     */
 }
 
-namespace example_loop1
-{
-    // Class functor
-    template <typename P>
-    struct perimeter
-    {
-        struct summation
-        {
-            double sum;
-            summation() : sum(0) {}
-        };
-
-        bool operator()(const ggl::segment<const P>& segment, summation& s) const
-        {
-            std::cout << "from " << segment.first << " to " << segment.second << std::endl;
-            s.sum += ggl::distance(segment.first, segment.second);
-            return true;
-        }
-    };
-
-    void example()
-    {
-        typedef ggl::point_xy<double> P;
-        ggl::polygon<P> poly;
-        ggl::read_wkt("POLYGON((0 0,0 7,4 2,2 0,0 0))", poly);
-        perimeter<P>::summation peri;
-        ggl::loop(poly.outer(), perimeter<P>(), peri);
-        std::cout << "Perimeter: " << peri.sum << std::endl;
-    }
-} //:\\ --
-
-
-namespace example_loop2
-{
-    struct summation
-    {
-        double sum;
-        summation() : sum(0) {}
-    };
-
-    // Function functor
-    template <typename P>
-    bool perimeter(const ggl::segment<const P>& segment, summation& s)
-    {
-        std::cout << "from " << segment.first << " to " << segment.second << std::endl;
-        s.sum += ggl::distance(segment.first, segment.second);
-        return true;
-    }
-
-    void example()
-    {
-        /*
-        Extension, other coordinate system:
-        typedef ggl::point_ll<double, ggl::cs::geographic<ggl::degree> > P;
-        ggl::polygon<P> poly;
-        ggl::read_wkt("POLYGON((-178.786 70.7853,177.476 71.2333,179.744 71.5733,-178.786 70.7853))", poly);
-        summation peri;
-        ggl::loop(poly.outer(), perimeter<P>, peri);
-        std::cout << "Perimeter: " << peri.sum/1000.0 << " km" << std::endl;
-        */
-    }
-} //:\\ --
-
 
 
 struct example_point_1
@@ -580,10 +512,10 @@ namespace ggl
         template <> struct dimension<example_point_2> : boost::mpl::int_<2> {};
         template <std::size_t Dimension> struct access<example_point_2, Dimension>
         {
-            static inline float get(example_point_2 const& p) 
+            static inline float get(example_point_2 const& p)
             { return p.get<Dimension>(); }
 
-            static inline void set(example_point_2& p, float const& value) 
+            static inline void set(example_point_2& p, float const& value)
             { p.get<Dimension>() = value; }
         };
 
@@ -630,8 +562,8 @@ int main(void)
 
     example_as_wkt_point();
 
-    example_intersection_linestring1();
-    example_intersection_linestring2();
+    example_clip_linestring1();
+    example_clip_linestring2();
     example_intersection_polygon1();
 
     example_simplify_linestring1();
@@ -652,8 +584,6 @@ int main(void)
     example_point_ll_construct();
     example_dms();
 
-    example_loop1::example();
-    example_loop2::example();
     example_own_point1::example();
     example_own_point2::example();
 
