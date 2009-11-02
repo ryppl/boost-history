@@ -96,7 +96,7 @@ namespace
     };
 
     template<typename F>
-    double call_unfused(F const& func, int & j) 
+    double call_unfused(F func, int & j)
     {
         boost::timer tim;
         int i = 0;
@@ -139,7 +139,7 @@ namespace
     }
 
     template<typename F>
-    double call_fused_ra(F const& func, int & j) 
+    double call_fused_ra(F func, int & j)
     {
         boost::timer tim;
         int i = 0;
@@ -192,7 +192,7 @@ namespace
     }
 
     template<typename F>
-    double call_fused(F const& func, int & j) 
+    double call_fused(F func, int & j)
     {
         boost::timer tim;
         int i = 0;
