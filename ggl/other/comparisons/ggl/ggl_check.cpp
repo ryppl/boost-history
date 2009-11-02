@@ -22,6 +22,7 @@
 #include <ggl/ggl.hpp>
 #include <ggl/geometries/geometries.hpp>
 
+
 #if defined(OUTPUT_ORACLE)
 #  include <ggl/io/oracle/write_oracle.hpp>
 #endif
@@ -300,7 +301,7 @@ int main(int argc, char** argv)
         {
             POLY::ring_type ring;
             //std::cout << ggl::wkt<POLY>(*it) << std::endl;
-            ggl::convex_hull(*it, std::back_inserter(ring));
+            ggl::convex_hull_inserter(*it, std::back_inserter(ring));
             if (compare::HULL_AREA)
             {
                 area += fabs(ggl::area(ring));
@@ -500,7 +501,17 @@ int main(int argc, char** argv)
                     std::cout << std::setprecision(16) << ggl::wkt(*it) << std::endl;
                 }
                 ***/
-                if (ggl::within(p, *bit) && ggl::within(p, *it))
+
+                // Windings           : 0.093 s
+                // Franklin           : 0.047 s
+                // Crossings-multiply : 0.062 s
+                // But note that they have different properties for "on border" cases
+
+                //ggl::strategy::within::windings<POINT> strategy;
+                ggl::strategy::within::franklin<POINT> strategy;
+                //ggl::strategy::within::crossings_multiply<POINT> strategy;
+
+                if (ggl::within(p, *bit) && ggl::within(p, *it, strategy))
                 {
                     //std::cout << e << " IN " << k << std::endl;
                     count++;
