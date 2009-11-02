@@ -14,6 +14,11 @@ The /Interval Template Library/ is currently submitted
 for a formal review on the boost developer's list.
 Depending on the review's result the library might or 
 might not become a boost library. 
+
+The name ['*Interval Template Library (ITL)*] is provisional
+an will probably be changed, if the library is accepted into
+boost. A renaming will not be done before completion of the
+formal review.
 ]
 
 Intervals are almost ubiquitous in software development. Yet they are
@@ -26,14 +31,14 @@ If you want to add intervals to a collection of
 intervals that does still represent a /set/,
 you arrive at the idea of /interval_sets/ provided by this library. 
 
-Interval containers of the *itl* have been developed initially at 
+Interval containers of the *ITL* have been developed initially at 
 [@http://www.cortex-software.de/desktopdefault.aspx Cortex Software GmbH]
 to solve problems related to date and time interval
 computations in the context of a Hospital Information System.
 Time intervals with associated values like ['amount of invoice]
 or ['set of therapies] had to be manipulated in statistics,
 billing programs and therapy scheduling programs. 
-So the *itl* emerged out of those industrial use cases.
+So the *ITL* emerged out of those industrial use cases.
 It extracts generic code that helps to solve common
 problems from the date and time problem domain and can be
 beneficial in other fields as well.
@@ -44,10 +49,14 @@ sets and maps /of elements/ can be very inefficient, if in a given
 problem domain, elements are typically occurring in contiguous
 chunks. 
 Besides a compact representation of associative containers, that
-can reduce the cost of space and time drastically, the itl
+can reduce the cost of space and time drastically, the ITL
 comes with a universal mechanism of aggregation, that allows
 to combine associated values in meaningful ways when intervals
 overlap on insertion.
+
+For a condensed introduction and overview you may want to look at the
+[@http://www.herold-faulhaber.de/boost_itl/doc/libs/itl/doc/boostcon09/intro_to_itl.pdf 
+presentation material on the *ITL* from ['*BoostCon2009*]].
 
 
 [section Definition and Basic Example]
