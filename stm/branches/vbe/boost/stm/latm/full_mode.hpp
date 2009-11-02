@@ -75,12 +75,7 @@ public:
         return ;
     }
 
-//-----------------------------------------------------------------------------
-        //int lock(mutex_type& lock);
-        //int try_lock(mutex_type& lock);
-        //int unlock(mutex_type& lock);
-
-    };
+};
 
 }}}
 

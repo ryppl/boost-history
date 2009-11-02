@@ -104,6 +104,7 @@
 //#define BOOST_STM_USE_BOOST_THREAD_ID 1
 //#define BOOST_STM_USE_BOOST_MUTEX 1
 #endif
+
 #define BOOST_STM_NO_PARTIAL_SPECIALIZATION 1
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -113,8 +114,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Define BOOST_STM_ALLOWS_DELETERS when you want STM manage with others deleters than delete
 #define BOOST_STM_ALLOWS_DELETERS 1
-
-#define BOOST_STM_USE_BOOST_SYNCHRO 1
 
 ///////////////////////////////////////////////////////////////////////////////
 // BOOST_STM_LATM_STATIC_MODE
@@ -132,12 +131,10 @@
 #define BOOST_STM_LATM_STATIC_MODE 1
 #endif
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // Define BOOST_STM_LATM_GENERIC when you want Boost.STM to manage with arbitrary mutex
 
 //#define BOOST_STM_LATM_GENERIC 1
-
 
 ///////////////////////////////////////////////////////////////////////////////
 #endif // BOOST_STM_DETAIL_CONFIG_H

@@ -35,7 +35,6 @@ namespace boost { namespace stm { namespace latm {
     typedef std::set<thread_id_t> thread_id_set;
 
     typedef std::set<mutex_type*> mutex_set;
-    //typedef std::map<thread_id_t, mutex_set* > thread_mutex_set_map;
     typedef std::map<thread_id_t, mutex_set* > thread_id_mutex_set_map;
     
     //typedef std::map<latm::mutex_type*, thread_id_set > MutexThreadSetMap;   

@@ -58,31 +58,25 @@ static void* Test1(void *threadId)
 
    for (int i = startingValue; i < endingValue/2; ++i)
    {
-      std::cout<< __LINE__ << " i= " << i << std::endl;
       int count=0;
       for (transaction t; ; t.restart())
       {
           count++;
-        std::cout<< __LINE__ << " i="<<i << " end= " << endingValue/2 << " count= " << count << std::endl;
          t.lock_conflict(&lock1);
          try
          {
-             std::cout<< __LINE__ << " lock" << std::endl;
             transaction::lock_(lock1);
             ++gInt.value();
-            cout << __LINE__ << "\t" << gInt.value() << endl;
-             std::cout<< __LINE__ << " unlock" << std::endl;
+            cout << "\t" << gInt.value() << endl;
             transaction::unlock_(lock1);
 
             SLEEP(50);
             // do nothing on purpose, allowing other threads time to see
             // intermediate state IF they can get lock1 (they shouldn't)
 
-             std::cout<< __LINE__ << " lock" << std::endl;
             transaction::lock_(lock1);
             --gInt.value();
-            cout << __LINE__ << "\t" << gInt.value() << endl;
-             std::cout<< __LINE__ << " unlock" << std::endl;
+            cout << "\t" << gInt.value() << endl;
             transaction::unlock_(lock1);
 
             t.end();
@@ -95,7 +89,6 @@ static void* Test1(void *threadId)
         }
       }
    }
-    std::cout<< __LINE__ << std::endl;
 
    //--------------------------------------------------------------------------
    // last thread out sets the endTimer
@@ -103,11 +96,9 @@ static void* Test1(void *threadId)
    endTimer = time(0);
    finishThread(start);
 
-    std::cout<< __LINE__ << std::endl;
    if (*(int*)threadId != kMainThreadId)
    {
       transaction::terminate_thread();
-    std::cout<< __LINE__ << std::endl;
       //pthread_exit(threadId);
    }
 
@@ -182,7 +173,7 @@ void TestIsolatedComposedIntLockInTx2()
 
    int mainThreadId = kMaxThreads-1;
 
-   //Test3((void*)&mainThreadId);
+   Test3((void*)&mainThreadId);
 
    finishThread(mainThreadId);
     transaction::terminate_thread();

@@ -324,7 +324,14 @@ project
             [ run ../example/non_tx_counter.cpp ]
     ;
 
+    alias def
+        : def_invalid
+    ;
+
+    alias dir
+        : dir_invalid
+    ;
 
     alias all
-        : def_invalid dir_invalid examples
+        : def dir examples
     ;
