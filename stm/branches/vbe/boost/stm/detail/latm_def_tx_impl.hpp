@@ -50,8 +50,8 @@ inline bool transaction::def_do_core_tx_conflicting_lock_pthread_lock_mutex
    // set. do not keep in-flight transactions blocked once the transactions have
    // been processed.
    //--------------------------------------------------------------------------
-   synchro::lock_guard<Mutex> autolock_g(*general_lock());
-   synchro::lock_guard<Mutex> autolock_i(*inflight_lock());
+   synchro::lock_guard<Mutex> lk_g(*general_lock());
+   synchro::lock_guard<Mutex> lk_i(*inflight_lock());
 
    std::list<transaction *> txList;
    std::set<thread_id_t> txThreadId;
@@ -152,56 +152,62 @@ inline void transaction::def_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_
 
       if (!t->is_currently_locked_lock(mutex))
       {
-         synchro::lock(*mutex); // TBR if (0 != lock(mutex)) return -1;
+         synchro::lock(*mutex);
       }
 
       t->add_to_currently_locked_locks(mutex);
       t->add_to_obtained_locks(mutex);
       t->commit_deferred_update_tx();
 
-      synchro::lock(latm::instance().latmMutex_);
+      //synchro::lock(latm::instance().latmMutex_);
+      synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_);
       def_do_core_tx_conflicting_lock_pthread_lock_mutex
          (mutex, 0, 0, true);
-      synchro::unlock(latm::instance().latmMutex_);
+      //synchro::unlock(latm::instance().latmMutex_);
 
       return;
    }
 
    for (;;)
    {
-      synchro::lock(*mutex); // TBR int val = lock(mutex);
-      // TBR if (0 != val) return val;
+      {//synchro::lock(*mutex);
+      synchro::unique_lock<latm::mutex_type> lk(*mutex);
 
-      synchro::lock(latm::instance().latmMutex_);
+      //synchro::lock(latm::instance().latmMutex_);
+      synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_);
 
-      try
-      {
+      //try
+      //{
          //--------------------------------------------------------------------
          // if we are able to do the core lock work, break
          //--------------------------------------------------------------------
          if (def_do_core_tx_conflicting_lock_pthread_lock_mutex
-            (mutex, waitTime, aborted, false)) break;
-      }
-      catch (...)
-      {
-         synchro::unlock(*mutex);
-         synchro::unlock(latm::instance().latmMutex_);
-         throw;
-      }
+            (mutex, waitTime, aborted, false)) {
+                latm::instance().latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
+                lk.release();
+                return;
+            }
+      //}
+      //catch (...)
+      //{
+         //synchro::unlock(*mutex);
+         //synchro::unlock(latm::instance().latmMutex_);
+      //   throw;
+      //}
 
       //-----------------------------------------------------------------------
       // we weren't able to do the core lock work, unlock our mutex and sleep
       //-----------------------------------------------------------------------
-      synchro::unlock(*mutex);
-      synchro::unlock(latm::instance().latmMutex_);
-
+      //synchro::unlock(*mutex);
+      } //synchro::unlock(latm::instance().latmMutex_);
+     
       SLEEP(cm_lock_sleep_time());
       waitTime += cm_lock_sleep_time();
       ++aborted;
    }
 
-   latm::instance().latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
-   synchro::unlock(latm::instance().latmMutex_);
+   //latm::instance().latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
+   //synchro::unlock(latm::instance().latmMutex_);
 
    // note: we do not release the transactionsInFlightMutex - this will prevents
    // new transactions from starting until this lock is released
@@ -219,11 +225,12 @@ inline bool transaction::def_tx_conflicting_lock_pthread_trylock_mutex(latm::mut
 
    bool txIsIrrevocable = false;
 
-   //int val = synchro::try_lock(*mutex);
-   //if (0 != val) return val;
-   if (!synchro::try_lock(*mutex)) return false;
+   //if (!synchro::try_lock(*mutex)) return false;
+   synchro::unique_lock<latm::mutex_type> lk(*mutex, synchro::try_to_lock);
+   if (!lk) return false;
 
-   synchro::lock(latm::instance().latmMutex_);
+   //synchro::lock(latm::instance().latmMutex_);
+   synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_);
 
    if (transaction* t = get_inflight_tx_of_same_thread(false))
    {
@@ -234,31 +241,32 @@ inline bool transaction::def_tx_conflicting_lock_pthread_trylock_mutex(latm::mut
       t->commit_deferred_update_tx();
    }
 
-   try
-   {
+   //try
+   //{
       //-----------------------------------------------------------------------
       // if !core done, since trylock, we cannot stall & retry - just exit
       //-----------------------------------------------------------------------
       if (!def_do_core_tx_conflicting_lock_pthread_lock_mutex(mutex, 0, 0, txIsIrrevocable))
       {
-         synchro::unlock(*mutex);
-         synchro::unlock(latm::instance().latmMutex_);
+         //synchro::unlock(*mutex);
+         //synchro::unlock(latm::instance().latmMutex_);
          //return -1;
          return false;
       }
-   }
-   catch (...)
-   {
-      synchro::unlock(*mutex);
-      synchro::unlock(latm::instance().latmMutex_);
-      throw;
-   }
+   //}
+   //catch (...)
+   //{
+      //synchro::unlock(*mutex);
+      //synchro::unlock(latm::instance().latmMutex_);
+   //   throw;
+   //}
 
    latm::instance().latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
-   synchro::unlock(latm::instance().latmMutex_);
+   //synchro::unlock(latm::instance().latmMutex_);
 
    // note: we do not release the transactionsInFlightMutex - this will prevents
    // new transactions from starting until this lock is released
+   lk.release();
    return true;
 }
 
@@ -267,9 +275,9 @@ inline bool transaction::def_tx_conflicting_lock_pthread_trylock_mutex(latm::mut
 //----------------------------------------------------------------------------
 inline void transaction::def_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex)
 {
-   synchro::lock_guard<Mutex> autolock_l(*latm_lock());
-   synchro::lock_guard<Mutex> autolock_g(*general_lock());
-   synchro::lock_guard<Mutex> autolock_i(*inflight_lock());
+   synchro::lock_guard<Mutex> lk_l(*latm_lock());
+   synchro::lock_guard<Mutex> lk_g(*general_lock());
+   synchro::lock_guard<Mutex> lk_i(*inflight_lock());
    bool hasLock = true;
 
    if (transaction* t = get_inflight_tx_of_same_thread(true))

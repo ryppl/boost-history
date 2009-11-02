@@ -216,7 +216,7 @@ inline void transaction::dir_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_
       // TBR int val = lock(mutex);
       // TBR if (0 != val) return val;
       {//synchro::lock(*mutex);
-      synchro::unique_lock<Mutex> lk(*mutex);
+      synchro::unique_lock<latm::mutex_type> lk(*mutex);
 
       //synchro::lock(latm::instance().latmMutex_);
       synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_);
@@ -271,7 +271,7 @@ inline bool transaction::dir_tx_conflicting_lock_pthread_trylock_mutex(latm::mut
 
    //int val = synchro::try_lock(*mutex);
    //if (0 != val) return val;
-   synchro::unique_lock<Mutex> lk(*mutex, synchro::try_to_lock);
+   synchro::unique_lock<latm::mutex_type> lk(*mutex, synchro::try_to_lock);
    if (!lk) return false;
    //if (!synchro::try_lock(*mutex)) return false;
 
