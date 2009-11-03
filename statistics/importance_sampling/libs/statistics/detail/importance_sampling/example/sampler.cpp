@@ -10,6 +10,9 @@
 #include <algorithm>
 #include <iterator>
 #include <boost/range.hpp>
+#include <boost/accumulators/framework/extractor.hpp>
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <boost/format.hpp>
@@ -28,6 +31,9 @@
 #include <boost/fusion/include/pair.hpp>
 #include <boost/fusion/include/map.hpp>
 
+#include <boost/math/tools/precision.hpp>
+
+#include <boost/statistics/detail/accumulator/statistics/proportion_less_than.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/bind_delegate.hpp>
@@ -42,11 +48,12 @@
 
 #include <boost/statistics/detail/importance_sampling/weights/prepare_weights.hpp>
 #include <boost/statistics/detail/importance_sampling/random/include.hpp>
+#include <boost/statistics/detail/importance_sampling/statistics/percentage_effective_sample_size.hpp>
 
 void example_sampler(std::ostream& os){
     os << "->example_sampler : \n";
 
-    // We sample from N(x|mu,sigma^2)N(x|mu,sigma^2) = N(x|mu,sigma^2/2), 
+    // Sample from N(x|mu,sigma^2)N(x|mu,sigma^2) = N(x|mu,sigma^2/2), 
     // using SIR with N(x|mu+sigma,sigma^2) as proposal density. 
     // The quality of the sample is assessed by a series of 
     // kolmorov-distances along the the sample size of the targets.    
@@ -63,6 +70,10 @@ void example_sampler(std::ostream& os){
     typedef math::normal_distribution<val_>             dist_;
     typedef mt19937                                     urng_;
     typedef is::prepare_weights<val_>                   prepare_weights_;
+    typedef stat::accumulator::tag::percentage_effective_sample_size tag_ess_;
+    typedef stat::accumulator::tag::proportion_less_than tag_plt_; 
+    typedef boost::accumulators::stats<tag_ess_,tag_plt_> stats_;
+    typedef boost::accumulators::accumulator_set<val_,stats_> acc_;
     typedef std::size_t                                 size_;
 
     typedef mpl::int_<0>                                key1_;
@@ -72,11 +83,7 @@ void example_sampler(std::ostream& os){
     typedef fusion::map<p1_,p2_>                        data_;
 
     typedef tk::meta::bind_delegate<dist_>::type        fun_;
-    typedef np::kolmogorov_smirnov::statistic<
-        val_,
-        key1_,
-        key2_
-    > ks_stat_;
+    typedef np::kolmogorov_smirnov::statistic<val_,key1_,key2_> ks_stat_;
 
     typedef std::vector<data_>                          dataset_;
     typedef range_iterator<dataset_>::type              dataset_it_;
@@ -86,10 +93,7 @@ void example_sampler(std::ostream& os){
         key1_
     >::type range1_;
     typedef is::sampler<range1_,val_>                   is_sampler_;
-    typedef boost::variate_generator<
-        urng_&,
-        is_sampler_
-    > vg_;
+    typedef boost::variate_generator<urng_&,is_sampler_> vg_;
 
     // Constants
     const unsigned p_n          = 5e4;             
@@ -98,6 +102,7 @@ void example_sampler(std::ostream& os){
     const val_ sigma            = 1.0;
     const val_ t_mu             = mu + sigma;
     const val_ t_sigma          = sigma/sqrt(2.0);
+    const val_ eps = boost::math::tools::epsilon<val_>();
 
     const unsigned n_loops  = 7;
     const unsigned n1       = 1e1;
@@ -158,11 +163,22 @@ void example_sampler(std::ostream& os){
             boost::end(is_weights)
         );
         os << "weights : " << std::endl
-            << prepare_weights_::header << std::endl
+            << prepare_weights_::header << " = "
             << prepare_weights << std::endl;
     }
     {
-    
+        acc_ acc = std::for_each(
+            boost::begin(is_weights),
+            boost::end(is_weights),
+            acc_(( stat::accumulator::keyword::threshold = eps ))
+        );
+        val_ ess = boost::accumulators::extract_result<tag_ess_>(acc);
+        val_ plt_eps = boost::accumulators::extract_result<tag_plt_>(acc);
+        boost::format f("(ess,plt_eps) = (%1%,%2%)");
+        f % ess % plt_eps;
+        os << f.str() << std::endl;
+    }
+    {
         range1_ r1 = stat::fusion::at_key::make_range<key1_>(
             boost::begin(proposals),
             boost::end(proposals)
@@ -181,6 +197,7 @@ void example_sampler(std::ostream& os){
         {
             os << "proposal : " << tk::description(p_d) << std::endl; 
             os << "target : " << tk::description(t_d) << std::endl; 
+            os << ks_stat_::description_header << std::endl;
             unsigned i = 0;
             unsigned n_draws = n1;
             targets.clear();

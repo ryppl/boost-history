@@ -15,6 +15,8 @@ erwann.rogard@gmail.com
 
 These are C++ tools for computing importance weights and sampling.
 
+The classes prepare_weights followed by sampler cover most needs.
+
 [ Note ]
 
 To ensure that the draws are from the desired target distribution, we recommend
@@ -52,6 +54,10 @@ Ridgeway and Madigan
 
 [ History ]
 
+November 1st 2009: 
+    Removed computations of ess and pc_lt_eps from prepare_weights. In their
+    place, have created standalone accumulators.
+
 October 11 2009:
     Merged importance_sampling and importance_weights, and embedded it in 
     namespace statistics::detail
@@ -71,10 +77,11 @@ Ouput of main.cpp:
 
 ->example_sampler : 
 weights : 
-(offset,scaling_factor,pc_ess,pc_lt_eps)
-(99,1,0.444955,0)
+(offset,scaling_factor) = (99,1)
+(ess,plt_eps) = (0.444955,0)
 proposal : normal(0,1)
 target : normal(1,0.707107)
+kolmogorov_smirnov(n,s)
 (10,0.306601)
 (110,0.0819208)
 (1110,0.0167257)
@@ -87,3 +94,10 @@ target : normal(1,0.707107)
 c = 13
 cum_sum = 1.79769e+308
 <-
+
+[ Remarks ]
+
+The last kolmogorov_smirnov value in the output above is slightly greater than 
+its preceding one. This is probably due to numerical error, which can be 
+resolved by increasing the number of proposals.
+
