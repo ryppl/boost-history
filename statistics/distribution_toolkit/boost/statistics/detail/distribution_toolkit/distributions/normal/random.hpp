@@ -22,9 +22,9 @@ namespace meta{
 
     template<typename T,typename P>
     struct random< 
-        math::normal_distribution<T,P> 
+        boost::math::normal_distribution<T,P> 
     >{
-        typedef math::normal_distribution<T,P> dist_;
+        typedef boost::math::normal_distribution<T,P> dist_;
         typedef boost::normal_distribution<T> type;
         
         static type make(const dist_& d){ 

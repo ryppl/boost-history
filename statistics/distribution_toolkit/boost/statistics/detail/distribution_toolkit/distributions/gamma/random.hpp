@@ -23,9 +23,9 @@ namespace meta{
 
     template<typename T,typename P>
     struct random< 
-        math::gamma_distribution<T,P> 
+        boost::math::gamma_distribution<T,P> 
     >{
-        typedef math::gamma_distribution<T,P> dist_;
+        typedef boost::math::gamma_distribution<T,P> dist_;
         typedef boost::gamma_distribution<T> z_;
         typedef boost::random::location_scale_distribution<z_> type;
         

@@ -24,7 +24,7 @@ namespace meta{
     struct random< 
         boost::math::chi_squared_distribution<T,P> 
     >{
-        typedef math::chi_squared_distribution<T> dist_;
+        typedef boost::math::chi_squared_distribution<T> dist_;
         typedef boost::random::chi_squared_distribution<T> type;
         
         static type make(const dist_& d){ 

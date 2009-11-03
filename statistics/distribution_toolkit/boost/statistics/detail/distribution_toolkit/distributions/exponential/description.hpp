@@ -22,16 +22,15 @@ namespace toolkit{
     template<typename T,typename P>
     std::string 
     description(
-        const math::exponential_distribution<T,P>& dist
+        const boost::math::exponential_distribution<T,P>& dist
     ){
         static const char* msg = "exponential(%1%)";
-        format f(msg); f%dist.lambda();
+        boost::format f(msg); f%dist.lambda();
         return f.str();
     }
     
 }// distribution
 }// toolkit
-
 }// detail
 }// statistics
 }// boost

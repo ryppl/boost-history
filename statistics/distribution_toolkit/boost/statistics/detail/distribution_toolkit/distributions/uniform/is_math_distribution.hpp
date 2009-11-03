@@ -21,7 +21,7 @@ namespace toolkit{
 namespace meta{
 
     template<typename T,typename P>
-    struct is_math_distribution< math::uniform_distribution<T,P> > 
+    struct is_math_distribution< boost::math::uniform_distribution<T,P> > 
         : mpl::bool_<true>{};
 
 }// meta

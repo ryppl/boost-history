@@ -21,7 +21,7 @@
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/include/at_key.hpp>
 
-#include <boost/statistics/detail/fusion/functor/map_identity_f.hpp>
+#include <boost/statistics/detail/fusion/map/identity_f.hpp>
 #include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/statistic.hpp>
 
 #include <boost/statistics/detail/distribution_toolkit/meta/bind_delegate.hpp>
@@ -57,7 +57,7 @@ void random(
     typedef typename common::meta::value<D>::type     val_;
     typedef mt19937                                   urng_;
     typedef typename meta::bind_delegate<D>::type     fun_;
-    typedef detail::fusion::functor::map_identity_f<
+    typedef detail::fusion::map::identity_f<
         mpl::int_<0>,
         mpl::int_<1>,
         fun_
@@ -71,7 +71,7 @@ void random(
         key1_,
         key2_
     > kolmogorov_smirnov_stat_;
-    typedef typename boost::result_of<functor_(const val_&)>::type   data_;
+    typedef typename boost::result_of<functor_(const val_&)>::type data_;
     typedef std::vector<data_>                              dataset_;
 
     // Constants

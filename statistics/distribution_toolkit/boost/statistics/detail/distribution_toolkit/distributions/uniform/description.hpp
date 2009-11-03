@@ -21,7 +21,7 @@ namespace toolkit{
 
     template<typename T,typename P>
     std::string
-    description(const math::uniform_distribution<T,P>& dist)
+    description(const boost::math::uniform_distribution<T,P>& dist)
     {
         static const char* msg = "uniform(%1%,%2%)";
         format f(msg); f%dist.lower()%dist.upper();

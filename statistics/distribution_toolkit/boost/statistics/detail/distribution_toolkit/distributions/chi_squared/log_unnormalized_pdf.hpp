@@ -31,13 +31,13 @@ namespace detail{
         static const char* function = 
         "log_unnormalized_pdf(const chi_squared_distribution<%1%>&, %1%)";
 
-        if(false == math::detail::check_df(
+        if(false == boost::math::detail::check_df(
             function, degrees_of_freedom, &error_result, P()))
                 return error_result;
 
         if((x <= 0) || !(boost::math::isfinite)(x))
         {
-            return math::policies::raise_domain_error<T>(
+            return boost::math::policies::raise_domain_error<T>(
             function, "Chi Square parameter was %1%, but must be > 0 !", 
             x, P());
         }

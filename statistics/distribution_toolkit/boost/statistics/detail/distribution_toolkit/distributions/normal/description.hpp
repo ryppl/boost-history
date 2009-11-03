@@ -21,7 +21,7 @@ namespace toolkit{
 
     template<typename T,typename P>
     std::string
-    description(const math::normal_distribution<T,P>& dist)
+    description(const boost::math::normal_distribution<T,P>& dist)
     {
         static const char* msg = "normal(%1%,%2%)";
         format f(msg); f % dist.location() % dist.scale();

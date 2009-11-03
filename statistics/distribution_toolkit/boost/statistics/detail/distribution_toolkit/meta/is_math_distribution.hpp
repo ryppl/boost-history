@@ -18,7 +18,7 @@ namespace toolkit{
 namespace meta{
 
     template<typename D>
-    struct is_math_distribution : mpl::bool_<false> {};
+    struct is_math_distribution : boost::mpl::bool_<false> {};
 
     // Specialize to bool_<true> for distribution defined in boost::math only
 

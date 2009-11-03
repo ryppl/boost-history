@@ -22,9 +22,9 @@ namespace meta{
 
     template<typename T,typename P>
     struct random< 
-        math::exponential_distribution<T,P> 
+        boost::math::exponential_distribution<T,P> 
     >{
-        typedef math::exponential_distribution<T,P> dist_;
+        typedef boost::math::exponential_distribution<T,P> dist_;
         typedef boost::exponential_distribution<T> type;
         
         static type make(const dist_& d){ return type(d.lambda()); }

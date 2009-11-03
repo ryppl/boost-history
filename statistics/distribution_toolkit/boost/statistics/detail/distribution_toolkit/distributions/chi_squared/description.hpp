@@ -21,7 +21,7 @@ namespace toolkit{
 
     template<typename T,typename P>
     std::string
-    description(const math::chi_squared_distribution<T,P>& dist)
+    description(const boost::math::chi_squared_distribution<T,P>& dist)
     {
         static const char* msg = "chi_squared(%1%)";
         format f(msg); f % dist.degrees_of_freedom();

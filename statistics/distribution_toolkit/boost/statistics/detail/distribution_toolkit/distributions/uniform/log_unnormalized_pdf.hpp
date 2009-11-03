@@ -28,13 +28,13 @@ namespace detail{
         T lower = dist.lower();
         T upper = dist.upper();
         T result; // of checks.
-        if(false == math::detail::check_uniform(
+        if(false == boost::math::detail::check_uniform(
             "boost::math::pdf(const uniform_distribution<%1%>&, %1%)", 
             lower, upper, &result, P()))
         {
             return result;
         }
-        if(false == math::detail::check_uniform_x(
+        if(false == boost::math::detail::check_uniform_x(
             "boost::math::pdf(const uniform_distribution<%1%>&, %1%)",
              x, &result, P()))
         {

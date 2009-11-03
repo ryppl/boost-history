@@ -21,7 +21,7 @@ namespace toolkit{
 
     template<typename T,typename P>
     std::string
-    description(const math::gamma_distribution<T,P>& dist)
+    description(const boost::math::gamma_distribution<T,P>& dist)
     {
         static const char* msg = "gamma(%1%,%2%)";
         format f(msg); f % dist.shape() % dist.scale();

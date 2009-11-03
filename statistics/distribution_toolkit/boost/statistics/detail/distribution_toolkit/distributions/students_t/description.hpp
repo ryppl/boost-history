@@ -21,7 +21,7 @@ namespace toolkit{
 
     template<typename T,typename P>
     std::string
-    description(const math::students_t_distribution<T,P>& dist)
+    description(const boost::math::students_t_distribution<T,P>& dist)
     {
         static const char* msg = "students_t(%1%)";
         format f(msg); f%dist.degrees_of_freedom();

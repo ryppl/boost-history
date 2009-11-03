@@ -21,8 +21,8 @@ namespace toolkit{
 namespace meta{
 
     template<typename T,typename P>
-    struct is_math_distribution< math::exponential_distribution<T,P> > 
-        : mpl::bool_<true>{};
+    struct is_math_distribution< boost::math::exponential_distribution<T,P> > 
+        : boost::mpl::bool_<true>{};
 
 }// meta
 }// distribution
