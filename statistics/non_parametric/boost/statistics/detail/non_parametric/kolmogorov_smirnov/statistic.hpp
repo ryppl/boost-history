@@ -57,7 +57,8 @@ namespace kolmogorov_smirnov{
             );
 
             while(b<e){
-                val_ ecdf = static_cast<val_>(i)/static_cast<val_>(this->n());
+                val_ ecdf = static_cast<val_>(i);
+                ecdf /= static_cast<val_>(this->count());
                 val_ cdf = boost::fusion::at_key<key2_>(*b);
                 val_ m2 = (cdf > ecdf)?(cdf - ecdf) : (ecdf - cdf);
                 if(m2 > m1){ m1 = m2; } 
@@ -68,8 +69,8 @@ namespace kolmogorov_smirnov{
             return m1;
         }
 
-        const size_type& n()const{ return this->n_; }
-        const result_type s()const{ return this->s_; }
+        const size_type& count()const{ return this->n_; }
+        const result_type value()const{ return this->s_; }
         
         static const str_ description_header;
         str_ description()const
@@ -77,7 +78,7 @@ namespace kolmogorov_smirnov{
              return (
                 boost::format(
                     "(%1%,%2%)"
-                )%this->n()%this->s()
+                )%this->count()%this->value()
             ).str();
         }
 
