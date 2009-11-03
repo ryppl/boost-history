@@ -26,7 +26,7 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<Seq>::type seq;
             typedef mpl::minus<typename seq::size, mpl::int_<1>, N> real_n;
 
-            typedef
+            typedef typename
                 result_of::at<
                     typename detail::forward_as<
                         Seq

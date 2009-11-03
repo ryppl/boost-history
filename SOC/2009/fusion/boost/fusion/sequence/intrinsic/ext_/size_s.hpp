@@ -32,11 +32,15 @@ namespace boost { namespace fusion
             struct result<This(State, Seq)>
               : mpl::plus<
                     segmented_size<
-                        typename remove_reference<Seq>::type
+                        typename detail::remove_reference<Seq>::type
                     >
-                  , typename remove_reference<State>::type
+                  , typename detail::remove_reference<State>::type
                 >
             {};
+
+            template<typename State, typename Seq>
+            typename result<size_plus(State,Seq)>::type
+            operator()(State,Seq);
         };
     }
 

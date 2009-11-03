@@ -24,6 +24,8 @@
 #   include <boost/preprocessor/repetition/enum_params.hpp>
 #   include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #   include <boost/call_traits.hpp>
+#else
+#   define BOOST_FUSION_VARIADIC_TEMPLATES_USED
 #endif
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
