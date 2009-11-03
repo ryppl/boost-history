@@ -37,13 +37,13 @@ struct test_func
     };
 
     template <typename T0, typename T1>
-    int operator()(T0 const& x, T1 const& y) const
+    int operator()(T0 const & x, T1 const & y) const
     {
         return 1+x-y;
     }
 
     template <typename T0, typename T1>
-    int operator()(T0 const& x, T1 const& y) 
+    int operator()(T0 const & x, T1 const & y) 
     {
         return 2+x-y;
     }
@@ -62,7 +62,7 @@ struct test_func
 };
 
 template <typename T>
-inline T const& const_(T const& t)
+inline T const & const_(T const & t)
 {
     return t;
 }
@@ -82,14 +82,11 @@ int main()
     BOOST_TEST(fusion::make_fused_function_object(ref(f_nc))(lv_vec) == 1);
     BOOST_TEST(fusion::make_fused_function_object(cref(f_nc))(lv_vec) == 0);
 
-    //TODO!!!
-    /*
     BOOST_TEST(fused_func(fusion::make_vector(2,'\003')) == 1);
     BOOST_TEST(const_(fused_func)(fusion::make_vector(2,'\003')) == 0);
     BOOST_TEST(fusion::make_fused_function_object(const_(f))(fusion::make_vector(2,'\003')) == 1);
     BOOST_TEST(fusion::make_fused_function_object(ref(f_nc))(fusion::make_vector(2,'\003')) == 1);
     BOOST_TEST(fusion::make_fused_function_object(cref(f_nc))(fusion::make_vector(2,'\003')) == 0);
-    */
 
     return boost::report_errors();
 }

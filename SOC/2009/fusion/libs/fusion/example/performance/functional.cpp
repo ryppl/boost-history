@@ -10,9 +10,11 @@
 #include <boost/fusion/container/list.hpp>
 #include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/algorithm/iteration/fold.hpp>
-#include <boost/fusion/functional/adapter/unfused_generic.hpp>
-#include <boost/fusion/functional/adapter/unfused_rvalue_args.hpp>
+#include <boost/fusion/functional/adapter/unfused.hpp>
 #include <boost/fusion/functional/adapter/fused_function_object.hpp>
+
+#include <boost/functional/forward_adapter.hpp>
+#include <boost/functional/lightweight_forward_adapter.hpp>
 
 #include <boost/utility/result_of.hpp>
 #include <boost/config.hpp>
@@ -36,7 +38,7 @@ namespace
     struct fused_sum
     {
         template <typename Seq>
-        int operator()(Seq const& seq) const
+        int operator()(Seq const & seq) const
         {
             int state = 0;
             return boost::fusion::fold(seq, state, sum_op());
@@ -49,13 +51,13 @@ namespace
         struct sum_op
         {
             template <typename T>
-            int operator()(int value, T const& elem) const
+            int operator()(T const & elem, int value) const
             {
               return value + sizeof(T) * elem;
             }
 
             template <typename T>
-            int operator()(int value, T & elem) const
+            int operator()(T & elem, int value) const
             {
               elem += sizeof(T);
               return value;
@@ -72,22 +74,22 @@ namespace
             return 0;
         }
         template<typename T0>
-        inline int operator()(T0 const& a0) const
+        inline int operator()(T0 const & a0) const
         {
             return a0;
         } 
         template<typename T0, typename T1>
-        inline int operator()(T0 const& a0, T1 const& a1) const
+        inline int operator()(T0 const & a0, T1 const & a1) const
         {
             return a0 + a1;
         } 
         template<typename T0, typename T1, typename T2>
-        inline int operator()(T0 const& a0, T1 const& a1, T2 a2) const
+        inline int operator()(T0 const & a0, T1 const & a1, T2 a2) const
         {
             return a0 + a1 + a2;
         } 
         template<typename T0, typename T1, typename T2, typename T3>
-        inline int operator()(T0 const& a0, T1 const& a1, T2 const& a2, T3 const& a3) const
+        inline int operator()(T0 const & a0, T1 const & a1, T2 const & a2, T3 const & a3) const
         {
             return a0 + a1 + a2 + a3;
         } 
@@ -96,7 +98,7 @@ namespace
     };
 
     template<typename F>
-    double call_unfused(F func, int & j)
+    double call_unfused(F const & func, int & j) 
     {
         boost::timer tim;
         int i = 0;
@@ -139,7 +141,7 @@ namespace
     }
 
     template<typename F>
-    double call_fused_ra(F func, int & j)
+    double call_fused_ra(F const & func, int & j) 
     {
         boost::timer tim;
         int i = 0;
@@ -192,7 +194,7 @@ namespace
     }
 
     template<typename F>
-    double call_fused(F func, int & j)
+    double call_fused(F const & func, int & j) 
     {
         boost::timer tim;
         int i = 0;
@@ -265,13 +267,13 @@ int main()
         total += res;
     }
     {
-        boost::fusion::unfused_rvalue_args<F> f;
-        std::cout << "unfused_rvalue_args<F>                         " << call_unfused(f,res) << std::endl;
+        boost::lightweight_forward_adapter< boost::fusion::unfused<F> > f;
+        std::cout << "lightweight_forward_adapter< unfused<F> >      " << call_unfused(f,res) << std::endl;
         total += res;
     }
     {
-        boost::fusion::unfused_generic<F> f;
-        std::cout << "unfused_generic<F>                             " << call_unfused(f,res) << std::endl;
+        boost::forward_adapter< boost::fusion::unfused<F> > f;
+        std::cout << "forward_adapter< unfused<F> >                  " << call_unfused(f,res) << std::endl;
         total += res;
     }
     std::cout << std::endl << "Fused adapters:" << std::endl;
@@ -291,13 +293,13 @@ int main()
         total += res;
     }
     {
-        boost::fusion::unfused_rvalue_args< boost::fusion::fused_function_object<U> > f;
-        std::cout << "unfused_rvalue_args<fused_function_object<U> > " << call_unfused(f,res) << std::endl;
+        boost::lightweight_forward_adapter< boost::fusion::unfused< boost::fusion::fused_function_object<U> > > f;
+        std::cout << "lightweight_forward_adapter< unfused<fused_function_object<U> > >" << call_unfused(f,res) << std::endl;
         total += res;
     }
     {
-        boost::fusion::unfused_generic< boost::fusion::fused_function_object<U> > f;
-        std::cout << "unfused_generic<fused_function_object<U> >     " << call_unfused(f,res) << std::endl;
+        boost::forward_adapter< boost::fusion::unfused< boost::fusion::fused_function_object<U> > > f;
+        std::cout << "forward_adapter< unfused<fused_function_object<U> > >           " << call_unfused(f,res) << std::endl;
         total += res;
     }
  

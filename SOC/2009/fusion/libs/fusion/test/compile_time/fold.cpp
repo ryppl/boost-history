@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2008 Dan Marsden
-
+  
     Use modification and distribution are subject to the Boost Software 
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt).
@@ -19,18 +19,7 @@ namespace
 
   struct f
   {
-#ifdef NO_PREEVALUATE
-    template<typename Sig>
-    struct result;
-
-    template<typename Self, typename State, typename D>
-    struct result<Self(State, D)>
-    {
-        typedef int type;
-    };
-#else
     typedef int result_type;
-#endif
 
     template<int n, int batch>
     int operator()(int state, distinct<n, batch> const& d) const

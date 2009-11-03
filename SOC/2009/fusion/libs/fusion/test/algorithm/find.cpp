@@ -11,7 +11,6 @@
 #include <boost/fusion/container/map/map.hpp>
 #include <boost/fusion/algorithm/query/find.hpp>
 #include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/sequence/io/out.hpp>
 #include <boost/mpl/vector.hpp>
 #include <string>
 
@@ -61,8 +60,8 @@ main()
         map_type seq(
             make_pair<int>('X')
           , make_pair<double>("Men"));
-
-        //TODO!!!
+        
+        //TODO
         //std::cout << *boost::fusion::find<int>(seq) << std::endl;
         //std::cout << *boost::fusion::find<double>(seq) << std::endl;
         //BOOST_TEST((*boost::fusion::find<int>(seq)).second == 'X');

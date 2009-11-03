@@ -1,29 +1,32 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
-
+#include <boost/fusion/container/vector/vector.hpp>
+#include <boost/fusion/adapted/mpl.hpp>
 #include <boost/fusion/sequence/io/out.hpp>
 #include <boost/fusion/sequence/comparison/equal_to.hpp>
 #include <boost/fusion/view/filter_view/filter_view.hpp>
-#include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/container/generation/make_vector.hpp>
-#include <boost/fusion/adapted/mpl.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/iterator/deref.hpp>
-
+#include <boost/fusion/container/map.hpp>
+#include <boost/fusion/sequence/intrinsic/has_key.hpp>
+#include <boost/fusion/sequence/intrinsic/begin.hpp>
+#include <boost/fusion/iterator/key_of.hpp>
+#include <boost/fusion/iterator/value_of_data.hpp>
+#include <boost/fusion/iterator/deref_data.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/mpl/arg.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/vector_c.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/assert.hpp>
+#include <boost/static_assert.hpp>
 
 struct X
 {
@@ -81,7 +84,7 @@ main()
         // $$$ JDG $$$ For some obscure reason, EDG based compilers
         // (e.g. comeau 4.3.3, intel) have problems with this.
         // vc7.1 and g++ are ok. The errors from comeau are useless.
-
+        
 #ifndef __EDG_VERSION__
         typedef vector_c<int, 5, 1, 2, 3, 6, 0, -1> vector_type;
         typedef filter_view<vector_type const, less<_, int_<3> > > filter_view_type;
@@ -100,6 +103,23 @@ main()
         typedef filter_view<vec, reject_all> filter_view_type;
 
         BOOST_MPL_ASSERT((result_of::equal_to<result_of::begin<filter_view_type>::type, result_of::end<filter_view_type>::type>));
+    }
+
+    {
+        typedef map<pair<void, int>, pair<double, std::string> > map_type;
+        map_type m(make_pair<void>(0), make_pair<double>("Bond"));
+
+        typedef filter_view<map_type const, is_same<_, pair<double, std::string> > > filter_view_type;
+        filter_view_type f(m);
+
+        BOOST_MPL_ASSERT((result_of::has_key<filter_view_type, double>::type));
+        BOOST_MPL_ASSERT_NOT((result_of::has_key<filter_view_type, void>::type));
+
+        BOOST_MPL_ASSERT((is_same<result_of::key_of<result_of::begin<filter_view_type>::type>::type, double>));
+        BOOST_MPL_ASSERT((is_same<result_of::value_of_data<result_of::begin<filter_view_type>::type>::type, std::string>));
+
+        std::cout << deref_data(begin(f)) << std::endl;
+        BOOST_TEST((deref_data(begin(f)) == "Bond"));
     }
 
     return boost::report_errors();

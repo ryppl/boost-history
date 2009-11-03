@@ -9,6 +9,7 @@
 #include <boost/fusion/container/list/convert.hpp>
 
 #define FUSION_SEQUENCE list
+#define FUSION_FORWARD_ONLY
 #include "misc.hpp"
 
 int

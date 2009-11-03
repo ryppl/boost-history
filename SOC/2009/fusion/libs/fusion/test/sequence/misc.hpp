@@ -6,27 +6,20 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
-
 #include <boost/fusion/sequence/intrinsic.hpp>
 #include <boost/fusion/support/is_sequence.hpp>
 #include <boost/fusion/mpl.hpp>
-
-#include <boost/mpl/push_back.hpp>
-#include <boost/mpl/push_front.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/equal.hpp>
-#include <boost/mpl/deref.hpp>
-#include <boost/mpl/back.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/find.hpp>
+#include <boost/mpl/back.hpp>
 #include <boost/mpl/equal.hpp>
+#include <boost/mpl/push_back.hpp>
+#include <boost/mpl/push_front.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/integral_c.hpp>
-
-#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
-
+#include <boost/static_assert.hpp>
 #include <string>
 
 #if !defined(FUSION_AT)
@@ -79,6 +72,8 @@ struct test_intrinsics1
     BOOST_STATIC_ASSERT(!(boost::mpl::empty<sequence>::value));
     BOOST_STATIC_ASSERT((boost::mpl::distance<second, fourth>::value == 2));
 
+#if !defined(FUSION_FORWARD_ONLY) // list has no back/prev
+
     typedef boost::mpl::prior<last>::type fourth_;
     typedef boost::mpl::prior<fourth_>::type third_;
     typedef boost::mpl::prior<third_>::type second_;
@@ -99,11 +94,14 @@ struct test_intrinsics1
     BOOST_STATIC_ASSERT((boost::is_same<
         boost::mpl::back<sequence>::type, char>::value));
 
+#endif
 };
 
 struct test_intrinsics2
 {
     typedef boost::fusion::FUSION_SEQUENCE<> seq0;
+
+#if !defined(FUSION_FORWARD_ONLY) // list has no back/prev
 
     typedef boost::fusion::FUSION_SEQUENCE<int> target1;
     typedef boost::mpl::push_back<seq0, int>::type seq1;
@@ -112,6 +110,8 @@ struct test_intrinsics2
     typedef boost::fusion::FUSION_SEQUENCE<int, double> target2;
     typedef boost::mpl::push_back<seq1, double>::type seq2;
     BOOST_STATIC_ASSERT((boost::mpl::equal<seq2, target2>::value));
+
+#endif
 
     typedef boost::fusion::FUSION_SEQUENCE<int> target3;
     typedef boost::mpl::push_front<seq0, int>::type seq3;
@@ -157,10 +157,12 @@ test()
     {   // testing front & back
 
         typedef FUSION_SEQUENCE<int, float, std::string> tup;
-        tup t(1, 2.2f, "Kimpo");
+        tup t(1, 2.2, "Kimpo");
 
         BOOST_TEST(front(t) == 1);
+#if !defined(FUSION_FORWARD_ONLY) // list has no back
         BOOST_TEST(back(t) == "Kimpo");
+#endif
     }
 
     {   // testing is_sequence

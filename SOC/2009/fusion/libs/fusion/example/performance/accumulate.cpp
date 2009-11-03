@@ -82,9 +82,9 @@ namespace
         template<typename Sig>
         struct result;
 
-        template<typename Self,typename Lhs, typename Rhs>
-        struct result<Self(Lhs,Rhs)>
-          : boost::fusion::detail::remove_reference<Lhs>
+        template<typename Lhs, typename Rhs>
+        struct result<poly_add(Lhs,Rhs)>
+            : boost::remove_reference<Lhs>
         {};
 
         template<typename Lhs, typename Rhs>
@@ -99,9 +99,9 @@ namespace
         template<typename Sig>
         struct result;
 
-        template<typename Self,typename Lhs, typename Rhs>
-        struct result<Self(Lhs, Rhs)>
-          : boost::fusion::detail::remove_reference<Lhs>
+        template<typename Lhs, typename Rhs>
+        struct result<poly_mult(Lhs, Rhs)>
+            : boost::remove_reference<Lhs>
         {};
 
         template<typename Lhs, typename Rhs>
@@ -249,14 +249,15 @@ namespace
     {
         template<typename Lhs, typename Rhs>
         struct result
-          : boost::fusion::detail::remove_reference<Lhs>
-        {};
+        {
+            typedef Lhs type;
+        };
         
         template<typename Lhs, typename Rhs>
         typename result<Lhs,Rhs>::type
         operator()(const Lhs& lhs, const Rhs& rhs) const
         {
-            return rhs + boost::fusion::at_c<0>(lhs) * boost::fusion::at_c<1>(lhs);
+            return lhs + boost::fusion::at_c<0>(rhs) * boost::fusion::at_c<1>(rhs);
         }
     };
 

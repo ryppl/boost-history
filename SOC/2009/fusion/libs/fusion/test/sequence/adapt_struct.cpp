@@ -23,10 +23,8 @@
 #include <boost/fusion/sequence/comparison/greater.hpp>
 #include <boost/fusion/sequence/comparison/greater_equal.hpp>
 #include <boost/fusion/support/is_view.hpp>
-
 #include <boost/mpl/assert.hpp>
 #include <boost/static_assert.hpp>
-
 #include <iostream>
 #include <string>
 
@@ -107,12 +105,11 @@ main()
 
     { // begin/end
         using namespace boost::fusion;
-        using boost::is_same;
 
         typedef result_of::begin<s>::type b;
         typedef result_of::end<s>::type e;
         // this fails
-        BOOST_MPL_ASSERT((is_same<result_of::next<b>::type, e>));
+        BOOST_MPL_ASSERT((boost::is_same<result_of::next<b>::type, e>));
     }
 
     return boost::report_errors();

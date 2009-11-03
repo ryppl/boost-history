@@ -6,12 +6,10 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/fusion/container/vector/vector.hpp>
-#include <boost/fusion/container/generation/vector_tie.hpp>
-#include <boost/fusion/container/generation/ignore.hpp>
 #include <boost/fusion/container/generation/make_vector.hpp>
 
 #define FUSION_SEQUENCE vector
-#include "tie.hpp"
+#include "make.hpp"
 
 int
 main()

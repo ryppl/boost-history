@@ -5,9 +5,8 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-
-#ifndef 
-#define 
+#if !defined(BOOST_FUSION_VALUE_OF_IMPL_20060223_1905)
+#define BOOST_FUSION_VALUE_OF_IMPL_20060223_1905
 
 #include <string>
 
@@ -23,7 +22,7 @@ namespace boost { namespace fusion {
 
     namespace extension
     {
-        template<typename>
+        template<typename Tag>
         struct value_of_impl;
 
         template<>

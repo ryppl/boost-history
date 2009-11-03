@@ -19,7 +19,14 @@
 
 struct square
 {
-    typedef int result_type;
+    template<typename Sig>
+    struct result;
+
+    template <typename T>
+    struct result<square(T)>
+    {
+        typedef int type;
+    };
 
     template <typename T>
     int operator()(T x) const
@@ -30,7 +37,14 @@ struct square
 
 struct add
 {
-    typedef int result_type;
+    template<typename Sig>
+    struct result;
+
+    template <typename A, typename B>
+    struct result<add(A, B)>
+    {
+        typedef int type;
+    };
 
     template <typename A, typename B>
     int operator()(A a, B b) const
@@ -44,8 +58,8 @@ struct unary_lvalue_transform
     template<typename Sig>
     struct result;
 
-    template<typename Self,typename T>
-    struct result<Self(T&)>
+    template<typename T>
+    struct result<unary_lvalue_transform(T&)>
     {
         typedef T* type;
     };
@@ -67,8 +81,8 @@ struct binary_lvalue_transform
     template<typename Sig>
     struct result;
 
-    template<typename Self,typename T0, typename T1>
-    struct result<Self(T0&,T1&)>
+    template<typename T0, typename T1>
+    struct result<binary_lvalue_transform(T0&,T1&)>
     {
         typedef T0* type;
     };
@@ -93,8 +107,8 @@ main()
 /// Testing the transform
 
     {
-        typedef range_c<int, 5, 9> seq_type;
-        seq_type sequence;
+        typedef range_c<int, 5, 9> sequence_type;
+        sequence_type sequence;
         std::cout << transform(sequence, square()) << std::endl;
         BOOST_TEST((transform(sequence, square()) == make_vector(25, 36, 49, 64)));
     }

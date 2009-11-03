@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
@@ -41,8 +41,8 @@ main()
         vector_type t1(1, 2, 3.3, 4, s, 5.5);
 
         {
-            std::cout << replace_if(t1, gt3(), -456) << std::endl;
-            //TODO!!!
+            //TODO
+            //std::cout << replace_if(t1, gt3(), -456) << std::endl;
             //BOOST_TEST((replace_if(t1, gt3(), -456)
             //    == make_vector(1, 2, -456, -456, s, -456)));
         }

@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
@@ -10,7 +10,6 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/intrinsic/at.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
-#include <boost/fusion/sequence/io/out.hpp>
 
 #include <boost/fusion/container/vector/vector20.hpp>
 #include <boost/fusion/container/vector/vector30.hpp>
@@ -30,14 +29,12 @@ int
 main()
 {
     using namespace boost::fusion;
-    using std::cout;
-    using std::endl;
 
     {
         vector0<> vec;
         (void) vec;
-        cout << "(): " << sizeof(vec) << endl;
-        cout << (boost::is_empty<vector0<> >::value ? "is empty" : "is not empty") << endl;
+        std::cout << "(): " << sizeof(vec) << std::endl;
+        std::cout << (boost::is_empty<vector0<> >::value ? "is empty" : "is not empty") << std::endl;
     }
 
     {
@@ -57,7 +54,7 @@ main()
         typedef vector1<int> type;
         type vec(123);
         BOOST_TEST(at_c<0>(vec) == 123);
-        cout << "(int): " << sizeof(vec) << endl;
+        std::cout << "(int): " << sizeof(vec) << std::endl;
     }
 
     { // testing const vector
@@ -92,7 +89,7 @@ main()
         type vec(123, 'x');
         BOOST_TEST(at_c<0>(vec) == 123);
         BOOST_TEST(at_c<1>(vec) == 'x');
-        cout << "(int, char): " << sizeof(vec) << endl;
+        std::cout << "(int, char): " << sizeof(vec) << std::endl;
     }
 
     {
@@ -121,19 +118,19 @@ main()
         BOOST_TEST(at_c<0>(vec) == 123);
         BOOST_TEST(at_c<1>(vec) == 'x');
         BOOST_TEST(at_c<2>(vec) >= 123.455 && at_c<2>(vec) <= 123.457);
-        cout << "(int, char, double): " << sizeof(vec) << endl;
+        std::cout << "(int, char, double): " << sizeof(vec) << std::endl;
     }
 
     {
         typedef vector4<int, char, double, bool> type;
         type vec(123, 'x', 123.456, true);
-        cout << "(int, char, double, bool): " << sizeof(vec) << endl;
+        std::cout << "(int, char, double, bool): " << sizeof(vec) << std::endl;
     }
 
     {
         typedef vector4<int, char, bool, double> type;
         type vec(123, 'x', true, 123.456);
-        cout << "(int, char, bool, double): " << sizeof(vec) << endl;
+        std::cout << "(int, char, bool, double): " << sizeof(vec) << std::endl;
     }
 
     {
@@ -155,13 +152,13 @@ main()
         BOOST_STATIC_ASSERT((boost::is_same<long, result_of::value_at_c<type, 4>::type>::value));
         BOOST_STATIC_ASSERT((boost::is_same<float, result_of::value_at_c<type, 5>::type>::value));
         BOOST_STATIC_ASSERT((boost::is_same<double, result_of::value_at_c<type, 6>::type>::value));
-        cout << "(bool, char, short, int, long, float, double): " << sizeof(vec) << endl;
+        std::cout << "(bool, char, short, int, long, float, double): " << sizeof(vec) << std::endl;
     }
 
     {
         typedef vector10<int, int, int, int, int, int, int, int, int, int> type;
         type vec; // compile check only
-        cout << "vector10 of int: " << sizeof(vec) << endl;
+        std::cout << "vector10 of int: " << sizeof(vec) << std::endl;
     }
 
     {
@@ -170,7 +167,7 @@ main()
           , int, int, int, int, int, int, int, int, int, int> type;
 
         type vec; // compile check only
-        cout << "vector20 of int: " << sizeof(vec) << endl;
+        std::cout << "vector20 of int: " << sizeof(vec) << std::endl;
     }
 
     {
@@ -180,7 +177,7 @@ main()
           , int, int, int, int, int, int, int, int, int, int> type;
 
         type vec; // compile check only
-        cout << "vector30 of int: " << sizeof(vec) << endl;
+        std::cout << "vector30 of int: " << sizeof(vec) << std::endl;
     }
 
     {
@@ -191,7 +188,7 @@ main()
           , int, int, int, int, int, int, int, int, int, int> type;
 
         type vec; // compile check only
-        cout << "vector40 of int: " << sizeof(vec) << endl;
+        std::cout << "vector40 of int: " << sizeof(vec) << std::endl;
     }
 
     {
@@ -203,18 +200,16 @@ main()
           , int, int, int, int, int, int, int, int, int, int> type;
 
         type vec; // compile check only
-        cout << "vector50 of int: " << sizeof(vec) << endl;
+        std::cout << "vector50 of int: " << sizeof(vec) << std::endl;
     }
-
+    
     {
         // testing copy and assign from a view
         vector0<> empty;
         vector2<int, long> v(push_back(push_back(empty, 123), 456));
-        cout << v << endl;
         BOOST_TEST(at_c<0>(v) == 123);
         BOOST_TEST(at_c<1>(v) == 456);
-        v =push_back(push_back(empty, 123), 456); // test assign
-        cout << v << endl;
+        v = push_back(push_back(empty, 123), 456); // test assign
         BOOST_TEST(at_c<0>(v) == 123);
         BOOST_TEST(at_c<1>(v) == 456);
     }
@@ -223,11 +218,9 @@ main()
         // testing copy and assign from a vector_c
         boost::mpl::vector_c<int, 123, 456> vec_c;
         vector2<int, long> v(vec_c);
-        std::cout << v << std::endl;
         BOOST_TEST(at_c<0>(v) == 123);
         BOOST_TEST(at_c<1>(v) == 456);
         v = boost::mpl::vector_c<int, 123, 456>(); // test assign
-        cout << v << endl;
         BOOST_TEST(at_c<0>(v) == 123);
         BOOST_TEST(at_c<1>(v) == 456);
     }

@@ -4,21 +4,24 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/fusion/container/map/map.hpp>
 #include <boost/fusion/container/generation/make_map.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
 #include <boost/fusion/sequence/intrinsic/has_key.hpp>
+#include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/io/out.hpp>
+#include <boost/fusion/iterator/key_of.hpp>
+#include <boost/fusion/iterator/deref_data.hpp>
+#include <boost/fusion/iterator/value_of_data.hpp>
+#include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/support/pair.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/mpl/assert.hpp>
 #include <iostream>
 #include <string>
-
 
 int
 main()
@@ -59,6 +62,17 @@ main()
         BOOST_STATIC_ASSERT((result_of::has_key<map_type, int>::value));
         BOOST_STATIC_ASSERT((result_of::has_key<map_type, double>::value));
         BOOST_STATIC_ASSERT((!result_of::has_key<map_type, std::string>::value));
+
+        std::cout << deref_data(begin(m)) << std::endl;
+        std::cout << deref_data(boost::fusion::next(begin(m))) << std::endl;
+
+        BOOST_TEST(deref_data(begin(m)) == 'X');
+        BOOST_TEST(deref_data(boost::fusion::next(begin(m))) == "Men");
+
+        BOOST_STATIC_ASSERT((boost::is_same<result_of::key_of<result_of::begin<map_type>::type>::type, int>::value));
+        BOOST_STATIC_ASSERT((boost::is_same<result_of::key_of<result_of::next<result_of::begin<map_type>::type>::type>::type, double>::value));
+        BOOST_STATIC_ASSERT((boost::is_same<result_of::value_of_data<result_of::begin<map_type>::type>::type, char>::value));
+        BOOST_STATIC_ASSERT((boost::is_same<result_of::value_of_data<result_of::next<result_of::begin<map_type>::type>::type>::type, std::string>::value));
     }
     
     {

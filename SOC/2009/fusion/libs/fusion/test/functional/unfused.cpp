@@ -37,19 +37,18 @@ struct test_func
     { };
 
     template <typename Seq>
-    long operator()(Seq const& seq) const
+    long operator()(Seq const & seq) const
     {
         long state = 0;
         return fusion::fold(seq, state, fold_op());
     }
 
     template <typename Seq>
-    long operator()(Seq const& seq) 
+    long operator()(Seq const & seq) 
     {
         long state = 100;
         return fusion::fold(seq, state, fold_op());
     }
-
 
   private:
 
@@ -81,10 +80,10 @@ int main()
 
     test_func<noncopyable> f;
     fusion::unfused< test_func<> > unfused_func;
-    fusion::unfused< test_func<noncopyable>& > unfused_func_ref(f);
+    fusion::unfused< test_func<noncopyable> & > unfused_func_ref(f);
     fusion::unfused< test_func<> const > unfused_func_c;
     fusion::unfused< test_func<> > const unfused_func_c2;
-    fusion::unfused< test_func<noncopyable> const& > unfused_func_c_ref(f);
+    fusion::unfused< test_func<noncopyable> const & > unfused_func_c_ref(f);
 
     BOOST_TEST(unfused_func() == 100);
     BOOST_TEST(unfused_func_ref() == 100);

@@ -43,14 +43,14 @@ struct test_func
     { };
 
     template <typename Seq>
-    long operator()(Seq const& seq) const
+    long operator()(Seq const & seq) const
     {
         long state = 0;
         return fusion::fold(seq, state, fold_op());
     }
 
     template < typename Seq >
-    long operator()(Seq const& seq) 
+    long operator()(Seq const & seq) 
     {
         long state = 100;
         return fusion::fold(seq, state, fold_op());
@@ -63,7 +63,7 @@ struct test_func
         typedef long result_type;
 
         template <typename T>
-        long operator()(long value, T const& elem) const
+        long operator()(long value, T const & elem) const
         {
           return value + sizeof(T) * elem;
         }
@@ -97,10 +97,10 @@ void nullary_tests()
 {
     test_func<noncopyable> f;
     fusion::unfused_typed< test_func<>, types0 > unfused_func;
-    fusion::unfused_typed< test_func<noncopyable>&, types0 > unfused_func_ref(f);
+    fusion::unfused_typed< test_func<noncopyable> &, types0 > unfused_func_ref(f);
     fusion::unfused_typed< test_func<> const, types0 > unfused_func_c;
     fusion::unfused_typed< test_func<>, types0 > const unfused_func_c2;
-    fusion::unfused_typed< test_func<noncopyable> const&, types0 > unfused_func_c_ref(f);
+    fusion::unfused_typed< test_func<noncopyable> const &, types0 > unfused_func_c_ref(f);
 
     BOOST_TEST(unfused_func() == 100);
     BOOST_TEST(unfused_func_ref() == 100);
@@ -113,10 +113,10 @@ void unary_tests()
 {
     test_func<noncopyable> f;
     fusion::unfused_typed< test_func<>, types1 > unfused_func;
-    fusion::unfused_typed< test_func<noncopyable>&, types1 > unfused_func_ref(f);
+    fusion::unfused_typed< test_func<noncopyable> &, types1 > unfused_func_ref(f);
     fusion::unfused_typed< test_func<> const, types1 > unfused_func_c;
     fusion::unfused_typed< test_func<>, types1 > const unfused_func_c2;
-    fusion::unfused_typed< test_func<noncopyable> const&, types1 > unfused_func_c_ref(f);
+    fusion::unfused_typed< test_func<noncopyable> const &, types1 > unfused_func_c_ref(f);
 
     long lvalue = 1;
     BOOST_TEST_NO_VC71(unfused_func(lvalue) == 100);
@@ -135,10 +135,10 @@ void ternary_tests()
 {
     test_func<noncopyable> f;
     fusion::unfused_typed< test_func<>, types3 > unfused_func;
-    fusion::unfused_typed< test_func<noncopyable>&, types3 > unfused_func_ref(f);
+    fusion::unfused_typed< test_func<noncopyable> &, types3 > unfused_func_ref(f);
     fusion::unfused_typed< test_func<> const, types3 > unfused_func_c;
     fusion::unfused_typed< test_func<>, types3 > const unfused_func_c2;
-    fusion::unfused_typed< test_func<noncopyable> const&, types3 > unfused_func_c_ref(f);
+    fusion::unfused_typed< test_func<noncopyable> const &, types3 > unfused_func_c_ref(f);
 
     long lvalue = 1;
     static const long expected = 2*sizeof(int) + 7*sizeof(char);

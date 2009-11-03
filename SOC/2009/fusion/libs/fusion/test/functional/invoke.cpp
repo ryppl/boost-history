@@ -30,7 +30,7 @@ namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
 
 template <typename T>
-inline T const& const_(T const& t)
+inline T const & const_(T const & t)
 {
     return t;
 }
@@ -67,8 +67,8 @@ struct fobj
 
     int operator()(int i, object &)             { return 4 + i; }
     int operator()(int i, object &) const       { return 5 + i; }
-    int operator()(int i, object const&)       { return 6 + i; }
-    int operator()(int i, object const&) const { return 7 + i; }
+    int operator()(int i, object const &)       { return 6 + i; }
+    int operator()(int i, object const &) const { return 7 + i; }
 
     int operator()(int i, object &, object_nc &)       { return 10 + i; }
     int operator()(int i, object &, object_nc &) const { return 11 + i; }
@@ -111,7 +111,7 @@ struct nullary_fobj_nc
 int nullary() { return 16; }
 int unary(int i) { return 17 + i; }
 int binary1(int i, object &) { return 18 + i; }
-int binary2(int i, object const&) { return 19 + i; }
+int binary2(int i, object const &) { return 19 + i; }
 
 typedef int (*                   func_ptr)(int);
 typedef int (* const           c_func_ptr)(int);
@@ -162,10 +162,10 @@ fusion::single_view<members  > sv_obj_ctx(  that);
 fusion::single_view<members &> sv_ref_ctx(  that);
 fusion::single_view<members *> sv_ptr_ctx(& that);
 fusion::single_view<members const  > sv_obj_c_ctx(  that);
-fusion::single_view<members const&> sv_ref_c_ctx(  that);
+fusion::single_view<members const &> sv_ref_c_ctx(  that);
 fusion::single_view<members const *> sv_ptr_c_ctx(& that);
-fusion::single_view<std::auto_ptr<members> const&> sv_spt_ctx(spt_that);
-fusion::single_view<std::auto_ptr<members const> const&> sv_spt_c_ctx(spt_that_c);
+fusion::single_view<std::auto_ptr<members> const &> sv_spt_ctx(spt_that);
+fusion::single_view< std::auto_ptr<members const> const &> sv_spt_c_ctx(spt_that_c);
 
 derived derived_that;
 
@@ -176,10 +176,10 @@ fusion::single_view<derived  > sv_obj_d_ctx(  derived_that);
 fusion::single_view<derived &> sv_ref_d_ctx(  derived_that);
 fusion::single_view<derived *> sv_ptr_d_ctx(& derived_that);
 fusion::single_view<derived const  > sv_obj_c_d_ctx(  derived_that);
-fusion::single_view<derived const&> sv_ref_c_d_ctx(  derived_that);
+fusion::single_view<derived const &> sv_ref_c_d_ctx(  derived_that);
 fusion::single_view<derived const *> sv_ptr_c_d_ctx(& derived_that);
-fusion::single_view<std::auto_ptr<derived> const&> sv_spt_d_ctx(spt_derived_that);
-fusion::single_view< std::auto_ptr<derived const> const&> sv_spt_c_d_ctx(spt_derived_that_c);
+fusion::single_view<std::auto_ptr<derived> const &> sv_spt_d_ctx(spt_derived_that);
+fusion::single_view< std::auto_ptr<derived const> const &> sv_spt_c_d_ctx(spt_derived_that_c);
 
 template <class Sequence>
 void test_sequence_n(Sequence & seq, mpl::int_<0>)
@@ -195,15 +195,15 @@ void test_sequence_n(Sequence & seq, mpl::int_<0>)
     // to be const with an explicit template argument. We can also request
     // the function object to be pased by reference...
     BOOST_TEST(const_(f)() == fusion::invoke<nullary_fobj const  >(const_(f),        seq ));
-    BOOST_TEST(const_(f)() == fusion::invoke<nullary_fobj const&>(const_(f), const_(seq)));
+    BOOST_TEST(const_(f)() == fusion::invoke<nullary_fobj const &>(const_(f), const_(seq)));
 
     nullary_fobj_nc nc_f;
     // ...and we further ensure there is no copying in this case, using a
     // noncopyable function object.
     BOOST_TEST(nc_f () == fusion::invoke<nullary_fobj_nc &>(nc_f ,        seq ));
     BOOST_TEST(nc_f () == fusion::invoke<nullary_fobj_nc &>(nc_f , const_(seq)));
-    BOOST_TEST(const_(nc_f)() == fusion::invoke<nullary_fobj_nc const&>(const_(nc_f),        seq ));
-    BOOST_TEST(const_(nc_f)() == fusion::invoke<nullary_fobj_nc const&>(const_(nc_f), const_(seq)));
+    BOOST_TEST(const_(nc_f)() == fusion::invoke<nullary_fobj_nc const &>(const_(nc_f),        seq ));
+    BOOST_TEST(const_(nc_f)() == fusion::invoke<nullary_fobj_nc const &>(const_(nc_f), const_(seq)));
 
     // Builtin Functions
 
@@ -227,6 +227,7 @@ void test_sequence_n(Sequence & seq, mpl::int_<0>)
     BOOST_TEST(that.nullary_c() == fusion::invoke(& members::nullary_c, fusion::join(sv_spt_c_ctx,seq)));
 
     // Pointer to data member
+
     BOOST_TEST(that.data == (fusion::invoke(& members::data, fusion::join(sv_obj_ctx,seq)) = that.data));
     BOOST_TEST(that.data == (fusion::invoke(& members::data, fusion::join(sv_ref_ctx,seq)) = that.data));
     BOOST_TEST(that.data == (fusion::invoke(& members::data, fusion::join(sv_ptr_ctx,seq)) = that.data));
@@ -253,13 +254,13 @@ void test_sequence_n(Sequence & seq, mpl::int_<1>)
     BOOST_TEST(f(element1) == fusion::invoke(f , seq ));
     BOOST_TEST(f(element1) == fusion::invoke(f , const_(seq)));
     BOOST_TEST(const_(f)(element1) == fusion::invoke<fobj const  >(const_(f), seq ));
-    BOOST_TEST(const_(f)(element1) == fusion::invoke<fobj const&>(const_(f), const_(seq)));
+    BOOST_TEST(const_(f)(element1) == fusion::invoke<fobj const &>(const_(f), const_(seq)));
 
     fobj_nc nc_f;
     BOOST_TEST(nc_f(element1) == fusion::invoke<fobj_nc &>(nc_f, seq ));
     BOOST_TEST(nc_f(element1) == fusion::invoke<fobj_nc &>(nc_f, const_(seq)));
-    BOOST_TEST(const_(nc_f)(element1) == fusion::invoke<fobj_nc const&>(const_(nc_f), seq ));
-    BOOST_TEST(const_(nc_f)(element1) == fusion::invoke<fobj_nc const&>(const_(nc_f), const_(seq)));
+    BOOST_TEST(const_(nc_f)(element1) == fusion::invoke<fobj_nc const &>(const_(nc_f), seq ));
+    BOOST_TEST(const_(nc_f)(element1) == fusion::invoke<fobj_nc const &>(const_(nc_f), const_(seq)));
 
     BOOST_TEST(unary(element1) == fusion::invoke<int (&)(int)>(unary, seq));
     BOOST_TEST(func_ptr1(element1) == fusion::invoke(func_ptr1, seq));

@@ -1,11 +1,7 @@
-/*=============================================================================
-    Copyright (c) 2005 David Abrahams
-    Copyright (c) 2005 Matthias Troyer
-    Copyright (c) 2005 Michael Gauckler
-
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-==============================================================================*/
+// Copyright David Abrahams, Matthias Troyer, Michael Gauckler
+// 2005. Distributed under the Boost Software License, Version
+// 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 #if !defined(LIVE_CODE_TYPE)
 # define LIVE_CODE_TYPE int

@@ -41,20 +41,20 @@ struct test_func
     struct result;
 
     template <class Self, class Seq> 
-    struct result< Self(Seq) >
+    struct result< Self(Seq &) >
         : mpl::if_< mpl::and_< fusion::result_of::empty<Seq>, RemoveNullary >, 
                     boost::blank, mpl::identity<long> >::type
     { };
 
     template <typename Seq>
-    long operator()(Seq const& seq) const
+    long operator()(Seq const & seq) const
     {
         long state = 0;
         return fusion::fold(seq, state, fold_op());
     }
 
     template < typename Seq >
-    long operator()(Seq const& seq) 
+    long operator()(Seq const & seq) 
     {
         long state = 100;
         return fusion::fold(seq, state, fold_op());
@@ -76,7 +76,7 @@ struct test_func
 };
 
 template <typename T>
-inline T const& const_(T const& t)
+inline T const & const_(T const & t)
 {
     return t;
 }

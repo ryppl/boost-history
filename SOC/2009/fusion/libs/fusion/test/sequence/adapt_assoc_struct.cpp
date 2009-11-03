@@ -16,7 +16,6 @@
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
 #include <boost/fusion/sequence/io/out.hpp>
-#include <boost/fusion/algorithm/transformation/erase_key.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/container/list/list.hpp>
 #include <boost/fusion/container/generation/make_vector.hpp>
@@ -28,12 +27,10 @@
 #include <boost/fusion/sequence/comparison/greater.hpp>
 #include <boost/fusion/sequence/comparison/greater_equal.hpp>
 #include <boost/fusion/support/is_view.hpp>
-
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
-
+#include <boost/static_assert.hpp>
 #include <iostream>
 #include <string>
 
@@ -119,15 +116,13 @@ main()
         BOOST_MPL_ASSERT((result_of::has_key<ns::point, ns::y_member>));
         BOOST_MPL_ASSERT((boost::mpl::not_<result_of::has_key<ns::point, ns::z_member> >));
 
-        BOOST_MPL_ASSERT(( boost::is_same<result_of::value_at_key<ns::point, ns::x_member>::type, int> ));
-        BOOST_MPL_ASSERT(( boost::is_same<result_of::value_at_key<ns::point, ns::y_member>::type, int> ));
+        BOOST_MPL_ASSERT((boost::is_same<result_of::value_at_key<ns::point, ns::x_member>::type, int>));
+        BOOST_MPL_ASSERT((boost::is_same<result_of::value_at_key<ns::point, ns::y_member>::type, int>));
 
         ns::point p = {5, 3};
         
         BOOST_TEST(at_key<ns::x_member>(p) == 5);
         BOOST_TEST(at_key<ns::y_member>(p) == 3);
-
-        erase_key<ns::x_member>(p);
     }
 
     return boost::report_errors();

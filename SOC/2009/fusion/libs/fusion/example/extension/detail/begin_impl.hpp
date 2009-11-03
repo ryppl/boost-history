@@ -5,9 +5,8 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-
-#ifndef 
-#define 
+#if !defined(BOOST_FUSION_BEGIN_IMPL_20060222_2042)
+#define BOOST_FUSION_BEGIN_IMPL_20060222_2042
 
 #include "../example_struct_iterator.hpp"
 
@@ -20,7 +19,7 @@ namespace boost { namespace fusion {
     
     namespace extension
     {
-        template<typename>
+        template<typename Tag>
         struct begin_impl;
 
         template<>

@@ -2,12 +2,15 @@
     Copyright (c) 1999-2003 Jaakko Jarvi
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/iterator/deref.hpp>
+#include <boost/fusion/sequence/intrinsic/at.hpp>
+
+#if !defined(FUSION_AT)
+#define FUSION_AT at_c
+#endif
 
 #if !defined(FUSION_MAKE)
 #define FUSION_MAKE BOOST_PP_CAT(make_, FUSION_SEQUENCE)
@@ -72,11 +75,11 @@ test()
 #endif
 
     dummy(ta);
-
+    
     // ties cannot be rebound
     int d = 3;
     FUSION_SEQUENCE<int&> ti(a);
-    BOOST_TEST(&deref(begin(ti)) == &a);
+    BOOST_TEST(&FUSION_AT<0>(ti) == &a);
     ti = FUSION_SEQUENCE<int&>(d);
-    BOOST_TEST(&deref(begin(ti)) == &a);
+    BOOST_TEST(&FUSION_AT<0>(ti) == &a);
 }

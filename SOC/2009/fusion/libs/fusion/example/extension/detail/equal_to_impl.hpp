@@ -5,9 +5,8 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-
-#ifndef 
-#define 
+#if !defined(BOOST_FUSION_EQUAL_TO_IMPL_20060223_1941)
+#define BOOST_FUSION_EQUAL_TO_IMPL_20060223_1941
 
 #include <boost/mpl/equal_to.hpp>
 
@@ -20,7 +19,7 @@ namespace boost { namespace fusion {
 
     namespace extension
     {
-        template<typename>
+        template<typename Tag>
         struct equal_to_impl;
 
         template<>

@@ -17,8 +17,10 @@
 
 #include <boost/fusion/sequence/sequence_facade.hpp>
 #include <boost/fusion/iterator/iterator_facade.hpp>
+
 #include <boost/fusion/sequence/intrinsic.hpp>
 #include <boost/fusion/iterator.hpp>
+
 #include <boost/fusion/support/category_of.hpp>
 
 #include <boost/mpl/int.hpp>
@@ -41,7 +43,7 @@ namespace demo
         : fusion::iterator_facade<triple_iterator<Seq, N>, fusion::random_access_traversal_tag>
     {
         typedef mpl::int_<N> index;
-        typedef Seq seq_type;
+        typedef Seq sequence_type;
 
         triple_iterator(Seq& seq)
             : seq_(seq) {}
@@ -127,7 +129,7 @@ namespace demo
         struct next
         {
             typedef triple_iterator<
-                typename It::seq_type, It::index::value + 1> type;
+                typename It::sequence_type, It::index::value + 1> type;
 
             static type call(It const& it)
             {
@@ -139,7 +141,7 @@ namespace demo
         struct prior
         {
             typedef triple_iterator<
-                typename It::seq_type, It::index::value - 1> type;
+                typename It::sequence_type, It::index::value - 1> type;
 
             static type call(It const& it)
             {
@@ -162,7 +164,7 @@ namespace demo
         struct advance
         {
             typedef triple_iterator<
-                typename It::seq_type,
+                typename It::sequence_type,
                 It::index::value + M::value> type;
 
             static type call(It const& it)

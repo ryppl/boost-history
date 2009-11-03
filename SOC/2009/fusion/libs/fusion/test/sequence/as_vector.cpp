@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
@@ -30,17 +30,17 @@ main()
         vector<> empty;
         std::cout << as_vector(make_list(1, 1.23, "harru")) << std::endl;
         std::cout << as_vector(push_back(empty, 999)) << std::endl;
-
+        
         BOOST_TEST(as_vector(make_list(1, 1.23, "harru")) == make_list(1, 1.23, std::string("harru")));
         BOOST_TEST(as_vector(push_back(empty, 999)) == push_back(empty, 999));
     }
 
     {
         std::cout << as_vector(mpl::vector_c<int, 1, 2, 3, 4, 5>()) << std::endl;
-        BOOST_TEST((as_vector(mpl::vector_c<int, 1, 2, 3, 4, 5>())
+        BOOST_TEST((as_vector(mpl::vector_c<int, 1, 2, 3, 4, 5>()) 
             == mpl::vector_c<int, 1, 2, 3, 4, 5>()));
     }
-
+    
     {
         // test conversion
         vector<int, std::string> v(make_list(123, "harru"));

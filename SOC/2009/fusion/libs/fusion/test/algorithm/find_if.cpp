@@ -50,7 +50,7 @@ main()
         using boost::mpl::_;
 
         typedef vector<int, char, X, double> mpl_vec;
-        BOOST_TEST((*boost::fusion::find_if<is_same<_, X> >(mpl_vec()) == 12345));
+        BOOST_TEST((*find_if<is_same<_, X> >(mpl_vec()) == 12345));
     }
 
     {
@@ -61,7 +61,7 @@ main()
         using boost::mpl::_;
 
         typedef vector_c<int, 1, 2, 3, 4> mpl_vec;
-        BOOST_TEST((*boost::fusion::find_if<less<_, int_<3> > >(mpl_vec()) == 1));
+        BOOST_TEST((*find_if<less<_, int_<3> > >(mpl_vec()) == 1));
     }
 
     return boost::report_errors();

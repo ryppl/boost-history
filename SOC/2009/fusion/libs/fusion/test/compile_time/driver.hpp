@@ -1,12 +1,12 @@
 /*=============================================================================
     Copyright (c) 2008 Dan Marsden
-
+  
     Use modification and distribution are subject to the Boost Software 
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_COMPILE_TIME_DRIVER
+#if !defined(BOOST_FUSION_COMPILE_TIME_DRIVER)
 #define BOOST_FUSION_COMPILE_TIME_DRIVER
 
 int main()

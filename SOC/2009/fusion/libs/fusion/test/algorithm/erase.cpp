@@ -1,19 +1,18 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
+#include <boost/fusion/sequence/intrinsic/begin.hpp>
+#include <boost/fusion/iterator/advance.hpp>
 #include <boost/fusion/adapted/mpl.hpp>
 #include <boost/fusion/sequence/io/out.hpp>
 #include <boost/fusion/sequence/comparison/equal_to.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/iterator/advance.hpp>
 #include <boost/fusion/container/generation/make_vector.hpp>
 #include <boost/fusion/algorithm/transformation/erase.hpp>
-
 #include <boost/mpl/vector_c.hpp>
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/advance.hpp>
@@ -38,10 +37,10 @@ main()
     {
         typedef vector<int, char, double, char const*> vector_type;
         vector_type t1(1, 'x', 3.3, "Ruby");
-        typedef
-            result_of::advance_c<result_of::begin<vector_type>::type,2>::type
-        it;
-        it pos(advance_c<2>(boost::fusion::begin(t1)));
+        //TODO
+        //vector_iterator<vector_type, 2> pos(t1);
+        result_of::advance_c<result_of::begin<vector_type>::type,2>::type
+        pos=advance_c<2>(boost::fusion::begin(t1));
 
         std::cout << erase(t1, pos) << std::endl;
         BOOST_TEST((erase(t1, pos) == make_vector(1, 'x', std::string("Ruby"))));
@@ -57,7 +56,8 @@ main()
         typedef boost::mpl::next<n2>::type n3;
 
         BOOST_STATIC_ASSERT((boost::is_same<mpl_vec_at3, n3>::value));
-
+        
+        
         std::cout << erase(mpl_vec(), mpl_vec_at3()) << std::endl;
         BOOST_TEST((erase(mpl_vec(), mpl_vec_at3())
             == make_vector(1, 2, 3, 5)));

@@ -2,7 +2,7 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2007 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
@@ -34,18 +34,15 @@ struct add_ints_only
     template<typename T>
     struct result;
 
-    template <typename Self,typename State,typename T>
-    struct result<Self(State,T)>
+    template <typename State, typename T>
+    struct result<add_ints_only(State, T)>
     {
-        //TODO cschmidt: remove_reference does not support rvalue refs yet,
-        //therefore we use the internal function of fusion!
-        typedef typename boost::fusion::detail::identity<T>::type type;
-        //typedef typename boost::remove_const<
-        //    typename boost::remove_reference<State>::type>::type type;
+        typedef typename boost::remove_const<
+            typename boost::remove_reference<State>::type>::type type;
     };
 
     template <typename State, typename T>
-    State const&
+    State
     operator()(State const& state, T const& x) const
     {
         return state;
@@ -63,15 +60,13 @@ struct count_ints
     template<typename T>
     struct result;
 
-    template <typename Self,typename CountT,typename T>
-    struct result<Self(CountT, T)>
+    template <typename CountT, typename T>
+    struct result<count_ints(CountT, T)>
     {
-        typedef typename boost::fusion::detail::identity<T>::type elem;
-        typedef typename boost::fusion::detail::identity<CountT>::type state;
-        //typedef typename boost::remove_const<
-        //    typename boost::remove_reference<T>::type>::type elem;
-        //typedef typename boost::remove_const<
-        //    typename boost::remove_reference<CountT>::type>::type state;
+        typedef typename boost::remove_const<
+            typename boost::remove_reference<CountT>::type>::type state;
+        typedef typename boost::remove_const<
+            typename boost::remove_reference<T>::type>::type elem;
 
         typedef typename
             if_<
@@ -98,6 +93,25 @@ struct appender
     std::string operator()(std::string const& str, char c) const
     {
         return str + c;
+    }
+};
+
+struct lvalue_adder
+{
+    template<typename Sig>
+    struct result;
+
+    template<typename T0, typename T1>
+    struct result<lvalue_adder(T0, T1&)>
+    {
+        // Second argument still needs to support rvalues - see definition of fusion::fold
+        typedef T1 type;
+    };
+
+    template<typename T0, typename T1>
+    T1 operator()(T0 const& lhs, T1& rhs) const
+    {
+        return lhs + rhs;
     }
 };
 
@@ -148,6 +162,11 @@ main()
     {
         BOOST_TEST(fusion::fold(fusion::make_vector('a','b','c','d','e'), std::string(""), appender())
                    == "abcde");
+    }
+
+    {
+        vector<int, int> vec(1,2);
+        BOOST_TEST(fusion::fold(vec, 0, lvalue_adder()) == 3);
     }
 
     {

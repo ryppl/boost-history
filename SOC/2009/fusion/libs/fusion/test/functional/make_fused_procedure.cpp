@@ -33,13 +33,13 @@ struct test_func
     : Base
 {
     template <typename T0, typename T1>
-    int operator()(T0 const& x, T1 const& y) const
+    int operator()(T0 const & x, T1 const & y) const
     {
         return effect = 1+x-y;
     }
 
     template <typename T0, typename T1>
-    int operator()(T0 const& x, T1 const& y) 
+    int operator()(T0 const & x, T1 const & y) 
     {
         return effect = 2+x-y;
     }
@@ -58,7 +58,7 @@ struct test_func
 };
 
 template <typename T>
-inline T const& const_(T const& t)
+inline T const & const_(T const & t)
 {
     return t;
 }
@@ -78,14 +78,11 @@ int main()
     CHECK_EFFECT(fusion::make_fused_procedure(ref(f_nc))(lv_vec), 1);
     CHECK_EFFECT(fusion::make_fused_procedure(cref(f_nc))(lv_vec), 0);
 
-    //TODO!!!
-    /*
     CHECK_EFFECT(fused_func(fusion::make_vector(2,'\003')), 1);
     CHECK_EFFECT(const_(fused_func)(fusion::make_vector(2,'\003')), 0);
     CHECK_EFFECT(fusion::make_fused_procedure(const_(f))(fusion::make_vector(2,'\003')), 1);
     CHECK_EFFECT(fusion::make_fused_procedure(ref(f_nc))(fusion::make_vector(2,'\003')), 1);
     CHECK_EFFECT(fusion::make_fused_procedure(cref(f_nc))(fusion::make_vector(2,'\003')), 0);
-    */
 
     return boost::report_errors();
 }

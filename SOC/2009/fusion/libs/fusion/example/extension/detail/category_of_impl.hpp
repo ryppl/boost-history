@@ -5,9 +5,8 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-
-#ifndef 
-#define 
+#if !defined(BOOST_FUSION_CATEGORY_OF_IMPL_20060223_2037)
+#define BOOST_FUSION_CATEGORY_OF_IMPL_20060223_2037
 
 #include <boost/fusion/support/category_of.hpp>
 
@@ -26,7 +25,7 @@ namespace boost { namespace fusion {
             template<typename Sequence>
             struct apply
             {
-                struct type : random_access_traversal_tag, associative_sequence_tag {};
+                struct type : random_access_traversal_tag, associative_tag {};
             };
         };
     }

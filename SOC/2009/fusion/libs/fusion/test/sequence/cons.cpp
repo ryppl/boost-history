@@ -2,7 +2,7 @@
     Copyright (c) 2005 Joel de Guzman
     Copyright (c) 2005 Eric Niebler
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <string>
@@ -32,7 +32,7 @@ main()
     std::cout << tuple_delimiter(", ");
 
 /// Testing cons
-
+    
     {
         std::string hello("hello");
         cons<int, cons<std::string> > ns =
@@ -59,7 +59,7 @@ main()
         );
 
         BOOST_TEST(
-            make_cons(123, make_cons("hello")) ==
+            make_cons(123, make_cons("hello")) == 
             make_vector(123, std::string("hello"))
         );
     }
@@ -75,7 +75,7 @@ main()
         std::cout << nf << std::endl;
         std::cout << filter_if<is_same<boost::mpl::_, int> >(nf) << std::endl;
     }
-
+    
     {
         int i = 3;
         cons<int&> tie(cons_tie(i));

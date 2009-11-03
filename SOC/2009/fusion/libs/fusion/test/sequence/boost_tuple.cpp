@@ -12,6 +12,7 @@
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/sequence/intrinsic/back.hpp>
 #include <boost/fusion/sequence/io/out.hpp>
+#include <boost/fusion/iterator/distance.hpp> 
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/container/list/list.hpp>
 #include <boost/fusion/container/generation/make_vector.hpp>
@@ -82,6 +83,16 @@ main()
         list<int, std::string> l(boost::tuples::make_tuple(123, "Hola!!!"));
         l = boost::tuples::make_tuple(123, "Hola!!!");
     }
+    
+    { 
+        // test from Ticket #1601, submitted by Shunsuke Sogame 
+        // expanded by Stjepan Rajko 
+        boost::tuple<int, char> t(3, 'a'); 
+
+        BOOST_TEST(0u == distance(begin(t), begin(t)));
+        BOOST_TEST(1u == distance(begin(t), next(begin(t))));
+        BOOST_TEST(2u == distance(begin(t), end(t)));
+    } 
 
     return boost::report_errors();
 }

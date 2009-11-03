@@ -28,7 +28,7 @@ namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
 
 template <typename T>
-inline T const& const_(T const& t)
+inline T const & const_(T const & t)
 {
     return t;
 }
@@ -69,10 +69,10 @@ fusion::single_view<members  > sv_obj_ctx(  that);
 fusion::single_view<members &> sv_ref_ctx(  that);
 fusion::single_view<members *> sv_ptr_ctx(& that);
 fusion::single_view<members const  > sv_obj_c_ctx(  that);
-fusion::single_view<members const&> sv_ref_c_ctx(  that);
+fusion::single_view<members const &> sv_ref_c_ctx(  that);
 fusion::single_view<members const *> sv_ptr_c_ctx(& that);
-fusion::single_view<std::auto_ptr<members> const&> sv_spt_ctx(spt_that);
-fusion::single_view< std::auto_ptr<members const> const&> sv_spt_c_ctx(spt_that_c);
+fusion::single_view<std::auto_ptr<members> const &> sv_spt_ctx(spt_that);
+fusion::single_view< std::auto_ptr<members const> const &> sv_spt_c_ctx(spt_that_c);
 
 struct fobj
 {
@@ -84,8 +84,8 @@ struct fobj
 
     int operator()(int & i, object &)             { return i = 4; }
     int operator()(int & i, object &) const       { return i = 5; }
-    int operator()(int & i, object const&)       { return i = 6; }
-    int operator()(int & i, object const&) const { return i = 7; }
+    int operator()(int & i, object const &)       { return i = 6; }
+    int operator()(int & i, object const &) const { return i = 7; }
 
     int operator()(int & i, object &, object_nc &)       { return i = 10; }
     int operator()(int & i, object &, object_nc &) const { return i = 11; }
@@ -104,7 +104,7 @@ struct fobj_nc
 int nullary() { return element1 = 16; }
 int unary(int & i) { return  i = 17; }
 int binary1(int & i, object &) { return i = 18; }
-int binary2(int & i, object const&) { return i = 19; }
+int binary2(int & i, object const &) { return i = 19; }
 
 typedef int (*                   func_ptr)(int &);
 typedef int (* const           c_func_ptr)(int &);
@@ -139,17 +139,17 @@ void test_sequence_n(Sequence & seq, mpl::int_<0>)
 
     // Note: The function object is taken by value, so we request the copy
     // to be const with an explicit template argument. We can also request
-    // the function object to be passed by reference...
+    // the function object to be pased by reference...
     COMPARE_EFFECT(const_(f)(), fusion::invoke_procedure<fobj const  >(const_(f),        seq ));
-    COMPARE_EFFECT(const_(f)(), fusion::invoke_procedure<fobj const&>(const_(f), const_(seq)));
+    COMPARE_EFFECT(const_(f)(), fusion::invoke_procedure<fobj const &>(const_(f), const_(seq)));
 
     fobj_nc nc_f;
     // ...and we further ensure there is no copying in this case, using a
     // noncopyable function object.
     COMPARE_EFFECT(nc_f (), fusion::invoke_procedure<fobj_nc &>(nc_f ,        seq ));
     COMPARE_EFFECT(nc_f (), fusion::invoke_procedure<fobj_nc &>(nc_f , const_(seq)));
-    COMPARE_EFFECT(const_(nc_f)(), fusion::invoke_procedure<fobj_nc const&>(const_(nc_f),        seq ));
-    COMPARE_EFFECT(const_(nc_f)(), fusion::invoke_procedure<fobj_nc const&>(const_(nc_f), const_(seq)));
+    COMPARE_EFFECT(const_(nc_f)(), fusion::invoke_procedure<fobj_nc const &>(const_(nc_f),        seq ));
+    COMPARE_EFFECT(const_(nc_f)(), fusion::invoke_procedure<fobj_nc const &>(const_(nc_f), const_(seq)));
 
     // Builtin Functions
 
@@ -180,13 +180,13 @@ void test_sequence_n(Sequence & seq, mpl::int_<1>)
     COMPARE_EFFECT(f(element1), fusion::invoke_procedure(f , seq ));
     COMPARE_EFFECT(f(element1), fusion::invoke_procedure(f , const_(seq)));
     COMPARE_EFFECT(const_(f)(element1), fusion::invoke_procedure<fobj const  >(const_(f), seq ));
-    COMPARE_EFFECT(const_(f)(element1), fusion::invoke_procedure<fobj const&>(const_(f), const_(seq)));
+    COMPARE_EFFECT(const_(f)(element1), fusion::invoke_procedure<fobj const &>(const_(f), const_(seq)));
 
     fobj_nc nc_f;
     COMPARE_EFFECT(nc_f(element1), fusion::invoke_procedure<fobj_nc &>(nc_f, seq ));
     COMPARE_EFFECT(nc_f(element1), fusion::invoke_procedure<fobj_nc &>(nc_f, const_(seq)));
-    COMPARE_EFFECT(const_(nc_f)(element1), fusion::invoke_procedure<fobj_nc const&>(const_(nc_f), seq ));
-    COMPARE_EFFECT(const_(nc_f)(element1), fusion::invoke_procedure<fobj_nc const&>(const_(nc_f), const_(seq)));
+    COMPARE_EFFECT(const_(nc_f)(element1), fusion::invoke_procedure<fobj_nc const &>(const_(nc_f), seq ));
+    COMPARE_EFFECT(const_(nc_f)(element1), fusion::invoke_procedure<fobj_nc const &>(const_(nc_f), const_(seq)));
 
     COMPARE_EFFECT(unary(element1), fusion::invoke_procedure<int (&)(int &)>(unary, seq));
     COMPARE_EFFECT(func_ptr1(element1), fusion::invoke_procedure(func_ptr1, seq));

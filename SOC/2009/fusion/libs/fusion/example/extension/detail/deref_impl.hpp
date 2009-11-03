@@ -5,9 +5,8 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-
-#ifndef 
-#define 
+#if !defined(BOOST_FUSION_DEREF_IMPL_20060222_1952)
+#define BOOST_FUSION_DEREF_IMPL_20060222_1952
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_const.hpp>
@@ -27,7 +26,7 @@ namespace boost { namespace fusion {
 
     namespace extension
     {
-        template<typename>
+        template<typename Tag>
         struct deref_impl;
 
         template<>

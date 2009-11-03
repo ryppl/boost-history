@@ -65,9 +65,9 @@ namespace impl
     // A traits class to find out whether T is a placeholeder
     template <typename T> struct is_placeholder              : mpl::false_  { };
     template <int I> struct is_placeholder< placeholder<I> > : mpl::true_   { };
-    template <int I> struct is_placeholder< placeholder<I>& > : mpl::true_   { };
+    template <int I> struct is_placeholder< placeholder<I> & > : mpl::true_   { };
     template <int I> struct is_placeholder< placeholder<I> const   > : mpl::true_   { };
-    template <int I> struct is_placeholder< placeholder<I> const& > : mpl::true_   { };
+    template <int I> struct is_placeholder< placeholder<I> const & > : mpl::true_   { };
 
     // This class template provides a Polymorphic Function Object to be used
     // with fusion::transform. It is applied to the sequence of arguments that
@@ -75,17 +75,17 @@ namespace impl
     // from the final call. 
     template<class FinalArgs> struct argument_transform
     {
-        FinalArgs const& ref_final_args;
+        FinalArgs const & ref_final_args;
     public:
 
-        explicit argument_transform(FinalArgs const& final_args)
+        explicit argument_transform(FinalArgs const & final_args)
             : ref_final_args(final_args)
         { }
 
         // A placeholder? Replace it with an argument from the final call...
         template <int Index>
         inline typename result_of::at_c<FinalArgs const, Index>::type
-        operator()(placeholder<Index> const&) const
+        operator()(placeholder<Index> const &) const
         {
             return fusion::at_c<Index>(this->ref_final_args);
         }
@@ -117,7 +117,7 @@ namespace impl
         bound_args fsq_bind_args;
     public:
 
-        fused_bound_function(BindArgs const& bind_args)
+        fused_bound_function(BindArgs const & bind_args)
           : fsq_bind_args(bind_args)
         { }
 
@@ -141,7 +141,7 @@ namespace impl
 
         template <class FinalArgs>
         inline typename result_impl<FinalArgs>::type 
-        operator()(FinalArgs const& final_args) const
+        operator()(FinalArgs const & final_args) const
         {
             return fusion::invoke( fusion::front(this->fsq_bind_args),
                 fusion::transform( fusion::pop_front(this->fsq_bind_args),
@@ -231,17 +231,17 @@ struct func
     }
 
     template <typename A> 
-    inline int operator()(A const& a) const
+    inline int operator()(A const & a) const
     {
-        std::cout << "operator()(A const& a)" << std::endl;
+        std::cout << "operator()(A const & a)" << std::endl;
         std::cout << "  a = " << a << "  A = " << typeid(A).name() << std::endl;
         return 1;
     }
 
     template <typename A, typename B> 
-    inline int operator()(A const& a, B & b) const
+    inline int operator()(A const & a, B & b) const
     {
-        std::cout << "operator()(A const& a, B & b)" << std::endl;
+        std::cout << "operator()(A const & a, B & b)" << std::endl;
         std::cout << "  a = " << a << "  A = " << typeid(A).name() << std::endl;
         std::cout << "  b = " << b << "  B = " << typeid(B).name() << std::endl;
         return 2;

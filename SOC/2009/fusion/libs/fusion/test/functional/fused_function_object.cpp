@@ -32,13 +32,13 @@ struct test_func
     };
 
     template <typename T0, typename T1>
-    int operator()(T0 const& x, T1 const& y) const
+    int operator()(T0 const & x, T1 const & y) const
     {
         return 1+x-y;
     }
 
     template <typename T0, typename T1>
-    int operator()(T0 const& x, T1 const& y) 
+    int operator()(T0 const & x, T1 const & y) 
     {
         return 2+x-y;
     }
@@ -60,10 +60,10 @@ int main()
 {
     test_func<noncopyable> f;
     fusion::fused_function_object< test_func<> > fused_func;
-    fusion::fused_function_object< test_func<noncopyable>& > fused_func_ref(f);
+    fusion::fused_function_object< test_func<noncopyable> & > fused_func_ref(f);
     fusion::fused_function_object< test_func<> const > fused_func_c;
     fusion::fused_function_object< test_func<> > const fused_func_c2;
-    fusion::fused_function_object< test_func<noncopyable> const& > fused_func_c_ref(f);
+    fusion::fused_function_object< test_func<noncopyable> const & > fused_func_c_ref(f);
 
     fusion::vector<int,char> lv_vec(1,'\004');
     BOOST_TEST(fused_func(lv_vec) == 1);
@@ -72,12 +72,11 @@ int main()
     BOOST_TEST(fused_func_ref(lv_vec) == 1);
     BOOST_TEST(fused_func_c_ref(lv_vec) == 0);
 
-    //TODO!!!
-    //BOOST_TEST(fused_func(fusion::make_vector(2,'\003')) == 1);
-    //BOOST_TEST(fused_func_c(fusion::make_vector(2,'\003')) == 0);
-    //BOOST_TEST(fused_func_c2(fusion::make_vector(2,'\003')) == 0);
-    //BOOST_TEST(fused_func_ref(fusion::make_vector(2,'\003')) == 1);
-    //BOOST_TEST(fused_func_c_ref(fusion::make_vector(2,'\003')) == 0);
+    BOOST_TEST(fused_func(fusion::make_vector(2,'\003')) == 1);
+    BOOST_TEST(fused_func_c(fusion::make_vector(2,'\003')) == 0);
+    BOOST_TEST(fused_func_c2(fusion::make_vector(2,'\003')) == 0);
+    BOOST_TEST(fused_func_ref(fusion::make_vector(2,'\003')) == 1);
+    BOOST_TEST(fused_func_c_ref(fusion::make_vector(2,'\003')) == 0);
 
     return boost::report_errors();
 }

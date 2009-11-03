@@ -23,10 +23,8 @@
 #include <boost/fusion/sequence/comparison/greater.hpp>
 #include <boost/fusion/sequence/comparison/greater_equal.hpp>
 #include <boost/fusion/support/is_view.hpp>
-
 #include <boost/mpl/assert.hpp>
 #include <boost/static_assert.hpp>
-
 #include <iostream>
 #include <string>
 #include <utility>

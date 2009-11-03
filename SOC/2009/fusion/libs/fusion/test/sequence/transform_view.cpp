@@ -26,7 +26,14 @@
 
 struct square
 {
-    typedef int result_type;
+    template<typename T>
+    struct result;
+
+    template <typename T>
+    struct result<square(T)>
+    {
+        typedef int type;
+    };
 
     template <typename T>
     int operator()(T x) const
@@ -37,7 +44,14 @@ struct square
 
 struct add
 {
-    typedef int result_type;
+    template<typename T>
+    struct result;
+
+    template <typename A, typename B>
+    struct result<add(A,B)>
+    {
+        typedef int type;
+    };
 
     template <typename A, typename B>
     int operator()(A a, B b) const
@@ -58,19 +72,19 @@ main()
 /// Testing the transform_view
 
     {
-        typedef boost::mpl::range_c<int, 5, 9> seq_type;
-        seq_type sequence;
+        typedef boost::mpl::range_c<int, 5, 9> sequence_type;
+        sequence_type sequence;
         square sq;
-        typedef transform_view<seq_type, square> xform_type;
+        typedef transform_view<sequence_type, square> xform_type;
         xform_type xform(sequence, sq);
 
         std::cout << xform << std::endl;
         BOOST_TEST((xform == make_vector(25, 36, 49, 64)));
 
-        typedef boost::fusion::result_of::begin<xform_type>::type begin_type;
-        begin_type first_it(boost::fusion::begin(xform));
+        typedef boost::fusion::result_of::begin<xform_type>::type first_type;
+        first_type first_it(boost::fusion::begin(xform));
 
-        typedef boost::fusion::result_of::next<begin_type>::type next_type;
+        typedef boost::fusion::result_of::next<first_type>::type next_type;
         next_type next_it(boost::fusion::next(first_it));
         BOOST_TEST((*next_it == 36));
         BOOST_TEST((*boost::fusion::prior(next_it) == 25));
