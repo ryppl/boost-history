@@ -17,7 +17,7 @@ namespace distribution{
 namespace common{
 namespace meta{
 
-    template<typename D,typename B = mpl::empty_base>
+    template<typename D,typename B = boost::mpl::empty_base>
     struct wrapper_distribution : B{
         typedef D distribution_type;
     };

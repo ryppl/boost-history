@@ -17,7 +17,7 @@ namespace distribution{
 namespace common{
 namespace meta{
 
-    template<typename P,typename B = mpl::empty_base>
+    template<typename P,typename B = boost::mpl::empty_base>
     struct wrapper_probability : B{
         typedef P probability_type;
     };
