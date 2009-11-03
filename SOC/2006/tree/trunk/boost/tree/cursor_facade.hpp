@@ -121,8 +121,8 @@ protected:
             cursor_facade_;
 public:
     typedef typename iterator_facade_::value_type value_type;
-    typedef Reference reference;
-    typedef Difference difference_type;
+    typedef typename iterator_facade_::reference reference;
+    typedef typename iterator_facade_::difference_type difference_type;
     typedef typename iterator_facade_::pointer pointer;
     typedef typename iterator_facade_::iterator_category iterator_category;
 

@@ -201,7 +201,7 @@ public:
      */      
     const_iterator cbegin() const
     {
-        const_cursor c = h.root();
+        const_cursor c = h.croot();
         to_first(inorder(), c);
         return const_iterator(c);
         //return const_iterator(h.inorder_cfirst());
@@ -213,7 +213,9 @@ public:
      */
     iterator end()
     {
-        return iterator(h.root());
+        cursor c = h.root();
+        to_past(inorder(), c);
+        return iterator(c);
     }
 
     /**
@@ -231,7 +233,9 @@ public:
      */    
     const_iterator cend() const
     {
-        return const_iterator(h.croot());
+        const_cursor c = h.croot();
+        to_past(inorder(), c);
+        return const_iterator(c);
     }
 
     /**

@@ -55,6 +55,13 @@ BOOST_AUTO_TEST_CASE( test_to_past )
     fake_to_last(inorder(), d);
     boost::tree::past_to_last(inorder(), c);
     BOOST_CHECK(c == d);
+
+    c = frbt1.root();
+    fake_to_past(inorder(), c);
+    d = frbt1.root();
+    fake_to_last(inorder(), d);
+    boost::tree::predecessor(inorder(), c);
+    BOOST_CHECK(c == d);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

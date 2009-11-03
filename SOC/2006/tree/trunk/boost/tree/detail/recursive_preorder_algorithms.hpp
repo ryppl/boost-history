@@ -86,10 +86,10 @@ for_each(preorder, Cursor s, Cursor t2, Op f, descending_vertical_traversal_tag)
 }
 
 /**
- * @brief    Apply a function to every element of a subtree, in preorder.
- * @param s    A cursor.
- * @param f    A unary function object.
- * @return    @p f
+ * @brief	Apply a function to every element of a subtree, in preorder.
+ * @param s	A cursor.
+ * @param f	A unary function object.
+ * @return  @p f
  *
  * Applies the function object @p f to each element in the @p subtree, using  
  * preorder. @p f must not modify the order of the sequence.
@@ -102,6 +102,9 @@ BOOST_CONCEPT_REQUIRES(
     (Op)) // return type
 for_each(preorder, Cursor s, Op f, descending_vertical_traversal_tag)
 {
+	if (s.is_leaf())
+		return f;
+
     f(*s);
     Cursor t = s.end();
     for (s.to_begin(); s != t; ++s) {
@@ -138,11 +141,16 @@ BOOST_CONCEPT_REQUIRES(
     (OutCursor)) // return type
 transform(preorder, InCursor s, OutCursor t, Op op, descending_vertical_traversal_tag)
 {
+	if (s.is_leaf())
+		return t;
+
+	*t = op(*s);
+
     InCursor r = s.end();
     s.to_begin();
     t.to_begin();
     for (; s != r; ++s, ++t) {
-        *t = op(*s);
+        //*t = op(*s);
         if (!s.is_leaf())
             transform(preorder(), s, t, op, descending_vertical_traversal_tag());
     }

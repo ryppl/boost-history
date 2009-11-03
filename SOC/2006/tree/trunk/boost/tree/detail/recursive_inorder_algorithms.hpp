@@ -52,11 +52,11 @@ for_each_recursive(inorder, MultiwayCursor r, Op& f)
 }
 
 /**
- * @brief    Apply a function to every element of a multiway subtree,
- *            in inorder.
- * @param s    A MultiwayTree cursor.
- * @param f    A unary function object.
- * @return    @p f
+ * @brief	Apply a function to every element of a multiway subtree,
+ *          in inorder.
+ * @param s	A MultiwayTree cursor.
+ * @param f A unary function object.
+ * @return  @p f
  *
  * Applies the function object @p f to each element in the @p subtree, using
  * inorder. @p f must not modify the order of the sequence.
@@ -69,6 +69,9 @@ BOOST_CONCEPT_REQUIRES(
     (Op)) // return type
 for_each(inorder, MultiwayCursor r, Op f, descending_vertical_traversal_tag)
 {
+	if (r.is_leaf())
+		return f;
+
     MultiwayCursor s = r.begin();
     MultiwayCursor t = r.end();
 
@@ -85,11 +88,11 @@ for_each(inorder, MultiwayCursor r, Op f, descending_vertical_traversal_tag)
 }
 
 /**
- * @brief     Performs an operation on a subtree, by traversing it in inorder.
- * @param s  An input cursor.
- * @param t  An output cursor.
- * @param op A unary operation.
- * @result     A cursor past t's inorder end, after the transforming has 
+ * @brief		Performs an operation on a subtree, by traversing it in inorder.
+ * @param s		An input cursor.
+ * @param t		An output cursor.
+ * @param op	A unary operation.
+ * @result		A cursor past t's inorder end, after the transforming has
  *              finished.
  * 
  * By traversing the input subtree s in inorder, apply the operation op 
@@ -105,19 +108,24 @@ BOOST_CONCEPT_REQUIRES(
     (OutCursor)) // return type
 transform(inorder, InCursor s, OutCursor t, Op op, descending_vertical_traversal_tag)
 {
-    InCursor r = s.end();
+	if (s.is_leaf())
+		return t;
+
+	*t = op(*s);
+
+    InCursor r = s;
 
     s.to_begin();
     t.to_begin();
     
-    for (; s != r; ++s, ++t) {
+    for (; s != r.end(); ++s, ++t) {
         if (!s.is_leaf())
             transform(inorder(), s, t, op, descending_vertical_traversal_tag());
-        *t=op(*s);
+        *t=op(*r);
     }
 
     // Multiway cursor
-    if (!r.is_leaf())
+    if (!r.to_end().is_leaf())
         transform(inorder(), r, t, op, descending_vertical_traversal_tag());
     return t;
 }

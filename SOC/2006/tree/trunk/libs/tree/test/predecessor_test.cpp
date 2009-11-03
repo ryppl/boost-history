@@ -59,6 +59,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, orders )
     BOOST_CHECK(c == d);
     
     BOOST_CHECK_EQUAL(boost::tree::predecessor(Order(), c), false);
+    BOOST_CHECK(c == frbt1.root());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -90,16 +90,6 @@ private:
     friend class cursor_core_access;
     friend class iterator_core_access;
 
-    bool empty_() const
-    {
-        return this->base().begin().is_leaf() && this->base().end().is_leaf();
-    }
-
-    typename forest_cursor::cursor_adaptor_::reference dereference() const
-    {
-        return *this->base_reference();
-    }
-
     void increment()
     {
         this->base_reference().to_end();

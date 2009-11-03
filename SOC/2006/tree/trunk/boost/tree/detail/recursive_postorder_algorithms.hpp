@@ -50,10 +50,10 @@ for_each_recursive(postorder, Cursor s, Op& f)
 }
 
 /**
- * @brief    Apply a function to every element of a subtree, in postorder.
- * @param s    A cursor.
- * @param f    A unary function object.
- * @return    @p f
+ * @brief	Apply a function to every element of a subtree, in postorder.
+ * @param s	A cursor.
+ * @param f	A unary function object.
+ * @return	@p f
  *
  * Applies the function object @p f to each element in the subtree @p s, using 
  * postorder. @p f must not modify the order of the sequence.
@@ -66,6 +66,9 @@ BOOST_CONCEPT_REQUIRES(
     (Op)) // return type
 for_each(postorder, Cursor s, Op f, descending_vertical_traversal_tag)
 {
+	if (s.is_leaf())
+		return f;
+
     Cursor t = s;
     for (s.to_begin(); s != t.end(); ++s)
         if (!s.is_leaf())
@@ -100,6 +103,9 @@ BOOST_CONCEPT_REQUIRES(
     (OutCursor)) // return type
 transform(postorder, InCursor s, OutCursor t, Op op, descending_vertical_traversal_tag)
 {
+	if (s.is_leaf())
+		return t;
+
     InCursor r = s;
     s.to_begin();
     t.to_begin();
@@ -113,7 +119,7 @@ transform(postorder, InCursor s, OutCursor t, Op op, descending_vertical_travers
     if (!s.is_leaf())
         transform(postorder(), s, t, op, descending_vertical_traversal_tag());
     
-    *t2 = op(*r.to_begin());
+    *t2 = op(*r);
     return t;
 }
 

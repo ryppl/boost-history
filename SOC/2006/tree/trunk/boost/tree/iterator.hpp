@@ -17,6 +17,7 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/tree/root_tracking_cursor.hpp>
+#include <boost/tree/inorder_algorithms.hpp>
 
 #include <boost/tree/cursor_concepts.hpp>
 
@@ -75,15 +76,65 @@ BOOST_CONCEPT_ASSERT((RootTrackingCursor<Cursor>));
     void increment()
     {
         successor(Order(), this->base_reference());
-        //BOOST_ASSERT(!index(this->base_reference()) || this->base_reference().is_root());
     }
     
     void decrement()
     {
         predecessor(Order(), this->base_reference());
-        //BOOST_ASSERT(!index(this->base_reference()) || this->base_reference().is_root());
     }
 };
+
+ template <class Cursor>
+ class iterator<inorder, Cursor>
+  : public boost::iterator_adaptor<iterator<inorder, Cursor>
+       , Cursor
+       , boost::use_default
+       , inorder::iterator_category
+     > {
+ BOOST_CONCEPT_ASSERT((RootTrackingCursor<Cursor>));
+
+  private:
+     struct enabler {};
+
+  public:
+     iterator()
+       : iterator::iterator_adaptor_() {}
+
+     explicit iterator(Cursor p)
+       : iterator::iterator_adaptor_(p) {}
+
+     template <class OtherCursor>
+     iterator(
+         iterator<inorder, OtherCursor> const& other
+       , typename boost::enable_if<
+             boost::is_convertible<OtherCursor, Cursor>
+           , enabler
+         >::type = enabler()
+     )
+       : iterator::iterator_adaptor_(other.base()) {}
+
+     operator Cursor()
+     {
+         return this->base();
+     }
+  private:
+     friend class boost::iterator_core_access;
+
+     void increment()
+     {
+    	 Cursor c = this->base_reference();
+         if (successor(inorder(), this->base_reference()))
+        	 return;
+
+         last_to_past(inorder(), c);
+         this->base_reference() = c;
+     }
+
+     void decrement()
+     {
+         predecessor(inorder(), this->base_reference());
+     }
+ };
 
 /**
  * @brief   First element of a subtree in traversal
@@ -116,7 +167,7 @@ BOOST_CONCEPT_REQUIRES(
 end(Order, Cursor c)
 {
     root_tracking_cursor<Cursor> rtc(c);
-    to_last(Order(), rtc);
+    to_past(Order(), rtc);
     return iterator< Order, root_tracking_cursor<Cursor> >(rtc);
 }
 

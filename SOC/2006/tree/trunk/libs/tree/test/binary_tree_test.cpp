@@ -399,46 +399,45 @@ BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
     BOOST_CHECK_EQUAL(*c.parent(), 3); // differently (not invariantly!) spoken
     BOOST_CHECK_EQUAL(*--c, 1);
     BOOST_CHECK_EQUAL(*(++c).begin(), 4);
-    BOOST_CHECK_EQUAL(*++c, 7);
+    BOOST_CHECK_EQUAL(*c.end(), 7);
 
     BOOST_CHECK_EQUAL(index(c), 1);    
     BOOST_CHECK_EQUAL(*c, 6);
-
-    c.to_begin();
 
     bt.rotate(c); // Left rotate
     
     c.to_parent().to_parent();
 
-    BOOST_CHECK_EQUAL(*c.begin(), 6);
-    BOOST_CHECK_EQUAL(*c.parent().begin(), 8);
+    BOOST_CHECK_EQUAL(*c, 6);
+    BOOST_CHECK_EQUAL(*c.parent(), 8);
     
-    BOOST_CHECK_EQUAL(*c.end().begin(), 7);
-    BOOST_CHECK_EQUAL(*c.begin().begin(), 3);
-    BOOST_CHECK_EQUAL(*c.begin().begin().begin(), 1);
-
-    BOOST_CHECK_EQUAL(*c.begin().end().begin(), 4);
-
-    c = c.begin();
+    BOOST_CHECK_EQUAL(*c.end(), 7);
     BOOST_CHECK_EQUAL(*c.begin(), 3);
+    BOOST_CHECK_EQUAL(*c.begin().begin(), 1);
+
+    BOOST_CHECK_EQUAL(*c.begin().end(), 4);
+
+    c.to_begin();
+    BOOST_CHECK_EQUAL(*c, 3);
     
     bt.rotate(c); // Right rotate
     c.to_parent().to_parent();
 
-    BOOST_CHECK_EQUAL(*c.begin(), 3);
-    c = c.end();
+    BOOST_CHECK_EQUAL(*c, 3);
+    c.to_end();
 
-    BOOST_CHECK_EQUAL(*c.begin(), 6);
+    BOOST_CHECK_EQUAL(*c, 6);
 
-    BOOST_CHECK_EQUAL(*c.parent(), 8);
-    BOOST_CHECK_EQUAL(*c.parent().begin(), 3); // other invariant candidate
+    BOOST_CHECK_EQUAL(*c.parent().parent(), 8);
+    BOOST_CHECK_EQUAL(*c.parent().parent().begin(), 3);
     
-    BOOST_CHECK_EQUAL(*--c, 3);
-    BOOST_CHECK_EQUAL(*c.begin(), 1);
-    BOOST_CHECK_EQUAL(*((++c).begin()).begin(), 4);
-    BOOST_CHECK_EQUAL(*(++c.begin()).begin(), 7);
-    
-    BOOST_CHECK_EQUAL(*c.begin(), 6);
+    BOOST_CHECK_EQUAL(*c.parent(), 3);
+    BOOST_CHECK_EQUAL(*--c, 1);
+    BOOST_CHECK_EQUAL(*(++c).begin(), 4);
+    BOOST_CHECK_EQUAL(*c.end(), 7);
+
+    BOOST_CHECK_EQUAL(index(c), 1);
+    BOOST_CHECK_EQUAL(*c, 6);
     
 //    BOOST_CHECK_EQUAL(*c.parent().parent().begin(), 6);
 //    BOOST_CHECK_EQUAL(*c.parent().parent().end().begin(), 7);
