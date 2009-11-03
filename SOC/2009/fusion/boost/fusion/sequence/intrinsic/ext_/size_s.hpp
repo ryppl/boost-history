@@ -31,7 +31,9 @@ namespace boost { namespace fusion
             template<typename This, typename State, typename Seq>
             struct result<This(State, Seq)>
               : mpl::plus<
-                    segmented_size<typename remove_reference<Seq>::type>
+                    segmented_size<
+                        typename remove_reference<Seq>::type
+                    >
                   , typename remove_reference<State>::type
                 >
             {};
@@ -41,10 +43,12 @@ namespace boost { namespace fusion
     ///////////////////////////////////////////////////////////////////////////
     template<typename Sequence, bool IsSegmented>
     struct segmented_size
-      : result_of::fold<
-            typename result_of::segments<Sequence>::type
-          , mpl::size_t<0>
-          , detail::size_plus
+      : detail::remove_reference<
+            typename result_of::fold<
+                typename result_of::segments<Sequence>::type
+              , mpl::size_t<0>
+              , detail::size_plus
+            >::type
         >::type
     {};
 

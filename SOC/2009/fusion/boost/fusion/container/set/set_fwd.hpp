@@ -19,7 +19,7 @@ namespace boost { namespace fusion
     struct set_iterator_tag;
 
     struct set_category
-      : bidirectional_traversal_tag, associative_sequence_tag
+      : bidirectional_traversal_tag, associative_tag
     {};
 
     VARIADIC_TEMPLATE_WITH_DEFAULT(FUSION_MAX_SET_SIZE)

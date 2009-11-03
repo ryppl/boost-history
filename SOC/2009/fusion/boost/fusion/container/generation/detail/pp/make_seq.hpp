@@ -72,4 +72,5 @@ namespace boost { namespace fusion
     }
 
 #undef BOOST_FUSION_N
+
 #endif

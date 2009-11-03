@@ -23,6 +23,7 @@
 
 #include <boost/fusion/view/reverse_view/detail/reverse_view_fwd.hpp>
 #include <boost/fusion/view/reverse_view/detail/reverse_view_iterator.hpp>
+#include <boost/fusion/view/reverse_view/detail/at_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/begin_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/end_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/deref_impl.hpp>
@@ -34,6 +35,7 @@
 #include <boost/fusion/view/reverse_view/detail/equal_to_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/deref_data_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/key_of_impl.hpp>
+#include <boost/fusion/view/reverse_view/detail/value_at_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/value_of_data_impl.hpp>
 
 namespace boost { namespace fusion
@@ -54,7 +56,7 @@ namespace boost { namespace fusion
         typedef typename
             mpl::eval_if<
                 traits::is_associative<seq_type>
-              , mpl::inherit2<seq_category,associative_sequence_tag>
+              , mpl::inherit2<seq_category,associative_tag>
               , mpl::identity<seq_category>
             >::type
         category;

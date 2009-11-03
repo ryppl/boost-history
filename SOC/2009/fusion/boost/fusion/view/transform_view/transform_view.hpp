@@ -38,7 +38,6 @@
 #include <boost/fusion/view/transform_view/transform_view_fwd.hpp>
 #include <boost/fusion/view/transform_view/detail/at_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/value_at_impl.hpp>
-
 #include <boost/fusion/view/transform_view/detail/transform_view_iterator.hpp>
 #include <boost/fusion/view/transform_view/detail/begin_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/end_impl.hpp>
@@ -96,7 +95,7 @@ namespace boost { namespace fusion
         typedef typename
             mpl::eval_if<
                 is_associative
-              , mpl::inherit2<strictest_traversal,associative_sequence_tag>
+              , mpl::inherit2<strictest_traversal,associative_tag>
               , mpl::identity<strictest_traversal>
             >::type
         category;
@@ -172,7 +171,7 @@ namespace boost { namespace fusion
         typedef typename
             mpl::eval_if<
                 is_associative
-              , mpl::inherit2<seq_category,associative_sequence_tag>
+              , mpl::inherit2<seq_category,associative_tag>
               , mpl::identity<seq_category>
             >::type
         category;

@@ -155,8 +155,8 @@ namespace boost { namespace fusion
               , Seq2 SEQ2_CV_REF_MODIFIER\
               , BOOST_FUSION_RREF_ELSE_OBJ(F)\
               , IsAssociative\
-            >::type(BOOST_FUSION_FORWARD(Seq1 SEQ1_CV_REF_MODIFIER,seq1)\
-                  , BOOST_FUSION_FORWARD(Seq2 SEQ2_CV_REF_MODIFIER,seq2)\
+            >::type(static_cast<Seq1 SEQ1_CV_REF_MODIFIER>(seq1)\
+                  , static_cast<Seq2 SEQ2_CV_REF_MODIFIER>(seq2)\
                   , BOOST_FUSION_FORWARD(F,f));\
     }\
     \

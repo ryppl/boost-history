@@ -35,18 +35,16 @@
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <boost/fusion/container/list/detail/cons/cons_fwd.hpp>
-#include <boost/fusion/container/list/detail/cons/value_at_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/at_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/empty_impl.hpp>
-
-#include <boost/fusion/container/list/detail/cons/cons_iterator.hpp>
-#include <boost/fusion/container/list/detail/cons/begin_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/end_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/deref_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/next_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/value_of_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/equal_to_impl.hpp>
+#include <boost/fusion/container/list/detail/cons_fwd.hpp>
+#include <boost/fusion/container/list/detail/cons_iterator.hpp>
+#include <boost/fusion/container/list/detail/value_at_impl.hpp>
+#include <boost/fusion/container/list/detail/at_impl.hpp>
+#include <boost/fusion/container/list/detail/begin_impl.hpp>
+#include <boost/fusion/container/list/detail/end_impl.hpp>
+#include <boost/fusion/container/list/detail/deref_impl.hpp>
+#include <boost/fusion/container/list/detail/next_impl.hpp>
+#include <boost/fusion/container/list/detail/value_of_impl.hpp>
+#include <boost/fusion/container/list/detail/equal_to_impl.hpp>
 
 namespace boost { namespace fusion
 {
@@ -125,10 +123,10 @@ namespace boost { namespace fusion
         //of cons_.car/cons_.cdr explicitly
 #define BOOST_FUSION_CONS_CTOR(COMBINATION,_)\
         cons(cons COMBINATION cons_)\
-          : car(fusion::front(BOOST_FUSION_FORWARD(cons COMBINATION,cons_)))\
+          : car(fusion::front(static_cast<cons COMBINATION>(cons_)))\
           , cdr(detail::assign_by_deref(),\
                 fusion::next(fusion::begin(\
-                        BOOST_FUSION_FORWARD(cons COMBINATION,cons_))))\
+                    static_cast<cons COMBINATION>(cons_))))\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CONS_CTOR,_);
@@ -226,14 +224,13 @@ namespace boost { namespace fusion
             return *this;
         }
 
-        template<typename Seq>
         cons&
-        operator=(cons const& seq)
+        operator=(cons const& cons_)
         {
 #ifdef BOOST_NO_RVALUE_REFERENCES
-            return this->operator=<cons<Car,Cdr> >(seq);
+            return this->operator=<cons<Car,Cdr> >(cons_);
 #else
-            return this->operator=<cons<Car,Cdr> const&>(seq);
+            return this->operator=<cons<Car,Cdr> const&>(cons_);
 #endif
         }
 

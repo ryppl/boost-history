@@ -16,6 +16,7 @@
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/deduce.hpp>
+#include <boost/fusion/support/internal/workaround.hpp>
 #include <boost/fusion/support/internal/sequence_assign.hpp>
 
 #include <boost/mpl/bool.hpp>
@@ -27,18 +28,21 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/fusion/view/single_view/detail/single_view_fwd.hpp>
+#include <boost/fusion/view/single_view/detail/at_impl.hpp>
+#include <boost/fusion/view/single_view/detail/value_at_impl.hpp>
 #include <boost/fusion/view/single_view/detail/single_view_iterator.hpp>
 #include <boost/fusion/view/single_view/detail/begin_impl.hpp>
-#include <boost/fusion/view/single_view/detail/end_impl.hpp>
 #include <boost/fusion/view/single_view/detail/deref_impl.hpp>
-#include <boost/fusion/view/single_view/detail/next_impl.hpp>
-#include <boost/fusion/view/single_view/detail/value_of_impl.hpp>
+#include <boost/fusion/view/single_view/detail/distance_impl.hpp>
+#include <boost/fusion/view/single_view/detail/end_impl.hpp>
 #include <boost/fusion/view/single_view/detail/equal_to_impl.hpp>
+#include <boost/fusion/view/single_view/detail/next_impl.hpp>
+#include <boost/fusion/view/single_view/detail/prior_impl.hpp>
+#include <boost/fusion/view/single_view/detail/value_of_impl.hpp>
 
 namespace boost { namespace fusion
 {
     struct single_view_tag;
-    struct forward_traversal_tag;
     struct fusion_sequence_tag;
 
     template <typename T>
@@ -49,13 +53,13 @@ namespace boost { namespace fusion
 
         typedef single_view_tag fusion_tag;
         typedef fusion_sequence_tag tag; 
-        typedef forward_traversal_tag category;
+        typedef random_access_traversal_tag category;
         typedef mpl::true_ is_view;
         typedef mpl::int_<1> size;
 
 #define BOOST_FUSION_SINGLE_VIEW_CTOR(COMBINATION,_)\
         single_view(single_view COMBINATION view)\
-          : val(BOOST_FUSION_FORWARD(single_view COMBINATION,view).val)\
+          : val(static_cast<single_view COMBINATION>(view).val)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_SINGLE_VIEW_CTOR,_)
@@ -153,21 +157,37 @@ namespace boost { namespace fusion
         template<typename T>
         struct make_single_view
         {
-            typedef
-                single_view<
-                    typename traits::deduce<BOOST_FUSION_R_ELSE_CLREF(T)>::type
-                >
-            type;
+            typedef single_view<typename traits::deduce<T>::type> type;
         };
     };
 
     template <typename T>
-    inline typename result_of::make_single_view<T>::type
+    inline typename
+        result_of::make_single_view<BOOST_FUSION_R_ELSE_CLREF(T)>::type
     make_single_view(BOOST_FUSION_R_ELSE_CLREF(T) val)
     {
         return typename result_of::make_single_view<T>::type(
                 BOOST_FUSION_FORWARD(T,val));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename T, typename Seq>
+    //cschmidt: see https://svn.boost.org/trac/boost/ticket/3305
+#   if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
+    typename lazy_disable_if<
+        is_const<T>
+      , result_of::make_single_view<T&>
+    >::type
+#   else
+    typename result_of::make_single_view<T&>::type
+#   endif
+    make_single_view(T& val)
+    {
+        return typename result_of::make_single_view<T&>::type(val);
+    }
+#endif
+
+    //TODO random access
 }}
 
 #endif

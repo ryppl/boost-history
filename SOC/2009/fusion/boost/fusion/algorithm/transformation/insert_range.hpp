@@ -82,7 +82,7 @@ namespace boost { namespace fusion
                         fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)),\
                         pos\
                     ),\
-                    BOOST_FUSION_FORWARD(Range RANGE_CV_REF_MODIFIER,range)\
+                    static_cast<Range RANGE_CV_REF_MODIFIER>(range)\
                 ),\
                 right_type(\
                     pos,\

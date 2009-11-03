@@ -24,7 +24,7 @@
 #include <boost/fusion/container/set/detail/deref_data_impl.hpp>
 #include <boost/fusion/container/set/detail/key_of_impl.hpp>
 
-#include <boost/fusion/container/detail/forward_ctor.hpp>
+#include <boost/fusion/container/detail/forward_interface.hpp>
 
 namespace boost { namespace fusion
 {
@@ -44,31 +44,11 @@ namespace boost { namespace fusion
         storage_type;
         typedef typename storage_type::size size;
 
-        set()
-        {}
-
-#define BOOST_FUSION_SET_CTOR(COMBINATION,_)\
-        set(set COMBINATION set_)\
-          : data(BOOST_FUSION_FORWARD(set COMBINATION,set_).data)\
-        {}
-
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_SET_CTOR,_)
-
-#undef BOOST_FUSION_SET_CTOR
-
 #define BOOST_FUSION_SEQ_NAME set
 #define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_SET_SIZE
-#include <boost/fusion/container/detail/forward_ctor.hpp>
+#include <boost/fusion/container/detail/forward_interface.hpp>
 #undef BOOST_FUSION_MAX_SEQ_SIZE
 #undef BOOST_FUSION_SEQ_NAME
-
-        template <typename Seq>
-        set&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
-        {
-            data = BOOST_FUSION_FORWARD(Seq, seq);
-            return *this;
-        }
 
         storage_type& get_data() { return data; }
         storage_type const& get_data() const { return data; }

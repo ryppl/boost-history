@@ -5,32 +5,35 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_VALUE_OF_IMPL_HPP
-#define BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_VALUE_OF_IMPL_HPP
-
-#include <boost/fusion/sequence/intrinsic/value_at.hpp>
+#ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_PRIOR_IMPL_HPP
+#define BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_PRIOR_IMPL_HPP
 
 namespace boost { namespace fusion { namespace extension
 {
     template <typename>
-    struct value_of_impl;
+    struct prior_impl;
 
     template <>
-    struct value_of_impl<list_iterator_tag>
+    struct prior_impl<single_view_iterator_tag>
     {
         template <typename It>
         struct apply
         {
             typedef typename detail::remove_reference<It>::type it;
 
-            typedef typename
-                result_of::value_at<
-                    typename detail::remove_reference<
-                        typename it::seq_type
-                    >::type::storage_type
-                  , typename it::index
-                >::type
+            typedef
+                single_view_iterator<
+                    typename it::value_type
+                  , typename it::value_ref_type
+                  , false
+                >
             type;
+
+            static type
+            call(It it)
+            {
+                return type(*it.val);
+            }
         };
     };
 }}}

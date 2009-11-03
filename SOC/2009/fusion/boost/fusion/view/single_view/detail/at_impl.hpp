@@ -5,38 +5,31 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_AT_IMPL_HPP
-#define BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_AT_IMPL_HPP
-
-#include <boost/fusion/sequence/intrinsic/at.hpp>
+#ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_AT_IMPL_HPP
+#define BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_AT_IMPL_HPP
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct at_impl;
 
-    template <>
-    struct at_impl<list_tag>
+    template<>
+    struct at_impl<single_view_tag>
     {
-        template <typename Seq, typename N>
+        template<typename Seq, typename>
         struct apply
         {
             typedef typename
-                result_of::at<
-                    typename detail::forward_as<
-                        Seq
-                      , typename detail::remove_reference<
-                            Seq
-                        >::type::storage_type
-                    >::type
-                  , N
+                detail::forward_as<
+                    Seq
+                  , typename detail::remove_reference<Seq>::type::value_type
                 >::type
             type;
 
             static type
             call(Seq seq)
             {
-                return fusion::at<N>(seq.get_data());
+                return seq.val;
             }
         };
     };

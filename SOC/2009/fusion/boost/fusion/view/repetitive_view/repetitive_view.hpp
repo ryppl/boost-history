@@ -11,14 +11,19 @@
 
 //TODO doc/testcase/zip_view testcase
 
+#include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/workaround.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/long.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/mpl/eqaul_to.hpp>
+#endif
 #include <boost/integer_traits.hpp>
 
 #include <boost/fusion/view/repetitive_view/detail/repetitive_view_fwd.hpp>
@@ -40,7 +45,7 @@ namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
 
-    template<typename Seq>
+    template<typename Seq, int Size=integer_traits<int>::const_max-1>
     struct repetitive_view
       : sequence_base<repetitive_view<Seq> >
     {
@@ -50,16 +55,16 @@ namespace boost { namespace fusion
         typedef typename storage_type::type seq_type;
 
         typedef typename traits::category_of<seq_type>::type category;
-        typedef mpl::int_<integer_traits<int>::const_max-1> size;
+        typedef mpl::int_<Size> size;
         typedef repetitive_view_tag fusion_tag;
         typedef fusion_sequence_tag tag;
         typedef mpl::true_ is_view;
 
 #define BOOST_FUSION_REPETITIVE_VIEW_CTOR(COMBINATION,_)\
         template<typename OtherSeq>\
-        repetitive_view(repetitive_view<OtherSeq> COMBINATION view)\
-          : seq(BOOST_FUSION_FORWARD(\
-                repetitive_view<OtherSeq> COMBINATION,view).seq)\
+        repetitive_view(repetitive_view<OtherSeq,Size> COMBINATION view)\
+          : seq(static_cast<repetitive_view<OtherSeq,Size> COMBINATION>(\
+                view).seq)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_REPETITIVE_VIEW_CTOR,_)
@@ -84,6 +89,10 @@ namespace boost { namespace fusion
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) other_view)
         {
             BOOST_FUSION_TAG_CHECK(OtherView,repetitive_view_tag);
+            BOOST_FUSION_MPL_ASSERT((mpl::equal_to<
+                    size
+                  , detail::remove_reference<OtherView>::type::size
+                >));
 
             seq=BOOST_FUSION_FORWARD(OtherView,other_view).seq;
             return *this;
@@ -92,6 +101,61 @@ namespace boost { namespace fusion
         detail::view_storage<Seq> seq;
     };
 
+
+    namespace result_of
+    {
+        template<typename Seq, int Size=integer_traits<int>::const_max-1>
+        struct repeat
+        {
+            typedef
+                repetitive_view<typename traits::deduce<Seq>::type, Size>
+            type;
+        };
+    };
+
+    template<int Size, typename Seq>
+    inline typename
+        result_of::repeat<BOOST_FUSION_R_ELSE_CLREF(Seq),Size>::type
+    repeat(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
+    {
+        return typename result_of::repeat<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+          , Size
+        >::type(BOOST_FUSION_FORWARD(Seq,seq));
+    }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template<int Size, typename Seq>
+    inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
+            result_of::repeat<,Seq,&, Size>)
+    repeat(Seq& seq)
+    {
+        return typename result_of::repeat<Seq&,Size>::type(seq);
+    }
+#endif
+
+    template<typename Seq>
+    inline typename result_of::repeat<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    repeat(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
+    {
+        return typename result_of::repeat<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type(
+            BOOST_FUSION_FORWARD(Seq,seq));
+    }
+
+    template<typename Seq>
+    //cschmidt: see https://svn.boost.org/trac/boost/ticket/3305
+#   if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
+    typename lazy_disable_if<
+        is_const<Seq>
+      , result_of::repeat<Seq&>
+    >::type
+#   else
+    typename result_of::repeat<Seq&>::type
+#   endif
+    repeat(Seq& seq)
+    {
+        return typename result_of::repeat<Seq&>::type(seq);
+    }
 }}
 
 #endif

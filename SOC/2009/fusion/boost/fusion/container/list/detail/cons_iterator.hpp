@@ -7,9 +7,10 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_CONS_ITERATOR_HPP
-#define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_CONS_ITERATOR_HPP
+#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_ITERATOR_HPP
+#define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_ITERATOR_HPP
 
+#include <boost/fusion/container/list/list_fwd.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
 
 namespace boost { namespace fusion
@@ -45,7 +46,6 @@ namespace boost { namespace fusion
         typename detail::remove_reference<cons_type>::type* cons;
     };
 
-    //TODO ref test
     struct nil_iterator
       : iterator_base<nil_iterator>
     {
@@ -63,6 +63,18 @@ namespace boost { namespace fusion
 #define BOOST_FUSION_NIL_ITERATOR(COMBINATION,_)\
       template <>\
       struct cons_iterator<nil COMBINATION>\
+        : nil_iterator\
+      {\
+          cons_iterator()\
+          {}\
+          \
+          explicit\
+          cons_iterator(nil COMBINATION, int)\
+          {}\
+      };\
+      \
+      template <>\
+      struct cons_iterator<list<> COMBINATION>\
         : nil_iterator\
       {\
           cons_iterator()\

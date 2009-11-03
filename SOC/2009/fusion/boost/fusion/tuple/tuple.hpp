@@ -20,7 +20,7 @@
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
 
-#include <boost/fusion/container/detail/forward_ctor.hpp>
+#include <boost/fusion/container/detail/forward_interface.hpp>
 
 namespace boost { namespace fusion
 {
@@ -32,14 +32,7 @@ namespace boost { namespace fusion
             vector<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_VECTOR_SIZE)>
         base_type;
 
-        tuple()
-        {}
-
 #define TUPLE_CTOR(COMBINATION,_)\
-        tuple(tuple COMBINATION tuple)\
-          : base_type(static_cast<base_type COMBINATION>(tuple))\
-        {}\
-        \
         template <typename A1, typename A2>\
         tuple(std::pair<A1, A2> COMBINATION pair)\
           : base_type(static_cast<std::pair<A1, A2> COMBINATION>(pair))\
@@ -52,18 +45,10 @@ namespace boost { namespace fusion
 #define BOOST_FUSION_USE_BASE_TYPE
 #define BOOST_FUSION_SEQ_NAME tuple
 #define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_VECTOR_SIZE
-#include <boost/fusion/container/detail/forward_ctor.hpp>
+#include <boost/fusion/container/detail/forward_interface.hpp>
 #undef BOOST_FUSION_MAX_SEQ_SIZE
 #undef BOOST_FUSION_SEQ_NAME
 #undef BOOST_FUSION_USE_BASE_TYPE
-
-        template <typename Seq>
-        tuple&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
-        {
-            *static_cast<base_type*>(this) = BOOST_FUSION_FORWARD(Seq, seq);
-            return *this;
-        }
     };
 
     template <typename Tuple>

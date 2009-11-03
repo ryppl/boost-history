@@ -18,6 +18,6 @@
 #undef BOOST_FUSION_MAX_SEQ_SIZE
 #undef BOOST_FUSION_SEQ_NAME
 
-#include <boost/fusion/container/list/detail/cons/convert_impl.hpp>
+#include <boost/fusion/container/list/detail/convert_impl.hpp>
 
 #endif

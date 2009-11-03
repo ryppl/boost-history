@@ -21,11 +21,13 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/inherit.hpp>
 #include <boost/mpl/identity.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/type_traits/is_same.hpp>
+#endif
 
 #include <boost/fusion/view/filter_view/detail/filter_view_fwd.hpp>
-#include <boost/fusion/view/filter_view/detail/size_impl.hpp>
-
 #include <boost/fusion/view/filter_view/detail/filter_view_iterator.hpp>
+#include <boost/fusion/view/filter_view/detail/size_impl.hpp>
 #include <boost/fusion/view/filter_view/detail/begin_impl.hpp>
 #include <boost/fusion/view/filter_view/detail/end_impl.hpp>
 #include <boost/fusion/view/filter_view/detail/deref_impl.hpp>
@@ -54,7 +56,7 @@ namespace boost { namespace fusion
         typedef typename
             mpl::eval_if<
                 traits::is_associative<seq_type>
-              , mpl::inherit2<forward_traversal_tag,associative_sequence_tag>
+              , mpl::inherit2<forward_traversal_tag,associative_tag>
               , mpl::identity<forward_traversal_tag>
             >::type
         category;
@@ -90,6 +92,10 @@ namespace boost { namespace fusion
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) other_view)
         {
             BOOST_FUSION_TAG_CHECK(OtherView,filter_view_tag);
+            BOOST_FUSION_MPL_ASSERT((is_same<
+                    pred_type
+                  , detail::remove_reference<OtherView>::type::pred_type
+                >));
 
             seq=BOOST_FUSION_FORWARD(OtherView,other_view).seq;
             return *this;

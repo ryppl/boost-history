@@ -187,7 +187,7 @@ namespace boost { namespace fusion
         BOOST_PP_CAT(vector,BOOST_FUSION_N)(Seq COMBINATION seq)\
           : BOOST_PP_ENUM(BOOST_FUSION_N,\
                   BOOST_FUSION_MEMBER_INIT,\
-                  BOOST_FUSION_FORWARD(Seq COMBINATION,seq))\
+                  static_cast<Seq COMBINATION>(seq))\
         {\
             BOOST_FUSION_MPL_ASSERT((\
                     mpl::equal_to<size,result_of::size<Seq> >));\

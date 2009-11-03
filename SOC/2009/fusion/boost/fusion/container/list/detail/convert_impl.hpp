@@ -6,10 +6,10 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_CONVERT_IMPL_HPP
-#define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_CONVERT_IMPL_HPP
+#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONVERT_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONVERT_IMPL_HPP
 
-#include <boost/fusion/container/list/detail/cons/build_cons.hpp>
+#include <boost/fusion/container/list/detail/build_cons.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 

@@ -10,59 +10,32 @@
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_SINGLE_VIEW_ITERATOR_HPP
 
 #include <boost/fusion/support/iterator_base.hpp>
+#include <boost/mpl/bool.hpp>
 
 namespace boost { namespace fusion
 {
     struct single_view_iterator_tag;
-    struct forward_traversal_tag;
 
-    struct void_;
-
-    template <typename SingleView>
-    struct single_view_iterator_end
-      : iterator_base<single_view_iterator_end<SingleView> >
-    {
-        typedef void_ view_type;
-
-        typedef single_view_iterator_tag fusion_tag;
-        typedef forward_traversal_tag category;
-    };
-
-    template <typename SingleViewRef>
+    //cschmidt: Due to a nasty bug in Proto (ticket #3583,
+    //https://svn.boost.org/trac/boost/ticket/3583) store value_type and
+    //value_ref_type directly, rather than a reference to the view itself.
+    template<typename Value, typename ValueRef, bool End>
     struct single_view_iterator
-      : iterator_base<single_view_iterator<SingleViewRef> >
+      : iterator_base<single_view_iterator<Value, ValueRef, End> >
     {
-        typedef SingleViewRef view_type;
-        typedef typename
-            detail::forward_as<
-                SingleViewRef,
-                typename detail::remove_reference<
-                    SingleViewRef
-                >::type::value_type
-            >::type
-        value_type;
+        typedef Value value_type;
+        typedef ValueRef value_ref_type;
+        typedef mpl::bool_<End> end;
 
         typedef single_view_iterator_tag fusion_tag;
-        typedef forward_traversal_tag category;
+        typedef random_access_traversal_tag category;
 
-        template<typename OtherSingleViewRef>
-        single_view_iterator(single_view_iterator<OtherSingleViewRef> const& it)
-          : view(it.view)
+        explicit
+        single_view_iterator(value_ref_type val)
+          : val(&val)
         {}
 
-        single_view_iterator(SingleViewRef view, int)
-          : view(&view)
-        {}
-
-        template<typename OtherSingleViewRef>
-        single_view_iterator&
-        operator=(single_view_iterator<OtherSingleViewRef> const& it)
-        {
-            view=it.view;
-            return *this;
-        }
-
-        typename detail::remove_reference<SingleViewRef>::type* view;
+        typename detail::remove_reference<value_ref_type>::type* val;
     };
 }}
 

@@ -5,10 +5,12 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_VALUE_AT_IMPL_HPP
-#define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_VALUE_AT_IMPL_HPP
+#ifndef BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_VALUE_AT_IMPL_HPP
+#define BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_VALUE_AT_IMPL_HPP
 
-#include <boost/mpl/eval_if.hpp>
+#include <boost/fusion/sequence/intrinsic/value_at.hpp>
+#include <boost/mpl/minus.hpp>
+#include <boost/mpl/int.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {
@@ -16,20 +18,17 @@ namespace boost { namespace fusion { namespace extension
     struct value_at_impl;
 
     template <>
-    struct value_at_impl<cons_tag>
+    struct value_at_impl<reverse_view_tag>
     {
         template <typename Seq, typename N>
         struct apply
         {
-            typedef typename
-                detail::remove_reference<Seq>::type
-            seq;
+            typedef typename detail::remove_reference<Seq>::type seq;
 
-            typedef typename
-                mpl::eval_if<
-                    N
-                  , apply<typename seq::cdr_type, mpl::int_<N::value-1> >
-                  , mpl::identity<typename seq::car_type>
+            typedef
+                result_of::value_at<
+                    typename seq::seq_type
+                  , mpl::minus<typename seq::size, mpl::int_<1>, N>
                 >::type
             type;
         };

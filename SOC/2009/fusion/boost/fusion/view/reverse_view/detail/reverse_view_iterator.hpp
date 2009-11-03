@@ -24,6 +24,7 @@ namespace boost { namespace fusion
         typedef reverse_view_iterator_tag fusion_tag;
         typedef typename traits::category_of<it_type>::type category;
 
+        explicit
         reverse_view_iterator(It const& it)
           : it(it)
         {}

@@ -6,27 +6,25 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_BEGIN_IMPL_HPP
-#define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_BEGIN_IMPL_HPP
+#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_VALUE_OF_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_LIST_DETAIL_VALUE_OF_IMPL_HPP
 
 namespace boost { namespace fusion { namespace extension
 {
     template <typename>
-    struct begin_impl;
+    struct value_of_impl;
 
     template <>
-    struct begin_impl<cons_tag>
+    struct value_of_impl<cons_iterator_tag>
     {
-        template <typename Seq>
+        template <typename It>
         struct apply
         {
-            typedef cons_iterator<typename detail::add_lref<Seq>::type> type;
-
-            static type
-            call(Seq t)
-            {
-                return type(t,0);
-            }
+            typedef typename
+                detail::remove_reference<
+                    typename detail::remove_reference<It>::type::cons_type
+                >::type::car_type
+            type;
         };
     };
 }}}

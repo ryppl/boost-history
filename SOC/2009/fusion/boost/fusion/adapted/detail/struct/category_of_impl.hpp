@@ -36,7 +36,7 @@ namespace boost { namespace fusion
             struct apply
             {
                 struct type
-                  : random_access_traversal_tag, associative_sequence_tag
+                  : random_access_traversal_tag, associative_tag
                 {};
             };
         };

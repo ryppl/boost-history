@@ -11,6 +11,7 @@
 namespace boost { namespace fusion
 {
     struct single_view_tag;
+    struct random_access_traversal_tag;
 }}
 
 #endif

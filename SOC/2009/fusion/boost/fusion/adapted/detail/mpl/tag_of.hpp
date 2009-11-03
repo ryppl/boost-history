@@ -9,6 +9,7 @@
 
 #include <boost/fusion/support/tag_of.hpp>
 
+#include <boost/mpl/apply.hpp>
 #include <boost/mpl/iterator_tags.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
@@ -41,7 +42,12 @@ namespace boost
             struct tag_of_fallback;
 
             template<typename T>
-            struct tag_of_fallback<T, typename enable_if<typename mpl::always<mpl::true_>::apply<T>::type>::type>
+            struct tag_of_fallback<
+                T
+              , typename enable_if<
+                    typename mpl::apply1<mpl::always<mpl::true_>,T>::type
+                >::type
+            >
             {
                 typedef typename detail::identity<T>::type identity_t;
 

@@ -7,8 +7,8 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_NEXT_IMPL_HPP
-#define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_NEXT_IMPL_HPP
+#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_NEXT_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_LIST_DETAIL_NEXT_IMPL_HPP
 
 namespace boost { namespace fusion { namespace extension
 {

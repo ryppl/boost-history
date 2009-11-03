@@ -288,7 +288,7 @@ namespace boost { namespace fusion
 #define VECTOR_CTOR(COMBINATION,_)\
         vector(vector COMBINATION vec)\
           : base_type(detail::assign_by_deref(),\
-                fusion::begin(BOOST_FUSION_FORWARD(vector COMBINATION,vec)))\
+                fusion::begin(static_cast<vector COMBINATION>(vec)))\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_CTOR,_)

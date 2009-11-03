@@ -1,44 +1,45 @@
 /*=============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2001-2006 Joel de Guzman
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_DEREF_IMPL_HPP
-#define BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_DEREF_IMPL_HPP
+#ifndef BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_AT_IMPL_HPP
+#define BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_AT_IMPL_HPP
 
 #include <boost/fusion/sequence/intrinsic/at.hpp>
+#include <boost/mpl/minus.hpp>
+#include <boost/mpl/int.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {
     template <typename>
-    struct deref_impl;
+    struct at_impl;
 
     template <>
-    struct deref_impl<list_iterator_tag>
+    struct at_impl<reverse_view_tag>
     {
-        template <typename It>
+        template <typename Seq, typename N>
         struct apply
         {
-            typedef typename detail::remove_reference<It>::type it;
+            typedef typename detail::remove_reference<Seq>::type seq;
+            typedef mpl::minus<typename seq::size, mpl::int_<1>, N> real_n;
 
-            typedef typename
+            typedef
                 result_of::at<
                     typename detail::forward_as<
-                        typename it::seq_type
-                      , typename detail::remove_reference<
-                            typename it::seq_type
-                        >::type::storage_type
+                        Seq
+                      , typename seq::seq_type
                     >::type
-                  , typename it::index
+                  , real_n
                 >::type
             type;
 
             static type
-            call(It it_)
+            call(Seq seq)
             {
-                return at<typename it::index>(it_.seq->get_data());
+                return fusion::at<real_n>(seq.seq.get());
             }
         };
     };

@@ -46,8 +46,8 @@ namespace boost { namespace fusion {
             result_of::join<\
                 Seq1 SEQ1_CV_REF_MODIFIER\
               , Seq2 SEQ2_CV_REF_MODIFIER\
-            >::type(BOOST_FUSION_FORWARD(Seq1 SEQ1_CV_REF_MODIFIER,seq1)\
-                  , BOOST_FUSION_FORWARD(Seq2 SEQ2_CV_REF_MODIFIER,seq2));\
+            >::type(static_cast<Seq1 SEQ1_CV_REF_MODIFIER>(seq1)\
+                  , static_cast<Seq2 SEQ2_CV_REF_MODIFIER>(seq2));\
     }
 
     BOOST_FUSION_JOIN(

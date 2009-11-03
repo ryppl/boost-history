@@ -26,7 +26,10 @@ namespace boost { namespace fusion { namespace extension
 
             typedef
                 repetitive_view_iterator<
-                    typename seq::seq_type
+                    typename detail::forward_as<
+                        Seq
+                      , typename seq::seq_type
+                    >::type
                   , typename result_of::begin<typename seq::seq_type>::type
                   , 0
                 >

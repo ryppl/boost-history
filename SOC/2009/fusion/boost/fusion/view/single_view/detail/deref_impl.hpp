@@ -22,13 +22,13 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef typename
-                detail::remove_reference<It>::type::value_type
+                detail::remove_reference<It>::type::value_ref_type
             type;
 
             static type
             call(It it)
             {
-                return it.view->val;
+                return *it.val;
             }
         };
     };

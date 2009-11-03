@@ -35,7 +35,7 @@ namespace boost { namespace fusion
             typedef typename storage_type::type seq_type;
             typedef Pred pred_type;
 
-            typedef associative_sequence_tag category;
+            typedef associative_tag category;
             typedef filter_key_view_tag fusion_tag;
             typedef fusion_sequence_tag tag;
             typedef mpl::true_ is_view;

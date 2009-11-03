@@ -23,10 +23,10 @@ namespace boost { namespace fusion { namespace extension
         struct apply
           : result_of::distance<
                 typename detail::remove_reference<
-                    BeginRef
+                    EndRef
                 >::type::it_type
               , typename detail::remove_reference<
-                    EndRef
+                    BeginRef
                 >::type::it_type
             >
         {};

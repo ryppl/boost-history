@@ -27,8 +27,9 @@ namespace boost { namespace fusion  { namespace detail
     template<typename...>
     struct variadic_arguments_to_vector;
 
-#define BOOST_PP_ITERATION_PARAMS_1\
-    (3, (0, 50, <boost/fusion/support/internal/variadic_templates/detail/variadic_arguments_to_vector_n.hpp>))
+#define BOOST_PP_FILENAME_1\
+    <boost/fusion/support/internal/variadic_templates/detail/variadic_arguments_to_vector_n.hpp>
+#define BOOST_PP_ITERATION_LIMITS (0, 50)
 #include BOOST_PP_ITERATE()
 }}}
 

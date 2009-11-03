@@ -68,7 +68,7 @@ namespace boost { namespace fusion { namespace detail
                     is_convertible<T1_nonref, T2_nonref>
                   , is_convertible<T2_nonref, T1_nonref>
                 >::value
-            >::call(BOOST_FUSION_FORWARD(T1Ref,x),BOOST_FUSION_FORWARD(T2,y));
+            >::call(static_cast<T1Ref>(x),BOOST_FUSION_FORWARD(T2,y));
         }
 
         T1Ref x;

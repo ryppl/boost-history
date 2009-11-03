@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -19,18 +20,20 @@ namespace boost { namespace fusion { namespace extension
         template <typename It>
         struct apply
         {
+            typedef typename detail::remove_reference<It>::type it;
+
             typedef
-                single_view_iterator_end<
-                    typename detail::remove_reference<
-                        It
-                    >::type::view_type
+                single_view_iterator<
+                    typename it::value_type
+                  , typename it::value_ref_type
+                  , true
                 >
             type;
 
             static type
-            call(It)
+            call(It it)
             {
-                return type();
+                return type(*it.val);
             }
         };
     };

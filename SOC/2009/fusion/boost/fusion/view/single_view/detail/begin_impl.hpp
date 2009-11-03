@@ -19,14 +19,23 @@ namespace boost { namespace fusion { namespace extension
         template <typename Seq>
         struct apply
         {
+            typedef typename detail::remove_reference<Seq>::type seq;
+
             typedef
-                single_view_iterator<typename detail::add_lref<Seq>::type>
+                single_view_iterator<
+                    typename seq::value_type
+                  , typename detail::forward_as<
+                        Seq
+                      , typename seq::value_type
+                    >::type
+                  , false
+                >
             type;
 
             static type
-            call(Seq s)
+            call(Seq seq)
             {
-                return type(s,0);
+                return type(seq.val);
             }
         };
     };

@@ -19,15 +19,11 @@ namespace boost { namespace fusion
 {
     struct repetitive_view_iterator_tag;
 
-    template<
-        typename Seq
-      , typename It
-      , int Index
-    >
+    template<typename SeqRef, typename It, int Index>
     struct repetitive_view_iterator
-      : iterator_base<repetitive_view_iterator<Seq, It, Index> >
+      : iterator_base<repetitive_view_iterator<SeqRef, It, Index> >
     {
-        typedef Seq seq_type;
+        typedef SeqRef seq_type;
         typedef It it_type;
         typedef mpl::int_<Index> index;
 
@@ -42,15 +38,8 @@ namespace boost { namespace fusion
             BOOST_FUSION_TAG_CHECK(OtherIt,repetitive_view_iterator_tag);
         }
 
-        template<typename OtherSeq>
-        repetitive_view_iterator(
-#ifdef BOOST_NO_RVALUE_REFERENCES
-                typename detail::view_storage<Seq>::call_param seq,
-#else
-                OtherSeq&& other_seq,
-#endif
-                It const& it)
-          : seq(BOOST_FUSION_FORWARD(OtherSeq,other_seq))
+        repetitive_view_iterator(SeqRef seq, It const& it)
+          : seq(&seq)
           , it(it)
         {}
 
@@ -65,7 +54,7 @@ namespace boost { namespace fusion
             return *this;
         }
 
-        detail::view_storage<Seq> seq;
+        typename detail::remove_reference<seq_type>::type* seq;
         It it;
     };
 }}
