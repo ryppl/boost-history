@@ -454,8 +454,8 @@ void reserve(size_type n)
         }
         catch(...)
         {
-            for (;i &gt; 0; --i)                 // clean up new elements
-               (new_begin + i)-&gt;~value_type();
+            while (i &gt; 0)                 // clean up new elements
+               (new_begin + --i)-&gt;~value_type();
 
             this-&gt;deallocate( new_begin );    // release storage
             throw;

@@ -122,8 +122,8 @@ However, ``std::vector::reserve`` could be move-enabled this way: [#default-cons
           }
           catch(...)
           {
-              for (;i > 0; --i)                 // clean up new elements
-                 (new_begin + i)->~value_type();
+              while (i > 0)                 // clean up new elements
+                 (new_begin + --i)->~value_type();
 
               this->deallocate( new_begin );    // release storage
               throw;
