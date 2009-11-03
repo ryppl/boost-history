@@ -7,6 +7,7 @@
 /////////////////////////////////////////////////////////////////////////////// 
 #include <iostream>
 #include <libs/statistics/detail/fusion/example/at_key.h>
+#include <boost/statistics/detail/fusion/joint_view/bind.hpp>
 
 int main(){
 
