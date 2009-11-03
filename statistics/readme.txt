@@ -16,9 +16,9 @@ I welcome feedback including bug reports at erwann.rogard@gmail.com
     This C++ library provides statistical tools that builds on the STL/Boost framework. 
     
 
-[ Related links ]
-        
-    http://beta.boost.org/community/sandbox.html
+[ Director structure ]
+
+   See under Organization at http://beta.boost.org/community/sandbox.html
     
 	
                         
