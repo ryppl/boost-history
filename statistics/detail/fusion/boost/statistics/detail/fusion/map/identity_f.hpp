@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// detail::fusion::functor::identity_f.hpp                                  //
+// detail::fusion::map::identity_f.hpp                                      //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -9,9 +9,7 @@
 #ifndef BOOST_STATISTICS_DETAIL_FUSION_MAP_IDENTITY_F_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_FUSION_MAP_IDENTITY_F_HPP_ER_2009
 #include <boost/utility/result_of.hpp>
-
 #include <boost/fusion/include/pair.hpp>
-
 #include <boost/fusion/container/map.hpp>
 #include <boost/fusion/include/map.hpp>
 #include <boost/fusion/include/map_fwd.hpp>
