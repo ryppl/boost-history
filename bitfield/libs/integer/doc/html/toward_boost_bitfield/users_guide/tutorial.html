@@ -102,10 +102,15 @@
           There are two variants for the setter. My prefered form is just to name
           the setter function as the type and return a reference able to support
           assignations. The other is the traditional set_field() taking the new value
-          as parameter. struct Rgb565 { //... red_type::reference red() { return
-          red_type::reference(storage); } void set_red(unsigned char val) { return
-          red_type::reference(storage).set(val); } };
+          as parameter.
         </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">Rgb565</span>
+<span class="special">{</span>
+    <span class="comment">//...
+</span>    <span class="identifier">red_type</span><span class="special">::</span><span class="identifier">reference</span> <span class="identifier">red</span><span class="special">()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">red_type</span><span class="special">::</span><span class="identifier">reference</span><span class="special">(</span><span class="identifier">storage</span><span class="special">);</span> <span class="special">}</span>
+    <span class="keyword">void</span> <span class="identifier">set_red</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">red_type</span><span class="special">::</span><span class="identifier">reference</span><span class="special">(</span><span class="identifier">storage</span><span class="special">).</span><span class="identifier">set</span><span class="special">(</span><span class="identifier">val</span><span class="special">);</span> <span class="special">}</span>
+<span class="special">};</span>
+</pre>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">

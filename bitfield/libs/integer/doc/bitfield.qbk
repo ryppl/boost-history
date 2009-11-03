@@ -324,6 +324,7 @@ Now we are ready to define the getter of this bitfield respect to the storage va
 
 
 There are two variants for the setter. My prefered form is just to name the setter function as the type and return a reference able to support assignations. The other is the traditional set_field() taking the new value as parameter.
+
         struct Rgb565
         {
             //...
