@@ -126,10 +126,7 @@ inline void transaction::dir_full_pthread_lock_mutex(latm::mutex_type* mutex)
         t->add_to_currently_locked_locks(mutex);
         t->add_to_obtained_locks(mutex);
 
-        // this method locks LATM and keeps it locked upon returning if param true
-        wait_until_all_locks_are_released(true);
-        latm::instance().latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
-        synchro::unlock(*latm_lock());
+        wait_until_all_locks_are_released_and_set(mutex);
 
         if (hadLock) return;
         else synchro::lock(*mutex);
@@ -177,10 +174,7 @@ inline bool transaction::dir_full_pthread_trylock_mutex(latm::mutex_type* mutex)
         t->add_to_currently_locked_locks(mutex);
         t->add_to_obtained_locks(mutex);
 
-        // this method locks LATM and keeps it locked upon returning if param true
-        wait_until_all_locks_are_released(true);
-        latm::instance().latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
-        synchro::unlock(*latm_lock());
+        wait_until_all_locks_are_released_and_set(mutex);
 
         if (hadLock) return true;
         else return synchro::try_lock(*mutex);

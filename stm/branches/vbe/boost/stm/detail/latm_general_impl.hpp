@@ -46,18 +46,41 @@ namespace boost { namespace stm {
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
-inline void boost::stm::transaction::wait_until_all_locks_are_released(bool keepLatmLocked)
+inline void boost::stm::transaction::wait_until_all_locks_are_released()
 {
-   while (true)
-   {
-      synchro::lock(*latm_lock());
-      if (latm::instance().latmLockedLocks_.empty()) break;
-      synchro::unlock(*latm_lock());
-      SLEEP(10);
+    while (true)
+    {
+        {
+        synchro::lock_guard<Mutex> lk(*latm_lock());
+        if (latm::instance().latmLockedLocks_.empty()) {
+            return;
+        }
+
+        }
+
+        SLEEP(10);
    }
 
-   if (!keepLatmLocked) synchro::unlock(*latm_lock());
 }
+
+inline void boost::stm::transaction::wait_until_all_locks_are_released_and_set(latm::mutex_type* mutex)
+{
+    while (true)
+    {
+        {
+        synchro::lock_guard<Mutex> lk(*latm_lock());
+        if (latm::instance().latmLockedLocks_.empty()) {
+            latm::instance().latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
+            return;
+        }
+
+        }
+
+        SLEEP(10);
+   }
+
+}
+
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
@@ -211,25 +234,16 @@ inline void boost::stm::transaction::tm_lock_conflict(latm::mutex_type* inLock)
 {
 #if 1
     latm::instance().tm_lock_conflict(inLock);
-#else    
+#else
    if (!latm::instance().doing_tm_lock_protection()) return;
 
-   //synchro::lock(latmMutex_);
    synchro::lock_guard<Mutex> lock_l(latmMutex_);
 
    //-------------------------------------------------------------------------
    // insert can throw an exception
    //-------------------------------------------------------------------------
-   //try { 
-       tmConflictingLocks_.insert(inLock); 
-    //}
-   //catch (...)
-   //{
-     // synchro::unlock(latmMutex_);
-      //throw;
-   //}
-   //synchro::unlock(latmMutex_);
-#endif   
+       tmConflictingLocks_.insert(inLock);
+#endif
 }
 
 #if 0
@@ -239,9 +253,7 @@ inline void boost::stm::transaction::tm_lock_conflict(latm::mutex_type* inLock)
 inline void boost::stm::transaction::clear_tm_conflicting_locks()
 {
    synchro::lock_guard<Mutex> lock_l(latmMutex_);
-   //synchro::lock(latmMutex_);
    tmConflictingLocks_.clear();
-   //synchro::unlock(latmMutex_);
 }
 
 //----------------------------------------------------------------------------
@@ -296,9 +308,7 @@ inline void boost::stm::transaction::add_tx_conflicting_lock(latm::mutex_type* i
 inline void boost::stm::transaction::clear_tx_conflicting_locks()
 {
    synchro::lock_guard<Mutex> lock_l(*general_lock());
-   //synchro::lock(*general_lock());
    get_tx_conflicting_locks().clear();
-   //synchro::unlock(*general_lock());
 }
 
 //----------------------------------------------------------------------------
@@ -465,7 +475,6 @@ inline boost::stm::transaction* boost::stm::transaction::get_inflight_tx_of_same
 (bool hasTxInFlightMutex)
 {
    synchro::lock_guard_if<Mutex> lock_l(*general_lock(), !hasTxInFlightMutex);
-   //if (!hasTxInFlightMutex) synchro::lock(*inflight_lock());
 
    for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
@@ -479,12 +488,10 @@ inline boost::stm::transaction* boost::stm::transaction::get_inflight_tx_of_same
       //--------------------------------------------------------------------
       if (t->thread_id() == this_thread::get_id())
       {
-         //if (!hasTxInFlightMutex) synchro::unlock(*inflight_lock());
          return t;
       }
    }
 
-   //if (!hasTxInFlightMutex) synchro::unlock(*inflight_lock());
    return 0;
 }
 }}

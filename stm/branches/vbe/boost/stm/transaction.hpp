@@ -327,7 +327,7 @@ public:
       tm_lock_conflict(&lock);
    }
    static void tm_lock_conflict(latm::mutex_type* lock);
-   
+
    static void clear_tm_conflicting_locks();
    //inline static latm::mutex_set get_tm_conflicting_locks() { return tmConflictingLocks_; }
 
@@ -351,8 +351,8 @@ public:
 
    void clear_tx_conflicting_locks();
    //latm::mutex_set get_tx_conflicting_locks() { return conflictingMutexRef_; }
-   
-  
+
+
     #endif
 
    void add_to_obtained_locks(latm::mutex_type* mutex);
@@ -385,13 +385,10 @@ public:
       // infinitely fail
       //-----------------------------------------------------------------------
       synchro::lock_guard<Mutex> lock_m(*inflight_lock());
-      //lock(inflight_lock());
       if (other_in_flight_same_thread_transactions())
       {
-         //unlock(inflight_lock());
          throw aborted_transaction_exception("closed nesting throw");
       }
-      //unlock(inflight_lock());
 
       return true;
    }
@@ -856,14 +853,12 @@ private:
       // memory - since we need to ensure other threads don't try to
       // manipulate this at the same time we are going to
       //-----------------------------------------------------------------------
-      //lock(&transactionMutex_);
       synchro::lock_guard<Mutex> lock_m(transactionMutex_);
 
       // we currently don't allow write stealing in direct update. if another
       // tx beat us to the memory, we abort
       if (in.transaction_thread() != invalid_thread_id())
       {
-         //unlock(&transactionMutex_);
          throw aborted_tx("direct writer already exists.");
       }
 
@@ -872,7 +867,6 @@ private:
 #if USE_BLOOM_FILTER
       bloom().insert((std::size_t)&in);
 #endif
-      //unlock(&transactionMutex_);
       return in;
    }
 
@@ -891,19 +885,15 @@ private:
       // and see if anyone else is writing to it. if not, we add the item to
       // our write list and our deletedList
       //-----------------------------------------------------------------------
-      //lock(&transactionMutex_);
       synchro::unique_lock<Mutex> lock_m(transactionMutex_);
 
       if (in.transaction_thread() != invalid_thread_id())
       {
-         //unlock(&transactionMutex_);
          cm_abort_on_write(*this, (base_transaction_object&)(in));
       }
       else
       {
          in.transaction_thread(threadId_);
-
-         //unlock(&transactionMutex_);
          lock_m.unlock();
          // is this really necessary? in the deferred case it is, but in direct it
          // doesn't actually save any time for anything
@@ -928,18 +918,15 @@ private:
       // and see if anyone else is writing to it. if not, we add the item to
       // our write list and our deletedList
       //-----------------------------------------------------------------------
-      //lock(&transactionMutex_);
       synchro::unique_lock<Mutex> lock_m(transactionMutex_);
 
       if (in.transaction_thread() != invalid_thread_id())
       {
-         //unlock(&transactionMutex_);
          cm_abort_on_write(*this, (base_transaction_object&)(in));
       }
       else
       {
          in.transaction_thread(threadId_);
-         //unlock(&transactionMutex_);
          lock_m.unlock();
          // is this really necessary? in the deferred case it is, but in direct it
          // doesn't actually save any time for anything
@@ -1040,11 +1027,9 @@ private:
       if (i == writeList().end())
       {
          // get the lock before we make a copy of this object
-         //lock_tx();
          synchro::unique_lock<Mutex> lock(*mutex());
 #if USE_BLOOM_FILTER
          bloom().insert((std::size_t)&in);
-         //unlock_tx();
          lock.unlock();
 #else
 
@@ -1057,9 +1042,6 @@ private:
          base_transaction_object* returnValue = in.clone(this);
          returnValue->transaction_thread(threadId_);
          writeList().insert(tx_pair((base_transaction_object*)&in, returnValue));
-#ifndef USE_BLOOM_FILTER
-         //unlock_tx();
-#endif
          return *static_cast<T*>(returnValue);
       }
       else {
@@ -1245,7 +1227,8 @@ private:
 
    static int thread_id_occurance_in_locked_locks_map(thread_id_t threadId);
 
-   static void wait_until_all_locks_are_released(bool);
+   static void wait_until_all_locks_are_released();
+   static void wait_until_all_locks_are_released_and_set(latm::mutex_type* mutex);
 
    //--------------------------------------------------------------------------
    // deferred updating locking methods
@@ -1852,7 +1835,7 @@ public:
 inline transaction* current_transaction() {return transaction::current_transaction();}
 
 inline void lock(latm::mutex_type& lock) {transaction::pthread_lock(&lock);}
-inline bool try_lock(latm::mutex_type& lock) {return transaction::pthread_trylock(&lock);} 
+inline bool try_lock(latm::mutex_type& lock) {return transaction::pthread_trylock(&lock);}
 inline void unlock(latm::mutex_type& lock) {transaction::pthread_unlock(&lock);}
 
 
