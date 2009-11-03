@@ -25,7 +25,7 @@ namespace at_key{
         typedef typename meta_::type it_;
         typedef iterator_range<it_>  type;
     
-        static type make(It b,It e){
+        static type call(It b,It e){
             return type(
                 make_iterator<K>(b),
                 make_iterator<K>(e)
@@ -38,7 +38,7 @@ namespace at_key{
     typename meta_range<It,K>::type
     make_range(It b,It e){
         typedef meta_range<It,K> m_;
-        return m_::make(b,e);
+        return m_::call(b,e);
     }
 
 }// at_key

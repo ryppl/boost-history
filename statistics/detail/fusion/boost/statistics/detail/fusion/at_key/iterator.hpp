@@ -32,7 +32,7 @@ namespace at_key{
         typedef typename result_of<f_(ref1_)>::type ref2_;
         typedef boost::transform_iterator<f_,It,ref2_> type;
     
-        static type make(It i){
+        static type call(It i){
             // don't use make_transform_iterator because not default.
             return type(i,f_());
         }
@@ -43,7 +43,7 @@ namespace at_key{
     typename meta_iterator<It,K>::type
     make_iterator(It i){
         typedef meta_iterator<It,K> m_;
-        return m_::make(i);
+        return m_::call(i);
     }
 
 }// at_key
