@@ -14,7 +14,10 @@
 #include <boost/lambda/bind.hpp>
 #include <boost/ref.hpp>
 #include <boost/iterator/iterator_traits.hpp>
-#include <boost/functional/mean_var_accumulator.hpp>
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/mean.hpp>
+#include <boost/accumulators/statistics/variance.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
 
 namespace boost{
 namespace statistics{
@@ -45,7 +48,12 @@ namespace importance_sampling{
         InIt e_w
     ){
         typedef typename iterator_value<InIt>::type val_;
-        typedef typename functional::mean_var_accumulator<val_>::type acc_;
+
+        typedef accumulators::stats<
+            accumulators::tag::mean,
+            accumulators::tag::variance
+        >  stat_;
+        typedef accumulators::accumulator_set<val_,stat_> acc_;
 
         // Var(w/c) = Var(w) / c^2
 
