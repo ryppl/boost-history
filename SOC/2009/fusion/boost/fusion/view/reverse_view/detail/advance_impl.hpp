@@ -39,7 +39,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(It it)
             {
-                return type(fusion::advance<neg_dist>(it.it));
+                return type(fusion::advance<neg_dist>(it.it),0);
             }
         };
     };

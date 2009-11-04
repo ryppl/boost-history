@@ -16,7 +16,6 @@
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/next.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/identity.hpp>
 
@@ -47,7 +46,7 @@ namespace boost { namespace fusion { namespace extension
                       , result_of::begin<typename it::seq_type>
                       , mpl::identity<next_it>
                     >::type
-                  , mpl::next<typename it::index>::type::value
+                  , it::index::value+1
                 >
             type;
 

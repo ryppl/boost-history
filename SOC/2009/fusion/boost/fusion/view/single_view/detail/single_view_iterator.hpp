@@ -30,10 +30,27 @@ namespace boost { namespace fusion
         typedef single_view_iterator_tag fusion_tag;
         typedef random_access_traversal_tag category;
 
+        template<typename OtherIt>
+        single_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+          : val(BOOST_FUSION_FORWARD(OtherIt,it).val)
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,single_view_iterator_tag);
+        }
+
         explicit
         single_view_iterator(value_ref_type val)
           : val(&val)
         {}
+
+        template<typename OtherIt>
+        single_view_iterator&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,single_view_iterator_tag);
+
+            val=BOOST_FUSION_FORWARD(OtherIt,it).val;
+            return *this;
+        }
 
         typename detail::remove_reference<value_ref_type>::type* val;
     };

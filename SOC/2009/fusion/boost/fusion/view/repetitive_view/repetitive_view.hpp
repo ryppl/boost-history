@@ -17,12 +17,18 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/sequence/intrinsic/empty.hpp>
+#endif
 #include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/long.hpp>
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/mpl/eqaul_to.hpp>
+#   include <boost/mpl/not.hpp>
+#   include <boost/mpl/or_.hpp>
+#   include <boost/mpl/bool.hpp>
 #endif
 #include <boost/integer_traits.hpp>
 
@@ -50,6 +56,11 @@ namespace boost { namespace fusion
       : sequence_base<repetitive_view<Seq> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+        BOOST_FUSION_MPL_ASSERT((mpl::or_<
+                            mpl:not_<result_of::empty<Seq> >
+                          , mpl::bool_<!Size>
+                        >));
 
         typedef detail::view_storage<Seq> storage_type;
         typedef typename storage_type::type seq_type;
@@ -107,6 +118,13 @@ namespace boost { namespace fusion
         template<typename Seq, int Size=integer_traits<int>::const_max-1>
         struct repeat
         {
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((mpl::or_<
+                                mpl:not_<result_of::empty<Seq> >
+                              , mpl::bool_<!Size>
+                            >));
+
             typedef
                 repetitive_view<typename traits::deduce<Seq>::type, Size>
             type;

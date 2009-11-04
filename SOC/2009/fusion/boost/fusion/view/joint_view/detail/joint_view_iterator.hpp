@@ -27,10 +27,29 @@ namespace boost { namespace fusion
         typedef joint_view_iterator_tag fusion_tag;
         typedef Category category;
 
+        template<typename OtherIt>
+        joint_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+          : first(BOOST_FUSION_FORWARD(OtherIt,it).first)
+          , concat(BOOST_FUSION_FORWARD(OtherIt,it).concat)
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,joint_view_iterator_tag);
+        }
+
         joint_view_iterator(Begin const& first, Concat const& concat)
           : first(first)
           , concat(concat)
         {}
+
+        template<typename OtherIt>
+        joint_view_iterator&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,joint_view_iterator_tag);
+
+            first=BOOST_FUSION_FORWARD(OtherIt,it).first;
+            concat=BOOST_FUSION_FORWARD(OtherIt,it).concat;
+            return *this;
+        }
 
         begin_type first;
         concat_type concat;
@@ -45,10 +64,26 @@ namespace boost { namespace fusion
         typedef concat_iterator_tag fusion_tag;
         typedef Category category;
 
-        explicit
-        concat_iterator(Begin const& first)
+        template<typename OtherIt>
+        concat_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+          : first(BOOST_FUSION_FORWARD(OtherIt,it).first)
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,concat_iterator_tag);
+        }
+
+        concat_iterator(Begin const& first,int)
           : first(first)
         {}
+
+        template<typename OtherIt>
+        concat_iterator&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,concat_iterator_tag);
+
+            first=BOOST_FUSION_FORWARD(OtherIt,it).first;
+            return *this;
+        }
 
         begin_type first;
     };

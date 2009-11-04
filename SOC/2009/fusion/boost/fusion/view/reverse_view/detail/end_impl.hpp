@@ -24,7 +24,12 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 reverse_view_iterator<
                     typename result_of::begin<
-                        typename detail::remove_reference<Seq>::type::seq_type
+                        typename detail::forward_as<
+                            Seq
+                          , typename detail::remove_reference<
+                                Seq
+                            >::type::seq_type
+                        >::type
                     >::type
                  >
             type;
@@ -32,7 +37,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(Seq seq)
             {
-                return type(fusion::begin(seq.seq.get()));
+                return type(fusion::begin(seq.seq.get()),0);
             }
         };
     };

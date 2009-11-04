@@ -29,14 +29,19 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 concat_iterator<
                     typename seq::category
-                  , typename result_of::end<typename seq::seq2_type>::type
+                  , typename result_of::end<
+                        typename detail::forward_as<
+                            Seq
+                          , typename seq::seq2_type
+                        >::type
+                    >::type
                 >
             type;
 
             static type
             call(Seq seq)
             {
-                return type(fusion::end(seq.seq2.get()));
+                return type(fusion::end(seq.seq2.get()),0);
             }
         };
     };

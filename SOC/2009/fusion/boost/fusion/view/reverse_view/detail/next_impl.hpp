@@ -31,7 +31,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(It it)
             {
-                return type(fusion::prior(it.it));
+                return type(fusion::prior(it.it),0);
             }
         };
     };

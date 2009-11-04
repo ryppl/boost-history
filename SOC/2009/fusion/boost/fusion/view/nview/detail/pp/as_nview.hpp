@@ -26,6 +26,9 @@
         >
 #endif
         {
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_random_access<Seq>));
+
             typedef
                 nview<
                     Seq

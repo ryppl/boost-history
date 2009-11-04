@@ -14,7 +14,6 @@
 #include <boost/fusion/iterator/equal_to.hpp>
 
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/next.hpp>
 #include <boost/mpl/equal_to.hpp>
 
 namespace boost { namespace fusion { namespace extension
@@ -46,7 +45,7 @@ namespace boost { namespace fusion { namespace extension
                           , typename it::it_type
                         >::type
                     >::type
-                  , mpl::next<typename it::index>::type::value
+                  , it::index::value-1
                 >
             type;
 

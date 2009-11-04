@@ -28,13 +28,21 @@ namespace boost { namespace fusion { namespace extension
         {
             typedef typename detail::remove_reference<Seq>::type seq;
             typedef typename
-                result_of::begin<typename seq::seq1_type>::type
+                detail::forward_as<Seq, typename seq::seq1_type>::type
+            underlying_seq1_type;
+            typedef typename
+                result_of::begin<underlying_seq1_type>::type
             begin_type;
             typedef typename
-                result_of::end<typename seq::seq1_type>::type
+                result_of::end<underlying_seq1_type>::type
             end_type;
             typedef typename
-                result_of::begin<typename seq::seq2_type>::type
+                result_of::begin<
+                    typename detail::forward_as<
+                        Seq
+                      , typename seq::seq2_type
+                    >::type
+                >::type
             concat_type;
             typedef typename
                 result_of::equal_to<begin_type, end_type>::type
@@ -56,7 +64,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(Seq seq, mpl::true_)
             {
-                return type(fusion::begin(seq.seq2.get()));
+                return type(fusion::begin(seq.seq2.get()),0);
             }
 
             static type

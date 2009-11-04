@@ -50,7 +50,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(It it, mpl::true_)
             {
-                return type(it.concat);
+                return type(it.concat,0);
             }
 
             static type
@@ -85,7 +85,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(It it)
             {
-                return type(fusion::next(it.first));
+                return type(fusion::next(it.first),0);
             }
         };
     };

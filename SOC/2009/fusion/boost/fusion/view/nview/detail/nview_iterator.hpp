@@ -10,6 +10,11 @@
 #define BOOST_FUSION_VIEW_NVIEW_DETAIL_NVIEW_ITERATOR_HPP
 
 #include <boost/fusion/support/iterator_base.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
+
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/mpl/eqaul_to.hpp>
+#endif
 
 namespace boost { namespace fusion
 {
@@ -25,10 +30,36 @@ namespace boost { namespace fusion
         typedef nview_iterator_tag fusion_tag;
         typedef random_access_traversal_tag category;
 
-        explicit
-        nview_iterator(SeqRef seq)
+        template<typename OtherIt>
+        nview_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+          : seq(BOOST_FUSION_FORWARD(OtherIt,it).seq)
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,nview_iterator_tag);
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::equal_to<
+                    Pos
+                  , detail::remove_reference<OtherIt>::type::pos_type
+                >));
+        }
+
+        nview_iterator(SeqRef seq,int)
           : seq(seq)
         {}
+
+        template<typename OtherIt>
+        nview_iterator&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,nview_iterator_tag);
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::equal_to<
+                    Pos
+                  , detail::remove_reference<OtherIt>::type::pos_type
+                >));
+
+            seq=BOOST_FUSION_FORWARD(OtherIt,it).seq;
+            return *this;
+        }
 
         SeqRef seq;
     };

@@ -24,10 +24,26 @@ namespace boost { namespace fusion
         typedef reverse_view_iterator_tag fusion_tag;
         typedef typename traits::category_of<it_type>::type category;
 
-        explicit
-        reverse_view_iterator(It const& it)
+        template<typename OtherIt>
+        reverse_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+          : it(BOOST_FUSION_FORWARD(OtherIt,it).it)
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,reverse_view_iterator_tag);
+        }
+
+        reverse_view_iterator(It const& it,int)
           : it(it)
         {}
+
+        template<typename OtherIt>
+        reverse_view_iterator&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it_)
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,reverse_view_iterator_tag);
+
+            it=BOOST_FUSION_FORWARD(OtherIt,it_).it;
+            return *this;
+        }
 
         it_type it;
     };

@@ -27,11 +27,8 @@ namespace boost { namespace fusion
     {
         template<typename Seq, typename M>
         struct get_endpoint
-        {
-            typedef typename result_of::begin<Seq>::type begin;
-
-            typedef typename result_of::advance<begin, M>::type type;
-        };
+          : result_of::advance<typename result_of::begin<Seq>::type, M>
+        {};
 
         template<typename M>
         struct endpoints

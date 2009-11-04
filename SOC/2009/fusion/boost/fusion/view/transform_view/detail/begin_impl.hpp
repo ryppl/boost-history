@@ -29,7 +29,12 @@ namespace boost { namespace fusion { namespace extension
 
             typedef
                 transform_view_iterator<
-                    typename result_of::begin<typename seq::seq_type>::type
+                    typename result_of::begin<
+                        typename detail::forward_as<
+                            Seq
+                          , typename seq::seq_type
+                        >::type
+                    >::type
                   , typename detail::forward_as<
                         Seq
                       , typename seq::transform_type
@@ -57,8 +62,18 @@ namespace boost { namespace fusion { namespace extension
 
             typedef
                 transform_view_iterator2<
-                    typename result_of::begin<typename seq::seq1_type>::type
-                  , typename result_of::begin<typename seq::seq2_type>::type
+                    typename result_of::begin<
+                        typename detail::forward_as<
+                            Seq
+                          , typename seq::seq1_type
+                        >::type
+                    >::type
+                  , typename result_of::begin<
+                        typename detail::forward_as<
+                            Seq
+                          , typename seq::seq2_type
+                        >::type
+                    >::type
                   , typename detail::forward_as<
                         Seq
                       , typename seq::transform_type
