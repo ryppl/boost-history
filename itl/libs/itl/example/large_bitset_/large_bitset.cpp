@@ -30,7 +30,7 @@ void test_large()
     venti += interval<nat64>(0, much);
 
     cout << "----- Test function test_large() -----------------------------------------------\n";
-    cout << "We have just turned on the awesome amount of 18,446,744,073,709,551,615 bits ;-)\n";
+    cout << "We have just turned on the awesome amount of 18,446,744,073,709,551,616 bits ;-)\n";
     venti.show_segments();
     //]
 
@@ -48,7 +48,7 @@ void test_small()
 {
     large_bitset<nat32, bits8> tall; // small is tall ...
         // ... because even this 'small' large_bitset 
-        // can represent up to 2^32-1 == 4,294,967,295 bits.
+        // can represent up to 2^32 == 4,294,967,296 bits.
 
     cout << "----- Test function test_small() -----------\n";
     cout << "-- Switch on all bits in range [0,64] ------\n";
@@ -70,12 +70,12 @@ void test_small()
     tall -= interval<nat>::rightopen(0,10);
     tall.show_segments();
 
-    cout << "-- remove even bits in range [0,72) --------\n";
+    cout << "-- Remove even bits in range [0,72) --------\n";
     int bit;
     for(bit=0; bit<72; bit++) if(!(bit%2)) tall -= bit;
     tall.show_segments();
 
-    cout << "-- set    odd  bits in range [0,72) --------\n";
+    cout << "--    Set odd  bits in range [0,72) --------\n";
     for(bit=0; bit<72; bit++) if(bit%2) tall += bit;
     tall.show_segments();
 

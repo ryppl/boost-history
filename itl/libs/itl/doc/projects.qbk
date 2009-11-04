@@ -39,7 +39,7 @@ to be more precise.
 The prefix ['*bit*] usually only indicates,
 that the representation of those sets is organized in a compressed
 form that exploits the fact, that we can switch on an off single
-bits in machine word. Bitsets are therefore known to be very small
+bits in machine words. Bitsets are therefore known to be very small
 and thus efficient.
 The efficiency of bitsets is usually coupled to the 
 precondition that the range of values of elements  
@@ -68,7 +68,7 @@ typedef interval_map<IntegralT, SomeBitSet<N>, partial_absorber,
 
 Such an `IntervalBitmap` represents `k*N` bits for every segment. 
 ``
-[a, a+k)->'1111....1111' //(N bits)
+[a, a+k)->'1111....1111' // N bits associated: Represents a total of k*N bits.  
 ``
 
 For the interval `[a, a+k)` above all bits are set.
@@ -91,7 +91,7 @@ periodic patterns.
 ``
 
 An `IntervalBitmap` can represent
-`N*(2^M-1)` elements, if `M` is the number of bits of the 
+`N*(2^M)` elements, if `M` is the number of bits of the 
 integral type `IntegralT`. Unlike bitsets, that usually
 represent ['*unsigned*] integral numbers, large_bitset may 
 range over negative numbers as well.
@@ -124,7 +124,7 @@ then we switch off the very last bit.
 Program output (/a little beautified/):
 ``
 ----- Test function test_large() -----------------------------------------------
-We have just turned on the awesome amount of 18,446,744,073,709,551,615 bits ;-)
+We have just turned on the awesome amount of 18,446,744,073,709,551,616 bits ;-)
 [                 0, 288230376151711744) -> 1111111111111111111111111111111111111111111111111111111111111111
 ---- Let's swich off the very last bit -----------------------------------------
 [                 0, 288230376151711743) -> 1111111111111111111111111111111111111111111111111111111111111111
@@ -162,12 +162,12 @@ In function `test_small()` we apply a few more operations . . .
 [3,4)->01011011
 [4,8)->11111111
 [8,9)->10000000
--- remove even bits in range [0,72) --------
+-- Remove even bits in range [0,72) --------
 [1,2)->00010101
 [2,3)->01010101
 [3,4)->01010001
 [4,8)->01010101
--- set    odd  bits in range [0,72) --------
+--    Set odd  bits in range [0,72) --------
 [0,9)->01010101
 --------------------------------------------
 ``
@@ -221,7 +221,7 @@ typedef interval_map<DomainT, BitSetT, partial_absorber,
                      std::less, inplace_bit_add, inplace_bit_and> IntervalBitmap;
 ``
 
-`DomainT` is supposed to be an unsigned integral
+`DomainT` is supposed to be an integral
 type, the bitset type `BitSetT` will be a wrapper class around an
 unsigned integral type. `BitSetT` has to implement bitwise operators
 that will be called by the functors `inplace_bit_add<BitSetT>` 
@@ -242,12 +242,12 @@ do not expect `operator +=` as addition but the bitwise operator
 The code of the project is enclosed in a `namespace mini`.
 The name indicates, that the implementation is a /minimal/
 example implementation. The name of the bitset class will
-be `bits` or qualified `mini::bits`.
+be `bits` or `mini::bits` if qualified.
 
-To be used as a codomain parameter of class template __itv_map__
-`mini::bits` has implement all the functions that are required
-for a codomain_type in general, which are the default ctor `bits()`
-and `operator==`. Moreover `mini::bits` has to implement operators
+To be used as a codomain parameter of class template __itv_map__,
+`mini::bits` has to implement all the functions that are required
+for a codomain_type in general, which are the default constructor `bits()`
+and an equality `operator==`. Moreover `mini::bits` has to implement operators
 required by the instantiations for parameter `Combine` and `Section`
 which are `inplace_bit_add` and `inplace_bit_and`. From functors
 `inplace_bit_add` and `inplace_bit_and` there are inverse functors
@@ -306,7 +306,7 @@ And now let's code `large_bitset`.
 [large_bitset_class_template_header]
 
 The first template parameter `DomainT` will be instantiated with
-an unsigned integral type that defines the kind of numbers that can
+an integral type that defines the kind of numbers that can
 be elements of the set. Since we want to go for a large set we
 use `nat64` as default which is a 64 bit unsigned integer ranging
 from `0` to `2^64-1`. As bitset parameter we also choose a 64-bit
@@ -349,11 +349,11 @@ done quite schematically.
 [large_bitset_operators]
 
 As we can see, the seven most important operators that work on the
-class type `large_bitset` can be directly implemented propagation
+class type `large_bitset` can be directly implemented by propagating
 the operation to the implementing `_map`
 of type `interval_bitmap_type`. For the operators that work on segment and
 element types, we use member functions `add`, `subtract`, `intersect` and
-`flip`. As we will see only a small amount of adaper code in needed
+`flip`. As we will see only a small amount of adaper code is needed
 to couple those functions with the functionality of the implementing
 container.
 
@@ -362,7 +362,7 @@ that allow to combine ['*intervals*] to `large_bitsets` can
 be uniformly implemented using a private function
 `segment_apply` that applies /addition/, /subtraction/,
 /intersection/ or /symmetric difference/, after having
-translated the intervals borders into the right bitset
+translated the interval's borders into the right bitset
 positions.  
 
 [large_bitset_fundamental_functions]
@@ -393,7 +393,7 @@ use a
 large_bitset<nat, mini::bits8> lbs;
 ``
 that carries small bitsets of 8 bits only. 
-The first four singleton interval of `lbs` are assumed to
+The first four interval of `lbs` are assumed to
 be associated with some bitsets. Now we want to add the interval
 `[a,b]==[5,27]`. This will result in the following situation:
 ``
@@ -405,7 +405,7 @@ be associated with some bitsets. Now we want to add the interval
 => [0,1)->   [1,3)->   [3,4)->
    [00101111][11111111][11110000]
 ``
-So we have to convert values 5 and 35 into a part that
+So we have to convert values 5 and 27 into a part that
 points to the interval and a part that refers to the
 position within the interval, which is done by a
 /division/ and a /modulo/ computation. (In order to have a
@@ -428,7 +428,7 @@ The constants needed for those bitset computations are defined here:
 [large_bitset_impl_constants]
 
 Looking at the example again, we can see that we have to identify the
-positions of the beginning and ending of the interval [5,7] that is
+positions of the beginning and ending of the interval [5,27] that is
 to insert, and then ['*subdivide*] that range of bitsets into three partitions.
 
 # The bitset where the interval starts.
