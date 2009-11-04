@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.6: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
 <title>Allowing Move Constructors to Throw</title>
 <meta name="author" content="David Abrahams, Rani Sharoni, Doug Gregor" />
 <meta name="organization" content="BoostPro Computing" />
@@ -497,8 +497,8 @@ trait very much like <tt class="docutils literal"><span class="pre">has_nothrow_
 current working draft; it would be identical to the proposed
 <tt class="docutils literal"><span class="pre">is_nothrow_constructible&lt;T,T&amp;&amp;&gt;</span></tt> from <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a>.  In other words, it
 returns <tt class="docutils literal"><span class="pre">true</span></tt> only when it can prove the move constructor doesn't
-throw, and is <em>allowed</em> to return <tt class="docutils literal"><span class="pre">false</span></tt> even when the move
-constructor can throw.</p>
+throw, and is <em>allowed</em> to return <tt class="docutils literal"><span class="pre">false</span></tt> otherwise, even if the
+move constructor is actually nonthrowing.</p>
 </div>
 <div class="section" id="an-optimization-hint">
 <h1><a class="toc-backref" href="#id10">An Optimization Hint</a></h1>

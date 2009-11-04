@@ -167,8 +167,8 @@ trait very much like ``has_nothrow_copy_constructor<T>`` from the
 current working draft; it would be identical to the proposed
 ``is_nothrow_constructible<T,T&&>`` from N2953_.  In other words, it
 returns ``true`` only when it can prove the move constructor doesn't
-throw, and is *allowed* to return ``false`` even when the move
-constructor can throw.
+throw, and is *allowed* to return ``false`` otherwise, even if the
+move constructor is actually nonthrowing.
 
 An Optimization Hint
 ********************
