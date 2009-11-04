@@ -42,14 +42,14 @@ namespace boost { namespace synchro {
     template<>
     inline void lock<pthread_mutex_t>(pthread_mutex_t& lockable) {
         int const res = pthread_mutex_lock(&lockable);
-        BOOST_STM_VERIFY(res==0);
+        BOOST_STM_VERIFY(res==0&&"synchro::lock<pthread_mutex_t>");
         //if (res!=0) throw lock_error();
     }
 
     template<>
     inline void unlock<pthread_mutex_t>(pthread_mutex_t& lockable) {
         int const res= pthread_mutex_unlock(&lockable);
-        BOOST_STM_VERIFY(res==0);
+        BOOST_STM_VERIFY(res==0&&"synchro::unlock<pthread_mutex_t>");
         //if (res!=0) throw lock_error();
     }
 

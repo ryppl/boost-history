@@ -14,6 +14,8 @@
 #ifndef BOOST_SYNCHO_LOCKABLE_UNLOCK_HPP
 #define BOOST_SYNCHO_LOCKABLE_UNLOCK_HPP
 
+#include <assert.h>
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
@@ -21,7 +23,11 @@ namespace boost { namespace synchro {
 
     template< typename Lockable >
     inline void unlock(Lockable& lockable) {
+        try {
         lockable.unlock();
+        } catch (...) {
+            assert(false && "synchro::unlock exception");
+        }
     }
 
 }}

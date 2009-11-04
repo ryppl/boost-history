@@ -11,27 +11,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_SYNCHO_LOCKABLE_TRY_LOCK_HPP
-#define BOOST_SYNCHO_LOCKABLE_TRY_LOCK_HPP
-
-#include <assert.h>
+#ifndef BOOST_STM_TX_SMART_PTR__HPP
+#define BOOST_STM_TX_SMART_PTR__HPP
 
 //-----------------------------------------------------------------------------
+#include <boost/stm/tx_ptr.hpp>
 //-----------------------------------------------------------------------------
-
-namespace boost { namespace synchro {
-
-    template< typename Lockable >
-    inline bool try_lock(Lockable& lockable) {
-        try {
-        return lockable.try_lock();
-        } catch (...) {
-            assert(false && "synchro::try_lock exception");
-            return false;
-        }
-    }
-
-}}
-#endif // BOOST_SYNCHO_TRY_LOCK_HPP
+#endif // BOOST_STM_TX_SMART_PTR__HPP
 
 
