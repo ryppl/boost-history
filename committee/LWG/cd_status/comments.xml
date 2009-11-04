@@ -1,6 +1,6 @@
 <?xml  version="1.0"?>
 
-<document date="2009-11-06"
+<document date="2009-11-04"
   rev="3"
   docno="PL22.16 09/0199 = WG21 N3009"
 >
@@ -15920,7 +15920,7 @@ See wiki for further comments.
 </rationale>Solved by N2992. 
 </comment>
 
-<comment nb="US" num="89" uknum="" type="te" owner="editor" issue="937" disp="" date="" extdoc="">
+<comment nb="US" num="89" uknum="" type="te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 29.3.1
 </section>
@@ -15941,7 +15941,7 @@ Table 122
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#927">Issue 937</a>. Direct the editor to turn the types into typedefs as proposed in the comment. Paper approved by committee used 
 typedefs, this appears to have been introduced as an editorial change. 
 Rationale: for compatibility with C.</notes>
-<rationale>Pass on to the editor.
+<rationale>
 </rationale>
 </comment>
 

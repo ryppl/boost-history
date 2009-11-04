@@ -69,8 +69,6 @@ those comments for which the "disp" attribute is empty.
      <p>
      This is an unofficial document used to track work-in-progress. Its contents 
      are subject to change.</p>
-    <p>Revised:
-     <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y %I:%M:%S %p %Z" startspan -->18 March 2009 06:43:27 AM -0500<!--webbot bot="Timestamp" endspan i-checksum="58300" --></p>
      <hr/>
      <xsl:choose>
       <xsl:when test="$responsible='all'">
