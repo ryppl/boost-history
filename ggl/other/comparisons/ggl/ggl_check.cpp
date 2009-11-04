@@ -374,7 +374,7 @@ int main(int argc, char** argv)
 
                     POLY p;
                     std::vector<POLY> v;
-                    ggl::intersection<POLY>(*eit, *it, std::back_inserter(v));
+                    ggl::intersection_inserter<POLY>(*eit, *it, std::back_inserter(v));
 
                     if (compare::OVERLAY_AREA) // && k != 1911)
                     {
@@ -434,7 +434,7 @@ int main(int argc, char** argv)
 
                 POLY p;
                 std::vector<POLY> v;
-                ggl::intersection<POLY>(*bit, *it, std::back_inserter(v));
+                ggl::intersection_inserter<POLY>(*bit, *it, std::back_inserter(v));
 
                 if (compare::CLIP_AREA)
                 {
