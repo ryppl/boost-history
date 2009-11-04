@@ -25,7 +25,7 @@ namespace ggl
         const and non const references
     \note This traits class is completely independant from GGL and might be a
         separate addition to Boost
-    \note Used in ggl::for_each
+    \note Used in a.o. ggl::for_each, ggl::interior_rings, ggl::exterior_ring
     \par Example
     \code
         void foo(typename add_const_if_c<IsConst, Point>::type& point)

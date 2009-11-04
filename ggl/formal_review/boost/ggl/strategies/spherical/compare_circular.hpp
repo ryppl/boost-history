@@ -22,6 +22,7 @@ namespace ggl
 namespace strategy { namespace compare {
 
 
+#ifndef DOXYGEN_NO_DETAIL
 namespace detail {
 
 
@@ -46,6 +47,7 @@ struct shift<radian>
 };
 
 } // namespace detail
+#endif
 
 /*!
     \brief Compare (in one direction) strategy for spherical coordinates

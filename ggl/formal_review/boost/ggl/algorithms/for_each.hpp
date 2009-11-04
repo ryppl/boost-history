@@ -260,7 +260,7 @@ struct for_each_segment<polygon_tag, false, Polygon, Functor, IsConst>
 
 /*!
     \brief Calls functor for geometry
-    \ingroup loop
+    \ingroup for_each
     \param geometry geometry to loop through
     \param f functor to use
     \details Calls the functor the specified \b const geometry
@@ -283,7 +283,7 @@ inline Functor for_each_point(Geometry const& geometry, Functor f)
 
 /*!
     \brief Calls functor for geometry
-    \ingroup loop
+    \ingroup for_each
     \param geometry geometry to loop through
     \param f functor to use
     \details Calls the functor for the specified geometry
@@ -306,7 +306,7 @@ inline Functor for_each_point(Geometry& geometry, Functor f)
 
 /*!
     \brief Calls functor for segments on linestrings, rings, polygons, ...
-    \ingroup loop
+    \ingroup for_each
     \param geometry geometry to loop through
     \param f functor to use
     \details Calls the functor all \b const segments of the
@@ -330,7 +330,7 @@ inline Functor for_each_segment(Geometry const& geometry, Functor f)
 
 /*!
     \brief Calls functor for segments on linestrings, rings, polygons, ...
-    \ingroup loop
+    \ingroup for_each
     \param geometry geometry to loop through
     \param f functor to use
     \details Calls the functor all segments of the specified geometry

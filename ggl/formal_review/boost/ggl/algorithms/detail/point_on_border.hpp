@@ -140,14 +140,14 @@ struct point_on_border<box_tag, Box, Point>
 
 
 /*!
-    \brief Take point on a border
-    \ingroup utility 
-    \tparam Geometry geometry type
-    \param geometry geometry to take point from
-    \param point 
-    \return TRUE if successful, else false. 
-        It is only false if polygon/line have no points
-    \note for a polygon, it is always a point on the exterior ring
+\brief Take point on a border
+\ingroup overlay
+\tparam Geometry geometry type
+\param geometry geometry to take point from
+\param point
+\return TRUE if successful, else false.
+    It is only false if polygon/line have no points
+\note for a polygon, it is always a point on the exterior ring
  */
 template <typename Geometry>
 inline bool point_on_border(Geometry const& geometry,
