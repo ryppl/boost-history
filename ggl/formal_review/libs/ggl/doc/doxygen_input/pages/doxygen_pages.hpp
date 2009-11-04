@@ -13,6 +13,64 @@
 //---------------------------------------------------------------------------------------------------
 
 /*!
+\page compat Relation to Boost and std libraries
+
+\section boost_compat Boost
+
+The GGL makes use of the following Boost Libraries:
+- Boost Range
+- Boost Type Traits (e.g. remove_const)
+- Boost Concept Check Library
+- Boost Numeric Conversion (cast, bounds)
+- Boost MPL
+- Boost Static Assert
+- Boost Iterator
+- Boost Smart Pointer (shared_ptr, in the extensions spatial index and projections)
+- Boost uBLAS
+- Adapted geometries:
+  - Boost Array
+  - Boost Tuple
+- IO and parsing
+  - Boost Tokenizer
+  - Boost Conversion (lexical cast)
+  - Boost String Algo
+- Testing
+  - Boost Test
+  - Boost Timer
+- Examples
+  - Boost Graph Library
+
+
+Many of these are used a lot inside the library.
+
+The \b Boost.Range library is used everywhere
+to declare iterators and to walk through standard containers or custom ranges.
+
+The \b Boost \b Concept \b Check \b Library is used to check concepts, for geometries as well
+as for strategies.
+
+Tranformations are implemented using \b Boost uBLAS
+
+\b MPL is used for a.o. reverse dispatching
+
+Finally, the library can perfectly be used together with the \b Boost \b Graph \b Library, as shown in example 7.
+
+
+\section std_compat std:: library
+
+
+The GGL makes substantial use of the std library, and is designed to be compatible with it.
+- provided geometries (linestring, ring, polygon, multi-s) make default use of std::vector (but that is configurable)
+- std sorting, unique copies, maps can make use of provided functors in \ref compare "compare".
+- internally, there are vector's, deque's, there is sorting, many things are implemented using the std library
+
+*/
+
+
+
+//---------------------------------------------------------------------------------------------------
+
+/*!
 \page compiling Compiling
 
 \section compiling_intro Compiling the Generic Geometry Library
@@ -121,6 +179,8 @@ Source: http://blogs.msdn.com/yash/archive/2007/09/19/intellisense-issues-in-vis
 
 
 */
+
+
 
 
 //---------------------------------------------------------------------------------------------------
