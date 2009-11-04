@@ -15,7 +15,6 @@
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/statistics/detail/importance_sampling/weights/apply_exp_offset.hpp>
 #include <boost/statistics/detail/importance_sampling/weights/scale_to_finite_sum.hpp>
-#include <boost/statistics/detail/importance_sampling/weights/effective_sample_size.hpp>
 
 namespace boost{
 namespace statistics{
