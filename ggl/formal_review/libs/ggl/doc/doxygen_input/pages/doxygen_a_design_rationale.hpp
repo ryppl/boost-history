@@ -31,8 +31,7 @@ struct mypoint
 
 And a function, containing the algorithm:
 \code
-double distance(mypoint const& a,
-                mypoint const& b)
+double distance(mypoint const& a, mypoint const& b)
 {
     double dx = a.x - b.x;
     double dy = a.y - b.y;
@@ -40,11 +39,11 @@ double distance(mypoint const& a,
 }
 \endcode
 
-Quite simple, and it is usable, but not generic. For a library it has to be designed way further. The design above can only be used for 2D points, for the struct point (and no other struct), in a Cartesian coordinate system.
+Quite simple, and it is usable, but not generic. For a library it has to be designed way further. The design above can only be used for 2D points, for the struct \b mypoint (and no other struct), in a Cartesian coordinate system.
 A generic library should be able to calculate the distance:
-- for any point class or struct, not on just this ‘mypoint’ type
+- for any point class or struct, not on just this \b mypoint type
 - in more than two dimensions
-- for other coordinate systems, e.g. over the earth or over a sphere
+- for other coordinate systems, e.g. over the earth or on a sphere
 - between a point and a line or between other geometry combinations
 - in higher precision than ‘double’
 - avoiding the square root: often we don’t want to do that because it is a relatively expensive function, and for comparing distances it is not necessary.
@@ -56,7 +55,7 @@ In this page we will make the design step by step more generic.
 
 
 \section par2 Using templates
-The distance function can be changed into a template function. This is trivial and allows calculating the distance between other point types than just ‘mypoint’. We add two template parameters, allowing input of two different point types.
+The distance function can be changed into a template function. This is trivial and allows calculating the distance between other point types than just \b mypoint. We add two template parameters, allowing input of two different point types.
 
 \code
 template <typename P1, typename P2>
@@ -95,7 +94,7 @@ namespace traits
 }
 \endcode
 
-which is then specialized for our ‘mypoint’ type, implementing a static method called ‘get’:
+which is then specialized for our \b mypoint type, implementing a static method called ‘get’:
 \code
 namespace traits
 {
@@ -112,9 +111,9 @@ namespace traits
 }
 \endcode
 
-Calling traits::access<point, 0>::get(a) now returns us our x-coordinate. Nice? It is too verbose for a function like this, used so often in the library. We can shorten the syntax by adding an extra function:
-template <int D, typename P>
+Calling traits::access<mypoint, 0>::get(a) now returns us our x-coordinate. Nice? It is too verbose for a function like this, used so often in the library. We can shorten the syntax by adding an extra \b free \b function:
 \code
+template <int D, typename P>
 inline double get(P const& p)
 {
     return traits::access<P, D>::get(p);
@@ -147,26 +146,22 @@ This alternative gives in the end the same functionality, either using an if-cla
 
 \section par4 Dimension agnosticism
 Now we can calculate the distance between points in 2D, points of any structure or class. However, we wanted to have 3D as well. So we have to make it dimension agnostic.
-This complicates our distance function. We can use a for-loop to walk through dimensions, but for loops have another performance than the addition which was there originally. However, we can make more usage of templates and make the distance algorithm as following, more complex but attractive for template fans:
+This complicates our distance function. We can use a for-loop to walk through dimensions, but for loops have another performance than the straightforward coordinate addition which was there originally. However, we can make more usage of templates and make the distance algorithm as following, more complex but attractive for template fans:
 \code
 template <typename P1, typename P2, int D>
 struct pythagoras
 {
-    static double apply(P1 const& a,
-        P2 const& b)
+    static double apply(P1 const& a, P2 const& b)
     {
         double d = get<D-1>(a) - get<D-1>(b);
-        return d * d + pythagoras
-                <P1, P2, D-1>
-            ::apply(a, b);
+        return d * d + pythagoras<P1, P2, D-1>::apply(a, b);
    }
 };
 
 template <typename P1, typename P2 >
 struct pythagoras<P1, P2, 0>
 {
-    static double apply(P1 const&,
-            P2 const&)
+    static double apply(P1 const&, P2 const&)
     {
         return 0;
     }
@@ -178,13 +173,9 @@ The distance function is calling that pythagoras struct, specifying the number o
 template <typename P1, typename P2>
 double distance(P1 const& a, P2 const& b)
 {
-    BOOST_STATIC_ASSERT((
-        dimension<P1>::value
-        == dimension<P2>::value ));
+    BOOST_STATIC_ASSERT(( dimension<P1>::value == dimension<P2>::value ));
 
-    return sqrt(pythagoras
-        <P1, P2, dimension<P1>::value>
-        :: apply(a, b));
+    return sqrt(pythagoras<P1, P2, dimension<P1>::value>::apply(a, b));
 }
 \endcode
 
@@ -197,7 +188,7 @@ namespace traits
 }
 \endcode
 
-which has to be specialized again for the struct  ‘mypoint’. Because it only has to publish a value, we conveniently derive it from the Boost Meta-Programming Library (MPL) class boost::mpl::int_:
+which has to be specialized again for the struct \b mypoint. Because it only has to publish a value, we conveniently derive it from the Boost Meta-Programming Library (MPL) class boost::mpl::int_:
 \code
 namespace traits
 {
@@ -262,14 +253,10 @@ struct pythagoras
             typename coordinate_type<P2>::type
         >::type computation_type;
 
-    static computation_type apply(
-            P1 const& a, P2 const& b)
+    static computation_type apply(P1 const& a, P2 const& b)
     {
-        computation_type d
-            = get<D-1>(a) - get<D-1>(b);
-        return d * d + pythagoras
-                <P1, P2, D-1>
-            ::apply(a, b);
+        computation_type d = get<D-1>(a) - get<D-1>(b);
+        return d * d + pythagoras <P1, P2, D-1> ::apply(a, b);
    }
 };
 \endcode
@@ -279,13 +266,12 @@ struct pythagoras
 
 
 \section par6 Different geometries
-We’ve designed a dimension agnostic system supporting any point-type of any coordinate type. There are still some tweaks but they will be worked out later.
+We’ve designed a dimension agnostic system supporting any point type of any coordinate type. There are still some tweaks but they will be worked out later.
 Now we will see how we calculate the distance between a point and a polygon, or between a point and a line-segment. These formulae are more complex, and the influence on design is even larger.
 We don’t want to add a function with another name:
 \code
 template <typename P, typename S>
-double distance_point_segment(P const& p,
-                S const& s)
+double distance_point_segment(P const& p, S const& s)
 \endcode
 
 We want to be generic, the distance function has to be called from code not knowing the type of geometry it handles, so it has to be named distance. We also cannot create an overload because that would be ambiguous, having the same template signature.
@@ -342,8 +328,7 @@ struct distance
 template <typename P1, typename P2>
 struct distance < point_tag, point_tag, P1, P2 >
 {
-    static double apply(P1 const& a,
-            P2 const& b)
+    static double apply(P1 const& a, P2 const& b)
     {
         // here we call pythagoras
         // exactly like we did before
@@ -357,8 +342,7 @@ struct distance
     point_tag, segment_tag, P, S
 >
 {
-    static double apply(P const& p,
-            S const& s)
+    static double apply(P const& p, S const& s)
     {
         // here we refer to another function
         // implementing point-segment
@@ -393,21 +377,20 @@ std::cout << "color distance: " << distance(red, orange) << std::endl;
 
 \section par7 Kernel revisited
 
-We described above that we had a traits class coordinate_type, defined in namespace traits, and defined a separate coordinate_type class as well. This was actually not really necessary before, because the only difference was namespace clause. But now that we have another geometry type, a segment in this case, it is essential. We can call the coordinate_type meta-function for any geometry type, point, segment, polygon, etc, implemented again by tag dispatching:
+We described above that we had a traits class coordinate_type, defined in namespace traits, and defined a separate coordinate_type class as well. This was actually not really necessary before, because the only difference was the namespace clause. But now that we have another geometry type, a segment in this case, it is essential. We can call the coordinate_type meta-function for any geometry type, point, segment, polygon, etc, implemented again by tag dispatching:
 
 \code
 template <typename G>
 struct coordinate_type
 {
-    typedef typename
-        dispatch::coordinate_type
+    typedef typename dispatch::coordinate_type
         <
             typename tag<G>::type, G
         >::type type;
 };
 \endcode
 
-Inside the dispatch namespace this meta-function is implemented twice: a generic version and one specialization for points. The specialization for points calls the traits class. The generic version calls the point-specialization, as a sort of recursive meta-function definition:
+Inside the dispatch namespace this meta-function is implemented twice: a generic version and one specialization for points. The specialization for points calls the traits class. The generic version calls the point specialization, as a sort of recursive meta-function definition:
 
 \code
 namespace dispatch
@@ -448,7 +431,7 @@ The same applies for the meta-function dimension and for the upcoming meta-funct
 \section par8 Coordinate system
 Until here we assumed a Cartesian system. But we know that the Earth is not flat. Calculating a distance between two GPS-points with the system above would result in nonsense. So we again extend our design. We define for each point type a coordinate system type, using the traits system again. Then we make the calculation dependant on that coordinate system.
 
-Coordinate system is similar to coordinate type, a meta-function, calling a dispatch function to have it for any geometry-type, forwarding to its point-specialization, and finally calling a traits class, defining a typedef type with a coordinate system. We don’t show that all here again. We only show the definition of a few coordinate systems:
+Coordinate system is similar to coordinate type, a meta-function, calling a dispatch function to have it for any geometry-type, forwarding to its point specialization, and finally calling a traits class, defining a typedef type with a coordinate system. We don’t show that all here again. We only show the definition of a few coordinate systems:
 \code
 struct cartesian {};
 
@@ -459,9 +442,9 @@ struct geographic
 };
 \endcode
 
-So Cartesian is simple, for geographic we can also select if its coordinates stored in degrees or in radians.
+So Cartesian is simple, for geographic we can also select if its coordinates are stored in degrees or in radians.
 
-The distance function now will change: it will select the computation method for the corresponding coordinate system and then call the dispatch struct for distance. We call the computation method specialized for coordinate systems a \b strategy. So the new version of the distance function is:
+The distance function will now change: it will select the computation method for the corresponding coordinate system and then call the dispatch struct for distance. We call the computation method specialized for coordinate systems a \b strategy. So the new version of the distance function is:
 
 \code
 template <typename G1, typename G2>
@@ -503,7 +486,7 @@ struct strategy_distance<cartesian, cartesian, P1, P2, D>
 
 So here is our Pythagoras again, now defined as a strategy. The distance dispatch function just calls its apply method.
 
-So this is an important step: for spherical or geographical coordinate systems, another strategy (computation method) can be implemented. For spherical coordinate systems we have the haversine formula. So it is specialized like this
+So this is an important step: for spherical or geographical coordinate systems, another strategy (computation method) can be implemented. For spherical coordinate systems we have the haversine formula. So the dispatching traits struct is specialized like this
 \code
 template <typename P1, typename P2,
     int D = 2>
@@ -516,10 +499,10 @@ struct strategy_distance<spherical, spherical, P1, P2, D>
 // is omitted here
 \endcode
 
-For geography, we have some alternatives for distance calculation. There is the Andoyer method[*], fast and precise, and there is the Vincenty method[*], slower and more precise, and there are some less precise approaches as well.
+For geography, we have some alternatives for distance calculation. There is the Andoyer method, fast and precise, and there is the Vincenty method, slower and more precise, and there are some less precise approaches as well.
 
 Per coordinate system, one strategy is defined as the default strategy.
-To be able to use any strategy, we modify our design again and add an overload for the distance algorithm, taking a strategy. That enables us to call distance with another strategy.
+To be able to use another strategy as well, we modify our design again and add an overload for the distance algorithm, taking a strategy object as a third parameter.
 
 This new overload distance function also has the advantage that the strategy can be constructed outside the distance function. Because it was constructed inside above, it could not have construction parameters. But for Andoyer or Vincenty, or the haversine formula, it certainly makes sense to have a constructor taking the radius of the earth as a parameter.
 So the distance overloaded function is:
@@ -537,7 +520,7 @@ double distance(G1 const& g1, G2 const& g2, S const& strategy)
 }
 \endcode
 
-The strategy has to have a method apply taking two points as argument (for points). It is not required that it is a static method. A strategy
+The strategy has to have a method \b apply taking two points as arguments (for points). It is not required that it is a static method. A strategy
 might define a constructor, where a configuration value is passed and stored as a member variable. In those cases a static
 method would be inconvenient. It can be implemented as a normal method (with the const qualifier).
 
@@ -577,7 +560,7 @@ The five traits classes mentioned in the paragraphs above form together the Poin
 - a specialization for traits::dimension
 - a specialization for traits::access
 
-The last one is a class, containing a function, the first four are meta-functions.
+The last one is a class, containing the method \b get and the (optional) method \b set, the first four are meta-functions, either defining \b type or declaring \b value (conform MPL conventions).
 So we now have agnosticism for the number of dimensions, agnosticism for coordinate systems, our design can handle any coordinate type, and it can handle different geometry types.
 Furthermore we can specify our own strategies, the code will not compile in case of two points with different dimensions (because of the assertion), and it will not compile for two points with different coordinate systems (because there is no specialization).
 We still have the distance function returning double. Next paragraph will solve that.
@@ -587,14 +570,13 @@ We still have the distance function returning double. Next paragraph will solve 
 \section par10 Return type
 We promised that calling sqrt was not always necessary. So we define a distance result struct that contains the squared value and is convertible to a double value.
 This, however, only has to be done for Pythagoras. The spherical distance functions do not take the square root so for them it is not necessary to avoid the expensive square root call; they can just return their distance.
-So the distance result struct is dependant on strategy, therefore made a member type of the strategy, looking like this:
+So the distance result struct is dependant on strategy, therefore made a member type of the strategy. The result struct looks like this:
 \code
 template<typename T = double>
 struct cartesian_distance
 {
     T sq;
-    explicit cartesian_distance(T const& v)
-        : sq (v) {}
+    explicit cartesian_distance(T const& v) : sq (v) {}
 
     inline operator T() const
     {
@@ -604,10 +586,11 @@ struct cartesian_distance
 \endcode
 
 It also has operators defined to compare itself to other results without taking the square root.
+
 Each strategy should define its return type, within the strategy class, e.g.:
 
 \code
-    typedef cartesian_distance<T>                   return_type;
+    typedef cartesian_distance<T> return_type;
 \endcode
 or:
 
@@ -634,7 +617,8 @@ struct distance_result
         <
             typename cs_tag<P1>::type,
             typename cs_tag<P2>::type,
-            P1, P2>::type S;
+            P1, P2
+        >::type S;
 
     typedef typename S::return_type type;
 };
@@ -643,12 +627,11 @@ struct distance_result
 and modify our distance function:
 \code
 template <typename G1, typename G2>
-inline typename distance_result
-    <G1, G2>::type
-    distance(G1 const& G1, G2 const& G2)
+inline typename distance_result<G1, G2>::type distance(G1 const& G1, G2 const& G2)
+{ ... }
 \endcode
 
-Of course also the apply functions in the dispatch specializations will return a result like this, they have a strategy as a template parameter everywhere, making the less verbose version possible.
+Of course also the apply functions in the dispatch specializations will return a result like this. They have a strategy as a template parameter everywhere, making the less verbose version possible.
 
 
 
@@ -661,11 +644,12 @@ We add a meta-function geometry_id, which has specializations for each geometry 
 Then we add a meta-function reverse_dispatch:
 \code
 template <typename G1, typename G2>
-struct reverse_dispatch :   detail::reverse_dispatch
-<
-    geometry_id<G1>::type::value,
-    geometry_id<G2>::type::value
-> {};
+struct reverse_dispatch : detail::reverse_dispatch
+    <
+        geometry_id<G1>::type::value,
+        geometry_id<G2>::type::value
+    >
+{};
 \endcode
 
 Because of the order in geometry_id, we can arrange (template) parameters in that order, in specializations. So the detail structure looks like:
@@ -673,13 +657,13 @@ Because of the order in geometry_id, we can arrange (template) parameters in tha
 namespace detail
 {
     template <int Id1, int Id2>
-    struct reverse_dispatch
-        : boost::mpl::if_c
+    struct reverse_dispatch : boost::mpl::if_c
         <
             (Id1 > Id2),
             boost::true_type,
             boost::false_type
-        > {};
+        >
+    {};
 \endcode
 
 And our distance function will be modified again with some template meta-programming:
@@ -735,21 +719,21 @@ struct is_multi<multi_linestring_tag> : boost::true_type {};
 template <>
 struct is_multi<multi_polygon_tag> : boost::true_type {};
 
-
-
-
 } // namespace dispatch
 \endcode
 
 
 Now we can specialize on is_multi, so we add two boolean IsMulti's, one for each geometry type, to our distance dispatch struct and make the call to them in the distance function:
 
-// specialization:
-
 \code
-template <typename GeometryTag1, typename GeometryTag2,
-       typename G1, typename G2, typename Strategy>
-struct distance<GeometryTag1, GeometryTag2, G1, G2, strategy_tag_distance_point_point, Strategy, false, true>
+// specialization:
+template <typename GeometryTag1, typename GeometryTag2, typename G1, typename G2, typename Strategy>
+struct distance
+    <
+        GeometryTag1, GeometryTag2, G1, G2, Strategy,
+        false, // G1 is_multi
+        true   // G2 is_multi
+    >
    : detail::distance::distance_single_to_multi<G1, G2, Strategy>
 {};
 \endcode
@@ -795,7 +779,7 @@ which iterates over a collection of multi-shapes, and returns the shortest dista
 
 
 
-\section par14 Sfinae
+\section par14 SFINAE
 Instead of tag dispatching we alternatively could have chosen for SFINAE, mentioned above. With SFINAE (Substitution Failure Is Not An Error) we add optional parameters to the distance function, which sole use is to make an overload invalid for other geometry types than specified. So like:
 \code
 template <typename P1, typename P2>
@@ -813,11 +797,9 @@ This SFINAE:
 - can be done on functions but not on structs (meta-functions). So the coordinate_type meta-function would still have to use tag dispatching
 - gives often compiler troubles and headaches: if a user makes an error somewhere, the compiler will not select any of the methods, and/or it will give completely incomprehensible error listings, just because of this SFINAE
 - does not support partial specializations because it is a function. The tag-dispatching function is of course also not supporting that, but it forwards its call to the dispatch struct where partial specializations (and member template functions) are possible. The SFINAE could do that as well but then: why not just add one tag more and have tag dispatching instead?
-- is a trick to deceive the compiler. “As a language behavior it was designed to avoid programs becoming ill-formed” [2], while tag dispatching is based on specialization, a core feature of C++
+- is a trick to deceive the compiler. “As a language behavior it was designed to avoid programs becoming ill-formed” (http://en.wikipedia.org/wiki/Substitution_failure_is_not_an_error), while tag dispatching is based on specialization, a core feature of C++
 - looks more ugly
 - is simply not necessary because we have tag dispatching :-)
-
-
 
 
 */

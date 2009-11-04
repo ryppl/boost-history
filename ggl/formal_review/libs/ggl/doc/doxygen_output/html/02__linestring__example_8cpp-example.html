@@ -196,8 +196,8 @@ The intersection algorithm intersects two geometries which each other, deliverin
     {
         <a class="code" href="classggl_1_1linestring.html" title="A linestring (named so by OGC) is a collection (default a vector) of points.">linestring_2d</a> lscopy = ls;
         std::for_each(lscopy.begin(), lscopy.end(), translate_function&lt;point_2d&gt;);
-        <a name="a13"></a><a class="code" href="namespaceggl.html#0cdb7f23bf7395ba3f385e9cf01a601f" title="Calls functor for geometry.">for_each_point</a>(lscopy, scale_functor&lt;point_2d&gt;());
-        <a class="code" href="namespaceggl.html#0cdb7f23bf7395ba3f385e9cf01a601f" title="Calls functor for geometry.">for_each_point</a>(lscopy, translate_function&lt;point_2d&gt;);
+        <a name="a13"></a><a class="code" href="group__for__each.html#g0cdb7f23bf7395ba3f385e9cf01a601f" title="Calls functor for geometry.">for_each_point</a>(lscopy, scale_functor&lt;point_2d&gt;());
+        <a class="code" href="group__for__each.html#g0cdb7f23bf7395ba3f385e9cf01a601f" title="Calls functor for geometry.">for_each_point</a>(lscopy, translate_function&lt;point_2d&gt;);
         std::cout &lt;&lt; <span class="stringliteral">"modified line: "</span> &lt;&lt; <a class="code" href="group__utility.html#g9419e5dd6f98468153ca14a35763bfd7" title="Main DSV-streaming function.">ggl::dsv</a>(lscopy) &lt;&lt; std::endl;
     }
 

@@ -43,20 +43,19 @@ The calculation method is always called \b apply (as convention in GGL) and gets
 In most cases, there is an additional method \b result which returns the calculated result. That result-method is a also non-static const method, and the state is passed.
 Note that the methods might be non-static const, but they might also be static. That is not checked by the concept-checker.
 
-A strategy for a specific algorithm has a concept. The distance-strategy should follow the distance-strategy-concept. The point-in-polygon strategy should follow the point-in-polygon-strategy-concept. Those concepts are not modelled as traits classes (contrary to the geomtries). The reason for this is that it seems not necessary to directly legacy classes as concepts, without modification. A wrapper can than be built. So the strategies should have a method apply and should define some types.
+A strategy for a specific algorithm has a concept. The distance-strategy should follow the distance-strategy-concept. The point-in-polygon strategy should follow the point-in-polygon-strategy-concept. Those concepts are not modelled as traits classes (contrary to the geometries). The reason for this is that it seems not necessary to use legacy classes as concepts, without modification. A wrapper can be built. So the strategies should have a method \b apply and should define some types.
 
-Which types, and which additional methods (often a method \b result), is thus dependant on the algorithm.
+Which types, and which additional methods (often a method \b result), is dependant on the algorithm / type of strategy.
 
 Strategies are checked by a strategy-concept-checker. For this checker (and sometimes for checking alone), they should define some types. Because if no types are defined, the methods cannot be checked at compile time... The strategy-concept-checkers are thus implemented per algorithm and they use the Boost Concept Check Library for checking.
 
-\section strpar3 Alternative designs
-
-So as explained above, the essention of the current design is:
+So as explained above, the essention of the design is:
 - function determines default-strategy, or is called with specified strategy
-- function calls dispatch (on geometry_tag)
+- function calls dispatch (dispatching is done on geometry_tag)
 - dispatch calls implementation (in namespace detail), which can be shared for different geometry types and for single/multi
 - implementation calls strategy (if applicable), with the smallest common (geometric) element applicable for all calculation method, the common denominator
 
+\section strpar3 Alternative designs
 
 Some calculations (strategies) might need to take the whole geometry, instead of working on point-per-point or segment-per-segment base. This would bypass the dispatch functionality. Because all strategies would take the whole geometry, it is not necessary to dispatch per geometry type. In fact this dispatching on geometry-type is moved to the strategy_traits class (which are specialized per coordinate system in the current design). So in this alternative design, the strategy traits class specializes on both geometry-tag and coordinate-system-tag, to select the default strategy.
 For the default strategy, this move from "dispatch" to another dispatch called "strategy_XXX" (XXX is the algorithm) might make sense. However, if library users would call the overloaded function and specify a strategy, the only thing what would happen is that that specified strategy is called. So, for example:

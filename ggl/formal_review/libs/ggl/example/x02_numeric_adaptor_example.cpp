@@ -102,7 +102,9 @@ int main(int argc, char *argv[])
 
     // But the value above cannot be expressed with that precision in IEEE 64 bits.
     // Points can therefore also be assigned by string with ggl::set
+    // (boost::to is a converser included in the Numeric Adaptor sources)
     ggl::set<0>(p, boost::to<type>(std::string("123456.78900001")));
+
     // and streamed (as a string representation)
     std::cout << "x coordinate: " << ggl::get<0>(p) << std::endl;
 

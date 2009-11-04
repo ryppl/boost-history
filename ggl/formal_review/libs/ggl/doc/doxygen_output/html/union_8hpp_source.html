@@ -140,7 +140,7 @@
 <a name="l00123"></a>00123                 <span class="keywordflow">if</span> (! add)
 <a name="l00124"></a>00124                 {
 <a name="l00125"></a>00125                     <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">ggl::point_type&lt;GeometryOut&gt;::type</a> point;
-<a name="l00126"></a>00126                     <a class="code" href="group__utility.html#ge415174744cad8935889144cc286a0fb" title="Take point on a border.">ggl::point_on_border</a>(holes[v[i].index], point);
+<a name="l00126"></a>00126                     <a class="code" href="group__overlay.html#ge415174744cad8935889144cc286a0fb" title="Take point on a border.">ggl::point_on_border</a>(holes[v[i].index], point);
 <a name="l00127"></a>00127                     add = ! <a class="code" href="group__within.html#g599c2aa76cf2037eb40514e449ace28d" title="Within, examine if a geometry is within another geometry.">ggl::within</a>(point, geometry);
 <a name="l00128"></a>00128                 }
 <a name="l00129"></a>00129                 <span class="keywordflow">if</span> (add)

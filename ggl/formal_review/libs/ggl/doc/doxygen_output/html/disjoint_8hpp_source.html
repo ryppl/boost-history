@@ -102,14 +102,14 @@
 <a name="l00077"></a>00077         <span class="comment">// If there is no intersection of segments, they might ly</span>
 <a name="l00078"></a>00078         <span class="comment">// inside each other</span>
 <a name="l00079"></a>00079         point_type p1;
-<a name="l00080"></a>00080         <a class="code" href="group__utility.html#ge415174744cad8935889144cc286a0fb" title="Take point on a border.">ggl::point_on_border</a>(geometry1, p1);
+<a name="l00080"></a>00080         <a class="code" href="group__overlay.html#ge415174744cad8935889144cc286a0fb" title="Take point on a border.">ggl::point_on_border</a>(geometry1, p1);
 <a name="l00081"></a>00081         <span class="keywordflow">if</span> (<a class="code" href="group__within.html#g599c2aa76cf2037eb40514e449ace28d" title="Within, examine if a geometry is within another geometry.">ggl::within</a>(p1, geometry2))
 <a name="l00082"></a>00082         {
 <a name="l00083"></a>00083             <span class="keywordflow">return</span> <span class="keyword">false</span>;
 <a name="l00084"></a>00084         }
 <a name="l00085"></a>00085 
 <a name="l00086"></a>00086         <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">ggl::point_type&lt;Geometry1&gt;::type</a> p2;
-<a name="l00087"></a>00087         <a class="code" href="group__utility.html#ge415174744cad8935889144cc286a0fb" title="Take point on a border.">ggl::point_on_border</a>(geometry2, p2);
+<a name="l00087"></a>00087         <a class="code" href="group__overlay.html#ge415174744cad8935889144cc286a0fb" title="Take point on a border.">ggl::point_on_border</a>(geometry2, p2);
 <a name="l00088"></a>00088         <span class="keywordflow">if</span> (<a class="code" href="group__within.html#g599c2aa76cf2037eb40514e449ace28d" title="Within, examine if a geometry is within another geometry.">ggl::within</a>(p2, geometry1))
 <a name="l00089"></a>00089         {
 <a name="l00090"></a>00090             <span class="keywordflow">return</span> <span class="keyword">false</span>;

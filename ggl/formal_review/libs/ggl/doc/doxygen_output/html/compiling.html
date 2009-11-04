@@ -38,7 +38,7 @@
 <h1><a class="anchor" name="compiling">Compiling </a></h1><h2><a class="anchor" name="compiling_intro">
 Compiling the Generic Geometry Library</a></h2>
 The Generic Geometry Library is a Header Only library. So just including the headerfiles is enough to use the algorithms. Nothing has to be linked.<p>
-The Generic Geometry Library is only dependant on (header only) Boost libraries. Download the Boost Library Collection from www.boost.org, adapt include path to include Boost.<h2><a class="anchor" name="platforms">
+The Generic Geometry Library is only dependant on (header only) Boost libraries. Download the Boost Library Collection from www.boost.org, adapt the include path to include Boost.<h2><a class="anchor" name="platforms">
 Platforms</a></h2>
 The library currently compiles successfully on the following platforms:<ul>
 <li>MS Visual Studio 2008 (Express Edition)</li><li>MS Visual Studio 2005 (Express Edition)</li><li>gcc version 3.4</li><li>gcc version 4 (tested are 4.1, 4.2, 4.4)</li></ul>
@@ -47,7 +47,7 @@ For Visual Studio, the examples contains some project files (for 2005). However,
 The test and example folders contain also Jam-files for bjam / boost-build<p>
 For gcc, the flag -Wno-long-long can be used (surpressing warnings originating from Boost)<h2><a class="anchor" name="convenient_includes">
 Convenient includes</a></h2>
-This section concentrates on how to include the Generic Geometry Library.<p>
+This section concentrates on how to include GGL.<p>
 The most convenient headerfile including all algorithms and strategies is ggl.hpp:<ul>
 <li>#include &lt;ggl/ggl.hpp&gt; It is recommended to include this file. Alternatively, it is possible to include GGL headerfiles separately. However, this is inconvenient as files might be renamed or moved occasionaly.</li></ul>
 <p>
@@ -56,6 +56,9 @@ An often used headerfile is <a class="el" href="geometries_8hpp.html">geometries
 <p>
 For users using only Cartesian points, with floating point coordinates (double), in 2D or 3D, you can use instead:<ul>
 <li>#include &lt;<a class="el" href="cartesian2d_8hpp.html">ggl/geometries/cartesian2d.hpp</a>&gt; This includes all 2D Cartesian geometries: point_2d, linestring_2d, etc. Using this headerfile the library seems to be a non-template library, so it is convenient for users that are not so into the template world.</li></ul>
+<p>
+For users using multi-geometries:<ul>
+<li>#include &lt;ggl/multi/multi.hpp&gt;</li></ul>
 <h2><a class="anchor" name="advanced_includes">
 Advanced includes</a></h2>
 This section is for users who have their own geometries and want to use algorithms from the Generic Geometry Library.<p>
@@ -67,10 +70,21 @@ If you are using standard containers containing points and want to handle them a
 <p>
 If you are using boost tuples and want to handle them as Cartesian points<ul>
 <li>#include &lt;<a class="el" href="tuple__cartesian_8hpp.html">ggl/geometries/adapted/tuple_cartesian.hpp</a>&gt;</li></ul>
+<h2><a class="anchor" name="extension_includes">
+Extensions</a></h2>
+The GGL is currently (since 0.5) split into the kernel and several extensions. As this split is relatively new, there are not yet umbrella-include files, but most things below will do:<p>
+If you want to use the <b>geographic</b> coordinate system:<ul>
+<li>the tag is already included in the kernel</li><li>#include &lt;ggl/extensions/gis/geographic/strategies/andoyer.hpp&gt; for Andoyer distance calculations</li><li>#include &lt;ggl/extensions/gis/geographic/strategies/vincenty.hpp&gt; for Vincenty distance calculations</li></ul>
+<p>
+If you want to use the <b>projections:</b> <ul>
+<li>#include &lt;ggl/extensions/gis/projections/parameters.hpp&gt;</li><li>#include &lt;ggl/extensions/gis/projections/projection.hpp&gt;</li><li>#include &lt;ggl/extensions/gis/projections/factory.hpp&gt;</li></ul>
+<p>
+If you want to use the <b>circle</b> (n-sphere)<ul>
+<li>#include &lt;ggl/extensions/nsphere/...&gt; <em>Several headerfiles, there is not yet a common include</em></li></ul>
 <h2><a class="anchor" name="performance">
 Performance</a></h2>
 The enumeration below is not exhaustive but can contain hints to improve the performance<ul>
-<li>For Microsoft, set the define _SECURE_SCL=0</li><li>For Microsoft, set the define _HAS_ITERATOR_DEBUGGING=0</li><li>measurements indicate that MSVC 2005 generates faster code than MSVC 2008</li><li>Using StlPort results in significant faster code than Microsoft's standard library</li><li>Of course turn on compiler optimizations, compile in release mode</li></ul>
+<li>For Microsoft, set the define _SECURE_SCL=0</li><li>For Microsoft, set the define _HAS_ITERATOR_DEBUGGING=0</li><li>our measurements indicate that MSVC 2005 generates faster code than MSVC 2008</li><li>Using StlPort results in significant faster code than Microsoft's standard library</li><li>Of course turn on compiler optimizations, compile in release mode</li></ul>
 <h2><a class="anchor" name="intellisense">
 Intellisense issues</a></h2>
 Microsoft Visual Studio (Express) 2005 and 2008 can hang typing in a bracket or angle bracket. This is not directly related to GGL, but caused by heavy templated libraries such as Boost and GGL. If this is inconvenient, intellisense can easily be turned off:<p>

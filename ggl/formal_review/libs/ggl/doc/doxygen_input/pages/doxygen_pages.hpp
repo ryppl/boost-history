@@ -21,7 +21,7 @@ The Generic Geometry Library is a Header Only library. So just including the hea
 to use the algorithms. Nothing has to be linked.
 
 The Generic Geometry Library is only dependant on (header only) Boost libraries. Download the Boost
-Library Collection from www.boost.org, adapt include path to include Boost.
+Library Collection from www.boost.org, adapt the include path to include Boost.
 
 \section platforms Platforms
 
@@ -40,7 +40,7 @@ For gcc, the flag -Wno-long-long can be used (surpressing warnings originating f
 
 \section convenient_includes Convenient includes
 
-This section concentrates on how to include the Generic Geometry Library.
+This section concentrates on how to include GGL.
 
 The most convenient headerfile including all algorithms and strategies is ggl.hpp:
 - \#include <ggl/ggl.hpp> It is recommended to include this file.
@@ -60,8 +60,8 @@ For users using only Cartesian points, with floating point coordinates (double),
   etc. Using this headerfile the library seems to be a non-template library, so it is convenient for users that
   are not so into the template world.
 
-
-
+For users using multi-geometries:
+- \#include <ggl/multi/multi.hpp>
 
 \section advanced_includes Advanced includes
 
@@ -77,16 +77,34 @@ If you are using standard containers containing points and want to handle them a
 - \#include <ggl/geometries/adapted/std_as_linestring.hpp> allows you to use things like \c std::vector<point_2d>
   and put them as parameters into algorithms.
 
-
 If you are using boost tuples and want to handle them as Cartesian points
 - \#include <ggl/geometries/adapted/tuple_cartesian.hpp>
+
+
+\section extension_includes Extensions
+The GGL is currently (since 0.5) split into the kernel and several extensions. As this split is relatively new,
+there are not yet umbrella-include files, but most things below will do:
+
+If you want to use the \b geographic coordinate system:
+- the tag is already included in the kernel
+- \#include <ggl/extensions/gis/geographic/strategies/andoyer.hpp> for Andoyer distance calculations
+- \#include <ggl/extensions/gis/geographic/strategies/vincenty.hpp> for Vincenty distance calculations
+
+If you want to use the \b projections:
+- \#include <ggl/extensions/gis/projections/parameters.hpp>
+- \#include <ggl/extensions/gis/projections/projection.hpp>
+- \#include <ggl/extensions/gis/projections/factory.hpp>
+
+If you want to use the \b circle (n-sphere)
+- \#include <ggl/extensions/nsphere/...> <i>Several headerfiles, there is not yet a common include</i>
+
 
 
 \section performance Performance finetuning
 The enumeration below is not exhaustive but can contain hints to improve the performance
 - For Microsoft, set the define _SECURE_SCL=0
 - For Microsoft, set the define _HAS_ITERATOR_DEBUGGING=0
-- measurements indicate that MSVC 2005 generates faster code than MSVC 2008
+- our measurements indicate that MSVC 2005 generates faster code than MSVC 2008
 - Using StlPort results in significant faster code than Microsoft's standard library
 - Of course turn on compiler optimizations, compile in release mode
 
@@ -178,8 +196,7 @@ inner rings. So basically a polygon which might have holes.
 <em>Note that this definition is different from several other polygon definitions and libraries,
 where polygons are not allowed to have holes. These polygons are comparable to the linear_ring above</em>
 
-The following geometries were in the first preview, because they are defined in OGC, but not in the current preview
-(they will be added again).
+And multi-geometries:
 - \ref ggl::multi_point "multi_point": collection of points
 - \ref ggl::multi_linestring "multi_linestring": collection of linestrings
 - \ref ggl::multi_polygon "multi_polygon": collection of polygons
@@ -292,6 +309,8 @@ There are the following changes:
   resulting in modifying geometries. Functions using an output iterator are called _inserter,
   so convex_hull_inserter inserts points (the hull) into something.
 - many headerfiles are moved and/or renamed
+- strategies now define a method \b apply, in previous versions this was \b operator()
+  <i>this only influences your code if you've made strategies yourself</i>
 - ...
 
 
@@ -310,7 +329,7 @@ From 2008 Bruno Lalande, already a Boost contributor, joined and helped
 to make the library more generic and to define clear concepts.
 It is now called Generic Geometry Library, abbreviated to GGL.
 From 2009 Mateusz Loskot, an active member of Geospatial Open Source communities,
-joined and helped with reviewing code, guidelines, WKB, iterators, and the Wiki and ticket system
+joined and helped with reviewing code, guidelines, WKB, iterators, and the Wiki and ticket system (http://trac.osgeo.org/ggl)
 
 The library is now called Generic Geometry Library, abbreviated to GGL.
 The Generic Geometry Library is Open Source and is proposed to the Boost community.
@@ -328,13 +347,9 @@ The library can be downloaded from Boost SVN. There is anonymous SVN access.
 
 The command
 
-<tt>svn co https://svn.boost.org/svn/boost/sandbox/ggl ggl</tt>
+<tt>svn co https://svn.boost.org/svn/boost/sandbox/ggl/formal_review ggl</tt>
 
 will download the library to your machine.
-
-Current \b Formal \b Review version is here:
-https://svn.boost.org/svn/boost/sandbox/ggl/formal_review
-
 
 */
 

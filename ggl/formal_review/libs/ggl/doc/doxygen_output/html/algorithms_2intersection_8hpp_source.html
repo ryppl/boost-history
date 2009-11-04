@@ -135,7 +135,7 @@
 <a name="l00147"></a>00147             <span class="keywordflow">if</span> (v[i].index_of_parent == -1)
 <a name="l00148"></a>00148             {
 <a name="l00149"></a>00149                 <span class="keyword">typename</span> <a class="code" href="structggl_1_1point__type.html" title="Meta-function which defines point type of any geometry.">ggl::point_type&lt;GeometryOut&gt;::type</a> point;
-<a name="l00150"></a>00150                 <a class="code" href="group__utility.html#ge415174744cad8935889144cc286a0fb" title="Take point on a border.">ggl::point_on_border</a>(holes[v[i].index], point);
+<a name="l00150"></a>00150                 <a class="code" href="group__overlay.html#ge415174744cad8935889144cc286a0fb" title="Take point on a border.">ggl::point_on_border</a>(holes[v[i].index], point);
 <a name="l00151"></a>00151                 <span class="keywordflow">if</span> (<a class="code" href="group__within.html#g599c2aa76cf2037eb40514e449ace28d" title="Within, examine if a geometry is within another geometry.">ggl::within</a>(point, geometry))
 <a name="l00152"></a>00152                 {
 <a name="l00153"></a>00153                     <span class="keyword">typename</span> ring_type&lt;GeometryOut&gt;::type hole;

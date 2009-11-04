@@ -6,7 +6,9 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-// Doxygen Examples, for email formal review
+// Doxygen Examples, for e.g. email formal review
+
+#include <boost/foreach.hpp>
 
 #include <ggl/ggl.hpp>
 #include <ggl/geometries/adapted/tuple_cartesian.hpp>
@@ -45,6 +47,21 @@ void example_length2()
         << std::endl;
 }
 
+void example_less()
+{
+    typedef boost::tuple<double, double> P;
+    std::vector<P> line;
+    line.push_back(boost::make_tuple(8.1, 1.9));
+    line.push_back(boost::make_tuple(4.2, 7.5));
+    line.push_back(boost::make_tuple(2.3, 3.6));
+    std::sort(line.begin(), line.end(), ggl::less<P>());
+
+    // Display ordered points
+    BOOST_FOREACH(P const& p, line)
+    {
+        std::cout << ggl::dsv(p) << std::endl;
+    }
+}
 
 
 
@@ -53,5 +70,6 @@ int main(void)
     example_distance();
     example_length1();
     example_length2();
+    example_less();
     return 0;
 }

@@ -113,7 +113,8 @@ INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.hpp
 RECURSIVE              = NO
 EXCLUDE                = ../../../boost/ggl/util/builder.hpp \
-			../../../boost/ggl/point_on_line.hpp \
+			../../../boost/ggl/algorithms/parse.hpp \
+			../../../boost/ggl/algorithms/point_on_line.hpp \
 			../../../boost/ggl/strategies/cartesian/cart_intersect.hpp \
 			../../../boost/ggl/util/distance_sort.hpp \
 			./doxygen_extension_examples.hpp 

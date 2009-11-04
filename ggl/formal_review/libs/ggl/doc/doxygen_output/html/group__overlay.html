@@ -65,12 +65,64 @@
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__overlay.html#gc1dcd7471f802810f7d48b36eea24d0f">ggl::merge_intersection_points</a> (IntersectionPoints &amp;intersection_points)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Merges intersection points such that points at the same location will be merged, having one <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> and their info-records appended.  <a href="#gc1dcd7471f802810f7d48b36eea24d0f"></a><br></td></tr>
+<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename Geometry &gt; </td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__overlay.html#ge415174744cad8935889144cc286a0fb">ggl::point_on_border</a> (Geometry const &amp;geometry, typename point_type&lt; Geometry &gt;::type &amp;point)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Take <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> on a border.  <a href="#ge415174744cad8935889144cc286a0fb"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename GeometryOut , typename Geometry1 , typename Geometry2 , typename IntersectionPoints , typename OutputIterator &gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__overlay.html#g05c8da6bfcd1aa911c5520ac991fdc0d">ggl::traverse</a> (Geometry1 const &amp;geometry1, Geometry2 const &amp;geometry2, int direction, IntersectionPoints &amp;intersection_points, bool trivial, OutputIterator out)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Traverses through intersection points / geometries.  <a href="#g05c8da6bfcd1aa911c5520ac991fdc0d"></a><br></td></tr>
 </table>
 <hr><h2>Function Documentation</h2>
+<a class="anchor" name="ge415174744cad8935889144cc286a0fb"></a><!-- doxytag: member="ggl::point_on_border" ref="ge415174744cad8935889144cc286a0fb" args="(Geometry const &amp;geometry, typename point_type&lt; Geometry &gt;::type &amp;point)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Geometry &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ggl::point_on_border           </td>
+          <td>(</td>
+          <td class="paramtype">Geometry const &amp;&nbsp;</td>
+          <td class="paramname"> <em>geometry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typename point_type&lt; Geometry &gt;::type &amp;&nbsp;</td>
+          <td class="paramname"> <em>point</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Take <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> on a border. 
+<p>
+<dl compact><dt><b>Template Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>Geometry</em>&nbsp;</td><td>geometry type </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>geometry</em>&nbsp;</td><td>geometry to take <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> from </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a></em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>TRUE if successful, else false. It is only false if polygon/line have no points </dd></dl>
+<dl class="note" compact><dt><b>Note:</b></dt><dd>for a <a class="el" href="classggl_1_1polygon.html" title="The polygon contains an outer ring and zero or more inner rings.">polygon</a>, it is always a <a class="el" href="classggl_1_1point.html" title="Basic point class, having coordinates defined in a neutral way.">point</a> on the exterior ring </dd></dl>
+
+<p>Definition at line <a class="el" href="point__on__border_8hpp_source.html#l00153">153</a> of file <a class="el" href="point__on__border_8hpp_source.html">point_on_border.hpp</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="g72698a9e6c8319f77d1481537096c890"></a><!-- doxytag: member="ggl::copy_segments" ref="g72698a9e6c8319f77d1481537096c890" args="(Geometry const &amp;geometry, SegmentIdentifier const &amp;seg_id, int to_index, RangeOut &amp;range_out)" -->
 <div class="memitem">
 <div class="memproto">

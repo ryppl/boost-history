@@ -44,9 +44,11 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Detect if two geometries are spatially equal.  <a href="#g122b1fd835cee0742da7c97dfdda94c5"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
+Equals returns true if geometries are spatially equal. Spatially equal means including the same point-set. A linestring can be spatially equal to another linestring, even if both do not have the same amount of points. A polygon can be spatially equal to a multi-polygon (which then has only one element).<p>
 <dl class="user" compact><dt><b>Geometries:</b></dt><dd><ul>
 <li><b>point</b> + <b>point</b> </li><li><b>box</b> + <b>box</b> </li></ul>
 </dd></dl>
+<dl class="note" compact><dt><b>Note:</b></dt><dd>There is a functor <a class="el" href="group__compare.html">compare</a> as well, which can be used for std:: library compatibility. </dd></dl>
 <hr><h2>Function Documentation</h2>
 <a class="anchor" name="g122b1fd835cee0742da7c97dfdda94c5"></a><!-- doxytag: member="ggl::equals" ref="g122b1fd835cee0742da7c97dfdda94c5" args="(Geometry1 const &amp;geometry1, Geometry2 const &amp;geometry2)" -->
 <div class="memitem">
@@ -93,7 +95,7 @@ Detect if two geometries are spatially equal.
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>true if geometries are spatially equal, else false </dd></dl>
 <dl compact><dt><b>Examples: </b></dt><dd>
 <a class="el" href="07__graph__route__example_8cpp-example.html#a6">07_graph_route_example.cpp</a>.</dl>
-<p>Definition at line <a class="el" href="equals_8hpp_source.html#l00295">295</a> of file <a class="el" href="equals_8hpp_source.html">equals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="equals_8hpp_source.html#l00304">304</a> of file <a class="el" href="equals_8hpp_source.html">equals.hpp</a>.</p>
 
 </div>
 </div><p>

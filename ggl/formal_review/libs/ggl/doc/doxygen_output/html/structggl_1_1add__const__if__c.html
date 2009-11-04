@@ -67,7 +67,7 @@
 Meta-function to define a const or non const type. 
 <p>
 If the boolean template parameter is true, the type parameter will be defined as const, otherwise it will be defined as it was. This meta-function is used to have one implementation for both const and non const references <dl class="note" compact><dt><b>Note:</b></dt><dd>This <a class="el" href="namespaceggl_1_1traits.html">traits</a> class is completely independant from GGL and might be a separate addition to Boost <p>
-Used in ggl::for_each </dd></dl>
+Used in a.o. ggl::for_each, <a class="el" href="group__access.html#gaee58ea9a166a2ca07597daf34433d7f" title="Function to get the interior rings of a polygon (non const version).">ggl::interior_rings</a>, <a class="el" href="group__access.html#g4dd59c8603683e869f1d74bd40045b8b" title="Function to get the exterior_ring ring of a polygon.">ggl::exterior_ring</a> </dd></dl>
 <dl class="user" compact><dt><b>Example</b></dt><dd><div class="fragment"><pre class="fragment">        <span class="keywordtype">void</span> foo(<span class="keyword">typename</span> add_const_if_c&lt;IsConst, Point&gt;::type&amp; point)
 </pre></div> </dd></dl>
 

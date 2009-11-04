@@ -23,7 +23,7 @@ Distributed under the Boost Software License, Version 1.0.\n
 </em>
 
 \section intro Introduction
-The Generic Geometry Library, GGL (currently in "Formal Review Request") defines \ref concepts "concepts" for geometries and implements some algorithms on such geometries.
+The Generic Geometry Library, GGL, currently in \b Formal \b Review, defines \ref concepts "concepts" for geometries and implements some algorithms on such geometries.
 
 GGL contains a dimension-agnostic, coordinate-system-agnostic and scalable kernel,  based on concepts, meta-functions and tag- dispatching.
 On top of that kernel, algorithms are built: area, length, perimeter, centroid, convex hull, intersection (clipping), within (point in polygon), distance, envelope (bounding box), simplify, transform, convert, and more. The library is also designed to support high precision arithmetic numbers, such as GMP.
@@ -39,10 +39,12 @@ The library follows existing conventions:
 - conventions from the std library
 - conventions and names from one of the OGC standards on Geometry
 
-This Generic Geometry Library (ggl) is now being proposed to the Boost Library Collection
+This Generic Geometry Library (ggl) is now being reviewed by the Boost Community
 
 The library can be downloaded from the Boost Sandbox,
 go to the \ref download "Download page" for more information.
+
+A (recently started) GGL Wiki is here: http://trac.osgeo.org/ggl/wiki
 
 \section quickstart Quick start
 It is not possible to show the whole library at a glance. A few very small examples are shown below.
@@ -82,7 +84,7 @@ move the second one to another place:
 \skip QRect
 \until }
 
-Many more examples are on the page \b Examples
+More examples are on the page \b Examples
 
 
 */
