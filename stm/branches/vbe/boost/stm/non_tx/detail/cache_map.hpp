@@ -16,6 +16,7 @@
 
 //-----------------------------------------------------------------------------
 #include <map>
+#include <memory>
 //-----------------------------------------------------------------------------
 #include <boost/synchro.hpp>
 //-----------------------------------------------------------------------------
@@ -60,7 +61,7 @@ public:
         : base_type()
         , value_(ptr), ptr_(0) {}
 
-    inline ~cache() {
+    ~cache() {
         delete ptr_;
     }
 
@@ -106,6 +107,7 @@ public:
         delete this;
     }
 #endif
+
     virtual void copy_state(base_transaction_object const * const rhs) {
         if (value_==0) return;
         *value_= *(static_cast<cache<T> const * const>(rhs)->ptr_);
@@ -130,7 +132,7 @@ public:
       base_memory_manager::return_mem(mem, sizeof(cache<T>));
    }
 #endif
-   
+
 private:
     //cache(cache<T> const & r);
 
@@ -158,27 +160,50 @@ public:
     static cache<T>* get(T* ptr) {
         synchro::lock_guard<Mutex> lk(mtx_);
         map_type::iterator it = map_.find(ptr);
-        cache<T>* res=0;
+        std::auto_ptr<cache<T> > res;
         if (it == map_.end()) {
-            res= new cache<T>(ptr);
-            map_.insert(std::make_pair(ptr, res));
+            // When the cache do not exists yet create a new one
+            res.reset(new cache<T>(ptr));
+            map_.insert(std::make_pair(ptr, res.get()));
         } else {
-            res=static_cast<cache<T>*>(it->second);
+            if (typeid(*it->second)==typeid(cache<T>)) {
+                res.reset(static_cast<cache<T>*>(it->second));
+            } else {
+                // When cached value do not corresponds to the type we need
+                // remove the cached one and create a new one.
+                base_transaction_object* tmp= it->second;
+                map_.erase(it);
+                delete tmp;
+                res.reset(new cache<T>(ptr));
+                map_.insert(std::make_pair(ptr, res.get()));
+            }
+
         }
-        return res;
+        return res.release();
     }
     template <typename T>
-    static cache<T>* get(T const* ptr) {
+    static cache<T> * get(T const* ptr) {
         synchro::lock_guard<Mutex> lk(mtx_);
         map_type::iterator it = map_.find(const_cast<T*>(ptr));
-        cache<T>* res=0;
+        std::auto_ptr<cache<T> > res;
         if (it == map_.end()) {
-            res= new cache<T>(const_cast<T*>(ptr));
-            map_.insert(std::make_pair(const_cast<T*>(ptr), res));
+            // When the cache do not exists yet create a new one
+            res.reset(new cache<T>(const_cast<T*>(ptr)));
+            map_.insert(std::make_pair(const_cast<T*>(ptr), res.get()));
         } else {
-            res=static_cast<cache<T>*>(it->second);
+            if (typeid(it->second)==typeid(cache<T>*)) {
+                res.reset(static_cast<cache<T>*>(it->second));
+            } else {
+                // When cached value do not corresponds to the type we need
+                // remove the cached one and create a new one.
+                base_transaction_object* tmp= it->second;
+                map_.erase(it);
+                delete tmp;
+                res.reset(new cache<T>(const_cast<T*>(ptr)));
+                map_.insert(std::make_pair(const_cast<T*>(ptr), res.get()));
+            }
         }
-        return res;
+        return res.release();
     }
 };
 
