@@ -33,10 +33,10 @@ env.BoostLibrary(
     """)
     )
 
+env = env.Clone()
 if not env.CheckPython():
     Return()
 
-env = env.Clone()
 env.Append(
     CPPDEFINES = "BOOST_MPI_PYTHON_SOURCE=1",
     )
