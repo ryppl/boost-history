@@ -1,0 +1,115 @@
+# vi: syntax=python:et:ts=4
+Import("env")
+
+if not (env.CheckPython() and env["LINK_DYNAMIC"]):
+    Return()
+
+def BPLTest(env, name, sources = None, script = None):
+    run = env.BoostRunPythonScript(name + ".py")
+    if sources:
+        for source in sources:
+            Depends(run,
+                env.PythonExtension(source != name and source or (source + "_ext"), source + ".cpp")
+            )
+    else:
+        Depends(run, env.PythonExtension(name + "_ext", name + ".cpp"))
+env.AddMethod(BPLTest)
+
+env.AppendENVPath('PYTHONPATH', Dir('.').path)
+
+env.BPLTest("crossmod_exception", ["crossmod_exception_a", "crossmod_exception_b"])
+for test in Split("""
+    injected
+    properties
+    return_arg
+    staticmethod
+    shared_ptr
+    enable_shared_from_this
+    andreas_beyer
+    polymorphism
+    polymorphism2
+
+    wrapper_held_type
+    polymorphism2_auto_ptr
+
+    auto_ptr
+
+    minimal
+    args
+    raw_ctor
+    numpy
+    enum
+    exception_translator
+    """):
+    env.BPLTest(test)
+env.BPLTest("test_cltree", ["cltree"])
+env.BPLTest("newtest", ["m1", "m2"])
+env.BPLTest("const_argument")
+env.BPLTest("keywords_test", ["keywords"])
+Depends(
+    env.BoostRunPythonScript("test_builtin_converters.py"),
+    env.PythonExtension("builtin_converters_ext", "test_builtin_converters.cpp")
+    )
+for test in Split("""
+    test_pointer_adoption
+    operators
+    operators_wrapper
+    callbacks
+    defaults
+
+    object
+    list
+    long
+    dict
+    tuple
+    str
+    slice
+
+    virtual_functions
+    back_reference
+    implicit
+    data_members
+
+    ben_scott1
+
+    bienstman1
+    bienstman2
+    bienstman3
+
+    multi_arg_constructor
+    """):
+    env.BPLTest(test)
+env.BPLTest("iterator", ["iterator", "input_iterator"])
+env.BPLTest("stl_iterator")
+
+env.BPLTest("extract")
+
+env.BPLTest("crossmod_opaque", ["crossmod_opaque_a", "crossmod_opaque_b"])
+
+for test in Split("""
+    opaque
+    voidptr
+
+    pickle1
+    pickle2
+    pickle3
+    pickle4
+
+    nested
+
+    docstring
+    pytype_function
+
+    vector_indexing_suite
+
+    pointer_vector
+    """):
+    env.BPLTest(test)
+Depends(
+    env.BoostRunPythonScript("map_indexing_suite.py"),
+    env.PythonExtension("map_indexing_suite_ext", [
+        "map_indexing_suite.cpp",
+        "int_map_indexing_suite.cpp",
+        "a_map_indexing_suite.cpp"])
+    )
+env.BoostRunTest("import_", "import_.cpp", "./${SOURCES[0]} ${SOURCES[1]}", "import_.py")

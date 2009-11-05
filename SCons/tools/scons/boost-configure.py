@@ -34,7 +34,10 @@ class CheckBZip2(DependencyChecker):
 class CheckPython(DependencyChecker):
     def Check(self, env):
         import distutils.sysconfig
-        self.flags = dict(CPPPATH = [distutils.sysconfig.get_python_inc()])
+        self.flags = dict(
+            CPPPATH = [distutils.sysconfig.get_python_inc()],
+            LIBPATH = [distutils.sysconfig.PREFIX + "/lib"],
+            LIBS = "python" + distutils.sysconfig.get_config_var('VERSION'))
         env.AppendUnique(**self.flags)
         self.have_dep = self.conf.CheckCHeader("Python.h")
 

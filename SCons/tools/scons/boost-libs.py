@@ -27,9 +27,9 @@ def BoostUseLib(env, lib):
 
 def PythonExtension(env, lib, sources, **kw):
     if env["LINK_DYNAMIC"]:
-        env.Alias(lib, 
-            env.SharedLibrary(lib, sources, SHLIBPREFIX='', SHLIBSUFFIX=distutils.sysconfig.get_config_var("SO"), **kw)
-            )
+        ext = env.SharedLibrary(lib, sources, SHLIBPREFIX='', SHLIBSUFFIX=distutils.sysconfig.get_config_var("SO"), **kw)
+        env.Alias(lib, ext)
+        return ext
 
 def boost_copy_func(dest, source, env):
     import os, stat, shutil
