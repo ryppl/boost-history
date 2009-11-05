@@ -31,6 +31,7 @@ namespace boost { namespace stm { namespace detail {
 struct deleter {
     virtual void reset()=0;
     virtual void release()=0;
+    virtual ~deleter() {}
 };
 
 //-----------------------------------------------------------------------------
