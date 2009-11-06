@@ -2241,16 +2241,15 @@ space_info <a name="space">space</a>(const path&amp; p</span>, system::error_cod
     end note</i>]</p>
       <p>For the <code>error_code&amp;</code> overload:</p>
     <ul>
-      <li>If the underlying file system API reports no error during attribute 
-      determination, <code>ec.clear()</code>.<br>
+      <li>If, during attribute determination, the underlying file system API reports no error, <code>ec.clear()</code>.<br>
 &nbsp;</li>
       <li>Otherwise, <code>ec</code> is set according to the error reported by 
       the underlying file system API.</li>
     </ul>
     <blockquote>
       <p>[<i>Note:</i> This allows users to inspect the specifics of underlying 
-      API errors even when the value returned by <code>status()</code> is <code>
-      file_status(file_not_found)</code>.&nbsp; <i>--end note</i>]</p>
+      API errors even when the value returned by <code>status()</code> is not <code>
+      file_status(status_error)</code>.&nbsp; <i>--end note</i>]</p>
     </blockquote>
     </blockquote>
   <p><i>Returns:</i></p>

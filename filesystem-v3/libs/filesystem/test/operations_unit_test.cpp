@@ -17,16 +17,16 @@ using namespace boost::system;
 using std::cout;
 using std::string;
 
-#define CHECK(x) check( x, __FILE__, __LINE__ )
+#define CHECK(x) check(x, __FILE__, __LINE__)
 
 namespace
 {
 
   std::string this_file;
   
-  void check( bool ok, const char* file, int line )
+  void check(bool ok, const char* file, int line)
   {
-    if ( ok ) return;
+    if (ok) return;
 
     ++::boost::detail::test_errors();
 
@@ -41,20 +41,20 @@ namespace
 
     error_code ec;
 
-    CHECK( file_size( "no-such-file", ec ) == 0 );
-    CHECK( ec == errc::no_such_file_or_directory );
+    CHECK(file_size("no-such-file", ec) == 0);
+    CHECK(ec == errc::no_such_file_or_directory);
 
-    CHECK( status( "no-such-file" ) == file_status( file_not_found ) );
+    CHECK(status("no-such-file") == file_status(file_not_found));
 
-    CHECK( exists( "/" ) );
-    CHECK( !exists( "no-such-file" ) );
+    CHECK(exists("/"));
+    CHECK(!exists("no-such-file"));
 
-    CHECK( is_directory( "/" ) );
-    CHECK( !is_directory( this_file ) );
+    CHECK(is_directory("/"));
+    CHECK(!is_directory(this_file));
 
-    CHECK( is_regular_file( this_file ) );
-    CHECK( !boost::filesystem::is_empty( this_file ) );
-    CHECK( !is_other( this_file ) );
+    CHECK(is_regular_file(this_file));
+    CHECK(!boost::filesystem::is_empty(this_file));
+    CHECK(!is_other(this_file));
   }
 
   //  directory_iterator_test  -----------------------------------------------//
@@ -65,29 +65,29 @@ namespace
 
     directory_iterator end;
 
-    directory_iterator it( "." );
+    directory_iterator it(".");
 
-    CHECK( !it->path().empty() );
+    CHECK(!it->path().empty());
 
-    if ( is_regular_file( it->status() ) )
+    if (is_regular_file(it->status()))
     {
-      CHECK( is_regular_file( it->symlink_status() ) );
-      CHECK( !is_directory( it->status() ) );
-      CHECK( !is_symlink( it->status() ) );
-      CHECK( !is_directory( it->symlink_status() ) );
-      CHECK( !is_symlink( it->symlink_status() ) );
+      CHECK(is_regular_file(it->symlink_status()));
+      CHECK(!is_directory(it->status()));
+      CHECK(!is_symlink(it->status()));
+      CHECK(!is_directory(it->symlink_status()));
+      CHECK(!is_symlink(it->symlink_status()));
     }
     else
     {
-      CHECK( is_directory( it->status() ) );
-      CHECK( is_directory( it->symlink_status() ) );
-      CHECK( !is_regular_file( it->status() ) );
-      CHECK( !is_regular_file( it->symlink_status() ) );
-      CHECK( !is_symlink( it->status() ) );
-      CHECK( !is_symlink( it->symlink_status() ) );
+      CHECK(is_directory(it->status()));
+      CHECK(is_directory(it->symlink_status()));
+      CHECK(!is_regular_file(it->status()));
+      CHECK(!is_regular_file(it->symlink_status()));
+      CHECK(!is_symlink(it->status()));
+      CHECK(!is_symlink(it->symlink_status()));
     }
 
-    for ( ; it != end; ++it )
+    for (; it != end; ++it)
     {
 //      cout << "  " << it->path().string() << "\n";
     }
@@ -103,23 +103,23 @@ namespace
 
     error_code ec;
 
-    CHECK( complete( "foo", "c:/" ) == "c:/foo" );
+    CHECK(complete("foo", "c:/") == "c:/foo");
 
-    CHECK( !create_directory( "/", ec ) );
+    CHECK(!create_directory("/", ec));
 
-    CHECK( !boost::filesystem::remove( "no-such-file-or-directory" ) );
-    CHECK( !remove_all( "no-such-file-or-directory" ) );
+    CHECK(!boost::filesystem::remove("no-such-file-or-directory"));
+    CHECK(!remove_all("no-such-file-or-directory"));
 
-    space_info info = space( "/" );
+    space_info info = space("/");
 
-    CHECK( info.available <= info.capacity );
+    CHECK(info.available <= info.capacity);
 
-    CHECK( equivalent( "/", "/" ) );
-    CHECK( !equivalent( "/", "." ) );
+    CHECK(equivalent("/", "/"));
+    CHECK(!equivalent("/", "."));
 
-    std::time_t ft = last_write_time( "." );
-
-    last_write_time( ".", std::time_t(-1), ec );
+    std::time_t ft = last_write_time(".");
+    ft = -1;
+    last_write_time(".", ft, ec);
   }
 
   //  directory_entry_overload_test  ---------------------------------------------------//
@@ -128,8 +128,8 @@ namespace
   {
     std::cout << "directory_entry overload test..." << std::endl;
 
-    directory_iterator it( "." );
-    path p( *it );
+    directory_iterator it(".");
+    path p(*it);
   }
 
 }  // unnamed namespace
@@ -140,7 +140,7 @@ namespace
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
-int main( int argc, char * argv[] )
+int main(int, char* argv[])
 {
   this_file = argv[0];
 
@@ -148,26 +148,26 @@ int main( int argc, char * argv[] )
 
   //  error handling tests
 
-  bool threw( false );
+  bool threw(false);
   try
   { 
-    file_size( "no-such-file" );
+    file_size("no-such-file");
   }
-  catch ( const boost::filesystem::filesystem_error & ex )
+  catch (const boost::filesystem::filesystem_error & ex)
   {
     threw = true;
     cout << "\nas expected, attempt to get size of non-existent file threw a filesystem_error\n"
       "what() returns " << ex.what() << "\n";
   }
-  catch ( ... )
+  catch (...)
   {
     cout << "\nunexpected exception type caught" << std::endl;
   }
 
-  CHECK( threw );
+  CHECK(threw);
 
   error_code ec;
-  CHECK( !create_directory( "/", ec ) );
+  CHECK(!create_directory("/", ec));
 
   query_test();
   directory_iterator_test();

@@ -74,7 +74,10 @@ namespace boost
 
   enum file_type
   { 
-    status_unknown,
+    status_error,
+# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+    status_unknown = status_error,
+# endif
     file_not_found,
     regular_file,
     directory_file,
@@ -91,9 +94,9 @@ namespace boost
   class BOOST_FILESYSTEM_DECL file_status
   {
   public:
-    explicit file_status(file_type v = status_unknown) : m_value(v) {}
+    explicit file_status(file_type v = status_error) : m_value(v) {}
 
-    void type(file_type v)  { m_value = v; }
+    void type(file_type v)    { m_value = v; }
     file_type type() const    { return m_value; }
 
     bool operator==(const file_status& rhs) const { return type() == rhs.type(); }
@@ -107,8 +110,8 @@ namespace boost
     file_type m_value;
   };
 
-  inline bool status_known(file_status f) { return f.type() != status_unknown; }
-  inline bool exists(file_status f)       { return f.type() != status_unknown
+  inline bool status_known(file_status f) { return f.type() != status_error; }
+  inline bool exists(file_status f)       { return f.type() != status_error
                                                 && f.type() != file_not_found; }
   inline bool is_regular_file(file_status f){ return f.type() == regular_file; }
   inline bool is_directory(file_status f) { return f.type() == directory_file; }
@@ -535,12 +538,12 @@ class directory_iterator;
 namespace detail
 {
   BOOST_FILESYSTEM_DECL
-    system::error_code dir_itr_close( // never throws()
+    system::error_code dir_itr_close(// never throws()
     void *& handle
 #     if     defined(BOOST_POSIX_API)
         , void *& buffer
 #     endif
-   ); 
+  ); 
 
   struct BOOST_FILESYSTEM_DECL dir_itr_imp
   {
@@ -563,7 +566,7 @@ namespace detail
 #       if defined(BOOST_POSIX_API)
          , buffer
 #       endif
-     );
+    );
     }
   };
 
@@ -695,7 +698,7 @@ namespace detail
       return m_imp_ptr.get() ? m_imp_ptr->m_path2 : empty_path ;
     }
 
-    const char * what() const throw()
+    const char* what() const throw()
     {
       if (!m_imp_ptr.get())
         return system::system_error::what();

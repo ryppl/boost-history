@@ -1,6 +1,6 @@
 //  operations.cpp  --------------------------------------------------------------------//
 
-//  Copyright 2002-2005 Beman Dawes
+//  Copyright 2002-2009 Beman Dawes
 //  Copyright 2001 Dietmar Kuehl
 
 //  Distributed under the Boost Software License, Version 1.0.
@@ -387,13 +387,13 @@ namespace
   }
 
   inline std::size_t get_full_path_name(
-    const path& src, std::size_t len, wchar_t * buf, wchar_t ** p)
+    const path& src, std::size_t len, wchar_t* buf, wchar_t** p)
   {
     return static_cast<std::size_t>(
       ::GetFullPathNameW(src.c_str(), static_cast<DWORD>(len), buf, p));
   }
 
-  BOOL resize_file_api(const wchar_t * p, boost::uintmax_t size)
+  BOOL resize_file_api(const wchar_t* p, boost::uintmax_t size)
   {
     HANDLE handle = CreateFileW(p, GENERIC_WRITE, 0, 0, OPEN_EXISTING,
                                 FILE_ATTRIBUTE_NORMAL, 0);
@@ -458,7 +458,7 @@ namespace
 
     int oflag = O_CREAT | O_WRONLY;
     if (fail_if_exists)oflag |= O_EXCL;
-    if ( (outfile = ::open(to_p.c_str(), oflag, from_stat.st_mode))< 0)
+    if ((outfile = ::open(to_p.c_str(), oflag, from_stat.st_mode))< 0)
     {
       int open_errno = errno;
       BOOST_ASSERT(infile >= 0);
@@ -504,7 +504,7 @@ namespace
 //
 //#else // BOOST_POSIX_API
 //
-//  int posix_remove(const char * p)
+//  int posix_remove(const char* p)
 //  {
 //#     if defined(__QNXNTO__) || (defined(__MSL__) && (defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)))
 //        // Some Metrowerks C library versions fail on directories because of a
@@ -1112,7 +1112,7 @@ namespace detail
   {
     error_code tmp_ec;
     file_status sym_status = symlink_status(p, tmp_ec);
-    if (error(!!tmp_ec, tmp_ec, p, ec, "boost::filesystem::remove"))
+    if (error(sym_status.type() == status_error, tmp_ec, p, ec, "boost::filesystem::remove"))
       return false;
 
     return remove_file_or_directory(p, sym_status, ec);
@@ -1123,10 +1123,10 @@ namespace detail
   {
     error_code tmp_ec;
     file_status sym_status = symlink_status(p, tmp_ec);
-    if (error(!!tmp_ec, tmp_ec, p, ec, "boost::filesystem::remove_all"))
+    if (error(sym_status.type() == status_error, tmp_ec, p, ec, "boost::filesystem::remove_all"))
       return 0;
 
-    return exists(sym_status)
+    return exists(sym_status) // exists() throws nothing
       ? remove_all_aux(p, sym_status, ec)
       : 0;
   }
@@ -1203,6 +1203,9 @@ namespace detail
   file_status process_status_failure(const path& p, error_code* ec)
   {
     int errval(::GetLastError());
+    if (ec != 0)                             // always report errval, even though some
+      ec->assign(errval, system_category);   // errval values are not status_errors
+
     if ((errval == ERROR_FILE_NOT_FOUND)
       || (errval == ERROR_PATH_NOT_FOUND)
       || (errval == ERROR_INVALID_NAME)// "tools/jam/src/:sys:stat.h", "//foo"
@@ -1210,21 +1213,16 @@ namespace detail
       || (errval == ERROR_BAD_PATHNAME)// "//nosuch" on Win64
       || (errval == ERROR_BAD_NETPATH))// "//nosuch" on Win32
     {
-      
-      if (ec != 0) ec->clear(); // these are not errors
       return file_status(file_not_found);
     }
     else if ((errval == ERROR_SHARING_VIOLATION))
     {
-      if (ec != 0) ec->clear(); // these are not errors
       return file_status(type_unknown);
     }
     if (ec == 0)
       throw_exception(filesystem_error("boost::filesystem::status",
         p, error_code(errval, system_category)));
-    else
-      ec->assign(errval, system_category);
-    return file_status(status_unknown);
+    return file_status(status_error);
   }
 
 # endif
@@ -1258,7 +1256,7 @@ namespace detail
       }
     }
 
-    if (ec != 0) ec->clear(); // these are not errors
+    if (ec != 0) ec->clear();
     return (attr & FILE_ATTRIBUTE_DIRECTORY)
       ? file_status(directory_file)
       : file_status(regular_file);
@@ -1268,18 +1266,17 @@ namespace detail
     struct stat path_stat;
     if (::stat(p.c_str(), &path_stat)!= 0)
     {
+      if (ec != 0)                            // always report errno, even though some
+        ec->assign(errno, system_category);   // errno values are not status_errors
+
       if (errno == ENOENT || errno == ENOTDIR)
       {
-        if (ec != 0) ec->clear();;
         return fs::file_status(fs::file_not_found);
       }
-      if (ec != 0)
-        ec->assign(errno, system_category);
-      else
+      if (ec == 0)
         throw_exception(filesystem_error("boost::filesystem::status",
           p, errno, system_category));
-
-      return fs::file_status(fs::status_unknown);
+      return fs::file_status(fs::status_error);
     }
     if (ec != 0) ec->clear();;
     if (S_ISDIR(path_stat.st_mode))
@@ -1310,10 +1307,11 @@ namespace detail
       return detail::process_status_failure(p, ec);
     }
 
+    if (ec != 0) ec->clear();
+
     if (attr & FILE_ATTRIBUTE_REPARSE_POINT)// aka symlink
       return file_status(symlink_file);
 
-    if (ec != 0) ec->clear(); // these are not errors
     return (attr & FILE_ATTRIBUTE_DIRECTORY)
       ? file_status(directory_file)
       : file_status(regular_file);
@@ -1323,14 +1321,17 @@ namespace detail
     struct stat path_stat;
     if (::lstat(p.c_str(), &path_stat)!= 0)
     {
+      if (ec != 0)                            // always report errno, even though some
+        ec->assign(errno, system_category);   // errno values are not status_errors
+
       if (errno == ENOENT || errno == ENOTDIR) // these are not errors
       {
-        if (ec != 0) ec->clear();
         return fs::file_status(fs::file_not_found);
       }
-      if (ec != 0) ec->assign(errno, system_category);
-      else
-      return fs::file_status(fs::status_unknown);
+      if (ec == 0)
+        throw_exception(filesystem_error("boost::filesystem::status",
+          p, errno, system_category));
+      return fs::file_status(fs::status_error);
     }
     if (ec != 0) ec->clear();
     if (S_ISREG(path_stat.st_mode))
@@ -1362,7 +1363,7 @@ namespace detail
       return p;
     }
     wchar_t buf[buf_size];
-    wchar_t * pfn;
+    wchar_t* pfn;
     std::size_t len = get_full_path_name(p, buf_size, buf, &pfn);
 
     if (error(len == 0, p, ec, "boost::filesystem::system_complete"))
@@ -1524,7 +1525,7 @@ namespace
   }
 
   error_code dir_itr_first(void *& handle, void *& buffer,
-    const char * dir, string& target,
+    const char* dir, string& target,
     fs::file_status &, fs::file_status &)
   {
     if ((handle = ::opendir(dir))== 0)
@@ -1590,7 +1591,7 @@ namespace
 #   ifdef BOOST_FILESYSTEM_STATUS_CACHE
     if (entry->d_type == DT_UNKNOWN) // filesystem does not supply d_type value
     {
-      sf = symlink_sf = fs::file_status(fs::status_unknown);
+      sf = symlink_sf = fs::file_status(fs::status_error);
     }
     else  // filesystem supplies d_type value
     {
@@ -1600,13 +1601,13 @@ namespace
         sf = symlink_sf = fs::file_status(fs::regular_file);
       else if (entry->d_type == DT_LNK)
       {
-        sf = fs::file_status(fs::status_unknown);
+        sf = fs::file_status(fs::status_error);
         symlink_sf = fs::file_status(fs::symlink_file);
       }
-      else sf = symlink_sf = fs::file_status(fs::status_unknown);
+      else sf = symlink_sf = fs::file_status(fs::status_error);
     }
 #   else
-    sf = symlink_sf = fs::file_status(fs::status_unknown);
+    sf = symlink_sf = fs::file_status(fs::status_error);
 #    endif
     return ok;
   }

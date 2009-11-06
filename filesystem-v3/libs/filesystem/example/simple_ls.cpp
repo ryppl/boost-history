@@ -18,12 +18,12 @@
 
 namespace fs = boost::filesystem;
 
-int main( int argc, char* argv[] )
+int main(int argc, char* argv[])
 {
-  fs::path p( fs::initial_path() );
+  fs::path p(fs::initial_path());
 
-  if ( argc > 1 )
-    p = fs::system_complete( argv[1] );
+  if (argc > 1)
+    p = fs::system_complete(argv[1]);
   else
     std::cout << "\nusage:   simple_ls [path]" << std::endl;
 
@@ -32,29 +32,29 @@ int main( int argc, char* argv[] )
   unsigned long other_count = 0;
   unsigned long err_count = 0;
 
-  if ( !fs::exists( p ) )
+  if (!fs::exists(p))
   {
     std::cout << "\nNot found: " << p.string() << std::endl;
     return 1;
   }
 
-  if ( fs::is_directory( p ) )
+  if (fs::is_directory(p))
   {
     std::cout << "\nIn directory: "
               << p.string() << "\n\n";
     fs::directory_iterator end_iter;
-    for ( fs::directory_iterator dir_itr( p );
+    for (fs::directory_iterator dir_itr(p);
           dir_itr != end_iter;
-          ++dir_itr )
+          ++dir_itr)
     {
       try
       {
-        if ( fs::is_directory( dir_itr->status() ) )
+        if (fs::is_directory(dir_itr->status()))
         {
           ++dir_count;
           std::cout << dir_itr->path().filename() << " [directory]\n";
         }
-        else if ( fs::is_regular_file( dir_itr->status() ) )
+        else if (fs::is_regular_file(dir_itr->status()))
         {
           ++file_count;
           std::cout << dir_itr->path().filename() << "\n";
@@ -66,7 +66,7 @@ int main( int argc, char* argv[] )
         }
 
       }
-      catch ( const std::exception & ex )
+      catch (const std::exception & ex)
       {
         ++err_count;
         std::cout << dir_itr->path().filename() << " " << ex.what() << std::endl;

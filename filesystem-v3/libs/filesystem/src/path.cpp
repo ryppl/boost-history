@@ -65,27 +65,27 @@ namespace
 
   const wchar_t separator = L'/';
   const wchar_t preferred_separator = L'\\';
-  const wchar_t * const separators = L"/\\";
-  const wchar_t * separator_string = L"/";
-  const wchar_t * preferred_separator_string = L"\\";
+  const wchar_t* const separators = L"/\\";
+  const wchar_t* separator_string = L"/";
+  const wchar_t* preferred_separator_string = L"\\";
   const wchar_t colon = L':';
   const wchar_t dot = L'.';
-  const fs::path dot_path( L"." );
+  const fs::path dot_path(L".");
 
 # else
 
   const char separator = '/';
   const char preferred_separator = '/';
-  const char * const separators = "/";
-  const char * separator_string = "/";
-  const char * preferred_separator_string = "/";
+  const char* const separators = "/";
+  const char* separator_string = "/";
+  const char* preferred_separator_string = "/";
   const char colon = ':';
   const char dot = '.';
-  const fs::path dot_path( "." );
+  const fs::path dot_path(".");
 
 # endif
 
-  inline bool is_separator( fs::path::value_type c )
+  inline bool is_separator(fs::path::value_type c)
   {
     return c == separator
 #     ifdef BOOST_WINDOWS_PATH
@@ -94,21 +94,21 @@ namespace
       ;
   }
 
-  bool is_non_root_separator( const string_type & str, size_type pos );
+  bool is_non_root_separator(const string_type & str, size_type pos);
     // pos is position of the separator
 
-  size_type filename_pos( const string_type & str,
-                          size_type end_pos ); // end_pos is past-the-end position
+  size_type filename_pos(const string_type & str,
+                          size_type end_pos); // end_pos is past-the-end position
   //  Returns: 0 if str itself is filename (or empty)
 
-  size_type root_directory_start( const string_type & path, size_type size );
+  size_type root_directory_start(const string_type & path, size_type size);
   //  Returns:  npos if no root_directory found
 
   void first_element(
       const string_type & src,
       size_type & element_pos,
       size_type & element_size,
-#    if !BOOST_WORKAROUND( BOOST_MSVC, <= 1310 ) // VC++ 7.1
+#    if !BOOST_WORKAROUND(BOOST_MSVC, <= 1310) // VC++ 7.1
       size_type size = string_type::npos
 #    else
       size_type size = -1
@@ -128,11 +128,11 @@ namespace boost
 namespace filesystem
 {
 
-  path & path::operator/=( const path & p )
+  path & path::operator/=(const path & p)
   {
-    if ( p.empty() )
+    if (p.empty())
       return *this;
-    if ( !is_separator( *p.m_path.begin() ) )
+    if (!is_separator(*p.m_path.begin()))
       m_append_separator_if_needed();
     m_path += p.m_path;
     return *this;
@@ -143,42 +143,42 @@ namespace filesystem
   const std::string  path::native_string() const
   { 
     std::string tmp;
-    if ( !m_path.empty() )
-      path_traits::convert( &*m_path.begin(), &*m_path.begin()+m_path.size(),
-        tmp, codecvt() );
+    if (!m_path.empty())
+      path_traits::convert(&*m_path.begin(), &*m_path.begin()+m_path.size(),
+        tmp, codecvt());
     return tmp;
   }
 
   void path::m_portable()
   {
-    for ( string_type::iterator it = m_path.begin();
-          it != m_path.end(); ++it )
+    for (string_type::iterator it = m_path.begin();
+          it != m_path.end(); ++it)
     {
-      if ( *it == L'\\' )
+      if (*it == L'\\')
         *it = L'/';
     }
   }
 
   const std::string path::string() const
   { 
-    path tmp( *this );
+    path tmp(*this);
     tmp.m_portable();
     return tmp.native_string();
   }
 
   const std::wstring path::wstring() const
   { 
-    path tmp( *this );
+    path tmp(*this);
     tmp.m_portable();
     return tmp.native_wstring();
   }
 
   path & path::localize()
   {
-    for ( string_type::iterator it = m_path.begin();
-          it != m_path.end(); ++it )
+    for (string_type::iterator it = m_path.begin();
+          it != m_path.end(); ++it)
     {
-      if ( *it == L'/' )
+      if (*it == L'/')
         *it = L'\\';
     }
     return *this;
@@ -190,13 +190,13 @@ namespace filesystem
 
   path::string_type::size_type path::m_append_separator_if_needed()
   {
-    if ( !m_path.empty() &&
+    if (!m_path.empty() &&
 #   ifdef BOOST_WINDOWS_PATH
       *(m_path.end()-1) != colon && 
 #   endif
-      !is_separator( *(m_path.end()-1) ) )
+      !is_separator(*(m_path.end()-1)))
     {
-      string_type::size_type tmp( m_path.size() );
+      string_type::size_type tmp(m_path.size());
       m_path += preferred_separator;
       return tmp;
     }
@@ -205,133 +205,133 @@ namespace filesystem
 
   //  m_erase_redundant_separator  -----------------------------------------------------//
 
-  void path::m_erase_redundant_separator( string_type::size_type sep_pos )
+  void path::m_erase_redundant_separator(string_type::size_type sep_pos)
   {
-    if ( sep_pos                         // a separator was added
+    if (sep_pos                         // a separator was added
       && sep_pos < m_path.size()         // and something was appended
       && (m_path[sep_pos+1] == separator // and it was also separator
 #   ifdef BOOST_WINDOWS_PATH
        || m_path[sep_pos+1] == preferred_separator  // or preferred_separator
 #   endif
-       )) { m_path.erase( sep_pos, 1 ); } // erase the added separator
+)) { m_path.erase(sep_pos, 1); } // erase the added separator
   }
 
   //  decomposition  -------------------------------------------------------------------//
 
   path  path::root_path() const
   { 
-    path temp( root_name() );
-    if ( !root_directory().empty() ) temp.m_path += root_directory().c_str();
+    path temp(root_name());
+    if (!root_directory().empty()) temp.m_path += root_directory().c_str();
     return temp;
   } 
 
   path path::root_name() const
   {
-    iterator itr( begin() );
+    iterator itr(begin());
 
-    return ( itr.m_pos != m_path.size()
+    return (itr.m_pos != m_path.size()
       && (
-          ( itr.m_element.m_path.size() > 1
-            && is_separator( itr.m_element.m_path[0] )
-            && is_separator( itr.m_element.m_path[1] )
-          )
+          (itr.m_element.m_path.size() > 1
+            && is_separator(itr.m_element.m_path[0])
+            && is_separator(itr.m_element.m_path[1])
+   )
 #       ifdef BOOST_WINDOWS_PATH
         || itr.m_element.m_path[itr.m_element.m_path.size()-1] == colon
 #       endif
-         ) )
+  ))
       ? itr.m_element
       : path();
   }
 
   path path::root_directory() const
   {
-    size_type pos( root_directory_start( m_path, m_path.size() ) );
+    size_type pos(root_directory_start(m_path, m_path.size()));
 
     return pos == string_type::npos
       ? path()
-      : path( m_path.c_str() + pos, m_path.c_str() + pos + 1 );
+      : path(m_path.c_str() + pos, m_path.c_str() + pos + 1);
   }
 
   path path::relative_path() const
   {
-    iterator itr( begin() );
+    iterator itr(begin());
 
-    for ( ; itr.m_pos != m_path.size()
-      && ( is_separator( itr.m_element.m_path[0] )
+    for (; itr.m_pos != m_path.size()
+      && (is_separator(itr.m_element.m_path[0])
 #       ifdef BOOST_WINDOWS_PATH
       || itr.m_element.m_path[itr.m_element.m_path.size()-1] == colon
 #       endif
-           ); ++itr ) {}
+    ); ++itr) {}
 
-    return path( m_path.c_str() + itr.m_pos );
+    return path(m_path.c_str() + itr.m_pos);
   }
 
   path path::parent_path() const
   {
-    size_type end_pos( filename_pos( m_path, m_path.size() ) );
+    size_type end_pos(filename_pos(m_path, m_path.size()));
 
-    bool filename_was_separator( m_path.size()
-      && is_separator( m_path[end_pos] ) );
+    bool filename_was_separator(m_path.size()
+      && is_separator(m_path[end_pos]));
 
     // skip separators unless root directory
-    size_type root_dir_pos( root_directory_start( m_path, end_pos ) );
-    for ( ; 
+    size_type root_dir_pos(root_directory_start(m_path, end_pos));
+    for (; 
       end_pos > 0
       && (end_pos-1) != root_dir_pos
-      && is_separator( m_path[end_pos-1] )
+      && is_separator(m_path[end_pos-1])
       ;
-      --end_pos ) {}
+      --end_pos) {}
 
    return (end_pos == 1 && root_dir_pos == 0 && filename_was_separator)
      ? path()
-     : path( m_path.c_str(), m_path.c_str() + end_pos );
+     : path(m_path.c_str(), m_path.c_str() + end_pos);
   }
 
   path path::filename() const
   {
-    size_type pos( filename_pos( m_path, m_path.size() ) );
+    size_type pos(filename_pos(m_path, m_path.size()));
     return (m_path.size()
               && pos
-              && is_separator( m_path[pos] )
+              && is_separator(m_path[pos])
               && is_non_root_separator(m_path, pos))
       ? dot_path
-      : path( m_path.c_str() + pos );
+      : path(m_path.c_str() + pos);
   }
 
   path path::stem() const
   {
-    path name( filename() );
-    size_type pos( name.m_path.rfind( dot ) );
+    path name(filename());
+    size_type pos(name.m_path.rfind(dot));
     return pos == string_type::npos
       ? name
-      : path( name.m_path.c_str(), name.m_path.c_str() + pos );
+      : path(name.m_path.c_str(), name.m_path.c_str() + pos);
   }
 
   path path::extension() const
   {
-    path name( filename() );
-    size_type pos( name.m_path.rfind( dot ) );
+    path name(filename());
+    size_type pos(name.m_path.rfind(dot));
     return pos == string_type::npos
       ? path()
-      : path( name.m_path.c_str() + pos );
+      : path(name.m_path.c_str() + pos);
   }
 
   path & path::remove_filename()
   {
-    m_path.erase( filename_pos( m_path, m_path.size() ) );
+    m_path.erase(filename_pos(m_path, m_path.size()));
     return *this;
   }
 
-  path & path::replace_extension( const path & source )
+  path & path::replace_extension(const path & source)
   {
     // erase existing extension if any
-    size_type pos( m_path.rfind( dot ) );
-    if ( pos != string_type::npos )
-      m_path.erase( pos );
+    size_type pos(m_path.rfind(dot));
+    if (pos != string_type::npos)
+      m_path.erase(pos);
 
     // append source extension if any
-    pos = source.m_path.rfind( dot );
-    if ( pos != string_type::npos )
+    pos = source.m_path.rfind(dot);
+    if (pos != string_type::npos)
       m_path += source.c_str() + pos;
 
     return *this;
@@ -343,28 +343,28 @@ namespace filesystem
 //
 //  path & path::m_normalize()
 //  {
-//    if ( m_path.empty() ) return *this;
+//    if (m_path.empty()) return *this;
 //      
 //    path_type temp;
-//    iterator start( begin() );
-//    iterator last( end() );
-//    iterator stop( last-- );
-//    for ( iterator itr( start ); itr != stop; ++itr )
+//    iterator start(begin());
+//    iterator last(end());
+//    iterator stop(last--);
+//    for (iterator itr(start); itr != stop; ++itr)
 //    {
 //      // ignore "." except at start and last
-//      if ( itr->size() == 1
+//      if (itr->size() == 1
 //        && (*itr)[0] == dot
 //        && itr != start
-//        && itr != last ) continue;
+//        && itr != last) continue;
 //
 //      // ignore a name and following ".."
-//      if ( !temp.empty()
+//      if (!temp.empty()
 //        && itr->size() == 2
 //        && (*itr)[0] == dot
-//        && (*itr)[1] == dot ) // dot dot
+//        && (*itr)[1] == dot) // dot dot
 //      {
-//        string_type lf( temp.filename() );  
-//        if ( lf.size() > 0  
+//        string_type lf(temp.filename());  
+//        if (lf.size() > 0  
 //          && (lf.size() != 1
 //            || (lf[0] != dot
 //              && lf[0] != separator))
@@ -380,21 +380,21 @@ namespace filesystem
 //        {
 //          temp.remove_filename();
 //          // if not root directory, must also remove "/" if any
-//          if ( temp.m_path.size() > 0
+//          if (temp.m_path.size() > 0
 //            && temp.m_path[temp.m_path.size()-1]
-//              == separator )
+//              == separator)
 //          {
 //            typename string_type::size_type rds(
-//              detail::root_directory_start<String,Traits>( temp.m_path,
-//                temp.m_path.size() ) );
-//            if ( rds == string_type::npos
-//              || rds != temp.m_path.size()-1 ) 
-//              { temp.m_path.erase( temp.m_path.size()-1 ); }
+//              detail::root_directory_start<String,Traits>(temp.m_path,
+//                temp.m_path.size()));
+//            if (rds == string_type::npos
+//              || rds != temp.m_path.size()-1) 
+//              { temp.m_path.erase(temp.m_path.size()-1); }
 //          }
 //
-//          iterator next( itr );
-//          if ( temp.empty() && ++next != stop
-//            && next == last && *last == dot_str ) temp /= dot_str;
+//          iterator next(itr);
+//          if (temp.empty() && ++next != stop
+//            && next == last && *last == dot_str) temp /= dot_str;
 //          continue;
 //        }
 //      }
@@ -402,7 +402,7 @@ namespace filesystem
 //      temp /= *itr;
 //    };
 //
-//    if ( temp.empty() ) temp /= dot_str;
+//    if (temp.empty()) temp /= dot_str;
 //    m_path = temp.m_path;
 //    return *this;
 //  }
@@ -421,19 +421,19 @@ namespace
 
   //  is_non_root_separator  -------------------------------------------------//
 
-  bool is_non_root_separator( const string_type & str, size_type pos )
+  bool is_non_root_separator(const string_type & str, size_type pos)
     // pos is position of the separator
   {
-    BOOST_ASSERT( !str.empty() && is_separator( str[pos] )
-      && "precondition violation" );
+    BOOST_ASSERT(!str.empty() && is_separator(str[pos])
+      && "precondition violation");
 
     // subsequent logic expects pos to be for leftmost slash of a set
-    while ( pos > 0 && is_separator( str[pos-1] ) )
+    while (pos > 0 && is_separator(str[pos-1]))
       --pos;
 
     return  pos != 0
-      && (pos <= 2 || !is_separator( str[1] )
-        || str.find_first_of( separators, 2 ) != pos)
+      && (pos <= 2 || !is_separator(str[1])
+        || str.find_first_of(separators, 2) != pos)
 #   ifdef BOOST_WINDOWS_PATH
       && (pos !=2 || str[1] != colon)
 #   endif
@@ -442,63 +442,63 @@ namespace
 
   //  filename_pos  ----------------------------------------------------------//
 
-  size_type filename_pos( const string_type & str,
-                          size_type end_pos ) // end_pos is past-the-end position
+  size_type filename_pos(const string_type & str,
+                          size_type end_pos) // end_pos is past-the-end position
     // return 0 if str itself is filename (or empty)
   {
     // case: "//"
-    if ( end_pos == 2 
-      && is_separator( str[0] )
-      && is_separator( str[1] ) ) return 0;
+    if (end_pos == 2 
+      && is_separator(str[0])
+      && is_separator(str[1])) return 0;
 
     // case: ends in "/"
-    if ( end_pos && is_separator( str[end_pos-1] ) )
+    if (end_pos && is_separator(str[end_pos-1]))
       return end_pos-1;
     
     // set pos to start of last element
-    size_type pos( str.find_last_of( separators, end_pos-1 ) );
+    size_type pos(str.find_last_of(separators, end_pos-1));
 
 # ifdef BOOST_WINDOWS_PATH
-    if ( pos == string_type::npos )
-      pos = str.find_last_of( colon, end_pos-2 );
+    if (pos == string_type::npos)
+      pos = str.find_last_of(colon, end_pos-2);
 # endif
 
-    return ( pos == string_type::npos // path itself must be a filename (or empty)
-      || (pos == 1 && is_separator( str[0] )) ) // or net
+    return (pos == string_type::npos // path itself must be a filename (or empty)
+      || (pos == 1 && is_separator(str[0]))) // or net
         ? 0 // so filename is entire string
         : pos + 1; // or starts after delimiter
   }
 
   //  root_directory_start  --------------------------------------------------//
 
-  size_type root_directory_start( const string_type & path, size_type size )
+  size_type root_directory_start(const string_type & path, size_type size)
   // return npos if no root_directory found
   {
 
 #   ifdef BOOST_WINDOWS_PATH
     // case "c:/"
-    if ( size > 2
+    if (size > 2
       && path[1] == colon
-      && is_separator( path[2] ) ) return 2;
+      && is_separator(path[2])) return 2;
 #   endif
 
     // case "//"
-    if ( size == 2
-      && is_separator( path[0] )
-      && is_separator( path[1] ) ) return string_type::npos;
+    if (size == 2
+      && is_separator(path[0])
+      && is_separator(path[1])) return string_type::npos;
 
     // case "//net {/}"
-    if ( size > 3
-      && is_separator( path[0] )
-      && is_separator( path[1] )
-      && !is_separator( path[2] ) )
+    if (size > 3
+      && is_separator(path[0])
+      && is_separator(path[1])
+      && !is_separator(path[2]))
     {
-      string_type::size_type pos( path.find_first_of( separators, 2 ) );
+      string_type::size_type pos(path.find_first_of(separators, 2));
       return pos < size ? pos : string_type::npos;
     }
     
     // case "/"
-    if ( size > 0 && is_separator( path[0] ) ) return 0;
+    if (size > 0 && is_separator(path[0])) return 0;
 
     return string_type::npos;
   }
@@ -512,32 +512,32 @@ namespace
       size_type & element_pos,
       size_type & element_size,
       size_type size
-      )
+)
   {
-    if ( size == string_type::npos ) size = src.size();
+    if (size == string_type::npos) size = src.size();
     element_pos = 0;
     element_size = 0;
-    if ( src.empty() ) return;
+    if (src.empty()) return;
 
     string_type::size_type cur(0);
     
     // deal with // [network]
-    if ( size >= 2 && is_separator( src[0] )
-      && is_separator( src[1] )
+    if (size >= 2 && is_separator(src[0])
+      && is_separator(src[1])
       && (size == 2
-        || !is_separator( src[2] )) )
+        || !is_separator(src[2])))
     { 
       cur += 2;
       element_size += 2;
     }
 
     // leading (not non-network) separator
-    else if ( is_separator( src[0] ) )
+    else if (is_separator(src[0]))
     {
       ++element_size;
       // bypass extra leading separators
-      while ( cur+1 < size
-        && is_separator( src[cur+1] ) )
+      while (cur+1 < size
+        && is_separator(src[cur+1]))
       {
         ++cur;
         ++element_pos;
@@ -549,20 +549,20 @@ namespace
     // or (on Windows only) a device name
 
     // find the end
-    while ( cur < size
+    while (cur < size
 #     ifdef BOOST_WINDOWS_PATH
       && src[cur] != colon
 #     endif
-      && !is_separator( src[cur] ) )
+      && !is_separator(src[cur]))
     {
       ++cur;
       ++element_size;
     }
 
 #   ifdef BOOST_WINDOWS_PATH
-    if ( cur == size ) return;
+    if (cur == size) return;
     // include device delimiter
-    if ( src[cur] == colon )
+    if (src[cur] == colon)
       { ++element_size; }
 #   endif
 
@@ -587,9 +587,9 @@ namespace filesystem
     iterator itr;
     itr.m_path_ptr = this;
     size_type element_size;
-    first_element( m_path, itr.m_pos, element_size );
-    itr.m_element = m_path.substr( itr.m_pos, element_size );
-    if ( itr.m_element.m_path == preferred_separator_string )
+    first_element(m_path, itr.m_pos, element_size);
+    itr.m_element = m_path.substr(itr.m_pos, element_size);
+    if (itr.m_element.m_path == preferred_separator_string)
       itr.m_element.m_path = separator_string;  // needed for Windows, harmless on POSIX
     return itr;
   }
@@ -602,31 +602,31 @@ namespace filesystem
     return itr;
   }
 
-  void path::m_path_iterator_increment( path::iterator & it )
+  void path::m_path_iterator_increment(path::iterator & it)
   {
-    BOOST_ASSERT( it.m_pos < it.m_path_ptr->m_path.size() && "path::basic_iterator increment past end()" );
+    BOOST_ASSERT(it.m_pos < it.m_path_ptr->m_path.size() && "path::basic_iterator increment past end()");
 
     // increment to position past current element
     it.m_pos += it.m_element.m_path.size();
 
     // if end reached, create end basic_iterator
-    if ( it.m_pos == it.m_path_ptr->m_path.size() )
+    if (it.m_pos == it.m_path_ptr->m_path.size())
     {
       it.m_element.clear(); 
       return;
     }
 
     // both POSIX and Windows treat paths that begin with exactly two separators specially
-    bool was_net( it.m_element.m_path.size() > 2
-      && is_separator( it.m_element.m_path[0] )
-      && is_separator( it.m_element.m_path[1] )
-      && !is_separator( it.m_element.m_path[2] ) );
+    bool was_net(it.m_element.m_path.size() > 2
+      && is_separator(it.m_element.m_path[0])
+      && is_separator(it.m_element.m_path[1])
+      && !is_separator(it.m_element.m_path[2]));
 
     // process separator (Windows drive spec is only case not a separator)
-    if ( is_separator( it.m_path_ptr->m_path[it.m_pos] ) )
+    if (is_separator(it.m_path_ptr->m_path[it.m_pos]))
     {
       // detect root directory
-      if ( was_net
+      if (was_net
 #       ifdef BOOST_WINDOWS_PATH
         // case "c:/"
         || it.m_element.m_path[it.m_element.m_path.size()-1] == colon
@@ -638,13 +638,13 @@ namespace filesystem
       }
 
       // bypass separators
-      while ( it.m_pos != it.m_path_ptr->m_path.size()
-        && is_separator( it.m_path_ptr->m_path[it.m_pos] ) )
+      while (it.m_pos != it.m_path_ptr->m_path.size()
+        && is_separator(it.m_path_ptr->m_path[it.m_pos]))
         { ++it.m_pos; }
 
       // detect trailing separator, and treat it as ".", per POSIX spec
-      if ( it.m_pos == it.m_path_ptr->m_path.size()
-        && is_non_root_separator( it.m_path_ptr->m_path, it.m_pos-1 ) ) 
+      if (it.m_pos == it.m_path_ptr->m_path.size()
+        && is_non_root_separator(it.m_path_ptr->m_path, it.m_pos-1)) 
       {
         --it.m_pos;
         it.m_element = dot_path;
@@ -653,22 +653,22 @@ namespace filesystem
     }
 
     // get next element
-    size_type end_pos( it.m_path_ptr->m_path.find_first_of( separators, it.m_pos ) );
-    if ( end_pos == string_type::npos ) end_pos = it.m_path_ptr->m_path.size();
-    it.m_element = it.m_path_ptr->m_path.substr( it.m_pos, end_pos - it.m_pos );
+    size_type end_pos(it.m_path_ptr->m_path.find_first_of(separators, it.m_pos));
+    if (end_pos == string_type::npos) end_pos = it.m_path_ptr->m_path.size();
+    it.m_element = it.m_path_ptr->m_path.substr(it.m_pos, end_pos - it.m_pos);
   }
 
-  void path::m_path_iterator_decrement( path::iterator & it )
+  void path::m_path_iterator_decrement(path::iterator & it)
   {
-    BOOST_ASSERT( it.m_pos && "path::iterator decrement past begin()"  );
+    BOOST_ASSERT(it.m_pos && "path::iterator decrement past begin()");
 
-    size_type end_pos( it.m_pos );
+    size_type end_pos(it.m_pos);
 
     // if at end and there was a trailing non-root '/', return "."
-    if ( it.m_pos == it.m_path_ptr->m_path.size()
+    if (it.m_pos == it.m_path_ptr->m_path.size()
       && it.m_path_ptr->m_path.size() > 1
-      && is_separator( it.m_path_ptr->m_path[it.m_pos-1] )
-      && is_non_root_separator( it.m_path_ptr->m_path, it.m_pos-1 ) 
+      && is_separator(it.m_path_ptr->m_path[it.m_pos-1])
+      && is_non_root_separator(it.m_path_ptr->m_path, it.m_pos-1) 
        )
     {
       --it.m_pos;
@@ -676,30 +676,30 @@ namespace filesystem
       return;
     }
 
-    size_type root_dir_pos( root_directory_start( it.m_path_ptr->m_path, end_pos ) );
+    size_type root_dir_pos(root_directory_start(it.m_path_ptr->m_path, end_pos));
 
     // skip separators unless root directory
-    for ( 
+    for (
       ; 
       end_pos > 0
       && (end_pos-1) != root_dir_pos
-      && is_separator( it.m_path_ptr->m_path[end_pos-1] )
+      && is_separator(it.m_path_ptr->m_path[end_pos-1])
       ;
-      --end_pos ) {}
+      --end_pos) {}
 
-    it.m_pos = filename_pos( it.m_path_ptr->m_path, end_pos );
-    it.m_element = it.m_path_ptr->m_path.substr( it.m_pos, end_pos - it.m_pos );
-    if ( it.m_element.m_path == preferred_separator_string )
+    it.m_pos = filename_pos(it.m_path_ptr->m_path, end_pos);
+    it.m_element = it.m_path_ptr->m_path.substr(it.m_pos, end_pos - it.m_pos);
+    if (it.m_element.m_path == preferred_separator_string)
       it.m_element.m_path = separator_string;  // needed for Windows, harmless on POSIX
   }
 
-  bool path::m_path_lex_compare( iterator first1, iterator last1,
-    iterator first2, iterator last2 )
+  bool path::m_path_lex_compare(iterator first1, iterator last1,
+    iterator first2, iterator last2)
   {
-    for ( ; first1 != last1 && first2 != last2 ; ++first1, ++first2)
+    for (; first1 != last1 && first2 != last2 ; ++first1, ++first2)
     {
-      if ( first1->m_path < first2->m_path ) return true;
-      if ( first2->m_path < first1->m_path ) return false;
+      if (first1->m_path < first2->m_path) return true;
+      if (first2->m_path < first1->m_path) return false;
     }
     return first1 == last1 && first2 != last2;
   }
@@ -729,7 +729,7 @@ namespace
   {
 # ifdef BOOST_WINDOWS_API
     std::locale global_loc = std::locale();
-    std::locale loc( global_loc, new windows_file_codecvt );
+    std::locale loc(global_loc, new windows_file_codecvt);
     return loc;
 # else
     // ISO C calls this "the locale-specific native environment":
@@ -744,7 +744,7 @@ namespace
   std::locale & path_locale()
   {
     // ISO C calls this "the locale-specific native environment":
-    static std::locale loc( default_locale() );
+    static std::locale loc(default_locale());
     return loc;
   }
 
@@ -765,16 +765,16 @@ namespace filesystem
    static const std::codecvt<wchar_t, char, std::mbstate_t> *
      facet(
        &std::use_facet<std::codecvt<wchar_t, char, std::mbstate_t> >
-        ( path_locale() ) );
+        (path_locale()));
    return facet;
   }
 
-  std::locale path::imbue( const std::locale & loc )
+  std::locale path::imbue(const std::locale & loc)
   {
-    std::locale temp( path_locale() );
+    std::locale temp(path_locale());
     path_locale() = loc;
     wchar_t_codecvt_facet() = &std::use_facet
-        <std::codecvt<wchar_t, char, std::mbstate_t> >( path_locale() );
+        <std::codecvt<wchar_t, char, std::mbstate_t> >(path_locale());
     return temp;
   }
 

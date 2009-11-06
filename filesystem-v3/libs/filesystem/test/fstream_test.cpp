@@ -29,127 +29,132 @@ namespace fs = boost::filesystem;
 
 #include <boost/detail/lightweight_test.hpp>
 
+#if defined(_MSC_VER)
+# pragma warning(push) // Save warning settings.
+# pragma warning(disable : 4428) // Disable universal-character-name encountered in source warning.
+#endif 
+
 namespace
 {
   bool cleanup = true;
   
-  void test( const fs::path & p )
+  void test(const fs::path & p)
   {
     { 
       std::cout << " in test 1\n";
       fs::filebuf fb;
-      fb.open( p, std::ios_base::in );
-      BOOST_TEST( fb.is_open() == fs::exists( p ) );
+      fb.open(p, std::ios_base::in);
+      BOOST_TEST(fb.is_open() == fs::exists(p));
     }
     {
       std::cout << " in test 2\n";
       fs::filebuf fb1;
-      fb1.open( p, std::ios_base::out );
-      BOOST_TEST( fb1.is_open() );
+      fb1.open(p, std::ios_base::out);
+      BOOST_TEST(fb1.is_open());
     }
     {
       std::cout << " in test 3\n";
       fs::filebuf fb2;
-      fb2.open( p, std::ios_base::in );
-      BOOST_TEST( fb2.is_open() );
+      fb2.open(p, std::ios_base::in);
+      BOOST_TEST(fb2.is_open());
     }
     {
       std::cout << " in test 4\n";
-      fs::ifstream tfs( p );
-      BOOST_TEST( tfs.is_open() );
+      fs::ifstream tfs(p);
+      BOOST_TEST(tfs.is_open());
     }
     {
       std::cout << " in test 4.1\n";
-      fs::ifstream tfs( p / p.filename() ); // should fail
-      BOOST_TEST( !tfs.is_open() );
+      fs::ifstream tfs(p / p.filename()); // should fail
+      BOOST_TEST(!tfs.is_open());
     }
     {
       std::cout << " in test 5\n";
-      fs::ifstream tfs( p, std::ios_base::in );
-      BOOST_TEST( tfs.is_open() );
+      fs::ifstream tfs(p, std::ios_base::in);
+      BOOST_TEST(tfs.is_open());
     }
     {
       std::cout << " in test 6\n";
       fs::ifstream tfs;
-      tfs.open( p );
-      BOOST_TEST( tfs.is_open() );
+      tfs.open(p);
+      BOOST_TEST(tfs.is_open());
     }
     {
       std::cout << " in test 7\n";
       fs::ifstream tfs;
-      tfs.open( p, std::ios_base::in );
-      BOOST_TEST( tfs.is_open() );
+      tfs.open(p, std::ios_base::in);
+      BOOST_TEST(tfs.is_open());
     }
     {
       std::cout << " in test 8\n";
-      fs::ofstream tfs( p );
-      BOOST_TEST( tfs.is_open() );
+      fs::ofstream tfs(p);
+      BOOST_TEST(tfs.is_open());
     }
     {
       std::cout << " in test 9\n";
-      fs::ofstream tfs( p, std::ios_base::out );
-      BOOST_TEST( tfs.is_open() );
+      fs::ofstream tfs(p, std::ios_base::out);
+      BOOST_TEST(tfs.is_open());
     }
     {
       std::cout << " in test 10\n";
       fs::ofstream tfs;
-      tfs.open( p );
-      BOOST_TEST( tfs.is_open() );
+      tfs.open(p);
+      BOOST_TEST(tfs.is_open());
     }
     {
       std::cout << " in test 11\n";
       fs::ofstream tfs;
-      tfs.open( p, std::ios_base::out );
-      BOOST_TEST( tfs.is_open() );
+      tfs.open(p, std::ios_base::out);
+      BOOST_TEST(tfs.is_open());
     }
     {
       std::cout << " in test 12\n";
-      fs::fstream tfs( p );
-      BOOST_TEST( tfs.is_open() );
+      fs::fstream tfs(p);
+      BOOST_TEST(tfs.is_open());
     }
     {
       std::cout << " in test 13\n";
-      fs::fstream tfs( p, std::ios_base::in|std::ios_base::out );
-      BOOST_TEST( tfs.is_open() );
+      fs::fstream tfs(p, std::ios_base::in|std::ios_base::out);
+      BOOST_TEST(tfs.is_open());
     }
     {
       std::cout << " in test 14\n";
       fs::fstream tfs;
-      tfs.open( p );
-      BOOST_TEST( tfs.is_open() );
+      tfs.open(p);
+      BOOST_TEST(tfs.is_open());
     }
     {
       std::cout << " in test 15\n";
       fs::fstream tfs;
-      tfs.open( p, std::ios_base::in|std::ios_base::out );
-      BOOST_TEST( tfs.is_open() );
+      tfs.open(p, std::ios_base::in|std::ios_base::out);
+      BOOST_TEST(tfs.is_open());
     }
 
-    if ( cleanup ) fs::remove( p );
+    if (cleanup) fs::remove(p);
 
   } // test
 } // unnamed namespace
 
-int main( int argc, char*[] )
+int main(int argc, char*[])
 {
-  if ( argc > 1 ) cleanup = false;
+  if (argc > 1) cleanup = false;
 
   // test narrow characters
   std::cout << "narrow character tests:\n";
-  test( "fstream_test_foo" );
+  test("fstream_test_foo");
 
 
   // So that tests are run with known encoding, use Boost UTF-8 codecvt
   std::locale global_loc = std::locale();
-  std::locale loc( global_loc, new fs::detail::utf8_codecvt_facet );
-  fs::path::imbue( loc );
+  std::locale loc(global_loc, new fs::detail::utf8_codecvt_facet);
+  fs::path::imbue(loc);
 
   // test with some wide characters
   //  \u2780 is circled 1 against white background == e2 9e 80 in UTF-8
   //  \u2781 is circled 2 against white background == e2 9e 81 in UTF-8
   //  \u263A is a white smiling face
   std::cout << "\nwide character tests:\n";
-  test( L"fstream_test_\u2780\u263A" );
+  test(L"fstream_test_\u2780\u263A");
 
   return ::boost::report_errors();
 }

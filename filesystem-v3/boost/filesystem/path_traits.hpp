@@ -41,86 +41,86 @@ namespace path_traits {
   //  Pathable empty
 
   template <class Container> inline
-    bool empty( const Container & c )
+    bool empty(const Container & c)
       { return c.begin() == c.end(); }
 
   template <class T> inline
-    bool empty( T * const & c_str )
+    bool empty(T * const & c_str)
   {
-    BOOST_ASSERT( c_str );
+    BOOST_ASSERT(c_str);
     return !*c_str;
   }
 
   template <typename T, size_t N> inline
-     bool empty( T (&array)[N] )
+     bool empty(T (&)[N])
        { return N <= 1; }
 
   //  Pathable dispatch
 
   template <class Container, class U> inline
-  void dispatch( const Container & c, U & to, const codecvt_type & cvt )
+  void dispatch(const Container & c, U & to, const codecvt_type & cvt)
   {
 //    std::cout << "dispatch() container\n";
-    if ( c.size() )
-      convert( &*c.begin(), &*c.begin() + c.size(), to, cvt );
+    if (c.size())
+      convert(&*c.begin(), &*c.begin() + c.size(), to, cvt);
   }
 
   template <class T, class U> inline
-  void dispatch( T * const & c_str, U & to, const codecvt_type & cvt )
+  void dispatch(T * const & c_str, U & to, const codecvt_type & cvt)
   {
 //    std::cout << "dispatch() const T *\n";
-    BOOST_ASSERT( c_str );
-    convert( c_str, to, cvt );
+    BOOST_ASSERT(c_str);
+    convert(c_str, to, cvt);
   }
   
   template <typename T, size_t N, class U> inline
-  void dispatch( T (&array)[N], U & to, const codecvt_type & cvt ) // T, N, U deduced
+  void dispatch(T (&array)[N], U & to, const codecvt_type & cvt) // T, N, U deduced
   {
 //    std::cout << "dispatch() array, N=" << N << "\n"; 
-    convert( array, array + N - 1, to, cvt );
+    convert(array, array + N - 1, to, cvt);
   }
 
   BOOST_FILESYSTEM_DECL
-  void dispatch( const directory_entry & de,
+  void dispatch(const directory_entry & de,
 #                ifdef BOOST_WINDOWS_API
                    std::wstring & to,
 #                else   
                    std::string & to,
 #                endif
-                 const codecvt_type & );
+                 const codecvt_type &);
 
   // value types differ  ---------------------------------------------------------------//
   //
   //   A from_end argument of 0 is less efficient than a known end, so use only if needed
   
   BOOST_FILESYSTEM_DECL
-  void convert( const char * from,
-                const char * from_end,    // 0 for null terminated MBCS
+  void convert(const char* from,
+                const char* from_end,    // 0 for null terminated MBCS
                 std::wstring & to,
-                const codecvt_type & cvt );
+                const codecvt_type & cvt);
 
   BOOST_FILESYSTEM_DECL
-  void convert( const wchar_t * from,
-                const wchar_t * from_end,  // 0 for null terminated MBCS
+  void convert(const wchar_t* from,
+                const wchar_t* from_end,  // 0 for null terminated MBCS
                 std::string & to,
-                const codecvt_type & cvt );
+                const codecvt_type & cvt);
 
   inline 
-  void convert( const char * from,
+  void convert(const char* from,
                 std::wstring & to,
-                const codecvt_type & cvt )
+                const codecvt_type & cvt)
   {
-    BOOST_ASSERT( from );
-    convert( from, 0, to, cvt );
+    BOOST_ASSERT(from);
+    convert(from, 0, to, cvt);
   }
 
   inline 
-  void convert( const wchar_t * from,
+  void convert(const wchar_t* from,
                 std::string & to,
-                const codecvt_type & cvt )
+                const codecvt_type & cvt)
   {
-    BOOST_ASSERT( from );
-    convert( from, 0, to, cvt );
+    BOOST_ASSERT(from);
+    convert(from, 0, to, cvt);
   }
 
   // value types same  -----------------------------------------------------------------//
@@ -128,40 +128,40 @@ namespace path_traits {
   // char
 
   inline 
-  void convert( const char * from, const char * from_end, std::string & to,
-    const codecvt_type & )
+  void convert(const char* from, const char* from_end, std::string & to,
+    const codecvt_type &)
   {
-    BOOST_ASSERT( from );
-    BOOST_ASSERT( from_end );
-    to.append( from, from_end );
+    BOOST_ASSERT(from);
+    BOOST_ASSERT(from_end);
+    to.append(from, from_end);
   }
 
   inline 
-  void convert( const char * from,
+  void convert(const char* from,
                 std::string & to,
-                const codecvt_type & )
+                const codecvt_type &)
   {
-    BOOST_ASSERT( from );
+    BOOST_ASSERT(from);
     to += from;
   }
 
   // wchar_t
 
   inline 
-  void convert( const wchar_t * from, const wchar_t * from_end, std::wstring & to,
-    const codecvt_type & )
+  void convert(const wchar_t* from, const wchar_t* from_end, std::wstring & to,
+    const codecvt_type &)
   {
-    BOOST_ASSERT( from );
-    BOOST_ASSERT( from_end );
-    to.append( from, from_end );
+    BOOST_ASSERT(from);
+    BOOST_ASSERT(from_end);
+    to.append(from, from_end);
   }
 
   inline 
-  void convert( const wchar_t * from,
+  void convert(const wchar_t* from,
                 std::wstring & to,
-                const codecvt_type & )
+                const codecvt_type &)
   {
-    BOOST_ASSERT( from );
+    BOOST_ASSERT(from);
     to += from;
   }
 
