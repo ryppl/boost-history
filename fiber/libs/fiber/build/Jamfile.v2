@@ -1,0 +1,66 @@
+# Boost.fiber Library Build Jamfile
+
+#          Copyright Oliver Kowalke 2009.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
+
+import os ;
+import feature ;
+import indirect ;
+import path ;
+
+project boost/fiber
+    : source-location
+        ../src
+    : requirements
+        <library>/boost/thread//boost_thread
+        <library>/boost/system//boost_system
+        <link>static:<define>BOOST_FIBER_BUILD_LIB=1
+        <link>shared:<define>BOOST_FIBER_BUILD_DLL=1
+        <threading>multi
+    : default-build
+        <threading>multi
+    ;
+
+local rule default_fiberapi ( )
+{
+    local api = posix ;
+    if [ os.name ] = "NT" { api = win32 ; }
+    return $(api) ;
+}
+
+feature.feature fiberapi : posix win32 : propagated ;
+feature.set-default fiberapi : [ default_fiberapi ] ;
+
+alias fiber_sources
+    : ## win32 sources ##
+	attributes.cpp
+	fiber.cpp
+	fiber_info_windows.cpp
+	fiber_windows.cpp
+	scheduler.cpp
+    : ## requirements ##
+      <fiberapi>win32
+    ;
+
+alias fiber_sources
+    : ## posix sources ##
+	attributes.cpp
+	fiber.cpp
+	fiber_info_posix.cpp
+	fiber_posix.cpp
+	scheduler.cpp
+    : ## requirements ##
+      <fiberapi>posix
+    ;
+
+explicit fiber_sources ;
+
+lib boost_fiber
+    : fiber_sources
+    : <link>shared:<define>BOOST_FIBER_USE_DLL=1
+      <link>static:<define>BOOST_FIBER_USE_LIB=1
+   ;
+
+boost-install boost_fiber ;

@@ -1,16 +1,15 @@
-//  Copyright (c) 2008 Oliver Kowalke. Distributed under the Boost
-//  Software License, Version 1.0. (See accompanying file
-//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBERS_FIBERS_H
-#define BOOST_FIBERS_FIBERS_H
+//          Copyright Oliver Kowalke 2009.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/fibers/fiber.hpp>
-#include <boost/fibers/context.hpp>
-#include <boost/fibers/exceptions.hpp>
-#include <boost/fibers/result.hpp>
-#include <boost/fibers/stacksize.hpp>
-#include <boost/fibers/wrapper.hpp>
+#ifndef BOOST_FIBER_H
+#define BOOST_FIBER_H
 
-#endif // BOOST_FIBERS_FIBERS_H
- 
+#include <boost/fiber/attributes.hpp>
+#include <boost/fiber/exceptions.hpp>
+#include <boost/fiber/scheduler.hpp>
+#include <boost/fiber/utility.hpp>
+
+#endif // BOOST_FIBER_H
