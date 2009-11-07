@@ -135,9 +135,22 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 to_first(inorder, Cursor& c, ascending_vertical_traversal_tag)
 {
+	Cursor d = c;
     to_leftmost(c);
-    c.to_parent();
+    if (c != d)
+		c.to_parent();
 }
+
+//template <class Cursor>
+//BOOST_CONCEPT_REQUIRES(
+//    ((RootTrackingCursor<Cursor>)),
+//    (void)) // return type
+//to_first(inorder, Cursor& c, root_tracking_vertical_traversal_tag)
+//{
+//    to_leftmost(c);
+//    if (!c.is_root())
+//		c.to_parent();
+//}
 
 /**
  * @brief   Last element of a subtree in inorder traversal
@@ -175,9 +188,22 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 to_last(inorder, Cursor& c, ascending_vertical_traversal_tag)
 {
+	Cursor d = c;
     to_rightmost(c);
-    c.to_parent();
+    if (c != d)
+		c.to_parent();
 }
+
+//template <class Cursor>
+//BOOST_CONCEPT_REQUIRES(
+//    ((RootTrackingCursor<Cursor>)),
+//    (void)) // return type
+//to_last(inorder, Cursor& c, root_tracking_vertical_traversal_tag)
+//{
+//    to_rightmost(c);
+//    if (!c.is_root())
+//		c.to_parent();
+//}
 
 /**
  * @brief   One position past the last element of a subtree in inorder 

@@ -48,6 +48,7 @@ BOOST_AUTO_TEST_CASE( unbalanced_binary_tree_test )
     BOOST_CHECK(c == my_tree.begin());
         
     c1 = my_tree.insert(c, 8);
+    BOOST_CHECK(c1 == my_tree.begin());
     
     BOOST_CHECK_EQUAL(*c1, 8);
     

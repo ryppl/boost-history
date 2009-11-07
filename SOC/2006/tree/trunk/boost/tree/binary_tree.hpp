@@ -37,7 +37,7 @@ class binary_tree {
 public:
     typedef Tp value_type;
     typedef typename Alloc::template rebind<value_type>::other allocator_type;
-    // Allocator usage roghly follows gcc's stl_list.h practice. 
+    // Allocator usage roughly follows gcc's stl_list.h practice.
 
 private:        
     typedef detail::ascending_node<value_type> node_type;

@@ -27,6 +27,7 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 //    BOOST_CHECK_EQUAL(++x, &bt0.m_header.m_children.data()[1]);
 
     //BOOST_CHECK(bt0.root().begin() == bt0.root().end()); //FIXME
+
     // test with allocator? 
 }
 
@@ -50,7 +51,7 @@ BOOST_AUTO_TEST_CASE( insert_value_test )
 {
     binary_tree<int> bt0;
     
-    binary_tree<int>::cursor c = bt0.insert(bt0.root()/*.begin()*/, 8); //FIXME   
+    binary_tree<int>::cursor c = bt0.insert(bt0.root()/*.end()*/, 8); //FIXME
     c.to_begin();
 
     BOOST_CHECK(c == bt0.root().begin());
@@ -75,6 +76,30 @@ BOOST_AUTO_TEST_CASE( insert_value_test )
     BOOST_CHECK(bt0.root().begin().begin().is_leaf());
     
     BOOST_CHECK(++c == bt0.root().begin().end());
+
+    c = bt0.insert(c, 7);
+
+    BOOST_CHECK(c == bt0.root().begin().end());
+    BOOST_CHECK(bt0.root().begin().end().parent() == bt0.root().begin());
+    BOOST_CHECK(!bt0.root().begin().end().is_leaf());
+    BOOST_CHECK_EQUAL(*bt0.root().begin().end(), 7);
+    BOOST_CHECK(bt0.root().begin().end().end().is_leaf());
+
+    c = bt0.insert(c, 6); // Non-leaf insert
+
+    BOOST_CHECK(c == bt0.root().begin().end());
+    BOOST_CHECK(bt0.root().begin().end().parent() == bt0.root().begin());
+    BOOST_CHECK(!bt0.root().begin().end().is_leaf());
+    BOOST_CHECK_EQUAL(*bt0.root().begin().end(), 6);
+    BOOST_CHECK(!bt0.root().begin().end().end().is_leaf());
+
+    c.to_end();
+    BOOST_CHECK(c == bt0.root().begin().end().end());
+    BOOST_CHECK(bt0.root().begin().end().end().parent() == bt0.root().begin().end());
+    BOOST_CHECK(!bt0.root().begin().end().end().is_leaf());
+    BOOST_CHECK_EQUAL(*bt0.root().begin().end().end(), 7);
+    BOOST_CHECK(bt0.root().begin().end().end().end().is_leaf());
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()

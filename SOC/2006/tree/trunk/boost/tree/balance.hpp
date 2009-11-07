@@ -441,7 +441,7 @@ public:
         // If yes, we could just insert at pos.
         
         cursor c = pos.base().base().base();
-        to_rightmost(c);
+        //to_rightmost(c);
         
         c = h.insert(c, data_type(val));
         

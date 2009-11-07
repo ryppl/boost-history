@@ -132,7 +132,8 @@ BOOST_CONCEPT_ASSERT((RootTrackingCursor<Cursor>));
 
      void decrement()
      {
-         predecessor(inorder(), this->base_reference());
+    	 // Works also if we're past the last element:
+    	 predecessor(inorder(), this->base_reference());
      }
  };
 
