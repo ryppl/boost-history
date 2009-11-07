@@ -27,15 +27,15 @@ struct BOOST_FIBER_DECL scheduler_data
 	fiber						master;
 	fiber::id					f_id;
 	ptr_map< fiber::id, fiber >	fibers;
-	std::queue< fiber::id >		run_queue;
-	std::queue< fiber::id >		zombie_queue;
+	std::queue< fiber::id >		runnable_fibers;
+	std::queue< fiber::id >		dead_fibers;
 
 	scheduler_data() :
 		master(),
 		f_id(),
 		fibers(),
-		run_queue(),
-		zombie_queue()
+		runnable_fibers(),
+		dead_fibers()
 	{}
 };
 

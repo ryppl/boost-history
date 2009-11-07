@@ -13,6 +13,14 @@
 namespace boost {
 namespace fiber {
 
+class fiber_error : public std::runtime_error
+{
+public:
+    fiber_error( std::string const& msg)
+	: std::runtime_error( msg)
+	{}
+};
+
 class scheduler_error : public std::runtime_error
 {
 public:

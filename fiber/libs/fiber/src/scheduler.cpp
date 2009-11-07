@@ -22,7 +22,7 @@ fiber::id
 scheduler::get_id()
 {
 	detail::scheduler_data * dt( data.get() );
-	BOOST_ASSERT( dt);
+	if ( ! dt) throw fiber_error("not a fiber");
 	return dt->f_id;
 }
 
@@ -30,8 +30,8 @@ void
 scheduler::yield()
 {
 	detail::scheduler_data * dt( data.get() );
-	BOOST_ASSERT( dt);
-	dt->run_queue.push( dt->f_id);
+	if ( ! dt) throw fiber_error("not a fiber");
+	dt->runnable_fibers.push( dt->f_id);
 	dt->fibers[dt->f_id].switch_to( dt->master);
 }
 
@@ -39,8 +39,8 @@ void
 scheduler::exit()
 {
 	detail::scheduler_data * dt( data.get() );
-	BOOST_ASSERT( dt);
-	dt->zombie_queue.push( dt->f_id);
+	if ( ! dt) throw fiber_error("not a fiber");
+	dt->dead_fibers.push( dt->f_id);
 	dt->fibers[dt->f_id].switch_to( dt->master);
 }
 
@@ -67,7 +67,7 @@ scheduler::add( std::auto_ptr< detail::fiber > f)
 	std::pair< ptr_map< detail::fiber::id, detail::fiber >::iterator, bool > result(
 		dt->fibers.insert( id, f) );
 	if ( ! result.second) throw scheduler_error("inserting fiber failed");
-	dt->run_queue.push( result.first->first);
+	dt->runnable_fibers.push( result.first->first);
 }
 
 bool
@@ -75,17 +75,17 @@ scheduler::run()
 {
 	detail::scheduler_data * dt = access_data();
 
-	if ( ! dt->run_queue.empty() )
+	if ( ! dt->runnable_fibers.empty() )
 	{
-		dt->f_id = dt->run_queue.front();
+		dt->f_id = dt->runnable_fibers.front();
 		dt->master.switch_to( dt->fibers[dt->f_id]);
-		dt->run_queue.pop();
+		dt->runnable_fibers.pop();
 		return true;
 	}
-	if ( ! dt->zombie_queue.empty() )
+	if ( ! dt->dead_fibers.empty() )
 	{
-		dt->fibers.erase( dt->zombie_queue.front() );
-		dt->zombie_queue.pop();
+		dt->fibers.erase( dt->dead_fibers.front() );
+		dt->dead_fibers.pop();
 		return true;
 	}
 	return false;
