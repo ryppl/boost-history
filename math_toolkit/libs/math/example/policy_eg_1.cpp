@@ -16,7 +16,7 @@ typedef policy<
    domain_error<errno_on_error>,
    pole_error<errno_on_error>,
    overflow_error<errno_on_error>,
-   evaluation_error<errno_on_error> 
+   evaluation_error<errno_on_error>
 > c_policy;
 //
 // Now use the policy when calling tgamma:
@@ -24,13 +24,12 @@ typedef policy<
 int main()
 {
    errno = 0;
-   std::cout << "Result of tgamma(30000) is: " 
+   std::cout << "Result of tgamma(30000) is: "
       << boost::math::tgamma(30000, c_policy()) << std::endl;
    std::cout << "errno = " << errno << std::endl;
-   std::cout << "Result of tgamma(-10) is: " 
+   std::cout << "Result of tgamma(-10) is: "
       << boost::math::tgamma(-10, c_policy()) << std::endl;
    std::cout << "errno = " << errno << std::endl;
 }
 
 //]
-
