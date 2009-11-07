@@ -28,101 +28,101 @@ stm::tx::int_t counter2(0);
 void inc() {
     stm::thread_initializer thi;
 
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         ++counter;
-    } end_atom
+    } BOOST_STM_END_ATOMIC
 }
 void inc1() {
     stm::thread_initializer thi;
 
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         counter+=1;
-    } end_atom
+    } BOOST_STM_END_ATOMIC
 }
 void decr() {
     stm::thread_initializer thi;
 
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         --counter;
-    } end_atom
+    } BOOST_STM_END_ATOMIC
 }
 bool check(int val) {
     //thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         BOOST_STM_TX_RETURN(_, (counter==val));
-    } end_atom
+    } BOOST_STM_END_ATOMIC
     return false;
 }
 
 bool test_equal() {
     //thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         counter=1;
         counter2=2;
         BOOST_STM_TX_GOTO(_, label1);
         counter2=3;
-    } end_atom
+    } BOOST_STM_END_ATOMIC
     label1:
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         counter=2;
         //assert(counter==counter2);
         BOOST_STM_TX_RETURN(_, (counter==counter2));
-    } end_atom
+    } BOOST_STM_END_ATOMIC
     return false;
 }
 
 bool test_assign() {
     //thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         counter=1;
         counter2=counter;
         BOOST_STM_CONTINUE;
         counter2=3;
-    } end_atom
-    atomic(_) {
+    } BOOST_STM_END_ATOMIC
+    BOOST_STM_ATOMIC(_) {
         //assert((counter==1) && (counter2==1) && (counter==counter2));
         BOOST_STM_TX_RETURN(_, (counter==1) && (counter2==1) && (counter==counter2)) ;
-    } end_atom
+    } BOOST_STM_END_ATOMIC
     return false;
 }
 
 bool test_less() {
     //thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         counter=1;
         counter2=2;
         BOOST_STM_BREAK;
         counter2=3;
-    } end_atom
-    atomic(_) {
+    } BOOST_STM_END_ATOMIC
+    BOOST_STM_ATOMIC(_) {
         //assert(counter<counter2);
         BOOST_STM_TX_RETURN(_, (counter<counter2)) ;
-    } end_atom
+    } BOOST_STM_END_ATOMIC
     return false;
 }
 
 bool test_le() {
     //thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         counter=1;
         counter2=1;
-    } end_atom
-    atomic(_) {
+    } BOOST_STM_END_ATOMIC
+    BOOST_STM_ATOMIC(_) {
         //assert(counter<=counter2);
         BOOST_STM_TX_RETURN(_, (counter<=counter2)) ;
-    } end_atom
+    } BOOST_STM_END_ATOMIC
     return false;
 }
 
 bool test_const(stm::tx::numeric<int> const& c) {
     //thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         counter2=c;
-    } end_atom
-    use_atomic(_) {
+    } BOOST_STM_END_ATOMIC
+    BOOST_STM_ATOMIC(_) {
         //assert(c==counter2);
         BOOST_STM_TX_RETURN(_, (c==counter2)) ;
-    }
+    } BOOST_STM_END_ATOMIC
     return false;
 }
 

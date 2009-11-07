@@ -95,7 +95,7 @@
 // Catch a unnamed abort exception and retry
 //---------------------------------------------------------------------------
 #define BOOST_STM_RETRY catch (boost::stm::aborted_tx &) {}
-#define BOOST_STM_END_ATOM BOOST_STM_RETRY
+#define BOOST_STM_END_ATOMIC BOOST_STM_RETRY
 
 //---------------------------------------------------------------------------
 // Catch a named exception and re-throw it after commiting
@@ -265,14 +265,14 @@ T commit_and_return(transaction&t, T expression) {
 //---------------------------------------------------------------------------
 
 #define BOOST_STM_TX_DELETE_PTR(TX, PTR) \
-    (TX).delete_tx_ptr(PTR);
+    (TX).delete_ptr(PTR)
 
 //---------------------------------------------------------------------------
 // deletes the allocated object on transaction TX
 //---------------------------------------------------------------------------
 
 #define BOOST_STM_TX_DELETE_ARRAY(TX, PTR) \
-    (TX).delete_tx_array(PTR);
+    (TX).delete_array(PTR)
 
 //---------------------------------------------------------------------------
 // deletes the allocated object on transaction TX

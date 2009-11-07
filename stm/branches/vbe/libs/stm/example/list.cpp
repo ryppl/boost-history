@@ -55,8 +55,8 @@ public:
     tx_ptr<list_node<T> > head_;
     tx_ptr<std::size_t> size_;
     list()
-    : head_(BOOST_STM_NEW_1(transactional_object<list_node<T> >()))
-    , size_(BOOST_STM_NEW_1(transactional_object<std::size_t>(0)))
+    : head_(BOOST_STM_NEW_PTR(transactional_object<list_node<T> >()))
+    , size_(BOOST_STM_NEW_PTR(transactional_object<std::size_t>(0)))
     {
             std::cout << "list().head_" << *head_.get() << std::endl;
             std::cout << "list().size_" << *size_.get() << std::endl;
@@ -96,7 +96,7 @@ public:
                 cerr << __LINE__ << " inserting" << endl;
                 wr_ptr<list_node<T> > insert_point(_,prev);
                 cerr << __LINE__ << " inserting" << endl;
-                insert_point->next_=BOOST_STM_NEW(_,transactional_object<list_node<T> >(val, curr));
+                insert_point->next_=BOOST_STM_TX_NEW_PTR(_,transactional_object<list_node<T> >(val, curr));
                 cerr << __LINE__ << " inserting" << endl;
                 //wr_ptr<std::size_t > size_tx(_,size_);
                 //cerr << __LINE__ << " inserting" << endl;
@@ -166,7 +166,7 @@ void create() {
     //l=boost::stm::make_tx_ptr<test::list<int> >();
     atomic(_) {
         cerr << __LINE__ << " create" << endl;
-        l=BOOST_STM_NEW(_,transactional_object<test::list<int> >());
+        l=BOOST_STM_TX_NEW_PTR(_,transactional_object<test::list<int> >());
         cerr << __LINE__ << " create" << endl;
         cerr << " create size " << l->size() << endl;
         //cerr << " insert " << l.get() << endl;

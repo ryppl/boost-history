@@ -30,6 +30,11 @@
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
+#ifdef BOOST_STM_USE_BOOST
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+#endif
+//-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction.hpp>
 #include <boost/stm/datatypes.hpp>
 #include <boost/stm/transaction_bookkeeping.hpp>
@@ -555,26 +560,82 @@ public:
       }
    }
 
+   //--------------------------------------------------------------------------
    template <typename T>
    inline void delete_tx_ptr(T *in) {
        delete_memory(*in);
    }
 
+   //--------------------------------------------------------------------------
    template <typename T>
-   inline void delete_tx_array(T *in) {
+   inline void delete_non_tx_ptr(T *in) {
+       delete_memory(*in);
+   }
+   #ifdef BOOST_STM_USE_BOOST
+    template <int> struct dummy { dummy(int) {} };
+//--------------------------------------------------------------------------
+   template <typename T>
+   inline
+   typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
+   delete_ptr(T *in, dummy<0> = 0) {
+       delete_tx_ptr(in);
+   }
+   template <typename T>
+   inline
+   typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
+   delete_ptr(T *in, dummy<1> = 0) {
+       delete_non_tx_ptr(in);
+   }
+   #endif
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   inline void delete_tx_array(T *in, std::size_t size) {
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
          throw "direct updating not implemented for validation yet";
 #else
-         direct_delete_tx_array(in);
+         direct_delete_tx_array(in, size);
 #endif
       }
       else
       {
-         deferred_delete_tx_array(in);
+         deferred_delete_tx_array(in, size);
       }
    }
+   //--------------------------------------------------------------------------
+   template <typename T>
+   inline void delete_non_tx_array(T *in, std::size_t size) {
+      if (direct_updating())
+      {
+#if PERFORMING_VALIDATION
+         throw "direct updating not implemented for validation yet";
+#else
+         direct_delete_tx_array(in, size);
+#endif
+      }
+      else
+      {
+         deferred_delete_tx_array(in, size);
+      }
+   }
+
+   //--------------------------------------------------------------------------
+   #ifdef BOOST_STM_USE_BOOST
+   template <typename T>
+   inline
+   typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
+   delete_array(T *in, std::size_t size, dummy<0> = 0) {
+       delete_tx_ptr(in, size);
+   }
+   template <typename T>
+   inline
+   typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
+   delete_array(T *in, std::size_t size, dummy<1> = 0) {
+       delete_non_tx_ptr(in, size);
+   }
+   #endif
 
    //--------------------------------------------------------------------------
    // allocation of new memory behaves the same for both deferred and direct
@@ -596,7 +657,7 @@ public:
 
    //--------------------------------------------------------------------------
    template <typename T>
-   T* as_new(T *newNode)
+   T* as_new_tx(T *newNode)
    {
       newNode->transaction_thread(threadId_);
       newNode->new_memory(1);
@@ -605,17 +666,54 @@ public:
       return newNode;
    }
 
+   #ifdef BOOST_STM_USE_BOOST
    //--------------------------------------------------------------------------
    template <typename T>
-   T* as_new_array(T *newNode, std::size_t size)
+   inline
+   typename enable_if<is_base_of<base_transaction_object, T>, T*>::type
+   as_new(T *in, dummy<0> = 0) {
+       return as_new_tx(in);
+   }
+   template <typename T>
+   inline
+   typename disable_if<is_base_of<base_transaction_object, T>, T*>::type
+   as_new(T *in, dummy<1> = 0) {
+       return as_new_non_tx(in);
+   }
+    #endif
+   //--------------------------------------------------------------------------
+   template <typename T>
+   T* as_new_tx_array(T *newNode, std::size_t size)
    {
-      //newNode->transaction_thread(threadId_);
-      //newNode->new_memory(1);
       newMemoryList().push_back(detail::make_array(newNode, size));
 
       return newNode;
    }
 
+   //--------------------------------------------------------------------------
+   template <typename T>
+   T* as_new_non_tx_array(T *newNode, std::size_t size)
+   {
+      newMemoryList().push_back(detail::make_array(newNode, size));
+
+      return newNode;
+   }
+
+   #ifdef BOOST_STM_USE_BOOST
+   //--------------------------------------------------------------------------
+   template <typename T>
+   inline
+   typename enable_if<is_base_of<base_transaction_object, T>, T*>::type
+   as_new_array(T *in, std::size_t size, dummy<0> = 0) {
+       return as_new_tx_array(in, size);
+   }
+   template <typename T>
+   inline
+   typename disable_if<is_base_of<base_transaction_object, T>, T*>::type
+   as_new_array(T *in, std::size_t size, dummy<1> = 0) {
+       return as_new_non_tx_array(in, size);
+   }
+    #endif
    //--------------------------------------------------------------------------
    template <typename T>
    T* new_shared_memory(T*)
@@ -905,35 +1003,49 @@ private:
 
    //--------------------------------------------------------------------------
    template <typename T>
-   void direct_delete_tx_array(T *in)
+   void direct_delete_tx_array(T *in, std::size_t size)
    {
-      if (in.transaction_thread() == threadId_)
-      {
-         deletedMemoryList().push_back(detail::make(in));
-         return;
-      }
+        bool all_in_this_thread = true;
+        for (int i=size-1; i>=0; --i) {
+            if (in[i].transaction_thread() != threadId_) {
+                all_in_this_thread=false;
+                break;
+            }
+        }
+        if (all_in_this_thread) {
+            deletedMemoryList().push_back(detail::make_array(in, size));
+            return;
+        }
 
-      //-----------------------------------------------------------------------
-      // if we're here this item isn't in our writeList - get the global lock
-      // and see if anyone else is writing to it. if not, we add the item to
-      // our write list and our deletedList
-      //-----------------------------------------------------------------------
-      synchro::unique_lock<Mutex> lock_m(transactionMutex_);
+        //-----------------------------------------------------------------------
+        // if we're here this item isn't in our writeList - get the global lock
+        // and see if anyone else is writing to it. if not, we add the item to
+        // our write list and our deletedList
+        //-----------------------------------------------------------------------
+        synchro::unique_lock<Mutex> lock_m(transactionMutex_);
 
-      if (in.transaction_thread() != invalid_thread_id())
-      {
-         cm_abort_on_write(*this, (base_transaction_object&)(in));
-      }
-      else
-      {
-         in.transaction_thread(threadId_);
-         lock_m.unlock();
-         // is this really necessary? in the deferred case it is, but in direct it
-         // doesn't actually save any time for anything
-         //writeList()[(base_transaction_object*)&in] = 0;
+        bool all_invalid = true;
+        for (int i=size-1; i>=0; --i) {
+            if (in[i].transaction_thread() = invalid_thread_id()) {
+                all_invalid=false;
+                break;
+            }
+        }
+        if (!all_invalid) {
+            cm_abort_on_write(*this, (base_transaction_object&)(*in));
+        }
+        else
+        {
+            for (int i=size-1; i>=0; --i) {
+                in[i].transaction_thread(threadId_);
+            }
+            lock_m.unlock();
+            // is this really necessary? in the deferred case it is, but in direct it
+            // doesn't actually save any time for anything
+            //writeList()[(base_transaction_object*)&in] = 0;
 
-         deletedMemoryList().push_back(detail::make(in));
-      }
+            deletedMemoryList().push_back(detail::make_array(in, size));
+        }
    }
 #endif
 
@@ -1064,10 +1176,9 @@ private:
       //-----------------------------------------------------------------------
       if (in.transaction_thread() != invalid_thread_id())
       {
-         { synchro::lock_guard<Mutex> lock(*mutex());
-         //lock_tx();
+         {
+         synchro::lock_guard<Mutex> lock(*mutex());
          bloom().insert((std::size_t)&in);
-         //unlock_tx();
          }
          writeList().insert(tx_pair((base_transaction_object*)&in, 0));
       }
@@ -1078,10 +1189,9 @@ private:
       //-----------------------------------------------------------------------
       else
       {
-         { synchro::lock_guard<Mutex> lock(*mutex());
-         //lock_tx();
+         {
+         synchro::lock_guard<Mutex> lock(*mutex());
          bloom().insert((std::size_t)&in);
-         //unlock_tx();
          }
          // check the ENTIRE write container for this piece of memory in the
          // second location. If it's there, it means we made a copy of a piece
@@ -1097,6 +1207,66 @@ private:
 
       deletedMemoryList().push_back(detail::make(in));
    }
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   void deferred_delete_tx_array(T *in, std::size_t size)
+   {
+      if (forced_to_abort())
+      {
+         deferred_abort(true);
+         throw aborted_tx("");
+      }
+      //-----------------------------------------------------------------------
+      // if this memory is true memory, not transactional, we add it to our
+      // deleted list and we're done
+      //-----------------------------------------------------------------------
+        bool all_valid = true;
+        for (int i=size-1; i>=0; --i) {
+            if (in[i].transaction_thread() == invalid_thread_id()) {
+                all_valid=false;
+                break;
+            }
+        }
+        if (all_valid) {
+            {
+                synchro::lock_guard<Mutex> lock(*mutex());
+                for (int i=size-1; i>=0; --i) {
+                    bloom().insert((std::size_t)(&in[i]));
+                }
+            }
+            for (int i=size-1; i>=0; --i) {
+                writeList().insert(tx_pair((base_transaction_object*)(&in[i]), 0));
+            }
+        }
+       //-----------------------------------------------------------------------
+       // this isn't real memory, it's transactional memory. But the good news is,
+       // the real version has to be in our write list somewhere, find it, add
+       // both items to the deletion list and exit
+       //-----------------------------------------------------------------------
+        else
+        {
+            {
+                synchro::lock_guard<Mutex> lock(*mutex());
+                for (int i=size-1; i>=0; --i) {
+                    bloom().insert((std::size_t)(&in[i]));
+                }
+            }
+            // check the ENTIRE write container for this piece of memory in the
+            // second location. If it's there, it means we made a copy of a piece
+            for (int i=size-1; i>=0; --i)
+            for (WriteContainer::iterator j = writeList().begin(); writeList().end() != j; ++j)
+            {
+                if (j->second == (base_transaction_object*)(&in[i]))
+                {
+                    writeList().insert(tx_pair(j->first, 0));
+                    deletedMemoryList().push_back(detail::make(j->first));
+                }
+            }
+        }
+
+        deletedMemoryList().push_back(detail::make_array(in, size));
+    }
 
    //--------------------------------------------------------------------------
    void verifyReadMemoryIsValidWithGlobalMemory();
@@ -1999,20 +2169,11 @@ struct thread_initializer {
 #define before_retry catch (boost::stm::aborted_tx &)
 #define end_atom catch (boost::stm::aborted_tx &) {}
 
-#define BOOST_STM_NEW(T, P) \
-    ((T).throw_if_forced_to_abort_on_new(), \
-    (T).as_new(new P))
-
-#define BOOST_STM_NEW_1(P) \
-    ((boost::stm::current_transaction()!=0)?BOOST_STM_NEW(*boost::stm::current_transaction(), P):new P)
-
 } // stm  namespace
 } // boost namespace
 
 #include <boost/stm/detail/transaction_impl.hpp>
 #include <boost/stm/detail/latm_general_impl.hpp>
-//#include <boost/stm/synch/auto_lock.hpp>
-//#include <boost/stm/tx_ptr.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 #endif // BOOST_STM_TRANSACTION__HPP

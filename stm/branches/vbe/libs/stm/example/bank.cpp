@@ -75,7 +75,7 @@ struct teller {
         thread_initializer thi;
         for(int i=10; i>0;--i)
         {
-            atomic(_) {
+            BOOST_STM_ATOMIC(_) {
                 int amount=random() % 1000;
                 #if 0
                 tx_ptr<bank> rd_bank(bank_);
@@ -87,7 +87,7 @@ struct teller {
                 int acc2=random() % rd_bank->accounts.size();
                 rd_bank->accounts[acc1]->Withdraw(amount);
                 rd_bank->accounts[acc2]->Deposit(amount+1);
-            } end_atom
+            } BOOST_STM_END_ATOMIC
             catch(...) {
                 cerr << "aborted"<< endl;
             }
@@ -101,7 +101,7 @@ bool volatile teller::exit=false;
 
 
 void create_db(bank* b, int nr_of_accounts){
-    //atomic(_)
+    //BOOST_STM_ATOMIC(_) {
     {
         for(int c=0;c<nr_of_accounts;++c){
             tx_ptr<BankAccount> acc(make_tx_ptr<BankAccount>(c));
@@ -113,28 +113,28 @@ void create_db(bank* b, int nr_of_accounts){
 tx_ptr<BankAccount> a;
 void account_withdraw_thr_basic() {
     thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         a->Withdraw(10);
-    }  end_atom
+    } BOOST_STM_END_ATOMIC
 }
 void account_withdraw_thr() {
     thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         make_wr_ptr(_,a)->Withdraw(10);
-    }  end_atom
+    } BOOST_STM_END_ATOMIC
 }
 
 void account_deposit_thr_basic() {
     thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         a->Deposit(10);
-    }  end_atom
+    } BOOST_STM_END_ATOMIC
 }
 void account_deposit_thr() {
     thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         make_wr_ptr(_,a)->Deposit(10);
-    }  end_atom
+    } BOOST_STM_END_ATOMIC
 }
 
 int test_account() {
@@ -157,17 +157,17 @@ tx_ptr<std::vector<int> > v;
 
 void vector_int_assign_basic() {
     thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         (*v)[0]+=10;
-    } end_atom
+    } BOOST_STM_END_ATOMIC
 }
 
 void vector_int_assign() {
     thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         wr_ptr<std::vector<int> > wrv(_,v);
         (*wrv)[0]+=10;
-    } end_atom
+    } BOOST_STM_END_ATOMIC
 }
 
 int test_vector_int() {
@@ -218,9 +218,9 @@ int test_xxxx() {
     delete th1;
     //th2->join();
     //delete th2;
-    atomic(_) {
-    mybank->print_balance();
-    } end_atom
+    BOOST_STM_ATOMIC(_) {
+        mybank->print_balance();
+    } BOOST_STM_END_ATOMIC
 #endif
 #if 0
 

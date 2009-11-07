@@ -32,65 +32,65 @@ tx_int_ptr counter_ptr, counter2_ptr;
 void inc() {
     thread_initializer thi;
 
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         // ++(*counter_ptr)
         read_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
         //tx_int_ptr tmp = *tx_counter_ptr_ptr;
         write_ptr<tx_int> tx_counter_ptr(_, **tx_counter_ptr_ptr);
         ++(*tx_counter_ptr);
-    } end_atom
+    } BOOST_STM_END_ATOMIC
 }
 void decr() {
     thread_initializer thi;
 
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         // --(*counter_ptr)
         read_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
         write_ptr<tx_int> tx_counter_ptr(_, **tx_counter_ptr_ptr);
         --(*tx_counter_ptr);
-    } end_atom
+    } BOOST_STM_END_ATOMIC
 }
 bool check(int val) {
     //thread_initializer thi;
     bool res;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         // *counter_ptr==val
         read_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
         read_ptr<tx_int> tx_counter_ptr(_, **tx_counter_ptr_ptr);
         res =(*tx_counter_ptr==val);
-    }  end_atom
+    } BOOST_STM_END_ATOMIC
     return res;
 }
 
 bool assign() {
     //thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         // *tx_counter2_ptr=*tx_counter_ptr;
         read_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
         write_ptr<tx_int_ptr> tx_counter2_ptr_ptr(_, counter2_ptr);
         tx_counter2_ptr_ptr=tx_counter_ptr_ptr;
-    }  end_atom
+    } BOOST_STM_END_ATOMIC
     bool res=true;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         //res = (counter2_ptr==counter_ptr) ;
         read_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
         read_ptr<tx_int_ptr> tx_counter2_ptr_ptr(_, counter2_ptr);
         //res = (*tx_counter2_ptr_ptr==*tx_counter_ptr_ptr) ;
         //res= (_.read(counter_ptr)==_.read(counter2_ptr));
-    }  end_atom
+    } BOOST_STM_END_ATOMIC
     return res;
 }
 #if 0
 bool test_const(tx_int_const_ptr& const  ptr) {
     //thread_initializer thi;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         write_ptr<tx_int_const_ptr> tx_counter_const_ptr_ptr(_, counter_const_ptr);
         tx_counter_const_ptr_ptr=ptr;
-    }  end_atom
+    } BOOST_STM_END_ATOMIC
     bool res=true;
-    atomic(_) {
+    BOOST_STM_ATOMIC(_) {
         //res =(c==counter2) ;
-    }  end_atom
+    } BOOST_STM_END_ATOMIC
     return res;
 }
 #endif
@@ -98,7 +98,7 @@ bool test_const(tx_int_const_ptr& const  ptr) {
 int test_counter() {
     atomic(_) {
         write_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
-        *tx_counter_ptr_ptr=BOOST_STM_NEW(_, tx_int());
+        *tx_counter_ptr_ptr=BOOST_STM_TX_NEW_PTR(_, tx_int());
     }  end_atom
     thread  th1(inc);
     thread  th2(decr);

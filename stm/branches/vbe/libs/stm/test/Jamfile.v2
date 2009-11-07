@@ -211,7 +211,8 @@ project
             [ run ../example/counter.cpp ]
             # fails sometimes
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52
-            [ run ../example/numeric.cpp ]
+            [ run ../example/tx/numeric.cpp ]
+            [ run ../example/tx/array.cpp ]
             [ run ../example/tx/pointer.cpp ]
             [ run ../example/counter_ptr.cpp ]
             # fails sometimes
@@ -250,7 +251,7 @@ project
             ########### fails sometimes
             [ run stm : -bench rbtree -def -threads 4 -inserts 100 : : : rbtree_def_t4_i100 ]
 
-            ########### fails 
+            ########### fails sometimes 19:00 091107
             [ run stm : -bench ll -dir -threads 2 -inserts 100 -latm tx : : : ll_dir_t2_tx_i100 ]
 
             ########### fails sometimes
