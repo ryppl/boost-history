@@ -12,8 +12,6 @@
 #ifndef BOOST_TREE_POSTORDER_ALGORITHMS_HPP
 #define BOOST_TREE_POSTORDER_ALGORITHMS_HPP
 
-#include <boost/tree/root_tracking_cursor.hpp>
-#include <boost/tree/ascending_cursor.hpp>
 #include <boost/tree/cursor_concepts.hpp>
 
 #include <boost/concept/requires.hpp>

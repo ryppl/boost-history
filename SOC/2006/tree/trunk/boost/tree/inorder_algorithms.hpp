@@ -13,8 +13,6 @@
 #define BOOST_TREE_INORDER_ALGORITHMS_HPP
 
 #include <boost/tree/general_algorithms.hpp>
-#include <boost/tree/root_tracking_cursor.hpp>
-#include <boost/tree/ascending_cursor.hpp>
 #include <boost/tree/cursor_concepts.hpp>
 
 #include <boost/concept/requires.hpp>
