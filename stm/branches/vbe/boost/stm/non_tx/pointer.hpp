@@ -15,7 +15,7 @@
 #define BOOST_STM_NON_TX_POINTER__HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/stm/non_tx/object.hpp>
+#include <boost/stm/non_tx/mixin.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
@@ -30,9 +30,9 @@ namespace boost { namespace stm { namespace non_tx {
 //-----------------------------------------------------------------------------
 
 template <typename T>
-class pointer : public object< pointer<T> ,T* >
+class pointer : public mixin< pointer<T> ,T* >
 {
-    typedef object< pointer<T> , T* > base_type;
+    typedef mixin< pointer<T> , T* > base_type;
     
 public:
     //-----------------------------------------------------------------------------
@@ -62,9 +62,9 @@ public:
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 template <typename C, typename R>
-class pointer_to_member : public transaction_object< pointer_to_member<C,R> >
+class pointer_to_member : public mixin< pointer_to_member<C,R>, R C::* >
 {
-    typedef object< pointer_to_member<C,R> ,R C::*> base_type;
+    typedef mixin< pointer_to_member<C,R>, R C::*> base_type;
 public:
     //-----------------------------------------------------------------------------
     pointer_to_member() : base_type(static_cast<R C::*>(0)) {}

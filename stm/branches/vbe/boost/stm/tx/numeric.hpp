@@ -15,7 +15,7 @@
 #define BOOST_STM_TX_NUMERIC__HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/stm/tx/object.hpp>
+#include <boost/stm/tx/mixin.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
@@ -28,9 +28,9 @@ namespace boost { namespace stm { namespace tx {
 // Note: the sizeof(numeric<T>)>>>>=sizeof(T)
 //-----------------------------------------------------------------------------
 template <typename T>
-class numeric : public object< numeric<T>, T >
+class numeric : public mixin< numeric<T>, T >
 {
-    typedef object< numeric<T> ,T > base_type;
+    typedef mixin< numeric<T> ,T > base_type;
 public:
     //-----------------------------------------------------------------------------
     numeric() : base_type(0) {}

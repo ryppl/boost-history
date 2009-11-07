@@ -15,71 +15,33 @@
 #define BOOST_STM_TX_OBJECT__HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/stm/transaction.hpp>
-#include <boost/stm/transaction_object.hpp>
+#include <boost/stm/tx/mixin.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm { namespace tx {
 
 //-----------------------------------------------------------------------------
-// mixing transactional object class that wraps a object type providing
+// transactional object class that wraps a object type providing
 // a transparent transactional view on a transactional context
 // a non-transactional view on a non-transactional context
 // Note: the sizeof(object<T>)>>>>=sizeof(T)
 //-----------------------------------------------------------------------------
-template <typename Final, typename T>
-class object : public transaction_object< Final >
+template <typename T>
+class object : public mixin< object<T>, T >
 {
-protected:
-    T val_;
 public:
-    typedef Final final_type;
-    typedef T value_type;
+    typedef mixin< object<T>, T > base_type;
     //-----------------------------------------------------------------------------
-    object() : val_() {}
-
-    //
-    template<typename F, typename U>
-    object(object<F,U> const& r) : val_(r.value()) {}
-
+    object() : base_type() {}
+    template<typename U>
+    object(object<U> const& r) : base_type(r) {}
     // contructor from a convertible to T
     template <typename U>
-    object(U v) : val_(v) {}
-
-    operator T() const { return value(); }
-    operator T&() { return ref(); }
-
-    //-----------------------------------------------------------------------------
-    // accessors        
-    T& ref() {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-
-            return tx->write(*this).val_;
-        }
-        return val_;
-    }
-
-    //-----------------------------------------------------------------------------
-    T value() const {
-        transaction* tx=current_transaction();
-        if (tx!=0) {
-            if (tx->forced_to_abort()) {
-                tx->lock_and_abort();
-                throw aborted_transaction_exception("aborting transaction");
-            }
-            return tx->read(*this).val_;
-        }
-        return val_;
-    }
+    object(U v) : base_type(v) {}
 };
 
 }}}
-#endif
+#endif //BOOST_STM_TX_OBJECT__HPP
 
 

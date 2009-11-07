@@ -28,7 +28,7 @@ void inc() {
     thread_initializer thi;
 
     BOOST_STM_ATOMIC(_) {
-        non_tx::wr_ptr<int> tx_counter(t, counter);
+        non_tx::wr_ptr<int> tx_counter(_, counter);
         ++(*tx_counter);
     } BOOST_STM_END_ATOMIC
 }
