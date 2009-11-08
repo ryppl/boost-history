@@ -36,20 +36,26 @@
 #include <boost/stm/synch.hpp>
 #include "main.h"
 
-#ifndef BOOST_STM_USE_BOOST_MUTEX
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+typedef pthread_mutex_t mutex_type;
+#else
+typedef boost::mutex mutex_type;
+#endif
 
-static boost::stm::latm::mutex_type L1 = PTHREAD_MUTEX_INITIALIZER;
-static boost::stm::latm::mutex_type L2 = PTHREAD_MUTEX_INITIALIZER;
-static boost::stm::latm::mutex_type L3 = PTHREAD_MUTEX_INITIALIZER;
-//static boost::stm::latm::mutex_type L8 = PTHREAD_MUTEX_INITIALIZER;
-//static boost::stm::latm::mutex_type L9 = PTHREAD_MUTEX_INITIALIZER;
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+
+static pthread_mutex_t L1 = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t L2 = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t L3 = PTHREAD_MUTEX_INITIALIZER;
+//static pthread_mutex_t L8 = PTHREAD_MUTEX_INITIALIZER;
+//static pthread_mutex_t L9 = PTHREAD_MUTEX_INITIALIZER;
 
 #else
-static boost::stm::latm::mutex_type L1;
-static boost::stm::latm::mutex_type L2;
-static boost::stm::latm::mutex_type L3;
-//static boost::stm::latm::mutex_type L8;
-//static boost::stm::latm::mutex_type L9;
+static boost::mutex L1;
+static boost::mutex L2;
+static boost::mutex L3;
+//static boost::mutex L8;
+//static boost::mutex L9;
 
 #endif
 ////////////////////////////////////////////////////////////////////////////
@@ -115,7 +121,7 @@ static void do_work3()
 
    for (int iters = 0; iters < iterations; ++iters)
    {
-        stm::lock_guard<latm::mutex_type> lk(L8);
+        stm::lock_guard<mutex_type> lk(L8);
        for (int i = 0; i < kMaxArrSize; ++i)
        {
          ++arr8[i].value();
@@ -131,7 +137,7 @@ static void do_work4()
 
    for (int iters = 0; iters < iterations; ++iters)
    {
-      stm::lock_guard<latm::mutex_type> lk(L9);
+      stm::lock_guard<mutex_type> lk(L9);
        for (int i = 0; i < kMaxArrSize; ++i)
        {
          ++arr9[i].value();
@@ -258,7 +264,7 @@ static void* lock1(void *threadId)
 
    for (int iters = 0; iters < lockFactor*3000*iterations; ++iters)
    {
-      stm::lock_guard<latm::mutex_type> lk(L1);
+      stm::lock_guard<mutex_type> lk(L1);
       int sum = 0;
       for (int i = 0; i < kMaxArrSize; ++i) sum += arr1[i].value();
    }
@@ -282,7 +288,7 @@ static void* lock2(void *threadId)
 
    for (int iters = 0; iters < lockFactor*3000*iterations; ++iters)
    {
-      stm::lock_guard<latm::mutex_type> lk(L2);
+      stm::lock_guard<mutex_type> lk(L2);
       int sum = 0;
       for (int i = 0; i < kMaxArrSize; ++i) sum += arr2[i].value();
    }
@@ -306,7 +312,7 @@ static void* lock3(void *threadId)
 
    for (int iters = 0; iters < 10000*iterations; ++iters)
    {
-      stm::lock_guard<latm::mutex_type> lk(L3);
+      stm::lock_guard<mutex_type> lk(L3);
       int sum = 0;
       for (int i = 0; i < kMaxArrSize; ++i) sum += arr3[i].value();
    }

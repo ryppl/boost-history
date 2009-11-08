@@ -19,12 +19,14 @@
 
 static boost::stm::native_trans<int> gInt1;
 static boost::stm::native_trans<int> gInt2;
-#ifndef BOOST_STM_USE_BOOST_MUTEX
-static boost::stm::latm::mutex_type lock1 = PTHREAD_MUTEX_INITIALIZER;
-static boost::stm::latm::mutex_type lock2 = PTHREAD_MUTEX_INITIALIZER;
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+typedef pthread_mutex_t mutex_type;
+static pthread_mutex_t lock1 = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t lock2 = PTHREAD_MUTEX_INITIALIZER;
 #else
-static boost::stm::latm::mutex_type lock1;
-static boost::stm::latm::mutex_type lock2;
+typedef boost::mutex mutex_type;
+static boost::mutex lock1;
+static boost::mutex lock2;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
@@ -50,7 +52,7 @@ static void* Test1(void *threadId)
          try
          {
             {
-            stm::lock_guard<latm::mutex_type> lk(lock2);
+            stm::lock_guard<mutex_type> lk(lock2);
             --gInt2.value();
             cout << "\tgInt2: " << gInt2.value() << endl;
             }
@@ -58,7 +60,7 @@ static void* Test1(void *threadId)
             SLEEP(1000);
 
             {
-            stm::lock_guard<latm::mutex_type> lk(lock2);
+            stm::lock_guard<mutex_type> lk(lock2);
             ++gInt1.value();
             cout << "\tgInt1: " << gInt1.value() << endl;
             }
@@ -100,8 +102,8 @@ static void* Test3(void *threadId)
    {
       SLEEP(1000);
 
-      stm::lock_guard<latm::mutex_type> lk(lock1);
-      stm::lock_guard<latm::mutex_type> lk2(lock2);
+      stm::lock_guard<mutex_type> lk(lock1);
+      stm::lock_guard<mutex_type> lk2(lock2);
 
       --gInt1.value();
       ++gInt2.value();

@@ -21,6 +21,11 @@
 #include <pthread.h>
 
 #include <fstream>
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+typedef pthread_mutex_t mutex_type;
+#else
+typedef boost::mutex mutex_type;
+#endif
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -94,7 +99,7 @@ public:
 
    LinkedList()
    {
-#ifndef BOOST_STM_USE_BOOST_MUTEX
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
       pthread_mutex_init (&list_lock_, 0);
 #endif
       head_.value() = T();
@@ -102,7 +107,7 @@ public:
 
    ~LinkedList() { quick_clear(); }
 
-   boost::stm::latm::mutex_type* get_list_lock() { return &list_lock_; }
+   pthread_mutex_t* get_list_lock() { return &list_lock_; }
 
    //--------------------------------------------------------------------------
    //--------------------------------------------------------------------------
@@ -179,7 +184,7 @@ public:
    {
       using namespace boost::stm;
       using namespace boost;
-      stm::lock_guard<latm::mutex_type> lk(list_lock_);
+      stm::lock_guard<mutex_type> lk(list_lock_);
 
       list_node<T> *headP = &head_;
 
@@ -237,7 +242,7 @@ public:
    {
       using namespace boost::stm;
       using namespace boost;
-      stm::lock_guard<latm::mutex_type> lk(list_lock_);
+      stm::lock_guard<mutex_type> lk(list_lock_);
 
       LATM::list_node<T> *cur = &head_;
 
@@ -514,7 +519,7 @@ private:
    }
 
    list_node<T> head_;
-   boost::stm::latm::mutex_type list_lock_;
+   pthread_mutex_t list_lock_;
 };
 
 } // LockAwareTransactions

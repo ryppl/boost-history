@@ -61,7 +61,7 @@ public:
 protected:
     lockable_type* the_lock() { return &st_lock_; }
     mutable lockable_type& st_lock_;
-    //mutable Poly<lockable_type, Base> dyn_lock_;
+    mutable Poly<lockable_type, Base> dyn_lock_;
 };
 #else
 template <typename Lockable >
@@ -73,9 +73,9 @@ public:
     exclusive_ref_lock_adapter(lockable_type& lock): st_lock_(lock) {}
     ~exclusive_ref_lock_adapter() {}
 
-    void lock() {stm::lock(st_lock_);}
-    void unlock() {stm::unlock(st_lock_);}
-    bool try_lock() { return stm::try_lock(st_lock_);}
+    void lock() {stm::lock(st_lock_, st_lock_);}
+    void unlock() {stm::unlock(st_lock_, st_lock_);}
+    bool try_lock() { return stm::try_lock(st_lock_, st_lock_);}
 
 protected:
     lockable_type* the_lock() { return &st_lock_; }
@@ -83,14 +83,14 @@ protected:
 };
 
 #endif
-template <typename Lockable>
-void lock(exclusive_lock_adapter<Lockable>& lock) {transaction::pthread_lock(&lock);}
-template <typename Lockable>
-bool try_lock(exclusive_lock_adapter<Lockable>& lock) {return transaction::pthread_trylock(&lock);}
-template <typename Lockable>
-void unlock(exclusive_lock_adapter<Lockable>& lock) {transaction::pthread_unlock(&lock);}
-
 #if 0
+template <typename Lockable>
+void lock(exclusive_lock_adapter<Lockable>& lock) {transaction::lock(lock, lock);}
+template <typename Lockable>
+bool try_lock(exclusive_lock_adapter<Lockable>& lock) {return transaction::try_lock(lock, lock);}
+template <typename Lockable>
+void unlock(exclusive_lock_adapter<Lockable>& lock) {transaction::unlock(lock, lock);}
+
 template <typename TimedLock>
 class timed_lock_adapter
     : public exclusive_lock_adapter<TimedLock>

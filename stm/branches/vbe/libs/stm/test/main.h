@@ -51,7 +51,7 @@ extern int kMaxArrIter;
 class String;
 class Integer;
 
-extern boost::stm::latm::mutex_type outputMutex;
+extern pthread_mutex_t outputMutex;
 extern String globalString;
 
 extern boost::stm::native_trans<int> threadsFinished;

@@ -52,10 +52,10 @@ time_t startTimer = kStartingTime;
 time_t endTimer = 0;
 eWorkType gWorkLoadType;
 
-#ifndef BOOST_STM_USE_BOOST_MUTEX
-static boost::stm::latm::mutex_type finishLock = PTHREAD_MUTEX_INITIALIZER;
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+static pthread_mutex_t finishLock = PTHREAD_MUTEX_INITIALIZER;
 #else
-static boost::stm::latm::mutex_type finishLock;
+static boost::mutex finishLock;
 #endif
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

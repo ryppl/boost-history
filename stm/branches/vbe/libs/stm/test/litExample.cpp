@@ -36,16 +36,22 @@
 #include <boost/stm/synch.hpp>
 #include "main.h"
 
-#ifndef BOOST_STM_USE_BOOST_MUTEX
-static boost::stm::latm::mutex_type L2 = PTHREAD_MUTEX_INITIALIZER;
-static boost::stm::latm::mutex_type L3 = PTHREAD_MUTEX_INITIALIZER;
-static boost::stm::latm::mutex_type L4 = PTHREAD_MUTEX_INITIALIZER;
-//static boost::stm::latm::mutex_type L8 = PTHREAD_MUTEX_INITIALIZER;
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+typedef pthread_mutex_t mutex_type;
 #else
-static boost::stm::latm::mutex_type L2;
-static boost::stm::latm::mutex_type L3;
-static boost::stm::latm::mutex_type L4;
-//static boost::stm::latm::mutex_type L8;
+typedef boost::mutex mutex_type;
+#endif
+
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+static pthread_mutex_t L2 = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t L3 = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t L4 = PTHREAD_MUTEX_INITIALIZER;
+//static pthread_mutex_t L8 = PTHREAD_MUTEX_INITIALIZER;
+#else
+static boost::mutex L2;
+static boost::mutex L3;
+static boost::mutex L4;
+//static boost::mutex L8;
 #endif
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
@@ -64,7 +70,7 @@ static int iterations = 0;
 
 static void inc2()
 {
-   stm::lock_guard<latm::mutex_type> lk(L2);
+   stm::lock_guard<mutex_type> lk(L2);
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr2[i].value();
@@ -73,7 +79,7 @@ static void inc2()
 
 static void inc3()
 {
-   stm::lock_guard<latm::mutex_type> lk(L3);
+   stm::lock_guard<mutex_type> lk(L3);
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr3[i].value();
@@ -82,7 +88,7 @@ static void inc3()
 
 static void inc4()
 {
-   stm::lock_guard<latm::mutex_type> lk(L4);
+   stm::lock_guard<mutex_type> lk(L4);
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr4[i].value();
@@ -138,7 +144,7 @@ static void do_work3()
    if (work3) return;
    work3 = true;
 
-   stm::lock_guard<latm::mutex_type> lk(L8);
+   stm::lock_guard<mutex_type> lk(L8);
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr8[i].value();

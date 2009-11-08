@@ -21,16 +21,18 @@ typedef int list_node_type;
 
 static newSyntaxNS::LinkedList< list_node_type > *llist = 0;
 
-#ifndef BOOST_STM_USE_BOOST_MUTEX
-static boost::stm::latm::mutex_type L = PTHREAD_MUTEX_INITIALIZER;
-static boost::stm::latm::mutex_type L2 = PTHREAD_MUTEX_INITIALIZER;
-static boost::stm::latm::mutex_type L3 = PTHREAD_MUTEX_INITIALIZER;
-//static boost::stm::latm::mutex_type L4 = PTHREAD_MUTEX_INITIALIZER;
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+typedef pthread_mutex_t mutex_type;
+static pthread_mutex_t L = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t L2 = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t L3 = PTHREAD_MUTEX_INITIALIZER;
+//static pthread_mutex_t L4 = PTHREAD_MUTEX_INITIALIZER;
 #else
-static boost::stm::latm::mutex_type L;
-static boost::stm::latm::mutex_type L2;
-static boost::stm::latm::mutex_type L3;
-//static boost::stm::latm::mutex_type L4;
+typedef boost::mutex mutex_type;
+static boost::mutex L;
+static boost::mutex L2;
+static boost::mutex L3;
+//static boost::mutex L4;
 #endif
 
 using namespace boost::stm;
@@ -288,7 +290,7 @@ static void* stall(void *)
 {
    transaction::initialize_thread();
 
-   stm::lock_guard<latm::mutex_type> lk(L2);
+   stm::lock_guard<mutex_type> lk(L2);
 
    SLEEP(10000);
 
@@ -337,8 +339,8 @@ static void TestTransactionInsideLock()
 
    SLEEP(1000);
 
-   stm::lock_guard<latm::mutex_type> lk(L);
-   stm::lock_guard<latm::mutex_type> lk3(L3);
+   stm::lock_guard<mutex_type> lk(L);
+   stm::lock_guard<mutex_type> lk3(L3);
 
    try_atomic(t)
    {
@@ -362,8 +364,8 @@ static void TestEarlyRelease()
 
    SLEEP(1000);
 
-   stm::unique_lock<latm::mutex_type> lk(L);
-   stm::lock_guard<latm::mutex_type> lk3(L3);
+   stm::unique_lock<mutex_type> lk(L);
+   stm::lock_guard<mutex_type> lk3(L3);
 
    try_atomic(t)
    {

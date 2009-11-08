@@ -36,11 +36,17 @@
 #include <boost/stm/synch.hpp>
 #include "main.h"
 
-static boost::stm::native_trans<int> gInt;
-#ifndef BOOST_STM_USE_BOOST_MUTEX
-static boost::stm::latm::mutex_type lock1 = PTHREAD_MUTEX_INITIALIZER;
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+typedef pthread_mutex_t mutex_type;
 #else
-static boost::stm::latm::mutex_type lock1;
+typedef boost::mutex mutex_type;
+#endif
+
+static boost::stm::native_trans<int> gInt;
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+static pthread_mutex_t lock1 = PTHREAD_MUTEX_INITIALIZER;
+#else
+static boost::mutex lock1;
 #endif
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
@@ -64,7 +70,7 @@ static void* TestIsolatedComposedLockInTxCount(void *threadId)
          try
          {
             {
-            stm::lock_guard<latm::mutex_type> lk(lock1);
+            stm::lock_guard<mutex_type> lk(lock1);
             ++gInt.value();
             cout << "\t" << gInt.value() << endl;
             }
@@ -74,7 +80,7 @@ static void* TestIsolatedComposedLockInTxCount(void *threadId)
             // intermediate state IF they can get lock1 (they shouldn't)
 
             {
-            stm::lock_guard<latm::mutex_type> lk(lock1);
+            stm::lock_guard<mutex_type> lk(lock1);
             --gInt.value();
             cout << "\t" << gInt.value() << endl;
             }
@@ -115,7 +121,7 @@ static void* TestComposedCount(void *threadId)
    for (int i = startingValue; i < 100*endingValue; ++i)
    {
       {
-      stm::lock_guard<latm::mutex_type> lk(lock1);
+      stm::lock_guard<mutex_type> lk(lock1);
       cout << gInt.value() << endl;
       }
       SLEEP(10); // do nothing on purpose

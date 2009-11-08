@@ -318,21 +318,22 @@ inline void boost::stm::transaction::clear_tx_conflicting_locks()
 // the client chose
 //
 //----------------------------------------------------------------------------
-inline void boost::stm::transaction::pthread_lock(latm::mutex_type* mutex)
+template <typename M> 
+inline void boost::stm::transaction::lock(M& m, latm::mutex_type& mutex)
 {
    //using namespace boost::stm;
 
    switch (latm::instance().protection())
    {
    case eFullLatmProtection:
-      if (direct_updating())  {dir_full_pthread_lock_mutex(mutex); return;}
-      else {def_full_pthread_lock_mutex(mutex);return;}
+      if (direct_updating())  {dir_full_lock(m, mutex); return;}
+      else {def_full_lock(m, mutex);return;}
    case eTmConflictingLockLatmProtection:
-      if (direct_updating()) {dir_tm_conflicting_lock_pthread_lock_mutex(mutex);return;}
-      else {def_tm_conflicting_lock_pthread_lock_mutex(mutex);return;}
+      if (direct_updating()) {dir_tm_lock(m, mutex);return;}
+      else {def_tm_lock(m, mutex);return;}
    case eTxConflictingLockLatmProtection:
-      if (direct_updating()) {dir_tx_conflicting_lock_pthread_lock_mutex(mutex);return;}
-      else {def_tx_conflicting_lock_pthread_lock_mutex(mutex);return;}
+      if (direct_updating()) {dir_tx_lock(m, mutex);return;}
+      else {def_tx_lock(m, mutex);return;}
    default:
       throw "invalid LATM type";
    }
@@ -341,21 +342,22 @@ inline void boost::stm::transaction::pthread_lock(latm::mutex_type* mutex)
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
-inline bool boost::stm::transaction::pthread_trylock(latm::mutex_type* mutex)
+template <typename M> 
+inline bool boost::stm::transaction::try_lock(M& m, latm::mutex_type& mutex)
 {
    //using namespace boost::stm;
 
    switch (latm::instance().protection())
    {
    case eFullLatmProtection:
-      if (direct_updating()) return dir_full_pthread_trylock_mutex(mutex);
-      else return def_full_pthread_trylock_mutex(mutex);
+      if (direct_updating()) return dir_fulltry_lock(m, mutex);
+      else return def_full_try_lock(m, mutex);
    case eTmConflictingLockLatmProtection:
-      if (direct_updating()) return dir_tm_conflicting_lock_pthread_trylock_mutex(mutex);
-      else return def_tm_conflicting_lock_pthread_trylock_mutex(mutex);
+      if (direct_updating()) return dir_tm_try_lock(m, mutex);
+      else return def_tm_try_lock(m, mutex);
    case eTxConflictingLockLatmProtection:
-      if (direct_updating()) return dir_tx_conflicting_lock_pthread_trylock_mutex(mutex);
-      else return def_tx_conflicting_lock_pthread_trylock_mutex(mutex);
+      if (direct_updating()) return dir_tx_try_lock(m, mutex);
+      else return def_tx_try_lock(m, mutex);
    default:
       throw "invalid LATM type";
    }
@@ -363,21 +365,22 @@ inline bool boost::stm::transaction::pthread_trylock(latm::mutex_type* mutex)
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
-inline void boost::stm::transaction::pthread_unlock(latm::mutex_type* mutex)
+template <typename M> 
+inline void boost::stm::transaction::unlock(M& m, latm::mutex_type& mutex)
 {
    //using namespace boost::stm;
 
    switch (latm::instance().protection())
    {
    case eFullLatmProtection:
-      if (direct_updating())  {dir_full_pthread_unlock_mutex(mutex);return;}
-      else {def_full_pthread_unlock_mutex(mutex);return;}
+      if (direct_updating())  {dir_full_unlock(m, mutex);return;}
+      else {def_full_unlock(m, mutex);return;}
    case eTmConflictingLockLatmProtection:
-      if (direct_updating()) {dir_tm_conflicting_lock_pthread_unlock_mutex(mutex);return;}
-      else {def_tm_conflicting_lock_pthread_unlock_mutex(mutex); return;}
+      if (direct_updating()) {dir_tm_unlock(m, mutex);return;}
+      else {def_tm_unlock(m, mutex); return;}
    case eTxConflictingLockLatmProtection:
-      if (direct_updating()) {dir_tx_conflicting_lock_pthread_unlock_mutex(mutex);return;}
-      else {def_tx_conflicting_lock_pthread_unlock_mutex(mutex);return;}
+      if (direct_updating()) {dir_tx_unlock(m, mutex);return;}
+      else {def_tx_unlock(m, mutex);return;}
    default:
       throw "invalid LATM type";
    }

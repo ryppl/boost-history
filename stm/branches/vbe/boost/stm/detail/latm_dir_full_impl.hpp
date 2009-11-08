@@ -116,20 +116,21 @@ inline bool transaction::dir_do_core_full_pthread_lock_mutex
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline void transaction::dir_full_pthread_lock_mutex(latm::mutex_type* mutex)
+template <typename M> 
+inline void transaction::dir_full_lock(M& m, latm::mutex_type& mutex)
 {
     if (transaction* t = get_inflight_tx_of_same_thread(false))
     {
         t->make_isolated();
 
-        bool hadLock = t->is_currently_locked_lock(mutex);
-        t->add_to_currently_locked_locks(mutex);
-        t->add_to_obtained_locks(mutex);
+        bool hadLock = t->is_currently_locked_lock(&mutex);
+        t->add_to_currently_locked_locks(&mutex);
+        t->add_to_obtained_locks(&mutex);
 
-        wait_until_all_locks_are_released_and_set(mutex);
+        wait_until_all_locks_are_released_and_set(&mutex);
 
         if (hadLock) return;
-        else synchro::lock(*mutex);
+        else synchro::lock(m);
         return;
     }
 
@@ -137,14 +138,14 @@ inline void transaction::dir_full_pthread_lock_mutex(latm::mutex_type* mutex)
     for (;;)
     {
         {
-        synchro::unique_lock<latm::mutex_type> lk(*mutex);
+        synchro::unique_lock<M> lk(m);
         synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_);
 
         //--------------------------------------------------------------------
         // if we are able to do the core lock work, break
         //--------------------------------------------------------------------
-        if (dir_do_core_full_pthread_lock_mutex(mutex, waitTime, aborted)) {
-            latm::instance().latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
+        if (dir_do_core_full_pthread_lock_mutex(&mutex, waitTime, aborted)) {
+            latm::instance().latmLockedLocksOfThreadMap_[&mutex] = this_thread::get_id();
             lk.release();
             return;
         }
@@ -164,35 +165,36 @@ inline void transaction::dir_full_pthread_lock_mutex(latm::mutex_type* mutex)
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline bool transaction::dir_full_pthread_trylock_mutex(latm::mutex_type* mutex)
+template <typename M> 
+inline bool transaction::dir_full_try_lock(M& m, latm::mutex_type& mutex)
 {
     if (transaction* t = get_inflight_tx_of_same_thread(false))
     {
         t->make_isolated();
 
-        bool hadLock = t->is_currently_locked_lock(mutex);
-        t->add_to_currently_locked_locks(mutex);
-        t->add_to_obtained_locks(mutex);
+        bool hadLock = t->is_currently_locked_lock(&mutex);
+        t->add_to_currently_locked_locks(&mutex);
+        t->add_to_obtained_locks(&mutex);
 
-        wait_until_all_locks_are_released_and_set(mutex);
+        wait_until_all_locks_are_released_and_set(&mutex);
 
         if (hadLock) return true;
-        else return synchro::try_lock(*mutex);
+        else return synchro::try_lock(m);
     }
 
-    synchro::unique_lock<latm::mutex_type> lk(*mutex, synchro::try_to_lock);
+    synchro::unique_lock<M> lk(m, synchro::try_to_lock);
     if (!lk) return false;
     synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_);
 
     //-----------------------------------------------------------------------
     // if !core done, since trylock, we cannot stall & retry - just exit
     //-----------------------------------------------------------------------
-    if (!dir_do_core_full_pthread_lock_mutex(mutex, 0, 0))
+    if (!dir_do_core_full_pthread_lock_mutex(&mutex, 0, 0))
     {
          return false;
     }
 
-    latm::instance().latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
+    latm::instance().latmLockedLocksOfThreadMap_[&mutex] = this_thread::get_id();
     // note: we do not release the transactionsInFlightMutex - this will prevents
     // new transactions from starting until this lock is released
     lk.release();
@@ -202,7 +204,8 @@ inline bool transaction::dir_full_pthread_trylock_mutex(latm::mutex_type* mutex)
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-inline void transaction::dir_full_pthread_unlock_mutex(latm::mutex_type* mutex)
+template <typename M> 
+inline void transaction::dir_full_unlock(M& m, latm::mutex_type& mutex)
 {
     bool hasLock = true;
     {
@@ -210,7 +213,7 @@ inline void transaction::dir_full_pthread_unlock_mutex(latm::mutex_type* mutex)
 
     if (transaction* t = get_inflight_tx_of_same_thread(false))
     {
-        if (!t->is_on_obtained_locks_list(mutex))
+        if (!t->is_on_obtained_locks_list(&mutex))
         {
         // this is illegal, it means the transaction is unlocking a lock
         // it did not obtain (e.g., early release) while the transaction
@@ -218,11 +221,11 @@ inline void transaction::dir_full_pthread_unlock_mutex(latm::mutex_type* mutex)
             throw "lock released for transaction that did not obtain it";
         }
 
-        if (!t->is_currently_locked_lock(mutex)) hasLock = false;
-        t->remove_from_currently_locked_locks(mutex);
+        if (!t->is_currently_locked_lock(&mutex)) hasLock = false;
+        t->remove_from_currently_locked_locks(&mutex);
     }
 
-    latm::instance().latmLockedLocks_.erase(mutex);
+    latm::instance().latmLockedLocks_.erase(&mutex);
 
     if (latm::instance().latmLockedLocks_.empty())
     {
@@ -230,9 +233,9 @@ inline void transaction::dir_full_pthread_unlock_mutex(latm::mutex_type* mutex)
         thread_conflicting_mutexes_set_all(false);
     }
 
-    latm::instance().latmLockedLocksOfThreadMap_.erase(mutex);
+    latm::instance().latmLockedLocksOfThreadMap_.erase(&mutex);
     }
-    if (hasLock) synchro::unlock(*mutex);
+    if (hasLock) synchro::unlock(m);
     return;
 }
 

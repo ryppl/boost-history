@@ -36,14 +36,20 @@
 #include <boost/stm/synch.hpp>
 #include "main.h"
 
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+typedef pthread_mutex_t mutex_type;
+#else
+typedef boost::mutex mutex_type;
+#endif
+
 static boost::stm::native_trans<int> gInt;
 static boost::stm::native_trans<int> gInt2;
-#ifndef BOOST_STM_USE_BOOST_MUTEX
-static boost::stm::latm::mutex_type lock1 = PTHREAD_MUTEX_INITIALIZER;
-//static boost::stm::latm::mutex_type lock2 = PTHREAD_MUTEX_INITIALIZER;
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+static pthread_mutex_t lock1 = PTHREAD_MUTEX_INITIALIZER;
+//static pthread_mutex_t lock2 = PTHREAD_MUTEX_INITIALIZER;
 #else
-static boost::stm::latm::mutex_type lock1;
-//static boost::stm::latm::mutex_type lock2;
+static boost::mutex lock1;
+//static boost::mutex lock2;
 #endif
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
@@ -68,7 +74,7 @@ static void* Test1(void *threadId)
          try
          {
             {
-            stm::lock_guard<latm::mutex_type> lk(lock1);
+            stm::lock_guard<mutex_type> lk(lock1);
             ++gInt.value();
             cout << "\t" << gInt.value() << endl;
             }
@@ -78,7 +84,7 @@ static void* Test1(void *threadId)
             // intermediate state IF they can get lock1 (they shouldn't)
 
             {
-            stm::lock_guard<latm::mutex_type> lk(lock1);
+            stm::lock_guard<mutex_type> lk(lock1);
             --gInt.value();
             cout << "\t" << gInt.value() << endl;
             }

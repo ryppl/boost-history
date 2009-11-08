@@ -311,9 +311,13 @@ public:
    // Lock Aware Transactional Memory support methods
    //--------------------------------------------------------------------------
 
-   static void pthread_lock(latm::mutex_type* lock);
-   static bool pthread_trylock(latm::mutex_type* lock);
-   static void pthread_unlock(latm::mutex_type* lock);
+   
+   template <typename M> 
+   static void lock(M& m, latm::mutex_type& lock);
+   template <typename M> 
+   static bool try_lock(M& m, latm::mutex_type& lock);
+   template <typename M> 
+   static void unlock(M& m, latm::mutex_type& lock);
 
    //--------------------------------------------------------------------------
     #if PERFORMING_LATM
@@ -1394,32 +1398,50 @@ private:
    //--------------------------------------------------------------------------
    // deferred updating locking methods
    //--------------------------------------------------------------------------
-   static void def_full_pthread_lock_mutex(latm::mutex_type* mutex);
-   static bool def_full_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static void def_full_pthread_unlock_mutex(latm::mutex_type* mutex);
+   template <typename M> 
+   static void def_full_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static bool def_full_try_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static void def_full_unlock(M& m, latm::mutex_type& mutex);
 
-   static void def_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
-   static bool def_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static void def_tm_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
+   template <typename M> 
+   static void def_tm_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static bool def_tm_try_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static void def_tm_unlock(M& m, latm::mutex_type& mutex);
 
-   static void def_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
-   static bool def_tx_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static void def_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
+   template <typename M> 
+   static void def_tx_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static bool def_tx_try_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static void def_tx_unlock(M& m, latm::mutex_type& mutex);
 
    //--------------------------------------------------------------------------
    // direct updating locking methods
    //--------------------------------------------------------------------------
-   static void dir_full_pthread_lock_mutex(latm::mutex_type* mutex);
-   static bool dir_full_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static void dir_full_pthread_unlock_mutex(latm::mutex_type* mutex);
+   template <typename M> 
+   static void dir_full_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static bool dir_full_try_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static void dir_full_unlock(M& m, latm::mutex_type& mutex);
 
-   static void dir_tm_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
-   static bool dir_tm_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static void dir_tm_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
+   template <typename M> 
+   static void dir_tm_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static bool dir_tm_try_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static void dir_tm_unlock(M& m, latm::mutex_type& mutex);
 
-   static void dir_tx_conflicting_lock_pthread_lock_mutex(latm::mutex_type* mutex);
-   static bool dir_tx_conflicting_lock_pthread_trylock_mutex(latm::mutex_type* mutex);
-   static void dir_tx_conflicting_lock_pthread_unlock_mutex(latm::mutex_type* mutex);
+   template <typename M> 
+   static void dir_tx_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static bool dir_tx_try_lock(M& m, latm::mutex_type& mutex);
+   template <typename M> 
+   static void dir_tx_unlock(M& m, latm::mutex_type& mutex);
 
    //--------------------------------------------------------------------------
 
@@ -1995,9 +2017,12 @@ public:
 
 inline transaction* current_transaction() {return transaction::current_transaction();}
 
-inline void lock(latm::mutex_type& lock) {transaction::pthread_lock(&lock);}
-inline bool try_lock(latm::mutex_type& lock) {return transaction::pthread_trylock(&lock);}
-inline void unlock(latm::mutex_type& lock) {transaction::pthread_unlock(&lock);}
+template <typename M> 
+inline void lock(M& m, latm::mutex_type& lock) {transaction::lock(m, lock);}
+template <typename M>
+inline  bool try_lock(M& m, latm::mutex_type& lock) {return transaction::try_lock(m, lock);}
+template <typename M> 
+inline void unlock(M& m, latm::mutex_type& lock) {transaction::unlock(m, lock);}
 
 
 template <class T> T* cache_allocate(transaction* t) {
