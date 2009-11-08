@@ -14,6 +14,7 @@
 #include <iostream>
 #include "txLinearLock.h"
 #include <boost/stm/transaction.hpp>
+#include <boost/stm/synch.hpp>
 #include "main.h"
 
 static boost::stm::native_trans<int> gInt1;
@@ -28,6 +29,7 @@ static boost::stm::latm::mutex_type lock2;
 
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
+using namespace boost;
 
 ///////////////////////////////////////////////////////////////////////////////
 static void* Test1(void *threadId)
@@ -47,17 +49,19 @@ static void* Test1(void *threadId)
 
          try
          {
-            transaction::lock_(lock2);
+            {
+            stm::lock_guard<latm::mutex_type> lk(lock2);
             --gInt2.value();
             cout << "\tgInt2: " << gInt2.value() << endl;
-            transaction::unlock_(lock2);
+            }
 
             SLEEP(1000);
 
-            transaction::lock_(lock1);
+            {
+            stm::lock_guard<latm::mutex_type> lk(lock2);
             ++gInt1.value();
             cout << "\tgInt1: " << gInt1.value() << endl;
-            transaction::unlock_(lock1);
+            }
 
             t.end();
             SLEEP(50);
@@ -96,16 +100,14 @@ static void* Test3(void *threadId)
    {
       SLEEP(1000);
 
-      transaction::lock_(lock1);
-      transaction::lock_(lock2);
+      stm::lock_guard<latm::mutex_type> lk(lock1);
+      stm::lock_guard<latm::mutex_type> lk2(lock2);
 
       --gInt1.value();
       ++gInt2.value();
       cout << "\t\tgInt1: " << gInt1.value() << endl;
       cout << "\t\tgInt2: " << gInt2.value() << endl;
 
-      transaction::unlock_(lock2);
-      transaction::unlock_(lock1);
    }
 
    //--------------------------------------------------------------------------

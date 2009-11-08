@@ -33,6 +33,7 @@
 #include <iostream>
 #include "isolatedComposedIntLockInTx.h"
 #include <boost/stm/transaction.hpp>
+#include <boost/stm/synch.hpp>
 #include "main.h"
 
 static boost::stm::native_trans<int> gInt;
@@ -46,6 +47,7 @@ static boost::stm::latm::mutex_type lock1;
 #endif
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
+using namespace boost;
 
 ///////////////////////////////////////////////////////////////////////////////
 static void* Test1(void *threadId)
@@ -65,19 +67,21 @@ static void* Test1(void *threadId)
          t.lock_conflict(&lock1);
          try
          {
-            transaction::lock_(lock1);
+            {
+            stm::lock_guard<latm::mutex_type> lk(lock1);
             ++gInt.value();
             cout << "\t" << gInt.value() << endl;
-            transaction::unlock_(lock1);
+            }
 
             SLEEP(50);
             // do nothing on purpose, allowing other threads time to see
             // intermediate state IF they can get lock1 (they shouldn't)
 
-            transaction::lock_(lock1);
+            {
+            stm::lock_guard<latm::mutex_type> lk(lock1);
             --gInt.value();
             cout << "\t" << gInt.value() << endl;
-            transaction::unlock_(lock1);
+            }
 
             t.end();
             SLEEP(50);

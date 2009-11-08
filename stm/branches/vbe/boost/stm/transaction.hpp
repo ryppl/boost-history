@@ -311,15 +311,6 @@ public:
    // Lock Aware Transactional Memory support methods
    //--------------------------------------------------------------------------
 
-   inline static void lock_(latm::mutex_type &lock) { pthread_lock(&lock); }
-   inline static void lock_(latm::mutex_type *lock) { pthread_lock(lock); }
-
-   inline static bool trylock_(latm::mutex_type &lock) { return pthread_trylock(&lock); }
-   inline static bool trylock_(latm::mutex_type *lock) { return pthread_trylock(lock); }
-
-   inline static void unlock_(latm::mutex_type &lock) { pthread_unlock(&lock); }
-   inline static void unlock_(latm::mutex_type *lock) { pthread_unlock(lock); }
-
    static void pthread_lock(latm::mutex_type* lock);
    static bool pthread_trylock(latm::mutex_type* lock);
    static void pthread_unlock(latm::mutex_type* lock);

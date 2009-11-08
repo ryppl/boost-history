@@ -17,6 +17,7 @@
 
 #include "main.h"
 #include <boost/stm/transaction.hpp>
+#include <boost/stm/synch.hpp>
 #include <pthread.h>
 
 #include <fstream>
@@ -177,7 +178,8 @@ public:
    bool lock_insert(list_node<T> const &rhs)
    {
       using namespace boost::stm;
-      transaction::lock_(&list_lock_);
+      using namespace boost;
+      stm::lock_guard<latm::mutex_type> lk(list_lock_);
 
       list_node<T> *headP = &head_;
 
@@ -191,7 +193,6 @@ public:
          {
             if (cur->value() == val)
             {
-               transaction::unlock_(&list_lock_);
                return false;
             }
             else if (cur->value() > val || !cur->next()) break;
@@ -227,7 +228,6 @@ public:
          head_.next(newNode);
       }
 
-      transaction::unlock_(&list_lock_);
       return true;
    }
 
@@ -236,7 +236,8 @@ public:
    bool lock_lookup(T const &val)
    {
       using namespace boost::stm;
-      transaction::lock_(&list_lock_);
+      using namespace boost;
+      stm::lock_guard<latm::mutex_type> lk(list_lock_);
 
       LATM::list_node<T> *cur = &head_;
 
@@ -244,14 +245,12 @@ public:
       {
          if (cur->value() == val)
          {
-            transaction::unlock_(&list_lock_);
             return true;
          }
 
          if (0 == cur->next()) break;
       }
 
-      transaction::unlock_(&list_lock_);
       return false;
    }
 

@@ -33,6 +33,7 @@
 #include <iostream>
 #include "isolatedInt.h"
 #include <boost/stm/transaction.hpp>
+#include <boost/stm/synch.hpp>
 #include "main.h"
 
 static boost::stm::native_trans<int> gInt;
@@ -44,6 +45,7 @@ static boost::stm::latm::mutex_type lock1;
 #endif
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
+using namespace boost;
 
 static native_trans<int> globalInt;
 
@@ -75,14 +77,15 @@ static void* TestIsolatedLockInTxCount(void *threadId)
             // global memory (gInt), its state must be updated to
             // reflect all changes made previously inside the tx
             //-------------------------------------------------------
-            transaction::lock_(lock1);
+            {
+            stm::lock_guard<latm::mutex_type> lk(lock1);
             cout << gInt.value() << endl;
 
             ++gInt.value();
 
             if (oldVal + 2 != gInt.value()) cout << "invariant violated" << endl;
 
-            transaction::unlock_(lock1);
+            }
 
             //-------------------------------------------------------
             // now again access gInt via tx. tx should access the

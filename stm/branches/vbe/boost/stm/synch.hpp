@@ -16,6 +16,9 @@
 
 #include <boost/stm/synch/auto_lock.hpp>
 #include <boost/stm/synch/mutex.hpp>
+#include <boost/stm/synch/lock_guard.hpp>
+#include <boost/stm/synch/unique_lock.hpp>
+#include <boost/stm/synch/synchronized.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 #endif // TRANSACTION_H

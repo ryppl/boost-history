@@ -33,6 +33,7 @@
 #include <iostream>
 #include "lotExample.h"
 #include <boost/stm/transaction.hpp>
+#include <boost/stm/synch.hpp>
 #include "main.h"
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
@@ -53,6 +54,7 @@ static boost::stm::latm::mutex_type L3;
 #endif
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
+using namespace boost;
 
 static native_trans<int> *arr1, *arr2, *arr3, *arr4, *arr5, *arr6, *arr7, *arr8; //, *arr9;
 
@@ -113,12 +115,11 @@ static void do_work3()
 
    for (int iters = 0; iters < iterations; ++iters)
    {
-      transaction::lock_(L8);
+        stm::lock_guard<latm::mutex_type> lk(L8);
        for (int i = 0; i < kMaxArrSize; ++i)
        {
          ++arr8[i].value();
        }
-       transaction::unlock_(L8);
    }
 }
 #endif
@@ -130,12 +131,11 @@ static void do_work4()
 
    for (int iters = 0; iters < iterations; ++iters)
    {
-      transaction::lock_(L9);
+      stm::lock_guard<latm::mutex_type> lk(L9);
        for (int i = 0; i < kMaxArrSize; ++i)
        {
          ++arr9[i].value();
        }
-      transaction::unlock_(L9);
    }
 }
 #endif
@@ -258,9 +258,9 @@ static void* lock1(void *threadId)
 
    for (int iters = 0; iters < lockFactor*3000*iterations; ++iters)
    {
-      transaction::lock_(L1); int sum = 0;
+      stm::lock_guard<latm::mutex_type> lk(L1);
+      int sum = 0;
       for (int i = 0; i < kMaxArrSize; ++i) sum += arr1[i].value();
-      transaction::unlock_(L1);
    }
 
    endTimer = time(0);
@@ -282,9 +282,9 @@ static void* lock2(void *threadId)
 
    for (int iters = 0; iters < lockFactor*3000*iterations; ++iters)
    {
-      transaction::lock_(L2); int sum = 0;
+      stm::lock_guard<latm::mutex_type> lk(L2);
+      int sum = 0;
       for (int i = 0; i < kMaxArrSize; ++i) sum += arr2[i].value();
-      transaction::unlock_(L2);
    }
 
    endTimer = time(0);
@@ -306,9 +306,9 @@ static void* lock3(void *threadId)
 
    for (int iters = 0; iters < 10000*iterations; ++iters)
    {
-      transaction::lock_(L3); int sum = 0;
+      stm::lock_guard<latm::mutex_type> lk(L3);
+      int sum = 0;
       for (int i = 0; i < kMaxArrSize; ++i) sum += arr3[i].value();
-      transaction::unlock_(L3);
    }
 
    endTimer = time(0);

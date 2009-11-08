@@ -33,6 +33,7 @@
 #include <iostream>
 #include "litExample.h"
 #include <boost/stm/transaction.hpp>
+#include <boost/stm/synch.hpp>
 #include "main.h"
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
@@ -48,6 +49,7 @@ static boost::stm::latm::mutex_type L4;
 #endif
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
+using namespace boost;
 
 static native_trans<int> *arr1, *arr2, *arr3, *arr4, *arr5, *arr6, *arr7, *arr8;
 
@@ -62,32 +64,29 @@ static int iterations = 0;
 
 static void inc2()
 {
-   transaction::lock_(L2);
+   stm::lock_guard<latm::mutex_type> lk(L2);
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr2[i].value();
    }
-   transaction::unlock_(L2);
 }
 
 static void inc3()
 {
-   transaction::lock_(L3);
+   stm::lock_guard<latm::mutex_type> lk(L3);
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr3[i].value();
    }
-   transaction::unlock_(L3);
 }
 
 static void inc4()
 {
-   transaction::lock_(L4);
+   stm::lock_guard<latm::mutex_type> lk(L4);
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr4[i].value();
    }
-   transaction::unlock_(L4);
 }
 
 
@@ -139,12 +138,11 @@ static void do_work3()
    if (work3) return;
    work3 = true;
 
-   transaction::lock_(L8);
+   stm::lock_guard<latm::mutex_type> lk(L8);
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr8[i].value();
    }
-   transaction::unlock_(L8);
 }
 #endif
 static void* tx1(void *threadId)

@@ -32,6 +32,7 @@
 
 #include <sstream>
 #include "nestedTxs.h"
+#include <boost/stm/synch.hpp>
 
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
@@ -47,6 +48,7 @@ static boost::stm::latm::mutex_type L3;
 #endif
 
 using namespace boost::stm;
+using namespace boost;
 using namespace std;
 
 static native_trans<int> x = 0;
@@ -118,11 +120,9 @@ static void* stall(void *)
 {
    transaction::initialize_thread();
 
-   transaction::lock_(&L2);
+   stm::lock_guard<latm::mutex_type> lk(L2);
 
    SLEEP(10000);
-
-   transaction::unlock_(&L2);
 
    return 0;
 }
@@ -184,8 +184,8 @@ static void TestTransactionInsideLock()
 
    SLEEP(1000);
 
-   transaction::lock_(&L);
-   transaction::lock_(&L3);
+   stm::lock_guard<latm::mutex_type> lk(L);
+   stm::lock_guard<latm::mutex_type> lk3(L3);
 
    try_atomic(t)
    {
@@ -197,8 +197,6 @@ static void TestTransactionInsideLock()
 
    } before_retry {}
 
-   transaction::unlock_(&L);
-   transaction::unlock_(&L3);
 
    cout << "X: " << x.value() << endl;
 }
@@ -212,8 +210,8 @@ static void TestEarlyRelease()
 
    SLEEP(1000);
 
-   transaction::lock_(&L);
-   transaction::lock_(&L3);
+   stm::unique_lock<latm::mutex_type> lk(L);
+   stm::lock_guard<latm::mutex_type> lk3(L3);
 
    try_atomic(t)
    {
@@ -221,14 +219,11 @@ static void TestEarlyRelease()
       t.lock_conflict(&L2);
       t.lock_conflict(&L3);
 
-      transaction::unlock_(&L);
+      lk.unlock();
 
       ++t.write(x);
 
    } before_retry {}
-
-   transaction::unlock_(&L);
-   transaction::unlock_(&L3);
 
    cout << "X: " << x.value() << endl;
 }

@@ -33,6 +33,7 @@
 #include <iostream>
 #include "isolatedComposedIntLockInTx.h"
 #include <boost/stm/transaction.hpp>
+#include <boost/stm/synch.hpp>
 #include "main.h"
 
 static boost::stm::native_trans<int> gInt;
@@ -43,6 +44,7 @@ static boost::stm::latm::mutex_type lock1;
 #endif
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
+using namespace boost;
 
 static native_trans<int> globalInt;
 
@@ -61,19 +63,21 @@ static void* TestIsolatedComposedLockInTxCount(void *threadId)
       {
          try
          {
-            transaction::lock_(lock1);
+            {
+            stm::lock_guard<latm::mutex_type> lk(lock1);
             ++gInt.value();
             cout << "\t" << gInt.value() << endl;
-            transaction::unlock_(lock1);
+            }
 
             SLEEP(1000);
             // do nothing on purpose, allowing other threads time to see
             // intermediate state IF they can get lock1 (they shouldn't)
 
-            transaction::lock_(lock1);
+            {
+            stm::lock_guard<latm::mutex_type> lk(lock1);
             --gInt.value();
             cout << "\t" << gInt.value() << endl;
-            transaction::unlock_(lock1);
+            }
 
             t.end();
             SLEEP(1000);
@@ -110,9 +114,10 @@ static void* TestComposedCount(void *threadId)
 
    for (int i = startingValue; i < 100*endingValue; ++i)
    {
-      transaction::lock_(lock1);
+      {
+      stm::lock_guard<latm::mutex_type> lk(lock1);
       cout << gInt.value() << endl;
-      transaction::unlock_(lock1);
+      }
       SLEEP(10); // do nothing on purpose
    }
 

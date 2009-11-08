@@ -14,10 +14,13 @@
 #ifndef BOOST_STM_SYNCH_MUTEX__HPP
 #define BOOST_STM_SYNCH_MUTEX__HPP
 
+#include <boost/stm/detail/config.hpp>
+//-----------------------------------------------------------------------------
 #include <boost/synchro/exceptions.hpp>
 #include <boost/synchro/time.hpp>
 #include <boost/synchro/detail/deleted_functions.hpp>
 #include <boost/synchro/poly/lock.hpp>
+#include <boost/synchro/poly/ref_lock_adapter.hpp>
 
 namespace boost { namespace stm {
 
@@ -40,25 +43,46 @@ protected:
     lockable_type* the_lock() { return &lock_; }
     mutable lockable_type lock_;
 };
+#if BOOST_STM_LATM_GENERIC    
 
-template <typename Lockable>
+template <typename Lockable, typename Base=boost::synchro::poly::exclusive_lock, template <class, class> class Poly = boost::synchro::poly::exclusive_ref_lock_adapter >
 class exclusive_ref_lock_adapter
 {
 public:
     typedef Lockable lockable_type;
 
-    exclusive_ref_lock_adapter(lockable_type& lock): lock_(lock) {}
+    exclusive_ref_lock_adapter(lockable_type& lock): st_lock_(lock), dyn_lock_(lock) {}
     ~exclusive_ref_lock_adapter() {}
 
-    void lock() {stm::lock(lock_);}
-    void unlock() {stm::unlock(lock_);}
-    bool try_lock() { return stm::try_lock(lock_);}
+    void lock() {stm::lock(st_lock_, dyn_lock_);}
+    void unlock() {stm::unlock(st_lock_, dyn_lock_);}
+    bool try_lock() { return stm::try_lock(st_lock_, dyn_lock_);}
 
 protected:
-    lockable_type* the_lock() { return &lock_; }
-    mutable lockable_type& lock_;
+    lockable_type* the_lock() { return &st_lock_; }
+    mutable lockable_type& st_lock_;
+    //mutable Poly<lockable_type, Base> dyn_lock_;
+};
+#else
+template <typename Lockable >
+class exclusive_ref_lock_adapter
+{
+public:
+    typedef Lockable lockable_type;
+
+    exclusive_ref_lock_adapter(lockable_type& lock): st_lock_(lock) {}
+    ~exclusive_ref_lock_adapter() {}
+
+    void lock() {stm::lock(st_lock_);}
+    void unlock() {stm::unlock(st_lock_);}
+    bool try_lock() { return stm::try_lock(st_lock_);}
+
+protected:
+    lockable_type* the_lock() { return &st_lock_; }
+    mutable lockable_type& st_lock_;
 };
 
+#endif
 template <typename Lockable>
 void lock(exclusive_lock_adapter<Lockable>& lock) {transaction::pthread_lock(&lock);}
 template <typename Lockable>
