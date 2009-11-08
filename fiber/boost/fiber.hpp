@@ -8,8 +8,15 @@
 #define BOOST_FIBER_H
 
 #include <boost/fiber/attributes.hpp>
+#include <boost/fiber/auto_reset_event.hpp>
+#include <boost/fiber/condition.hpp>
+#include <boost/fiber/count_down_event.hpp>
 #include <boost/fiber/exceptions.hpp>
+#include <boost/fiber/fiber.hpp>
+#include <boost/fiber/manual_reset_event.hpp>
+#include <boost/fiber/mutex.hpp>
 #include <boost/fiber/scheduler.hpp>
+#include <boost/fiber/unique_lock.hpp>
 #include <boost/fiber/utility.hpp>
 
 #endif // BOOST_FIBER_H

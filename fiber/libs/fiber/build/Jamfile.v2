@@ -36,9 +36,13 @@ feature.set-default fiberapi : [ default_fiberapi ] ;
 alias fiber_sources
     : ## win32 sources ##
 	attributes.cpp
+	condition.cpp
+	count_down_event.cpp
 	fiber.cpp
 	fiber_info_windows.cpp
 	fiber_windows.cpp
+	manual_reset_event.cpp
+	mutex.cpp
 	rrp.cpp
 	scheduler.cpp
     : ## requirements ##
@@ -48,9 +52,13 @@ alias fiber_sources
 alias fiber_sources
     : ## posix sources ##
 	attributes.cpp
+	condition.cpp
+	count_down_event.cpp
 	fiber.cpp
 	fiber_info_posix.cpp
 	fiber_posix.cpp
+	manual_reset_event.cpp
+	mutex.cpp
 	rrp.cpp
 	scheduler.cpp
     : ## requirements ##

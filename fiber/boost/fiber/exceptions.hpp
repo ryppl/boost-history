@@ -31,6 +31,14 @@ public:
 	{}
 };
 
+class lock_error : public std::logic_error
+{
+public:
+    lock_error() :
+		std::logic_error("lock invalid")
+	{}
+};
+
 class scheduler_error : public std::runtime_error
 {
 public:

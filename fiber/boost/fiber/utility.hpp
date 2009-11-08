@@ -20,6 +20,10 @@ namespace boost {
 namespace this_fiber {
 
 inline
+void interruption_point()
+{}
+
+inline
 bool runs_as_fiber()
 { return fiber::scheduler::runs_as_fiber(); }
 
