@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_DETAIL_FIBER_INFO_BASE_POSIX_H
-#define BOOST_FIBER_DETAIL_FIBER_INFO_BASE_POSIX_H
+#ifndef BOOST_FIBER_DETAIL_FIBER_INFO_POSIX_H
+#define BOOST_FIBER_DETAIL_FIBER_INFO_POSIX_H
 
 extern "C" {
 
@@ -83,4 +83,4 @@ void intrusive_ptr_release( fiber::detail::fiber_info_base * p)
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBER_DETAIL_FIBER_INFO_BASE_POSIX_H
+#endif // BOOST_FIBER_DETAIL_FIBER_INFO_POSIX_H

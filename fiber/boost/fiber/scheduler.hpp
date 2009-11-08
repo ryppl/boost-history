@@ -29,6 +29,7 @@ namespace this_fiber {
 bool runs_as_fiber();
 fiber::fiber::id get_id();
 void yield();
+void cancel();
 
 }
 
@@ -41,6 +42,7 @@ private:
 	friend bool this_fiber::runs_as_fiber();
 	friend fiber::id this_fiber::get_id();
 	friend void this_fiber::yield();
+	friend void this_fiber::cancel();
 
 	typedef thread_specific_ptr< policy >	tss_policy_t;
 

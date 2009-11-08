@@ -32,6 +32,10 @@ void yield()
 { fiber::scheduler::yield(); }
 
 inline
+void cancel()
+{ fiber::scheduler::exit(); }
+
+inline
 void sleep( system_time const& abs_time)
 {}
 

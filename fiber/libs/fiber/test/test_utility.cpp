@@ -4,6 +4,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <stdexcept>
 #include <sstream>
 #include <string>
 
@@ -35,6 +36,17 @@ void yield_fn( int n)
 	}	
 }
 
+void cancel_fn( int n)
+{
+	if ( n < 3) throw std::invalid_argument("must be greater than 3");
+	for ( int i = 0; i < n; ++i)
+	{
+		if ( i == 2) boost::this_fiber::cancel();
+		++value;
+		boost::this_fiber::yield();
+	}	
+}
+
 void test_case_1()
 {
 	boost::fiber::scheduler sched;
@@ -58,6 +70,7 @@ void test_case_2()
 
 void test_case_3()
 {
+	value = 0;
 	boost::fiber::scheduler sched;
 	sched.make_fiber( yield_fn, 3);
 	BOOST_CHECK_EQUAL( 0, value);
@@ -78,6 +91,26 @@ void test_case_3()
 	BOOST_CHECK_EQUAL( 3, value);
 }
 
+void test_case_4()
+{
+	value = 0;
+	boost::fiber::scheduler sched;
+	sched.make_fiber( cancel_fn, 5);
+	BOOST_CHECK_EQUAL( 0, value);
+	
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( 1, value);
+	
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( 2, value);
+	
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( sched.empty() );
+	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
+	BOOST_CHECK( ! sched.run() );
+	BOOST_CHECK_EQUAL( 2, value);
+}
+
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
 	boost::unit_test::test_suite * test =
@@ -86,6 +119,7 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_TEST_CASE( & test_case_1) );
 	test->add( BOOST_TEST_CASE( & test_case_2) );
 	test->add( BOOST_TEST_CASE( & test_case_3) );
+	test->add( BOOST_TEST_CASE( & test_case_4) );
 
 	return test;
 }
