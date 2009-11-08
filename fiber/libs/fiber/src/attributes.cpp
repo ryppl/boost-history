@@ -6,7 +6,7 @@
 
 #include <boost/fiber/attributes.hpp>
 
-#include <stdexcept>
+#include <boost/fiber/exceptions.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -22,7 +22,7 @@ void
 attributes::stack_size( std::size_t value)
 {
 	if ( value < 1)
-		throw std::invalid_argument("invalid stacksize");
+		throw invalid_stacksize();
 	stacksize_ = value;
 }
 

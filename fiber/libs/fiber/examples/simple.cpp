@@ -23,8 +23,8 @@ int main()
 	{
 		boost::fiber::scheduler sched;
 
-		sched.make_fiber( & f, boost::fiber::attributes(), "abc", 5);
-		sched.make_fiber( & f, boost::fiber::attributes(), "xyz", 7);
+		sched.make_fiber( & f, "abc", 5);
+		sched.make_fiber( & f, "xyz", 7);
 
 		std::cout << "start" << std::endl;
 

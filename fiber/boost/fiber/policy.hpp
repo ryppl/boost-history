@@ -10,7 +10,6 @@
 #include <cstddef>
 #include <memory>
 
-#include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/fiber.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -18,7 +17,7 @@
 namespace boost {
 namespace fiber {
 
-struct BOOST_FIBER_DECL policy
+struct policy
 {
 	virtual ~policy() {}
 

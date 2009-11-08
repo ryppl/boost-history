@@ -22,14 +22,14 @@ namespace boost {
 namespace fiber {
 
 void
-fiber::init()
+fiber::init_()
 {
 	typedef void fn_type( fiber *);
 	typedef void ( * st_fn)();
 	fn_type * fn_ptr( trampoline);
 
 	::makecontext(
-		& info->uctx,
+		& info_->uctx,
 		( st_fn)( fn_ptr),
 		1,
 		this);
@@ -38,7 +38,7 @@ fiber::init()
 void
 fiber::switch_to( fiber & to)
 {
-	if ( ::swapcontext( & info->uctx, & to.info->uctx) != 0)
+	if ( ::swapcontext( & info_->uctx, & to.info_->uctx) != 0)
 		throw system::system_error(
 			system::error_code(
 				errno,
@@ -48,5 +48,3 @@ fiber::switch_to( fiber & to)
 }}
 
 #include <boost/config/abi_suffix.hpp>
-
-

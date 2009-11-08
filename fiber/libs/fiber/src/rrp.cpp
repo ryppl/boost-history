@@ -54,20 +54,21 @@ rrp::exit_active_fiber()
 bool
 rrp::run()
 {
+	bool result( false);
 	if ( ! runnable_fibers_.empty() )
 	{
 		f_id_ = runnable_fibers_.front();
 		master_.switch_to( fibers_[f_id_]);
 		runnable_fibers_.pop();
-		return true;
+		result = true;
 	}
 	if ( ! dead_fibers_.empty() )
 	{
 		fibers_.erase( dead_fibers_.front() );
 		dead_fibers_.pop();
-		return true;
+		result = true;
 	}
-	return false;
+	return result;
 }
 
 bool

@@ -30,16 +30,12 @@ class BOOST_FIBER_DECL fiber : private noncopyable
 private:
 	friend void trampoline( fiber *);
 
-	detail::fiber_info_base::ptr_t	info;
+	detail::fiber_info_base::ptr_t	info_;
 
 	fiber( fiber &);
 	fiber & operator=( fiber const&);
 
-	void init();
-
-	template< typename Fn >
-	static inline detail::fiber_info_base::ptr_t make_info( Fn fn, attributes const& attribs)
-	{ return detail::fiber_info_base::ptr_t( new detail::fiber_info< Fn >( fn, attribs) ); }
+	void init_();
 
 	struct dummy;
 
@@ -51,36 +47,9 @@ public:
 	fiber();
 
 	template< typename Fn >
-	explicit fiber( Fn fn, attributes const& attribs) :
-		info( make_info( fn, attribs) )
-	{ init(); }
-
-#ifndef BOOST_FIBER_MAX_ARITY
-#define BOOST_FIBER_MAX_ARITY 10
-#endif
-
-#define BOOST_FIBER_ARG(z, n, unused) \
-   BOOST_PP_CAT(A, n) BOOST_PP_CAT(a, n)
-#define BOOST_ENUM_FIBER_ARGS(n) BOOST_PP_ENUM(n, BOOST_FIBER_ARG, ~)
-
-#define BOOST_FIBER_CTOR(z, n, unused)	\
-	template<							\
-		typename Fn,					\
-		BOOST_PP_ENUM_PARAMS(n, typename A)	\
-	>										\
-	fiber( Fn fn, attributes const& attribs, BOOST_ENUM_FIBER_ARGS(n)) :	\
-		info(																\
-			make_info(														\
-				boost::bind( boost::type< void >(), fn, BOOST_PP_ENUM_PARAMS(n, a) ),	\
-				attribs) )																\
-	{ init(); }
-
-BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_CTOR, ~)
-
-#undef BOOST_FIBER_CTOR
-#undef BOOST_FIBER_MAX_ARITY
-
-	~fiber();
+	explicit fiber( Fn fn, attributes const& attrs) :
+		info_( new detail::fiber_info< Fn >( fn, attrs) )
+	{ init_(); }
 
 	void swap( fiber & other);
 
@@ -97,41 +66,41 @@ class fiber::id
 private:
 	friend class fiber;
 
-	detail::fiber_info_base::ptr_t	info;
+	detail::fiber_info_base::ptr_t	info_;
 
-	explicit id( detail::fiber_info_base::ptr_t info_) :
-		info( info_)
+	explicit id( detail::fiber_info_base::ptr_t info) :
+		info_( info)
 	{}
 
 public:
 	id() :
-		info()
+		info_()
 	{}
 
 	bool operator==( id const& other) const
-	{ return info == other.info; }
+	{ return info_ == other.info_; }
 
 	bool operator!=( id const& other) const
-	{ return info != other.info; }
+	{ return info_ != other.info_; }
 	
 	bool operator<( id const& other) const
-	{ return info < other.info; }
+	{ return info_ < other.info_; }
 	
 	bool operator>( id const& other) const
-	{ return other.info < info; }
+	{ return other.info_ < info_; }
 	
 	bool operator<=( id const& other) const
-	{ return !( other.info < info); }
+	{ return !( other.info_ < info_); }
 	
 	bool operator>=( id const& other) const
-	{ return ! ( info < other.info); }
+	{ return ! ( info_ < other.info_); }
 
 	template< typename charT, class traitsT >
 	friend std::basic_ostream< charT, traitsT > &
 	operator<<( std::basic_ostream< charT, traitsT > & os, id const& other)
 	{
-		if ( other.info)
-			return os << other.info;
+		if ( other.info_)
+			return os << other.info_;
 		else
 			return os << "{not-a-fiber}";
 	}

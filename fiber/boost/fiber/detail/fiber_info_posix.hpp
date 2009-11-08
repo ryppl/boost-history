@@ -36,9 +36,11 @@ struct BOOST_FIBER_DECL fiber_info_base
 	::ucontext_t			uctx;
 	shared_array< char >	uctx_stack;
 
+	static void convert_thread_to_fiber() {}
+
 	fiber_info_base();
 
-	fiber_info_base( attributes const& attribs_);
+	fiber_info_base( attributes const&);
 
 	virtual ~fiber_info_base() {}
 
@@ -55,10 +57,10 @@ struct BOOST_FIBER_DECL fiber_info_base
 #else
 
     void add_ref()
-    { ++use_count_; }
+    { ++use_count; }
 
     void release()
-    { if ( --use_count_ == 0) delete this; }
+    { if ( --use_count == 0) delete this; }
 
 #endif
 };

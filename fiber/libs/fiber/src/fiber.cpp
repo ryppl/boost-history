@@ -6,8 +6,6 @@
 
 #include <boost/fiber/fiber.hpp>
 
-#include <algorithm>
-
 #include <boost/assert.hpp>
 
 #include <boost/fiber/scheduler.hpp>
@@ -19,22 +17,19 @@ namespace fiber {
 
 void
 fiber::convert_thread_to_fiber()
-{}
+{ detail::fiber_info_base::convert_thread_to_fiber(); }
 
 fiber::fiber() :
-	info( new detail::fiber_info_default() )
-{}
-
-fiber::~fiber()
+	info_( new detail::fiber_info_default() )
 {}
 
 void
 fiber::swap( fiber & other)
-{ info.swap( other.info); }
+{ info_.swap( other.info_); }
 
 fiber::id
 fiber::get_id() const
-{ return fiber::id( info); }
+{ return fiber::id( info_); }
 
 bool
 fiber::operator==( fiber const& other) const
@@ -47,13 +42,11 @@ fiber::operator!=( fiber const& other) const
 void trampoline( fiber * self)
 {
 	BOOST_ASSERT( self);
-	BOOST_ASSERT( self->info);
-	self->info->run();
+	BOOST_ASSERT( self->info_);
+	self->info_->run();
  	scheduler::exit();
 }
 
 }}
 
 #include <boost/config/abi_suffix.hpp>
-
-

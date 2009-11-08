@@ -14,48 +14,45 @@
 namespace boost {
 namespace fiber {
 
-scheduler::policy_ptr_t scheduler::policy_;
+scheduler::tss_policy_t scheduler::impl_;
 
 bool
 scheduler::runs_as_fiber()
-{ return policy_.get() != 0; }
+{ return impl_.get() != 0; }
 
 fiber::id
 scheduler::get_id()
 {
-	policy * po( policy_.get() );
-	if ( ! po) throw fiber_error("not a fiber");
-	return po->active_fiber();
+	policy * impl( impl_.get() );
+	if (  ! impl) throw fiber_error("not a fiber");
+	return impl->active_fiber();
 }
 
 void
 scheduler::yield()
 {
-	policy * po( policy_.get() );
-	if ( ! po) throw fiber_error("not a fiber");
-	po->yield_active_fiber();
+	policy * impl( impl_.get() );
+	if (  ! impl) throw fiber_error("not a fiber");
+	impl->yield_active_fiber();
 }
 
 void
 scheduler::exit()
 {
-	policy * po( policy_.get() );
-	if ( ! po) throw fiber_error("not a fiber");
-	po->exit_active_fiber();
+	policy * impl( impl_.get() );
+	if (  ! impl) throw fiber_error("not a fiber");
+	impl->exit_active_fiber();
 }
-
-scheduler::scheduler()
-{}
 
 policy *
 scheduler::access_()
 {
-	if ( ! policy_.get() )
+	if ( ! impl_.get() )
 	{
 		fiber::convert_thread_to_fiber();
-		policy_.reset( new rrp() );
+		impl_.reset( new rrp() );
 	}
-	return policy_.get();
+	return impl_.get();
 }
 
 bool

@@ -26,4 +26,6 @@ rule fiber-test ( source )
 
 test-suite fiber :
     [ fiber-test test_fiber ]
+    [ fiber-test test_rrp ]
+    [ fiber-test test_utility ]
     ;

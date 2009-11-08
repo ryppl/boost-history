@@ -10,25 +10,37 @@
 #include <stdexcept>
 #include <string>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost {
 namespace fiber {
 
 class fiber_error : public std::runtime_error
 {
 public:
-    fiber_error( std::string const& msg)
-	: std::runtime_error( msg)
+    fiber_error( std::string const& msg) :
+		std::runtime_error( msg)
+	{}
+};
+
+class invalid_stacksize : public std::runtime_error
+{
+public:
+    invalid_stacksize() :
+		std::runtime_error("invalid stacksize")
 	{}
 };
 
 class scheduler_error : public std::runtime_error
 {
 public:
-    scheduler_error( std::string const& msg)
-	: std::runtime_error( msg)
+    scheduler_error( std::string const& msg) :
+		std::runtime_error( msg)
 	{}
 };
 
 }}
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_FIBER_EXCEPTIONS_H
