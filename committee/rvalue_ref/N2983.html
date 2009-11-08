@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.6: http://docutils.sourceforge.net/" />
 <title>Allowing Move Constructors to Throw</title>
 <meta name="author" content="David Abrahams, Rani Sharoni, Doug Gregor" />
 <meta name="organization" content="BoostPro Computing" />
@@ -341,7 +341,7 @@ rst2html.py - -footnote-references=superscript \
 <li><a class="reference internal" href="#operator-noexcept-expression" id="id11">operator <tt class="docutils literal"><span class="pre">noexcept(</span></tt><em>expression</em><tt class="docutils literal"><span class="pre">)</span></tt></a></li>
 <li><a class="reference internal" href="#interactions-with-other-proposals" id="id12">Interactions with Other Proposals</a></li>
 <li><a class="reference internal" href="#existing-practice" id="id13">Existing Practice</a></li>
-<li><a class="reference internal" href="#implicit-noexcept-true-for-destructors" id="id14">Implicit <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> for Destructors</a></li>
+<li><a class="reference internal" href="#implicit-noexcept-for-destructors" id="id14">Implicit <tt class="docutils literal"><span class="pre">noexcept</span></tt> for Destructors</a></li>
 <li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id15">Proposed Changes to Standard Wording</a><ul>
 <li><a class="reference internal" href="#keywords-lex-key" id="id16">2.12 Keywords [lex.key]</a></li>
 <li><a class="reference internal" href="#allocation-functions-basic-stc-dynamic-allocation" id="id17">3.7.4.1 Allocation functions [basic.stc.dynamic.allocation]</a></li>
@@ -497,7 +497,7 @@ trait very much like <tt class="docutils literal"><span class="pre">has_nothrow_
 current working draft; it would be identical to the proposed
 <tt class="docutils literal"><span class="pre">is_nothrow_constructible&lt;T,T&amp;&amp;&gt;</span></tt> from <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a>.  In other words, it
 returns <tt class="docutils literal"><span class="pre">true</span></tt> only when it can prove the move constructor doesn't
-throw, and is <em>allowed</em> to return <tt class="docutils literal"><span class="pre">false</span></tt> otherwise, even if the
+throw, and returns <tt class="docutils literal"><span class="pre">false</span></tt> otherwise, even if the
 move constructor is actually nonthrowing.</p>
 </div>
 <div class="section" id="an-optimization-hint">
@@ -514,7 +514,7 @@ allow these <em>xxx</em><tt class="docutils literal"><span class="pre">_nothrow_
 any operation decorated with <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt>.  Class maintainers could
 label their move constructors <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> to indicate non-throwing
 behavior, and the library is permitted to take advantage of that
-labelling if it can be detected (via “compiler magic”).</p>
+labeling if it can be detected (via “compiler magic”).</p>
 <p>Note that the usefulness of <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> as an optimization hint
 goes way beyond the narrow case introduced by <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2855.html">N2855</a>.  In fact, it
 goes beyond move construction: when the compiler can detect
@@ -540,6 +540,10 @@ pair( pair&lt;First2,Second2&gt;&amp;&amp; rhs )
 be <em>required</em> if there is a ban on throwing move constructors, the
 exception specification above is entirely optional; its presence or
 absence doesn't affect the correctness of a move constructor.</p>
+<p>Since the common case for <tt class="docutils literal"><span class="pre">noexcept</span></tt> is to label certain operations
+as never throwing exceptions (without the need for a condition), the
+exception-specification <tt class="docutils literal"><span class="pre">noexcept</span></tt> is provided as a shorthand for
+<tt class="docutils literal"><span class="pre">noexcept(true)</span></tt>.</p>
 </div>
 <div class="section" id="operator-noexcept-expression">
 <h1><a class="toc-backref" href="#id11">operator <tt class="docutils literal"><span class="pre">noexcept(</span></tt><em>expression</em><tt class="docutils literal"><span class="pre">)</span></tt></a></h1>
@@ -547,7 +551,25 @@ absence doesn't affect the correctness of a move constructor.</p>
 not just in this proposal).  Once we have <tt class="docutils literal"><span class="pre">noexcept(</span></tt><em>bool-constant-expr</em><tt class="docutils literal"><span class="pre">)</span></tt> available to make the information
 available, it makes sense to generalize the traits into an operator
 similar to <tt class="docutils literal"><span class="pre">sizeof</span></tt> and <tt class="docutils literal"><span class="pre">typeof</span></tt> that can give us answers about
-<em>any</em> expression.</p>
+<em>any</em> expression. The new operator <tt class="docutils literal"><span class="pre">noexcept(</span></tt><em>expression</em><tt class="docutils literal"><span class="pre">)</span></tt>
+determines whether the given <em>expression</em> can throw.</p>
+<p>The <tt class="docutils literal"><span class="pre">noexcept</span></tt> operator is conservative, and will only evaluate true
+when the compiler can be certain that the expression will not throw,
+because no subexpression can throw and there are no calls to any
+functions that allow exceptions. Note that the wording in this
+document does <em>not</em> give compilers freedom to perform any additional
+analysis to determine whether a function can throw. For example,
+<tt class="docutils literal"><span class="pre">noexcept(f())</span></tt> will evaluate <tt class="docutils literal"><span class="pre">false</span></tt> given the following function
+<tt class="docutils literal"><span class="pre">f</span></tt>, even though a sufficiently smart compiler could determine that
+<tt class="docutils literal"><span class="pre">f</span></tt> does not throw:</p>
+<pre class="literal-block">
+float get_float();
+void f() {
+  float x = get_float();
+  if (sqrt(fabs(x)) &lt; 0)
+    throw x;
+}
+</pre>
 </div>
 <div class="section" id="interactions-with-other-proposals">
 <h1><a class="toc-backref" href="#id12">Interactions with Other Proposals</a></h1>
@@ -556,11 +578,10 @@ Stroustrup in <a class="reference external" href="http://www.open-std.org/JTC1/S
 Crowl in <a class="reference external" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2953.html">N2953</a>, is harmonious with our proposal.  For example, since
 throwing move constructors are allowed, default move constructors will
 be generated in more cases, with performance benefits if <em>any</em>
-subobjects have been move-enabled.</p>
-<p>As a matter of QOI, a default move constructor would probably gain an
-exception specification whose boolean constant parameter is computed
-from the results of has_nothrow_move on all subobjects, but, being a
-matter of QOI, that doesn't have any effect on standard text.</p>
+subobjects have been move-enabled. A default move constructor should
+gain a <tt class="docutils literal"><span class="pre">noexcept</span></tt> specification whose boolean constant parameter is
+computed from the results of the <tt class="docutils literal"><span class="pre">noexcept</span></tt> operator for the move of
+all subobjects.</p>
 <p>The proposed <tt class="docutils literal"><span class="pre">[[nothrow]]</span></tt> attribute is just a less-powerful version
 of this feature.  In particular, it can't express the hint shown for
 <tt class="docutils literal"><span class="pre">pair</span></tt>'s move constructor above.  We suggest it be dropped.</p>
@@ -577,8 +598,8 @@ successful in practice and is regarded by many as superior to the one
 in the standard.  Standardizing <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> gives everyone access
 to this optimization tool.</p>
 </div>
-<div class="section" id="implicit-noexcept-true-for-destructors">
-<h1><a class="toc-backref" href="#id14">Implicit <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> for Destructors</a></h1>
+<div class="section" id="implicit-noexcept-for-destructors">
+<h1><a class="toc-backref" href="#id14">Implicit <tt class="docutils literal"><span class="pre">noexcept</span></tt> for Destructors</a></h1>
 <p>So few destructors can throw exceptions that the default
 exception-specification for destructors could be changed from nothing
 (i.e. <tt class="docutils literal"><span class="pre">noexcept(false)</span></tt>) to <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt> with only a tiny
@@ -586,7 +607,6 @@ amount of code breakage.  Such code is already very dangerous, and
 where used properly, ought to be a well-known “caution area” that is
 reasonably easily migrated.  However, we don't think this change would
 be appropriate for C++0x at this late date, so we're not proposing it.</p>
-<p>FIXME: Add some discussion about implementation freedom with noexcept(true).</p>
 </div>
 <div class="section" id="proposed-changes-to-standard-wording">
 <h1><a class="toc-backref" href="#id15">Proposed Changes to Standard Wording</a></h1>
@@ -702,16 +722,17 @@ declarator.</p>
   <em>type-id-list</em>, <em>type-id</em> <span class="raw-html"><code>...</code><sub><i>opt</i></sub></span>
 
 <span class="raw-html"><span class="ins"><em>noexcept-specification:</em></span></span>
-  <span class="raw-html"><span class="ins"><code>noexcept (</code> <em>constant-expression<span class="sub">opt</span></em> <code>)</code></span></span>
+  <span class="raw-html"><span class="ins"><code>noexcept (</code> <em>constant-expression</em> <code>)</code></span></span>
+  <span class="raw-html"><span class="ins"><code>noexcept</code></span></span>
 </pre>
 <p><span class="raw-html"><span class="ins">In a <i>noexcept-specification</i>, the
 <i>constant-expression</i>, if supplied, shall be a constant expression
 ([expr.const]) that is contextually converted to <code>bool</code>
 ([conv] Clause 4). A <i>noexcept-specification</i>
-<code>noexcept()</code> is equivalent to <code>noexcept(true)</code>.</span></span></p>
+<code>noexcept</code> is equivalent to <code>noexcept(true)</code>.</span></span></p>
 <p>7 A function is said to <em>allow</em> an exception of type <tt class="docutils literal"><span class="pre">E</span></tt> if its <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i></span> contains a type <tt class="docutils literal"><span class="pre">T</span></tt> for which a handler of type <tt class="docutils literal"><span class="pre">T</span></tt> would be a match (15.3) for an exception of type <tt class="docutils literal"><span class="pre">E</span></tt>.</p>
 <!-- comment :raw-html:`<span class="ins">, if its <i>noexcept-specification</i> is <code>noexcept(false)</code>, or if the function has no <i>exception-specification</i>`. -->
-<p>11 A function with no <em>exception-specification</em> <span class="raw-html"><span class="ins">, or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>false</code>,</span></span> allows all exceptions. <span class="raw-html"><span class="ins">An <i>exception-specification</i> is <i>non-throwing</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>true</code>.</span></span> A function with <span class="del">an empty</span> <span class="ins">a non-throwing</span> <em>exception-specification</em> <span class="raw-html"><span class="del">, <code>throw()</code>,</span></span> does not allow any exceptions.</p>
+<p>11 A function with no <em>exception-specification</em> <span class="raw-html"><span class="ins">, or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>false</code>,</span></span> allows all exceptions. <span class="raw-html"><span class="ins">An <i>exception-specification</i> is <i>non-throwing</i> if it is of the form <code>throw()</code>, <code>noexcept</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>true</code>.</span></span> A function with <span class="del">an empty</span> <span class="ins">a non-throwing</span> <em>exception-specification</em> <span class="raw-html"><span class="del">, <code>throw()</code>,</span></span> does not allow any exceptions.</p>
 <p>14 In <span class="raw-html">a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i>,</span> a <em>type-id</em> followed by an ellipsis is a pack expansion (14.6.3).</p>
 </blockquote>
 <p>Add the following new paragraph:</p>

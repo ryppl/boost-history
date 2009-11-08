@@ -167,7 +167,7 @@ trait very much like ``has_nothrow_copy_constructor<T>`` from the
 current working draft; it would be identical to the proposed
 ``is_nothrow_constructible<T,T&&>`` from N2953_.  In other words, it
 returns ``true`` only when it can prove the move constructor doesn't
-throw, and is *allowed* to return ``false`` otherwise, even if the
+throw, and returns ``false`` otherwise, even if the
 move constructor is actually nonthrowing.
 
 An Optimization Hint
@@ -187,7 +187,7 @@ allow these *xxx*\ ``_nothrow_``\ *xxx* traits to report ``true`` for
 any operation decorated with ``noexcept(true)``.  Class maintainers could
 label their move constructors ``noexcept(true)`` to indicate non-throwing
 behavior, and the library is permitted to take advantage of that
-labelling if it can be detected (via “compiler magic”).
+labeling if it can be detected (via “compiler magic”).
 
 Note that the usefulness of ``noexcept(true)`` as an optimization hint
 goes way beyond the narrow case introduced by N2855_.  In fact, it
@@ -218,6 +218,11 @@ be *required* if there is a ban on throwing move constructors, the
 exception specification above is entirely optional; its presence or
 absence doesn't affect the correctness of a move constructor.
 
+Since the common case for ``noexcept`` is to label certain operations
+as never throwing exceptions (without the need for a condition), the
+exception-specification ``noexcept`` is provided as a shorthand for
+``noexcept(true)``.
+
 operator ``noexcept(``\ *expression*\ ``)``
 *******************************************
 
@@ -226,8 +231,25 @@ not just in this proposal).  Once we have ``noexcept(``\
 *bool-constant-expr*\ ``)`` available to make the information
 available, it makes sense to generalize the traits into an operator
 similar to ``sizeof`` and ``typeof`` that can give us answers about
-*any* expression.
+*any* expression. The new operator ``noexcept(``\ *expression*\ ``)``
+determines whether the given *expression* can throw.
 
+The ``noexcept`` operator is conservative, and will only evaluate true
+when the compiler can be certain that the expression will not throw,
+because no subexpression can throw and there are no calls to any
+functions that allow exceptions. Note that the wording in this
+document does *not* give compilers freedom to perform any additional
+analysis to determine whether a function can throw. For example,
+``noexcept(f())`` will evaluate ``false`` given the following function
+``f``, even though a sufficiently smart compiler could determine that
+``f`` does not throw::
+
+  float get_float();
+  void f() {
+    float x = get_float();
+    if (sqrt(fabs(x)) < 0)
+      throw x;
+  }
 
 Interactions with Other Proposals
 *********************************
@@ -237,12 +259,10 @@ Stroustrup in N2904_, and again by Bjarne Stroustrup and Lawrence
 Crowl in N2953_, is harmonious with our proposal.  For example, since
 throwing move constructors are allowed, default move constructors will
 be generated in more cases, with performance benefits if *any*
-subobjects have been move-enabled.
-
-As a matter of QOI, a default move constructor would probably gain an
-exception specification whose boolean constant parameter is computed
-from the results of has_nothrow_move on all subobjects, but, being a
-matter of QOI, that doesn't have any effect on standard text.
+subobjects have been move-enabled. A default move constructor should
+gain a ``noexcept`` specification whose boolean constant parameter is
+computed from the results of the ``noexcept`` operator for the move of
+all subobjects.
 
 The proposed ``[[nothrow]]`` attribute is just a less-powerful version
 of this feature.  In particular, it can't express the hint shown for
@@ -261,8 +281,8 @@ successful in practice and is regarded by many as superior to the one
 in the standard.  Standardizing ``noexcept(true)`` gives everyone access
 to this optimization tool.
 
-Implicit ``noexcept(true)`` for Destructors
-*******************************************
+Implicit ``noexcept`` for Destructors
+*************************************
 
 So few destructors can throw exceptions that the default
 exception-specification for destructors could be changed from nothing
@@ -271,8 +291,6 @@ amount of code breakage.  Such code is already very dangerous, and
 where used properly, ought to be a well-known “caution area” that is
 reasonably easily migrated.  However, we don't think this change would
 be appropriate for C++0x at this late date, so we're not proposing it.
-
-FIXME: Add some discussion about implementation freedom with noexcept(true).
 
 Proposed Changes to Standard Wording
 ************************************
@@ -416,19 +434,20 @@ Change the following paragraphs as follows:
       *type-id-list*, *type-id* :raw-html:`<code>...</code><sub><i>opt</i></sub>`
 
     :raw-html:`<span class="ins"><em>noexcept-specification:</em></span>`
-      :raw-html:`<span class="ins"><code>noexcept (</code> <em>constant-expression<span class="sub">opt</span></em> <code>)</code></span>`
+      :raw-html:`<span class="ins"><code>noexcept (</code> <em>constant-expression</em> <code>)</code></span>`
+      :raw-html:`<span class="ins"><code>noexcept</code></span>`
 
   :raw-html:`<span class="ins">In a <i>noexcept-specification</i>, the
   <i>constant-expression</i>, if supplied, shall be a constant expression
   ([expr.const]) that is contextually converted to <code>bool</code>
   ([conv] Clause 4). A <i>noexcept-specification</i>
-  <code>noexcept()</code> is equivalent to <code>noexcept(true)</code>.</span>`
+  <code>noexcept</code> is equivalent to <code>noexcept(true)</code>.</span>`
 
   7 A function is said to *allow* an exception of type ``E`` if its :raw-html:`<i><span class="ins">dynamic-</span>exception-specification</i>` contains a type ``T`` for which a handler of type ``T`` would be a match (15.3) for an exception of type ``E``.
 
   .. comment :raw-html:`<span class="ins">, if its <i>noexcept-specification</i> is <code>noexcept(false)</code>, or if the function has no <i>exception-specification</i>`.
 
-  11 A function with no *exception-specification* :raw-html:`<span class="ins">, or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>false</code>,</span>` allows all exceptions. :raw-html:`<span class="ins">An <i>exception-specification</i> is <i>non-throwing</i> if it is of the form <code>throw()</code>, <code>noexcept()</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>true</code>.</span>` A function with :del:`an empty` :ins:`a non-throwing` *exception-specification* :raw-html:`<span class="del">, <code>throw()</code>,</span>` does not allow any exceptions.
+  11 A function with no *exception-specification* :raw-html:`<span class="ins">, or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>false</code>,</span>` allows all exceptions. :raw-html:`<span class="ins">An <i>exception-specification</i> is <i>non-throwing</i> if it is of the form <code>throw()</code>, <code>noexcept</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>true</code>.</span>` A function with :del:`an empty` :ins:`a non-throwing` *exception-specification* :raw-html:`<span class="del">, <code>throw()</code>,</span>` does not allow any exceptions.
 
   14 In :raw-html:`a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i>,` a *type-id* followed by an ellipsis is a pack expansion (14.6.3).
 
