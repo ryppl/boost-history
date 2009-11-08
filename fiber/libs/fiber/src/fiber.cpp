@@ -4,7 +4,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/fiber/detail/fiber.hpp>
+#include <boost/fiber/fiber.hpp>
+
+#include <algorithm>
 
 #include <boost/assert.hpp>
 
@@ -14,18 +16,13 @@
 
 namespace boost {
 namespace fiber {
-namespace detail {
 
 void
 fiber::convert_thread_to_fiber()
 {}
 
 fiber::fiber() :
-	info( new fiber_info_default() )
-{}
-
-fiber::fiber( fiber_info_base::sptr_t info_) :
-	info( info_)
+	info( new detail::fiber_info_default() )
 {}
 
 fiber::~fiber()
@@ -55,7 +52,7 @@ void trampoline( fiber * self)
  	scheduler::exit();
 }
 
-}}}
+}}
 
 #include <boost/config/abi_suffix.hpp>
 

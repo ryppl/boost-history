@@ -11,7 +11,7 @@
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/thread/thread_time.hpp>
 
-#include <boost/fiber/detail/fiber.hpp>
+#include <boost/fiber/fiber.hpp>
 #include <boost/fiber/scheduler.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -20,7 +20,11 @@ namespace boost {
 namespace this_fiber {
 
 inline
-fiber::id get_id()
+bool runs_as_fiber()
+{ return fiber::scheduler::runs_as_fiber(); }
+
+inline
+fiber::fiber::id get_id()
 { return fiber::scheduler::get_id(); }
 
 inline

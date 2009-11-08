@@ -14,20 +14,29 @@ namespace boost {
 namespace fiber {
 
 attributes::attributes() :
-	stacksize_( 64000)
+	stacksize_( 64000),
+	priority_( 0)
 {}
 
 void
-attributes::stack_size( std::size_t stacksize)
+attributes::stack_size( std::size_t value)
 {
-	if ( stacksize < 1)
+	if ( value < 1)
 		throw std::invalid_argument("invalid stacksize");
-	stacksize_ = stacksize;
+	stacksize_ = value;
 }
 
 std::size_t
 attributes::stack_size() const
 { return stacksize_; }
+
+void
+attributes::priority( std::size_t value)
+{ priority_ = value; }
+
+std::size_t
+attributes::priority() const
+{ return priority_; }
 
 }}
 

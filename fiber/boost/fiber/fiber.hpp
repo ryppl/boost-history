@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_DETAIL_FIBER_H
-#define BOOST_FIBER_DETAIL_FIBER_H
+#ifndef BOOST_FIBER_FIBER_H
+#define BOOST_FIBER_FIBER_H
 
 #include <iostream>
 
@@ -21,7 +21,6 @@
 
 namespace boost {
 namespace fiber {
-namespace detail {
 
 class fiber;
 void trampoline( fiber * fib);
@@ -31,18 +30,16 @@ class BOOST_FIBER_DECL fiber : private noncopyable
 private:
 	friend void trampoline( fiber *);
 
-	fiber_info_base::sptr_t	info;
+	detail::fiber_info_base::ptr_t	info;
 
 	fiber( fiber &);
 	fiber & operator=( fiber const&);
 
-	explicit fiber( fiber_info_base::sptr_t);
-
 	void init();
 
 	template< typename Fn >
-	static inline fiber_info_base::sptr_t make_info( Fn fn, attributes const& attribs)
-	{ return fiber_info_base::sptr_t( new fiber_info< Fn >( fn, attribs) ); }
+	static inline detail::fiber_info_base::ptr_t make_info( Fn fn, attributes const& attribs)
+	{ return detail::fiber_info_base::ptr_t( new detail::fiber_info< Fn >( fn, attribs) ); }
 
 	struct dummy;
 
@@ -100,9 +97,9 @@ class fiber::id
 private:
 	friend class fiber;
 
-	fiber_info_base::sptr_t	info;
+	detail::fiber_info_base::ptr_t	info;
 
-	explicit id( fiber_info_base::sptr_t info_) :
+	explicit id( detail::fiber_info_base::ptr_t info_) :
 		info( info_)
 	{}
 
@@ -144,17 +141,13 @@ void trampoline( fiber *);
 
 }
 
-typedef detail::fiber::id	id;
-
-}
-
 inline
-void swap( fiber::detail::fiber & lhs, fiber::detail::fiber & rhs)
+void swap( fiber::fiber & lhs, fiber::fiber & rhs)
 { return lhs.swap( rhs); }
 
 }
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBER_DETAIL_FIBER_H
+#endif // BOOST_FIBER_FIBER_H
 

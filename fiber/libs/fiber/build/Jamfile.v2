@@ -39,6 +39,7 @@ alias fiber_sources
 	fiber.cpp
 	fiber_info_windows.cpp
 	fiber_windows.cpp
+	rrp.cpp
 	scheduler.cpp
     : ## requirements ##
       <fiberapi>win32
@@ -50,6 +51,7 @@ alias fiber_sources
 	fiber.cpp
 	fiber_info_posix.cpp
 	fiber_posix.cpp
+	rrp.cpp
 	scheduler.cpp
     : ## requirements ##
       <fiberapi>posix

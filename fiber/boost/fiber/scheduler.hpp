@@ -16,8 +16,9 @@
 
 #include <boost/fiber/attributes.hpp>
 #include <boost/fiber/detail/config.hpp>
-#include <boost/fiber/detail/fiber.hpp>
-#include <boost/fiber/detail/scheduler_data.hpp>
+#include <boost/fiber/fiber.hpp>
+#include <boost/fiber/policy.hpp>
+#include <boost/fiber/rrp.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -25,7 +26,8 @@ namespace boost {
 
 namespace this_fiber {
 
-fiber::id get_id();
+bool runs_as_fiber();
+fiber::fiber::id get_id();
 void yield();
 
 }
@@ -35,13 +37,16 @@ namespace fiber {
 class BOOST_FIBER_DECL scheduler : private noncopyable
 {
 private:
-	friend void detail::trampoline( detail::fiber *);
-	friend id this_fiber::get_id();
+	friend void trampoline( fiber *);
+	friend bool this_fiber::runs_as_fiber();
+	friend fiber::id this_fiber::get_id();
 	friend void this_fiber::yield();
 
-	typedef thread_specific_ptr< detail::scheduler_data >	data_ptr_t;
+	typedef thread_specific_ptr< policy >	policy_ptr_t;
 
-	static data_ptr_t	data;
+	static policy_ptr_t	policy_;
+
+	static bool runs_as_fiber();
 
 	static fiber::id get_id();
 
@@ -49,9 +54,7 @@ private:
 
 	static void exit();
 
-	detail::scheduler_data * access_data();
-
-	void add( std::auto_ptr< detail::fiber >);
+	policy * access_();
 
 public:
 	scheduler();
@@ -59,9 +62,9 @@ public:
 	template< typename Fn >
 	void make_fiber( Fn fn, attributes attrs = attributes() )
 	{
-		add(
-			std::auto_ptr< detail::fiber >(
-				new detail::fiber( fn, attrs) ) );
+		access_()->add_fiber(
+			std::auto_ptr< fiber >(
+				new fiber( fn, attrs) ) );
 	}
 
 #ifndef BOOST_FIBER_MAX_ARITY
@@ -79,9 +82,9 @@ public:
 	>													\
 	void make_fiber( Fn fn, attributes const& attribs, BOOST_ENUM_FIBER_ARGS(n))	\
 	{																				\
-		add(																		\
-			std::auto_ptr< detail::fiber >(											\
-				new detail::fiber(													\
+		access_()->add_fiber(																\
+			std::auto_ptr< fiber >(											\
+				new fiber(													\
 					boost::bind(													\
 						boost::type< void >(), fn, BOOST_PP_ENUM_PARAMS(n, a) ),	\
 					attribs) ) );													\

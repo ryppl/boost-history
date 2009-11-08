@@ -20,13 +20,18 @@ class BOOST_FIBER_DECL attributes
 {
 private:
 	std::size_t		stacksize_;
+	std::size_t		priority_;
 
 public:
 	attributes();
 
-	void stack_size( std::size_t stacksize);
+	void stack_size( std::size_t);
 
 	std::size_t stack_size() const;
+
+	void priority( std::size_t);
+
+	std::size_t priority() const;
 };
 
 }}

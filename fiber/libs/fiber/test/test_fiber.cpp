@@ -18,8 +18,8 @@ void zero_args_fn() {}
 void test_case_1()
 {
 	boost::fiber::attributes attribs;
-	boost::fiber::detail::fiber f1( zero_args_fn, attribs);
-	boost::fiber::detail::fiber f2( zero_args_fn, attribs);
+	boost::fiber::fiber f1( zero_args_fn, attribs);
+	boost::fiber::fiber f2( zero_args_fn, attribs);
 
 	BOOST_CHECK( f1 != f2);
 
@@ -38,11 +38,11 @@ void test_case_1()
 void test_case_2()
 {
 	boost::fiber::attributes attribs;
-	boost::fiber::detail::fiber f1( zero_args_fn, attribs);
-	boost::fiber::detail::fiber f2( zero_args_fn, attribs);
+	boost::fiber::fiber f1( zero_args_fn, attribs);
+	boost::fiber::fiber f2( zero_args_fn, attribs);
 
-	boost::fiber::id id1 = f1.get_id();
-	boost::fiber::id id2 = f2.get_id();
+	boost::fiber::fiber::id id1 = f1.get_id();
+	boost::fiber::fiber::id id2 = f2.get_id();
 
 	f1.swap( f2);
 

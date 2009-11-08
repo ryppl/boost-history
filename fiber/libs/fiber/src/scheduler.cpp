@@ -6,98 +6,69 @@
 
 #include <boost/fiber/scheduler.hpp>
 
-#include <boost/assert.hpp>
-#include <boost/ptr_container/ptr_map.hpp>
-
 #include <boost/fiber/exceptions.hpp>
+#include <boost/fiber/rrp.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
 namespace fiber {
 
-scheduler::data_ptr_t scheduler::data;
+scheduler::policy_ptr_t scheduler::policy_;
+
+bool
+scheduler::runs_as_fiber()
+{ return policy_.get() != 0; }
 
 fiber::id
 scheduler::get_id()
 {
-	detail::scheduler_data * dt( data.get() );
-	if ( ! dt) throw fiber_error("not a fiber");
-	return dt->f_id;
+	policy * po( policy_.get() );
+	if ( ! po) throw fiber_error("not a fiber");
+	return po->active_fiber();
 }
 
 void
 scheduler::yield()
 {
-	detail::scheduler_data * dt( data.get() );
-	if ( ! dt) throw fiber_error("not a fiber");
-	dt->runnable_fibers.push( dt->f_id);
-	dt->fibers[dt->f_id].switch_to( dt->master);
+	policy * po( policy_.get() );
+	if ( ! po) throw fiber_error("not a fiber");
+	po->yield_active_fiber();
 }
 
 void
 scheduler::exit()
 {
-	detail::scheduler_data * dt( data.get() );
-	if ( ! dt) throw fiber_error("not a fiber");
-	dt->dead_fibers.push( dt->f_id);
-	dt->fibers[dt->f_id].switch_to( dt->master);
+	policy * po( policy_.get() );
+	if ( ! po) throw fiber_error("not a fiber");
+	po->exit_active_fiber();
 }
 
 scheduler::scheduler()
 {}
 
-detail::scheduler_data *
-scheduler::access_data()
+policy *
+scheduler::access_()
 {
-	if ( ! data.get() )
+	if ( ! policy_.get() )
 	{
-		detail::fiber::convert_thread_to_fiber();
-		data.reset( new detail::scheduler_data() );
+		fiber::convert_thread_to_fiber();
+		policy_.reset( new rrp() );
 	}
-	return data.get();
-}
-
-void
-scheduler::add( std::auto_ptr< detail::fiber > f)
-{
-	detail::scheduler_data * dt = access_data();
-
-	detail::fiber::id id( f->get_id() );
-	std::pair< ptr_map< detail::fiber::id, detail::fiber >::iterator, bool > result(
-		dt->fibers.insert( id, f) );
-	if ( ! result.second) throw scheduler_error("inserting fiber failed");
-	dt->runnable_fibers.push( result.first->first);
+	return policy_.get();
 }
 
 bool
 scheduler::run()
-{
-	detail::scheduler_data * dt = access_data();
-
-	if ( ! dt->runnable_fibers.empty() )
-	{
-		dt->f_id = dt->runnable_fibers.front();
-		dt->master.switch_to( dt->fibers[dt->f_id]);
-		dt->runnable_fibers.pop();
-		return true;
-	}
-	if ( ! dt->dead_fibers.empty() )
-	{
-		dt->fibers.erase( dt->dead_fibers.front() );
-		dt->dead_fibers.pop();
-		return true;
-	}
-	return false;
-}
+{ return access_()->run(); }
 
 bool
 scheduler::empty()
-{ return access_data()->fibers.empty(); }
+{ return access_()->empty(); }
 
 std::size_t
 scheduler::size()
-{ return access_data()->fibers.size(); }
+{ return access_()->size(); }
 
 }}
 

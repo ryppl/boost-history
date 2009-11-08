@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/fiber/detail/fiber.hpp>
+#include <boost/fiber/fiber.hpp>
 
 extern "C" {
 
@@ -20,7 +20,6 @@ extern "C" {
 
 namespace boost {
 namespace fiber {
-namespace detail {
 
 void
 fiber::init()
@@ -46,7 +45,7 @@ fiber::switch_to( fiber & to)
 				system::system_category) );
 }
 
-}}}
+}}
 
 #include <boost/config/abi_suffix.hpp>
 
