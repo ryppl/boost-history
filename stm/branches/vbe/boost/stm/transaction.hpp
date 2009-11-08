@@ -322,11 +322,13 @@ public:
    //--------------------------------------------------------------------------
     #if PERFORMING_LATM
    //--------------------------------------------------------------------------
-   inline static void tm_lock_conflict(latm::mutex_type &lock)
+   template <typename MP>
+   inline static void tm_lock_conflict(MP &lock)
    {
       tm_lock_conflict(&lock);
    }
-   static void tm_lock_conflict(latm::mutex_type* lock);
+   template <typename MP>
+   static void tm_lock_conflict(MP* lock);
 
    static void clear_tm_conflicting_locks();
    //inline static latm::mutex_set get_tm_conflicting_locks() { return tmConflictingLocks_; }
@@ -337,17 +339,21 @@ public:
     #if USING_TRANSACTION_SPECIFIC_LATM
    void see_if_tx_must_block_due_to_tx_latm();
 
-   inline void lock_conflict(latm::mutex_type &lock)
+   template <typename MP>
+   inline void lock_conflict(MP &lock)
    { add_tx_conflicting_lock(&lock); }
 
-   inline void lock_conflict(latm::mutex_type* lock)
+   template <typename MP>
+   inline void lock_conflict(MP* lock)
    { add_tx_conflicting_lock(lock); }
 
-   inline void add_tx_conflicting_lock(latm::mutex_type &lock)
+   template <typename MP>
+   inline void add_tx_conflicting_lock(MP &lock)
    {
       add_tx_conflicting_lock(&lock);
    }
-   void add_tx_conflicting_lock(latm::mutex_type* lock);
+   template <typename MP>
+   void add_tx_conflicting_lock(MP* lock);
 
    void clear_tx_conflicting_locks();
    //latm::mutex_set get_tx_conflicting_locks() { return conflictingMutexRef_; }

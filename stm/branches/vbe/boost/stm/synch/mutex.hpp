@@ -24,34 +24,76 @@
 
 namespace boost { namespace stm {
 
-template <typename Lockable>
-class exclusive_lock_adapter : public boost::synchro::poly::exclusive_lock
+template <typename Lockable, typename Base=boost::synchro::poly::exclusive_lock
+        , template <class, class> class Poly = boost::synchro::poly::exclusive_ref_lock_adapter >
+class exclusive_lock_adapter;
+    
+template <typename Lockable, typename Base, template <class, class> class Poly >
+class exclusive_lock_adapter
 {
 public:
     typedef Lockable lockable_type;
 
     BOOST_COPY_CONSTRUCTOR_DELETE(exclusive_lock_adapter) /*< disable copy construction >*/
     BOOST_COPY_ASSIGNEMENT_DELETE(exclusive_lock_adapter) /*< disable copy asignement >*/
-    exclusive_lock_adapter() {}
+    exclusive_lock_adapter() 
+        : st_lock_()
+        , dyn_lock_(st_lock_) 
+    {}
+
     ~exclusive_lock_adapter() {}
 
-    void lock() {stm::lock(lock_);}
-    void unlock() {stm::unlock(lock_);}
-    bool try_lock() { return stm::try_lock(lock_);}
+    void lock() {stm::lock(st_lock_, dyn_lock_);}
+    void unlock() {stm::unlock(st_lock_, dyn_lock_);}
+    bool try_lock() { return stm::try_lock(st_lock_, dyn_lock_);}
 
+    lockable_type& the_lock() { return st_lock_; }
+    boost::synchro::poly::exclusive_lock& the_poly_lock() { return dyn_lock_; }
 protected:
-    lockable_type* the_lock() { return &lock_; }
-    mutable lockable_type lock_;
+    mutable lockable_type               st_lock_;
+    mutable Poly<lockable_type, Base>   dyn_lock_;
 };
+
+template <typename Base, template <class, class> class Poly >
+class exclusive_lock_adapter<pthread_mutex_t, Base, Poly>
+{
+public:
+    typedef pthread_mutex_t lockable_type;
+
+    BOOST_COPY_CONSTRUCTOR_DELETE(exclusive_lock_adapter) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(exclusive_lock_adapter) /*< disable copy asignement >*/
+    exclusive_lock_adapter() 
+        : st_lock_(PTHREAD_MUTEX_INITIALIZER)
+        , dyn_lock_(st_lock_) 
+    {}
+    ~exclusive_lock_adapter() {}
+
+    void lock() {stm::lock(st_lock_, dyn_lock_);}
+    void unlock() {stm::unlock(st_lock_, dyn_lock_);}
+    bool try_lock() { return stm::try_lock(st_lock_, dyn_lock_);}
+
+    lockable_type& the_lock() { return st_lock_; }
+    boost::synchro::poly::exclusive_lock& the_poly_lock() { return dyn_lock_; }
+    
+protected:
+    mutable lockable_type               st_lock_;
+    mutable Poly<lockable_type, Base>   dyn_lock_;
+};
+
+#if 0
 #if BOOST_STM_LATM_GENERIC    
 
-template <typename Lockable, typename Base=boost::synchro::poly::exclusive_lock, template <class, class> class Poly = boost::synchro::poly::exclusive_ref_lock_adapter >
+template <typename Lockable, typename Base=boost::synchro::poly::exclusive_lock
+        , template <class, class> class Poly = boost::synchro::poly::exclusive_ref_lock_adapter >
 class exclusive_ref_lock_adapter
 {
 public:
     typedef Lockable lockable_type;
 
-    exclusive_ref_lock_adapter(lockable_type& lock): st_lock_(lock), dyn_lock_(lock) {}
+    exclusive_ref_lock_adapter(lockable_type& lock)
+        : st_lock_(lock)
+        , dyn_lock_(lock) 
+    {}
     ~exclusive_ref_lock_adapter() {}
 
     void lock() {stm::lock(st_lock_, dyn_lock_);}
@@ -82,6 +124,7 @@ protected:
     mutable lockable_type& st_lock_;
 };
 
+#endif
 #endif
 #if 0
 template <typename Lockable>

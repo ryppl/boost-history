@@ -35,22 +35,15 @@
 #include <boost/stm/synch.hpp>
 
 #ifndef BOOST_STM_T_USE_BOOST_MUTEX
-typedef pthread_mutex_t mutex_type;
+typedef boost::stm::exclusive_lock_adapter<pthread_mutex_t> mutex_type;
 #else
-typedef boost::mutex mutex_type;
+typedef boost::stm::exclusive_lock_adapter<boost::mutex> mutex_type;
 #endif
 
-#ifndef BOOST_STM_T_USE_BOOST_MUTEX
-static pthread_mutex_t L = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t L2 = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t L3 = PTHREAD_MUTEX_INITIALIZER;
-//static pthread_mutex_t L4 = PTHREAD_MUTEX_INITIALIZER;
-#else
-static boost::mutex L;
-static boost::mutex L2;
-static boost::mutex L3;
-//static boost::mutex L4;
-#endif
+static mutex_type L;
+static mutex_type L2;
+static mutex_type L3;
+//static mutex_type L4;
 
 using namespace boost::stm;
 using namespace boost;

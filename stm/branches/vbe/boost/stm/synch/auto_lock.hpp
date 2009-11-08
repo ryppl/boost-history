@@ -29,23 +29,22 @@
 #ifdef PERFORMING_LATM
 #include <boost/stm/transaction.hpp>
 #include <boost/stm/latm.hpp>
-#else
+#include <boost/stm/synch/mutex.hpp>
 #endif
 //---------------------------------------------------------------------------
 
 
 //---------------------------------------------------------------------------
 #ifdef PERFORMING_LATM
-#define BOOST_STM_LOCK(a, b) boost::stm::lock(a,b)
-#define BOOST_STM_UNLOCK(a, b) boost::stm::unlock(a, b)
+#define BOOST_STM_LOCK(a) a.lock()
+#define BOOST_STM_UNLOCK(a) a.unlock()
 #else
-#define BOOST_STM_LOCK(a, b) boost::synchro::lock(a)
-#define BOOST_STM_UNLOCK(a, b) boost::synchro::unlock(a)
+#define BOOST_STM_LOCK(a) boost::synchro::lock(a)
+#define BOOST_STM_UNLOCK(a) boost::synchro::unlock(a)
 #endif
 
 //---------------------------------------------------------------------------
 namespace boost { namespace stm {
-
 
 //---------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -67,28 +66,34 @@ typedef timer_lock_exception timer_err;
 //-----------------------------------------------------------------------------
 class auto_lock
 {
+#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+typedef boost::stm::exclusive_lock_adapter<pthread_mutex_t> mutex_type;
+#else
+typedef boost::stm::exclusive_lock_adapter<boost::mutex> mutex_type;
+#endif
+    
 public:
    typedef std::pair<thread_id_t const, latm::mutex_type*> ThreadedLockPair;
    typedef std::multimap<thread_id_t const, latm::mutex_type*> ThreadedLockContainer;
    typedef ThreadedLockContainer::iterator ThreadedLockIter;
 
-   auto_lock(latm::mutex_type &mutex) : hasLock_(false), lock_(mutex)
+   auto_lock(mutex_type &mutex) : hasLock_(false), lock_(mutex)
    {
       do_auto_lock();
    }
 
-   auto_lock(latm::mutex_type *mutex) : hasLock_(false), lock_(*mutex)
+   auto_lock(mutex_type *mutex) : hasLock_(false), lock_(*mutex)
    {
       do_auto_lock();
    }
 
 
-   auto_lock(milliseconds_t timeOut, latm::mutex_type &mutex) : hasLock_(false), lock_(mutex)
+   auto_lock(milliseconds_t timeOut, mutex_type &mutex) : hasLock_(false), lock_(mutex)
    {
       do_timed_auto_lock(timeOut);
    }
 
-   auto_lock(milliseconds_t timeOut, latm::mutex_type *mutex) : hasLock_(false), lock_(*mutex)
+   auto_lock(milliseconds_t timeOut, mutex_type *mutex) : hasLock_(false), lock_(*mutex)
    {
       do_timed_auto_lock(timeOut);
    }
@@ -111,14 +116,14 @@ private:
    {
       //lock_ = mutex;
 
-      if (thread_has_lock(lock_)) return;
+      if (thread_has_lock(lock_.the_poly_lock())) return;
 
       for (milliseconds_t i = 0; i < timeOut; ++i)
       {
          if (synchro::try_lock(lock_))
          {
             hasLock_ = true;
-            insert_into_threaded_lock_map(lock_);
+            insert_into_threaded_lock_map(lock_.the_poly_lock());
             return;
          }
 
@@ -137,12 +142,12 @@ private:
    void do_auto_lock()
    {
       //lock_ = mutex;
-      if (thread_has_lock(lock_)) return;
+      if (thread_has_lock(lock_.the_poly_lock())) return;
 
-      BOOST_STM_LOCK(lock_, lock_);
+      BOOST_STM_LOCK(lock_);
       hasLock_ = true;
 
-      insert_into_threaded_lock_map(lock_);
+      insert_into_threaded_lock_map(lock_.the_poly_lock());
    }
 
    void do_auto_unlock()
@@ -150,8 +155,8 @@ private:
       if (hasLock_)
       {
          hasLock_ = false;
-         BOOST_STM_UNLOCK(lock_, lock_);
-         remove_thread_has_lock(lock_);
+         BOOST_STM_UNLOCK(lock_);
+         remove_thread_has_lock(lock_.the_poly_lock());
       }
    }
 
@@ -206,7 +211,7 @@ private:
    //auto_lock& operator=(auto_lock const &);
 
    bool hasLock_;
-   latm::mutex_type &lock_;
+   mutex_type &lock_;
 };
 
 //---------------------------------------------------------------------------

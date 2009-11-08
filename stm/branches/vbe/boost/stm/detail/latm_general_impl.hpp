@@ -230,10 +230,11 @@ inline void boost::stm::transaction::unblock_threads_if_locks_are_empty()
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
-inline void boost::stm::transaction::tm_lock_conflict(latm::mutex_type* inLock)
+template <typename MP>
+inline void boost::stm::transaction::tm_lock_conflict(MP* inLock)
 {
 #if 1
-    latm::instance().tm_lock_conflict(inLock);
+    latm::instance().tm_lock_conflict(inLock->the_poly_lock());
 #else
    if (!latm::instance().doing_tm_lock_protection()) return;
 
@@ -279,7 +280,8 @@ inline void boost::stm::transaction::must_be_in_conflicting_lock_set(latm::mutex
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
-inline void boost::stm::transaction::add_tx_conflicting_lock(latm::mutex_type* inLock)
+template <typename MP>
+inline void boost::stm::transaction::add_tx_conflicting_lock(MP* inLock)
 {
    if (!latm::instance().doing_tx_lock_protection()) return;
 
@@ -288,8 +290,8 @@ inline void boost::stm::transaction::add_tx_conflicting_lock(latm::mutex_type* i
       synchro::lock_guard<Mutex> autolock_g(*general_lock());
       synchro::lock_guard<Mutex> autolock_i(*inflight_lock());
 
-      if (get_tx_conflicting_locks().find(inLock) != get_tx_conflicting_locks().end()) return;
-      get_tx_conflicting_locks().insert(inLock);
+      if (get_tx_conflicting_locks().find(&inLock->the_poly_lock()) != get_tx_conflicting_locks().end()) return;
+      get_tx_conflicting_locks().insert(&inLock->the_poly_lock());
 
       if (irrevocable()) return;
 
@@ -350,7 +352,7 @@ inline bool boost::stm::transaction::try_lock(M& m, latm::mutex_type& mutex)
    switch (latm::instance().protection())
    {
    case eFullLatmProtection:
-      if (direct_updating()) return dir_fulltry_lock(m, mutex);
+      if (direct_updating()) return dir_full_try_lock(m, mutex);
       else return def_full_try_lock(m, mutex);
    case eTmConflictingLockLatmProtection:
       if (direct_updating()) return dir_tm_try_lock(m, mutex);

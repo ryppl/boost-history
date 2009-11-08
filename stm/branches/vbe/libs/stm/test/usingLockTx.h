@@ -23,11 +23,13 @@
 #include <pthread.h>
 
 #include <fstream>
+
 #ifndef BOOST_STM_T_USE_BOOST_MUTEX
-typedef pthread_mutex_t mutex_type;
+typedef boost::stm::exclusive_lock_adapter<pthread_mutex_t> mutex_type;
 #else
-typedef boost::mutex mutex_type;
+typedef boost::stm::exclusive_lock_adapter<boost::mutex> mutex_type;
 #endif
+
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -101,15 +103,15 @@ public:
 
    LinkedList()
    {
-#ifndef BOOST_STM_T_USE_BOOST_MUTEX
-      pthread_mutex_init (&list_lock_, 0);
-#endif
+//#ifndef BOOST_STM_T_USE_BOOST_MUTEX
+//      pthread_mutex_init (&list_lock_, 0);
+//#endif
       head_.value() = T();
    }
 
    ~LinkedList() { quick_clear(); }
 
-   pthread_mutex_t* get_list_lock() { return &list_lock_; }
+   mutex_type* get_list_lock() { return &list_lock_; }
 
    //--------------------------------------------------------------------------
    //--------------------------------------------------------------------------
@@ -520,7 +522,7 @@ private:
    }
 
    list_node<T> head_;
-   pthread_mutex_t list_lock_;
+   mutex_type list_lock_;
 };
 
 } // LockAwareTransactions

@@ -22,18 +22,15 @@ typedef int list_node_type;
 static newSyntaxNS::LinkedList< list_node_type > *llist = 0;
 
 #ifndef BOOST_STM_T_USE_BOOST_MUTEX
-typedef pthread_mutex_t mutex_type;
-static pthread_mutex_t L = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t L2 = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t L3 = PTHREAD_MUTEX_INITIALIZER;
-//static pthread_mutex_t L4 = PTHREAD_MUTEX_INITIALIZER;
+typedef boost::stm::exclusive_lock_adapter<pthread_mutex_t> mutex_type;
 #else
-typedef boost::mutex mutex_type;
-static boost::mutex L;
-static boost::mutex L2;
-static boost::mutex L3;
-//static boost::mutex L4;
+typedef boost::stm::exclusive_lock_adapter<boost::mutex> mutex_type;
 #endif
+
+static mutex_type L;
+static mutex_type L2;
+static mutex_type L3;
+//static mutex_type L4;
 
 using namespace boost::stm;
 using namespace boost;

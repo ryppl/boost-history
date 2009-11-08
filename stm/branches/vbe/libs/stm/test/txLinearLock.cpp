@@ -19,15 +19,15 @@
 
 static boost::stm::native_trans<int> gInt1;
 static boost::stm::native_trans<int> gInt2;
+
 #ifndef BOOST_STM_T_USE_BOOST_MUTEX
-typedef pthread_mutex_t mutex_type;
-static pthread_mutex_t lock1 = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t lock2 = PTHREAD_MUTEX_INITIALIZER;
+typedef boost::stm::exclusive_lock_adapter<pthread_mutex_t> mutex_type;
 #else
-typedef boost::mutex mutex_type;
-static boost::mutex lock1;
-static boost::mutex lock2;
+typedef boost::stm::exclusive_lock_adapter<boost::mutex> mutex_type;
 #endif
+
+static mutex_type lock1;
+static mutex_type lock2;
 
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;

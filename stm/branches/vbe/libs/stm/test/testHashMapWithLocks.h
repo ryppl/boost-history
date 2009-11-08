@@ -79,7 +79,7 @@ public:
       }
    }
 
-   pthread_mutex_t* get_hash_lock(int val) { return buckets_[val].get_list_lock(); }
+   mutex_type* get_hash_lock(int val) { return buckets_[val].get_list_lock(); }
 
 private:
    LATM::LinkedList<T> buckets_[nHashMap::kBuckets2];

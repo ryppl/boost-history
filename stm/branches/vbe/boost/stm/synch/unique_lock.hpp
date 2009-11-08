@@ -29,8 +29,9 @@ namespace stm {
     class unique_lock
     {
     private:
-        stm::exclusive_ref_lock_adapter<Mutex> mtx_;
-        stm::exclusive_ref_lock_adapter<Mutex>* m;
+        typedef Mutex mutex_type;
+        mutex_type& mtx_;
+        mutex_type* m;
         bool is_locked;
     
         unique_lock(unique_lock&);
@@ -42,30 +43,30 @@ namespace stm {
         {}
         #endif
 
-        explicit unique_lock(Mutex& m_):
+        explicit unique_lock(mutex_type& m_):
             mtx_(m_),m(&mtx_),is_locked(false)
         {
             lock();
         }
 
-        unique_lock(Mutex& m_,adopt_lock_t):
+        unique_lock(mutex_type& m_,adopt_lock_t):
             mtx_(m_),m(&mtx_),is_locked(true)
         {}
-        unique_lock(Mutex& m_,defer_lock_t):
+        unique_lock(mutex_type& m_,defer_lock_t):
             mtx_(m_),m(&mtx_),is_locked(false)
         {}
-        unique_lock(Mutex& m_,try_to_lock_t):
+        unique_lock(mutex_type& m_,try_to_lock_t):
             mtx_(m_),m(&mtx_),is_locked(false)
         {
             try_lock();
         }
         template<typename TimeDuration>
-        unique_lock(Mutex& m_,TimeDuration const& target_time):
+        unique_lock(mutex_type& m_,TimeDuration const& target_time):
             mtx_(m_),m(&mtx_),is_locked(false)
         {
             lock_for(target_time);
         }
-        unique_lock(Mutex& m_,system_time const& target_time):
+        unique_lock(mutex_type& m_,system_time const& target_time):
             mtx_(m_),m(&mtx_),is_locked(false)
         {
             lock_until(target_time);
@@ -195,14 +196,14 @@ namespace stm {
             return is_locked;
         }
 
-        Mutex* mutex() const
+        mutex_type* mutex() const
         {
             return m;
         }
 
-        Mutex* release()
+        mutex_type* release()
         {
-            Mutex* const res=m;
+            mutex_type* const res=m;
             m=0;
             is_locked=false;
             return res;

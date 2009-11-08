@@ -47,17 +47,18 @@ namespace stm {
     class lock_guard {
     private:
         //Mutex& m;
-        stm::exclusive_ref_lock_adapter<Mutex> m;
+        typedef Mutex mutex_type;
+        mutex_type& m;
 
         explicit lock_guard(lock_guard&);
         lock_guard& operator=(lock_guard&);
     public:
-        explicit lock_guard(Mutex& m_)
+        explicit lock_guard(mutex_type& m_)
             : m(m_)
         {
             m.lock();
         }
-        lock_guard(Mutex& m_, bool cnd, adopt_lock_t)
+        lock_guard(mutex_type& m_, bool cnd, adopt_lock_t)
             : m(m_)
         {}
         ~lock_guard() {

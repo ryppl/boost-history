@@ -37,17 +37,16 @@
 #include "main.h"
 
 #ifndef BOOST_STM_T_USE_BOOST_MUTEX
-typedef pthread_mutex_t mutex_type;
+typedef boost::stm::exclusive_lock_adapter<pthread_mutex_t> mutex_type;
 #else
-typedef boost::mutex mutex_type;
+typedef boost::stm::exclusive_lock_adapter<boost::mutex> mutex_type;
 #endif
 
+
 static boost::stm::native_trans<int> gInt;
-#ifndef BOOST_STM_T_USE_BOOST_MUTEX
-static pthread_mutex_t lock1 = PTHREAD_MUTEX_INITIALIZER;
-#else
-static boost::mutex lock1;
-#endif
+
+static mutex_type lock1;
+
 ////////////////////////////////////////////////////////////////////////////
 using namespace std; using namespace boost::stm;
 using namespace boost;

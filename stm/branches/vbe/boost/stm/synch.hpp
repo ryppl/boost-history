@@ -21,6 +21,6 @@
 #include <boost/stm/synch/synchronized.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
-#endif // TRANSACTION_H
+#endif // BOOST_STM_SYNCH__HPP
 
 
