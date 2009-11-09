@@ -36,8 +36,6 @@ void example_serialize(std::ostream& os){
     typedef mpl::int_<1> k_1_;
     typedef int d_0_;
     typedef int d_1_;
-    typedef fusion::pair<k_0_,d_0_> p_0_;
-    typedef fusion::pair<k_1_,d_1_> p_1_;
     typedef fusion::map<p_0_,p_1_>  map_;
     typedef boost::archive::text_iarchive           ia_;
     typedef boost::archive::text_oarchive           oa_;
