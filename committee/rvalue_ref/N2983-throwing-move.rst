@@ -5,9 +5,9 @@
 :Author: David Abrahams, Rani Sharoni, Doug Gregor
 :Contact: dave@boostpro.com, rani_sharoni@hotmail.com, doug.gregor@gmail.com
 :organization: `BoostPro Computing`_
-:date: 2009-10-14
+:date: 2009-11-09
 
-:Number: D2983=09-0173
+:Number: N2983=09-0173
 
 .. _`BoostPro Computing`: http://www.boostpro.com
 
