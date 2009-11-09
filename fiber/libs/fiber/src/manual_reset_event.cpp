@@ -56,11 +56,7 @@ manual_reset_event::wait()
 	}
 
 	while ( static_cast< uint32_t >( RESET) == detail::atomic_load( & state_) )
-	{
-		this_fiber::interruption_point();
 		this_fiber::yield();	
-		this_fiber::interruption_point();
-	}
 
 	if ( 1 == detail::atomic_fetch_sub( & waiters_, 1) )
 		enter_mtx_.unlock();
@@ -73,9 +69,7 @@ manual_reset_event::wait( system_time const& abs_time)
 
 	while ( static_cast< uint32_t >( RESET) == detail::atomic_load( & state_) )
 	{
-		this_fiber::interruption_point();
 		this_fiber::yield();	
-		this_fiber::interruption_point();
 	
 		if ( get_system_time() >= abs_time) return false;
 	}

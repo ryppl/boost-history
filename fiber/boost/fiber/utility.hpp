@@ -20,10 +20,6 @@ namespace boost {
 namespace this_fiber {
 
 inline
-void interruption_point()
-{}
-
-inline
 bool runs_as_fiber()
 { return fiber::scheduler::runs_as_fiber(); }
 
@@ -38,14 +34,6 @@ void yield()
 inline
 void cancel()
 { fiber::scheduler::exit(); }
-
-inline
-void sleep( system_time const& abs_time)
-{}
-
-template< typename TimeDuration >
-void sleep( TimeDuration const& rel_time)
-{}
 
 }}
 

@@ -30,11 +30,7 @@ condition::notify_( uint32_t cmd)
 	uint32_t expected = static_cast< uint32_t >( SLEEPING);
 	while ( ! detail::atomic_compare_exchange_strong(
 				& cmd_, & expected, cmd) )
-	{
-		this_fiber::interruption_point();
 		this_fiber::yield();	
-		this_fiber::interruption_point();
-	}
 }
 
 void
@@ -51,11 +47,7 @@ condition::wait_( mutex & mtx)
 	for (;;)
 	{
 		while ( static_cast< uint32_t >( SLEEPING) == detail::atomic_load( & cmd_) )
-		{
-			this_fiber::interruption_point();
 			this_fiber::yield();	
-			this_fiber::interruption_point();
-		}
 
 		mutex::scoped_lock lk( check_mtx_);
 		BOOST_ASSERT( lk);
@@ -109,9 +101,7 @@ condition::wait_( mutex & mtx, system_time const& abs_time)
 	{
 		while ( static_cast< uint32_t >( SLEEPING) == detail::atomic_load( & cmd_) )
 		{
-			this_fiber::interruption_point();
 			this_fiber::yield();	
-			this_fiber::interruption_point();
 
 			if ( get_system_time() >= abs_time)
 			{

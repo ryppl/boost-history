@@ -25,11 +25,7 @@ mutex::lock()
 		if ( detail::atomic_compare_exchange_strong( & state_, & expected, 1) )
 			break;
 		else
-		{
-			this_fiber::interruption_point();
 			this_fiber::yield();	
-			this_fiber::interruption_point();
-		}	
 	}
 }
 
@@ -59,9 +55,7 @@ mutex::timed_lock( system_time const& abs_time)
 		if ( get_system_time() >= abs_time)
 			return false;
 
-		this_fiber::interruption_point();
 		this_fiber::yield();	
-		this_fiber::interruption_point();
 	}
 
 	return true;
