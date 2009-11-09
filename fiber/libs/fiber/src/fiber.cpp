@@ -8,6 +8,7 @@
 
 #include <boost/assert.hpp>
 
+#include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/scheduler.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -43,8 +44,15 @@ void trampoline( fiber * self)
 {
 	BOOST_ASSERT( self);
 	BOOST_ASSERT( self->info_);
-	self->info_->run();
- 	scheduler::exit();
+	try
+	{
+		self->info_->run();
+ 		scheduler::exit();
+	}
+	catch ( fiber_interrupted const&)
+	{ scheduler::failed(); }
+	catch (...)
+	{ scheduler::failed(); }
 }
 
 }}

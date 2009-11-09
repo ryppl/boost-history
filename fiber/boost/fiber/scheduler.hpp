@@ -56,9 +56,13 @@ private:
 
 	static void exit();
 
+	static void failed();
+
 	policy * access_();
 
 public:
+	~scheduler();
+
 	template< typename Fn >
 	void make_fiber( Fn fn)
 	{

@@ -10,6 +10,8 @@
 #include <stdexcept>
 #include <string>
 
+#include <boost/fiber/detail/config.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
@@ -22,6 +24,9 @@ public:
 		std::runtime_error( msg)
 	{}
 };
+
+class fiber_interrupted
+{};
 
 class invalid_stacksize : public std::runtime_error
 {

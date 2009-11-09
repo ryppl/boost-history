@@ -44,6 +44,14 @@ scheduler::exit()
 	impl->exit_active_fiber();
 }
 
+void
+scheduler::failed()
+{
+	policy * impl( impl_.get() );
+	if (  ! impl) throw fiber_error("not a fiber");
+	impl->exit_active_fiber();
+}
+
 policy *
 scheduler::access_()
 {
@@ -54,6 +62,9 @@ scheduler::access_()
 	}
 	return impl_.get();
 }
+
+scheduler::~scheduler()
+{ impl_.reset(); }
 
 bool
 scheduler::run()

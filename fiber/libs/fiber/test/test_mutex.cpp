@@ -17,12 +17,9 @@
 #include <boost/function.hpp>
 #include <boost/ref.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/thread.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber.hpp>
-
-#include <libs/task/test/util.ipp>
 
 template< typename M >
 struct test_lock
@@ -65,11 +62,71 @@ void do_test_mutex()
     test_lock< boost::fiber::mutex >()();
 }
 
-void test_mutex()
+void test_case1()
 {
 	boost::fiber::scheduler sched;
     sched.make_fiber( & do_test_mutex);
 	sched.run();
+}
+
+int value1 = 0;
+int value2 = 0;
+
+void test_fn1( boost::fiber::mutex & mtx)
+{
+	boost::fiber::mutex::scoped_lock lk( mtx);
+	++value1;
+	for ( int i = 0; i < 3; ++i)
+		boost::this_fiber::yield();
+}
+
+void test_fn2( boost::fiber::mutex & mtx)
+{
+	boost::fiber::mutex::scoped_lock lk( mtx);
+	++value2;
+}
+
+void test_case2()
+{
+	boost::fiber::mutex mtx;
+	boost::fiber::scheduler sched;
+    sched.make_fiber( & test_fn1, boost::ref( mtx) );
+    sched.make_fiber( & test_fn2, boost::ref( mtx) );
+
+	BOOST_CHECK_EQUAL( 0, value1);
+	BOOST_CHECK_EQUAL( 0, value2);
+
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value1);
+	BOOST_CHECK_EQUAL( 0, value2);
+
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value1);
+	BOOST_CHECK_EQUAL( 0, value2);
+
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value1);
+	BOOST_CHECK_EQUAL( 0, value2);
+
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value1);
+	BOOST_CHECK_EQUAL( 0, value2);
+
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value1);
+	BOOST_CHECK_EQUAL( 0, value2);
+
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value1);
+	BOOST_CHECK_EQUAL( 1, value2);
 }
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
@@ -77,7 +134,8 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
     boost::unit_test_framework::test_suite * test =
 		BOOST_TEST_SUITE("Boost.Fiber: mutex test suite");
 
-    test->add(BOOST_TEST_CASE(&test_mutex));
+    test->add(BOOST_TEST_CASE(&test_case1));
+    test->add(BOOST_TEST_CASE(&test_case2));
 
 	return test;
 }
