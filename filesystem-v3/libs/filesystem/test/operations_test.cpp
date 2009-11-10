@@ -103,6 +103,9 @@ namespace
     return false;
   }
 
+  boost::system::error_category* poison_category_aux() { return 0; }
+  boost::system::error_category& poison_category()     { return *poison_category_aux(); }
+
   // compile-only two argument "do-the-right-thing" tests
   //   verifies that all overload combinations compile without error
   void do_not_call()
@@ -749,18 +752,82 @@ namespace
   {
     std::cout << "status_of_nonexistent_tests..." << std::endl;
     fs::path p ("nosuch");
+    BOOST_TEST(!fs::exists(p));
     BOOST_TEST(!fs::is_regular_file(p));
     BOOST_TEST(!fs::is_directory(p));
     BOOST_TEST(!fs::is_symlink(p));
     BOOST_TEST(!fs::is_other(p));
 
     fs::file_status s = fs::status(p);
+    BOOST_TEST(!fs::exists(s));
     BOOST_TEST_EQ(s.type(), fs::file_not_found);
     BOOST_TEST(fs::status_known(s));
     BOOST_TEST(!fs::is_regular_file(s));
     BOOST_TEST(!fs::is_directory(s));
     BOOST_TEST(!fs::is_symlink(s));
     BOOST_TEST(!fs::is_other(s));
+  }
+
+  //  status_error_reporting_tests  ----------------------------------------------------//
+
+  void status_error_reporting_tests()
+  {
+    std::cout << "status_error_reporting_tests..." << std::endl;
+
+    error_code ec;
+
+    // test status, ec, for existing file
+    ec.assign(-1,poison_category());
+    BOOST_TEST(ec.value() == -1);
+    BOOST_TEST(&ec.category() == &poison_category()); 
+    fs::file_status s = fs::status(".",ec);
+    BOOST_TEST(ec.value() == 0);
+    BOOST_TEST(ec.category() == system_category); 
+    BOOST_TEST(fs::exists(s));
+    BOOST_TEST(fs::is_directory(s));
+
+    // test status, ec, for non-existing file
+    fs::path p ("nosuch");
+    ec.assign(-1,poison_category());
+    s = fs::status(p,ec);
+    BOOST_TEST(ec.value() != 0);
+    BOOST_TEST(ec.category() == system_category); 
+
+    BOOST_TEST(!fs::exists(s));
+    BOOST_TEST_EQ(s.type(), fs::file_not_found);
+    BOOST_TEST(fs::status_known(s));
+    BOOST_TEST(!fs::is_regular_file(s));
+    BOOST_TEST(!fs::is_directory(s));
+    BOOST_TEST(!fs::is_symlink(s));
+    BOOST_TEST(!fs::is_other(s));
+
+    // test queries, ec, for existing file
+    ec.assign(-1,poison_category());
+    BOOST_TEST(fs::exists(".", ec));
+    BOOST_TEST(ec.value() == 0);
+    BOOST_TEST(ec.category() == system_category); 
+    ec.assign(-1,poison_category());
+    BOOST_TEST(!fs::is_regular_file(".", ec));
+    BOOST_TEST(ec.value() == 0);
+    BOOST_TEST(ec.category() == system_category); 
+    ec.assign(-1,poison_category());
+    BOOST_TEST(fs::is_directory(".", ec));
+    BOOST_TEST(ec.value() == 0);
+    BOOST_TEST(ec.category() == system_category); 
+
+    // test queries, ec, for non-existing file
+    ec.assign(-1,poison_category());
+    BOOST_TEST(!fs::exists(p, ec));
+    BOOST_TEST(ec.value() != 0);
+    BOOST_TEST(ec.category() == system_category); 
+    ec.assign(-1,poison_category());
+    BOOST_TEST(!fs::is_regular_file(p, ec));
+    BOOST_TEST(ec.value() != 0);
+    BOOST_TEST(ec.category() == system_category); 
+    ec.assign(-1,poison_category());
+    BOOST_TEST(!fs::is_directory(p, ec));
+    BOOST_TEST(ec.value() != 0);
+    BOOST_TEST(ec.category() == system_category); 
   }
 
   //  _tests  --------------------------------------------------------------------------//
@@ -935,6 +1002,7 @@ int main(int argc, char* argv[])
   BOOST_TEST(fs::is_empty(d1));
 
   status_of_nonexistent_tests();
+  status_error_reporting_tests();
   directory_iterator_tests();
   create_directories_tests();  // must run AFTER directory_iterator_tests
 
