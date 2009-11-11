@@ -64,7 +64,8 @@ static int iterations = 0;
 
 static void inc2()
 {
-   stm::lock_guard<mutex_type> lk(L2);
+   BOOST_STM_SYNCHRONIZE(L2)
+   //stm::lock_guard<mutex_type> lk(L2);
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr2[i].value();
@@ -73,7 +74,8 @@ static void inc2()
 
 static void inc3()
 {
-   stm::lock_guard<mutex_type> lk(L3);
+   BOOST_STM_SYNCHRONIZE(L3)
+   //stm::lock_guard<mutex_type> lk(L3);
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr3[i].value();
@@ -82,7 +84,8 @@ static void inc3()
 
 static void inc4()
 {
-   stm::lock_guard<mutex_type> lk(L4);
+   BOOST_STM_SYNCHRONIZE(L4)
+   //stm::lock_guard<mutex_type> lk(L4);
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr4[i].value();
@@ -138,7 +141,8 @@ static void do_work3()
    if (work3) return;
    work3 = true;
 
-   stm::lock_guard<mutex_type> lk(L8);
+   //stm::lock_guard<mutex_type> lk(L8);
+   BOOST_STM_SYNCHRONIZE(L8)
    for (int i = 0; i < kMaxArrSize; ++i)
    {
       ++arr8[i].value();

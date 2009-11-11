@@ -18,19 +18,19 @@
     for (VAR_DECL;!__stop; __stop= true)
 
 #define BOOST_STM_SYNCHRONIZE_TYPE(TYPE, VAR, LOCKABLE) \
-    BOOST_STM_SYNCHRONIZE_EXT(boost::stm::unique_lock<TYPE> VAR(LOCKABLE))
-
+    BOOST_STM_SYNCHRONIZE_EXT(boost::stm::unique_lock<boost::stm::exclusive_lock_adapter<TYPE> > VAR(LOCKABLE))
 #define BOOST_STM_ADOPT_SYNCHRONIZE_TYPE(TYPE, VAR, LOCKABLE) \
-    BOOST_STM_SYNCHRONIZE_EXT(boost::stm:unique_lock<TYPE> VAR(LOCKABLE, boost::synchro::adopt_lock))
+    BOOST_STM_SYNCHRONIZE_EXT(boost::stm:unique_lock<boost::stm::exclusive_lock_adapter<TYPE> > VAR(LOCKABLE, boost::synchro::adopt_lock))
 #define BOOST_STM_DEFER_SYNCHRONIZE_TYPE(TYPE, VAR, LOCKABLE) \
-    BOOST_STM_SYNCHRONIZE_EXT(boost::stm:unique_lock<TYPE> VAR(LOCKABLE, boost::synchro::defer_lock))
+    BOOST_STM_SYNCHRONIZE_EXT(boost::stm:unique_lock<boost::stm::exclusive_lock_adapter<TYPE> > VAR(LOCKABLE, boost::synchro::defer_lock))
 #define BOOST_STM_TRY_TO_SYNCHRONIZE_TYPE(TYPE, VAR, LOCKABLE) \
-    BOOST_STM_SYNCHRONIZE_EXT(boost::stm:unique_lock<TYPE> VAR(LOCKABLE, boost::synchro::try_to_lock))
+    BOOST_STM_SYNCHRONIZE_EXT(boost::stm:unique_lock<boost::stm::exclusive_lock_adapter<TYPE> > VAR(LOCKABLE, boost::synchro::try_to_lock))
 #define BOOST_STM_TRY_TO_SYNCHRONIZE_TYPE_UNTIL(TYPE, VAR, LOCKABLE, ABS_TIME) \
-    BOOST_STM_SYNCHRONIZE_EXT(boost::stm:unique_lock<TYPE> VAR(LOCKABLE, ABS_TIME))
+    BOOST_STM_SYNCHRONIZE_EXT(boost::stm:unique_lock<boost::stm::exclusive_lock_adapter<TYPE> > VAR(LOCKABLE, ABS_TIME))
 #define BOOST_STM_SYNCHRONIZE_TYPE_UNTIL(TYPE, VAR, LOCKABLE, ABS_TIME) \
-    BOOST_STM_SYNCHRONIZE_EXT(boost::stm:unique_lock<TYPE> VAR(ABS_TIME, LOCKABLE))
+    BOOST_STM_SYNCHRONIZE_EXT(boost::stm:unique_lock<boost::stm::exclusive_lock_adapter<TYPE> > VAR(ABS_TIME, LOCKABLE))
 
+#if defined(BOOST_STM_T_USE_BOOST_MUTEX) 
 #define BOOST_STM_SYNCHRONIZE_VAR(VAR, LOCKABLE) \
     BOOST_STM_SYNCHRONIZE_TYPE(boost::mutex, VAR, LOCKABLE)
 #define BOOST_STM_ADOPT_SYNCHRONIZE_VAR(VAR, LOCKABLE) \
@@ -43,7 +43,20 @@
     BOOST_STM_SYNCHRONIZE_TYPE_UNTIL(boost::mutex, VAR, LOCKABLE, ABS_TIME)
 #define BOOST_STM_TRY_TO_SYNCHRONIZE_VAR_UNTIL(VAR, LOCKABLE, ABS_TIME) \
     BOOST_STM_TRY_TO_SYNCHRONIZE_TYPE_UNTIL(boost::mutex, VAR, LOCKABLE, ABS_TIME)
-
+#else
+#define BOOST_STM_SYNCHRONIZE_VAR(VAR, LOCKABLE) \
+    BOOST_STM_SYNCHRONIZE_TYPE(pthread_mutex_t, VAR, LOCKABLE)
+#define BOOST_STM_ADOPT_SYNCHRONIZE_VAR(VAR, LOCKABLE) \
+    BOOST_STM_ADOPT_SYNCHRONIZE_TYPE(pthread_mutex_t, VAR, LOCKABLE)
+#define BOOST_STM_DEFER_SYNCHRONIZE_VAR(VAR, LOCKABLE) \
+    BOOST_STM_DEFER_SYNCHRONIZE_TYPE(pthread_mutex_t, VAR, LOCKABLE)
+#define BOOST_STM_TRY_TO_SYNCHRONIZE_VAR(VAR, LOCKABLE) \
+    BOOST_STM_TRY_TO_SYNCHRONIZE_TYPE(pthread_mutex_t, VAR, LOCKABLE)
+#define BOOST_STM_SYNCHRONIZE_VAR_UNTIL(VAR, LOCKABLE, ABS_TIME) \
+    BOOST_STM_SYNCHRONIZE_TYPE_UNTIL(pthread_mutex_t, VAR, LOCKABLE, ABS_TIME)
+#define BOOST_STM_TRY_TO_SYNCHRONIZE_VAR_UNTIL(VAR, LOCKABLE, ABS_TIME) \
+    BOOST_STM_TRY_TO_SYNCHRONIZE_TYPE_UNTIL(pthread_mutex_t, VAR, LOCKABLE, ABS_TIME)
+#endif
 #define BOOST_STM_SYNCHRONIZE(LOCKABLE) \
     BOOST_STM_SYNCHRONIZE_VAR(_, LOCKABLE)
 #define BOOST_STM_ADOPT_SYNCHRONIZE(LOCKABLE) \

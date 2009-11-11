@@ -68,20 +68,20 @@ static void* TestIsolatedComposedLockInTxCount(void *threadId)
       {
          try
          {
-            {
-            stm::lock_guard<mutex_type> lk(lock1);
-            ++gInt.value();
-            cout << "\t" << gInt.value() << endl;
+            BOOST_STM_SYNCHRONIZE(lock1) {
+            //stm::lock_guard<mutex_type> lk(lock1);
+                ++gInt.value();
+                cout << "\t" << gInt.value() << endl;
             }
 
             SLEEP(1000);
             // do nothing on purpose, allowing other threads time to see
             // intermediate state IF they can get lock1 (they shouldn't)
 
-            {
-            stm::lock_guard<mutex_type> lk(lock1);
-            --gInt.value();
-            cout << "\t" << gInt.value() << endl;
+            BOOST_STM_SYNCHRONIZE(lock1) {
+            //stm::lock_guard<mutex_type> lk(lock1);
+                --gInt.value();
+                cout << "\t" << gInt.value() << endl;
             }
 
             t.end();
@@ -119,10 +119,9 @@ static void* TestComposedCount(void *threadId)
 
    for (int i = startingValue; i < 100*endingValue; ++i)
    {
-      {
-      stm::lock_guard<mutex_type> lk(lock1);
-      cout << gInt.value() << endl;
-      }
+      BOOST_STM_SYNCHRONIZE(lock1)
+      //stm::lock_guard<mutex_type> lk(lock1);
+        cout << gInt.value() << endl;
       SLEEP(10); // do nothing on purpose
    }
 

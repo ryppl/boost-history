@@ -70,8 +70,8 @@ static void* Test1(void *threadId)
          t.lock_conflict(&lock1);
          try
          {
-            {
-            stm::lock_guard<mutex_type> lk(lock1);
+            BOOST_STM_SYNCHRONIZE(lock1) {
+            //stm::lock_guard<mutex_type> lk(lock1);
             ++gInt.value();
             cout << "\t" << gInt.value() << endl;
             }
@@ -80,8 +80,8 @@ static void* Test1(void *threadId)
             // do nothing on purpose, allowing other threads time to see
             // intermediate state IF they can get lock1 (they shouldn't)
 
-            {
-            stm::lock_guard<mutex_type> lk(lock1);
+            BOOST_STM_SYNCHRONIZE(lock1) {
+            //stm::lock_guard<mutex_type> lk(lock1);
             --gInt.value();
             cout << "\t" << gInt.value() << endl;
             }

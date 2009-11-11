@@ -287,8 +287,8 @@ static void* stall(void *)
 {
    transaction::initialize_thread();
 
-   stm::lock_guard<mutex_type> lk(L2);
-
+  BOOST_STM_SYNCHRONIZE(L2) 
+   //stm::lock_guard<mutex_type> lk(L2);
    SLEEP(10000);
 
 

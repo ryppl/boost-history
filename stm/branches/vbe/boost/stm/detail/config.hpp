@@ -155,6 +155,7 @@
 //#define BOOST_STM_USE_BOOST_SLEEP 1
 //#define BOOST_STM_USE_BOOST_THREAD_ID 1
 //#define BOOST_STM_USE_BOOST_MUTEX 1
+//#define BOOST_STM_T_USE_BOOST_MUTEX 1
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////

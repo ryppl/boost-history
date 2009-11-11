@@ -81,14 +81,13 @@ static void* TestIsolatedLockInTxCount(void *threadId)
             // global memory (gInt), its state must be updated to
             // reflect all changes made previously inside the tx
             //-------------------------------------------------------
-            {
-            stm::lock_guard<mutex_type> lk(lock1);
-            cout << gInt.value() << endl;
+            BOOST_STM_SYNCHRONIZE(lock1) {
+            //stm::lock_guard<mutex_type> lk(lock1);
+                cout << gInt.value() << endl;
 
-            ++gInt.value();
+                ++gInt.value();
 
-            if (oldVal + 2 != gInt.value()) cout << "invariant violated" << endl;
-
+                if (oldVal + 2 != gInt.value()) cout << "invariant violated" << endl;
             }
 
             //-------------------------------------------------------

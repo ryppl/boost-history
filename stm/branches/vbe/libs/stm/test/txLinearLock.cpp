@@ -51,16 +51,16 @@ static void* Test1(void *threadId)
 
          try
          {
-            {
-            stm::lock_guard<mutex_type> lk(lock2);
-            --gInt2.value();
-            cout << "\tgInt2: " << gInt2.value() << endl;
+            BOOST_STM_SYNCHRONIZE(lock2) {
+            //stm::lock_guard<mutex_type> lk(lock2);
+                --gInt2.value();
+                cout << "\tgInt2: " << gInt2.value() << endl;
             }
 
             SLEEP(1000);
 
-            {
-            stm::lock_guard<mutex_type> lk(lock2);
+            BOOST_STM_SYNCHRONIZE(lock2) {
+            //stm::lock_guard<mutex_type> lk(lock2);
             ++gInt1.value();
             cout << "\tgInt1: " << gInt1.value() << endl;
             }
@@ -102,13 +102,15 @@ static void* Test3(void *threadId)
    {
       SLEEP(1000);
 
-      stm::lock_guard<mutex_type> lk(lock1);
-      stm::lock_guard<mutex_type> lk2(lock2);
+      BOOST_STM_SYNCHRONIZE(lock1) BOOST_STM_SYNCHRONIZE(lock2) {
+      //stm::lock_guard<mutex_type> lk(lock1);
+      //stm::lock_guard<mutex_type> lk2(lock2);
 
-      --gInt1.value();
-      ++gInt2.value();
-      cout << "\t\tgInt1: " << gInt1.value() << endl;
-      cout << "\t\tgInt2: " << gInt2.value() << endl;
+        --gInt1.value();
+        ++gInt2.value();
+        cout << "\t\tgInt1: " << gInt1.value() << endl;
+        cout << "\t\tgInt2: " << gInt2.value() << endl;
+      }
 
    }
 
