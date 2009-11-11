@@ -1,0 +1,512 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Mixins</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="core.html" title="Core">
+<link rel="next" href="warppers.html" title="Warppers">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="core.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="warppers.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.reference.mixins"></a><a href="mixins.html" title="Mixins">Mixins</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects">Deep
+        Transactional objects</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_ptr_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction_object_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_numeric_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">tx</span><span class="special">/</span><span class="identifier">numeric</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_pointer_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">tx</span><span class="special">/</span><span class="identifier">pointer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects">Shallow
+        Transactional Objects</a></span></dt>
+<dd><dl><dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">shallow_transaction_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.smart_pointers">Smart
+        pointers</a></span></dt>
+<dd><dl><dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.smart_pointers.txs_ptr_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">tx_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt></dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects" title="Deep
+        Transactional objects">Deep
+        Transactional objects</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_ptr_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction_object_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_numeric_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">tx</span><span class="special">/</span><span class="identifier">numeric</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_pointer_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">tx</span><span class="special">/</span><span class="identifier">pointer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp" title="
+          Header &lt;boost/stm/transaction_object.hpp&gt;">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___">Template
+            Class <code class="computeroutput"><span class="identifier">transaction_object</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__native_trans___">Template
+            Class <code class="computeroutput"><span class="identifier">native_trans</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Derived</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">transaction_object</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">native_trans</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___" title="Template
+            Class transaction_object&lt;&gt;">Template
+            Class <code class="computeroutput"><span class="identifier">transaction_object</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__clone___">Virtual
+              function <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__copy_state___">Virtual
+              function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__move_state___">Virtual
+              function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__cache_deallocate___">Virtual
+              function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<p>
+              To further simplify the usage of TBoost.STM, an intermediate template
+              class was built which is meant to sit between the base_transaction_object
+              and the user-defined transaction objects. The purpose of this intermediate
+              class is to reduce the code overhead needed for user-defined transaction
+              objects. To do this, the curiously recurring template pattern developed
+              by James Coplien was used.
+            </p>
+<p>
+              With the templatized transaction_object, client-side transaction objects
+              need only to derive from it and pass their class type as its template
+              parameter. At compile-time the transaction_object generates the necessary
+              code to override copy_state() and implement operator new and operator
+              delete using TBoost.STM's memory manager for all user-defined types
+              derived from it.
+            </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Derived</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">transaction_object</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">base_transaction_object</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="keyword">virtual</span> <span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">clone</span><span class="special">(</span><span class="identifier">transaction</span><span class="special">*</span> <span class="identifier">t</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__clone___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__clone___" title="Virtual
+              function clone()">Virtual
+              function <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">clone</span><span class="special">(</span><span class="identifier">transaction</span><span class="special">*</span> <span class="identifier">t</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+                The clone() creates a new Derived instace using the copy constructor.
+              </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__copy_state___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__copy_state___" title="Virtual
+              function copy_state()">Virtual
+              function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+<p>
+                The copy_state() assigns the rhs to this instace using the copy-assignement
+                operator.
+              </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__move_state___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__move_state___" title="Virtual
+              function move_state()">Virtual
+              function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__cache_deallocate___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__transaction_object___.virtual_function__cache_deallocate___" title="Virtual
+              function cache_deallocate()">Virtual
+              function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">();</span>
+</pre>
+<p>
+                The cache_deallocate() delete this instace using the delete operator.
+              </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__native_trans___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_hpp.template_class__native_trans___" title="Template
+            Class native_trans&lt;&gt;">Template
+            Class <code class="computeroutput"><span class="identifier">native_trans</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">native_trans</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span> <span class="identifier">native_trans</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+   <span class="identifier">native_trans</span><span class="special">(){}</span>
+   <span class="identifier">native_trans</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="identifier">native_trans</span><span class="special">(</span><span class="identifier">native_trans</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="identifier">native_trans</span><span class="special">(</span><span class="identifier">native_trans</span> <span class="special">&amp;&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="identifier">native_trans</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">native_trans</span> <span class="special">&amp;&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+
+   <span class="identifier">native_trans</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+
+   <span class="identifier">native_trans</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">--();</span>
+   <span class="identifier">native_trans</span> <span class="keyword">operator</span><span class="special">--(</span><span class="keyword">int</span><span class="special">);</span>
+   <span class="identifier">native_trans</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">++();</span>
+   <span class="identifier">native_trans</span> <span class="keyword">operator</span><span class="special">++(</span><span class="keyword">int</span><span class="special">);</span>
+   <span class="identifier">native_trans</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="identifier">native_trans</span> <span class="keyword">operator</span><span class="special">+(</span><span class="identifier">native_trans</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+
+   <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">value</span><span class="special">();</span>
+   <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_ptr_hpp"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.transaction_object_ptr_hpp" title="
+          Header &lt;boost/stm/transaction_object_ptr.hpp&gt;">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction_object_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h5></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.tx_numeric_hpp"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_numeric_hpp" title="
+          Header &lt;boost/stm/tx/numeric.hpp&gt;">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">tx</span><span class="special">/</span><span class="identifier">numeric</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h5></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_numeric_hpp.template_class__tx__numeric___">Template
+            Class <code class="computeroutput"><span class="identifier">tx</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">tx</span> <span class="special">{</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">numeric</span><span class="special">;</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;</span> <span class="identifier">boolean</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="identifier">char_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">&gt;</span> <span class="identifier">uchar_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="keyword">short</span><span class="special">&gt;</span> <span class="identifier">short_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">short</span><span class="special">&gt;</span> <span class="identifier">ushort_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">int_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">uint_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;</span> <span class="identifier">long_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">long</span><span class="special">&gt;</span> <span class="identifier">ulong_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="keyword">float</span><span class="special">&gt;</span> <span class="identifier">float_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">double_t</span><span class="special">;</span>
+
+<span class="special">}}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.tx_numeric_hpp.template_class__tx__numeric___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_numeric_hpp.template_class__tx__numeric___" title="Template
+            Class tx::numeric&lt;&gt;">Template
+            Class <code class="computeroutput"><span class="identifier">tx</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">numeric</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span> <span class="identifier">numeric</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+<span class="keyword">protected</span><span class="special">:</span>
+    <span class="identifier">T</span> <span class="identifier">val_</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">numeric</span><span class="special">();</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">numeric</span><span class="special">(</span><span class="identifier">numeric</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">u</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">numeric</span><span class="special">(</span><span class="identifier">U</span> <span class="identifier">v</span><span class="special">);</span>
+    
+    <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">&amp;();</span>
+
+    <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">ref</span><span class="special">();</span>
+    <span class="identifier">T</span> <span class="identifier">value</span><span class="special">();</span>
+
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.tx_pointer_hpp"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_pointer_hpp" title="
+          Header &lt;boost/stm/tx/pointer.hpp&gt;">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">tx</span><span class="special">/</span><span class="identifier">pointer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_pointer_hpp.template_class__tx__pointer___">Template
+            Class <code class="computeroutput"><span class="identifier">tx</span><span class="special">::</span><span class="identifier">pointer</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_pointer_hpp.template_class__tx__pointer_to_member___">Template
+            Class <code class="computeroutput"><span class="identifier">tx</span><span class="special">::</span><span class="identifier">pointer_to_member</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">tx</span> <span class="special">{</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">pointer</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">R</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">pointer_to_member</span><span class="special">;</span>
+
+<span class="special">}}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.tx_pointer_hpp.template_class__tx__pointer___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_pointer_hpp.template_class__tx__pointer___" title="Template
+            Class tx::pointer&lt;&gt;">Template
+            Class <code class="computeroutput"><span class="identifier">tx</span><span class="special">::</span><span class="identifier">pointer</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">pointer</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span> <span class="identifier">pointer</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+<span class="keyword">protected</span><span class="special">:</span>
+    <span class="identifier">T</span><span class="special">*</span> <span class="identifier">val_</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">pointer</span><span class="special">();</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">pointer</span><span class="special">(</span><span class="identifier">pointer</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">pointer</span><span class="special">(</span><span class="identifier">U</span><span class="special">*</span> <span class="identifier">v</span><span class="special">);</span>
+    <span class="identifier">pointer</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">v</span><span class="special">);</span>
+    <span class="special">~</span><span class="identifier">pointer</span><span class="special">()</span> <span class="special">{}</span>
+
+    <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">*&amp;();</span>
+
+    <span class="identifier">T</span><span class="special">*&amp;</span> <span class="identifier">get</span><span class="special">();</span>
+    <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="identifier">T</span> <span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;();</span>
+    <span class="identifier">T</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*();</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.deep_transactional_objects.tx_pointer_hpp.template_class__tx__pointer_to_member___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.deep_transactional_objects.tx_pointer_hpp.template_class__tx__pointer_to_member___" title="Template
+            Class tx::pointer_to_member&lt;&gt;">Template
+            Class <code class="computeroutput"><span class="identifier">tx</span><span class="special">::</span><span class="identifier">pointer_to_member</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.mixins.shallow_transactional_objects"></a><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects" title="Shallow
+        Transactional Objects">Shallow
+        Transactional Objects</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">shallow_transaction_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp"></a><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp" title="
+          Header &lt;boost/stm/shallow_transaction_object.hpp&gt;">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">shallow_transaction_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h5></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___">Template
+            Class <code class="computeroutput"><span class="identifier">shallow_transaction_object</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Derived</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Base</span><span class="special">=</span><span class="identifier">base_transaction_object</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">shallow_transaction_object</span><span class="special">;</span> 
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___" title="Template
+            Class shallow_transaction_object&lt;&gt;">Template
+            Class <code class="computeroutput"><span class="identifier">shallow_transaction_object</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__clone___">Virtual
+              function <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__copy_state___">Virtual
+              function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__move_state___">Virtual
+              function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__cache_deallocate___">Virtual
+              function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<p>
+              To further simplify the usage of TBoost.STM, an intermediate template
+              class was built which is meant to sit between the base_transaction_object
+              and the user-defined transaction objects. The purpose of this intermediate
+              class is to reduce the code overhead needed for user-defined transaction
+              objects. To do this, the curiously recurring template pattern developed
+              by James Coplien was used.
+            </p>
+<p>
+              With the templatized <code class="computeroutput"><span class="identifier">shallow_transaction_object</span></code>,
+              client-side transaction objects need only to derive from it and pass
+              their class type as its template parameter. At compile-time the transaction_object
+              generates the necessary code to override copy_state() and implement
+              operator new and operator delete using TBoost.STM's memory manager
+              for all user-defined types derived from it.
+            </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Derived</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Base</span><span class="special">=</span><span class="identifier">base_transaction_object</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">shallow_transaction_object</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">base_transaction_object</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="keyword">virtual</span> <span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">clone</span><span class="special">(</span><span class="identifier">transaction</span><span class="special">*</span> <span class="identifier">t</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">();</span>
+
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__clone___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__clone___" title="Virtual
+              function clone()">Virtual
+              function <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">clone</span><span class="special">(</span><span class="identifier">transaction</span><span class="special">*</span> <span class="identifier">t</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+                The clone() method calls to the free function cache_new_copy which
+                allocates enough memory for the new object and then do a memcpy by
+                default.
+              </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__copy_state___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__copy_state___" title="Virtual
+              function copy_state()">Virtual
+              function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+<p>
+                The copy_state() method call to the free function cache_copy which
+                do a memcpy by default.
+              </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__move_state___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__move_state___" title="Virtual
+              function move_state()">Virtual
+              function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+<p>
+                The move_state() method call to the free function cache_copy which
+                do a memcpy by default.
+              </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__cache_deallocate___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.shallow_transactional_objects.shallow_transaction_object_hpp.template_class__shallow_transaction_object___.virtual_function__cache_deallocate___" title="Virtual
+              function cache_deallocate()">Virtual
+              function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">();</span>
+</pre>
+<p>
+                The cache_deallocate() method call to the free function cache_deallocate
+                which do a memcpy by default.
+              </p>
+</div>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.mixins.smart_pointers"></a><a href="mixins.html#toward_boost_stm.reference.mixins.smart_pointers" title="Smart
+        pointers">Smart
+        pointers</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.smart_pointers.txs_ptr_hpp">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">tx_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.mixins.smart_pointers.txs_ptr_hpp"></a><a href="mixins.html#toward_boost_stm.reference.mixins.smart_pointers.txs_ptr_hpp" title="
+          Header &lt;boost/stm/tx_ptr.hpp&gt;">
+          Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">tx_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.smart_pointers.txs_ptr_hpp.template_class__read_ptr___">Template
+            Class <code class="computeroutput"><span class="identifier">read_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="mixins.html#toward_boost_stm.reference.mixins.smart_pointers.txs_ptr_hpp.template_class__write_ptr___">Template
+            Class <code class="computeroutput"><span class="identifier">write_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">read_ptr</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">write_ptr</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.smart_pointers.txs_ptr_hpp.template_class__read_ptr___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.smart_pointers.txs_ptr_hpp.template_class__read_ptr___" title="Template
+            Class read_ptr&lt;&gt;">Template
+            Class <code class="computeroutput"><span class="identifier">read_ptr</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">read_ptr</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+   <span class="keyword">inline</span> <span class="identifier">read_ptr</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">tx_obj</span><span class="special">);</span>
+   <span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="keyword">inline</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="keyword">inline</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+
+   <span class="keyword">inline</span> <span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">trans</span><span class="special">();</span>
+   <span class="identifier">T</span><span class="special">*</span> <span class="identifier">write_ptr</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.mixins.smart_pointers.txs_ptr_hpp.template_class__write_ptr___"></a><a href="mixins.html#toward_boost_stm.reference.mixins.smart_pointers.txs_ptr_hpp.template_class__write_ptr___" title="Template
+            Class write_ptr&lt;&gt;">Template
+            Class <code class="computeroutput"><span class="identifier">write_ptr</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">write_ptr</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+   <span class="keyword">inline</span> <span class="identifier">write_ptr</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">T</span> <span class="special">&amp;</span> <span class="identifier">tx_obj</span><span class="special">);</span>
+
+   <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="keyword">inline</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*();</span>
+   <span class="keyword">inline</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;();</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="core.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="warppers.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

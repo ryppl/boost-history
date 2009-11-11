@@ -1,0 +1,1967 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Core</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="stm_hpp.html" title=" Header &lt;boost/stm.hpp&gt;">
+<link rel="next" href="mixins_transactional_objects.html" title="Mixins
+      Transactional Objects">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="stm_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="mixins_transactional_objects.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.reference.core"></a><a href="core.html" title="Core">Core</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">base_transaction_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_">Abstract
+          Class <code class="computeroutput"><span class="identifier">base_transaction_object</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">cache_fct</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_clone_____">Template
+          Function <code class="computeroutput"><span class="identifier">cache_clone</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_copy_____">Template
+          Function <code class="computeroutput"><span class="identifier">cache_copy</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.function__cache_release_____">Function
+          <code class="computeroutput"><span class="identifier">cache_release</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_allocate_____">Template
+          Function <code class="computeroutput"><span class="identifier">cache_allocate</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_deallocate_____">Template
+          Function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">datatypes</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.enum__transaction_type_">Enum
+          <code class="computeroutput"><span class="identifier">transaction_type</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.enum__latm_type_">Enum
+          <code class="computeroutput"><span class="identifier">latm_type</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.enum__transaction_state_">Enum
+          <code class="computeroutput"><span class="identifier">transaction_state</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__new_memory_t_">Typedef
+          <code class="computeroutput"><span class="identifier">new_memory_t</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__priority_t_">Typedef
+          <code class="computeroutput"><span class="identifier">priority_t</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__clock_t_">Typedef
+          <code class="computeroutput"><span class="identifier">clock_t</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__version_t_">Typedef
+          <code class="computeroutput"><span class="identifier">version_t</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__thread_id_t_">Typedef
+          <code class="computeroutput"><span class="identifier">thread_id_t</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.function__invalid_thread_id___">Function
+          <code class="computeroutput"><span class="identifier">invalid_thread_id</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.function__this_thread__get_id___">Function
+          <code class="computeroutput"><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">get_id</span><span class="special">()</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.exceptions_hpp"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">exceptions</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.exceptions_hpp.class__aborted_transaction_exception_">Class
+          <code class="computeroutput"><span class="identifier">aborted_transaction_exception</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">language_like</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__atomic_">Macro
+          <code class="computeroutput"><span class="identifier">atomic</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__try_atomic_">Macro
+          <code class="computeroutput"><span class="identifier">try_atomic</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__use_atomic_">Macro
+          <code class="computeroutput"><span class="identifier">use_atomic</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__catch_before_retry_">Macro
+          <code class="computeroutput"><span class="identifier">catch_before_retry</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__before_retry_">Macro
+          <code class="computeroutput"><span class="identifier">before_retry</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__end_atom_">Macro
+          <code class="computeroutput"><span class="identifier">end_atom</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_">Class
+          <code class="computeroutput"><span class="identifier">transaction</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.struct__thread_initializer_">Struct
+          <code class="computeroutput"><span class="identifier">thread_initializer</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_bookkeeping_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction_bookkeeping</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_bookkeeping_hpp.class__transaction_bookkeeping_">Class
+          <code class="computeroutput"><span class="identifier">transaction_bookkeeping</span></code></a></span></dt></dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.core.base_transaction_object_hpp"></a><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp" title="
+        Header &lt;boost/stm/base_transaction_object.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">base_transaction_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_">Abstract
+          Class <code class="computeroutput"><span class="identifier">base_transaction_object</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">base_transaction_object</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_"></a><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_" title="Abstract
+          Class base_transaction_object">Abstract
+          Class <code class="computeroutput"><span class="identifier">base_transaction_object</span></code></a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.constructor__base_transaction_object___">Constructor
+            <code class="computeroutput"><span class="identifier">base_transaction_object</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_destructor___base_transaction_object___">Virtual
+            Destructor <code class="computeroutput"><span class="special">~</span><span class="identifier">base_transaction_object</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_function__copy_state___">Virtual
+            function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_function__move_state___">Virtual
+            function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.static_function__retrieve_mem___">Static
+            function <code class="computeroutput"><span class="identifier">retrieve_mem</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.static_function__return_mem___">Static
+            function <code class="computeroutput"><span class="identifier">return_mem</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.static_function__alloc_size___">Static
+            function <code class="computeroutput"><span class="identifier">alloc_size</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_function__cache_deallocate___">Virtual
+            function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<p>
+            This is the base class of all the transactional objects. It tracks:
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">transactionThread_</span></code>:
+              the thread identifier holding the write acces to this transactional
+              object
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">transaction_</span></code>: the pointer
+              to the transaction
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">version_</span></code>: the version
+              when performing validation
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">newMemory_</span></code>: states
+              whether this object is a new object
+            </li>
+</ul></div>
+<p>
+            Transactional objets must specialize the pure virtual functions
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span>
+              <span class="special">*</span> <span class="keyword">const</span>
+              <span class="identifier">rhs</span><span class="special">)</span></code></li>
+<li>
+<code class="computeroutput"><span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span>
+              <span class="identifier">rhs</span><span class="special">)</span></code>
+              if <code class="computeroutput"><span class="identifier">BUILD_MOVE_SEMANTICS</span></code>
+</li>
+<li>
+<code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code>
+              if <code class="computeroutput"><span class="identifier">BOOST_STM_USE_UNASIGNED_COPY</span></code>
+</li>
+</ul></div>
+<p>
+            <code class="computeroutput"><span class="identifier">copy_state</span></code> is used to
+            copy the backup/working copy to the shared transactional object when
+            the roolback/commit is done direct/defered policy is used.
+          </p>
+<p>
+            <code class="computeroutput"><span class="identifier">move_state</span></code> is used to
+            move the backup/working copy to the shared transactional object when
+            the roolback/commit is done direct/defered policy is used.
+          </p>
+<p>
+            <code class="computeroutput"><span class="identifier">cache_deallocate</span></code> is used
+            to release the backup/working copy when the transaction ends if direct/defered
+            policy is used.
+          </p>
+<p>
+            When USE_STM_MEMORY_MANAGER is defined this class provides two functions
+            (<code class="computeroutput"><span class="identifier">retrieve_mem</span></code> and <code class="computeroutput"><span class="identifier">return_mem</span></code>) and to manage a pool of
+            memory.
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">base_transaction_object</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="identifier">base_transaction_object</span><span class="special">();</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">base_transaction_object</span><span class="special">()</span> <span class="special">{};</span>
+
+    <span class="keyword">virtual</span> <span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">clone</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+
+    <span class="keyword">void</span> <span class="identifier">transaction_thread</span><span class="special">(</span><span class="identifier">thread_id</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">thread_id</span> <span class="identifier">transaction_thread</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">void</span> <span class="identifier">new_memory</span><span class="special">(</span><span class="keyword">bool</span> <span class="identifier">rhs</span><span class="special">)</span>
+    <span class="keyword">bool</span> <span class="identifier">new_memory</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+<span class="preprocessor">#if</span> <span class="identifier">BOOST_STM_PERFORMING_VALIDATION</span>
+    <span class="keyword">void</span> <span class="identifier">version</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">version</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+
+<span class="preprocessor">#if</span> <span class="identifier">BOOST_STM_USE_MEMORY_MANAGER</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">return_mem</span><span class="special">(</span><span class="keyword">void</span> <span class="special">*</span><span class="identifier">mem</span><span class="special">,</span> <span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+    <span class="keyword">static</span> <span class="keyword">void</span><span class="special">*</span> <span class="identifier">retrieve_mem</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">alloc_size</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+<span class="preprocessor">#endif</span>
+
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_STM_USE_UNASIGNED_COPY</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.constructor__base_transaction_object___"></a><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.constructor__base_transaction_object___" title="Constructor
+            base_transaction_object()">Constructor
+            <code class="computeroutput"><span class="identifier">base_transaction_object</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="identifier">base_transaction_object</span><span class="special">();</span>
+</pre>
+<p>
+              Default constructor (ctor) with no parameters allows derived base_transaction_objects
+              to implicitly construct the base_transaction_object base class for
+              easier integration.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_destructor___base_transaction_object___"></a><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_destructor___base_transaction_object___" title="Virtual
+            Destructor ~base_transaction_object()">Virtual
+            Destructor <code class="computeroutput"><span class="special">~</span><span class="identifier">base_transaction_object</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">base_transaction_object</span><span class="special">()</span> <span class="special">{};</span>
+</pre>
+<p>
+              Virtual destructor (dtor) ensures correct destructors are called in
+              the inheritance hierarchy for delete operations invoked on base_transaction_object
+              pointers, which occur in numerous places throughout the internal transaction
+              code.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_function__copy_state___"></a><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_function__copy_state___" title="Virtual
+            function copy_state()">Virtual
+            function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+              The <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code>
+              method is called each time global memory is updated, for either direct
+              or deferred updating policies. With this in mind, it is vital that
+              the this object be set to the exact state of the input parameter.
+            </p>
+<p>
+              Derived classes usually simply override this method and perform an
+              <code class="computeroutput"><span class="keyword">operator</span><span class="special">=()</span></code>
+              function call for the specific derived type.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_function__move_state___"></a><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_function__move_state___" title="Virtual
+            function move_state()">Virtual
+            function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+              The move_state() method is internally called at deferred updating commit
+              time and at direct updating abort time and invokes the user-defined
+              derived transaction class's move assignment (e.g. operator=(type &amp;&amp;)).
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.static_function__retrieve_mem___"></a><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.static_function__retrieve_mem___" title="Static
+            function retrieve_mem()">Static
+            function <code class="computeroutput"><span class="identifier">retrieve_mem</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span><span class="special">*</span> <span class="identifier">retrieve_mem</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+</pre>
+<p>
+              Static interface into TBoost.STM's memory management system for retrieving
+              memory. The supplied parameter is the requested block size, the return
+              parameter is a void* to the allocated block. Usually access to this
+              interface is done by overloading operator new in the derived base_transaction_object
+              class. Void pointers are the natural and preferred manner to handle
+              memory allocations and deallocations and are therefore safe in this
+              context.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.static_function__return_mem___"></a><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.static_function__return_mem___" title="Static
+            function return_mem()">Static
+            function <code class="computeroutput"><span class="identifier">return_mem</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">return_mem</span><span class="special">(</span><span class="keyword">void</span> <span class="special">*</span><span class="identifier">mem</span><span class="special">,</span> <span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+</pre>
+<p>
+              Static interface into TBoost.STM's memory management system for returning
+              memory. The first parameter points to the memory block being returned,
+              the second parameter specifies its size. Usually access to this interface
+              is done by overloading operator delete in the derived transaction object
+              class. Void pointers are the natural and preferred manner to handle
+              memory allocations and deallocations and are therefore safe in this
+              context.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.static_function__alloc_size___"></a><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.static_function__alloc_size___" title="Static
+            function alloc_size()">Static
+            function <code class="computeroutput"><span class="identifier">alloc_size</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">alloc_size</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+</pre>
+<p>
+              Static interface into TBoost.STM's memory management system which allows
+              the user to specify the allocation chunk size for the memory manager.
+              The input parameter specifies the number of transactional objects that
+              should be allocated at startup and with each subsequent buffer increase.
+              If no size is specified, the allocation chunk size uses TBoost.STM's
+              default value, currently 8192. The alloc_size() interface can be reconfigured
+              at runtime and is used upon the next buffer increase.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_function__cache_deallocate___"></a><a href="core.html#toward_boost_stm.reference.core.base_transaction_object_hpp.abstract_class__base_transaction_object_.virtual_function__cache_deallocate___" title="Virtual
+            function cache_deallocate()">Virtual
+            function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+</pre>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.core.cache_fct_hpp"></a><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp" title=" Header
+        &lt;boost/stm/cache_fct.hpp&gt;"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">cache_fct</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_clone_____">Template
+          Function <code class="computeroutput"><span class="identifier">cache_clone</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_copy_____">Template
+          Function <code class="computeroutput"><span class="identifier">cache_copy</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.function__cache_release_____">Function
+          <code class="computeroutput"><span class="identifier">cache_release</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_allocate_____">Template
+          Function <code class="computeroutput"><span class="identifier">cache_allocate</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_deallocate_____">Template
+          Function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">cache_clone</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">cache_copy</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">const</span> <span class="identifier">ori</span><span class="special">,</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">target</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">cache_release</span><span class="special">(</span><span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">cache_allocate</span><span class="special">();</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">(</span><span class="identifier">T</span><span class="special">*);</span>
+
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_clone_____"></a><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_clone_____" title="Template
+          Function cache_clone&lt;&gt;()">Template
+          Function <code class="computeroutput"><span class="identifier">cache_clone</span><span class="special">&lt;&gt;()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">T</span><span class="special">*</span> <span class="identifier">cache_clone</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">);</span>
+</pre>
+<p>
+            Makes a new copy of the parameter. Allocates an object of type T using
+            the <code class="computeroutput"><span class="identifier">cache_allocate</span></code> function
+            and copy from the given parameter <code class="computeroutput"><span class="identifier">val</span></code>
+            using the free function <code class="computeroutput"><span class="identifier">cache_copy</span></code>.
+          </p>
+<p>
+            The user can overload this function, as TBoost.STM uses ADL to access
+            it.
+          </p>
+<p>
+            When <code class="computeroutput"><span class="identifier">BOOST_STM_NO_PARTIAL_SPECIALIZATION</span></code>
+            is defined, i.e. on compilers not supporting partial template specialization,
+            the function calls to <code class="computeroutput"><span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">cache_clone</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">apply</span><span class="special">(</span><span class="identifier">val</span><span class="special">)</span></code>. So the user will need to overload the
+            class <code class="computeroutput"><span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">cache_clone</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> defining the function
+          </p>
+<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">apply</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_copy_____"></a><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_copy_____" title="Template
+          Function cache_copy&lt;&gt;()">Template
+          Function <code class="computeroutput"><span class="identifier">cache_copy</span><span class="special">&lt;&gt;()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">cache_copy</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">const</span> <span class="identifier">source</span><span class="special">,</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">target</span><span class="special">);</span>
+</pre>
+<p>
+            Copy from souce to target using memcpy by default.
+          </p>
+<p>
+            The user can overload this function, as TBoost.STM uses ADL to access
+            it.
+          </p>
+<p>
+            When <code class="computeroutput"><span class="identifier">BOOST_STM_NO_PARTIAL_SPECIALIZATION</span></code>
+            is defined, i.e. on compilers not supporting partial template specialization,
+            the function calls to <code class="computeroutput"><span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">cache_copy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">apply</span><span class="special">(</span><span class="identifier">source</span><span class="special">,</span> <span class="identifier">target</span><span class="special">)</span></code>. So the user will need to overload the
+            class <code class="computeroutput"><span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">cache_copy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> defining the function
+          </p>
+<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">apply</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">const</span> <span class="identifier">source</span><span class="special">,</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">target</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.cache_fct_hpp.function__cache_release_____"></a><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.function__cache_release_____" title="Function
+          cache_release&lt;&gt;()">Function
+          <code class="computeroutput"><span class="identifier">cache_release</span><span class="special">&lt;&gt;()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">cache_release</span><span class="special">(</span><span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">)</span> <span class="special">{</span>
+</pre>
+<p>
+            Release the given base_transaction_object by calling to the virtual function
+            <code class="computeroutput"><span class="identifier">cache_dealocate</span></code>.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_allocate_____"></a><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_allocate_____" title="Template
+          Function cache_allocate&lt;&gt;()">Template
+          Function <code class="computeroutput"><span class="identifier">cache_allocate</span><span class="special">&lt;&gt;()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">T</span><span class="special">*</span> <span class="identifier">cache_allocate</span><span class="special">();</span>
+</pre>
+<p>
+            Allocates an instance of calls T. Depending on whether BOOST_STM_CACHE_USE_MEMORY_MANAGER,
+            BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER
+            are defined this function will use the static pool of the class T, malloc
+            or the thread specific monotonic allocator.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_deallocate_____"></a><a href="core.html#toward_boost_stm.reference.core.cache_fct_hpp.template_function__cache_deallocate_____" title="Template
+          Function cache_deallocate&lt;&gt;()">Template
+          Function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">&lt;&gt;()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span><span class="identifier">ptr</span><span class="special">)</span> <span class="special">{</span>
+</pre>
+<p>
+            Deallocates an instance of calls T. Depending on whether BOOST_STM_CACHE_USE_MEMORY_MANAGER,
+            BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER
+            are defined this function will use the static pool of the class T, free
+            or the no-op.
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.core.datatypes_hpp"></a><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp" title=" Header
+        &lt;boost/stm/datatypes.hpp&gt;"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">datatypes</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.enum__transaction_type_">Enum
+          <code class="computeroutput"><span class="identifier">transaction_type</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.enum__latm_type_">Enum
+          <code class="computeroutput"><span class="identifier">latm_type</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.enum__transaction_state_">Enum
+          <code class="computeroutput"><span class="identifier">transaction_state</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__new_memory_t_">Typedef
+          <code class="computeroutput"><span class="identifier">new_memory_t</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__priority_t_">Typedef
+          <code class="computeroutput"><span class="identifier">priority_t</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__clock_t_">Typedef
+          <code class="computeroutput"><span class="identifier">clock_t</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__version_t_">Typedef
+          <code class="computeroutput"><span class="identifier">version_t</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__thread_id_t_">Typedef
+          <code class="computeroutput"><span class="identifier">thread_id_t</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.function__invalid_thread_id___">Function
+          <code class="computeroutput"><span class="identifier">invalid_thread_id</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.function__this_thread__get_id___">Function
+          <code class="computeroutput"><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">get_id</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">enum</span> <span class="identifier">transaction_type</span><span class="special">;</span>
+    <span class="keyword">enum</span> <span class="identifier">latm_type</span><span class="special">;</span>
+    <span class="keyword">enum</span> <span class="identifier">transaction_state</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">new_memory_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">priority_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">clock_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">milliseconds_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">version_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">thread_id_t</span><span class="special">;</span>
+    <span class="identifier">thread_id_t</span> <span class="identifier">invalid_thread_id</span><span class="special">();</span>
+    <span class="keyword">namespace</span> <span class="identifier">this_thread</span> <span class="special">{</span>
+        <span class="identifier">thread_id_t</span> <span class="identifier">get_id</span><span class="special">();</span>
+    <span class="special">}</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.datatypes_hpp.enum__transaction_type_"></a><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.enum__transaction_type_" title="Enum
+          transaction_type">Enum
+          <code class="computeroutput"><span class="identifier">transaction_type</span></code></a>
+</h5></div></div></div>
+<p>
+            Type of transaction enumeration.
+          </p>
+<pre class="programlisting"> <span class="keyword">enum</span> <span class="identifier">transaction_type</span>
+ <span class="special">{</span>
+     <span class="identifier">eNormalTx</span><span class="special">,</span>
+     <span class="identifier">eIrrevocableTx</span><span class="special">,</span>
+     <span class="identifier">eIrrevocableAndIsolatedTx</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.datatypes_hpp.enum__latm_type_"></a><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.enum__latm_type_" title="Enum
+          latm_type">Enum
+          <code class="computeroutput"><span class="identifier">latm_type</span></code></a>
+</h5></div></div></div>
+<p>
+            Type of LATM enumeration.
+          </p>
+<pre class="programlisting"><span class="keyword">enum</span> <span class="identifier">latm_type</span>
+<span class="special">{</span>
+    <span class="identifier">eFullLatmProtection</span><span class="special">,</span>
+    <span class="identifier">eTmConflictingLockLatmProtection</span><span class="special">,</span>
+    <span class="identifier">eTxConflictingLockLatmProtection</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.datatypes_hpp.enum__transaction_state_"></a><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.enum__transaction_state_" title="Enum
+          transaction_state">Enum
+          <code class="computeroutput"><span class="identifier">transaction_state</span></code></a>
+</h5></div></div></div>
+<p>
+            Transaction states enumeration.
+          </p>
+<pre class="programlisting"><span class="keyword">enum</span> <span class="identifier">transaction_state</span>
+<span class="special">{</span>
+   <span class="identifier">e_no_state</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">,</span> <span class="comment">// no state is -1
+</span>   <span class="identifier">e_aborted</span><span class="special">,</span>      <span class="comment">// ensure aborted = 0
+</span>   <span class="identifier">e_committed</span><span class="special">,</span>    <span class="comment">// committed is positive
+</span>   <span class="identifier">e_hand_off</span><span class="special">,</span>      <span class="comment">// so is handoff in case bool conversion
+</span>   <span class="identifier">e_in_flight</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.datatypes_hpp.typedef__new_memory_t_"></a><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__new_memory_t_" title="Typedef
+          new_memory_t">Typedef
+          <code class="computeroutput"><span class="identifier">new_memory_t</span></code></a>
+</h5></div></div></div>
+<p>
+            This type should be bool, but for alignements purposes is a int.
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="identifier">new_memory_t</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.datatypes_hpp.typedef__priority_t_"></a><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__priority_t_" title="Typedef
+          priority_t">Typedef
+          <code class="computeroutput"><span class="identifier">priority_t</span></code></a>
+</h5></div></div></div>
+<p>
+            Type used for the user contention management with transaction priority.
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">priority_t</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.datatypes_hpp.typedef__clock_t_"></a><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__clock_t_" title="Typedef
+          clock_t">Typedef
+          <code class="computeroutput"><span class="identifier">clock_t</span></code></a>
+</h5></div></div></div>
+<p>
+            Type used to represent the time.
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">clock_t</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">milliseconds_t</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.datatypes_hpp.typedef__version_t_"></a><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__version_t_" title="Typedef
+          version_t">Typedef
+          <code class="computeroutput"><span class="identifier">version_t</span></code></a>
+</h5></div></div></div>
+<p>
+            Type used for validation using the version algorithm.
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">version_t</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.datatypes_hpp.typedef__thread_id_t_"></a><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.typedef__thread_id_t_" title="Typedef
+          thread_id_t">Typedef
+          <code class="computeroutput"><span class="identifier">thread_id_t</span></code></a>
+</h5></div></div></div>
+<p>
+            Thread id type, which is platform dependent.
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">platform_specific</span> <span class="identifier">thread_id_t</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.datatypes_hpp.function__invalid_thread_id___"></a><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.function__invalid_thread_id___" title="Function
+          invalid_thread_id()">Function
+          <code class="computeroutput"><span class="identifier">invalid_thread_id</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<p>
+            Invalid thread_id_t value.
+          </p>
+<pre class="programlisting"><span class="identifier">thread_id_t</span> <span class="identifier">invalid_thread_id</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.datatypes_hpp.function__this_thread__get_id___"></a><a href="core.html#toward_boost_stm.reference.core.datatypes_hpp.function__this_thread__get_id___" title="Function
+          this_thread::get_id()">Function
+          <code class="computeroutput"><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">get_id</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<p>
+            thread_id_t for the current thread.
+          </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">this_thread</span> <span class="special">{</span>
+    <span class="keyword">inline</span> <span class="identifier">thread_id_t</span> <span class="identifier">get_id</span><span class="special">()</span> <span class="special">{</span>
+<span class="special">}</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.core.exceptions_hpp"></a><a href="core.html#toward_boost_stm.reference.core.exceptions_hpp" title=" Header
+        &lt;boost/stm/exceptions.hpp&gt;"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">exceptions</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.exceptions_hpp.class__aborted_transaction_exception_">Class
+          <code class="computeroutput"><span class="identifier">aborted_transaction_exception</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">aborted_transaction_exception</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.exceptions_hpp.class__aborted_transaction_exception_"></a><a href="core.html#toward_boost_stm.reference.core.exceptions_hpp.class__aborted_transaction_exception_" title="Class
+          aborted_transaction_exception">Class
+          <code class="computeroutput"><span class="identifier">aborted_transaction_exception</span></code></a>
+</h5></div></div></div></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp" title="
+        Header &lt;boost/stm/language_like.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">language_like</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__atomic_">Macro
+          <code class="computeroutput"><span class="identifier">atomic</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__try_atomic_">Macro
+          <code class="computeroutput"><span class="identifier">try_atomic</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__use_atomic_">Macro
+          <code class="computeroutput"><span class="identifier">use_atomic</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__catch_before_retry_">Macro
+          <code class="computeroutput"><span class="identifier">catch_before_retry</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__before_retry_">Macro
+          <code class="computeroutput"><span class="identifier">before_retry</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__end_atom_">Macro
+          <code class="computeroutput"><span class="identifier">end_atom</span></code></a></span></dt>
+</dl></div>
+<p>
+          The complexity behind the <code class="computeroutput"><span class="identifier">atomic</span></code>
+          macro is needed to guarantee two fundamental goals.
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            First, transactions must start and end correctly.
+          </li>
+<li>
+            Second, transactions must change their retry behavior based on whether
+            they are a child or parent transaction to ensure proper closed nesting,
+            flattened transaction behavior is performed.
+          </li>
+</ul></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">atomic</span></code> preprocessor
+          behaves as follows. When the transactional for loop is entered, a transaction
+          automatic object is constructed which initializes the transaction and puts
+          it in-flight. The for loop conditional ensures the following conditions:
+        </p>
+<div class="orderedlist"><ol type="1">
+<li>
+            the transaction is uncommitted,
+          </li>
+<li>
+            the transaction has the opportunity to throw an exception if necessary,
+            and
+          </li>
+<li>
+            the transaction is in-flight.
+          </li>
+</ol></div>
+<p>
+          Once a transaction commits, the check on (1) <code class="computeroutput"><span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span></code> ensures the transaction is not executed
+          again. If the transaction has been aborted but is a child transaction,
+          the transaction must be restarted at the parent level. The call to (2)
+          <code class="computeroutput"><span class="identifier">T</span><span class="special">.</span><span class="identifier">check_throw_before_restart</span><span class="special">()</span></code>
+          allows an aborted child transaction to throw an exception upward (before
+          it is restarted) so the entire transaction can be restarted from the parent.
+          The <code class="computeroutput"><span class="identifier">check_throw_before_restart</span><span class="special">()</span></code> API checks the current run-time state
+          of the thread to determine if another transaction is active above it. This
+          behavior allows transactions to be used at any nesting level while dynamically
+          ensuring the correct retry behavior. Finally, the call to <code class="computeroutput"><span class="identifier">restart_if_not_inflight</span><span class="special">()</span></code>
+          ensures the transaction is correctly restarted after each subsequent abort.
+        </p>
+<p>
+          Once all of the transactional operations within the for loop are executed,
+          a call to no_throw_end() is made which ends the transaction. The <code class="computeroutput"><span class="identifier">no_throw_end</span><span class="special">()</span></code>
+          terminates the transaction by either committing or aborting it. Note, however,
+          that <code class="computeroutput"><span class="identifier">no_throw_end</span><span class="special">()</span></code>
+          does not throw an exception if the transaction is aborted, whereas the
+          prior TBoost.STM's API end() does. This non-throwing behavior deviates
+          from the prior TBoost.STM implementation of automatic objects when end()
+          was invoked within the try / catch body. Furthermore, due to <code class="computeroutput"><span class="identifier">no_throw_end</span><span class="special">()</span></code>
+          not throwing an exception if the transaction is aborted, some cases may
+          arise where <code class="computeroutput"><span class="identifier">catch_before_retry</span></code>
+          or <code class="computeroutput"><span class="identifier">before_retry</span></code> operations
+          are not invoked when a transaction is aborted. This is a current limitation
+          of the system and is overcome by inserting a manual end() operation as
+          the last operation in the atomic block. The explicit end() ensures any
+          operations within the before_retry block are executed if the transaction
+          is aborted.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">try_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">catch_before_retry</span><span class="special">(</span><span class="identifier">E</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">before_retry</span>
+<span class="preprocessor">#define</span> <span class="identifier">end_atom</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.macro__atomic_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__atomic_" title="Macro
+          atomic">Macro
+          <code class="computeroutput"><span class="identifier">atomic</span></code></a>
+</h5></div></div></div>
+<p>
+            Use atomic transaction T for optimistic critical section. Supports single-depth
+            and multiple-depth (nested) transactions. Performs automatic retry when
+            T is a parent transaction, throws exception when T is a child transaction.
+            This automatic switch enables correctly behaved nested and non-nested
+            transactions
+          </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">\</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">T</span><span class="special">;</span> <span class="special">\</span>
+        <span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">check_throw_before_restart</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">restart_if_not_inflight</span><span class="special">();</span> <span class="special">\</span>
+        <span class="identifier">T</span><span class="special">.</span><span class="identifier">no_throw_end</span><span class="special">())</span>
+    <span class="keyword">try</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.macro__try_atomic_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__try_atomic_" title="Macro
+          try_atomic">Macro
+          <code class="computeroutput"><span class="identifier">try_atomic</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">try_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">\</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">T</span><span class="special">;</span> <span class="special">\</span>
+        <span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">restart</span><span class="special">();</span> <span class="special">\</span>
+        <span class="identifier">T</span><span class="special">.</span><span class="identifier">no_throw_end</span><span class="special">())</span>
+    <span class="keyword">try</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.macro__use_atomic_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__use_atomic_" title="Macro
+          use_atomic">Macro
+          <code class="computeroutput"><span class="identifier">use_atomic</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">\</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">T</span><span class="special">;</span> <span class="special">\</span>
+        <span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">restart</span><span class="special">();</span> <span class="special">\</span>
+        <span class="identifier">T</span><span class="special">.</span><span class="identifier">end</span><span class="special">())</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.macro__catch_before_retry_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__catch_before_retry_" title="Macro
+          catch_before_retry">Macro
+          <code class="computeroutput"><span class="identifier">catch_before_retry</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">catch_before_retry</span><span class="special">(</span><span class="identifier">E</span><span class="special">)</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span> <span class="special">&amp;</span><span class="identifier">E</span><span class="special">)</span>
+</pre>
+<p>
+            Catches exception when transaction is aborted. This, before_retry, or
+            end_atom must follow an atomic block. Once all operations within the
+            catch_before_retry block are executed, control is returned to the local
+            atomic where the transaction is retried (if it is the parent) or the
+            atomic block is exited by exception (if it is a child).
+          </p>
+<p>
+            To be used pairwise with <code class="computeroutput"><span class="identifier">try_atomic</span></code>
+            or <code class="computeroutput"><span class="identifier">atomic</span></code>.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.macro__before_retry_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__before_retry_" title="Macro
+          before_retry">Macro
+          <code class="computeroutput"><span class="identifier">before_retry</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">before_retry</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span> <span class="special">&amp;)</span>
+</pre>
+<p>
+            Same as catch_before_retry(E) except the exception is discarded.
+          </p>
+<p>
+            To be used pairwise with <code class="computeroutput"><span class="identifier">try_atomic</span></code>
+            or <code class="computeroutput"><span class="identifier">atomic</span></code>.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.macro__end_atom_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__end_atom_" title="Macro
+          end_atom">Macro
+          <code class="computeroutput"><span class="identifier">end_atom</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">end_atom</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span> <span class="special">&amp;)</span> <span class="special">{}</span>
+</pre>
+<p>
+            Same as before_retry except the exception is discarded and {} are automated.
+          </p>
+<p>
+            To be used pairwise with <code class="computeroutput"><span class="identifier">try_atomic</span></code>
+            or <code class="computeroutput"><span class="identifier">atomic</span></code>.
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp" title=" Header
+        &lt;boost/stm/transaction.hpp&gt;"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_">Class
+          <code class="computeroutput"><span class="identifier">transaction</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.struct__thread_initializer_">Struct
+          <code class="computeroutput"><span class="identifier">thread_initializer</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">transaction</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">thread_initializer</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_" title="Class
+          transaction">Class
+          <code class="computeroutput"><span class="identifier">transaction</span></code></a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__initialize___">Static
+            Function <code class="computeroutput"><span class="identifier">initialize</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__initialize_thread___">Static
+            Function <code class="computeroutput"><span class="identifier">initialize_thread</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__terminate_thread___">Static
+            Function <code class="computeroutput"><span class="identifier">terminate_thread</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__contention_manager_">Static
+            Function <code class="computeroutput"><span class="identifier">contention_manager</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__get_contention_manager_">Static
+            Function <code class="computeroutput"><span class="identifier">get_contention_manager</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__enable_dynamic_priority_assignment_">Static
+            Function <code class="computeroutput"><span class="identifier">enable_dynamic_priority_assignment</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__disable_dynamic_priority_assignment_">Static
+            Function <code class="computeroutput"><span class="identifier">disable_dynamic_priority_assignment</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_dynamic_priority_assignment_">Static
+            Function <code class="computeroutput"><span class="identifier">doing_dynamic_priority_assignment</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__enableloggingofabortandcommitsetsize_">Static
+            Function <code class="computeroutput"><span class="identifier">enableLoggingOfAbortAndCommitSetSize</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__disableloggingofabortandcommitsetsize_">Static
+            Function <code class="computeroutput"><span class="identifier">disableLoggingOfAbortAndCommitSetSize</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__transaction_bookkeeping_">Static
+            Function <code class="computeroutput"><span class="identifier">transaction_bookkeeping</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__early_conflict_detection_">Static
+            Function <code class="computeroutput"><span class="identifier">early_conflict_detection</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__late_conflict_detection_">Static
+            Function <code class="computeroutput"><span class="identifier">late_conflict_detection</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_early_conflict_detection_">Static
+            Function <code class="computeroutput"><span class="identifier">do_early_conflict_detection</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_late_conflict_detection_">Static
+            Function <code class="computeroutput"><span class="identifier">do_late_conflict_detection</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__consistency_checking_string_">Static
+            Function <code class="computeroutput"><span class="identifier">consistency_checking_string</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__validating_">Static
+            Function <code class="computeroutput"><span class="identifier">validating</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__invalidating_">Static
+            Function <code class="computeroutput"><span class="identifier">invalidating</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__direct_updating_">Static
+            Function <code class="computeroutput"><span class="identifier">direct_updating</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__deferred_updating_">Static
+            Function <code class="computeroutput"><span class="identifier">deferred_updating</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_direct_updating_">Static
+            Function <code class="computeroutput"><span class="identifier">do_direct_updating</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_deferred_updating_">Static
+            Function <code class="computeroutput"><span class="identifier">do_deferred_updating</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__update_policy_string_">Static
+            Function <code class="computeroutput"><span class="identifier">update_policy_string</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__latm_protection_">Static
+            Function <code class="computeroutput"><span class="identifier">latm_protection</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__latm_protection_str_">Static
+            Function <code class="computeroutput"><span class="identifier">latm_protection_str</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_full_lock_protection_">Static
+            Function <code class="computeroutput"><span class="identifier">do_full_lock_protection</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_tm_lock_protection_">Static
+            Function <code class="computeroutput"><span class="identifier">do_tm_lock_protection</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_tx_lock_protection_">Static
+            Function <code class="computeroutput"><span class="identifier">do_tx_lock_protection</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_tx_lock_protection_">Static
+            Function <code class="computeroutput"><span class="identifier">doing_tx_lock_protection</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_full_lock_protection_">Static
+            Function <code class="computeroutput"><span class="identifier">doing_full_lock_protection</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_tm_lock_protection_">Static
+            Function <code class="computeroutput"><span class="identifier">doing_tm_lock_protection</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__in_flight_transactions_">Static
+            Function <code class="computeroutput"><span class="identifier">in_flight_transactions</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.constructor__transaction___">Constructor
+            <code class="computeroutput"><span class="identifier">transaction</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.destructor___transaction___">Destructor
+            <code class="computeroutput"><span class="special">~</span><span class="identifier">transaction</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__committed_">Member
+            Function <code class="computeroutput"><span class="identifier">committed</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__aborted_">Member
+            Function <code class="computeroutput"><span class="identifier">aborted</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__in_flight_">Member
+            Function <code class="computeroutput"><span class="identifier">in_flight</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__begin_">Member
+            Function <code class="computeroutput"><span class="identifier">begin</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__restart_">Member
+            Function <code class="computeroutput"><span class="identifier">restart</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__restart_if_not_inflight_">Member
+            Function <code class="computeroutput"><span class="identifier">restart_if_not_inflight</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__end_">Member
+            Function <code class="computeroutput"><span class="identifier">end</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__no_throw_end_">Member
+            Function <code class="computeroutput"><span class="identifier">no_throw_end</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__force_to_abort_">Member
+            Function <code class="computeroutput"><span class="identifier">force_to_abort</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__unforce_to_abort_">Member
+            Function <code class="computeroutput"><span class="identifier">unforce_to_abort</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__priority_">Member
+            Function <code class="computeroutput"><span class="identifier">priority</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__set_priority_">Member
+            Function <code class="computeroutput"><span class="identifier">set_priority</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__raise_priority_">Member
+            Function <code class="computeroutput"><span class="identifier">raise_priority</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__make_irrevocable_">Member
+            Function <code class="computeroutput"><span class="identifier">make_irrevocable</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__make_isolated_">Member
+            Function <code class="computeroutput"><span class="identifier">make_isolated</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__irrevocable_">Member
+            Function <code class="computeroutput"><span class="identifier">irrevocable</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__isolated_">Member
+            Function <code class="computeroutput"><span class="identifier">isolated</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__thread_id_">Member
+            Function <code class="computeroutput"><span class="identifier">thread_id</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template_member_function__find_original___">Template
+            Member Function <code class="computeroutput"><span class="identifier">find_original</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__read___">Template
+            Function <code class="computeroutput"><span class="identifier">read</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__read_ptr___">Template
+            Function <code class="computeroutput"><span class="identifier">read_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__write___">Template
+            Function <code class="computeroutput"><span class="identifier">write</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__write_ptr___">Template
+            Function <code class="computeroutput"><span class="identifier">write_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__get_written___">Template
+            Function <code class="computeroutput"><span class="identifier">get_written</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__delete_memory___">Template
+            Function <code class="computeroutput"><span class="identifier">delete_memory</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__new_memory___">Template
+            Function <code class="computeroutput"><span class="identifier">new_memory</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__new_memory_copy___">Template
+            Function <code class="computeroutput"><span class="identifier">new_memory_copy</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<p>
+            TBoost.STM defines transactions as stackbased objects using RAII. In
+            addition to the static interfaces for direct and deferred updating described
+            earlier in this section, the following interfaces are necessary for performing
+            transactions.
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">transaction</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="comment">// initialization
+</span>    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">initialize</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">initialize_thread</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">terminate_thread</span><span class="special">();</span>
+
+    <span class="comment">// contention manager
+</span>    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">contention_manager</span><span class="special">(</span><span class="identifier">base_contention_manager</span> <span class="special">*</span><span class="identifier">rhs</span><span class="special">);</span>
+    <span class="keyword">static</span> <span class="identifier">base_contention_manager</span><span class="special">*</span> <span class="identifier">get_contention_manager</span><span class="special">();</span>
+
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">enable_dynamic_priority_assignment</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">disable_dynamic_priority_assignment</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">doing_dynamic_priority_assignment</span><span class="special">();</span>
+
+    <span class="comment">// bookeeping
+</span>    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">enableLoggingOfAbortAndCommitSetSize</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">disableLoggingOfAbortAndCommitSetSize</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">transaction_bookkeeping</span> <span class="special">&amp;</span> <span class="identifier">bookkeeping</span><span class="special">();</span>
+
+    <span class="comment">// conflict detection
+</span>    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">early_conflict_detection</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">late_conflict_detection</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">do_early_conflict_detection</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">do_late_conflict_detection</span><span class="special">();</span>
+
+    <span class="comment">// consistency checking
+</span>    <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">consistency_checking_string</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">validating</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">invalidating</span><span class="special">();</span>
+
+    <span class="comment">// updating
+</span>    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">direct_updating</span><span class="special">()</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">deferred_updating</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">do_direct_updating</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">do_deferred_updating</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">update_policy_string</span><span class="special">();</span>
+
+    <span class="comment">// Lock Aware Transactional Memory support methods
+</span>    <span class="keyword">static</span> <span class="identifier">latm_type</span> <span class="keyword">const</span> <span class="identifier">latm_protection</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span> <span class="identifier">latm_protection_str</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">do_full_lock_protection</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">do_tm_lock_protection</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">do_tx_lock_protection</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">doing_full_lock_protection</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">doing_tm_lock_protection</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">doing_tx_lock_protection</span><span class="special">();</span>
+
+    <span class="comment">//in flight transactions
+</span>    <span class="keyword">static</span> <span class="identifier">InflightTxes</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">in_flight_transactions</span><span class="special">();</span>
+
+    <span class="comment">// transaction
+</span>    <span class="identifier">transaction</span><span class="special">();</span>
+    <span class="special">~</span><span class="identifier">transaction</span><span class="special">();</span>
+
+    <span class="keyword">bool</span> <span class="identifier">committed</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">aborted</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">in_flight</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">void</span> <span class="identifier">begin</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">restart</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">restart_if_not_inflight</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">end</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">no_throw_end</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">force_to_abort</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">unforce_to_abort</span><span class="special">();</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">priority</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">void</span> <span class="identifier">set_priority</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">void</span> <span class="identifier">raise_priority</span><span class="special">();</span>
+
+    <span class="keyword">void</span> <span class="identifier">make_irrevocable</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">make_isolated</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">irrevocable</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">isolated</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="identifier">thread_id_t</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">thread_id</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">find_original</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">read</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span> <span class="identifier">read_ptr</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span> <span class="identifier">in</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">write</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">write_ptr</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">in</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">w</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get_written</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">delete_memory</span><span class="special">(</span><span class="identifier">T</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">)</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">new_memory</span><span class="special">();</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">new_memory_copy</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__initialize___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__initialize___" title="Static
+            Function initialize()">Static
+            Function <code class="computeroutput"><span class="identifier">initialize</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">initialize</span><span class="special">();</span>
+</pre>
+<p>
+              This method must called before any transaction objects are constructed.
+              The initialize method initializes the overall transaction locking framework.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__initialize_thread___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__initialize_thread___" title="Static
+            Function initialize_thread()">Static
+            Function <code class="computeroutput"><span class="identifier">initialize_thread</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">initialize_thread</span><span class="special">();</span>
+</pre>
+<p>
+              This method must be called for each thread before any transactions
+              are constructed. This method initializes the thread's read and write
+              sets, new and deleted memory sets, mutex locks and thread-based flags.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__terminate_thread___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__terminate_thread___" title="Static
+            Function terminate_thread()">Static
+            Function <code class="computeroutput"><span class="identifier">terminate_thread</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">terminate_thread</span><span class="special">();</span>
+</pre>
+<p>
+              This method should be called before destroying a thread. While it is
+              not needed, it will keep transaction operations functioning optimally
+              by reducing static overhead within the transaction class that is no
+              longer needed once a thread's lifetime has ended.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__contention_manager_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__contention_manager_" title="Static
+            Function contention_manager">Static
+            Function <code class="computeroutput"><span class="identifier">contention_manager</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">contention_manager</span><span class="special">(</span><span class="identifier">base_contention_manager</span> <span class="special">*</span><span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+<p>
+              Sets TBoost.STM's contention manager to point to the passed in contention
+              manager. When a new CM is passed in to TBoost.STM, it deletes the previously
+              pointed to CM and points to the new one. Client code is responsible
+              for constructing new CMs that are passed to this method, but TBoost.STM
+              then takes ownership of these CMs.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__get_contention_manager_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__get_contention_manager_" title="Static
+            Function get_contention_manager">Static
+            Function <code class="computeroutput"><span class="identifier">get_contention_manager</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">base_contention_manager</span><span class="special">*</span> <span class="identifier">get_contention_manager</span><span class="special">();</span>
+</pre>
+<p>
+              Returns a pointer to the current CM used by TBoost.STM. This method
+              is mostly used for validation purposes after setting a CM to a user-specified
+              implementation.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__enable_dynamic_priority_assignment_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__enable_dynamic_priority_assignment_" title="Static
+            Function enable_dynamic_priority_assignment">Static
+            Function <code class="computeroutput"><span class="identifier">enable_dynamic_priority_assignment</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">enable_dynamic_priority_assignment</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__disable_dynamic_priority_assignment_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__disable_dynamic_priority_assignment_" title="Static
+            Function disable_dynamic_priority_assignment">Static
+            Function <code class="computeroutput"><span class="identifier">disable_dynamic_priority_assignment</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">disable_dynamic_priority_assignment</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_dynamic_priority_assignment_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_dynamic_priority_assignment_" title="Static
+            Function doing_dynamic_priority_assignment">Static
+            Function <code class="computeroutput"><span class="identifier">doing_dynamic_priority_assignment</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">doing_dynamic_priority_assignment</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__enableloggingofabortandcommitsetsize_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__enableloggingofabortandcommitsetsize_" title="Static
+            Function enableLoggingOfAbortAndCommitSetSize">Static
+            Function <code class="computeroutput"><span class="identifier">enableLoggingOfAbortAndCommitSetSize</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">enableLoggingOfAbortAndCommitSetSize</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__disableloggingofabortandcommitsetsize_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__disableloggingofabortandcommitsetsize_" title="Static
+            Function disableLoggingOfAbortAndCommitSetSize">Static
+            Function <code class="computeroutput"><span class="identifier">disableLoggingOfAbortAndCommitSetSize</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">disableLoggingOfAbortAndCommitSetSize</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__transaction_bookkeeping_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__transaction_bookkeeping_" title="Static
+            Function transaction_bookkeeping">Static
+            Function <code class="computeroutput"><span class="identifier">transaction_bookkeeping</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">transaction_bookkeeping</span> <span class="special">&amp;</span> <span class="identifier">bookkeeping</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__early_conflict_detection_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__early_conflict_detection_" title="Static
+            Function early_conflict_detection">Static
+            Function <code class="computeroutput"><span class="identifier">early_conflict_detection</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">early_conflict_detection</span><span class="special">();</span>
+</pre>
+<p>
+              Returns true if direct updating is active and early conflict detection,
+              otherwise returns false.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__late_conflict_detection_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__late_conflict_detection_" title="Static
+            Function late_conflict_detection">Static
+            Function <code class="computeroutput"><span class="identifier">late_conflict_detection</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">late_conflict_detection</span><span class="special">();</span>
+</pre>
+<p>
+              Returns true if deferred updating is active or if direct updating and
+              late conflict detection are active, otherwise returns false.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_early_conflict_detection_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_early_conflict_detection_" title="Static
+            Function do_early_conflict_detection">Static
+            Function <code class="computeroutput"><span class="identifier">do_early_conflict_detection</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">do_early_conflict_detection</span><span class="special">();</span>
+</pre>
+<p>
+              Attempts to switch to early conflict detection. Returns false if in-flight
+              transactions are found or if deferred updating is active. Otherwise
+              returns true and enables early conflict detection.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_late_conflict_detection_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_late_conflict_detection_" title="Static
+            Function do_late_conflict_detection">Static
+            Function <code class="computeroutput"><span class="identifier">do_late_conflict_detection</span></code></a>
+</h6></div></div></div>
+<p>
+              Attempts to switch to late conflict detection. Returns false if in-flight
+              transactions are found, otherwise returns true and enables late conflict
+              detection.
+            </p>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">do_late_conflict_detection</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__consistency_checking_string_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__consistency_checking_string_" title="Static
+            Function consistency_checking_string">Static
+            Function <code class="computeroutput"><span class="identifier">consistency_checking_string</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">consistency_checking_string</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__validating_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__validating_" title="Static
+            Function validating">Static
+            Function <code class="computeroutput"><span class="identifier">validating</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">validating</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__invalidating_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__invalidating_" title="Static
+            Function invalidating">Static
+            Function <code class="computeroutput"><span class="identifier">invalidating</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">invalidating</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__direct_updating_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__direct_updating_" title="Static
+            Function direct_updating">Static
+            Function <code class="computeroutput"><span class="identifier">direct_updating</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">direct_updating</span><span class="special">()</span>
+</pre>
+<p>
+              Returns true if direct updating is active, otherwise returns false.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__deferred_updating_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__deferred_updating_" title="Static
+            Function deferred_updating">Static
+            Function <code class="computeroutput"><span class="identifier">deferred_updating</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">deferred_updating</span><span class="special">();</span>
+</pre>
+<p>
+              Returns true if deferred updating is active, otherwise returns false
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_direct_updating_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_direct_updating_" title="Static
+            Function do_direct_updating">Static
+            Function <code class="computeroutput"><span class="identifier">do_direct_updating</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">do_direct_updating</span><span class="special">();</span>
+</pre>
+<p>
+              Attempts to switch to direct updating. Returns false if inflight transactions
+              are found and TBoost.STM is unable to switch updating models. Otherwise,
+              returns true and enables direct updating.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_deferred_updating_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_deferred_updating_" title="Static
+            Function do_deferred_updating">Static
+            Function <code class="computeroutput"><span class="identifier">do_deferred_updating</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">do_deferred_updating</span><span class="special">();</span>
+</pre>
+<p>
+              Attempts to switch to deferred updating. Returns false if inflight
+              transactions are found and TBoost.STM is unable to switch updating
+              models. Otherwise, returns true and enables deferred updating.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__update_policy_string_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__update_policy_string_" title="Static
+            Function update_policy_string">Static
+            Function <code class="computeroutput"><span class="identifier">update_policy_string</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">update_policy_string</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__latm_protection_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__latm_protection_" title="Static
+            Function latm_protection">Static
+            Function <code class="computeroutput"><span class="identifier">latm_protection</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">latm_type</span> <span class="keyword">const</span> <span class="identifier">latm_protection</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__latm_protection_str_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__latm_protection_str_" title="Static
+            Function latm_protection_str">Static
+            Function <code class="computeroutput"><span class="identifier">latm_protection_str</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span> <span class="identifier">latm_protection_str</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_full_lock_protection_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_full_lock_protection_" title="Static
+            Function do_full_lock_protection">Static
+            Function <code class="computeroutput"><span class="identifier">do_full_lock_protection</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">do_full_lock_protection</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_tm_lock_protection_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_tm_lock_protection_" title="Static
+            Function do_tm_lock_protection">Static
+            Function <code class="computeroutput"><span class="identifier">do_tm_lock_protection</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">do_tm_lock_protection</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_tx_lock_protection_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__do_tx_lock_protection_" title="Static
+            Function do_tx_lock_protection">Static
+            Function <code class="computeroutput"><span class="identifier">do_tx_lock_protection</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">do_tx_lock_protection</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_tx_lock_protection_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_tx_lock_protection_" title="Static
+            Function doing_tx_lock_protection">Static
+            Function <code class="computeroutput"><span class="identifier">doing_tx_lock_protection</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">doing_tx_lock_protection</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_full_lock_protection_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_full_lock_protection_" title="Static
+            Function doing_full_lock_protection">Static
+            Function <code class="computeroutput"><span class="identifier">doing_full_lock_protection</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">doing_full_lock_protection</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_tm_lock_protection_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__doing_tm_lock_protection_" title="Static
+            Function doing_tm_lock_protection">Static
+            Function <code class="computeroutput"><span class="identifier">doing_tm_lock_protection</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">doing_tm_lock_protection</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__in_flight_transactions_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.static_function__in_flight_transactions_" title="Static
+            Function in_flight_transactions">Static
+            Function <code class="computeroutput"><span class="identifier">in_flight_transactions</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">InflightTxes</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">in_flight_transactions</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.constructor__transaction___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.constructor__transaction___" title="Constructor
+            transaction()">Constructor
+            <code class="computeroutput"><span class="identifier">transaction</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="identifier">transaction</span><span class="special">();</span>
+</pre>
+<p>
+              Default ctor for a transaction immediately puts the transaction in-flight.
+              In addition, the ctor points referenced members to a number of thread-specific
+              sets which it does by referencing the thread id.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.destructor___transaction___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.destructor___transaction___" title="Destructor
+            ~transaction()">Destructor
+            <code class="computeroutput"><span class="special">~</span><span class="identifier">transaction</span><span class="special">()</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="special">~</span><span class="identifier">transaction</span><span class="special">();</span>
+</pre>
+<p>
+              The transaction dtor releases the thread-specific transaction lock
+              if it is obtained. The dtor then immediately returns if the transaction
+              was not in-flight, or if the transaction was in-flight, it forces the
+              transaction to abort which performs a number of clean-up operations.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__committed_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__committed_" title="Member
+            Function committed">Member
+            Function <code class="computeroutput"><span class="identifier">committed</span></code></a>
+</h6></div></div></div>
+<p>
+              States if the state of the transaction is e_committed or e_hand_off
+            </p>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">committed</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__aborted_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__aborted_" title="Member
+            Function aborted">Member
+            Function <code class="computeroutput"><span class="identifier">aborted</span></code></a>
+</h6></div></div></div>
+<p>
+              States if the state of the transaction is e_aborted
+            </p>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">aborted</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__in_flight_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__in_flight_" title="Member
+            Function in_flight">Member
+            Function <code class="computeroutput"><span class="identifier">in_flight</span></code></a>
+</h6></div></div></div>
+<p>
+              States if the state of the transaction is e_in_flight
+            </p>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">in_flight</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__begin_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__begin_" title="Member
+            Function begin">Member
+            Function <code class="computeroutput"><span class="identifier">begin</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">begin</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__restart_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__restart_" title="Member
+            Function restart">Member
+            Function <code class="computeroutput"><span class="identifier">restart</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">restart</span><span class="special">();</span>
+</pre>
+<p>
+              This method is similar to the transaction ctor as it signals the start
+              of a transaction and attempts to put it in-flight. A fundamental difference
+              between restart_transaction() and the transaction ctor is that if the
+              transaction is already in-flight, begin_transaction() aborts the transaction
+              and restarts it. This behavior is important for composed transactions
+              where the outer transaction is never destructed, due to continually
+              excepting inner transactions which also prevent the outer transaction
+              from reaching its call to end_transaction(). This is shown concretely
+              in the composable transaction example
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__restart_if_not_inflight_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__restart_if_not_inflight_" title="Member
+            Function restart_if_not_inflight">Member
+            Function <code class="computeroutput"><span class="identifier">restart_if_not_inflight</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">restart_if_not_inflight</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__end_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__end_" title="Member
+            Function end">Member
+            Function <code class="computeroutput"><span class="identifier">end</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">end</span><span class="special">();</span>
+</pre>
+<p>
+              This method signals that the transaction should try to commit. The
+              return value stored in a transaction_state enumeration is either 1)
+              e_hand_off, meaning the transaction was nested and has handed off its
+              state to the parent transaction or 2) e_committed, meaning the transaction
+              was committed and global memory has been updated. If a transaction
+              is aborted, an aborted_transaction_exception is thrown. A call to end_transaction()
+              will never return an enumerated state which signals the transaction
+              was aborted. Instead, if a transaction is found to be aborted at a
+              call to end_transaction(), an aborted transaction exception is thrown.
+              This behavior enables all aborted transactions to be handled in a similar
+              fashion, resulting in an aborted transaction exception.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__no_throw_end_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__no_throw_end_" title="Member
+            Function no_throw_end">Member
+            Function <code class="computeroutput"><span class="identifier">no_throw_end</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">no_throw_end</span><span class="special">();</span>
+</pre>
+<p>
+              Do the same as end() by caching every exception.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__force_to_abort_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__force_to_abort_" title="Member
+            Function force_to_abort">Member
+            Function <code class="computeroutput"><span class="identifier">force_to_abort</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">force_to_abort</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__unforce_to_abort_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__unforce_to_abort_" title="Member
+            Function unforce_to_abort">Member
+            Function <code class="computeroutput"><span class="identifier">unforce_to_abort</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">unforce_to_abort</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__priority_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__priority_" title="Member
+            Function priority">Member
+            Function <code class="computeroutput"><span class="identifier">priority</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">priority</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__set_priority_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__set_priority_" title="Member
+            Function set_priority">Member
+            Function <code class="computeroutput"><span class="identifier">set_priority</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">set_priority</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__raise_priority_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__raise_priority_" title="Member
+            Function raise_priority">Member
+            Function <code class="computeroutput"><span class="identifier">raise_priority</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">raise_priority</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__make_irrevocable_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__make_irrevocable_" title="Member
+            Function make_irrevocable">Member
+            Function <code class="computeroutput"><span class="identifier">make_irrevocable</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">make_irrevocable</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__make_isolated_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__make_isolated_" title="Member
+            Function make_isolated">Member
+            Function <code class="computeroutput"><span class="identifier">make_isolated</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">make_isolated</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__irrevocable_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__irrevocable_" title="Member
+            Function irrevocable">Member
+            Function <code class="computeroutput"><span class="identifier">irrevocable</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">irrevocable</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__isolated_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__isolated_" title="Member
+            Function isolated">Member
+            Function <code class="computeroutput"><span class="identifier">isolated</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">isolated</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__thread_id_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.member_function__thread_id_" title="Member
+            Function thread_id">Member
+            Function <code class="computeroutput"><span class="identifier">thread_id</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="identifier">thread_id_t</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">thread_id</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template_member_function__find_original___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template_member_function__find_original___" title="Template
+            Member Function find_original&lt;&gt;">Template
+            Member Function <code class="computeroutput"><span class="identifier">find_original</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">find_original</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+</pre>
+<p>
+              This method searches the transaction's write list for the original
+              piece of memory referred to by the transactional memory passed in.
+              If the memory passed in is the original global memory it is simply
+              returned. Otherwise, the copied memory passed in, is used to find the
+              original global memory stored in the transaction's write set and then
+              the original memory is returned. While new memory constructed within
+              a transaction can be passed into find_original(), it is not necessary
+              as it always will return a reference to itself. However, to reduce
+              the complexity of client-side code, it may be preferred to build a
+              single method for both new and existing memory address lookup.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__read___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__read___" title="Template
+            Function read&lt;&gt;">Template
+            Function <code class="computeroutput"><span class="identifier">read</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">read</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+</pre>
+<p>
+              The read method is used when a transaction is attempting to read a
+              piece of memory that is shared between threads (i.e. global heap space).
+              The input argument is a reference to a derived base_transaction_object
+              instance, the return value reference is the correct base_transaction_object
+              to read based on the current state of the transaction and the currently
+              employed updating policy.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__read_ptr___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__read_ptr___" title="Template
+            Function read_ptr&lt;&gt;">Template
+            Function <code class="computeroutput"><span class="identifier">read_ptr</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span> <span class="identifier">read_ptr</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span> <span class="identifier">in</span><span class="special">);</span>
+</pre>
+<p>
+              Identical to the read() interface, except the input parameter is a
+              base_transaction_object pointer as is the return parameter
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__write___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__write___" title="Template
+            Function write&lt;&gt;">Template
+            Function <code class="computeroutput"><span class="identifier">write</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">write</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">w</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+</pre>
+<p>
+              The templatized write method is used when a transaction is attempting
+              to write to a piece of memory that is shared between threads (i.e.
+              global heap space). The input argument is a reference to a derived
+              base_transaction_object instance, the return value reference is the
+              correct base_transaction_object to write to based on the current state
+              of the transaction and the currently employed updating policy.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__write_ptr___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__write_ptr___" title="Template
+            Function write_ptr&lt;&gt;">Template
+            Function <code class="computeroutput"><span class="identifier">write_ptr</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">write_ptr</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">in</span><span class="special">);</span>
+</pre>
+<p>
+              Identical to the write() interface, except the input is a base_transaction_object
+              pointer as is the return parameter.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__get_written___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__get_written___" title="Template
+            Function get_written&lt;&gt;">Template
+            Function <code class="computeroutput"><span class="identifier">get_written</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get_written</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">in</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__delete_memory___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__delete_memory___" title="Template
+            Function delete_memory&lt;&gt;">Template
+            Function <code class="computeroutput"><span class="identifier">delete_memory</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">delete_memory</span><span class="special">(</span><span class="identifier">T</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">)</span>
+</pre>
+<p>
+              This method places the input parameter into a garbage set which is
+              emptied (deleted) once the transaction commits.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__new_memory___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__new_memory___" title="Template
+            Function new_memory&lt;&gt;">Template
+            Function <code class="computeroutput"><span class="identifier">new_memory</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">new_memory</span><span class="special">();</span>
+</pre>
+<p>
+              This method constructs new memory of a derived base_transaction_object
+              type and returns a pointer to the newly allocated memory. While the
+              input template parameter is not used, C++ does not allow functions
+              to differ only by return type. Since different template function instantiations
+              would be constructed here, one per derived base_transaction_object
+              type used within the transaction, a compiler error would be generated
+              for differing return types if an input parameter was not supplied.
+              To overcome this, a void* could be used as the return value, but that
+              would incur client-side casting on the return value, a costly side-effect.
+              To overcome the limitations of C++, while still ensuring strong type-safety,
+              an input parameter which is never referenced is required.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__new_memory_copy___"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.class__transaction_.template__function__new_memory_copy___" title="Template
+            Function new_memory_copy&lt;&gt;">Template
+            Function <code class="computeroutput"><span class="identifier">new_memory_copy</span><span class="special">&lt;&gt;</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">new_memory_copy</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+<p>
+              This method behaves similarly to the new_memory() interface except
+              that it makes an exact replica of the input parameter. The return value
+              is a pointer to the newly allocated, replicated object.
+            </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.transaction_hpp.struct__thread_initializer_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_hpp.struct__thread_initializer_" title="Struct
+          thread_initializer">Struct
+          <code class="computeroutput"><span class="identifier">thread_initializer</span></code></a>
+</h5></div></div></div>
+<p>
+            Scoped thread initializer calling transaction::initialize_thread() in
+            the constructor and transaction::terminate_thread() in the destructor.
+          </p>
+<p>
+            Declare an object of this class on each thread participating on a transaction.
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">thread_initializer</span> <span class="special">{</span>
+    <span class="identifier">thread_initializer</span><span class="special">();</span>
+    <span class="special">~</span><span class="identifier">thread_initializer</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.core.transaction_bookkeeping_hpp"></a><a href="core.html#toward_boost_stm.reference.core.transaction_bookkeeping_hpp" title="
+        Header &lt;boost/stm/transaction_bookkeeping.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction_bookkeeping</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_bookkeeping_hpp.class__transaction_bookkeeping_">Class
+          <code class="computeroutput"><span class="identifier">transaction_bookkeeping</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">transaction_bookkeeping</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.transaction_bookkeeping_hpp.class__transaction_bookkeeping_"></a><a href="core.html#toward_boost_stm.reference.core.transaction_bookkeeping_hpp.class__transaction_bookkeeping_" title="Class
+          transaction_bookkeeping">Class
+          <code class="computeroutput"><span class="identifier">transaction_bookkeeping</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">transaction_bookkeeping</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+   <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">uint32</span><span class="special">,</span> <span class="identifier">uint32</span><span class="special">&gt;</span> <span class="identifier">thread_commit_map</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">ThreadIdAndCommitId</span><span class="special">,</span> <span class="identifier">uint32</span><span class="special">&gt;</span> <span class="identifier">CommitHistory</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">ThreadIdAndCommitId</span><span class="special">,</span> <span class="identifier">uint32</span><span class="special">&gt;</span> <span class="identifier">AbortHistory</span><span class="special">;</span>
+
+   <span class="identifier">transaction_bookkeeping</span><span class="special">();</span>
+
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">lockConvoyMs</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">commitTimeMs</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">readAborts</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">writeAborts</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">abortPermDenied</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="identifier">totalAborts</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">commits</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">handOffs</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">newMemoryAborts</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">newMemoryCommits</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">deletedMemoryAborts</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">deletedMemoryCommits</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">readChangedToWrite</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">readStayedAsRead</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+   <span class="keyword">void</span> <span class="identifier">inc_read_aborts</span><span class="special">();</span>
+   <span class="keyword">void</span> <span class="identifier">inc_write_aborts</span><span class="special">();</span>
+
+   <span class="keyword">void</span> <span class="identifier">inc_thread_commits</span><span class="special">(</span><span class="identifier">uint32</span> <span class="identifier">threadId</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_thread_aborts</span><span class="special">(</span><span class="identifier">uint32</span> <span class="identifier">threadId</span><span class="special">);</span>
+
+   <span class="identifier">thread_commit_map</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">threadedCommits</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">thread_commit_map</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">threadedAborts</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+   <span class="keyword">void</span> <span class="identifier">inc_lock_convoy_ms</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_commit_time_ms</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_commits</span><span class="special">();</span>
+   <span class="keyword">void</span> <span class="identifier">inc_abort_perm_denied</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">threadId</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_handoffs</span><span class="special">();</span>
+   <span class="keyword">void</span> <span class="identifier">inc_new_mem_aborts_by</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_new_mem_commits_by</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_del_mem_aborts_by</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_del_mem_commits_by</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">incrementReadChangedToWrite</span><span class="special">();</span>
+   <span class="keyword">void</span> <span class="identifier">incrementReadStayedAsRead</span><span class="special">();</span>
+
+   <span class="identifier">CommitHistory</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">getCommitReadSetList</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">CommitHistory</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">getCommitWriteSetList</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">AbortHistory</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">getAbortReadSetList</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">AbortHistory</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">getAbortWriteSetList</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+   <span class="keyword">void</span> <span class="identifier">pushBackSizeOfReadSetWhenAborting</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">size</span><span class="special">);</span>
+
+   <span class="keyword">void</span> <span class="identifier">pushBackSizeOfWriteSetWhenAborting</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">size</span><span class="special">);</span>
+
+   <span class="keyword">void</span> <span class="identifier">pushBackSizeOfReadSetWhenCommitting</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">size</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">pushBackSizeOfWriteSetWhenCommitting</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">size</span><span class="special">);</span>
+
+   <span class="keyword">bool</span> <span class="identifier">isLoggingAbortAndCommitSize</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="keyword">void</span> <span class="identifier">setIsLoggingAbortAndCommitSize</span><span class="special">(</span><span class="keyword">bool</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">);</span>
+
+   <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">out</span><span class="special">,</span> <span class="identifier">transaction_bookkeeping</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">that</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="stm_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="mixins_transactional_objects.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
