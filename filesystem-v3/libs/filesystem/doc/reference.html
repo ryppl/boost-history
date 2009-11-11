@@ -77,7 +77,7 @@
 &nbsp;&nbsp;&nbsp;
 <a href="#directory_iterator-constructors">directory_iterator 
     constructors</a><br>
-<a href="#Class-template-recursive_directory_iterator">Class recursive_directory_iterator</a><br>
+<a href="#Class-recursive_directory_iterator">Class recursive_directory_iterator</a><br>
     <a href="#file_status">Class 
     file_status</a><br>
     &nbsp;</td>
@@ -232,7 +232,7 @@ the same object within a file system.</p>
 
 </span>      class <a href="#Class-directory_iterator">directory_iterator</a>;
 
-      class <a href="#Class-template-recursive_directory_iterator">recursive_directory_iterator</a>;
+      class <a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a>;
 
       enum <a name="file_type">file_type</a> { status_error, file_not_found, regular_file, directory_file,
                        symlink_file, block_file, character_file, fifo_file, socket_file,
@@ -346,21 +346,26 @@ the same object within a file system.</p>
     } // namespace filesystem
   } // namespace boost</pre>
 <h4><a name="Error-reporting">Error reporting</a></h4>
-<p>Use cases for the Filesystem library include situations where:</p>
-<ul>
-  <li>File system 
-errors are truly exceptional and indicate a serious failure. Throwing an 
-  exception is the most appropriate response.<br>
-&nbsp;</li>
-  <li>File system system errors are routine and do not necessarily represent 
-  failure. Returning an error code is the most appropriate response.</li>
-</ul>
-<p>To support both uses cases, many filesystem library functions provide two overloads, one that 
+<p>Filesystem library functions often provide two overloads, one that 
 throws an exception to report file system errors, and another that sets an
 <code>error_code</code>.</p>
-<p>Functions not having an argument of type
-<code>system::error_code&amp;</code>, unless otherwise specified, 
-report errors as follows:</p>
+<blockquote>
+<p>[<i>Note:</i> This supports two common use cases:</p>
+<ul>
+  <li>Uses where file system 
+errors are truly exceptional and indicate a serious failure. Throwing an 
+  exception is the most appropriate response. This is the preferred default for 
+  most everyday programming.<br>
+&nbsp;</li>
+  <li>Uses where file system system errors are routine and do not necessarily represent 
+  failure. Returning an error code is the most appropriate response. This allows 
+  application specific error handling, including simply ignoring the error.</li>
+</ul>
+  <p><i>--end note</i>]</p>
+</blockquote>
+<p>Functions <b>not</b> having an argument of type
+<code>system::error_code&amp;</code> 
+report errors as follows, unless otherwise specified:</p>
   <ul>
   <li>When a call by the 
   implementation to an operating system or other underlying API results in an 
@@ -369,10 +374,13 @@ report errors as follows:</p>
 <code>filesystem_error</code> is thrown.<br>
 &nbsp;</li>
   <li>Failure to allocate storage is reported by throwing an exception as described in the C++ standard, 
-  17.6.4.10 [res.on.exception.handling].</li>
+  17.6.4.10 [res.on.exception.handling].<br>
+&nbsp;</li>
+  <li>Destructors throw nothing.</li>
   </ul>
   <p>Functions having an argument of type
-<code>system::error_code&amp;</code>, unless otherwise specified, report errors as follows:</p>
+<code>system::error_code&amp;</code> report errors as follows, unless otherwise 
+  specified:</p>
 <ul>
   <li>If a call by the 
   implementation to an operating system or other underlying API results in an 
@@ -1575,6 +1583,9 @@ else if ( &amp;ec != &amp;boost::throws() ) ec.clear();</span></pre>
   m_symlink_status</code></span></p>
 </blockquote>
 <h3><a name="Class-directory_iterator">Class <code>directory_iterator</code></a></h3>
+<p>Objects of type <code>directory_iterator</code> provide standard library 
+compliant iteration over the contents of a directory. Also see class <code>
+<a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a></code>.</p>
 <pre>  namespace boost
   {
     namespace filesystem
@@ -1589,7 +1600,8 @@ else if ( &amp;ec != &amp;boost::throws() ) ec.clear();</span></pre>
 
         // <a href="#directory_iterator-constructors">constructors</a>
         directory_iterator();  // creates the &quot;end&quot; iterator
-        explicit directory_iterator(const path&amp; p, system::error_code&amp; ec);
+        explicit directory_iterator(const path&amp; p);
+        directory_iterator(const path&amp; p, system::error_code&amp; ec);
 
        ~directory_iterator();
 
@@ -1620,8 +1632,7 @@ with no arguments always constructs an end iterator object, which is the only
 legitimate iterator to be used for the end condition. The result of <code>
 operator*</code> on an end iterator is not defined. For any other iterator value 
 a <code>const directory_entry&amp;</code> is returned. The result of
-<code>operator-&gt;</code> on an end iterator is not defined. For any other 
-iterator value a <code>const directory_entry*</code> is 
+<code>operator-&gt;</code> on an end iterator is not defined. For any other iterator value a <code>const directory_entry*</code> is 
 returned. </p>
 <p>Two end iterators are always equal. An end iterator is not equal to a non-end 
 iterator.</p>
@@ -1664,19 +1675,29 @@ result in an iterator whose value is the removed or added directory entry. See
 
 <p><i>Effects:</i> Constructs the end iterator.</p>
 
+<p><i>Throws:</i> Nothing.</p>
+
 </blockquote>
 
-<pre><code>explicit directory_iterator(</code>const path&amp; p, system::error_code&amp; ec<code>);</code></pre>
+<pre><code>explicit directory_iterator(</code>const path&amp; p<code>);
+directory_iterator(</code>const path&amp; p, system::error_code&amp; ec<code>);</code></pre>
 <blockquote>
 
 <p><i>Effects:</i> Constructs a iterator representing the first 
-entry in the directory resolved to by <code>dp</code>, otherwise, the end iterator.</p>
+entry in the directory <code>p</code> resolves to, if any, otherwise, the end iterator.</p>
+
+<p><i>Throws:</i> As specified in
+  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  Error reporting</a>.</p>
 
 <p>[<i>Note:</i> To iterate over the current directory, write <code>
 directory_iterator(&quot;.&quot;)</code> rather than <code>directory_iterator(&quot;&quot;)</code>.
 <i>-- end note</i>]</p>
 </blockquote>
-<h3><a name="Class-template-recursive_directory_iterator">Class <code>recursive_directory_iterator</code></a></h3>
+<h3><a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code></a></h3>
+<p>Objects of type <code>directory_iterator</code> provide standard library 
+compliant iteration over the contents of a directory, including recursion into 
+its sub-directories.</p>
 <pre>  namespace boost
   {
     namespace filesystem
@@ -3138,7 +3159,7 @@ final document.</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->04 November 2009<!--webbot bot="Timestamp" endspan i-checksum="40588" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->11 November 2009<!--webbot bot="Timestamp" endspan i-checksum="40583" --></p>
 
 </body>
 

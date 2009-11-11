@@ -74,6 +74,15 @@ namespace
     }
   }
 
+  void report_error_code(const error_code& ec)
+  {
+    cout << "  ec:\n"
+         << "    value() is " << ec.value() << '\n'
+         << "    category().name() is " << ec.category().name() << '\n'
+         << "    message() is " <<  ec.message() << '\n'
+         ;
+  }
+
   bool threw_exception;
 
 }
@@ -85,6 +94,8 @@ int main(int argc, char* argv[])
     cout << "Usage: error_demo path\n";
     return 1;
   }
+
+  error_code ec;
 
   //  construct path - no error_code
 
@@ -118,6 +129,11 @@ int main(int argc, char* argv[])
   report_status(s);
 
   //  get status - with error_code
+
+  cout << "status(argv[1], ec);\n";
+  s = fs::status(p, ec);
+  report_status(s);
+  report_error_code(ec);
 
   //  query existence - no error_code
 

@@ -16,12 +16,10 @@
 *
 *  Review all operations.cpp code for race conditions similar to #2925. Fix or document.
 *  Enable all BOOST_FILESYSTEM_NO_DEPRECATED code.
-*  Vista symlink_status support.
 *  rename and remove really need to be renamed. If users says "using namespace boost::filesystem"
    and some header included stdio, there is just too much chance of silent error.
 *  create_directories error handling.
 *  Review any commented out code, both in operations.hpp and operations.cpp
-*  Finish refactoring operations_test.
 *  Fold convenience.hpp into operations.hpp
 *  Two argument recursive_directory_iterator ctor isn't recognizing throws().
    would it be better to fold into a single two argument ctor with default?
@@ -584,10 +582,9 @@ namespace detail
 //--------------------------------------------------------------------------------------//
 
   class directory_iterator
-    : public boost::iterator_facade<
-        directory_iterator,
-        directory_entry,
-        boost::single_pass_traversal_tag >
+    : public boost::iterator_facade< directory_iterator,
+                                     directory_entry,
+                                     boost::single_pass_traversal_tag >
   {
   public:
 
