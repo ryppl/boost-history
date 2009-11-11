@@ -46,13 +46,13 @@ namespace boost { namespace stm {
 
 template <typename T>
 class transactional_object : public
-#ifdef USE_STM_MEMORY_MANAGER2
+#ifdef USE_STM_MEMORY_MANAGER
     memory_manager<transactional_object<T>, base_transaction_object>
 #else
     base_transaction_object
 #endif
 {
-#ifdef USE_STM_MEMORY_MANAGER2
+#ifdef USE_STM_MEMORY_MANAGER
     typedef memory_manager<transactional_object<T>, base_transaction_object> base_type;
 #else
     typedef base_transaction_object base_type;
@@ -117,24 +117,6 @@ public:
         //cache_copy(static_cast<transactional_object<T> const * const>(rhs), this);
         *this=*static_cast<transactional_object<T> const * const>(rhs);
     }
-
-    #if USE_STM_MEMORY_MANAGER
-   void* operator new(std::size_t size, const std::nothrow_t&) throw ()
-   {
-      return base_memory_manager::retrieve_mem(size);
-   }
-    void* operator new(std::size_t size) throw (std::bad_alloc)
-    {
-        void* ptr= base_memory_manager::retrieve_mem(size);
-        if (ptr==0) throw std::bad_alloc();
-        return ptr;
-    }
-
-   void operator delete(void* mem) throw ()
-   {
-      base_memory_manager::return_mem(mem, sizeof(transactional_object<T>));
-   }
-    #endif
 
 };
 

@@ -38,13 +38,13 @@ namespace non_tx { namespace detail {
 
 template <typename T>
 class cache : public
-#ifdef USE_STM_MEMORY_MANAGER2
+#ifdef USE_STM_MEMORY_MANAGER
     memory_manager<cache<T>, base_transaction_object>
 #else
     base_transaction_object
 #endif
 {
-#ifdef USE_STM_MEMORY_MANAGER2
+#ifdef USE_STM_MEMORY_MANAGER
     typedef memory_manager<cache<T>, base_transaction_object> base_type;
 #else
     typedef base_transaction_object base_type;
@@ -115,7 +115,7 @@ public:
         ptr_=0;
     }
 
-#if USE_STM_MEMORY_MANAGER
+#if USE_STM_MEMORY_MANAGER2
    void* operator new(std::size_t size, const std::nothrow_t&) throw ()
    {
       return base_memory_manager::retrieve_mem(size);

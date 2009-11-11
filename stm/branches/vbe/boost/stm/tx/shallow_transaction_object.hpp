@@ -56,13 +56,13 @@ class transaction;
 template <class Derived, typename Base=base_transaction_object>
 class shallow_transaction_object : public
 #ifdef USE_STM_MEMORY_MANAGER
-    memory_manager<shallow_transaction_object<Derived,Base>, Base>
+    memory_manager<Derived, Base>
 #else
     Base
 #endif
 {
 #ifdef USE_STM_MEMORY_MANAGER
-    typedef memory_manager<transaction_object<Derived,Base>, Base> base_type;
+    typedef memory_manager<Derived, Base> base_type;
 #else
     typedef Base base_type;
 #endif

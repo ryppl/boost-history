@@ -55,14 +55,14 @@ class transaction;
 //-----------------------------------------------------------------------------
 template <class Derived, typename Base=base_transaction_object>
 class transaction_object : public
-#ifdef USE_STM_MEMORY_MANAGER2
-    memory_manager<transaction_object<Derived,Base>, Base>
+#ifdef USE_STM_MEMORY_MANAGER
+    memory_manager<Derived, Base>
 #else
     Base
 #endif
 {
-#ifdef USE_STM_MEMORY_MANAGER2
-    typedef memory_manager<transaction_object<Derived,Base>, Base> base_type;
+#ifdef USE_STM_MEMORY_MANAGER
+    typedef memory_manager<Derived, Base> base_type;
 #else
     typedef Base base_type;
 #endif
@@ -112,23 +112,6 @@ public:
    }
 #endif
 
-#if USE_STM_MEMORY_MANAGER
-   void* operator new(std::size_t size, const std::nothrow_t&) throw ()
-   {
-      return base_memory_manager::retrieve_mem(size);
-   }
-    void* operator new(std::size_t size) throw (std::bad_alloc)
-    {
-        void* ptr= base_memory_manager::retrieve_mem(size);
-        if (ptr==0) throw std::bad_alloc();
-        return ptr;
-    }
-
-   void operator delete(void* mem) throw ()
-   {
-      base_memory_manager::return_mem(mem, sizeof(Derived));
-   }
-#endif
 };
 
 template <typename T> class native_trans :

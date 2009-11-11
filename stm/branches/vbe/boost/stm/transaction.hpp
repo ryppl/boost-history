@@ -1543,8 +1543,9 @@ private:
 ////////////////////////////////////////
 #ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
 ////////////////////////////////////////
+//public:
     tx_context &context_;
-
+//private:
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
     mutable WriteContainer *write_list_ref_;
     inline WriteContainer *write_list() {return write_list_ref_;}
@@ -1645,7 +1646,7 @@ private:
         }
     }
 
-    static void thread_conflicting_mutexes_set_all_cnd(Mutex *mutex, int b) {
+    static void thread_conflicting_mutexes_set_all_cnd(latm::mutex_type *mutex, int b) {
         for (latm::thread_id_mutex_set_map::iterator iter = threadConflictingMutexes_.begin();
             threadConflictingMutexes_.end() != iter; ++iter)
         {
@@ -2031,6 +2032,7 @@ template <typename M>
 inline void unlock(M& m, latm::mutex_type& lock) {transaction::unlock(m, lock);}
 
 
+#if defined(BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER)
 template <class T> T* cache_allocate(transaction* t) {
     #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER) && defined (USE_STM_MEMORY_MANAGER)
     return  reinterpret_cast<T*>(base_memory_manager::retrieve_mem(sizeof(T)));
@@ -2039,13 +2041,16 @@ template <class T> T* cache_allocate(transaction* t) {
     #elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
     return reinterpret_cast<T*>(t->context_.mstorage_.allocate<T>());
     #else
+    return 0;
     #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER, BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER must be defined"
     #endif
 }
+#endif
 
 // this function must be specialized for objects that are non transactional
 // by deleting the object
 
+#if defined(BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER)
 #ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
 namespace partial_specialization_workaround {
 template <class T>
@@ -2084,11 +2089,12 @@ inline void cache_deallocate(T* ptr) {
         free(ptr);
     #elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
     #else
-    #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER or BOOST_STM_CACHE_USE_MALLOC must be defined"#endif
+    #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER or BOOST_STM_CACHE_USE_MALLOC must be defined"
     #endif
     }
 }
 #endif //BOOST_STM_NO_PARTIAL_SPECIALIZATION
+#endif 
 
 inline void cache_release(base_transaction_object* ptr) {
     if (ptr==0) return ;

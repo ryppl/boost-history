@@ -80,7 +80,7 @@ Mutex transaction::deletionBufferMutex_;
 std::ofstream transaction::logFile_;
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-Mutex base_memory_manager::transactionObjectMutex_ = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t base_memory_manager::transactionObjectMutex_ = PTHREAD_MUTEX_INITIALIZER;
 #else
 boost::mutex base_memory_manager::transactionObjectMutex_;
 #endif
@@ -170,16 +170,10 @@ void transaction::initialize()
    logFile_.open("DracoSTM_log.txt");
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-   //pthread_mutexattr_settype(&transactionMutexAttribute_, PTHREAD_MUTEX_NORMAL);
-
    pthread_mutex_init(&transactionMutex_, 0);
    pthread_mutex_init(&transactionsInFlightMutex_, 0);
    pthread_mutex_init(&deletionBufferMutex_, 0);
    pthread_mutex_init(&latm::instance().latmMutex_, 0);
-
-   //pthread_mutex_init(&transactionMutex_, &transactionMutexAttribute_);
-   //pthread_mutex_init(&transactionsInFlightMutex_, &transactionMutexAttribute_);
-   //pthread_mutex_init(&latmMutex_, &transactionMutexAttribute_);
 #endif
 }
 
