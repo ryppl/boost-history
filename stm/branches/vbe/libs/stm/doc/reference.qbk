@@ -12,7 +12,7 @@ This section presents the interface of __Boost_STM__.
 
 [include reference/stm.qbk]
 
-[section Basics]
+[section Core]
 
 [/include reference/rt_configuration.qbk]
 [include reference/base_transaction_object.qbk]
@@ -20,35 +20,70 @@ This section presents the interface of __Boost_STM__.
 [include reference/data_types.qbk]
 [include reference/exceptions.qbk]
 [include reference/language_like.qbk]
-[include reference/contention_manager.qbk]
 [include reference/transaction.qbk]
 [include reference/transaction_bookkeeping.qbk]
 [endsect]
 
-[section Contention managers]
+There are two kind of transactional objets:
+
+* Mixins
+* Wrappers
+
+[section Mixins Transactional Objects]
+
+Mixing transactional objects can be deep or shallow copied. 
+
+Both schemas can be used by the same smart pointers.
+
+[section Deep Copy]
+[include reference/transaction_object.qbk]
+[include reference/transaction_object_ptr.qbk]
+[include reference/tx/numeric.qbk]
+[include reference/tx/pointer.qbk]
+[endsect]
+
+[section Shallow Copy]
+[include reference/shallow_transaction_object.qbk]
+[endsect]
+
+[section Smart pointers]
+[include reference/smart_pointers.qbk]
+[endsect]
+
+[endsect]
+
+[section Warppers Transactional Objects]
+
+[include reference/transactional_object.qbk]
+[section Smart pointers]
+[include reference/tx/smart_ptr.qbk]
+[endsect]
+[endsect]
+
+[section Non Transactional Objects]
+[include reference/non_tx/numeric.qbk]
+[include reference/non_tx/pointer.qbk]
+[section Smart pointers]
+[include reference/non_tx/smart_ptr.qbk]
+[endsect]
+[endsect]
+
+[section Contention Managers]
+[include reference/contention_managers/concept.qbk]
+
+__TBoost_STM__ allows the user to choose between static and dynamic polimorphic contention manager.
+
+[include reference/contention_manager.qbk]
+
+[section Static Contention Managers]
+[endsect]
+[section Dynamic Contention Managers]
 [include reference/base_contention_manager.qbk]
-[/include reference/contention_managers/default.qbk]
+[include reference/contention_managers/default.qbk]
 [/include reference/contention_managers/NoExceptionOnAbortNoticeOnReadWrites.qbk]
 [/include reference/contention_managers/ExceptAndBackOffOnAbortNotice.qbk]
 [endsect]
-
-[section Transactional objects]
-[include reference/shallow_transaction_object.qbk]
-[include reference/transaction_object.qbk]
-[include reference/transaction_object_ptr.qbk]
-[include reference/transactional_object.qbk]
-[include reference/smart_pointers.qbk]
-[include reference/tx/numeric.qbk]
-[include reference/tx/pointer.qbk]
-[include reference/tx/smart_ptr.qbk]
 [endsect]
-
-[section Non transactional objects]
-[include reference/non_tx/numeric.qbk]
-[include reference/non_tx/pointer.qbk]
-[include reference/non_tx/smart_ptr.qbk]
-[endsect]
-
 
 [endsect]
 

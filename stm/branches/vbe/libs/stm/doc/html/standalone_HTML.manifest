@@ -8,10 +8,11 @@ toward_boost_stm/users_guide/ext_references.html
 toward_boost_stm/users_guide/glosary.html
 toward_boost_stm/reference.html
 toward_boost_stm/reference/stm_hpp.html
-toward_boost_stm/reference/basics.html
-toward_boost_stm/reference/contention_managers.html
-toward_boost_stm/reference/transactional_objects.html
+toward_boost_stm/reference/core.html
+toward_boost_stm/reference/mixins_transactional_objects.html
+toward_boost_stm/reference/warppers_transactional_objects.html
 toward_boost_stm/reference/non_transactional_objects.html
+toward_boost_stm/reference/contention_managers.html
 toward_boost_stm/examples.html
 toward_boost_stm/appendices.html
 toward_boost_stm/appendices/changes.html

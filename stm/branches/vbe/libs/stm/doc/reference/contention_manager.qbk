@@ -13,11 +13,13 @@
 
 This file defines the contention manager depending on the compile directives:
 
-* BOOST_STM_CM_STATIC_CONF when you want a staticacly configured CM
-    * BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm when configuration manager is except_and_back_off_on_abort_notice_cm
-    
-* BOOST_STM_CM_DYNAMIC_CONF when you want a polymorphic CM configured at run time
+Define BOOST_STM_CM_STATIC_CONF when you want a staticacly configured CM.
+For example
 
+    #define BOOST_STM_CM_STATIC_CONF \
+        <boost/stm/contention_managers/except_and_back_off_on_abort_notice_cm.hpp>
+
+When not defined the type of the contention manager will be dynmic_polymorphic.
 
     typedef 'compilation_dependent_type' contention_manager_type;
 
