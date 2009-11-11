@@ -6,8 +6,8 @@
 
 // this file is based on config.hpp of boost.thread
 
-#ifndef BOOST_FIBER_DETAIL_CONFIG_H
-#define BOOST_FIBER_DETAIL_CONFIG_H
+#ifndef BOOST_FIBERS_DETAIL_CONFIG_H
+#define BOOST_FIBERS_DETAIL_CONFIG_H
 
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
@@ -86,5 +86,4 @@
 #include <boost/config/auto_link.hpp>
 # endif  // auto-linking disabled
 
-#endif // BOOST_FIBER_DETAIL_CONFIG_H
-
+#endif // BOOST_FIBERS_DETAIL_CONFIG_H

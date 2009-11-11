@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_ATTRIBUTES_H
-#define BOOST_FIBER_ATTRIBUTES_H
+#ifndef BOOST_FIBERS_ATTRIBUTES_H
+#define BOOST_FIBERS_ATTRIBUTES_H
 
 #include <cstddef>
 
@@ -14,7 +14,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 class BOOST_FIBER_DECL attributes
 {
@@ -38,4 +38,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBER_ATTRIBUTES_H
+#endif // BOOST_FIBERS_ATTRIBUTES_H

@@ -4,13 +4,13 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "boost/fiber/mutex.hpp"
+#include <boost/fiber/mutex.hpp>
 
-#include "boost/fiber/detail/atomic.hpp"
-#include "boost/fiber/utility.hpp"
+#include <boost/fiber/detail/atomic.hpp>
+#include <boost/fiber/utility.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 mutex::mutex() :
 	state_( 0)

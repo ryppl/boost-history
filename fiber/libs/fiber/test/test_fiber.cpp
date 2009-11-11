@@ -14,35 +14,72 @@
 
 void zero_args_fn() {}
 
-// check fiber
+void one_args_fn( int i) {}
+
+void two_args_fn( int i, std::string const& msg) {}
+
 void test_case_1()
 {
-	boost::fiber::attributes attribs;
-	boost::fiber::fiber f1( zero_args_fn, attribs);
-	boost::fiber::fiber f2( zero_args_fn, attribs);
+	boost::fiber f1( one_args_fn, 10);
+	boost::fiber f2;
+	BOOST_CHECK( f1);
+	BOOST_CHECK( ! f2);
+}
+
+void test_case_2()
+{
+	boost::fiber f1;
+	f1 = boost::fibers::make_fiber( zero_args_fn);
+	boost::fiber f2 = boost::fibers::make_fiber( one_args_fn, 1);
+	boost::fiber f3;
+	f3 = boost::fibers::make_fiber( two_args_fn, 1, "abc");
+}
+
+void test_case_3()
+{
+	boost::fiber f1( one_args_fn, 10);
+	BOOST_CHECK( f1);
+	boost::fiber f2( boost::move( f1) );
+	BOOST_CHECK( ! f1);
+	BOOST_CHECK( f2);
+}
+
+void test_case_4()
+{
+	boost::fiber f1( zero_args_fn);
+	boost::fiber f2( zero_args_fn);
+	boost::fiber f3;
+	BOOST_CHECK( f1);
+	BOOST_CHECK( f2);
+	BOOST_CHECK( ! f3);
 
 	BOOST_CHECK( f1 != f2);
+	BOOST_CHECK( f1 != f3);
+	BOOST_CHECK( f2 != f3);
 
 	std::ostringstream os1;
 	os1 << f1.get_id();
 	std::ostringstream os2;
 	os2 << f2.get_id();
+	std::ostringstream os3;
+	os3 << f3.get_id();
 
 	std::string not_a_fiber("{not-a-fiber}");
 	BOOST_CHECK( os1.str() != os2.str() );
+	BOOST_CHECK( os1.str() != os3.str() );
+	BOOST_CHECK( os2.str() != os3.str() );
 	BOOST_CHECK( os1.str() != not_a_fiber);
 	BOOST_CHECK( os2.str() != not_a_fiber);
+	BOOST_CHECK( os3.str() == not_a_fiber);
 }
 
-// check swap
-void test_case_2()
+void test_case_5()
 {
-	boost::fiber::attributes attribs;
-	boost::fiber::fiber f1( zero_args_fn, attribs);
-	boost::fiber::fiber f2( zero_args_fn, attribs);
+	boost::fiber f1( zero_args_fn);
+	boost::fiber f2( zero_args_fn);
 
-	boost::fiber::fiber::id id1 = f1.get_id();
-	boost::fiber::fiber::id id2 = f2.get_id();
+	boost::fiber::id id1 = f1.get_id();
+	boost::fiber::id id2 = f2.get_id();
 
 	f1.swap( f2);
 
@@ -57,6 +94,9 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 
 	test->add( BOOST_TEST_CASE( & test_case_1) );
 	test->add( BOOST_TEST_CASE( & test_case_2) );
+	test->add( BOOST_TEST_CASE( & test_case_3) );
+	test->add( BOOST_TEST_CASE( & test_case_4) );
+	test->add( BOOST_TEST_CASE( & test_case_5) );
 
 	return test;
 }

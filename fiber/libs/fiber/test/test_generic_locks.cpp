@@ -12,9 +12,9 @@ namespace tsk = boost::task;
 
 void test_lock_two_uncontended()
 {
-    boost::fiber::mutex m1,m2;
+    boost::fibers::mutex m1,m2;
 
-    boost::fiber::mutex::scoped_lock l1(m1,boost::defer_lock),
+    boost::fibers::mutex::scoped_lock l1(m1,boost::defer_lock),
         l2(m2,boost::defer_lock);
 
     BOOST_CHECK(!l1.owns_lock());
@@ -28,9 +28,9 @@ void test_lock_two_uncontended()
 
 struct wait_data
 {
-    boost::fiber::mutex m;
+    boost::fibers::mutex m;
     bool flag;
-    boost::fiber::condition cond;
+    boost::fibers::condition cond;
     
     wait_data():
         flag(false)
@@ -38,7 +38,7 @@ struct wait_data
     
     void wait()
     {
-        boost::fiber::mutex::scoped_lock l(m);
+        boost::fibers::mutex::scoped_lock l(m);
         while(!flag)
         {
             cond.wait(l);
@@ -50,7 +50,7 @@ struct wait_data
     {
         boost::system_time const target=boost::get_system_time()+d;
         
-        boost::fiber::mutex::scoped_lock l(m);
+        boost::fibers::mutex::scoped_lock l(m);
         while(!flag)
         {
             if(!cond.timed_wait(l,target))
@@ -63,32 +63,32 @@ struct wait_data
     
     void signal()
     {
-        boost::fiber::mutex::scoped_lock l(m);
+        boost::fibers::mutex::scoped_lock l(m);
         flag=true;
         cond.notify_all();
     }
 };
        
 
-void lock_mutexes_slowly(boost::fiber::mutex* m1,boost::fiber::mutex* m2,wait_data* locked,wait_data* quit)
+void lock_mutexes_slowly(boost::fibers::mutex* m1,boost::fibers::mutex* m2,wait_data* locked,wait_data* quit)
 {
-    boost::lock_guard<boost::fiber::mutex> l1(*m1);
+    boost::lock_guard<boost::fibers::mutex> l1(*m1);
     boost::this_fiber::sleep(boost::posix_time::milliseconds(500));
-    boost::lock_guard<boost::fiber::mutex> l2(*m2);
+    boost::lock_guard<boost::fibers::mutex> l2(*m2);
     locked->signal();
     quit->wait();
 }
 
-void lock_pair(boost::fiber::mutex* m1,boost::fiber::mutex* m2)
+void lock_pair(boost::fibers::mutex* m1,boost::fibers::mutex* m2)
 {
     boost::lock(*m1,*m2);
-    boost::fiber::mutex::scoped_lock l1(*m1,boost::adopt_lock),
+    boost::fibers::mutex::scoped_lock l1(*m1,boost::adopt_lock),
         l2(*m2,boost::adopt_lock);
 }
 
 void test_lock_two_other_thread_locks_in_order()
 {
-    boost::fiber::mutex m1,m2;
+    boost::fibers::mutex m1,m2;
     wait_data locked;
     wait_data release;
     
@@ -107,7 +107,7 @@ void test_lock_two_other_thread_locks_in_order()
 
 void test_lock_two_other_thread_locks_in_opposite_order()
 {
-    boost::fiber::mutex m1,m2;
+    boost::fibers::mutex m1,m2;
     wait_data locked;
     wait_data release;
     
@@ -126,9 +126,9 @@ void test_lock_two_other_thread_locks_in_opposite_order()
 
 void test_lock_five_uncontended()
 {
-    boost::fiber::mutex m1,m2,m3,m4,m5;
+    boost::fibers::mutex m1,m2,m3,m4,m5;
 
-    boost::fiber::mutex::scoped_lock l1(m1,boost::defer_lock),
+    boost::fibers::mutex::scoped_lock l1(m1,boost::defer_lock),
         l2(m2,boost::defer_lock),
         l3(m3,boost::defer_lock),
         l4(m4,boost::defer_lock),
@@ -149,23 +149,23 @@ void test_lock_five_uncontended()
     BOOST_CHECK(l5.owns_lock());
 }
 
-void lock_five_mutexes_slowly(boost::fiber::mutex* m1,boost::fiber::mutex* m2,boost::fiber::mutex* m3,boost::fiber::mutex* m4,boost::fiber::mutex* m5,
+void lock_five_mutexes_slowly(boost::fibers::mutex* m1,boost::fibers::mutex* m2,boost::fibers::mutex* m3,boost::fibers::mutex* m4,boost::fibers::mutex* m5,
                               wait_data* locked,wait_data* quit)
 {
-    boost::lock_guard<boost::fiber::mutex> l1(*m1);
+    boost::lock_guard<boost::fibers::mutex> l1(*m1);
     boost::this_fiber::sleep(boost::posix_time::milliseconds(500));
-    boost::lock_guard<boost::fiber::mutex> l2(*m2);
+    boost::lock_guard<boost::fibers::mutex> l2(*m2);
     boost::this_fiber::sleep(boost::posix_time::milliseconds(500));
-    boost::lock_guard<boost::fiber::mutex> l3(*m3);
+    boost::lock_guard<boost::fibers::mutex> l3(*m3);
     boost::this_fiber::sleep(boost::posix_time::milliseconds(500));
-    boost::lock_guard<boost::fiber::mutex> l4(*m4);
+    boost::lock_guard<boost::fibers::mutex> l4(*m4);
     boost::this_fiber::sleep(boost::posix_time::milliseconds(500));
-    boost::lock_guard<boost::fiber::mutex> l5(*m5);
+    boost::lock_guard<boost::fibers::mutex> l5(*m5);
     locked->signal();
     quit->wait();
 }
 
-void lock_five(boost::fiber::mutex* m1,boost::fiber::mutex* m2,boost::fiber::mutex* m3,boost::fiber::mutex* m4,boost::fiber::mutex* m5)
+void lock_five(boost::fibers::mutex* m1,boost::fibers::mutex* m2,boost::fibers::mutex* m3,boost::fibers::mutex* m4,boost::fibers::mutex* m5)
 {
     boost::lock(*m1,*m2,*m3,*m4,*m5);
     m1->unlock();
@@ -177,7 +177,7 @@ void lock_five(boost::fiber::mutex* m1,boost::fiber::mutex* m2,boost::fiber::mut
 
 void test_lock_five_other_thread_locks_in_order()
 {
-    boost::fiber::mutex m1,m2,m3,m4,m5;
+    boost::fibers::mutex m1,m2,m3,m4,m5;
     wait_data locked;
     wait_data release;
     
@@ -196,7 +196,7 @@ void test_lock_five_other_thread_locks_in_order()
 
 void test_lock_five_other_thread_locks_in_different_order()
 {
-    boost::fiber::mutex m1,m2,m3,m4,m5;
+    boost::fibers::mutex m1,m2,m3,m4,m5;
     wait_data locked;
     wait_data release;
     
@@ -213,7 +213,7 @@ void test_lock_five_other_thread_locks_in_different_order()
     t.join();
 }
 
-void lock_n(boost::fiber::mutex* mutexes,unsigned count)
+void lock_n(boost::fibers::mutex* mutexes,unsigned count)
 {
     boost::lock(mutexes,mutexes+count);
     for(unsigned i=0;i<count;++i)
@@ -227,7 +227,7 @@ void test_lock_ten_other_thread_locks_in_different_order()
 {
     unsigned const num_mutexes=10;
     
-    boost::fiber::mutex mutexes[num_mutexes];
+    boost::fibers::mutex mutexes[num_mutexes];
     wait_data locked;
     wait_data release;
     

@@ -6,8 +6,8 @@
 //
 //  based on boost::interprocess::sync::interprocess_condition
 
-#ifndef BOOST_FIBER_CONDITION_H
-#define BOOST_FIBER_CONDITION_H
+#ifndef BOOST_FIBERS_CONDITION_H
+#define BOOST_FIBERS_CONDITION_H
 
 #include <boost/cstdint.hpp>
 #include <boost/thread/thread_time.hpp>
@@ -17,7 +17,7 @@
 #include <boost/fiber/mutex.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 class condition : private noncopyable
 {
@@ -119,4 +119,4 @@ public:
 
 }}
 
-#endif // BOOST_FIBER_CONDITION_H
+#endif // BOOST_FIBERS_CONDITION_H

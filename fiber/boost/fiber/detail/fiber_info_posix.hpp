@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_DETAIL_FIBER_INFO_POSIX_H
-#define BOOST_FIBER_DETAIL_FIBER_INFO_POSIX_H
+#ifndef BOOST_FIBERS_DETAIL_FIBER_INFO_POSIX_H
+#define BOOST_FIBERS_DETAIL_FIBER_INFO_POSIX_H
 
 extern "C" {
 
@@ -24,7 +24,7 @@ extern "C" {
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 namespace detail {
 
 struct BOOST_FIBER_DECL fiber_info_base
@@ -32,7 +32,7 @@ struct BOOST_FIBER_DECL fiber_info_base
 	typedef intrusive_ptr< fiber_info_base >	ptr_t;	
 
 	uint32_t				use_count;
-	attributes				attribs;
+	attributes				attrs;
 	::ucontext_t			uctx;
 	shared_array< char >	uctx_stack;
 
@@ -83,4 +83,4 @@ void intrusive_ptr_release( fiber::detail::fiber_info_base * p)
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBER_DETAIL_FIBER_INFO_POSIX_H
+#endif // BOOST_FIBERS_DETAIL_FIBER_INFO_POSIX_H

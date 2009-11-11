@@ -23,19 +23,20 @@ void value1_fn()
 void value2_fn()
 { value2 = 1; }
 
-// check empty() + size()
 void test_case_1()
 {
-	boost::fiber::scheduler sched;
+	boost::fibers::scheduler sched( boost::fibers::round_robin_policy);
 	BOOST_CHECK( sched.empty() );
 	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
 	BOOST_CHECK( ! sched.run() );
 
-	sched.make_fiber( zero_args_fn);
+	boost::fiber f( boost::fibers::make_fiber( zero_args_fn) );
+	sched.submit_fiber( boost::move( f) );
 	BOOST_CHECK( ! sched.empty() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 
-	sched.make_fiber( zero_args_fn);
+	sched.submit_fiber(
+		boost::fibers::make_fiber( zero_args_fn) );
 	BOOST_CHECK( ! sched.empty() );
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
 
@@ -50,7 +51,7 @@ void test_case_1()
 
 void test_case_2()
 {
-	boost::fiber::scheduler sched;
+	boost::fibers::scheduler sched( boost::fibers::round_robin_policy);
 
 	sched.make_fiber( value1_fn);
 	sched.make_fiber( value2_fn);

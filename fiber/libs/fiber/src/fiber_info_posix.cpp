@@ -14,19 +14,19 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 namespace detail {
 
 fiber_info_base::fiber_info_base() :
-	attribs(),
+	attrs(),
 	uctx(),
 	uctx_stack()
 {}
 
-fiber_info_base::fiber_info_base( attributes const& attribs_) :
-	attribs( attribs_),
+fiber_info_base::fiber_info_base( attributes const& attrs_) :
+	attrs( attrs_),
 	uctx(),
-	uctx_stack( new char[attribs.stack_size()])
+	uctx_stack( new char[attrs.stack_size()])
 {
 	BOOST_ASSERT( uctx_stack);
 
@@ -36,7 +36,7 @@ fiber_info_base::fiber_info_base( attributes const& attribs_) :
 				errno,
 				system::system_category) );
 	uctx.uc_stack.ss_sp = uctx_stack.get();
-	uctx.uc_stack.ss_size = attribs.stack_size();
+	uctx.uc_stack.ss_size = attrs.stack_size();
 	uctx.uc_link = 0;
 }
 

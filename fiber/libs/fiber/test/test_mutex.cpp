@@ -30,7 +30,7 @@ struct test_lock
     void operator()()
     {
         mutex_type mutex;
-        boost::fiber::condition condition;
+        boost::fibers::condition condition;
 
         // Test the lock's constructors.
         {
@@ -59,12 +59,12 @@ struct test_lock
 
 void do_test_mutex()
 {
-    test_lock< boost::fiber::mutex >()();
+    test_lock< boost::fibers::mutex >()();
 }
 
 void test_case1()
 {
-	boost::fiber::scheduler sched;
+	boost::fibers::scheduler sched;
     sched.make_fiber( & do_test_mutex);
 	sched.run();
 }
@@ -72,24 +72,24 @@ void test_case1()
 int value1 = 0;
 int value2 = 0;
 
-void test_fn1( boost::fiber::mutex & mtx)
+void test_fn1( boost::fibers::mutex & mtx)
 {
-	boost::fiber::mutex::scoped_lock lk( mtx);
+	boost::fibers::mutex::scoped_lock lk( mtx);
 	++value1;
 	for ( int i = 0; i < 3; ++i)
 		boost::this_fiber::yield();
 }
 
-void test_fn2( boost::fiber::mutex & mtx)
+void test_fn2( boost::fibers::mutex & mtx)
 {
-	boost::fiber::mutex::scoped_lock lk( mtx);
+	boost::fibers::mutex::scoped_lock lk( mtx);
 	++value2;
 }
 
 void test_case2()
 {
-	boost::fiber::mutex mtx;
-	boost::fiber::scheduler sched;
+	boost::fibers::mutex mtx;
+	boost::fibers::scheduler sched;
     sched.make_fiber( & test_fn1, boost::ref( mtx) );
     sched.make_fiber( & test_fn2, boost::ref( mtx) );
 

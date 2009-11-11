@@ -6,8 +6,8 @@
 //
 //  based on boost::interprocess::sync::scoped_lock
 
-#ifndef BOOST_FIBER_UNIQUE_LOCK_H
-#define BOOST_FIBER_UNIQUE_LOCK_H
+#ifndef BOOST_FIBERS_UNIQUE_LOCK_H
+#define BOOST_FIBERS_UNIQUE_LOCK_H
 
 #include <algorithm>
 
@@ -17,7 +17,7 @@
 #include <boost/fiber/exceptions.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 template< typename Mutex >
 class unique_lock
@@ -144,4 +144,4 @@ public:
 
 }}
 
-#endif // BOOST_FIBER_UNIQUE_LOCK_H
+#endif // BOOST_FIBERS_UNIQUE_LOCK_H

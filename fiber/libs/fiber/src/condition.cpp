@@ -14,7 +14,7 @@
 #include <boost/fiber/utility.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 void
 condition::notify_( uint32_t cmd)

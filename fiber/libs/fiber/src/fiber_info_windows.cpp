@@ -14,7 +14,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 namespace detail {
 
 fiber_info_base::fiber_info_base() :

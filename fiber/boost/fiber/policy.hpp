@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_POLICY_H
-#define BOOST_FIBER_POLICY_H
+#ifndef BOOST_FIBERS_POLICY_H
+#define BOOST_FIBERS_POLICY_H
 
 #include <cstddef>
 #include <memory>
@@ -15,7 +15,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 struct policy
 {
@@ -36,8 +36,13 @@ struct policy
 	virtual std::size_t size() = 0;
 };
 
+enum policy_t
+{
+	round_robin_policy = 0
+};
+
 }}
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBER_POLICY_H
+#endif // BOOST_FIBERS_POLICY_H

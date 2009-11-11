@@ -21,7 +21,7 @@
 
 int value = 0;
 
-void wait_fn( boost::fiber::count_down_event & ev)
+void wait_fn( boost::fibers::count_down_event & ev)
 {
 	ev.wait();
 	++value;
@@ -30,7 +30,7 @@ void wait_fn( boost::fiber::count_down_event & ev)
 void test_case_1()
 {
 	boost::uint32_t n = 3;
-	boost::fiber::count_down_event ev( n);
+	boost::fibers::count_down_event ev( n);
 
 	BOOST_CHECK_EQUAL( ev.initial(), n);
 	BOOST_CHECK_EQUAL( ev.current(), n);
@@ -56,8 +56,8 @@ void test_case_2()
 {
 	value = 0;
 	boost::uint32_t n = 3;
-	boost::fiber::count_down_event ev( n);
-	boost::fiber::scheduler sched;
+	boost::fibers::count_down_event ev( n);
+	boost::fibers::scheduler sched;
 
 	BOOST_CHECK_EQUAL( ev.initial(), n);
 	BOOST_CHECK_EQUAL( ev.current(), n);

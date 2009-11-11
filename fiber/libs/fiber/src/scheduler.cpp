@@ -6,13 +6,14 @@
 
 #include <boost/fiber/scheduler.hpp>
 
+#include <boost/fiber/detail/move.hpp>
 #include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/rrp.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 scheduler::tss_policy_t scheduler::impl_;
 
@@ -29,7 +30,7 @@ scheduler::get_id()
 }
 
 void
-scheduler::yield()
+scheduler::fiber_yield()
 {
 	policy * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
@@ -37,7 +38,7 @@ scheduler::yield()
 }
 
 void
-scheduler::exit()
+scheduler::fiber_exit()
 {
 	policy * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
@@ -45,12 +46,16 @@ scheduler::exit()
 }
 
 void
-scheduler::failed()
+scheduler::fiber_failed()
 {
 	policy * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
 	impl->exit_active_fiber();
 }
+
+scheduler::scheduler( policy_t pol) :
+	pol_( pol)
+{}
 
 policy *
 scheduler::access_()
@@ -58,7 +63,14 @@ scheduler::access_()
 	if ( ! impl_.get() )
 	{
 		fiber::convert_thread_to_fiber();
-		impl_.reset( new rrp() );
+		switch ( pol_)
+		{
+		case round_robin_policy:
+			impl_.reset( new rrp() );
+			break;
+		default:
+			throw scheduler_error("invalid scheduling policy");
+		}
 	}
 	return impl_.get();
 }
@@ -77,6 +89,15 @@ scheduler::empty()
 std::size_t
 scheduler::size()
 { return access_()->size(); }
+
+void
+scheduler::submit_fiber( fiber f)
+{
+	access_()->add_fiber(
+		std::auto_ptr< fiber >(
+			new fiber(
+				boost::move( f) ) ) );
+}
 
 }}
 

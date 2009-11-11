@@ -12,7 +12,7 @@
 #include <boost/fiber/utility.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 manual_reset_event::manual_reset_event( bool isset) :
 	state_(

@@ -49,7 +49,7 @@ void cancel_fn( int n)
 
 void test_case_1()
 {
-	boost::fiber::scheduler sched;
+	boost::fibers::scheduler sched;
 	sched.make_fiber( runs_as_fn);
 
 	BOOST_CHECK( sched.run() );
@@ -59,7 +59,7 @@ void test_case_1()
 
 void test_case_2()
 {
-	boost::fiber::scheduler sched;
+	boost::fibers::scheduler sched;
 	sched.make_fiber( get_id_fn);
 
 	BOOST_CHECK( sched.run() );
@@ -71,7 +71,7 @@ void test_case_2()
 void test_case_3()
 {
 	value = 0;
-	boost::fiber::scheduler sched;
+	boost::fibers::scheduler sched;
 	sched.make_fiber( yield_fn, 3);
 	BOOST_CHECK_EQUAL( 0, value);
 
@@ -94,7 +94,7 @@ void test_case_3()
 void test_case_4()
 {
 	value = 0;
-	boost::fiber::scheduler sched;
+	boost::fibers::scheduler sched;
 	sched.make_fiber( cancel_fn, 5);
 	BOOST_CHECK_EQUAL( 0, value);
 	

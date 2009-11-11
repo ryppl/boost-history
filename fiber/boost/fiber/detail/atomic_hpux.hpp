@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_DETAIL_ATOMIC_HPUX_H
-#define BOOST_FIBER_DETAIL_ATOMIC_HPUX_H
+#ifndef BOOST_FIBERS_DETAIL_ATOMIC_HPUX_H
+#define BOOST_FIBERS_DETAIL_ATOMIC_HPUX_H
 
 extern "C"
 {
@@ -17,7 +17,7 @@ extern "C"
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 namespace detail {
 
 inline
@@ -58,5 +58,4 @@ uint32_t atomic_fetch_sub( uint32_t volatile * object, uint32_t operand)
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBER_DETAIL_ATOMIC_HPUX_H
-
+#endif // BOOST_FIBERS_DETAIL_ATOMIC_HPUX_H

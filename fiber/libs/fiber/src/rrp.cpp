@@ -8,15 +8,19 @@
 
 #include <utility>
 
+#include <boost/fiber/detail/fiber_info.hpp>
+#include <boost/fiber/detail/move.hpp>
 #include <boost/fiber/exceptions.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 rrp::rrp() :
-	master_(),
+	master_(
+		detail::fiber_info_base::ptr_t(
+			new detail::fiber_info_default() ) ),
 	f_id_(),
 	fibers_(),
 	runnable_fibers_(),

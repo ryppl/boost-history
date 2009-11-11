@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_RRP_H
-#define BOOST_FIBER_RRP_H
+#ifndef BOOST_FIBERS_RRP_H
+#define BOOST_FIBERS_RRP_H
 
 #include <cstddef>
 #include <memory>
@@ -21,7 +21,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 class BOOST_FIBER_DECL rrp : private noncopyable,
 							 public policy
@@ -55,4 +55,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBER_RRP_H
+#endif // BOOST_FIBERS_RRP_H

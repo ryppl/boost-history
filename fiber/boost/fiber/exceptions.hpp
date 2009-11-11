@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_EXCEPTIONS_H
-#define BOOST_FIBER_EXCEPTIONS_H
+#ifndef BOOST_FIBERS_EXCEPTIONS_H
+#define BOOST_FIBERS_EXCEPTIONS_H
 
 #include <stdexcept>
 #include <string>
@@ -15,7 +15,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 class fiber_error : public std::runtime_error
 {
@@ -27,6 +27,14 @@ public:
 
 class fiber_interrupted
 {};
+
+class fiber_moved : public std::logic_error
+{
+public:
+    fiber_moved() :
+		std::logic_error("fiber moved")
+	{}
+};
 
 class invalid_stacksize : public std::runtime_error
 {
@@ -56,4 +64,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBER_EXCEPTIONS_H
+#endif // BOOST_FIBERS_EXCEPTIONS_H

@@ -11,7 +11,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 attributes::attributes() :
 	stacksize_( 64000),

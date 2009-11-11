@@ -21,19 +21,19 @@ namespace this_fiber {
 
 inline
 bool runs_as_fiber()
-{ return fiber::scheduler::runs_as_fiber(); }
+{ return fibers::scheduler::runs_as_fiber(); }
 
 inline
-fiber::fiber::id get_id()
-{ return fiber::scheduler::get_id(); }
+fiber::id get_id()
+{ return fibers::scheduler::get_id(); }
 
 inline
 void yield()
-{ fiber::scheduler::yield(); }
+{ fibers::scheduler::fiber_yield(); }
 
 inline
 void cancel()
-{ fiber::scheduler::exit(); }
+{ fibers::scheduler::fiber_exit(); }
 
 }}
 

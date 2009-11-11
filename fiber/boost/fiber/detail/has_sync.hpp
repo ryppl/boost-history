@@ -1,5 +1,5 @@
-#ifndef BOOST_FIBER_DETAIL_HAS_SYNC_H
-#define BOOST_FIBER_DETAIL_HAS_SYNC_H
+#ifndef BOOST_FIBERS_DETAIL_HAS_SYNC_H
+#define BOOST_FIBERS_DETAIL_HAS_SYNC_H
 
 // MS compatible compilers support #pragma once
 
@@ -46,4 +46,4 @@
 
 #endif // __GNUC__ * 100 + __GNUC_MINOR__ >= 401
 
-#endif // BOOST_FIBER_DETAIL_HAS_SYNC_H
+#endif // BOOST_FIBERS_DETAIL_HAS_SYNC_H

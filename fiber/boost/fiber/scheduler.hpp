@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_SCHEDULER_H
-#define BOOST_FIBER_SCHEDULER_H
+#ifndef BOOST_FIBERS_SCHEDULER_H
+#define BOOST_FIBERS_SCHEDULER_H
 
 #include <cstddef>
 #include <memory>
@@ -33,12 +33,11 @@ void cancel();
 
 }
 
-namespace fiber {
+namespace fibers {
 
 class BOOST_FIBER_DECL scheduler : private noncopyable
 {
 private:
-	friend void trampoline( fiber *);
 	friend bool this_fiber::runs_as_fiber();
 	friend fiber::id this_fiber::get_id();
 	friend void this_fiber::yield();
@@ -52,32 +51,43 @@ private:
 
 	static fiber::id get_id();
 
-	static void yield();
+	static void fiber_yield();
 
-	static void exit();
+	static void fiber_exit();
 
-	static void failed();
+	static void fiber_failed();
+
+	policy_t	pol_;
 
 	policy * access_();
 
 public:
+	scheduler( policy_t = round_robin_policy);
+
 	~scheduler();
+
+	bool run();
+
+	bool empty();
+
+	std::size_t size();
+
+	void submit_fiber( fiber);
 
 	template< typename Fn >
 	void make_fiber( Fn fn)
 	{
-		attributes attrs;
 		access_()->add_fiber(
 			std::auto_ptr< fiber >(
-				new fiber( fn, attrs) ) );
+				new fiber( fn) ) );
 	}
 
 	template< typename Fn >
 	void make_fiber( attributes attrs, Fn fn)
 	{
-		access_()->add_fiber(
-			std::auto_ptr< fiber >(
-				new fiber( fn, attrs) ) );
+		std::auto_ptr< fiber > f( new fiber( fn) );
+		f->set_attributes( attrs);
+		access_()->add_fiber( f);
 	}
 
 #ifndef BOOST_FIBER_MAX_ARITY
@@ -88,55 +98,31 @@ public:
    BOOST_PP_CAT(A, n) BOOST_PP_CAT(a, n)
 #define BOOST_ENUM_FIBER_ARGS(n) BOOST_PP_ENUM(n, BOOST_FIBER_ARG, ~)
 
-#define BOOST_FIBER_MAKE_FIBER_FUNCTION(z, n, unused)	\
-	template<											\
-		typename Fn,									\
-		BOOST_PP_ENUM_PARAMS(n, typename A)				\
-	>													\
-	void make_fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n))	\
-	{													\
-		attributes attrs;								\
-		access_()->add_fiber(							\
-			std::auto_ptr< fiber >(						\
-				new fiber(								\
-					boost::bind(						\
-						boost::type< void >(), fn, BOOST_PP_ENUM_PARAMS(n, a) ),\
-					attrs) ) );													\
-	}
-
-BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTION, ~)
-
-#undef BOOST_FIBER_MAKE_FIBER_FUNCTION
-
-#define BOOST_FIBER_MAKE_FIBER_FUNCTION(z, n, unused)	\
-	template<											\
-		typename Fn,									\
-		BOOST_PP_ENUM_PARAMS(n, typename A)				\
-	>													\
-	void make_fiber( attributes const& attrs, Fn fn, BOOST_ENUM_FIBER_ARGS(n))	\
-	{																			\
-		access_()->add_fiber(													\
-			std::auto_ptr< fiber >(												\
-				new fiber(														\
-					boost::bind(												\
-						boost::type< void >(), fn, BOOST_PP_ENUM_PARAMS(n, a) ),\
-					attrs) ) );													\
+#define BOOST_FIBER_MAKE_FIBER_FUNCTION(z, n, unused) \
+	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
+	void make_fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
+	{ \
+		access_()->add_fiber( \
+			std::auto_ptr< fiber >( \
+				new fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ) ); \
+	} \
+	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
+	void make_fiber( attributes const& attrs, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
+	{ \
+		std::auto_ptr< fiber > f( \
+			new fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); \
+		f->set_attributes( attrs); \
+		access_()->add_fiber( f);\
 	}
 
 BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTION, ~)
 
 #undef BOOST_FIBER_MAKE_FIBER_FUNCTION
 #undef BOOST_FIBER_MAX_ARITY
-
-	bool run();
-
-	bool empty();
-
-	std::size_t size();
 };
 
 }}
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBER_SCHEDULER_H
+#endif // BOOST_FIBERS_SCHEDULER_H

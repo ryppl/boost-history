@@ -11,7 +11,7 @@
 #include <boost/fiber/utility.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 count_down_event::count_down_event( uint32_t initial) :
 	initial_( initial),

@@ -6,8 +6,8 @@
 //
 //  based on boost::interprocess::sync::interprocess_mutex
 
-#ifndef BOOST_FIBER_MUTEX_H
-#define BOOST_FIBER_MUTEX_H
+#ifndef BOOST_FIBERS_MUTEX_H
+#define BOOST_FIBERS_MUTEX_H
 
 #include <boost/cstdint.hpp>
 #include <boost/thread/thread_time.hpp>
@@ -16,7 +16,7 @@
 #include <boost/fiber/unique_lock.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 class mutex : private noncopyable
 {
@@ -45,4 +45,4 @@ typedef mutex try_mutex;
 
 }}
 
-#endif // BOOST_FIBER_MUTEX_H
+#endif // BOOST_FIBERS_MUTEX_H

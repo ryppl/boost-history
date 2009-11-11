@@ -4,23 +4,16 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_DETAIL_FIBER_INFO_H
-#define BOOST_FIBER_DETAIL_FIBER_INFO_H
+#ifndef BOOST_FIBERS_DETAIL_FIBER_INFO_H
+#define BOOST_FIBERS_DETAIL_FIBER_INFO_H
 
-extern "C" {
-
-#include <ucontext.h>
-
-}
-
+#include <boost/assert.hpp>
 #include <boost/config.hpp>
-#include <boost/function.hpp>
-#include <boost/shared_array.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
 #include <boost/fiber/attributes.hpp>
 #include <boost/fiber/detail/config.hpp>
+#include <boost/fiber/detail/move.hpp>
 
 # if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__CYGWIN__)
 #include <boost/fiber/detail/fiber_info_windows.hpp>
@@ -33,7 +26,7 @@ extern "C" {
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 namespace detail {
 
 class BOOST_FIBER_DECL fiber_info_default : public fiber_info_base
@@ -47,7 +40,8 @@ public:
 		fiber_info_base()
 	{}
 	
-	void run() {}
+	void run()
+	{ BOOST_ASSERT( ! "run() of master-fiber should never be executed"); }
 };
 
 template< typename Fn >
@@ -60,10 +54,22 @@ private:
 	fiber_info & operator=( fiber_info const&);
 
 public:
+#ifdef BOOST_HAS_RVALUE_REFS
+	thread_data( Fn && fn, attributes const& attribs) :
+		fiber_info_base( attribs),
+		fn_( static_cast< Fn && >( fn) )
+	{}
+#else
 	fiber_info( Fn fn, attributes const& attribs) :
 		fiber_info_base( attribs),
 		fn_( fn)
 	{}
+
+	fiber_info( boost::detail::fiber_move_t< Fn > fn, attributes const& attribs) :
+		fiber_info_base( attribs),
+		fn_( fn)
+	{}
+#endif            
 
 	void run()
 	{ fn_(); }
@@ -111,4 +117,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBER_DETAIL_FIBER_INFO_H
+#endif // BOOST_FIBERS_DETAIL_FIBER_INFO_H

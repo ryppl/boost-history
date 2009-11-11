@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_COUNT_DOWN_EVENT_H
-#define BOOST_FIBER_COUNT_DOWN_EVENT_H
+#ifndef BOOST_FIBERS_COUNT_DOWN_EVENT_H
+#define BOOST_FIBERS_COUNT_DOWN_EVENT_H
 
 #include <boost/cstdint.hpp>
 #include <boost/thread/thread_time.hpp>
@@ -14,7 +14,7 @@
 #include <boost/fiber/mutex.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
 class count_down_event : private noncopyable
 {
@@ -44,4 +44,4 @@ public:
 
 }}
 
-#endif // BOOST_FIBER_COUNT_DOWN_EVENT_H
+#endif // BOOST_FIBERS_COUNT_DOWN_EVENT_H
