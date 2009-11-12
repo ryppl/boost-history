@@ -7,8 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_COMMON_FUNCTOR_LOG_UNNORMALIZED_PDF_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_COMMON_FUNCTOR_LOG_UNNORMALIZED_PDF_HPP_ER_2009
+#include <boost/statistics/detail/distribution_common/fwd/log_unnormalized_pdf.hpp>
 #include <boost/statistics/detail/distribution_common/meta/value.hpp>
-#include <boost/statistics/detail/distribution_common/functor/log_unnormalized_pdf.hpp>
 
 namespace boost{
 namespace statistics{
