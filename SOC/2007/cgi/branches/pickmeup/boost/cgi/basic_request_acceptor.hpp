@@ -19,10 +19,10 @@
 #include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/common/basic_protocol_service.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
-  /// The interface class for any *cgi::acceptor.
+  /// The interface class for any *BOOST_CGI_NAMESPACE::acceptor.
   template<typename RequestAcceptorService>
   class basic_request_acceptor
     : public boost::asio::basic_io_object<RequestAcceptorService>
@@ -287,7 +287,7 @@ namespace cgi {
   };
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_BASIC_REQUEST_ACCEPTOR_HPP_INCLUDED__
 

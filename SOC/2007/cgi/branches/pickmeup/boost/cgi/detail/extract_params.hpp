@@ -15,14 +15,13 @@
 
 #include "boost/cgi/detail/url_decode.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace detail {
 
    /// Extract name/value pairs from a supplied string buffer.
    /**
-    * Name / value pairs can be separated by either '&' or ';', and the format
-    * of the name / value pairs is:
-    * 	<name>=<value>
+    * Name/value pairs can be separated by either '&' or ';', and the
+    * format is: name=value
     *
     */
    template<typename String, typename Map, typename Separator>
@@ -85,6 +84,6 @@ namespace cgi {
    }
 
  } // namespace detail
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_DETAIL_EXTRACT_PARAMS_HPP_INCLUDED__

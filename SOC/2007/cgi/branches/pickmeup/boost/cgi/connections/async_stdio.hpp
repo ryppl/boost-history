@@ -18,7 +18,7 @@
 #include "boost/cgi/connections/stdio.hpp"
 #include "boost/cgi/import/io_service.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
   // Asynchronous access to stdio
@@ -47,7 +47,7 @@ namespace cgi {
       is_open_ = false;
     }
 
-    static pointer create(::cgi::common::io_service& ios)
+    static pointer create(::BOOST_CGI_NAMESPACE::common::io_service& ios)
     {
       return pointer(new basic_connection<tags::async_stdio>(ios));
     }
@@ -119,7 +119,7 @@ namespace cgi {
     }
 
   private:
-    ::cgi::common::io_service& io_service_;
+    ::BOOST_CGI_NAMESPACE::common::io_service& io_service_;
   };
 
  } // namespace common
@@ -128,6 +128,6 @@ namespace cgi {
     typedef common::basic_connection<common::tags::async_stdio> async_stdio;
   } // namespace connections
 
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_ASYNC_STDIO_HPP_INCLUDED__

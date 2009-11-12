@@ -89,8 +89,7 @@ int main()
     //  throw std::runtime_error("Couldn't open file for writing");
     //std::cerr.rdbuf() = of.rdbuf();
 
-    service s;
-    request req(s);
+    request req;
 
     try {
 

@@ -14,6 +14,7 @@
 #include "boost/cgi/common/form_part.hpp"
 #include "boost/cgi/detail/url_decode.hpp"
 #include "boost/cgi/common/source_enums.hpp"
+#include "boost/cgi/config.hpp"
 
 #include <iostream> // **FIXME**
 #include <fstream>
@@ -21,7 +22,8 @@
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/random/mersenne_twister.hpp>
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
+
  namespace detail {
 
     BOOST_CGI_INLINE
@@ -42,7 +44,7 @@ namespace cgi {
          "multipart/form-data") != string_type::npos)
         parse_multipart_form(ec);
       else
-        return ec = error::invalid_form_type;
+        return ec = common::error::invalid_form_type;
 
       return ec;
     }
@@ -258,7 +260,8 @@ namespace cgi {
     }
 
  } // namespace detail
-} // namespace cgi
+ 
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_DETAIL_FORM_PARSER_IPP_INCLUDED__
 

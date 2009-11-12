@@ -14,7 +14,7 @@
 #include "boost/cgi/fcgi/request_service.hpp"
 #include "boost/cgi/fwd/basic_request_fwd.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace fcgi {
    
    // typedef for typical usage (FCGI)
@@ -25,7 +25,11 @@ namespace cgi {
    request;
 
  } // namespace fcgi
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
+
+namespace boost { namespace fcgi {
+  using ::BOOST_CGI_NAMESPACE::fcgi::request;
+} }
 
 #include "boost/cgi/basic_request.hpp"
 

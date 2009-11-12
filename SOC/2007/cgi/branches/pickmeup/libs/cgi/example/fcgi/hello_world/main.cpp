@@ -12,6 +12,7 @@
 // The simplest FastCGI program, outputs only "Hello there, universe."
 //
 
+#include <boost/cgi/config.hpp>
 #include <cmath>
 #include <iostream>
 #include <boost/asio.hpp>

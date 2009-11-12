@@ -17,8 +17,9 @@
 #include "boost/cgi/detail/service_base.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
 #include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
   /// The generic service class for basic_request<>s
@@ -44,7 +45,7 @@ namespace cgi {
     typedef Protocol                                  protocol_type;
     typedef common::basic_protocol_service<Protocol>  protocol_service_type;
 
-    request_service(::cgi::common::io_service& ios)
+    request_service(::BOOST_CGI_NAMESPACE::common::io_service& ios)
       : detail::service_base<request_service<Protocol> >(ios)
       , service_impl_(boost::asio::use_service<service_impl_type>(ios))
     {
@@ -153,7 +154,7 @@ namespace cgi {
   };
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #include "boost/cgi/detail/pop_options.hpp"
 

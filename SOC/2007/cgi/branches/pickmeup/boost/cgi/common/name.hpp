@@ -17,8 +17,9 @@
 #include <ostream>
 #include <cstdlib>
 #include <ctype.h>
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    template <typename CharT>
@@ -75,7 +76,7 @@ namespace cgi {
   }
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_CGI_COMMON_NAME_HPP_INCLUDED__
 

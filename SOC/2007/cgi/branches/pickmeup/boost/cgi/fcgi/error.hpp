@@ -17,7 +17,8 @@
 #include <string>
 #include <boost/system/error_code.hpp>
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
+ namespace fcgi {
   namespace error {
 
 enum fcgi_errors
@@ -116,15 +117,18 @@ inline const boost::system::error_category& get_fcgi_category()
 }
 
 static const boost::system::error_category& fcgi_category
-  = ::cgi::error::get_fcgi_category();
+  = ::BOOST_CGI_NAMESPACE::fcgi::error::get_fcgi_category();
 
   } // namespace error
-} // namespace cgi
+ } // namespace fcgi
+BOOST_CGI_NAMESPACE_END
 
 namespace boost {
   namespace system {
 
-    template<> struct is_error_code_enum< ::cgi::error::fcgi_errors>
+    template<> struct is_error_code_enum<
+        ::BOOST_CGI_NAMESPACE::fcgi::error::fcgi_errors
+      >
     {
       BOOST_STATIC_CONSTANT(bool, value = true);
     };
@@ -132,7 +136,8 @@ namespace boost {
   } // namespace system
 } // namespace boost
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
+ namespace fcgi {
   namespace error {
   
     inline boost::system::error_code make_error_code(fcgi_errors e)
@@ -142,6 +147,7 @@ namespace cgi {
     }
 
   } // namespace error
-} // namespace cgi
+ } // namespace fcgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_FCGI_ERROR_HPP_INCLUDED__

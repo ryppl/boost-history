@@ -19,9 +19,8 @@ using namespace boost::acgi;
 
 int main()
 {
-  service s;        // This becomes useful with async operations.
-  request req(s);   // Our request (POST data won't be parsed yet).
-  response resp;    // A response object to make our lives easier.
+  request req;   // Our request (POST data won't be parsed yet).
+  response resp; // A response object to make our lives easier.
 
   // This is a minimal response. The content_type(...) may go before or after
   // the response text.
@@ -29,7 +28,7 @@ int main()
       << "Hello there, universe.";
 
   // Leave this function, after sending the response and closing the request.
-  return_(resp, req, 0); // Note the underscore: returns "0" to the OS.
+  return commit(req, resp);
 }
 //]
 

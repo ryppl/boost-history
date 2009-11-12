@@ -11,8 +11,9 @@
 
 #include <string>
 #include <boost/lexical_cast.hpp>
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    template<typename CharT> struct basic_header;
@@ -56,6 +57,10 @@ namespace cgi {
      operator string_type () {
         return content + "\r\n";
      }
+     
+//     const_buffer_type data() {
+//        return boost::asio::buffer(
+//     }
 
      string_type content;
    };
@@ -166,7 +171,7 @@ namespace cgi {
    //}
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_HEADER_HPP_INCLUDED__
 

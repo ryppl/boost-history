@@ -8,8 +8,9 @@
 ////////////////////////////////////////////////////////////////
 #ifndef CGI_COMMON_REQUEST_STATUS_HPP_INCLUDED__
 #define CGI_COMMON_REQUEST_STATUS_HPP_INCLUDED__
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    enum request_status
@@ -25,7 +26,7 @@ namespace cgi {
      };
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_COMMON_REQUEST_STATUS_HPP_INCLUDED__
 

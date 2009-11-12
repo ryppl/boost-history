@@ -19,7 +19,7 @@
 #include "boost/cgi/fcgi/acceptor_service_impl.hpp"
 #include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
 
   /// The service class for FCGI basic_request_acceptor<>s
   /**
@@ -178,7 +178,7 @@ namespace cgi {
     service_impl_type service_impl_;
   };
 
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #include "boost/cgi/detail/pop_options.hpp"
 

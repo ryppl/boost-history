@@ -18,8 +18,9 @@
 
 #include <string>
 #include <boost/system/error_code.hpp>
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
   namespace error {
 
@@ -45,8 +46,11 @@ enum cgi_errors
   // **FIXME**
   broken_pipe,
 
-  // **FIXME**
+  // **TODO** Document
   bad_read,
+
+  // **TODO** Document
+  bad_write,
 
   // A client wasn't able to open.
   client_not_open,
@@ -114,16 +118,18 @@ inline const boost::system::error_category& get_cgi_category()
 }
 
 static const boost::system::error_category& cgi_category
-  = ::cgi::common::error::get_cgi_category();
+  = ::BOOST_CGI_NAMESPACE::common::error::get_cgi_category();
 
   } // namespace error
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 namespace boost {
   namespace system {
 
-    template<> struct is_error_code_enum< ::cgi::common::error::cgi_errors>
+    template<> struct is_error_code_enum<
+        ::BOOST_CGI_NAMESPACE::common::error::cgi_errors
+      >
     {
       BOOST_STATIC_CONSTANT(bool, value = true);
     };
@@ -131,7 +137,7 @@ namespace boost {
   } // namespace system
 } // namespace boost
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
   namespace error {
   
@@ -143,6 +149,6 @@ namespace cgi {
 
   } // namespace error
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_COMMON_ERROR_HPP_INCLUDED__

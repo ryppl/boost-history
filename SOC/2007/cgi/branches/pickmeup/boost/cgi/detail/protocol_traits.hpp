@@ -23,7 +23,7 @@
 #include "boost/cgi/fwd/basic_request_fwd.hpp"
 #include "boost/cgi/fwd/basic_connection_fwd.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
 
   namespace cgi  {}
   namespace acgi
@@ -90,7 +90,7 @@ namespace cgi {
 
  namespace detail {
 
-   namespace tags = ::cgi::common::tags;
+   namespace tags = ::BOOST_CGI_NAMESPACE::common::tags;
 
    template<typename Protocol>
     struct protocol_traits
@@ -202,19 +202,19 @@ namespace cgi {
 
     // **FIXME** (remove)
     template<>
-    struct protocol_traits< ::cgi::common::scgi_>
+    struct protocol_traits< ::BOOST_CGI_NAMESPACE::common::scgi_>
       : protocol_traits<tags::scgi>
     {
     };
 
     // **FIXME** (remove)
     template<>
-    struct protocol_traits< ::cgi::common::fcgi_>
+    struct protocol_traits< ::BOOST_CGI_NAMESPACE::common::fcgi_>
       : protocol_traits<tags::fcgi>
     {
     };
 
  } // namespace detail
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_REQUEST_TRAITS_HPP_INCLUDED__

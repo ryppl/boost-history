@@ -5,8 +5,9 @@
 #include <vector>
 #include <string>
 #include <boost/range.hpp>
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    struct form_part
@@ -60,7 +61,7 @@ namespace cgi {
    };
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_CGI_FORM_PART_HPP_INCLUDED__
 

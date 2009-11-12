@@ -20,8 +20,9 @@
 
 #include "boost/cgi/common/response.hpp"
 #include "boost/cgi/basic_request.hpp"
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    template<typename Response, typename Request>
@@ -38,7 +39,7 @@ namespace cgi {
    }
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 /// If an error occurs during the sending or closing then `status` will be
 // incremented by the value of this macro.
@@ -47,17 +48,17 @@ namespace cgi {
 #endif
 
 #define BOOST_CGI_RETURN(response, request, status)                     \
-          if ( ::cgi::common::return_helper(response, request, status)) \
+          if ( ::BOOST_CGI_NAMESPACE::common::return_helper(response, request, status)) \
             /** error **/                                               \
             return status + BOOST_CGI_RETURN_ERROR_INCREMENT;           \
           return status;
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
 #define return_(response, request, status) BOOST_CGI_RETURN(response, request, status)
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_RETURN_HPP_INCLUDED__

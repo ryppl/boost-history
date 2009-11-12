@@ -7,8 +7,10 @@
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/common/return.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
+
  namespace common {
 
     /// Send a response to a reqest and close off the request.
@@ -31,7 +33,7 @@ namespace cgi {
     }
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_CGI_COMMIT_HPP_INCLUDED_
 

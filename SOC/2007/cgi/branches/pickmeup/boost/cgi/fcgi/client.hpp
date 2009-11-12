@@ -32,7 +32,7 @@
 #undef max
 #include <algorithm>
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
   enum client_status
@@ -51,11 +51,11 @@ namespace cgi {
   class basic_client<connections::shareable_tcp, Protocol>
   {
   public:
-    typedef ::cgi::common::io_service         io_service_type;
-    typedef ::cgi::common::map                map_type;
-    typedef Protocol                          protocol_type;
-    typedef connections::shareable_tcp        connection_type;
-    typedef typename connection_type::pointer connection_ptr;
+    typedef ::BOOST_CGI_NAMESPACE::common::io_service   io_service_type;
+    typedef ::BOOST_CGI_NAMESPACE::common::map          map_type;
+    typedef Protocol                                    protocol_type;
+    typedef connections::shareable_tcp                  connection_type;
+    typedef typename connection_type::pointer           connection_ptr;
     typedef boost::array<
         unsigned char
       , fcgi::spec::header_length::value
@@ -130,7 +130,7 @@ namespace cgi {
       if (!ec && status_ != closed_ && connection_->is_open())
       {
         outbuf_.clear();
-        header_.reset(spec_detail::END_REQUEST, request_id_, 8);
+        header_.reset(fcgi::spec_detail::END_REQUEST, request_id_, 8);
 
         // Write an EndRequest packet to the server.
         fcgi::spec::end_request_body body(
@@ -225,20 +225,20 @@ namespace cgi {
           outbuf_.push_back(*iter);
         }
       }
-      header_.reset(spec_detail::STDOUT, request_id_, total_buffer_size);
+      header_.reset(fcgi::spec_detail::STDOUT, request_id_, total_buffer_size);
       
       std::size_t bytes_transferred
         = boost::asio::write(*connection_, outbuf_
                             , boost::asio::transfer_all(), ec);
 
-      /*
+      
       std::cerr<< "Transferred " << bytes_transferred
                << " / " << total_buffer_size << " bytes (running total: "
-               << total_sent_bytes_ << "; "
+               << total_sent_bytes_ << " bytes; "
                << total_sent_packets_ << " packets).\n";
       if (ec)
         std::cerr<< "Error " << ec << ": " << ec.message() << '\n';
-      */
+      
       total_sent_bytes_ += bytes_transferred;
       total_sent_packets_ += 1;
       // Now remove the protocol overhead from the caller, who
@@ -246,7 +246,7 @@ namespace cgi {
       bytes_transferred -= fcgi::spec::header_length::value;
       // Check everything was written ok.
       if (!ec && bytes_transferred != total_buffer_size)
-        ec = ::cgi::error::couldnt_write_complete_packet;
+        ec = ::BOOST_CGI_NAMESPACE::fcgi::error::couldnt_write_complete_packet;
 
       return bytes_transferred;
     }
@@ -341,14 +341,12 @@ namespace cgi {
 namespace fcgi {
     typedef
       common::basic_client<
-        connections::shareable_tcp, ::cgi::common::fcgi_
+        connections::shareable_tcp, ::BOOST_CGI_NAMESPACE::common::fcgi_
       >
     client;
 } // namespace fcgi
 
-
-
-}// namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_FCGI_CLIENT_HPP_INCLUDED__
 

@@ -16,16 +16,13 @@
 #include "boost/cgi/cgi/request_impl.hpp"
 #include "boost/cgi/basic_request.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
 
   class cgi_service_impl;
 
   typedef common::basic_request<cgi_request_service, cgi_service> cgi_request;
   typedef cgi_request request;
 
- //namespace cgi {
- //  typedef cgi_request request;
- //} // namespace cgi
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_CGI_REQUEST_HPP_INCLUDED__

@@ -23,9 +23,9 @@
 #include "boost/cgi/import/streambuf.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/fwd/basic_request_fwd.hpp"
+#include "boost/cgi/config.hpp"
 
-
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
   /// The response class: a helper for responding to requests.
@@ -45,7 +45,7 @@ namespace cgi {
      * Takes the buffer and uses it internally, does nothing with it on
      * destruction.
      */
-    basic_response(::cgi::common::streambuf* buf,
+    basic_response(::BOOST_CGI_NAMESPACE::common::streambuf* buf,
         common::http::status_code sc = common::http::ok);
 
     ~basic_response();
@@ -192,44 +192,29 @@ namespace cgi {
 
    /// Typedefs for typical usage.
    typedef basic_response<char>    response;
-   typedef basic_response<wchar_t> wresponse; // **FIXME** (untested)
-
-  /*
-  std::basic_ostream<char_type>& operator<<(std::basic_ostream<char_type>&, self_type& resp)
-  {
-    os<< "**response**";  
-    return os;
-  }
-  
-  template<typename CharT>
-  basic_response<CharT>&
-    basic_response<CharT>::operator<< (ostream_type& (*func)(ostream_type&))
-  {  
-    ostream_<< func; return *this;
-  }
-  */
+   typedef basic_response<wchar_t> wresponse; // **TODO** (untested)
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 
 
   /// Generic ostream template
   template<typename CharT, typename T>
-  cgi::common::basic_response<CharT>&
-    operator<< (cgi::common::basic_response<CharT>& resp, T const& t);
+  BOOST_CGI_NAMESPACE::common::basic_response<CharT>&
+    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<CharT>& resp, T const& t);
 
   template<typename CharT>
-  cgi::common::basic_response<CharT>&
-    operator<< (cgi::common::basic_response<CharT>& resp
-               , cgi::common::basic_header<CharT> const& hdr);
+  BOOST_CGI_NAMESPACE::common::basic_response<CharT>&
+    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<CharT>& resp
+               , BOOST_CGI_NAMESPACE::common::basic_header<CharT> const& hdr);
 
   template<typename CharT>
-  cgi::common::basic_response<CharT>&
-    operator<< (cgi::common::basic_response<CharT>& resp
-               , cgi::common::charset_header<CharT> const& hdr);
+  BOOST_CGI_NAMESPACE::common::basic_response<CharT>&
+    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<CharT>& resp
+               , BOOST_CGI_NAMESPACE::common::charset_header<CharT> const& hdr);
 
-  /// You can stream a cgi::cookie into a response.
+  /// You can stream a BOOST_CGI_NAMESPACE::cookie into a response.
   /**
    * This is just a shorthand way of setting a header that will set a
    * client-side cookie.
@@ -241,34 +226,19 @@ namespace cgi {
    * library.
    */
   template<typename charT>
-  cgi::common::basic_response<charT>&
-    operator<< (cgi::common::basic_response<charT>&
-               , cgi::common::basic_cookie<charT>);
+  BOOST_CGI_NAMESPACE::common::basic_response<charT>&
+    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<charT>&
+               , BOOST_CGI_NAMESPACE::common::basic_cookie<charT>);
                
-/*
   template<typename charT, typename T>
-  cgi::common::basic_response<charT>&
-    operator<< (cgi::common::basic_response<charT>&
-               , cgi::common::basic_cookie<T> const&);
-*/
-  template<typename charT, typename T>
-  cgi::common::basic_response<charT>&
-    operator<< (cgi::common::basic_response<charT>&
-               , cgi::common::http::status_code);
+  BOOST_CGI_NAMESPACE::common::basic_response<charT>&
+    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<charT>&
+               , BOOST_CGI_NAMESPACE::common::http::status_code);
 
   template<typename charT, typename T>
-  cgi::common::basic_response<charT>&
-    operator<< (cgi::common::basic_response<charT>&
-               , cgi::common::basic_response<charT>&);
-/*        
-inline std::ostream& operator<<(
-std::ios& (*func)(std::ios&)
-){return std::cout << func;};
-inline std::ostream& operator<<(
-std::ios_base& (*func)(std::ios_base&)
-){return std::cout << func;};
-};
-*/ 
+  BOOST_CGI_NAMESPACE::common::basic_response<charT>&
+    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<charT>&
+               , BOOST_CGI_NAMESPACE::common::basic_response<charT>&);
 
 #include "boost/cgi/detail/pop_options.hpp"
 

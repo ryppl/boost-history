@@ -9,6 +9,8 @@
 #ifndef CGI_ACGI_SERVICE_IMPL_HPP_INCLUDED__
 #define CGI_ACGI_SERVICE_IMPL_HPP_INCLUDED__
 
+#include "boost/cgi/detail/push_options.hpp"
+
 #include "boost/cgi/common/tags.hpp"
 #include "boost/cgi/common/map.hpp"
 #include "boost/cgi/acgi/request_impl.hpp"
@@ -18,7 +20,7 @@
 #include "boost/cgi/connections/async_stdio.hpp"
 #include "boost/cgi/detail/cgi_service_impl_base.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace acgi {
 
   class request_service
@@ -42,7 +44,7 @@ namespace cgi {
     void construct(implementation_type& impl)
     {
       impl.client_.set_connection(
-        implementation_type::connection_type::create(this->io_service())
+        implementation_type::connection_type::create(this->get_io_service())
       );
     }
 
@@ -57,6 +59,8 @@ namespace cgi {
   };
 
  } // namespace acgi
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
+
+#include "boost/cgi/detail/pop_options.hpp"
 
 #endif // CGI_ASYNC_CGI_SERVICE_IMPL_HPP_INCLUDED__

@@ -8,7 +8,6 @@
 [library CGI
     [quickbook 1.4]
     [version 0.01]
-    [id boost.cgi]
     [dirname the_document_dir]
     [copyright 2007 2008 Darren Garvey]
     [purpose Thoughts about CGI implementation]
@@ -87,6 +86,8 @@ These documents are either hosted at [@http://sourceforge.net/projects/cgi/ sour
 
 [include:intro introduction.qbk]
 
+[include quickstart.qbk]
+
 [include user_guide.qbk]
 
 [/include:tutorial user_guide/tutorial.qbk]
@@ -110,3 +111,7 @@ These documents are either hosted at [@http://sourceforge.net/projects/cgi/ sour
 [include troubleshooting.qbk]
 
 [include acknowledgements.qbk]
+
+[xinclude index.xml]
+
+[include reference.qbk]

@@ -39,3 +39,5 @@
  * currently on by default).
  */
 #define BOOST_CGI_KEEP_EMPTY_VARS
+
+#include "boost/cgi/config.hpp"

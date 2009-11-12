@@ -9,11 +9,13 @@
 #  define BOOST_CGI_SESSION_MAP_TYPE map
 #endif // BOOST_CGI_SESSION_MAP_TYPE
 
-namespace cgi {
+#include "boost/cgi/config.hpp"
+
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
-  typedef std::map< ::cgi::common::name, std::string> map;
-  typedef std::multimap< ::cgi::common::name, std::string> multimap;
+  typedef std::map< ::BOOST_CGI_NAMESPACE::common::name, std::string> map;
+  typedef std::multimap< ::BOOST_CGI_NAMESPACE::common::name, std::string> multimap;
 
    /**
     * If you want to add a new data type to a request you need to:
@@ -31,7 +33,7 @@ namespace cgi {
   typedef map        session_map;
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_CGI_COMMON_MAP_HPP_INCLUDED__
 

@@ -9,7 +9,7 @@
 #ifndef CGI_HTTP_STATUS_CODE_HPP_INCLUDED__
 #define CGI_HTTP_STATUS_CODE_HPP_INCLUDED__
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
   namespace http {
 
@@ -86,7 +86,7 @@ namespace cgi {
 
   using namespace common::http; // **FIXME**
 
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_HTTP_STATUS_CODE_HPP_INCLUDED__
 

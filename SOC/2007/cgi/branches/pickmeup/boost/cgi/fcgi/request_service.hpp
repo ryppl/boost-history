@@ -27,7 +27,7 @@
 #include "boost/cgi/detail/service_base.hpp"
 #include "boost/cgi/common/parse_options.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace fcgi {
  
   /// The IoObjectService class for a FCGI basic_request<>s
@@ -40,11 +40,11 @@ namespace cgi {
     struct implementation_type
       : common::request_base<fcgi_request_service>::impl_base
     {
-      typedef ::cgi::common::fcgi_              protocol_type;
-      typedef ::cgi::fcgi::client               client_type;
-      typedef client_type::connection_type      connection_type;
-      typedef client_type::header_buffer_type   header_buffer_type;
-      typedef spec_detail::Header               header_type;
+      typedef ::BOOST_CGI_NAMESPACE::common::fcgi_  protocol_type;
+      typedef ::BOOST_CGI_NAMESPACE::fcgi::client   client_type;
+      typedef client_type::connection_type          connection_type;
+      typedef client_type::header_buffer_type       header_buffer_type;
+      typedef spec_detail::Header                   header_type;
 
       typedef detail::protocol_traits<
         protocol_type
@@ -57,7 +57,7 @@ namespace cgi {
         : id_(0)
         , client_()
         , stdin_parsed_(false)
-        , http_status_(::cgi::common::http::no_content)
+        , http_status_(::BOOST_CGI_NAMESPACE::common::http::no_content)
         , request_status_(common::unloaded)
         , request_role_(spec_detail::ANY)
         , all_done_(false)
@@ -71,7 +71,7 @@ namespace cgi {
       client_type client_;
 
       bool stdin_parsed_;
-      ::cgi::common::http::status_code http_status_;
+      ::BOOST_CGI_NAMESPACE::common::http::status_code http_status_;
       common::request_status request_status_;
       fcgi::spec_detail::role_types request_role_;
       std::size_t characters_left_;
@@ -121,7 +121,7 @@ namespace cgi {
       Service* service_;
     };
     
-    fcgi_request_service(::cgi::common::io_service& ios)
+    fcgi_request_service(::BOOST_CGI_NAMESPACE::common::io_service& ios)
       : detail::service_base<fcgi_request_service>(ios)
     {
     }
@@ -160,11 +160,11 @@ namespace cgi {
     }
 
     /// Close the request.
-    int close(implementation_type& impl, ::cgi::common::http::status_code& hsc
+    int close(implementation_type& impl, ::BOOST_CGI_NAMESPACE::common::http::status_code& hsc
               , int program_status);
 
     /// Close the request.
-    int close(implementation_type& impl, ::cgi::common::http::status_code& hsc
+    int close(implementation_type& impl, ::BOOST_CGI_NAMESPACE::common::http::status_code& hsc
              , int program_status, boost::system::error_code& ec);
 
     /// Clear all request data (object is then safe to remove).
@@ -192,9 +192,9 @@ namespace cgi {
     /// Returns true if the request environment params have been read.
     bool params_read(implementation_type& impl);
 
-    role_type get_role(implementation_type& impl)
+    common::role_type get_role(implementation_type& impl)
     {
-      return responder;
+      return common::responder;
     }
 
     implementation_type::client_type&
@@ -275,12 +275,12 @@ namespace cgi {
 
     // Mammoth typedef corresponding to function signature of process_*
     // functions.
-    typedef boost::system::error_code
-      ( full_type::* proc_func_t)
-      (implementation_type& impl, boost::uint16_t, const unsigned char*
-      , boost::uint32_t, boost::system::error_code&);
+    //typedef boost::system::error_code
+    //  ( full_type::* proc_func_t)
+    //  (implementation_type& impl, boost::uint16_t, const unsigned char*
+    //  , boost::uint32_t, boost::system::error_code&);
 
-    static const proc_func_t proc_funcs[];
+    //const proc_func_t proc_funcs[8];
   
     boost::system::error_code
       parse_packet(implementation_type& impl, boost::system::error_code& ec);
@@ -300,10 +300,11 @@ namespace cgi {
       begin_request_helper(implementation_type& impl
                           , implementation_type::header_buffer_type& header
                           , boost::system::error_code& ec);
+                          
   };
 
  } // namespace fcgi
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #include "boost/cgi/fcgi/request.hpp"
 #include "boost/cgi/basic_request.hpp"

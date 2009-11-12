@@ -12,7 +12,7 @@
 #include "boost/cgi/common/tags.hpp"
 #include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
 
   /// typedef for typical usage
   namespace acgi {
@@ -37,7 +37,7 @@ namespace cgi {
   */
 
 
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #include "boost/cgi/common/basic_protocol_service.hpp"
 

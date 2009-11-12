@@ -9,6 +9,8 @@
 #ifndef CGI_ACGI_REQUEST_IMPL_HPP_INCLUDED__
 #define CGI_ACGI_REQUEST_IMPL_HPP_INCLUDED__
 
+#include "boost/cgi/detail/push_options.hpp"
+
 #include "boost/cgi/acgi/service.hpp"
 #include "boost/cgi/basic_client.hpp"
 #include "boost/cgi/connections/async_stdio.hpp"
@@ -16,18 +18,18 @@
 
 // Make this ProtocolService-independent
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace acgi {
 
   class request_impl
     : public detail::cgi_request_impl_base<connections::async_stdio>
   {
   public:
-    typedef ::cgi::acgi::service                 protocol_service_type;
+    typedef ::BOOST_CGI_NAMESPACE::acgi::service protocol_service_type;
     typedef protocol_service_type::protocol_type protocol_type;
     typedef connections::async_stdio             connection_type;
     typedef
-      ::cgi::common::basic_client<
+      ::BOOST_CGI_NAMESPACE::common::basic_client<
         connection_type, common::tags::acgi
       >
     client_type;
@@ -41,7 +43,9 @@ namespace cgi {
   };
 
  } // namespace acgi
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
+
+#include "boost/cgi/detail/pop_options.hpp"
 
 #endif // CGI_ASYNC_CGI_REQUEST_IMPL_HPP_INCLUDED__
 

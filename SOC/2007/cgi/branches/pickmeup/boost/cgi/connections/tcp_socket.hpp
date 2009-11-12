@@ -18,7 +18,7 @@
 #include "boost/cgi/detail/push_options.hpp"
 #include "boost/cgi/common/connection_base.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
   template<>
@@ -102,7 +102,7 @@ namespace cgi {
     typedef common::basic_connection<common::tags::tcp_socket> tcp;
   } // namespace connections
 
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #include "boost/cgi/detail/pop_options.hpp"
 

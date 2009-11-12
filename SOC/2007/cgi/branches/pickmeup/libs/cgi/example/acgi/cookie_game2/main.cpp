@@ -59,13 +59,10 @@ typedef request request_type;
 typedef response response_type;
 
 // These are some of the functions / types / enums used in this example.
-using boost::acgi::has_key;
 using boost::acgi::cookie;
 using boost::acgi::header;
 using boost::acgi::redirect;
 using boost::acgi::parse_all;
-using boost::acgi::form;
-using boost::acgi::cookies;
 using boost::acgi::content_type;
 
 // This function just makes it easier to change the templating engine. It's
@@ -73,8 +70,12 @@ using boost::acgi::content_type;
 stencil_type* get_stencil(std::string const& filename)
 {
   if (!fs::exists(filename))
-    throw std::runtime_error(std::string("Template file not found: '") + fs::path(filename).string() + "'");
-  return ctemplate::Template::GetTemplate(filename, ctemplate::STRIP_WHITESPACE);
+    throw std::runtime_error(
+      std::string("Template file not found: '")
+        + fs::path(filename).string() + "'");
+  else
+    return ctemplate::Template::GetTemplate(
+      filename, ctemplate::STRIP_WHITESPACE);
 }
 
 // Show the data in the passed map, updating the passed dictionary.
@@ -98,8 +99,7 @@ void print_formatted_data(MapT& data, Dict& dict)
 int main()
 {
   try {
-    service_type srv;
-    request_type req(srv);
+    request_type req;
 
     // Load up the request data
     req.load(parse_all);
@@ -107,7 +107,7 @@ int main()
     response_type resp;
 
     // Check if we are resetting the user.
-    if (has_key(req.form, "reset") && req.form["reset"] == "true")
+    if (req.form.count("reset") && req.form["reset"] == "true")
     {
       resp<< cookie("name") // delete the 'name' cookie.
           << redirect(req, req.script_name()); // redirect them.
@@ -115,23 +115,24 @@ int main()
       return 0;
     }
 
-    if (has_key(req.form, "name"))
+    if (req.form.count("name"))
     {
       // If requested by the user, delete the cookie.
-      if (has_key(req.form, "del"))
+      if (req.form.count("del"))
         resp<< cookie(req.form["name"]);
       else // Set the cookie.
         resp<< cookie(req.form["name"], req.form["value"]);
       resp<< redirect(req, req.script_name());
       // Exit here.
-      return_(resp, req, http::ok);
+      return commit(req, resp, http::ok);
     }
 
     dictionary_type dict("cookie-game dict");
 
     // First, see if they have a cookie set
-    if (has_key(req.cookies, "name"))
-      dict.SetValueAndShowSection("USER_NAME", req.cookies["name"], "HAS_NAME_IN_COOKIE_true");
+    if (req.cookies.count("name"))
+      dict.SetValueAndShowSection("USER_NAME", req.cookies["name"],
+        "HAS_NAME_IN_COOKIE_true");
     else
       dict.ShowSection("HAS_NAME_IN_COOKIE_false");
 
@@ -141,7 +142,7 @@ int main()
     // get_value is defined in boost/cgi/util/
     // Looks up the key in the map, returns a default value if the key 
     // isn't found.
-    dict.SetValue("COOKIE_NAME", get_value(req.form, "name", ""));
+    dict.SetValue("COOKIE_NAME", req.form.get("name", ""));
     dict.SetValue("COOKIE_VALUE", req.form["value"]);
 
     // Load the HTML stencil now from the index.html file.
@@ -156,7 +157,7 @@ int main()
         << output;
 
     // Send the response to the requestor and return control.
-    return_(resp, req, http::ok);
+    return commit(req, resp, http::ok);
 
   }catch(boost::system::system_error& err){
     std::cerr<< "System Error: [" << err.code() << "] - " << err.what() << std::endl;

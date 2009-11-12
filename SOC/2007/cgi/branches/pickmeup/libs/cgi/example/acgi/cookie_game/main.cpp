@@ -202,8 +202,7 @@ void print_formatted_data(Response& resp, MapT& data)
 
 int main()
 {
-  service srv;
-  request req(srv);
+  request req;
 
   // Load up the request data
   req.load(parse_all);

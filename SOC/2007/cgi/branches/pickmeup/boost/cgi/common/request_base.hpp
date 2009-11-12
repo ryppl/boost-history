@@ -24,8 +24,9 @@
 #include "boost/cgi/common/parse_options.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
 #include "boost/cgi/detail/save_environment.hpp"
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
   /// ABC that defines the common interface for basic_request<>s
@@ -233,7 +234,7 @@ namespace cgi {
   };
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_COMMON_REQUEST_BASE_HPP_INCLUDE_
 

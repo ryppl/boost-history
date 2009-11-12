@@ -2,6 +2,8 @@
 #ifndef BOOST_CGI_REDIRECT_HPP_INCLUDED_
 #define BOOST_CGI_REDIRECT_HPP_INCLUDED_
 
+#include "boost/cgi/detail/push_options.hpp"
+
 #include <string>
 ///////////////////////////////////////////////////////////
 #include <boost/system/error_code.hpp>
@@ -10,7 +12,7 @@
 #include "boost/cgi/common/header.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    /// Redirect a request to another place.
@@ -43,7 +45,7 @@ namespace cgi {
    }
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_CGI_REDIRECT_HPP_INCLUDED_
 

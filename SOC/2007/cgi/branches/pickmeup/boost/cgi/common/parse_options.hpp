@@ -1,8 +1,9 @@
 
 #ifndef BOOST_CGI_COMMON_PARSE_OPTIONS_HPP_INCLUDED_
 #define BOOST_CGI_COMMON_PARSE_OPTIONS_HPP_INCLUDED_
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    // Parser options for loading requests. Note that you should *always*
@@ -25,7 +26,7 @@ namespace cgi {
    };
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_CGI_COMMON_PARSE_OPTIONS_HPP_INCLUDED_
 

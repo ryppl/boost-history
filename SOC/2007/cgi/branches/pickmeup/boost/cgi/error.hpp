@@ -24,11 +24,13 @@
 #include "boost/cgi/common/error.hpp"
 #include "boost/cgi/fcgi/error.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
   namespace error {
 
+    using namespace ::BOOST_CGI_NAMESPACE::common::error;
+
   } // namespace error
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_ERROR_HPP_INCLUDED__
 

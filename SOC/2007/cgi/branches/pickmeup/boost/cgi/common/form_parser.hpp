@@ -24,16 +24,18 @@
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/common/map.hpp"
 #include "boost/cgi/common/form_part.hpp"
+#include "boost/cgi/config.hpp"
 
 /// Set the directory that uploads are stored in.
 /**
  * When files are uploaded, using multipart/form-data, uploaded
  * files are saved to disk, rather than being held in memory.
  *
- * This macro determines where uploaded files are stored.
+ * This macro determines where uploaded files are stored. It must
+ * include a trailing slash (eg. "../upload/", which is the default).
  *
- * You must ensure the user that your web server runs as has read and
- * write permissions to this directory. You should never allow this to
+ * Your web server must run as a user that has read and write
+ * permissions to this directory. You should never allow this to
  * be the same directory the FastCGI script is running in, or any
  * directory containing executable files.
  */
@@ -41,10 +43,28 @@
 #   define BOOST_CGI_UPLOAD_DIRECTORY "../upload/"
 #endif // BOOST_CGI_UPLOAD_DIRECTORY
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace detail {
 
-  /// Destined for better things than an implementation detail (hopefully).
+  /// A class for parsing POST data sent to a CGI process.
+  /**
+   * Construct this and then call `form_parser::parse` with an
+   * instance of form_parser::context (or compatible struct).
+   *
+   * This is minimal and doesn't extract all meta-data yet, but
+   * is known to work on Windows XP with MSVC9.0 and Ubuntu linux
+   * with gcc 4.2.x and 4.3.x.
+   *
+   * Valid Form Encodings
+   * > `application/x-www-form-urlencoded`
+   * > `multipart/form-data`
+   *
+   * File uploads (ie. in `multipart/form-data` forms) are saved
+   * to disk. See the `BOOST_CGI_UPLOAD_DIRECTORY` macro.
+   *
+   * Should also work for HTTP POST data.
+   * 
+   */
   class form_parser
   {
   public:
@@ -132,7 +152,8 @@ private:
   };
 
  } // namespace detail
-} // namespace cgi
+
+BOOST_CGI_NAMESPACE_END
 
 //#ifndef BOOST_CGI_BUILD_LIB
 #    include "boost/cgi/impl/form_parser.ipp"

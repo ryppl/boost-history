@@ -4,9 +4,10 @@
 
 #include <boost/fusion/include/at.hpp>
 ///////////////////////////////////////////////////////////
+#include "boost/cgi/config.hpp"
 #include "boost/cgi/common/map.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    /// Types of data sources and related enums.
@@ -53,7 +54,7 @@ namespace cgi {
    }
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_CGI_COMMON_SOURCE_ENUMS_HPP_INCLUDED__
 

@@ -1,6 +1,6 @@
 //                -- basic_request.hpp --
 //
-//            Copyright (c) Darren Garvey 2007.
+//          Copyright (c) 2007-2009 Darren Garvey.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -23,19 +23,18 @@
 #include <boost/functional/hash.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/system/error_code.hpp>
-#include <boost/asio/basic_io_object.hpp>
+#include <boost/utility/enable_if.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/common/map.hpp"
-#include "boost/cgi/common/is_async.hpp"
 #include "boost/cgi/common/path_info.hpp"
 #include "boost/cgi/common/role_type.hpp"
 #include "boost/cgi/common/source_enums.hpp"
+#include "boost/cgi/common/parse_options.hpp"
 #include "boost/cgi/common/request_service.hpp"
 #include "boost/cgi/http/status_code.hpp"
 #include "boost/cgi/fwd/basic_request_fwd.hpp"
 #include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
-#include "boost/cgi/import/basic_io_object.hpp"
-#include "boost/cgi/detail/basic_sync_io_object.hpp"
+#include "boost/cgi/detail/basic_io_object.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
 
@@ -44,7 +43,8 @@
 #   define BOOST_CGI_POST_MAX 6663322
 #endif // BOOST_CGI_POST_MAX
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
+ 
  namespace common {
 
    /// Get a hashed interpretation of the request.
@@ -75,14 +75,7 @@ namespace cgi {
           , typename ProtocolService
           , typename Allocator>
   class basic_request
-    : public boost::mpl::if_<
-                 is_async<typename RequestService::protocol_type>
-               , basic_io_object<RequestService>
-                 // A basic_sync_io_object is a little more lightweight
-                 // than a basic_io_object. It can't handle asynchonous
-                 // operations as a consequence.
-               , detail::basic_sync_io_object<RequestService>
-               >::type
+    : public detail::basic_io_object<RequestService>
   {
   public:
     typedef
@@ -90,7 +83,7 @@ namespace cgi {
         RequestService, ProtocolService
       , Allocator
     >                                                    self_type;
-    typedef ::cgi::common::map                           map_type;
+    typedef ::BOOST_CGI_NAMESPACE::common::map           map_type;
     typedef RequestService                               service_type;
     typedef typename service_type::protocol_type         protocol_type;
     typedef ProtocolService                              protocol_service_type;
@@ -100,14 +93,23 @@ namespace cgi {
     typedef typename implementation_type::string_type    string_type;
     typedef typename implementation_type::client_type    client_type;
     typedef typename implementation_type::buffer_type    buffer_type;
+    
+    /*
+    boost::enable_if<
+      boost::type_traits::is_same<
+        typename RequestService::protocol_type,
+        ::BOOST_CGI_NAMESPACE::common::tags::acgi
+      >
+    > ios;
+    */
 
     /// A proxy class to provide access to the data maps as member variables.
     /**
-     * This wraps the underlying data map and exposes a std::map-like interface
-     * for the different data maps.
+     * This wraps the underlying data map and exposes a std::map-like 
+     * interface for the different data maps.
      *
-     * It also includes an as<> member function which casts the found data into
-     * any type the user specifies.
+     * It also includes an as<> member function which casts the found data
+     * into any type the user specifies.
      */
     template<typename MapType>
     struct data_map_proxy
@@ -153,6 +155,13 @@ namespace cgi {
          return impl->count(key);
       }
       
+      mapped_type& get(key_type const& key, mapped_type const& default_)
+      {
+        BOOST_ASSERT(impl);
+        const_iterator iter = impl->find(key);
+        return iter == impl->end() > default_ : *iter;
+      }
+      
       template<typename T>
       T as(key_type const& key) {
         BOOST_ASSERT(impl);
@@ -184,8 +193,8 @@ namespace cgi {
     data_map_proxy<cookie_map> cookies;
 
     basic_request(const parse_options opts = parse_none
-                 , char** base_env = NULL)
-      : detail::basic_sync_io_object<service_type>()
+      , char** base_env = NULL)
+        : detail::basic_io_object<service_type>()
     {
       if (opts > parse_none) load(opts, base_env);
       construct();
@@ -195,7 +204,7 @@ namespace cgi {
     basic_request(boost::system::error_code& ec
                  , const parse_options opts = parse_none
                  , char** base_env = NULL)
-      : detail::basic_sync_io_object<service_type>()
+      : detail::basic_io_object<service_type>()
     {
       if (opts > parse_none) load(opts, ec);
     }
@@ -204,7 +213,7 @@ namespace cgi {
     basic_request(protocol_service_type& s
                  , const parse_options opts = parse_none
                  , char** base_env = NULL)
-      : basic_io_object<service_type>(s.io_service())
+      : detail::basic_io_object<service_type>(s.io_service())
     {
       set_protocol_service(s);
       if (opts > parse_none) load(opts, base_env);
@@ -215,7 +224,7 @@ namespace cgi {
                  , boost::system::error_code& ec
                  , const parse_options opts = parse_none
                  , char** base_env = NULL)
-      : basic_io_object<service_type>(s.io_service())
+      : detail::basic_io_object<service_type>(s.io_service())
     {
       set_protocol_service(s);
       if (opts > parse_none) load(opts, ec, base_env);
@@ -224,7 +233,7 @@ namespace cgi {
     /// Make a new mutiplexed request from an existing connection.
     // Throws.
     basic_request(implementation_type& impl)
-      : basic_io_object<service_type>(impl.service_->io_service())
+      : detail::basic_io_object<service_type>(impl.service_->io_service())
     {
       set_protocol_service(*impl.service_);
       boost::system::error_code ec;
@@ -236,7 +245,7 @@ namespace cgi {
     /// Make a new mutiplexed request from an existing connection.
     // Won't throw.
     basic_request(implementation_type& impl, boost::system::error_code& ec)
-      : basic_io_object<service_type>(impl.service_->io_service())
+      : detail::basic_io_object<service_type>(impl.service_->io_service())
     {
       set_protocol_service(*impl.service_);
       this->service.begin_request_helper(this->implementation
@@ -264,6 +273,11 @@ namespace cgi {
     static pointer create(protocol_service_type& ps)
     {
       return pointer(new self_type(ps));
+    }
+
+    static pointer create()
+    {
+      return pointer(new self_type());
     }
 
     void set_protocol_service(protocol_service_type& ps)
@@ -503,13 +517,16 @@ namespace cgi {
      * Set the output sink as `stdout_`, `stderr_`, or `stdout_ | stderr_`
      */
     /*
-    void set_output(cgi::sink dest, boost::system::error_code& ec)
+    void set_output(BOOST_CGI_NAMESPACE::sink dest, boost::system::error_code& ec)
     {
       this->service(this->implementation, dest, ec);
     }
     */
 
-    // [helper-functions for the basic CGI 1.1 meta-variables.
+    /////////////////////////////////////////////////////////
+    // Helper-functions for the basic CGI 1.1 meta-variables.
+    /////////////////////////////////////////////////////////
+    
     string_type& auth_type()
     { return env["AUTH_TYPE"]; }
 
@@ -524,66 +541,133 @@ namespace cgi {
       return boost::lexical_cast<long>(cl.empty() ? "0" : cl); 
     }
 
+    /// The content type of the request.
+    /**
+     * Common value: text/html.
+     */
     string_type& content_type()
     { return env["CONTENT_TYPE"]; }
 
+    /// The protocol used by the server to communicate to the script.
+    /**
+     * Common value: CGI/1.1.
+     */
     string_type& gateway_interface()
     { return env["GATEWAY_INTERFACE"]; }
 
+    /// Additional information, appendended to the script.
     common::path_info path_info()
     { return env["PATH_INFO"]; }
 
+    /// The translated version of the path info.
+    /**
+     * Your HTTP server may provide this, depending on configuration. 
+     * The path info can represent a resource on the local file system.
+     */
     string_type& path_translated()
     { return env["PATH_TRANSLATED"]; }
 
+    /// The query string for the request.
+    /**
+     * This is the part of the request URI after a '?'. A GET request
+     * passes request parameters, URL encoded in the query string.
+     */
     string_type& query_string()
     { return env["QUERY_STRING"]; }
 
+    /// The host address of the remote user.
     string_type& remote_addr()
     { return env["REMOTE_ADDR"]; }
 
+    /// The host name of the remote user's machine.
     string_type& remote_host()
     { return env["REMOTE_HOST"]; }
 
+    /// The user making the request.
     string_type& remote_ident()
     { return env["REMOTE_IDENT"]; }
 
+    /// The userid of the person accessing the script.
     string_type& remote_user()
     { return env["REMOTE_USER"]; }
 
+    /// The method of the request.
+    /**
+     * Common values: `GET`, `POST`, `HEAD`.
+     */
     string_type& method()
     { return env["REQUEST_METHOD"]; }
 
+    /// The method of the request (long-hand of `method()`).
+    /**
+     * Common values: `GET`, `POST`, `HEAD`.
+     */
     string_type& request_method()
     { return env["REQUEST_METHOD"]; }
 
-    string_type& url()
-    { return env["REQUEST_URL"]; }
+    /// Get the URI of the request.
+    string_type& uri()
+    { return env["REQUEST_URI"]; }
 
-    string_type& request_url()
-    { return env["REQUEST_URL"]; }
+    /// Get the URI of the request (long-hand of `uri()`).
+    string_type& request_uri()
+    { return env["REQUEST_URI"]; }
 
+    /// The name of the script.
     string_type& script_name()
     { return env["SCRIPT_NAME"]; }
 
+    /// The URL of the script.
     string_type& script_url()
     { return env["SCRIPT_URL"]; }
 
+    /// The full URI of the script.
     string_type& script_uri()
     { return env["SCRIPT_URI"]; }
 
+    /// Get the name of the server.
+    /**
+     * Usually set in your HTTP configuration. This could be the name
+     * of a virtual host.
+     */
     string_type& server_name()
     { return env["SERVER_NAME"]; }
 
+    /// Get the port the calling server is listening on.
+    /**
+     * Common value: 80.
+     */
     string_type& server_port()
     { return env["SERVER_PORT"]; }
 
+    /// Get the protocol being used by the calling server.
+    /**
+     * Common value: HTTP/1.1.
+     */
     string_type& server_protocol()
     { return env["SERVER_PROTOCOL"]; }
 
+    /// Get a string identifying the calling server.
+    /**
+     * CGI scripts are generally called by a web-facing HTTP server.
+     * When set, this string can be useful for knowing what is calling 
+     * the script, especially in a multi-server or load balanced
+     * environment.
+     */
     string_type& server_software()
     { return env["SERVER_SOFTWARE"]; }
-
+    
+    /// Get the web page the user came from.
+    /**
+     * HTTP equivalent: `HTTP_REFERER`
+     *
+     * The referer is commonly used for tracking user's movements and
+     * origins. For instance, some sites use this to highlight some
+     * keywords on the page when users come from a search engine.
+     *
+     * Note that you cannot ever guarantee on this value being either set
+     * or accurate.
+     */
     string_type& referer()
     { return env["HTTP_REFERER"]; }
     // -- end helper-functions]
@@ -599,6 +683,10 @@ namespace cgi {
 
       return match[1];
     }
+    
+    /// The email of the user making the request.
+    string_type& http_from ()
+    { return env["HTTP_FROM"]; }
 
     /// The role that the request is playing
     /**
@@ -606,18 +694,29 @@ namespace cgi {
      *
      * In some cases - for instance with FastCGI - the role type can be
      * different
-     * eg. authorizer, or filter.
+     * eg. `authorizer`, or `filter`.
      */
     role_type& role()
     {
       return this->service.get_role(this->implementation);
     }
 
+    /// Get a hashed interpretation of the request.
+    /**
+     * You cannot consider this completely unique to each
+     * request, but it should be quite useful anyway.
+     * You can use this for logging or tracking, for example.
+     */
     std::size_t hash()
     {
       return boost::hash<self_type>()(*this);
     }
 
+    /// Set the status of a request.
+    /**
+     * The usual way to set the request status is to set it
+     * when calling `close`.
+     */
     void set_status(common::http::status_code const& status)
     {
       this->service.set_status(this->implementation, status);
@@ -636,7 +735,7 @@ namespace cgi {
    }
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #include "boost/cgi/detail/pop_options.hpp"
 
@@ -649,4 +748,3 @@ NOTES::future_plans:
   - The user should supply an abort_handler-derived function if they want
     any special handling of aborted requests
 */
-

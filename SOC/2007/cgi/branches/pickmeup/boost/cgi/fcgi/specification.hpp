@@ -14,7 +14,7 @@
 // NOTE: CamelCase style mimicks the FastCGI specification
 // SEE: http://www.fastcgi.com/devkit/doc/fcgi-spec.html#S8
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace fcgi {
   namespace spec_detail {
 
@@ -577,12 +577,12 @@ namespace cgi {
         }
       }
     };
-    //using namespace ::cgi::fcgi::detail;
+    //using namespace ::BOOST_CGI_NAMESPACE::fcgi::detail;
   }
 
   namespace spec = specification;
 
  } // namespace fcgi
-}// namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_FCGI_SPECIFICATION_HPP_INCLUDED__

@@ -181,8 +181,18 @@ boost::system::error_code& show_file(
           std::string ctype (content_type(mime_type));
           std::string clen (content_length<char>(size));
           clen += "\r\n";
-          write(client, boost::asio::buffer(ctype));
-          write(client, boost::asio::buffer(clen));
+          
+          // Create an output buffer. This will only hold references
+          // to the data so we need to ensure the data stays in memory
+          // until the write completes.
+          //
+          // The purpose of this buffer is so efficient I/O operations 
+          // (eg. scatter-gather) can be used under the hood. This vector
+          // is light-weight so it can be copied cheaply.
+          std::vector<boost::asio::const_buffer> output(3);
+          output.push_back(boost::asio::buffer(ctype));
+          output.push_back(boost::asio::buffer(clen));
+
           // Read then write up to 1MB at a time.
           boost::uintmax_t bufsize = 1000000;
           boost::uintmax_t read_bytes;
@@ -193,10 +203,14 @@ boost::system::error_code& show_file(
             ifs.read(buf, size < bufsize ? size : bufsize);
             read_bytes = ifs.gcount();
             size -= read_bytes;
-            //cerr<< "Read " << read_bytes << " bytes from the file.\n";
+
+            output.push_back(boost::asio::buffer(buf, read_bytes));
             // Write unbuffered (ie. not using a response).
-            write(client, boost::asio::buffer(buf, read_bytes)
+            write(client, output
                  , boost::asio::transfer_all(), ec);
+            // This needs to go at the end, so the Content-type, etc. 
+            // headers are sent the first time around.
+            output.clear();
           }
         }
         else

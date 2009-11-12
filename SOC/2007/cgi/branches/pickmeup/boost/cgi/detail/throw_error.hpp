@@ -13,7 +13,7 @@
 #include <boost/system/system_error.hpp>
 #include <boost/throw_exception.hpp>
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace detail {
 
    inline void throw_error(const boost::system::error_code& ec)
@@ -27,6 +27,6 @@ namespace cgi {
    }
 
  } // namespace detail
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_THROW_ERROR_HPP_INCLUDED__

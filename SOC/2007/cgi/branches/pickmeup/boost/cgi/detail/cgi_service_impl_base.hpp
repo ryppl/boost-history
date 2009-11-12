@@ -35,17 +35,17 @@
 #include "boost/cgi/detail/extract_params.hpp"
 #include "boost/cgi/detail/save_environment.hpp"
 
-namespace cgi {
-// **FIXME** Wrong namespace (should be cgi::detail?).
+BOOST_CGI_NAMESPACE_BEGIN
+// **FIXME** Wrong namespace (should be BOOST_CGI_NAMESPACE::detail?).
 
   template<typename RequestImplType>
   class cgi_service_impl_base
-    : public common::request_base<cgi_service_impl_base<RequestImplType> >//, struct cgi_service_impl_base<RequestImplType>::implementation_type >
+    : public common::request_base<cgi_service_impl_base<RequestImplType> >
   {
   public:
     typedef cgi_service_impl_base<RequestImplType> self_type;
     typedef common::request_base<self_type>        base_type;
-    typedef ::cgi::common::map                     map_type;
+    typedef ::BOOST_CGI_NAMESPACE::common::map                     map_type;
     typedef typename
       RequestImplType::protocol_type               protocol_type;
 
@@ -177,7 +177,7 @@ namespace cgi {
       return ec;
     }
 
-    role_type
+    common::role_type
     get_role(implementation_type& impl)
     {
       return responder;
@@ -253,7 +253,7 @@ namespace cgi {
     }
   };
 
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #include "boost/cgi/detail/pop_options.hpp"
 

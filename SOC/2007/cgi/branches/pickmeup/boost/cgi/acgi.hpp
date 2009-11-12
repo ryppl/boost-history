@@ -13,18 +13,18 @@
 #include "boost/cgi/acgi/request.hpp"
 #include "boost/cgi/detail/common_headers.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace acgi {
 
-   using namespace ::cgi::common; // import common namespace elements.
+   using namespace ::BOOST_CGI_NAMESPACE::common; // import common namespace elements.
 
  } // namespace acgi
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 /// Dump acgi stuff into the boost namespace
 namespace boost {
  namespace acgi {
-   using namespace ::cgi::acgi;
+   using namespace ::BOOST_CGI_NAMESPACE::acgi;
  } // namespace acgi
 } // namespace boost
 

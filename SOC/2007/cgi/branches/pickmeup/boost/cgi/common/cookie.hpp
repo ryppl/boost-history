@@ -12,10 +12,12 @@
 #include <string>
 #include <boost/system/error_code.hpp>
 #include <boost/tokenizer.hpp>
+#include "boost/cgi/config.hpp"
 
 #define BOOST_CGI_DATE_IN_THE_PAST "Fri, 05-Jun-1989 15:30:00 GMT"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
+
  namespace common {
 
   template<typename CharT> struct basic_cookie;
@@ -27,8 +29,8 @@ namespace cgi {
   /// A `basic_cookie<>` object that can be (out-) streamed
   /**
    * Either set the parameters in the constructor, or set them directly.
-   * Note: If you want to set the parameters individually, remember that each
-   * parameter must NOT have a trailing semi-colon!
+   * Note: If you want to set the parameters individually, remember that
+   * each parameter must NOT have a trailing semi-colon!
    *
    * TODO
    * - Data should be URL-encoded, or maybe provide an overload for url_decode
@@ -77,6 +79,7 @@ namespace cgi {
     string_type expires;
     string_type path;
     string_type domain;
+    /// `true` iff the cookie is only used for secure connections.
     bool secure;
     bool http_only;
 
@@ -125,7 +128,7 @@ namespace cgi {
     }
     */
 
-    /// Make a string out of the cookie
+    /// Make a string out of the cookie.
     string_type to_string() const
     {
       string_type str(name + "=" + value);
@@ -141,11 +144,11 @@ namespace cgi {
   };
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 /*
 template<typename OutStream, typename CharT>
-inline OutStream& operator<< (OutStream& os, cgi::common::basic_cookie<CharT> const& ck)
+inline OutStream& operator<< (OutStream& os, BOOST_CGI_NAMESPACE::common::basic_cookie<CharT> const& ck)
 {
   os<< ck.to_string();
   return os;

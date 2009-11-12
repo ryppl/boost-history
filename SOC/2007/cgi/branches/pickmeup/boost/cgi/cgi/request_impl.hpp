@@ -24,7 +24,7 @@
 
 // Make this ProtocolService-independent
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
 
   // Forward declaration
   //template<typename>
@@ -66,7 +66,7 @@ namespace cgi {
     friend class cgi_service_impl;
   };
 
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_CGI_REQUEST_IMPL_HPP_INCLUDED__
 

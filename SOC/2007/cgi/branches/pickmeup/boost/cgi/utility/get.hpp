@@ -2,12 +2,14 @@
 #ifndef BOOST_CGI_GET_HPP_INCLUDED_
 #define BOOST_CGI_GET_HPP_INCLUDED_
 
+#include "boost/cgi/detail/push_options.hpp"
+
 #include <map>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/common/name.hpp"
 #include "boost/cgi/utility/has_key.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    /// Get a value from the map, or return the passed value as a default.
@@ -23,7 +25,7 @@ namespace cgi {
     }
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_CGI_GET_HPP_INCLUDED_
 

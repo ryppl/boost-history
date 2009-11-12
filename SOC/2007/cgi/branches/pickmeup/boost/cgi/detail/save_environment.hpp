@@ -23,7 +23,7 @@
 #endif
 
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace detail {
 
    /// Save all information from `environment` to env_map
@@ -78,6 +78,6 @@ namespace cgi {
    }
 
  } // namespace detail
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_DETAIL_SAVE_ENVIRONMENT_HPP_INCLUDED__

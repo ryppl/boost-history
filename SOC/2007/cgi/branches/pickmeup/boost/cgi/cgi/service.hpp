@@ -14,7 +14,7 @@
 #include "boost/cgi/connections/async_stdio.hpp"
 #include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
 
   /// typedef for typical usage
   /**
@@ -39,6 +39,6 @@ namespace cgi {
   };
   */
 
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_CGI_SERVICE_HPP_INCLUDED__

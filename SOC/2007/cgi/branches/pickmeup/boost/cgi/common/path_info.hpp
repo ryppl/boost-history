@@ -7,8 +7,9 @@
 #include <boost/algorithm/string/classification.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/fwd/basic_request_fwd.hpp"
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    struct path_info
@@ -20,22 +21,24 @@ namespace cgi {
 
      template<typename S, typename P, typename A>
      path_info(basic_request<S,P,A> & request)
-       : value(boost::algorithm::trim_copy_if(request.env["path_info"],
-    		   boost::algorithm::is_any_of("/")))
+       : value(request.env["path_info"])
      {
     	 boost::algorithm::split(
            parts, value, boost::algorithm::is_any_of("/"));
      }
 
      path_info(value_type const& str)
-       : value(boost::algorithm::trim_copy_if(
-                 str, boost::algorithm::is_any_of("/")))
+       : value(str)
      {
     	 boost::algorithm::split(
            parts, value, boost::algorithm::is_any_of("/"));
      }
      
      value_type& operator[](int i) { return parts[i]; }
+     
+     value_type& str() { return value; }
+     
+     operator value_type& () { return value; }
      
      iterator begin() { return parts.begin(); }
      iterator end() { return parts.end(); }
@@ -47,7 +50,7 @@ namespace cgi {
    };
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_CGI_COMMON_PATH_INFO_HPP_INCLUDED_
 

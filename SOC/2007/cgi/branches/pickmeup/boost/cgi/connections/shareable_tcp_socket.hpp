@@ -27,7 +27,7 @@
 
 #include "boost/cgi/detail/protocol_traits.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
   /*** 05.02.2008 :
@@ -54,7 +54,7 @@ namespace cgi {
     typedef boost::asio::ip::tcp::socket              next_layer_type;
 
     /** FastCGI specific stuff **/
-    //typedef ::cgi::fcgi::client                      client_type;
+    //typedef ::BOOST_CGI_NAMESPACE::fcgi::client                      client_type;
     typedef //typename
       detail::protocol_traits<fcgi_>::request_type   request_type;
     typedef 
@@ -217,7 +217,7 @@ namespace cgi {
       common::tags::shareable_tcp_socket> shareable_tcp;
   } // namespace connections
 
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #include "boost/cgi/detail/pop_options.hpp"
 

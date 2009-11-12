@@ -11,8 +11,14 @@
 
 #include <cstdio>
 #include <string>
-//#include <io.h>
-#include <fcntl.h>
+#   include <stdio.h> // for _setmode
+#   include <io.h>    // for _setmode
+#   include <fcntl.h> // for _setmode
+#if BOOST_WINDOWS
+#   include <stdio.h> // for _setmode
+#   include <io.h>    // for _setmode
+#   include <fcntl.h> // for _setmode
+#endif // BOOST_WINDOWS
 ///////////////////////////////////////////////////////////
 #include <boost/system/error_code.hpp>
 #include <boost/asio.hpp>
@@ -23,7 +29,7 @@
 #include "boost/cgi/common/connection_base.hpp"
 #include "boost/cgi/fwd/basic_connection_fwd.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
   template<>
@@ -85,12 +91,12 @@ namespace cgi {
       }
 
       if (std::feof(stdin))
-        ec = ::cgi::error::eof;
+        ec = ::BOOST_CGI_NAMESPACE::error::eof;
       else
       if (std::ferror(stdin))
-        ec = ::cgi::error::bad_read;
+        ec = ::BOOST_CGI_NAMESPACE::error::bad_read;
       else
-        ec = ::cgi::error::broken_pipe;
+        ec = ::BOOST_CGI_NAMESPACE::error::broken_pipe;
 
       return 0;
     }
@@ -111,7 +117,7 @@ namespace cgi {
         //int ret(fputs(boost::asio::buffer_cast<const char*>(*i), stdout));
         //if (ret == EOF)
         //{
-        //  return ::cgi::error::broken_pipe;
+        //  return ::BOOST_CGI_NAMESPACE::error::broken_pipe;
         //}
         //std::cerr<< "[buf] " 
         // << std::string(boost::asio::buffer_cast<const char*>(*i), buf_len)
@@ -120,12 +126,12 @@ namespace cgi {
                        , buf_len, 1, stdout))
         {
           if (std::feof(stdout))
-            ec = ::cgi::error::eof;
+            ec = ::BOOST_CGI_NAMESPACE::error::eof;
           else
           if (std::ferror(stdout))
-            ec = ::cgi::error::bad_write;
+            ec = ::BOOST_CGI_NAMESPACE::error::bad_write;
           else
-            ec = ::cgi::error::broken_pipe;
+            ec = ::BOOST_CGI_NAMESPACE::error::broken_pipe;
         }
       }
       return bytes_transferred;
@@ -141,6 +147,6 @@ namespace cgi {
     typedef common::basic_connection<common::tags::stdio> stdio;
   } // namespace connections
 
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_STDIO_CONNECTION_IMPL_HPP_INCLUDED__

@@ -9,20 +9,24 @@
 #ifndef CGI_ACGI_ACCEPTOR_HPP_INCLUDED__
 #define CGI_ACGI_ACCEPTOR_HPP_INCLUDED__
 
+#include "boost/cgi/detail/push_options.hpp"
+
 #include "boost/cgi/basic_request_acceptor.hpp"
 #include "boost/cgi/acgi/request_acceptor_service.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace acgi {
 
    /// Typedef for common usage (ACGI)
    typedef
-     ::cgi::common::basic_request_acceptor<
+     ::BOOST_CGI_NAMESPACE::common::basic_request_acceptor<
        acgi_request_acceptor_service<>
      >
    acceptor;
 
  } // namespace acgi
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
+
+#include "boost/cgi/detail/pop_options.hpp"
 
 #endif // CGI_ACGI_ACCEPTOR_HPP_INCLUDED__

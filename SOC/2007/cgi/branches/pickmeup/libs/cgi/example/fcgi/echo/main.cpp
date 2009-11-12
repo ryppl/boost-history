@@ -15,6 +15,8 @@
 // variables QUERY_STRING and HTTP_COOKIE respectively.
 //
 ///////////////////////////////////////////////////////////
+#include <iostream>
+///////////////////////////////////////////////////////////
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/program_options/environment_iterator.hpp>
 ///////////////////////////////////////////////////////////
@@ -188,7 +190,7 @@ try {
     for (;;)
     {
       a.accept(req);
-      cerr<< "Accepted new request.\n";
+      std::cerr<< "Accepted new request.\n";
       ret = handle_request(req);
       if (ret)
         break;
@@ -205,14 +207,14 @@ try {
 
 }catch(boost::system::system_error const& se){
   // This is the type of error thrown by the library.
-  cerr<< "[fcgi] System error: " << se.what() << endl;
+  std::cerr<< "[fcgi] System error: " << se.what() << std::endl;
   return -1;
 }catch(std::exception const& e){
   // Catch any other exceptions
-  cerr<< "[fcgi] Exception: " << e.what() << endl;
+  std::cerr<< "[fcgi] Exception: " << e.what() << std::endl;
   return -2;
 }catch(...){
-  cerr<< "[fcgi] Uncaught exception!" << endl;
+  std::cerr<< "[fcgi] Uncaught exception!" << std::endl;
   return -3;
 }
 }

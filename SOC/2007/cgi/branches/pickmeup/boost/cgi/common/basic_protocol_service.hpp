@@ -21,8 +21,9 @@
 #include "boost/cgi/detail/protocol_traits.hpp"
 #include "boost/cgi/common/io_service_provider.hpp"
 #include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
   /// Basic Protocol Service
@@ -114,7 +115,7 @@ namespace cgi {
      * The order in which the underlying io_services are returned is determined
      * by what policy the IoServiceProvider uses.
      */
-    ::cgi::common::io_service& io_service()
+    ::BOOST_CGI_NAMESPACE::common::io_service& io_service()
     {
       return ios_provider_.get_io_service();
     }
@@ -153,6 +154,6 @@ namespace cgi {
   };
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_BASIC_PROTOCOL_SERVICE_HPP_INCLUDED__

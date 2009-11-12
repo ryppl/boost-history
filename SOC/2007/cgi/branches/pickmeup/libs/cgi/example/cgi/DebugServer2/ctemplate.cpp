@@ -34,9 +34,9 @@ int cgi_handler(request& req, response& resp)
         << content_type("text/html")
         << output;
 
-    if (req[form]["badger"] == "bait!")
+    if (req.form["badger"] == "bait!")
       throw std::runtime_error("AOUHFAEOUHAEOUHAEOUHOUH!!!!!!");
-    else if (has_key(req[form], "spam"))
+    else if (req.form.count("spam"))
       return -1;
     return 0;
 }

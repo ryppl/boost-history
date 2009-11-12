@@ -23,7 +23,7 @@
 #include "boost/cgi/connections/stdio.hpp"
 #include "boost/cgi/common/request_status.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace detail {
 
   //Forward declaration
@@ -42,7 +42,7 @@ namespace cgi {
     
   {
   public:
-    typedef ::cgi::common::map                                map_type;
+    typedef ::BOOST_CGI_NAMESPACE::common::map                                map_type;
     typedef Connection                                        connection_type;
     typedef 
       common::basic_client<Connection, common::tags::acgi>    client_type;
@@ -81,7 +81,7 @@ namespace cgi {
   };
 
  } // namespace detail
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_CGI_REQUEST_IMPL_BASE_HPP_INCLUDED__
 

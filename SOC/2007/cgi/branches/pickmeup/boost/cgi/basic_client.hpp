@@ -18,7 +18,7 @@
 #include "boost/cgi/connections/tcp_socket.hpp"
 
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
   /// A client
@@ -43,7 +43,7 @@ namespace cgi {
   class basic_client
   {
   public:
-    //typedef cgi::map                          map_type;
+    //typedef BOOST_CGI_NAMESPACE::map                          map_type;
     typedef Connection                        connection_type;
     typedef Protocol                          protocol_type;
     typedef typename connection_type::pointer connection_ptr;
@@ -155,6 +155,6 @@ namespace cgi {
   };
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_BASIC_CLIENT_HPP_INCLUDED__

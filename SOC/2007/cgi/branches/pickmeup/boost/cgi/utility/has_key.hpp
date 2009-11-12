@@ -2,11 +2,13 @@
 #ifndef BOOST_CGI_HAS_KEY_HPP_INCLUDED_
 #define BOOST_CGI_HAS_KEY_HPP_INCLUDED_
 
+#include "boost/cgi/detail/push_options.hpp"
+
 #include <map>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/common/name.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    /// Check if the given map has an entry `name`.
@@ -53,7 +55,7 @@ namespace cgi {
     }
 
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // BOOST_CGI_HAS_KEY_HPP_INCLUDED_
 

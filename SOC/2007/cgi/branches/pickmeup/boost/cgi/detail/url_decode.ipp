@@ -11,7 +11,7 @@
 
 #include "boost/cgi/detail/url_decode.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace detail {
 
    /// Convert a char into a hexadecimal value
@@ -100,7 +100,7 @@ namespace cgi {
    }
 
  } // namespace detail
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #include "boost/cgi/detail/pop_options.hpp"
 

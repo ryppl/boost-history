@@ -19,7 +19,7 @@
 #include "boost/cgi/detail/extract_params.hpp"
 #include "boost/cgi/detail/cgi_service_impl_base.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
 
   //class cgi_request_impl;
 
@@ -53,6 +53,6 @@ namespace cgi {
     }
   };
 
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_CGI_SERVICE_IMPL_HPP_INCLUDED__

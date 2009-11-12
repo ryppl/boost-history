@@ -62,9 +62,9 @@ void TracebackServer::bomb_out(std::string const& error, response_type& response
     template_ = ctemplate::Template::GetTemplate(TBS_TEMPLATE__DEBUG_VIEW, ctemplate::STRIP_WHITESPACE);
     dictionary_type dict("debug_view");
     dict.SetValue("ERROR", error);
-    expand_map(dict, request[boost::cgi::env], "Environment Data");
-    expand_map(dict, request[boost::cgi::form], "Form (" + request.request_method() + ") data");
-    expand_map(dict, request[boost::cgi::cookies], "Cookies");
+    expand_map(dict, request.env, "Environment Data");
+    expand_map(dict, request.form, "Form (" + request.method() + ") data");
+    expand_map(dict, request.cookies, "Cookies");
     BOOST_FOREACH(std::string& hstring, response.headers())
     {
         dict.SetValueAndShowSection("HEADER", hstring, "RESPONSE_HEADER");
@@ -120,14 +120,12 @@ bool TracebackServer::run(callback_type const& callback)
     try {
         request.load(boost::cgi::parse_all);  
         int ret(callback(request, response));
-        if (request[boost::cgi::form_data]["debug"] == "1") {
+        if (request.form["debug"] == "1") {
             bomb_out("** Debug mode ** - client callback returned code #" + boost::lexical_cast<std::string>(ret)
                     , response, request);
         }else
         if (!ret) {
-            response.send(request.client());
-            request.close();
-            return true;
+            return boost::cgi::commit(request, response);
         } else {
             bomb_out("Callback returned code #" + boost::lexical_cast<std::string>(ret) + "; unknown error", response, request);
         }

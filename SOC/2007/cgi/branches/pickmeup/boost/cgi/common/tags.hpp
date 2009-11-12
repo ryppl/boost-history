@@ -13,7 +13,9 @@
 #pragma once
 #endif
 
-namespace cgi {
+#include "boost/cgi/config.hpp"
+
+BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    /// SCGI (note, this must be removed)
@@ -48,6 +50,6 @@ namespace cgi {
 
   } // namespace tags
  } // namespace common
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_TAGS_HPP_INCLUDED__

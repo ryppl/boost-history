@@ -28,8 +28,9 @@
 #include "boost/cgi/import/io_service.hpp"
 #include "boost/cgi/detail/service_base.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/config.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
 
    namespace detail {
      
@@ -71,7 +72,7 @@ namespace cgi {
     /// Close the request.
     BOOST_CGI_INLINE int
     fcgi_request_service::close(
-        implementation_type& impl, ::cgi::common::http::status_code& hsc
+        implementation_type& impl, ::BOOST_CGI_NAMESPACE::common::http::status_code& hsc
       , int program_status)
     {
       impl.all_done_ = true;
@@ -82,7 +83,7 @@ namespace cgi {
 
     BOOST_CGI_INLINE int
     fcgi_request_service::close(
-        implementation_type& impl, ::cgi::common::http::status_code& hsc
+        implementation_type& impl, ::BOOST_CGI_NAMESPACE::common::http::status_code& hsc
       , int program_status, boost::system::error_code& ec)
     {
       impl.all_done_ = true;
@@ -196,7 +197,7 @@ namespace cgi {
       if (request_method == "POST" 
           && opts & common::parse_post_only)
       {
-      std::cerr<< "Parsing post vars now.\n";
+        std::cerr<< "Parsing post vars now.\n";
         if (parse_post_vars(impl, ec))
 	      return ec;
       }
@@ -212,6 +213,7 @@ namespace cgi {
           parse_packet(impl, ec);
         }
       }
+        
       if (ec == error::eof) {
         ec = boost::system::error_code();
         return ec;
@@ -598,11 +600,27 @@ namespace cgi {
         implementation_type& impl, const MutableBuffersType& buf
       , boost::system::error_code& ec)
     {
-      return
-        (this->* proc_funcs[fcgi::spec::get_type(impl.header_buf_)])
-            (impl, fcgi::spec::get_request_id(impl.header_buf_)
-            , boost::asio::buffer_cast<unsigned char*>(buf)
-            , boost::asio::buffer_size(buf), ec);
+      switch(fcgi::spec::get_type(impl.header_buf_))
+      {
+      case 1: process_begin_request(impl, fcgi::spec::get_request_id(impl.header_buf_)
+              , boost::asio::buffer_cast<unsigned char*>(buf)
+              , boost::asio::buffer_size(buf), ec);
+              break;
+      case 2: process_abort_request(impl, fcgi::spec::get_request_id(impl.header_buf_)
+              , boost::asio::buffer_cast<unsigned char*>(buf)
+              , boost::asio::buffer_size(buf), ec);
+              break;
+      case 4: process_params(impl, fcgi::spec::get_request_id(impl.header_buf_)
+              , boost::asio::buffer_cast<unsigned char*>(buf)
+              , boost::asio::buffer_size(buf), ec);
+              break;
+      case 5: process_stdin(impl, fcgi::spec::get_request_id(impl.header_buf_)
+              , boost::asio::buffer_cast<unsigned char*>(buf)
+              , boost::asio::buffer_size(buf), ec);
+              break;
+      default: break;
+      }
+      return ec;
     }
 
     BOOST_CGI_INLINE boost::system::error_code
@@ -632,25 +650,13 @@ namespace cgi {
        return ec;
     }
 
-  //template<>
-  const fcgi_request_service::proc_func_t fcgi_request_service::proc_funcs[] =
-    { 0
-    , &fcgi_request_service::process_begin_request
-    , &fcgi_request_service::process_abort_request
-    , 0
-    , &fcgi_request_service::process_params
-    , &fcgi_request_service::process_stdin
-    , 0
-    , 0
-    };
-
  } // namespace fcgi
-} // namespace cgi
+BOOST_CGI_NAMESPACE_END
 
 #include "boost/cgi/fcgi/request.hpp"
 #include "boost/cgi/basic_request.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
  namespace fcgi {
 
 /*
@@ -696,9 +702,9 @@ namespace cgi {
 
         // **FIXME** THIS LEAKS MEMORY!!!!!!!
         //requests.at(id-1)
-        request_type* new_request = new request_type(impl, ec);
+        //request_type* new_request = new request_type(impl, ec);
 
-        conn.add_request(id, new_request, true, ec);
+        //conn.add_request(id, new_request, true, ec);
 
         return ec;//error::multiplexed_request_incoming;
       }
@@ -708,7 +714,8 @@ namespace cgi {
 
 
  } // namespace fcgi
-} // namespace cgi
+ 
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_FCGI_REQUEST_SERVICE_IPP_INCLUDED__
 
