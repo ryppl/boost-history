@@ -23,9 +23,42 @@
 NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
+// intrinsic function log2
+
+namespace detail {
+
+#if defined(_MSC_VER) // vc++
+
+#if _MSC_VER > 1200
+#pragma warning(push)
+#endif
+
+#pragma warning(disable:4035)
+#pragma warning(disable:4793)
+
+__forceinline unsigned int log2(IN unsigned int val) {
+	BOOST_MEMORY_ASSERT(val != 0);
+	__asm {
+		bsr eax, val
+	};
+}
+
+#if _MSC_VER > 1200
+#pragma warning(pop)
+#endif
+
+#else // if defined(__GNUG__) || defined(__GNUC__) // g++/gcc
+
+#error "Error: to do - unsupport compiler!"
+
+#endif
+
+} // namespace detail
+
+// -------------------------------------------------------------------------
 // class pools, scoped_pools
 
-template <class PolicyT, size_t nPool = 16, size_t nAlignBits = 3, int m_fPreAlloc = 1>
+template <class PolicyT, int m_fPreAlloc = 1>
 class pools_alloc
 {
 private:
@@ -39,27 +72,41 @@ public:
 	typedef typename pool_type::alloc_type block_pool_type;
 
 private:
-	enum { ALIGN_BITS = nAlignBits };
-	enum { NPOOL = nPool };
-	enum { ALIGN = 1 << ALIGN_BITS };
-	enum { MIN_BYTES = ALIGN };
-	enum { MAX_BYTES = ALIGN * NPOOL };
+	// 8, 16, 24, 32, 40, ..., 128
+	enum { NPOOL1 = 16 };
+	enum { ALIGN_BITS1 = 3 };
+	enum { ALIGN1 = 1 << ALIGN_BITS1 };
+	enum { MIN_BYTES1 = ALIGN1 };
+	enum { MAX_BYTES1 = ALIGN1 * NPOOL1 };
+
+	// 2^8-4, 2^9-4, 2^10-4, 2^11-4, 2^12-4, 2^13-4
+	enum { NPOOL2 = 6 };
+	enum { PADDING2 = 4 };
+	enum { MIN_BITS2 = 8 };
+	enum { MAX_BITS2 = 13 };
+	enum { MIN_BYTES2 = (2 << MIN_BITS2) - PADDING2 };
+	enum { MAX_BYTES2 = (2 << MAX_BITS2) - PADDING2 };
+
+	enum { NPOOL = NPOOL1 + NPOOL2 };
+
+public:
+	enum { MAX_BYTES = MAX_BYTES2 };
 
 private:
-	pool_type* m_pools[nPool];
+	pool_type* m_pools[NPOOL];
 	block_pool_type m_recycle;
 	region_alloc_type m_alloc;
 
 public:
 	pools_alloc()
 	{
-		std::fill_n(m_pools, nPool, (pool_type*)NULL);
+		memset(m_pools, 0, sizeof(pool_type*)*NPOOL);
 	}
 
 	pools_alloc(block_pool_type recycle)
 		: m_recycle(recycle), m_alloc(recycle)
 	{
-		std::fill_n(m_pools, nPool, (pool_type*)NULL);
+		memset(m_pools, 0, sizeof(pool_type*)*NPOOL);
 	}
 
 	block_pool_type BOOST_MEMORY_CALL get_block_pool() const
@@ -76,20 +123,34 @@ public:
 	{
 		BOOST_MEMORY_ASSERT(has_pool(cb));
 		
-		const size_type index = (cb - 1) >> ALIGN_BITS;
-		pool_type* p = m_pools[index];
-		if (p == NULL)
+		if (cb - 1 < (size_type)MAX_BYTES1)
 		{
-			const size_type cbElem = (index + 1) << ALIGN_BITS;
-			m_pools[index] = p = BOOST_MEMORY_NEW(m_alloc, pool_type)(m_recycle, cbElem);
+			const size_type index = (cb - 1) >> ALIGN_BITS1;
+			pool_type* p = m_pools[index];
+			if (p == NULL)
+			{
+				const size_type cbElem = (index + 1) << ALIGN_BITS1;
+				m_pools[index] = p = BOOST_MEMORY_NEW(m_alloc, pool_type)(m_recycle, cbElem);
+			}
+			return *p;
 		}
-		return *p;
+		else
+		{
+			BOOST_MEMORY_ASSERT(cb - 1 < (size_type)MAX_BYTES2);
+			const size_type index = detail::log2(cb + (PADDING2 - 1)) + (NPOOL1 - (MIN_BITS2 - 1));
+			pool_type* p = m_pools[index];
+			if (p == NULL)
+			{
+				const size_type cbElem = (1 << (index - (NPOOL1 - MIN_BITS2))) - PADDING2;
+				m_pools[index] = p = BOOST_MEMORY_NEW(m_alloc, pool_type)(m_recycle, cbElem);
+			}
+			return *p;
+		}
 	}
 	
 	bool BOOST_MEMORY_CALL has_pool(size_type cb) const
 	{
-		const size_type index = (cb - 1) >> ALIGN_BITS;
-		return index < nPool;
+		return cb - 1 < (size_type)MAX_BYTES2;
 	}
 };
 
