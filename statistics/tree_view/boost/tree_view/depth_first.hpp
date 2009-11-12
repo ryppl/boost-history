@@ -17,7 +17,7 @@
 namespace boost{
 namespace tree_view{
 
-    // Manages a node that moves in the tree according to breadth-first
+    // Manages a node that moves in the tree according to depth-first
     template<unsigned n,unsigned m = BOOST_SWITCH_LIMIT>
     class depth_first
         : incrementable<
