@@ -56,6 +56,10 @@ BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_set_find_4_bicremental_types)
 {            interval_set_find_4_bicremental_types<INTERVAL_SET, bicremental_type_1>();}
 
+BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_set_element_iter_4_discrete_types)
+{            interval_set_element_iter_4_discrete_types<INTERVAL_SET, discrete_type_2>();}
+
 #endif // BOOST_ITL_FASTEST_INTERVAL_SET_CASES_HPP_JOFA_090702
 
 

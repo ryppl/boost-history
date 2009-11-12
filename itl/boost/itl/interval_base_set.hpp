@@ -14,6 +14,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/set.hpp>
 #include <boost/itl/interval.hpp>
 #include <boost/itl/detail/notate.hpp>
+#include <boost/itl/detail/element_iterator.hpp>
 
 #define const_FOR_IMPL(iter) for(typename ImplSetT::const_iterator iter=_set.begin(); (iter)!=_set.end(); (iter)++)
 #define FOR_IMPL(iter) for(typename ImplSetT::iterator iter=_set.begin(); (iter)!=_set.end(); (iter)++)
@@ -116,12 +117,21 @@ public:
     /// const_iterator for iteration over intervals
     typedef typename ImplSetT::const_reverse_iterator const_reverse_iterator;
 
+	/// element iterator: Depreciated, see documentation.
+	typedef boost::itl::element_iterator<iterator> element_iterator; 
+	/// element const iterator: Depreciated, see documentation.
+	typedef boost::itl::element_iterator<const_iterator> element_const_iterator; 
+	/// element reverse iterator: Depreciated, see documentation.
+	typedef boost::itl::element_iterator<reverse_iterator> element_reverse_iterator; 
+	/// element const reverse iterator: Depreciated, see documentation.
+	typedef boost::itl::element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
+
     typedef typename ImplSetT::pointer                 pointer;
     typedef typename ImplSetT::const_pointer           const_pointer;
     typedef typename ImplSetT::reference               reference;
     typedef typename ImplSetT::const_reference         const_reference;
 
-    enum { fineness = 4 }; //SubType::fineness };
+    enum { fineness = 4 };
 
 public:
     //==========================================================================
@@ -400,6 +410,20 @@ public:
 
     std::pair<const_iterator,const_iterator> equal_range(const key_type& interval)const
     { return _set.equal_range(interval); }
+
+
+    //==========================================================================
+    //= Element iterator related
+    //==========================================================================
+	element_iterator elements_begin(){ return element_iterator(this->begin()); }
+	element_iterator elements_end()  { return element_iterator(this->end());   }
+	element_const_iterator elements_begin()const{ return element_iterator(this->begin()); }
+	element_const_iterator elements_end()  const{ return element_iterator(this->end());   }
+
+	element_reverse_iterator elements_rbegin(){ return element_reverse_iterator(this->rbegin()); }
+	element_reverse_iterator elements_rend()  { return element_reverse_iterator(this->rend());   }
+	element_const_reverse_iterator elements_rbegin()const{ return element_reverse_iterator(this->rbegin()); }
+	element_const_reverse_iterator elements_rend()  const{ return element_reverse_iterator(this->rend());   }
 
     //==========================================================================
     //= Morphisms

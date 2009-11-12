@@ -1234,5 +1234,49 @@ void interval_map_std_copy_via_inserter_4_bicremental_types()
 }
 
 
+template <class T, class U, class Trt,
+          template<class T, class U,
+                   class Traits = Trt,
+                   ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
+                   ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalMap
+          >
+void interval_map_element_iter_4_discrete_types()
+{
+    typedef IntervalMap<T,U,Trt> IntervalMapT;
+	typedef typename IntervalMapT::element_iterator ReptatorT;
+	typedef std::vector<std::pair<T,U> > VectorT;
+
+	IntervalMapT map_a;
+	map_a.insert(IIv(1,3,1)).insert(IIv(6,7,2));
+
+	IntervalMapT::atomized_type ato_map_a;
+	ReptatorT el_it = map_a.elements_begin();
+
+	VectorT vec(5), cev(5);
+	vec[0]=sK_v(1,1);vec[1]=sK_v(2,1);vec[2]=sK_v(3,1);vec[3]=sK_v(6,2);vec[4]=sK_v(7,2);
+	cev[0]=sK_v(7,2);cev[1]=sK_v(6,2);cev[2]=sK_v(3,1);cev[3]=sK_v(2,1);cev[4]=sK_v(1,1);
+
+	VectorT dest;
+	std::copy(map_a.elements_begin(), map_a.elements_end(), std::back_inserter(dest));
+    BOOST_CHECK_EQUAL( vec == dest, true );
+
+	dest.clear();
+	std::copy(map_a.elements_rbegin(), map_a.elements_rend(), std::back_inserter(dest));
+    BOOST_CHECK_EQUAL( cev == dest, true );
+
+	dest.clear();
+	std::reverse_copy(map_a.elements_rbegin(), map_a.elements_rend(), std::back_inserter(dest));
+    BOOST_CHECK_EQUAL( vec == dest, true );
+
+	dest.clear();
+	std::reverse_copy(map_a.elements_begin(), map_a.elements_end(), std::back_inserter(dest));
+    BOOST_CHECK_EQUAL( cev == dest, true );
+
+}
+
 #endif // __test_itl_interval_map_shared_h_JOFA_080920__
 

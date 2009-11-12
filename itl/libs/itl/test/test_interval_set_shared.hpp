@@ -719,5 +719,40 @@ void interval_set_find_4_bicremental_types()
     BOOST_CHECK_EQUAL( found == set_a.end(), true );
 }
 
+template <template< class T, 
+                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
+                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalSet, 
+          class T>
+void interval_set_element_iter_4_discrete_types()
+{
+    typedef IntervalSet<T> IntervalSetT;
+	typedef std::vector<T> VectorT;
+
+    IntervalSetT set_a;
+    set_a.add(I_I(1,3)).add(I_I(6,7));
+
+	VectorT vec(5), cev(5);
+	vec[0]=MK_v(1);vec[1]=MK_v(2);vec[2]=MK_v(3);vec[3]=MK_v(6);vec[4]=MK_v(7);
+	cev[0]=MK_v(7);cev[1]=MK_v(6);cev[2]=MK_v(3);cev[3]=MK_v(2);cev[4]=MK_v(1);
+
+	VectorT dest;
+	std::copy(set_a.elements_begin(), set_a.elements_end(), std::back_inserter(dest));
+    BOOST_CHECK_EQUAL( vec == dest, true );
+
+	dest.clear();
+	std::copy(set_a.elements_rbegin(), set_a.elements_rend(), std::back_inserter(dest));
+    BOOST_CHECK_EQUAL( cev == dest, true );
+
+	dest.clear();
+	std::reverse_copy(set_a.elements_begin(), set_a.elements_end(), std::back_inserter(dest));
+    BOOST_CHECK_EQUAL( cev == dest, true );
+
+	dest.clear();
+	std::reverse_copy(set_a.elements_rbegin(), set_a.elements_rend(), std::back_inserter(dest));
+    BOOST_CHECK_EQUAL( vec == dest, true );
+}
+
 #endif // __test_itl_interval_set_shared_h_JOFA_080920__
 

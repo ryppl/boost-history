@@ -7,6 +7,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 +-----------------------------------------------------------------------------*/
 #define BOOST_TEST_MODULE itl::interval_set unit test
 #include <string>
+#include <vector>
 #include <boost/mpl/list.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>

@@ -153,6 +153,15 @@ public:
     /// const_iterator for iteration over intervals
     typedef typename ImplMapT::const_reverse_iterator const_reverse_iterator;
 
+	/// element iterator: Depreciated, see documentation.
+	typedef boost::itl::element_iterator<iterator> element_iterator; 
+	/// const element iterator: Depreciated, see documentation.
+	typedef boost::itl::element_iterator<const_iterator> element_const_iterator; 
+	/// element reverse iterator: Depreciated, see documentation.
+	typedef boost::itl::element_iterator<reverse_iterator> element_reverse_iterator; 
+	/// element const reverse iterator: Depreciated, see documentation.
+	typedef boost::itl::element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
+
     typedef typename ImplMapT::pointer                 pointer;
     typedef typename ImplMapT::const_pointer           const_pointer;
     typedef typename ImplMapT::reference               reference;
@@ -654,6 +663,19 @@ public:
     reverse_iterator rend()   { return _map.rend(); }
     const_reverse_iterator rbegin()const { return _map.rbegin(); }
     const_reverse_iterator rend()const   { return _map.rend(); }
+
+    //==========================================================================
+    //= Element iterator related
+    //==========================================================================
+	element_iterator elements_begin(){ return element_iterator(this->begin()); }
+	element_iterator elements_end()  { return element_iterator(this->end());   }
+	element_const_iterator elements_begin()const{ return element_iterator(this->begin()); }
+	element_const_iterator elements_end()  const{ return element_iterator(this->end());   }
+
+	element_reverse_iterator elements_rbegin(){ return element_reverse_iterator(this->rbegin()); }
+	element_reverse_iterator elements_rend()  { return element_reverse_iterator(this->rend());   }
+	element_const_reverse_iterator elements_rbegin()const{ return element_reverse_iterator(this->rbegin()); }
+	element_const_reverse_iterator elements_rend()  const{ return element_reverse_iterator(this->rend());   }
 
     //==========================================================================
     //= Representation

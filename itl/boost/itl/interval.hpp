@@ -509,14 +509,13 @@ struct discrete_interval
         cardinality(const IntervalT& x) 
     { 
         return x.empty()? itl::neutron<typename IntervalT::size_type>::value() 
-                        : succ(x.last()-x.first());
+                        : static_cast<typename IntervalT::size_type>(succ(x.last()-x.first()));
     }
 
     static typename IntervalT::difference_type length(const IntervalT& x) 
     {
-        return x.empty() ? 
-            itl::neutron<typename IntervalT::difference_type>::value() : 
-            succ(x.last() - x.first()); 
+        return x.empty() ? itl::neutron<typename IntervalT::difference_type>::value() 
+                         : succ(x.last() - x.first()); 
     }
 
     static bool unaligned_lwb_equal(const IntervalT& x1, const IntervalT& x2)

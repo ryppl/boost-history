@@ -12,9 +12,11 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <iostream>                   // to organize output
 #include <boost/cstdint.hpp>          // portable boost integers
 #include <boost/operators.hpp>        // to define operators with minimal effort
+#include <boost/itl/interval_map.hpp> // base of large bitsets
 #include <boost/itl_xt/meta_log.hpp>  // a meta logarithm
 #include <boost/itl_xt/bits.hpp>      // a bitset implementation
-#include <boost/itl/interval_map.hpp> // base of large bitsets
+#include <boost/itl_xt/detail/bit_element_iterator.hpp>
+//CL  itl\boost\itl_xt\detail\bit_element_iterator.hpp
 
 namespace boost{namespace itl
 {
@@ -61,7 +63,8 @@ public:
     typedef DomainT                                       element_type;   // 0 ..  2^digits(element_type)-1
     typedef DomainT                                       condensed_type; // 0 .. (2^digits(element_type)-1)/digits(word_type)
     typedef typename BitSetT::word_type                   word_type;      // 0 ..  2^digits(word_type)-1
-    typedef typename BitSetT::bit_type                    bit_type;       // 0 .. digits(word_type)     
+    typedef typename BitSetT::bit_type                    bit_type;       // 0 .. digits(word_type)
+	typedef short                                         narrow_type;    // small signed type that includes bit_type
     typedef BitSetT                                       bitset_type;
     typedef BitSetT                                       data_type;
     typedef typename std::size_t                          size_type;
@@ -71,10 +74,27 @@ public:
     typedef typename interval_bitmap_type::key_type       key_type;
     typedef typename interval_bitmap_type::value_type     value_type;
 
-    typedef typename interval_bitmap_type::iterator       iterator;
-    typedef typename interval_bitmap_type::const_iterator const_iterator;
-
     typedef typename itl::set<DomainT,Compare,Alloc>      atomized_type;
+
+    typedef typename interval_bitmap_type::iterator               iterator;
+    typedef typename interval_bitmap_type::const_iterator         const_iterator;
+    typedef typename interval_bitmap_type::reverse_iterator       reverse_iterator;
+    typedef typename interval_bitmap_type::const_reverse_iterator const_reverse_iterator;
+
+	/// element iterator: Depreciated, see documentation.
+	typedef boost::itl::bit_element_iterator<iterator> element_iterator; 
+	/// element const iterator: Depreciated, see documentation.
+	typedef boost::itl::bit_element_iterator<const_iterator> element_const_iterator; 
+	/// element reverse iterator: Depreciated, see documentation.
+	typedef boost::itl::bit_element_iterator<reverse_iterator> element_reverse_iterator; 
+	/// element const reverse iterator: Depreciated, see documentation.
+	typedef boost::itl::bit_element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
+
+    typedef typename interval_bitmap_type::pointer         pointer;
+    typedef typename interval_bitmap_type::const_pointer   const_pointer;
+    typedef typename interval_bitmap_type::reference       reference;
+    typedef typename interval_bitmap_type::const_reference const_reference;
+
 
 public:
     bool operator ==(const interval_bitset& rhs)const{ return _map == rhs._map; }
@@ -126,30 +146,51 @@ public:
     void show_matrix(const char off_on[2] = " 1")const;
     std::string as_string()const{ return _map.as_string(); }
 
-    iterator       begin()     { return _map.begin(); }
-    const_iterator begin()const{ return _map.begin(); }
-    iterator       end()       { return _map.end(); }
-    const_iterator end()const  { return _map.end(); }
+    //==========================================================================
+    //= Iterator related
+    //==========================================================================
+
+    iterator       begin()      { return _map.begin(); }
+    const_iterator begin()const { return _map.begin(); }
+    iterator       end()        { return _map.end(); }
+    const_iterator end()const   { return _map.end(); }
+
+    reverse_iterator rbegin()            { return _map.rbegin(); }
+    reverse_iterator rend()              { return _map.rend(); }
+    const_reverse_iterator rbegin()const { return _map.rbegin(); }
+    const_reverse_iterator rend()const   { return _map.rend(); }
+
+    //==========================================================================
+    //= Element iterator related
+    //==========================================================================
+	element_iterator elements_begin(){ return element_iterator(this->begin()); }
+	element_iterator elements_end()  { return element_iterator(this->end(), iterator_state::end);   }
+	element_const_iterator elements_begin()const{ return element_iterator(this->begin()); }
+	element_const_iterator elements_end()  const{ return element_iterator(this->end(), iterator_state::end);   }
+
+	element_reverse_iterator elements_rbegin(){ return element_reverse_iterator(this->rbegin()); }
+	element_reverse_iterator elements_rend()  { return element_reverse_iterator(this->rend(), iterator_state::end);   }
+	element_const_reverse_iterator elements_rbegin()const{ return element_reverse_iterator(this->rbegin()); }
+	element_const_reverse_iterator elements_rend()  const{ return element_reverse_iterator(this->rend(), iterator_state::end);   }
 
 private:                                       
     typedef typename interval_bitmap_type::segment_type seg_type;
 
-    static const word_type                     
-        digits    = bitset_type::digits,
-        divisor   = digits,
-        shift     = log2_<divisor>::value,      
-        w1        = static_cast<word_type>(1),
-        mask      = divisor - w1,               
-        all       = ~static_cast<word_type>(0),
-        top       = w1 << (digits-w1);
+    BOOST_STATIC_CONSTANT( word_type, digits    = bitset_type::digits       );
+    BOOST_STATIC_CONSTANT( word_type, divisor   = digits                    );
+    BOOST_STATIC_CONSTANT( word_type, shift     = log2_<divisor>::value     );
+    BOOST_STATIC_CONSTANT( word_type, w1        = static_cast<word_type>(1) );
+    BOOST_STATIC_CONSTANT( word_type, mask      = divisor - w1              );
+    BOOST_STATIC_CONSTANT( word_type, all       = ~static_cast<word_type>(0));
+    BOOST_STATIC_CONSTANT( word_type, top       = w1 << (digits-w1)         );
     
     typedef itl::bits<unsigned char> PartsT;
     enum { inner_part = 0, sub_part = 1, super_part = 2, inter_part = 4 };
 
     typedef void (interval_bitset::*segment_combiner)(element_type, element_type, bitset_type);
 
-    word_type from_lower_to(word_type bit)const{return bit==digits-w1 ? all : (1<<(bit+1))-1;}
-    word_type to_upper_from(word_type bit)const{return bit==digits-w1 ? top : ~((1<<bit)-1); }
+    static word_type from_lower_to(word_type bit){return bit==top ? all : (1<<(bit+1))-1;}
+    static word_type to_upper_from(word_type bit){return bit==top ? top : ~((1<<bit)-1); }
 
     interval_bitset& segment_apply(segment_combiner combine, const interval_type& operand)
     {                                                 // same as

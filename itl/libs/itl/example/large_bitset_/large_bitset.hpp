@@ -155,8 +155,8 @@ private:                                      // Example value
     //]
 
     //[large_bitset_bitset_filler
-    word_type from_lower_to(word_type bit){return bit==digits-w1 ? all : (1<<(bit+1))-1;}
-    word_type to_upper_from(word_type bit){return bit==digits-w1 ? top : ~((1<<bit)-1); }
+    static word_type from_lower_to(word_type bit){return bit==top ? all : (1<<(bit+1))-1;}
+    static word_type to_upper_from(word_type bit){return bit==top ? top : ~((1<<bit)-1); }
     //]
 
     //[large_bitset_segment_apply

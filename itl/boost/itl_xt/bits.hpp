@@ -21,6 +21,9 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
+// A bit_range_type is supposed to cover the range of bits including endings.
+// rend()              end()
+//     -1   <=  b  <=  BitsT::digits
 typedef short bit_range_type;
 
 namespace bitcount
@@ -139,6 +142,7 @@ static unsigned char table[] =
     2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
     3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
 };
+
 
 template<>
 struct count<nat8, 8>

@@ -33,6 +33,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_fastest_set_interval_se
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_fastest_set_itl_set", "fastest_set_itl_set_\vc9_fastest_set_itl_set.vcproj", "{33577D13-D562-4E3F-89F2-A8885151D13F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_fastest_split_interval_map", "fastest_split_interval_map_\vc9_fastest_split_interval_map.vcproj", "{EE61B7EF-EC45-4165-8B49-FD5B7D2A913E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_fastest_split_interval_set", "fastest_split_interval_set_\vc9_fastest_split_interval_set.vcproj", "{EE61B7EF-EC45-4165-8B49-FD5B7D4A915C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -103,6 +107,14 @@ Global
 		{33577D13-D562-4E3F-89F2-A8885151D13F}.Debug|Win32.Build.0 = Debug|Win32
 		{33577D13-D562-4E3F-89F2-A8885151D13F}.Release|Win32.ActiveCfg = Release|Win32
 		{33577D13-D562-4E3F-89F2-A8885151D13F}.Release|Win32.Build.0 = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D2A913E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D2A913E}.Debug|Win32.Build.0 = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D2A913E}.Release|Win32.ActiveCfg = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D2A913E}.Release|Win32.Build.0 = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D4A915C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D4A915C}.Debug|Win32.Build.0 = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D4A915C}.Release|Win32.ActiveCfg = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D4A915C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
