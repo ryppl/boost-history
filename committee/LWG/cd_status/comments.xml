@@ -14412,7 +14412,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="300" uknum="351" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
+<comment nb="UK" num="300" uknum="351" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 25.2.3
 </section>
@@ -14439,9 +14439,9 @@ All concepts-related text has been removed from the draft.
         &lt;utility&gt; to access pair and provide legacy support
         for finding swap.
 </suggestion>
-<notes>Done
+<notes>Voted into the WP by direct formal motion in Santa Cruz.
 </notes>
-<rationale>No consensus to make the change.
+<rationale>
 </rationale>
 </comment>
 
