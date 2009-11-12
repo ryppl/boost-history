@@ -11,7 +11,7 @@
 
 int main(){
     
-    // example_tree(std::cout);
+    example_tree(std::cout);
     example_depth_first(std::cout);
     
     return 0;

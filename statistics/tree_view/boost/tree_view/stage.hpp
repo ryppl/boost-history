@@ -57,7 +57,7 @@ namespace tree_view{
     // Recursion
     template<unsigned j,unsigned n>
     unsigned stage<j,n>::position_first 
-        = stage<j-1,n>::template position_last;
+        = stage<j-1,n>::position_last;
 
     template<unsigned j,unsigned n>
     unsigned stage<j,n>::position_last 
