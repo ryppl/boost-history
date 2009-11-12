@@ -26,7 +26,7 @@ rule fiber-test ( source )
 
 test-suite fiber :
     [ fiber-test test_fiber ]
-    [ fiber-test test_rrp ]
+    [ fiber-test test_scheduler ]
     [ fiber-test test_utility ]
     [ fiber-test test_mutex ]
     [ fiber-test test_auto_reset_event ]

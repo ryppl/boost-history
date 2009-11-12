@@ -25,3 +25,4 @@ project boost/fiber/example
 
 exe simple : simple.cpp ;
 exe simple_mt : simple_mt.cpp ;
+exe ping_pong : ping_pong.cpp ;

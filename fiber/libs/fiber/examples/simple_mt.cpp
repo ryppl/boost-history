@@ -25,7 +25,7 @@ void f( std::string const& str, int n)
 
 void run_thread(
 		boost::barrier & b,
-		boost::fiber::scheduler & sched,
+		boost::fibers::scheduler & sched,
 		std::string const& msg, int n)
 {
 		std::ostringstream os;
@@ -47,7 +47,7 @@ int main()
 {
 	try
 	{
-		boost::fiber::scheduler sched;
+		boost::fibers::scheduler sched;
 
 		std::cout << "start" << std::endl;
 
@@ -70,7 +70,7 @@ int main()
 	}
 	catch ( boost::system::system_error const& e)
 	{ std::cerr << "system_error: " << e.code().value() << std::endl; }
-	catch ( boost::fiber::scheduler_error const& e)
+	catch ( boost::fibers::scheduler_error const& e)
 	{ std::cerr << "scheduler_error: " << e.what() << std::endl; }
 	catch ( std::exception const& e)
 	{ std::cerr << "exception: " << e.what() << std::endl; }

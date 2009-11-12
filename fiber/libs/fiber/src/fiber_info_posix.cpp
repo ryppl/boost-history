@@ -20,13 +20,15 @@ namespace detail {
 fiber_info_base::fiber_info_base() :
 	attrs(),
 	uctx(),
-	uctx_stack()
+	uctx_stack(),
+	state( STATE_MASTER)
 {}
 
 fiber_info_base::fiber_info_base( attributes const& attrs_) :
 	attrs( attrs_),
 	uctx(),
-	uctx_stack( new char[attrs.stack_size()])
+	uctx_stack( new char[attrs.stack_size()]),
+	state( STATE_NOT_STARTED)
 {
 	BOOST_ASSERT( uctx_stack);
 

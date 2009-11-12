@@ -24,6 +24,7 @@ void test_case_1()
 	boost::fiber f2;
 	BOOST_CHECK( f1);
 	BOOST_CHECK( ! f2);
+	BOOST_CHECK( ! f1.is_alive() );
 }
 
 void test_case_2()
@@ -42,6 +43,11 @@ void test_case_3()
 	boost::fiber f2( boost::move( f1) );
 	BOOST_CHECK( ! f1);
 	BOOST_CHECK( f2);
+	boost::fiber f3;
+	BOOST_CHECK( ! f3);
+	f3 = f2;
+	BOOST_CHECK( f3);
+	BOOST_CHECK_EQUAL( f2, f3);
 }
 
 void test_case_4()

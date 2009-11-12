@@ -33,7 +33,7 @@ void yield()
 
 inline
 void cancel()
-{ fibers::scheduler::fiber_exit(); }
+{ fibers::scheduler::fiber_terminate(); }
 
 }}
 

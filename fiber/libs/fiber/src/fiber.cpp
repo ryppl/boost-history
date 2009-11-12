@@ -8,6 +8,7 @@
 
 #include <boost/assert.hpp>
 
+#include <boost/fiber/detail/fiber_state.hpp>
 #include <boost/fiber/exceptions.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -21,10 +22,10 @@ fiber::convert_thread_to_fiber()
 
 #ifdef BOOST_HAS_RVALUE_REFS
 detail::fiber_info_base::ptr_t
-fiber::make_info_( void ( * fn)() )
+fiber::make_info_( attributes attrs, void ( * fn)() )
 {
 	return detail::fiber_info_base::ptr_t(
-		new detail::fiber_info< void( *)() >( fn, attributes() ) );
+		new detail::fiber_info< void( *)() >( fn, attrs) );
 }
 #endif
 
@@ -91,20 +92,6 @@ fiber::id
 fiber::get_id() const
 { return fiber::id( info_); }
 
-attributes const&
-fiber::get_attributes() const
-{
-	if ( ! info_) throw fiber_moved();
-	return info_->attrs;
-}
-
-void
-fiber::set_attributes( attributes const& attrs)
-{
-	if ( ! info_) throw fiber_moved();
-	info_->attrs = attrs;
-}
-
 bool
 fiber::operator==( fiber const& other) const
 { return get_id() == other.get_id(); }
@@ -112,6 +99,15 @@ fiber::operator==( fiber const& other) const
 bool
 fiber::operator!=( fiber const& other) const
 { return !( get_id() == other.get_id() ); }
+
+bool
+fiber::is_alive() const
+{
+	if ( ! info_)
+		throw fiber_moved();
+	return ( info_->state & detail::STATE_RUNNABLE) == detail::STATE_RUNNABLE ||
+		( info_->state & detail::STATE_NOT_RUNNABLE) == detail::STATE_NOT_RUNNABLE;
+}
 
 }}
 
