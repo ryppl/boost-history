@@ -41,6 +41,7 @@ private:
 	friend fiber::id this_fiber::get_id();
 	friend void this_fiber::yield();
 	friend void this_fiber::cancel();
+	friend class fiber;
 
 	typedef thread_specific_ptr< detail::scheduler_impl >	tss_impl_t;
 
@@ -50,11 +51,11 @@ private:
 
 	static fiber::id get_id();
 
-	static void fiber_yield();
+	static void yield_active_fiber();
 
-	static void fiber_terminate();
+	static void terminate_active_fiber();
 
-	static void fiber_failed();
+	static void cancel_fiber( fiber::id const&);
 
 	detail::scheduler_impl * access_();
 

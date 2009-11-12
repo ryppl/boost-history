@@ -53,7 +53,7 @@ fiber::init_()
 }
 
 void
-fiber::switch_to( fiber & to)
+fiber::switch_to_( fiber & to)
 {
 	if ( ! info_) throw fiber_moved();
 

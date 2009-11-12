@@ -8,8 +8,8 @@
 #define BOOST_FIBERS_DETAIL_SCHEDULER_IMPL_H
 
 #include <cstddef>
+#include <list>
 #include <map>
-#include <queue>
 
 #include <boost/utility.hpp>
 
@@ -25,11 +25,14 @@ namespace detail {
 class BOOST_FIBER_DECL scheduler_impl : private noncopyable
 {
 private:
-	fiber							master_;
-	fiber::id						f_id_;
-	std::map< fiber::id, fiber >	fibers_;
-	std::queue< fiber::id >			runnable_fibers_;
-	std::queue< fiber::id >			terminated_fibers_;
+	typedef std::map< fiber::id, fiber >	container;
+	typedef std::list< fiber::id >			queue;
+
+	fiber		master_;
+	fiber::id	f_id_;
+	container	fibers_;
+	queue		runnable_fibers_;
+	queue		terminated_fibers_;
 
 public:
 	scheduler_impl();
@@ -41,6 +44,8 @@ public:
 	void yield_active_fiber();
 
 	void terminate_active_fiber();
+
+	void cancel_fiber( fiber::id const&);
 
 	bool run();
 

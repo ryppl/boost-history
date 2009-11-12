@@ -44,6 +44,8 @@ private:
 
 	void init_();
 
+	void switch_to_( fiber &);
+
 #ifdef BOOST_HAS_RVALUE_REFS
 	template< typename Fn >
 	static detail::fiber_info_base::ptr_t make_info_(
@@ -186,7 +188,7 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_FIBER_CTOR, ~)
 
 	bool is_alive() const;
 
-	void switch_to( fiber &);
+	void cancel();
 };
 
 class fiber::id

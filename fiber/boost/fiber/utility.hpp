@@ -29,11 +29,11 @@ fiber::id get_id()
 
 inline
 void yield()
-{ fibers::scheduler::fiber_yield(); }
+{ fibers::scheduler::yield_active_fiber(); }
 
 inline
 void cancel()
-{ fibers::scheduler::fiber_terminate(); }
+{ fibers::scheduler::terminate_active_fiber(); }
 
 }}
 

@@ -30,7 +30,7 @@ scheduler::get_id()
 }
 
 void
-scheduler::fiber_yield()
+scheduler::yield_active_fiber()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
@@ -38,7 +38,7 @@ scheduler::fiber_yield()
 }
 
 void
-scheduler::fiber_terminate()
+scheduler::terminate_active_fiber()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
@@ -46,11 +46,11 @@ scheduler::fiber_terminate()
 }
 
 void
-scheduler::fiber_failed()
+scheduler::cancel_fiber( fiber::id const& f_id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
-	impl->terminate_active_fiber();
+	impl->cancel_fiber( f_id);
 }
 
 detail::scheduler_impl *

@@ -10,6 +10,7 @@
 
 #include <boost/fiber/detail/fiber_state.hpp>
 #include <boost/fiber/exceptions.hpp>
+#include <boost/fiber/scheduler.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -108,6 +109,10 @@ fiber::is_alive() const
 	return ( info_->state & detail::STATE_RUNNABLE) == detail::STATE_RUNNABLE ||
 		( info_->state & detail::STATE_NOT_RUNNABLE) == detail::STATE_NOT_RUNNABLE;
 }
+
+void
+fiber::cancel()
+{ scheduler::cancel_fiber( get_id() ); }
 
 }}
 
