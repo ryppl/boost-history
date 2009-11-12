@@ -64,7 +64,7 @@ public:
     typedef DomainT                                       condensed_type; // 0 .. (2^digits(element_type)-1)/digits(word_type)
     typedef typename BitSetT::word_type                   word_type;      // 0 ..  2^digits(word_type)-1
     typedef typename BitSetT::bit_type                    bit_type;       // 0 .. digits(word_type)
-	typedef short                                         narrow_type;    // small signed type that includes bit_type
+    typedef short                                         narrow_type;    // small signed type that includes bit_type
     typedef BitSetT                                       bitset_type;
     typedef BitSetT                                       data_type;
     typedef typename std::size_t                          size_type;
@@ -81,14 +81,14 @@ public:
     typedef typename interval_bitmap_type::reverse_iterator       reverse_iterator;
     typedef typename interval_bitmap_type::const_reverse_iterator const_reverse_iterator;
 
-	/// element iterator: Depreciated, see documentation.
-	typedef boost::itl::bit_element_iterator<iterator> element_iterator; 
-	/// element const iterator: Depreciated, see documentation.
-	typedef boost::itl::bit_element_iterator<const_iterator> element_const_iterator; 
-	/// element reverse iterator: Depreciated, see documentation.
-	typedef boost::itl::bit_element_iterator<reverse_iterator> element_reverse_iterator; 
-	/// element const reverse iterator: Depreciated, see documentation.
-	typedef boost::itl::bit_element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
+    /// element iterator: Depreciated, see documentation.
+    typedef boost::itl::bit_element_iterator<iterator> element_iterator; 
+    /// element const iterator: Depreciated, see documentation.
+    typedef boost::itl::bit_element_iterator<const_iterator> element_const_iterator; 
+    /// element reverse iterator: Depreciated, see documentation.
+    typedef boost::itl::bit_element_iterator<reverse_iterator> element_reverse_iterator; 
+    /// element const reverse iterator: Depreciated, see documentation.
+    typedef boost::itl::bit_element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
 
     typedef typename interval_bitmap_type::pointer         pointer;
     typedef typename interval_bitmap_type::const_pointer   const_pointer;
@@ -163,15 +163,15 @@ public:
     //==========================================================================
     //= Element iterator related
     //==========================================================================
-	element_iterator elements_begin(){ return element_iterator(this->begin()); }
-	element_iterator elements_end()  { return element_iterator(this->end(), iterator_state::end);   }
-	element_const_iterator elements_begin()const{ return element_iterator(this->begin()); }
-	element_const_iterator elements_end()  const{ return element_iterator(this->end(), iterator_state::end);   }
+    element_iterator elements_begin(){ return element_iterator(this->begin()); }
+    element_iterator elements_end()  { return element_iterator(this->end(), iterator_state::end);   }
+    element_const_iterator elements_begin()const{ return element_iterator(this->begin()); }
+    element_const_iterator elements_end()  const{ return element_iterator(this->end(), iterator_state::end);   }
 
-	element_reverse_iterator elements_rbegin(){ return element_reverse_iterator(this->rbegin()); }
-	element_reverse_iterator elements_rend()  { return element_reverse_iterator(this->rend(), iterator_state::end);   }
-	element_const_reverse_iterator elements_rbegin()const{ return element_reverse_iterator(this->rbegin()); }
-	element_const_reverse_iterator elements_rend()  const{ return element_reverse_iterator(this->rend(), iterator_state::end);   }
+    element_reverse_iterator elements_rbegin(){ return element_reverse_iterator(this->rbegin()); }
+    element_reverse_iterator elements_rend()  { return element_reverse_iterator(this->rend(), iterator_state::end);   }
+    element_const_reverse_iterator elements_rbegin()const{ return element_reverse_iterator(this->rbegin()); }
+    element_const_reverse_iterator elements_rend()  const{ return element_reverse_iterator(this->rend(), iterator_state::end);   }
 
 private:                                       
     typedef typename interval_bitmap_type::segment_type seg_type;

@@ -14,21 +14,21 @@ namespace boost{namespace itl
 template<class FirstT, class SecondT>
 struct mapped_reference
 {
-	typedef FirstT  first_type;   
-	typedef SecondT second_type; 
-	typedef mapped_reference type;
+    typedef FirstT  first_type;   
+    typedef SecondT second_type; 
+    typedef mapped_reference type;
 
-	const FirstT& first;                
-	     SecondT& second;              
+    const FirstT& first;                
+         SecondT& second;              
 
-	mapped_reference(const FirstT& fst, SecondT& snd) : first(fst), second(snd){}
+    mapped_reference(const FirstT& fst, SecondT& snd) : first(fst), second(snd){}
 
-	template<class FstT, class SndT>
-	mapped_reference(const mapped_reference<FstT, SndT>& source):
-	    first(source.first), second(source.second){}
+    template<class FstT, class SndT>
+    mapped_reference(const mapped_reference<FstT, SndT>& source):
+        first(source.first), second(source.second){}
 
-	template<class FstT, class SndT>
-	operator std::pair<FstT,SndT>(){ return std::pair<FstT,SndT>(first, second); }
+    template<class FstT, class SndT>
+    operator std::pair<FstT,SndT>(){ return std::pair<FstT,SndT>(first, second); }
 };
 
 
