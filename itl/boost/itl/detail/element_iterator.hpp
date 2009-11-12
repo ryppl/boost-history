@@ -227,7 +227,7 @@ private:
 		}
 	}
 
-    value_type& dereference()const
+    value_type dereference()const
 	{
 		return adapt::transient_element(_inter_pos, _saltator, _reptator);
 	}

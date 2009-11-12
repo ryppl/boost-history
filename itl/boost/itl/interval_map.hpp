@@ -54,6 +54,7 @@ public:
     typedef typename base_type::segment_type segment_type;
     typedef typename base_type::domain_mapping_type domain_mapping_type;
     typedef typename base_type::interval_mapping_type interval_mapping_type;
+    //CL typedef typename base_type::atomized_type atomized_type;
     typedef typename base_type::ImplMapT ImplMapT;
 
     typedef typename base_type::codomain_combine codomain_combine;

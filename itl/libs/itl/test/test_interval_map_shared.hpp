@@ -1253,7 +1253,7 @@ void interval_map_element_iter_4_discrete_types()
 	IntervalMapT map_a;
 	map_a.insert(IIv(1,3,1)).insert(IIv(6,7,2));
 
-	IntervalMapT::atomized_type ato_map_a;
+	typename IntervalMapT::atomized_type ato_map_a;
 	ReptatorT el_it = map_a.elements_begin();
 
 	VectorT vec(5), cev(5);
