@@ -20,6 +20,8 @@
 #include <boost/tree/inorder_algorithms.hpp>
 #include <boost/tree/postorder_algorithms.hpp>
 
+#include <boost/tree/root_tracking_cursor.hpp>
+
 #include <boost/tree/cursor_concepts.hpp>
 
 #include <boost/concept/requires.hpp>

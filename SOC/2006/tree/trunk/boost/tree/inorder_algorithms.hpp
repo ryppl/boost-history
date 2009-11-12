@@ -14,6 +14,7 @@
 
 #include <boost/tree/general_algorithms.hpp>
 #include <boost/tree/cursor_concepts.hpp>
+#include <boost/tree/cursor.hpp>
 
 #include <boost/concept/requires.hpp>
 

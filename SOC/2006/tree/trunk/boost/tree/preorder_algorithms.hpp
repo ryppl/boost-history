@@ -13,6 +13,7 @@
 #define BOOST_TREE_PREORDER_ALGORITHMS_HPP
 
 #include <boost/tree/cursor_concepts.hpp>
+#include <boost/tree/cursor.hpp>
 
 #include <boost/concept/requires.hpp>
 
