@@ -46,6 +46,7 @@ namespace importance_sampling{
         value_type offset()const{ return this->offset_; }  
         // w <- w/c such that sum{w/c}<inf
         value_type scaling_factor()const{ return this->scaling_factor_; }
+        value_type count()const{ return this->n_; } 
         
         // [ Side effect ] 
         // 1) w <- exp(lw+offset)
@@ -65,6 +66,8 @@ namespace importance_sampling{
                 b_w,
                 e_w
             ); 
+            
+            this->n_ = std::distance(b_w,e_w);
         }
 
         static const char* header;
@@ -72,6 +75,7 @@ namespace importance_sampling{
         value_type max_log_;
         value_type offset_;
         value_type scaling_factor_;
+        size_type n_;
         static const value_type zero;
         static const value_type default_max_log;
 
@@ -84,7 +88,8 @@ namespace importance_sampling{
     ){
         out << 
             (
-                boost::format("(%1%,%2%)")
+                boost::format("(%1%,%2%,%3%)")
+                % that.count()
                 % that.offset()
                 % that.scaling_factor()
             ).str();
@@ -93,7 +98,7 @@ namespace importance_sampling{
 
     template<typename T>
     const char* prepare_weights<T>::header 
-        = "(offset,scaling_factor)";
+        = "(count, offset,scaling_factor)";
 
     template<typename T>
     const typename prepare_weights<T>::value_type

@@ -46,11 +46,9 @@ namespace impl
         template<typename Args>
         result_type result(const Args& args) const
         {
-
             typedef 
                 typename boost::parameter::binding<Args,tag_acc_>::type cref_;
             cref_ acc = args[boost::accumulators::accumulator];
-
             T v = accumulators::extract_result<tag_v_>(acc);
             T c = accumulators::extract_result<tag_m_>(acc);
             return v / (c*c);

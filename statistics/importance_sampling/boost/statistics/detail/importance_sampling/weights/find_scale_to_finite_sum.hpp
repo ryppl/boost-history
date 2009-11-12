@@ -53,7 +53,7 @@ namespace importance_sampling{
         typedef typename iterator_value<InIt>::type val_;
         static val_ zero = static_cast<val_>(0);
         static val_ two = static_cast<val_>(2);
-        static val_ eps = math::tools::epsilon<val_>();
+        static val_ eps = boost::math::tools::epsilon<val_>();
 
         BOOST_ASSERT(low_init < high_init);
         BOOST_ASSERT(low_init > zero);
