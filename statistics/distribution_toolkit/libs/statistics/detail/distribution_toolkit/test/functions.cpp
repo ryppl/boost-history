@@ -9,6 +9,7 @@
 #ifndef LIBS_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_TEST_FUNCTIONS_H_ER_2009
 #define LIBS_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_TEST_FUNCTIONS_H_ER_2009
 #include <ostream>
+
 #include <boost/concept/assert.hpp>
 
 #include <boost/statistics/detail/distribution_toolkit/distributions/chi_squared/include.hpp>

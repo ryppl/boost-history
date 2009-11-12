@@ -13,6 +13,8 @@
 #include <boost/statistics/detail/distribution_toolkit/fwd_math/pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/fwd_math/quantile.hpp>
 #include <boost/statistics/detail/distribution_toolkit/fwd_math/mean.hpp>
+#include <boost/statistics/detail/distribution_toolkit/fwd_math/range.hpp>
+#include <boost/statistics/detail/distribution_toolkit/fwd_math/support.hpp>
 #include <boost/statistics/detail/distribution_toolkit/fwd_math/variance.hpp>
 
 #endif

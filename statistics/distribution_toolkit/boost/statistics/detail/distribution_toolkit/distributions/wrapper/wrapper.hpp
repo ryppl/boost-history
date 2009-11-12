@@ -14,8 +14,8 @@
 #include <boost/mpl/not.hpp>
 #include <boost/statistics/detail/distribution_common/meta/inherit_policy.hpp>
 #include <boost/statistics/detail/distribution_common/meta/value.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+//#include <boost/archive/text_oarchive.hpp>
+//#include <boost/archive/text_iarchive.hpp>
 
 namespace boost{
 namespace statistics{
@@ -54,20 +54,20 @@ namespace toolkit{
     
         private:
 
-        template<class A>
-        void serialize(
-            A & ar, 
-            const unsigned int version
-        )
-        {
-            BOOST_MPL_ASSERT((
-                mpl::not_<
-                    is_reference<D>
-                >
-            ));
-
-            ar & d_;
-        }
+        //template<class A>
+        //void serialize(
+        //    A & ar, 
+        //    const unsigned int version
+        //)
+        //{
+        //    BOOST_MPL_ASSERT((
+        //        mpl::not_<
+        //            is_reference<D>
+        //        >
+        //    ));
+		//
+        //    ar & d_;
+        //}
         
         typename call_traits<D>::value_type d_;
     };

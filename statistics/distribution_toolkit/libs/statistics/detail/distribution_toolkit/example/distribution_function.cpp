@@ -12,6 +12,9 @@
 #include <numeric>
 #include <cmath>
 #include <string>
+#include <stdexcept>
+#include <limits>
+
 #include <boost/mpl/apply.hpp>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
@@ -21,6 +24,8 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
+
+#include <boost/statistics/detail/distribution_common/functor/log_unnormalized_pdf.hpp>
 
 #include <boost/statistics/detail/distribution_toolkit/meta/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/students_t/include.hpp>
@@ -43,6 +48,7 @@ void example_distribution_function(std::ostream& out){
         using namespace math;
         using namespace statistics::detail;
         namespace st = statistics::detail;
+        namespace co = distribution::common;
         namespace tk = distribution::toolkit;
         namespace tk_it = tk::iterator;
 
@@ -53,6 +59,7 @@ void example_distribution_function(std::ostream& out){
         typedef math::students_t_distribution<val_>             stud_;
         typedef tk::location_scale_distribution<stud_>          ls_stud_;
         typedef boost::variate_generator<urng_&,rnd_>           vg_;
+        typedef boost::numeric::bounds<val_> 					bounds_;
 
         // Constants
         const unsigned df   = 10;
@@ -66,6 +73,21 @@ void example_distribution_function(std::ostream& out){
         
         stud_ stud(df);
         ls_stud_ ls_stud(mu, sigma, stud);
+
+		out << "testing error handling : " << std::endl;
+
+        try{   
+        	static const val_ inf = std::numeric_limits<val_>::infinity();
+			ls_stud_ ls_stud(inf,sigma,stud);
+        }catch(std::exception& e){
+        	out << e.what() << std::endl;
+		}
+
+		try{
+			ls_stud_(mu,-1.0,stud);
+        }catch(std::exception& e){
+        	out << e.what() << std::endl;
+        }
 
         struct float_{
             
@@ -89,6 +111,10 @@ void example_distribution_function(std::ostream& out){
                     st::log_unnormalized_pdf(ls_stud,x)
                 )
             );
+        }
+        {   // Create a delegate for log_unnormalized_pdf
+			typedef co::functor::log_unnormalized_pdf<ls_stud_> ftor_;		
+			ftor_ ftor(ls_stud);
         }
         {   // make_distribution_function_iterator + fun_wrap
             // Arbitrary random sample

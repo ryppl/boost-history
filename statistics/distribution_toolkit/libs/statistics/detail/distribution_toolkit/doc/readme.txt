@@ -63,6 +63,9 @@ libboost_serialization-xgcc42-mt-1_39.a
     Decouples the function, such as pdf, from the distribution D:
         fun_wrap::cdf_<D>::instance
 
+	Note : distribution_common has functors (in the making) that achieve the 
+    same goal that are easier to use 
+
 /fwd_math 
 /iterator
 /map_pdf
@@ -88,6 +91,8 @@ See distributions/wrapper/wrapper.hpp
 
 [ History ]
 
+Nov 6 2009 : Added error-handling policy to location_scale
+
 Oct 11 2009 : 
     removed /data. use instead sandbox/non_parametric/statistic
     added   /test
@@ -107,3 +112,7 @@ Sep 23 2009 : Merged
 Sep 16 2009 : deleted /algorithm and added /iterator
 July 2009   : First version
 
+[ TODO ]
+
+- range and support for location_scale
+- other distributions
