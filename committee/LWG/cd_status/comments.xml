@@ -6642,7 +6642,7 @@ bullet is about destructors of stack objects during stack unwinding.
 </rationale>
 </comment>
 
-<comment nb="FR" num="2" uknum="" type="ge" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="FR" num="2" uknum="" type="ge" owner="LWG" issue="1156" disp="" date="" extdoc="">
 <section>
 General
 Comment
@@ -6657,7 +6657,8 @@ Library
 <suggestion>
         FR 2
 </suggestion>
-<notes>Editorial; sent to Pete Becker</notes>
+<notes>Also see UK156. Originally sent to the project editor, who rejected the part of the paper
+in question as needing more work. </notes>
 <rationale>
 </rationale>
 </comment>
