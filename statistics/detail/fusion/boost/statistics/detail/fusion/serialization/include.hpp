@@ -6,10 +6,10 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_FUSION_MAP_SERIALIZATION_INCLUDE_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_FUSION_MAP_SERIALIZATION_INCLUDE_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_FUSION_SERIALIZATION_INCLUDE_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_FUSION_SERIALIZATION_INCLUDE_HPP_ER_2009
 
-#include <boost/statistics/detail/fusion/map/serialization/loader.hpp>
-#include <boost/statistics/detail/fusion/map/serialization/saver.hpp>
+#include <boost/statistics/detail/fusion/serialization/saver.hpp>
+#include <boost/statistics/detail/fusion/serialization/loader.hpp>
 
 #endif
