@@ -34,12 +34,24 @@ class pointer : public mixin< pointer<T> ,T* >
     
 public:
     //-----------------------------------------------------------------------------
-    pointer() : base_type(static_cast<T*>(0)) {}
-    template<class U>
-    pointer(pointer<U> const& r) : base_type(r) {}
-    template <typename U>
-    pointer(U* v) : base_type(v) {}
-    //pointer(T* v) : base_type(v) {}
+    pointer() : base_type(static_cast<T*>(0)) {
+            std::cerr << __LINE__ << " pointer" << std::endl;        
+    }
+    //template<class U>
+    //pointer(pointer<U> const& r) : base_type(r) {
+    //        std::cerr << __LINE__ << " pointer" << std::endl;        
+    //}
+    //pointer(pointer const& r) : base_type(r) {
+    pointer(pointer const& r) : base_type(*((base_type const*)(&r))) {
+            std::cerr << __LINE__ << " pointer" << std::endl;        
+    }
+    //template <typename U>
+    //pointer(U* v) : base_type(v) {
+    //        std::cerr << __LINE__ << " pointer" << std::endl;        
+    //}
+    pointer(T* v) : base_type(v) {
+            std::cerr << __LINE__ << " pointer" << std::endl;        
+    }
 
     T* operator->() const {
         return this->value();

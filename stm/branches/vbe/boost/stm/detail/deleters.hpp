@@ -71,8 +71,8 @@ struct base_transaction_object_array_deleter  : deleter {
 template <typename T>
 struct non_transaction_object_deleter  : deleter {
     T* ptr_;
-    typedef typename T::binds_list binds_type;
-    typedef typename T::binds_list::iterator binds_iterator;
+    typedef typename std::list<base_transaction_object*> binds_type;
+    typedef typename binds_type::iterator binds_iterator;
 
     non_transaction_object_deleter(T* ptr) : ptr_(ptr){}
     virtual void reset() {
@@ -95,8 +95,8 @@ template <typename T>
 struct non_transaction_object_array_deleter : deleter {
     T* ptr_;
     std::size_t size_;
-    typedef typename T::binds_list binds_type;
-    typedef typename T::binds_list::iterator binds_iterator;
+    typedef typename std::list<base_transaction_object*> binds_type;
+    typedef typename binds_type::iterator binds_iterator;
 
     non_transaction_object_array_deleter(T* ptr, std::size_t size) : ptr_(ptr), size_(size) {}
     virtual void reset() {
@@ -201,6 +201,26 @@ struct non_transaction_object_array_deleter : deleter {
         return new base_transaction_object_deleter<T>(const_cast<T*>(&r));
     }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+    template <typename T>
+    inline deleter_type* make_non_tx(T* p) {
+        return new non_transaction_object_deleter<T>(p);
+    }
+    template <typename T>
+    inline deleter_type* make_non_tx(T& r) {
+        return new non_transaction_object_deleter<T>(&r);
+    }
+    template <typename T>
+    inline deleter_type* make_non_tx(T const* p) {
+        return new non_transaction_object_deleter<T>(const_cast<T*>(p));
+    }
+    template <typename T>
+    inline deleter_type* make_non_tx(T const& r) {
+        return new non_transaction_object_deleter<T>(const_cast<T*>(&r));
+    }
+
+    
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
     template <typename T>

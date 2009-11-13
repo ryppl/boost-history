@@ -192,7 +192,7 @@ project
 
             ########### fails
             # /bin/sh: line 4:  2656 Segmentation fault      (core dumped) "bin/list.test/gcc-3.4.4/debug/threading-multi/list.exe" > "bin/list.test/gcc-3.4.4/debug/threading-multi/list.output" 2>&1
-            [ link ../example/list.cpp ]
+            #[ link ../example/list.cpp ]
 
             [ run ../example/counter.cpp ]
             # fails sometimes
@@ -200,6 +200,7 @@ project
             [ run ../example/tx/numeric.cpp ]
             [ run ../example/tx/array.cpp ]
             [ run ../example/tx/pointer.cpp ]
+            [ run ../example/tx/list.cpp ]
             [ run ../example/counter_ptr.cpp ]
             # fails sometimes
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52

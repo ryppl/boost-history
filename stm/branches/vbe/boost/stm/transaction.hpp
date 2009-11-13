@@ -570,7 +570,18 @@ public:
    //--------------------------------------------------------------------------
    template <typename T>
    inline void delete_non_tx_ptr(T *in) {
-       delete_memory(*in);
+      if (direct_updating())
+      {
+#if PERFORMING_VALIDATION
+         throw "direct updating not implemented for validation yet";
+#else
+         direct_delete_non_tx_ptr(in);
+#endif
+      }
+      else
+      {
+         deferred_delete_non_tx_ptr(in);
+      }
    }
    #ifdef BOOST_STM_USE_BOOST
     template <int> struct dummy { dummy(int) {} };
@@ -663,6 +674,15 @@ public:
       newNode->transaction_thread(threadId_);
       newNode->new_memory(1);
       newMemoryList().push_back(detail::make(newNode));
+
+      return newNode;
+   }
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   T* as_new_non_tx(T *newNode)
+   {
+      newMemoryList().push_back(detail::make_non_tx(newNode));
 
       return newNode;
    }
@@ -1004,6 +1024,39 @@ private:
 
    //--------------------------------------------------------------------------
    template <typename T>
+   void direct_delete_non_tx_ptr(T *in)
+   {
+      //if (in.transaction_thread() == threadId_)
+      //{
+      //   deletedMemoryList().push_back(detail::make(in));
+      //   return;
+      //}
+
+      //-----------------------------------------------------------------------
+      // if we're here this item isn't in our writeList - get the global lock
+      // and see if anyone else is writing to it. if not, we add the item to
+      // our write list and our deletedList
+      //-----------------------------------------------------------------------
+      synchro::unique_lock<Mutex> lock_m(transactionMutex_);
+
+      //if (in.transaction_thread() != invalid_thread_id())
+      //{
+      //   cm_abort_on_write(*this, (base_transaction_object&)(in));
+      //}
+      //else
+      {
+         //in.transaction_thread(threadId_);
+         lock_m.unlock();
+         // is this really necessary? in the deferred case it is, but in direct it
+         // doesn't actually save any time for anything
+         //writeList()[(base_transaction_object*)&in] = 0;
+
+         deletedMemoryList().push_back(detail::make_non_tx(in));
+      }
+   }
+   
+   //--------------------------------------------------------------------------
+   template <typename T>
    void direct_delete_tx_array(T *in, std::size_t size)
    {
         bool all_in_this_thread = true;
@@ -1144,8 +1197,6 @@ private:
 #if USE_BLOOM_FILTER
          bloom().insert((std::size_t)&in);
          lock.unlock();
-#else
-
 #endif
 #if PERFORMING_WRITE_BLOOM
          wbloom().set_bv1(bloom().h1());
@@ -1207,6 +1258,53 @@ private:
       }
 
       deletedMemoryList().push_back(detail::make(in));
+   }
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   void deferred_delete_non_tx_ptr(T *in)
+   {
+      if (forced_to_abort())
+      {
+         deferred_abort(true);
+         throw aborted_tx("");
+      }
+      //-----------------------------------------------------------------------
+      // if this memory is true memory, not transactional, we add it to our
+      // deleted list and we're done
+      //-----------------------------------------------------------------------
+      //if (in.transaction_thread() != invalid_thread_id())
+      //{
+      //   {
+      //      synchro::lock_guard<Mutex> lock(*mutex());
+      //      bloom().insert((std::size_t)&in);
+      //   }
+      //   writeList().insert(tx_pair((base_transaction_object*)&in, 0));
+      //}
+      //-----------------------------------------------------------------------
+      // this isn't real memory, it's transactional memory. But the good news is,
+      // the real version has to be in our write list somewhere, find it, add
+      // both items to the deletion list and exit
+      //-----------------------------------------------------------------------
+      //else
+      //{
+      //   {
+      //   synchro::lock_guard<Mutex> lock(*mutex());
+      //   bloom().insert((std::size_t)&in);
+      //   }
+      //   // check the ENTIRE write container for this piece of memory in the
+      //   // second location. If it's there, it means we made a copy of a piece
+      //   for (WriteContainer::iterator j = writeList().begin(); writeList().end() != j; ++j)
+      //   {
+      //      if (j->second == (base_transaction_object*)&in)
+      //      {
+      //         writeList().insert(tx_pair(j->first, 0));
+      //         deletedMemoryList().push_back(detail::make(j->first));
+      //      }
+      //   }
+      //}
+
+      deletedMemoryList().push_back(detail::make_non_tx(in));
    }
 
    //--------------------------------------------------------------------------

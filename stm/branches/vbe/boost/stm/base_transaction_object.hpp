@@ -104,7 +104,7 @@ public:
 #endif
 
 #if BOOST_STM_ALLOWS_EMBEDEEDS
-    std::list<base_transaction_object*>& embeddeds() {return embeddeds_;}
+    std::list<base_transaction_object*>& binds() {return embeddeds_;}
     void bind(base_transaction_object* bto) {embeddeds_.push_back(bto);}
 #endif
   
