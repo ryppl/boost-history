@@ -184,6 +184,7 @@ scheduler_impl::resume_fiber( fiber::id const& f_id)
 		{
 		case STATE_READY:
 		case STATE_RUNNING:
+			f.info_->state = STATE_READY;
 			runnable_fibers_.push_back( f.get_id() );
 			break;
 		case STATE_WAITING:
