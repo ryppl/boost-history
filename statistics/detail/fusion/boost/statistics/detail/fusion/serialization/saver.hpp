@@ -60,7 +60,7 @@ struct saver
     >::type
     operator()(const T& serializable_item)const
     {
-        // TODO test serialazable concept
+        // TODO assert serialazable concept
 
 		this->ar_ << serializable_item;
     }
