@@ -28,6 +28,7 @@ test-suite fiber :
     [ fiber-test test_fiber ]
     [ fiber-test test_scheduler ]
     [ fiber-test test_utility ]
+    [ fiber-test test_cancel ]
     [ fiber-test test_mutex ]
     [ fiber-test test_auto_reset_event ]
     [ fiber-test test_manual_reset_event ]

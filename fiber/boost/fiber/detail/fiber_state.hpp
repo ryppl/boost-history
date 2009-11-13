@@ -17,7 +17,7 @@ enum state_t
 {
 	STATE_MASTER		= 1 << 0,
 	STATE_NOT_STARTED	= 1 << 1,
-	STATE_READY		= 1 << 2,
+	STATE_READY			= 1 << 2,
 	STATE_RUNNING		= 1 << 3,
 	STATE_SUSPENDED		= 1 << 4,
 	STATE_WAITING		= 1 << 5,

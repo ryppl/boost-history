@@ -57,6 +57,7 @@ scheduler_impl::add_fiber( fiber f)
 {
 	if ( ! f) throw fiber_moved();
 	fiber::id id( f.get_id() );
+	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
 	BOOST_ASSERT( STATE_NOT_STARTED == f.info_->state);
 	f.info_->state = STATE_READY;
 	std::pair< std::map< fiber::id, fiber >::iterator, bool > result(
@@ -72,6 +73,7 @@ scheduler_impl::active_fiber()
 void
 scheduler_impl::yield_active_fiber()
 {
+	BOOST_ASSERT( ! HAS_STATE_MASTER( fibers_[f_id_].info_->state) );
 	BOOST_ASSERT( STATE_RUNNING == fibers_[f_id_].info_->state);
 	fibers_[f_id_].info_->state = STATE_READY;
 	runnable_fibers_.push_back( f_id_);
@@ -81,6 +83,7 @@ scheduler_impl::yield_active_fiber()
 void
 scheduler_impl::cancel_active_fiber()
 {
+	BOOST_ASSERT( ! HAS_STATE_MASTER( fibers_[f_id_].info_->state) );
 	BOOST_ASSERT( STATE_RUNNING == fibers_[f_id_].info_->state);
 	fibers_[f_id_].info_->state = STATE_TERMINATED;
 	terminated_fibers_.push( f_id_);
@@ -90,6 +93,7 @@ scheduler_impl::cancel_active_fiber()
 void
 scheduler_impl::suspend_active_fiber()
 {
+	BOOST_ASSERT( ! HAS_STATE_MASTER( fibers_[f_id_].info_->state) );
 	BOOST_ASSERT( STATE_RUNNING == fibers_[f_id_].info_->state);
 	fibers_[f_id_].info_->state |= STATE_SUSPENDED;
 	fibers_[f_id_].switch_to_( master_);
@@ -102,7 +106,7 @@ scheduler_impl::cancel_fiber( fiber::id const& f_id)
 	if ( i == fibers_.end() ) return;
 	fiber f( i->second);
 	BOOST_ASSERT( f);
-	BOOST_ASSERT( HAS_STATE_MASTER( f.info_->state) );
+	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
 	
 	if ( HAS_STATE_TERMINATED( f.info_->state) ||
 	     HAS_STATE_NOT_STARTED( f.info_->state) )
@@ -138,7 +142,7 @@ scheduler_impl::suspend_fiber( fiber::id const& f_id)
 	if ( i == fibers_.end() ) return;
 	fiber f( i->second);
 	BOOST_ASSERT( f);
-	BOOST_ASSERT( STATE_MASTER != f.info_->state);
+	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
 	
 	if ( HAS_STATE_TERMINATED( f.info_->state) ||
 	     HAS_STATE_NOT_STARTED( f.info_->state) )
@@ -171,7 +175,7 @@ scheduler_impl::resume_fiber( fiber::id const& f_id)
 	if ( i == fibers_.end() ) return;
 	fiber f( i->second);
 	BOOST_ASSERT( f);
-	BOOST_ASSERT( STATE_MASTER != f.info_->state);
+	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
 
 	if ( HAS_STATE_SUSPENDED( f.info_->state) )
 	{

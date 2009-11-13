@@ -80,7 +80,7 @@ void test_case_2()
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
 	boost::unit_test::test_suite * test =
-		BOOST_TEST_SUITE("Boost.Fiber: rrp test suite");
+		BOOST_TEST_SUITE("Boost.Fiber: scheduler test suite");
 
 	test->add( BOOST_TEST_CASE( & test_case_1) );
 	test->add( BOOST_TEST_CASE( & test_case_2) );
