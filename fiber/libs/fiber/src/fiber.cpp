@@ -106,13 +106,20 @@ fiber::is_alive() const
 {
 	if ( ! info_)
 		throw fiber_moved();
-	return ( info_->state & detail::STATE_RUNNABLE) == detail::STATE_RUNNABLE ||
-		( info_->state & detail::STATE_NOT_RUNNABLE) == detail::STATE_NOT_RUNNABLE;
+	return ( info_->state & IS_ALIVE_BIT_MASK) != 0;
 }
 
 void
 fiber::cancel()
 { scheduler::cancel_fiber( get_id() ); }
+
+void
+fiber::suspend()
+{ scheduler::suspend_fiber( get_id() ); }
+
+void
+fiber::resume()
+{ scheduler::resume_fiber( get_id() ); }
 
 }}
 

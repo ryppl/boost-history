@@ -25,7 +25,7 @@ bool runs_as_fiber()
 
 inline
 fiber::id get_id()
-{ return fibers::scheduler::get_id(); }
+{ return fibers::scheduler::active_fiber(); }
 
 inline
 void yield()
@@ -33,7 +33,11 @@ void yield()
 
 inline
 void cancel()
-{ fibers::scheduler::terminate_active_fiber(); }
+{ fibers::scheduler::cancel_active_fiber(); }
+
+inline
+void suspend()
+{ fibers::scheduler::suspend_active_fiber(); }
 
 }}
 

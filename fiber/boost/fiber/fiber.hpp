@@ -189,6 +189,10 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_FIBER_CTOR, ~)
 	bool is_alive() const;
 
 	void cancel();
+
+	void suspend();
+
+	void resume();
 };
 
 class fiber::id

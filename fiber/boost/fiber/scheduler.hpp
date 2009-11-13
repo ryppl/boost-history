@@ -29,6 +29,7 @@ bool runs_as_fiber();
 fiber::fiber::id get_id();
 void yield();
 void cancel();
+void suspend();
 
 }
 
@@ -41,6 +42,7 @@ private:
 	friend fiber::id this_fiber::get_id();
 	friend void this_fiber::yield();
 	friend void this_fiber::cancel();
+	friend void this_fiber::suspend();
 	friend class fiber;
 
 	typedef thread_specific_ptr< detail::scheduler_impl >	tss_impl_t;
@@ -49,13 +51,19 @@ private:
 
 	static bool runs_as_fiber();
 
-	static fiber::id get_id();
+	static fiber::id active_fiber();
 
 	static void yield_active_fiber();
 
-	static void terminate_active_fiber();
+	static void cancel_active_fiber();
+
+	static void suspend_active_fiber();
 
 	static void cancel_fiber( fiber::id const&);
+
+	static void suspend_fiber( fiber::id const&);
+
+	static void resume_fiber( fiber::id const&);
 
 	detail::scheduler_impl * access_();
 

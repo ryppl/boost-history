@@ -13,18 +13,20 @@ namespace boost {
 namespace fibers {
 namespace detail {
 
-enum fiber_state_t
+enum state_t
 {
-	STATE_MASTER			= 0X00,
-	STATE_NOT_STARTED		= 0X10,
-	STATE_RUNNABLE			= 0x20,
-		STATE_READY			= 0x21,
-		STATE_RUNNING		= 0x22,
-	STATE_NOT_RUNNABLE		= 0x40,
-		STATE_SUSPENDED		= 0x41,
-		STATE_WAITING		= 0x42,
-	STATE_TERMINATED		= 0x80
+	STATE_MASTER		= 1 << 0,
+	STATE_NOT_STARTED	= 1 << 1,
+	STATE_READY		= 1 << 2,
+	STATE_RUNNING		= 1 << 3,
+	STATE_SUSPENDED		= 1 << 4,
+	STATE_WAITING		= 1 << 5,
+	STATE_TERMINATED	= 1 << 6
 };
+
+typedef char fiber_state_t;
+
+#define IS_ALIVE_BIT_MASK 0x3C
 
 }}
 

@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <list>
 #include <map>
+#include <queue>
 
 #include <boost/utility.hpp>
 
@@ -26,13 +27,14 @@ class BOOST_FIBER_DECL scheduler_impl : private noncopyable
 {
 private:
 	typedef std::map< fiber::id, fiber >	container;
-	typedef std::list< fiber::id >			queue;
+	typedef std::list< fiber::id >			runnable_queue;
+	typedef std::queue< fiber::id >		terminated_queue;
 
 	fiber		master_;
 	fiber::id	f_id_;
 	container	fibers_;
-	queue		runnable_fibers_;
-	queue		terminated_fibers_;
+	runnable_queue		runnable_fibers_;
+	terminated_queue	terminated_fibers_;
 
 public:
 	scheduler_impl();
@@ -43,9 +45,15 @@ public:
 
 	void yield_active_fiber();
 
-	void terminate_active_fiber();
+	void cancel_active_fiber();
+
+	void suspend_active_fiber();
 
 	void cancel_fiber( fiber::id const&);
+
+	void suspend_fiber( fiber::id const&);
+
+	void resume_fiber( fiber::id const&);
 
 	bool run();
 

@@ -22,7 +22,7 @@ scheduler::runs_as_fiber()
 { return impl_.get() != 0; }
 
 fiber::id
-scheduler::get_id()
+scheduler::active_fiber()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
@@ -38,11 +38,19 @@ scheduler::yield_active_fiber()
 }
 
 void
-scheduler::terminate_active_fiber()
+scheduler::cancel_active_fiber()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
-	impl->terminate_active_fiber();
+	impl->cancel_active_fiber();
+}
+
+void
+scheduler::suspend_active_fiber()
+{
+	detail::scheduler_impl * impl( impl_.get() );
+	if (  ! impl) throw fiber_error("not a fiber");
+	impl->suspend_active_fiber();
 }
 
 void
@@ -51,6 +59,22 @@ scheduler::cancel_fiber( fiber::id const& f_id)
 	detail::scheduler_impl * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
 	impl->cancel_fiber( f_id);
+}
+
+void
+scheduler::suspend_fiber( fiber::id const& f_id)
+{
+	detail::scheduler_impl * impl( impl_.get() );
+	if (  ! impl) throw fiber_error("not a fiber");
+	impl->suspend_fiber( f_id);
+}
+
+void
+scheduler::resume_fiber( fiber::id const& f_id)
+{
+	detail::scheduler_impl * impl( impl_.get() );
+	if (  ! impl) throw fiber_error("not a fiber");
+	impl->resume_fiber( f_id);
 }
 
 detail::scheduler_impl *
