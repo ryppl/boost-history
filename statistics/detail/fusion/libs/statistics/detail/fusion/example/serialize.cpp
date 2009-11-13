@@ -23,7 +23,6 @@
 
 #include <boost/statistics/detail/fusion/serialization/include.hpp>
 
-#include <boost/statistics/detail/fusion/map/serialization/include.hpp>
 #include <libs/statistics/detail/fusion/example/serialize.h>
 
 void example_serialize(std::ostream& os){
