@@ -14,12 +14,14 @@
 #include <boost/range.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
-#include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/include/at_key.hpp>
-#include <boost/fusion/container/map.hpp>
+#include <boost/fusion/include/at_c.hpp>
+#include <boost/fusion/include/pair.hpp>
 #include <boost/fusion/include/map.hpp>
-#include <boost/fusion/include/map_fwd.hpp>
 #include <boost/fusion/include/make_map.hpp>
+#include <boost/fusion/include/make_vector.hpp>
+
+#include <boost/statistics/detail/fusion/serialization/include.hpp>
 
 #include <boost/statistics/detail/fusion/map/serialization/include.hpp>
 #include <libs/statistics/detail/fusion/example/serialize.h>
@@ -32,11 +34,15 @@ void example_serialize(std::ostream& os){
     namespace stat = boost::statistics::detail;
 	namespace sf = stat::fusion;
 
-    typedef mpl::int_<0> k_0_;
-    typedef mpl::int_<1> k_1_;
-    typedef int d_0_;
-    typedef int d_1_;
-    typedef fusion::map<p_0_,p_1_>  map_;
+    typedef mpl::int_<0> k0_;
+    typedef mpl::int_<1> k1_;
+    typedef mpl::int_<2> k2_;
+    typedef int d0_;
+    typedef int d1_;
+    typedef int d2_;
+    typedef boost::fusion::result_of::make_map<k0_,k1_,d0_,d1_>::type 	map01_;
+    typedef boost::fusion::result_of::make_map<k2_,d2_>::type 			map2_;
+    typedef boost::fusion::result_of::make_vector<map01_,map2_>::type  	vec_map01_map2_;
     typedef boost::archive::text_iarchive           ia_;
     typedef boost::archive::text_oarchive           oa_;
     typedef std::ifstream                           ifs_;
@@ -44,22 +50,43 @@ void example_serialize(std::ostream& os){
 	typedef std::string 							str_;
 
     const str_ path = "./serialize";
-    const d_0_ d_0 = 0;
-    const d_1_ d_1 = 1;
+    const d0_ d0 = 0;
+    const d1_ d1 = 1;
+    const d2_ d2 = 2;
     
-    map_ map = boost::fusion::make_map<k_0_,k_1_>(d_0,d_1);
+    map01_ map01(
+    	boost::fusion::make_pair<k0_>(d0),
+    	boost::fusion::make_pair<k1_>(d1)
+    );
+    map2_ map2(
+    	boost::fusion::make_pair<k2_>(d2)
+    );
+    vec_map01_map2_ vec_map01_map2(map01,map2);
     {
     	ofs_ ofs(path.c_str());
     	oa_ oa(ofs);
-		sf::map::save(map,oa);
+        sf::serialization::make_saver(oa)(vec_map01_map2);
     }
     {
-    	map_ map;
+    	vec_map01_map2_ vec;
     	ifs_ ifs(path.c_str());
     	ia_ ia(ifs);
-		sf::map::load(map,ia);
-		BOOST_ASSERT(boost::fusion::at_key<k_0_>(map) == d_0);        
-		BOOST_ASSERT(boost::fusion::at_key<k_1_>(map) == d_1);        
+		sf::serialization::make_loader(ia)(vec);
+        BOOST_ASSERT(
+            boost::fusion::at_key<k0_>(
+        		boost::fusion::at_c<0>(vec) 
+            )== d0
+    	);        
+        BOOST_ASSERT(
+            boost::fusion::at_key<k1_>(
+        		boost::fusion::at_c<0>(vec) 
+            )== d1
+    	);        
+        BOOST_ASSERT(
+            boost::fusion::at_key<k2_>(
+        		boost::fusion::at_c<1>(vec) 
+            )== d2
+    	);        
     }
 
     os << "<-" << std::endl;
