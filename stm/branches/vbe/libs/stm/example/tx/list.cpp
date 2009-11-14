@@ -94,8 +94,8 @@ public:
     void insert(const T& val) {
         //cerr << __LINE__ << " * insert" << endl;
         BOOST_STM_ATOMIC(_) {
-            list_node<T>*  prev=head_;
-            list_node<T> * curr=head_->next_.value();
+            list_node<T> const * prev = head_;
+            list_node<T> const * curr = prev->next_;
             while (curr!=0) {
                 if (curr->value_ == val) return;
                 else if (curr->value_ > val) break;
@@ -103,7 +103,7 @@ public:
                 curr = curr->next_.value();
             }
             if (curr==0 || (curr->value_ > val)) {
-                prev->next_=BOOST_STM_TX_NEW_PTR(_,list_node<T>(val, curr));
+                const_cast<list_node<T> *>(prev)->next_=BOOST_STM_TX_NEW_PTR(_,list_node<T>(val, const_cast<list_node<T> *>(curr)));
                 ++size_;
             }
         } BOOST_STM_END_ATOMIC
@@ -115,21 +115,14 @@ public:
 
     // search function
     bool lookup(const T& val) const {
-        //cerr << __LINE__ << " * lookup val=" << val << endl;
         BOOST_STM_ATOMIC(_) {
-            list_node<T> const * curr=head_->next_.value();
+            list_node<T> const * curr=head_->next_;
             while (curr) {
-                //cerr << __LINE__ << " * lookup curr->value_=" << curr->value_ << endl;
                 if (curr->value_ >= val) break;
                 curr = curr->next_.value();
             }
-
-            //cerr << __LINE__ << " * lookup ret=" << ((curr) && (curr->value_ == val)) << endl;
             BOOST_STM_RETURN((curr) && (curr->value_ == val));
         }  BOOST_STM_END_ATOMIC
-        catch (...) {
-            cerr << __LINE__ << " lookup" << endl;
-        }
         return false;
     }
 
@@ -138,12 +131,12 @@ public:
     {
         BOOST_STM_ATOMIC(_) {
             // find the node whose val matches the request
-            list_node<T>* prev=head_;
-            list_node<T>* curr=prev->next_.value();
+            list_node<T> const * prev=head_;
+            list_node<T> const * curr=prev->next_;
             while (curr) {
                 // if we find the node, disconnect it and end the search
                 if (curr->value_ == val) {
-                    prev->next_=curr->next_.value();
+                    const_cast<list_node<T> *>(prev)->next_=curr->next_;
                     // delete curr...
                     BOOST_STM_TX_DELETE_PTR(_,curr);
                     --size_;
@@ -267,20 +260,20 @@ int test_all() {
     //fails= fails || !insert1();
     thread  th1(insert1_th);
     thread  th2(insert2_th);
-    //thread  th3(insert2_th);
-    //thread  th4(insert3_th);
+    thread  th3(insert2_th);
+    thread  th4(insert3_th);
     
     th1.join();
     th2.join();
-    //th3.join();
-    //th4.join();
+    th3.join();
+    th4.join();
     fails= fails || !check_lookup(1);
     fails= fails || !check_lookup(2);
-    fails= fails || !check_size(2);
+    fails= fails || !check_size(3);
     remove2();
     fails= fails || !check_lookup(1);
-    //fails= fails || check_lookup(2);
-    fails= fails || !check_size(1);
+    fails= fails || check_lookup(2);
+    fails= fails || !check_size(2);
     #if 0
     SLEEP(2);
     #endif
