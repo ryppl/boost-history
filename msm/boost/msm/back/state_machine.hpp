@@ -55,6 +55,10 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(no_automatic_create)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(non_forwarding_flag)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(direct_entry)
 
+#ifndef BOOST_MSM_CONSTRUCTOR_ARG_SIZE
+#define BOOST_MSM_CONSTRUCTOR_ARG_SIZE 5 // default max number of arguments for constructors
+#endif
+
 namespace boost { namespace msm { namespace back
 {
 // event used internally for wrapping a direct entry
@@ -827,6 +831,59 @@ private:
          fill_states(this);
      }
  
+     // Construct with the default initial states and some default argument(s)
+#ifdef BOOST_MSVC
+
+#define MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB(z, n, unused) ARG ## n t ## n
+#define MSM_CONSTRUCTOR_HELPER_EXECUTE(z, n, unused)                                \
+        template <BOOST_PP_ENUM_PARAMS(n, class ARG)>                               \
+        state_machine<Derived,HistoryPolicy                                         \
+          ,WorkaroundVC9                                                            \
+        >(BOOST_PP_ENUM(n, MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB, ~ ) )                \
+        :Derived(BOOST_PP_ENUM_PARAMS(n,t))                                         \
+	     ,m_events_queue()                                                          \
+	     ,m_deferred_events_queue()                                                 \
+	     ,m_history()                                                               \
+         ,m_event_processing(false)                                                 \
+         ,m_is_included(false)                                                      \
+         ,m_visitors()                                                              \
+         ,m_substate_list()                                                         \
+     {                                                                              \
+         ::boost::mpl::for_each< seq_initial_states, ::boost::msm::back::wrap<mpl::placeholders::_1> > \
+                        (init_states(m_states));                                    \
+         m_history.set_initial_states(m_states);                                    \
+         fill_states(this);                                                         \
+     }
+     BOOST_PP_REPEAT_FROM_TO(1,BOOST_PP_ADD(BOOST_MSM_CONSTRUCTOR_ARG_SIZE,1), MSM_CONSTRUCTOR_HELPER_EXECUTE, ~)
+#undef MSM_CONSTRUCTOR_HELPER_EXECUTE
+#undef MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB
+#else
+
+#define MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB(z, n, unused) ARG ## n t ## n
+#define MSM_CONSTRUCTOR_HELPER_EXECUTE(z, n, unused)                                \
+        template <BOOST_PP_ENUM_PARAMS(n, class ARG)>                               \
+        state_machine<Derived,HistoryPolicy                                         \
+        >(BOOST_PP_ENUM(n, MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB, ~ ) )                \
+        :Derived(BOOST_PP_ENUM_PARAMS(n,t))                                         \
+	     ,m_events_queue()                                                          \
+	     ,m_deferred_events_queue()                                                 \
+	     ,m_history()                                                               \
+         ,m_event_processing(false)                                                 \
+         ,m_is_included(false)                                                      \
+         ,m_visitors()                                                              \
+         ,m_substate_list()                                                         \
+     {                                                                              \
+         ::boost::mpl::for_each< seq_initial_states, ::boost::msm::back::wrap<mpl::placeholders::_1> > \
+                        (init_states(m_states));                                    \
+         m_history.set_initial_states(m_states);                                    \
+         fill_states(this);                                                         \
+     }
+     BOOST_PP_REPEAT_FROM_TO(1,BOOST_PP_ADD(BOOST_MSM_CONSTRUCTOR_ARG_SIZE,1), MSM_CONSTRUCTOR_HELPER_EXECUTE, ~)
+#undef MSM_CONSTRUCTOR_HELPER_EXECUTE
+#undef MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB
+
+#endif
+
      // assignment operator using the copy policy to decide if non_copyable, shallow or deep copying is necessary
      library_sm& operator= (library_sm const& rhs)
      {
