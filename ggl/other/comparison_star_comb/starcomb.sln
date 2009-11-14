@@ -1,0 +1,43 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ggl_starcomb", "ggl\ggl_starcomb.vcproj", "{81D77FB4-9CA0-4EC2-A3D7-5BE9FD826C40}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "terralib_starcomb", "terralib\terralib_starcomb.vcproj", "{B752EBBE-DE0D-460B-ADC9-AD3C41B9359A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gtl_starcomb", "gtl\gtl_starcomb.vcproj", "{68F2FC62-2126-46B8-AFE6-E331566A42A3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgal_starcomb", "cgal\cgal_starcomb.vcproj", "{431BCA9E-8AD4-4B78-BC1E-7EF1C08F7ED7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geos_starcomb", "geos\geos_starcomb.vcproj", "{067789B1-E4A3-48D0-A759-E183E9A8AD2D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81D77FB4-9CA0-4EC2-A3D7-5BE9FD826C40}.Debug|Win32.ActiveCfg = Debug|Win32
+		{81D77FB4-9CA0-4EC2-A3D7-5BE9FD826C40}.Debug|Win32.Build.0 = Debug|Win32
+		{81D77FB4-9CA0-4EC2-A3D7-5BE9FD826C40}.Release|Win32.ActiveCfg = Release|Win32
+		{81D77FB4-9CA0-4EC2-A3D7-5BE9FD826C40}.Release|Win32.Build.0 = Release|Win32
+		{B752EBBE-DE0D-460B-ADC9-AD3C41B9359A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B752EBBE-DE0D-460B-ADC9-AD3C41B9359A}.Debug|Win32.Build.0 = Debug|Win32
+		{B752EBBE-DE0D-460B-ADC9-AD3C41B9359A}.Release|Win32.ActiveCfg = Release|Win32
+		{B752EBBE-DE0D-460B-ADC9-AD3C41B9359A}.Release|Win32.Build.0 = Release|Win32
+		{68F2FC62-2126-46B8-AFE6-E331566A42A3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{68F2FC62-2126-46B8-AFE6-E331566A42A3}.Debug|Win32.Build.0 = Debug|Win32
+		{68F2FC62-2126-46B8-AFE6-E331566A42A3}.Release|Win32.ActiveCfg = Release|Win32
+		{68F2FC62-2126-46B8-AFE6-E331566A42A3}.Release|Win32.Build.0 = Release|Win32
+		{431BCA9E-8AD4-4B78-BC1E-7EF1C08F7ED7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{431BCA9E-8AD4-4B78-BC1E-7EF1C08F7ED7}.Debug|Win32.Build.0 = Debug|Win32
+		{431BCA9E-8AD4-4B78-BC1E-7EF1C08F7ED7}.Release|Win32.ActiveCfg = Release|Win32
+		{431BCA9E-8AD4-4B78-BC1E-7EF1C08F7ED7}.Release|Win32.Build.0 = Release|Win32
+		{067789B1-E4A3-48D0-A759-E183E9A8AD2D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{067789B1-E4A3-48D0-A759-E183E9A8AD2D}.Debug|Win32.Build.0 = Debug|Win32
+		{067789B1-E4A3-48D0-A759-E183E9A8AD2D}.Release|Win32.ActiveCfg = Release|Win32
+		{067789B1-E4A3-48D0-A759-E183E9A8AD2D}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
