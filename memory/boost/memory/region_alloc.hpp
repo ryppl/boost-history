@@ -240,7 +240,6 @@ public:
 #pragma pack()
 
 // -------------------------------------------------------------------------
-// $Log: region_alloc.hpp,v $
 
 NS_BOOST_MEMORY_END
 

@@ -12,8 +12,8 @@
 #ifndef BOOST_MEMORY_POOL_HPP
 #define BOOST_MEMORY_POOL_HPP
 
-#ifndef BOOST_MEMORY_FIXED_ALLOC_HPP
-#include "fixed_alloc.hpp"
+#ifndef BOOST_MEMORY_POOL_ALLOC_HPP
+#include "pool_alloc.hpp"
 #endif
 
 #ifndef BOOST_MEMORY_BLOCKPOOL_HPP
@@ -25,11 +25,10 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class pool, scoped_pool
 
-typedef fixed_alloc<NS_BOOST_MEMORY_POLICY::stdlib> pool;
-typedef fixed_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_pool;
+typedef pool_alloc<NS_BOOST_MEMORY_POLICY::stdlib> pool;
+typedef pool_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_pool;
 
 // -------------------------------------------------------------------------
-// $Log: $
 
 NS_BOOST_MEMORY_END
 

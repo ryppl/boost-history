@@ -67,7 +67,7 @@ private:
 
 public:
 	typedef size_t size_type;
-	typedef fixed_alloc<PolicyT> pool_type;
+	typedef pool_alloc<PolicyT> pool_type;
 	typedef region_alloc<PolicyT, m_fPreAlloc> region_alloc_type;
 	typedef typename pool_type::alloc_type block_pool_type;
 
@@ -79,13 +79,13 @@ private:
 	enum { MIN_BYTES1 = ALIGN1 };
 	enum { MAX_BYTES1 = ALIGN1 * NPOOL1 };
 
-	// 2^8-4, 2^9-4, 2^10-4, 2^11-4, 2^12-4, 2^13-4
-	enum { NPOOL2 = 6 };
-	enum { PADDING2 = 4 };
+	// 2^8-16, 2^9-16, 2^10-16, 2^11-16, 2^12-16, 2^13-16, 2^14-16, 2^15-16
+	enum { PADDING2 = 16 };
 	enum { MIN_BITS2 = 8 };
-	enum { MAX_BITS2 = 13 };
-	enum { MIN_BYTES2 = (2 << MIN_BITS2) - PADDING2 };
-	enum { MAX_BYTES2 = (2 << MAX_BITS2) - PADDING2 };
+	enum { MAX_BITS2 = 15 };
+	enum { NPOOL2 = MAX_BITS2 - MIN_BITS2 + 1 };
+	enum { MIN_BYTES2 = (1 << MIN_BITS2) - PADDING2 };
+	enum { MAX_BYTES2 = (1 << MAX_BITS2) - PADDING2 };
 
 	enum { NPOOL = NPOOL1 + NPOOL2 };
 

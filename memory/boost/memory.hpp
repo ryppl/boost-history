@@ -34,10 +34,6 @@
 #include "memory/pools.hpp"
 #endif
 
-#ifndef BOOST_MEMORY_OBJECT_POOL_HPP
-#include "memory/object_pool.hpp"
-#endif
-
 // -------------------------------------------------------------------------
 // default_alloc
 

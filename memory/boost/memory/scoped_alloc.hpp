@@ -28,7 +28,6 @@ NS_BOOST_MEMORY_BEGIN
 typedef region_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_alloc;
 
 // -------------------------------------------------------------------------
-// $Log: scoped_alloc.hpp,v $
 
 NS_BOOST_MEMORY_END
 

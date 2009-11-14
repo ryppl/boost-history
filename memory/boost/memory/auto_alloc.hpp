@@ -105,7 +105,6 @@ typedef region_alloc<NS_BOOST_MEMORY_POLICY::stdlib> auto_alloc;
 #endif
 
 // -------------------------------------------------------------------------
-// $Log: auto_alloc.hpp,v $
 
 NS_BOOST_MEMORY_END
 

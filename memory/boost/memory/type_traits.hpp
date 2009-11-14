@@ -261,7 +261,6 @@ BOOST_MEMORY_DECL_CTYPE_(long);
 BOOST_MEMORY_DECL_CTYPE_(unsigned long);
 
 // =========================================================================
-// $Log: $
 
 NS_BOOST_MEMORY_END
 

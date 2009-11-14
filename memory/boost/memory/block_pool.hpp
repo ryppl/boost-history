@@ -168,7 +168,6 @@ public:
 NS_BOOST_MEMORY_POLICY_END
 
 // -------------------------------------------------------------------------
-// $Log: $
 
 NS_BOOST_MEMORY_END
 

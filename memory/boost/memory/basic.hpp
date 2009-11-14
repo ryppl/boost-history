@@ -226,6 +226,5 @@ void swap_object(Type* a, Type* b)
 NS_BOOST_MEMORY_END
 
 // =========================================================================
-// $Log: basic.hpp,v $
 
 #endif /* BOOST_MEMORY_BASIC_HPP */

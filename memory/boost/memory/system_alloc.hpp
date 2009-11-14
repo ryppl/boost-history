@@ -34,7 +34,7 @@ NS_BOOST_MEMORY_BEGIN
 class stdlib_alloc
 {
 public:
-	enum { Padding = 32 /* must >= sizeof(AllocateHeader) */ };
+	enum { Padding = 16 /* must >= sizeof(AllocateHeader) */ };
 
 	static void* BOOST_MEMORY_CALL allocate(size_t cb) {
 		return malloc(cb);
@@ -76,7 +76,7 @@ NS_BOOST_MEMORY_POLICY_BEGIN
 class sys
 {
 public:
-	enum { MemBlockBytes = 16384 /* 16k */ };
+	enum { MemBlockBytes = 65536 /* 64k */ };
 
 public:
 	typedef system_alloc alloc_type;
@@ -92,7 +92,6 @@ public:
 NS_BOOST_MEMORY_POLICY_END
 
 // =========================================================================
-// $Log: $
 
 NS_BOOST_MEMORY_END
 
