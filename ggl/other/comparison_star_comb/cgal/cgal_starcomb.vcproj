@@ -184,14 +184,6 @@
 				RelativePath=".\cgal_starcomb.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\common\shapelib-1.2.10\dbfopen.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\common\shapelib-1.2.10\shpopen.cpp"
-				>
-			</File>
 			<Filter
 				Name="CGAL"
 				>
