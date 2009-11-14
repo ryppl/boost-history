@@ -66,6 +66,7 @@ private:
 	condition				not_full_cond_;
 	std::size_t				hwm_;
 	std::size_t				lwm_;
+	volatile uint32_t		use_count_;
 
 	bool active_() const
 	{ return 0 == state_; }
@@ -110,7 +111,8 @@ public:
 		not_empty_cond_(),
 		not_full_cond_(),
 		hwm_( hwm),
-		lwm_( lwm)
+		lwm_( lwm),
+		use_count_( 0)
 	{
 		if ( hwm_ < lwm_)
 			throw std::invalid_argument("invalid watermark");
@@ -126,7 +128,8 @@ public:
 		not_empty_cond_(),
 		not_full_cond_(),
 		hwm_( wm),
-		lwm_( wm)
+		lwm_( wm),
+		use_count_( 0)
 	{}
 
 	void upper_bound_( std::size_t hwm)
@@ -295,6 +298,14 @@ public:
 		}
 		return valid;
 	}
+
+	template< typename R >
+    friend void intrusive_ptr_add_ref( bounded_fifo< R > * p)
+    { detail::atomic_fetch_add( & p->use_count_, 1); }
+
+	template< typename R >
+    friend void intrusive_ptr_release( bounded_fifo< R > * p)
+    { if ( detail::atomic_fetch_sub( & p->use_count_, 1) == 1) delete p; }
 };
 
 }}

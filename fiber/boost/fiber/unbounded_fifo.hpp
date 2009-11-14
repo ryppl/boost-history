@@ -62,6 +62,7 @@ private:
 	typename node::ptr_t	tail_;
 	mutex					tail_mtx_;
 	condition				not_empty_cond_;
+	uint32_t				use_count_;	
 
 	bool active_() const
 	{ return 0 == state_; }
@@ -93,7 +94,8 @@ public:
 		head_mtx_(),
 		tail_( head_),
 		tail_mtx_(),
-		not_empty_cond_()
+		not_empty_cond_(),
+		use_count_( 0)
 	{}
 
 	void deactivate()
@@ -176,6 +178,14 @@ public:
 		pop_head_();
 		return va;
 	}
+
+	template< typename R >
+    friend void intrusive_ptr_add_ref( unbounded_fifo< R > * p)
+    { detail::atomic_fetch_add( & p->use_count_, 1); }
+
+	template< typename R >
+    friend void intrusive_ptr_release( unbounded_fifo< R > * p)
+    { if ( detail::atomic_fetch_sub( & p->use_count_, 1) == 1) delete p; }
 };
 
 }}

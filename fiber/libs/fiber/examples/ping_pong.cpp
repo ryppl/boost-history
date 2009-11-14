@@ -3,6 +3,7 @@
 #include <string>
 
 #include <boost/assert.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/ref.hpp>
 #include <boost/optional.hpp>
 #include <boost/system/system_error.hpp>
@@ -10,7 +11,7 @@
 #include <boost/fiber.hpp>
 
 typedef boost::fibers::unbounded_fifo< std::string >	fifo_t;
-typedef boost::shared_ptr< fifo_t >			fifo_ptr_t;
+typedef boost::intrusive_ptr< fifo_t >					fifo_ptr_t;
 inline
 void ping(
 		fifo_ptr_t & recv_buf,
