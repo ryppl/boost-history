@@ -41,7 +41,7 @@ public:
 
 	void add_fiber( fiber);
 
-	fiber::id active_fiber();
+	fiber::id active_fiber() const;
 
 	void yield_active_fiber();
 
@@ -54,6 +54,12 @@ public:
 	void suspend_fiber( fiber::id const&);
 
 	void resume_fiber( fiber::id const&);
+
+	int priority( fiber::id const&);
+
+	void priority( fiber::id const&, int);
+
+	void re_schedule( fiber::id const&);
 
 	bool run();
 

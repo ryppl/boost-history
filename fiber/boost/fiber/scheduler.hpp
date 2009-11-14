@@ -30,6 +30,8 @@ fiber::fiber::id get_id();
 void yield();
 void cancel();
 void suspend();
+int priority();
+void priority( int);
 
 }
 
@@ -43,6 +45,8 @@ private:
 	friend void this_fiber::yield();
 	friend void this_fiber::cancel();
 	friend void this_fiber::suspend();
+	friend int this_fiber::priority();
+	friend void this_fiber::priority( int);
 	friend class fiber;
 
 	typedef thread_specific_ptr< detail::scheduler_impl >	tss_impl_t;
@@ -64,6 +68,12 @@ private:
 	static void suspend_fiber( fiber::id const&);
 
 	static void resume_fiber( fiber::id const&);
+
+	static int priority( fiber::id const&);
+
+	static void priority( fiber::id const&, int);
+
+	static void re_schedule( fiber::id const&);
 
 	detail::scheduler_impl * access_();
 

@@ -104,9 +104,23 @@ fiber::operator!=( fiber const& other) const
 bool
 fiber::is_alive() const
 {
-	if ( ! info_)
-		throw fiber_moved();
+	if ( ! info_) throw fiber_moved();
 	return ( info_->state & IS_ALIVE_BIT_MASK) != 0;
+}
+
+int
+fiber::priority() const
+{
+	if ( ! info_) throw fiber_moved();
+	return info_->attrs.priority();
+}
+
+void
+fiber::priority( int prio)
+{
+	if ( ! info_) throw fiber_moved();
+	info_->attrs.priority( prio);
+	if ( is_alive() ) scheduler::re_schedule( get_id() );
 }
 
 void

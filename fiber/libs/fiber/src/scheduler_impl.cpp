@@ -67,7 +67,7 @@ scheduler_impl::add_fiber( fiber f)
 }
 
 fiber::id
-scheduler_impl::active_fiber()
+scheduler_impl::active_fiber() const
 { return f_id_; }
 
 void
@@ -194,6 +194,44 @@ scheduler_impl::resume_fiber( fiber::id const& f_id)
 			BOOST_ASSERT( ! "should never reached");
 		}
 	}
+}
+
+int
+scheduler_impl::priority( fiber::id const& f_id)
+{
+	container::iterator i = fibers_.find( f_id);
+	if ( i == fibers_.end() ) throw scheduler_error("fiber not found");
+	fiber f( i->second);
+	BOOST_ASSERT( f);
+	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
+
+	return f.info_->attrs.priority();
+}
+
+void
+scheduler_impl::priority( fiber::id const& f_id, int prio)
+{
+	container::iterator i = fibers_.find( f_id);
+	if ( i == fibers_.end() ) throw scheduler_error("fiber not found");
+	fiber f( i->second);
+	BOOST_ASSERT( f);
+	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
+
+	f.info_->attrs.priority( prio);
+	re_schedule( f_id);
+}
+
+void
+scheduler_impl::re_schedule( fiber::id const& f_id)
+{
+	container::iterator i = fibers_.find( f_id);
+	if ( i == fibers_.end() ) return;
+	fiber f( i->second);
+	BOOST_ASSERT( f);
+	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
+
+	// TODO: re-schedule fiber == remove from
+	// runnable_fibers + re-insert
 }
 
 bool

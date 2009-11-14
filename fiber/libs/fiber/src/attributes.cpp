@@ -31,10 +31,10 @@ attributes::stack_size() const
 { return stacksize_; }
 
 void
-attributes::priority( std::size_t value)
+attributes::priority( int value)
 { priority_ = value; }
 
-std::size_t
+int
 attributes::priority() const
 { return priority_; }
 

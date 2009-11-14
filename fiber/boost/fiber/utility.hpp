@@ -39,6 +39,14 @@ inline
 void suspend()
 { fibers::scheduler::suspend_active_fiber(); }
 
+inline
+int priority()
+{ return fibers::scheduler::priority( get_id() ); }
+
+inline
+void priority( int prio)
+{ fibers::scheduler::priority( get_id(), prio); }
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

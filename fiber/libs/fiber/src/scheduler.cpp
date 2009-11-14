@@ -77,6 +77,30 @@ scheduler::resume_fiber( fiber::id const& f_id)
 	impl->resume_fiber( f_id);
 }
 
+int
+scheduler::priority( fiber::id const& f_id)
+{
+	detail::scheduler_impl * impl( impl_.get() );
+	if (  ! impl) throw fiber_error("not a fiber");
+	return impl->priority( f_id);
+}
+
+void
+scheduler::priority( fiber::id const& f_id, int prio)
+{
+	detail::scheduler_impl * impl( impl_.get() );
+	if (  ! impl) throw fiber_error("not a fiber");
+	impl->priority( f_id, prio);
+	re_schedule( f_id);
+}
+
+void
+scheduler::re_schedule( fiber::id const& f_id)
+{
+	detail::scheduler_impl * impl( impl_.get() );
+	impl->re_schedule( f_id);
+}
+
 detail::scheduler_impl *
 scheduler::access_()
 {
