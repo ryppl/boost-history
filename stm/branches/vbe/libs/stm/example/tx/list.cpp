@@ -28,22 +28,22 @@ class list_node
 public:
 
     list_node() : value_(), next_() 
-        , embeddeds_()
-{}
+        , binds_()
+    {}
     explicit list_node(T const &rhs) 
         : value_(rhs), next_() {}
-    list_node(T const &rhs, tx::pointer<list_node<T> > next) 
+    list_node(T const &rhs, list_node<T>* next) 
         : value_(rhs), next_(next) {}
 
     // zero initialization for native types
     void clear() { value_ = T(); next_ = 0; }
 
-    std::list<base_transaction_object*>& binds() {return embeddeds_;}
-    void bind(base_transaction_object* bto) {embeddeds_.push_back(bto);}
+    std::list<base_transaction_object*>& binds() {return binds_;}
+    void bind(base_transaction_object* bto) {binds_.push_back(bto);}
 
     tx::object<T> value_;
     tx::pointer<list_node<T> > next_;
-    std::list<base_transaction_object*> embeddeds_;
+    std::list<base_transaction_object*> binds_;
 };
 
 template <typename OSTREAM, typename T>
@@ -65,8 +65,8 @@ public:
     : head_(BOOST_STM_NEW_PTR(list_node<T>()))
     , size_(0)
     {
-            std::cout << "list().head=" << head_ << std::endl;
-            std::cout << "list().size=" << size_ << std::endl;
+            //std::cout << "list().head=" << head_ << std::endl;
+            //std::cout << "list().size=" << size_ << std::endl;
     }
 
     ~list() { }
@@ -82,47 +82,39 @@ public:
     // find the location to insert the node. if the value already exists, fail
     //--------------------------------------------------------------------------
     void insert(const T& val) {
-        cerr << __LINE__ << " insert" << endl;
+        //cerr << __LINE__ << " * insert" << endl;
         BOOST_STM_ATOMIC(_) {
-        //for (boost::stm::transaction _; !_.committed() && _.restart(); _.end()) {
-            cerr << __LINE__ << " insert head=" << head_.value() << endl;
-            //tx::pointer<list_node<T> > prev(head_);
-            list_node<T>*  prev(head_);
-            //tx::pointer<list_node<T> > curr(head_->next_);
-            list_node<T> * curr(head_->next_);
+            list_node<T>*  prev=head_;
+            list_node<T> * curr=head_->next_.value();
             while (curr!=0) {
-                cerr << __LINE__ << " curr" << curr << endl;
                 if (curr->value_ == val) return;
                 else if (curr->value_ > val) break;
                 prev = curr;
-                curr = curr->next_;
+                curr = curr->next_.value();
             }
-            cerr << __LINE__ << " insert" << endl;
             if (curr==0 || (curr->value_ > val)) {
-                tx::pointer<list_node<T> >  mod(prev);
-                mod->next_=BOOST_STM_TX_NEW_PTR(_,list_node<T>(val, curr));
+                prev->next_=BOOST_STM_TX_NEW_PTR(_,list_node<T>(val, curr));
                 ++size_;
-                cerr << __LINE__ << " inserting" << endl;
-
             }
         } BOOST_STM_END_ATOMIC
         catch (...) {
-        cerr << __LINE__ << " insert" << endl;
+        cerr << __LINE__ << " * insert" << endl;
         }
-        cerr << __LINE__ << " insert" << endl;
+        //cerr << __LINE__ << " * insert" << endl;
    }
 
     // search function
     bool lookup(const T& val) const {
-        bool found = false;
+        cerr << __LINE__ << " * lookup val=" << val << endl;
         BOOST_STM_ATOMIC(_) {
-            tx::pointer<list_node<T> > curr=head_;
-            curr = curr->next_;
+            list_node<T>* curr=head_->next_.value();
             while (curr) {
+                cerr << __LINE__ << " * lookup curr->value_=" << curr->value_ << endl;
                 if (curr->value_ >= val) break;
-                curr = curr->next_;
+                curr = curr->next_.value();
             }
 
+            cerr << __LINE__ << " * lookup ret=" << ((curr) && (curr->value_ == val)) << endl;
             BOOST_STM_RETURN((curr) && (curr->value_ == val));
         }  BOOST_STM_END_ATOMIC
         catch (...) {
@@ -136,18 +128,19 @@ public:
     {
         BOOST_STM_ATOMIC(_) {
             // find the node whose val matches the request
-            tx::pointer<list_node<T> > prev=head_;
-            tx::pointer<list_node<T> > curr=prev->next_;
+            list_node<T>* prev=head_;
+            list_node<T>* curr=prev->next_.value();
             while (curr) {
                 // if we find the node, disconnect it and end the search
                 if (curr->value_ == val) {
-                    prev->next_=curr->next_;
+                    cerr << __LINE__ << " * remove found next=" << curr->next_.value() << endl;
+                    prev->next_=curr->next_.value();
                     // delete curr...
-                    delete_ptr(_,curr);
+                    BOOST_STM_TX_DELETE_PTR(_,curr);
                     --size_;
                     break;
                 } else if (curr->value_ > val) {
-                    // this means the search failed
+                    cerr << __LINE__ << " * remove not found" << endl;
                     break;
                 }
                 prev = curr;
@@ -161,6 +154,7 @@ public:
 //--------------------------------------------------------------------------
 
 test::list<int> l;
+test::list_node<int> n;
 
 void create() {
     BOOST_STM_ATOMIC(_) {
@@ -171,58 +165,116 @@ void create() {
         cerr << "aborted" << endl;
     }
 }
-void insert1() {
-    //thread_initializer thi;
-    //BOOST_STM_ATOMIC(_) {
-        cerr << __LINE__ << " try" << endl;
-        cerr << __LINE__ << " insert1 size " << l.size() << endl;
-        int val = 1;
-        l.insert(val);
-        cerr << __LINE__ << " insert1 size " << l.size() << endl;
-    //}  BOOST_STM_END_ATOMIC 
-    //catch(...) {
-    //    cerr << __LINE__ << " aborted" << endl;
-    //}
-}
-void insert2() {
-    thread_initializer thi;
-    BOOST_STM_ATOMIC(_) {
-        l.insert(2);
-    } BOOST_STM_END_ATOMIC
-}
-
-void insert3() {
-    thread_initializer thi;
-    BOOST_STM_ATOMIC(_) {
-        l.insert(3);
-    } BOOST_STM_END_ATOMIC
-}
 bool check_size(std::size_t val) {
     BOOST_STM_ATOMIC(_) {
         BOOST_STM_RETURN(l.size()==val);
     } BOOST_STM_END_ATOMIC
     return false;
 }
+bool check_lookup(int val) {
+    BOOST_STM_ATOMIC(_) {
+        //cerr << " check_lookup " << l.lookup(val) << endl;
+        BOOST_STM_RETURN(l.lookup(val));
+    } BOOST_STM_END_ATOMIC
+    return false;
+}
+
+bool insert1() {
+    //thread_initializer thi;
+    BOOST_STM_ATOMIC(_) {
+        int val = 10;
+        l.insert(val);
+    }  BOOST_STM_END_ATOMIC 
+    return check_size(1);
+}
+void insert1_th() {
+    thread_initializer thi;
+    BOOST_STM_ATOMIC(_) {
+        l.insert(1);
+    }  BOOST_STM_END_ATOMIC 
+}
+void insert2_th() {
+    thread_initializer thi;
+    BOOST_STM_ATOMIC(_) {
+        l.insert(2);
+    } BOOST_STM_END_ATOMIC
+}
+
+void remove2() {
+    //thread_initializer thi;
+    BOOST_STM_ATOMIC(_) {
+        l.remove(2);
+    } BOOST_STM_END_ATOMIC
+}
+
+void insert3_th() {
+    thread_initializer thi;
+    BOOST_STM_ATOMIC(_) {
+        l.insert(3);
+    } BOOST_STM_END_ATOMIC
+}
+bool n1() {
+    BOOST_STM_ATOMIC(_) {
+        int val = 10;
+        n.next_=BOOST_STM_TX_NEW_PTR(_,test::list_node<int>(val, 0));
+    } BOOST_STM_END_ATOMIC
+    BOOST_STM_ATOMIC(_) {
+        BOOST_STM_RETURN(n.next_->value_==10);
+    } BOOST_STM_END_ATOMIC
+    return false;
+}
+
+bool n2() {
+    BOOST_STM_ATOMIC(_) {
+        n.next_->value_=12;
+    } BOOST_STM_END_ATOMIC
+    BOOST_STM_ATOMIC(_) {
+        BOOST_STM_RETURN(n.next_->value_==12);
+    } BOOST_STM_END_ATOMIC
+    return false;
+}
+
+bool n3() {
+        //cerr << __LINE__ << " * n3" << endl;
+    BOOST_STM_ATOMIC(_) {
+        test::list_node<int>* prev =&n;
+        test::list_node<int>* curr =prev->next_.value();
+        int val = 10;
+        prev->next_=BOOST_STM_TX_NEW_PTR(_,test::list_node<int>(val, curr));
+    } BOOST_STM_END_ATOMIC
+    BOOST_STM_ATOMIC(_) {
+        BOOST_STM_RETURN(n.next_->value_==10);
+    } BOOST_STM_END_ATOMIC
+    return false;
+}
+
 int test_all() {
     //create();
-    insert1();
     bool fails=false;
+    //fails= fails || !n1();
+    //fails= fails || !n2();
+    fails= fails || !n3();
     //fails= fails || !check_size(0);
-    #if 0
-    thread  th1(insert1);
-    thread  th2(insert2);
-    thread  th3(insert2);
-    thread  th4(insert3);
-
+    //fails= fails || !insert1();
+    thread  th1(insert1_th);
+    thread  th2(insert2_th);
+    //thread  th3(insert2_th);
+    //thread  th4(insert3_th);
+    
     th1.join();
     th2.join();
-    th3.join();
-    th4.join();
-    bool fails=false;
-    //fails= !check_size(1);
-    //boost::stm::delete_ptr(l);
-    #endif
+    //th3.join();
+    //th4.join();
+    fails= fails || !check_lookup(1);
+    fails= fails || !check_lookup(2);
+    fails= fails || !check_size(2);
+    remove2();
+    fails= fails || !check_lookup(1);
+    //fails= fails || check_lookup(2);
+    fails= fails || !check_size(1);
+    #if 0
     SLEEP(2);
+    #endif
     return fails;
 }
 

@@ -32,34 +32,31 @@ template <typename Final, typename T, typename Base=base_transaction_object>
 class mixin : public transaction_object< Final, Base >
 {
 protected:
-public:
     T val_;
+public:
     typedef mixin<Final, T, Base> this_type;
     typedef Final final_type;
     typedef T value_type;
     //-----------------------------------------------------------------------------
     mixin() : val_() {
-            std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;        
+            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;        
     }
 
-    //
-    //template<typename F, typename U>
-    //mixin(mixin<F,U> const& r) : val_(r.value()) {
-    //        std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;        
-    //}
-
-    //template<typename F, typename U>
     mixin(mixin const& r) : val_(r.value()) {
-            std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;        
+            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;        
+    }
+    template<typename F, typename U>
+    mixin(mixin<F,U> const& r) : val_(r.value()) {
+            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;        
     }
 
-    // contructor from a convertible to T
-    //template <typename U>
-    //mixin(U v) : val_(v) {
-    //        std::cerr << __LINE__ << " mixin val_=" << v << std::endl;        
-    //}
     mixin(T v) : val_(v) {
-            std::cerr << __LINE__ << " mixin val_=" << v << std::endl;        
+            //std::cerr << __LINE__ << " mixin val_=" << v << std::endl;        
+    }
+    // contructor from a convertible to T
+    template <typename U>
+    mixin(U v) : val_(v) {
+            //std::cerr << __LINE__ << " mixin val_=" << v << std::endl;        
     }
     
     operator T() const { return value(); }
@@ -88,16 +85,12 @@ public:
                 tx->lock_and_abort();
                 throw aborted_transaction_exception("aborting transaction");
             }
-            this_type const * r=tx->read_ptr(this);
-            std::cerr << __LINE__ << " mixin this=" << this << std::endl;        
-            std::cerr << __LINE__ << " mixin this.val_=" << this->val_ << std::endl;        
-            std::cerr << __LINE__ << " mixin read=" << r << std::endl;        
-            std::cerr << __LINE__ << " mixin val_=" << r->val_ << std::endl;        
             return tx->read(*this).val_;
         }
         return val_;
     }
 };
+
 
 }}}
 #endif //BOOST_STM_TX_MIXIN__HPP
