@@ -29,7 +29,10 @@ public:
 
     list_node() : value_(), next_() 
         , binds_()
-    {}
+    {
+        bind(&value_);
+        bind(&next_);
+    }
     explicit list_node(T const &rhs) 
         : value_(rhs), next_() {}
     list_node(T const &rhs, list_node<T>* next) 
@@ -38,12 +41,13 @@ public:
     // zero initialization for native types
     void clear() { value_ = T(); next_ = 0; }
 
-    std::list<base_transaction_object*>& binds() {return binds_;}
-    void bind(base_transaction_object* bto) {binds_.push_back(bto);}
-
     tx::object<T> value_;
     tx::pointer<list_node<T> > next_;
+
+    std::list<base_transaction_object*>& binds() {return binds_;}
     std::list<base_transaction_object*> binds_;
+
+    void bind(base_transaction_object* bto) {binds_.push_back(bto);}
 };
 
 template <typename OSTREAM, typename T>
@@ -56,17 +60,23 @@ OSTREAM& operator<<(OSTREAM& os, list_node<T>& v) {
 template <typename T>
 class list
 {
-public:
-
     typedef tx::pointer<list_node<T> > node_type;
     tx::pointer<list_node<T> > head_;
     tx::uint_t size_;
+
+    std::list<base_transaction_object*>& binds() {return binds_;}
+    std::list<base_transaction_object*> binds_;
+
+    void bind(base_transaction_object* bto) {binds_.push_back(bto);}
+
+public:   
     list()
     : head_(BOOST_STM_NEW_PTR(list_node<T>()))
     , size_(0)
+    , binds_()
     {
-            //std::cout << "list().head=" << head_ << std::endl;
-            //std::cout << "list().size=" << size_ << std::endl;
+        bind(&head_);
+        bind(&size_);
     }
 
     ~list() { }
@@ -105,16 +115,16 @@ public:
 
     // search function
     bool lookup(const T& val) const {
-        cerr << __LINE__ << " * lookup val=" << val << endl;
+        //cerr << __LINE__ << " * lookup val=" << val << endl;
         BOOST_STM_ATOMIC(_) {
-            list_node<T>* curr=head_->next_.value();
+            list_node<T> const * curr=head_->next_.value();
             while (curr) {
-                cerr << __LINE__ << " * lookup curr->value_=" << curr->value_ << endl;
+                //cerr << __LINE__ << " * lookup curr->value_=" << curr->value_ << endl;
                 if (curr->value_ >= val) break;
                 curr = curr->next_.value();
             }
 
-            cerr << __LINE__ << " * lookup ret=" << ((curr) && (curr->value_ == val)) << endl;
+            //cerr << __LINE__ << " * lookup ret=" << ((curr) && (curr->value_ == val)) << endl;
             BOOST_STM_RETURN((curr) && (curr->value_ == val));
         }  BOOST_STM_END_ATOMIC
         catch (...) {
@@ -133,7 +143,6 @@ public:
             while (curr) {
                 // if we find the node, disconnect it and end the search
                 if (curr->value_ == val) {
-                    cerr << __LINE__ << " * remove found next=" << curr->next_.value() << endl;
                     prev->next_=curr->next_.value();
                     // delete curr...
                     BOOST_STM_TX_DELETE_PTR(_,curr);
