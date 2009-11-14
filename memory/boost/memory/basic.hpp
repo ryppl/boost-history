@@ -57,6 +57,17 @@
 #endif
 
 // -------------------------------------------------------------------------
+// macro BOOST_MEMORY_DBG_FILL
+
+#ifndef BOOST_MEMORY_DBG_FILL
+#if defined(_DEBUG)
+#define BOOST_MEMORY_DBG_FILL(p, cb)	memset(p, 0xcd, cb)
+#else
+#define BOOST_MEMORY_DBG_FILL(p, cb)
+#endif
+#endif
+
+// -------------------------------------------------------------------------
 
 #ifndef BOOST_MEMORY_STATIC_ASSERT
 #if defined(BOOST_STATIC_ASSERT)

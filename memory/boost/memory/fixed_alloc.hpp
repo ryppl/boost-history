@@ -36,14 +36,6 @@ NS_BOOST_MEMORY_BEGIN
 #define MIN(x, y)		((x) < (y) ? (x) : (y))
 #endif
 
-#ifndef BOOST_MEMORY_DBG_FILL
-#if defined(_DEBUG)
-#define BOOST_MEMORY_DBG_FILL(p, cb)	memset(p, 0xcd, cb)
-#else
-#define BOOST_MEMORY_DBG_FILL(p, cb)
-#endif
-#endif
-
 template <class PolicyT>
 class fixed_alloc
 {
