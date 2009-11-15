@@ -292,6 +292,9 @@ scheduler_impl::run()
 		runnable_fibers_.pop_front();
 		result = true;
 	}
+	else
+		boost::move( active_);
+
 	while ( ! terminated_fibers_.empty() )
 	{
 		fiber f( fibers_[terminated_fibers_.front()].f);

@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/fiber/detail/fiber_info_posix.hpp>
+#include <boost/fiber/detail/fiber_info_base_posix.hpp>
 
 #include <cerrno>
 

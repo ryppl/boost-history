@@ -40,7 +40,7 @@ alias fiber_sources
 	condition.cpp
 	count_down_event.cpp
 	fiber.cpp
-	fiber_info_windows.cpp
+	fiber_info_base_windows.cpp
 	fiber_windows.cpp
 	manual_reset_event.cpp
 	mutex.cpp
@@ -57,7 +57,7 @@ alias fiber_sources
 	condition.cpp
 	count_down_event.cpp
 	fiber.cpp
-	fiber_info_posix.cpp
+	fiber_info_base_posix.cpp
 	fiber_posix.cpp
 	manual_reset_event.cpp
 	mutex.cpp

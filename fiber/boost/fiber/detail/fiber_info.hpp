@@ -13,15 +13,8 @@
 
 #include <boost/fiber/attributes.hpp>
 #include <boost/fiber/detail/config.hpp>
+#include <boost/fiber/detail/fiber_info_base.hpp>
 #include <boost/fiber/detail/move.hpp>
-
-# if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__CYGWIN__)
-#include <boost/fiber/detail/fiber_info_windows.hpp>
-
-# elif defined(_POSIX_VERSION)
-#include <boost/fiber/detail/fiber_info_posix.hpp>
-
-# endif
 
 #include <boost/config/abi_prefix.hpp>
 
