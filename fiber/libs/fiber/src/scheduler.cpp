@@ -54,58 +54,58 @@ scheduler::suspend_active_fiber()
 }
 
 void
-scheduler::cancel_fiber( fiber::id const& f_id)
+scheduler::cancel_fiber( fiber::id const& id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
-	impl->cancel_fiber( f_id);
+	impl->cancel_fiber( id);
 }
 
 void
-scheduler::suspend_fiber( fiber::id const& f_id)
+scheduler::suspend_fiber( fiber::id const& id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
-	impl->suspend_fiber( f_id);
+	impl->suspend_fiber( id);
 }
 
 void
-scheduler::resume_fiber( fiber::id const& f_id)
+scheduler::resume_fiber( fiber::id const& id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
-	impl->resume_fiber( f_id);
+	impl->resume_fiber( id);
 }
 
 int
-scheduler::priority( fiber::id const& f_id)
+scheduler::priority( fiber::id const& id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
-	return impl->priority( f_id);
+	return impl->priority( id);
 }
 
 void
-scheduler::priority( fiber::id const& f_id, int prio)
+scheduler::priority( fiber::id const& id, int prio)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if (  ! impl) throw fiber_error("not a fiber");
-	impl->priority( f_id, prio);
-	re_schedule( f_id);
+	impl->priority( id, prio);
+	re_schedule( id);
 }
 
 void
-scheduler::re_schedule( fiber::id const& f_id)
+scheduler::re_schedule( fiber::id const& id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
-	impl->re_schedule( f_id);
+	impl->re_schedule( id);
 }
 
 void
-scheduler::join( fiber::id const& f_id)
+scheduler::join( fiber::id const& id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
-	impl->join( f_id);
+	impl->join( id);
 }
 
 detail::scheduler_impl *

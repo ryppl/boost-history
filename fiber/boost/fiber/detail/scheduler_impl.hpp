@@ -45,7 +45,7 @@ private:
 	typedef std::queue< fiber::id >				terminated_queue;
 
 	fiber				master_;
-	fiber::id			f_id_;
+	fiber				active_;
 	container			fibers_;
 	runnable_queue		runnable_fibers_;
 	terminated_queue	terminated_fibers_;
