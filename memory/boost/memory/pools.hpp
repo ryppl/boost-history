@@ -51,12 +51,30 @@ __forceinline unsigned int log2(IN unsigned int val) {
 
 __forceinline unsigned int log2(IN unsigned int val) {
 	BOOST_MEMORY_ASSERT(val != 0);
-	__asm__ volatile("bsr %0, %%eax"::"m"(val));
+	unsigned int result;
+	__asm__("bsr %0, %%eax"::"m"(val));
+	__asm__("movl %%eax, %0":"=m"(result));
+	return result;
 }
 
 #else
 
-#error "Error: to do - unsupport compiler!"
+__forceinline unsigned int log2(IN unsigned int val)
+{
+	BOOST_MEMORY_ASSERT(val != 0);
+	if (!(val & 0xFFFFFFFFU))
+		return 0xCDCDCDCDU;
+	unsigned int result = 31, mask = (1 << 31);
+	for (;;)
+	{
+		if (val & mask)
+			return result;
+		--result;
+		mask >>= 1;
+	}
+}
+
+#pragma message("Warning: unsupport compiler, and use a slow log2 algorithm!"
 
 #endif
 
