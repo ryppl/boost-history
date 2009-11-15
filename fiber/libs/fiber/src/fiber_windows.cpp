@@ -4,12 +4,13 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#define _WIN32_WINNT 0x0501
+
 #include <boost/fiber/fiber.hpp>
 
 extern "C" {
 
 #include <windows.h>
-#include <winnt.h>
 
 }
 
@@ -23,11 +24,11 @@ extern "C" {
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fiber {
+namespace fibers {
 
-LPVOID trampoline( LPVOID vp)
+VOID CALLBACK trampoline( LPVOID vp)
 {
-	detail::fiberinfo_base * self(
+	detail::fiber_info_base * self(
 			static_cast< detail::fiber_info_base * >( vp) );
 	BOOST_ASSERT( self);
 	try
@@ -45,7 +46,7 @@ fiber::init_()
 	if ( ! info_) throw fiber_moved();
 
 	info_->uctx = ::CreateFiber(
-		info_->attrs.stacksize(),
+		info_->attrs.stack_size(),
 		static_cast< LPFIBER_START_ROUTINE >( & trampoline),
 		static_cast< LPVOID >( info_.get() ) );
 }
@@ -55,30 +56,26 @@ fiber::switch_to_( fiber & to)
 {
 	if ( ! info_) throw fiber_moved();
 
-	if ( ::SiwtchToFiber( & to.info_->uctx) != 0)
-		throw system::system_error(
-			system::error_code(
-				::GetLastError(),
-				system::system_category) );
+	::SwitchToFiber( to.info_->uctx);
 }
 
 void
 fiber::convert_thread_to_fiber()
 {
-	if ( ! ::ConvertThreadToFiber( 0) )
+	if ( ::ConvertThreadToFiber( 0) == 0)
 		throw system::system_error(
 			system::error_code(
-				::GetLastError(),
+				GetLastError(),
 				system::system_category) );
 }
 
 void
 fiber::convert_fiber_to_thread()
 {
-	if ( ! ::ConvertFiberToThread( 0) )
+	if ( ::ConvertFiberToThread() == 0)
 		throw system::system_error(
 			system::error_code(
-				::GetLastError(),
+				GetLastError(),
 				system::system_category) );
 }
 

@@ -7,10 +7,11 @@
 #ifndef BOOST_FIBERS_DETAIL_FIBER_INFO_WINDOWS_H
 #define BOOST_FIBERS_DETAIL_FIBER_INFO_WINDOWS_H
 
+#define _WIN32_WINNT 0x0501
+
 extern "C" {
 
 #include <windows.h>
-#include <winnt.h>
 
 }
 
@@ -40,7 +41,7 @@ struct BOOST_FIBER_DECL fiber_info_base
 
 	fiber_info_base( attributes const&);
 
-	virtual ~fiber_info_base() {}
+	virtual ~fiber_info_base();
 
 	virtual void run() = 0;
 

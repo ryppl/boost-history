@@ -4,7 +4,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/fiber/detail/fiber_info_base_posix.hpp>
+#define _WIN32_WINNT 0x0501
+
+#include <boost/fiber/detail/fiber_info_base_windows.hpp>
 
 #include <cerrno>
 
@@ -32,7 +34,7 @@ fiber_info_base::fiber_info_base() :
 }
 
 fiber_info_base::~fiber_info_base()
-{ ::DeleteFiber( uctx); }
+{ if ( state != STATE_MASTER) ::DeleteFiber( uctx); }
 
 fiber_info_base::fiber_info_base( attributes const& attrs_) :
 	use_count( 0),

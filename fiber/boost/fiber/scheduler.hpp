@@ -11,7 +11,7 @@
 #include <memory>
 
 #include <boost/preprocessor/repetition.hpp>
-#include <boost/thread/tss.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/attributes.hpp>
@@ -26,7 +26,7 @@ namespace boost {
 namespace this_fiber {
 
 bool runs_as_fiber();
-fiber::fiber::id get_id();
+boost::fiber::id get_id();
 void yield();
 void cancel();
 void suspend();
@@ -49,9 +49,9 @@ private:
 	friend void this_fiber::priority( int);
 	friend class fiber;
 
-	typedef thread_specific_ptr< detail::scheduler_impl >	tss_impl_t;
+	typedef scoped_ptr< detail::scheduler_impl >	impl_t;
 
-	static tss_impl_t	impl_;
+	static impl_t	impl_;
 
 	static bool runs_as_fiber();
 
@@ -77,9 +77,9 @@ private:
 
 	static void join( fiber::id const&);
 
-	detail::scheduler_impl * access_();
-
 public:
+	scheduler();
+
 	~scheduler();
 
 	bool run();
@@ -92,11 +92,11 @@ public:
 
 	template< typename Fn >
 	void make_fiber( Fn fn)
-	{ access_()->add_fiber( fiber( fn) ); }
+	{ impl_->add_fiber( fiber( fn) ); }
 
 	template< typename Fn >
 	void make_fiber( attributes attrs, Fn fn)
-	{ access_()->add_fiber( fiber( attrs, fn) ); }
+	{ impl_->add_fiber( fiber( attrs, fn) ); }
 
 #ifndef BOOST_FIBER_MAX_ARITY
 #define BOOST_FIBER_MAX_ARITY 10
@@ -109,10 +109,10 @@ public:
 #define BOOST_FIBER_MAKE_FIBER_FUNCTION(z, n, unused) \
 	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
 	void make_fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-	{ access_()->add_fiber( fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); } \
+	{ impl_->add_fiber( fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); } \
 	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
 	void make_fiber( attributes const& attrs, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-	{ access_()->add_fiber( fiber( attrs, fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); }
+	{ impl_->add_fiber( fiber( attrs, fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); }
 
 BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTION, ~)
 
