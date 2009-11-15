@@ -47,11 +47,11 @@ __forceinline unsigned int log2(IN unsigned int val) {
 #pragma warning(pop)
 #endif
 
-#else if defined(__GNUG__) || defined(__GNUC__) // g++/gcc
+#elif defined(__GNUG__) || defined(__GNUC__) // g++/gcc
 
 __forceinline unsigned int log2(IN unsigned int val) {
 	BOOST_MEMORY_ASSERT(val != 0);
-	asm(bsr $val, %eax);
+	__asm__ volatile("bsr %0, %%eax"::"m"(val));
 }
 
 #else

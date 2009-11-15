@@ -128,8 +128,6 @@ private:
 		blk->pPrev = m_blks;
 		m_blks = blk;
 
-		blk->nUsed = 0;
-
 		FreeChunk* p = (FreeChunk*)blk->buffer;
 		p->pPrev = m_freelist;
 		for (size_type i = m_nChunkPerBlock; --i;)
