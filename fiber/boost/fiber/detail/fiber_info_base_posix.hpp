@@ -35,7 +35,7 @@ struct BOOST_FIBER_DECL fiber_info_base
 	attributes				attrs;
 	::ucontext_t			uctx;
 	shared_array< char >	uctx_stack;
-	fiber_state_t		state;
+	fiber_state_t			state;
 
 	static void convert_thread_to_fiber() {}
 
@@ -54,9 +54,7 @@ struct BOOST_FIBER_DECL fiber_info_base
     { if ( --p->use_count == 0) delete p; }
 };
 
-}}
-
-}
+}}}
 
 #include <boost/config/abi_suffix.hpp>
 

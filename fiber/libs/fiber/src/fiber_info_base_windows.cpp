@@ -18,27 +18,28 @@ namespace fibers {
 namespace detail {
 
 fiber_info_base::fiber_info_base() :
-	attribs(),
+	use_count( 0),
+	attrs(),
 	uctx(),
-	uctx_stack()
-{}
-
-fiber_info_base::fiber_info_base( attributes const& attribs_) :
-	attribs( attribs_),
-	uctx(),
-	uctx_stack( new char[attribs.stack_size()])
+	state( STATE_MASTER)
 {
-	BOOST_ASSERT( uctx_stack);
-
-	if ( ::getcontext( & uctx) == -1)
+	uctx = ::GetCurrentFiber();
+	if ( ! uctx)
 		throw system::system_error(
 			system::error_code(
-				errno,
+				::GetLastError(),
 				system::system_category) );
-	uctx.uc_stack.ss_sp = uctx_stack.get();
-	uctx.uc_stack.ss_size = attribs.stack_size();
-	uctx.uc_link = 0;
 }
+
+fiber_info_base::~fiber_info_base()
+{ ::DeleteFiber( uctx); }
+
+fiber_info_base::fiber_info_base( attributes const& attrs_) :
+	use_count( 0),
+	attrs( attrs_),
+	uctx(),
+	state( STATE_NOT_STARTED)
+{}
 
 }}}
 

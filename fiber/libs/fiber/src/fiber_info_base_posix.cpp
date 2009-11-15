@@ -18,6 +18,7 @@ namespace fibers {
 namespace detail {
 
 fiber_info_base::fiber_info_base() :
+	use_count( 0),
 	attrs(),
 	uctx(),
 	uctx_stack(),
@@ -25,6 +26,7 @@ fiber_info_base::fiber_info_base() :
 {}
 
 fiber_info_base::fiber_info_base( attributes const& attrs_) :
+	use_count( 0),
 	attrs( attrs_),
 	uctx(),
 	uctx_stack( new char[attrs.stack_size()]),

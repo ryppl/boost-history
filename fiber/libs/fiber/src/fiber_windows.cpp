@@ -17,28 +17,55 @@ extern "C" {
 
 #include <boost/system/system_error.hpp>
 
+#include <boost/fiber/exceptions.hpp>
+#include <boost/fiber/utility.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
 namespace fiber {
 
-void
-fiber::init_()
+VOID trampoline( LPVOID vp)
 {
-	typedef void fn_type( fiber *);
-	typedef void ( * st_fn)();
-	fn_type * fn_ptr( trampoline);
-
-	info_->uctx = ::CreateFiber(
-		info_->stack_size_,
-		static_cast< LPFIBER_START_ROUTINE >( & trampoline< fiber >),
-		static_cast< LPVOID >( this) );
+	detail::fiberinfo_base * self(
+			static_cast< detail::fiber_info_base * >( vp) );
+	BOOST_ASSERT( self);
+	try
+	{ self->run(); }
+	catch ( fiber_interrupted const&)
+	{}
+	catch (...)
+	{}
+ 	this_fiber::cancel();
 }
 
 void
-fiber::switch_to( fiber & to)
+fiber::init_()
 {
-	if ( ::SiwtchToFiber( & info_->uctx) != 0)
+	if ( ! info_) throw fiber_moved();
+
+	info_->uctx = ::CreateFiber(
+		info_->attrs.stacksize(),
+		static_cast< LPFIBER_START_ROUTINE >( & trampoline),
+		static_cast< LPVOID >( info_.get() ) );
+}
+
+void
+fiber::switch_to_( fiber & to)
+{
+	if ( ! info_) throw fiber_moved();
+
+	if ( ::SiwtchToFiber( & to.info_->uctx) != 0)
+		throw system::system_error(
+			system::error_code(
+				::GetLastError(),
+				system::system_category) );
+}
+
+void
+fiber::convert_thread_to_fiber()
+{
+	if ( ! ::ConvertThreadToFiber( 0) )
 		throw system::system_error(
 			system::error_code(
 				::GetLastError(),

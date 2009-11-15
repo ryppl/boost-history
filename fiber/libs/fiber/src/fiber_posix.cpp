@@ -14,10 +14,10 @@ extern "C" {
 
 #include <cerrno>
 
+#include <boost/system/system_error.hpp>
+
 #include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/utility.hpp>
-
-#include <boost/system/system_error.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
