@@ -68,6 +68,7 @@ void example_serialize(std::ostream& os){
     }
     {
     	vec_map01_map2_ vec;
+
     	ifs_ ifs(path.c_str());
     	ia_ ia(ifs);
 		sf::serialization::make_loader(ia)(vec);
