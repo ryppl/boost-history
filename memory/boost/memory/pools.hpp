@@ -77,7 +77,7 @@ __forceinline unsigned int log2(IN unsigned int val)
 	}
 }
 
-#pragma message("Warning: unsupport compiler, and use a slow log2 algorithm!"
+#pragma message("Warning: unknown compiler and use a slow log2 algorithm!"
 
 #endif
 
