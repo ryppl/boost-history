@@ -49,7 +49,8 @@ __forceinline unsigned int log2(IN unsigned int val) {
 
 #elif defined(__GNUG__) || defined(__GNUC__) // g++/gcc
 
-__forceinline unsigned int log2(IN unsigned int val) {
+__forceinline unsigned int log2(IN unsigned int val)
+{
 	BOOST_MEMORY_ASSERT(val != 0);
 	unsigned int result;
 	__asm__("bsr %0, %%eax"::"m"(val));
@@ -62,8 +63,10 @@ __forceinline unsigned int log2(IN unsigned int val) {
 __forceinline unsigned int log2(IN unsigned int val)
 {
 	BOOST_MEMORY_ASSERT(val != 0);
+
 	if (!(val & 0xFFFFFFFFU))
 		return 0xCDCDCDCDU;
+
 	unsigned int result = 31, mask = (1 << 31);
 	for (;;)
 	{
