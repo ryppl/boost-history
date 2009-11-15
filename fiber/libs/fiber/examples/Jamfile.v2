@@ -27,5 +27,4 @@ exe suspend : suspend.cpp ;
 exe join : join.cpp ;
 exe cancel : cancel.cpp ;
 exe simple : simple.cpp ;
-exe simple_mt : simple_mt.cpp ;
 exe ping_pong : ping_pong.cpp ;
