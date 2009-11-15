@@ -93,6 +93,10 @@ void
 scheduler::join( fiber::id const& id)
 { impl_->join( id); }
 
+void
+scheduler::interruption_point()
+{ impl_->interrupt_active_fiber(); }
+
 scheduler::scheduler()
 {
 	fiber::convert_thread_to_fiber();

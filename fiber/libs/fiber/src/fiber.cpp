@@ -120,6 +120,20 @@ fiber::priority( int prio)
 }
 
 void
+fiber::interrupt()
+{
+	if ( ! info_) throw fiber_moved();
+	info_->interrupt = true;
+}
+
+bool
+fiber::interruption_requested() const
+{
+	if ( ! info_) throw fiber_moved();
+	return info_->interrupt;
+}
+
+void
 fiber::cancel()
 { scheduler::cancel_fiber( get_id() ); }
 

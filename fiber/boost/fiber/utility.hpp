@@ -47,6 +47,10 @@ inline
 void priority( int prio)
 { fibers::scheduler::priority( get_id(), prio); }
 
+inline
+void interruption_point()
+{ fibers::scheduler::interruption_point(); }
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

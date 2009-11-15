@@ -124,6 +124,15 @@ scheduler_impl::suspend_active_fiber()
 }
 
 void
+scheduler_impl::interrupt_active_fiber()
+{
+	BOOST_ASSERT( ! HAS_STATE_MASTER( active_.info_->state) );
+	BOOST_ASSERT( STATE_RUNNING == active_.info_->state);
+
+	if ( active_.info_->interrupt) throw fiber_interrupted();
+}
+
+void
 scheduler_impl::cancel_fiber( fiber::id const& id)
 {
 	container::iterator i = fibers_.find( id);

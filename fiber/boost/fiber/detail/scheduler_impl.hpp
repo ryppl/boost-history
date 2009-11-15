@@ -63,6 +63,8 @@ public:
 
 	void suspend_active_fiber();
 
+	void interrupt_active_fiber();
+
 	void cancel_fiber( fiber::id const&);
 
 	void suspend_fiber( fiber::id const&);

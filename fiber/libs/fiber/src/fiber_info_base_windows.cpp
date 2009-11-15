@@ -23,7 +23,8 @@ fiber_info_base::fiber_info_base() :
 	use_count( 0),
 	attrs(),
 	uctx(),
-	state( STATE_MASTER)
+	state( STATE_MASTER),
+	interrupt( false)
 {
 	uctx = ::GetCurrentFiber();
 	if ( ! uctx)
@@ -40,7 +41,8 @@ fiber_info_base::fiber_info_base( attributes const& attrs_) :
 	use_count( 0),
 	attrs( attrs_),
 	uctx(),
-	state( STATE_NOT_STARTED)
+	state( STATE_NOT_STARTED),
+	interrupt( false)
 {}
 
 }}}

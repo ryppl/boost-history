@@ -36,6 +36,7 @@ struct BOOST_FIBER_DECL fiber_info_base
 	attributes		attrs;
 	LPVOID			uctx;
 	fiber_state_t	state;
+	bool			interrupt;
 
 	fiber_info_base();
 

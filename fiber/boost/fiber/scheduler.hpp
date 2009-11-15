@@ -32,6 +32,7 @@ void cancel();
 void suspend();
 int priority();
 void priority( int);
+void interruption_point();
 
 }
 
@@ -47,6 +48,7 @@ private:
 	friend void this_fiber::suspend();
 	friend int this_fiber::priority();
 	friend void this_fiber::priority( int);
+	friend void this_fiber::interruption_point();
 	friend class fiber;
 
 	typedef scoped_ptr< detail::scheduler_impl >	impl_t;
@@ -76,6 +78,8 @@ private:
 	static void re_schedule( fiber::id const&);
 
 	static void join( fiber::id const&);
+
+	static void interruption_point();
 
 public:
 	scheduler();

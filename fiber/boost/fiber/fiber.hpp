@@ -193,6 +193,10 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_FIBER_CTOR, ~)
 
 	void priority( int);
 
+	void interrupt();
+
+	bool interruption_requested() const;
+
 	void cancel();
 
 	void suspend();

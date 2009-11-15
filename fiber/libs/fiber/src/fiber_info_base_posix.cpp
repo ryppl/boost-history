@@ -22,7 +22,8 @@ fiber_info_base::fiber_info_base() :
 	attrs(),
 	uctx(),
 	uctx_stack(),
-	state( STATE_MASTER)
+	state( STATE_MASTER),
+	interrupt( false)
 {}
 
 fiber_info_base::fiber_info_base( attributes const& attrs_) :
@@ -30,7 +31,8 @@ fiber_info_base::fiber_info_base( attributes const& attrs_) :
 	attrs( attrs_),
 	uctx(),
 	uctx_stack( new char[attrs.stack_size()]),
-	state( STATE_NOT_STARTED)
+	state( STATE_NOT_STARTED),
+	interrupt( false)
 {
 	BOOST_ASSERT( uctx_stack);
 
