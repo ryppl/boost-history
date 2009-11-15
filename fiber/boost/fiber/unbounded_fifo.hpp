@@ -143,31 +143,31 @@ public:
 		return va;
 	}
 
-	bool take(
-		value_type & va,
-		posix_time::time_duration const& rel_time)
-	{
-		mutex::scoped_lock lk( head_mtx_);
-		bool empty = empty_();
-		if ( ! active_() && empty)
-			return false;
-		if ( empty)
-		{
-			try
-			{
-				while ( active_() && empty_() )
-					if ( ! not_empty_cond_.timed_wait( lk, rel_time) )
-						return false;
-			}
-			catch ( fiber_interrupted const&)
-			{ return false; }
-		}
-		if ( ! active_() && empty_() )
-			return false;
-		swap( va, head_->va);
-		pop_head_();
-		return va;
-	}
+//	bool take(
+//		value_type & va,
+//		posix_time::time_duration const& rel_time)
+//	{
+//		mutex::scoped_lock lk( head_mtx_);
+//		bool empty = empty_();
+//		if ( ! active_() && empty)
+//			return false;
+//		if ( empty)
+//		{
+//			try
+//			{
+//				while ( active_() && empty_() )
+//					if ( ! not_empty_cond_.timed_wait( lk, rel_time) )
+//						return false;
+//			}
+//			catch ( fiber_interrupted const&)
+//			{ return false; }
+//		}
+//		if ( ! active_() && empty_() )
+//			return false;
+//		swap( va, head_->va);
+//		pop_head_();
+//		return va;
+//	}
 
 	bool try_take( value_type & va)
 	{

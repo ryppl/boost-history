@@ -101,6 +101,13 @@ scheduler::re_schedule( fiber::id const& f_id)
 	impl->re_schedule( f_id);
 }
 
+void
+scheduler::join( fiber::id const& f_id)
+{
+	detail::scheduler_impl * impl( impl_.get() );
+	impl->join( f_id);
+}
+
 detail::scheduler_impl *
 scheduler::access_()
 {

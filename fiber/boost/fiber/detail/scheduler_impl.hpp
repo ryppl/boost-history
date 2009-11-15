@@ -26,13 +26,27 @@ namespace detail {
 class BOOST_FIBER_DECL scheduler_impl : private noncopyable
 {
 private:
-	typedef std::map< fiber::id, fiber >	container;
-	typedef std::list< fiber::id >			runnable_queue;
-	typedef std::queue< fiber::id >		terminated_queue;
+	struct schedulable
+	{
+		fiber					f;
+		std::list< fiber::id >	waiting;
 
-	fiber		master_;
-	fiber::id	f_id_;
-	container	fibers_;
+		schedulable() :
+			f(), waiting()
+		{}
+
+		schedulable( fiber f_) :
+			f( f_), waiting()
+		{}
+	};
+
+	typedef std::map< fiber::id, schedulable >	container;
+	typedef std::list< fiber::id >				runnable_queue;
+	typedef std::queue< fiber::id >				terminated_queue;
+
+	fiber				master_;
+	fiber::id			f_id_;
+	container			fibers_;
 	runnable_queue		runnable_fibers_;
 	terminated_queue	terminated_fibers_;
 
@@ -60,6 +74,8 @@ public:
 	void priority( fiber::id const&, int);
 
 	void re_schedule( fiber::id const&);
+
+	void join( fiber::id const&);
 
 	bool run();
 

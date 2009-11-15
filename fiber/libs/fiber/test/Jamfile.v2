@@ -31,6 +31,7 @@ test-suite fiber :
     [ fiber-test test_cancel ]
     [ fiber-test test_suspended ]
     [ fiber-test test_priority ]
+    [ fiber-test test_join ]
     [ fiber-test test_mutex ]
     [ fiber-test test_auto_reset_event ]
     [ fiber-test test_manual_reset_event ]

@@ -75,6 +75,8 @@ private:
 
 	static void re_schedule( fiber::id const&);
 
+	static void join( fiber::id const&);
+
 	detail::scheduler_impl * access_();
 
 public:

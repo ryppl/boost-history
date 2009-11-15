@@ -9,6 +9,7 @@
 #include <utility>
 
 #include <boost/assert.hpp>
+#include <boost/foreach.hpp>
 
 #include <boost/fiber/detail/fiber_info.hpp>
 #include <boost/fiber/detail/move.hpp>
@@ -56,12 +57,13 @@ void
 scheduler_impl::add_fiber( fiber f)
 {
 	if ( ! f) throw fiber_moved();
+
 	fiber::id id( f.get_id() );
 	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
 	BOOST_ASSERT( STATE_NOT_STARTED == f.info_->state);
 	f.info_->state = STATE_READY;
-	std::pair< std::map< fiber::id, fiber >::iterator, bool > result(
-		fibers_.insert( std::make_pair( id, f) ) );
+	std::pair< std::map< fiber::id, schedulable >::iterator, bool > result(
+		fibers_.insert( std::make_pair( id, schedulable( f) ) ) );
 	if ( ! result.second) throw scheduler_error("inserting fiber failed");
 	runnable_fibers_.push_back( result.first->first);
 }
@@ -73,30 +75,50 @@ scheduler_impl::active_fiber() const
 void
 scheduler_impl::yield_active_fiber()
 {
-	BOOST_ASSERT( ! HAS_STATE_MASTER( fibers_[f_id_].info_->state) );
-	BOOST_ASSERT( STATE_RUNNING == fibers_[f_id_].info_->state);
-	fibers_[f_id_].info_->state = STATE_READY;
+	BOOST_ASSERT( ! HAS_STATE_MASTER( fibers_[f_id_].f.info_->state) );
+	BOOST_ASSERT( STATE_RUNNING == fibers_[f_id_].f.info_->state);
+
+	fibers_[f_id_].f.info_->state = STATE_READY;
+
 	runnable_fibers_.push_back( f_id_);
-	fibers_[f_id_].switch_to_( master_);
+	fibers_[f_id_].f.switch_to_( master_);
 }
 
 void
 scheduler_impl::cancel_active_fiber()
 {
-	BOOST_ASSERT( ! HAS_STATE_MASTER( fibers_[f_id_].info_->state) );
-	BOOST_ASSERT( STATE_RUNNING == fibers_[f_id_].info_->state);
-	fibers_[f_id_].info_->state = STATE_TERMINATED;
+	BOOST_ASSERT( ! HAS_STATE_MASTER( fibers_[f_id_].f.info_->state) );
+	BOOST_ASSERT( STATE_RUNNING == fibers_[f_id_].f.info_->state);
+
+	fibers_[f_id_].f.info_->state = STATE_TERMINATED;
+
 	terminated_fibers_.push( f_id_);
-	fibers_[f_id_].switch_to_( master_);
+
+	BOOST_FOREACH( fiber::id f_id__, fibers_[f_id_].waiting)
+	{
+		fiber f__( fibers_[f_id__].f);
+		BOOST_ASSERT( HAS_STATE_WAITING( f__.info_->state) );
+		f__.info_->state &= ~STATE_WAITING;
+		if ( ( HAS_STATE_READY( f__.info_->state) || HAS_STATE_RUNNING( f__.info_->state) )
+		     && ! HAS_STATE_SUSPENDED( f__.info_->state)  )
+		{
+			f__.info_->state = STATE_READY;
+			runnable_fibers_.push_back( f__.get_id() );
+		}
+	}
+	fibers_[f_id_].waiting.clear();
+
+	fibers_[f_id_].f.switch_to_( master_);
 }
 
 void
 scheduler_impl::suspend_active_fiber()
 {
-	BOOST_ASSERT( ! HAS_STATE_MASTER( fibers_[f_id_].info_->state) );
-	BOOST_ASSERT( STATE_RUNNING == fibers_[f_id_].info_->state);
-	fibers_[f_id_].info_->state |= STATE_SUSPENDED;
-	fibers_[f_id_].switch_to_( master_);
+	BOOST_ASSERT( ! HAS_STATE_MASTER( fibers_[f_id_].f.info_->state) );
+	BOOST_ASSERT( STATE_RUNNING == fibers_[f_id_].f.info_->state);
+
+	fibers_[f_id_].f.info_->state |= STATE_SUSPENDED;
+	fibers_[f_id_].f.switch_to_( master_);
 }
 
 void
@@ -104,13 +126,27 @@ scheduler_impl::cancel_fiber( fiber::id const& f_id)
 {
 	container::iterator i = fibers_.find( f_id);
 	if ( i == fibers_.end() ) return;
-	fiber f( i->second);
+	fiber f( i->second.f);
 	BOOST_ASSERT( f);
 	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
 	
 	if ( HAS_STATE_TERMINATED( f.info_->state) ||
 	     HAS_STATE_NOT_STARTED( f.info_->state) )
 		return;
+
+	BOOST_FOREACH( fiber::id f_id__, fibers_[f_id].waiting)
+	{
+		fiber f__( fibers_[f_id__].f);
+		BOOST_ASSERT( HAS_STATE_WAITING( f__.info_->state) );
+		f__.info_->state &= ~STATE_WAITING;
+		if ( ( HAS_STATE_READY( f__.info_->state) || HAS_STATE_RUNNING( f__.info_->state) )
+		     && ! HAS_STATE_SUSPENDED( f__.info_->state)  )
+		{
+			f__.info_->state = STATE_READY;
+			runnable_fibers_.push_back( f__.get_id() );
+		}
+	}
+	fibers_[f_id].waiting.clear();
 
 	if ( HAS_STATE_READY( f.info_->state) )
 	{
@@ -140,7 +176,7 @@ scheduler_impl::suspend_fiber( fiber::id const& f_id)
 {
 	container::iterator i = fibers_.find( f_id);
 	if ( i == fibers_.end() ) return;
-	fiber f( i->second);
+	fiber f( i->second.f);
 	BOOST_ASSERT( f);
 	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
 	
@@ -160,10 +196,7 @@ scheduler_impl::suspend_fiber( fiber::id const& f_id)
 		f.switch_to_( master_);
 	}
 	else if ( HAS_STATE_WAITING( f.info_->state) )
-	{
 		f.info_->state |= STATE_SUSPENDED;
-		// TODO: remove from waiting-queue
-	}
 	else
 		BOOST_ASSERT( ! "should never reached");
 }
@@ -173,25 +206,18 @@ scheduler_impl::resume_fiber( fiber::id const& f_id)
 {
 	container::iterator i = fibers_.find( f_id);
 	if ( i == fibers_.end() ) return;
-	fiber f( i->second);
+	fiber f( i->second.f);
 	BOOST_ASSERT( f);
 	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
 
 	if ( HAS_STATE_SUSPENDED( f.info_->state) )
 	{
 		f.info_->state &= ~STATE_SUSPENDED;
-		switch ( f.info_->state)
+		if ( ( HAS_STATE_READY( f.info_->state) || HAS_STATE_RUNNING( f.info_->state) )
+			 && ! HAS_STATE_WAITING( f.info_->state) )
 		{
-		case STATE_READY:
-		case STATE_RUNNING:
 			f.info_->state = STATE_READY;
 			runnable_fibers_.push_back( f.get_id() );
-			break;
-		case STATE_WAITING:
-		// TODO: put it into the waiting-queue
-			break;
-		default:
-			BOOST_ASSERT( ! "should never reached");
 		}
 	}
 }
@@ -201,7 +227,7 @@ scheduler_impl::priority( fiber::id const& f_id)
 {
 	container::iterator i = fibers_.find( f_id);
 	if ( i == fibers_.end() ) throw scheduler_error("fiber not found");
-	fiber f( i->second);
+	fiber f( i->second.f);
 	BOOST_ASSERT( f);
 	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
 
@@ -213,7 +239,7 @@ scheduler_impl::priority( fiber::id const& f_id, int prio)
 {
 	container::iterator i = fibers_.find( f_id);
 	if ( i == fibers_.end() ) throw scheduler_error("fiber not found");
-	fiber f( i->second);
+	fiber f( i->second.f);
 	BOOST_ASSERT( f);
 	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
 
@@ -226,12 +252,26 @@ scheduler_impl::re_schedule( fiber::id const& f_id)
 {
 	container::iterator i = fibers_.find( f_id);
 	if ( i == fibers_.end() ) return;
-	fiber f( i->second);
+	fiber f( i->second.f);
 	BOOST_ASSERT( f);
 	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
 
 	// TODO: re-schedule fiber == remove from
 	// runnable_fibers + re-insert
+}
+
+void
+scheduler_impl::join( fiber::id const& f_id)
+{
+	container::iterator i = fibers_.find( f_id);
+	if ( i == fibers_.end() ) return;
+	fiber f( i->second.f);
+	BOOST_ASSERT( f);
+	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
+
+	fibers_[f_id].waiting.push_back( f_id_);
+	fibers_[f_id_].f.info_->state |= STATE_WAITING;
+	fibers_[f_id_].f.switch_to_( master_);
 }
 
 bool
@@ -240,18 +280,21 @@ scheduler_impl::run()
 	bool result( false);
 	if ( ! runnable_fibers_.empty() )
 	{
-		f_id_ = runnable_fibers_.front();
-		BOOST_ASSERT( fibers_[f_id_].info_->state == STATE_READY);
-		fibers_[f_id_].info_->state = STATE_RUNNING;
-		master_.switch_to_( fibers_[f_id_]);
+		fiber f( fibers_[runnable_fibers_.front()].f);
+		f_id_ = f.get_id();
+		BOOST_ASSERT( f.info_->state == STATE_READY);
+		f.info_->state = STATE_RUNNING;
+		master_.switch_to_( f);
 		runnable_fibers_.pop_front();
 		result = true;
 	}
 	while ( ! terminated_fibers_.empty() )
 	{
-		BOOST_ASSERT( STATE_TERMINATED == fibers_[terminated_fibers_.front()].info_->state);	
-		fibers_.erase( terminated_fibers_.front() );
+		fiber f( fibers_[terminated_fibers_.front()].f);
 		terminated_fibers_.pop();
+		BOOST_ASSERT( STATE_TERMINATED == f.info_->state);	
+		BOOST_ASSERT( fibers_[f.get_id()].waiting.empty() );	
+		fibers_.erase( f.get_id() );
 		result = true;
 	}
 	return result;

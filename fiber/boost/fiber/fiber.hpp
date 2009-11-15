@@ -197,6 +197,8 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_FIBER_CTOR, ~)
 	void suspend();
 
 	void resume();
+
+	void join();
 };
 
 class fiber::id

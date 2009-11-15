@@ -135,6 +135,10 @@ void
 fiber::resume()
 { scheduler::resume_fiber( get_id() ); }
 
+void
+fiber::join()
+{ scheduler::join( get_id() ); }
+
 }}
 
 #include <boost/config/abi_suffix.hpp>
