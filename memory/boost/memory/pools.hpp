@@ -47,7 +47,14 @@ __forceinline unsigned int log2(IN unsigned int val) {
 #pragma warning(pop)
 #endif
 
-#else // if defined(__GNUG__) || defined(__GNUC__) // g++/gcc
+#else if defined(__GNUG__) || defined(__GNUC__) // g++/gcc
+
+__forceinline unsigned int log2(IN unsigned int val) {
+	BOOST_MEMORY_ASSERT(val != 0);
+	asm(bsr $val, %eax);
+}
+
+#else
 
 #error "Error: to do - unsupport compiler!"
 
