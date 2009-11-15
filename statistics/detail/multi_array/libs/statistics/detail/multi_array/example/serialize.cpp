@@ -13,6 +13,7 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/statistics/detail/multi_array/serialization/serialize.hpp>
+#include <boost/serialization/serialization.hpp>
 //#include <boost/serialization/vector.hpp>
 #include <libs/statistics/detail/multi_array/example/serialize.h>
 
@@ -32,6 +33,7 @@ void example_multi_array_serialize(std::ostream& os)
 	typedef boost::multi_array<val_, 2> array_;
     typedef std::vector<array_> vec_array_;
     typedef boost::array<ma::multi_array_base::index,2> extents_;
+    const unsigned int v = 0; // should call the overload (default is unsigned long) 
     const unsigned n0 = 2;
     const unsigned n1 = 2;
     const str_ path = "./multi_array_serialization";
@@ -47,10 +49,10 @@ void example_multi_array_serialize(std::ostream& os)
 				a[i][j] = i * n1 + j; 
         	}
     	}
-		boost::serialization::save(oa,a,0);
+		boost::serialization::save(oa,a,v);
         
 		// Neither of these compiles:
-        // boost::serialization::serialize(oa,a,0);
+        boost::serialization::serialize_adl(oa,a,v);
         // oa << a;
     }
     {
@@ -58,9 +60,9 @@ void example_multi_array_serialize(std::ostream& os)
     	ia_ ia(ifs);
     	array_ a;
 		// Neither of these compiles:
-        // boost::serialization::serialize(ia,a,0);
+        // boost::serialization::serialize(ia,a,v);
         // ia >> a;
-        boost::serialization::load(ia,a,0);
+        boost::serialization::load(ia,a,v);
 		for(unsigned i = 0; i<n0; i++)
     	{
     		for(unsigned j = 0; j<n1; j++)
