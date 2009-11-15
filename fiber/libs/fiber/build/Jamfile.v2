@@ -10,6 +10,11 @@ import feature ;
 import indirect ;
 import path ;
 
+if [ os.name ] = HP
+{
+	lib atomic ;
+}
+
 project boost/fiber
     : source-location
         ../src
@@ -19,6 +24,7 @@ project boost/fiber
         <link>static:<define>BOOST_FIBER_BUILD_LIB=1
         <link>shared:<define>BOOST_FIBER_BUILD_DLL=1
         <threading>multi
+		<os>HPUX:<library>atomic
     : default-build
         <threading>multi
     ;

@@ -17,10 +17,6 @@
 namespace boost {
 namespace fibers {
 
-void
-fiber::convert_thread_to_fiber()
-{ detail::fiber_info_base::convert_thread_to_fiber(); }
-
 #ifdef BOOST_HAS_RVALUE_REFS
 detail::fiber_info_base::ptr_t
 fiber::make_info_( attributes attrs, void ( * fn)() )

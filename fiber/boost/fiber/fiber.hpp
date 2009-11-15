@@ -81,6 +81,7 @@ public:
 	class id;
 
 	static void convert_thread_to_fiber();
+	static void convert_fiber_to_thread();
 
 	fiber();
 

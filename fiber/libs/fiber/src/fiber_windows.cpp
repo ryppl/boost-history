@@ -25,7 +25,7 @@ extern "C" {
 namespace boost {
 namespace fiber {
 
-VOID trampoline( LPVOID vp)
+LPVOID trampoline( LPVOID vp)
 {
 	detail::fiberinfo_base * self(
 			static_cast< detail::fiber_info_base * >( vp) );
@@ -66,6 +66,16 @@ void
 fiber::convert_thread_to_fiber()
 {
 	if ( ! ::ConvertThreadToFiber( 0) )
+		throw system::system_error(
+			system::error_code(
+				::GetLastError(),
+				system::system_category) );
+}
+
+void
+fiber::convert_fiber_to_thread()
+{
+	if ( ! ::ConvertFiberToThread( 0) )
 		throw system::system_error(
 			system::error_code(
 				::GetLastError(),

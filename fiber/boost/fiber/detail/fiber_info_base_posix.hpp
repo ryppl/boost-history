@@ -37,8 +37,6 @@ struct BOOST_FIBER_DECL fiber_info_base
 	shared_array< char >	uctx_stack;
 	fiber_state_t			state;
 
-	static void convert_thread_to_fiber() {}
-
 	fiber_info_base();
 
 	fiber_info_base( attributes const&);

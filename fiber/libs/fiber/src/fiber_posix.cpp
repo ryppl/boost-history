@@ -64,6 +64,14 @@ fiber::switch_to_( fiber & to)
 				system::system_category) );
 }
 
+void
+fiber::convert_thread_to_fiber()
+{} 
+
+void
+fiber::convert_fiber_to_thread()
+{}
+
 }}
 
 #include <boost/config/abi_suffix.hpp>
