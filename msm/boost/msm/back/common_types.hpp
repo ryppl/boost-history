@@ -22,7 +22,8 @@ typedef enum
 {
     HANDLED_FALSE=0,
     HANDLED_TRUE =1,
-    HANDLED_GUARD_REJECT=2
+    HANDLED_GUARD_REJECT=2,
+    HANDLED_DEFERRED=4
 } HandledEnum;
 
 typedef HandledEnum execute_return;

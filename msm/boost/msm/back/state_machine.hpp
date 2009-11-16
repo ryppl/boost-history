@@ -98,7 +98,7 @@ private:
         execute_return ()>                          transition_fct;
     typedef ::boost::function<
         execute_return () >                         deferred_fct;
-    typedef std::queue<deferred_fct >               deferred_events_queue_t;
+    typedef std::deque<deferred_fct >               deferred_events_queue_t;
     typedef std::queue<transition_fct >	            events_queue_t;
     typedef bool (*flag_handler)(library_sm&);
 
@@ -668,13 +668,13 @@ private:
             handle_defer_helper<library_sm> defer_helper(m_deferred_events_queue);
             defer_helper.do_pre_handle_deferred();
             // process event
-            bool handled = this->do_process_helper<library_sm,Event>(evt);
+            HandledEnum handled = this->do_process_helper<library_sm,Event>(evt);
             if (handled)
             {
                 ret_handled = HANDLED_TRUE;
             }
             // after handling, take care of the deferred events
-            defer_helper.do_post_handle_deferred();
+            defer_helper.do_post_handle_deferred(handled);
 
             // now check if some events were generated in a transition and was not handled
             // because of another processing, and if yes, start handling them
@@ -682,7 +682,7 @@ private:
 
             // event can be handled, processing
             // handle with lowest priority event-less transitions
-            handle_eventless_transitions_helper<library_sm> eventless_helper(this,handled);
+            handle_eventless_transitions_helper<library_sm> eventless_helper(this,(handled!=HANDLED_FALSE));
             eventless_helper.process_automatic_event();
 
             return ret_handled;
@@ -809,7 +809,7 @@ private:
      };
      public:
      // Construct with the default initial states
-      state_machine<Derived,HistoryPolicy
+     state_machine<Derived,HistoryPolicy
 #ifdef BOOST_MSVC          
           ,WorkaroundVC9
 #endif      
@@ -830,7 +830,7 @@ private:
          // create states
          fill_states(this);
      }
- 
+
      // Construct with the default initial states and some default argument(s)
 #ifdef BOOST_MSVC
 
@@ -883,6 +883,7 @@ private:
 #undef MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB
 
 #endif
+
 
      // assignment operator using the copy policy to decide if non_copyable, shallow or deep copying is necessary
      library_sm& operator= (library_sm const& rhs)
@@ -977,13 +978,13 @@ private:
     }
     // the following 2 functions handle the processing either with a try/catch protection or without
     template <class StateType,class EventType>
-    typename ::boost::enable_if<typename is_no_exception_thrown<StateType>::type,bool >::type
+    typename ::boost::enable_if<typename is_no_exception_thrown<StateType>::type,HandledEnum >::type
         do_process_helper(EventType const& evt, ::boost::msm::back::dummy<0> = 0)
     {
         return this->do_process_event(evt);
     }
     template <class StateType,class EventType>
-    typename ::boost::disable_if<typename is_no_exception_thrown<StateType>::type,bool >::type
+    typename ::boost::disable_if<typename is_no_exception_thrown<StateType>::type,HandledEnum >::type
         do_process_helper(EventType const& evt, ::boost::msm::back::dummy<1> = 0)
     {
         try
@@ -995,7 +996,7 @@ private:
             // give a chance to the concrete state machine to handle
             this->exception_caught(evt,*this,e);
         } 
-        return false;
+        return HANDLED_FALSE;
     }
     // handling of deferred events
     // if none is found in the SM, take the following empty main version
@@ -1007,7 +1008,7 @@ private:
         {
         }
 
-        void do_post_handle_deferred()
+        void do_post_handle_deferred(HandledEnum)
         {
         }
     };
@@ -1021,14 +1022,20 @@ private:
         {
             if (!events_queue.empty())
             {
-                next_deferred_event = events_queue.front();
-                events_queue.pop();
+                next_deferred_event = events_queue.back();
+                events_queue.pop_back();
             }
         }
 
-        void do_post_handle_deferred()
+        void do_post_handle_deferred(HandledEnum handled)
         {
-            if (next_deferred_event)
+            if (((handled & HANDLED_DEFERRED) == HANDLED_DEFERRED) && next_deferred_event )
+            {
+                // the event was already deferred, no reason to process another deferred event
+                events_queue.push_back(next_deferred_event);
+                return;
+            }
+            else if (next_deferred_event)
             {
                 next_deferred_event();
             }
@@ -1073,12 +1080,12 @@ private:
 
     // minimum event processing without exceptions, queues, etc.
     template<class Event>
-    bool do_process_event(Event const& evt)
+    HandledEnum do_process_event(Event const& evt)
     {
         // use this table as if it came directly from the user
         typedef dispatch_table<library_sm,complete_table,Event> table;
 
-        bool handled = false;
+        HandledEnum handled = HANDLED_FALSE;
         // dispatch the event to every region
         for (int i=0; i<nr_regions::value;++i)
         {	
@@ -1086,7 +1093,7 @@ private:
                 table::instance.entries[this->m_states[i]](
                 *this, this->m_states[i], evt);
             this->m_states[i] = res.first;
-            handled = (handled || res.second);
+            handled = (HandledEnum)((int)handled | (int)res.second);
         }
         // if the event has not been handled and we have orthogonal zones, then
         // generate an error on every active state 
@@ -1631,7 +1638,7 @@ BOOST_PP_REPEAT(BOOST_PP_ADD(BOOST_MSM_VISITOR_ARG_SIZE,1), MSM_VISITOR_ARGS_EXE
         Event temp (e);
         ::boost::function<execute_return () > f= ::boost::bind(pf, ::boost::ref(fsm),temp);
         fsm.post_deferred_event(f);
-        return std::make_pair(state,HANDLED_TRUE);
+        return std::make_pair(state,HANDLED_DEFERRED);
     }
 
     // called for automatic events. Default address set in the dispatch_table at init
@@ -1645,7 +1652,7 @@ BOOST_PP_REPEAT(BOOST_PP_ADD(BOOST_MSM_VISITOR_ARG_SIZE,1), MSM_VISITOR_ARGS_EXE
     // puts a deferred event in the queue
     void post_deferred_event(deferred_fct& deferred)
     {
-        m_deferred_events_queue.push(deferred);
+        m_deferred_events_queue.push_front(deferred);
     }
     // removes one event from the message queue and processes it
     void process_message_queue()
