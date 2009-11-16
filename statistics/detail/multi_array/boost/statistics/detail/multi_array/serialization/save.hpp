@@ -15,7 +15,7 @@
 
 namespace boost{ namespace serialization{
 
-    template<typename T,typename Archive>
+    template<typename Archive,typename T>
     inline void save(
         Archive & ar,
         const boost::multi_array<T,2> & t,

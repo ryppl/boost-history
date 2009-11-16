@@ -10,11 +10,11 @@
 #include <string>
 #include <fstream>
 #include <boost/multi_array.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
 #include <boost/statistics/detail/multi_array/serialization/serialize.hpp>
 #include <boost/serialization/serialization.hpp>
-//#include <boost/serialization/vector.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+// #include <boost/serialization/vector.hpp>
 #include <libs/statistics/detail/multi_array/example/serialize.h>
 
 void example_multi_array_serialize(std::ostream& os)
@@ -30,6 +30,7 @@ void example_multi_array_serialize(std::ostream& os)
 	typedef boost::archive::text_oarchive oa_;
 	typedef boost::archive::text_iarchive ia_;
     typedef double val_;
+    typedef std::vector<val_> vec_;
 	typedef boost::multi_array<val_, 2> array_;
     typedef std::vector<array_> vec_array_;
     typedef boost::array<ma::multi_array_base::index,2> extents_;
@@ -42,6 +43,7 @@ void example_multi_array_serialize(std::ostream& os)
 	    oa_ oa(ofs);
     	extents_ extents = {{n0,n1}};
 		array_ a(extents);
+        // vec_ vec;
 		for(unsigned i = 0; i<n0; i++)
     	{
     		for(unsigned j = 0; j<n1; j++)
@@ -49,19 +51,13 @@ void example_multi_array_serialize(std::ostream& os)
 				a[i][j] = i * n1 + j; 
         	}
     	}
-		boost::serialization::save(oa,a,v);
-        
-		// Neither of these compiles:
-        boost::serialization::serialize_adl(oa,a,v);
-        // oa << a;
+        oa << a;
     }
     {
     	ifs_ ifs(path.c_str());
     	ia_ ia(ifs);
     	array_ a;
-		// Neither of these compiles:
-        // boost::serialization::serialize(ia,a,v);
-        // ia >> a;
+        ia >> a;
         boost::serialization::load(ia,a,v);
 		for(unsigned i = 0; i<n0; i++)
     	{

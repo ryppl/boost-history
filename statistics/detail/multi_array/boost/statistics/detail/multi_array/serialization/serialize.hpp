@@ -14,10 +14,10 @@
 
 namespace boost{ namespace serialization{
 
-    template<typename T,class Archive>
+    template<class Archive,typename T>
     inline void serialize(
         Archive & ar,
-        const boost::multi_array<T,2>& t,
+        boost::multi_array<T,2>& t,
         const unsigned int file_version
     )
     {
