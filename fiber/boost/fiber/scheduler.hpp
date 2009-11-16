@@ -33,10 +33,14 @@ void suspend();
 int priority();
 void priority( int);
 void interruption_point();
+bool interruption_requested();
 
 }
 
 namespace fibers {
+
+class disable_interruption;
+class restore_interruption;
 
 class BOOST_FIBER_DECL scheduler : private noncopyable
 {
@@ -49,7 +53,10 @@ private:
 	friend int this_fiber::priority();
 	friend void this_fiber::priority( int);
 	friend void this_fiber::interruption_point();
+	friend bool this_fiber::interruption_requested();
 	friend class fiber;
+	friend class disable_interruption;
+	friend class restore_interruption;
 
 	typedef scoped_ptr< detail::scheduler_impl >	impl_t;
 
@@ -57,7 +64,7 @@ private:
 
 	static bool runs_as_fiber();
 
-	static fiber::id active_fiber();
+	static fiber const& active_fiber();
 
 	static void yield_active_fiber();
 
@@ -65,21 +72,19 @@ private:
 
 	static void suspend_active_fiber();
 
+	static void interrupt_active_fiber();
+
+	static void priority_active_fiber( int);
+
 	static void cancel_fiber( fiber::id const&);
 
 	static void suspend_fiber( fiber::id const&);
 
 	static void resume_fiber( fiber::id const&);
 
-	static int priority( fiber::id const&);
+	static void reschedule_fiber( fiber::id const&);
 
-	static void priority( fiber::id const&, int);
-
-	static void re_schedule( fiber::id const&);
-
-	static void join( fiber::id const&);
-
-	static void interruption_point();
+	static void join_fiber( fiber::id const&);
 
 public:
 	scheduler();

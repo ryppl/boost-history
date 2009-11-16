@@ -116,21 +116,22 @@ fiber::priority( int prio)
 {
 	if ( ! info_) throw fiber_moved();
 	info_->attrs.priority( prio);
-	if ( is_alive() ) scheduler::re_schedule( get_id() );
+	if ( is_alive() ) scheduler::reschedule_fiber( get_id() );
 }
 
 void
 fiber::interrupt()
 {
 	if ( ! info_) throw fiber_moved();
-	info_->interrupt = true;
+	info_->interrupt &= ~detail::INTERRUPTION_DISABLED;
+	info_->interrupt |= detail::INTERRUPTION_ENABLED;
 }
 
 bool
 fiber::interruption_requested() const
 {
 	if ( ! info_) throw fiber_moved();
-	return info_->interrupt;
+	return ( info_->interrupt & detail::INTERRUPTION_ENABLED) != 0;
 }
 
 void
@@ -147,7 +148,7 @@ fiber::resume()
 
 void
 fiber::join()
-{ scheduler::join( get_id() ); }
+{ scheduler::join_fiber( get_id() ); }
 
 }}
 

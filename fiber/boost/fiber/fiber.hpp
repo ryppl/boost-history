@@ -31,10 +31,15 @@ class scheduler_impl;
 
 }
 
+class disable_interruption;
+class restore_interruption;
+
 class BOOST_FIBER_DECL fiber
 {
 private:
 	friend class detail::scheduler_impl;
+	friend class disable_interruption;
+	friend class restore_interruption;
 
 	struct dummy;
 

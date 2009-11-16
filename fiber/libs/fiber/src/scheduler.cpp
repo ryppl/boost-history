@@ -21,7 +21,7 @@ bool
 scheduler::runs_as_fiber()
 { return impl_; }
 
-fiber::id
+fiber const&
 scheduler::active_fiber()
 {
 	if ( ! impl_) throw fiber_error("not a fiber");
@@ -50,6 +50,20 @@ scheduler::suspend_active_fiber()
 }
 
 void
+scheduler::interrupt_active_fiber()
+{
+	if ( ! impl_) throw fiber_error("not a fiber");
+	impl_->interrupt_active_fiber();
+}
+
+void
+scheduler::priority_active_fiber( int prio)
+{
+	if ( ! impl_) throw fiber_error("not a fiber");
+	impl_->priority_active_fiber( prio);
+}
+
+void
 scheduler::cancel_fiber( fiber::id const& id)
 {
 	if ( ! impl_) throw fiber_error("not a fiber");
@@ -70,32 +84,19 @@ scheduler::resume_fiber( fiber::id const& id)
 	impl_->resume_fiber( id);
 }
 
-int
-scheduler::priority( fiber::id const& id)
+void
+scheduler::reschedule_fiber( fiber::id const& id)
 {
 	if ( ! impl_) throw fiber_error("not a fiber");
-	return impl_->priority( id);
+	impl_->reschedule_fiber( id);
 }
 
 void
-scheduler::priority( fiber::id const& id, int prio)
+scheduler::join_fiber( fiber::id const& id)
 {
 	if ( ! impl_) throw fiber_error("not a fiber");
-	impl_->priority( id, prio);
-	re_schedule( id);
+	impl_->join_fiber( id);
 }
-
-void
-scheduler::re_schedule( fiber::id const& id)
-{ impl_->re_schedule( id); }
-
-void
-scheduler::join( fiber::id const& id)
-{ impl_->join( id); }
-
-void
-scheduler::interruption_point()
-{ impl_->interrupt_active_fiber(); }
 
 scheduler::scheduler()
 {

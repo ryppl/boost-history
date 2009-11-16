@@ -70,9 +70,9 @@ scheduler_impl::add_fiber( fiber f)
 	runnable_fibers_.push_back( result.first->first);
 }
 
-fiber::id
+fiber const&
 scheduler_impl::active_fiber() const
-{ return active_.get_id(); }
+{ return active_; }
 
 void
 scheduler_impl::yield_active_fiber()
@@ -129,7 +129,18 @@ scheduler_impl::interrupt_active_fiber()
 	BOOST_ASSERT( ! HAS_STATE_MASTER( active_.info_->state) );
 	BOOST_ASSERT( STATE_RUNNING == active_.info_->state);
 
-	if ( active_.info_->interrupt) throw fiber_interrupted();
+	if ( INTERRUPTION_ENABLED == active_.info_->interrupt)
+		throw fiber_interrupted();
+}
+
+void
+scheduler_impl::priority_active_fiber( int prio)
+{
+	BOOST_ASSERT( ! HAS_STATE_MASTER( active_.info_->state) );
+	BOOST_ASSERT( STATE_RUNNING == active_.info_->state);
+
+	active_.priority( prio);
+	reschedule_fiber( active_.get_id() );
 }
 
 void
@@ -235,33 +246,8 @@ scheduler_impl::resume_fiber( fiber::id const& id)
 	}
 }
 
-int
-scheduler_impl::priority( fiber::id const& id)
-{
-	container::iterator i = fibers_.find( id);
-	if ( i == fibers_.end() ) throw scheduler_error("fiber not found");
-	fiber f( i->second.f);
-	BOOST_ASSERT( f);
-	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
-
-	return f.info_->attrs.priority();
-}
-
 void
-scheduler_impl::priority( fiber::id const& id, int prio)
-{
-	container::iterator i = fibers_.find( id);
-	if ( i == fibers_.end() ) throw scheduler_error("fiber not found");
-	fiber f( i->second.f);
-	BOOST_ASSERT( f);
-	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_->state) );
-
-	f.info_->attrs.priority( prio);
-	re_schedule( id);
-}
-
-void
-scheduler_impl::re_schedule( fiber::id const& id)
+scheduler_impl::reschedule_fiber( fiber::id const& id)
 {
 	container::iterator i = fibers_.find( id);
 	if ( i == fibers_.end() ) return;
@@ -274,7 +260,7 @@ scheduler_impl::re_schedule( fiber::id const& id)
 }
 
 void
-scheduler_impl::join( fiber::id const& id)
+scheduler_impl::join_fiber( fiber::id const& id)
 {
 	container::iterator i = fibers_.find( id);
 	if ( i == fibers_.end() ) return;

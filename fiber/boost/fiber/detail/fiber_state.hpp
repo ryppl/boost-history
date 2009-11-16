@@ -28,9 +28,16 @@ typedef char fiber_state_t;
 
 #define IS_ALIVE_BIT_MASK 0x3C
 
-}}
+enum interrupt_t
+{
+	INTERRUPTION_DISABLED	= 1 << 0,
+	INTERRUPTION_ENABLED	= 1 << 1,
+	INTERRUPTION_BLOCKED	= 1 << 2
+};
 
-}
+typedef char fiber_interrupt_t;
+
+}}}
 
 #include <boost/config/abi_suffix.hpp>
 

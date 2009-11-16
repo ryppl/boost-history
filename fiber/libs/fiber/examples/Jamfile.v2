@@ -25,6 +25,7 @@ project boost/fiber/example
 
 exe suspend : suspend.cpp ;
 exe join : join.cpp ;
+exe interrupt : interrupt.cpp ;
 exe cancel : cancel.cpp ;
 exe simple : simple.cpp ;
 exe ping_pong : ping_pong.cpp ;

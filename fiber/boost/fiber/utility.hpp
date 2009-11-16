@@ -25,7 +25,7 @@ bool runs_as_fiber()
 
 inline
 fiber::id get_id()
-{ return fibers::scheduler::active_fiber(); }
+{ return fibers::scheduler::active_fiber().get_id(); }
 
 inline
 void yield()
@@ -41,15 +41,19 @@ void suspend()
 
 inline
 int priority()
-{ return fibers::scheduler::priority( get_id() ); }
+{ return fibers::scheduler::active_fiber().priority(); }
 
 inline
 void priority( int prio)
-{ fibers::scheduler::priority( get_id(), prio); }
+{ fibers::scheduler::priority_active_fiber( prio); }
 
 inline
 void interruption_point()
-{ fibers::scheduler::interruption_point(); }
+{ fibers::scheduler::interrupt_active_fiber(); }
+
+inline
+bool interruption_requested()
+{ return fibers::scheduler::active_fiber().interruption_requested(); }
 
 }}
 

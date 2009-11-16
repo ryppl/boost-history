@@ -36,7 +36,7 @@ struct BOOST_FIBER_DECL fiber_info_base
 	::ucontext_t			uctx;
 	shared_array< char >	uctx_stack;
 	fiber_state_t			state;
-	bool					interrupt;
+	fiber_interrupt_t					interrupt;
 
 	fiber_info_base();
 
