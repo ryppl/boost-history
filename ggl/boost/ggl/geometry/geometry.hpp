@@ -10,6 +10,11 @@
 #define _GEOMETRY_GEOMETRY_HPP
 
 // Shortcut to include all header files
+#if defined(_MSC_VER) || defined(__BORLANDC__) || defined(__DMC__)
+#  pragma message ("Warning: for Formal Review, please use .../ggl/formal_review/boost/ggl/ggl.hpp")
+#elif defined(__GNUC__) || defined(__HP_aCC) || defined(__SUNPRO_CC) || defined(__IBMCPP__)
+#  warning "Warning: for Formal Review, please use .../ggl/formal_review/boost/ggl/ggl.hpp")
+#endif
 
 
 
