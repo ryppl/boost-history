@@ -8,6 +8,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <boost/mpl/assert.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/utility/result_of.hpp>
 #include <boost/assert.hpp>
@@ -22,6 +23,10 @@
 #include <boost/fusion/include/make_vector.hpp>
 
 #include <boost/statistics/detail/fusion/serialization/include.hpp>
+//#include <boost/statistics/detail/fusion/serialization/save.hpp>
+//#include <boost/statistics/detail/fusion/serialization/load.hpp>
+//#include <boost/statistics/detail/fusion/serialization/map.hpp>
+//#include <boost/statistics/detail/fusion/serialization/vector.hpp>
 
 #include <libs/statistics/detail/fusion/example/serialize.h>
 
@@ -39,20 +44,21 @@ void example_serialize(std::ostream& os){
     typedef int d0_;
     typedef int d1_;
     typedef int d2_;
+    typedef boost::fusion::pair<k0_,d0_> pair_;
     typedef boost::fusion::result_of::make_map<k0_,k1_,d0_,d1_>::type 	map01_;
     typedef boost::fusion::result_of::make_map<k2_,d2_>::type 			map2_;
-    typedef boost::fusion::result_of::make_vector<map01_,map2_>::type  	vec_map01_map2_;
+    typedef boost::fusion::vector2<map01_,map2_> 			   vec_map01_map2_;
     typedef boost::archive::text_iarchive           ia_;
     typedef boost::archive::text_oarchive           oa_;
     typedef std::ifstream                           ifs_;
     typedef std::ofstream                           ofs_;
 	typedef std::string 							str_;
 
-    const str_ path = "./serialize";
-    const d0_ d0 = 0;
+    const str_ path = "./fusion_serialization";
+    const d0_ d0 = 2;
     const d1_ d1 = 1;
-    const d2_ d2 = 2;
-    
+    const d2_ d2 = 0;
+
     map01_ map01(
     	boost::fusion::make_pair<k0_>(d0),
     	boost::fusion::make_pair<k1_>(d1)
@@ -64,14 +70,14 @@ void example_serialize(std::ostream& os){
     {
     	ofs_ ofs(path.c_str());
     	oa_ oa(ofs);
-        sf::serialization::make_saver(oa)(vec_map01_map2);
+        oa << vec_map01_map2;
     }
     {
     	vec_map01_map2_ vec;
 
     	ifs_ ifs(path.c_str());
     	ia_ ia(ifs);
-		sf::serialization::make_loader(ia)(vec);
+        ia >> vec;
         BOOST_ASSERT(
             boost::fusion::at_key<k0_>(
         		boost::fusion::at_c<0>(vec) 
@@ -89,6 +95,6 @@ void example_serialize(std::ostream& os){
     	);        
     }
 
-    os << "<-" << std::endl;
+	os << "<-" << std::endl;
 
 }

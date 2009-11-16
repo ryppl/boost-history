@@ -34,11 +34,11 @@ struct loader
 
 	// TODO overload with any other non sequence fusion data structure
 
-    template <typename F,typename S>
-    void operator()(boost::fusion::pair<F,S> & data) const
-    {
-        (*this)(data.second);
-    }
+    //template <typename F,typename S>
+    //void operator()(boost::fusion::pair<F,S> & data) const
+    //{
+    //    (*this)(data.second);
+    //}
 
     template <typename S>
     typename boost::enable_if<
@@ -60,8 +60,9 @@ struct loader
     >::type
     operator()(T& serializable_item) const
     {
-    	// TODO assert serialazable concept
-    
+        // Note : tag_of< fusion::pair<F,S> > == non_fusion_tag 
+    	// and operator>>(IStream& is, pair<First, Second>& p) is defined in 
+        // fusion       
 		(this->ar_ >> serializable_item);
     }
 
