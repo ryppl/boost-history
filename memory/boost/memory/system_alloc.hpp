@@ -35,6 +35,8 @@ class stdlib_alloc
 {
 public:
 	enum { Padding = 16 /* must >= sizeof(AllocateHeader) */ };
+	
+	typedef size_t size_type;
 
 	static void* BOOST_MEMORY_CALL allocate(size_t cb) {
 		return malloc(cb);

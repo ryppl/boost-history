@@ -35,6 +35,7 @@ private:
 public:
 	enum { MemBlockSize = PolicyT::MemBlockBytes - AllocT::Padding };
 
+	typedef size_t size_type;
 	typedef AllocT alloc_type;
 
 private:
@@ -86,7 +87,7 @@ public:
 	{
 		init_();
 	}
-	explicit region_alloc(AllocT alloc) : m_alloc(alloc), m_destroyChain(NULL)
+	explicit region_alloc(alloc_type alloc) : m_alloc(alloc), m_destroyChain(NULL)
 	{
 		init_();
 	}
