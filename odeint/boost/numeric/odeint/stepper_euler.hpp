@@ -1,10 +1,11 @@
-/* Boost odeint/euler.hpp header file
+/* Boost odeint/stepper_euler.hpp header file
  
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
  Copyright 2009 Andre Bergner
  
- This file includes the explicit euler solver for ordinary differential equations.
+ This file includes the explicit euler solver for
+ ordinary differential equations.
 
  It solves any ODE dx/dt = f(x,t) via
  x(t+dt) = x(t) + dt*f(x,t)
@@ -14,8 +15,8 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef BOOST_NUMERIC_ODEINT_EULER_HPP
-#define BOOST_NUMERIC_ODEINT_EULER_HPP
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_EULER_HPP
+#define BOOST_NUMERIC_ODEINT_STEPPER_EULER_HPP
 
 #include <boost/concept_check.hpp>
 
@@ -34,10 +35,8 @@ namespace odeint {
         class Time = double ,
         class Resizer = resizer< Container >
         >
-    class ode_step_euler
+    class stepper_euler
     {
-
-
         // provide basic typedefs
     public:
 
@@ -107,4 +106,4 @@ namespace odeint {
 } // namespace boost
 
 
-#endif // BOOST_NUMERIC_ODEINT_EULER_HPP
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_EULER_HPP
