@@ -23,6 +23,7 @@ project boost/fiber/example
         <threading>multi
     ;
 
+exe at_exit : at_exit.cpp ;
 exe suspend : suspend.cpp ;
 exe join : join.cpp ;
 exe interrupt : interrupt.cpp ;
