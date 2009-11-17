@@ -21,6 +21,11 @@
 
 #include <boost/config/abi_prefix.hpp>
 
+# if defined(BOOST_MSVC)
+# pragma warning(push)
+# pragma warning(disable:4251 4275)
+# endif
+
 namespace boost {
 namespace fibers {
 namespace detail {
@@ -100,6 +105,10 @@ public:
 };
 
 }}}
+
+# if defined(BOOST_MSVC)
+# pragma warning(pop)
+# endif
 
 #include <boost/config/abi_suffix.hpp>
 

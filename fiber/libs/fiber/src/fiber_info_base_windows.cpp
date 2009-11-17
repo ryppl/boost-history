@@ -4,8 +4,6 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#define _WIN32_WINNT 0x0501
-
 #include <boost/fiber/detail/fiber_info_base_windows.hpp>
 
 #include <cerrno>

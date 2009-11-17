@@ -7,8 +7,6 @@
 #ifndef BOOST_FIBERS_DETAIL_FIBER_INFO_WINDOWS_H
 #define BOOST_FIBERS_DETAIL_FIBER_INFO_WINDOWS_H
 
-#define _WIN32_WINNT 0x0501
-
 extern "C" {
 
 #include <windows.h>
@@ -26,6 +24,11 @@ extern "C" {
 #include <boost/fiber/detail/fiber_state.hpp>
 
 #include <boost/config/abi_prefix.hpp>
+
+# if defined(BOOST_MSVC)
+# pragma warning(push)
+# pragma warning(disable:4251 4275)
+# endif
 
 namespace boost {
 namespace fibers {
@@ -60,6 +63,10 @@ struct BOOST_FIBER_DECL fiber_info_base
 };
 
 }}}
+
+# if defined(BOOST_MSVC)
+# pragma warning(pop)
+# endif
 
 #include <boost/config/abi_suffix.hpp>
 

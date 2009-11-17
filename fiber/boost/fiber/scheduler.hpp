@@ -23,6 +23,11 @@
 
 #include <boost/config/abi_prefix.hpp>
 
+# if defined(BOOST_MSVC)
+# pragma warning(push)
+# pragma warning(disable:4251 4275)
+# endif
+
 namespace boost {
 
 namespace this_fiber {
@@ -153,6 +158,10 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTI
 };
 
 }}
+
+# if defined(BOOST_MSVC)
+# pragma warning(pop)
+# endif
 
 #include <boost/config/abi_suffix.hpp>
 

@@ -4,8 +4,6 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#define _WIN32_WINNT 0x0501
-
 #include <boost/fiber/fiber.hpp>
 
 extern "C" {
@@ -33,10 +31,15 @@ VOID CALLBACK trampoline( LPVOID vp)
 	BOOST_ASSERT( self);
 	try
 	{ self->run(); }
-	catch ( fiber_interrupted const&)
-	{}
-	catch (...)
-	{}
+	catch ( fiber_interrupted const&) {}
+	catch (...) {}
+	while ( ! self->at_exit.empty() )
+	{
+		detail::fiber_info_base::callable_t ca;
+		self->at_exit.top().swap( ca);
+		self->at_exit.pop();
+		ca();
+	}
  	this_fiber::cancel();
 }
 
