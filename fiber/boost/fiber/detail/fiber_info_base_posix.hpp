@@ -13,7 +13,10 @@ extern "C" {
 
 }
 
+#include <stack>
+
 #include <boost/cstdint.hpp>
+#include <boost/function.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/shared_array.hpp>
 
@@ -29,7 +32,9 @@ namespace detail {
 
 struct BOOST_FIBER_DECL fiber_info_base
 {
-	typedef intrusive_ptr< fiber_info_base >	ptr_t;	
+	typedef intrusive_ptr< fiber_info_base >	ptr_t;
+	typedef function< void() >			callable_t;
+	typedef std::stack< callable_t >		callable_stack_t;
 
 	uint32_t				use_count;
 	attributes				attrs;
@@ -37,6 +42,7 @@ struct BOOST_FIBER_DECL fiber_info_base
 	shared_array< char >	uctx_stack;
 	fiber_state_t			state;
 	fiber_interrupt_t					interrupt;
+	callable_stack_t		at_exit;
 
 	fiber_info_base();
 

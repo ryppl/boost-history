@@ -5,6 +5,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
 #include <boost/test/unit_test.hpp>
@@ -34,6 +35,8 @@ void fn_1()
 void fn_2()
 {
 	boost::fibers::disable_interruption disabled;
+	if ( boost::this_fiber::interruption_enabled() )
+		throw std::logic_error("interruption enabled");
 	for ( int i = 0; i < 5; ++i)
 	{
 		++value1;
@@ -47,6 +50,8 @@ void fn_3()
 	try
 	{
 		boost::fibers::disable_interruption disabled;
+		if ( boost::this_fiber::interruption_enabled() )
+			throw std::logic_error("interruption enabled");
 		for ( int i = 0; i < 5; ++i)
 		{
 			++value1;

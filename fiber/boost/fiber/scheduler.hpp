@@ -10,12 +10,14 @@
 #include <cstddef>
 #include <memory>
 
+#include <boost/function.hpp>
 #include <boost/preprocessor/repetition.hpp>
-#include <boost/scoped_ptr.hpp>
+#include <boost/thread/tss.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/attributes.hpp>
 #include <boost/fiber/detail/config.hpp>
+#include <boost/fiber/detail/fiber_state.hpp>
 #include <boost/fiber/detail/scheduler_impl.hpp>
 #include <boost/fiber/fiber.hpp>
 
@@ -34,6 +36,11 @@ int priority();
 void priority( int);
 void interruption_point();
 bool interruption_requested();
+bool interruption_enabled();
+template< typename Callable >
+void at_fiber_exit( Callable);
+void at_fiber_exit( function< void() >);
+void at_fiber_exit( void (*)() );
 
 }
 
@@ -54,17 +61,23 @@ private:
 	friend void this_fiber::priority( int);
 	friend void this_fiber::interruption_point();
 	friend bool this_fiber::interruption_requested();
+	friend bool this_fiber::interruption_enabled();
+	template< typename Callable >
+	friend void this_fiber::at_fiber_exit( Callable);
+	friend void this_fiber::at_fiber_exit( function< void() >);
+	friend void this_fiber::at_fiber_exit( void (*)() );
 	friend class fiber;
 	friend class disable_interruption;
 	friend class restore_interruption;
 
-	typedef scoped_ptr< detail::scheduler_impl >	impl_t;
+	typedef thread_specific_ptr< detail::scheduler_impl >	impl_t;
+	typedef function< void() >								callable_t;
 
 	static impl_t	impl_;
 
 	static bool runs_as_fiber();
 
-	static fiber const& active_fiber();
+	static fiber::id id_active_fiber();
 
 	static void yield_active_fiber();
 
@@ -74,7 +87,17 @@ private:
 
 	static void interrupt_active_fiber();
 
+	static bool interruption_requested_active_fiber();
+
+	static bool interruption_enabled_active_fiber();
+
+	static detail::fiber_interrupt_t & interrupt_flags_active_fiber();
+
+	static int priority_active_fiber();
+
 	static void priority_active_fiber( int);
+
+	static void at_exit_active_fiber( callable_t);
 
 	static void cancel_fiber( fiber::id const&);
 
@@ -86,9 +109,9 @@ private:
 
 	static void join_fiber( fiber::id const&);
 
-public:
-	scheduler();
+	detail::scheduler_impl * access_();
 
+public:
 	~scheduler();
 
 	bool run();
@@ -101,11 +124,11 @@ public:
 
 	template< typename Fn >
 	void make_fiber( Fn fn)
-	{ impl_->add_fiber( fiber( fn) ); }
+	{ access_()->add_fiber( fiber( fn) ); }
 
 	template< typename Fn >
 	void make_fiber( attributes attrs, Fn fn)
-	{ impl_->add_fiber( fiber( attrs, fn) ); }
+	{ access_()->add_fiber( fiber( attrs, fn) ); }
 
 #ifndef BOOST_FIBER_MAX_ARITY
 #define BOOST_FIBER_MAX_ARITY 10
@@ -118,10 +141,10 @@ public:
 #define BOOST_FIBER_MAKE_FIBER_FUNCTION(z, n, unused) \
 	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
 	void make_fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-	{ impl_->add_fiber( fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); } \
+	{ access_()->add_fiber( fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); } \
 	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
 	void make_fiber( attributes const& attrs, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-	{ impl_->add_fiber( fiber( attrs, fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); }
+	{ access_()->add_fiber( fiber( attrs, fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); }
 
 BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTION, ~)
 

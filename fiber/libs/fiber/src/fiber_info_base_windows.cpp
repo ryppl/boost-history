@@ -24,7 +24,8 @@ fiber_info_base::fiber_info_base() :
 	attrs(),
 	uctx(),
 	state( STATE_MASTER),
-	interrupt( INTERRUPTION_DISABLED)
+	interrupt( INTERRUPTION_DISABLED),
+	at_exit()
 {
 	uctx = ::GetCurrentFiber();
 	if ( ! uctx)

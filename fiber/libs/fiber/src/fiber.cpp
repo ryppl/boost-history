@@ -127,13 +127,6 @@ fiber::interrupt()
 	info_->interrupt |= detail::INTERRUPTION_ENABLED;
 }
 
-bool
-fiber::interruption_requested() const
-{
-	if ( ! info_) throw fiber_moved();
-	return ( info_->interrupt & detail::INTERRUPTION_ENABLED) != 0;
-}
-
 void
 fiber::cancel()
 { scheduler::cancel_fiber( get_id() ); }

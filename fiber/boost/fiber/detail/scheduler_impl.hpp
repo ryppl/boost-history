@@ -12,9 +12,11 @@
 #include <map>
 #include <queue>
 
+#include <boost/function.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/detail/config.hpp>
+#include <boost/fiber/detail/fiber_state.hpp>
 #include <boost/fiber/fiber.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -43,6 +45,7 @@ private:
 	typedef std::map< fiber::id, schedulable >	container;
 	typedef std::list< fiber::id >				runnable_queue;
 	typedef std::queue< fiber::id >				terminated_queue;
+	typedef function< void() >			callable_t;
 
 	fiber				master_;
 	fiber				active_;
@@ -53,9 +56,11 @@ private:
 public:
 	scheduler_impl();
 
+	~scheduler_impl();
+
 	void add_fiber( fiber);
 
-	fiber const& active_fiber() const;
+	fiber::id id_active_fiber() const;
 
 	void yield_active_fiber();
 
@@ -65,7 +70,17 @@ public:
 
 	void interrupt_active_fiber();
 
+	bool interruption_requested_active_fiber() const;
+
+	bool interruption_enabled_active_fiber() const;
+
+	fiber_interrupt_t & interrupt_flags_active_fiber();
+
+	int priority_active_fiber();
+
 	void priority_active_fiber( int);
+
+	void at_exit_active_fiber( callable_t);
 
 	void cancel_fiber( fiber::id const&);
 

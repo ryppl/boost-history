@@ -23,7 +23,8 @@ fiber_info_base::fiber_info_base() :
 	uctx(),
 	uctx_stack(),
 	state( STATE_MASTER),
-	interrupt( INTERRUPTION_DISABLED)
+	interrupt( INTERRUPTION_DISABLED),
+	at_exit()
 {}
 
 fiber_info_base::fiber_info_base( attributes const& attrs_) :

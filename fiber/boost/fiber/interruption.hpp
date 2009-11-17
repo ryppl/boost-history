@@ -27,16 +27,16 @@ private:
 
 public:
 	disable_interruption() :
-		set_( ( scheduler::active_fiber().info_->interrupt & detail::INTERRUPTION_BLOCKED) != 0)
+		set_( ( scheduler::interrupt_flags_active_fiber() & detail::INTERRUPTION_BLOCKED) != 0)
 	{
 		if ( ! set_)
-			scheduler::active_fiber().info_->interrupt |= detail::INTERRUPTION_BLOCKED;
+			scheduler::interrupt_flags_active_fiber() |= detail::INTERRUPTION_BLOCKED;
 	}
 
 	~disable_interruption()
 	{
 		if ( ! set_)
-			scheduler::active_fiber().info_->interrupt &= ~detail::INTERRUPTION_BLOCKED;
+			scheduler::interrupt_flags_active_fiber() &= ~detail::INTERRUPTION_BLOCKED;
 	}
 };
 
@@ -47,16 +47,16 @@ private:
 
 public:
 	restore_interruption() :
-		set_( ( scheduler::active_fiber().info_->interrupt & detail::INTERRUPTION_BLOCKED) != 0)
+		set_( ( scheduler::interrupt_flags_active_fiber() & detail::INTERRUPTION_BLOCKED) != 0)
 	{
 		if ( set_)
-			scheduler::active_fiber().info_->interrupt &= ~detail::INTERRUPTION_BLOCKED;
+			scheduler::interrupt_flags_active_fiber() &= ~detail::INTERRUPTION_BLOCKED;
 	}
 
 	~restore_interruption()
 	{  
 		if ( set_)
-			scheduler::active_fiber().info_->interrupt |= detail::INTERRUPTION_BLOCKED;
+			scheduler::interrupt_flags_active_fiber() |= detail::INTERRUPTION_BLOCKED;
 	}
 };
 

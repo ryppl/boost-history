@@ -44,14 +44,20 @@ namespace detail {
 	( state & STATE_TERMINATED) != 0
 
 scheduler_impl::scheduler_impl() :
-	master_(
-		fiber_info_base::ptr_t(
-			new fiber_info_default() ) ),
+	master_(),
 	active_(),
 	fibers_(),
 	runnable_fibers_(),
 	terminated_fibers_()
-{}
+{
+	fiber::convert_thread_to_fiber();
+	master_ = fiber( 
+		fiber_info_base::ptr_t(
+			new fiber_info_default() ) );
+}
+
+scheduler_impl::~scheduler_impl()
+{ fiber::convert_fiber_to_thread(); }
 
 void
 scheduler_impl::add_fiber( fiber f)
@@ -70,9 +76,9 @@ scheduler_impl::add_fiber( fiber f)
 	runnable_fibers_.push_back( result.first->first);
 }
 
-fiber const&
-scheduler_impl::active_fiber() const
-{ return active_; }
+fiber::id
+scheduler_impl::id_active_fiber() const
+{ return active_.get_id(); }
 
 void
 scheduler_impl::yield_active_fiber()
@@ -133,6 +139,42 @@ scheduler_impl::interrupt_active_fiber()
 		throw fiber_interrupted();
 }
 
+bool
+scheduler_impl::interruption_requested_active_fiber() const
+{
+	BOOST_ASSERT( ! HAS_STATE_MASTER( active_.info_->state) );
+	BOOST_ASSERT( STATE_RUNNING == active_.info_->state);
+
+	return ( active_.info_->interrupt & detail::INTERRUPTION_ENABLED) != 0;
+}
+
+bool
+scheduler_impl::interruption_enabled_active_fiber() const
+{
+	BOOST_ASSERT( ! HAS_STATE_MASTER( active_.info_->state) );
+	BOOST_ASSERT( STATE_RUNNING == active_.info_->state);
+
+	return active_.info_->interrupt == detail::INTERRUPTION_ENABLED;
+}
+
+fiber_interrupt_t &
+scheduler_impl::interrupt_flags_active_fiber()
+{
+	BOOST_ASSERT( ! HAS_STATE_MASTER( active_.info_->state) );
+	BOOST_ASSERT( STATE_RUNNING == active_.info_->state);
+
+	return active_.info_->interrupt;
+}
+
+int
+scheduler_impl::priority_active_fiber()
+{
+	BOOST_ASSERT( ! HAS_STATE_MASTER( active_.info_->state) );
+	BOOST_ASSERT( STATE_RUNNING == active_.info_->state);
+
+	return active_.priority();
+}
+
 void
 scheduler_impl::priority_active_fiber( int prio)
 {
@@ -141,6 +183,15 @@ scheduler_impl::priority_active_fiber( int prio)
 
 	active_.priority( prio);
 	reschedule_fiber( active_.get_id() );
+}
+
+void
+scheduler_impl::at_exit_active_fiber( callable_t ca)
+{
+	BOOST_ASSERT( ! HAS_STATE_MASTER( active_.info_->state) );
+	BOOST_ASSERT( STATE_RUNNING == active_.info_->state);
+
+	active_.info_->at_exit.push( ca);
 }
 
 void

@@ -7,9 +7,9 @@
 #ifndef BOOST_THIS_FIBER_UTILITY_H
 #define BOOST_THIS_FIBER_UTILITY_H
 
+#include <boost/bind.hpp>
 #include <boost/config.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <boost/thread/thread_time.hpp>
+#include <boost/function.hpp>
 
 #include <boost/fiber/fiber.hpp>
 #include <boost/fiber/scheduler.hpp>
@@ -25,7 +25,7 @@ bool runs_as_fiber()
 
 inline
 fiber::id get_id()
-{ return fibers::scheduler::active_fiber().get_id(); }
+{ return fibers::scheduler::id_active_fiber(); }
 
 inline
 void yield()
@@ -41,7 +41,7 @@ void suspend()
 
 inline
 int priority()
-{ return fibers::scheduler::active_fiber().priority(); }
+{ return fibers::scheduler::priority_active_fiber(); }
 
 inline
 void priority( int prio)
@@ -53,7 +53,29 @@ void interruption_point()
 
 inline
 bool interruption_requested()
-{ return fibers::scheduler::active_fiber().interruption_requested(); }
+{ return fibers::scheduler::interruption_requested_active_fiber(); }
+
+inline
+bool interruption_enabled()
+{ return fibers::scheduler::interruption_enabled_active_fiber(); }
+
+template< typename Callable >
+void at_fiber_exit( Callable ca)
+{
+	fibers::scheduler::at_exit_active_fiber(
+		boost::bind( boost::type< void >(), ca) );
+}
+
+inline
+void at_fiber_exit( function< void() > ca)
+{ fibers::scheduler::at_exit_active_fiber( ca); }
+
+inline
+void at_fiber_exit( void ( * ca)() )
+{
+	fibers::scheduler::at_exit_active_fiber(
+		boost::bind( boost::type< void >(), ca) );
+}
 
 }}
 
