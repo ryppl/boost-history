@@ -19,10 +19,10 @@ namespace fibers {
 
 #ifdef BOOST_HAS_RVALUE_REFS
 detail::fiber_info_base::ptr_t
-fiber::make_info_( attributes attrs, void ( * fn)() )
+fiber::make_info_( std::size_t stack_size, void ( * fn)() )
 {
 	return detail::fiber_info_base::ptr_t(
-		new detail::fiber_info< void( *)() >( fn, attrs) );
+		new detail::fiber_info< void( *)() >( fn, stack_size) );
 }
 #endif
 
@@ -108,14 +108,14 @@ int
 fiber::priority() const
 {
 	if ( ! info_) throw fiber_moved();
-	return info_->attrs.priority();
+	return info_->priority;
 }
 
 void
 fiber::priority( int prio)
 {
 	if ( ! info_) throw fiber_moved();
-	info_->attrs.priority( prio);
+	info_->priority = prio;
 	if ( is_alive() ) scheduler::reschedule_fiber( get_id() );
 }
 
@@ -125,6 +125,13 @@ fiber::interrupt()
 	if ( ! info_) throw fiber_moved();
 	info_->interrupt &= ~detail::INTERRUPTION_DISABLED;
 	info_->interrupt |= detail::INTERRUPTION_ENABLED;
+}
+
+bool
+fiber::interruption_requested() const
+{
+	if ( ! info_) throw fiber_moved();
+	return ( info_->interrupt & detail::INTERRUPTION_ENABLED) != 0;
 }
 
 void

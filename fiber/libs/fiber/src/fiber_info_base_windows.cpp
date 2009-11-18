@@ -19,7 +19,8 @@ namespace detail {
 
 fiber_info_base::fiber_info_base() :
 	use_count( 0),
-	attrs(),
+	stack_size( 0),
+	priority( 0),
 	uctx(),
 	state( STATE_MASTER),
 	interrupt( INTERRUPTION_DISABLED),
@@ -36,9 +37,10 @@ fiber_info_base::fiber_info_base() :
 fiber_info_base::~fiber_info_base()
 { if ( state != STATE_MASTER) ::DeleteFiber( uctx); }
 
-fiber_info_base::fiber_info_base( attributes const& attrs_) :
+fiber_info_base::fiber_info_base( std::size_t stack_size_) :
 	use_count( 0),
-	attrs( attrs_),
+	stack_size( stack_size_),
+	priority( 0),
 	uctx(),
 	state( STATE_NOT_STARTED),
 	interrupt( INTERRUPTION_DISABLED)

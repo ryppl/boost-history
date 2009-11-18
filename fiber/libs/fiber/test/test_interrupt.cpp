@@ -70,6 +70,11 @@ void fn_5( boost::fiber f)
 	{
 		++value2;
 		if ( i == 1) f.interrupt();
+		if ( i >= 1)
+		{
+			if ( ! f.interruption_requested() )
+				throw std::logic_error("");
+		}
 		boost::this_fiber::yield();
 	}
 }

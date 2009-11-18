@@ -7,6 +7,7 @@
 #ifndef BOOST_FIBERS_FIBER_H
 #define BOOST_FIBERS_FIBER_H
 
+#include <cstddef>
 #include <iostream>
 
 #include <boost/bind.hpp>
@@ -16,7 +17,6 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/fiber/attributes.hpp>
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/detail/fiber_info.hpp>
 #include <boost/fiber/detail/move.hpp>
@@ -39,6 +39,8 @@ class scheduler_impl;
 class disable_interruption;
 class restore_interruption;
 
+#define BOOST_FIBER_DEFAULT_STACKSIZE 64000
+
 class BOOST_FIBER_DECL fiber
 {
 private:
@@ -59,31 +61,30 @@ private:
 #ifdef BOOST_HAS_RVALUE_REFS
 	template< typename Fn >
 	static detail::fiber_info_base::ptr_t make_info_(
-		attributes attrs, Fn && fn)
+		std::size_t stack_size, Fn && fn)
 	{
 		return detail::fiber_info_base::ptr_t(
 			new detail::fiber_info< typename remove_reference< Fn >::type >(
-				static_cast< Fn && >( fn), attrs) );
+				static_cast< Fn && >( fn), stack_size) );
 	}
 
 	static detail::fiber_info_base::ptr_t make_info_(
-		attributes attrs, void ( * fn)() );
+		std::size_t stack_size, void ( * fn)() );
 #else
 	template< typename Fn >
 	static detail::fiber_info_base::ptr_t make_info_(
-		attributes attrs, Fn fn)
+		std::size_t stack_size, Fn fn)
 	{
 		return detail::fiber_info_base::ptr_t(
-			new detail::fiber_info< Fn >( fn, attrs) );
+			new detail::fiber_info< Fn >( fn, stack_size) );
 	}
 
 	template< typename Fn >
 	static detail::fiber_info_base::ptr_t make_info_(
-		attributes attrs,
-		boost::detail::fiber_move_t< Fn > fn)
+		std::size_t stack_size, boost::detail::fiber_move_t< Fn > fn)
 	{
 		return detail::fiber_info_base::ptr_t(
-			new detail::fiber_info< Fn >( fn, attrs) );
+			new detail::fiber_info< Fn >( fn, stack_size) );
 	}
 #endif
 
@@ -98,11 +99,11 @@ public:
 #ifdef BOOST_HAS_RVALUE_REFS
 	template< typename Fn >
 	fiber( Fn && fn) :
-		info_( make_info_( attributes(), static_cast< Fn && >( fn) ) )
+		info_( make_info_( BOOST_FIBER_DEFAULT_STACKSIZE, static_cast< Fn && >( fn) ) )
 	{ init_(); }
 
-	fiber( attributes attrs, Fn && fn) :
-		info_( make_info_( attrs, static_cast< Fn && >( fn) ) )
+	fiber( std::size_t stack_size, Fn && fn) :
+		info_( make_info_( stack_size, static_cast< Fn && >( fn) ) )
 	{ init_(); }
 
 	fiber( fiber &&);
@@ -114,37 +115,36 @@ public:
 #ifdef BOOST_NO_SFINAE
 	template< typename Fn >
 	explicit fiber( Fn fn) :
-		info_( make_info_( attributes(), fn) )
+		info_( make_info_( BOOST_FIBER_DEFAULT_STACKSIZE, fn) )
 	{ init_(); }
 
 	template< typename Fn >
-	explicit fiber( attributes attrs, Fn fn) :
-		info_( make_info_( attrs, fn) )
+	explicit fiber( std::size_t stack_size, Fn fn) :
+		info_( make_info_( stack_size, fn) )
 	{ init_(); }
 #else
 	template< typename Fn >
 	explicit fiber(
 			Fn fn,
 			typename disable_if< boost::is_convertible< Fn &, boost::detail::fiber_move_t< Fn > >, dummy * >::type = 0) :
-		info_( make_info_( attributes(), fn) )
+		info_( make_info_( BOOST_FIBER_DEFAULT_STACKSIZE, fn) )
 	{ init_(); }
 
 	template< typename Fn >
 	explicit fiber(
-			attributes attrs,
-			Fn fn,
+			std::size_t stack_size, Fn fn,
 			typename disable_if< boost::is_convertible< Fn &, boost::detail::fiber_move_t< Fn > >, dummy * >::type = 0) :
-		info_( make_info_( attrs, fn) )
+		info_( make_info_( stack_size, fn) )
 	{ init_(); }
 #endif
 	template< typename Fn >
 	explicit fiber( boost::detail::fiber_move_t< Fn > fn) :
-		info_( make_info_( attributes(), fn) )
+		info_( make_info_( BOOST_FIBER_DEFAULT_STACKSIZE, fn) )
 	{ init_(); }
 
 	template< typename Fn >
-	explicit fiber( attributes attrs, boost::detail::fiber_move_t< Fn > fn) :
-		info_( make_info_( attrs, fn) )
+	explicit fiber( std::size_t stack_size, boost::detail::fiber_move_t< Fn > fn) :
+		info_( make_info_( stack_size, fn) )
 	{ init_(); }
 
 	fiber( boost::detail::fiber_move_t< fiber >);
@@ -165,14 +165,14 @@ public:
 	fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n)) : \
 		info_( \
 			make_info_( \
-				attributes(), \
+				BOOST_FIBER_DEFAULT_STACKSIZE, \
 				boost::bind( boost::type< void >(), fn, BOOST_PP_ENUM_PARAMS(n, a)) ) ) \
 	{ init_(); } \
 	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
-	fiber( attributes attrs, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) : \
+	fiber( std::size_t stack_size, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) : \
 		info_( \
 			make_info_( \
-				attrs, \
+				stack_size, \
 				boost::bind( boost::type< void >(), fn, BOOST_PP_ENUM_PARAMS(n, a)) ) ) \
 	{ init_(); }
 
@@ -204,6 +204,7 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_FIBER_CTOR, ~)
 	void priority( int);
 
 	void interrupt();
+	bool interruption_requested() const;
 
 	void cancel();
 
@@ -264,16 +265,16 @@ fiber make_fiber( Fn fn)
 { return fiber( fn); }
 
 template< typename Fn >
-fiber make_fiber( attributes attrs, Fn fn)
-{ return fiber( attrs, fn); }
+fiber make_fiber( std::size_t stack_size, Fn fn)
+{ return fiber( stack_size, fn); }
 
 #define BOOST_FIBER_make_info_FUNCTION(z, n, unused) \
 template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
 fiber make_fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
 { return fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ); } \
 template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
-fiber make_fiber( attributes attrs, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-{ return fiber( attrs, fn, BOOST_PP_ENUM_PARAMS(n, a) ); }
+fiber make_fiber( std::size_t stack_size, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
+{ return fiber( stack_size, fn, BOOST_PP_ENUM_PARAMS(n, a) ); }
 
 BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_make_info_FUNCTION, ~)
 
@@ -281,6 +282,8 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_make_info_FUNCTIO
 #undef BOOST_ENUM_FIBER_ARGS
 #undef BOOST_FIBER_ARG
 #undef BOOST_FIBER_MAX_ARITY
+
+#undef BOOST_FIBER_DEFAULT_STACKSIZE
 
 }
 

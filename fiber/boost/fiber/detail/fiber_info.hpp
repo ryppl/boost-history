@@ -7,11 +7,12 @@
 #ifndef BOOST_FIBERS_DETAIL_FIBER_INFO_H
 #define BOOST_FIBERS_DETAIL_FIBER_INFO_H
 
+#include <cstddef>
+
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
-#include <boost/fiber/attributes.hpp>
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/detail/fiber_info_base.hpp>
 #include <boost/fiber/detail/move.hpp>
@@ -48,18 +49,18 @@ private:
 
 public:
 #ifdef BOOST_HAS_RVALUE_REFS
-	thread_data( Fn && fn, attributes const& attribs) :
-		fiber_info_base( attribs),
+	thread_data( Fn && fn, std::size_t stack_size) :
+		fiber_info_base( stack_size),
 		fn_( static_cast< Fn && >( fn) )
 	{}
 #else
-	fiber_info( Fn fn, attributes const& attribs) :
-		fiber_info_base( attribs),
+	fiber_info( Fn fn, std::size_t stack_size) :
+		fiber_info_base( stack_size),
 		fn_( fn)
 	{}
 
-	fiber_info( boost::detail::fiber_move_t< Fn > fn, attributes const& attribs) :
-		fiber_info_base( attribs),
+	fiber_info( boost::detail::fiber_move_t< Fn > fn, std::size_t stack_size) :
+		fiber_info_base( stack_size),
 		fn_( fn)
 	{}
 #endif            
@@ -78,8 +79,8 @@ private:
 	fiber_info & operator=( fiber_info const&);
 
 public:
-	fiber_info( reference_wrapper< Fn > fn, attributes const& attribs) :
-		fiber_info_base( attribs),
+	fiber_info( reference_wrapper< Fn > fn, std::size_t stack_size) :
+		fiber_info_base( stack_size),
 		fn_( fn)
 	{}
 	
@@ -97,8 +98,8 @@ private:
 	fiber_info & operator=( fiber_info const&);
 
 public:
-	fiber_info( const reference_wrapper< Fn > fn, attributes const& attribs) :
-		fiber_info_base( attribs),
+	fiber_info( const reference_wrapper< Fn > fn, std::size_t stack_size) :
+		fiber_info_base( stack_size),
 		fn_( fn)
 	{}
 	

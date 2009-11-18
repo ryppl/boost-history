@@ -19,7 +19,8 @@ namespace detail {
 
 fiber_info_base::fiber_info_base() :
 	use_count( 0),
-	attrs(),
+	stack_size( 0),
+	priority( 0),
 	uctx(),
 	uctx_stack(),
 	state( STATE_MASTER),
@@ -27,11 +28,12 @@ fiber_info_base::fiber_info_base() :
 	at_exit()
 {}
 
-fiber_info_base::fiber_info_base( attributes const& attrs_) :
+fiber_info_base::fiber_info_base( std::size_t stack_size_) :
 	use_count( 0),
-	attrs( attrs_),
+	stack_size( stack_size_),
+	priority( 0),
 	uctx(),
-	uctx_stack( new char[attrs.stack_size()]),
+	uctx_stack( new char[stack_size]),
 	state( STATE_NOT_STARTED),
 	interrupt( INTERRUPTION_DISABLED)
 {
@@ -43,7 +45,7 @@ fiber_info_base::fiber_info_base( attributes const& attrs_) :
 				errno,
 				system::system_category) );
 	uctx.uc_stack.ss_sp = uctx_stack.get();
-	uctx.uc_stack.ss_size = attrs.stack_size();
+	uctx.uc_stack.ss_size = stack_size;
 	uctx.uc_link = 0;
 }
 

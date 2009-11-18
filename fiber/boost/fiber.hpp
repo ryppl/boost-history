@@ -7,7 +7,6 @@
 #ifndef BOOST_FIBER_H
 #define BOOST_FIBER_H
 
-#include <boost/fiber/attributes.hpp>
 #include <boost/fiber/auto_reset_event.hpp>
 #include <boost/fiber/bounded_fifo.hpp>
 #include <boost/fiber/condition.hpp>

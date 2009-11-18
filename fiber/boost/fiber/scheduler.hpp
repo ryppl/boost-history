@@ -15,7 +15,6 @@
 #include <boost/thread/tss.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/fiber/attributes.hpp>
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/detail/fiber_state.hpp>
 #include <boost/fiber/detail/scheduler_impl.hpp>
@@ -132,8 +131,8 @@ public:
 	{ access_()->add_fiber( fiber( fn) ); }
 
 	template< typename Fn >
-	void make_fiber( attributes attrs, Fn fn)
-	{ access_()->add_fiber( fiber( attrs, fn) ); }
+	void make_fiber( std::size_t stack_size, Fn fn)
+	{ access_()->add_fiber( fiber( stack_size, fn) ); }
 
 #ifndef BOOST_FIBER_MAX_ARITY
 #define BOOST_FIBER_MAX_ARITY 10
@@ -148,8 +147,8 @@ public:
 	void make_fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
 	{ access_()->add_fiber( fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); } \
 	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
-	void make_fiber( attributes const& attrs, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-	{ access_()->add_fiber( fiber( attrs, fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); }
+	void make_fiber( std::size_t stack_size, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
+	{ access_()->add_fiber( fiber( stack_size, fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); }
 
 BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTION, ~)
 

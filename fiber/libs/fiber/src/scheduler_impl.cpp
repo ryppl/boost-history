@@ -145,7 +145,7 @@ scheduler_impl::interruption_requested_active_fiber() const
 	BOOST_ASSERT( ! HAS_STATE_MASTER( active_.info_->state) );
 	BOOST_ASSERT( STATE_RUNNING == active_.info_->state);
 
-	return ( active_.info_->interrupt & detail::INTERRUPTION_ENABLED) != 0;
+	return active_.interruption_requested();
 }
 
 bool

@@ -49,7 +49,7 @@ fiber::init_()
 	if ( ! info_) throw fiber_moved();
 
 	info_->uctx = ::CreateFiber(
-		info_->attrs.stack_size(),
+		info_->stack_size,
 		static_cast< LPFIBER_START_ROUTINE >( & trampoline),
 		static_cast< LPVOID >( info_.get() ) );
 }

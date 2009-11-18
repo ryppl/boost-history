@@ -13,13 +13,13 @@ extern "C" {
 
 }
 
+#include <cstddef>
 #include <stack>
 
 #include <boost/cstdint.hpp>
 #include <boost/function.hpp>
 #include <boost/intrusive_ptr.hpp>
 
-#include <boost/fiber/attributes.hpp>
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/detail/fiber_state.hpp>
 
@@ -37,19 +37,20 @@ namespace detail {
 struct BOOST_FIBER_DECL fiber_info_base
 {
 	typedef intrusive_ptr< fiber_info_base >	ptr_t;	
-	typedef function< void() >			callable_t;
-	typedef std::stack< callable_t >		callable_stack_t;
+	typedef function< void() >					callable_t;
+	typedef std::stack< callable_t >			callable_stack_t;
 
-	uint32_t		use_count;
-	attributes		attrs;
-	LPVOID			uctx;
-	fiber_state_t	state;
-	fiber_interrupt_t			interrupt;
-	callable_stack_t		at_exit;
+	uint32_t			use_count;
+	std::size_t			stacksize_;
+	int					priority_;
+	LPVOID				uctx;
+	fiber_state_t		state;
+	fiber_interrupt_t	interrupt;
+	callable_stack_t	at_exit;
 
 	fiber_info_base();
 
-	fiber_info_base( attributes const&);
+	fiber_info_base( std::size_t);
 
 	virtual ~fiber_info_base();
 
