@@ -25,55 +25,55 @@ bool runs_as_fiber()
 
 inline
 fiber::id get_id()
-{ return fibers::scheduler::id_active_fiber(); }
+{ return fibers::scheduler::get_id(); }
 
 inline
 void yield()
-{ fibers::scheduler::yield_active_fiber(); }
+{ fibers::scheduler::yield(); }
 
 inline
 void cancel()
-{ fibers::scheduler::cancel_active_fiber(); }
+{ fibers::scheduler::cancel(); }
 
 inline
 void suspend()
-{ fibers::scheduler::suspend_active_fiber(); }
+{ fibers::scheduler::suspend(); }
 
 inline
 int priority()
-{ return fibers::scheduler::priority_active_fiber(); }
+{ return fibers::scheduler::priority(); }
 
 inline
 void priority( int prio)
-{ fibers::scheduler::priority_active_fiber( prio); }
+{ fibers::scheduler::priority( prio); }
 
 inline
 void interruption_point()
-{ fibers::scheduler::interrupt_active_fiber(); }
+{ fibers::scheduler::interrupt(); }
 
 inline
 bool interruption_requested()
-{ return fibers::scheduler::interruption_requested_active_fiber(); }
+{ return fibers::scheduler::interruption_requested(); }
 
 inline
 bool interruption_enabled()
-{ return fibers::scheduler::interruption_enabled_active_fiber(); }
+{ return fibers::scheduler::interruption_enabled(); }
 
 template< typename Callable >
 void at_fiber_exit( Callable ca)
 {
-	fibers::scheduler::at_exit_active_fiber(
+	fibers::scheduler::at_exit(
 		boost::bind( boost::type< void >(), ca) );
 }
 
 inline
 void at_fiber_exit( function< void() > ca)
-{ fibers::scheduler::at_exit_active_fiber( ca); }
+{ fibers::scheduler::at_exit( ca); }
 
 inline
 void at_fiber_exit( void ( * ca)() )
 {
-	fibers::scheduler::at_exit_active_fiber(
+	fibers::scheduler::at_exit(
 		boost::bind( boost::type< void >(), ca) );
 }
 

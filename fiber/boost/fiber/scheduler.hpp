@@ -81,37 +81,41 @@ private:
 
 	static bool runs_as_fiber();
 
-	static fiber::id id_active_fiber();
+	static fiber::id get_id();
 
-	static void yield_active_fiber();
+	static void interrupt();
 
-	static void cancel_active_fiber();
+	static bool interruption_requested();
 
-	static void suspend_active_fiber();
+	static bool interruption_enabled();
 
-	static void interrupt_active_fiber();
+	static detail::fiber_interrupt_t & interrupt_flags();
 
-	static bool interruption_requested_active_fiber();
+	static void yield();
 
-	static bool interruption_enabled_active_fiber();
+	static void cancel();
 
-	static detail::fiber_interrupt_t & interrupt_flags_active_fiber();
+	static void suspend();
 
-	static int priority_active_fiber();
+	static int priority();
 
-	static void priority_active_fiber( int);
+	static void priority( int);
 
-	static void at_exit_active_fiber( callable_t);
+	static void at_exit( callable_t);
 
-	static void cancel_fiber( fiber::id const&);
+	static void interrupt( fiber::id const&);
 
-	static void suspend_fiber( fiber::id const&);
+	static bool interruption_requested( fiber::id const&);
 
-	static void resume_fiber( fiber::id const&);
+	static void cancel( fiber::id const&);
 
-	static void reschedule_fiber( fiber::id const&);
+	static void suspend( fiber::id const&);
 
-	static void join_fiber( fiber::id const&);
+	static void resume( fiber::id const&);
+
+	static void join( fiber::id const&);
+
+	static void reschedule( fiber::id const&);
 
 	detail::scheduler_impl * access_();
 
@@ -128,11 +132,11 @@ public:
 
 	template< typename Fn >
 	void make_fiber( Fn fn)
-	{ access_()->add_fiber( fiber( fn) ); }
+	{ access_()->add( fiber( fn) ); }
 
 	template< typename Fn >
 	void make_fiber( std::size_t stack_size, Fn fn)
-	{ access_()->add_fiber( fiber( stack_size, fn) ); }
+	{ access_()->add( fiber( stack_size, fn) ); }
 
 #ifndef BOOST_FIBER_MAX_ARITY
 #define BOOST_FIBER_MAX_ARITY 10
@@ -145,10 +149,10 @@ public:
 #define BOOST_FIBER_MAKE_FIBER_FUNCTION(z, n, unused) \
 	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
 	void make_fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-	{ access_()->add_fiber( fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); } \
+	{ access_()->add( fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); } \
 	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
 	void make_fiber( std::size_t stack_size, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-	{ access_()->add_fiber( fiber( stack_size, fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); }
+	{ access_()->add( fiber( stack_size, fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); }
 
 BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTION, ~)
 

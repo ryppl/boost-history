@@ -81,14 +81,6 @@ bool
 fiber::operator!() const
 { return ! info_; }
 
-void
-fiber::swap( fiber & other)
-{ info_.swap( other.info_); }
-
-fiber::id
-fiber::get_id() const
-{ return fiber::id( info_); }
-
 bool
 fiber::operator==( fiber const& other) const
 { return get_id() == other.get_id(); }
@@ -96,6 +88,14 @@ fiber::operator==( fiber const& other) const
 bool
 fiber::operator!=( fiber const& other) const
 { return !( get_id() == other.get_id() ); }
+
+void
+fiber::swap( fiber & other)
+{ info_.swap( other.info_); }
+
+fiber::id
+fiber::get_id() const
+{ return fiber::id( info_); }
 
 bool
 fiber::is_alive() const
@@ -116,15 +116,14 @@ fiber::priority( int prio)
 {
 	if ( ! info_) throw fiber_moved();
 	info_->priority = prio;
-	if ( is_alive() ) scheduler::reschedule_fiber( get_id() );
+	if ( is_alive() ) scheduler::reschedule( get_id() );
 }
 
 void
 fiber::interrupt()
 {
 	if ( ! info_) throw fiber_moved();
-	info_->interrupt &= ~detail::INTERRUPTION_DISABLED;
-	info_->interrupt |= detail::INTERRUPTION_ENABLED;
+	scheduler::interrupt( get_id() );
 }
 
 bool
@@ -136,19 +135,31 @@ fiber::interruption_requested() const
 
 void
 fiber::cancel()
-{ scheduler::cancel_fiber( get_id() ); }
+{
+	if ( ! info_) throw fiber_moved();
+	scheduler::cancel( get_id() );
+}
 
 void
 fiber::suspend()
-{ scheduler::suspend_fiber( get_id() ); }
+{
+	if ( ! info_) throw fiber_moved();
+	scheduler::suspend( get_id() );
+}
 
 void
 fiber::resume()
-{ scheduler::resume_fiber( get_id() ); }
+{
+	if ( ! info_) throw fiber_moved();
+	scheduler::resume( get_id() );
+}
 
 void
 fiber::join()
-{ scheduler::join_fiber( get_id() ); }
+{
+	if ( ! info_) throw fiber_moved();
+	scheduler::join( get_id() );
+}
 
 }}
 

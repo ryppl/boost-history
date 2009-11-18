@@ -22,131 +22,139 @@ scheduler::runs_as_fiber()
 { return impl_.get() != 0; }
 
 fiber::id
-scheduler::id_active_fiber()
+scheduler::get_id()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	return impl->id_active_fiber();
+	return impl->get_id();
 }
 
 void
-scheduler::yield_active_fiber()
+scheduler::yield()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	impl->yield_active_fiber();
+	impl->yield();
 }
 
 void
-scheduler::cancel_active_fiber()
+scheduler::cancel()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	impl->cancel_active_fiber();
+	impl->cancel();
 }
 
 void
-scheduler::suspend_active_fiber()
+scheduler::suspend()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	impl->suspend_active_fiber();
+	impl->suspend();
 }
 
 void
-scheduler::interrupt_active_fiber()
+scheduler::interrupt()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	impl->interrupt_active_fiber();
+	impl->interrupt();
 }
 
 bool
-scheduler::interruption_requested_active_fiber()
+scheduler::interruption_requested()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	return impl->interruption_requested_active_fiber();
+	return impl->interruption_requested();
 }
 
 bool
-scheduler::interruption_enabled_active_fiber()
+scheduler::interruption_enabled()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	return impl->interruption_enabled_active_fiber();
+	return impl->interruption_enabled();
 }
 
 detail::fiber_interrupt_t &
-scheduler::interrupt_flags_active_fiber()
+scheduler::interrupt_flags()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	return impl->interrupt_flags_active_fiber();
+	return impl->interrupt_flags();
 }
 
 int
-scheduler::priority_active_fiber()
+scheduler::priority()
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	return impl->priority_active_fiber();
+	return impl->priority();
 }
 
 void
-scheduler::priority_active_fiber( int prio)
+scheduler::priority( int prio)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	impl->priority_active_fiber( prio);
+	impl->priority( prio);
 }
 
 void
-scheduler::at_exit_active_fiber( callable_t ca)
+scheduler::at_exit( callable_t ca)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	impl->at_exit_active_fiber( ca);
+	impl->at_exit( ca);
 }
 
 void
-scheduler::cancel_fiber( fiber::id const& id)
+scheduler::interrupt( fiber::id const& id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	impl->cancel_fiber( id);
+	impl->interrupt( id);
 }
 
 void
-scheduler::suspend_fiber( fiber::id const& id)
+scheduler::cancel( fiber::id const& id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	impl->suspend_fiber( id);
+	impl->cancel( id);
 }
 
 void
-scheduler::resume_fiber( fiber::id const& id)
+scheduler::suspend( fiber::id const& id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	impl->resume_fiber( id);
+	impl->suspend( id);
 }
 
 void
-scheduler::reschedule_fiber( fiber::id const& id)
+scheduler::resume( fiber::id const& id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	impl->reschedule_fiber( id);
+	impl->resume( id);
 }
 
 void
-scheduler::join_fiber( fiber::id const& id)
+scheduler::join( fiber::id const& id)
 {
 	detail::scheduler_impl * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
-	impl->join_fiber( id);
+	impl->join( id);
+}
+
+void
+scheduler::reschedule( fiber::id const& id)
+{
+	detail::scheduler_impl * impl( impl_.get() );
+	if ( ! impl) throw fiber_error("not a fiber");
+	impl->reschedule( id);
 }
 
 detail::scheduler_impl *
@@ -174,7 +182,7 @@ scheduler::size()
 
 void
 scheduler::submit_fiber( fiber f)
-{ access_()->add_fiber( f); }
+{ access_()->add( f); }
 
 }}
 

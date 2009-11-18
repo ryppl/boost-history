@@ -13,6 +13,7 @@
 #include <queue>
 
 #include <boost/function.hpp>
+#include <boost/optional.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/detail/config.hpp>
@@ -36,21 +37,22 @@ private:
 	struct schedulable
 	{
 		fiber					f;
-		std::list< fiber::id >	waiting;
+		std::list< fiber::id >	joining_fibers;
+		optional< fiber::id >	waiting_on;
 
 		schedulable() :
-			f(), waiting()
+			f(), joining_fibers(), waiting_on()
 		{}
 
 		schedulable( fiber f_) :
-			f( f_), waiting()
+			f( f_), joining_fibers(), waiting_on()
 		{}
 	};
 
 	typedef std::map< fiber::id, schedulable >	container;
 	typedef std::list< fiber::id >				runnable_queue;
 	typedef std::queue< fiber::id >				terminated_queue;
-	typedef function< void() >			callable_t;
+	typedef function< void() >					callable_t;
 
 	fiber				master_;
 	fiber				active_;
@@ -63,39 +65,41 @@ public:
 
 	~scheduler_impl();
 
-	void add_fiber( fiber);
+	void add( fiber);
 
-	fiber::id id_active_fiber() const;
+	fiber::id get_id() const;
 
-	void yield_active_fiber();
+	void yield();
 
-	void cancel_active_fiber();
+	void cancel();
 
-	void suspend_active_fiber();
+	void suspend();
 
-	void interrupt_active_fiber();
+	void interrupt();
 
-	bool interruption_requested_active_fiber() const;
+	bool interruption_requested();
 
-	bool interruption_enabled_active_fiber() const;
+	bool interruption_enabled();
 
-	fiber_interrupt_t & interrupt_flags_active_fiber();
+	fiber_interrupt_t & interrupt_flags();
 
-	int priority_active_fiber();
+	int priority();
 
-	void priority_active_fiber( int);
+	void priority( int);
 
-	void at_exit_active_fiber( callable_t);
+	void at_exit( callable_t);
 
-	void cancel_fiber( fiber::id const&);
+	void interrupt( fiber::id const&);
 
-	void suspend_fiber( fiber::id const&);
+	void cancel( fiber::id const&);
 
-	void resume_fiber( fiber::id const&);
+	void suspend( fiber::id const&);
 
-	void reschedule_fiber( fiber::id const&);
+	void resume( fiber::id const&);
 
-	void join_fiber( fiber::id const&);
+	void join( fiber::id const&);
+
+	void reschedule( fiber::id const&);
 
 	bool run();
 
