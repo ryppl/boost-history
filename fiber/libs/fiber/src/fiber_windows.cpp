@@ -46,20 +46,20 @@ VOID CALLBACK trampoline( LPVOID vp)
 void
 fiber::init_()
 {
-	if ( ! info_) throw fiber_moved();
+	if ( ! info_base_) throw fiber_moved();
 
-	info_->uctx = ::CreateFiber(
+	info_base_->uctx = ::CreateFiber(
 		info_->stack_size,
 		static_cast< LPFIBER_START_ROUTINE >( & trampoline),
-		static_cast< LPVOID >( info_.get() ) );
+		static_cast< LPVOID >( info_base_.get() ) );
 }
 
 void
 fiber::switch_to_( fiber & to)
 {
-	if ( ! info_) throw fiber_moved();
+	if ( ! info_base_) throw fiber_moved();
 
-	::SwitchToFiber( to.info_->uctx);
+	::SwitchToFiber( to.info_base_->uctx);
 }
 
 void

@@ -17,7 +17,7 @@
 
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/detail/fiber_state.hpp>
-#include <boost/fiber/detail/scheduler_impl.hpp>
+#include <boost/fiber/detail/strategy.hpp>
 #include <boost/fiber/fiber.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -74,7 +74,7 @@ private:
 	friend class disable_interruption;
 	friend class restore_interruption;
 
-	typedef thread_specific_ptr< detail::scheduler_impl >	impl_t;
+	typedef thread_specific_ptr< detail::strategy >	impl_t;
 	typedef function< void() >								callable_t;
 
 	static impl_t	impl_;
@@ -117,7 +117,7 @@ private:
 
 	static void reschedule( fiber::id const&);
 
-	detail::scheduler_impl * access_();
+	detail::strategy * access_();
 
 public:
 	~scheduler();

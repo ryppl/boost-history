@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBERS_DETAIL_SCHEDULER_IMPL_H
-#define BOOST_FIBERS_DETAIL_SCHEDULER_IMPL_H
+#ifndef BOOST_FIBERS_DETAIL_STRATEGY_H
+#define BOOST_FIBERS_DETAIL_STRATEGY_H
 
 #include <cstddef>
 #include <list>
@@ -31,7 +31,7 @@ namespace boost {
 namespace fibers {
 namespace detail {
 
-class BOOST_FIBER_DECL scheduler_impl : private noncopyable
+class BOOST_FIBER_DECL strategy : private noncopyable
 {
 private:
 	struct schedulable
@@ -61,9 +61,9 @@ private:
 	terminated_queue	terminated_fibers_;
 
 public:
-	scheduler_impl();
+	strategy();
 
-	~scheduler_impl();
+	~strategy();
 
 	void add( fiber);
 
@@ -116,4 +116,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBERS_DETAIL_SCHEDULER_IMPL_H
+#endif // BOOST_FIBERS_DETAIL_STRATEGY_H

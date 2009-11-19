@@ -7,7 +7,7 @@
 #include <boost/fiber/scheduler.hpp>
 
 #include <boost/fiber/detail/move.hpp>
-#include <boost/fiber/detail/scheduler_impl.hpp>
+#include <boost/fiber/detail/strategy.hpp>
 #include <boost/fiber/exceptions.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -24,7 +24,7 @@ scheduler::runs_as_fiber()
 fiber::id
 scheduler::get_id()
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	return impl->get_id();
 }
@@ -32,7 +32,7 @@ scheduler::get_id()
 void
 scheduler::yield()
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->yield();
 }
@@ -40,7 +40,7 @@ scheduler::yield()
 void
 scheduler::cancel()
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->cancel();
 }
@@ -48,7 +48,7 @@ scheduler::cancel()
 void
 scheduler::suspend()
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->suspend();
 }
@@ -56,7 +56,7 @@ scheduler::suspend()
 void
 scheduler::interrupt()
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->interrupt();
 }
@@ -64,7 +64,7 @@ scheduler::interrupt()
 bool
 scheduler::interruption_requested()
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	return impl->interruption_requested();
 }
@@ -72,7 +72,7 @@ scheduler::interruption_requested()
 bool
 scheduler::interruption_enabled()
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	return impl->interruption_enabled();
 }
@@ -80,7 +80,7 @@ scheduler::interruption_enabled()
 detail::fiber_interrupt_t &
 scheduler::interrupt_flags()
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	return impl->interrupt_flags();
 }
@@ -88,7 +88,7 @@ scheduler::interrupt_flags()
 int
 scheduler::priority()
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	return impl->priority();
 }
@@ -96,7 +96,7 @@ scheduler::priority()
 void
 scheduler::priority( int prio)
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->priority( prio);
 }
@@ -104,7 +104,7 @@ scheduler::priority( int prio)
 void
 scheduler::at_exit( callable_t ca)
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->at_exit( ca);
 }
@@ -112,7 +112,7 @@ scheduler::at_exit( callable_t ca)
 void
 scheduler::interrupt( fiber::id const& id)
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->interrupt( id);
 }
@@ -120,7 +120,7 @@ scheduler::interrupt( fiber::id const& id)
 void
 scheduler::cancel( fiber::id const& id)
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->cancel( id);
 }
@@ -128,7 +128,7 @@ scheduler::cancel( fiber::id const& id)
 void
 scheduler::suspend( fiber::id const& id)
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->suspend( id);
 }
@@ -136,7 +136,7 @@ scheduler::suspend( fiber::id const& id)
 void
 scheduler::resume( fiber::id const& id)
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->resume( id);
 }
@@ -144,7 +144,7 @@ scheduler::resume( fiber::id const& id)
 void
 scheduler::join( fiber::id const& id)
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->join( id);
 }
@@ -152,16 +152,16 @@ scheduler::join( fiber::id const& id)
 void
 scheduler::reschedule( fiber::id const& id)
 {
-	detail::scheduler_impl * impl( impl_.get() );
+	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->reschedule( id);
 }
 
-detail::scheduler_impl *
+detail::strategy *
 scheduler::access_()
 {
 	if ( ! impl_.get() )
-		impl_.reset( new detail::scheduler_impl() );
+		impl_.reset( new detail::strategy() );
 	return impl_.get();
 }
 
