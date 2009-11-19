@@ -41,8 +41,8 @@ struct BOOST_FIBER_DECL fiber_info_base
 	typedef std::stack< callable_t >			callable_stack_t;
 
 	uint32_t			use_count;
-	std::size_t			stacksize_;
-	int					priority_;
+	std::size_t			stack_size;
+	int					priority;
 	LPVOID				uctx;
 	fiber_state_t		state;
 	fiber_interrupt_t	interrupt;
