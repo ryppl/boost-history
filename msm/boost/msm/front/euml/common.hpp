@@ -35,6 +35,7 @@
 #include <utility>
 
 #include <boost/proto/core.hpp>
+#include <boost/proto/transform.hpp>
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>

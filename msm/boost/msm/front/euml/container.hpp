@@ -12,12 +12,11 @@
 #define BOOST_MSM_FRONT_EUML_CONTAINER_H
 
 #include <utility>
+#include <boost/msm/front/euml/common.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/has_key.hpp>
 #include <boost/mpl/set.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/proto/core.hpp>
-#include <boost/msm/front/euml/common.hpp>
 #include <boost/msm/front/euml/operator.hpp>
 #include <boost/type_traits.hpp>
 

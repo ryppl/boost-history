@@ -11,8 +11,7 @@
 #ifndef BOOST_MSM_FRONT_EUML_STATE_GRAMMAR_H
 #define BOOST_MSM_FRONT_EUML_STATE_GRAMMAR_H
 
-#include <boost/proto/core.hpp>
-#include <boost/proto/transform.hpp>
+#include <boost/msm/front/euml/common.hpp>
 #include <boost/fusion/container/vector.hpp>
 #include <boost/mpl/remove_if.hpp>
 #include <boost/mpl/eval_if.hpp>
@@ -20,7 +19,6 @@
 #include <boost/msm/row_tags.hpp>
 #include <boost/msm/front/common_states.hpp>
 #include <boost/msm/front/state_machine_def.hpp>
-#include <boost/msm/front/euml/common.hpp>
 #include <boost/msm/front/euml/operator.hpp>
 #include <boost/msm/front/euml/guard_grammar.hpp>
 
