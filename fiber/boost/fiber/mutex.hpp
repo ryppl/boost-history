@@ -13,7 +13,7 @@
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/fiber/unique_lock.hpp>
+#include <boost/fiber/locks.hpp>
 
 namespace boost {
 namespace fibers {

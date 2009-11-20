@@ -31,7 +31,9 @@ auto_reset_event::wait()
 			& state_, & expected,
 			static_cast< uint32_t >( RESET) ) )
 	{
+		this_fiber::interruption_point();
 		this_fiber::yield();
+		this_fiber::interruption_point();
 		expected = static_cast< uint32_t >( SET);
 	}
 }
@@ -46,6 +48,8 @@ auto_reset_event::wait( system_time const& abs_time)
 			& state_, & expected,
 			static_cast< uint32_t >( RESET) ) )
 	{
+		this_fiber::interruption_point();
+		this_fiber::interruption_point();
 		this_fiber::yield();	
 	
 		if ( get_system_time() >= abs_time) return false;

@@ -20,9 +20,13 @@
 namespace boost {
 namespace fibers {
 
+class restore_interruption;
+
 class BOOST_FIBER_DECL disable_interruption : private noncopyable
 {
 private:
+	friend class restore_interruption;
+
 	bool	set_;
 
 public:
@@ -35,28 +39,38 @@ public:
 
 	~disable_interruption()
 	{
-		if ( ! set_)
-			scheduler::interrupt_flags() &= ~detail::INTERRUPTION_BLOCKED;
+		try
+		{
+			if ( ! set_)
+				scheduler::interrupt_flags() &= ~detail::INTERRUPTION_BLOCKED;
+		}
+		catch (...)
+		{}
 	}
 };
 
 class BOOST_FIBER_DECL restore_interruption : private noncopyable
 {
 private:
-	bool	set_;
+	disable_interruption	&	disabler_;
 
 public:
-	restore_interruption() :
-		set_( ( scheduler::interrupt_flags() & detail::INTERRUPTION_BLOCKED) != 0)
+	explicit restore_interruption( disable_interruption & disabler) :
+		disabler_( disabler)
 	{
-		if ( set_)
+		if ( ! disabler_.set_)
 			scheduler::interrupt_flags() &= ~detail::INTERRUPTION_BLOCKED;
 	}
 
 	~restore_interruption()
-	{  
-		if ( set_)
-			scheduler::interrupt_flags() |= detail::INTERRUPTION_BLOCKED;
+	{
+	   try
+	   {	   
+			if ( ! disabler_.set_)
+				scheduler::interrupt_flags() |= detail::INTERRUPTION_BLOCKED;
+		}
+		catch (...)
+		{}
 	}
 };
 

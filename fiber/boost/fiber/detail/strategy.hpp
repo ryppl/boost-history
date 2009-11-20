@@ -8,16 +8,9 @@
 #define BOOST_FIBERS_DETAIL_STRATEGY_H
 
 #include <cstddef>
-#include <list>
-#include <map>
-#include <queue>
 
 #include <boost/function.hpp>
-#include <boost/optional.hpp>
-#include <boost/utility.hpp>
 
-#include <boost/fiber/detail/config.hpp>
-#include <boost/fiber/detail/fiber_state.hpp>
 #include <boost/fiber/fiber.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -31,81 +24,47 @@ namespace boost {
 namespace fibers {
 namespace detail {
 
-class BOOST_FIBER_DECL strategy : private noncopyable
+struct BOOST_FIBER_DECL strategy
 {
-private:
-	struct schedulable
-	{
-		fiber					f;
-		std::list< fiber::id >	joining_fibers;
-		optional< fiber::id >	waiting_on;
+	typedef function< void() >	callable_t;
 
-		schedulable() :
-			f(), joining_fibers(), waiting_on()
-		{}
+	virtual ~strategy() {}
 
-		schedulable( fiber f_) :
-			f( f_), joining_fibers(), waiting_on()
-		{}
-	};
+	virtual void add( fiber const&) = 0;
 
-	typedef std::map< fiber::id, schedulable >	container;
-	typedef std::list< fiber::id >				runnable_queue;
-	typedef std::queue< fiber::id >				terminated_queue;
-	typedef function< void() >					callable_t;
+	virtual fiber::id get_id() const = 0;
 
-	fiber				master_;
-	fiber				active_;
-	container			fibers_;
-	runnable_queue		runnable_fibers_;
-	terminated_queue	terminated_fibers_;
+	virtual void yield() = 0;
 
-public:
-	strategy();
+	virtual void cancel() = 0;
 
-	~strategy();
+	virtual void interrupt() = 0;
 
-	void add( fiber);
+	virtual bool interruption_requested() const = 0;
 
-	fiber::id get_id() const;
+	virtual bool interruption_enabled() const = 0;
 
-	void yield();
+	virtual fiber_interrupt_t & interrupt_flags() = 0;
 
-	void cancel();
+	virtual int priority() const = 0;
 
-	void suspend();
+	virtual void priority( int) = 0;
 
-	void interrupt();
+	virtual void at_exit( callable_t) = 0;
 
-	bool interruption_requested();
+	virtual void interrupt( fiber::id const&) = 0;
 
-	bool interruption_enabled();
+	virtual void cancel( fiber::id const&) = 0;
 
-	fiber_interrupt_t & interrupt_flags();
+	virtual void join( fiber::id const&) = 0;
 
-	int priority();
+	virtual void reschedule( fiber::id const&) = 0;
 
-	void priority( int);
+	virtual bool run() = 0;
 
-	void at_exit( callable_t);
+	virtual bool empty() const = 0;
 
-	void interrupt( fiber::id const&);
-
-	void cancel( fiber::id const&);
-
-	void suspend( fiber::id const&);
-
-	void resume( fiber::id const&);
-
-	void join( fiber::id const&);
-
-	void reschedule( fiber::id const&);
-
-	bool run();
-
-	bool empty();
-
-	std::size_t size();
+	virtual std::size_t size() const = 0;
 };
 
 }}}

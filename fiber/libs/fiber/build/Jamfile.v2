@@ -49,8 +49,8 @@ alias fiber_sources
 	fiber_windows.cpp
 	manual_reset_event.cpp
 	mutex.cpp
+	round_robin.cpp
 	scheduler.cpp
-	strategy.cpp
     : ## requirements ##
       <fiberapi>win32
     ;
@@ -65,8 +65,8 @@ alias fiber_sources
 	fiber_posix.cpp
 	manual_reset_event.cpp
 	mutex.cpp
+	round_robin.cpp
 	scheduler.cpp
-	strategy.cpp
     : ## requirements ##
       <fiberapi>posix
     ;

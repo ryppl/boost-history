@@ -32,7 +32,7 @@ namespace boost {
 namespace fibers {
 namespace detail {
 
-class strategy;
+class round_robin;
 
 }
 
@@ -41,7 +41,7 @@ class strategy;
 class BOOST_FIBER_DECL fiber
 {
 private:
-	friend class detail::strategy;
+	friend class detail::round_robin;
 
 	struct dummy;
 
@@ -201,13 +201,10 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_FIBER_CTOR, ~)
 	void priority( int);
 
 	void interrupt();
+
 	bool interruption_requested() const;
 
 	void cancel();
-
-	void suspend();
-
-	void resume();
 
 	void join();
 };

@@ -1,0 +1,24 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+
+ 	Based on documentation from Boost.Thread.
+]
+
+[section:todo Todo]
+
+* replace spin-waiting in condition- and event-variables
+
+* improve implementation of atomic-ops
+
+* replace system calls related to fiber switching (like swapcontext()) by assembler
+
+* explicit migraton of fiber between schedulers (that measn threads)
+
+* improve scheduling algorithm (take priorities into acount)
+
+* provide a spin-wait class
+
+[endsect]

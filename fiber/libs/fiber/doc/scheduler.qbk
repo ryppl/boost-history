@@ -1,0 +1,123 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+
+ 	Based on documentation from Boost.Thread.
+]
+
+[section:scheduler_ref Scheduler]
+
+[heading Synopsis]
+
+The class `scheduler` is responsible for managing and scheduling of fibers passed to it. The fibers are
+thread-affine, e.g. the fibers remain local for the thread passing the fiber to the scheduler.
+(Maybe futher version of __boost_fiber__ will support explicit migration of fibers between threads.)
+
+Usally `scheduler` will be invoked until all fibers have finished.
+
+	boost::fibers::scheduler sched;
+	
+	sched.make_fiber( some_fn);
+
+	for (;;)
+	{
+		while ( sched.run() );
+		if ( sched.empty() ) break;
+	}
+
+
+[section:scheduler Class `scheduler`]
+
+	#include <boost/fiber/scheduler.hpp>
+
+	class scheduler
+	{
+	public:
+		bool run();
+
+		bool empty();
+
+		std::size_t size();
+
+		void submit_fiber( fiber);
+
+		template< typename Fn >
+		void make_fiber( Fn fn);
+
+		template< typename Fn >
+		void make_fiber( std::size_t stack_size, Fn fn);
+
+		template< typename Fn, typename A1, typename A2,... >
+		void make_fiber( Fn fn, A0 a0, A1 a1,...);
+
+		template< typename Fn, typename A1, typename A2,... >
+		void make_fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...);
+	};
+
+
+[section:run `run()`]
+
+        bool run();
+
+[variablelist
+[[Effects:] [Executes a fiber from the internal storage and removes terminated fibers. The fnction returns
+`true` if a fiber could be executed or a terminated fiber could be removed - otherwise `false`.]]
+[[Throws:] [__system_error__ if a system call failed.]]
+]
+[endsect]
+
+[section:empty `empty()`]
+
+        bool empty();
+
+[variablelist
+[[Effects:] [Returns `true` if the scheduler contains fibers (maybe runnable or waiting).]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:size `size()`]
+
+        std::size_t size();
+
+[variablelist
+[[Effects:] [Returns how many fibers the scheduler contains (maybe runnable or waiting).]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:submit_fiber `submit_fiber( fiber f)`]
+
+        void submit_fiber( fiber f);
+
+[variablelist
+[[Effects:] [This function stores the passed fiber in the scheduler.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:make_fiber `make_fiber()`]
+
+		template< typename Fn >
+		void make_fiber( Fn fn);
+
+		template< typename Fn >
+		void make_fiber( std::size_t stack_size, Fn fn);
+
+		template< typename Fn, typename A1, typename A2,... >
+		void make_fiber( Fn fn, A0 a0, A1 a1,...);
+
+		template< typename Fn, typename A1, typename A2,... >
+		void make_fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...);
+
+[variablelist
+[[Effects:] [The functionscreate a fiber which gets stored in the internal structures from scheduler.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[endsect]
+
+[endsect]

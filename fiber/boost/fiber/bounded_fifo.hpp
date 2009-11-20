@@ -19,8 +19,8 @@
 #include <boost/fiber/condition.hpp>
 #include <boost/fiber/detail/atomic.hpp>
 #include <boost/fiber/exceptions.hpp>
+#include <boost/fiber/locks.hpp>
 #include <boost/fiber/mutex.hpp>
-#include <boost/fiber/unique_lock.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -115,7 +115,7 @@ public:
 		use_count_( 0)
 	{
 		if ( hwm_ < lwm_)
-			throw std::invalid_argument("invalid watermark");
+			throw invalid_watermark();
 	}
 
 	bounded_fifo( std::size_t const& wm) :
@@ -135,7 +135,7 @@ public:
 	void upper_bound_( std::size_t hwm)
 	{
 		if ( hwm < lwm_)
-			throw std::invalid_argument("invalid watermark");
+			throw invalid_watermark();
 		std::size_t tmp( hwm_);
 		hwm_ = hwm;
 		if ( hwm_ > tmp) not_full_cond_.notify_one();
@@ -147,7 +147,7 @@ public:
 	void lower_bound_( std::size_t lwm)
 	{
 		if ( lwm > hwm_ )
-			throw std::invalid_argument("invalid watermark");
+			throw invalid_watermark();
 		std::size_t tmp( lwm_);
 		lwm_ = lwm;
 		if ( lwm_ > tmp) not_full_cond_.notify_one();

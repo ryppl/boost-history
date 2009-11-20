@@ -19,14 +19,13 @@ enum state_t
 	STATE_NOT_STARTED	= 1 << 1,
 	STATE_READY			= 1 << 2,
 	STATE_RUNNING		= 1 << 3,
-	STATE_SUSPENDED		= 1 << 4,
-	STATE_WAIT_FOR_JOIN	= 1 << 5,
-	STATE_TERMINATED	= 1 << 6
+	STATE_WAIT_FOR_JOIN	= 1 << 4,
+	STATE_TERMINATED	= 1 << 5
 };
 
 typedef char fiber_state_t;
 
-#define IS_ALIVE_BIT_MASK 0x3C
+#define IS_ALIVE_BIT_MASK 0x1C
 
 enum interrupt_t
 {

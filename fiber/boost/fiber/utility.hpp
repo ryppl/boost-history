@@ -36,10 +36,6 @@ void cancel()
 { fibers::scheduler::cancel(); }
 
 inline
-void suspend()
-{ fibers::scheduler::suspend(); }
-
-inline
 int priority()
 { return fibers::scheduler::priority(); }
 

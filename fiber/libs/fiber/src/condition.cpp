@@ -164,6 +164,9 @@ condition::condition() :
 	check_mtx_()
 {}
 
+condition::~condition()
+{}
+
 void
 condition::notify_one()
 { notify_( static_cast< uint32_t >( NOTIFY_ONE) ); }

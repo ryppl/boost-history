@@ -41,6 +41,8 @@ private:
 public:
 	condition();
 
+	~condition();
+
 	void notify_one();
 
 	void notify_all();

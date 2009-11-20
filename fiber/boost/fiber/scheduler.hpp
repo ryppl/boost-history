@@ -35,7 +35,6 @@ bool runs_as_fiber();
 boost::fiber::id get_id();
 void yield();
 void cancel();
-void suspend();
 int priority();
 void priority( int);
 void interruption_point();
@@ -60,7 +59,6 @@ private:
 	friend fiber::id this_fiber::get_id();
 	friend void this_fiber::yield();
 	friend void this_fiber::cancel();
-	friend void this_fiber::suspend();
 	friend int this_fiber::priority();
 	friend void this_fiber::priority( int);
 	friend void this_fiber::interruption_point();
@@ -95,8 +93,6 @@ private:
 
 	static void cancel();
 
-	static void suspend();
-
 	static int priority();
 
 	static void priority( int);
@@ -108,10 +104,6 @@ private:
 	static bool interruption_requested( fiber::id const&);
 
 	static void cancel( fiber::id const&);
-
-	static void suspend( fiber::id const&);
-
-	static void resume( fiber::id const&);
 
 	static void join( fiber::id const&);
 

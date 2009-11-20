@@ -1,0 +1,795 @@
+[/
+  (C) Copyright 2007-8 Anthony Williams.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:fiber_management Fiber Management]
+
+
+[heading Synopsis]
+
+Each __fiber__ class represents a user-space context of execution which will be launched and managed by the
+__scheduler__ class. Objects of type __fiber__ are copy- and moveable.
+
+    boost::fiber f; // not-a-fiber
+
+    void f()
+    {
+        boost::fiber f1=boost::fibers::make_fiber( some_fn);
+        boost::fiber f2=boost::fibers::make_fiber( another_fn);
+
+		boost::fibers::scheduler s;
+		s.submit( f1); // f1 gets copied
+		s.submit( boost::move( f2) ); // f2 gets moved
+
+		std::cout << f1.get_id() << std::endl;
+		std::cout << f2.get_id() << std::endl;
+    }
+
+
+[heading Launching fibers]
+
+A new fiber is launched by passing an object of a callable type that can be invoked with no parameters to the
+constructor and submiting the fiber (copy- or move-op.) to an instance of __scheduler__. The object is then copied
+into internal storage, and invoked on the newly-created fiber. If the object must not (or cannot) be copied, then
+`boost::ref` can be used to pass in a reference to the function object. In this case, the user of __boost_fiber__
+must ensure that the referred-to object outlives the newly-created fiber.
+
+    struct callable
+    { void operator()(); };
+
+    boost::fiber copies_are_safe()
+    {
+        callable x;
+        return boost::fiber( x);
+    } // x is destroyed, but the newly-created fiber has a copy, so this is OK
+
+    boost::fiber oops()
+    {
+        callable x;
+        return boost::fiber( boost::ref( x) );
+    } // x is destroyed, but the newly-created fiber still has a reference
+      // this leads to undefined behaviour
+
+If you wish to construct an instance of __fiber__ with a function or callable object that requires arguments to be
+supplied, this can be done by passing additional arguments to the __fiber__ constructor:
+
+    void find_the_question( int the_answer);
+
+    boost::fiber deep_thought_2( find_the_question, 42);
+
+The arguments are ['copied] into the internal fiber structure: if a reference is required, use `boost::ref`, just as
+for references to callable functions.
+
+For convinience `boost::fibers::make_fiber()` is provided:
+
+	boost::fiber f = boost::fibers::make_fiber( new_fn, arg1, arg2, arg3);
+
+Another alternative is to use __scheduler_make_fiber__ which creates and stores the new fiber inside the scheduler.
+
+    boost::fibers::scheduler sched;
+    sched.make_fiber( new_fn, arg1, arg2, arg3);
+
+
+[heading Exceptions in fiber functions]
+
+Exceptions thrown by the function or callable object passed to the __fiber__ constructor are consumed by the
+framework (if it required to know whichexceptions was thrown __boost_task__ should be used together with 
+__boost_fiber__).
+
+
+[heading Joining]
+
+In order to wait for a fiber to finish, the __join__ member functions of the __fiber__ object can be
+used. __join__ will block the calling fiber until the fiber represented by the __fiber__ object has completed.
+If the fiber has already completed, or the __fiber__ object represents __not_a_fiber__, then __join__ returns
+immediately.
+
+	void some_fn()
+	{}
+
+	void joining_fiber_fn( boost::fiber f)
+	{ f.join(); }
+
+	boost:.fibers::scheduler sched;
+	boost::fiber f( some_fn);
+	sched.submit_fiber( f);
+	sched.make_fiber( joining_fiber, f);
+	for (;;)
+	{
+		while ( sched.run() );
+		if ( sched.empty() ) break;
+	}
+
+
+[heading Interruption]
+
+A running fiber can be ['interrupted] by invoking the __interrupt__ member function. When the interrupted fiber
+next executes one of the specified __interruption_points__ (or if it is currently __blocked__ whilst executing one)
+with interruption enabled, then a __fiber_interrupted__ exception will be thrown in the interrupted fiber. If not
+caught, this will cause the execution of the interrupted fiber to terminate.
+
+If a fiber wishes to avoid being interrupted, it can create an instance of __disable_interruption__. Objects of this
+class disable interruption for the fiber that created them on construction, and restore the interruption state to
+whatever it was before on destruction:
+
+    void f()
+    {
+        // interruption enabled here
+        {
+            boost::this_fiber::disable_interruption disabler1;
+            // interruption disabled
+            {
+                boost::this_fiber::disable_interruption disabler2;
+                // interruption still disabled
+            } // disabler2 destroyed, interruption state restored
+            // interruption still disabled
+        } // disabler1 destroyed, interruption state restored
+        // interruption now enabled
+    }
+
+The effects of an instance of __disable_interruption__ can be temporarily reversed by constructing an instance of
+__restore_interruption__, passing in the __disable_interruption__ object in question. This will restore the
+interruption state to what it was when the __disable_interruption__ object was constructed, and then disable
+interruption again when the __restore_interruption__ object is destroyed.
+
+    void g()
+    {
+        // interruption enabled here
+        {
+            boost::this_fiber::disable_interruption disabler;
+            // interruption disabled
+            {
+                boost::this_fiber::restore_interruption restorer( disabler);
+                // interruption now enabled
+            } // restorer destroyed, interruption disable again
+        } // disabler destroyed, interruption state restored
+        // interruption now enabled
+    }
+
+At any point, the interruption state for the current fiber can be queried by calling __interruption_enabled__.
+
+[#interruption_points]
+
+
+[heading Predefined Interruption Points]
+
+The following functions are ['interruption points], which will throw __fiber_interrupted__ if interruption is
+enabled for the current fiber, and interruption is requested for the current fiber:
+
+* [join_link `boost::fiber::join()`]
+* [cond_wait_link `boost::fibers::condition::wait()`]
+* [auto_reset_wait_link `boost::fibers::auto_reset_event::wait()`]
+* [manual_reset_wait_link `boost::fibers::manual_reset_event::wait()`]
+* [count_down_wait_link `boost::fibers::count_down_event::wait()`]
+* __interruption_point__
+
+
+[heading Fiber IDs]
+
+Objects of class __fiber_id__ can be used to identify fibers. Each running fiber has a unique ID
+obtainable from the corresponding __fiber__ by calling the `get_id()` member function, or by calling
+`boost::this_fiber::get_id()` from within the fiber. Objects of class __fiber_id__ can be copied, and used as
+keys in associative containers: the full range of comparison operators is provided. Fiber IDs can also be written
+to an output stream using the stream insertion operator, though the output format is unspecified.
+
+Each instance of __fiber_id__ either refers to some fiber, or __not_a_fiber__. Instances that refer to __not_a_fiber__
+compare equal to each other, but not equal to any instances that refer to an actual fiber.
+The comparison operators on __fiber_id__ yield a total order for every non-equal fiber ID.
+
+
+[section:fiber Class `fiber`]
+
+    #include <boost/fiber/fiber.hpp>
+
+    class fiber
+    {
+    public:
+        fiber();
+        ~fiber();
+
+        template< typename Fn >
+        explicit fiber( Fn fn);
+
+        template< typename Fn >
+        explicit fiber( std::size_t stack_size, Fn fn);
+
+        template< typename Fn, typename A1, typename A2,...>
+        fiber( Fn fn, A1 a1, A2 a2,...);
+
+        template< typename Fn, typename A1, typename A2,...>
+        fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...);
+
+        template< typename Fn >
+        fiber( detail::fiber_move_t< Fn > f);
+
+        // move support
+        fiber( detail::fiber_move_t< fiber > x);
+        fiber & operator=( detail::fiber_move_t< fiber > x);
+        operator detail::fiber_move_t< fiber >();
+        detail::fiber_move_t< fiber > move();
+
+        operator ``['unspecified-bool-type]``() const;
+		
+		bool operator!() const;
+		
+		void swap( fiber & other);
+		
+		id get_id() const;
+		
+		bool operator==( fiber const&) const;
+		bool operator!=( fiber const&) const;
+		
+		bool is_alive() const;
+		
+		int priority() const;
+		
+		void priority( int);
+		
+		void interrupt();
+		bool interruption_requested() const;
+		
+		void cancel();
+		
+		void join();
+    };
+
+    void swap( fiber & lhs, fiber & rhs);
+
+	template< typename Fn >
+	fiber make_fiber( Fn fn);
+
+	template< typename Fn >
+	fiber make_fiber( std::size_t stack_size, Fn fn);
+
+	template< typename Fn, typename A1, typename A2,... >
+	fiber make_fiber( Fn fn, A1 a1, A2 a2,...);
+
+	template< typename Fn, typename A1, typename A2,... >
+	fiber make_fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...);
+
+
+[section:default_constructor Default Constructor]
+
+    fiber();
+
+[variablelist
+[[Effects:] [Constructs a __fiber__ instance that refers to __not_a_fiber__.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:callable_constructor Fiber Constructor]
+
+    template< typename Callable >
+    fiber( Callable fn);
+
+    template< typename Callable >
+    fiber( std::size_t stack_size, Callable fn);
+
+[variablelist
+[[Preconditions:] [`Callable` must by copyable.]]
+[[Effects:] [`fn` is copied into storage managed internally by the fiber library, and that copy is invoked on a
+newly-created fiber. Second version sets the stack-size of the fiber.]]
+[[Postconditions:] [`*this` refers to the newly created fiber.]]
+[[Throws:] [__system_error__ if system call failed.]]
+]
+[endsect]
+
+[section:multiple_argument_constructor Fiber Constructor with arguments]
+
+    template< typename Fn, typename A1, typename A2,...>
+    fiber( Fn fn,A1 a1,A2 a2,...);
+
+    template< typename Fn, typename A1, typename A2,...>
+    fiber( std::size_t stack_size, Fn fn,A1 a1,A2 a2,...);
+
+[variablelist
+[[Preconditions:] [`Fn` and each `A`n must by copyable or movable.]]
+[[Effects:] [As if [link
+fiber.fiber_management.fiber.callable_constructor
+`fiber( boost::bind( fn, a1, a2,...) )`. Consequently, `fn` and each `a`n
+are copied into internal storage for access by the new fiber.
+Second version additionaly sets the stack-size used by the fiber.]]]
+[[Postconditions:] [`*this` refers to the newly created fiber.]]
+[[Throws:] [__system_error__ if system call failed.]]
+[[Note:] [Currently up to nine additional arguments `a1` to `a9` can be specified in addition to the function `fn`.]]
+]
+[endsect]
+
+[section:destructor Fiber Destructor]
+
+    ~fiber();
+
+[variablelist
+[[Effects:] [Destroys `*this`.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:get_id Member function `get_id()`]
+
+    fiber::id get_id() const;
+
+[variablelist
+[[Returns:] [If `*this` refers to a fiber, an instance of __fiber_id__ that represents that fiber. Otherwise returns
+a default-constructed __fiber_id__.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:join Member function `join()`]
+
+    void join();
+
+[variablelist
+[[Effects:] [Waits for that fiber to complete.]]
+[[Throws:] [__fiber_interrupted__ if the current fiber is interrupted and __system_error__
+if system call failed.]]
+[[Notes:] [`join()` is one of the predefined __interruption_points__.]]
+]
+[endsect]
+
+[section:interrupt Member function `interrupt()`]
+
+    void interrupt();
+
+[variablelist
+[[Effects:] [If `*this` refers to a fiber, request that the fiber will be interrupted the next time it enters one of
+the predefined __interruption_points__ with interruption enabled, or if it is currently __blocked__ in a call to one
+of the predefined __interruption_points__ with interruption enabled .]]
+[[Throws:] [__fiber_moved__ if not a fiber of execution.]]
+]
+[endsect]
+
+[section:interruption_requested Member function `interruption_requested()`]
+
+    bool interruption_requested();
+
+[variablelist
+[[Effects:] [If `*this` refers to a fiber, the function returns if the interruption of the fiber was already
+requested.]]
+[[Throws:] [__fiber_moved__ if `*this` is not a fiber of execution.]]
+]
+[endsect]
+
+[section:cancel Member function `cancel()`]
+
+    void cancel();
+
+[variablelist
+[[Effects:] [If `*this` refers to a fiber, request that the fiber will be canceled the next time it yields its
+execution.]]
+[[Throws:] [__system_error__ if system call fails. __fiber__moved__ if  `*this` is not a fiber of execution.]]
+]
+[endsect]
+
+[section:is_alive Member function `is_alive()`]
+
+    bool is_alive();
+
+[variablelist
+[[Effects:] [If `*this` refers to a fiber, the function returns false if the fiber is terminated or not started 
+Otherwise it returns true.]]
+[[Throws:] [__fiber_moved__ if `*this` is not a fiber of execution.]]
+]
+[endsect]
+
+[section:unspec_operator `operator unspecified-bool-type() const`]
+
+        operator ``['unspecified-bool-type]``() const;
+
+[variablelist
+[[Returns:] [If `*this` refers to a fiber, the function returns true. Otherwise false.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:not_operator `operator!`]
+
+	bool operator!() const;
+
+[variablelist
+[[Returns:] [If `*this` refers not to a fiber, the function returns true. Otherwise false.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:equals `operator==`]
+
+    bool operator==(const fiber& other) const;
+
+[variablelist
+[[Returns:] [`get_id()==other.get_id()`]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:not_equals `operator!=`]
+
+	bool operator!=(const fiber& other) const;
+
+[variablelist
+[[Returns:] [`get_id()!=other.get_id()`]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:swap Member function `swap()`]
+
+    void swap(fiber& other);
+
+[variablelist
+[[Effects:] [Exchanges the fibers associated with `*this` and `other`, so `*this` is associated with the fiber 
+associated with `other` prior to the call, and vice-versa.]]
+[[Postconditions:] [`this->get_id()` returns the same value as `other.get_id()` prior to the call. `other.get_id()`
+returns the same value as `this->get_id()` prior to the call.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:non_member_swap Non-member function `swap()`]
+
+    #include <boost/fiber/fiber.hpp>
+
+    void swap( fiber & lhs, fiber & rhs);
+
+[variablelist
+[[Effects:] [[link fiber.fiber_management.fiber.swap `lhs.swap( rhs)`].]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:non_member_make_fiber Non-member template function `make_fiber()`]
+
+    #include <boost/fiber/fiber.hpp>
+
+	template< typename Fn >
+	fiber make_fiber( Fn fn);
+
+	template< typename Fn >
+	fiber make_fiber( std::size_t stack_size, Fn fn);
+
+	template< typename Fn, typename A1, typename A2,... >
+	fiber make_fiber( Fn fn, A1 a1, A2 a2,...);
+
+	template< typename Fn, typename A1, typename A2,... >
+	fiber make_fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...);
+
+[variablelist
+[[Effects:] [Creates a fiber.]]
+]
+[endsect]
+
+[section:id Class `boost::fiber::id`]
+
+    #include <boost/fiber/fiber.hpp>
+
+    class fiber::id
+    {
+    public:
+        id();
+
+        bool operator==( id const& x) const;
+        bool operator!=( id const& x) const;
+        bool operator<( id const& x) const;
+        bool operator>( id const& x) const;
+        bool operator<=( id const& x) const;
+        bool operator>=( id const& x) const;
+
+        template< typename charT, typename traitsT >
+        friend std::basic_ostream< charT, traitsT > & 
+        operator<<( std::basic_ostream< charT, traitsT > & os, id const& x);
+    };
+
+[section:constructor Default constructor]
+
+    id();
+
+[variablelist
+[[Effects:] [Constructs a __fiber_id__ instance that represents __not_a_fiber__.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:is_equal `operator==`]
+
+    bool operator==( id const& x) const;
+
+[variablelist
+[[Returns:] [`true` if `*this` and `x` both represent the same fiber, or both represent __not_a_fiber__, `false`
+otherwise.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:not_equal `operator!=`]
+
+    bool operator!=( id const& x) const;
+
+[variablelist
+[[Returns:] [`true` if `*this` and `x` represent different fibers, or one represents a fiber, and
+the other represent __not_a_fiber__, `false` otherwise.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:less_than `operator<`]
+
+    bool operator<( id const& x) const;
+
+[variablelist
+[[Returns:] [`true` if `*this!=x` is `true` and the implementation-defined total order of __fiber_id__ values places
+`*this` before `y`, `false` otherwise.]]
+[[Throws:] [Nothing.]]
+[[Note:] [A __fiber_id__ instance representing __not_a_fiber__ will always compare less than an instance representing
+a fiber of execution.]]
+]
+[endsect]
+
+
+[section:greater_than `operator>`]
+
+    bool operator>( id const& x) const;
+
+[variablelist
+[[Returns:] [`x<*this`]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:less_than_or_equal `operator>=`]
+
+    bool operator<=( id const& x) const;
+
+[variablelist
+[[Returns:] [`!(x<*this)`]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:greater_than_or_equal `operator>=`]
+
+    bool operator>=( id const& x) const;
+
+[variablelist
+[[Returns:] [`!(*this<x)`]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:stream_out Friend `operator<<`]
+
+    template< typename charT, typename traitsT >
+    friend std::basic_ostream< charT, traitsT > & 
+    operator<<( std::basic_ostream< charT, traitsT > & os, id const& x);
+
+[variablelist
+[[Effects:] [Writes a representation of the __fiber_id__ instance `x` to the stream `os`, such that the representation of two
+instances of __fiber_id__ `a` and `b` is the same if `a==b`, and different if `a!=b`.]]
+[[Returns:] [`os`]]
+]
+[endsect]
+
+[endsect]
+
+[endsect]
+
+
+[section:this_fiber Namespace `this_fiber`]
+
+[section:runs_as_fiber Non-member function `runs_as_fiber()`]
+
+    #include <boost/fiber/utility.hpp>
+
+    namespace this_fiber
+    {
+        bool runs_as_fiber();
+    }
+
+[variablelist
+[[Returns:] [Returns `true` if current execution context is a fiber.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:get_id Non-member function `get_id()`]
+
+    #include <boost/fiber/utility.hpp>
+
+    namespace this_fiber
+    {
+        fiber::id get_id();
+    }
+
+[variablelist
+[[Returns:] [An instance of __fiber_id__ that represents that currently executing fiber.]]
+[[Throws:] [__fiber_error__ if the execution context is not a fiber.]]
+]
+[endsect]
+
+[section:interruption_point Non-member function `interruption_point()`]
+
+    #include <boost/fiber/utility.hpp>
+
+    namespace this_fiber
+    {
+        void interruption_point();
+    }
+
+[variablelist
+[[Effects:] [Check to see if the current fiber has been interrupted.]]
+[[Throws:] [__fiber_interrupted__ if __interruption_enabled__ and __interruption_requested__ both return `true` and
+__fiber_error__ if the execution context is not a fiber.]]
+]
+[endsect]
+
+[section:interruption_requested Non-member function `interruption_requested()`]
+
+    #include <boost/fiber/utility.hpp>
+
+    namespace this_fiber
+    {
+        bool interruption_requested();
+    }
+
+[variablelist
+[[Returns:] [`true` if interruption has been requested for the current fiber, `false` otherwise.]]
+[[Throws:] [__fiber_error__ if the execution context is not a fiber.]]
+]
+[endsect]
+
+[section:interruption_enabled Non-member function `interruption_enabled()`]
+
+    #include <boost/fiber/utility.hpp>
+
+    namespace this_fiber
+    {
+        bool interruption_enabled();
+    }
+
+[variablelist
+[[Returns:] [`true` if interruption has been enabled for the current fiber, `false` otherwise.]]
+[[Throws:] [__fiber_error__ if the execution context is not a fiber.]]
+]
+[endsect]
+
+[section:yield Non-member function `yield()`]
+
+	#include <boost/fiber/utility.hppV>
+
+	namespace this_fiber
+	{
+		void yield();
+	}
+
+[variablelist
+[[Effects:] [Cooperativly allows other fibers to run.]]
+[[Throws:] [__fiber_error__ if the execution context is not a fiber.]]
+]
+[endsect]
+
+[section:cancel Non-member function `cancel()`]
+
+	#include <boost/fiber/utility.hpp>
+
+	namespace this_fiber
+	{
+		void cancel();
+	}
+
+[variablelist
+[[Effects:] [Fiber gets canceled after calling `yield`.]]
+[[Throws:] [__fiber_error__ if the execution context is not a fiber.]]
+]
+[endsect]
+
+[section:disable_interruption Class `disable_interruption`]
+
+    #include <boost/fiber/interruption.hpp>
+
+    namespace this_fiber
+    {
+        class disable_interruption
+        {
+        public:
+            disable_interruption();
+            ~disable_interruption();
+        };
+    }
+
+`boost::this_fiber::disable_interruption` disables interruption for the current fiber on construction, and restores 
+the prior interruption state on destruction. Instances of `disable_interruption` cannot be copied or moved.
+
+[section:constructor Constructor]
+
+    disable_interruption();
+
+[variablelist
+[[Effects:] [Stores the current state of __interruption_enabled__ and disables interruption for the current fiber.]]
+[[Postconditions:] [__interruption_enabled__ returns `false` for the current fiber.]]
+[[Throws:] [__fiber_error__ if the execution context is not a fiber.]]
+]
+[endsect]
+
+[section:destructor Destructor]
+
+    ~disable_interruption();
+
+[variablelist
+[[Preconditions:] [Must be called from the same fiber from which `*this` was constructed.]]
+[[Effects:] [Restores the current state of __interruption_enabled__ for the current fiber to that prior to the 
+construction of `*this`.]]
+[[Postconditions:] [__interruption_enabled__ for the current fiber returns the value stored in the constructor of
+`*this`.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[endsect]
+
+[section:restore_interruption Class `restore_interruption`]
+
+    #include <boost/fiber/interruption.hpp>
+
+    namespace this_fiber
+    {
+        class restore_interruption
+        {
+        public:
+            explicit restore_interruption( disable_interruption & disabler);
+            ~restore_interruption();
+        };
+    }
+
+On construction of an instance of `boost::this_fiber::restore_interruption`, the interruption state for the current 
+fiber is restored to the interruption state stored by the constructor of the supplied instance of
+__disable_interruption__. When the instance is destroyed, interruption is again disabled. Instances of
+`restore_interruption` cannot be copied or moved.
+
+[section:constructor Constructor]
+
+    explicit restore_interruption( disable_interruption & disabler);
+
+[variablelist
+[[Preconditions:] [Must be called from the same fiber from which `disabler` was constructed.]]
+[[Effects:] [Restores the current state of __interruption_enabled__ for the current fiber to that prior to the 
+construction of `disabler`.]]
+[[Postconditions:] [__interruption_enabled__ for the current fiber returns the value stored in the constructor of
+`disabler`.]]
+[[Throws:] [__fiber_error__ if the execution context is not a fiber.]]
+]
+[endsect]
+
+[section:destructor Destructor]
+
+    ~restore_interruption();
+
+[variablelist
+[[Preconditions:] [Must be called from the same fiber from which `*this` was constructed.]]
+[[Effects:] [Disables interruption for the current fiber.]]
+[[Postconditions:] [__interruption_enabled__ for the current fiber returns `false`.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[endsect]
+
+[section:atfiberexit Non-member function template `at_fiber_exit()`]
+
+    #include <boost/fiber/utility.hpp>
+
+    template< typename Callable >
+    void at_fiber_exit( Callable ca);
+
+[variablelist
+[[Effects:] [A copy of `ca`. This copy is invoked when the current fiber exits (even if the fiber has been
+interrupted).]]
+[[Postconditions:] [A copy of `ca` has been saved for invocation on fiber exit.]]
+[[Throws:] [__fiber_error__ if the execution context is not a fiber.]]
+]
+[endsect]
+
+[endsect]

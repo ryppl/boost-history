@@ -7,7 +7,7 @@
 #include <boost/fiber/scheduler.hpp>
 
 #include <boost/fiber/detail/move.hpp>
-#include <boost/fiber/detail/strategy.hpp>
+#include <boost/fiber/detail/round_robin.hpp>
 #include <boost/fiber/exceptions.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -43,14 +43,6 @@ scheduler::cancel()
 	detail::strategy * impl( impl_.get() );
 	if ( ! impl) throw fiber_error("not a fiber");
 	impl->cancel();
-}
-
-void
-scheduler::suspend()
-{
-	detail::strategy * impl( impl_.get() );
-	if ( ! impl) throw fiber_error("not a fiber");
-	impl->suspend();
 }
 
 void
@@ -126,22 +118,6 @@ scheduler::cancel( fiber::id const& id)
 }
 
 void
-scheduler::suspend( fiber::id const& id)
-{
-	detail::strategy * impl( impl_.get() );
-	if ( ! impl) throw fiber_error("not a fiber");
-	impl->suspend( id);
-}
-
-void
-scheduler::resume( fiber::id const& id)
-{
-	detail::strategy * impl( impl_.get() );
-	if ( ! impl) throw fiber_error("not a fiber");
-	impl->resume( id);
-}
-
-void
 scheduler::join( fiber::id const& id)
 {
 	detail::strategy * impl( impl_.get() );
@@ -161,7 +137,7 @@ detail::strategy *
 scheduler::access_()
 {
 	if ( ! impl_.get() )
-		impl_.reset( new detail::strategy() );
+		impl_.reset( new detail::round_robin() );
 	return impl_.get();
 }
 

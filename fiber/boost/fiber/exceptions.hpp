@@ -36,11 +36,11 @@ public:
 	{}
 };
 
-class invalid_stacksize : public std::runtime_error
+class invalid_watermark : public std::runtime_error
 {
 public:
-    invalid_stacksize() :
-		std::runtime_error("invalid stacksize")
+    invalid_watermark() :
+		std::runtime_error("invalid watermark")
 	{}
 };
 

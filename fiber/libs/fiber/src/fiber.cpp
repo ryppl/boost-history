@@ -146,20 +146,6 @@ fiber::cancel()
 }
 
 void
-fiber::suspend()
-{
-	if ( ! info_base_) throw fiber_moved();
-	scheduler::suspend( get_id() );
-}
-
-void
-fiber::resume()
-{
-	if ( ! info_base_) throw fiber_moved();
-	scheduler::resume( get_id() );
-}
-
-void
 fiber::join()
 {
 	if ( ! info_base_) throw fiber_moved();

@@ -34,7 +34,7 @@ void fn_1()
 
 void fn_2()
 {
-	boost::fibers::disable_interruption disabled;
+	boost::fibers::disable_interruption disabler;
 	if ( boost::this_fiber::interruption_enabled() )
 		throw std::logic_error("interruption enabled");
 	for ( int i = 0; i < 5; ++i)
@@ -49,13 +49,13 @@ void fn_3()
 {
 	try
 	{
-		boost::fibers::disable_interruption disabled;
+		boost::fibers::disable_interruption disabler;
 		if ( boost::this_fiber::interruption_enabled() )
 			throw std::logic_error("interruption enabled");
 		for ( int i = 0; i < 5; ++i)
 		{
 			++value1;
-			boost::fibers::restore_interruption restored;
+			boost::fibers::restore_interruption restorer( disabler);
 			boost::this_fiber::interruption_point();
 			boost::this_fiber::yield();
 		}

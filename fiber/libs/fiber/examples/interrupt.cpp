@@ -41,7 +41,7 @@ void fn_3()
 	{
 		++value3;
 		std::cout << "fn_3() increment value3 " << value3 << std::endl;
-		boost::fibers::restore_interruption restored;
+		boost::fibers::restore_interruption restored( disabled);
 		boost::this_fiber::interruption_point();
 		boost::this_fiber::yield();
 	}
