@@ -1,0 +1,8 @@
+0.1.1 :
+-------
+- refactor STATE macros -> don't test and set only one bit
+- documentation corrected
+
+0.1.0 :
+-------
+- initial version

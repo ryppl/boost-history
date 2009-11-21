@@ -15,7 +15,7 @@
 
 * replace system calls related to fiber switching (like swapcontext()) by assembler
 
-* explicit migraton of fiber between schedulers (that measn threads)
+* explicit migraton of fiber between schedulers (== between threads)
 
 * improve scheduling algorithm (take priorities into acount)
 

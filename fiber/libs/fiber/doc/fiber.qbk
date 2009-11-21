@@ -38,7 +38,7 @@
 [template mutex_func_ref_link[link_text] [link fiber.synchronization.locks.unique_lock.mutex [link_text]]]
 [template unique_lock_link[link_text] [link fiber.synchronization.locks.unique_lock [link_text]]]
 [template join_link[link_text] [link fiber.fiber_management.fiber.join [link_text]]]
-[template cond_wait_link[link_text] [link fiber.synchronization.condvar_ref.condition_variable.wait [link_text]]]
+[template cond_wait_link[link_text] [link fiber.synchronization.condvar_ref.condition.wait [link_text]]]
 [template cond_any_wait_link[link_text] [link fiber.synchronization.condvar_ref.condition_variable_any.wait [link_text]]]
 
 
@@ -79,13 +79,12 @@
 
 [include overview.qbk]
 [include fiber_ref.qbk]
-[include scheduler.qbk]
 [section:synchronization Synchronization]
 [include lockables.qbk]
 [include mutexes.qbk]
 [include condition_variables.qbk]
 [include event_variables.qbk]
 [include fifos.qbk]
-[include todo.qbk]
 [endsect]
+[include todo.qbk]
 [include acknowledgements.qbk]
