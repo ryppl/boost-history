@@ -162,7 +162,6 @@ bool
 round_robin::interruption_requested() const
 {
 	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
-	BOOST_ASSERT( ! fibers_.at( active_.get_id() ).waiting_on);
 
 	return active_.interruption_requested();
 }
@@ -171,7 +170,6 @@ bool
 round_robin::interruption_enabled() const
 {
 	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
-	BOOST_ASSERT( ! fibers_.at( active_.get_id() ).waiting_on);
 
 	return active_.info_()->interrupt == detail::INTERRUPTION_ENABLED;
 }
@@ -180,7 +178,7 @@ fiber_interrupt_t &
 round_robin::interrupt_flags()
 {
 	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
-	BOOST_ASSERT( ! fibers_.at( active_.get_id() ).waiting_on);
+	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	return active_.info_()->interrupt;
 }
@@ -189,7 +187,6 @@ int
 round_robin::priority() const
 {
 	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
-	BOOST_ASSERT( ! fibers_.at( active_.get_id() ).waiting_on);
 
 	return active_.priority();
 }
@@ -198,7 +195,7 @@ void
 round_robin::priority( int prio)
 {
 	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
-	BOOST_ASSERT( ! fibers_.at( active_.get_id() ).waiting_on);
+	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	// set priority
 	active_.priority( prio);
@@ -208,7 +205,7 @@ void
 round_robin::at_exit( callable_t ca)
 {
 	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
-	BOOST_ASSERT( ! fibers_.at( active_.get_id() ).waiting_on);
+	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	// push a exit-callback on fibers stack
 	active_.info_()->at_exit.push( ca);

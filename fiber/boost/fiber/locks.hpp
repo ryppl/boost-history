@@ -122,7 +122,7 @@ public:
             std::swap( locked_, other.locked_);
         }
 #else
-        unique_lock( detail::thread_move_t< unique_lock< Mutex > > other) :
+        unique_lock( boost::detail::fiber_move_t< unique_lock< Mutex > > other) :
 		mtx_( other->mtx_),
 		locked_( other->locked_)
         {
@@ -130,20 +130,20 @@ public:
             other->mtx_ = 0;
         }
 
-        operator detail::thread_move_t< unique_lock< Mutex > >()
+        operator boost::detail::fiber_move_t< unique_lock< Mutex > >()
         { return move(); }
 
-        detail::thread_move_t< unique_lock< Mutex > > move()
-        { return detail::thread_move_t< unique_lock< Mutex > >( * this); }
+        boost::detail::fiber_move_t< unique_lock< Mutex > > move()
+        { return boost::detail::fiber_move_t< unique_lock< Mutex > >( * this); }
 
-        unique_lock & operator=( detail::thread_move_t< unique_lock< Mutex > > other)
+        unique_lock & operator=( boost::detail::fiber_move_t< unique_lock< Mutex > > other)
         {
             unique_lock tmp( other);
             swap( tmp);
             return * this;
         }
 
-        void swap( detail::thread_move_t< unique_lock< Mutex > > other)
+        void swap( boost::detail::fiber_move_t< unique_lock< Mutex > > other)
         {
             std::swap( mtx_, other->mtx_);
             std::swap( locked_, other->locked_);
