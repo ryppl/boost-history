@@ -22,23 +22,38 @@ namespace boost {
 namespace fibers {
 namespace detail {
 
-#define HAS_STATE_MASTER( state) \
-	( state & STATE_MASTER) != 0
+#define SET_STATE_NOT_STARTED( f) \
+	f.info_()->state = STATE_NOT_STARTED;
 
-#define HAS_STATE_NOT_STARTED( state) \
-	( state & STATE_NOT_STARTED) != 0
+#define SET_STATE_READY( f) \
+	f.info_()->state = STATE_READY;
 
-#define HAS_STATE_READY( state) \
-	( state & STATE_READY) != 0
+#define SET_STATE_RUNNING( f) \
+	f.info_()->state = STATE_RUNNING;
 
-#define HAS_STATE_RUNNING( state) \
-	( state & STATE_RUNNING) != 0
+#define SET_STATE_WAIT_FOR_JOIN( f) \
+	f.info_()->state = STATE_WAIT_FOR_JOIN;
 
-#define HAS_STATE_WAIT_FOR_JOIN( state) \
-	( state & STATE_WAIT_FOR_JOIN) != 0
+#define SET_STATE_TERMINATED( f) \
+	f.info_()->state = STATE_TERMINATED
 
-#define HAS_STATE_TERMINATED( state) \
-	( state & STATE_TERMINATED) != 0
+#define IN_STATE_MASTER( f) \
+	( f.info_()->state == STATE_MASTER)
+
+#define IN_STATE_NOT_STARTED( f) \
+	( f.info_()->state == STATE_NOT_STARTED)
+
+#define IN_STATE_READY( f) \
+	( f.info_()->state == STATE_READY)
+
+#define IN_STATE_RUNNING( f) \
+	( f.info_()->state == STATE_RUNNING)
+
+#define IN_STATE_WAIT_FOR_JOIN( f) \
+	( f.info_()->state == STATE_WAIT_FOR_JOIN)
+
+#define IN_STATE_TERMINATED( f) \
+	( f.info_()->state == STATE_TERMINATED)
 
 round_robin::round_robin() :
 	master_(),
@@ -61,11 +76,11 @@ round_robin::add( fiber const& f)
 {
 	if ( ! f) throw fiber_moved();
 
-	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_()->state) );
-	BOOST_ASSERT( STATE_NOT_STARTED == f.info_()->state);
+	BOOST_ASSERT( ! IN_STATE_MASTER( f) );
+	BOOST_ASSERT( IN_STATE_NOT_STARTED( f) );
 
 	// set state to ready
-	f.info_()->state = STATE_READY;
+	SET_STATE_READY( f);
 
 	// insert fiber to fiber-list
 	std::pair< std::map< fiber::id, schedulable >::iterator, bool > result(
@@ -83,16 +98,21 @@ round_robin::add( fiber const& f)
 
 fiber::id
 round_robin::get_id() const
-{ return active_.get_id(); }
+{
+	BOOST_ASSERT( IN_STATE_RUNNING( active_) );
+//	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
+
+	return active_.get_id();
+}
 
 void
 round_robin::yield()
 {
-	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
+	BOOST_ASSERT( IN_STATE_RUNNING( active_) );
 	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	// set state ready
-	active_.info_()->state = STATE_READY;
+	SET_STATE_READY( active_);
 
 	// put fiber to runnable-queue
 	runnable_fibers_.push_back( active_.get_id() );
@@ -104,11 +124,10 @@ round_robin::yield()
 void
 round_robin::cancel()
 {
-	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
+	BOOST_ASSERT( IN_STATE_RUNNING( active_) );
 	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	schedulable s( fibers_[active_.get_id()]);
-
 	// invoke each fiber waiting on this fiber
 	BOOST_FOREACH( fiber::id id__, s.joining_fibers)
 	{
@@ -116,27 +135,20 @@ round_robin::cancel()
 		fiber f__( s__.f);
 		BOOST_ASSERT( s__.waiting_on);
 		BOOST_ASSERT( active_.get_id() == * s__.waiting_on);
-		BOOST_ASSERT( HAS_STATE_WAIT_FOR_JOIN( f__.info_()->state) );
+		BOOST_ASSERT( IN_STATE_WAIT_FOR_JOIN( f__) );
 
 		// clear waiting-on
 		fibers_[id__].waiting_on.reset();
 
-		// remove wait-for-join state
-		f__.info_()->state &= ~STATE_WAIT_FOR_JOIN;
-
-		// if fiber is in state ready or running
-		// put it on runnable-queue
-		if ( ( HAS_STATE_READY( f__.info_()->state) || HAS_STATE_RUNNING( f__.info_()->state) ) )
-		{
-			f__.info_()->state = STATE_READY;
-			runnable_fibers_.push_back( id__);
-		}
+		// put fiber on runnable-queue
+		SET_STATE_READY( f__);
+		runnable_fibers_.push_back( id__);
 	}
 	// clear waiting-queue
 	fibers_[active_.get_id()].joining_fibers.clear();
 
 	// set state to terminated
-	active_.info_()->state = STATE_TERMINATED;
+	SET_STATE_TERMINATED( active_);
 
 	// put fiber to terminated-queue
 	terminated_fibers_.push( active_.get_id() );
@@ -148,7 +160,7 @@ round_robin::cancel()
 void
 round_robin::interrupt()
 {
-	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
+	BOOST_ASSERT( IN_STATE_RUNNING( active_) );
 	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	// gets invoked by interruption-points
@@ -161,7 +173,8 @@ round_robin::interrupt()
 bool
 round_robin::interruption_requested() const
 {
-	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
+	BOOST_ASSERT( IN_STATE_RUNNING( active_) );
+//	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	return active_.interruption_requested();
 }
@@ -169,7 +182,8 @@ round_robin::interruption_requested() const
 bool
 round_robin::interruption_enabled() const
 {
-	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
+	BOOST_ASSERT( IN_STATE_RUNNING( active_) );
+//	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	return active_.info_()->interrupt == detail::INTERRUPTION_ENABLED;
 }
@@ -177,7 +191,7 @@ round_robin::interruption_enabled() const
 fiber_interrupt_t &
 round_robin::interrupt_flags()
 {
-	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
+	BOOST_ASSERT( IN_STATE_RUNNING( active_) );
 	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	return active_.info_()->interrupt;
@@ -186,7 +200,8 @@ round_robin::interrupt_flags()
 int
 round_robin::priority() const
 {
-	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
+	BOOST_ASSERT( IN_STATE_RUNNING( active_) );
+//	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	return active_.priority();
 }
@@ -194,7 +209,7 @@ round_robin::priority() const
 void
 round_robin::priority( int prio)
 {
-	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
+	BOOST_ASSERT( IN_STATE_RUNNING( active_) );
 	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	// set priority
@@ -204,7 +219,7 @@ round_robin::priority( int prio)
 void
 round_robin::at_exit( callable_t ca)
 {
-	BOOST_ASSERT( STATE_RUNNING == active_.info_()->state);
+	BOOST_ASSERT( IN_STATE_RUNNING( active_) );
 	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	// push a exit-callback on fibers stack
@@ -219,11 +234,11 @@ round_robin::interrupt( fiber::id const& id)
 	schedulable s( i->second);
 	fiber f( s.f);
 	BOOST_ASSERT( f);
-	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_()->state) );
-	BOOST_ASSERT( ! HAS_STATE_NOT_STARTED( f.info_()->state) );
+	BOOST_ASSERT( ! IN_STATE_MASTER( f) );
+	BOOST_ASSERT( ! IN_STATE_NOT_STARTED( f) );
 
 	// nothing to do for al terminated fiber
-	if ( HAS_STATE_TERMINATED( f.info_()->state) ) return;
+	if ( IN_STATE_TERMINATED( f) ) return;
 
 	// remove disabled flag
 	f.info_()->interrupt &= ~detail::INTERRUPTION_DISABLED;
@@ -232,7 +247,7 @@ round_robin::interrupt( fiber::id const& id)
 	f.info_()->interrupt |= detail::INTERRUPTION_ENABLED;
 
 	// if fiber is waiting
-	if ( HAS_STATE_WAIT_FOR_JOIN( f.info_()->state) )
+	if ( IN_STATE_WAIT_FOR_JOIN( f) )
 	{
 		// fiber is waiting (joining) on another fiber
 		// remove it from the waiting-queue, reset waiting-on
@@ -240,12 +255,7 @@ round_robin::interrupt( fiber::id const& id)
 		BOOST_ASSERT( s.waiting_on);
 		fibers_[* s.waiting_on].joining_fibers.remove( id);
 		fibers_[id].waiting_on.reset();
-		f.info_()->interrupt &= ~STATE_WAIT_FOR_JOIN;
-
-		BOOST_ASSERT(
-				HAS_STATE_READY( f.info_()->state) ||
-				HAS_STATE_RUNNING( f.info_()->state) );
-		f.info_()->state = STATE_READY;
+		SET_STATE_READY( f);
 		runnable_fibers_.push_back( id);
 	}
 }	
@@ -258,11 +268,11 @@ round_robin::cancel( fiber::id const& id)
 	schedulable s( i->second);
 	fiber f( s.f);
 	BOOST_ASSERT( f);
-	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_()->state) );
-	BOOST_ASSERT( ! HAS_STATE_NOT_STARTED( f.info_()->state) );
+	BOOST_ASSERT( ! IN_STATE_MASTER( f) );
+	BOOST_ASSERT( ! IN_STATE_NOT_STARTED( f) );
 
 	// nothing to do for al terminated fiber
-	if ( HAS_STATE_TERMINATED( f.info_()->state) ) return;
+	if ( IN_STATE_TERMINATED( f) ) return;
 
 	// invoke each fiber waiting on this fiber
 	BOOST_FOREACH( fiber::id id__, s.joining_fibers)
@@ -270,49 +280,42 @@ round_robin::cancel( fiber::id const& id)
 		schedulable s__( fibers_[id__]);
 		fiber f__( s__.f);
 		BOOST_ASSERT( s__.waiting_on);
-		BOOST_ASSERT( HAS_STATE_WAIT_FOR_JOIN( f__.info_()->state) );
+		BOOST_ASSERT( IN_STATE_WAIT_FOR_JOIN( f__) );
 
 		// clear waiting-on
 		fibers_[id__].waiting_on.reset();
 
-		// remove wait-for-join state
-		f__.info_()->state &= ~STATE_WAIT_FOR_JOIN;
-
-		// if fiber is in state ready or running
-		// put it on runnable-queue
-		if ( ( HAS_STATE_READY( f__.info_()->state) || HAS_STATE_RUNNING( f__.info_()->state) ) )
-		{
-			f__.info_()->state = STATE_READY;
-			runnable_fibers_.push_back( id__);
-		}
+		// put fiber on runnable-queue
+		SET_STATE_READY( f__);
+		runnable_fibers_.push_back( id__);
 	}
 	// clear waiting-queue
 	fibers_[id].joining_fibers.clear();
 
 	// if fiber is ready remove it from the runnable-queue
 	// and put it to terminated-queue
-	if ( HAS_STATE_READY( f.info_()->state) )
+	if ( IN_STATE_READY( f) )
 	{
-		f.info_()->state = STATE_TERMINATED;
+		SET_STATE_TERMINATED( f);
 		runnable_fibers_.remove( id);
 		terminated_fibers_.push( id);	
 	}
 	// if fiber is running (== active fiber)
 	// put it to terminated-queue and switch
 	// to master fiber
-	else if ( HAS_STATE_RUNNING( f.info_()->state) )
+	else if ( IN_STATE_RUNNING( f) )
 	{
 		BOOST_ASSERT( active_.get_id() == id);
-		f.info_()->state = STATE_TERMINATED;
+		SET_STATE_TERMINATED( f);
 		terminated_fibers_.push( id);
 		f.switch_to_( master_);
 	}
 	// if fiber is waiting then remove it from the
 	// waiting-queue and put it to terminated-queue
-	else if ( HAS_STATE_WAIT_FOR_JOIN( f.info_()->state) )
+	else if ( IN_STATE_WAIT_FOR_JOIN( f) )
 	{
 		BOOST_ASSERT( s.waiting_on);
-		f.info_()->state = STATE_TERMINATED;
+		SET_STATE_TERMINATED( f);
 		fibers_[* s.waiting_on].joining_fibers.remove( id);
 		terminated_fibers_.push( id);	
 	}
@@ -328,11 +331,11 @@ round_robin::join( fiber::id const& id)
 	schedulable s( i->second);
 	fiber f( s.f);
 	BOOST_ASSERT( f);
-	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_()->state) );
-	BOOST_ASSERT( ! HAS_STATE_NOT_STARTED( f.info_()->state) );
+	BOOST_ASSERT( ! IN_STATE_MASTER( f) );
+	BOOST_ASSERT( ! IN_STATE_NOT_STARTED( f) );
 
 	// nothing to do for a terminated fiber
-	if ( HAS_STATE_TERMINATED( f.info_()->state) ) return;
+	if ( IN_STATE_TERMINATED( f) ) return;
 
 	// prevent self-join
 	if ( active_.get_id() == id) throw scheduler_error("self-join denied");
@@ -341,7 +344,7 @@ round_robin::join( fiber::id const& id)
 	fibers_[id].joining_fibers.push_back( active_.get_id() );
 
 	// set state waiting
-	active_.info_()->state |= STATE_WAIT_FOR_JOIN;
+	SET_STATE_WAIT_FOR_JOIN( active_);
 
 	// set fiber-id waiting-on
 	fibers_[active_.get_id()].waiting_on = id;
@@ -349,8 +352,8 @@ round_robin::join( fiber::id const& id)
 	// switch to master-fiber
 	active_.switch_to_( master_);
 
-	// fiber was invoked
-	BOOST_ASSERT( ! HAS_STATE_WAIT_FOR_JOIN( active_.info_()->state) );
+	// fiber returned
+	BOOST_ASSERT( IN_STATE_RUNNING( active_) );
 	BOOST_ASSERT( ! fibers_[active_.get_id()].waiting_on);
 
 	// check if interruption was requested
@@ -364,9 +367,9 @@ round_robin::reschedule( fiber::id const& id)
 	if ( i == fibers_.end() ) return;
 	fiber f( i->second.f);
 	BOOST_ASSERT( f);
-	BOOST_ASSERT( ! HAS_STATE_MASTER( f.info_()->state) );
-	BOOST_ASSERT( ! HAS_STATE_NOT_STARTED( f.info_()->state) );
-	BOOST_ASSERT( ! HAS_STATE_TERMINATED( f.info_()->state) );
+	BOOST_ASSERT( ! IN_STATE_MASTER( f) );
+	BOOST_ASSERT( ! IN_STATE_NOT_STARTED( f) );
+	BOOST_ASSERT( ! IN_STATE_TERMINATED( f) );
 
 	// TODO: re-schedule fiber == remove from
 	// runnable_fibers + re-insert
@@ -381,8 +384,8 @@ round_robin::run()
 		schedulable s = fibers_[runnable_fibers_.front()];
 		active_ = s.f;
 		BOOST_ASSERT( ! s.waiting_on);
-		BOOST_ASSERT( active_.info_()->state == STATE_READY);
-		active_.info_()->state = STATE_RUNNING;
+		BOOST_ASSERT( IN_STATE_READY( active_) );
+		SET_STATE_RUNNING( active_);
 		master_.switch_to_( active_);
 		runnable_fibers_.pop_front();
 		result = true;
@@ -396,7 +399,7 @@ round_robin::run()
 		fiber f( s.f);
 		terminated_fibers_.pop();
 		BOOST_ASSERT( s.joining_fibers.empty() );	
-		BOOST_ASSERT( STATE_TERMINATED == f.info_()->state);	
+		BOOST_ASSERT( IN_STATE_TERMINATED( f) );	
 		fibers_.erase( f.get_id() );
 		result = true;
 	}
@@ -411,12 +414,17 @@ std::size_t
 round_robin::size() const
 { return fibers_.size(); }
 
-#undef HAS_STATE_MASTER
-#undef HAS_STATE_NOT_STARTED
-#undef HAS_STATE_READY
-#undef HAS_STATE_RUNNING
-#undef HAS_STATE_WAIT_FOR_JOIN
-#undef HAS_STATE_TERMINATED
+#undef IN_STATE_MASTER
+#undef IN_STATE_NOT_STARTED
+#undef IN_STATE_READY
+#undef IN_STATE_RUNNING
+#undef IN_STATE_WAIT_FOR_JOIN
+#undef IN_STATE_TERMINATED
+#undef SET_STATE_NOT_STARTED
+#undef SET_STATE_READY
+#undef SET_STATE_RUNNING
+#undef SET_STATE_WAIT_FOR_JOIN
+#undef SET_STATE_TERMINATED
 
 }}}
 
