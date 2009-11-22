@@ -35,5 +35,12 @@ BOOST_CGI_NAMESPACE_BEGIN
  } // namespace common
 BOOST_CGI_NAMESPACE_END
 
+namespace boost {
+
+  namespace cgi { using ::BOOST_CGI_NAMESPACE::common::commit; }
+  namespace fcgi { using ::BOOST_CGI_NAMESPACE::common::commit; }
+
+} // namespace boost
+
 #endif // BOOST_CGI_COMMIT_HPP_INCLUDED_
 

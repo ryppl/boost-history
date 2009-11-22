@@ -15,30 +15,53 @@ BOOST_CGI_NAMESPACE_BEGIN
    struct path_info
    {
      typedef std::string                  value_type;
+     typedef value_type                   string_type;
+     typedef string_type::size_type       size_type;
      typedef std::vector<value_type>      vector_type;
      typedef vector_type::iterator        iterator;
      typedef vector_type::const_iterator  const_iterator;
 
+private:
+     void parse()
+     {
+       if (value[0] != '/') value.insert(value.begin(), '/');
+    	 boost::algorithm::split(
+           parts, value, boost::algorithm::is_any_of("/"));       
+     }
+     
+     string_type substr(string_type const& str, char ch, bool include_char = true) const
+     {
+       try {
+         return value.substr(value.find_last_of(ch));
+       } catch(...) {
+         return "";
+       }
+     }
+
+public:
+     
      template<typename S, typename P, typename A>
      path_info(basic_request<S,P,A> & request)
        : value(request.env["path_info"])
      {
-    	 boost::algorithm::split(
-           parts, value, boost::algorithm::is_any_of("/"));
+       parse();
      }
 
      path_info(value_type const& str)
        : value(str)
      {
-    	 boost::algorithm::split(
-           parts, value, boost::algorithm::is_any_of("/"));
+       parse();
      }
      
      value_type& operator[](int i) { return parts[i]; }
      
-     value_type& str() { return value; }
+     value_type& string() { return value; }
      
      operator value_type& () { return value; }
+     
+     string_type stem() const { return substr(value, '/', false); }
+     
+     string_type extension() const { return substr(stem(), '.'); }
      
      iterator begin() { return parts.begin(); }
      iterator end() { return parts.end(); }
