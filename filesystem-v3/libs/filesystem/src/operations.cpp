@@ -177,6 +177,8 @@ namespace
   const char dot = '.';
 # endif
 
+  boost::filesystem::directory_iterator end_dir_itr;
+
   const std::size_t buf_size(128);
   const error_code ok;
 
@@ -270,8 +272,7 @@ namespace
 
   bool is_empty_directory(const path& p)
   {
-    static const fs::directory_iterator end_itr;
-    return fs::directory_iterator(p)== end_itr;
+    return fs::directory_iterator(p)== end_dir_itr;
   }
 
   bool remove_directory(const path& p) // true if succeeds
@@ -306,14 +307,13 @@ namespace
   boost::uintmax_t remove_all_aux(const path& p, fs::file_status sym_stat,
     error_code* ec)
   {
-    static const fs::directory_iterator end_itr;
     boost::uintmax_t count = 1;
 
     if (!fs::is_symlink(sym_stat)// don't recurse symbolic links
       && fs::is_directory(sym_stat))
     {
       for (fs::directory_iterator itr(p);
-            itr != end_itr; ++itr)
+            itr != end_dir_itr; ++itr)
       {
         fs::file_status tmp_sym_stat = fs::symlink_status(itr->path(), *ec);
         if (ec != 0 && ec)
@@ -1658,7 +1658,7 @@ namespace detail
 # endif
   }
 
-  void directory_iterator_construct(directory_iterator & it,
+  void directory_iterator_construct(directory_iterator& it,
     const path& p, system::error_code* ec)    
   {
     if (error(p.empty(), not_found_error, p, ec,
@@ -1693,30 +1693,36 @@ namespace detail
     }
   }
 
-  void directory_iterator_increment(directory_iterator & it)
+  void directory_iterator_increment(directory_iterator& it,
+    system::error_code* ec)
   {
     BOOST_ASSERT(it.m_imp.get() && "attempt to increment end iterator");
     BOOST_ASSERT(it.m_imp->handle != 0 && "internal program error");
     
     path::string_type filename;
     file_status file_stat, symlink_file_stat;
-    system::error_code ec;
+    system::error_code temp_ec;
 
     for (;;)
     {
-      ec = dir_itr_increment(it.m_imp->handle,
+      temp_ec = dir_itr_increment(it.m_imp->handle,
 #if     defined(BOOST_POSIX_API)
         it.m_imp->buffer,
 #endif
         filename, file_stat, symlink_file_stat);
 
-      if (ec)
+      if (temp_ec)
       {
         it.m_imp.reset();
-        error(true, it.m_imp->dir_entry.path().parent_path(),
-          &ec, "boost::filesystem::directory_iterator::operator++");
+        if (ec == 0)
+          throw_exception(
+            filesystem_error("boost::filesystem::directory_iterator::operator++",
+              it.m_imp->dir_entry.path().parent_path(),
+              error_code(BOOST_ERRNO, system_category)));
+        ec->assign(BOOST_ERRNO, system_category);
         return;
       }
+      else if (ec != 0) ec->clear();
 
       if (it.m_imp->handle == 0){ it.m_imp.reset(); return; } // eof, make end
       if (!(filename[0] == dot // !(dot or dot-dot)
@@ -1730,7 +1736,6 @@ namespace detail
       }
     }
   }
-
 }  // namespace detail
 } // namespace filesystem
 } // namespace boost

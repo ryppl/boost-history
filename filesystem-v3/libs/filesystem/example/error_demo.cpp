@@ -37,7 +37,7 @@ namespace
 
   void report_filesystem_error(const system_error& ex)
   {
-    cout << "  Threw filesystem_error exception:\n"
+    cout << "  threw filesystem_error exception:\n"
          << "    ex.code().value() is " << ex.code().value() << '\n'
          << "    ex.code().category().name() is " << ex.code().category().name() << '\n'
          << "    ex.what() is " << ex.what() << '\n'
@@ -46,7 +46,7 @@ namespace
 
   void report_status(fs::file_status s)
   {
-    cout << "file_status::type() is ";
+    cout << "  file_status::type() is ";
     switch (s.type())
     {
     case fs::status_error:
@@ -97,25 +97,26 @@ int main(int argc, char* argv[])
 
   error_code ec;
 
-  //  construct path - no error_code
+  ////  construct path - no error_code
 
-  try { path p1(argv[1]); }
-  catch (const system_error& ex)
-  {
-    cout << "construct path without error_code";
-    report_system_error(ex);
-  }
+  //try { path p1(argv[1]); }
+  //catch (const system_error& ex)
+  //{
+  //  cout << "construct path without error_code";
+  //  report_system_error(ex);
+  //}
 
-  //  construct path - with error_code
+  ////  construct path - with error_code
 
+  path p (argv[1]);
 
-  path p(argv[1]);
+  fs::file_status s;
+  bool            b (false);
+  fs::directory_iterator di;
 
   //  get status - no error_code
 
-  fs::file_status s;
-
-  cout << "status(argv[1]);\n";
+  cout << "\nstatus(\"" << p.native_string() << "\");\n";
   threw_exception = false;
 
   try { s = fs::status(p); }
@@ -130,14 +131,55 @@ int main(int argc, char* argv[])
 
   //  get status - with error_code
 
-  cout << "status(argv[1], ec);\n";
+  cout << "\nstatus(\"" << p.native_string() << "\", ec);\n";
   s = fs::status(p, ec);
   report_status(s);
   report_error_code(ec);
 
   //  query existence - no error_code
 
+  cout << "\nexists(\"" << p.native_string() << "\");\n";
+  threw_exception = false;
+
+  try { b = fs::exists(p); }
+  catch (const system_error& ex)
+  {
+    report_filesystem_error(ex);
+    threw_exception = true;
+  }
+  if (!threw_exception)
+  {
+    cout << "  Did not throw exception\n"
+         << "  Returns: " << (b ? "true" : "false") << '\n';
+  }
+
   //  query existence - with error_code
+
+  //  directory_iterator - no error_code
+
+  cout << "\ndirectory_iterator(\"" << p.native_string() << "\");\n";
+  threw_exception = false;
+
+  try { di = fs::directory_iterator(p); }
+  catch (const system_error& ex)
+  {
+    report_filesystem_error(ex);
+    threw_exception = true;
+  }
+  if (!threw_exception)
+  {
+    cout << "  Did not throw exception\n"
+      << (di == fs::directory_iterator() ? "  Equal" : "  Not equal")
+      << " to the end iterator\n";
+  }
+
+  //  directory_iterator - with error_code
+
+  cout << "\ndirectory_iterator(\"" << p.native_string() << "\", ec);\n";
+  di = fs::directory_iterator(p, ec);
+  cout << (di == fs::directory_iterator() ? "  Equal" : "  Not equal")
+       << " to the end iterator\n";
+  report_error_code(ec);
 
   return 0;
 }

@@ -46,6 +46,8 @@
 #include <string>
 #include <utility> // for pair
 #include <ctime>
+#include <vector>
+#include <stack>
 
 #ifdef BOOST_WINDOWS_API
 #  include <fstream>
@@ -543,13 +545,13 @@ namespace detail
 #     endif
   ); 
 
-  struct BOOST_FILESYSTEM_DECL dir_itr_imp
+  struct dir_itr_imp
   {
     directory_entry  dir_entry;
-    void *           handle;
+    void*            handle;
 
 #   ifdef BOOST_POSIX_API
-      void *           buffer;  // see dir_itr_increment implementation
+      void*            buffer;  // see dir_itr_increment implementation
 #   endif
 
     dir_itr_imp() : handle(0)
@@ -569,9 +571,10 @@ namespace detail
   };
 
   // see path::iterator: comment below
-  BOOST_FILESYSTEM_DECL void directory_iterator_construct(directory_iterator & it,
-    const path& p, system::error_code * ec);
-  BOOST_FILESYSTEM_DECL void directory_iterator_increment(directory_iterator & it);
+  BOOST_FILESYSTEM_DECL void directory_iterator_construct(directory_iterator& it,
+    const path& p, system::error_code* ec);
+  BOOST_FILESYSTEM_DECL void directory_iterator_increment(directory_iterator& it,
+    system::error_code* ec);
 
 }  // namespace detail
 
@@ -600,13 +603,20 @@ namespace detail
         : m_imp(new detail::dir_itr_imp)
           { detail::directory_iterator_construct(*this, p, &ec); }
 
-    ~directory_iterator() {} // never throws
+   ~directory_iterator() {} // never throws
+
+    directory_iterator& increment(system::error_code& ec)
+    { 
+      detail::directory_iterator_increment(*this, &ec);
+      return *this;
+    }
 
   private:
     friend struct detail::dir_itr_imp;
-    friend void detail::directory_iterator_construct(directory_iterator & it,
-      const path& p, system::error_code * ec);
-    friend void detail::directory_iterator_increment(directory_iterator & it);
+    friend void detail::directory_iterator_construct(directory_iterator& it,
+      const path& p, system::error_code* ec);
+    friend void detail::directory_iterator_increment(directory_iterator& it,
+      system::error_code* ec);
 
     // shared_ptr provides shallow-copy semantics required for InputIterators.
     // m_imp.get()==0 indicates the end iterator.
@@ -623,11 +633,195 @@ namespace detail
       return m_imp->dir_entry;
     }
 
-    void increment() { detail::directory_iterator_increment(*this); }
+    void increment() { detail::directory_iterator_increment(*this, 0); }
 
-    bool equal(const directory_iterator & rhs) const
+    bool equal(const directory_iterator& rhs) const
       { return m_imp == rhs.m_imp; }
   };
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                      recursive_directory_iterator helpers                            //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
+  namespace detail
+  {
+    struct recur_dir_itr_imp
+    {
+      typedef directory_iterator element_type;
+      std::stack< element_type, std::vector< element_type > > m_stack;
+      int  m_level;
+      bool m_no_push_request;
+
+      recur_dir_itr_imp() : m_level(0), m_no_push_request(false) {}
+
+      void increment(system::error_code* ec);  // ec == 0 means throw on error
+
+      void pop();
+
+    };
+
+    //  Implementation is inline to avoid dynamic linking difficulties with m_stack:
+    //  Microsoft warning C4251, m_stack needs to have dll-interface to be used by
+    //  clients of struct 'boost::filesystem::detail::recur_dir_itr_imp'
+
+    inline
+    void recur_dir_itr_imp::increment(system::error_code* ec)
+    // ec == 0 means throw on error
+    {
+      if (m_no_push_request)
+        { m_no_push_request = false; }
+      else if (is_directory(m_stack.top()->status()))
+      {
+        if (ec == 0)
+          m_stack.push(directory_iterator(m_stack.top()->path()));
+        else
+        {
+          m_stack.push(directory_iterator(m_stack.top()->path(), *ec));
+          if (*ec) return;
+        }
+        if (m_stack.top() != directory_iterator())
+        {
+          ++m_level;
+          return;
+        }
+        m_stack.pop();
+      }
+
+      while (!m_stack.empty() && ++m_stack.top() == directory_iterator())
+      {
+        m_stack.pop();
+        --m_level;
+      }
+    }
+
+    inline
+    void recur_dir_itr_imp::pop()
+    {
+      BOOST_ASSERT(m_level > 0 && "pop() on recursive_directory_iterator with level < 1");
+
+      do
+      {
+        m_stack.pop();
+        --m_level;
+      }
+      while (!m_stack.empty() && ++m_stack.top() == directory_iterator());
+    }
+  } // namespace detail
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                           recursive_directory_iterator                               //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
+  class recursive_directory_iterator
+    : public boost::iterator_facade<
+        recursive_directory_iterator,
+        directory_entry,
+        boost::single_pass_traversal_tag >
+  {
+  public:
+
+    recursive_directory_iterator(){}  // creates the "end" iterator
+
+    explicit recursive_directory_iterator(const path& dir_path)
+      : m_imp(new detail::recur_dir_itr_imp)
+    {
+      m_imp->m_stack.push(directory_iterator(dir_path));
+      if (m_imp->m_stack.top() == directory_iterator())
+        { m_imp.reset (); }
+    }
+
+    recursive_directory_iterator(const path& dir_path,
+      system::error_code & ec)
+    : m_imp(new detail::recur_dir_itr_imp)
+    {
+      m_imp->m_stack.push(directory_iterator(dir_path, ec));
+      if (m_imp->m_stack.top() == directory_iterator())
+        { m_imp.reset (); }
+    }
+
+    recursive_directory_iterator& increment(system::error_code* ec)
+    {
+      BOOST_ASSERT(m_imp.get() && "increment() on end recursive_directory_iterator");
+      m_imp->increment(ec);
+      return *this;
+    }
+
+    int level() const
+    { 
+      BOOST_ASSERT(m_imp.get() && "level() on end recursive_directory_iterator");
+      return m_imp->m_level;
+    }
+
+    bool no_push_request() const
+    {
+      BOOST_ASSERT(m_imp.get() && "no_push_request() on end recursive_directory_iterator");
+      return m_imp->m_no_push_request;
+    }
+
+    void pop()
+    { 
+      BOOST_ASSERT(m_imp.get() && "pop() on end recursive_directory_iterator");
+      m_imp->pop();
+      if (m_imp->m_stack.empty()) m_imp.reset(); // done, so make end iterator
+    }
+
+    void no_push()
+    {
+      BOOST_ASSERT(m_imp.get() && "no_push() on end recursive_directory_iterator");
+      m_imp->m_no_push_request = true;
+    }
+
+    file_status status() const
+    {
+      BOOST_ASSERT(m_imp.get()
+        && "status() on end recursive_directory_iterator");
+      return m_imp->m_stack.top()->status();
+    }
+
+    file_status symlink_status() const
+    {
+      BOOST_ASSERT(m_imp.get()
+        && "symlink_status() on end recursive_directory_iterator");
+      return m_imp->m_stack.top()->symlink_status();
+    }
+
+  private:
+
+    // shared_ptr provides shallow-copy semantics required for InputIterators.
+    // m_imp.get()==0 indicates the end iterator.
+    boost::shared_ptr< detail::recur_dir_itr_imp >  m_imp;
+
+    friend class boost::iterator_core_access;
+
+    boost::iterator_facade< 
+      recursive_directory_iterator,
+      directory_entry,
+      boost::single_pass_traversal_tag >::reference
+    dereference() const 
+    {
+      BOOST_ASSERT(m_imp.get() && "dereference of end recursive_directory_iterator");
+      return *m_imp->m_stack.top();
+    }
+
+    void increment()
+    { 
+      BOOST_ASSERT(m_imp.get() && "increment of end recursive_directory_iterator");
+      m_imp->increment(0);
+      if (m_imp->m_stack.empty()) m_imp.reset(); // done, so make end iterator
+    }
+
+    bool equal(const recursive_directory_iterator& rhs) const
+      { return m_imp == rhs.m_imp; }
+
+  };
+
+# if !defined(BOOST_FILESYSTEM_NO_DEPRECATED)
+    typedef recursive_directory_iterator wrecursive_directory_iterator;
+# endif
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //

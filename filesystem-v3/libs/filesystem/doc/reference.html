@@ -74,9 +74,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#directory_entry-observers">directory_entry observers</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#directory_entry-comparisons">directory_entry comparisons</a><br>
 <a href="#Class-directory_iterator">Class  directory_iterator</a><br>
-&nbsp;&nbsp;&nbsp;
-<a href="#directory_iterator-constructors">directory_iterator 
-    constructors</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#directory_iterator-members">directory_iterator 
+    members</a><br>
 <a href="#Class-recursive_directory_iterator">Class recursive_directory_iterator</a><br>
     <a href="#file_status">Class 
     file_status</a><br>
@@ -418,7 +417,7 @@ system. </p>
         typedef std::basic_string&lt;value_type&gt; string_type;
         typedef path_traits::codecvt_type     codecvt_type;
 
-        // <a href="#path-constructors">constructors</a>
+        // <a href="#path-constructors">constructors</a> and destructor
         path();
         path(const path&amp; p);
 
@@ -427,6 +426,8 @@ system. </p>
 
         template &lt;class Source&gt;
           path(Source const&amp; source);
+
+       ~path();
 
         // <a href="#path-assignments">assignments</a>
         path&amp; operator=(const path&amp; p);
@@ -1291,10 +1292,16 @@ void swap( path&lt;String, Traits&gt; &amp; lhs, path&lt;String, Traits&gt; &amp
       class basic_filesystem_error : public <span style="background-color: #FFFFFF">system</span>_error
       {
       public:
-
+        filesystem_error();
+        filesystem_error(const filesystem_error&amp;);
         <a href="#filesystem_error-2-arg">filesystem_error</a>(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, system::error_code ec);
         <a href="#filesystem_error-3-arg">filesystem_error</a>(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, const path&amp; p1, system::error_code ec);
         <a href="#filesystem_error-4-arg">filesystem_error</a>(const std::string&amp; <span style="background-color: #FFFFFF">what_arg</span>, const path&amp; p1, const path&amp; p2, system::error_code ec);
+
+        filesystem_error&amp; filesystem_error(const filesystem_error&amp;);
+       ~filesystem_error();
+
+        filesystem_error&amp; operator=(const filesystem_error&amp;);
 
         const path&amp; <a href="#filesystem_error-path1">path1</a>() const;
         const path&amp; <a href="#filesystem_error-path2">path2</a>() const;
@@ -1422,11 +1429,14 @@ clause.</p>
       {
       public:
 
-        // <a href="#directory_entry-constructors">constructors</a>
+        // <a href="#directory_entry-constructors">constructors</a> and destructor
         directory_entry();
+        directory_entry(const directory_entry&amp;);
         explicit directory_entry(const path_type&amp; p, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
+       ~directory_entry(); 
 
         // <a href="#directory_entry-modifiers">modifiers</a>
+        directory_entry&amp; operator=(const directory_entry&amp;);
         void assign(const path_type&amp; p, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
         void replace_filename(const string_type&amp; s, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
 
@@ -1598,15 +1608,21 @@ compliant iteration over the contents of a directory. Also see class <code>
       public:
         typedef Path path_type;
 
-        // <a href="#directory_iterator-constructors">constructors</a>
+        // <a href="#directory_iterator-members">member functions</a>
+
         directory_iterator();  // creates the &quot;end&quot; iterator
+        directory_iterator(const directory_iterator&amp;);
         explicit directory_iterator(const path&amp; p);
         directory_iterator(const path&amp; p, system::error_code&amp; ec);
-
        ~directory_iterator();
 
+        directory_iterator&amp; operator=(const directory_iterator&amp;);
+
+        directory_iterator&amp; operator++();
+        directory_iterator&amp; increment(system::error_code&amp; ec);
+
         // other members as required by
-        //  C++ Std, 24.1.1 Input iterators [lib.input.iterators]
+        //  C++ Std, 24.1.1 Input iterators [input.iterators]
       };
 
     } // namespace filesystem
@@ -1667,7 +1683,7 @@ result in an iterator whose value is the removed or added directory entry. See
 <a href="http://www.opengroup.org/onlinepubs/000095399/functions/readdir_r.html">readdir_r()</a></code>. <i>
 --end note</i>]</p>
 </blockquote>
-<h4><a name="directory_iterator-constructors"><code>directory_iterator</code> constructors</a></h4>
+<h4><a name="directory_iterator-members"><code>directory_iterator</code> members</a></h4>
 
 <p><code>directory_iterator();</code></p>
 
@@ -1684,15 +1700,28 @@ directory_iterator(</code>const path&amp; p, system::error_code&amp; ec<code>);<
 <blockquote>
 
 <p><i>Effects:</i> Constructs a iterator representing the first 
-entry in the directory <code>p</code> resolves to, if any, otherwise, the end iterator.</p>
+entry in the directory <code>p</code> resolves to, if any; otherwise, the end iterator.</p>
 
 <p><i>Throws:</i> As specified in
   <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
   Error reporting</a>.</p>
 
-<p>[<i>Note:</i> To iterate over the current directory, write <code>
+<p>[<i>Note:</i> To iterate over the current directory, use <code>
 directory_iterator(&quot;.&quot;)</code> rather than <code>directory_iterator(&quot;&quot;)</code>.
 <i>-- end note</i>]</p>
+</blockquote>
+<pre>directory_iterator&amp; <a name="directory_iterator-increment">operator++</a>();
+directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
+<blockquote>
+
+<p><i>Effects:</i> As specified by the C++ Standard, 24.1.1 Input iterators [input.iterators]</p>
+
+<p><i>Returns:</i> <code>*this</code>.</p>
+
+<p><i>Throws:</i> As specified in
+  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  Error reporting</a>.</p>
+
 </blockquote>
 <h3><a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code></a></h3>
 <p>Objects of type <code>directory_iterator</code> provide standard library 
@@ -1707,17 +1736,23 @@ its sub-directories.</p>
       {
       public:
 
-        // constructors
+        // constructors and destructor
         recursive_directory_iterator();
-        explicit recursive_directory_iterator(const path&amp; dp);
-        recursive_directory_iterator(const recursive_directory_iterator&amp; brdi);
-        recursive_directory_iterator&amp; operator=(const recursive_directory_iterator&amp; brdi);
+        recursive_directory_iterator(const recursive_directory_iterator&amp;);
+        explicit recursive_directory_iterator(const path&amp; p);
+        recursive_directory_iterator(const path&amp; p, system::error_code&amp; ec);
        ~recursive_directory_iterator();
 
         // observers
         int level() const;
+        bool no_push<code>_request</code>() const;
 
         // modifiers
+        recursive_directory_iterator&amp; operator=(const recursive_directory_iterator&amp;);
+
+        recursive_directory_iterator&amp; operator++();
+        recursive_directory_iterator&amp; increment(system::error_code&amp; ec);
+
         void pop();
         void no_push();
 
@@ -1725,7 +1760,8 @@ its sub-directories.</p>
         //  C++ Std, 24.1.2 Input iterators [input.iterators]
 
       private:
-        int m_level; // for exposition only
+        int  m_level; <b><i>          // for exposition only</i></b>
+        bool m_no_<code>push_request</code>;  <b><i>// for exposition only</i></b>
       };
 
     } // namespace filesystem
@@ -1733,23 +1769,87 @@ its sub-directories.</p>
 <p>The behavior of a <code>recursive_directory_iterator</code> is the same 
 as a <code>directory_iterator</code> unless otherwise specified.</p>
 <ul>
-  <li>When an iterator is constructed, <code>m_level</code> is set to 0;</li>
-  <li>When an iterator <code>it</code> is incremented, if <code>it-&gt;is_directory()</code> 
-  is true and <code>no_push()</code> had not been called subsequent to 
-  the most recent increment operation (or construction, if no increment has 
-  occurred), then&nbsp; <code>m_level</code> is incremented, the 
-  directory is visited, and its contents recursively iterated over.</li>
   <li>When an iterator reaches the end of the directory currently being iterated 
   over, or when <code>pop()</code> is called, <code>m_level</code> is 
   decremented, and iteration continues with the parent directory, until the 
   directory specified in the constructor argument is reached.</li>
-  <li><code>level()</code> returns <code>m_level</code>.</li>
-  <li><code>level()</code>, <code>pop()</code>, and <code>no_push()</code> all 
-  require that the iterator not be the end iterator.</li>
 </ul>
 <blockquote>
   <p>[<i>Note:</i> One of the uses of <code>no_push()</code> is to prevent 
-  unwanted recursion into symlinked directories. This may be necessary to 
+  unwanted recursion into a directory symlink. This may be necessary to 
+  prevent loops on some operating systems. <i>--end note</i>]</p>
+</blockquote>
+<pre>recursive_directory_iterator();</pre>
+<blockquote>
+
+<p><i>Effects:</i> Constructs the end iterator.</p>
+
+<p><i>Throws:</i> Nothing.</p>
+
+</blockquote>
+
+<pre><code>explicit </code>recursive_<code>directory_iterator(</code>const path&amp; p<code>);
+</code>recursive_<code>directory_iterator(</code>const path&amp; p, system::error_code&amp; ec<code>);</code></pre>
+<blockquote>
+
+<p><i>Effects:</i>&nbsp; Constructs a iterator representing the first 
+entry in the directory <code>p</code> resolves to, if any; otherwise, the end iterator.</p>
+
+<p><i>Postconditions: </i>Unless the end iterator was constructed,<i> </i><code>
+level() == 0</code>, <code>no_push_request() == false</code>.</p>
+
+<p><i>Throws:</i> As specified in
+  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  Error reporting</a>.</p>
+
+<p>[<i>Note:</i> To iterate over the current directory, use <code>recursive_directory_iterator(&quot;.&quot;)</code> rather than
+<code>recursive_directory_iterator(&quot;&quot;)</code>.
+<i>-- end note</i>]</p>
+</blockquote>
+<pre>int level() const;</pre>
+<blockquote>
+  <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
+  <p><i>Returns:</i> <code>m_level</code>.</p>
+  <p><i>Throws:</i> Nothing.</p>
+</blockquote>
+<pre>bool <code>no_push_request</code>() const;</pre>
+<blockquote>
+  <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
+  <p><i>Returns:</i> <code>m_no_push_request</code>.</p>
+  <p><i>Throws:</i> Nothing.</p>
+</blockquote>
+<pre><code>recursive_</code>directory_iterator&amp; <a name="directory_iterator-increment">operator++</a>();
+<code>recursive_</code>directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
+<blockquote>
+
+<p><i>Effects:</i> As specified by the C++ Standard, 24.1.1 Input iterators [input.iterators], 
+except that if <code>(*this)-&gt;is_directory() &amp;&amp; !no_push_requested()</code> then&nbsp; <code>m_level</code> 
+is incremented and <code>(*this)-&gt;path()</code> is recursively iterated into.</p>
+
+<p><i>Postconditions:</i> <code>no_push_request() == false</code>.</p>
+
+<p><i>Returns:</i> <code>*this</code>.</p>
+
+<p><i>Throws:</i> As specified in
+  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  Error reporting</a>.</p>
+
+</blockquote>
+<pre>void pop();</pre>
+<blockquote>
+  <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
+  <p><i>Effects:</i> If <code>level() == 0</code>, set <code>*this</code> to <code>recursive_directory_iterator()</code>. 
+  Otherwise, <code>--m_level</code>, cease iteration of the directory currently being 
+  iterated over, and continue iteration over the parent directory.</p>
+  <p><i>Throws:</i> Nothing.</p>
+</blockquote>
+<pre>void no_push();</pre>
+<blockquote>
+  <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
+<p><i>Postconditions:</i> <code>no_push_request() == true</code>.</p>
+  <p><i>Throws:</i> Nothing.</p>
+  <p>[<i>Note:</i> One of the uses of <code>no_push()</code> is to prevent 
+  unwanted recursion into a directory symlink. This may be necessary to 
   prevent loops on some operating systems. <i>--end note</i>]</p>
 </blockquote>
 <h3><a name="file_status">Class file_status</a></h3>
@@ -1760,10 +1860,13 @@ as a <code>directory_iterator</code> unless otherwise specified.</p>
       class file_status
       {
       public:
-        explicit file_status( file_type v = status_error );
+        file_status();
+        file_status(const file_status&amp;);
+        explicit file_status(file_type v=status_error);
+       ~file_status();
 
         <a href="#file_type">file_type</a> type() const;
-        void type( file_type v );
+        void type(file_type v);
       };
     } // namespace filesystem
   } // namespace boost</pre>
@@ -1774,15 +1877,16 @@ file. The internal form of the stored information is unspecified.</p>
   additional status information. <i>--end note]</i></p>
 </blockquote>
 <h4>Members</h4>
-<pre>explicit file_status( <a href="#file_type">file_type</a> v = status_error );</pre>
+<pre>explicit file_status(<a href="#file_type">file_type</a> v=status_error);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores <code>v</code>.</p>
+  <p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre>file_type type() const;</pre>
 <blockquote>
   <p><i>Returns: </i>The stored <a href="#file_type"> <code>file_type</code>.</a></p>
 </blockquote>
-<pre>void type( <a href="#file_type">file_type</a> v );</pre>
+<pre>void type(<a href="#file_type">file_type</a> v);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores <code>v</code>, replacing the previously stored 
   value.</p>
@@ -3131,9 +3235,11 @@ http://www.boost.org/libs/filesystem/doc/index.htm#Acknowledgements</a>.</p>
 Witt were particularly helpful in refining the library.</p>
 <p>The create_directories, extension, basename, and replace_extension functions 
 were developed by Vladimir Prus.</p>
-<p>Howard Hinnant and John Maddock reviewed a draft of the proposal, and 
+<p>Howard Hinnant and John Maddock reviewed a draft of the version 2 proposal, and 
 identified a number of mistakes or weaknesses, resulting in a more polished 
 final document.</p>
+<p>Peter Dimov suggested a single class path, with member templates to adapt to 
+multiple string types. His idea became the basis for the version 3 path design.</p>
 <h2><a name="References">References</a></h2>
 <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
   <tr>
@@ -3159,7 +3265,7 @@ final document.</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->11 November 2009<!--webbot bot="Timestamp" endspan i-checksum="40583" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->23 November 2009<!--webbot bot="Timestamp" endspan i-checksum="40588" --></p>
 
 </body>
 

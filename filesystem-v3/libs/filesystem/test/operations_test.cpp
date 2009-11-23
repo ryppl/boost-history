@@ -292,10 +292,20 @@ namespace
     catch (const fs::filesystem_error &) { dir_itr_exception = true; }
     BOOST_TEST(dir_itr_exception);
 
+    error_code ec;
+
+    BOOST_TEST(!ec);
+    fs::directory_iterator it("", ec);
+    BOOST_TEST(ec);
+
     dir_itr_exception = false;
     try { fs::directory_iterator it("nosuchdirectory"); }
     catch (const fs::filesystem_error &) { dir_itr_exception = true; }
     BOOST_TEST(dir_itr_exception);
+
+    ec.clear();
+    fs::directory_iterator it2("nosuchdirectory", ec);
+    BOOST_TEST(ec);
 
     dir_itr_exception = false;
     try
@@ -353,7 +363,10 @@ namespace
       }
       BOOST_TEST(++dir_itr == fs::directory_iterator());
       BOOST_TEST(dir_itr2 != fs::directory_iterator());
-      BOOST_TEST(++dir_itr2 == fs::directory_iterator());
+      ec.clear();
+      dir_itr2.increment(ec);
+      BOOST_TEST(!ec);
+      BOOST_TEST(dir_itr2 == fs::directory_iterator());
     }
 
     { // *i++ must work to meet the standard's InputIterator requirements
