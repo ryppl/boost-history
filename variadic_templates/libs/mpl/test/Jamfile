@@ -5,7 +5,6 @@
  compile aux_/preprocessor/is_seq.cpp ;
  compile aux_/preprocessor/token_equal.cpp ;
  
- compile test.cpp : : test.compile ;
  compile advance.cpp : : advance.compile ;
  compile always.cpp ;
  compile apply.cpp ;
