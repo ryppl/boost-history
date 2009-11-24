@@ -1,7 +1,7 @@
 #ifndef BOOST_MPL_LIST_HPP_INCLUDED
 #define BOOST_MPL_LIST_HPP_INCLUDED
 #include <boost/mpl/list/list0.hpp>
-#include <boost/mpl/foldr_pack.hpp>
+#include <boost/mpl/fold_assoc_pack.hpp>
 
 namespace boost
 {
@@ -19,9 +19,10 @@ list
 //  one of the files:
 //    boost/mpl/list/aux_/preprocessed/plain/listN.hpp
 //  for some N in 10,20,...
-  : foldr_pack
-    < list0
+  : fold_assoc_pack
+    < assoc_right
     , l_item_fold
+    , list0
     , Values...
     >::type
 {

@@ -10,13 +10,13 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source: /home/evansl/prog_dev/boost-svn/ro/boost-vrtmp/boost/mpl/RCS/set.hpp,v $
-// $Date: 2009/08/30 12:18:00 $
-// $Revision: 1.10 $
+// $Source: /home/evansl/prog_dev/boost-svn/ro/sandbox-rw/variadic_templates/boost/mpl/RCS/set.hpp,v $
+// $Date: 2009/11/23 14:47:01 $
+// $Revision: 1.13 $
 
 #include <boost/mpl/aux_/value_wknd.hpp>
 #include <boost/mpl/set/set0.hpp>
-#include <boost/mpl/foldr_pack.hpp>
+#include <boost/mpl/fold_assoc_pack.hpp>
 
 namespace boost
 {
@@ -28,9 +28,10 @@ namespace mpl
   >
   struct
 set
-  : foldr_pack
-    < set0
+  : fold_assoc_pack
+    < assoc_right
     , s_item_fold
+    , set0
     , Values...
     >::type
 //!

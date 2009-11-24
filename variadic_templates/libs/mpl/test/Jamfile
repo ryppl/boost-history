@@ -5,7 +5,8 @@
  compile aux_/preprocessor/is_seq.cpp ;
  compile aux_/preprocessor/token_equal.cpp ;
  
- compile advance.cpp ;
+ compile test.cpp : : test.compile ;
+ compile advance.cpp : : advance.compile ;
  compile always.cpp ;
  compile apply.cpp ;
  compile apply_wrap.cpp ;
@@ -20,7 +21,7 @@
  compile comparison.cpp ;
  compile contains.cpp ;
  compile copy.cpp ;
- compile copy_if.cpp ;
+ compile copy_if.cpp : : copy_if.compile ;
  compile count.cpp ;
  compile count_if.cpp ;
  compile deque.cpp ;
@@ -34,7 +35,7 @@
  compile find.cpp ;
  compile find_if.cpp ;
  compile fold.cpp ;
- compile foldr_pack.cpp ;
+ compile fold_assoc_pack.cpp ;
  run for_each.cpp ;
 
  compile front.cpp ;
@@ -47,7 +48,6 @@
  compile insert.cpp ;
  compile insert_range.cpp ;
  run int.cpp ;
- compile int.cpp : : int.compile ;
  run integral_c.cpp : : : <toolset>vacpp:<cxxflags>-qchars=signed ;
  compile is_placeholder.cpp ;
  compile is_sequence.cpp ;

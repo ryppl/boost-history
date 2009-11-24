@@ -14,6 +14,7 @@
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/push_front.hpp>
+#include <boost/mpl/pop_front.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/next.hpp>
@@ -148,6 +149,35 @@ namespace mpl
               Package
               < Head
               , Tail...
+              >
+            type
+            ;
+        };
+        
+          template
+          < typename Package
+          >
+          struct
+        impl_pop_front
+        ;
+          template
+          < typename... Tail
+          , typename Head
+          , template
+            < typename...
+            >class Package
+          >
+          struct
+        impl_pop_front
+          < Package
+            < Head
+            , Tail...
+            >
+          >
+        {  
+                typedef
+              Package
+              < Tail...
               >
             type
             ;
@@ -345,6 +375,26 @@ namespace mpl
           : variadic::impl_push_front
             < Package
             , Head
+            >
+        {
+        };
+    };
+    
+      template
+      <
+      >
+      struct
+    pop_front_impl
+      < aux::package_tag
+      >
+    {
+          template
+          < class Package
+          >
+          struct
+        apply
+          : variadic::impl_pop_front
+            < Package
             >
         {
         };

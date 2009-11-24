@@ -10,12 +10,12 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source: /home/evansl/prog_dev/boost-svn/ro/boost-vrtmp/boost/mpl/RCS/map.hpp,v $
-// $Date: 2009/09/02 18:45:20 $
-// $Revision: 1.5 $
+// $Source: /home/evansl/prog_dev/boost-svn/ro/sandbox-rw/variadic_templates/boost/mpl/RCS/map.hpp,v $
+// $Date: 2009/11/23 14:43:13 $
+// $Revision: 1.7 $
 
 #include <boost/mpl/map/map0.hpp>
-#include <boost/mpl/foldr_pack.hpp>
+#include <boost/mpl/fold_assoc_pack.hpp>
 
 namespace boost
 {
@@ -26,9 +26,10 @@ namespace mpl
   >
   struct
 map
-  : foldr_pack
-    < map0
+  : fold_assoc_pack
+    < assoc_right
     , m_item_fold
+    , map0
     , Values...
     >::type
 {

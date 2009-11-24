@@ -15,3 +15,52 @@ project
 unit-test tuple_non_recur.package_range_c.unit-test
   : tuple_non_recur.package_range_c.cpp
   ;
+unit-test tupmap_indexed_test.unit-test
+  : tupmap_indexed_test.cpp
+  ;
+compile tupmap_indexed_test.cpp
+  :
+  : tupmap_indexed_test-compile 
+  ;
+compile tuple_non_recur.cpp
+  :
+  : tuple_non_recur.compile 
+  ;
+compile decltype.cpp
+  :
+  : decltype.compile 
+  ;
+unit-test tuple_non_recur.unit-test
+  : tuple_non_recur.cpp
+  ;
+compile-fail tupmap_indexed_test.cpp
+  : <define>MAP_FACE_DUPKEY
+  : tupmap_indexed_test-MAP_FACE_DUPKEY
+  ;
+compile package_test.cpp
+  : 
+  ;
+compile package_c_test.cpp
+  : 
+  ;
+compile vector_c_test.cpp
+  : 
+  ;
+compile fold_test.cpp
+  : 
+  ;
+compile fold_c_test.cpp
+  : 
+  ;
+compile cons_inherit_check_test.cpp
+  : 
+  ;
+compile curry_map_index_test.cpp
+  : 
+  ;
+compile-fail package_c_ice.cpp
+  : 
+  ;
+#cpreproc test.cpreproc
+#  : test.cpp
+#  ;

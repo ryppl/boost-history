@@ -8,8 +8,8 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2009/03/24 04:20:21 $
-// $Revision: 1.2 $
+// $Date: 2009/08/30 00:09:25 $
+// $Revision: 1.7 $
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
