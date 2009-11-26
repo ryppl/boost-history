@@ -18,7 +18,7 @@ namespace bindings {
 namespace detail {
 
 template< typename T, typename Alloc, typename Id, typename Enable >
-struct adaptor< boost::numeric::ublas::vector< T, Alloc >, Id, Enable > {
+struct adaptor< ublas::vector< T, Alloc >, Id, Enable > {
 
     typedef typename copy_const< Id, T >::type value_type;
     typedef mpl::map<
