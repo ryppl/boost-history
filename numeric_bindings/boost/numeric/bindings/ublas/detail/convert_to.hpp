@@ -6,10 +6,11 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOOST_NUMERIC_BINDINGS_UBLAS_DETAIL_TO_BINDINGS_TAG_HPP
-#define BOOST_NUMERIC_BINDINGS_UBLAS_DETAIL_TO_BINDINGS_TAG_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_UBLAS_DETAIL_CONVERT_TO_HPP
+#define BOOST_NUMERIC_BINDINGS_UBLAS_DETAIL_CONVERT_TO_HPP
 
-#include <boost/numeric/bindings/detail/tag.hpp>
+#include <boost/numeric/bindings/detail/convert_to.hpp>
+#include <boost/numeric/bindings/tag.hpp>
 #include <boost/numeric/ublas/fwd.hpp>
 
 namespace boost {
@@ -18,33 +19,53 @@ namespace bindings {
 namespace detail {
 
 template<>
-struct to_bindings_tag< ublas::lower > {
-    typedef tag::lower type;
-};
-
-template<>
-struct to_bindings_tag< ublas::upper > {
-    typedef tag::upper type;
-};
-
-template<>
-struct to_bindings_tag< ublas::unit_lower > {
-    typedef tag::unit_lower type;
-};
-
-template<>
-struct to_bindings_tag< ublas::unit_upper > {
-    typedef tag::unit_upper type;
-};
-
-template<>
-struct to_bindings_tag< ublas::row_major > {
+struct convert_to< tag::data_order, ublas::row_major > {
     typedef tag::row_major type;
 };
 
 template<>
-struct to_bindings_tag< ublas::column_major > {
+struct convert_to< tag::data_order, ublas::column_major > {
     typedef tag::column_major type;
+};
+
+template<>
+struct convert_to< tag::matrix_side, ublas::lower > {
+    typedef tag::lower type;
+};
+
+template<>
+struct convert_to< tag::matrix_side, ublas::upper > {
+    typedef tag::upper type;
+};
+
+template<>
+struct convert_to< tag::matrix_side, ublas::unit_lower > {
+    typedef tag::unit_lower type;
+};
+
+template<>
+struct convert_to< tag::matrix_side, ublas::unit_upper > {
+    typedef tag::unit_upper type;
+};
+
+template<>
+struct convert_to< tag::data_side, ublas::lower > {
+    typedef tag::lower type;
+};
+
+template<>
+struct convert_to< tag::data_side, ublas::upper > {
+    typedef tag::upper type;
+};
+
+template<>
+struct convert_to< tag::data_side, ublas::unit_lower > {
+    typedef tag::lower type;
+};
+
+template<>
+struct convert_to< tag::data_side, ublas::unit_upper > {
+    typedef tag::upper type;
 };
 
 } // namespace detail
