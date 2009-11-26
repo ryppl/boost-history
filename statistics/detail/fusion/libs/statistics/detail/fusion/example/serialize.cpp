@@ -23,11 +23,7 @@
 #include <boost/fusion/include/make_vector.hpp>
 
 #include <boost/statistics/detail/fusion/serialization/include.hpp>
-//#include <boost/statistics/detail/fusion/serialization/save.hpp>
-//#include <boost/statistics/detail/fusion/serialization/load.hpp>
-//#include <boost/statistics/detail/fusion/serialization/map.hpp>
-//#include <boost/statistics/detail/fusion/serialization/vector.hpp>
-
+#include <boost/statistics/detail/fusion/serialization/map.hpp> // tmp
 #include <libs/statistics/detail/fusion/example/serialize.h>
 
 void example_serialize(std::ostream& os){
@@ -79,19 +75,13 @@ void example_serialize(std::ostream& os){
     	ia_ ia(ifs);
         ia >> vec;
         BOOST_ASSERT(
-            boost::fusion::at_key<k0_>(
-        		boost::fusion::at_c<0>(vec) 
-            )== d0
+            boost::fusion::at_key<k0_>( boost::fusion::at_c<0>(vec) ) == d0
     	);        
         BOOST_ASSERT(
-            boost::fusion::at_key<k1_>(
-        		boost::fusion::at_c<0>(vec) 
-            )== d1
+            boost::fusion::at_key<k1_>( boost::fusion::at_c<0>(vec) ) == d1
     	);        
         BOOST_ASSERT(
-            boost::fusion::at_key<k2_>(
-        		boost::fusion::at_c<1>(vec) 
-            )== d2
+            boost::fusion::at_key<k2_>( boost::fusion::at_c<1>(vec) ) == d2
     	);        
     }
 

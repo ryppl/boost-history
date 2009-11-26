@@ -8,11 +8,13 @@
 #include <iostream>
 #include <libs/statistics/detail/fusion/example/at_key.h>
 #include <libs/statistics/detail/fusion/example/serialize.h>
+#include <libs/statistics/detail/fusion/example/joint_view_binder.h>
 
 int main(){
 
-    example_at_key_iterator(std::cout);
+    // example_at_key_iterator(std::cout);
     example_serialize(std::cout);
+    // example_joint_view_binder(std::cout);
 
     return 0;
 }

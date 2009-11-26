@@ -24,11 +24,11 @@ namespace boost{ namespace serialization{
     template<class Archive,typename K1,typename D1>
     void serialize(
         Archive & ar,
-        typename boost::fusion::result_of::make_map<K1,D1>::type& t,
+        boost::fusion::map<boost::fusion::pair<K1,D1> >& t,
         const unsigned int file_version
     )
     {
-        split_free(ar, t, file_version);
+        split_free(ar, t, file_version); 
     }
 
 	// n = 2
@@ -36,7 +36,10 @@ namespace boost{ namespace serialization{
     template<class Archive,typename K1,typename K2,typename D1,typename D2>
     void serialize(
         Archive & ar,
-        typename boost::fusion::result_of::make_map<K1,K2,D1,D2>::type& t,
+        boost::fusion::map<
+        	boost::fusion::pair<K1,D1>, 
+        	boost::fusion::pair<K2,D2> 
+        >& t,
         const unsigned int file_version
     )
     {
@@ -51,7 +54,11 @@ namespace boost{ namespace serialization{
     >
     void serialize(
         Archive & ar,
-        typename boost::fusion::result_of::make_map<K1,K2,K3,D1,D2,D3>::type& t,
+        boost::fusion::map<
+        	boost::fusion::pair<K1,D1>, 
+        	boost::fusion::pair<K2,D2>, 
+        	boost::fusion::pair<K3,D3>
+        >& t,
         const unsigned int file_version
     )
     {
