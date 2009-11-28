@@ -98,6 +98,8 @@ protected:
 
 	void attach( fiber &);
 
+	void detach( fiber &);
+
 	void switch_between( fiber &, fiber &);
 
 	void enable_interruption( fiber &);

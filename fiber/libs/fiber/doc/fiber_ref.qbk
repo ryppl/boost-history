@@ -945,6 +945,7 @@ old the current (running) fiber and `master_fiber` executes the scheduling logic
 		fiber					master_fiber;
 
 		void attach( fiber &);
+		void detach( fiber &);
 
 		void switch_between( fiber &, fiber &);
 
@@ -995,6 +996,18 @@ old the current (running) fiber and `master_fiber` executes the scheduling logic
 
 [variablelist
 [[Effects:] [Protected member function in order to register the scheduler in
+internal storage from the fiber.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:detach Protected member function `detach( fiber &)`]
+
+        void detach( fiber &);
+
+[variablelist
+[[Effects:] [Protected member function in order to unregister the scheduler in
 internal storage from the fiber.]]
 [[Throws:] [Nothing.]]
 ]

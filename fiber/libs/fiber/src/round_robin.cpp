@@ -27,6 +27,12 @@ round_robin::round_robin() :
 	terminated_fibers_()
 {}
 
+round_robin::~round_robin()
+{
+	BOOST_FOREACH( container::value_type va, fibers_)
+	{ detach( va.second.f); }
+}
+
 void
 round_robin::add( fiber f)
 {

@@ -85,6 +85,7 @@ strategy::yield()
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
+	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
 	active->info_()->st->yield( active->get_id() );
 }
 
@@ -93,6 +94,7 @@ strategy::cancel()
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
+	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
 	active->info_()->st->cancel( active->get_id() );
 }
 
@@ -111,6 +113,10 @@ strategy::~strategy()
 void
 strategy::attach( fiber & f)
 { f.info_()->st = this; }
+
+void
+strategy::detach( fiber & f)
+{ f.info_()->st = 0; }
 
 void
 strategy::switch_between( fiber & from, fiber & to)

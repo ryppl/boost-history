@@ -61,6 +61,8 @@ private:
 public:
 	round_robin();
 
+	~round_robin();
+
 	void add( fiber);
 
 	void yield( fiber::id const&);
