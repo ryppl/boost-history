@@ -111,7 +111,7 @@ int main()
 	}
 	catch ( boost::system::system_error const& e)
 	{ std::cerr << "system_error: " << e.code().value() << std::endl; }
-	catch ( boost::fibers::scheduler<>_error const& e)
+	catch ( boost::fibers::scheduler_error const& e)
 	{ std::cerr << "scheduler_error: " << e.what() << std::endl; }
 	catch ( std::exception const& e)
 	{ std::cerr << "exception: " << e.what() << std::endl; }
