@@ -32,6 +32,9 @@ extern "C" {
 
 namespace boost {
 namespace fibers {
+
+class strategy;
+
 namespace detail {
 
 struct BOOST_FIBER_DECL fiber_info_base
@@ -47,6 +50,7 @@ struct BOOST_FIBER_DECL fiber_info_base
 	fiber_state_t		state;
 	fiber_interrupt_t	interrupt;
 	callable_stack_t	at_exit;
+	strategy		*	st;
 
 	fiber_info_base();
 

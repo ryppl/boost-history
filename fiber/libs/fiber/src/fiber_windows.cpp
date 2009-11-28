@@ -21,6 +21,20 @@ extern "C" {
 
 #include <boost/config/abi_prefix.hpp>
 
+namespace {
+
+bool is_thread_a_fiber()
+{
+#if ( _WIN32_WINNT > 0x0600)
+	return ::IsThreadAFiber() == TRUE;
+#else
+	LPVOID current = ::GetCurrentFiber();
+	return 0 != current && current != reinterpret_cast< LPVOID >( 0x1E00);
+#endif
+}
+
+}
+
 namespace boost {
 namespace fibers {
 
@@ -65,21 +79,23 @@ fiber::switch_to_( fiber & to)
 void
 fiber::convert_thread_to_fiber()
 {
-	if ( ::ConvertThreadToFiber( 0) == 0)
-		throw system::system_error(
-			system::error_code(
-				GetLastError(),
-				system::system_category) );
+	if ( ! is_thread_a_fiber() )
+		if ( ::ConvertThreadToFiber( 0) == 0)
+			throw system::system_error(
+				system::error_code(
+					GetLastError(),
+					system::system_category) );
 }
 
 void
 fiber::convert_fiber_to_thread()
 {
-	if ( ::ConvertFiberToThread() == 0)
-		throw system::system_error(
-			system::error_code(
-				GetLastError(),
-				system::system_category) );
+	if ( ! this_fiber::runs_as_fiber() && is_thread_a_fiber() )
+		if ( ::ConvertFiberToThread() == 0)
+			throw system::system_error(
+				system::error_code(
+					GetLastError(),
+					system::system_category) );
 }
 
 }}

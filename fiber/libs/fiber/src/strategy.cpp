@@ -53,7 +53,7 @@ strategy::interruption_enabled()
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
-	return active->info_()->interrupt & detail::INTERRUPTION_ENABLED;
+	return ( active->info_()->interrupt & detail::INTERRUPTION_ENABLED) != 0;
 }
 
 int
