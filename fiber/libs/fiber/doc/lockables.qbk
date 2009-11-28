@@ -155,10 +155,6 @@ the lock in a non-blocking fashion, or with a timeout. Consequently, __unlock_re
 if the lock object has locked the __lockable_concept_type__ object, or otherwise adopted a lock on the
 __lockable_concept_type__ object.
 
-Specializations of __unique_lock__ model the __timed_lockable_concept__ if the supplied __lockable_concept_type__
-type itself models __timed_lockable_concept__ (e.g. `boost::unique_lock<boost::timed_mutex>`), or the
-__lockable_concept__ otherwise (e.g. `boost::unique_lock<boost::mutex>`). 
-
 An instance of __unique_lock__ is said to ['own] the lock state of a __lockable_concept_type__ `m` if
 __mutex_func_ref__ returns a pointer to `m` and __owns_lock_ref__ returns `true`. If an object that ['owns] the lock
 state of a __lockable_concept_type__ object is destroyed, then the destructor will invoke [unlock_ref_link

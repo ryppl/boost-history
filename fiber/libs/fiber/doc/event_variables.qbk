@@ -48,7 +48,7 @@ In the mean time, another fiber signals the event variable by calling
     public:
         explicit auto_reset_event( bool isset = false);
 
-		~auto_reset_event();
+        ~auto_reset_event();
 
         void set();
 
@@ -126,7 +126,7 @@ __interrupt__ on the __fiber__ object associated with the current fiber of execu
     public:
         explicit manual_reset_event( bool isset = false);
 
-		~manual_reset_event();
+        ~manual_reset_event();
 
         void set();
 
@@ -215,21 +215,21 @@ __interrupt__ on the __fiber__ object associated with the current fiber of execu
     class count_down_event : private boost::noncopyable
     {
     public:
-		explicit count_down_event( uint32_t);
+        explicit count_down_event( uint32_t);
 
-		~count_down_event();
+        ~count_down_event();
 
-		uint32_t initial() const;
+        uint32_t initial() const;
 
-		uint32_t current() const;
+        uint32_t current() const;
 
-		bool is_set() const;
+        bool is_set() const;
 
-		void set();
+        void set();
 
-		void wait();
+        void wait();
 
-		bool wait( system_time const&);
+        bool wait( system_time const&);
     };
 
 [section:constructor `count_down_event( uint32_t)`]

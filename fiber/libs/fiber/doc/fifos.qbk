@@ -26,7 +26,7 @@ Both classes implement methods in order to be used by boost::intrusive_ptr.
 		{ std::cout << "received " << * value << std::endl; }
 	}
 
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 	fifo_t fifo( new boost::fibers::unbounded_fifo< int >() );
 	sched.make_fiber( send, fifo);
 	sched.make_fiber( recv, fifo);
@@ -40,24 +40,24 @@ Both classes implement methods in order to be used by boost::intrusive_ptr.
 
 [section:unbounded_fifo Template `unbounded_fifo`]
 
-    #include <boost/fiber/unbounded_fifo.hpp>
+	#include <boost/fiber/unbounded_fifo.hpp>
 
-template< typename T >
-class unbounded_fifo : private noncopyable
-{
-public:
-	unbounded_fifo();
+	template< typename T >
+	class unbounded_fifo : private noncopyable
+	{
+	public:
+		unbounded_fifo();
 
-	void deactivate();
+		void deactivate();
 
-	bool empty();
+		bool empty();
 
-	void put( T const& t);
+		void put( T const& t);
 
-	bool take( boost::optional< T > & va);
+		bool take( boost::optional< T > & va);
 
-	bool try_take( boost::optional< T > & va);
-};
+		bool try_take( boost::optional< T > & va);
+	};
 
 [section:constructor `unbounded_fifo()`]
 
@@ -129,26 +129,26 @@ Otherwise it returns `true` and `va` contains the dequed value.]]
 
 [section:bounded_fifo Template `bounded_fifo`]
 
-    #include <boost/fiber/bounded_fifo.hpp>
+	#include <boost/fiber/bounded_fifo.hpp>
 
-template< typename T >
-class bounded_fifo : private noncopyable
-{
-public:
-	unbounded_fifo( std::size_t wm);
+	template< typename T >
+	class bounded_fifo : private noncopyable
+	{
+	public:
+		unbounded_fifo( std::size_t wm);
 
-	unbounded_fifo( std::size_t hwm, std::size_t lwm);
+		unbounded_fifo( std::size_t hwm, std::size_t lwm);
 
-	void deactivate();
+		void deactivate();
 
-	bool empty();
+		bool empty();
 
-	void put( T const& t);
+		void put( T const& t);
 
-	bool take( boost::optional< T > & va);
+		bool take( boost::optional< T > & va);
 
-	bool try_take( boost::optional< T > & va);
-};
+		bool try_take( boost::optional< T > & va);
+	};
 
 [section:constructor `bounded_fifo()`]
 

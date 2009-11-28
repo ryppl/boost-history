@@ -19,6 +19,10 @@
 
 * improve scheduling algorithm (take priorities into acount)
 
+* provide a future and task class
+
+* provide a barrier class
+
 * provide a spin-wait class
 
 [endsect]

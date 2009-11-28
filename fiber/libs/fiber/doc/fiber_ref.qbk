@@ -19,7 +19,7 @@ __scheduler__ class. Objects of type __fiber__ are copy- and moveable.
 		boost::fiber f1=boost::fibers::make_fiber( some_fn);
 		boost::fiber f2=boost::fibers::make_fiber( another_fn);
 
-		boost::fibers::scheduler s;
+		boost::fibers::scheduler<> s;
 		s.submit( f1); // f1 gets copied
 		s.submit( boost::move( f2) ); // f2 gets moved
 
@@ -66,9 +66,9 @@ For convinience `boost::fibers::make_fiber()` is provided:
 
 	boost::fiber f = boost::fibers::make_fiber( new_fn, arg1, arg2, arg3);
 
-Another alternative is to use __scheduler_make_fiber__ which creates and stores the new fiber inside the scheduler.
+Another alternative is to use `scheduler<>::make_fiber()` which creates and stores the new fiber inside the scheduler.
 
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 	sched.make_fiber( new_fn, arg1, arg2, arg3);
 
 
@@ -93,7 +93,7 @@ immediately.
 	void joining_fiber_fn( boost::fiber f)
 	{ f.join(); }
 
-	boost:.fibers::scheduler sched;
+	boost:.fibers::scheduler<> sched;
 	boost::fiber f( some_fn);
 	sched.submit_fiber( f);
 	sched.make_fiber( joining_fiber, f);
@@ -288,11 +288,9 @@ newly-created fiber. Second version sets the stack-size of the fiber.]]
 
 [variablelist
 [[Preconditions:] [`Fn` and each `A`n must by copyable or movable.]]
-[[Effects:] [As if [link
-fiber.fiber_management.fiber.callable_constructor
-`fiber( boost::bind( fn, a1, a2,...) )`. Consequently, `fn` and each `a`n
+[[Effects:] [As if `fiber( boost::bind( fn, a1, a2,...) )`. Consequently, `fn` and each `a`n
 are copied into internal storage for access by the new fiber.
-Second version additionaly sets the stack-size used by the fiber.]]]
+Second version additionaly sets the stack-size used by the fiber.]]
 [[Postconditions:] [`*this` refers to the newly created fiber.]]
 [[Throws:] [__system_error__ if system call failed.]]
 [[Note:] [Currently up to nine additional arguments `a1` to `a9` can be specified in addition to the function `fn`.]]
@@ -325,7 +323,7 @@ a default-constructed __fiber_id__.]]
 	void join();
 
 [variablelist
-[[Effects:] [Waits for that fiber to complete.]]
+[[Effects:] [Waits for `*this` to complete.]]
 [[Throws:] [__fiber_interrupted__ if the current fiber is interrupted and __system_error__
 if system call failed.]]
 [[Notes:] [`join()` is one of the predefined __interruption_points__.]]
@@ -362,7 +360,7 @@ requested.]]
 [variablelist
 [[Effects:] [If `*this` refers to a fiber, request that the fiber will be canceled the next time it yields its
 execution.]]
-[[Throws:] [__system_error__ if system call fails. __fiber__moved__ if  `*this` is not a fiber of execution.]]
+[[Throws:] [__system_error__ if system call fails. __fiber_moved__ if  `*this` is not a fiber of execution.]]
 ]
 [endsect]
 
@@ -379,7 +377,7 @@ Otherwise it returns true.]]
 
 [section:unspec_operator `operator unspecified-bool-type() const`]
 
-		operator unspecified-bool-type() const;
+	operator unspecified-bool-type() const;
 
 [variablelist
 [[Returns:] [If `*this` refers to a fiber, the function returns true. Otherwise false.]]
@@ -589,7 +587,7 @@ instances of __fiber_id__ `a` and `b` is the same if `a==b`, and different if `a
 
 [variablelist
 [[Returns:] [An instance of __fiber_id__ that represents that currently executing fiber.]]
-[[Throws:] [__fiber_resource_error__ if an error occurs.]]
+[[Throws:] [__fiber_error__ if an error occurs.]]
 ]
 [endsect]
 
@@ -619,7 +617,7 @@ instances of __fiber_id__ `a` and `b` is the same if `a==b`, and different if `a
 
 [variablelist
 [[Returns:] [`true` if interruption has been requested for the current fiber, `false` otherwise.]]
-[[Throws:] [Nothing.]]
+[[Throws:] [__fiber_error__ if an error occurs.]]
 ]
 [endsect]
 
@@ -634,7 +632,7 @@ instances of __fiber_id__ `a` and `b` is the same if `a==b`, and different if `a
 
 [variablelist
 [[Returns:] [`true` if interruption has been enabled for the current fiber, `false` otherwise.]]
-[[Throws:] [Nothing.]]
+[[Throws:] [__fiber_error__ if an error occurs.]]
 ]
 [endsect]
 
@@ -649,7 +647,7 @@ instances of __fiber_id__ `a` and `b` is the same if `a==b`, and different if `a
 
 [variablelist
 [[Effects:] [Cancels the current fiber.]]
-[[Throws:] [__fiber_interrupted__ if the current fiber of execution is interrupted.]]
+[[Throws:] [__fiber_error__ if an error occurs.]]
 ]
 [endsect]
 
@@ -664,7 +662,7 @@ instances of __fiber_id__ `a` and `b` is the same if `a==b`, and different if `a
 
 [variablelist
 [[Effects:] [Gives up the remainder of the current fiber's time slice, to allow other fibers to run.]]
-[[Throws:] [Nothing.]]
+[[Throws:] [__fiber_error__ if an error occurs.]]
 ]
 [endsect]
 
@@ -766,7 +764,7 @@ is destroyed, interruption is again disabled. Instances of `restore_interruption
 fiber-specific storage. This copy is invoked when the current fiber
 exits (even if the fiber has been interrupted).]]
 [[Postconditions:] [A copy of `func` has been saved for invocation on fiber exit.]]
-[[Throws:] [`std::bad_alloc` if memory cannot be allocated for the copy of the function, __fiber_resource_error__ if any other
+[[Throws:] [`std::bad_alloc` if memory cannot be allocated for the copy of the function, __fiber_error__ if any other
 error occurs within the fiber library. Any exception thrown whilst copying `func` into internal storage.]]
 [[Note:] [This function is *not* called if the fiber was terminated
 forcefully using platform-specific APIs, or if the fiber is
@@ -783,13 +781,16 @@ registered with `at_fiber_exit()`]]
 
 [heading Synopsis]
 
-The class `scheduler` is responsible for managing and scheduling of fibers passed to it. The fibers are
+The template __scheduler__ is responsible for managing and scheduling of fibers passed to it. The fibers are
 thread-affine, e.g. the fibers remain local for the thread passing the fiber to the scheduler.
 (Maybe futher version of __boost_fiber__ will support explicit migration of fibers between threads.)
 
-Usally `scheduler` will be invoked until all fibers have finished.
+The scheduling-algorithm is provided as an template arguemnt to __scheduler__. The class implementing the
+scheduling algorithm must derive from class __strategy__.
 
-	boost::fibers::scheduler sched;
+Usally __scheduler__ will be invoked until all fibers have finished.
+
+	boost::fibers::scheduler<> sched;
 	
 	sched.make_fiber( some_fn);
 
@@ -800,13 +801,18 @@ Usally `scheduler` will be invoked until all fibers have finished.
 	}
 
 
-[section:scheduler Class `scheduler`]
+[section:scheduler Template `scheduler`]
 
 	#include <boost/fiber/scheduler.hpp>
 
+	template< typename Strategy >
 	class scheduler
 	{
 	public:
+		scheduler();
+
+		~scheduler();
+
 		bool run();
 
 		bool empty();
@@ -829,7 +835,29 @@ Usally `scheduler` will be invoked until all fibers have finished.
 	};
 
 
-[section:run `run()`]
+[section:ctor Default Constructor]
+
+        scheduler();
+
+[variablelist
+[[Effects:] [Creates an object of type scheduler< Strategy >.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:dtor Destructor]
+
+        ~scheduler();
+
+[variablelist
+[[Effects:] [Destroys the scheduler.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:run Member function `run()`]
 
         bool run();
 
@@ -840,7 +868,7 @@ Usally `scheduler` will be invoked until all fibers have finished.
 ]
 [endsect]
 
-[section:empty `empty()`]
+[section:empty Member function `empty()`]
 
         bool empty();
 
@@ -850,7 +878,7 @@ Usally `scheduler` will be invoked until all fibers have finished.
 ]
 [endsect]
 
-[section:size `size()`]
+[section:size Member function `size()`]
 
         std::size_t size();
 
@@ -860,7 +888,7 @@ Usally `scheduler` will be invoked until all fibers have finished.
 ]
 [endsect]
 
-[section:submit_fiber `submit_fiber( fiber f)`]
+[section:submit_fiber Member function `submit_fiber( fiber f)`]
 
         void submit_fiber( fiber f);
 
@@ -870,7 +898,7 @@ Usally `scheduler` will be invoked until all fibers have finished.
 ]
 [endsect]
 
-[section:make_fiber `make_fiber()`]
+[section:make_fiber Template member function `make_fiber()`]
 
 		template< typename Fn >
 		void make_fiber( Fn fn);
@@ -886,6 +914,342 @@ Usally `scheduler` will be invoked until all fibers have finished.
 
 [variablelist
 [[Effects:] [The functionscreate a fiber which gets stored in the internal structures from scheduler.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[endsect]
+
+[endsect]
+
+[section:strategy_ref Strategy]
+
+[heading Synopsis]
+
+The template __scheduler__ accepts the implementation of the scheduling-algorithm as a template argument
+(currently round-robin is the choosen as the default).
+Each class destined to implement a scheduling algorithm must derive from __strategy__. The memeber `active_fiber`
+old the current (running) fiber and `master_fiber` executes the scheduling logic.
+
+
+[section:strategy Class `strategy`]
+
+	#include <boost/fiber/strategy.hpp>
+
+	class strategy
+	{
+	protected:
+		typedef thread_specific_ptr< fiber >	active_fiber_t;
+
+		static active_fiber_t	active_fiber;
+		fiber					master_fiber;
+
+		void attach( fiber &);
+
+		void switch_between( fiber &, fiber &);
+
+		void enable_interruption( fiber &);
+		bool interruption_enabled( fiber const&);
+
+		bool is_master( fiber const&);
+
+		bool in_state_not_started( fiber const&);
+		bool in_state_ready( fiber const&);
+		bool in_state_running( fiber const&);
+		bool in_state_wait_for_join( fiber const&);
+		bool in_state_terminated( fiber const&);
+
+		void set_state_ready( fiber &);
+		void set_state_running( fiber &);
+		void set_state_wait_for_join( fiber &);
+		void set_state_terminated( fiber &);
+
+	public:
+		strategy();
+
+		virtual ~strategy();
+
+		virtual void add( fiber) = 0;
+		
+		virtual void yield( fiber::id const&) = 0;
+		
+		virtual void cancel( fiber::id const&) = 0;
+
+		virtual void join( fiber::id const&) = 0;
+
+		virtual void interrupt( fiber::id const&) = 0;
+
+		virtual void reschedule( fiber::id const&) = 0;
+
+		virtual bool run() = 0;
+
+		virtual bool empty() = 0;
+
+		virtual std::size_t size() = 0;
+	};
+
+
+[section:attach Protected member function `attach( fiber &)`]
+
+        void attach( fiber &);
+
+[variablelist
+[[Effects:] [Protected member function in order to register the scheduler in
+internal storage from the fiber.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:switch_between Protected member function `switch_between( fiber &, fiber &)`]
+
+        void switch_between( fiber & from, fiber & to);
+
+[variablelist
+[[Effects:] [Protected member function switches from fiber `from` to fiber `to`.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:enable_interruption Protected member function `enable_interruption( fiber &)`]
+
+        void enable_interruption( fiber &);
+
+[variablelist
+[[Effects:] [Protected member function enables interruption on the fiber.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:interruption_enabled Protected member function `interruption_enabled( fiber const&)`]
+
+        bool interruption_enabled( fiber const&);
+
+[variablelist
+[[Effects:] [Protected member function tests if interruption is enabled on the fiber.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:is_master Protected member function `is_master( fiber const&)`]
+
+        bool is_master( fiber const&);
+
+[variablelist
+[[Effects:] [Protected member function tests if the fiber is the `master_fiber`.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:in_state_not_started Protected member function `in_state_not_started( fiber const&)`]
+
+        bool in_state_not_started( fiber const&);
+
+[variablelist
+[[Effects:] [Protected member function tests if the fiber is in the state `started`.]] 
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:in_state_ready Protected member function `in_state_ready( fiber const&)`]
+
+        bool in_state_ready( fiber const&);
+
+[variablelist
+[[Effects:] [Protected member function tests if the fiber is in the state `ready`.]] 
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:in_state_running Protected member function `in_state_running( fiber const&)`]
+
+        bool in_state_running( fiber const&);
+
+[variablelist
+[[Effects:] [Protected member function tests if the fiber is in the state `running`.]] 
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:in_state_wait_for_join Protected member function `in_state_wait_for_join( fiber const&)`]
+
+        bool in_state_wait_for_join( fiber const&);
+
+[variablelist
+[[Effects:] [Protected member function tests if the fiber is in the state `wait for join`.]] 
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:in_state_terminated Protected member function `in_state_terminated( fiber const&)`]
+
+        bool in_state_terminated( fiber const&);
+
+[variablelist
+[[Effects:] [Protected member function tests if the fiber is in the state `terminated`.]] 
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:set_state_ready Protected member function `set_state_ready( fiber &)`]
+
+        void set_state_ready( fiber &);
+
+[variablelist
+[[Effects:] [Protected member function sets the state of the fiber to `ready`.]] 
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:set_state_running Protected member function `set_state_running( fiber &)`]
+
+        void set_state_running( fiber &);
+
+[variablelist
+[[Effects:] [Protected member function sets the state of the fiber to `running`.]] 
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:set_state_wait_for_join Protected member function `set_state_wait_for_join( fiber &)`]
+
+        void set_state_wait_for_join( fiber &);
+
+[variablelist
+[[Effects:] [Protected member function sets the state of the fiber to `wait for join`.]] 
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:set_state_terminated Protected member function `set_state_terminated( fiber &)`]
+
+        void set_state_terminated( fiber &);
+
+[variablelist
+[[Effects:] [Protected member function sets the state of the fiber to `terminated`.]] 
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:ctor Default Constructor]
+
+        strategy();
+
+[variablelist
+[[Effects:] [Creates an object of type strategy and initializes the master_fiber member.]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:add Virtual member function `add( fiber)`]
+
+        virtual void add( fiber) = 0;
+
+[variablelist
+[[Precondition:] [Fiber was not assigned to another scheduler.]]
+[[Effects:] [Add a fiber to the scheduler.]]
+]
+[endsect]
+
+
+[section:yield Virtual member function `yield( fiber::id const&)`]
+
+        virtual void yield( fiber::id const&) = 0;
+
+[variablelist
+[[Precondition:] [Fiber is the active fiber.]]
+[[Effects:] [Yield active fiber and switch back to `master_fiber` in order to schedule
+another fiber from the internal storage.]]
+]
+[endsect]
+
+
+[section:cancel Virtual member function `cancel( fiber::id const&)`]
+
+        virtual void cancel( fiber::id const&) = 0;
+
+[variablelist
+[[Precondition:] [Fiber belongs to this scheduler.]]
+[[Effects:] [The fiber with passed identifier will be stopped, e.g. removed from the run-queue.]]
+]
+[endsect]
+
+
+[section:join Virtual member function `join( fiber::id const&)`]
+
+        virtual void join( fiber::id const&) = 0;
+
+[variablelist
+[[Precondition:] [Fiber belongs to this scheduler.]]
+[[Effects:] [The active fiber will yield until the fiber identified by the id has finished its
+execution or was interrupted.]]
+]
+[endsect]
+
+
+[section:interrupt Virtual member function `interrupt( fiber::id const&)`]
+
+        virtual void interrupt( fiber::id const&) = 0;
+
+[variablelist
+[[Precondition:] [Fiber belongs to this scheduler.]]
+[[Effects:] [The fiber identified by the id will be interrupted by its next execution.]]
+]
+[endsect]
+
+
+[section:reschedule Virtual member function `reschedule( fiber::id const&)`]
+
+        virtual void reschedule( fiber::id const&) = 0;
+
+[variablelist
+[[Precondition:] [Fiber belongs to this scheduler.]]
+[[Effects:] [The scheduling-algorithm will be applied uppon the fiber identified by the id again.]]
+]
+[endsect]
+
+
+[section:run Virtual member function `run()`]
+
+        virtual bool run() = 0;
+
+[variablelist
+[[Effects:] [Executes a fiber from the internal storage and removes terminated fibers. The function returns
+`true` if a fiber could be executed or a terminated fiber could be removed - otherwise `false`.]]
+[[Throws:] [__system_error__ if a system call failed.]]
+]
+[endsect]
+
+[section:empty Virtual member function `empty()`]
+
+        virtual bool empty() = 0;
+
+[variablelist
+[[Effects:] [Returns `true` if the scheduler contains fibers (maybe runnable or waiting).]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:size Virtual member function `size()`]
+
+        virtual std::size_t size() = 0;
+
+[variablelist
+[[Effects:] [Returns how many fibers the scheduler contains (maybe runnable or waiting).]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]

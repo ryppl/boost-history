@@ -7,16 +7,20 @@
 #include <sstream>
 #include <string>
 
+#include <boost/assert.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber.hpp>
 
-void zero_args_fn() {}
+void zero_args_fn()
+{ BOOST_ASSERT( boost::this_fiber::runs_as_fiber() ); }
 
-void one_args_fn( int i) {}
+void one_args_fn( int)
+{ BOOST_ASSERT( boost::this_fiber::runs_as_fiber() ); }
 
-void two_args_fn( int i, std::string const& msg) {}
+void two_args_fn( int, std::string const&)
+{ BOOST_ASSERT( boost::this_fiber::runs_as_fiber() ); }
 
 void test_case_1()
 {

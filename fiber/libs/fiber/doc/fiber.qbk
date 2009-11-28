@@ -27,6 +27,7 @@
 [def __interruption_points__ [link interruption_points ['interruption points]]]
 [def __not_a_fiber__ ['not-a-fiber]]
 [def __scheduler__ ['scheduler]]
+[def __strategy__ ['strategy]]
 
 [template lockable_concept_link[link_text] [link fiber.synchronization.mutex_concepts.lockable [link_text]]]
 [template lock_ref_link[link_text] [link fiber.synchronization.mutex_concepts.lockable.lock [link_text]]]
@@ -40,7 +41,9 @@
 [template join_link[link_text] [link fiber.fiber_management.fiber.join [link_text]]]
 [template cond_wait_link[link_text] [link fiber.synchronization.condvar_ref.condition.wait [link_text]]]
 [template cond_any_wait_link[link_text] [link fiber.synchronization.condvar_ref.condition_variable_any.wait [link_text]]]
-
+[template auto_reset_wait_link[link_text] [link fiber.synchronization.eventvar_ref.auto_reset_event.wait [link_text]]]
+[template manual_reset_wait_link[link_text] [link fiber.synchronization.eventvar_ref.manual_reset_event.wait [link_text]]]
+[template count_down_wait_link[link_text] [link fiber.synchronization.eventvar_ref.count_down_event.wait [link_text]]]
 
 [def __lockable_concept__ [lockable_concept_link `Lockable` concept]]
 [def __lockable_concept_type__ [lockable_concept_link `Lockable`]]
@@ -71,6 +74,7 @@
 [def __fiber_interrupted__ `boost::fibers::fiber_interrupted`]
 [def __fiber_error__ `boost::fibers::fiber_error`]
 [def __fiber_moved__ `boost::fibers::fiber_moved`]
+[def __lock_error__ `boost::fibers::lock_error`]
 [def __system_error__ `boost::system::system_error`]
 
 [def __cond_wait__ [cond_wait_link `wait()`]]

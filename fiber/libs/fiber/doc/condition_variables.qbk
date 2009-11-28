@@ -126,15 +126,14 @@ reason), the lock is reacquired by invoking `lock.lock()` before the call to
 `wait` returns. The lock is also reacquired by invoking `lock.lock()` if the
 function exits with an exception.]]
 [[Postcondition:] [`lock` is locked by the current fiber.]]
-[[Throws:] [__fiber_resource_error__ if an error
+[[Throws:] [__fiber_error__ if an error
 occurs. __fiber_interrupted__ if the wait was interrupted by a call to
 __interrupt__ on the __fiber__ object associated with the current fiber of execution.]]
 
 ]
 [endsect]
 
-[section:wait_predicate `template< typename predicate_type >
-	void wait( boost::fibers::unique_lock< boost::fibers::mutex > & lock, predicate_type pred)`]
+[section:wait_predicate `void wait( boost::fibers::unique_lock< boost::fibers::mutex > & lk, predicate_type pred)`]
 [variablelist
 [[Effects:] [As-if ``
 while ( ! pred())
