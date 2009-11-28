@@ -57,7 +57,7 @@ void test_case_2()
 	value = 0;
 	boost::uint32_t n = 3;
 	boost::fibers::count_down_event ev( n);
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 
 	BOOST_CHECK_EQUAL( ev.initial(), n);
 	BOOST_CHECK_EQUAL( ev.current(), n);

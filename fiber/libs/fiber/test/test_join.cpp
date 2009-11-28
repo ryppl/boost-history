@@ -66,7 +66,7 @@ void test_case_1()
 	value1 = 0;
 	value2 = 0;
 
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 
 	boost::fiber f( fn_1);
 	sched.submit_fiber( f);
@@ -166,7 +166,7 @@ void test_case_2()
 	value2 = 0;
 	value3 = 0;
 
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 
 	boost::fiber f( fn_1);
 	sched.submit_fiber( f);
@@ -310,7 +310,7 @@ void test_case_3()
 	value2 = 0;
 	value3 = 0;
 
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 
 	boost::fiber f1( fn_1);
 	sched.submit_fiber( f1);

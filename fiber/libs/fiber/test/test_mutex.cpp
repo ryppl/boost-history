@@ -64,7 +64,7 @@ void do_test_mutex()
 
 void test_case1()
 {
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
     sched.make_fiber( & do_test_mutex);
 	sched.run();
 }
@@ -89,7 +89,7 @@ void test_fn2( boost::fibers::mutex & mtx)
 void test_case2()
 {
 	boost::fibers::mutex mtx;
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
     sched.make_fiber( & test_fn1, boost::ref( mtx) );
     sched.make_fiber( & test_fn2, boost::ref( mtx) );
 

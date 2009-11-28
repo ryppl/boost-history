@@ -29,7 +29,7 @@ void fn()
 
 void test_case_1()
 {
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber( fn);
 

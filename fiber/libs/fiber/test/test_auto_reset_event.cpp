@@ -33,7 +33,7 @@ void test_case_1()
 {
 	value = 0;
 	boost::fibers::auto_reset_event ev;
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber(
 		wait_fn,
@@ -71,7 +71,7 @@ void test_case_2()
 {
 	value = 0;
 	boost::fibers::auto_reset_event ev( true);
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber(
 		wait_fn,

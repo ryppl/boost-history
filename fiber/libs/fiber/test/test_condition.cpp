@@ -46,7 +46,7 @@ void test_case_1()
 	value = 0;
 	boost::fibers::mutex mtx;
 	boost::fibers::condition cond;
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber(
 		wait_fn,
@@ -87,7 +87,7 @@ void test_case_2()
 	value = 0;
 	boost::fibers::mutex mtx;
 	boost::fibers::condition cond;
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber(
 		wait_fn,
@@ -141,7 +141,7 @@ void test_case_3()
 	value = 0;
 	boost::fibers::mutex mtx;
 	boost::fibers::condition cond;
-	boost::fibers::scheduler sched;
+	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber(
 		wait_fn,
