@@ -10,7 +10,7 @@
 
 #include <boost/fiber/detail/fiber_state.hpp>
 #include <boost/fiber/exceptions.hpp>
-#include <boost/fiber/scheduler.hpp>
+#include <boost/fiber/strategy.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -121,14 +121,15 @@ fiber::priority( int prio)
 {
 	if ( ! info_base_) throw fiber_moved();
 	info_base_->priority = prio;
-	if ( is_alive() ) scheduler::reschedule( get_id() );
+	if ( is_alive() )
+		info_base_->st->reschedule( get_id() );
 }
 
 void
 fiber::interrupt()
 {
 	if ( ! info_base_) throw fiber_moved();
-	scheduler::interrupt( get_id() );
+	info_base_->st->interrupt( get_id() );
 }
 
 bool
@@ -142,14 +143,14 @@ void
 fiber::cancel()
 {
 	if ( ! info_base_) throw fiber_moved();
-	scheduler::cancel( get_id() );
+	info_base_->st->cancel( get_id() );
 }
 
 void
 fiber::join()
 {
 	if ( ! info_base_) throw fiber_moved();
-	scheduler::join( get_id() );
+	info_base_->st->join( get_id() );
 }
 
 }}

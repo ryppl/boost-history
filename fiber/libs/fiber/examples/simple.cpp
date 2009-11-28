@@ -21,7 +21,7 @@ int main()
 {
 	try
 	{
-		boost::fibers::scheduler sched;
+		boost::fibers::scheduler<> sched;
 
 		boost::fiber f( fn, "abc", 5);
 		sched.submit_fiber( boost::move( f) );

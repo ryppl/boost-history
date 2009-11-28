@@ -57,7 +57,7 @@ fiber::init_()
 void
 fiber::switch_to_( fiber & to)
 {
-	if ( ! info_base_) throw fiber_moved();
+	if ( ! info_base_ || ! to.info_base_) throw fiber_moved();
 
 	::SwitchToFiber( to.info_base_->uctx);
 }

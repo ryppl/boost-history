@@ -60,7 +60,7 @@ fiber::init_()
 void
 fiber::switch_to_( fiber & to)
 {
-	if ( ! info_base_) throw fiber_moved();
+	if ( ! info_base_ || ! to.info_base_) throw fiber_moved();
 
 	if ( ::swapcontext( & info_base_->uctx, & to.info_base_->uctx) != 0)
 		throw system::system_error(

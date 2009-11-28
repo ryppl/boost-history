@@ -30,20 +30,20 @@
 
 namespace boost {
 namespace fibers {
-namespace detail {
-
-class round_robin;
-
-}
 
 #define BOOST_FIBER_DEFAULT_STACKSIZE 64000
+
+class strategy;
 
 class BOOST_FIBER_DECL fiber
 {
 private:
-	friend class detail::round_robin;
+	friend class strategy;
 
 	struct dummy;
+
+	static void convert_thread_to_fiber();
+	static void convert_fiber_to_thread();
 
 	detail::fiber_info_base::ptr_t	info_base_;
 
@@ -88,9 +88,6 @@ private:
 public:
 	class id;
 
-	static void convert_thread_to_fiber();
-	static void convert_fiber_to_thread();
-
 	fiber();
 
 #ifdef BOOST_HAS_RVALUE_REFS
@@ -123,7 +120,7 @@ public:
 	template< typename Fn >
 	explicit fiber(
 			Fn fn,
-			typename disable_if< boost::is_convertible< Fn &, boost::detail::fiber_move_t< Fn > >, dummy * >::type = 0) :
+				typename disable_if< boost::is_convertible< Fn &, boost::detail::fiber_move_t< Fn > >, dummy * >::type = 0) :
 		info_base_( make_info_( BOOST_FIBER_DEFAULT_STACKSIZE, fn) )
 	{ init_(); }
 

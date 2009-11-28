@@ -40,7 +40,7 @@ int main()
 {
 	try
 	{
-		boost::fibers::scheduler sched;
+		boost::fibers::scheduler<> sched;
 
 		boost::fiber f( fn_1);
 		sched.submit_fiber( f);

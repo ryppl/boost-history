@@ -20,7 +20,7 @@ int main()
 {
 	try
 	{
-		boost::fibers::scheduler sched;
+		boost::fibers::scheduler<> sched;
 
 		sched.make_fiber( fn);
 

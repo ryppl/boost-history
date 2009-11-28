@@ -10,15 +10,15 @@
 #include <cstddef>
 #include <memory>
 
-#include <boost/function.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/thread/tss.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/detail/fiber_state.hpp>
-#include <boost/fiber/detail/strategy.hpp>
 #include <boost/fiber/fiber.hpp>
+#include <boost/fiber/round_robin.hpp>
+#include <boost/fiber/strategy.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -28,99 +28,43 @@
 # endif
 
 namespace boost {
-
-namespace this_fiber {
-
-bool runs_as_fiber();
-boost::fiber::id get_id();
-void yield();
-void cancel();
-int priority();
-void priority( int);
-void interruption_point();
-bool interruption_requested();
-bool interruption_enabled();
-template< typename Callable >
-void at_fiber_exit( Callable);
-void at_fiber_exit( function< void() >);
-void at_fiber_exit( void (*)() );
-
-}
-
 namespace fibers {
 
-class disable_interruption;
-class restore_interruption;
-
+template< typename Strategy = round_robin >
 class BOOST_FIBER_DECL scheduler : private noncopyable
 {
 private:
-	friend bool this_fiber::runs_as_fiber();
-	friend fiber::id this_fiber::get_id();
-	friend void this_fiber::yield();
-	friend void this_fiber::cancel();
-	friend int this_fiber::priority();
-	friend void this_fiber::priority( int);
-	friend void this_fiber::interruption_point();
-	friend bool this_fiber::interruption_requested();
-	friend bool this_fiber::interruption_enabled();
-	template< typename Callable >
-	friend void this_fiber::at_fiber_exit( Callable);
-	friend void this_fiber::at_fiber_exit( function< void() >);
-	friend void this_fiber::at_fiber_exit( void (*)() );
-	friend class fiber;
-	friend class disable_interruption;
-	friend class restore_interruption;
 
-	typedef thread_specific_ptr< detail::strategy >	impl_t;
-	typedef function< void() >								callable_t;
+	typedef thread_specific_ptr< strategy >	impl_t;
 
-	static impl_t	impl_;
+	impl_t	impl_;
 
-	static bool runs_as_fiber();
-
-	static fiber::id get_id();
-
-	static void interrupt();
-
-	static bool interruption_requested();
-
-	static bool interruption_enabled();
-
-	static detail::fiber_interrupt_t & interrupt_flags();
-
-	static void yield();
-
-	static void cancel();
-
-	static int priority();
-
-	static void priority( int);
-
-	static void at_exit( callable_t);
-
-	static void interrupt( fiber::id const&);
-
-	static bool interruption_requested( fiber::id const&);
-
-	static void cancel( fiber::id const&);
-
-	static void join( fiber::id const&);
-
-	static void reschedule( fiber::id const&);
-
-	detail::strategy * access_();
+	strategy * access_()
+	{
+		if ( ! impl_.get() )
+			impl_.reset( new Strategy() );
+		return impl_.get();
+	}
 
 public:
-	~scheduler();
+	scheduler() :
+		impl_()
+	{}
 
-	bool run();
+	~scheduler()
+	{ impl_.reset(); }
 
-	bool empty();
+	bool run()
+	{ return access_()->run(); }
 
-	std::size_t size();
+	bool empty()
+	{ return access_()->empty(); }
 
-	void submit_fiber( fiber);
+	std::size_t size()
+	{ return access_()->size(); }
+
+	void submit_fiber( fiber f)
+	{ access_()->add( f); }
 
 	template< typename Fn >
 	void make_fiber( Fn fn)

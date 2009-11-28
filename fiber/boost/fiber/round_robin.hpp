@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBERS_DETAIL_ROUND_ROBIN_H
-#define BOOST_FIBERS_DETAIL_ROUND_ROBIN_H
+#ifndef BOOST_FIBERS_ROUND_ROBIN_H
+#define BOOST_FIBERS_ROUND_ROBIN_H
 
 #include <cstddef>
 #include <list>
@@ -18,8 +18,8 @@
 
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/detail/fiber_state.hpp>
-#include <boost/fiber/detail/strategy.hpp>
 #include <boost/fiber/fiber.hpp>
+#include <boost/fiber/strategy.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -30,7 +30,6 @@
 
 namespace boost {
 namespace fibers {
-namespace detail {
 
 class BOOST_FIBER_DECL round_robin : private noncopyable,
 									 public strategy
@@ -55,8 +54,6 @@ private:
 	typedef std::list< fiber::id >				runnable_queue;
 	typedef std::queue< fiber::id >				terminated_queue;
 
-	fiber				master_;
-	fiber				active_;
 	container			fibers_;
 	runnable_queue		runnable_fibers_;
 	terminated_queue	terminated_fibers_;
@@ -64,46 +61,26 @@ private:
 public:
 	round_robin();
 
-	~round_robin();
+	void add( fiber);
 
-	void add( fiber const&);
-
-	fiber::id get_id() const;
-
-	void yield();
-
-	void cancel();
-
-	void interrupt();
-
-	bool interruption_requested() const;
-
-	bool interruption_enabled() const;
-
-	fiber_interrupt_t & interrupt_flags();
-
-	int priority() const;
-
-	void priority( int);
-
-	void at_exit( callable_t);
-
-	void interrupt( fiber::id const&);
+	void yield( fiber::id const&);
 
 	void cancel( fiber::id const&);
 
 	void join( fiber::id const&);
 
+	void interrupt( fiber::id const&);
+
 	void reschedule( fiber::id const&);
 
 	bool run();
 
-	bool empty() const;
+	bool empty();
 
-	std::size_t size() const;
+	std::size_t size();
 };
 
-}}}
+}}
 
 # if defined(BOOST_MSVC)
 # pragma warning(pop)
@@ -111,4 +88,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBERS_DETAIL_ROUND_ROBIN_H
+#endif // BOOST_FIBERS_ROUND_ROBIN_H

@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBERS_INTERRUPTION_H
-#define BOOST_FIBERS_INTERRUPTION_H
+#ifndef BOOST_THIS_FIBER_INTERRUPTION_H
+#define BOOST_THIS_FIBER_INTERRUPTION_H
 
 #include <cstddef>
 
@@ -13,12 +13,12 @@
 
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/detail/fiber_state.hpp>
-#include <boost/fiber/scheduler.hpp>
+#include <boost/fiber/strategy.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace fibers {
+namespace this_fiber {
 
 class restore_interruption;
 
@@ -31,10 +31,10 @@ private:
 
 public:
 	disable_interruption() :
-		set_( ( scheduler::interrupt_flags() & detail::INTERRUPTION_BLOCKED) != 0)
+		set_( ( fibers::strategy::interrupt_flags() & fibers::detail::INTERRUPTION_BLOCKED) != 0)
 	{
 		if ( ! set_)
-			scheduler::interrupt_flags() |= detail::INTERRUPTION_BLOCKED;
+			fibers::strategy::interrupt_flags() |= fibers::detail::INTERRUPTION_BLOCKED;
 	}
 
 	~disable_interruption()
@@ -42,7 +42,7 @@ public:
 		try
 		{
 			if ( ! set_)
-				scheduler::interrupt_flags() &= ~detail::INTERRUPTION_BLOCKED;
+				fibers::strategy::interrupt_flags() &= ~fibers::detail::INTERRUPTION_BLOCKED;
 		}
 		catch (...)
 		{}
@@ -59,7 +59,7 @@ public:
 		disabler_( disabler)
 	{
 		if ( ! disabler_.set_)
-			scheduler::interrupt_flags() &= ~detail::INTERRUPTION_BLOCKED;
+			fibers::strategy::interrupt_flags() &= ~fibers::detail::INTERRUPTION_BLOCKED;
 	}
 
 	~restore_interruption()
@@ -67,7 +67,7 @@ public:
 	   try
 	   {	   
 			if ( ! disabler_.set_)
-				scheduler::interrupt_flags() |= detail::INTERRUPTION_BLOCKED;
+				fibers::strategy::interrupt_flags() |= fibers::detail::INTERRUPTION_BLOCKED;
 		}
 		catch (...)
 		{}
@@ -78,4 +78,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBERS_INTERRUPTION_H
+#endif // BOOST_THIS_FIBER_INTERRUPTION_H

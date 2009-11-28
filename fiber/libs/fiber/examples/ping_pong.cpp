@@ -62,7 +62,7 @@ void pong(
 	send_buf->deactivate();
 }
 
-void f( boost::fibers::scheduler & sched)
+void f( boost::fibers::scheduler<> & sched)
 {
 	fifo_ptr_t buf1( new fifo_t() );
 	fifo_ptr_t buf2( new fifo_t() );
@@ -75,7 +75,7 @@ int main()
 {
 	try
 	{
-		boost::fibers::scheduler sched;
+		boost::fibers::scheduler<> sched;
 
 		sched.make_fiber( & f, boost::ref( sched) );
 

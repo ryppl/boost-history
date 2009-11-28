@@ -8,11 +8,10 @@
 #define BOOST_THIS_FIBER_UTILITY_H
 
 #include <boost/bind.hpp>
-#include <boost/config.hpp>
 #include <boost/function.hpp>
 
 #include <boost/fiber/fiber.hpp>
-#include <boost/fiber/scheduler.hpp>
+#include <boost/fiber/strategy.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -21,57 +20,51 @@ namespace this_fiber {
 
 inline
 bool runs_as_fiber()
-{ return fibers::scheduler::runs_as_fiber(); }
+{ return fibers::strategy::runs_as_fiber(); }
 
 inline
 fiber::id get_id()
-{ return fibers::scheduler::get_id(); }
-
-inline
-void yield()
-{ fibers::scheduler::yield(); }
-
-inline
-void cancel()
-{ fibers::scheduler::cancel(); }
+{ return fibers::strategy::get_id(); }
 
 inline
 int priority()
-{ return fibers::scheduler::priority(); }
+{ return fibers::strategy::priority(); }
 
 inline
 void priority( int prio)
-{ fibers::scheduler::priority( prio); }
+{ fibers::strategy::priority( prio); }
 
 inline
 void interruption_point()
-{ fibers::scheduler::interrupt(); }
+{ fibers::strategy::interruption_point(); }
 
 inline
 bool interruption_requested()
-{ return fibers::scheduler::interruption_requested(); }
+{ return fibers::strategy::interruption_requested(); }
 
 inline
 bool interruption_enabled()
-{ return fibers::scheduler::interruption_enabled(); }
-
-template< typename Callable >
-void at_fiber_exit( Callable ca)
-{
-	fibers::scheduler::at_exit(
-		boost::bind( boost::type< void >(), ca) );
-}
+{ return fibers::strategy::interruption_enabled(); }
 
 inline
 void at_fiber_exit( function< void() > ca)
-{ fibers::scheduler::at_exit( ca); }
+{ fibers::strategy::at_fiber_exit( ca); }
+
+template< typename Callable >
+void at_fiber_exit( Callable ca)
+{ fibers::strategy::at_fiber_exit( boost::bind( boost::type< void >(), ca) ); }
 
 inline
 void at_fiber_exit( void ( * ca)() )
-{
-	fibers::scheduler::at_exit(
-		boost::bind( boost::type< void >(), ca) );
-}
+{ fibers::strategy::at_fiber_exit( boost::bind( boost::type< void >(), ca) ); }
+
+inline
+void yield()
+{ fibers::strategy::yield(); }
+
+inline
+void cancel()
+{ fibers::strategy::cancel(); }
 
 }}
 

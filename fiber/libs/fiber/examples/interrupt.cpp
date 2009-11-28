@@ -24,7 +24,7 @@ void fn_1()
 
 void fn_2()
 {
-	boost::fibers::disable_interruption disabled;
+	boost::this_fiber::disable_interruption disabled;
 	for ( int i = 0; i < 10; ++i)
 	{
 		++value2;
@@ -36,12 +36,12 @@ void fn_2()
 
 void fn_3()
 {
-	boost::fibers::disable_interruption disabled;
+	boost::this_fiber::disable_interruption disabled;
 	for ( int i = 0; i < 10; ++i)
 	{
 		++value3;
 		std::cout << "fn_3() increment value3 " << value3 << std::endl;
-		boost::fibers::restore_interruption restored( disabled);
+		boost::this_fiber::restore_interruption restored( disabled);
 		boost::this_fiber::interruption_point();
 		boost::this_fiber::yield();
 	}
@@ -65,7 +65,7 @@ int main()
 {
 	try
 	{
-		boost::fibers::scheduler sched;
+		boost::fibers::scheduler<> sched;
 
 		boost::fiber f1( fn_1);
 		sched.submit_fiber( f1);
@@ -111,7 +111,7 @@ int main()
 	}
 	catch ( boost::system::system_error const& e)
 	{ std::cerr << "system_error: " << e.code().value() << std::endl; }
-	catch ( boost::fibers::scheduler_error const& e)
+	catch ( boost::fibers::scheduler<>_error const& e)
 	{ std::cerr << "scheduler_error: " << e.what() << std::endl; }
 	catch ( std::exception const& e)
 	{ std::cerr << "exception: " << e.what() << std::endl; }

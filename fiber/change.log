@@ -1,3 +1,16 @@
+0.2.0:
+------
+- classes disable_interruption and restore_interruption moved into namespace boost::this_fiber
+- classes strategy and round robin moved into namespace boost::fibers
+- class strategy becomes an abstract base-class and provides protected member
+  functions in order to access private data of class boost::fiber
+- class scheduler becomes a template
+  the template argument must be derived from strategy and implements the scheduling strategy
+  the default is boost::fibers::round_robin
+- multiple schedulers in one thread supported
+- STATE macros in class boost::fibers::round_robin replaced by protected member function of
+  boost::fibers::strategy
+
 0.1.1 :
 -------
 - refactor STATE macros -> don't test and set only one bit
