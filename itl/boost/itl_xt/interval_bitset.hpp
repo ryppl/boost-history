@@ -429,7 +429,7 @@ namespace Interval
 			            const interval_bitset<DomainT, BitSetT>& clustered)
         {
             typedef interval_bitset<DomainT, BitSetT> InterBitsetT;
-			InterBitsetT::element_const_iterator bit_ = clustered.elements_begin();
+			typename InterBitsetT::element_const_iterator bit_ = clustered.elements_begin();
 			while(bit_ != clustered.elements_end())
 				atomized.insert(*bit_++);
         }

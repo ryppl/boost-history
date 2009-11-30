@@ -178,7 +178,7 @@ struct count<nat16, 16>
     }
 };
 
-
+/*JODO redefinition for gcc.
 template<>
 struct count<nat32, 32>
 {
@@ -194,6 +194,7 @@ struct count<nat32, 32>
     }
 
 };
+*/
 
 template<>
 struct count<unsigned int, 32>
