@@ -10,6 +10,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #ifndef BOOST_VALIDATE_LAWS_ATOMIC_EQUIVALENCE_HPP_JOFA_091124
 #define BOOST_VALIDATE_LAWS_ATOMIC_EQUIVALENCE_HPP_JOFA_091124
 
+#include <iterator>
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/functors.hpp>
 #include <boost/itl/predicates.hpp>
