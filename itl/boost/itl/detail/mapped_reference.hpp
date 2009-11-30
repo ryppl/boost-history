@@ -20,13 +20,13 @@ struct mapped_reference
     typedef FirstT  first_type;   
     typedef SecondT second_type; 
     typedef mapped_reference type;
-	typedef typename 
-		mpl::if_<is_const<second_type>, 
-		               second_type&, 
-				 const second_type&>::type second_reference_type;
+    typedef typename 
+        mpl::if_<is_const<second_type>, 
+                       second_type&, 
+                 const second_type&>::type second_reference_type;
 
     const FirstT&         first;
-	second_reference_type second;
+    second_reference_type second;
 
     mapped_reference(const FirstT& fst, second_reference_type snd) : first(fst), second(snd){}
 

@@ -166,48 +166,48 @@ public:
     //= Element iterator related
     //==========================================================================
     element_iterator elements_begin()
-	{
-		if(this->begin()==this->end())
-			return element_iterator(this->begin(), element_iterator::beyond);
-		else 
-			return element_iterator(this->begin(), element_iterator::ante  );
-	}
+    {
+        if(this->begin()==this->end())
+            return element_iterator(this->begin(), element_iterator::beyond);
+        else 
+            return element_iterator(this->begin(), element_iterator::ante  );
+    }
 
     element_iterator elements_end()  
-	{ return element_iterator(this->end(), element_iterator::beyond);   }
+    { return element_iterator(this->end(), element_iterator::beyond);   }
 
     element_const_iterator elements_begin()const
-	{
-		if(this->begin()==this->end())
-			return element_const_iterator(this->begin(), element_iterator::beyond);
-		else 
-			return element_const_iterator(this->begin(), element_iterator::ante  );
-	}
+    {
+        if(this->begin()==this->end())
+            return element_const_iterator(this->begin(), element_iterator::beyond);
+        else 
+            return element_const_iterator(this->begin(), element_iterator::ante  );
+    }
 
     element_const_iterator elements_end()const
-	{ return element_const_iterator(this->end(), element_iterator::beyond);   }
+    { return element_const_iterator(this->end(), element_iterator::beyond);   }
 
     element_reverse_iterator elements_rbegin()
-	{
-		if(this->rbegin()==this->rend())
-			return element_reverse_iterator(this->rbegin(), element_iterator::before);
-		else 
-			return element_reverse_iterator(this->rbegin(), element_iterator::past  );
-	}
+    {
+        if(this->rbegin()==this->rend())
+            return element_reverse_iterator(this->rbegin(), element_iterator::before);
+        else 
+            return element_reverse_iterator(this->rbegin(), element_iterator::past  );
+    }
 
     element_reverse_iterator elements_rend()  
-	{ return element_reverse_iterator(this->rend(), element_iterator::before); }
+    { return element_reverse_iterator(this->rend(), element_iterator::before); }
 
     element_const_reverse_iterator elements_rbegin()const
-	{
-		if(this->rbegin()==this->rend())
-			return element_const_reverse_iterator(this->rbegin(), element_iterator::before);
-		else 
-			return element_const_reverse_iterator(this->rbegin(), element_iterator::past  );
-	}
+    {
+        if(this->rbegin()==this->rend())
+            return element_const_reverse_iterator(this->rbegin(), element_iterator::before);
+        else 
+            return element_const_reverse_iterator(this->rbegin(), element_iterator::past  );
+    }
 
     element_const_reverse_iterator elements_rend()const
-	{ return element_const_reverse_iterator(this->rend(), element_iterator::before); }
+    { return element_const_reverse_iterator(this->rend(), element_iterator::before); }
 
 private:                                       
     typedef typename interval_bitmap_type::segment_type seg_type;
@@ -423,15 +423,15 @@ struct type_to_string<itl::interval_bitset<DomainT,BitSetT,Compare,Interval,Allo
 namespace Interval
 {
     template <typename DomainT, typename BitSetT>
-	struct Atomize<itl::set<DomainT>, interval_bitset<DomainT, BitSetT> >
+    struct Atomize<itl::set<DomainT>, interval_bitset<DomainT, BitSetT> >
     {
         void operator()(                      itl::set<DomainT>& atomized, 
-			            const interval_bitset<DomainT, BitSetT>& clustered)
+                        const interval_bitset<DomainT, BitSetT>& clustered)
         {
             typedef interval_bitset<DomainT, BitSetT> InterBitsetT;
-			typename InterBitsetT::element_const_iterator bit_ = clustered.elements_begin();
-			while(bit_ != clustered.elements_end())
-				atomized.insert(*bit_++);
+            typename InterBitsetT::element_const_iterator bit_ = clustered.elements_begin();
+            while(bit_ != clustered.elements_end())
+                atomized.insert(*bit_++);
         }
     };
 

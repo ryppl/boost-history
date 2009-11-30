@@ -27,7 +27,7 @@ struct bitwise<std::pair<Interval<DomainT,Compare>const, BitSetT> >
     typedef DomainT domain_type;
     typedef DomainT codomain_type;
     typedef DomainT element_type;
-	typedef BitSetT                     bitset_type;
+    typedef BitSetT                     bitset_type;
     typedef typename BitSetT::word_type word_type;
 
     BOOST_STATIC_CONSTANT(bit_range_type, digits = BitSetT::digits);
@@ -60,11 +60,11 @@ public:
     typedef element_type                                    data_type;
 
     BOOST_STATIC_CONSTANT(bit_range_type, digits = bitwise<segment_type>::digits );
-	BOOST_STATIC_CONSTANT(bool,           is_forward  = mpl::not_<is_reverse<SegmentIteratorT> >::value );
+    BOOST_STATIC_CONSTANT(bool,           is_forward  = mpl::not_<is_reverse<SegmentIteratorT> >::value );
 
-	typedef typename biterate::proceed<segment_iterator,is_forward> Proceed;
+    typedef typename biterate::proceed<segment_iterator,is_forward> Proceed;
 
-	BOOST_STATIC_CONSTANT(bit_range_type, before = Proceed::before );
+    BOOST_STATIC_CONSTANT(bit_range_type, before = Proceed::before );
     BOOST_STATIC_CONSTANT(bit_range_type, ante   = Proceed::ante   );
     BOOST_STATIC_CONSTANT(bit_range_type, past   = Proceed::past   );
     BOOST_STATIC_CONSTANT(bit_range_type, beyond = Proceed::beyond );
@@ -83,7 +83,7 @@ public:
     bit_element_iterator(segment_iterator jumper, bit_range_type start_pos)
         : _saltator(jumper)
         , _reptator(neutron<domain_difference_type>::value()) 
-		, _on_bit(start_pos)
+        , _on_bit(start_pos)
     {}
 
     template <class SaltatorT>
@@ -104,58 +104,58 @@ private:
     template <class SaltatorT>
     bool equal(bit_element_iterator<SaltatorT> const& other) const
     {
-		if(     _saltator != other._saltator)
-			return false;
-		else if(_reptator != other._reptator)
-			return false;
-		else if(this->_on_bit == ante)
-			return other._on_bit == beyond || other.is_segment_begin();
-		else 
-			return _on_bit == other._on_bit;
+        if(     _saltator != other._saltator)
+            return false;
+        else if(_reptator != other._reptator)
+            return false;
+        else if(_on_bit == ante)
+            return other._on_bit == beyond || other.is_segment_begin();
+        else 
+            return _on_bit == other._on_bit;
     }
 
     void increment()
     { 
-		if(_on_bit == ante)
-			first_bit();
-		
-		next_bit();
-		if(_on_bit == past)
+        if(_on_bit == ante)
+            first_bit();
+        
+        next_bit();
+        if(_on_bit == past)
         {   // The current bitset passed the end
             if(_reptator < pred(_saltator->first.length()))
-			{
+            {
                 ++_reptator; 
-				_on_bit = ante;
-			}
+                _on_bit = ante;
+            }
             else
             {
                 ++_saltator;
-				// NOTE: increment and dereference are unsecure now, because 
-				// _saltator can (finally) be end here. decrement is secure. 
+                // NOTE: increment and dereference are unsecure now, because 
+                // _saltator can (finally) be end here. decrement is secure. 
                 _reptator = neutron<domain_difference_type>::value();
-				_on_bit = ante;
+                _on_bit = ante;
             }
         }
     }
 
     void decrement()
     { 
-		prev_bit();
+        prev_bit();
         if(_on_bit == ante)
         {   // The current bitset passed the beginning
             if(neutron<domain_difference_type>::value() < _reptator)
-			{
+            {
                 --_reptator;
-				_on_bit = past;
-			}
+                _on_bit = past;
+            }
             else
             {
-				//assert: _saltator is not at begin here.
+                //assert: _saltator is not at begin here.
                 --_saltator;
-				// NOW: decrement insecure, because _saltator can (finally) be 
-				// begin here. increment and dereference are secure.
-				_reptator = _saltator->first.length();
-				--_reptator;
+                // NOW: decrement insecure, because _saltator can (finally) be 
+                // begin here. increment and dereference are secure.
+                _reptator = _saltator->first.length();
+                --_reptator;
                 _on_bit = past;
             }
         }
@@ -163,61 +163,61 @@ private:
 
     element_type dereference()const
     {
-		if(_on_bit == ante)
-			first_bit();
-		else if(_on_bit == past)
-			last_bit();
+        if(_on_bit == ante)
+            first_bit();
+        else if(_on_bit == past)
+            last_bit();
 
-		return (Proceed::inter_value(_reptator, _saltator->first) << shift) + _on_bit;
+        return (Proceed::inter_value(_reptator, _saltator->first) << shift) + _on_bit;
     }
 
     void first_bit()const
     {
-		// Because interval_bitsets are neutron absorbers, _saltator->second.word() is not a neutron
+        // Because interval_bitsets are neutron absorbers, _saltator->second.word() is not a neutron
         _on_bit   = Proceed::first_bit(_saltator->second.word());
     }
 
     void last_bit()const
     {
-		// Because interval_bitsets are neutron absorbers, _saltator->second.word() is not a neutron
+        // Because interval_bitsets are neutron absorbers, _saltator->second.word() is not a neutron
         _on_bit   = Proceed::last_bit(_saltator->second.word());
     }
 
     bool next_bit()
     {
-		if(_on_bit == before)
-		{
-			++_saltator;
-			_reptator = neutron<domain_difference_type>::value();
+        if(_on_bit == before)
+        {
+            ++_saltator;
+            _reptator = neutron<domain_difference_type>::value();
             _on_bit   = Proceed::first_bit(_saltator->second.word());
-		}
-		else
-			_on_bit = Proceed::next_bit(_saltator->second.word(), _on_bit);
+        }
+        else
+            _on_bit = Proceed::next_bit(_saltator->second.word(), _on_bit);
 
         return _on_bit != past;
     }
 
     bool prev_bit()
     {
-		if(_on_bit == beyond)
-		{
-			--_saltator;
-			_reptator = _saltator->first.length();
-			--_reptator;
+        if(_on_bit == beyond)
+        {
+            --_saltator;
+            _reptator = _saltator->first.length();
+            --_reptator;
             _on_bit   = Proceed::last_bit(_saltator->second.word());
-		}
-		else
+        }
+        else
             _on_bit = Proceed::prev_bit(_saltator->second.word(), _on_bit);
 
         return _on_bit != ante;
     }
 
-	bool is_segment_begin()const
-	{
-		return _reptator == neutron<domain_difference_type>::value()
-			&& 0 <= _on_bit && _on_bit < digits
-			&& _on_bit == Proceed::first_bit(_saltator->second.word());
-	}
+    bool is_segment_begin()const
+    {
+        return _reptator == neutron<domain_difference_type>::value()
+            && 0 <= _on_bit && _on_bit < digits
+            && _on_bit == Proceed::first_bit(_saltator->second.word());
+    }
 
 private:
     segment_iterator               _saltator;  // satltare: to jump  : the fast moving iterator
@@ -297,10 +297,10 @@ struct forward
         }
     }
 
-	static bit_range_type last_bit(word_type value)
+    static bit_range_type last_bit(word_type value)
     {
         return index32[((high_bit(value) * factor)) >> shift];
-	}
+    }
 
     static bit_range_type prev_bit(word_type value, bit_range_type cur_pos)
     {
@@ -347,7 +347,7 @@ template<> struct forward<nat64, 64>
         return static_cast<half_type>(value >> half) & ~((1<<(cur_pos-half+1))-1);
     }
 
-	static bit_range_type first_bit(word_type value)
+    static bit_range_type first_bit(word_type value)
     {
         half_type lower = static_cast<half_type>(lower_mask & value);
         if(lower)
@@ -357,7 +357,7 @@ template<> struct forward<nat64, 64>
             half_type upper = static_cast<half_type>(value >> half);
             return half + index32[(((upper & -upper) * factor)) >> shift];
         }
-	}
+    }
 
     static bit_range_type next_bit(word_type value, bit_range_type cur_pos)
     {
@@ -376,8 +376,8 @@ template<> struct forward<nat64, 64>
                     return index32[(((low_next & -low_next) * factor)) >> shift];
                 else if(half_type up_next = upper_next(value, cur_pos))
                     return half + index32[(((up_next & -up_next) * factor)) >> shift];
-				else
-					return past;
+                else
+                    return past;
         }
     }
 
@@ -392,7 +392,7 @@ template<> struct forward<nat64, 64>
         return static_cast<half_type>(value >> half) & ((1<<(cur_pos-half))-1);
     }
 
-	static bit_range_type last_bit(word_type value)
+    static bit_range_type last_bit(word_type value)
     {
         half_type upper = static_cast<half_type>(value >> half);
         if(upper)
@@ -402,7 +402,7 @@ template<> struct forward<nat64, 64>
             half_type lower = static_cast<half_type>(value & lower_mask);
             return index32[((high_bit(lower) * factor)) >> shift];
         }
-	}
+    }
 
     static bit_range_type prev_bit(word_type value, bit_range_type cur_pos)
     {
@@ -440,40 +440,40 @@ struct proceed<IteratorT,true>
     typedef typename bitwise<segment_type>::word_type    word_type;
 
     BOOST_STATIC_CONSTANT(bit_range_type, digits = bitwise<segment_type>::digits );
-	BOOST_STATIC_CONSTANT(bit_range_type, before = -2       );
-	BOOST_STATIC_CONSTANT(bit_range_type, ante   = -1       );
-	BOOST_STATIC_CONSTANT(bit_range_type, past   = digits   );
-	BOOST_STATIC_CONSTANT(bit_range_type, beyond = digits+1 );
+    BOOST_STATIC_CONSTANT(bit_range_type, before = -2       );
+    BOOST_STATIC_CONSTANT(bit_range_type, ante   = -1       );
+    BOOST_STATIC_CONSTANT(bit_range_type, past   = digits   );
+    BOOST_STATIC_CONSTANT(bit_range_type, beyond = digits+1 );
 
-	static bit_range_type first_bit(word_type value)
-	{
-		unsigned int dbg_word_value = value; //CL
-		return forward<word_type,digits>::first_bit(value); 
-	}
+    static bit_range_type first_bit(word_type value)
+    {
+        unsigned int dbg_word_value = value; //CL
+        return forward<word_type,digits>::first_bit(value); 
+    }
 
-	static bit_range_type last_bit(word_type value)
-	{ return forward<word_type,digits>::last_bit(value); }
+    static bit_range_type last_bit(word_type value)
+    { return forward<word_type,digits>::last_bit(value); }
 
-	static bit_range_type next_bit(word_type value, bit_range_type cur_pos)
-	{ return forward<word_type,digits>::next_bit(value, cur_pos); }
+    static bit_range_type next_bit(word_type value, bit_range_type cur_pos)
+    { return forward<word_type,digits>::next_bit(value, cur_pos); }
 
-	static bit_range_type prev_bit(word_type value, bit_range_type cur_pos)
-	{ return forward<word_type,digits>::prev_bit(value, cur_pos); }
+    static bit_range_type prev_bit(word_type value, bit_range_type cur_pos)
+    { return forward<word_type,digits>::prev_bit(value, cur_pos); }
 
-	static difference_type inter_value(difference_type reptator, const interval_type inter_val)
-	{
-		return inter_val.first() + reptator;
-	}
+    static difference_type inter_value(difference_type reptator, const interval_type inter_val)
+    {
+        return inter_val.first() + reptator;
+    }
 
-	static difference_type inter_base(const iterator& iter)
-	{
-		return neutron<difference_type>::value();
-	}
+    static difference_type inter_base(const iterator& iter)
+    {
+        return neutron<difference_type>::value();
+    }
 
-	static difference_type inter_ceil(const iterator& iter)
-	{
-		return iter->first.length();
-	}
+    static difference_type inter_ceil(const iterator& iter)
+    {
+        return iter->first.length();
+    }
 };
 
 template<class IteratorT>
@@ -486,37 +486,37 @@ struct proceed<IteratorT,false>
     typedef typename bitwise<segment_type>::word_type    word_type;
 
     BOOST_STATIC_CONSTANT(bit_range_type, digits = bitwise<segment_type>::digits );
-	BOOST_STATIC_CONSTANT(bit_range_type, beyond = -2       );
-	BOOST_STATIC_CONSTANT(bit_range_type, past   = -1       );
-	BOOST_STATIC_CONSTANT(bit_range_type, ante   = digits   );
-	BOOST_STATIC_CONSTANT(bit_range_type, before = digits+1 );
+    BOOST_STATIC_CONSTANT(bit_range_type, beyond = -2       );
+    BOOST_STATIC_CONSTANT(bit_range_type, past   = -1       );
+    BOOST_STATIC_CONSTANT(bit_range_type, ante   = digits   );
+    BOOST_STATIC_CONSTANT(bit_range_type, before = digits+1 );
 
-	static bit_range_type first_bit(word_type value)
-	{ return forward<word_type,digits>::last_bit(value); }
+    static bit_range_type first_bit(word_type value)
+    { return forward<word_type,digits>::last_bit(value); }
 
-	static bit_range_type last_bit(word_type value)
-	{ return forward<word_type,digits>::first_bit(value); }
+    static bit_range_type last_bit(word_type value)
+    { return forward<word_type,digits>::first_bit(value); }
 
-	static bit_range_type next_bit(word_type value, bit_range_type cur_pos)
-	{ return forward<word_type,digits>::prev_bit(value, cur_pos); }
+    static bit_range_type next_bit(word_type value, bit_range_type cur_pos)
+    { return forward<word_type,digits>::prev_bit(value, cur_pos); }
 
-	static bit_range_type prev_bit(word_type value, bit_range_type cur_pos)
-	{ return forward<word_type,digits>::next_bit(value, cur_pos); }
+    static bit_range_type prev_bit(word_type value, bit_range_type cur_pos)
+    { return forward<word_type,digits>::next_bit(value, cur_pos); }
 
-	static difference_type inter_value(difference_type reptator, const interval_type inter_val)
-	{
-		return inter_val.last() - reptator;
-	}
+    static difference_type inter_value(difference_type reptator, const interval_type inter_val)
+    {
+        return inter_val.last() - reptator;
+    }
 
-	static difference_type inter_base(const iterator& iter)//CL . . .
-	{
-		return iter->first.length();
-	}
+    static difference_type inter_base(const iterator& iter)//CL . . .
+    {
+        return iter->first.length();
+    }
 
-	static difference_type inter_ceil(const iterator& iter)
-	{
-		return neutron<difference_type>::value();
-	}
+    static difference_type inter_ceil(const iterator& iter)
+    {
+        return neutron<difference_type>::value();
+    }
 };
 
 

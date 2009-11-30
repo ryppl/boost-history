@@ -51,7 +51,7 @@ namespace boost{namespace itl
             switch(freeChoice)
             {
             case FreeChoice::_1:
-				return new sorted_associative_validater< interval_bitset<int, bits<unsigned char> >,  itl::list<int> >; 
+                return new sorted_associative_validater< interval_bitset<int, bits<unsigned char> >,  itl::list<int> >; 
             case FreeChoice::_2:
                 return new sorted_associative_validater< interval_bitset<int, bits<unsigned short> >, itl::list<int> >; 
             case FreeChoice::_3:

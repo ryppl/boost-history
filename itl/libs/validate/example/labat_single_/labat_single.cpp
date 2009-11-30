@@ -108,18 +108,18 @@ void test_LawValidater()
     //    hint_insertion
     //> TestLawT;
 
-	//typedef UnaryAtomicEquivalence
-	//<
-	//	itl::interval_bitset<int,itl::bits16>,
-	//	itl::list<int>,
-	//	itl::std_reverse_copy_forward
-	//> TestLawT;
+    //typedef UnaryAtomicEquivalence
+    //<
+    //    itl::interval_bitset<int,itl::bits16>,
+    //    itl::list<int>,
+    //    itl::std_reverse_copy_forward
+    //> TestLawT;
 
     typedef BinaryAtomicEquivalence
     <
-		itl::interval_bitset<int,itl::bits16>,
-		itl::list<int>,
-		itl::std_includes_forward
+        itl::interval_bitset<int,itl::bits16>,
+        itl::list<int>,
+        itl::std_includes_forward
     > TestLawT;
 
 
@@ -132,8 +132,8 @@ void test_LawValidater()
     GentorProfileSgl::it()->set_std_profile(32,1);
     test_law.set_trials_count(test_count);
 
-	TestLawT law;
-	cout << law.typeString() << endl;
+    TestLawT law;
+    cout << law.typeString() << endl;
     std::cout << "Start\n";
     start = ptime(microsec_clock::local_time());
     test_law.run();

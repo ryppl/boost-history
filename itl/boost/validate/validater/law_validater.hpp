@@ -147,14 +147,14 @@ namespace boost{namespace itl
             start = posix_time::ptime(posix_time::microsec_clock::local_time());
             // In order to measure small time intervals, evaluation must be repeated.
 
-			//std::cout << idx << " "; //CL..
-			//if(idx==0)
-			//{
-			//	int dbg_ = 1;
-			//}
+            //std::cout << idx << " "; //CL..
+            //if(idx==0)
+            //{
+            //    int dbg_ = 1;
+            //}
 
-			for(int repeat=0; repeat<_repeat_count; repeat++)
-				law_is_violated = !_law.holds();
+            for(int repeat=0; repeat<_repeat_count; repeat++)
+                law_is_violated = !_law.holds();
 
             stop = posix_time::ptime(posix_time::microsec_clock::local_time());
             validation_time += static_cast<double>((stop - start).total_microseconds());

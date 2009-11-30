@@ -18,73 +18,73 @@ namespace boost{namespace itl
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_copy_forward
 {
-	static void apply(const SourceT& source, TargetT& target)
-	{
-		std::copy(source.begin(), source.end(), 
-			InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
-	}
+    static void apply(const SourceT& source, TargetT& target)
+    {
+        std::copy(source.begin(), source.end(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
 
-	static void apply_elemental(const SourceT& source, TargetT& target)
-	{
-		std::copy(source.elements_begin(), source.elements_end(), 
-			InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
-	}
+    static void apply_elemental(const SourceT& source, TargetT& target)
+    {
+        std::copy(source.elements_begin(), source.elements_end(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
 
-	static std::string struct_abbreviation(){ return "cpy_f"; }
+    static std::string struct_abbreviation(){ return "cpy_f"; }
 };
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_copy_backward
 {
-	static void apply(const SourceT& source, TargetT& target)
-	{
-		std::copy(source.rbegin(), source.rend(), 
-			InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
-	}
+    static void apply(const SourceT& source, TargetT& target)
+    {
+        std::copy(source.rbegin(), source.rend(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
 
-	static void apply_elemental(const SourceT& source, TargetT& target)
-	{
-		std::copy(source.elements_rbegin(), source.elements_rend(), 
-			InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
-	}
+    static void apply_elemental(const SourceT& source, TargetT& target)
+    {
+        std::copy(source.elements_rbegin(), source.elements_rend(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
 
-	static std::string struct_abbreviation(){ return "cpy_b"; }
+    static std::string struct_abbreviation(){ return "cpy_b"; }
 };
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_reverse_copy_forward
 {
-	static void apply(const SourceT& source, TargetT& target)
-	{
-		std::reverse_copy(source.begin(), source.end(), 
-			InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
-	}
+    static void apply(const SourceT& source, TargetT& target)
+    {
+        std::reverse_copy(source.begin(), source.end(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
 
-	static void apply_elemental(const SourceT& source, TargetT& target)
-	{
-		std::reverse_copy(source.elements_begin(), source.elements_end(), 
-			InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
-	}
+    static void apply_elemental(const SourceT& source, TargetT& target)
+    {
+        std::reverse_copy(source.elements_begin(), source.elements_end(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
 
-	static std::string struct_abbreviation(){ return "rcpy_f"; }
+    static std::string struct_abbreviation(){ return "rcpy_f"; }
 };
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_reverse_copy_backward
 {
-	static void apply(const SourceT& source, TargetT& target)
-	{
-		std::reverse_copy(source.rbegin(), source.rend(), 
-			InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
-	}
+    static void apply(const SourceT& source, TargetT& target)
+    {
+        std::reverse_copy(source.rbegin(), source.rend(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
 
-	static void apply_elemental(const SourceT& source, TargetT& target)
-	{
-		std::reverse_copy(source.elements_rbegin(), source.elements_rend(), 
-			InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
-	}
+    static void apply_elemental(const SourceT& source, TargetT& target)
+    {
+        std::reverse_copy(source.elements_rbegin(), source.elements_rend(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
 
-	static std::string struct_abbreviation(){ return "rcpy_b"; }
+    static std::string struct_abbreviation(){ return "rcpy_b"; }
 };
 
 

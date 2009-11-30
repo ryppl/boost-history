@@ -53,20 +53,20 @@ public:
         _lawChoice.setMaxWeights(sum_of_shares);
 
         int rest_shares = sum_of_shares, item_index = 0;
-		_lawChoice[copy_fore                    ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[copy_back                    ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[reverse_copy_fore            ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[reverse_copy_back            ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[includes_fore                ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[includes_back                ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[set_union_fore               ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[set_union_back               ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[set_difference_fore          ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[set_difference_back          ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[set_intersection_fore        ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[set_intersection_back        ] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[set_symmetric_difference_fore] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[set_symmetric_difference_back] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[copy_fore                    ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[copy_back                    ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[reverse_copy_fore            ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[reverse_copy_back            ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[includes_fore                ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[includes_back                ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[set_union_fore               ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[set_union_back               ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[set_difference_fore          ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[set_difference_back          ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[set_intersection_fore        ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[set_intersection_back        ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[set_symmetric_difference_fore] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[set_symmetric_difference_back] = share(Laws_size, item_index, rest_shares);
 
         _lawChoice.init();
     }
@@ -76,20 +76,20 @@ public:
     {
         switch(_lawChoice.some())
         {
-		case copy_fore          : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_copy_forward           >, RandomGentor>;
-		case copy_back          : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_copy_backward          >, RandomGentor>;
-		case reverse_copy_fore  : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_reverse_copy_forward   >, RandomGentor>;
-		case reverse_copy_back  : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_reverse_copy_backward  >, RandomGentor>;
-		case includes_fore      : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_includes_forward      >, RandomGentor>;
-		case includes_back      : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_includes_backward     >, RandomGentor>;
-		case set_union_fore     : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_union_forward      >, RandomGentor>;
-		case set_union_back     : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_union_backward     >, RandomGentor>;
-		case set_difference_fore: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_difference_forward >, RandomGentor>;
-		case set_difference_back: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_difference_backward>, RandomGentor>;
-		case set_intersection_fore: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_intersection_forward >, RandomGentor>;
-		case set_intersection_back: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_intersection_backward>, RandomGentor>;
-		case set_symmetric_difference_fore: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_symmetric_difference_forward >, RandomGentor>;
-		case set_symmetric_difference_back: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_symmetric_difference_backward>, RandomGentor>;
+        case copy_fore          : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_copy_forward           >, RandomGentor>;
+        case copy_back          : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_copy_backward          >, RandomGentor>;
+        case reverse_copy_fore  : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_reverse_copy_forward   >, RandomGentor>;
+        case reverse_copy_back  : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_reverse_copy_backward  >, RandomGentor>;
+        case includes_fore      : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_includes_forward      >, RandomGentor>;
+        case includes_back      : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_includes_backward     >, RandomGentor>;
+        case set_union_fore     : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_union_forward      >, RandomGentor>;
+        case set_union_back     : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_union_backward     >, RandomGentor>;
+        case set_difference_fore: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_difference_forward >, RandomGentor>;
+        case set_difference_back: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_difference_backward>, RandomGentor>;
+        case set_intersection_fore: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_intersection_forward >, RandomGentor>;
+        case set_intersection_back: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_intersection_backward>, RandomGentor>;
+        case set_symmetric_difference_fore: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_symmetric_difference_forward >, RandomGentor>;
+        case set_symmetric_difference_back: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_symmetric_difference_backward>, RandomGentor>;
         default: return NULL;
         }
     }

@@ -103,7 +103,7 @@ namespace boost{namespace itl
             //-----------------------------------------------------------------
             case RootType::interval_map: {
                 switch(neutronizerChoice) {
-			    case NeutronHandlerType::partial_absorber: return new sorted_associative_validater<interval_map<int,int,partial_absorber>, itl::list<std::pair<int,int> > >;
+                case NeutronHandlerType::partial_absorber: return new sorted_associative_validater<interval_map<int,int,partial_absorber>, itl::list<std::pair<int,int> > >;
                 case NeutronHandlerType::partial_enricher: return new sorted_associative_validater<interval_map<int,int,partial_enricher>, itl::list<std::pair<int,int> > >;
                 case NeutronHandlerType::total_absorber:   return new sorted_associative_validater<interval_map<int,int,total_absorber  >, itl::list<std::pair<int,int> > >;
                 case NeutronHandlerType::total_enricher:   return new sorted_associative_validater<interval_map<int,int,total_enricher  >, itl::list<std::pair<int,int> > >;

@@ -97,7 +97,7 @@ public:
     size_type cardinality()const{ return bitcount::count<word_type, digits>::apply(_bits); }
     size_type size()const       { return cardinality(); }
 
-	std::string as_string(const char off_on[2] = " 1")const;
+    std::string as_string(const char off_on[2] = " 1")const;
 
 private:
     word_type _bits;
