@@ -256,6 +256,7 @@ fall together in the well known ['*set intersection*].
 [include functions_intersection.qbk]
 [include functions_symmetric_difference.qbk]
 [include functions_iterator_related.qbk]
+[include functions_element_iteration.qbk]
 [include functions_streaming.qbk]
 
 

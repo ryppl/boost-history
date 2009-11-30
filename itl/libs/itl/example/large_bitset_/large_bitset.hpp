@@ -143,6 +143,7 @@ private:                                      // Example value
     static const word_type                    //   8-bit case  
         digits  = sizeof(word_type)*CHAR_BIT, //   8           Size of the associated bitsets 
         divisor = digits                    , //   8           Divisor to find intervals for values
+        last    = digits-1                  , //   7           Last bit (0 based)
         shift   = log2_<divisor>::value     , //   3           To express the division as bit shift
         w1      = static_cast<word_type>(1) , //               Helps to avoid static_casts for long long
         mask    = divisor - w1              , //   7=11100000  Helps to express the modulo operation as bit_and
@@ -155,8 +156,8 @@ private:                                      // Example value
     //]
 
     //[large_bitset_bitset_filler
-    static word_type from_lower_to(word_type bit){return bit==top ? all : (1<<(bit+1))-1;}
-    static word_type to_upper_from(word_type bit){return bit==top ? top : ~((1<<bit)-1); }
+    static word_type from_lower_to(word_type bit){return bit==last ? all : (w1<<(bit+w1))-w1;}
+    static word_type to_upper_from(word_type bit){return bit==last ? top : ~((w1<<bit)-w1); }
     //]
 
     //[large_bitset_segment_apply

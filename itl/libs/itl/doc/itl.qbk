@@ -145,6 +145,7 @@ Distributed under the Boost Software License, Version 1.0.
 [def __biLintersection__ [link boost_itl.function_reference.intersection ['*intersection*]]]
 [def __biLSymmetricDifference__ [link boost_itl.function_reference.symmetric_difference ['*Symmetric difference*]]]
 [def __biLIteratorRelated__ [link boost_itl.function_reference.iterator_related ['*Iterator related*]]]
+[def __biLElementIteration__ [link boost_itl.function_reference.element_iteration ['*Element iteration*]]]
 [def __biLStreaming__    [link boost_itl.function_reference.streaming__conversion ['*Streaming, conversion*]]]
 
 [/ column headers]

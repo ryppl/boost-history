@@ -11,7 +11,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/mpl/list.hpp>
 
 // interval instance types
-#include <boost/itl/gregorian.hpp> 
+// #include <boost/itl/gregorian.hpp> 
 #include <boost/itl/ptime.hpp> 
 #include <boost/itl/rational.hpp> 
 

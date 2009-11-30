@@ -22,6 +22,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/set_laws.hpp>
 #include <boost/validate/laws/minor_set_laws.hpp>
 #include <boost/validate/laws/function_equality.hpp>
+#include <boost/validate/laws/atomic_equivalence.hpp>
 
 //#include <boost/validate/laws/novial_tree.hpp>
 #include <boost/validate/laws/inversion_laws.hpp>
@@ -31,6 +32,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/functors.hpp>
+#include <boost/itl_xt/interval_bitset.hpp>
 
 using namespace std;
 using namespace Loki;
@@ -98,22 +100,40 @@ void test_LawValidater()
     //    <interval_set<int>, itl::interval<int> >  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-    typedef FunctionEquality
+    //typedef FunctionEquality
+    //<
+    //    itl::list<std::pair<int,int> >, 
+    //    itl::map<int,int,partial_absorber>,
+    //    base_insertion, 
+    //    hint_insertion
+    //> TestLawT;
+
+	//typedef UnaryAtomicEquivalence
+	//<
+	//	itl::interval_bitset<int,itl::bits16>,
+	//	itl::list<int>,
+	//	itl::std_reverse_copy_forward
+	//> TestLawT;
+
+    typedef BinaryAtomicEquivalence
     <
-        itl::list<std::pair<int,int> >, 
-        itl::map<int,int,partial_absorber>,
-        base_insertion, 
-        hint_insertion
+		itl::interval_bitset<int,itl::bits16>,
+		itl::list<int>,
+		itl::std_includes_forward
     > TestLawT;
+
+
     LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------
-    int test_count = 10000;
+    int test_count = 1000;
     ptime start, stop;
 
-    GentorProfileSgl::it()->set_std_profile(4,1);
+    GentorProfileSgl::it()->set_std_profile(32,1);
     test_law.set_trials_count(test_count);
 
+	TestLawT law;
+	cout << law.typeString() << endl;
     std::cout << "Start\n";
     start = ptime(microsec_clock::local_time());
     test_law.run();

@@ -39,29 +39,276 @@ using namespace unit_test;
 using namespace boost::itl;
 
 
-
-BOOST_AUTO_TEST_CASE(casual_test)
+BOOST_AUTO_TEST_CASE(reverse_iter)
 {
-    typedef interval_bitset<nat, bits8> InterBits8T;
-    InterBits8T lbs;
+    typedef interval_bitset<int, bits8> InterBitsT;
+    InterBitsT lbs;
 
-    lbs.add(1).add(4).add(7).add(8);
+    lbs.add(0).add(3).add(5);
+
+	InterBitsT::element_reverse_iterator rit_   = lbs.elements_rend();
+	InterBitsT::element_reverse_iterator revbeg = lbs.elements_rbegin();
+
+	cout << "{";
+	while(!(rit_ == revbeg))
+	{
+		--rit_;
+		cout << *rit_ << " ";
+	}
+	cout << "}";
+}
+
+
+/*
+BOOST_AUTO_TEST_CASE(bitter16_forward)
+{
+    typedef interval_bitset<int, bits16> InterBitsT;
+    InterBitsT lbs;
+
+    lbs
+	   .add(-50).add(-62).add(-63).add(-64).add(-65)
+	   .add(-17).add(-20).add(-31).add(-32).add(-33)
+	   .add(-1).add(-2).add(-4).add(-7).add(-8).add(-9).add(-15).add(-16)
+	   .add(0)
+	   .add(1).add(2).add(4).add(7).add(8).add(9).add(15).add(16)
+	   .add(17).add(20).add(31).add(32).add(33)
+	   .add(50).add(62).add(63).add(64).add(65)
+	   ;
     
-    InterBits8T::element_iterator it = lbs.elements_begin();
+	lbs.show_segments();
+	cout << lbs << endl;
+
+    InterBitsT::element_iterator it = lbs.elements_begin();
+	int ele;
     cout << "{";
     while(it != lbs.elements_end())
     {
-        int ele = *it;
+        ele = *it;
         cout << *it << " ";
-        if(ele == 8)
+        if(ele == 65)
         {
-            int dbg = 1;
+            int dbg = 0;
         }
         ++it;
     }
     cout << "}";
 }
 
+
+BOOST_AUTO_TEST_CASE(itv_set_reverted_backwards)
+{
+    typedef interval_set<int> InterSetT;
+	InterSetT itv_set;
+
+	itv_set;
+	InterSetT::element_reverse_iterator rit;
+	rit = itv_set.elements_rend();
+	while(rit != itv_set.elements_rbegin())
+	{
+		cout << *rit << endl;
+		--rit;
+	}
+
+	itv_set.add(0).add(1).add(3);
+
+	rit = itv_set.elements_rend();
+
+	if(rit != itv_set.elements_rbegin())
+		--rit;
+
+	cout << "{";
+	while(rit != itv_set.elements_rbegin())
+	{
+		cout << *rit << " ";
+		--rit;
+	}
+
+	BOOST_ASSERT(rit == itv_set.elements_rbegin());
+	cout << *rit << "}\n";
+}
+
+
+BOOST_AUTO_TEST_CASE(itv_set_backwards)
+{
+    typedef interval_set<int> InterSetT;
+	InterSetT itv_set;
+
+	itv_set;
+	InterSetT::element_iterator rit;
+	rit = itv_set.elements_end();
+	while(rit != itv_set.elements_begin())
+	{
+		cout << *rit << endl;
+		--rit;
+	}
+
+	itv_set.add(0).add(1).add(3);
+
+	rit = itv_set.elements_end();
+
+	if(rit != itv_set.elements_begin())
+		--rit;
+
+	cout << "{";
+	while(rit != itv_set.elements_begin())
+	{
+		cout << *rit << " ";
+		--rit;
+	}
+
+	BOOST_ASSERT(rit == itv_set.elements_begin());
+	cout << *rit << "}\n";
+}
+
+
+
+BOOST_AUTO_TEST_CASE(bitter64_reverted_backwards)
+{
+    typedef interval_bitset<int, bits64> InterBitsT;
+    InterBitsT lbs;
+
+    lbs
+	   .add(-50).add(-62).add(-63).add(-64).add(-65)
+	   .add(-17).add(-20).add(-31).add(-32).add(-33)
+	   .add(-1).add(-2).add(-4).add(-7).add(-8).add(-9).add(-15).add(-16)
+	   .add(0)
+	   .add(1).add(2).add(4).add(7).add(8).add(9).add(15).add(16)
+	   .add(17).add(20).add(31).add(32).add(33)
+	   .add(50).add(62).add(63).add(64).add(65)
+	   ;
+    
+	lbs.show_segments();
+	cout << lbs << endl;
+
+    InterBitsT::element_reverse_iterator it = lbs.elements_rend();
+	InterBitsT::element_reverse_iterator rbeg_eq_at_64 = lbs.elements_rbegin();
+	int ele;
+	--it;
+    cout << "{";
+    while(it != lbs.elements_rbegin())
+    {
+        ele = *it;
+        cout << *it << " ";
+        if(ele == 64)
+        {
+            int dbg = 0;
+        }
+        --it;
+    }
+    ele = *it;
+    cout << *it << " ";
+    cout << "}";
+}
+
+
+BOOST_AUTO_TEST_CASE(bitter64_reverted)
+{
+    typedef interval_bitset<int, bits64> InterBitsT;
+    InterBitsT lbs;
+
+    lbs
+	   .add(-50).add(-62).add(-63).add(-64).add(-65)
+	   .add(-17).add(-20).add(-31).add(-32).add(-33)
+	   .add(-1).add(-2).add(-4).add(-7).add(-8).add(-9).add(-15).add(-16)
+	   .add(0)
+	   .add(1).add(2).add(4).add(7).add(8).add(9).add(15).add(16)
+	   .add(17).add(20).add(31).add(32).add(33)
+	   .add(50).add(62).add(63).add(64).add(65)
+	   ;
+    
+	lbs.show_segments();
+	cout << lbs << endl;
+
+    InterBitsT::element_reverse_iterator it = lbs.elements_rbegin();
+	int ele;
+    cout << "{";
+    while(it != lbs.elements_rend())
+    {
+        ele = *it;
+        cout << *it << " ";
+        if(ele == -65)
+        {
+            int dbg = 0;
+        }
+        ++it;
+    }
+    cout << "}";
+}
+*/
+
+/*---------------- bggy case
+BOOST_AUTO_TEST_CASE(bitter64_backwards)
+{
+    typedef interval_bitset<int, bits64> InterBitsT;
+    InterBitsT lbs;
+
+    lbs
+	   .add(-50).add(-62).add(-63).add(-64).add(-65)
+	   .add(-17).add(-20).add(-31).add(-32).add(-33)
+	   .add(-1).add(-2).add(-4).add(-7).add(-8).add(-9).add(-15).add(-16)
+	   .add(0)
+	   .add(1).add(2).add(4).add(7).add(8).add(9).add(15).add(16)
+	   .add(17).add(20).add(31).add(32).add(33)
+	   .add(50).add(62).add(63).add(64).add(65)
+	   ;
+    
+	lbs.show_segments();
+	cout << lbs << endl;
+
+    InterBitsT::element_iterator it = lbs.elements_end();
+	int ele;
+	--it;
+    cout << "{";
+    while(it != lbs.elements_begin())
+    {
+        ele = *it;
+        cout << *it << " ";
+        if(ele == -65)
+        {
+            int dbg = 0;
+        }
+        --it;
+    }
+    ele = *it;
+    cout << *it << " ";
+    cout << "}";
+}
+*/
+
+/*
+BOOST_AUTO_TEST_CASE(bitter64_forward)
+{
+    typedef interval_bitset<int, bits64> InterBitsT;
+    InterBitsT lbs;
+
+    lbs
+	   .add(-50).add(-62).add(-63).add(-64).add(-65)
+	   .add(-17).add(-20).add(-31).add(-32).add(-33)
+	   .add(-1).add(-2).add(-4).add(-7).add(-8).add(-9).add(-15).add(-16)
+	   .add(0)
+	   .add(1).add(2).add(4).add(7).add(8).add(9).add(15).add(16)
+	   .add(17).add(20).add(31).add(32).add(33)
+	   .add(50).add(62).add(63).add(64).add(65)
+	   ;
+    
+	lbs.show_segments();
+	cout << lbs << endl;
+
+    InterBitsT::element_iterator it = lbs.elements_begin();
+	int ele;
+    cout << "{";
+    while(it != lbs.elements_end())
+    {
+        ele = *it;
+        cout << *it << " ";
+        if(ele == 65)
+        {
+            int dbg = 0;
+        }
+        ++it;
+    }
+    cout << "}";
+}
 
 /*
 BOOST_AUTO_TEST_CASE(biter64_test)

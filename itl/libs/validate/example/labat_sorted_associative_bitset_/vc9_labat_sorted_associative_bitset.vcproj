@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="vc9_labat_itv_bitset"
-	ProjectGUID="{BF42574F-66E2-42DD-90D9-3A8FCE6F472B}"
-	RootNamespace="vc9_labat_itv_bitset"
+	Name="vc9_labat_sorted_associative_bitset"
+	ProjectGUID="{BF42574F-66E2-42DD-90D9-3A8FCE6F4764}"
+	RootNamespace="vc9_labat_sorted_associative_bitset"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -186,7 +186,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\labat_itv_bitset_\labat_itv_bitset.cpp"
+				RelativePath="..\labat_sorted_associative_bitset_\labat_sorted_associative_bitset.cpp"
 				>
 			</File>
 		</Filter>
@@ -195,6 +195,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\..\..\boost\validate\validater\sorted_associative_validater.hpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Ressourcendateien"

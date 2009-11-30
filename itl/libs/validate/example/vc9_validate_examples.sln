@@ -9,6 +9,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_unsigned_quantifi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_bit_collector", "labat_bit_collector_\vc9_labat_bit_collector.vcproj", "{9EF72937-0585-487D-B887-5359BFA569E9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_single", "labat_single_\vc9_labat_single.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F471C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_associative_map", "labat_sorted_associative_map_\vc9_labat_sorted_associative_map.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4762}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_associative_set", "labat_sorted_associative_set_\vc9_labat_sorted_associative_set.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4763}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_associative_bitset", "labat_sorted_associative_bitset_\vc9_labat_sorted_associative_bitset.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4764}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +39,22 @@ Global
 		{9EF72937-0585-487D-B887-5359BFA569E9}.Debug|Win32.Build.0 = Debug|Win32
 		{9EF72937-0585-487D-B887-5359BFA569E9}.Release|Win32.ActiveCfg = Release|Win32
 		{9EF72937-0585-487D-B887-5359BFA569E9}.Release|Win32.Build.0 = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F471C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F471C}.Debug|Win32.Build.0 = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F471C}.Release|Win32.ActiveCfg = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F471C}.Release|Win32.Build.0 = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4762}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4762}.Debug|Win32.Build.0 = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4762}.Release|Win32.ActiveCfg = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4762}.Release|Win32.Build.0 = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4763}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4763}.Debug|Win32.Build.0 = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4763}.Release|Win32.ActiveCfg = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4763}.Release|Win32.Build.0 = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4764}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4764}.Debug|Win32.Build.0 = Debug|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4764}.Release|Win32.ActiveCfg = Release|Win32
+		{BF42574F-66E2-42DD-90D9-3A8FCE6F4764}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

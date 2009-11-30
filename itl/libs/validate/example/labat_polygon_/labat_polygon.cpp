@@ -101,17 +101,17 @@ void test_polyset_gen()
     typedef itl::list<point<int> > PolygonT;
     typedef itl::list<PolygonT>    PolygonSetT;
 
-    point_gentor<int> pointgen;
-    pointgen.setRange(interval<int>::rightopen(-99, 100));
+    point_gentor<int>* pointgen = new point_gentor<int>;
+    pointgen->setRange(interval<int>::rightopen(-99, 100));
 
     PolygonT some_poly;
-    polygon_gentor<PolygonT> polygen;
-    polygen.setDomainGentor(&pointgen);
-    polygen.setRangeOfSampleSize(interval<int>::rightopen(1, 5));
+    polygon_gentor<PolygonT>* polygen = new polygon_gentor<PolygonT>;
+    polygen->setDomainGentor(pointgen);
+    polygen->setRangeOfSampleSize(interval<int>::rightopen(1, 5));
 
     PolygonSetT some_polyset;
     polygon_set_gentor<PolygonSetT> polysetgen;
-    polysetgen.setDomainGentor(&polygen);
+    polysetgen.setDomainGentor(polygen);
     polysetgen.setRangeOfSampleSize(interval<int>::rightopen(1, 3));
 
     for(int idx=0; idx<10; idx++)
@@ -152,7 +152,10 @@ void test_LawValidater()
     // Size of polygon sets is in [0 .. |poly|]
     // Coordinates in [min .. max)
     //                                         |set|,|poly|, min, max 
-    GentorProfileSgl::it()->set_polygon_profile(1,    3,     0,   10);
+    //GentorProfileSgl::it()->set_polygon_profile(1,    3,     0,   10);
+    //int test_count = 10000;
+    //                                         |set|,|poly|, min, max 
+    GentorProfileSgl::it()->set_polygon_profile(2,    9,     0,   100);
     int test_count = 10000;
 
     ptime start, stop;

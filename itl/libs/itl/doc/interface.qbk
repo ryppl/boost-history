@@ -524,6 +524,47 @@ overloaded implementations for the function of that row is shown.
 [[`std::string T::as_string()`]                [1]       [1]      [1]     [1]      [1]      [ ]      [ ]]
 ]
 
+[h4 Element iterators for interval containers]
+
+Iterators on [*interval conainers] that are refered to so far are
+['*segment iterators*]. They reveal the more implementation specific
+aspect, that the conceptual aspect abstracts from.[/ NOTE Identical to function_element_iteration.qbk from here]
+Iteration over segments is fast, compared to an iteration over elements,
+particularly if intervals are large. 
+But if we want to view our interval containers as containers
+of elements that are usable with std::algoritms, we need to
+iterate over elements. 
+
+Iteration over elements . . .
+
+* is possible only for integral or discrete `domain_types`
+* can be very ['*slow*] if the intervals are very large.
+* and is therefore ['*depreciated*]
+
+On the other hand, sometimes iteration over interval containers
+on the element level might be desired, if you have some 
+interface that works for `std::SortedAssociativeContainers` of 
+elements and you need to quickly use it with an interval container.
+Accepting the poorer performance might be less bothersome at times
+than adjusting your whole interface for segment iteration.
+
+[caution So we advice you to choose element iteration over
+interval containers ['*judiciously*]. Do not use element iteration
+['*by default or habitual*]. Always try to achieve results using
+member functions, global functions or operators 
+(preferably inplace versions)
+or iteration over segments first.]
+
+ 
+[table Element iterators for interval containers
+[[__biLElementIteration__]      [__ch_itv_sets__][__ch_itv_maps__] ]
+[[`J T::elements_begin()`]            [2]              [2]        ]
+[[`J T::elements_end()`]              [2]              [2]        ]
+[[`J T::elements_rbegin()`]           [2]              [2]        ]
+[[`J T::elements_rend()`]             [2]              [2]        ]
+]
+
+
 [endsect][/ Function Synopsis]
 
 [endsect][/ Interface]
