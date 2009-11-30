@@ -10,10 +10,9 @@
 #define BOOST_FIBERS_MUTEX_H
 
 #include <boost/cstdint.hpp>
+#include <boost/thread/locks.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
-
-#include <boost/fiber/locks.hpp>
 
 namespace boost {
 namespace fibers {

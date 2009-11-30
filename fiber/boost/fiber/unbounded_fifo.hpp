@@ -19,7 +19,6 @@
 #include <boost/fiber/condition.hpp>
 #include <boost/fiber/detail/atomic.hpp>
 #include <boost/fiber/exceptions.hpp>
-#include <boost/fiber/locks.hpp>
 #include <boost/fiber/mutex.hpp>
 
 #include <boost/config/abi_prefix.hpp>
