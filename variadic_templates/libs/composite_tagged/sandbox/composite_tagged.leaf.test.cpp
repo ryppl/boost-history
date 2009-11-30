@@ -6,11 +6,45 @@ namespace boost
 {
 namespace composite_tagged_leaf
 {
+    static
+  unsigned
+object_id
+=0
+;
+    static
+  int
+object_number
+=0
+;
+struct obj
+{
+      unsigned const
+    my_id
+    ;
+    obj(void)
+    : my_id(++object_id)
+    {
+        ++object_number;
+    }
+    obj(obj const&)
+    : my_id(++object_id)
+    {
+        ++object_number;
+    }
+    ~obj(void)
+    {
+        --object_number;
+    }
+      void
+    operator=(obj const&)
+    {}
+};
   template
   < unsigned I
   >
   struct
 charvec_u
+: obj
 {
     char v[2*(I+1)];
     unsigned tag(void)const
@@ -36,6 +70,7 @@ index_numerals
 void test(void)
 {
 #if 0
+    std::cout<<"object_number="<<object_number<<"\n";
     {
             typedef
           detail::layout_make
@@ -54,6 +89,7 @@ void test(void)
     }
 #endif    
 #if 1
+    std::cout<<"object_number="<<object_number<<"\n";
     {    
             typedef
           composite_tagged
@@ -113,6 +149,7 @@ void test(void)
     }
 #endif    
 #if 0
+    std::cout<<"object_number="<<object_number<<"\n";
     {
         std::cout
           <<"sizeof(charvec_u<0>)="<<sizeof(charvec_u<0>)<<"\n"
@@ -176,6 +213,7 @@ void test(void)
     }
 #endif    
 #if 1
+    std::cout<<"object_number="<<object_number<<"\n";
     {    
             typedef
           composite_tagged
@@ -201,18 +239,58 @@ void test(void)
           <<":offset<1>="<<layout_type::offset(detail_composite_tagged::index_wrap<1>())<<"\n"
           <<":offset<2>="<<layout_type::offset(detail_composite_tagged::index_wrap<2>())<<"\n"
           <<":offset<3>="<<layout_type::offset(detail_composite_tagged::index_wrap<3>())<<"\n"
-          <<":project<index_0>="<<tagged_valu.project<index_0>().v<<"\n"
-          <<":project<index_1>="<<tagged_valu.project<index_1>().v<<"\n"
         ;
-        tagged_valu.project<index_1>().v[0]='b';
+        
+        charvec_u<index_1> c_1;
+        c_1.v[0]='b';
         std::cout
-          <<"***composite_tagged<all_of_packed>:\n"
+          <<"  (before project<index_1>='b')\n"
+          <<":c_1.v="<<c_1.v<<"\n";
+        tagged_valu.project<index_1>(c_1);
+        std::cout
           <<"  (after project<index_1>='b')\n"
-          <<":project<index_1>="<<tagged_valu.project<index_1>().v<<"\n"
-        ;
+          <<":c_1.v="<<c_1.v<<"\n";
+        c_1.v[0]='c';
+        std::cout
+          <<"  (before inject<index_1>='c')\n"
+          <<":c_1.v="<<c_1.v<<"\n";
+        tagged_valu.inject<index_1>(c_1);
+        std::cout
+          <<"  (after inject<index_1>='c')\n"
+          <<":c_1.v="<<c_1.v<<"\n";
+        c_1.v[0]='d';
+        tagged_valu.project<index_1>(c_1);
+        std::cout
+          <<"  (after project<index_1>='d')\n"
+          <<":c_1.v="<<c_1.v<<"\n";
+          
+        charvec_u<index_2> c_2;
+        c_2.v[0]='b';
+        std::cout
+          <<"  (before project<index_2>='b')\n"
+          <<":c_2.v="<<c_2.v<<"\n";
+        tagged_valu.project<index_2>(c_2);
+        std::cout
+          <<"  (after project<index_2>='b')\n"
+          <<":c_2.v="<<c_2.v<<"\n";
+        c_2.v[0]='c';
+        std::cout
+          <<"  (before inject<index_2>='c')\n"
+          <<":c_2.v="<<c_2.v<<"\n";
+        tagged_valu.inject<index_2>(c_2);
+        std::cout
+          <<"  (after inject<index_2>='c')\n"
+          <<":c_2.v="<<c_2.v<<"\n";
+        c_2.v[0]='d';
+        tagged_valu.project<index_2>(c_2);
+        std::cout
+          <<"  (after project<index_2>='d')\n"
+          <<":c_2.v="<<c_2.v<<"\n";
+          
     }
 #endif    
 #if 1
+    std::cout<<"object_number="<<object_number<<"\n";
     {    
             typedef
           composite_tagged
@@ -249,6 +327,7 @@ void test(void)
         ;
     }
 #endif    
+    std::cout<<"final:object_number="<<object_number<<"\n";
 }
 
 }//exit composite_tagged_leaf namespace

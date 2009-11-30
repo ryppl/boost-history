@@ -9,6 +9,8 @@
 //
 
 #include <cstddef>
+#include <cstring>
+
 #include <boost/math/common_factor_ct.hpp>
 #include <boost/aligned_storage.hpp>
 #include <boost/mpl/for_each.hpp>
@@ -16,8 +18,6 @@
 #include <boost/mpl/fold_assoc_pack.hpp>
 #include <boost/mpl/package_range_c.hpp>
 #include <boost/mpl/mk_indexed_pairs.hpp>
-
-#include <iostream>
 
 namespace boost
 {
@@ -154,7 +154,7 @@ layout_make
  *  These traits include at least the size
  *  and possibly the offsets and alignments
  *  of the composite's components.
- *  Also a layout contains injection and projection 
+ *  Also a layout contains inject and project
  *  functions for creating components of the composite
  *  in a memory buffer and retrieving the components
  *  from that memory buffer.
@@ -231,6 +231,11 @@ layout_make
         {
             return 0;
         }
+            static
+          void
+        destroy(index_type index_arg, char*buffer_composite)
+        {
+        }
     };
       template
       < typename HeadLayout
@@ -301,6 +306,20 @@ layout_make
                 TailComponent*p=static_cast<TailComponent*>(buffer_tail);
                 return p;
             }
+                static
+              void
+            destroy(index_type index_arg, char*buffer_composite)
+            {
+                if(index_arg == index_part)
+                {
+                    TailComponent*p=project( index_wrap<index_part>(), buffer_composite);
+                    p->~TailComponent();
+                }
+                else
+                {
+                    HeadLayout::destroy( index_arg, buffer_composite);
+                }
+            }
         };
     };
     
@@ -355,6 +374,10 @@ composite_tagged
     composite_tagged(void)
     : my_index(detail_composite_tagged::index_undefined)
     {}   
+    ~composite_tagged(void)
+    {
+        layout_type::destroy( my_index, buffer.address());
+    }   
       template
       < index_type Index
       >
@@ -379,6 +402,7 @@ composite_tagged
       ( typename result_type<indexValu>::type const& tail_component
       )
     {
+        layout_type::destroy( my_index, buffer.address());
         detail_composite_tagged::index_wrap<indexValu> index;
         layout_type::inject(index,buffer.address(),tail_component);
         my_index=indexValu;
@@ -458,14 +482,10 @@ layout_make
         }
             static
           void
-        project(index_wrap<index_part> index_arg, char const*buffer_composite)
+        project(index_wrap<index_part> index_arg, char const*buffer_composite,...)
         {
         }
-            static
-          void
-        project(index_wrap<index_part> index_arg, char*buffer_composite)
-        {
-        }
+
     };
       template
       < typename HeadLayout
@@ -517,26 +537,21 @@ layout_make
             
             {
                 void*buffer_tail=buffer_composite+HeadLayout::size_part;
-                new(buffer_tail) TailComponent(tail_component);
+                std::size_t const size_tail=sizeof(TailComponent);
+                void const* tail_ptr=&tail_component;
+                std::memcpy(buffer_tail, tail_ptr, size_tail);
             }
               using HeadLayout::
             project
             ;
                 static
-              TailComponent const&
-            project(index_wrap<index_part> index_arg, char const*buffer_composite)
+              void
+            project(index_wrap<index_part> index_arg, char const*buffer_composite, TailComponent& tail_component)
             {
-                void const*buffer_tail=buffer_composite+HeadLayout::size_part;
-                TailComponent const*p=static_cast<TailComponent const*>(buffer_tail);
-                return *p;
-            }
-                static
-              TailComponent&
-            project(index_wrap<index_part> index_arg, char*buffer_composite)
-            {
-                void*buffer_tail=buffer_composite+HeadLayout::size_part;
-                TailComponent*p=static_cast<TailComponent*>(buffer_tail);
-                return *p;
+                void const* buffer_tail=buffer_composite+HeadLayout::size_part;
+                std::size_t const size_tail=sizeof(TailComponent);
+                void*tail_ptr=&tail_component;
+                std::memcpy(tail_ptr, buffer_tail, size_tail);
             }
             
         };//end type struct
@@ -656,20 +671,20 @@ composite_tagged
       template
       < IndexType IndexValu
       >
-      typename result_type<IndexValu>::type const&
-    project(void)const
+      void
+    inject(typename result_type<IndexValu>::type const& tail_component)
     {
         detail_composite_tagged::index_wrap<IndexValu> index;
-        return layout_type::project(index,buffer);
+        layout_type::inject(index,buffer,tail_component);
     }        
       template
       < IndexType IndexValu
       >
-      typename result_type<IndexValu>::type &
-    project(void)
+      void 
+    project(typename result_type<IndexValu>::type & tail_component)
     {
         detail_composite_tagged::index_wrap<IndexValu> index;
-        return layout_type::project(index,buffer);
+        layout_type::project(index,buffer,tail_component);
     }        
 };
 #endif //endif#composite_tags::all_of_packed
@@ -750,6 +765,11 @@ layout_make
             static
           void
         project(index_wrap<index_part> index_arg, char*buffer_composite)
+        {
+        }
+            static
+          void
+        destroy(char*buffer_composite)
         {
         }
     };
@@ -842,6 +862,14 @@ layout_make
                 TailComponent*p=static_cast<TailComponent*>(buffer_tail);
                 return *p;
             }
+                static
+              void
+            destroy( char*buffer_composite)
+            {
+                TailComponent&p=project( index_wrap<index_part>(), buffer_composite);
+                p.~TailComponent();
+                HeadLayout::destroy(buffer_composite);
+            }
             
         };//end type struct
     };//end push_back struct
@@ -890,6 +918,10 @@ composite_tagged
         char*memory=buffer.address();
         detail_composite_tagged::construct_all<layout_type,Components...>::initialize_all(memory);
     }
+    ~composite_tagged(void)
+    {
+        layout_type::destroy( buffer.address());
+    }   
  
       template
       < index_type Index
