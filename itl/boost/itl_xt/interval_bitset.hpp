@@ -16,7 +16,9 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl_xt/meta_log.hpp>  // a meta logarithm
 #include <boost/itl_xt/bits.hpp>      // a bitset implementation
 #include <boost/itl_xt/detail/bit_element_iterator.hpp>
-//CL  itl\boost\itl_xt\detail\bit_element_iterator.hpp
+
+#include <boost/itl/interval_morphism.hpp> //JODO Separate aspects and concerns
+
 
 namespace boost{namespace itl
 {
@@ -163,21 +165,56 @@ public:
     //==========================================================================
     //= Element iterator related
     //==========================================================================
-    element_iterator elements_begin(){ return element_iterator(this->begin()); }
-    element_iterator elements_end()  { return element_iterator(this->end(), iterator_state::end);   }
-    element_const_iterator elements_begin()const{ return element_iterator(this->begin()); }
-    element_const_iterator elements_end()  const{ return element_iterator(this->end(), iterator_state::end);   }
+    element_iterator elements_begin()
+	{
+		if(this->begin()==this->end())
+			return element_iterator(this->begin(), element_iterator::beyond);
+		else 
+			return element_iterator(this->begin(), element_iterator::ante  );
+	}
 
-    element_reverse_iterator elements_rbegin(){ return element_reverse_iterator(this->rbegin()); }
-    element_reverse_iterator elements_rend()  { return element_reverse_iterator(this->rend(), iterator_state::end);   }
-    element_const_reverse_iterator elements_rbegin()const{ return element_reverse_iterator(this->rbegin()); }
-    element_const_reverse_iterator elements_rend()  const{ return element_reverse_iterator(this->rend(), iterator_state::end);   }
+    element_iterator elements_end()  
+	{ return element_iterator(this->end(), element_iterator::beyond);   }
+
+    element_const_iterator elements_begin()const
+	{
+		if(this->begin()==this->end())
+			return element_const_iterator(this->begin(), element_iterator::beyond);
+		else 
+			return element_const_iterator(this->begin(), element_iterator::ante  );
+	}
+
+    element_const_iterator elements_end()const
+	{ return element_const_iterator(this->end(), element_iterator::beyond);   }
+
+    element_reverse_iterator elements_rbegin()
+	{
+		if(this->rbegin()==this->rend())
+			return element_reverse_iterator(this->rbegin(), element_iterator::before);
+		else 
+			return element_reverse_iterator(this->rbegin(), element_iterator::past  );
+	}
+
+    element_reverse_iterator elements_rend()  
+	{ return element_reverse_iterator(this->rend(), element_iterator::before); }
+
+    element_const_reverse_iterator elements_rbegin()const
+	{
+		if(this->rbegin()==this->rend())
+			return element_const_reverse_iterator(this->rbegin(), element_iterator::before);
+		else 
+			return element_const_reverse_iterator(this->rbegin(), element_iterator::past  );
+	}
+
+    element_const_reverse_iterator elements_rend()const
+	{ return element_const_reverse_iterator(this->rend(), element_iterator::before); }
 
 private:                                       
     typedef typename interval_bitmap_type::segment_type seg_type;
 
     BOOST_STATIC_CONSTANT( word_type, digits    = bitset_type::digits       );
     BOOST_STATIC_CONSTANT( word_type, divisor   = digits                    );
+    BOOST_STATIC_CONSTANT( word_type, last      = digits-1                  );
     BOOST_STATIC_CONSTANT( word_type, shift     = log2_<divisor>::value     );
     BOOST_STATIC_CONSTANT( word_type, w1        = static_cast<word_type>(1) );
     BOOST_STATIC_CONSTANT( word_type, mask      = divisor - w1              );
@@ -189,11 +226,11 @@ private:
 
     typedef void (interval_bitset::*segment_combiner)(element_type, element_type, bitset_type);
 
-    static word_type from_lower_to(word_type bit){return bit==top ? all : (1<<(bit+1))-1;}
-    static word_type to_upper_from(word_type bit){return bit==top ? top : ~((1<<bit)-1); }
+    static word_type from_lower_to(word_type bit){return bit==last ? all : (w1<<(bit+w1))-w1;}
+    static word_type to_upper_from(word_type bit){return bit==last ? top : ~((w1<<bit)-w1); }
 
     interval_bitset& segment_apply(segment_combiner combine, const interval_type& operand)
-    {                                                 // same as
+    {                                                   // same as
         condensed_type base = operand.first() >> shift, // operand.first()/ divisor
                        ceil = operand.last()  >> shift; // operand.last() / divisor
         word_type base_rest = operand.first() &  mask , // operand.first()% divisor
@@ -382,6 +419,23 @@ struct type_to_string<itl::interval_bitset<DomainT,BitSetT,Compare,Interval,Allo
                             + type_to_string<BitSetT>::apply() + ">";
     }
 };
+
+namespace Interval
+{
+    template <typename DomainT, typename BitSetT>
+	struct Atomize<itl::set<DomainT>, interval_bitset<DomainT, BitSetT> >
+    {
+        void operator()(                      itl::set<DomainT>& atomized, 
+			            const interval_bitset<DomainT, BitSetT>& clustered)
+        {
+            typedef interval_bitset<DomainT, BitSetT> InterBitsetT;
+			InterBitsetT::element_const_iterator bit_ = clustered.elements_begin();
+			while(bit_ != clustered.elements_end())
+				atomized.insert(*bit_++);
+        }
+    };
+
+} // namespace Interval
 
 
 }} // namespace itl boost

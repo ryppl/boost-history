@@ -8,6 +8,9 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_DETAIL_MAPPED_REFERENCE_HPP_JOFA_091108
 #define BOOST_ITL_DETAIL_MAPPED_REFERENCE_HPP_JOFA_091108
 
+#include <boost/type_traits/is_const.hpp>
+#include <boost/mpl/if.hpp>
+
 namespace boost{namespace itl
 {
 
@@ -17,11 +20,15 @@ struct mapped_reference
     typedef FirstT  first_type;   
     typedef SecondT second_type; 
     typedef mapped_reference type;
+	typedef typename 
+		mpl::if_<is_const<second_type>, 
+		               second_type&, 
+				 const second_type&>::type second_reference_type;
 
-    const FirstT& first;                
-         SecondT& second;              
+    const FirstT&         first;
+	second_reference_type second;
 
-    mapped_reference(const FirstT& fst, SecondT& snd) : first(fst), second(snd){}
+    mapped_reference(const FirstT& fst, second_reference_type snd) : first(fst), second(snd){}
 
     template<class FstT, class SndT>
     mapped_reference(const mapped_reference<FstT, SndT>& source):

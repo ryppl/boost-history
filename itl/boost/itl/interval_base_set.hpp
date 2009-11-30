@@ -417,13 +417,13 @@ public:
     //==========================================================================
     element_iterator elements_begin(){ return element_iterator(this->begin()); }
     element_iterator elements_end()  { return element_iterator(this->end());   }
-    element_const_iterator elements_begin()const{ return element_iterator(this->begin()); }
-    element_const_iterator elements_end()  const{ return element_iterator(this->end());   }
+    element_const_iterator elements_begin()const{ return element_const_iterator(this->begin()); }
+    element_const_iterator elements_end()  const{ return element_const_iterator(this->end());   }
 
     element_reverse_iterator elements_rbegin(){ return element_reverse_iterator(this->rbegin()); }
     element_reverse_iterator elements_rend()  { return element_reverse_iterator(this->rend());   }
-    element_const_reverse_iterator elements_rbegin()const{ return element_reverse_iterator(this->rbegin()); }
-    element_const_reverse_iterator elements_rend()  const{ return element_reverse_iterator(this->rend());   }
+    element_const_reverse_iterator elements_rbegin()const{ return element_const_reverse_iterator(this->rbegin()); }
+    element_const_reverse_iterator elements_rend()  const{ return element_const_reverse_iterator(this->rend());   }
 
     //==========================================================================
     //= Morphisms

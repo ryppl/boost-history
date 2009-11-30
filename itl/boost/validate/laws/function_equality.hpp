@@ -102,5 +102,5 @@ public:
 
 }} // namespace itl boost
 
-#endif // BOOST_ITL_MINOR_SET_LAWS_HPP_JOFA_070411
+#endif // BOOST_ITL_FUNCTION_EQUALITY_HPP_JOFA_091005
 

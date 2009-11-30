@@ -62,15 +62,16 @@ namespace boost{namespace itl
     class RandomGentor< std::pair<DomainT,CodomainT> > :
         public std_pair_gentor<DomainT,CodomainT> {};
 
+
+    template <class DomainT> 
+    class RandomGentor<itl::list<DomainT> > :
+        public SeqGentorT<itl::list<DomainT> > {};
+
 #ifdef LAW_BASED_TEST_BOOST_POLYGON
     // -------------------------------------------------------------------------
     template <class DomainT> 
     class RandomGentor<itl::point<DomainT> > :
         public point_gentor<DomainT> {};
-
-    template <class PointT> 
-    class RandomGentor<itl::list<PointT> > :
-        public polygon_gentor<itl::list<PointT> > {};
 
     template <class PointT> 
     class RandomGentor<itl::list<itl::list<PointT> > > :
@@ -93,10 +94,6 @@ namespace boost{namespace itl
     template <class DomainT> 
     class RandomGentor<itl::list<itl::interval<DomainT> > > :
         public SeqGentorT<itl::list<itl::interval<DomainT> > > {};
-
-    template <class DomainT> 
-    class RandomGentor<itl::list<DomainT> > :
-        public SeqGentorT<itl::list<DomainT> > {};
 
     // ----- sets --------------------------------------------------------------
     //template <class DomainT, template<class>class Set> 

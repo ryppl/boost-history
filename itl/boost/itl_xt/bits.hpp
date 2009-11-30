@@ -64,7 +64,8 @@ public:
     typedef bit_range_type   bit_type;
     typedef bit_type         element_type; // pretty short: 0 <= max < digits
     typedef bit_type         size_type;
-    BOOST_STATIC_CONSTANT(bit_type, digits = std::numeric_limits<NaturalT>::digits);
+    BOOST_STATIC_CONSTANT(bit_type,  digits = std::numeric_limits<NaturalT>::digits);
+    BOOST_STATIC_CONSTANT(word_type, w1     = static_cast<word_type>(1)            );
 
     bits():_bits(){}
     explicit bits(word_type value):_bits(value){}
@@ -91,10 +92,12 @@ public:
     bool operator  == (const bits& value)const{return _bits == value._bits;}
 
     bool empty()const { return _bits == 0; }
-    bool contains(element_type element)const { return 0 != ((1 << element) & _bits); }
+    bool contains(element_type element)const { return 0 != ((w1 << element) & _bits); }
     bool contains(const bits& sub)const { return inclusion::subset==inclusion_compare(sub,*this); }
     size_type cardinality()const{ return bitcount::count<word_type, digits>::apply(_bits); }
     size_type size()const       { return cardinality(); }
+
+	std::string as_string(const char off_on[2] = " 1")const;
 
 private:
     word_type _bits;
@@ -118,6 +121,15 @@ int inclusion_compare(itl::bits<NaturalT> left, itl::bits<NaturalT> right)
     else if(left.word() < right.word() ) return inclusion::subset;
     else if(left.word() > right.word() ) return inclusion::superset;
     else                                 return inclusion::equal;
+}
+
+template<class NaturalT>
+std::string bits<NaturalT>::as_string(const char off_on[2])const
+{
+    std::string sequence;
+    for(int bit=0; bit < digits; bit++)
+        sequence += contains(bit) ? off_on[1] : off_on[0];
+    return sequence;
 }
 
 
@@ -183,21 +195,21 @@ struct count<nat32, 32>
 
 };
 
-//template<>
-//struct count<unsigned int, 32>
-//{
-//    typedef unsigned int            word_type;
-//    typedef count<word_type,32> type;
-//
-//    static bit_range_type apply(word_type value)
-//    { 
-//        return table[ value        & 0xfful]
-//             + table[(value >>  8) & 0xfful]
-//             + table[(value >> 16) & 0xfful]
-//             + table[(value >> 24) & 0xfful];
-//    }
-//
-//};
+template<>
+struct count<unsigned int, 32>
+{
+    typedef unsigned int            word_type;
+    typedef count<word_type,32> type;
+
+    static bit_range_type apply(word_type value)
+    { 
+        return table[ value        & 0xfful]
+             + table[(value >>  8) & 0xfful]
+             + table[(value >> 16) & 0xfful]
+             + table[(value >> 24) & 0xfful];
+    }
+
+};
 
 template<>
 struct count<nat64, 64>
@@ -205,7 +217,7 @@ struct count<nat64, 64>
     typedef nat64               word_type;
     typedef count<word_type,64> type;
 
-    static bit_range_type compute(word_type value)    
+    static bit_range_type apply(word_type value)    
     { 
         return table[ value        & 0xffull]
              + table[(value >>  8) & 0xffull]
