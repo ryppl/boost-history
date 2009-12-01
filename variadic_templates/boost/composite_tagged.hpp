@@ -10,6 +10,7 @@
 
 #include <cstddef>
 #include <cstring>
+#include <iostream>
 
 #include <boost/math/common_factor_ct.hpp>
 #include <boost/aligned_storage.hpp>
@@ -184,6 +185,11 @@ layout_make
 
 namespace detail_composite_tagged//composite_tags::one_of
 {
+    typedef
+  void
+(*destroy_fun)( char*buffer_composite)
+;
+        
   template
   <
   >
@@ -233,8 +239,14 @@ layout_make
         }
             static
           void
-        destroy(index_type index_arg, char*buffer_composite)
+        destroy( char*buffer_composite)
         {
+        }
+            static
+          destroy_fun
+        destroyer(index_wrap<index_part> index_arg)
+        {
+            return destroy;
         }
     };
       template
@@ -284,8 +296,8 @@ layout_make
               , TailComponent const& tail_component
               )
             {
-                char*buffer_tail=buffer_composite;
-                new(buffer_tail) TailComponent(tail_component);
+                char*tail_buffer=buffer_composite;
+                new(tail_buffer) TailComponent(tail_component);
             }
               using HeadLayout::
             project
@@ -294,34 +306,69 @@ layout_make
               TailComponent const*
             project(index_wrap<index_part> index_arg, char const*buffer_composite)
             {
-                void const*buffer_tail=buffer_composite;
-                TailComponent const*p=static_cast<TailComponent const*>(buffer_tail);
-                return p;
+                void const*tail_buffer=buffer_composite;
+                TailComponent const*tail_ptr=static_cast<TailComponent const*>(tail_buffer);
+                return tail_ptr;
             }
                 static
               TailComponent*
             project(index_wrap<index_part> index_arg, char*buffer_composite)
             {
-                void*buffer_tail=buffer_composite;
-                TailComponent*p=static_cast<TailComponent*>(buffer_tail);
-                return p;
+                void*tail_buffer=buffer_composite;
+                TailComponent*tail_ptr=static_cast<TailComponent*>(tail_buffer);
+                return tail_ptr;
             }
                 static
               void
-            destroy(index_type index_arg, char*buffer_composite)
+            destroy( char*buffer_composite)
             {
-                if(index_arg == index_part)
-                {
-                    TailComponent*p=project( index_wrap<index_part>(), buffer_composite);
-                    p->~TailComponent();
-                }
-                else
-                {
-                    HeadLayout::destroy( index_arg, buffer_composite);
-                }
+                TailComponent*tail_ptr=project( index_wrap<index_part>(), buffer_composite);
+                tail_ptr->~TailComponent();
             }
-        };
+              using HeadLayout::
+            destroyer
+            ;
+                static
+              destroy_fun
+            destroyer(index_wrap<index_part> index_arg)
+            {
+                return destroy;
+            }
+            };
     };
+    
+};
+
+  template
+  < typename Layout
+  , typename Indices
+  >
+  struct
+destroyers
+;
+  template
+  < typename Layout
+  , index_type... Indices
+  >
+  struct
+destroyers
+  < Layout
+  , mpl::package_c<index_type,Indices...>
+  >
+{
+        static
+      destroy_fun
+    _( index_type index_valu)
+    {
+            static
+          destroy_fun const
+        vec
+          [ sizeof...(Indices)
+          ]
+        = { Layout::destroyer(index_wrap<Indices>())...
+          };
+        return vec[index_valu-index_undefined];
+    }
     
 };
 
@@ -365,6 +412,30 @@ composite_tagged
       index_type
     my_index
     ;
+      void
+    destroy(void)
+    {
+            typedef
+          typename mpl::package_range_c
+          < index_type
+          , detail_composite_tagged::index_undefined
+          , sizeof...(Components)
+          >::type
+        indices
+        ;
+            typedef
+          detail_composite_tagged::destroyers
+          < layout_type
+          , indices
+          >
+        destroyers
+        ;
+          detail_composite_tagged::destroy_fun const
+        destroyer
+        = destroyers::_(my_index)
+        ;
+        destroyer(buffer.address());
+    }
  public:
       index_type
     which(void)const
@@ -376,7 +447,7 @@ composite_tagged
     {}   
     ~composite_tagged(void)
     {
-        layout_type::destroy( my_index, buffer.address());
+        destroy();
     }   
       template
       < index_type Index
@@ -402,7 +473,7 @@ composite_tagged
       ( typename result_type<indexValu>::type const& tail_component
       )
     {
-        layout_type::destroy( my_index, buffer.address());
+        destroy();
         detail_composite_tagged::index_wrap<indexValu> index;
         layout_type::inject(index,buffer.address(),tail_component);
         my_index=indexValu;
@@ -536,10 +607,10 @@ layout_make
               )
             
             {
-                void*buffer_tail=buffer_composite+HeadLayout::size_part;
-                std::size_t const size_tail=sizeof(TailComponent);
+                void      * tail_buffer=buffer_composite+HeadLayout::size_part;
                 void const* tail_ptr=&tail_component;
-                std::memcpy(buffer_tail, tail_ptr, size_tail);
+                std::size_t const tail_size=sizeof(TailComponent);
+                std::memcpy(tail_buffer, tail_ptr, tail_size);
             }
               using HeadLayout::
             project
@@ -548,16 +619,16 @@ layout_make
               void
             project(index_wrap<index_part> index_arg, char const*buffer_composite, TailComponent& tail_component)
             {
-                void const* buffer_tail=buffer_composite+HeadLayout::size_part;
-                std::size_t const size_tail=sizeof(TailComponent);
-                void*tail_ptr=&tail_component;
-                std::memcpy(tail_ptr, buffer_tail, size_tail);
+                void const* tail_buffer=buffer_composite+HeadLayout::size_part;
+                void      * tail_ptr=&tail_component;
+                std::size_t const tail_size=sizeof(TailComponent);
+                std::memcpy(tail_ptr, tail_buffer, tail_size);
             }
             
         };//end type struct
     };//end push_back struct
 };//end layout_make struct
-    
+  
   template
   < typename Layout
   , typename... Components
@@ -612,7 +683,7 @@ construct_all
         mpl::for_each<ndx_pairs>(initializer);
     };
 };
-  
+
 }//exit detail_composite_tagged//composite_tags::all_of_packed
 
   template
@@ -840,8 +911,8 @@ layout_make
               , TailComponent const& tail_component
               )
             {
-                void*buffer_tail=buffer_composite+HeadLayout::size_part;
-                new(buffer_tail) TailComponent(tail_component);
+                void*tail_buffer=buffer_composite+HeadLayout::size_part;
+                new(tail_buffer) TailComponent(tail_component);
             }
               using HeadLayout::
             project
@@ -850,24 +921,24 @@ layout_make
               TailComponent const&
             project(index_wrap<index_part> index_arg, char const*buffer_composite)
             {
-                void const*buffer_tail=buffer_composite+HeadLayout::size_part;
-                TailComponent const*p=static_cast<TailComponent const*>(buffer_tail);
-                return *p;
+                void const*tail_buffer=buffer_composite+HeadLayout::size_part;
+                TailComponent const*tail_ptr=static_cast<TailComponent const*>(tail_buffer);
+                return *tail_ptr;
             }
                 static
               TailComponent&
             project(index_wrap<index_part> index_arg, char*buffer_composite)
             {
-                void*buffer_tail=buffer_composite+HeadLayout::size_part;
-                TailComponent*p=static_cast<TailComponent*>(buffer_tail);
-                return *p;
+                void*tail_buffer=buffer_composite+HeadLayout::size_part;
+                TailComponent*tail_ptr=static_cast<TailComponent*>(tail_buffer);
+                return *tail_ptr;
             }
                 static
               void
             destroy( char*buffer_composite)
             {
-                TailComponent&p=project( index_wrap<index_part>(), buffer_composite);
-                p.~TailComponent();
+                TailComponent&tail_ref=project( index_wrap<index_part>(), buffer_composite);
+                tail_ref.~TailComponent();
                 HeadLayout::destroy(buffer_composite);
             }
             

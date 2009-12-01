@@ -321,7 +321,7 @@ void test(void)
         ;
         tagged_valu.project<index_1>().v[0]='b';
         std::cout
-          <<"***composite_tagged<all_of_packed>:\n"
+          <<"***composite_tagged<all_of_aligned>:\n"
           <<"  (after project<index_1>='b')\n"
           <<":project<index_1>="<<tagged_valu.project<index_1>().v<<"\n"
         ;
