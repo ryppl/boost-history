@@ -186,31 +186,6 @@ public:
 		not_empty_cond_.notify_one();
 	}
 
-//	void put(
-//		T const& t,
-//		posix_time::time_duration const& rel_time)
-//	{
-//		typename node::sptr_t new_node( new node);
-//		{
-//			mutex::scoped_lock lk( tail_mtx_);
-//	
-//			if ( full_() )
-//			{
-//				while ( active_() && full_() )
-//					if ( ! not_full_cond_.timed_wait( lk, rel_time) )
-//						throw std::runtime_error("timed out");
-//			}
-//			if ( ! active_() )
-//				throw std::runtime_error("queue is not active");
-//	
-//			tail_->va = t;
-//			tail_->next = new_node;
-//			tail_ = new_node;
-//			detail::atomic_fetch_add( & count_, 1);
-//		}
-//		not_empty_cond_.notify_one();
-//	}
-
 	bool take( value_type & va)
 	{
 		mutex::scoped_lock lk( head_mtx_);
@@ -242,41 +217,6 @@ public:
 		}
 		return va;
 	}
-
-//	bool take(
-//		value_type & va,
-//		posix_time::time_duration const& rel_time)
-//	{
-//		mutex::scoped_lock lk( head_mtx_);
-//		bool empty = empty_();
-//		if ( ! active_() && empty)
-//			return false;
-//		if ( empty)
-//		{
-//			try
-//			{
-//				while ( active_() && empty_() )
-//					if ( ! not_empty_cond_.timed_wait( lk, rel_time) )
-//						return false;
-//			}
-//			catch ( fiber_interrupted const&)
-//			{ return false; }
-//		}
-//		if ( ! active_() && empty_() )
-//			return false;
-//		swap( va, head_->va);
-//		pop_head_();
-//		if ( size_() <= lwm_)
-//		{
-//			if ( lwm_ == hwm_)
-//				not_full_cond_.notify_one();
-//			else
-//				// more than one producer could be waiting
-//				// for submiting an action object
-//				not_full_cond_.notify_all();
-//		}
-//		return va;
-//	}
 
 	bool try_take( value_type & va)
 	{

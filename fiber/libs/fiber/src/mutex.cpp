@@ -36,31 +36,6 @@ mutex::try_lock()
 	return detail::atomic_compare_exchange_strong( & state_, & expected, 1);
 }
 
-bool
-mutex::timed_lock( system_time const& abs_time)
-{
-	if ( abs_time.is_infinity() )
-	{
-		lock();
-		return true;
-	}
-
-	if ( get_system_time() >= abs_time)
-		return false;
-
-	for (;;)
-	{
-		if ( try_lock() ) break;
-
-		if ( get_system_time() >= abs_time)
-			return false;
-
-		this_fiber::yield();	
-	}
-
-	return true;
-}
-
 void
 mutex::unlock()
 {

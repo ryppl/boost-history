@@ -8,7 +8,6 @@
 #define BOOST_FIBERS_AUTO_RESET_EVENT_H
 
 #include <boost/cstdint.hpp>
-#include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
 namespace boost {
@@ -31,12 +30,6 @@ public:
 	void set();
 
 	void wait();
-
-	bool wait( system_time const&);
-
-	template< typename TimeDuration >
-	bool wait( TimeDuration const& rel_time)
-	{ return wait( get_system_time() + rel_time); }
 
 	bool try_wait();
 };

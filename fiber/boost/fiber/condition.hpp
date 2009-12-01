@@ -10,7 +10,6 @@
 #define BOOST_FIBERS_CONDITION_H
 
 #include <boost/cstdint.hpp>
-#include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/exceptions.hpp>
@@ -35,7 +34,6 @@ private:
 	mutex				check_mtx_;
 
 	void wait_( mutex &);
-	bool wait_( mutex &, system_time const&);
 	void notify_( uint32_t);
 
 public:
@@ -67,56 +65,6 @@ public:
 		while ( ! pred() )
 			wait_( * lk.mutex() );
 	}
-
-	template< typename Lock >
-	bool timed_wait( Lock & lk, system_time const& abs_time)
-	{
-		if ( abs_time.is_infinity() )
-		{
-			wait( lk);
-			return true;
-		}
-
-		if ( ! lk)
-			throw lock_error();
-		return wait_( * lk.mutex(), abs_time);
-	}
-
-	template<
-		typename Lock,
-		typename Pred
-	>
-	bool timed_wait( Lock & lk, system_time const& abs_time, Pred pred)
-	{
-		if ( abs_time.is_infinity() )
-		{
-			wait( lk, pred);
-			return true;
-		}
-
-		if ( ! lk)
-			throw lock_error();
-
-		while ( ! pred() )
-			if ( ! wait_( * lk.mutex(), abs_time) )
-				return pred();
-		return true;
-	}
-
-	template<
-		typename Lock,
-		typename TimeDuration
-	>
-	bool timed_wait( Lock & lk, TimeDuration const& rel_time)
-	{ return timed_wait( lk, get_system_time() + rel_time); }
-
-	template<
-		typename Lock,
-		typename TimeDuration,
-		typename Pred
-	>
-	bool timed_wait( Lock & lk, TimeDuration const& rel_time, Pred pred)
-	{ return timed_wait( lk, get_system_time() + rel_time, pred); }
 };
 
 }}

@@ -67,23 +67,6 @@ manual_reset_event::wait()
 }
 
 bool
-manual_reset_event::wait( system_time const& abs_time)
-{
-	if ( get_system_time() >= abs_time) return false;
-
-	while ( static_cast< uint32_t >( RESET) == detail::atomic_load( & state_) )
-	{
-		this_fiber::interruption_point();
-		this_fiber::yield();	
-		this_fiber::interruption_point();
-	
-		if ( get_system_time() >= abs_time) return false;
-	}
-
-	return true;
-}
-
-bool
 manual_reset_event::try_wait()
 {
 	{

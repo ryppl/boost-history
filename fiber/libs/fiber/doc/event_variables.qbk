@@ -228,8 +228,6 @@ __interrupt__ on the __fiber__ object associated with the current fiber of execu
         void set();
 
         void wait();
-
-        bool wait( system_time const&);
     };
 
 [section:constructor `count_down_event( uint32_t)`]

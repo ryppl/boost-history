@@ -40,15 +40,6 @@ struct test_lock
         lock_type lock(mutex);
         BOOST_CHECK(lock ? true : false);
 
-        // Construct and initialize an xtime for a fast time out.
-        boost::posix_time::time_duration xt = boost::posix_time::milliseconds( 100);
-
-        // Test the lock and the mutex with condition variables.
-        // No one is going to notify this condition variable.  We expect to
-        // time out.
-        BOOST_CHECK(!condition.timed_wait(lock, xt));
-        BOOST_CHECK(lock ? true : false);
-
         // Test the lock and unlock methods.
         lock.unlock();
         BOOST_CHECK(!lock);
