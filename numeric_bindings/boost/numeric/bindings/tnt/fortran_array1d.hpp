@@ -24,14 +24,16 @@ struct adaptor< TNT::Fortran_Array1D< T >, Id, Enable > {
     typedef mpl::map<
         mpl::pair< tag::value_type, value_type >,
         mpl::pair< tag::entity, tag::vector >,
-        mpl::pair< tag::data_structure, tag::linear_array >
+        mpl::pair< tag::size_type<1>, std::ptrdiff_t >,
+        mpl::pair< tag::data_structure, tag::linear_array >,
+        mpl::pair< tag::stride_type<1>, tag::contiguous >
     > property_map;
 
-    static std::ptrdiff_t size1( Id const& t ) {
+    static std::ptrdiff_t size1( const Id& t ) {
         return t.dim();
     }
 
-    static value_type* data( Id& t ) {
+    static value_type* begin_value_array( Id& t ) {
         return &t(1);
     }
 

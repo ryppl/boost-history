@@ -24,20 +24,28 @@ struct adaptor< TNT::Array2D< T >, Id, Enable > {
     typedef mpl::map<
         mpl::pair< tag::value_type, value_type >,
         mpl::pair< tag::entity, tag::matrix >,
+        mpl::pair< tag::size_type<1>, std::ptrdiff_t >,
+        mpl::pair< tag::size_type<2>, std::ptrdiff_t >,
         mpl::pair< tag::data_structure, tag::linear_array >,
-        mpl::pair< tag::data_order, tag::row_major >
+        mpl::pair< tag::data_order, tag::row_major >,
+        mpl::pair< tag::stride_type<1>, std::ptrdiff_t >,
+        mpl::pair< tag::stride_type<2>, tag::contiguous >
     > property_map;
 
-    static std::ptrdiff_t size1( Id const& t ) {
+    static std::ptrdiff_t size1( const Id& t ) {
         return t.dim1();
     }
 
-    static std::ptrdiff_t size2( Id const& t ) {
+    static std::ptrdiff_t size2( const Id& t ) {
         return t.dim2();
     }
 
-    static value_type* data( Id& t ) {
+    static value_type* begin_value_array( Id& t ) {
         return &t[0];
+    }
+
+    static std::ptrdiff_t stride1( const Id& t ) {
+        return t.dim2();
     }
 
 };
