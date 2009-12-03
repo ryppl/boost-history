@@ -23,7 +23,7 @@ template <typename Type, typename TargetT = itl::list<typename Type::value_type>
 class sorted_associative_validater : public algebra_validater
 {
 public:
-	typedef typename Type::value_type value_type;
+    typedef typename Type::value_type value_type;
 public:
 
     enum Laws 

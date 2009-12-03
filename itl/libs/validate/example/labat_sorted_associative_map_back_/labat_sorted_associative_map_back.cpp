@@ -25,9 +25,9 @@ void test_sorted_associative_map_back_driver()
     ">> -------- Law based test automaton 'LaBatea' ---------- <<\n";
 
 #if(_MSC_VER >= 1400 && defined(_DEBUG) ) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
-	cout << msvc_stl_false_order_checking_for_reverse_iteration_message();
+    cout << msvc_stl_false_order_checking_for_reverse_iteration_message();
 #else
-	cout <<
+    cout <<
     ">> Output will be generated in a few seconds\n"
     ">> terminate by typing <CTRL>C\n"
     ">> ------------------------------------------------------ <<\n";

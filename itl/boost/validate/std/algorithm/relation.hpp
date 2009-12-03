@@ -28,15 +28,15 @@ struct std_equals
 {
     static void apply(const SourceT& left, const SourceT& right, TargetT& target)
     {
-		target = false;
-		if(left.size() <= right.size())
-			target = std::equal(left.begin(), left.end(), right.begin());
+        target = false;
+        if(left.size() <= right.size())
+            target = std::equal(left.begin(), left.end(), right.begin());
     }
 
     static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
     {
-		target = false;
-		if(left.size() <= right.size())
+        target = false;
+        if(left.size() <= right.size())
             target = std::equal(left.elements_begin(),  left.elements_end(), right.elements_begin()); 
     }
 
@@ -48,15 +48,15 @@ struct std_equals_back
 {
     static void apply(const SourceT& left, const SourceT& right, TargetT& target)
     {
-		target = false;
-		if(left.size() <= right.size())
-			target = std::equal(left.rbegin(), left.rend(), right.rbegin());
+        target = false;
+        if(left.size() <= right.size())
+            target = std::equal(left.rbegin(), left.rend(), right.rbegin());
     }
 
     static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
     {
-		target = false;
-		if(left.size() <= right.size())
+        target = false;
+        if(left.size() <= right.size())
             target = std::equal(left.elements_rbegin(),  left.elements_rend(), right.elements_rbegin()); 
     }
 
@@ -82,7 +82,7 @@ struct std_lexicographical_compare
     static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
     {
         target = std::lexicographical_compare
-			(left.elements_begin(),  left.elements_end(), 
+            (left.elements_begin(),  left.elements_end(), 
              right.elements_begin(), right.elements_end()); 
     }
 
@@ -102,7 +102,7 @@ struct std_lexicographical_compare_back
     static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
     {
         target = std::lexicographical_compare
-			(left.elements_rbegin(),  left.elements_rend(), 
+            (left.elements_rbegin(),  left.elements_rend(), 
              right.elements_rbegin(), right.elements_rend()); 
     }
 

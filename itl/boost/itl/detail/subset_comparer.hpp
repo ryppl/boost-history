@@ -86,7 +86,7 @@ template<class LeftT, class RightT>
 class subset_comparer
 {
 private:
-	subset_comparer& operator = (const subset_comparer&);
+    subset_comparer& operator = (const subset_comparer&);
 public:
     typedef typename LeftT::const_iterator  LeftIterT;
     typedef typename RightT::const_iterator RightIterT;

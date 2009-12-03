@@ -32,9 +32,9 @@ namespace boost{namespace itl
         return result;
     }
 
-	std::string msvc_stl_false_order_checking_for_reverse_iteration_message()
-	{
-		return std::string( 
+    std::string msvc_stl_false_order_checking_for_reverse_iteration_message()
+    {
+        return std::string( 
 "+----------------------------------------------------------------------------+\n"
 "| MSVC STL: Incorrect order checking for reverse iteration in _DEBUG mode:   |\n" 
 "+----------------------------------------------------------------------------+\n"
@@ -45,8 +45,8 @@ namespace boost{namespace itl
 "| For Msvc, law based tests on sorted associative containers in reverse      |\n"
 "| order, are therefore executed in RELEASE MODE only.                        |\n" 
 "+----------------------------------------------------------------------------+\n"
-		);
-	}
+        );
+    }
 
 }} // namespace itl boost
 

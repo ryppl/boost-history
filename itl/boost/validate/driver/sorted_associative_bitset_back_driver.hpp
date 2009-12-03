@@ -26,7 +26,7 @@ namespace boost{namespace itl
 
         void setProfile()
         {
-			const int used_choices = 4;
+            const int used_choices = 4;
             setValid(true);
             _freeChoice.setSize(used_choices);
             _freeChoice.setMaxWeights(100);

@@ -86,12 +86,12 @@ struct map_val
     static interval<domain_type> interval_(int lower, int upper, int bounds = 2)
     {
         return interval_type(test_value<domain_type>::make(lower), 
-                             test_value<domain_type>::make(upper), bounds);
+                             test_value<domain_type>::make(upper), static_cast<bound_type>(bounds));
     }
 
     static value_type val_pair(int lower, int upper, int val, int bounds = 2)
     {
-        return value_type( interval_(lower, upper, bounds), 
+        return value_type( interval_(lower, upper, static_cast<bound_type>(bounds)), 
                            test_value<codomain_type>::make(val) );
     }
 

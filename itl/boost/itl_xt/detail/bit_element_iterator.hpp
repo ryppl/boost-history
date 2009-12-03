@@ -415,8 +415,8 @@ template<> struct forward<nat64, 64>
         {
             half_type up_prev, low_prev;
             if(half == cur_pos)
-				// warning C4706: assignment within conditional expression
-				// This is intentional here.
+                // warning C4706: assignment within conditional expression
+                // This is intentional here.
                 if(low_prev = static_cast<half_type>(lower_mask & value))
                     return index32[((high_bit(low_prev) * factor)) >> shift];
                 else
