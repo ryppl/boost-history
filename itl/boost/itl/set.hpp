@@ -21,7 +21,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/subset_comparer.hpp>
-#include <boost/itl/set_algo.hpp>
+#include <boost/itl/detail/set_algo.hpp>
 #include <boost/itl/predicates.hpp>
 
 #include <boost/utility/enable_if.hpp>
@@ -233,7 +233,7 @@ public:
 
     /** \c make_element allows for a uniform notation of key comparison which
         is used for common algorithms on sets and maps. */
-    static value_type make_element(const key_type& key_val, const data_type& data_val)
+    static value_type make_element(const key_type& key_val, const data_type&)
     { return key_val; }
 
 };

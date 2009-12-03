@@ -19,12 +19,17 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/functors.hpp>
 #include <boost/itl/predicates.hpp>
 #include <boost/itl/set.hpp>
-#include <boost/itl/map_algo.hpp>
+#include <boost/itl/detail/map_algo.hpp>
 #include <map>
 
 
 namespace boost{namespace itl
 {
+
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
+#pragma warning(push)
+#pragma warning(disable:4127) // conditional expression is constant
+#endif                        
 
 struct partial_absorber
 {
@@ -1148,6 +1153,9 @@ struct type_to_string<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,
     }
 };
 
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+#pragma warning(pop)
+#endif
 
 }} // namespace itl boost
 

@@ -28,6 +28,7 @@ namespace boost{ namespace itl
 
 
     //--------------------------------------------------------------------------
+    template<>inline std::string type_to_string<bool>::apply() { return "bool"; }
     template<>inline std::string type_to_string<char>::apply() { return "char"; }
     template<>inline std::string type_to_string<short>::apply(){ return "short"; }
     template<>inline std::string type_to_string<int>::apply()  { return "int"; }

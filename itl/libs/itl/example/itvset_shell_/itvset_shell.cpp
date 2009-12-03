@@ -49,7 +49,7 @@ void setTestShell()
 
         instructions();
 
-        while(true)
+        for(;;)
         {
             cout << "> ";
             cin >> cmd ;

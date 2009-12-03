@@ -141,7 +141,7 @@ private:
 
 private:
     /// Treatment of adjoint intervals on insertion
-    void handle_neighbours(const iterator& it_){}
+    void handle_neighbours(const iterator&){}
 } ;
 
 

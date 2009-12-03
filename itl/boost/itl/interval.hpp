@@ -490,13 +490,13 @@ struct continuous_interval
                          : x.upper() - x.lower();
     }
 
-    static bool unaligned_lwb_equal(const IntervalT& x1, const IntervalT& x2)
+    static bool unaligned_lwb_equal(const IntervalT&, const IntervalT&)
     { return false; }
 
-    static bool unaligned_upb_equal(const IntervalT& x1, const IntervalT& x2)
+    static bool unaligned_upb_equal(const IntervalT&, const IntervalT&)
     { return false; }
 
-    static bool has_equal_border_touch(const IntervalT& x1, const IntervalT& x2)
+    static bool has_equal_border_touch(const IntervalT&, const IntervalT&)
     { return false; }
 };
 

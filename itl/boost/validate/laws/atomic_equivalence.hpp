@@ -18,6 +18,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/validate/laws/law.hpp>
 #include <boost/validate/std/algorithm/copy.hpp>
 #include <boost/validate/std/algorithm/set_algo.hpp>
+#include <boost/validate/std/algorithm/relation.hpp>
 
 namespace boost{namespace itl
 {
@@ -39,7 +40,7 @@ namespace boost{namespace itl
 // -----------------------------------------------------------------------------
 template <typename SegmentsT, 
           typename TargetsT  = typename SegmentsT::atomized_type,
-          template<class,class,template<class>class>class Algorithm = itl::std_copy_forward,
+          template<class,class,template<class>class>class Algorithm = itl::std_copy,
           template<class>class       TargetIterator = std::insert_iterator,
           template<class,class>class Atomizer       = itl::Interval::Atomize,
           template<class>class       Equality       = itl::std_equal         > 
@@ -60,7 +61,7 @@ class UnaryAtomicEquivalence :
 public:
     typedef typename SegmentsT::atomized_type ElementsT;
 
-    std::string name()const { return "UnnaryAtomicEquivalence"; }
+    std::string name()const { return "UnaryAtomicEquivalence"; }
     std::string formula()const { return "For all S a: Alg<E,T,I>(atomize(a)) == Alg<S,T,I>(a)"; }
 
     std::string typeString()const
@@ -124,7 +125,7 @@ public:
 // -----------------------------------------------------------------------------
 template <typename SegmentsT, 
           typename TargetsT  = typename SegmentsT::atomized_type,
-          template<class,class,template<class>class>class Algorithm = itl::std_set_union_forward,
+          template<class,class,template<class>class>class Algorithm = itl::std_set_union,
           template<class>class       TargetIterator = std::insert_iterator,
           template<class,class>class Atomizer       = itl::Interval::Atomize,
           template<class>class       Equality       = itl::std_equal         > 

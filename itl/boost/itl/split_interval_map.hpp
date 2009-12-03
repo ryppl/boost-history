@@ -17,6 +17,11 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 namespace boost{namespace itl
 {
 
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
+#pragma warning(push)
+#pragma warning(disable:4127) // conditional expression is constant
+#endif                        
+
 /** implements a map as a map of intervals - on insertion overlapping intervals are split and associated values are combined. */
 template
 <
@@ -700,6 +705,9 @@ struct type_to_string<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,C
     }
 };
 
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+#pragma warning(pop)
+#endif
 
 }} // namespace itl boost
 

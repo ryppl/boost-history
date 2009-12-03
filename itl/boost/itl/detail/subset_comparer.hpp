@@ -20,6 +20,11 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
+#pragma warning(push)
+#pragma warning(disable:4127) // conditional expression is constant
+#endif                        
+
 namespace Set
 {
 
@@ -49,7 +54,7 @@ struct atomic_codomain_compare
 template<class LeftT, class RightT>
 struct empty_codomain_compare
 {
-    static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
+    static int apply(typename LeftT::const_iterator&, typename RightT::const_iterator&)
     {
         return inclusion::equal;
     }
@@ -80,6 +85,8 @@ struct map_codomain_compare
 template<class LeftT, class RightT>
 class subset_comparer
 {
+private:
+	subset_comparer& operator = (const subset_comparer&);
 public:
     typedef typename LeftT::const_iterator  LeftIterT;
     typedef typename RightT::const_iterator RightIterT;
@@ -240,6 +247,10 @@ int subset_compare(const LeftT& left, const RightT& right)
 
 } // namespace Set
     
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+#pragma warning(pop)
+#endif
+
 }} // namespace itl boost
 
 #endif 

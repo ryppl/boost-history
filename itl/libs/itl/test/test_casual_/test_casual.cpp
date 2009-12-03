@@ -44,11 +44,26 @@ BOOST_AUTO_TEST_CASE(reverse_iter)
     typedef interval_bitset<int, bits8> InterBitsT;
     InterBitsT lbs;
 
-    lbs.add(0).add(3).add(5);
+    lbs.add(0).add(3);
 
     InterBitsT::element_reverse_iterator rit_   = lbs.elements_rend();
     InterBitsT::element_reverse_iterator revbeg = lbs.elements_rbegin();
 
+	//  {< > 0  3 }
+	//  re!
+	--rit_; // 
+	cout << "*rit_=" << *rit_ << endl;
+	--rit_; // 
+	cout << "*rit_=" << *rit_ << endl;
+
+	rit_ == revbeg;
+
+	if(rit_ == lbs.elements_rbegin())
+		cout << "at rbegin=last\n";
+	else
+		cout << "NOT at rbegin=last\n";
+
+/*
     cout << "{";
     while(!(rit_ == revbeg))
     {
@@ -56,6 +71,7 @@ BOOST_AUTO_TEST_CASE(reverse_iter)
         cout << *rit_ << " ";
     }
     cout << "}";
+*/
 }
 
 

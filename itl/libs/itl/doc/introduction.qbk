@@ -87,7 +87,7 @@ bool has_answer = mySet.contains(42);
 
 The second aspect, that will be called __bi_iterative__ ['*aspect*], allows to exploit the
 fact, that the elements of __itv_sets__ and __itv_maps__ are clustered in
-__itvs__ that we can iterate over.
+['*intervals*] or ['*segments*] that we can iterate over.
 
 ``
 // Switch on my favorite telecasts using an interval_set

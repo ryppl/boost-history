@@ -158,13 +158,13 @@ Distributed under the Boost Software License, Version 1.0.
 [def __ch_itl_set__    interval\nsets]
 [def __ch_itl_map__    interval\nmaps]
 
-[def __bi_conceptual__ ['*conceptual*]]
-[def __conceptual__    conceptual]
-[def __Conceptual__    Conceptual]
+[def __bi_conceptual__ ['*fundamental*]]
+[def __conceptual__    fundamental]
+[def __Conceptual__    Fundamental]
 
-[def __bi_iterative__  ['*iterative*]]
-[def __iterative__     iterative]
-[def __Iterative__     Iterative]
+[def __bi_iterative__  ['*segmental*]]
+[def __iterative__     segmental]
+[def __Iterative__     Segmental]
 
 [def __O1__            ['O(1)]]
 [def __aO1__           ['amortized O(1)]]

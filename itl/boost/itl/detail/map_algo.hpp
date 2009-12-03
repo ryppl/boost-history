@@ -12,7 +12,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/itl/detail/notate.hpp>
-#include <boost/itl/set_algo.hpp>
+#include <boost/itl/detail/set_algo.hpp>
 
 namespace boost{namespace itl
 {

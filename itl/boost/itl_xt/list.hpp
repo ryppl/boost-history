@@ -22,7 +22,7 @@ class itl::list
 #include <boost/itl_xt/std/pair.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
-#include <boost/itl/set_algo.hpp>
+#include <boost/itl/detail/set_algo.hpp>
 #include <boost/itl/predicates.hpp>
 
 

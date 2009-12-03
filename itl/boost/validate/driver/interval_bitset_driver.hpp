@@ -66,7 +66,6 @@ namespace boost{namespace itl
             default: return choiceError(ITL_LOCATION("freeChoice:\n"), freeChoice, _freeChoice);
             } //switch()
 
-            return NULL; //just to please the compiler ;)
         }
 
     };

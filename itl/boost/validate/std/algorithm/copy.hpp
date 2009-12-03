@@ -15,8 +15,10 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
+//------------------------------------------------------------------------------
+//- std::copy ------------------------------------------------------------------
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_copy_forward
+struct std_copy
 {
     static void apply(const SourceT& source, TargetT& target)
     {
@@ -34,7 +36,7 @@ struct std_copy_forward
 };
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_copy_backward
+struct std_copy_back
 {
     static void apply(const SourceT& source, TargetT& target)
     {
@@ -51,8 +53,10 @@ struct std_copy_backward
     static std::string struct_abbreviation(){ return "cpy_b"; }
 };
 
+//------------------------------------------------------------------------------
+//- std::reverse_copy ----------------------------------------------------------
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_reverse_copy_forward
+struct std_reverse_copy
 {
     static void apply(const SourceT& source, TargetT& target)
     {
@@ -70,7 +74,7 @@ struct std_reverse_copy_forward
 };
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_reverse_copy_backward
+struct std_reverse_copy_back
 {
     static void apply(const SourceT& source, TargetT& target)
     {
@@ -86,6 +90,46 @@ struct std_reverse_copy_backward
 
     static std::string struct_abbreviation(){ return "rcpy_b"; }
 };
+
+
+//------------------------------------------------------------------------------
+//- std::copy_backward ---------------------------------------------------------
+template<class SourceT, class TargetT, template<class>class InsertIterator>
+struct std_copy_backward
+{
+    static void apply(const SourceT& source, TargetT& target)
+    {
+        std::copy_backward(source.begin(), source.end(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
+
+    static void apply_elemental(const SourceT& source, TargetT& target)
+    {
+        std::copy_backward(source.elements_begin(), source.elements_end(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
+
+    static std::string struct_abbreviation(){ return "cpyb_f"; }
+};
+
+template<class SourceT, class TargetT, template<class>class InsertIterator>
+struct std_copy_backward_back
+{
+    static void apply(const SourceT& source, TargetT& target)
+    {
+        std::copy_backward(source.rbegin(), source.rend(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
+
+    static void apply_elemental(const SourceT& source, TargetT& target)
+    {
+        std::copy_backward(source.elements_rbegin(), source.elements_rend(), 
+            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+    }
+
+    static std::string struct_abbreviation(){ return "cpyb_b"; }
+};
+
 
 
 }} // namespace itl boost

@@ -299,7 +299,7 @@ namespace Loki
         {
             typedef TupleGentor<NullType, index> TrgTupleT;
             typedef TupleGentor<NullType, index> SrcTupleT;
-            static void Do(TrgTupleT& trg, SrcTupleT& src){}
+            static void Do(TrgTupleT&, SrcTupleT&){}
         };
 
 
@@ -418,9 +418,8 @@ namespace Loki
         {
             typedef TupleGentor<NullType, index> SrcTupleT;
 
-            static void Do(SrcTupleT& src)
+            static void Do(SrcTupleT&)
             {
-                //CL? Function<TrgType, UnaryTpl>::apply(src);
             }
         };
 
@@ -728,7 +727,7 @@ namespace Loki
         template <unsigned int i>
         struct Stringer<tuple<NullType>, i>
         {
-            static std::string Do(const tuple<NullType>& obj)
+            static std::string Do(const tuple<NullType>&)
             {
                 return std::string();
             }

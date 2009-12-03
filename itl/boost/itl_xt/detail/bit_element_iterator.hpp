@@ -110,6 +110,8 @@ private:
             return false;
         else if(_on_bit == ante)
             return other._on_bit == beyond || other.is_segment_begin();
+        else if(ante == other._on_bit)
+            return _on_bit == beyond || is_segment_begin();
         else 
             return _on_bit == other._on_bit;
     }
@@ -231,11 +233,12 @@ private:
 namespace biterate
 {
 
-#if (defined _MSC_VER)
-# pragma warning( push )
-// C4146: unary minus operator applied to unsigned type, result still unsigned
-# pragma warning( disable : 4146 )
-#endif
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
+#pragma warning(push)
+#pragma warning(disable:4706) // assignment within conditional expression
+#pragma warning(disable:4146) // unary minus operator applied to unsigned type, result still unsigned
+#endif                        
+
 
 /* Bit-iteration is coded on the bases of the work of
 Charles E. Leiserson, Harald Prokop, Keith H. Randall
@@ -359,6 +362,7 @@ template<> struct forward<nat64, 64>
         }
     }
 
+
     static bit_range_type next_bit(word_type value, bit_range_type cur_pos)
     {
         if(cur_pos == last)
@@ -380,7 +384,6 @@ template<> struct forward<nat64, 64>
                     return past;
         }
     }
-
 
     static half_type lower_previous(word_type value, bit_range_type cur_pos)
     {
@@ -412,6 +415,8 @@ template<> struct forward<nat64, 64>
         {
             half_type up_prev, low_prev;
             if(half == cur_pos)
+				// warning C4706: assignment within conditional expression
+				// This is intentional here.
                 if(low_prev = static_cast<half_type>(lower_mask & value))
                     return index32[((high_bit(low_prev) * factor)) >> shift];
                 else
@@ -446,10 +451,7 @@ struct proceed<IteratorT,true>
     BOOST_STATIC_CONSTANT(bit_range_type, beyond = digits+1 );
 
     static bit_range_type first_bit(word_type value)
-    {
-        unsigned int dbg_word_value = value; //CL
-        return forward<word_type,digits>::first_bit(value); 
-    }
+    { return forward<word_type,digits>::first_bit(value); }
 
     static bit_range_type last_bit(word_type value)
     { return forward<word_type,digits>::last_bit(value); }
@@ -461,19 +463,13 @@ struct proceed<IteratorT,true>
     { return forward<word_type,digits>::prev_bit(value, cur_pos); }
 
     static difference_type inter_value(difference_type reptator, const interval_type inter_val)
-    {
-        return inter_val.first() + reptator;
-    }
+    { return inter_val.first() + reptator; }
 
     static difference_type inter_base(const iterator& iter)
-    {
-        return neutron<difference_type>::value();
-    }
+    { return neutron<difference_type>::value(); }
 
     static difference_type inter_ceil(const iterator& iter)
-    {
-        return iter->first.length();
-    }
+    { return iter->first.length(); }
 };
 
 template<class IteratorT>
@@ -504,25 +500,11 @@ struct proceed<IteratorT,false>
     { return forward<word_type,digits>::next_bit(value, cur_pos); }
 
     static difference_type inter_value(difference_type reptator, const interval_type inter_val)
-    {
-        return inter_val.last() - reptator;
-    }
-
-    static difference_type inter_base(const iterator& iter)//CL . . .
-    {
-        return iter->first.length();
-    }
-
-    static difference_type inter_ceil(const iterator& iter)
-    {
-        return neutron<difference_type>::value();
-    }
+    { return inter_val.last() - reptator; }
 };
 
-
-#if (defined _MSC_VER)
-# pragma warning( pop ) // C4146: unary minus operator applied to unsigned type,
-                        // result still unsigned
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+#pragma warning(pop)
 #endif
 
 } //namespace biterate

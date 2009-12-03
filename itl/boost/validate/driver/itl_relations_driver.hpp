@@ -95,7 +95,7 @@ namespace boost{namespace itl
         {
             int rootChoice         = _rootChoice.some();
             int domainChoice       = _domainChoice.some();
-            int codomainChoice     = _codomainChoice.some();
+            //int codomainChoice     = _codomainChoice.some();
             int neutronizerChoice  = _neutronizerChoice.some();
 
             switch(rootChoice)
@@ -162,7 +162,6 @@ namespace boost{namespace itl
             default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
 
-            return NULL; //just to please the compiler ;)
         }
 
     };

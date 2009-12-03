@@ -320,19 +320,19 @@ namespace boost{namespace itl
     template <> 
     struct Calibrater<std::pair<int,int>, RandomGentor>
     {
-        static void apply(RandomGentor< std::pair<int,int> >& gentor){}
+        static void apply(RandomGentor< std::pair<int,int> >&){}
     };
 
     template <> 
     struct Calibrater<std::pair<itl::interval<int>, int>, RandomGentor>
     {
-        static void apply(RandomGentor< std::pair<itl::interval<int>, int> >& gentor){}
+        static void apply(RandomGentor< std::pair<itl::interval<int>, int> >&){}
     };
 
     template <> 
     struct Calibrater<std::pair<itl::interval<double>, int>, RandomGentor>
     {
-        static void apply(RandomGentor< std::pair<itl::interval<double>, int> >& gentor){}
+        static void apply(RandomGentor< std::pair<itl::interval<double>, int> >&){}
     };
 
     template <> 

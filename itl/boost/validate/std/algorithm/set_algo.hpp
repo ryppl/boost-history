@@ -15,50 +15,11 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-//- includes -------------------------------------------------------------------
-
-template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_includes_forward
-{
-    static void apply(const SourceT& left, const SourceT& right, TargetT& target)
-    {
-        target = std::includes(left.begin(), left.end(), 
-                               right.begin(), right.end());
-    }
-
-    static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
-    {
-        target = std::includes(left.elements_begin(),  left.elements_end(), 
-                               right.elements_begin(), right.elements_end()); 
-    }
-
-    static std::string struct_abbreviation(){ return "C=f"; }
-};
-
-
-template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_includes_backward
-{
-    static void apply(const SourceT& left, const SourceT& right, TargetT& target)
-    {
-        target = std::includes(left.rbegin(), left.rend(), 
-                               right.rbegin(), right.rend());
-    }
-
-    static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
-    {
-        target = std::includes(left.elements_rbegin(),  left.elements_rend(), 
-                               right.elements_rbegin(), right.elements_rend()); 
-    }
-
-    static std::string struct_abbreviation(){ return "C=b"; }
-};
-
 
 //- set_union -----------------------------------------------------------------
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_set_union_forward
+struct std_set_union
 {
     static void apply(const SourceT& left, const SourceT& right, TargetT& target)
     {
@@ -80,7 +41,7 @@ struct std_set_union_forward
 
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_set_union_backward
+struct std_set_union_back
 {
     static void apply(const SourceT& left, const SourceT& right, TargetT& target)
     {
@@ -104,7 +65,7 @@ struct std_set_union_backward
 //- set_difference ------------------------------------------------------------
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_set_difference_forward
+struct std_set_difference
 {
     static void apply(const SourceT& left, const SourceT& right, TargetT& target)
     {
@@ -126,7 +87,7 @@ struct std_set_difference_forward
 
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_set_difference_backward
+struct std_set_difference_back
 {
     static void apply(const SourceT& left, const SourceT& right, TargetT& target)
     {
@@ -150,7 +111,7 @@ struct std_set_difference_backward
 //- set_intersection -----------------------------------------------------------
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_set_intersection_forward
+struct std_set_intersection
 {
     static void apply(const SourceT& left, const SourceT& right, TargetT& target)
     {
@@ -172,7 +133,7 @@ struct std_set_intersection_forward
 
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_set_intersection_backward
+struct std_set_intersection_back
 {
     static void apply(const SourceT& left, const SourceT& right, TargetT& target)
     {
@@ -196,7 +157,7 @@ struct std_set_intersection_backward
 //- set_symmetric_difference ---------------------------------------------------
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_set_symmetric_difference_forward
+struct std_set_symmetric_difference
 {
     static void apply(const SourceT& left, const SourceT& right, TargetT& target)
     {
@@ -218,7 +179,7 @@ struct std_set_symmetric_difference_forward
 
 
 template<class SourceT, class TargetT, template<class>class InsertIterator>
-struct std_set_symmetric_difference_backward
+struct std_set_symmetric_difference_back
 {
     static void apply(const SourceT& left, const SourceT& right, TargetT& target)
     {

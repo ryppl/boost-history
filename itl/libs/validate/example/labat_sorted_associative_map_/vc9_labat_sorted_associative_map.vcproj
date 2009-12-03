@@ -124,7 +124,7 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
@@ -224,11 +224,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\boost\validate\typevalidater.h"
+				RelativePath="..\..\..\..\boost\validate\sorted_associative_map_validater.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\boost\validate\sorted_associative_map_validater.hpp"
+				RelativePath="..\..\..\..\boost\validate\typevalidater.h"
 				>
 			</File>
 		</Filter>

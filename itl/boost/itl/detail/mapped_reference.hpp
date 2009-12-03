@@ -15,8 +15,11 @@ namespace boost{namespace itl
 {
 
 template<class FirstT, class SecondT>
-struct mapped_reference
+class mapped_reference
 {
+private:
+	mapped_reference& operator = (const mapped_reference&);
+public:
     typedef FirstT  first_type;   
     typedef SecondT second_type; 
     typedef mapped_reference type;

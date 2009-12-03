@@ -54,8 +54,7 @@ divided in are summarized in the next table:
 [section Aspects]
 
 There are two major ['*aspects*] or ['*views*] of itl containers. The first and predominant
-aspect is called __bi_conceptual__. The second and minor aspect is called __bi_iterative__ or
-iteration related.
+aspect is called __bi_conceptual__. The second and minor aspect is called __bi_iterative__.
 
 [/ table
 [[Aspect]    [Abstraction level][]                  []                    [Practical]]
@@ -75,7 +74,6 @@ iteration related.
              of elements(element value pairs)             ]
                                                            [Segmentation information is available. 
                                                             See e.g. [link boost_itl.examples.month_and_week_grid Time grids for months and weeks]]]
-[[]         [no iteration over elements]                   [iteration over intervals]]
 ]
 
 On the __conceptual__ aspect
@@ -84,7 +82,7 @@ On the __conceptual__ aspect
 * an __itv_set__ implements a set of elements.
 * an __itv_map__ implements a map of element value pairs.
 
-On the iteration related or __iterative__ aspect
+On the __iterative__ aspect
 
 * an __itv_set__ implements a set of intervals.
 * an __itv_map__ implements a map of interval value pairs.

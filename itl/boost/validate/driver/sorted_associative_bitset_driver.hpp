@@ -26,14 +26,14 @@ namespace boost{namespace itl
 
         void setProfile()
         {
+			const int used_choices = 4;
             setValid(true);
-            _freeChoice.setSize(FreeChoice::FreeChoice_size);
+            _freeChoice.setSize(used_choices);
             _freeChoice.setMaxWeights(100);
-            _freeChoice[FreeChoice::_1] = 20;
-            _freeChoice[FreeChoice::_2] = 20;
-            _freeChoice[FreeChoice::_3] = 20;
-            _freeChoice[FreeChoice::_4] = 20;
-            _freeChoice[FreeChoice::_5] = 20;
+            _freeChoice[FreeChoice::_1] = 25;
+            _freeChoice[FreeChoice::_2] = 25;
+            _freeChoice[FreeChoice::_3] = 25;
+            _freeChoice[FreeChoice::_4] = 25;
             setRootTypeNames();
             _freeChoice.init();
 
@@ -55,15 +55,12 @@ namespace boost{namespace itl
             case FreeChoice::_2:
                 return new sorted_associative_validater< interval_bitset<int, bits<unsigned short> >, itl::list<int> >; 
             case FreeChoice::_3:
-                return new sorted_associative_validater< interval_bitset<int, bits<unsigned int> >,   itl::list<int> >; 
-            case FreeChoice::_4:
                 return new sorted_associative_validater< interval_bitset<int, bits<unsigned long> >,  itl::list<int> >; 
-            case FreeChoice::_5:
+            case FreeChoice::_4:
                 return new sorted_associative_validater< interval_bitset<int, bits<unsigned long long> >, itl::list<int> >; 
             default: return choiceError(ITL_LOCATION("freeChoice:\n"), freeChoice, _freeChoice);
             } //switch()
 
-            return NULL; //just to please the compiler ;)
         }
     };
 

@@ -11,7 +11,6 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 
 #include <limits>
 #include <boost/operators.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/itl_xt/meta_log.hpp>
 #include <boost/itl/type_traits/type_to_string.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
@@ -103,11 +102,11 @@ private:
     word_type _bits;
 };
 
-typedef unsigned int    nat; 
-typedef boost::uint8_t  nat8;
-typedef boost::uint16_t nat16;
-typedef boost::uint32_t nat32; 
-typedef boost::uint64_t nat64; 
+typedef unsigned int       nat; 
+typedef unsigned char      nat8;
+typedef unsigned short     nat16;
+typedef unsigned long      nat32; 
+typedef unsigned long long nat64; 
 
 typedef bits<nat8>  bits8;
 typedef bits<nat16> bits16;
@@ -178,28 +177,10 @@ struct count<nat16, 16>
     }
 };
 
-/*JODO redefinition for gcc.
 template<>
 struct count<nat32, 32>
 {
     typedef nat32               word_type;
-    typedef count<word_type,32> type;
-
-    static bit_range_type apply(word_type value)
-    { 
-        return table[ value        & 0xfful]
-             + table[(value >>  8) & 0xfful]
-             + table[(value >> 16) & 0xfful]
-             + table[(value >> 24) & 0xfful];
-    }
-
-};
-*/
-
-template<>
-struct count<unsigned int, 32>
-{
-    typedef unsigned int            word_type;
     typedef count<word_type,32> type;
 
     static bit_range_type apply(word_type value)
@@ -246,8 +227,8 @@ struct is_set<bits<NaturalT> >
 
 template <>struct type_to_string<itl::bits<unsigned char > >{static std::string apply(){ return "bit8";  }};
 template <>struct type_to_string<itl::bits<unsigned short> >{static std::string apply(){ return "bit16"; }};
-template <>struct type_to_string<itl::bits<unsigned int  > >{static std::string apply(){ return "bit32"; }};
-template <>struct type_to_string<itl::bits<unsigned long > >{static std::string apply(){ return "bitl32"; }};
+template <>struct type_to_string<itl::bits<unsigned int  > >{static std::string apply(){ return "bit_32"; }};
+template <>struct type_to_string<itl::bits<unsigned long > >{static std::string apply(){ return "bit32"; }};
 template <>struct type_to_string<itl::bits<unsigned long long> >{static std::string apply(){ return "bit64"; }};
 
 

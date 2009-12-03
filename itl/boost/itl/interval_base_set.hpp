@@ -10,7 +10,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define __interval_base_set_h_JOFA_990223__
 
 #include <limits>
-#include <boost/itl/interval_set_algo.hpp>
+#include <boost/itl/detail/interval_set_algo.hpp>
 #include <boost/itl/set.hpp>
 #include <boost/itl/interval.hpp>
 #include <boost/itl/detail/notate.hpp>

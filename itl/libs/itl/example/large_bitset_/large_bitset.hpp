@@ -10,7 +10,6 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #define BOOST_LIBS_ITL_EXAMPLE_LARGE_BITSET__LARGE_BITSET_HPP_JOFA_091019
 //[large_bitset_includes
 #include <iostream>                   // to organize output
-#include <boost/cstdint.hpp>          // portable boost integers
 #include <boost/operators.hpp>        // to define operators with minimal effort
 #include "meta_log.hpp"               // a meta logarithm
 #include "bits.hpp"                   // a minimal bitset implementation
@@ -21,11 +20,11 @@ namespace mini // minimal implementations for example projects
 //]
 
 //[large_bitset_natural_typedefs
-typedef boost::uint8_t  nat8; // nati i: number bits
-typedef boost::uint16_t nat16;
-typedef boost::uint32_t nat32; 
-typedef boost::uint64_t nat64; 
-typedef nat32           nat; 
+typedef unsigned char      nat8; // nati i: number bits
+typedef unsigned short     nat16;
+typedef unsigned long      nat32; 
+typedef unsigned long long nat64; 
+typedef unsigned int       nat; 
 
 typedef bits<nat8>  bits8;
 typedef bits<nat16> bits16;

@@ -117,9 +117,9 @@ void test_LawValidater()
 
     typedef BinaryAtomicEquivalence
     <
-        itl::interval_bitset<int,itl::bits16>,
-        itl::list<int>,
-        itl::std_includes_forward
+        itl::interval_set<int>,
+        bool,
+        itl::std_equals
     > TestLawT;
 
 
@@ -129,7 +129,7 @@ void test_LawValidater()
     int test_count = 1000;
     ptime start, stop;
 
-    GentorProfileSgl::it()->set_std_profile(32,1);
+    GentorProfileSgl::it()->set_std_profile(8,1);
     test_law.set_trials_count(test_count);
 
     TestLawT law;

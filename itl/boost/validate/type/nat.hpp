@@ -43,20 +43,6 @@ public:
         return *this; 
     }
 
-    /*CL
-    cnat& operator ^= (const cnat& right) //JODO should not be required
-    { 
-        _value ^= right._value; 
-        return *this; 
-    }
-    cnat& operator &= (const cnat& right) //JODO should not be required
-    { 
-        _value &= right._value; 
-        return *this; 
-    }
-    */
-
-    //CL operator int()const{ return (_value); }
     operator unsigned int()const{ return (_value); }
 
     std::string as_string()const { return to_string<int>::apply(_value); }

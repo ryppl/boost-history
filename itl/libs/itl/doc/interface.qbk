@@ -528,7 +528,7 @@ overloaded implementations for the function of that row is shown.
 
 Iterators on [*interval conainers] that are refered to so far are
 ['*segment iterators*]. They reveal the more implementation specific
-aspect, that the conceptual aspect abstracts from.[/ NOTE Identical to function_element_iteration.qbk from here]
+aspect, that the __conceptual__ aspect abstracts from.[/ NOTE Identical to function_element_iteration.qbk from here]
 Iteration over segments is fast, compared to an iteration over elements,
 particularly if intervals are large. 
 But if we want to view our interval containers as containers
