@@ -73,6 +73,9 @@ enum fcgi_errors
   // (I have no access to a server that supports it)
   multiplexing_not_supported,
   
+  // The client has already been closed.
+  already_closed,
+  
   // An empty FastCGI packet was read (eg. STDIN or GET_PARAM data has been read).
   //empty_packet_read,
   
@@ -98,6 +101,8 @@ public:
              "multiplexed). This isn't handled for now. **FIXME**";
     case accepting_on_an_open_request:
       return "You called async_accept before closing a request.";
+    case already_closed:
+      return "The client has already been closed.";
     case multiplexing_not_supported:
       return "Multiplexing connections are not yet supported.";
     //case empty_packet_read:

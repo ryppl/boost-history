@@ -67,6 +67,8 @@ enum cgi_errors
   // Expected a boundary marker for a multipart form, but did not find it.
   no_boundary_marker,
   
+  already_closed,
+  
   // The content length of the file upload is larger than maximum allowed
   // by the BOOST_CGI_POST_MAX macro.
   max_post_exceeded

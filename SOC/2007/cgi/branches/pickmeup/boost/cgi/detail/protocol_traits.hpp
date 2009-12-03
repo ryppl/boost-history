@@ -16,10 +16,13 @@
 #ifndef CGI_REQUEST_TRAITS_HPP_INCLUDED__
 #define CGI_REQUEST_TRAITS_HPP_INCLUDED__
 
+#include <boost/none.hpp>
 #include <boost/shared_ptr.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 #include "boost/cgi/common/tags.hpp"
+#include "boost/cgi/common/role_type.hpp"
+#include "boost/cgi/fcgi/specification.hpp"
 #include "boost/cgi/fwd/basic_request_fwd.hpp"
 #include "boost/cgi/fwd/basic_connection_fwd.hpp"
 
@@ -42,8 +45,6 @@ BOOST_CGI_NAMESPACE_BEGIN
   {
   class fcgi_request_impl;
   class fcgi_service_impl;
-  class fcgi_gateway_impl;
-  class fcgi_gateway_service;
   class fcgi_request_service;
   class fcgi_acceptor_service;
   }
@@ -51,8 +52,6 @@ BOOST_CGI_NAMESPACE_BEGIN
   {
   class scgi_request_impl;
   class scgi_service_impl;
-  class scgi_gateway_impl;
-  class scgi_gateway_service;
   class scgi_request_service;
   class scgi_acceptor_service;
   }
@@ -64,22 +63,10 @@ BOOST_CGI_NAMESPACE_BEGIN
   class async_cgi_request_impl;
   class fcgi_request_impl;
 
-  //template<typename>
   class cgi_service_impl;
   class acgi_service_impl;
   class async_cgi_service_impl;
   class fcgi_service_impl;
-
-  class cgi_gateway_impl;
-  class acgi_gateway_impl;
-  class async_cgi_gateway_impl;
-  class fcgi_gateway_impl;
-
-  class cgi_gateway_service;
-  class acgi_gateway_service;
-  class async_cgi_gateway_service;
-  class fcgi_gateway_service;
-  template<typename> class gateway_service;
 
   class acgi_acceptor_service;
   class fcgi_acceptor_service;
@@ -112,8 +99,8 @@ BOOST_CGI_NAMESPACE_BEGIN
               >                                      request_type; 
       typedef cgi_service_impl                       service_impl_type;
       typedef common::basic_connection<tags::stdio>  connection_type;
-//    typedef cgi_gateway_impl                       gateway_impl_type;
-//    typedef cgi_gateway_service                    gateway_service_impl_type;
+      typedef boost::none_t                          header_type;
+      typedef common::role_type                      role_type;
     };
 
     template<>
@@ -133,13 +120,12 @@ BOOST_CGI_NAMESPACE_BEGIN
       typedef common::basic_connection<
                   tags::async_stdio
               >                                      connection_type;
-      typedef async_cgi_gateway_impl                 gateway_impl_type;
-      typedef async_cgi_gateway_service              gateway_service_type;
+      typedef boost::none_t                          header_type;
+      typedef common::role_type                      role_type;
     };
 
     template<>
     struct protocol_traits<tags::acgi>
-    //  : protocol_traits<tags::async_cgi>
     {
       typedef protocol_traits<tags::acgi>            type;
       typedef acgi::request_impl                     impl_type;
@@ -154,8 +140,8 @@ BOOST_CGI_NAMESPACE_BEGIN
       typedef common::basic_connection<
                   tags::async_stdio
               >                                      connection_type;
-      typedef acgi_gateway_impl                      gateway_impl_type;
-      typedef acgi_gateway_service                   gateway_service_type;
+      typedef boost::none_t                          header_type;
+      typedef common::role_type                      role_type;
     };
 
     template<>
@@ -172,15 +158,13 @@ BOOST_CGI_NAMESPACE_BEGIN
                 , protocol_service_type
               >                                      request_type; 
       typedef boost::shared_ptr<request_type>        request_ptr;
-      //typedef fcgi_request_service
-      //        ::implementation_type                  request_impl_type;
       typedef fcgi::fcgi_service_impl                service_impl_type;
       typedef fcgi::fcgi_acceptor_service            acceptor_service_impl;
       typedef common::basic_connection<
                   tags::shareable_tcp_socket
               >                                      connection_type;
-      //typedef fcgi_gateway_impl                      gateway_impl_type;
-      //typedef fcgi_gateway_service                   gateway_service_type;
+      typedef fcgi::spec::header                     header_type;
+      typedef fcgi::spec_detail::role_types          role_type;
     };
 
     template<>
@@ -196,8 +180,6 @@ BOOST_CGI_NAMESPACE_BEGIN
       typedef scgi::scgi_service_impl                service_impl_type;
       typedef scgi::scgi_acceptor_service            acceptor_service_impl;
       typedef common::basic_connection<tags::tcp_socket>     connection_type;
-      //typedef scgi_gateway_impl                      gateway_impl_type;
-      //typedef scgi_gateway_service                   gateway_service_type;
     };
 
     // **FIXME** (remove)

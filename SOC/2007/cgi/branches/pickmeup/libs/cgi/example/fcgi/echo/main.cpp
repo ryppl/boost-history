@@ -203,6 +203,8 @@ try {
     }
   }
   
+  std::cin.get();
+  
   return ret;
 
 }catch(boost::system::system_error const& se){
@@ -217,5 +219,7 @@ try {
   std::cerr<< "[fcgi] Uncaught exception!" << std::endl;
   return -3;
 }
+  std::cerr<< "Press enter to continue." << std::endl;
+  std::cin.get();
 }
 //]

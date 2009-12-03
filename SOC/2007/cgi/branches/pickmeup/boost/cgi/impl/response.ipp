@@ -324,10 +324,27 @@ BOOST_CGI_NAMESPACE_BEGIN
   /// Get the response as a string.
   template<typename T> BOOST_CGI_INLINE  
   typename basic_response<T>::string_type
-    basic_response<T>::str() const
+    basic_response<T>::str(bool include_header) const
   {
-    return string_type(boost::asio::buffer_cast<const char_type *>(buffer_->data()),
-                       boost::asio::buffer_size(buffer_->data()));
+    string_type body;
+    if (include_header)
+    {
+      typedef std::vector<string_type>::const_iterator iter_t;
+      for (
+        iter_t iter(headers_.begin()), end(headers_.end());
+        iter != end;
+        ++iter
+      ) {
+        body += *iter;
+      }
+      if (!headers_terminated_)   body += "\r\n";
+    }
+    
+    body += string_type(
+      boost::asio::buffer_cast<const char_type *>(buffer_->data()),
+      boost::asio::buffer_size(buffer_->data()));
+      
+    return body;
   }
 
 
@@ -415,19 +432,23 @@ BOOST_CGI_NAMESPACE_BEGIN
   {
     BOOST_CGI_ADD_DEFAULT_HEADER;
     
-    BOOST_ASSERT((headers_[0].length() > 13 && "Content-type header not found"));
-    
-    headers_[0].insert(headers_[0].length()-2, "; charset: " + charset_);
-
     // Terminate the headers.
     if (!headers_terminated_)
       headers_.push_back("\r\n");
 
-    //{ Construct a ConstBufferSequence out of the headers we have.
-    typedef typename std::vector<string_type>::iterator iter;
-    for (iter i(headers_.begin()), e(headers_.end()); i != e; ++i)
+    typedef std::vector<string_type>::iterator iter_t;
+    for (
+      iter_t iter(headers_.begin()), end(headers_.end());
+      iter != end;
+      ++iter
+    )
     {
-      headers.push_back(common::buffer(*i));
+      boost::cgi::common::name type(iter->substr(0, 12).c_str());
+      if (type == "Content-type")
+        iter->insert(iter->length()-2, "; charset: " + charset_);    
+
+      //{ Construct a ConstBufferSequence out of the headers we have.
+      headers.push_back(common::buffer(*iter));
     }
     //}
 
@@ -483,7 +504,7 @@ BOOST_CGI_NAMESPACE_END
     operator<< (BOOST_CGI_NAMESPACE::common::basic_response<CharT>& resp
                , BOOST_CGI_NAMESPACE::common::charset_header<CharT> const& hdr)
   {
-    resp.charset() = hdr.content;
+    resp.charset(hdr.content);
     return resp;
   }
 

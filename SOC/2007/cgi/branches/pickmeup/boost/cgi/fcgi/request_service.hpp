@@ -154,9 +154,11 @@ BOOST_CGI_NAMESPACE_BEGIN
       impl.service_ = &ps;
     }
 
+    /// Check if the request is still open.
     bool is_open(implementation_type& impl)
     {
-      return !impl.all_done_ && impl.client_.is_open();
+      return impl.request_status_ != common::null
+          && !impl.all_done_ && impl.client_.is_open();
     }
 
     /// Close the request.

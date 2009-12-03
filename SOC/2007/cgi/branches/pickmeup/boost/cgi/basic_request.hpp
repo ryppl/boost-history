@@ -155,18 +155,21 @@ BOOST_CGI_NAMESPACE_BEGIN
          return impl->count(key);
       }
       
-      mapped_type& get(key_type const& key, mapped_type const& default_)
+      mapped_type const&
+        get(key_type const& key, mapped_type const& default_) const
       {
         BOOST_ASSERT(impl);
         const_iterator iter = impl->find(key);
-        return iter == impl->end() > default_ : *iter;
+        return iter == impl->end() ? default_ : iter->second;
       }
       
       template<typename T>
       T as(key_type const& key) {
         BOOST_ASSERT(impl);
-        mapped_type& val((*impl)[key]);
-        return val.empty() ? T() : boost::lexical_cast<T>(val);
+        const_iterator iter = impl->find(key);
+        return iter == impl->end()
+                     ? T()
+                     : boost::lexical_cast<T>(val);
       }
       
       mapped_type& operator[](key_type const& varname) {

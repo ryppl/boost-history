@@ -84,9 +84,11 @@ BOOST_CGI_NAMESPACE_BEGIN
   } // namespace http
  } // namespace common
 
-  using namespace common::http; // **FIXME**
-
 BOOST_CGI_NAMESPACE_END
+
+namespace boost { namespace http {
+  using namespace ::BOOST_CGI_NAMESPACE::common::http;
+} } // namespace boost::http
 
 #endif // CGI_HTTP_STATUS_CODE_HPP_INCLUDED__
 

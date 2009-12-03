@@ -72,20 +72,35 @@ BOOST_CGI_NAMESPACE_BEGIN
     /// Close the request.
     BOOST_CGI_INLINE int
     fcgi_request_service::close(
-        implementation_type& impl, ::BOOST_CGI_NAMESPACE::common::http::status_code& hsc
+        implementation_type& impl
+      , ::BOOST_CGI_NAMESPACE::common::http::status_code& hsc
       , int program_status)
     {
-      impl.all_done_ = true;
-      impl.client_.close(program_status);
-      impl.request_status_ = common::closed;
+      boost::system::error_code ec;
+      close(impl, hsc, program_status, ec);
+      detail::throw_error(ec);
       return program_status;
     }
 
     BOOST_CGI_INLINE int
     fcgi_request_service::close(
-        implementation_type& impl, ::BOOST_CGI_NAMESPACE::common::http::status_code& hsc
-      , int program_status, boost::system::error_code& ec)
+        implementation_type& impl
+      , ::BOOST_CGI_NAMESPACE::common::http::status_code& hsc
+      , int program_status
+      , boost::system::error_code& ec)
     {
+      /**
+       * Apache on Windows with mod_fcgid requires that all of the
+       * pending data for the connection is read before the response
+       * is sent.
+       */
+      while(!ec 
+        && impl.client_.status() < common::stdin_read
+        && impl.request_status_ != common::loaded)
+      {
+        parse_packet(impl, ec);
+      }
+
       impl.all_done_ = true;
       impl.client_.close(program_status, ec);
       impl.request_status_ = common::closed;
@@ -115,7 +130,6 @@ BOOST_CGI_NAMESPACE_BEGIN
       impl.request_status_ = common::null;
       impl.request_role_ = spec_detail::ANY;
       impl.all_done_ = false;
-
       impl.client_.status_ = common::none_;
       impl.client_.request_id_ = -1;
     }
@@ -140,7 +154,7 @@ BOOST_CGI_NAMESPACE_BEGIN
 
       impl.client_.construct(impl, ec);
       // Bomb out if the client isn't open here.
-      if (!impl.client_.connection_->is_open())
+      if (!impl.client_.connection()->is_open())
           return error::client_not_open;
 
       while(!ec)
@@ -198,21 +212,22 @@ BOOST_CGI_NAMESPACE_BEGIN
           && opts & common::parse_post_only)
       {
         std::cerr<< "Parsing post vars now.\n";
+
+        if (opts & common::parse_post_only)
+        {
+          while(!ec 
+            && impl.client_.status() < common::stdin_read
+            && impl.request_status_ != common::loaded)
+          {
+            parse_packet(impl, ec);
+          }
+        }
+        
         if (parse_post_vars(impl, ec))
 	      return ec;
       }
       if (opts & common::parse_cookies_only)
         parse_cookie_vars(impl, ec);
-        
-      if (opts & common::parse_post_only)
-      {
-        while(!ec 
-          && impl.client_.status() < common::stdin_read
-          && impl.request_status_ != common::loaded)
-        {
-          parse_packet(impl, ec);
-        }
-      }
         
       if (ec == error::eof) {
         ec = boost::system::error_code();
@@ -365,23 +380,10 @@ BOOST_CGI_NAMESPACE_BEGIN
       // clear the header first (might be unneccesary).
       impl.header_buf_ = implementation_type::header_buffer_type();
 
-      if (8 != read(*impl.client_.connection_, buffer(impl.header_buf_)
+      if (8 != read(*impl.client_.connection(), buffer(impl.header_buf_)
                    , boost::asio::transfer_all(), ec) || ec)
         return ec;
       
-      //if (ec) return ec;
-
-      /*
-      std::cerr<< std::endl
-          << "[hw] Header details {" << std::endl
-          << "  RequestId := " << fcgi::spec::get_request_id(impl.header_buf_) << std::endl
-          << "  FastCGI version := " << fcgi::spec::get_version(impl.header_buf_) << std::endl
-          << "  Type := " << fcgi::spec::get_type(impl.header_buf_)
-          << " (" << fcgi::spec::request_type::to_string(impl.header_buf_) << ")" << std::endl
-          << "  Content-length := " << fcgi::spec::get_content_length(impl.header_buf_) << std::endl
-          << "}" << std::endl;
-      */
-
       return ec;
     }
 
@@ -422,17 +424,6 @@ BOOST_CGI_NAMESPACE_BEGIN
       }catch(...){
         ec = error::abort_request_record_recieved_for_invalid_request;
       }
-/*
-      connection_type::request_map_type::iterator i
-        = connection_->find(id);
-
-      if (i == connection_type::request_map_type::iterator())
-      {
-        return bad_request_id;
-      }
-
-      //lookup_request(id).abort();
-*/
       return ec;
     }
 
@@ -586,7 +577,7 @@ BOOST_CGI_NAMESPACE_BEGIN
       , boost::system::error_code& ec)
     {
       std::size_t bytes_read
-        = read(*impl.client_.connection_, buf
+        = read(*impl.client_.connection(), buf
               , boost::asio::transfer_all(), ec);
 
       BOOST_ASSERT(bytes_read == fcgi::spec::get_length(impl.header_buf_)
@@ -659,24 +650,6 @@ BOOST_CGI_NAMESPACE_END
 BOOST_CGI_NAMESPACE_BEGIN
  namespace fcgi {
 
-/*
-    fdetail::request_type&
-      get_or_make_request(implementation_type& impl, boost::uint16_t id)
-    {
-      implementation_type::client_type::connection_type::request_vector_type&
-        requests = impl.client_.connection_->requests_;
-
-      if (!requests.at(id-1))
-      {
-        if (requests.size() < (id-1))
-          requests.resize(id);
-        requests.at(id-1) = fdetail::request_type::create(*impl.service_);
-      }
-
-      return *requests.at(id-1);
-    }
-*/
-
     BOOST_CGI_INLINE boost::system::error_code
     fcgi_request_service::process_begin_request(
         implementation_type& impl, boost::uint16_t id
@@ -693,22 +666,8 @@ BOOST_CGI_NAMESPACE_BEGIN
         //  << fcgi::spec::begin_request::get_role(impl.header_buf_) << std::endl;
 
         implementation_type::client_type::connection_type&
-          conn = *impl.client_.connection_;
-
-        if (conn.get_slot(id, ec))
-        { // error
-          return ec;
-        }
-
-        // **FIXME** THIS LEAKS MEMORY!!!!!!!
-        //requests.at(id-1)
-        //request_type* new_request = new request_type(impl, ec);
-
-        //conn.add_request(id, new_request, true, ec);
-
-        return ec;//error::multiplexed_request_incoming;
+          conn = *impl.client_.connection();
       }
-
       return ec;
     }
 

@@ -31,6 +31,7 @@ int handle_request(Request& req, Response& resp)
   // the response text.
   req.load(parse_env);
   resp<< content_type("text/plain")
+      << header("X-Protocol", "FastCGI")
       << "Hello there, universe.";
 
   return commit(req, resp, 0);

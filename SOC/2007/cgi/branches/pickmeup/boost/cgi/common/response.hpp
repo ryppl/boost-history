@@ -141,9 +141,9 @@ BOOST_CGI_NAMESPACE_BEGIN
     /// Get the contents of the response as a string.
     /**
      * This copies the contents of the response into a string.
-     * Headers aren't included in the dump.
+     * Headers aren't included in the dump unless `include_header` is true.
      */
-    string_type str() const;
+    string_type str(bool include_header = false) const;
 
     /// Format and add a header given name and value, appending CRLF.
     basic_response<char_type>&
@@ -155,7 +155,10 @@ BOOST_CGI_NAMESPACE_BEGIN
 
     void reset_headers();
     
-    string_type& charset() { return charset_; }
+    /// Get the charset.
+    string_type& charset() const { return charset_; }
+    /// Set the charset.
+    void charset(string_type const& cs) { charset_ = cs; }
 
     bool headers_terminated() const;
 

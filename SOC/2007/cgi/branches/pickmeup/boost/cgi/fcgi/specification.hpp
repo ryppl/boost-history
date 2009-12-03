@@ -10,6 +10,7 @@
 #define CGI_FCGI_SPECIFICATION_HPP_INCLUDED__
 
 #include <boost/cstdint.hpp>
+#include <boost/asio/buffer.hpp>
 
 // NOTE: CamelCase style mimicks the FastCGI specification
 // SEE: http://www.fastcgi.com/devkit/doc/fcgi-spec.html#S8
