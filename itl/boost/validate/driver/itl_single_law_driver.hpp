@@ -7,7 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#pragma once
+#ifndef BOOST_VALIDATE_DRIVER_SINGLE_LAW_DRIVER_HPP_JOFA_080405
+#define BOOST_VALIDATE_DRIVER_SINGLE_LAW_DRIVER_HPP_JOFA_080405
 
 #include <iostream>
 #include <stdio.h>
@@ -164,11 +165,12 @@ namespace boost{namespace itl
             default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
 
-            return NULL; //just to please the compiler ;)
         }
 
     };
 
 
 }} // namespace itl boost
+
+#endif // BOOST_VALIDATE_DRIVER_SINGLE_LAW_DRIVER_HPP_JOFA_080405
 
