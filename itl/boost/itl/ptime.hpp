@@ -24,6 +24,7 @@ w.r.t. addition (neutron()).
 #pragma warning(push)
 #pragma warning(disable:4100) // boost/date_time/time.hpp(80) : warning C4100: 'as_offset' : unreferenced formal parameter
 #pragma warning(disable:4244) // 'argument' : conversion from 'int' to 'unsigned short', possible loss of data
+#pragma warning(disable:4702) // boost\lexical_cast.hpp(1159) : warning C4702: unreachable code
 #endif                        
 #include <boost/date_time/posix_time/posix_time.hpp>
 #ifdef BOOST_MSVC

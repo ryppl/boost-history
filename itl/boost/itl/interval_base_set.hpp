@@ -465,7 +465,7 @@ public:
     static bool key_less(LeftIterT lhs_, RightIterT rhs_) 
     { return key_compare()(*lhs_, *rhs_); }
 
-    static value_type make_domain_element(const domain_type& dom_val, const codomain_type& codom_val)
+    static value_type make_domain_element(const domain_type& dom_val, const codomain_type&)
     { return value_type(interval_type(dom_val)); }
 
 protected:
