@@ -16,7 +16,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
+#ifdef BOOST_MSVC 
 #pragma warning(push)
 #pragma warning(disable:4127) // conditional expression is constant
 #endif                        
@@ -841,7 +841,7 @@ struct type_to_string<itl::interval_map<DomainT,CodomainT,Traits,Compare,Combine
     }
 };
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+#ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 

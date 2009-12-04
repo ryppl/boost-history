@@ -7,7 +7,9 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#pragma once
+#ifndef BOOST_ITL_VALIDATE_VALIDATER_ITL_COLLECTOR_VALIDATER_HPP_JOFA_090315
+#define BOOST_ITL_VALIDATE_VALIDATER_ITL_COLLECTOR_VALIDATER_HPP_JOFA_090315
+
 
 #include <boost/itl/functors.hpp>
 #include <boost/validate/laws/monoid.hpp>
@@ -16,6 +18,11 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/set_laws.hpp>
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/validater/algebra_validater.hpp>
+
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4127) // conditional expression is constant
+#endif                        
 
 namespace boost{namespace itl
 {
@@ -133,4 +140,10 @@ private:
 
 
 }} // namespace itl boost
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
+
+#endif // BOOST_ITL_VALIDATE_VALIDATER_ITL_COLLECTOR_VALIDATER_HPP_JOFA_090315
 

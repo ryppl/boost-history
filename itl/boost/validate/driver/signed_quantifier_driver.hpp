@@ -94,8 +94,8 @@ namespace boost{namespace itl
         algebra_validater* chooseValidater()
         {
             int rootChoice         = _rootChoice.some();
-            //int domainChoice       = _domainChoice.some(); // not used
-            int codomainChoice     = _codomainChoice.some();
+            //int domainChoice       = _domainChoice.some();
+            //int codomainChoice     = _codomainChoice.some();
             int neutronizerChoice  = _neutronizerChoice.some();
 
             switch(rootChoice)

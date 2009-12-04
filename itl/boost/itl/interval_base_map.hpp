@@ -26,7 +26,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 namespace boost{namespace itl
 {
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
+#ifdef BOOST_MSVC 
 #pragma warning(push)
 #pragma warning(disable:4127) // conditional expression is constant
 #endif                        
@@ -1374,7 +1374,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Inter
 {
     iterator it = _map.begin();
     while(it != _map.end())
-        if(Predicate()(*it))
+        if(pred(*it))
             _map.erase(it++); 
         else ++it;
     return *that();
@@ -1636,7 +1636,7 @@ struct is_interval_container<itl::interval_base_map<SubType,DomainT,CodomainT,Tr
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+#ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 

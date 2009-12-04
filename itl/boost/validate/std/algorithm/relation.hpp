@@ -17,7 +17,7 @@ namespace boost{namespace itl
 
 //- equal ----------------------------------------------------------------------
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
+#ifdef BOOST_MSVC 
 #pragma warning(push)
 #pragma warning(disable:4996) //'std::equal': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
 #endif                        // I do guarantee here that I am using the parameters correctly :)
@@ -63,7 +63,7 @@ struct std_equals_back
     static std::string struct_abbreviation(){ return "==b"; }
 };
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+#ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 

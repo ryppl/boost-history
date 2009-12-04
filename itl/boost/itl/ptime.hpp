@@ -18,8 +18,18 @@ w.r.t. addition (neutron()).
 #include <stdio.h>
 #include <string>
 #include <sstream>
+#include <boost/detail/workaround.hpp>
 
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4100) // boost/date_time/time.hpp(80) : warning C4100: 'as_offset' : unreferenced formal parameter
+#pragma warning(disable:4244) // 'argument' : conversion from 'int' to 'unsigned short', possible loss of data
+#endif                        
 #include <boost/date_time/posix_time/posix_time.hpp>
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
+
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/difference.hpp>
 #include <boost/itl/type_traits/size.hpp>

@@ -17,7 +17,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 namespace boost{namespace itl
 {
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
+#ifdef BOOST_MSVC 
 #pragma warning(push)
 #pragma warning(disable:4127) // conditional expression is constant
 #endif                        
@@ -149,10 +149,9 @@ private:
     void add_rear(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
 
     template<class Combiner>
-    void subtract_main(const interval_type& inter_val, const CodomainT& co_val, 
-                       iterator& it_, iterator& end_  );
+    void subtract_main(const CodomainT& co_val, iterator& it_, iterator& end_  );
 
-    void subtract_front(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
+    void subtract_front(const interval_type& inter_val, iterator& it_);
 
     template<class Combiner>
     void subtract_rear(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
@@ -394,15 +393,15 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 
     iterator last_  = end_; --last_;
     iterator it_    = first_;
-    subtract_front         (inter_val, co_val, it_);
-    subtract_main<Combiner>(inter_val, co_val, it_, last_);
+    subtract_front         (inter_val,         it_);
+    subtract_main<Combiner>(           co_val, it_, last_);
     subtract_rear<Combiner>(inter_val, co_val, it_);
 }
 
 
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::subtract_front(const interval_type& inter_val, const CodomainT& co_val, iterator& it_)
+    ::subtract_front(const interval_type& inter_val, iterator& it_)
 {
     interval_type left_resid = right_subtract(it_->first, inter_val);
 
@@ -420,8 +419,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
     template<class Combiner>
 inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::subtract_main(const interval_type& inter_val, const CodomainT& co_val, 
-                    iterator& it_, iterator& last_)
+    ::subtract_main(const CodomainT& co_val, iterator& it_, iterator& last_)
 {
     while(it_ != last_)
     {
@@ -705,7 +703,7 @@ struct type_to_string<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,C
     }
 };
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+#ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 

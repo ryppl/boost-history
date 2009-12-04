@@ -233,7 +233,7 @@ private:
 namespace biterate
 {
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
+#ifdef BOOST_MSVC 
 #pragma warning(push)
 #pragma warning(disable:4706) // assignment within conditional expression
 #pragma warning(disable:4146) // unary minus operator applied to unsigned type, result still unsigned
@@ -503,7 +503,7 @@ struct proceed<IteratorT,false>
     { return inter_val.last() - reptator; }
 };
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+#ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 

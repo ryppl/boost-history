@@ -9,7 +9,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <string>
 #include <vector>
 #include <boost/mpl/list.hpp>
-#include <boost/test/unit_test.hpp>
+#include "../unit_test_unwarned.hpp"
 #include <boost/test/test_case_template.hpp>
 
 // interval instance types

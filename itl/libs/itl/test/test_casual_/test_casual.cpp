@@ -10,7 +10,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <vector>
 #include <boost/mpl/list.hpp>
 #include <boost/itl/iterator.hpp>
-#include <boost/test/unit_test.hpp>
+#include "../unit_test_unwarned.hpp"
 #include <boost/test/test_case_template.hpp>
 
 // interval instance types
@@ -41,5 +41,16 @@ using namespace boost::itl;
 
 BOOST_AUTO_TEST_CASE(reverse_iter)
 {
+    itl::list<int> list_a, list_b;
+    list_a.push_back(1);
+    list_a.push_back(2);
+    cout << list_a << endl;
+    //std::copy_backward(list_a.begin(), list_a.end(), std::inserter(list_b, list_b.end()));
+    fill_n(std::inserter(list_b, list_b.end()) , 2, -1);
+    //list_b.push_back(-1);
+    //list_b.push_back(-1);
+    itl::list<int>::iterator ins = list_b.end();
+    std::copy_backward(list_a.begin(), list_a.end(), ins);
+    cout << list_b << endl;
 }
 

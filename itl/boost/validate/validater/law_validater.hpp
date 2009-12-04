@@ -11,7 +11,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <iostream>
 #include <stdio.h>
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/itl/ptime.hpp>
 
 #include <boost/validate/loki_xt/Tuple.h>
 #include <boost/itl/set.hpp>

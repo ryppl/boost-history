@@ -95,8 +95,8 @@ namespace boost{namespace itl
         {
             int rootChoice         = _rootChoice.some();
             int domainChoice       = _domainChoice.some();
-            int codomainChoice     = _codomainChoice.some();
-            int neutronizerChoice  = _neutronizerChoice.some();
+            //int codomainChoice     = _codomainChoice.some();
+            //int neutronizerChoice  = _neutronizerChoice.some();
 
             switch(rootChoice)
             {

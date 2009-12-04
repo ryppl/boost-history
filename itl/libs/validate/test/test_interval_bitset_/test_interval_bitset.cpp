@@ -10,7 +10,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_TEST_MODULE validate::itl_set_copy_conformity unit test
 #include <string>
 #include <iostream>
-#include <boost/test/unit_test.hpp>
+#include "../unit_test_unwarned.hpp"
 #include <boost/validate/driver/interval_bitset_driver.hpp>
 
 using namespace std;

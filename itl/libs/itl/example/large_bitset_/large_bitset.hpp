@@ -8,6 +8,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 +-----------------------------------------------------------------------------*/
 #ifndef BOOST_LIBS_ITL_EXAMPLE_LARGE_BITSET__LARGE_BITSET_HPP_JOFA_091019
 #define BOOST_LIBS_ITL_EXAMPLE_LARGE_BITSET__LARGE_BITSET_HPP_JOFA_091019
+
 //[large_bitset_includes
 #include <iostream>                   // to organize output
 #include <boost/operators.hpp>        // to define operators with minimal effort
@@ -24,7 +25,7 @@ typedef unsigned char      nat8; // nati i: number bits
 typedef unsigned short     nat16;
 typedef unsigned long      nat32; 
 typedef unsigned long long nat64; 
-typedef unsigned int       nat; 
+typedef unsigned long      nat; 
 
 typedef bits<nat8>  bits8;
 typedef bits<nat16> bits16;

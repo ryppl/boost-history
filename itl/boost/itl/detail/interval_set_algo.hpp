@@ -148,6 +148,11 @@ bool contains(const LeftT& super, const RightT& sub)
     return result == inclusion::superset || result == inclusion::equal;
 }
 
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4127) // conditional expression is constant
+#endif                        
+
 template<class IntervalContainerT>
 bool is_joinable(const IntervalContainerT& container, 
                  typename IntervalContainerT::const_iterator first, 
@@ -178,6 +183,11 @@ bool is_joinable(const IntervalContainerT& container,
 
     return true;
 }
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
+
 
 template<class IntervalContainerT>
 bool is_dense(const IntervalContainerT& container, 

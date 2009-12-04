@@ -14,6 +14,11 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/set_algo.hpp>
 
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4127) // conditional expression is constant
+#endif                        
+
 namespace boost{namespace itl
 {
 namespace Map 
@@ -189,6 +194,10 @@ bool lexicographical_protonic_equal(const MapType& left, const MapType& right)
 
 } // namespace Map
 }} // namespace boost itl
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 
 #endif
 

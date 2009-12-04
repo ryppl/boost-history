@@ -11,8 +11,19 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <stdio.h>
 #include <string>
 #include <sstream>
+#include <boost/detail/workaround.hpp>
+
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4244) // 'argument' : conversion from 'int' to 'unsigned short', possible loss of data
+#endif
 
 #include <boost/date_time/gregorian/gregorian.hpp>
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
+
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/difference.hpp>
 #include <boost/itl/type_traits/size.hpp>

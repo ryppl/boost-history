@@ -8,7 +8,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #define BOOST_TEST_MODULE itl::interval unit test
 #include <string>
 #include <boost/mpl/list.hpp>
-#include <boost/test/unit_test.hpp>
+#include "../unit_test_unwarned.hpp"
 
 // interval instance types
 #include "../test_type_lists.hpp"

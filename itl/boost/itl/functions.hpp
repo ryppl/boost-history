@@ -376,6 +376,12 @@ ObjectT operator & (typename ObjectT::overloadable_type object, const ObjectT& o
 //------------------------------------------------------------------------------
 //- intersects
 //------------------------------------------------------------------------------
+
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4127) // conditional expression is constant
+#endif                        
+
 template<class LeftT, class RightT>
 typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
                           bool>::type
@@ -402,6 +408,11 @@ intersects(const LeftT& left, const RightT& right)
 
     return false; 
 }
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
+
 
 template<class LeftT, class RightT>
 typename boost::enable_if<is_cross_combinable<LeftT, RightT>, 

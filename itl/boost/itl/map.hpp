@@ -26,7 +26,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
+#ifdef BOOST_MSVC 
 #pragma warning(push)
 #pragma warning(disable:4127) // conditional expression is constant
 #endif                        
@@ -649,10 +649,10 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& map<DomainT,Codomai
 {
     clear();
     const_iterator it = src.begin();
-    while(it != src.end()) {
-        if(Predicate()(*it)) 
+    while(it != src.end())
+        if(pred(*it)) 
             add(*it++); 
-    }
+    
     return *this;
 }
 
@@ -1153,7 +1153,7 @@ struct type_to_string<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,
     }
 };
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+#ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 

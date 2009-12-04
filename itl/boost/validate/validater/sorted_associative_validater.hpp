@@ -28,16 +28,17 @@ public:
 
     enum Laws 
     { 
-        copy          ,
-        reverse_copy  ,
-        equal         ,
-        lexicographical_compare      ,
-        includes      ,
-        set_union     ,
-        set_difference,
-        set_intersection,
-        set_symmetric_difference,
-        Laws_size 
+          copy         
+        , copy_backward         
+        , reverse_copy 
+        , equal        
+        , lexicographical_compare
+        , includes      
+        , set_union     
+        , set_difference
+        , set_intersection
+        , set_symmetric_difference
+        , Laws_size 
     };
 
     sorted_associative_validater() {setProfile();}
@@ -51,6 +52,7 @@ public:
 
         int rest_shares = sum_of_shares, item_index = 0;
         _lawChoice[copy                    ] = share(Laws_size, item_index, rest_shares);
+        _lawChoice[copy_backward           ] = share(Laws_size, item_index, rest_shares);
         _lawChoice[reverse_copy            ] = share(Laws_size, item_index, rest_shares);
         _lawChoice[equal                   ] = share(Laws_size, item_index, rest_shares);
         _lawChoice[lexicographical_compare ] = share(Laws_size, item_index, rest_shares);
@@ -68,14 +70,15 @@ public:
     {
         switch(_lawChoice.some())
         {
-        case copy                    : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_copy          >, RandomGentor>;
-        case reverse_copy            : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_reverse_copy  >, RandomGentor>;
-        case equal                   : return new LawValidater<BinaryAtomicEquivalence<Type, bool,    std_equals         >, RandomGentor>;
-        case lexicographical_compare : return new LawValidater<BinaryAtomicEquivalence<Type, bool,    std_lexicographical_compare>, RandomGentor>;
-        case includes                : return new LawValidater<BinaryAtomicEquivalence<Type, bool,    std_includes      >, RandomGentor>;
-        case set_union               : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_union     >, RandomGentor>;
-        case set_difference          : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_difference>, RandomGentor>;
-        case set_intersection        : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_intersection >, RandomGentor>;
+        case copy                    : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_copy                     >, RandomGentor>;
+        case copy_backward           : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_copy_backward            >, RandomGentor>;
+        case reverse_copy            : return new LawValidater< UnaryAtomicEquivalence<Type, TargetT, std_reverse_copy             >, RandomGentor>;
+        case equal                   : return new LawValidater<BinaryAtomicEquivalence<Type, bool,    std_equals                   >, RandomGentor>;
+        case lexicographical_compare : return new LawValidater<BinaryAtomicEquivalence<Type, bool,    std_lexicographical_compare  >, RandomGentor>;
+        case includes                : return new LawValidater<BinaryAtomicEquivalence<Type, bool,    std_includes                 >, RandomGentor>;
+        case set_union               : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_union                >, RandomGentor>;
+        case set_difference          : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_difference           >, RandomGentor>;
+        case set_intersection        : return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_intersection         >, RandomGentor>;
         case set_symmetric_difference: return new LawValidater<BinaryAtomicEquivalence<Type, TargetT, std_set_symmetric_difference >, RandomGentor>;
         default: return NULL;
         }

@@ -97,16 +97,18 @@ struct std_reverse_copy_back
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_copy_backward
 {
+    typedef typename TargetT::value_type value_type;
+
     static void apply(const SourceT& source, TargetT& target)
     {
-        std::copy_backward(source.begin(), source.end(), 
-            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
+        std::copy_backward(source.begin(), source.end(), target.end());
     }
 
     static void apply_elemental(const SourceT& source, TargetT& target)
     {
-        std::copy_backward(source.elements_begin(), source.elements_end(), 
-            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
+        std::copy_backward(source.elements_begin(), source.elements_end(), target.end());
     }
 
     static std::string struct_abbreviation(){ return "cpyb_f"; }
@@ -115,16 +117,18 @@ struct std_copy_backward
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_copy_backward_back
 {
+    typedef typename TargetT::value_type value_type;
+
     static void apply(const SourceT& source, TargetT& target)
     {
-        std::copy_backward(source.rbegin(), source.rend(), 
-            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
+        std::copy_backward(source.rbegin(), source.rend(), target.end());
     }
 
     static void apply_elemental(const SourceT& source, TargetT& target)
     {
-        std::copy_backward(source.elements_rbegin(), source.elements_rend(), 
-            InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
+        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
+        std::copy_backward(source.elements_rbegin(), source.elements_rend(), target.end());
     }
 
     static std::string struct_abbreviation(){ return "cpyb_b"; }

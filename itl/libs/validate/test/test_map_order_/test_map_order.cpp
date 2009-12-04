@@ -10,7 +10,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_TEST_MODULE validate::itl_map_order unit test
 #include <string>
 #include <iostream>
-#include <boost/test/unit_test.hpp>
+#include "../unit_test_unwarned.hpp"
 #include <boost/validate/driver/map_order_driver.hpp>
 
 using namespace std;

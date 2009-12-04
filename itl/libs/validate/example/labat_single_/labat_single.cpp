@@ -115,11 +115,11 @@ void test_LawValidater()
     //    itl::std_reverse_copy_forward
     //> TestLawT;
 
-    typedef BinaryAtomicEquivalence
+    typedef UnaryAtomicEquivalence
     <
         itl::interval_set<int>,
-        bool,
-        itl::std_equals
+        itl::list<int>,
+        itl::std_copy_backward_back
     > TestLawT;
 
 

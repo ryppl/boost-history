@@ -10,6 +10,10 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 
     \include large_bitset_/large_bitset.cpp
 */
+#if defined(_MSC_VER)
+#pragma warning(disable:4244) // Msvc warns on some operations that are needed
+#pragma warning(disable:4245) // in this example - we're working on bit level.
+#endif                        // So we intentionally disable them.
 
 //[large_bitset_cpp_includes
 #include <limits>

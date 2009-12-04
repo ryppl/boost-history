@@ -7,14 +7,20 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#pragma once
+#ifndef BOOST_ITL_VALIDATE_DRIVER_ITL_DRIVER_HPP_JOFA_090303
+#define BOOST_ITL_VALIDATE_DRIVER_ITL_DRIVER_HPP_JOFA_090303
 
 #include <iostream>
 #include <stdio.h>
 #include <time.h>
-#include <boost/config/warning_disable.hpp>
 #include <boost/validate/validater/algebra_validater.hpp>
 #include <boost/validate/utility.hpp>
+
+
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4996) // 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+#endif                        
 
 namespace boost{namespace itl
 {
@@ -290,4 +296,11 @@ namespace boost{namespace itl
 
 
 }} // namespace itl boost
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
+
+#endif // BOOST_ITL_VALIDATE_DRIVER_ITL_DRIVER_HPP_JOFA_090303
+
 

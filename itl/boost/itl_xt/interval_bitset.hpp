@@ -213,7 +213,7 @@ public:
 private:                                       
     typedef typename interval_bitmap_type::segment_type seg_type;
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
+#ifdef BOOST_MSVC 
 #pragma warning(push)
 #pragma warning(disable:4245) //'initializing' : conversion from 'int' to 'const unsigned char', signed/unsigned mismatch
 #endif                        
@@ -227,7 +227,7 @@ private:
     BOOST_STATIC_CONSTANT( word_type, all       = ~static_cast<word_type>(0));
     BOOST_STATIC_CONSTANT( word_type, top       = w1 << (digits-w1)         );
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+#ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 
