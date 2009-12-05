@@ -8,11 +8,14 @@
 #define BOOST_FIBERS_STRATEGY_H
 
 #include <cstddef>
+#include <list>
+#include <map>
 
 #include <boost/function.hpp>
 #include <boost/thread/tss.hpp>
 
-#include <boost/fiber/detail/fiber_state.hpp>
+#include <boost/fiber/detail/interrupt_flags.hpp>
+#include <boost/fiber/object/id.hpp>
 #include <boost/fiber/fiber.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -47,6 +50,12 @@ class restore_interruption;
 
 namespace fibers {
 
+class auto_reset_event;
+class condition;
+class count_down_event;
+class manual_reset_event;
+class mutex;
+
 class BOOST_FIBER_DECL strategy
 {
 private:
@@ -65,36 +74,52 @@ private:
 	friend void this_fiber::at_fiber_exit( void (*)() );
 	friend class this_fiber::disable_interruption;
 	friend class this_fiber::restore_interruption;
+	friend class auto_reset_event;
+	friend class condition;
+	friend class count_down_event;
+	friend class manual_reset_event;
+	friend class mutex;
 
 	typedef function< void() >				callable_t;
 
-	static bool runs_as_fiber();
+	static bool runs_as_fiber_();
 
-	static fiber::id get_id();
+	static fiber::id get_id_();
 
-	static void interruption_point();
+	static void interruption_point_();
 
-	static bool interruption_requested();
+	static bool interruption_requested_();
 
-	static detail::fiber_interrupt_t & interrupt_flags();
+	static detail::interrupt_t & interrupt_flags_();
 
-	static bool interruption_enabled();
+	static bool interruption_enabled_();
 
-	static int priority();
+	static int priority_();
 
-	static void priority( int);
+	static void priority_( int);
 
-	static void at_fiber_exit( callable_t);
+	static void at_fiber_exit_( callable_t);
 
-	static void yield();
+	static void yield_();
 
-	static void cancel();
+	static void cancel_();
+
+	static void register_object_( object::id const&);
+
+	static void unregister_object_( object::id const&);
+
+	static void wait_for_object_( object::id const&);
+
+	static void object_notify_one_( object::id const&);
+
+	static void object_notify_all_( object::id const&);
 
 protected:
-	typedef thread_specific_ptr< fiber >	active_fiber_t;
+	typedef thread_specific_ptr< fiber >			fiber_t;
 
-	static active_fiber_t	active_fiber;
-	fiber					master_fiber;
+	static fiber_t	active_fiber;
+
+	fiber			master_fiber;
 
 	void attach( fiber &);
 
@@ -114,7 +139,9 @@ protected:
 
 	bool in_state_running( fiber const&);
 
-	bool in_state_wait_for_join( fiber const&);
+	bool in_state_wait_for_fiber( fiber const&);
+
+	bool in_state_wait_for_object( fiber const&);
 
 	bool in_state_terminated( fiber const&);
 
@@ -122,7 +149,9 @@ protected:
 
 	void set_state_running( fiber &);
 
-	void set_state_wait_for_join( fiber &);
+	void set_state_wait_for_fiber( fiber &);
+
+	void set_state_wait_for_object( fiber &);
 
 	void set_state_terminated( fiber &);
 
@@ -132,16 +161,26 @@ public:
 	virtual ~strategy();
 
 	virtual void add( fiber) = 0;
-	
-	virtual void yield( fiber::id const&) = 0;
-	
-	virtual void cancel( fiber::id const&) = 0;
 
 	virtual void join( fiber::id const&) = 0;
 
 	virtual void interrupt( fiber::id const&) = 0;
 
 	virtual void reschedule( fiber::id const&) = 0;
+	
+	virtual void cancel( fiber::id const&) = 0;
+	
+	virtual void yield() = 0;
+
+	virtual void register_object( object::id const&) = 0;
+
+	virtual void unregister_object( object::id const&) = 0;
+
+	virtual void wait_for_object( object::id const&) = 0;
+
+	virtual void object_notify_one( object::id const&) = 0;
+
+	virtual void object_notify_all( object::id const&) = 0;
 
 	virtual bool run() = 0;
 

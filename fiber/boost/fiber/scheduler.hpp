@@ -15,7 +15,6 @@
 #include <boost/utility.hpp>
 
 #include <boost/fiber/detail/config.hpp>
-#include <boost/fiber/detail/fiber_state.hpp>
 #include <boost/fiber/fiber.hpp>
 #include <boost/fiber/round_robin.hpp>
 #include <boost/fiber/strategy.hpp>

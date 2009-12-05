@@ -181,13 +181,13 @@ void test_case_3()
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value1);
 	BOOST_CHECK_EQUAL( 0, value2);
-
+	
 	for (;;)
 	{
 		while ( sched.run() );
 		if ( sched.empty() ) break;
 	}
-
+	
 	BOOST_CHECK( ! sched.run() );
 	BOOST_CHECK( sched.empty() );
 	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );

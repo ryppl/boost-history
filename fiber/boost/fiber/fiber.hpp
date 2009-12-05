@@ -18,7 +18,7 @@
 #include <boost/utility.hpp>
 
 #include <boost/fiber/detail/config.hpp>
-#include <boost/fiber/detail/fiber_info.hpp>
+#include <boost/fiber/detail/info.hpp>
 #include <boost/fiber/detail/move.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -45,43 +45,43 @@ private:
 	static void convert_thread_to_fiber();
 	static void convert_fiber_to_thread();
 
-	detail::fiber_info_base::ptr_t	info_base_;
+	detail::info_base::ptr_t	info_base_;
 
-	explicit fiber( detail::fiber_info_base::ptr_t);
+	explicit fiber( detail::info_base::ptr_t);
 
 	void init_();
 
-	detail::fiber_info_base::ptr_t	info_() const;
+	detail::info_base::ptr_t info_() const;
 
 	void switch_to_( fiber &);
 
 #ifdef BOOST_HAS_RVALUE_REFS
 	template< typename Fn >
-	static detail::fiber_info_base::ptr_t make_info_(
+	static detail::info_base::ptr_t make_info_(
 		std::size_t stack_size, Fn && fn)
 	{
-		return detail::fiber_info_base::ptr_t(
-			new detail::fiber_info< typename remove_reference< Fn >::type >(
+		return detail::info_base::ptr_t(
+			new detail::info< typename remove_reference< Fn >::type >(
 				static_cast< Fn && >( fn), stack_size) );
 	}
 
-	static detail::fiber_info_base::ptr_t make_info_(
+	static detail::info_base::ptr_t make_info_(
 		std::size_t stack_size, void ( * fn)() );
 #else
 	template< typename Fn >
-	static detail::fiber_info_base::ptr_t make_info_(
+	static detail::info_base::ptr_t make_info_(
 		std::size_t stack_size, Fn fn)
 	{
-		return detail::fiber_info_base::ptr_t(
-			new detail::fiber_info< Fn >( fn, stack_size) );
+		return detail::info_base::ptr_t(
+			new detail::info< Fn >( fn, stack_size) );
 	}
 
 	template< typename Fn >
-	static detail::fiber_info_base::ptr_t make_info_(
+	static detail::info_base::ptr_t make_info_(
 		std::size_t stack_size, boost::detail::fiber_move_t< Fn > fn)
 	{
-		return detail::fiber_info_base::ptr_t(
-			new detail::fiber_info< Fn >( fn, stack_size) );
+		return detail::info_base::ptr_t(
+			new detail::info< Fn >( fn, stack_size) );
 	}
 #endif
 
@@ -178,7 +178,7 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_FIBER_CTOR, ~)
 
 #undef BOOST_FIBER_FIBER_CTOR
 
-	typedef detail::fiber_info_base::ptr_t::unspecified_bool_type	unspecified_bool_type;
+	typedef detail::info_base::ptr_t::unspecified_bool_type	unspecified_bool_type;
 
 	operator unspecified_bool_type() const;
 
@@ -211,9 +211,9 @@ class fiber::id
 private:
 	friend class fiber;
 
-	detail::fiber_info_base::ptr_t	info_;
+	detail::info_base::ptr_t	info_;
 
-	explicit id( detail::fiber_info_base::ptr_t info) :
+	explicit id( detail::info_base::ptr_t info) :
 		info_( info)
 	{}
 

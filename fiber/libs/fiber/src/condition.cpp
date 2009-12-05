@@ -11,27 +11,11 @@
 
 #include <boost/fiber/detail/atomic.hpp>
 #include <boost/fiber/mutex.hpp>
+#include <boost/fiber/strategy.hpp>
 #include <boost/fiber/utility.hpp>
 
 namespace boost {
 namespace fibers {
-
-void
-condition::notify_( uint32_t cmd)
-{
-	enter_mtx_.lock();
-
-	if ( 0 == detail::atomic_load( & waiters_) )
-	{
-		enter_mtx_.unlock();
-		return;
-	}
-
-	uint32_t expected = static_cast< uint32_t >( SLEEPING);
-	while ( ! detail::atomic_compare_exchange_strong(
-				& cmd_, & expected, cmd) )
-		this_fiber::yield();	
-}
 
 void
 condition::wait_( mutex & mtx)
@@ -47,7 +31,7 @@ condition::wait_( mutex & mtx)
 	for (;;)
 	{
 		while ( static_cast< uint32_t >( SLEEPING) == detail::atomic_load( & cmd_) )
-			this_fiber::yield();	
+			strategy::wait_for_object_( id_);
 
 		mutex::scoped_lock lk( check_mtx_);
 		BOOST_ASSERT( lk);
@@ -88,18 +72,51 @@ condition::condition() :
 	cmd_( static_cast< uint32_t >( SLEEPING) ),
 	waiters_( 0),
 	enter_mtx_(),
-	check_mtx_()
-{}
+	check_mtx_(),
+	id_( * this)
+{ strategy::register_object_( id_); }
 
 condition::~condition()
-{}
+{ strategy::unregister_object_( id_); }
 
 void
 condition::notify_one()
-{ notify_( static_cast< uint32_t >( NOTIFY_ONE) ); }
+{
+	enter_mtx_.lock();
+
+	if ( 0 == detail::atomic_load( & waiters_) )
+	{
+		enter_mtx_.unlock();
+		return;
+	}
+
+	uint32_t cmd = static_cast< uint32_t >( NOTIFY_ONE);
+	uint32_t expected = static_cast< uint32_t >( SLEEPING);
+	while ( ! detail::atomic_compare_exchange_strong(
+				& cmd_, & expected, cmd) )
+		this_fiber::yield();
+	
+	strategy::object_notify_one_( id_);
+}
 
 void
 condition::notify_all()
-{ notify_( static_cast< uint32_t >( NOTIFY_ALL) ); }
+{
+	enter_mtx_.lock();
+
+	if ( 0 == detail::atomic_load( & waiters_) )
+	{
+		enter_mtx_.unlock();
+		return;
+	}
+
+	uint32_t cmd = static_cast< uint32_t >( NOTIFY_ALL);
+	uint32_t expected = static_cast< uint32_t >( SLEEPING);
+	while ( ! detail::atomic_compare_exchange_strong(
+				& cmd_, & expected, cmd) )
+		this_fiber::yield();
+
+	strategy::object_notify_all_( id_);
+}
 
 }}

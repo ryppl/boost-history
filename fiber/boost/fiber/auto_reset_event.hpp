@@ -10,6 +10,8 @@
 #include <boost/cstdint.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/fiber/object/id.hpp>
+
 namespace boost {
 namespace fibers {
 
@@ -23,9 +25,12 @@ private:
 	};
 
 	volatile uint32_t	state_;
+	object::id			id_;
 
 public:
 	explicit auto_reset_event( bool = false);
+
+	~auto_reset_event();
 
 	void set();
 

@@ -1,22 +1,25 @@
 #include <boost/fiber/strategy.hpp>
 
+#include <utility>
+
 #include <boost/assert.hpp>
 
-#include <boost/fiber/detail/fiber_info.hpp>
-#include <boost/fiber/detail/fiber_info_base.hpp>
+#include <boost/fiber/detail/info.hpp>
+#include <boost/fiber/detail/info_base.hpp>
+#include <boost/fiber/detail/state_flags.hpp>
 #include <boost/fiber/exceptions.hpp>
 
 namespace boost {
 namespace fibers {
 
-strategy::active_fiber_t strategy::active_fiber;
+strategy::fiber_t strategy::active_fiber;
 
 bool
-strategy::runs_as_fiber()
+strategy::runs_as_fiber_()
 { return active_fiber.get() != 0; }
 
 fiber::id
-strategy::get_id()
+strategy::get_id_()
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
@@ -24,24 +27,24 @@ strategy::get_id()
 }
 
 void
-strategy::interruption_point()
+strategy::interruption_point_()
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
-	if ( active->info_()->interrupt == detail::INTERRUPTION_ENABLED)
+	if ( detail::INTERRUPTION_ENABLED == active->info_()->interrupt)
 		throw fiber_interrupted();
 }
 
 bool
-strategy::interruption_requested()
+strategy::interruption_requested_()
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
 	return active->interruption_requested();
 }
 
-detail::fiber_interrupt_t &
-strategy::interrupt_flags()
+detail::interrupt_t &
+strategy::interrupt_flags_()
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
@@ -49,7 +52,7 @@ strategy::interrupt_flags()
 }
 
 bool
-strategy::interruption_enabled()
+strategy::interruption_enabled_()
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
@@ -57,7 +60,7 @@ strategy::interruption_enabled()
 }
 
 int
-strategy::priority()
+strategy::priority_()
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
@@ -65,7 +68,7 @@ strategy::priority()
 }
 
 void
-strategy::priority( int prio)
+strategy::priority_( int prio)
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
@@ -73,7 +76,7 @@ strategy::priority( int prio)
 }
 
 void
-strategy::at_fiber_exit( callable_t ca)
+strategy::at_fiber_exit_( callable_t ca)
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
@@ -81,21 +84,66 @@ strategy::at_fiber_exit( callable_t ca)
 }
 
 void
-strategy::yield()
+strategy::yield_()
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
 	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
-	active->info_()->st->yield( active->get_id() );
+	active->info_()->st->yield();
 }
 
 void
-strategy::cancel()
+strategy::cancel_()
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");
 	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
-	active->info_()->st->cancel( active->get_id() );
+	active->info_()->st->cancel( active_fiber->get_id() );
+}
+
+void
+strategy::register_object_( object::id const& oid)
+{
+	fiber * active( active_fiber.get() );
+	if ( ! active) throw fiber_error("not a fiber");
+	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
+	active->info_()->st->register_object( oid);
+}
+
+void
+strategy::unregister_object_( object::id const& oid)
+{
+	fiber * active( active_fiber.get() );
+	if ( ! active) throw fiber_error("not a fiber");
+	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
+	active->info_()->st->unregister_object( oid);
+}
+
+void
+strategy::wait_for_object_( object::id const& oid)
+{
+	fiber * active( active_fiber.get() );
+	if ( ! active) throw fiber_error("not a fiber");
+	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
+	active->info_()->st->wait_for_object( oid);
+}
+
+void
+strategy::object_notify_one_( object::id const& oid)
+{
+	fiber * active( active_fiber.get() );
+	if ( ! active) throw fiber_error("not a fiber");
+	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
+	active->info_()->st->object_notify_one( oid);
+}
+
+void
+strategy::object_notify_all_( object::id const& oid)
+{
+	fiber * active( active_fiber.get() );
+	if ( ! active) throw fiber_error("not a fiber");
+	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
+	active->info_()->st->object_notify_all( oid);
 }
 
 strategy::strategy() :
@@ -103,8 +151,9 @@ strategy::strategy() :
 {
 	fiber::convert_thread_to_fiber();
 	master_fiber = fiber( 
-		detail::fiber_info_base::ptr_t(
-			new detail::fiber_info_default() ) );
+			detail::info_base::ptr_t(
+				new detail::info_default() ) );
+	attach( master_fiber);
 }
 
 strategy::~strategy()
@@ -138,7 +187,7 @@ strategy::interruption_enabled( fiber const& f)
 
 bool
 strategy::is_master( fiber const& f)
-{ return master_fiber == f; }
+{ return f == master_fiber; }
 
 bool
 strategy::in_state_not_started( fiber const& f)
@@ -153,8 +202,12 @@ strategy::in_state_running( fiber const& f)
 { return detail::STATE_RUNNING == f.info_()->state; }
 
 bool
-strategy::in_state_wait_for_join( fiber const& f)
-{ return detail::STATE_WAIT_FOR_JOIN == f.info_()->state; }
+strategy::in_state_wait_for_fiber( fiber const& f)
+{ return detail::STATE_WAIT_FOR_FIBER == f.info_()->state; }
+
+bool
+strategy::in_state_wait_for_object( fiber const& f)
+{ return detail::STATE_WAIT_FOR_OBJECT == f.info_()->state; }
 
 bool
 strategy::in_state_terminated( fiber const& f)
@@ -169,8 +222,12 @@ strategy::set_state_running( fiber & f)
 { f.info_()->state = detail::STATE_RUNNING; }
 
 void
-strategy::set_state_wait_for_join( fiber & f)
-{ f.info_()->state = detail::STATE_WAIT_FOR_JOIN; }
+strategy::set_state_wait_for_fiber( fiber & f)
+{ f.info_()->state = detail::STATE_WAIT_FOR_FIBER; }
+
+void
+strategy::set_state_wait_for_object( fiber & f)
+{ f.info_()->state = detail::STATE_WAIT_FOR_OBJECT; }
 
 void
 strategy::set_state_terminated( fiber & f)

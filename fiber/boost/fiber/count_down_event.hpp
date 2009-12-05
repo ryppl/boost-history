@@ -10,6 +10,7 @@
 #include <boost/cstdint.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/fiber/object/id.hpp>
 #include <boost/fiber/mutex.hpp>
 
 namespace boost {
@@ -20,9 +21,12 @@ class count_down_event : private noncopyable
 private:
 	uint32_t			initial_;
 	volatile uint32_t	current_;
+	object::id			id_;
 
 public:
 	explicit count_down_event( uint32_t);
+
+	~count_down_event();
 
 	uint32_t initial() const;
 

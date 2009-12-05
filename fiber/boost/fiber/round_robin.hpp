@@ -17,7 +17,7 @@
 #include <boost/utility.hpp>
 
 #include <boost/fiber/detail/config.hpp>
-#include <boost/fiber/detail/fiber_state.hpp>
+#include <boost/fiber/object/id.hpp>
 #include <boost/fiber/fiber.hpp>
 #include <boost/fiber/strategy.hpp>
 
@@ -39,24 +39,30 @@ private:
 	{
 		fiber					f;
 		std::list< fiber::id >	joining_fibers;
-		optional< fiber::id >	waiting_on;
+		optional< fiber::id >	waiting_on_fiber;
+		optional< object::id >	waiting_on_object;
 
 		schedulable() :
-			f(), joining_fibers(), waiting_on()
+			f(), joining_fibers(),
+			waiting_on_fiber(), waiting_on_object()
 		{}
 
 		schedulable( fiber f_) :
-			f( f_), joining_fibers(), waiting_on()
+			f( f_), joining_fibers(),
+			waiting_on_fiber(), waiting_on_object()
 		{}
 	};
 
-	typedef std::map< fiber::id, schedulable >	container;
-	typedef std::list< fiber::id >				runnable_queue;
-	typedef std::queue< fiber::id >				terminated_queue;
+	typedef std::map< fiber::id, schedulable >		fiber_map;
+	typedef std::list< fiber::id >					fiber_id_list;
+	typedef std::map< object::id, fiber_id_list >	object_map;
+	typedef std::list< fiber::id >					runnable_queue;
+	typedef std::queue< fiber::id >					terminated_queue;
 
-	container			fibers_;
+	fiber_map			fibers_;
 	runnable_queue		runnable_fibers_;
 	terminated_queue	terminated_fibers_;
+	object_map			objects_;
 
 public:
 	round_robin();
@@ -65,15 +71,25 @@ public:
 
 	void add( fiber);
 
-	void yield( fiber::id const&);
-
-	void cancel( fiber::id const&);
-
 	void join( fiber::id const&);
 
 	void interrupt( fiber::id const&);
 
 	void reschedule( fiber::id const&);
+
+	void cancel( fiber::id const&);
+
+	void yield();
+
+	void register_object( object::id const&);
+
+	void unregister_object( object::id const&);
+
+	void wait_for_object( object::id const&);
+
+	void object_notify_one( object::id const&);
+
+	void object_notify_all( object::id const&);
 
 	bool run();
 

@@ -92,7 +92,7 @@ void test_case_2()
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value);
 
-	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( ! sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value);
 
@@ -131,6 +131,7 @@ void test_case_3()
 void test_case_4()
 {
 	boost::fibers::manual_reset_event ev;
+	boost::fibers::scheduler<> sched;
 
 	BOOST_CHECK_EQUAL( false, ev.try_wait() );
 

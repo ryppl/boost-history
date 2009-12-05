@@ -31,6 +31,7 @@ void test_case_1()
 {
 	boost::uint32_t n = 3;
 	boost::fibers::count_down_event ev( n);
+	boost::fibers::scheduler<> sched;
 
 	BOOST_CHECK_EQUAL( ev.initial(), n);
 	BOOST_CHECK_EQUAL( ev.current(), n);
@@ -66,12 +67,14 @@ void test_case_2()
 		wait_fn,
 		boost::ref( ev) );
 
-	for ( boost::uint32_t i = 0; i < n - 1; ++i)
-	{
-		ev.set();
-		BOOST_CHECK( sched.run() );
-		BOOST_CHECK( value != 1);
-	}
+	ev.set();
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( value != 1);
+
+	ev.set();
+	BOOST_CHECK( ! sched.run() );
+	BOOST_CHECK( value != 1);
+
 	ev.set();
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( ev.initial(), n);

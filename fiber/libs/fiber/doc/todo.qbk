@@ -9,13 +9,13 @@
 
 [section:todo Todo]
 
-* replace spin-waiting in condition- and event-variables
+* replace spin-waiting in mutex, condition- and event-variables
 
 * improve implementation of atomic-ops
 
 * replace system calls related to fiber switching (like swapcontext()) by assembler
 
-* explicit migraton of fiber between schedulers (== between threads)
+* explicit migration of fiber between schedulers (== between threads)
 
 * improve scheduling algorithm (take priorities into acount)
 

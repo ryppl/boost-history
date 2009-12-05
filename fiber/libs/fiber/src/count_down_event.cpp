@@ -8,15 +8,19 @@
 
 #include <boost/fiber/detail/atomic.hpp>
 #include <boost/fiber/mutex.hpp>
-#include <boost/fiber/utility.hpp>
+#include <boost/fiber/strategy.hpp>
 
 namespace boost {
 namespace fibers {
 
 count_down_event::count_down_event( uint32_t initial) :
 	initial_( initial),
-	current_( initial_)
-{}
+	current_( initial_),
+	id_( * this)
+{ strategy::register_object_( id_); }
+
+count_down_event::~count_down_event()
+{ strategy::unregister_object_( id_); }
 
 uint32_t
 count_down_event::initial() const
@@ -39,19 +43,17 @@ count_down_event::set()
 			return;
 		uint32_t expected = current_;
 		if ( detail::atomic_compare_exchange_strong( & current_, & expected, expected - 1) )
-			return;
+			break;
 	}
+	if ( 0 == detail::atomic_load( & current_) )
+		strategy::object_notify_all_( id_);
 }
 
 void
 count_down_event::wait()
 {
 	while ( 0 != detail::atomic_load( & current_) )
-	{
-		this_fiber::interruption_point();
-		this_fiber::yield();	
-		this_fiber::interruption_point();
-	}
+		strategy::wait_for_object_( id_);
 }
 
 }}

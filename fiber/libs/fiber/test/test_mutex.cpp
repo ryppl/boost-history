@@ -30,7 +30,6 @@ struct test_lock
     void operator()()
     {
         mutex_type mutex;
-        boost::fibers::condition condition;
 
         // Test the lock's constructors.
         {
@@ -53,7 +52,7 @@ void do_test_mutex()
     test_lock< boost::fibers::mutex >()();
 }
 
-void test_case1()
+void test_1()
 {
 	boost::fibers::scheduler<> sched;
     sched.make_fiber( & do_test_mutex);
@@ -73,11 +72,12 @@ void test_fn1( boost::fibers::mutex & mtx)
 
 void test_fn2( boost::fibers::mutex & mtx)
 {
+	++value2;
 	boost::fibers::mutex::scoped_lock lk( mtx);
 	++value2;
 }
 
-void test_case2()
+void test_2()
 {
 	boost::fibers::mutex mtx;
 	boost::fibers::scheduler<> sched;
@@ -95,29 +95,46 @@ void test_case2()
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value1);
-	BOOST_CHECK_EQUAL( 0, value2);
+	BOOST_CHECK_EQUAL( 1, value2);
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK( sched.run() );
-	BOOST_CHECK( sched.run() );
-	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
-	BOOST_CHECK_EQUAL( 1, value1);
-	BOOST_CHECK_EQUAL( 0, value2);
-
-	BOOST_CHECK( sched.run() );
-	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
-	BOOST_CHECK_EQUAL( 1, value1);
-	BOOST_CHECK_EQUAL( 0, value2);
-
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value1);
-	BOOST_CHECK_EQUAL( 0, value2);
+	BOOST_CHECK_EQUAL( 1, value2);
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value1);
-	BOOST_CHECK_EQUAL( 1, value2);
+	BOOST_CHECK_EQUAL( 2, value2);
+
+	BOOST_CHECK( ! sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value1);
+	BOOST_CHECK_EQUAL( 2, value2);
+}
+
+void test_case1()
+{
+	boost::fibers::scheduler<> sched;
+    sched.make_fiber( & test_1);
+	for (;;)
+	{
+		while ( sched.run() );
+		if ( sched.empty() ) break;
+	}
+}
+
+void test_case2()
+{
+	boost::fibers::scheduler<> sched;
+    sched.make_fiber( & test_2);
+	for (;;)
+	{
+		while ( sched.run() );
+		if ( sched.empty() ) break;
+	}
 }
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])

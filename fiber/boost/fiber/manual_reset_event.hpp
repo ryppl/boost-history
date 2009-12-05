@@ -10,6 +10,7 @@
 #include <boost/cstdint.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/fiber/object/id.hpp>
 #include <boost/fiber/mutex.hpp>
 
 namespace boost {
@@ -27,9 +28,12 @@ private:
 	volatile uint32_t	state_;
 	volatile uint32_t	waiters_;
 	mutex				enter_mtx_;
+	object::id			id_;
 
 public:
 	explicit manual_reset_event( bool = false);
+
+	~manual_reset_event();
 
 	void set();
 

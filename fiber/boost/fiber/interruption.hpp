@@ -12,7 +12,7 @@
 #include <boost/utility.hpp>
 
 #include <boost/fiber/detail/config.hpp>
-#include <boost/fiber/detail/fiber_state.hpp>
+#include <boost/fiber/detail/interrupt_flags.hpp>
 #include <boost/fiber/strategy.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -31,10 +31,10 @@ private:
 
 public:
 	disable_interruption() :
-		set_( ( fibers::strategy::interrupt_flags() & fibers::detail::INTERRUPTION_BLOCKED) != 0)
+		set_( ( fibers::strategy::interrupt_flags_() & fibers::detail::INTERRUPTION_BLOCKED) != 0)
 	{
 		if ( ! set_)
-			fibers::strategy::interrupt_flags() |= fibers::detail::INTERRUPTION_BLOCKED;
+			fibers::strategy::interrupt_flags_() |= fibers::detail::INTERRUPTION_BLOCKED;
 	}
 
 	~disable_interruption()
@@ -42,7 +42,7 @@ public:
 		try
 		{
 			if ( ! set_)
-				fibers::strategy::interrupt_flags() &= ~fibers::detail::INTERRUPTION_BLOCKED;
+				fibers::strategy::interrupt_flags_() &= ~fibers::detail::INTERRUPTION_BLOCKED;
 		}
 		catch (...)
 		{}
@@ -59,7 +59,7 @@ public:
 		disabler_( disabler)
 	{
 		if ( ! disabler_.set_)
-			fibers::strategy::interrupt_flags() &= ~fibers::detail::INTERRUPTION_BLOCKED;
+			fibers::strategy::interrupt_flags_() &= ~fibers::detail::INTERRUPTION_BLOCKED;
 	}
 
 	~restore_interruption()
@@ -67,7 +67,7 @@ public:
 	   try
 	   {	   
 			if ( ! disabler_.set_)
-				fibers::strategy::interrupt_flags() |= fibers::detail::INTERRUPTION_BLOCKED;
+				fibers::strategy::interrupt_flags_() |= fibers::detail::INTERRUPTION_BLOCKED;
 		}
 		catch (...)
 		{}

@@ -13,6 +13,8 @@
 #include <boost/thread/locks.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/fiber/object/id.hpp>
+
 namespace boost {
 namespace fibers {
 
@@ -20,11 +22,14 @@ class mutex : private noncopyable
 {
 private:
 	volatile uint32_t	state_;
+	object::id			id_;
 
 public:
 	typedef unique_lock< mutex >			scoped_lock;
 
 	mutex();
+
+	~mutex();
 
 	void lock();
 

@@ -102,6 +102,7 @@ void test_case_2()
 void test_case_3()
 {
 	boost::fibers::auto_reset_event ev;
+	boost::fibers::scheduler<> sched;
 
 	BOOST_CHECK_EQUAL( false, ev.try_wait() );
 

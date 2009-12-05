@@ -4,15 +4,15 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBER_DETAIL_FIBER_INFO_BASE_H
-#define BOOST_FIBER_DETAIL_FIBER_INFO_BASE_H
+#ifndef BOOST_FIBER_DETAIL_INFO_BASE_H
+#define BOOST_FIBER_DETAIL_INFO_BASE_H
 
 #include <boost/fiber/detail/config.hpp>
 
 # if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__CYGWIN__)
-#include <boost/fiber/detail/fiber_info_base_windows.hpp>
+#include <boost/fiber/detail/info_base_windows.hpp>
 # elif defined(_POSIX_VERSION)
-#include <boost/fiber/detail/fiber_info_base_posix.hpp>
+#include <boost/fiber/detail/info_base_posix.hpp>
 # endif
 
-#endif // BOOST_FIBER_DETAIL_FIBER_INFO_BASE_H
+#endif // BOOST_FIBER_DETAIL_INFO_BASE_H

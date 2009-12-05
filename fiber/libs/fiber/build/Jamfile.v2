@@ -45,8 +45,8 @@ alias fiber_sources
 	condition.cpp
 	count_down_event.cpp
 	fiber.cpp
-	fiber_info_base_windows.cpp
 	fiber_windows.cpp
+	info_base_windows.cpp
 	manual_reset_event.cpp
 	mutex.cpp
 	round_robin.cpp
@@ -61,8 +61,8 @@ alias fiber_sources
 	condition.cpp
 	count_down_event.cpp
 	fiber.cpp
-	fiber_info_base_posix.cpp
 	fiber_posix.cpp
+	info_base_posix.cpp
 	manual_reset_event.cpp
 	mutex.cpp
 	round_robin.cpp

@@ -9,7 +9,7 @@
 #include <boost/assert.hpp>
 
 #include <boost/fiber/detail/atomic.hpp>
-#include <boost/fiber/utility.hpp>
+#include <boost/fiber/strategy.hpp>
 
 namespace boost {
 namespace fibers {
@@ -20,8 +20,12 @@ manual_reset_event::manual_reset_event( bool isset) :
 			static_cast< uint32_t >( SET) :
 			static_cast< uint32_t >( RESET) ),
 	waiters_( 0),
-	enter_mtx_()
-{}
+	enter_mtx_(),
+	id_( * this)
+{ strategy::register_object_( id_); }
+
+manual_reset_event::~manual_reset_event()
+{ strategy::unregister_object_( id_); }
 
 void
 manual_reset_event::set()
@@ -34,6 +38,8 @@ manual_reset_event::set()
 			static_cast< uint32_t >( SET) ) ||
 		! detail::atomic_load( & waiters_ ) )
 		enter_mtx_.unlock();
+	else
+		strategy::object_notify_all_( id_);
 }
 
 void
@@ -56,11 +62,7 @@ manual_reset_event::wait()
 	}
 
 	while ( static_cast< uint32_t >( RESET) == detail::atomic_load( & state_) )
-	{
-		this_fiber::interruption_point();
-		this_fiber::yield();	
-		this_fiber::interruption_point();
-	}
+		strategy::wait_for_object_( id_);
 
 	if ( 1 == detail::atomic_fetch_sub( & waiters_, 1) )
 		enter_mtx_.unlock();

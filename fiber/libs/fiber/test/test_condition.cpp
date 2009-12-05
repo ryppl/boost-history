@@ -57,11 +57,11 @@ void test_case_1()
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
 
-	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( ! sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
 
-	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( ! sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
 
@@ -73,11 +73,14 @@ void test_case_1()
 	BOOST_CHECK_EQUAL( 0, value);
 
 	BOOST_CHECK( sched.run() );
-	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
 
 	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value);
+
+	BOOST_CHECK( ! sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value);
 }
@@ -107,7 +110,7 @@ void test_case_2()
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
 
-	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( ! sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
 
@@ -120,20 +123,28 @@ void test_case_2()
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK( sched.run() );
-	BOOST_CHECK_EQUAL( std::size_t( 3), sched.size() );
-	BOOST_CHECK_EQUAL( 0, value);
+	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value);
 
-	BOOST_CHECK( sched.run() );
-	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
-	BOOST_CHECK_EQUAL( 0, value);
+	BOOST_CHECK( ! sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value);
+
+	sched.make_fiber(
+		notify_one_fn,
+		boost::ref( cond) );
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value);
 
 	BOOST_CHECK( sched.run() );
-	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
-	BOOST_CHECK_EQUAL( 1, value);
+	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
+	BOOST_CHECK_EQUAL( 2, value);
+
+	BOOST_CHECK( ! sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
+	BOOST_CHECK_EQUAL( 2, value);
 }
 
 void test_case_3()
@@ -161,7 +172,7 @@ void test_case_3()
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
 
-	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( ! sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
 
@@ -174,16 +185,16 @@ void test_case_3()
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK( sched.run() );
-	BOOST_CHECK_EQUAL( std::size_t( 3), sched.size() );
-	BOOST_CHECK_EQUAL( 0, value);
-
-	BOOST_CHECK( sched.run() );
-	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
-	BOOST_CHECK_EQUAL( 0, value);
-
-	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value);
+
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
+	BOOST_CHECK_EQUAL( 2, value);
+
+	BOOST_CHECK( ! sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
+	BOOST_CHECK_EQUAL( 2, value);
 
 	sched.make_fiber(
 		wait_fn,
@@ -194,11 +205,11 @@ void test_case_3()
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 2, value);
 
-	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( ! sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 2, value);
 
-	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( ! sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 2, value);
 
@@ -208,10 +219,10 @@ void test_case_3()
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK( sched.run() );
-	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
-	BOOST_CHECK_EQUAL( 2, value);
+	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
+	BOOST_CHECK_EQUAL( 3, value);
 
-	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( ! sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
 	BOOST_CHECK_EQUAL( 3, value);
 }

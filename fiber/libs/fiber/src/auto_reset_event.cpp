@@ -7,7 +7,7 @@
 #include "boost/fiber/auto_reset_event.hpp"
 
 #include <boost/fiber/detail/atomic.hpp>
-#include <boost/fiber/utility.hpp>
+#include <boost/fiber/strategy.hpp>
 
 namespace boost {
 namespace fibers {
@@ -16,12 +16,19 @@ auto_reset_event::auto_reset_event( bool isset) :
 	state_(
 		isset ?
 		static_cast< uint32_t >( SET) :
-		static_cast< uint32_t >( RESET) )
-{}
+		static_cast< uint32_t >( RESET) ),
+	id_( * this)
+{ strategy::register_object_( id_); }
+
+auto_reset_event::~auto_reset_event()
+{ strategy::unregister_object_( id_); }
 
 void
 auto_reset_event::set()
-{ detail::atomic_exchange( & state_, static_cast< uint32_t >( SET) ); }
+{
+	detail::atomic_exchange( & state_, static_cast< uint32_t >( SET) );
+	strategy::object_notify_one_( id_);
+}
 
 void
 auto_reset_event::wait()
@@ -31,9 +38,7 @@ auto_reset_event::wait()
 			& state_, & expected,
 			static_cast< uint32_t >( RESET) ) )
 	{
-		this_fiber::interruption_point();
-		this_fiber::yield();
-		this_fiber::interruption_point();
+		strategy::wait_for_object_( id_);
 		expected = static_cast< uint32_t >( SET);
 	}
 }

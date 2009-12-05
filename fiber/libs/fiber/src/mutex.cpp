@@ -7,14 +7,18 @@
 #include <boost/fiber/mutex.hpp>
 
 #include <boost/fiber/detail/atomic.hpp>
-#include <boost/fiber/utility.hpp>
+#include <boost/fiber/strategy.hpp>
 
 namespace boost {
 namespace fibers {
 
 mutex::mutex() :
-	state_( 0)
-{}
+	state_( 0),
+	id_( * this)
+{ strategy::register_object_( id_); }
+
+mutex::~mutex()
+{ strategy::unregister_object_( id_); }
 
 void
 mutex::lock()
@@ -25,7 +29,7 @@ mutex::lock()
 		if ( detail::atomic_compare_exchange_strong( & state_, & expected, 1) )
 			break;
 		else
-			this_fiber::yield();	
+			strategy::wait_for_object_( id_);
 	}
 }
 
@@ -39,8 +43,8 @@ mutex::try_lock()
 void
 mutex::unlock()
 {
-	uint32_t expected = 1;
-	detail::atomic_compare_exchange_strong( & state_, & expected, 0);
+	detail::atomic_exchange( & state_, 0);
+	strategy::object_notify_one_( id_);
 }
 
 }}

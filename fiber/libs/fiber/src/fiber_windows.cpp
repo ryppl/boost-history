@@ -40,8 +40,8 @@ namespace fibers {
 
 VOID CALLBACK trampoline( LPVOID vp)
 {
-	detail::fiber_info_base * self(
-			static_cast< detail::fiber_info_base * >( vp) );
+	detail::info_base * self(
+			static_cast< detail::info_base * >( vp) );
 	BOOST_ASSERT( self);
 	try
 	{ self->run(); }
@@ -49,7 +49,7 @@ VOID CALLBACK trampoline( LPVOID vp)
 	catch (...) {}
 	while ( ! self->at_exit.empty() )
 	{
-		detail::fiber_info_base::callable_t ca;
+		detail::info_base::callable_t ca;
 		self->at_exit.top().swap( ca);
 		self->at_exit.pop();
 		ca();

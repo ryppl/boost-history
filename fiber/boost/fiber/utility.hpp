@@ -20,51 +20,51 @@ namespace this_fiber {
 
 inline
 bool runs_as_fiber()
-{ return fibers::strategy::runs_as_fiber(); }
+{ return fibers::strategy::runs_as_fiber_(); }
 
 inline
 fiber::id get_id()
-{ return fibers::strategy::get_id(); }
+{ return fibers::strategy::get_id_(); }
 
 inline
 int priority()
-{ return fibers::strategy::priority(); }
+{ return fibers::strategy::priority_(); }
 
 inline
 void priority( int prio)
-{ fibers::strategy::priority( prio); }
+{ fibers::strategy::priority_( prio); }
 
 inline
 void interruption_point()
-{ fibers::strategy::interruption_point(); }
+{ fibers::strategy::interruption_point_(); }
 
 inline
 bool interruption_requested()
-{ return fibers::strategy::interruption_requested(); }
+{ return fibers::strategy::interruption_requested_(); }
 
 inline
 bool interruption_enabled()
-{ return fibers::strategy::interruption_enabled(); }
+{ return fibers::strategy::interruption_enabled_(); }
 
 inline
 void at_fiber_exit( function< void() > ca)
-{ fibers::strategy::at_fiber_exit( ca); }
+{ fibers::strategy::at_fiber_exit_( ca); }
 
 template< typename Callable >
 void at_fiber_exit( Callable ca)
-{ fibers::strategy::at_fiber_exit( boost::bind( boost::type< void >(), ca) ); }
+{ fibers::strategy::at_fiber_exit_( boost::bind( boost::type< void >(), ca) ); }
 
 inline
 void at_fiber_exit( void ( * ca)() )
-{ fibers::strategy::at_fiber_exit( boost::bind( boost::type< void >(), ca) ); }
+{ fibers::strategy::at_fiber_exit_( boost::bind( boost::type< void >(), ca) ); }
 
 inline
 void yield()
-{ fibers::strategy::yield(); }
+{ fibers::strategy::yield_(); }
 
 inline
 void cancel()
-{ fibers::strategy::cancel(); }
+{ fibers::strategy::cancel_(); }
 
 }}
 

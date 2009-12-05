@@ -12,6 +12,7 @@
 #include <boost/cstdint.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/fiber/object/id.hpp>
 #include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/mutex.hpp>
 
@@ -32,9 +33,9 @@ private:
 	volatile uint32_t	waiters_;
 	mutex				enter_mtx_;
 	mutex				check_mtx_;
+	object::id			id_;
 
 	void wait_( mutex &);
-	void notify_( uint32_t);
 
 public:
 	condition();

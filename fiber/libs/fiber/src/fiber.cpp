@@ -8,7 +8,8 @@
 
 #include <boost/assert.hpp>
 
-#include <boost/fiber/detail/fiber_state.hpp>
+#include <boost/fiber/detail/interrupt_flags.hpp>
+#include <boost/fiber/detail/state_flags.hpp>
 #include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/strategy.hpp>
 
@@ -18,11 +19,11 @@ namespace boost {
 namespace fibers {
 
 #ifdef BOOST_HAS_RVALUE_REFS
-detail::fiber_info_base::ptr_t
+detail::info_base::ptr_t
 fiber::make_info_( std::size_t stack_size, void ( * fn)() )
 {
-	return detail::fiber_info_base::ptr_t(
-		new detail::fiber_info< void( *)() >( fn, stack_size) );
+	return detail::info_base::ptr_t(
+		new detail::info< void( *)() >( fn, stack_size) );
 }
 #endif
 
@@ -30,7 +31,7 @@ fiber::fiber() :
 	info_base_()
 {}
 
-fiber::fiber( detail::fiber_info_base::ptr_t info_base) :
+fiber::fiber( detail::info_base::ptr_t info_base) :
 	info_base_( info_base)
 {}
 
@@ -75,7 +76,7 @@ fiber::move()
 }
 #endif
 
-detail::fiber_info_base::ptr_t
+detail::info_base::ptr_t
 fiber::info_() const
 { return info_base_; }
 

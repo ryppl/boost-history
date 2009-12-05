@@ -24,7 +24,7 @@ extern "C" {
 namespace boost {
 namespace fibers {
 
-void trampoline( detail::fiber_info_base * self)
+void trampoline( detail::info_base * self)
 {
 	BOOST_ASSERT( self);
 	try
@@ -33,7 +33,7 @@ void trampoline( detail::fiber_info_base * self)
 	catch (...) {}
 	while ( ! self->at_exit.empty() )
 	{
-		detail::fiber_info_base::callable_t ca;
+		detail::info_base::callable_t ca;
 		self->at_exit.top().swap( ca);
 		self->at_exit.pop();
 		ca();
@@ -44,7 +44,7 @@ void trampoline( detail::fiber_info_base * self)
 void
 fiber::init_()
 {
-	typedef void fn_type( detail::fiber_info_base *);
+	typedef void fn_type( detail::info_base *);
 	typedef void ( * st_fn)();
 	fn_type * fn_ptr( trampoline);
 
