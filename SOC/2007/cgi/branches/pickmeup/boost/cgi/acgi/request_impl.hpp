@@ -22,24 +22,48 @@ BOOST_CGI_NAMESPACE_BEGIN
  namespace acgi {
 
   class request_impl
-    : public detail::cgi_request_impl_base<connections::async_stdio>
   {
   public:
-    typedef ::BOOST_CGI_NAMESPACE::acgi::service protocol_service_type;
-    typedef protocol_service_type::protocol_type protocol_type;
-    typedef connections::async_stdio             connection_type;
+    typedef ::BOOST_CGI_NAMESPACE::common::map              map_type;
+    typedef ::BOOST_CGI_NAMESPACE::acgi::service            protocol_service_type;
+    typedef protocol_service_type::protocol_type            protocol_type;
+    typedef connections::async_stdio                        connection_type;
     typedef
       ::BOOST_CGI_NAMESPACE::common::basic_client<
         connection_type, common::tags::acgi
       >
     client_type;
+    typedef connection_type::pointer                        conn_ptr;
 
+    /// Constructor
     request_impl()
-      : detail::cgi_request_impl_base<connection_type>()
+      : stdin_parsed_(false)
+      , stdin_data_read_(false)
+      , stdin_bytes_left_(-1)
+      , http_status_(common::http::ok)
+      , request_status_(common::unloaded)
     {
     }
 
     protocol_service_type* service_;
+        
+    bool stdin_parsed()                      { return stdin_parsed_;   }
+    common::http::status_code& http_status() { return http_status_;    }
+    common::request_status& status()         { return request_status_; }
+
+    conn_ptr& connection()                   { return connection_;     }
+
+    bool stdin_parsed_;
+    bool stdin_data_read_;
+    std::size_t stdin_bytes_left_;
+    
+  private:
+
+    common::http::status_code http_status_;
+    common::request_status request_status_;
+
+    conn_ptr connection_;
+
   };
 
  } // namespace acgi

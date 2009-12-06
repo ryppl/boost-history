@@ -14,6 +14,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include "boost/cgi/common/is_async.hpp"
 #include "boost/cgi/common/tags.hpp"
+#include "boost/cgi/common/has_hidden_io_service.hpp"
 
 BOOST_CGI_NAMESPACE_BEGIN
 
@@ -115,9 +116,14 @@ BOOST_CGI_NAMESPACE_BEGIN
   class basic_io_object<
       Service,
       typename boost::enable_if<
-        boost::is_same<
-          typename Service::protocol_type, tags::acgi
-        >  
+        boost::mpl::or_<
+          boost::is_same<
+            typename Service::protocol_type, tags::cgi
+          >,
+          boost::is_same<
+            typename Service::protocol_type, tags::acgi
+          >
+        >
       >::type
     >
     : private boost::noncopyable
@@ -161,6 +167,8 @@ BOOST_CGI_NAMESPACE_BEGIN
     service_type& service;
     implementation_type implementation;
   };
+  
+  
   
  } // namespace detail
 BOOST_CGI_NAMESPACE_END

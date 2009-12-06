@@ -37,6 +37,7 @@
 #include "boost/cgi/detail/basic_io_object.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
+#include "boost/cgi/common/has_hidden_io_service.hpp"
 
 #ifndef BOOST_CGI_POST_MAX
     /// Restrict POST data to less than 7MB per request.
@@ -82,27 +83,18 @@ BOOST_CGI_NAMESPACE_BEGIN
     basic_request<
         RequestService, ProtocolService
       , Allocator
-    >                                                    self_type;
-    typedef ::BOOST_CGI_NAMESPACE::common::map           map_type;
-    typedef RequestService                               service_type;
-    typedef typename service_type::protocol_type         protocol_type;
-    typedef ProtocolService                              protocol_service_type;
-    typedef boost::shared_ptr<self_type>                 pointer;
-    typedef typename RequestService::implementation_type implementation_type;
-    typedef typename implementation_type::char_type      char_type;
-    typedef typename implementation_type::string_type    string_type;
-    typedef typename implementation_type::client_type    client_type;
-    typedef typename implementation_type::buffer_type    buffer_type;
+    >                                                  self_type;
+    typedef ::BOOST_CGI_NAMESPACE::common::map         map_type;
+    typedef RequestService                             service_type;
+    typedef typename service_type::protocol_type       protocol_type;
+    typedef ProtocolService                            protocol_service_type;
+    typedef boost::shared_ptr<self_type>               pointer;
+    typedef typename service_type::implementation_type implementation_type;
+    typedef typename implementation_type::char_type    char_type;
+    typedef typename implementation_type::string_type  string_type;
+    typedef typename implementation_type::client_type  client_type;
+    typedef typename implementation_type::buffer_type  buffer_type;
     
-    /*
-    boost::enable_if<
-      boost::type_traits::is_same<
-        typename RequestService::protocol_type,
-        ::BOOST_CGI_NAMESPACE::common::tags::acgi
-      >
-    > ios;
-    */
-
     /// A proxy class to provide access to the data maps as member variables.
     /**
      * This wraps the underlying data map and exposes a std::map-like 
