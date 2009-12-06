@@ -14,7 +14,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
 namespace concept{
 
     template<typename B>
@@ -25,12 +24,9 @@ namespace concept{
 
         public:
     
-        BOOST_CONCEPT_USAGE(Pdf){
-            p =  boost::statistics::detail::pdf(d,x);
-        }
+        BOOST_CONCEPT_USAGE(Pdf){ p =  pdf(d,x); }
 
         private:
-        typedef typename meta::value<d_>::type value_;
         d_ d;
         p_ p;
         x_ x;
@@ -38,9 +34,7 @@ namespace concept{
     };
 
 }// concept
-}// common
 }// distribution
-
 }// statistics
 }// detail
 }// boost

@@ -1,3 +1,4 @@
+/*
 //////////////////////////////////////////////////////////////////////////////
 // distribution::common::meta::wrapper_variable.hpp                         //
 //                                                                          //
@@ -14,7 +15,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
 namespace meta{
 
     template<typename X,typename B = boost::mpl::empty_base>
@@ -23,10 +23,10 @@ namespace meta{
     };
     
 }// meta
-}// common
 }// distribution
 }// detail
 }// statistics
 }// boost
 
 #endif
+*/

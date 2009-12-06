@@ -5,6 +5,7 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
+/*
 #ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_COMMON_META_INHERIT_POLICY_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_COMMON_META_INHERIT_POLICY_HPP_ER_2009
 #include <boost/mpl/assert.hpp>
@@ -17,7 +18,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
 namespace meta{
 
     template<typename D,typename B = mpl::empty_base>
@@ -31,11 +31,11 @@ namespace meta{
     };
 
 }// meta
-}// common
 }// distribution
-
 }// detail
 }// statistics
 }// boost
 
 #endif
+
+*/

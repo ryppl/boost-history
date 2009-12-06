@@ -14,7 +14,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
 namespace concept{
 
     template<typename B>
@@ -25,9 +24,7 @@ namespace concept{
 
         public:
     
-        BOOST_CONCEPT_USAGE(Cdf){
-            p =  boost::statistics::detail::cdf(d,x);
-        }
+        BOOST_CONCEPT_USAGE(Cdf){ p =  cdf(d,x); }
 
         private:
         d_ d;
@@ -37,9 +34,7 @@ namespace concept{
     };
 
 }// concept
-}// common
 }// distribution
-
 }// statistics
 }// detail
 }// boost

@@ -14,7 +14,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
 namespace concept{
 
     template<typename B>
@@ -26,24 +25,18 @@ namespace concept{
         public:
     
         BOOST_CONCEPT_USAGE(DerivativeLogUnnormalizedPdf){
-            val = boost::statistics::detail::derivative_log_unnormalized_pdf(
-                d,
-                x
-            );
+            p = derivative_log_unnormalized_pdf(d,x);
         }
 
         private:
-        typedef typename meta::value<d_>::type value_;
         d_ d;
-        value_ val;
+        p_ p;
         x_ x;
         
     };
 
 }// concept
-}// common
 }// distribution
-
 }// statistics
 }// detail
 }// boost

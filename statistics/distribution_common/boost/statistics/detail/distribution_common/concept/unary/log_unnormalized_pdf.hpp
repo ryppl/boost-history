@@ -14,7 +14,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
 namespace concept{
 
     template<typename B>
@@ -25,8 +24,8 @@ namespace concept{
 
         public:
 
-        BOOST_CONCEPT_USAGE(LogUnnormalizedPdf){
-            p =  boost::statistics::detail::log_unnormalized_pdf(d,x);
+        BOOST_CONCEPT_USAGE(LogUnnormalizedPdf){ 
+        	p = log_unnormalized_pdf(d,x);
         }
 
         private:
@@ -37,11 +36,9 @@ namespace concept{
     };
 
 }// concept
-}// common
 }// distribution
-
-}// statistics
 }// detail
+}// statistics
 }// boost
 
 #endif

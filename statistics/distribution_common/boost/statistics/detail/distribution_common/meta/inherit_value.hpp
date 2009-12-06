@@ -1,3 +1,4 @@
+/*
 ///////////////////////////////////////////////////////////////////////////////
 // distribution::common::meta::inherit_value.hpp                             //
 //                                                                           //
@@ -17,7 +18,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
 namespace meta{
 
     template<typename D,typename B = mpl::empty_base>
@@ -34,10 +34,9 @@ namespace meta{
 
 }// meta
 }// common
-}// distribution
-
 }// detail
 }// statistics
 }// boost
 
 #endif
+*/

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution::common::reference::wrapper.hpp                             //
+// distribution::common::reference::reference_wrapper.hpp                   //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -16,24 +16,21 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
-namespace reference{
 
     template<typename D>
-    class wrapper{
-
+    class reference_wrapper{
         public:
 
         typedef typename remove_cv<
-            typename remove_reference<D>::type
+        	typename remove_reference<D>::type
         >::type distribution_type;
         
         typedef typename meta::value<distribution_type>::type value_type;
 
-        wrapper(){}
-        wrapper(typename call_traits<D>::param_type dist):dist_(dist){}
-        wrapper(const wrapper& that):dist_(that.dist_){}
-        wrapper& operator=(const wrapper& that)
+        reference_wrapper(){}
+        reference_wrapper(typename call_traits<D>::param_type dist):dist_(dist){}
+        reference_wrapper(const reference_wrapper& that):dist_(that.dist_){}
+        reference_wrapper& operator=(const reference_wrapper& that)
         {
             if(&that!=this)
             {
@@ -41,21 +38,15 @@ namespace reference{
             }
             return (*this);
         }
-
         
         typename call_traits<D>::const_reference 
-        distribution()const
-        {
-            return this->dist_;
-        }
+        distribution()const{ return this->dist_; }
                 
         private:
         typename call_traits<D>::value_type dist_;
         
     };
     
-}// reference
-}// common
 }// distribution
 }// detail
 }// statistics

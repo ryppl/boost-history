@@ -14,7 +14,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
 namespace meta{
 
     template<typename D>
@@ -23,7 +22,6 @@ namespace meta{
     >{};
     
 }// meta
-}// common
 }// distribution
 }// detail
 }// statistics

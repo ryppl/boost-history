@@ -14,7 +14,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
 namespace concept{
 
     template<typename B>
@@ -25,7 +24,7 @@ namespace concept{
         public:
     
         BOOST_CONCEPT_USAGE(NormalizingConstant){
-            p =  boost::statistics::detail::normalizing_constant(d);
+            p =  normalizing_constant(d);
         }
 
         private:
@@ -35,9 +34,7 @@ namespace concept{
     };
 
 }// concept
-}// common
 }// distribution
-
 }// statistics
 }// detail
 }// boost

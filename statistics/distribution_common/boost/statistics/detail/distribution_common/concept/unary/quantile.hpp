@@ -14,7 +14,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
 namespace concept{
 
     template<typename B>
@@ -25,9 +24,7 @@ namespace concept{
 
         public:
     
-        BOOST_CONCEPT_USAGE(Quantile){
-            x = boost::statistics::detail::quantile(d,p);
-        }
+        BOOST_CONCEPT_USAGE(Quantile){ x = quantile(d,p); }
 
         private:
         d_ d;
@@ -37,9 +34,7 @@ namespace concept{
     };
 
 }// concept
-}// common
 }// distribution
-
 }// statistics
 }// detail
 }// boost

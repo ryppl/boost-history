@@ -14,7 +14,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace common{
 namespace concept{
 
     template<typename B>
@@ -23,10 +22,7 @@ namespace concept{
         typedef typename B::probability_type    p_;
 
         public:
-    
-        BOOST_CONCEPT_USAGE(Variance){
-            p =  boost::statistics::detail::variance(d);
-        }
+        BOOST_CONCEPT_USAGE(Variance){ p = variance(d); }
 
         private:
         d_ d;
@@ -34,9 +30,7 @@ namespace concept{
     };
 
 }// concept
-}// common
 }// distribution
-
 }// statistics
 }// detail
 }// boost

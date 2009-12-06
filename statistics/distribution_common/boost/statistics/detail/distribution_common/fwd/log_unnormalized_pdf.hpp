@@ -13,9 +13,11 @@ namespace boost{
 namespace statistics{
 namespace detail{
  
-	template<typename D,typename X>
-    typename distribution::common::meta::value<D>::type
-    log_unnormalized_pdf(const D& dist,const X& x);
+ 
+// TODO : remove 
+//	template<typename D,typename X>
+//    typename distribution::common::meta::value<D>::type
+//    log_unnormalized_pdf(const D& dist,const X& x);
 
 }// detail
 }// statistics
