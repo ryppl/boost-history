@@ -27,8 +27,8 @@ http://www.boost.org/doc/libs/1_40_0/libs/random/index.html
 [ Platform/Compiler ]
 
 Win7-32 V6.1.7100		Dev-C++ 5.0 beta 9.2 with Mingw/GCC 3.4.2 	boost_1_41_0							Dev-C++ 
-Win7-32 V6.1.7100		Visual Studio 2010							boost_1_41_0
-Mac OS X 10.6         	gcc 4.2										boost_1_41_0
+Win7-32 V6.1.7100		Visual Studio 2010                          boost_1_41_0
+Mac OS X 10.6         	gcc 4.2                                     boost_1_41_0
 
 [ Dependencies ]
 
@@ -104,6 +104,7 @@ Sep 16 2009 : deleted /algorithm and added /iterator
 July 2009   : First version
 
 [ TODO ]
+- Eliminate build warnings under MSVC and mingw.
 - search TODO inside project
 - range and support for location_scale
 - other distributions
