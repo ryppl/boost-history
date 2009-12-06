@@ -9,7 +9,7 @@
 #ifndef  BOOST_STATISTICS_DETAIL_CROSS_VALIDATION_ESTIMATOR_ADAPTOR_JOINED_HPP_ER_2009
 #define  BOOST_STATISTICS_DETAIL_CROSS_VALIDATION_ESTIMATOR_ADAPTOR_JOINED_HPP_ER_2009
 //#include <boost/mpl/empty_base.hpp>
-#include <boost/mpl/nested_type.hpp>
+#include <boost/statistics/detail/mpl/nested_type.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range.hpp>
 #include <boost/statistics/detail/cross_validation/estimator/adaptor/wrapper.hpp>

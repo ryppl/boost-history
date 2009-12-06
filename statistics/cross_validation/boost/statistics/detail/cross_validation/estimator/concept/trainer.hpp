@@ -20,7 +20,7 @@ namespace cross_validation{
 namespace estimator{
 namespace concept{
 
-    template <typename B = mpl::empty_base>
+    template <typename B = boost::mpl::empty_base>
     class Trainer : public B
     {        
         typedef typename B::estimator_type          e_;

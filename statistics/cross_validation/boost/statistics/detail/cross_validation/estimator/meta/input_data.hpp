@@ -17,7 +17,7 @@ namespace cross_validation{
 namespace estimator{
 namespace meta{
 
-    template<typename T,typename B = mpl::empty_base>
+    template<typename T,typename B = boost::mpl::empty_base>
     struct input_data : B{
         typedef T input_data_type;
     };
