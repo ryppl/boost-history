@@ -15,17 +15,19 @@
 namespace boost{
 namespace statistics{
 namespace detail{
+namespace distribution{
+namespace toolkit{
 
     template<typename Z>
-    typename distribution::common::meta::value<
-        distribution::toolkit::location_scale_distribution<Z>
-    >::type
+    typename location_scale_distribution<Z>::value_type
     mean(
-        const distribution::toolkit::location_scale_distribution<Z>& d
+        const location_scale_distribution<Z>& d
     ){
-        return d.mu() + statistics::detail::mean(d.z());
+        return d.mu() + mean(d.z());
     }
 
+}// toolkit
+}// distribution
 }// detail
 }// statistics
 }// boost

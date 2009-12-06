@@ -8,8 +8,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_MAP_PDF_INVERSE_PDF_INVERSE_PDF_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_MAP_PDF_INVERSE_PDF_INVERSE_PDF_HPP_ER_2009
-#include <boost/statistics/detail/distribution_common/meta/inherit_policy.hpp>
-#include <boost/statistics/detail/distribution_common/meta/inherit_value.hpp>
+#include <boost/statistics/detail/distribution_common/meta/inherit/policy.hpp>
+#include <boost/statistics/detail/distribution_common/meta/inherit/value.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_pseudo_scalar_distribution.hpp>
 
 namespace boost{
@@ -18,19 +18,18 @@ namespace detail{
 namespace distribution{
 namespace toolkit{
 
-
     // A pseudo distribution resulting from mapping the pdf of a distribution
     // to its inverse
     template<typename D>
     class inverse_pdf : public
-        distribution::common::meta::inherit_policy<
+        distribution::meta::inherit_policy<
             D,
-            distribution::common::meta::inherit_value<D>
+            distribution::meta::inherit_value<D>
         >
     {
     
     public:
-        typedef typename distribution::common::meta::value<D>::type value_type;
+        typedef typename distribution::meta::value<D>::type value_type;
 
         inverse_pdf(){}
         explicit inverse_pdf(const D& d):d_(d){}

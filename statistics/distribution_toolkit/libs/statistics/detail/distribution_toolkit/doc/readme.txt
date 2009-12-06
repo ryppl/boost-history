@@ -91,6 +91,12 @@ See distributions/wrapper/wrapper.hpp
 
 [ History ]
 
+Dec 4 2009 : 
+	/math_fwd removed. Instead, any extension to boost::math stays in this 
+    namespace. Rationale : allows Koenig Lookup.
+    /fun_wrap removed. Instead, functor for pdf, cdf etc are in 
+    distribution_common
+
 Nov 6 2009 : Added error-handling policy to location_scale
 
 Oct 11 2009 : 

@@ -49,11 +49,11 @@ namespace toolkit{
 
         BOOST_MPL_ASSERT(( meta::is_scalar_distribution<Z> ));
 
-        typedef typename distribution::common::meta::value<
+        typedef typename distribution::meta::value<
             distribution_type
         >::type value_type;
 
-        typedef typename distribution::common::meta::policy<
+        typedef typename distribution::meta::policy<
             distribution_type
         >::type policy_type;
 

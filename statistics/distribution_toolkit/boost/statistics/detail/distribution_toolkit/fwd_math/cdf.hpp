@@ -13,6 +13,17 @@
 #include <boost/statistics/detail/distribution_common/meta/value.hpp>
 
 namespace boost{
+namespace math{    
+    template<typename D>
+    typename boost::lazy_enable_if<
+        boost::statistics::detail::distribution::toolkit::meta::is_math_distribution<D>,
+        boost::statistics::detail::distribution::common::meta::value<D>
+    >::type
+    cdf(    
+        const D& dist,
+        const typename boost::statistics::detail::distribution::common::meta::value<D>::type& x
+    );
+}
 namespace statistics{
 namespace detail{
     

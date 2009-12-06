@@ -1,3 +1,4 @@
+/*
 //////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::distributions::concept::unary::function_ptr.hpp        //
 //                                                                              //
@@ -42,3 +43,4 @@ namespace concept{
 }// boost
 
 #endif
+*/

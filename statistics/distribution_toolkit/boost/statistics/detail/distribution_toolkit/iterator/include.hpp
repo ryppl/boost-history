@@ -1,3 +1,4 @@
+/*
 //////////////////////////////////////////////////////////////////////////////
 // distribution_toolkititerator::distribution_function.hpp                         //
 //                                                                          //
@@ -12,4 +13,4 @@
 #include <boost/statistics/detail/distribution_toolkit/iterator/distribution_function.hpp>
 
 #endif
-
+*/

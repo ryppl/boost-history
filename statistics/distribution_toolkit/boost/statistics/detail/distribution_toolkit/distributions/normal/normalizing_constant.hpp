@@ -13,8 +13,7 @@
 #include <boost/math/distributions/normal.hpp>
 
 namespace boost{
-namespace statistics{
-namespace detail{
+namespace math{
 
 template<typename T,typename P>
 T normalizing_constant(const boost::math::normal_distribution<T,P>& d){
@@ -23,8 +22,7 @@ T normalizing_constant(const boost::math::normal_distribution<T,P>& d){
     return sqrt(two * pi) * d.scale();
 }
 
-}// detail
-}// statistics
+}// math
 }// boost
 
 #endif

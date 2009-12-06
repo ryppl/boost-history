@@ -15,17 +15,17 @@
 namespace boost{
 namespace statistics{
 namespace detail{
+namespace distribution{
+namespace toolkit{
 
     template<typename Z>
-    typename distribution::common::meta::value<
-        distribution::toolkit::location_scale_distribution<Z>
-    >::type
-    variance(
-        const distribution::toolkit::location_scale_distribution<Z>& d
-    ){
-        return statistics::detail::variance(d.z()) * d.sigma() * d.sigma();
+    typename location_scale_distribution<Z>::value_type
+    variance(const location_scale_distribution<Z>& d){
+        return variance(d.z()) * d.sigma() * d.sigma();
     }
 
+}// toolkit
+}// distribution
 }// detail
 }// statistics
 }// boost

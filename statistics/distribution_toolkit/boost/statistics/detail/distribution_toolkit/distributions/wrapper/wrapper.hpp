@@ -6,6 +6,7 @@
 //  Boost Software License, Version 1.0. (See accompanying file                //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)           //
 /////////////////////////////////////////////////////////////////////////////////
+/*
 #ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_WRAPPER_WRAPPER_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_WRAPPER_WRAPPER_HPP_ER_2009
 #include <boost/call_traits.hpp>
@@ -23,12 +24,11 @@ namespace detail{
 namespace distribution{
 namespace toolkit{
 
+	// TODO deprecated
 
     // Useful for serializing or as a reference wrapper (D = const E&)
-    //
-    // BUG : See function_ptrs.cpp
     template<typename D>
-    class wrapper : distribution::common::meta::inherit_policy<
+    class wrapper : distribution::meta::inherit_policy<
         typename remove_cv<
             typename remove_reference<D>::type
         >::type 
@@ -80,5 +80,5 @@ namespace toolkit{
 }// boost
 
 #endif
-
+*/
 

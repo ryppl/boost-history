@@ -1,3 +1,4 @@
+/*
 //////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::iterator::distribution_function.hpp                //
 //                                                                          //
@@ -30,7 +31,7 @@ struct meta_distribution_function{
         typedef boost::transform_iterator<unary_,ItX> type;
 
         template<template<typename> class F>
-        static type make(
+        static type call(
             const D& dist,
             ItX i_x
         ){
@@ -72,3 +73,4 @@ make_distribution_function(
 
 
 #endif
+*/

@@ -1,3 +1,4 @@
+/*
 /////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::distributions::wrapper::cdf.hpp                       //
 //                                                                             //
@@ -17,8 +18,7 @@ namespace statistics{
 namespace detail{
 
     template<typename D,typename T>
-    T
-    cdf(
+    T cdf(
         const distribution::toolkit::wrapper<D>& w,
         const T& x
     ){
@@ -30,3 +30,4 @@ namespace detail{
 }// boost
 
 #endif
+*/

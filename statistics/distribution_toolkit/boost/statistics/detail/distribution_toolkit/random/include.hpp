@@ -1,3 +1,4 @@
+/*
 //////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::random::include.hpp                                    //
 //                                                                              //
@@ -12,3 +13,4 @@
 #include <boost/statistics/detail/distribution_toolkit/random/generator.hpp>
 
 #endif
+*/

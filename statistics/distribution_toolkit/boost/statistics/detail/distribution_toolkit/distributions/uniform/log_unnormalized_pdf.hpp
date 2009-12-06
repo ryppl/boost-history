@@ -15,12 +15,10 @@
 #include <boost/math/tools/precision.hpp>
 
 namespace boost{
-namespace statistics{
-namespace detail{
+namespace math{
 
     template<typename T,typename P>
-    T
-    log_unnormalized_pdf(
+    T log_unnormalized_pdf(
         const boost::math::uniform_distribution<T,P>& dist,
         const T& x
     )
@@ -52,8 +50,7 @@ namespace detail{
         }
     } 
 
-}// detail
-}// statistics
+}// math
 }// boost
 
 #endif

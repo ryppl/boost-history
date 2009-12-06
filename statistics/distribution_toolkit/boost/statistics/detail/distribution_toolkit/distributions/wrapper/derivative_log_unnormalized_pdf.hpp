@@ -1,3 +1,4 @@
+/*
 ///////////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::distributions::wrapper::derivative_log_unnormalized_pdf.hpp //
 //                                                                                   //
@@ -33,3 +34,4 @@ namespace detail{
 }// boost
 
 #endif
+*/

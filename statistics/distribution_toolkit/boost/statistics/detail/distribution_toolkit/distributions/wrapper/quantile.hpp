@@ -1,3 +1,4 @@
+/*
 /////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::distributions::wrapper::quantile.hpp                  //
 //                                                                             //
@@ -29,3 +30,4 @@ namespace detail{
 }// boost
 
 #endif
+*/

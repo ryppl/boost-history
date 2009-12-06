@@ -23,7 +23,7 @@ namespace toolkit{
     struct meta_ratio_pdf{
         typedef inverse_pdf<B> inv_;
         typedef product_pdf<A, inv_ > type;
-        static type make(const A& a,const B& b){
+        static type call(const A& a,const B& b){
             return type(
                 a,
                 inv_(b)
@@ -36,7 +36,7 @@ namespace toolkit{
     make_ratio_pdf(const A& a, const B& b)
     {
         typedef meta_ratio_pdf<A,B> meta_;
-        return meta_::make(a,b);
+        return meta_::call(a,b);
     }
 
 }// distribution

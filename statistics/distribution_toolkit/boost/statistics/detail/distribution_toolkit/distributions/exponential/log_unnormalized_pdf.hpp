@@ -13,8 +13,7 @@
 #include <boost/math/policies/policy.hpp> 
 
 namespace boost{
-namespace statistics{
-namespace detail{
+namespace math{
 
     template<typename T,typename P>
     T
@@ -42,8 +41,7 @@ namespace detail{
         return result;
     }
 
-}// detail
-}// statistics
+}// math
 }// boost
 
 #endif

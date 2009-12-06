@@ -10,25 +10,18 @@
 #include <iterator>
 #include <boost/utility/result_of.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <ext/algorithm>
 #include <boost/range.hpp>
+#include <boost/function.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 #include <boost/random/mersenne_twister.hpp>
-
-#include <boost/fusion/container/map.hpp>
 #include <boost/fusion/include/map.hpp>
-#include <boost/fusion/include/map_fwd.hpp>
-#include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/include/at_key.hpp>
-
-#include <boost/statistics/detail/fusion/map/identity_f.hpp>
+#include <boost/statistics/detail/distribution_toolkit/test/detail/x_f.hpp>
 #include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/statistic.hpp>
-
-#include <boost/statistics/detail/distribution_toolkit/meta/bind_delegate.hpp>
-#include <boost/statistics/detail/distribution_toolkit/fun_wrap/cdf.hpp>
-
-#include <boost/statistics/detail/distribution_toolkit/random/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/unscope/os.hpp>
+#include <boost/statistics/detail/distribution_common/functor/cdf.hpp>
+#include <boost/statistics/detail/distribution_common/meta/random/generator.hpp>
 
 namespace boost{
 namespace statistics{
@@ -37,9 +30,10 @@ namespace distribution{
 namespace toolkit{
 namespace test{
 
-template<typename D,typename N>
+template<typename D,typename R,typename N>
 void random(
     const D& dist,
+    R& random_generator,
     N n_loops,  // 6
     N n1,       // 1e1
     N n2,       // 1e1
@@ -50,78 +44,66 @@ void random(
     // by make_random(dist), this example outputs a series of kolmogorov-
     // smirnov statistics. Convergence to zero is evidence that 
     // the sample agrees wit the cdf of dist
-
-    using namespace boost;
     
-    // Types 
-    typedef typename common::meta::value<D>::type     val_;
-    typedef mt19937                                   urng_;
-    typedef typename meta::bind_delegate<D>::type     fun_;
-    typedef detail::fusion::map::identity_f<
-        mpl::int_<0>,
-        mpl::int_<1>,
-        fun_
-    > functor_;
-
-   typedef typename functor_::identity::key_ key1_;
-   typedef typename functor_::function::key_ key2_;
-
-    typedef non_parametric::kolmogorov_smirnov::statistic<
-        val_,
-        key1_,
-        key2_
-    > kolmogorov_smirnov_stat_;
-    typedef typename boost::result_of<functor_(const val_&)>::type data_;
-    typedef std::vector<data_>                              dataset_;
-
-    // Constants
+    typedef typename distribution::meta::value<D>::type val_;
+    typedef distribution::functor::cdf_<D>     		    fun_;
+	typedef detail::x_f<val_>							x_cdf_;
+    typedef typename x_cdf_::input						k1_;
+    typedef typename x_cdf_::output1					k2_;
+    typedef non_parametric::kolmogorov_smirnov::statistic<val_,k1_,k2_> ks_;
+    typedef typename x_cdf_::template functor<D> 		make_x_cdf_;
     
-    urng_ urng;
-
-    typedef boost::function<data_()> gen_data_;
-    
+    typedef typename x_cdf_::template meta_generator<D>	meta_gen_data_;
+	typedef typename meta_gen_data_::type 				gen_data_;
+    typedef typename gen_data_::result_type 			data_;
+    typedef std::vector<data_> dataset_;
     dataset_ dataset;
-    kolmogorov_smirnov_stat_ kolmogorov_smirnov_stat;
-
+    ks_ ks;
     {
 
-        functor_ functor(
-            make_bind_delegate<fun_wrap::cdf_>(dist)
-        );
-
-        BOOST_AUTO(
-            vg,
-            make_random_generator(urng,dist)
-        );
-
-        gen_data_ gen_data = boost::lambda::bind<data_>(
-            functor,
-            boost::lambda::bind(
-                boost::ref(
-                    vg
-                )
-            )
-        );
-
-        os << description(dist) << std::endl; 
+		gen_data_ gen_data = meta_gen_data_::call(dist,random_generator);
+        os << dist << std::endl; 
         unsigned i = 0;
         unsigned n_draws = n1;
         dataset.clear();
         while(i<n_loops){
             dataset.reserve(dataset.size()+n_draws);
-            
             std::generate_n(
                 std::back_inserter(dataset),
                 n_draws,
                 gen_data
             );
-            
-            kolmogorov_smirnov_stat(boost::begin(dataset),boost::end(dataset));
-            os << kolmogorov_smirnov_stat.description() << std::endl;
+            ks(boost::begin(dataset),boost::end(dataset));
+            os << ks.description() << std::endl;
             ++i;
             n_draws *= n2;
         }
     }
+}
+
+template<typename D,typename U,typename N>
+void random2(
+    const D& dist,
+    U& urng,
+    N n_loops,  
+    N n1,       
+    N n2,       
+    std::ostream& os
+)
+{
+	BOOST_AUTO(
+    	vg,
+        make_random_generator(urng,dist)
+    );
+
+	return test::random(
+    	dist,
+		vg,
+        n_loops,
+		n1,
+        n2,
+        os
+	);
 }
 
 
@@ -131,6 +113,5 @@ void random(
 }// detail
 }// statistics
 }// boost
-
 
 #endif

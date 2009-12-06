@@ -13,10 +13,7 @@
 #include <boost/math/distributions/gamma.hpp>
 
 namespace boost{
-namespace statistics{
-namespace detail{
-namespace distribution{
-namespace toolkit{
+namespace math{
 
 
     template<typename T,typename P>
@@ -28,11 +25,7 @@ namespace toolkit{
         return f.str();
     }
     
-}// distribution
-}// toolkit
-
-}// detail
-}// statistics
+}// math
 }// boost
 
 #endif

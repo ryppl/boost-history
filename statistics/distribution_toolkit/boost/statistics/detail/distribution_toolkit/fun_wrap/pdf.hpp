@@ -9,7 +9,7 @@
 #ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_FUN_WRAP_PDF_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_FUN_WRAP_PDF_HPP_ER_2009
 #include <boost/statistics/detail/distribution_toolkit/fun_wrap/detail/impl.hpp>
-#include <boost/statistics/detail/distribution_toolkit/fwd_math/pdf.hpp>
+//#include <boost/statistics/detail/distribution_toolkit/fwd_math/pdf.hpp>
 
 namespace boost{
 namespace statistics{
@@ -18,8 +18,8 @@ namespace distribution{
 namespace toolkit{
 namespace fun_wrap{
         
-    template<typename D> struct pdf_ 
-        : impl<D,statistics::detail::pdf>{};
+//    template<typename D> struct pdf_ 
+//        : impl<D,statistics::detail::pdf>{};
 
 }// fun_wrap
 }// distribution

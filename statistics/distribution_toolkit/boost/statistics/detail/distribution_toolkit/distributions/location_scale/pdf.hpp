@@ -15,6 +15,8 @@
 namespace boost{
 namespace statistics{
 namespace detail{
+namespace distribution{
+namespace toolkit{
 
     template<typename Z,typename T>
     T
@@ -25,11 +27,13 @@ namespace detail{
 
         T z = (x-d.mu())/d.sigma();
         
-        T result = statistics::detail::pdf(d.z(),z);
+        T result = pdf(d.z(),z);
         result /= d.sigma();
         return result;
     }
 
+}// toolkit
+}// distribution
 }// detail
 }// statistics
 }// boost

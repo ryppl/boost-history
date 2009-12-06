@@ -15,21 +15,25 @@
 namespace boost{
 namespace statistics{
 namespace detail{
+namespace distribution{
+namespace toolkit{
 
     template<typename Z,typename T>
     T
     derivative_log_unnormalized_pdf(
-        const distribution::toolkit::location_scale_distribution<Z>& d,
+    	const location_scale_distribution<Z>& d,
         const T& x
     ){
-        typedef distribution::toolkit::location_scale_distribution<Z> dist_;
+        typedef location_scale_distribution<Z> dist_;
 
         T z = (x-d.mu())/d.sigma();
-        T result = statistics::detail::derivative_log_unnormalized_pdf(d.z(),z); 
+        T result = derivative_log_unnormalized_pdf(d.z(),z); 
         result /= d.sigma(); // = dz/dx
         return result;
     }
 
+}// toolkit
+}// distribution
 }// detail
 }// statistics 
 }// boost

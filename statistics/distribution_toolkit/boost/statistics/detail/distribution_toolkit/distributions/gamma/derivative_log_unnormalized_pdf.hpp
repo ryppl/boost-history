@@ -13,8 +13,7 @@
 #include <boost/math/policies/policy.hpp>
 
 namespace boost{
-namespace statistics{
-namespace detail{
+namespace math{
 
 template <class T, class P>
 inline T derivative_log_unnormalized_pdf(
@@ -46,8 +45,8 @@ inline T derivative_log_unnormalized_pdf(
    return result;
 } // derivative_log_unnormalized_pdf
 
-}// detail
-}// statistics
+
+}// math
 }// boost
 
 #endif

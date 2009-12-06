@@ -1,3 +1,4 @@
+/*
 //////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::test::function_ptrs.cpp                            //
 //                                                                          //
@@ -104,3 +105,4 @@ void test_function_ptrs(std::ostream& os)
 }
 
 #endif
+*/

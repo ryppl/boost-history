@@ -17,5 +17,6 @@
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/is_math_distribution.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/normalizing_constant.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/random.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/normal/os.hpp>
 
 #endif

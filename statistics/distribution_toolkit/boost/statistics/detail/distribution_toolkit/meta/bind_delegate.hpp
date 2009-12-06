@@ -35,7 +35,7 @@ namespace meta{
         typedef function<sig2_>                           type;
         
         template<template<typename> class F>
-        static type make(const D& dist){
+        static type call(const D& dist){
             return type(
                 boost::lambda::bind(
                     deleg_::template make<F>(),

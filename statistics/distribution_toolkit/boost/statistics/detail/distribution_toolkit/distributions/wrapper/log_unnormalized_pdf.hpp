@@ -1,3 +1,4 @@
+/*
 /////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::distributions::wrapper::log_unnormalized_pdf.hpp      //
 //                                                                             //
@@ -30,3 +31,4 @@ namespace detail{
 }// boost
 
 #endif
+*/

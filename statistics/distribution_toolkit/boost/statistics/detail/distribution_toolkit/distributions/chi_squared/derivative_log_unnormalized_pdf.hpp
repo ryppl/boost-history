@@ -14,8 +14,7 @@
 #include <boost/math/policies/policy.hpp>
 
 namespace boost{
-namespace statistics{
-namespace detail{
+namespace math{
 
     template<typename T,typename P>
     T
@@ -49,8 +48,7 @@ namespace detail{
         return (degrees_of_freedom/two-one) / x - one/two;
     }
 
-}// detail
-}// statistics
+}// math
 }// boost
 
 #endif

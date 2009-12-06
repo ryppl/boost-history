@@ -1,3 +1,4 @@
+/*
 /////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::distributions::wrapper::mean.hpp                      //
 //                                                                             //
@@ -31,3 +32,4 @@ namespace detail{
 }// boost
 
 #endif
+*/

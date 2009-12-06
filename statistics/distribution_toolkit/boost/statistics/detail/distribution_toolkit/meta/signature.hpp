@@ -21,7 +21,7 @@ namespace meta{
     // Signature for f(dist,x), f = pdf, cdf etc.
     template<typename D>
     struct signature{
-        typedef typename distribution::common::meta::value<D>::type value_type;
+        typedef typename distribution::meta::value<D>::type value_type;
 
         typedef value_type type(
             const D&,

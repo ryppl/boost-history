@@ -9,7 +9,7 @@
 #ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_FUN_WRAP_QUANTILE_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_FUN_WRAP_QUANTILE_HPP_ER_2009
 #include <boost/statistics/detail/distribution_toolkit/fun_wrap/detail/impl.hpp>
-#include <boost/statistics/detail/distribution_toolkit/fwd_math/quantile.hpp>
+//#include <boost/statistics/detail/distribution_toolkit/fwd_math/quantile.hpp>
 
 namespace boost{
 namespace statistics{
@@ -18,9 +18,9 @@ namespace distribution{
 namespace toolkit{
 namespace fun_wrap{
 
-        template<typename D> 
-        struct quantile_ 
-            : impl<D,statistics::detail::quantile>{};
+//        template<typename D> 
+//        struct quantile_ 
+//            : impl<D,statistics::detail::quantile>{};
 
 }// fun_wrap
 }// distribution

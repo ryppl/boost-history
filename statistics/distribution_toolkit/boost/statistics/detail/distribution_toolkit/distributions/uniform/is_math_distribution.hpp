@@ -17,7 +17,6 @@ namespace statistics{
 namespace detail{
 namespace distribution{
 namespace toolkit{
-
 namespace meta{
 
     template<typename T,typename P>

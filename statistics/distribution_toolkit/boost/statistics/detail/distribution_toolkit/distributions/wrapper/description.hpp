@@ -1,3 +1,4 @@
+/*
 //////////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::distributions::wrapper::description.hpp                    //
 //                                                                                  //
@@ -37,3 +38,4 @@ namespace toolkit{
 
 
 #endif
+*/

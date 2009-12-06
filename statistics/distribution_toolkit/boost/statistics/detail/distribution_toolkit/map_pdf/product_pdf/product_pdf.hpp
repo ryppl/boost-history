@@ -18,13 +18,12 @@ namespace detail{
 namespace distribution{
 namespace toolkit{
 
-
     // A pseudo distribution resulting from product of the pdf of two
     // distributions
     template<typename A,typename B>
-    class product_pdf : public distribution::common::meta::inherit_policy<
+    class product_pdf : public distribution::meta::inherit_policy<
         A,
-        distribution::common::meta::inherit_value<A> 
+        distribution::meta::inherit_value<A> 
     >{
 
         public:

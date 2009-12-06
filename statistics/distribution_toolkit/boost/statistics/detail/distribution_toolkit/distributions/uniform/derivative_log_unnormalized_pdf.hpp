@@ -15,8 +15,7 @@
 #include <boost/math/tools/precision.hpp>
 
 namespace boost{
-namespace statistics{
-namespace detail{
+namespace math{
 
     template<typename T,typename P>
     T
@@ -52,8 +51,7 @@ namespace detail{
         }
     }
 
-}// detail
-}// statistics
+}// math
 }// boost
 
 #endif

@@ -16,21 +16,17 @@
 namespace boost{
 namespace statistics{
 namespace detail{
+namespace distribution{
+namespace toolkit{
 
     template<typename D,typename T>
-    T
-    log_unnormalized_pdf(
-        const distribution::toolkit::inverse_pdf<D>& dist,
-        const T& x
-    ){
-        return
-            ( -statistics::detail::log_unnormalized_pdf(
-                dist.distribution(),
-                x
-            ) 
-        );
+    T log_unnormalized_pdf(const inverse_pdf<D>& dist,const T& x)
+    {
+        return ( -log_unnormalized_pdf(dist.distribution(),x) );
     }
 
+}// toolkit
+}// distribution
 }// detail
 }// statistics
 }// boost

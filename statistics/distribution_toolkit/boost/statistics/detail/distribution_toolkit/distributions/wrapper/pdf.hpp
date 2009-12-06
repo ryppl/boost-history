@@ -1,3 +1,4 @@
+/*
 /////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::distributions::wrapper::pdf.hpp                       //
 //                                                                             //
@@ -30,3 +31,4 @@ namespace detail{
 }// boost
 
 #endif
+*/

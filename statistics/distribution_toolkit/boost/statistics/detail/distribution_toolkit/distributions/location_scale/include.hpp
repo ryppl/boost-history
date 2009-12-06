@@ -20,5 +20,6 @@
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/random.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/quantile.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/variance.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/os.hpp>
 
 #endif

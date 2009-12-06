@@ -13,11 +13,7 @@
 #include <boost/math/distributions/exponential.hpp>
 
 namespace boost{
-namespace statistics{
-namespace detail{
-namespace distribution{
-namespace toolkit{
-
+namespace math{
 
     template<typename T,typename P>
     std::string 
@@ -29,10 +25,7 @@ namespace toolkit{
         return f.str();
     }
     
-}// distribution
-}// toolkit
-}// detail
-}// statistics
+}// math
 }// boost
 
 #endif

@@ -16,5 +16,6 @@
 #include <boost/statistics/detail/distribution_toolkit/distributions/chi_squared/is_math_distribution.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/chi_squared/log_unnormalized_pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/chi_squared/random.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/chi_squared/os.hpp>
 
 #endif

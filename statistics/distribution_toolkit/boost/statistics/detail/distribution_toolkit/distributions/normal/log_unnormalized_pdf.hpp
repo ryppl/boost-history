@@ -13,8 +13,7 @@
 //#include <boost/math/policies/policy.hpp>//TODO
 
 namespace boost{
-namespace statistics{
-namespace detail{
+namespace math{
 
     template<typename T,typename P>
     T
@@ -30,8 +29,7 @@ namespace detail{
         return - z * z / int2real_t::convert(2);
     }
     
-}// detail
-}// statistics
+}// math
 }// boost
 
 #endif

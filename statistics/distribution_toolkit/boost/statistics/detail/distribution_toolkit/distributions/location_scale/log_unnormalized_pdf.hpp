@@ -15,6 +15,8 @@
 namespace boost{
 namespace statistics{
 namespace detail{
+namespace distribution{
+namespace toolkit{
 
     template<typename Z,typename T>
     T
@@ -25,11 +27,13 @@ namespace detail{
         typedef distribution::toolkit::location_scale_distribution<Z> dist_;
 
         T z = (x-d.mu())/d.sigma();
-        T result = statistics::detail::log_unnormalized_pdf(d.z(),z); 
+        T result = log_unnormalized_pdf(d.z(),z); 
         // -log ( sigma ) is a constant so it is ignored
         return result;
     }
 
+}// toolkit
+}// distribution
 }// detail
 }// statistics 
 }// boost

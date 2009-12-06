@@ -15,21 +15,19 @@
 namespace boost{
 namespace statistics{
 namespace detail{
+namespace distribution{
+namespace toolkit{
 
     template<typename Z,typename T>
     T
-    cdf(
-        const distribution::toolkit::location_scale_distribution<Z>& d,
-        const T& x
-    ){
-        typedef distribution::toolkit::location_scale_distribution<Z> dist_;
+    cdf(const location_scale_distribution<Z>& d,const T& x){
+        typedef location_scale_distribution<Z> dist_;
         T z = (x-d.mu())/d.sigma();
-        return statistics::detail::cdf(
-            d.z(),
-            z
-        );
+        return cdf(d.z(),z);
     }
 
+}// toolkit
+}// distribution
 }// detail
 }// statistics
 }// boost

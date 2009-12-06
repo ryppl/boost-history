@@ -17,5 +17,6 @@
 #include <boost/statistics/detail/distribution_toolkit/distributions/gamma/is_math_distribution.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/gamma/log_unnormalized_pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/gamma/random.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/gamma/os.hpp>
 
 #endif

@@ -16,5 +16,6 @@
 #include <boost/statistics/detail/distribution_toolkit/distributions/exponential/is_math_distribution.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/exponential/log_unnormalized_pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/exponential/random.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/exponential/os.hpp>
 
 #endif

@@ -1,3 +1,4 @@
+/*
 //////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::random::generator.hpp                                  //
 //                                                                              //
@@ -28,7 +29,7 @@ namespace meta{
         typedef distribution::toolkit::meta::random<D> meta_;
         typedef typename meta_::type r_;;
         typedef variate_generator<U,r_> type;
-        static type make(U urng,const D& d){
+        static type call(U urng,const D& d){
             return type(
                 urng,
                 make_random(d)
@@ -54,7 +55,7 @@ namespace meta{
     make_random_generator(U& urng,const D& dist){
         typedef statistics::detail::distribution::toolkit::random
             ::meta::generator<D,U&> meta_;
-        return meta_::make(urng,dist);
+        return meta_::call(urng,dist);
     }
 
         
@@ -62,3 +63,4 @@ namespace meta{
 
 
 #endif
+*/

@@ -13,22 +13,29 @@
 #include <boost/statistics/detail/distribution_toolkit/meta/is_pseudo_scalar_distribution.hpp>
 
 namespace boost{
+namespace statistics{
+namespace detail{
+namespace distribution{
+namespace toolkit{
 
     template<typename D>
-    typename boost::lazy_enable_if<
-        statistics::detail::distribution::toolkit
-            ::meta::is_pseudo_scalar_distribution<D>,
-            mpl::identity<std::ostream&> 
+    typename 
+    boost::lazy_enable_if<
+    	meta::is_pseudo_scalar_distribution<D>,
+        boost::mpl::identity<std::ostream&> 
     >::type
     operator<<(std::ostream& os,const D& dist){
-        return (
-            os << 
-                statistics::detail::distribution::toolkit::description(dist)
-        );
+        return (os << description(dist));
     }
 
 
-}
+}// toolkit
+}// distribution
+}// detail
+}// statistics
+}// boost
+
+// using boost::statistics::detail::distribution::toolkit::operator<<
 
 #endif
 

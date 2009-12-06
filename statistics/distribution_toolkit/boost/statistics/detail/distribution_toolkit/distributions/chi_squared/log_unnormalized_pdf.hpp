@@ -14,12 +14,10 @@
 #include <boost/math/policies/policy.hpp>
 
 namespace boost{
-namespace statistics{
-namespace detail{
+namespace math{
 
     template<typename T,typename P>
-    T
-    log_unnormalized_pdf(
+    T log_unnormalized_pdf(
         const boost::math::chi_squared_distribution<T,P>& dist,
         const T& x
     ){
@@ -49,8 +47,7 @@ namespace detail{
         return (degrees_of_freedom/two-one) * log(x) - x/two;
     }
 
-}// detail
-}// statistics
+}// math
 }// boost
 
 #endif

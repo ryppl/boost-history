@@ -11,25 +11,23 @@
 #include <boost/math/distributions/gamma.hpp>
 #include <boost/random/gamma_distribution.hpp>
 #include <boost/random/location_scale.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/random.hpp>
+#include <boost/statistics/detail/distribution_common/meta/random/distribution.hpp>
 
 namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace toolkit{
-
 namespace meta{
 
     template<typename T,typename P>
-    struct random< 
+    struct random_distribution< 
         boost::math::gamma_distribution<T,P> 
     >{
         typedef boost::math::gamma_distribution<T,P> dist_;
         typedef boost::gamma_distribution<T> z_;
         typedef boost::random::location_scale_distribution<z_> type;
         
-        static type make(const dist_& d){ 
+        static type call(const dist_& d){ 
             return type(
                 0,
                 d.scale(),
@@ -40,8 +38,6 @@ namespace meta{
     
 }// meta
 }// distribution
-}// toolkit
-
 }// detail
 }// statistics
 }// boost

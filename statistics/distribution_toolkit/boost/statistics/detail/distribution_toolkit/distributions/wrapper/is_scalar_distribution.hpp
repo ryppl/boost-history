@@ -1,3 +1,4 @@
+/*
 /////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::distributions::wrapper::is_scalar_distribution.hpp    //
 //                                                                             //
@@ -33,3 +34,4 @@ namespace meta{
 }// boost
 
 #endif
+*/

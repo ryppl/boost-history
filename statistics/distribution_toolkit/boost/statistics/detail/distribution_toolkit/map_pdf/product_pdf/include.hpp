@@ -12,5 +12,7 @@
 #include <boost/statistics/detail/distribution_toolkit/map_pdf/product_pdf/product_pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/map_pdf/product_pdf/is_pseudo_scalar_distribution.hpp>
 #include <boost/statistics/detail/distribution_toolkit/map_pdf/product_pdf/log_unnormalized_pdf.hpp>
+#include <boost/statistics/detail/distribution_toolkit/map_pdf/product_pdf/description.hpp>
+#include <boost/statistics/detail/distribution_toolkit/map_pdf/product_pdf/os.hpp>
 
 #endif

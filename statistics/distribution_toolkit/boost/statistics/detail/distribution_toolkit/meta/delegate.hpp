@@ -25,7 +25,7 @@ namespace meta{
         typedef boost::function<sig_>           type;
 
         template<template<typename> class F> // F in fun_wrap
-        static type make(){ return type(F<D>::instance); }
+        static type call(){ return type(F<D>::instance); }
     };
 
 

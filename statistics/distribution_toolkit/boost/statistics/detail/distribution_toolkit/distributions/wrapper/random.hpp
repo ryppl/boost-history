@@ -1,3 +1,4 @@
+/*
 /////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::distributions::wrapper::random.hpp                    //
 //                                                                             //
@@ -27,7 +28,7 @@ namespace meta{
         typedef typename w_::distribution_type d_;
         typedef typename meta::random<d_>::type type;
         
-        static type make(const w_& d){ 
+        static type call(const w_& d){ 
             return type(
                 make_random(d.const_reference())
             ); 
@@ -43,3 +44,4 @@ namespace meta{
 }// boost
 
 #endif
+*/

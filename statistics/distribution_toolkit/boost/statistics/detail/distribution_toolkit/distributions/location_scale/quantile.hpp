@@ -15,20 +15,21 @@
 namespace boost{
 namespace statistics{
 namespace detail{
+namespace distribution{
+namespace toolkit{
 
     template<typename Z,typename T>
     T
     quantile(
-        const distribution::toolkit::location_scale_distribution<Z>& d,
+        const location_scale_distribution<Z>& d,
         const T& x
     ){
         T z = (x-d.mu())/d.sigma();
-        return statistics::detail::quantile(
-            d.z(),
-            z
-        );
+        return quantile(d.z(),z);
     }
 
+}// toolkit
+}// distribution
 }// detail
 }// statistics
 }// boost

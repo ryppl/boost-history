@@ -1,3 +1,4 @@
+/*
 //////////////////////////////////////////////////////////////////////////////////
 // distribution::toolkit::distributions::aggregate::function_ptrs.hpp            //
 //                                                                              //
@@ -23,11 +24,12 @@ namespace toolkit{
 namespace concept{
 
     template<typename D>
-    class FunctionPtrs : 
-        FunctionPtr<D,fun_wrap::cdf_>, 
-        FunctionPtr<D,fun_wrap::pdf_>, 
-        FunctionPtr<D,fun_wrap::log_unnormalized_pdf_>, 
-        FunctionPtr<D,fun_wrap::quantile_>
+    class FunctionPtrs 
+// : 
+//        FunctionPtr<D,fun_wrap::cdf_>, 
+//        FunctionPtr<D,fun_wrap::pdf_>, 
+//        FunctionPtr<D,fun_wrap::log_unnormalized_pdf_>, 
+//        FunctionPtr<D,fun_wrap::quantile_>
     {
     };
 
@@ -40,3 +42,4 @@ namespace concept{
 }// boost
 
 #endif
+*/

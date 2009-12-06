@@ -10,30 +10,27 @@
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_LOCATION_SCALE_RANDOM_HPP_ER_2009
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/location_scale.hpp>
 #include <boost/random/location_scale.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/random.hpp>
+#include <boost/statistics/detail/distribution_common/meta/random/distribution.hpp>
 
 namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace toolkit{
-
 namespace meta{
 
-
     template<typename Z>
-    struct random< 
-        location_scale_distribution<Z> 
+    struct random_distribution< 
+        toolkit::location_scale_distribution<Z> 
     >{
-        typedef location_scale_distribution<Z> dist_;
-        typedef typename meta::random<Z>::type z_;
+        typedef toolkit::location_scale_distribution<Z> dist_;
+        typedef typename meta::random_distribution<Z>::type z_;
         typedef boost::random::location_scale_distribution<z_> type;
         
-        static type make(const dist_& d){ 
+        static type call(const dist_& d){ 
             return type(
                 d.mu(),
                 d.sigma(),
-                make_random(d.z())
+                make_random_distribution(d.z())
             ); 
         }
     };
@@ -41,8 +38,6 @@ namespace meta{
     
 }// meta
 }// distribution
-}// toolkit
-
 }// detail
 }// statistics
 }// boost

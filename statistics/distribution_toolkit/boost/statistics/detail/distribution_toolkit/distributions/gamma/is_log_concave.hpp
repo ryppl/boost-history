@@ -13,8 +13,7 @@
 #include <boost/math/policies/policy.hpp>
 
 namespace boost{
-namespace statistics{
-namespace detail{
+namespace math{
 
 template <class T, class P>
 inline bool is_log_concave(
@@ -23,9 +22,7 @@ inline bool is_log_concave(
     return ( dist.shape() > static_cast<T>(1) );
 }
 
-
-}// detail
-}// statistics
+}// math
 }// boost
 
 #endif

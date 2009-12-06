@@ -15,5 +15,6 @@
 #include <boost/statistics/detail/distribution_toolkit/distributions/students_t/is_math_distribution.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/students_t/log_unnormalized_pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/students_t/random.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/students_t/os.hpp>
 
 #endif

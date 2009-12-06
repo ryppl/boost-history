@@ -10,32 +10,28 @@
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_STUDENTS_T_RANDOM_HPP_ER_2009
 #include <boost/math/distributions/students_t.hpp>
 #include <boost/random/students_t.hpp> // sandbox/statistics/random
-#include <boost/statistics/detail/distribution_toolkit/meta/random.hpp>
+#include <boost/statistics/detail/distribution_common/meta/random/distribution.hpp>
 
 namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution{
-namespace toolkit{
-
 namespace meta{
 
     template<typename T,typename P>
-    struct random< 
+    struct random_distribution< 
         boost::math::students_t_distribution<T,P> 
     >{
         typedef boost::math::students_t_distribution<T,P> dist_;
         typedef boost::random::students_t_distribution<T> type;
         
-        static type make(const dist_& d){ 
+        static type call(const dist_& d){ 
             return type(d.degrees_of_freedom()); 
         }
     };
 
 }// meta
 }// distribution
-}// toolkit
-
 }// detail
 }// statistics
 }// boost
