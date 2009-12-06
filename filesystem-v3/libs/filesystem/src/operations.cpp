@@ -911,12 +911,12 @@ namespace detail
 
     if (error(::GetFileAttributesExW(p.c_str(), ::GetFileExInfoStandard, &fad)== 0,
         p, ec, "boost::filesystem::file_size"))
-      return 0;
+        return static_cast<boost::uintmax_t>(-1);
 
     if (error((fad.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)!= 0,
-      error_code(ERROR_FILE_NOT_FOUND, system_category),
+      error_code(ERROR_NOT_SUPPORTED, system_category),
         p, ec, "boost::filesystem::file_size"))
-      return 0;
+      return static_cast<boost::uintmax_t>(-1);
 
     return (static_cast<boost::uintmax_t>(fad.nFileSizeHigh)
               << (sizeof(fad.nFileSizeLow)*8)) + fad.nFileSizeLow;
@@ -1471,8 +1471,10 @@ namespace
       == INVALID_HANDLE_VALUE)
     { 
       handle = 0;
-      return error_code(::GetLastError()== ERROR_FILE_NOT_FOUND
-        ? 0 : ::GetLastError(), system_category);
+      return error_code( (::GetLastError() == ERROR_FILE_NOT_FOUND
+                       // Windows Mobile returns ERROR_NO_MORE_FILES; see ticket #3551                                           
+                       || ::GetLastError() == ERROR_NO_MORE_FILES) 
+        ? 0 : ::GetLastError(), system_category );
     }
     target = data.cFileName;
     if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
