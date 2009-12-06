@@ -7,24 +7,24 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#define BOOST_TEST_MODULE validate::itl__interval_bitset unit test
+#define BOOST_TEST_MODULE validate::itl_sorted_associative_map_back unit test
 #include <string>
 #include <iostream>
 #include "../unit_test_unwarned.hpp"
-#include <boost/validate/driver/interval_bitset_driver.hpp>
+#include <boost/validate/driver/sorted_associative_map_back_driver.hpp>
 
 using namespace std;
 using namespace boost;
 using namespace unit_test;
 using namespace boost::itl;
 
-BOOST_AUTO_TEST_CASE(test_validate_itl_interval_bitset)
+BOOST_AUTO_TEST_CASE(test_validate_itl_sorted_associative_map_back)
 {
-    interval_bitset_driver validater;
+    sorted_associative_map_back_driver validater;
     GentorProfileSgl::it()->set_std_profile(20,1);
     //GentorProfileSgl::it()->report_profile();
-    validater.terminate_at_law_count(42, 2);
-    //validater.set_information_level(inform::never);
+    validater.terminate_at_law_count(104, 2);
+    validater.set_information_level(inform::never);
 
     BOOST_CHECK_EQUAL(validater.validate(), true);
 }
