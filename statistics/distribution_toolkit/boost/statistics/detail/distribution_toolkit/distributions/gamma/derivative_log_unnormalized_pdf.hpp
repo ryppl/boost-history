@@ -9,6 +9,7 @@
 #ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_GAMMA_DERIVATIVE_LOG_UNNORMALIZED_PDF_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_GAMMA_DERIVATIVE_LOG_UNNORMALIZED_PDF_HPP_ER_2009
 #include <cmath>
+#include <limits>
 #include <boost/math/distributions/gamma.hpp>
 #include <boost/math/policies/policy.hpp>
 
@@ -39,7 +40,7 @@ inline T derivative_log_unnormalized_pdf(
    if(x == 0)
    {
       // TODO see log_unnormalized_pdf
-      return static_cast<T>(1/0);
+      return std::numeric_limits<T>::infinity();
    }
    static T one_ = static_cast<T>(1);
    result = (shape - one_) / x - one_ / scale;
