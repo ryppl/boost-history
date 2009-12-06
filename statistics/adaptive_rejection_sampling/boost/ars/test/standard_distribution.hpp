@@ -20,13 +20,22 @@
 #include <boost/static_assert.hpp>
 #include <boost/format.hpp>
 #include <boost/range.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 #include <boost/numeric/conversion/converter.hpp>
 #include <boost/iterator/counting_iterator.hpp>
 #include <boost/assign/std/vector.hpp>
 
+#include <boost/fusion/include/make_map.hpp>
+#include <boost/fusion/include/at_key.hpp>
+
+#include <boost/statistics/detail/distribution_common/meta/random/generator.hpp>
+#include <boost/statistics/detail/distribution_common/meta/value.hpp>
+#include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/statistic.hpp>
+
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/variate_generator.hpp>
-#include <boost/random/normal_distribution.hpp>
+//#include <boost/random/normal_distribution.hpp>
 #include <boost/random/ref_distribution.hpp>
 
 //#include <boost/ars/functional/standard_distribution.hpp>
@@ -34,8 +43,6 @@
 #include <boost/ars/constant.hpp>
 #include <boost/ars/proposal_sampler.hpp>
 #include <boost/ars/sampler.hpp>
-
-#include <boost/statistics/detail/distribution_toolkit/data/sample_cdf.hpp>
 
 namespace boost{
 namespace statistics{
@@ -67,9 +74,10 @@ void standard_distribution(
     using namespace boost;
     using namespace math;
     using namespace assign;
+    namespace dist = boost::statistics::detail::distribution;
     typedef std::string                                     str_;
     typedef std::runtime_error                              err_;
-    typedef typename D::value_type                          val_;
+    typedef typename dist::meta::value<D>::type 			val_;
     typedef std::vector<val_>                               vals_;
 
     typedef ars::function::adaptor<D>                       fun_t;
@@ -78,37 +86,55 @@ void standard_distribution(
     typedef random::ref_distribution<ars_&>                 ref_ars_;
     typedef variate_generator<U&,ref_ars_>                  vg_ars_;
 
-    typedef statistics::detail::distribution::toolkit::sample_cdf<val_> sc_;
-
+    typedef boost::mpl::int_<0>							key1_;
+    typedef boost::mpl::int_<1>							key2_;
+    typedef typename boost::fusion::result_of::make_map<
+    	key1_,key2_,val_,val_
+    >::type data_;
+    typedef non_parametric::kolmogorov_smirnov::statistic<val_,key1_,key2_> ks_;
+    typedef std::vector<data_> dataset_;
+    dataset_ dataset;
+    ks_ ks;
     ars_ ars;
     ars.set_function(x_min, x_max, fun_t(mdist));
-
-    sc_ sc;
-
     {
-        format f(
-            "ars initialized every %1% with init_0 = %2% and init_1 = %3%"
-        );
+    	static const str_ str 
+        	= "ars initialized every %1% with init_0 = %2% and init_1 = %3%";
+        format f(str);
         f%n3%init_0%init_1;
         os << f.str() << std::endl;
-        os << "(Kolmogorov-statistic, # rejections per draw): " << std::endl;
+        os << description(mdist) << std::endl;
+        {
+        	format f("(%1%,%2%)");
+            f%ks.description_header%"rejection rate";
+        	os 
+        		<< f.str() 
+        		<< std::endl;
+        }
     }
     long unsigned n_reject;
     try{
         for(unsigned i1 = 0; i1<n1; i1++){
-            sc.clear();
+            dataset.clear();
             n_reject = 0;
+
             for(unsigned i2 = 0; i2<n2; i2++){
                 try{
                     ars.initialize(init_0,init_1);
                     vg_ars_ vg_ars(urng,ref_ars_(ars)); 
-                    boost::generate_n(
-                        sc,
-                        n3,
-                        vg_ars,
-                        mdist
-                    );
-                    // Withos ref_s_, n would be reset to 0
+            		dataset.reserve(dataset.size()+n3);
+                    for(unsigned i = 0; i<n3; i++)
+                    {
+						val_ x = vg_ars();
+                    	dataset.push_back(
+							boost::fusion::make_map<key1_,key2_>(
+                            	x,
+                                cdf(mdist,x)
+                            )                        
+                        );
+                    }
+            		ks(boost::begin(dataset),boost::end(dataset));
+                    // Without ref_s_, n would be reset to 0
                     n_reject += (
                         (vg_ars.distribution()).distribution()
                     ).n_reject();
@@ -122,7 +148,7 @@ void standard_distribution(
                 = static_cast<val_>(n_reject)/static_cast<val_>(n3*n2);
             os 
                 << '(' 
-                << sc
+                << ks.description()
                 << ','
                 << rate 
                 << ')'

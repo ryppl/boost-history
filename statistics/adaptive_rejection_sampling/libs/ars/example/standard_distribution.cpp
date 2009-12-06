@@ -8,7 +8,6 @@
 #include <iostream>
 #include <boost/statistics/detail/distribution_toolkit/distributions/gamma/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
 #include <boost/ars/test/gamma_distribution.hpp>
 #include <boost/ars/test/normal_distribution.hpp>
 #include <libs/ars/example/standard_distribution.h>
@@ -27,10 +26,10 @@ void example_standard_distribution(std::ostream& out){
 
     typedef double value_;
 
-    const unsigned n1 = 6e0;    // # loops
+    const unsigned n1 = 1e1;    // # loops
     const unsigned n2 = 1e1;   // # subsamples on first loop  
     const unsigned n3 = 1e0;   // size of subsample 
-    const unsigned n4 = 1e1;   // At each loop, n2 *= n4
+    const unsigned n4 = 2e0;   // At each loop, n2 *= n4
     const unsigned max_n_reject = 10;
 
     // The initial values are chosen to test the robustness of the

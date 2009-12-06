@@ -53,12 +53,12 @@ class adaptor{
         value_type& log_pdf,
         value_type& dlog_pdf
     )const{
-        log_pdf = statistics::detail::log_unnormalized_pdf(
+        log_pdf = log_unnormalized_pdf(
             this->distribution(),
             x
         );
             
-        dlog_pdf = statistics::detail::derivative_log_unnormalized_pdf(
+        dlog_pdf = derivative_log_unnormalized_pdf(
             this->distribution(),
             x
         );

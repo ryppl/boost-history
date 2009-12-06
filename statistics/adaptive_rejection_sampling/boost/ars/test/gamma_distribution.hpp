@@ -11,7 +11,6 @@
 #include <string>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/gamma/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/data/generate_n_sample_cdf.hpp>
 #include <boost/ars/test/standard_distribution.hpp>
 
 namespace boost{
@@ -58,10 +57,10 @@ void gamma_distribution(
         init_0,                 
         init_1, 
         urng,   
-        n1,    // 1e2
-        n2,    // 10
-        n3,    // 1
-        n4,    // 10
+        n1,    
+        n2,    
+        n3,    
+        n4,    
         n_max_reject,
         out
     );

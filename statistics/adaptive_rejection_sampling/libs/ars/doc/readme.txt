@@ -31,6 +31,7 @@ boost_1_39_0
 
 [ History ]
 
+Dec 4	2009 : misc changes due to updated dependencies
 Sept    2009 : standard_distribution.hpp modified due to changes described in
  sandbox/distribution_toolkit's history.
 July    2009 : Previous package superseded by adaptive_rejection_sampling
