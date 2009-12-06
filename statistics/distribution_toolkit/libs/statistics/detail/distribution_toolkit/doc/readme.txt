@@ -11,15 +11,12 @@
 
 erwann.rogard@gmail.com
 
-Please report your experience (good or bad) if are you using MSVC or gcc on 
-any platform other than Mac, from exectuting libs/.../src/main.cpp
-
 [ Overview ]
 
 These are C++ classes that extend boost/math/distributions and also bridges it
-with boost/random. However, it is not intrusive: the distributions in 
-boost::math are brought into the scope of statistics::detail with forwarding 
-functions.
+with boost/random. functions that have as argument distributions in boost/math
+are in the same namespace. functions and classes that do not already exist
+in boost/math are in namespace boost/statistics/detail/distribution_toolkit.
 
 [ Related links ]
 
@@ -28,21 +25,21 @@ http://www.boost.org/doc/libs/1_40_0/libs/random/index.html
 
 [ Platform/Compiler ]
 
-Mac OS Leopard 10.5         gcc version 4.0.1
-                            Intel C++ compiler 11.1
+Mac OS Leopard 10.6         gcc version 4.0.1
+
                             
 [ Dependencies ]
 
-boost_1_40_0
-/sandbox/statistics/random/ 
+/sandbox/statistics/non_parametric/ 
+/sandbox/statistics/detail/fusion/ 
 /sandbox/statistics/distribution_common/ 
-
-To use distributions/wrapper,
-libboost_serialization-xgcc42-mt-1_39.a
+/sandbox/statistics/random/
+/sandbox/statistics/distribution_toolkit/ 
+/usr/local/boost_1_40_0/
 
 [ Directories ]
 
-/data
+/concept
 /distributions
     
     Provides extended functionality for distributions in boost::math or adds
@@ -57,16 +54,6 @@ libboost_serialization-xgcc42-mt-1_39.a
 
     make_random(dist) returns a model of RandomDistribution 
 
-/concept
-/fun_wrap 
-
-    Decouples the function, such as pdf, from the distribution D:
-        fun_wrap::cdf_<D>::instance
-
-	Note : distribution_common has functors (in the making) that achieve the 
-    same goal that are easier to use 
-
-/fwd_math 
 /iterator
 /map_pdf
 

@@ -32,7 +32,6 @@
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/wrapper/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/map_pdf/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/unscope/include.hpp>
 
 #include <libs/statistics/detail/distribution_toolkit/example/distribution_function.h>
 
