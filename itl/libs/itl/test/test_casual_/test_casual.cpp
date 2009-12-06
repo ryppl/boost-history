@@ -41,16 +41,22 @@ using namespace boost::itl;
 
 BOOST_AUTO_TEST_CASE(reverse_iter)
 {
-    itl::list<int> list_a, list_b;
-    list_a.push_back(1);
-    list_a.push_back(2);
-    cout << list_a << endl;
-    //std::copy_backward(list_a.begin(), list_a.end(), std::inserter(list_b, list_b.end()));
-    fill_n(std::inserter(list_b, list_b.end()) , 2, -1);
-    //list_b.push_back(-1);
-    //list_b.push_back(-1);
-    itl::list<int>::iterator ins = list_b.end();
-    std::copy_backward(list_a.begin(), list_a.end(), ins);
-    cout << list_b << endl;
+    interval_map<int,int> map_a;
+    map_a += make_pair(interval<int>::rightopen(0,3),1);
+    cout << map_a << endl;
+
+    for(interval_map<int,int>::element_iterator elem = map_a.elements_begin();
+        elem != map_a.elements_end(); elem++)
+        cout << "(" << elem->first << "," << elem->second << ")";
+    cout << "\n-------------------------------------\n";
+
+    std::pair<const int, int> search_pair(2,1);
+
+    interval_map<int,int>::element_const_iterator found 
+        = std::find(map_a.elements_begin(), map_a.elements_end(), search_pair);
+    cout << "(" << found->first << "," << found->second << ")\n";
+
+    const_cast<int&>(found->second) = 2;
+    cout << map_a << endl;
 }
 
