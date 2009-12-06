@@ -20,13 +20,15 @@ namespace boost{namespace itl
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_copy
 {
-    static void apply(const SourceT& source, TargetT& target)
+    typedef typename SourceT::atomized_type AtomicT;
+
+    void operator()(const AtomicT& source, TargetT& target)const
     {
         std::copy(source.begin(), source.end(), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
     }
 
-    static void apply_elemental(const SourceT& source, TargetT& target)
+    void operator()(const SourceT& source, TargetT& target)const
     {
         std::copy(source.elements_begin(), source.elements_end(), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
@@ -38,13 +40,15 @@ struct std_copy
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_copy_back
 {
-    static void apply(const SourceT& source, TargetT& target)
+    typedef typename SourceT::atomized_type AtomicT;
+
+    void operator()(const AtomicT& source, TargetT& target)
     {
         std::copy(source.rbegin(), source.rend(), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
     }
 
-    static void apply_elemental(const SourceT& source, TargetT& target)
+    void operator()(const SourceT& source, TargetT& target)
     {
         std::copy(source.elements_rbegin(), source.elements_rend(), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
@@ -58,13 +62,15 @@ struct std_copy_back
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_reverse_copy
 {
-    static void apply(const SourceT& source, TargetT& target)
+    typedef typename SourceT::atomized_type AtomicT;
+
+    void operator()(const AtomicT& source, TargetT& target)
     {
         std::reverse_copy(source.begin(), source.end(), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
     }
 
-    static void apply_elemental(const SourceT& source, TargetT& target)
+    void operator()(const SourceT& source, TargetT& target)
     {
         std::reverse_copy(source.elements_begin(), source.elements_end(), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
@@ -76,13 +82,15 @@ struct std_reverse_copy
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_reverse_copy_back
 {
-    static void apply(const SourceT& source, TargetT& target)
+    typedef typename SourceT::atomized_type AtomicT;
+
+    void operator()(const AtomicT& source, TargetT& target)
     {
         std::reverse_copy(source.rbegin(), source.rend(), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
     }
 
-    static void apply_elemental(const SourceT& source, TargetT& target)
+    void operator()(const SourceT& source, TargetT& target)
     {
         std::reverse_copy(source.elements_rbegin(), source.elements_rend(), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
@@ -97,15 +105,16 @@ struct std_reverse_copy_back
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_copy_backward
 {
+    typedef typename SourceT::atomized_type AtomicT;
     typedef typename TargetT::value_type value_type;
 
-    static void apply(const SourceT& source, TargetT& target)
+    void operator()(const AtomicT& source, TargetT& target)
     {
         fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
         std::copy_backward(source.begin(), source.end(), target.end());
     }
 
-    static void apply_elemental(const SourceT& source, TargetT& target)
+    void operator()(const SourceT& source, TargetT& target)
     {
         fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
         std::copy_backward(source.elements_begin(), source.elements_end(), target.end());
@@ -117,15 +126,16 @@ struct std_copy_backward
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_copy_backward_back
 {
+    typedef typename SourceT::atomized_type AtomicT;
     typedef typename TargetT::value_type value_type;
 
-    static void apply(const SourceT& source, TargetT& target)
+    void operator()(const AtomicT& source, TargetT& target)
     {
         fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
         std::copy_backward(source.rbegin(), source.rend(), target.end());
     }
 
-    static void apply_elemental(const SourceT& source, TargetT& target)
+    void operator()(const SourceT& source, TargetT& target)
     {
         fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
         std::copy_backward(source.elements_rbegin(), source.elements_rend(), target.end());
@@ -138,5 +148,5 @@ struct std_copy_backward_back
 
 }} // namespace itl boost
 
-#endif BOOST_VALIDATE_STD_ALGORITHM_COPY_HPP_JOFA_091124
+#endif // BOOST_VALIDATE_STD_ALGORITHM_COPY_HPP_JOFA_091124
 

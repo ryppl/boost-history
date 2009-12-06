@@ -16,9 +16,6 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl/predicates.hpp>
 #include <boost/itl/interval_morphism.hpp>
 #include <boost/validate/laws/law.hpp>
-#include <boost/validate/std/algorithm/copy.hpp>
-#include <boost/validate/std/algorithm/set_algo.hpp>
-#include <boost/validate/std/algorithm/relation.hpp>
 
 namespace boost{namespace itl
 {
@@ -40,7 +37,7 @@ namespace boost{namespace itl
 // -----------------------------------------------------------------------------
 template <typename SegmentsT, 
           typename TargetsT  = typename SegmentsT::atomized_type,
-          template<class,class,template<class>class>class Algorithm = itl::std_copy,
+          template<class,class,template<class>class>class Algorithm,
           template<class>class       TargetIterator = std::insert_iterator,
           template<class,class>class Atomizer       = itl::Interval::Atomize,
           template<class>class       Equality       = itl::std_equal         > 
@@ -60,6 +57,7 @@ class UnaryAtomicEquivalence :
     */
 public:
     typedef typename SegmentsT::atomized_type ElementsT;
+    typedef Algorithm<SegmentsT,TargetsT,TargetIterator> Algo;
 
     std::string name()const { return "UnaryAtomicEquivalence"; }
     std::string formula()const { return "For all S a: Alg<E,T,I>(atomize(a)) == Alg<S,T,I>(a)"; }
@@ -70,7 +68,7 @@ public:
             "EleEq<"
                 + type_to_string<SegmentsT>::apply()+","
                 + type_to_string<TargetsT>::apply() +","
-                + Algorithm<ElementsT,TargetsT,TargetIterator>::struct_abbreviation() +">";
+                + Algo::struct_abbreviation() +">";
     }
 
 public:
@@ -83,11 +81,98 @@ public:
         SegmentsT segmental_a = this->template getInputValue<operand_a>();
         ElementsT elemental_a;
         Atomizer<ElementsT,SegmentsT>()(elemental_a, segmental_a);
-        Algorithm<ElementsT,TargetsT,TargetIterator>::apply(elemental_a, lhs); 
+        Algo()(elemental_a, lhs); 
 
         // --- right hand side -------------------------------------------------
         TargetsT rhs;
-        Algorithm<SegmentsT,TargetsT,TargetIterator>::apply_elemental(segmental_a, rhs); 
+        Algo()(segmental_a, rhs); 
+
+        this->template setOutputValue<lhs_result>(lhs);
+        this->template setOutputValue<rhs_result>(rhs);
+
+        return Equality<TargetsT>()(lhs, rhs);
+    }
+
+    bool debug_holds()
+    { 
+        return holds();
+    }
+
+    size_t size()const 
+    { 
+        return value_size<SegmentsT>::apply(this->template getInputValue<operand_a>());
+    }
+};
+
+
+
+// -----------------------------------------------------------------------------
+// S: Segment container 
+// f: Atomize function transforming an interval container into an element container
+// E: Element container
+// g: A function (specifically std::algorithm) applicable to S and E
+// T: Target container
+//
+//         S
+//        / \
+//     f /   \ g
+//      /  =  \
+//     V       V  
+//    E ------> T
+//         g
+// -----------------------------------------------------------------------------
+template <typename SegmentsT, 
+          typename TargetsT  = typename SegmentsT::atomized_type,
+          template<class,class>class Algorithm,
+          template<class,class>class Atomizer       = itl::Interval::Atomize,
+          template<class>class       Equality       = itl::std_equal         > 
+class UnaryAtomicEquivalence2 : 
+    public Law<UnaryAtomicEquivalence2<SegmentsT, TargetsT, 
+                                       Algorithm, Atomizer, Equality>, 
+               LOKI_TYPELIST_2(SegmentsT, TargetsT),
+               LOKI_TYPELIST_2(TargetsT, TargetsT)   >
+{
+    /** S: SegmentsT, T: TargetsT, I: InputIterator
+    Alg<S,T,I>: an algortihm on interval containers S
+                that results in a container T via iterator I. 
+    For all S a: Alg<E,T,I>(c)(atomize(a)) == Alg<S,T,I>(c)(a)
+    Input  = (a := inVal1)
+    Output = (lhs_result, rhs_result)
+    */
+public:
+    typedef typename SegmentsT::atomized_type ElementsT;
+    typedef typename ElementsT::value_type    value_type;
+    typedef TargetsT                          element_type;
+
+    typedef Algorithm<SegmentsT,TargetsT> Algo;
+
+    std::string name()const { return "UnaryAtomicEquivalence2"; }
+    std::string formula()const { return "For all S a: Alg<E,T,I>(c)(atomize(a)) == Alg<S,T,I>(c)(a)"; }
+
+    std::string typeString()const
+    {
+        return
+            "EleEq2<"
+                + type_to_string<SegmentsT>::apply()+","
+                + type_to_string<TargetsT>::apply() +","
+                + Algo::struct_abbreviation() +">";
+    }
+
+public:
+
+    bool holds()
+    {
+        // For all S a: Alg<E,T,I>(c)(atomize(a)) == Alg<S,T,I>(c)(a)
+        // --- left hand side --------------------------------------------------
+        SegmentsT    segmental_a = this->template getInputValue<operand_a>();
+        element_type comparand   = this->template getInputValue<operand_b>();
+        ElementsT elemental_a;
+        Atomizer<ElementsT,SegmentsT>()(elemental_a, segmental_a);
+        Algo algorithm(comparand);
+        TargetsT lhs = algorithm(elemental_a);
+
+        // --- right hand side -------------------------------------------------
+        TargetsT rhs = algorithm(segmental_a);
 
         this->template setOutputValue<lhs_result>(lhs);
         this->template setOutputValue<rhs_result>(rhs);
@@ -125,7 +210,7 @@ public:
 // -----------------------------------------------------------------------------
 template <typename SegmentsT, 
           typename TargetsT  = typename SegmentsT::atomized_type,
-          template<class,class,template<class>class>class Algorithm = itl::std_set_union,
+          template<class,class,template<class>class>class Algorithm,
           template<class>class       TargetIterator = std::insert_iterator,
           template<class,class>class Atomizer       = itl::Interval::Atomize,
           template<class>class       Equality       = itl::std_equal         > 
@@ -144,6 +229,7 @@ class BinaryAtomicEquivalence :
     Output = (lhs_result, rhs_result)
     */
 public:
+    typedef Algorithm<SegmentsT,TargetsT,TargetIterator> Algo;
     typedef typename SegmentsT::atomized_type ElementsT;
 
     std::string name()const { return "BinaryAtomicEquivalence"; }
@@ -156,7 +242,7 @@ public:
             "EleEq<"
                 + type_to_string<SegmentsT>::apply()+","
                 + type_to_string<TargetsT>::apply() +","
-                + Algorithm<ElementsT,TargetsT,TargetIterator>::struct_abbreviation() +">";
+                + Algo::struct_abbreviation() +">";
     }
 
 public:
@@ -171,11 +257,11 @@ public:
         ElementsT elemental_a, elemental_b;
         Atomizer<ElementsT,SegmentsT>()(elemental_a, segmental_a);
         Atomizer<ElementsT,SegmentsT>()(elemental_b, segmental_b);
-        Algorithm<ElementsT,TargetsT,TargetIterator>::apply(elemental_a, elemental_b, lhs); 
+        Algo()(elemental_a, elemental_b, lhs); 
 
         // --- right hand side -------------------------------------------------
         TargetsT rhs;
-        Algorithm<SegmentsT,TargetsT,TargetIterator>::apply_elemental(segmental_a, segmental_b, rhs); 
+        Algo()(segmental_a, segmental_b, rhs); 
 
         this->template setOutputValue<lhs_result>(lhs);
         this->template setOutputValue<rhs_result>(rhs);
@@ -197,5 +283,5 @@ public:
 
 }} // namespace itl boost
 
-#endif BOOST_VALIDATE_LAWS_ATOMIC_EQUIVALENCE_HPP_JOFA_091124
+#endif // BOOST_VALIDATE_LAWS_ATOMIC_EQUIVALENCE_HPP_JOFA_091124
 

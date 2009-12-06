@@ -27,6 +27,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 //#include <boost/validate/laws/novial_tree.hpp>
 #include <boost/validate/laws/inversion_laws.hpp>
 #include <boost/validate/validater/law_validater.hpp>
+#include <boost/validate/std/algorithm/copy.hpp>
+#include <boost/validate/std/algorithm/find.hpp>
 #include <boost/validate/gentor/gentorprofile.hpp>
 #include <boost/validate/gentor/rangegentor.hpp>
 #include <boost/itl/interval_set.hpp>
@@ -115,18 +117,19 @@ void test_LawValidater()
     //    itl::std_reverse_copy_forward
     //> TestLawT;
 
-    typedef UnaryAtomicEquivalence
+    typedef UnaryAtomicEquivalence2
     <
-        itl::interval_set<int>,
-        itl::list<int>,
-        itl::std_copy_backward_back
+        itl::interval_map<int,int>, 
+        //itl::list<int>,
+        std::pair<int,int>,
+        itl::std_find
     > TestLawT;
 
 
     LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------
-    int test_count = 1000;
+    int test_count = 10000;
     ptime start, stop;
 
     GentorProfileSgl::it()->set_std_profile(8,1);

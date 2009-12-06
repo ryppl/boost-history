@@ -26,14 +26,16 @@ namespace boost{namespace itl
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_equals
 {
-    static void apply(const SourceT& left, const SourceT& right, TargetT& target)
+    typedef typename SourceT::atomized_type AtomicT;
+
+    void operator()(const AtomicT& left, const AtomicT& right, TargetT& target)
     {
         target = false;
         if(left.size() <= right.size())
             target = std::equal(left.begin(), left.end(), right.begin());
     }
 
-    static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
+    void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         target = false;
         if(left.size() <= right.size())
@@ -46,14 +48,16 @@ struct std_equals
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_equals_back
 {
-    static void apply(const SourceT& left, const SourceT& right, TargetT& target)
+    typedef typename SourceT::atomized_type AtomicT;
+
+    void operator()(const AtomicT& left, const AtomicT& right, TargetT& target)
     {
         target = false;
         if(left.size() <= right.size())
             target = std::equal(left.rbegin(), left.rend(), right.rbegin());
     }
 
-    static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
+    void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         target = false;
         if(left.size() <= right.size())
@@ -73,13 +77,15 @@ struct std_equals_back
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_lexicographical_compare
 {
-    static void apply(const SourceT& left, const SourceT& right, TargetT& target)
+    typedef typename SourceT::atomized_type AtomicT;
+
+    void operator()(const AtomicT& left, const AtomicT& right, TargetT& target)
     {
         target = std::lexicographical_compare(left.begin(), left.end(), 
                                               right.begin(), right.end());
     }
 
-    static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
+    void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         target = std::lexicographical_compare
             (left.elements_begin(),  left.elements_end(), 
@@ -93,13 +99,15 @@ struct std_lexicographical_compare
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_lexicographical_compare_back
 {
-    static void apply(const SourceT& left, const SourceT& right, TargetT& target)
+    typedef typename SourceT::atomized_type AtomicT;
+
+    void operator()(const AtomicT& left, const AtomicT& right, TargetT& target)
     {
         target = std::lexicographical_compare(left.rbegin(), left.rend(), 
                                               right.rbegin(), right.rend());
     }
 
-    static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
+    void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         target = std::lexicographical_compare
             (left.elements_rbegin(),  left.elements_rend(), 
@@ -115,13 +123,15 @@ struct std_lexicographical_compare_back
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_includes
 {
-    static void apply(const SourceT& left, const SourceT& right, TargetT& target)
+    typedef typename SourceT::atomized_type AtomicT;
+
+    void operator()(const AtomicT& left, const AtomicT& right, TargetT& target)
     {
         target = std::includes(left.begin(), left.end(), 
                                right.begin(), right.end());
     }
 
-    static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
+    void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         target = std::includes(left.elements_begin(),  left.elements_end(), 
                                right.elements_begin(), right.elements_end()); 
@@ -134,13 +144,15 @@ struct std_includes
 template<class SourceT, class TargetT, template<class>class InsertIterator>
 struct std_includes_back
 {
-    static void apply(const SourceT& left, const SourceT& right, TargetT& target)
+    typedef typename SourceT::atomized_type AtomicT;
+
+    void operator()(const AtomicT& left, const AtomicT& right, TargetT& target)
     {
         target = std::includes(left.rbegin(), left.rend(), 
                                right.rbegin(), right.rend());
     }
 
-    static void apply_elemental(const SourceT& left, const SourceT& right, TargetT& target)
+    void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         target = std::includes(left.elements_rbegin(),  left.elements_rend(), 
                                right.elements_rbegin(), right.elements_rend()); 
@@ -151,5 +163,5 @@ struct std_includes_back
 
 }} // namespace itl boost
 
-#endif BOOST_VALIDATE_STD_ALGORITHM_RELATION_HPP_JOFA_091202
+#endif // BOOST_VALIDATE_STD_ALGORITHM_RELATION_HPP_JOFA_091202
 

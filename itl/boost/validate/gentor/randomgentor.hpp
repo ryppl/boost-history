@@ -320,7 +320,16 @@ namespace boost{namespace itl
     template <> 
     struct Calibrater<std::pair<int,int>, RandomGentor>
     {
-        static void apply(RandomGentor< std::pair<int,int> >&){}
+        static void apply(RandomGentor< std::pair<int,int> >& gentor)
+        {
+            // Set the range within which the sizes of the generated object varies.
+            NumberGentorT<int>* int_gentor_1 = new NumberGentorT<int>;
+            NumberGentorT<int>* int_gentor_2 = new NumberGentorT<int>;
+            int_gentor_1->setRange(GentorProfileSgl::it()->range_int());
+            int_gentor_2->setRange(GentorProfileSgl::it()->range_int());
+            gentor.set_first_gentor(int_gentor_1);
+            gentor.set_second_gentor(int_gentor_2);
+        }
     };
 
     template <> 

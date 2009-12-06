@@ -10,6 +10,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 
 #include <boost/type_traits/is_const.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/itl/type_traits/is_concept_equivalent.hpp>
 
 namespace boost{namespace itl
 {
@@ -47,25 +48,79 @@ inline bool operator == (const mapped_reference<FirstT, SecondT>& left, const ma
 { return left.first == right.first && left.second == right.second; }
 
 template<class FirstT, class SecondT>
+inline bool operator == (const mapped_reference<FirstT, SecondT>& left, const std::pair<const FirstT, SecondT>& right)
+{ return left.first == right.first && left.second == right.second; }
+
+template<class FirstT, class SecondT>
+inline bool operator == (const std::pair<const FirstT, SecondT>& left, const mapped_reference<FirstT, SecondT>& right)
+{ return left.first == right.first && left.second == right.second; }
+
+//------------------------------------------------------------------------------
+template<class FirstT, class SecondT>
 inline bool operator < (const mapped_reference<FirstT, SecondT>& left, const mapped_reference<FirstT, SecondT>& right)
 { return left.first < right.first || (!(right.first < left.first) && left.second < right.second); }
 
+template<class FirstT, class SecondT>
+inline bool operator < (const mapped_reference<FirstT, SecondT>& left, const std::pair<const FirstT, SecondT>& right)
+{ return left.first < right.first || (!(right.first < left.first) && left.second < right.second); }
+
+template<class FirstT, class SecondT>
+inline bool operator < (const std::pair<const FirstT, SecondT>& left, const mapped_reference<FirstT, SecondT>& right)
+{ return left.first < right.first || (!(right.first < left.first) && left.second < right.second); }
+
+//------------------------------------------------------------------------------
 template<class FirstT, class SecondT>
 inline bool operator != (const mapped_reference<FirstT, SecondT>& left, const mapped_reference<FirstT, SecondT>& right)
 { return !(left == right); }
 
 template<class FirstT, class SecondT>
+inline bool operator != (const mapped_reference<FirstT, SecondT>& left, const std::pair<const FirstT, SecondT>& right)
+{ return !(left == right); }
+
+template<class FirstT, class SecondT>
+inline bool operator != (const std::pair<const FirstT, SecondT>& left, const mapped_reference<FirstT, SecondT>& right)
+{ return !(left == right); }
+
+//------------------------------------------------------------------------------
+template<class FirstT, class SecondT>
 inline bool operator > (const mapped_reference<FirstT, SecondT>& left, const mapped_reference<FirstT, SecondT>& right)
 { return right < left; }
 
+template<class FirstT, class SecondT>
+inline bool operator > (const mapped_reference<FirstT, SecondT>& left, const std::pair<const FirstT, SecondT>& right)
+{ return right < left; }
+
+template<class FirstT, class SecondT>
+inline bool operator > (const std::pair<const FirstT, SecondT>& left, const mapped_reference<FirstT, SecondT>& right)
+{ return right < left; }
+
+//------------------------------------------------------------------------------
 template<class FirstT, class SecondT>
 inline bool operator <= (const mapped_reference<FirstT, SecondT>& left, const mapped_reference<FirstT, SecondT>& right)
 { return !(right < left); }
 
 template<class FirstT, class SecondT>
+inline bool operator <= (const mapped_reference<FirstT, SecondT>& left, const std::pair<const FirstT, SecondT>& right)
+{ return !(right < left); }
+
+template<class FirstT, class SecondT>
+inline bool operator <= (const std::pair<const FirstT, SecondT>& left, const mapped_reference<FirstT, SecondT>& right)
+{ return !(right < left); }
+
+//------------------------------------------------------------------------------
+template<class FirstT, class SecondT>
 inline bool operator >= (const mapped_reference<FirstT, SecondT>& left, const mapped_reference<FirstT, SecondT>& right)
 { return !(left < right); }
 
+template<class FirstT, class SecondT>
+inline bool operator >= (const mapped_reference<FirstT, SecondT>& left, const std::pair<const FirstT, SecondT>& right)
+{ return !(left < right); }
+
+template<class FirstT, class SecondT>
+inline bool operator >= (const std::pair<const FirstT, SecondT>& left, const mapped_reference<FirstT, SecondT>& right)
+{ return !(left < right); }
+
+//------------------------------------------------------------------------------
 template<class FirstT, class SecondT>
 inline mapped_reference<FirstT, SecondT> make_mapped_reference(const FirstT& left, SecondT& right)
 { return mapped_reference<FirstT, SecondT>(left, right); }

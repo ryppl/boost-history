@@ -63,6 +63,7 @@ public:
          std::less, boost::itl::inplace_bit_add, boost::itl::inplace_bit_and> interval_bitmap_type;
 
     typedef DomainT                                       domain_type;
+    typedef DomainT                                       codomain_type;
     typedef DomainT                                       element_type;   // 0 ..  2^digits(element_type)-1
     typedef DomainT                                       condensed_type; // 0 .. (2^digits(element_type)-1)/digits(word_type)
     typedef typename BitSetT::word_type                   word_type;      // 0 ..  2^digits(word_type)-1

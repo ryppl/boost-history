@@ -164,27 +164,14 @@ namespace boost{namespace itl
 
 
         /** Function template <tt>lexicographical_equal</tt> implements 
-        lexicographical equality. */
+            lexicographical equality. */
         template<class SetType>
         bool lexicographical_equal(const SetType& left, const SetType& right)
         {
-            if(&left == &right)        return true;
-            if(left.iterative_size() != right.iterative_size()) 
-                return false;
-
-            // so we have two sorted containers with equal element counts
-            typename SetType::const_iterator left_  = left.begin();
-            typename SetType::const_iterator right_ = right.begin();
-
-            while(left_ != left.end())
-            {
-                if(!(*left_==*right_))
-                    return false;
-            
-                ++left_; ++right_;
-            }
-
-            return true;
+            if(&left == &right)
+                return true;
+            else return left.iterative_size() == right.iterative_size()
+                     && std::equal(left.begin(), left.end(), right.begin()); 
         }
 
 

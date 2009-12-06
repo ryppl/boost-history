@@ -1417,11 +1417,6 @@ template
 inline bool operator == (const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& lhs,
                          const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& rhs)
 {
-    //MEMO PORT: This implementation worked with stlport, sgi and gnu 
-    // implementations of the stl. But using MSVC-implementation
-    // results in runtime error! So I had to provide an independent
-    // safe implementation.
-    //return std::equal(lhs.begin(), lhs.end(), rhs.begin());
     return Set::lexicographical_equal(lhs, rhs);
 }
 

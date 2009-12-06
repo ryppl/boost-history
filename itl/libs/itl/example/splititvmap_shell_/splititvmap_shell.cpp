@@ -55,7 +55,7 @@ void mapTestShell()
 
         instructions();
 
-        while(true)
+        for(;;)
         {
             cout << "> ";
             cin >> cmd ;
