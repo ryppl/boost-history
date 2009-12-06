@@ -26,21 +26,20 @@
 #include <boost/ref.hpp>
 #include <boost/foreach.hpp>
 
-//#include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/include/at_key.hpp>
 #include <boost/fusion/include/pair.hpp>
 #include <boost/fusion/include/map.hpp>
+#include <boost/fusion/include/make_map.hpp>
 
 #include <boost/math/tools/precision.hpp>
 
 #include <boost/statistics/detail/accumulator/statistics/proportion_less_than.hpp>
+#include <boost/statistics/detail/distribution_common/distributions/reference/wrapper.hpp>
+#include <boost/statistics/detail/distribution_common/functor/log_unnormalized_pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/bind_delegate.hpp>
 #include <boost/statistics/detail/distribution_toolkit/map_pdf/ratio_pdf/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/fun_wrap/log_unnormalized_pdf.hpp>
-#include <boost/statistics/detail/distribution_toolkit/fun_wrap/cdf.hpp>
-#include <boost/statistics/detail/distribution_toolkit/random/generator.hpp>
+#include <boost/statistics/detail/distribution_toolkit/test/detail/x_f.hpp>
+#include <boost/statistics/detail/distribution_toolkit/test/random.hpp>
 
 #include <boost/statistics/detail/fusion/at_key/functor.hpp>
 #include <boost/statistics/detail/fusion/at_key/range.hpp>
@@ -59,6 +58,7 @@ void example_sampler(std::ostream& os){
     // kolmorov-distances along the the sample size of the targets.    
     using namespace boost;
     namespace stat = boost::statistics::detail;
+    namespace dist = stat::distribution;
     namespace tk = stat::distribution::toolkit;
     namespace is = stat::importance_sampling;
     namespace np = stat::non_parametric;
@@ -76,27 +76,23 @@ void example_sampler(std::ostream& os){
     typedef boost::accumulators::accumulator_set<val_,stats_> acc_;
     typedef std::size_t                                 size_;
 
-    typedef mpl::int_<0>                                key1_;
-    typedef mpl::int_<1>                                key2_;
-    typedef boost::fusion::pair<key1_,val_>             p1_;
-    typedef boost::fusion::pair<key2_,val_>             p2_;
-    typedef fusion::map<p1_,p2_>                        data_;
+    typedef boost::mpl::int_<0>                     	k0_;
+    typedef boost::mpl::int_<1>                         k1_;
+	typedef boost::fusion::result_of::make_map<k0_,k1_,val_,val_>::type data_;
+	
+    typedef np::kolmogorov_smirnov::statistic<val_,k0_,k1_> ks_stat_;
+    typedef std::vector<data_>                          vec_data_;
+    typedef range_iterator<vec_data_>::type             vec_data_it_;
 
-    typedef tk::meta::bind_delegate<dist_>::type        fun_;
-    typedef np::kolmogorov_smirnov::statistic<val_,key1_,key2_> ks_stat_;
-
-    typedef std::vector<data_>                          dataset_;
-    typedef range_iterator<dataset_>::type              dataset_it_;
-    typedef boost::function<data_()>                    gen_data_;
     typedef stat::fusion::at_key::meta_range<
-        dataset_it_,
-        key1_
+        vec_data_it_,
+        k0_
     >::type range1_;
-    typedef is::sampler<range1_,val_>                   is_sampler_;
-    typedef boost::variate_generator<urng_&,is_sampler_> vg_;
+    typedef is::sampler<range1_,val_>                   	is_sampler_;
+    typedef boost::variate_generator<urng_&,is_sampler_> 	vg_;
 
     // Constants
-    const unsigned p_n          = 5e4;             
+    const unsigned n_p          = 5e4;             
     const val_ max_log          = 100.0;           
     const val_ mu               = 0.0;
     const val_ sigma            = 1.0;
@@ -114,44 +110,26 @@ void example_sampler(std::ostream& os){
 
     urng_ urng;
 
-    dataset_ proposals(p_n); 
+    vec_data_ proposals(n_p); 
     {
         // Generate proposal values and their log_pdf
-        // {(x,log_pdf(x)):i=1,...,p_n}
-        BOOST_AUTO(
-            vg,
-            make_random_generator(
-                urng,
-                p_d
-            )
-        );
-
-        BOOST_FOREACH(data_& d,proposals)
-        {
-            val_ x = vg();
-            d = data_(
-                x,
-                stat::log_unnormalized_pdf(p_d,x)
-            );
-            
-        }
-
+        // {(x,log_pdf(x)):i=1,...,n_p}
+		BOOST_AUTO(vg,dist::make_random_generator(urng,p_d));        
+        BOOST_FOREACH(data_& data,proposals){
+        	val_ x = vg();
+			boost::fusion::at_key<k0_>(data) = x;
+            boost::fusion::at_key<k1_>(data) = log_unnormalized_pdf(p_d,x);
+		}        
     }
-    vals_ is_weights( p_n );
+    vals_ is_weights( n_p );
     {
         // is_weights <- log_pdf(t_d) - log_pdf(p_d)
-
-        BOOST_AUTO(
-            r,
-            tk::make_ratio_pdf(t_d,p_d)
-        );
 
         vals_it_ i = boost::begin( is_weights );
         BOOST_FOREACH(const data_& d, proposals)
         {
-
-            *i = stat::log_unnormalized_pdf( t_d, fusion::at_key<key1_>(d) ) 
-                - fusion::at_key<key2_>(d);
+            *i = log_unnormalized_pdf( t_d, fusion::at_key<k0_>(d) ) 
+                - fusion::at_key<k1_>(d);
             ++i;
         }
 
@@ -179,11 +157,10 @@ void example_sampler(std::ostream& os){
         os << f.str() << std::endl;
     }
     {
-        range1_ r1 = stat::fusion::at_key::make_range<key1_>(
+        range1_ r1 = stat::fusion::at_key::make_range<k0_>(
             boost::begin(proposals),
             boost::end(proposals)
         );
-
         vg_ vg(
             urng,
             is_sampler_(
@@ -191,41 +168,19 @@ void example_sampler(std::ostream& os){
                 r1
             )
         );
-
-        dataset_ targets;
-        ks_stat_ ks_stat;
+        vec_data_ targets;
         {
-            os << "proposal : " << tk::description(p_d) << std::endl; 
-            os << "target : " << tk::description(t_d) << std::endl; 
+            os << "proposal : " << description(p_d) << std::endl; 
             os << ks_stat_::description_header << std::endl;
-            unsigned i = 0;
-            unsigned n_draws = n1;
-            targets.clear();
-            while(i<n_loops){
-                targets.reserve(targets.size()+n_draws);
-                for(unsigned j = 0; j<n_draws; j++)
-                {
-                    BOOST_AUTO(x,vg());
-                
-                    targets.push_back( 
-                        data_(
-                            fusion::make_pair<key1_>( x ),
-                            fusion::make_pair<key2_>( 
-                                stat::cdf(t_d,x)
-                            )
-                        )
-                    );
-                }
-                ks_stat(
-                    boost::begin(targets),
-                    boost::end(targets)
-                );
-                os << ks_stat.description() << std::endl;
-                ++i;
-                n_draws *= n2;
-            }
+			dist::toolkit::test::random(
+            	t_d,
+                vg,
+                n_loops,
+                n1,
+                n2,
+                os
+            );
         }
-        
     }
 
     os << "<-" << std::endl;
