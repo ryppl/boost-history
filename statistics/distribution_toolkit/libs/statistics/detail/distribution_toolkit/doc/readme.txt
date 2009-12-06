@@ -14,9 +14,10 @@ erwann.rogard@gmail.com
 [ Overview ]
 
 These are C++ classes that extend boost/math/distributions and also bridges it
-with boost/random. functions that have as argument distributions in boost/math
-are in the same namespace. functions and classes that do not already exist
-in boost/math are in namespace boost/statistics/detail/distribution_toolkit.
+with boost/random. functions that have as argument classes in namespace
+boost/math are in the same namespace. functions and classes that do not 
+already exist in boost/math are in namespace 
+boost/statistics/detail/distribution_toolkit.
 
 [ Related links ]
 
@@ -25,9 +26,10 @@ http://www.boost.org/doc/libs/1_40_0/libs/random/index.html
 
 [ Platform/Compiler ]
 
-Mac OS X 10.6         	gcc 4.2					boost_1_41_0
-Win7 V6.1.7100			Visual Studio 2010		boost_1_40_0
-                            
+Win7-32 V6.1.7100		Dev-C++ 5.0 beta 9.2 with Mingw/GCC 3.4.2 	boost_1_41_0							Dev-C++ 
+Win7-32 V6.1.7100		Visual Studio 2010							boost_1_41_0
+Mac OS X 10.6         	gcc 4.2										boost_1_41_0
+
 [ Dependencies ]
 
 /sandbox/statistics/non_parametric/ 
@@ -36,6 +38,11 @@ Win7 V6.1.7100			Visual Studio 2010		boost_1_40_0
 /sandbox/statistics/random/
 /sandbox/statistics/distribution_toolkit/ 
 /usr/local/boost_1_40_0/
+
+[ Bugs ]
+
+In example/distribution_function testing error handling outputs a boost format
+runtime error under MSVC and mingw.
 
 [ Directories ]
 
@@ -65,17 +72,8 @@ Win7 V6.1.7100			Visual Studio 2010		boost_1_40_0
     associated with distributions can be reused (e.g. fun_wrap::pdf_).
 
 /meta
-/random
-    
-    Maps a distribution and a uniform random number generator to a variate 
-    generator
-    
-/unscope
+/test    
         
-[ Bugs ]
-
-See distributions/wrapper/wrapper.hpp
-
 [ History ]
 
 Dec 4 2009 : 
@@ -106,6 +104,6 @@ Sep 16 2009 : deleted /algorithm and added /iterator
 July 2009   : First version
 
 [ TODO ]
-
+- search TODO inside project
 - range and support for location_scale
 - other distributions
