@@ -20,23 +20,23 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-// -----------------------------------------------------------------------------
-// S: Segment container 
-// f: Atomize function transforming an interval container into an element container
-// E: Element container
-// g: A function (specifically std::algorithm) applicable to S and E
-// T: Target container
-//
-//         S
-//        / \
-//     f /   \ g
-//      /  =  \
-//     V       V  
-//    E ------> T
-//         g
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------+
+// S: Segment container                                                        |
+// f: Function transforming an interval container into an element container    |
+// E: Element container                                                        |
+// g: A function (specifically std::algorithm) applicable to S and E           |
+// T: Target container                                                         |
+//                                                                             |
+//         S                                                                   |
+//        / \                                                                  |
+//     f /   \ g                                                               |
+//      /  =  \                                                                |
+//     V       V                                                               |
+//    E ------> T                                                              |
+//         g                                                                   |
+// ----------------------------------------------------------------------------+
 template <typename SegmentsT, 
-          typename TargetsT  = typename SegmentsT::atomized_type,
+          typename TargetsT,
           template<class,class,template<class>class>class Algorithm,
           template<class>class       TargetIterator = std::insert_iterator,
           template<class,class>class Atomizer       = itl::Interval::Atomize,
@@ -106,23 +106,23 @@ public:
 
 
 
-// -----------------------------------------------------------------------------
-// S: Segment container 
-// f: Atomize function transforming an interval container into an element container
-// E: Element container
-// g: A function (specifically std::algorithm) applicable to S and E
-// T: Target container
-//
-//         S
-//        / \
-//     f /   \ g
-//      /  =  \
-//     V       V  
-//    E ------> T
-//         g
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------+
+// S: Segment container                                                        |
+// f: Function transforming an interval container into an element container    |
+// E: Element container                                                        |
+// g: A function (specifically std::algorithm) applicable to S and E           |
+// T: Target container                                                         |
+//                                                                             |
+//         S                                                                   |
+//        / \                                                                  |
+//     f /   \ g                                                               |
+//      /  =  \                                                                |
+//     V       V                                                               |
+//    E ------> T                                                              |
+//         g                                                                   |
+// ----------------------------------------------------------------------------+
 template <typename SegmentsT, 
-          typename TargetsT  = typename SegmentsT::atomized_type,
+          typename TargetsT,
           template<class,class>class Algorithm,
           template<class,class>class Atomizer       = itl::Interval::Atomize,
           template<class>class       Equality       = itl::std_equal         > 
@@ -193,23 +193,24 @@ public:
 
 
 
-// -----------------------------------------------------------------------------
-// S: Segment container 
-// f: Atomize function transforming an interval container into an element container
-// E: Element container
-// .o.: U x U -> T A binary function (specifically std::algorithm) applicable to S or E
-// T: Target container
-//
-//         S
-//        / \
-//     f /   \ o
-//      /  =  \
-//     V       V  
-//    E ------> T
-//         o
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------+
+// S: Segment container                                                        |
+// f: Function transforming an interval container into an element container    |
+// E: Element container                                                        |
+// .o.: U x U -> T A binary function (specifically std::algorithm)             |
+//      applicable to S or E                                                   |
+// T: Target container                                                         |
+//                                                                             |
+//         S                                                                   |
+//        / \                                                                  |
+//     f /   \ o                                                               |
+//      /  =  \                                                                |
+//     V       V                                                               |
+//    E ------> T                                                              |
+//         o                                                                   |
+// ----------------------------------------------------------------------------+
 template <typename SegmentsT, 
-          typename TargetsT  = typename SegmentsT::atomized_type,
+          typename TargetsT,
           template<class,class,template<class>class>class Algorithm,
           template<class>class       TargetIterator = std::insert_iterator,
           template<class,class>class Atomizer       = itl::Interval::Atomize,
