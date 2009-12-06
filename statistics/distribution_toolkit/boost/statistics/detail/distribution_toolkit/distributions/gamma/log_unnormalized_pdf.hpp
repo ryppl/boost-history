@@ -38,7 +38,9 @@ inline T log_unnormalized_pdf(
 
    if(x == 0)
    {
-      return log(0);
+      // TODO just a guess based on definition of math::pdf
+      // cast is needed by MSVC
+      return log(static_cast<T>(0));
    }
    static T one_ = static_cast<T>(1);
    result = (shape - one_) * log(x) - x / scale;

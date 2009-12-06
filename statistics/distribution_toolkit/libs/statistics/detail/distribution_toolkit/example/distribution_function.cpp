@@ -37,7 +37,7 @@
 
 void example_distribution_function(std::ostream& out){
 
-        out << "-> example_math_location_scale" << std::endl;
+        out << "-> example_distribution_function" << std::endl;
 
         using namespace boost;
         using namespace math;

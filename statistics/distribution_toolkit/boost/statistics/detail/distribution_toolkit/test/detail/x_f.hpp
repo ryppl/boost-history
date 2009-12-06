@@ -38,7 +38,10 @@ namespace detail{
             boost::fusion::pair<output1,T>
         > data_type;
 
-		template<typename D,template<typename> class F = functor::cdf_>
+		template<
+        	typename D,
+        	template<typename> class F = distribution::functor::cdf_
+        >
 		class functor{
 			typedef distribution::functor::cdf_<D> funct_;				
 			public:
@@ -67,7 +70,10 @@ namespace detail{
 
         typedef boost::function<data_type()> generator_type;
 
-        template<typename D,template<typename> class F = functor::cdf_>
+        template<
+        	typename D,
+            template<typename> class F = distribution::functor::cdf_
+        >
         struct meta_generator{
         	typedef functor<D,F> functor_;
             typedef typename functor_::result_type res_;

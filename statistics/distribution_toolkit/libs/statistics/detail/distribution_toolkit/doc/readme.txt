@@ -25,8 +25,8 @@ http://www.boost.org/doc/libs/1_40_0/libs/random/index.html
 
 [ Platform/Compiler ]
 
-Mac OS Leopard 10.6         gcc version 4.0.1
-
+Mac OS X 10.6         	gcc 4.2					boost_1_41_0
+Win7 V6.1.7100			Visual Studio 2010		boost_1_40_0
                             
 [ Dependencies ]
 

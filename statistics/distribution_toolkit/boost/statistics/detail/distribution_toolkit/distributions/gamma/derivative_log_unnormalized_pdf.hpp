@@ -38,7 +38,8 @@ inline T derivative_log_unnormalized_pdf(
 
    if(x == 0)
    {
-      return log(0);
+      // TODO see log_unnormalized_pdf
+      return static_cast<T>(1/0);
    }
    static T one_ = static_cast<T>(1);
    result = (shape - one_) / x - one_ / scale;
