@@ -37,7 +37,7 @@ Mac OS X 10.6        gcc 4.2                                    boost_1_41_0
 /sandbox/statistics/distribution_common/ 
 /sandbox/statistics/random/
 /sandbox/statistics/distribution_toolkit/ 
-/usr/local/boost_1_40_0/
+/usr/local/boost_1_41_0/
 
 [ Bugs ]
 
