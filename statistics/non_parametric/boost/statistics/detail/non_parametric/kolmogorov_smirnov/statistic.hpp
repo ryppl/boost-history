@@ -10,7 +10,12 @@
 #define BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_KOLMOGOROV_SMIRNOV_STATISTIC_HPP_ER_2009
 #include <string>
 #include <boost/format.hpp>
-#include <ext/algorithm>
+#ifdef BOOST_MSVC
+ #include <algorithm>
+#endif
+#ifndef BOOST_MSVC
+ #include <ext/algorithm>
+#endif
 #include <boost/range.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 
