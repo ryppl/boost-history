@@ -70,7 +70,8 @@ public:
     
     TargetT operator()(const AtomicT& source)const
     {
-        AtomicT::const_reverse_iterator found = std::find(source.rbegin(), source.rend(), _comparand); 
+        typename AtomicT::const_reverse_iterator found 
+			= std::find(source.rbegin(), source.rend(), _comparand); 
         if(found == source.rend())
             return neutron<TargetT>::value();
         else
@@ -79,7 +80,7 @@ public:
 
     TargetT operator()(const SegmentalT& source)const
     {
-        SegmentalT::element_const_reverse_iterator found 
+        typename SegmentalT::element_const_reverse_iterator found 
             = std::find(source.elements_rbegin(), source.elements_rend(), _comparand); 
         if(found == source.elements_rend())
             return neutron<TargetT>::value();
@@ -110,7 +111,8 @@ public:
     
     TargetT operator()(const AtomicT& source)const
     {
-        AtomicT::const_iterator found = std::lower_bound(source.begin(), source.end(), _comparand); 
+        typename AtomicT::const_iterator found 
+			= std::lower_bound(source.begin(), source.end(), _comparand); 
         if(found == source.end())
             return neutron<TargetT>::value();
         else
@@ -119,7 +121,8 @@ public:
 
     TargetT operator()(const SegmentalT& source)const
     {
-        SegmentalT::element_const_iterator found = std::lower_bound(source.elements_begin(), source.elements_end(), _comparand); 
+        typename SegmentalT::element_const_iterator found 
+			= std::lower_bound(source.elements_begin(), source.elements_end(), _comparand); 
         if(found == source.elements_end())
             return neutron<TargetT>::value();
         else
@@ -147,7 +150,8 @@ public:
     
     TargetT operator()(const AtomicT& source)const
     {
-        AtomicT::const_reverse_iterator found = std::lower_bound(source.rbegin(), source.rend(), _comparand); 
+        typename AtomicT::const_reverse_iterator found 
+			= std::lower_bound(source.rbegin(), source.rend(), _comparand); 
         if(found == source.rend())
             return neutron<TargetT>::value();
         else
@@ -156,7 +160,7 @@ public:
 
     TargetT operator()(const SegmentalT& source)const
     {
-        SegmentalT::element_const_reverse_iterator found 
+        typename SegmentalT::element_const_reverse_iterator found 
             = std::lower_bound(source.elements_rbegin(), source.elements_rend(), _comparand); 
         if(found == source.elements_rend())
             return neutron<TargetT>::value();
@@ -187,7 +191,8 @@ public:
     
     TargetT operator()(const AtomicT& source)const
     {
-        AtomicT::const_iterator found = std::upper_bound(source.begin(), source.end(), _comparand); 
+        typename AtomicT::const_iterator found 
+			= std::upper_bound(source.begin(), source.end(), _comparand); 
         if(found == source.end())
             return neutron<TargetT>::value();
         else
@@ -196,7 +201,8 @@ public:
 
     TargetT operator()(const SegmentalT& source)const
     {
-        SegmentalT::element_const_iterator found = std::upper_bound(source.elements_begin(), source.elements_end(), _comparand); 
+        typename SegmentalT::element_const_iterator found 
+			= std::upper_bound(source.elements_begin(), source.elements_end(), _comparand); 
         if(found == source.elements_end())
             return neutron<TargetT>::value();
         else
@@ -224,7 +230,8 @@ public:
     
     TargetT operator()(const AtomicT& source)const
     {
-        AtomicT::const_reverse_iterator found = std::upper_bound(source.rbegin(), source.rend(), _comparand); 
+        typename AtomicT::const_reverse_iterator found 
+			= std::upper_bound(source.rbegin(), source.rend(), _comparand); 
         if(found == source.rend())
             return neutron<TargetT>::value();
         else
@@ -233,7 +240,7 @@ public:
 
     TargetT operator()(const SegmentalT& source)const
     {
-        SegmentalT::element_const_reverse_iterator found 
+        typename SegmentalT::element_const_reverse_iterator found 
             = std::upper_bound(source.elements_rbegin(), source.elements_rend(), _comparand); 
         if(found == source.elements_rend())
             return neutron<TargetT>::value();

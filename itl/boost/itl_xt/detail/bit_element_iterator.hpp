@@ -235,7 +235,6 @@ namespace biterate
 
 #ifdef BOOST_MSVC 
 #pragma warning(push)
-#pragma warning(disable:4706) // assignment within conditional expression
 #pragma warning(disable:4146) // unary minus operator applied to unsigned type, result still unsigned
 #endif                        
 
@@ -371,12 +370,12 @@ template<> struct forward<nat64, 64>
         {
             half_type low_next, up_next;
             if(half-1 <= cur_pos)
-                if(up_next = upper_next(value, cur_pos))
+                if((up_next = upper_next(value, cur_pos)))
                     return half + index32[(((up_next & -up_next) * factor)) >> shift];
                 else
                     return past;
             else
-                if(low_next = lower_next(value, cur_pos))
+                if((low_next = lower_next(value, cur_pos)))
                     return index32[(((low_next & -low_next) * factor)) >> shift];
                 else if(half_type up_next = upper_next(value, cur_pos))
                     return half + index32[(((up_next & -up_next) * factor)) >> shift];
@@ -415,14 +414,12 @@ template<> struct forward<nat64, 64>
         {
             half_type up_prev, low_prev;
             if(half == cur_pos)
-                // warning C4706: assignment within conditional expression
-                // This is intentional here.
-                if(low_prev = static_cast<half_type>(lower_mask & value))
+                if((low_prev = static_cast<half_type>(lower_mask & value)))
                     return index32[((high_bit(low_prev) * factor)) >> shift];
                 else
                     return ante;
             else if(cur_pos < half || !(up_prev = upper_previous(value, cur_pos)))
-                if(low_prev = lower_previous(value,cur_pos))
+                if((low_prev = lower_previous(value,cur_pos)))
                     return index32[((high_bit(low_prev) * factor)) >> shift];
                 else
                     return ante;
