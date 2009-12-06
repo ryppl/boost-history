@@ -8,8 +8,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_MAP_PDF_PRODUCT_PDF_PRODUCT_PDF_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_MAP_PDF_PRODUCT_PDF_PRODUCT_PDF_HPP_ER_2009
-#include <boost/statistics/detail/distribution_common/meta/inherit_policy.hpp>
-#include <boost/statistics/detail/distribution_common/meta/inherit_value.hpp>
+#include <boost/statistics/detail/distribution_common/meta/inherit/policy.hpp>
+#include <boost/statistics/detail/distribution_common/meta/inherit/value.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_pseudo_scalar_distribution.hpp>
 
 namespace boost{

@@ -16,7 +16,7 @@
 #include <boost/utility.hpp>
 #include <boost/type_traits.hpp> // remove_reference etc.
 #include <boost/range.hpp>
-#include <boost/statistics/detail/distribution_common/meta/inherit_policy.hpp>
+#include <boost/statistics/detail/distribution_common/meta/inherit/policy.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_scalar_distribution.hpp>
 #include <boost/statistics/detail/distribution_common/meta/value.hpp>
 #include <boost/statistics/detail/distribution_common/meta/policy.hpp>
