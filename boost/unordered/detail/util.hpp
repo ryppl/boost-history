@@ -14,22 +14,7 @@
 #include <boost/iterator/iterator_categories.hpp>
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/seq/enum.hpp>
-#include <boost/unordered/detail/manager.hpp>
-
-#if !defined(BOOST_UNORDERED_STD_FORWARD)
-
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
-
-#define BOOST_UNORDERED_TEMPLATE_ARGS(z, n) \
-    BOOST_PP_ENUM_PARAMS_Z(z, n, class Arg)
-#define BOOST_UNORDERED_FUNCTION_PARAMS(z, n) \
-    BOOST_PP_ENUM_BINARY_PARAMS_Z(z, n, Arg, const& arg)
-#define BOOST_UNORDERED_CALL_PARAMS(z, n) \
-    BOOST_PP_ENUM_PARAMS_Z(z, n, arg)
-
-#endif
+#include <boost/unordered/detail/fwd.hpp>
 
 namespace boost { namespace unordered_detail {
 
@@ -38,7 +23,8 @@ namespace boost { namespace unordered_detail {
 
     inline std::size_t double_to_size_t(double f)
     {
-        return f >= static_cast<double>((std::numeric_limits<std::size_t>::max)()) ?
+        return f >= static_cast<double>(
+            (std::numeric_limits<std::size_t>::max)()) ?
             (std::numeric_limits<std::size_t>::max)() :
             static_cast<std::size_t>(f);
     }
@@ -75,24 +61,24 @@ namespace boost { namespace unordered_detail {
     typedef prime_list_template<std::size_t> prime_list;
 
     // no throw
-    inline std::size_t next_prime(std::size_t n) {
+    inline std::size_t next_prime(std::size_t num) {
         std::size_t const* const prime_list_begin = prime_list::value;
         std::size_t const* const prime_list_end = prime_list_begin +
             prime_list::length;
         std::size_t const* bound =
-            std::lower_bound(prime_list_begin, prime_list_end, n);
+            std::lower_bound(prime_list_begin, prime_list_end, num);
         if(bound == prime_list_end)
             bound--;
         return *bound;
     }
 
     // no throw
-    inline std::size_t prev_prime(std::size_t n) {
+    inline std::size_t prev_prime(std::size_t num) {
         std::size_t const* const prime_list_begin = prime_list::value;
         std::size_t const* const prime_list_end = prime_list_begin +
             prime_list::length;
         std::size_t const* bound =
-            std::upper_bound(prime_list_begin,prime_list_end, n);
+            std::upper_bound(prime_list_begin,prime_list_end, num);
         if(bound != prime_list_begin)
             bound--;
         return *bound;
@@ -143,9 +129,10 @@ namespace boost { namespace unordered_detail {
     
     template <class I>
     inline std::size_t initial_size(I i, I j,
-        std::size_t n = boost::unordered_detail::default_initial_bucket_count)
+        std::size_t num_buckets = boost::unordered_detail::default_bucket_count)
     {
-        return (std::max)(static_cast<std::size_t>(insert_size(i, j)) + 1, n);
+        return (std::max)(static_cast<std::size_t>(insert_size(i, j)) + 1,
+            num_buckets);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -172,29 +159,29 @@ namespace boost { namespace unordered_detail {
 
 #else
 
-#define BOOST_UNORDERED_CONSTRUCT_IMPL(z, n, _)                                 \
-    template <                                                                  \
-        class T,                                                                \
-        BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                                     \
-    >                                                                           \
-    inline void construct_impl(                                                 \
-        T*, void* address,                                                      \
-        BOOST_UNORDERED_FUNCTION_PARAMS(z, n)                                   \
-    )                                                                           \
-    {                                                                           \
-        new(address) T(                                                         \
-            BOOST_UNORDERED_CALL_PARAMS(z, n));                                 \
-    }                                                                           \
-                                                                                \
-    template <class First, class Second, class Key,                             \
-        BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                                     \
-    >                                                                           \
-    inline void construct_impl(                                                 \
-        std::pair<First, Second>*, void* address,                               \
-        Key const& k, BOOST_UNORDERED_FUNCTION_PARAMS(z, n))                    \
-    {                                                                           \
-        new(address) std::pair<First, Second>(k,                                \
-            Second(BOOST_UNORDERED_CALL_PARAMS(z, n)));                         \
+#define BOOST_UNORDERED_CONSTRUCT_IMPL(z, num_params, _)                       \
+    template <                                                                 \
+        class T,                                                               \
+        BOOST_UNORDERED_TEMPLATE_ARGS(z, num_params)                           \
+    >                                                                          \
+    inline void construct_impl(                                                \
+        T*, void* address,                                                     \
+        BOOST_UNORDERED_FUNCTION_PARAMS(z, num_params)                         \
+    )                                                                          \
+    {                                                                          \
+        new(address) T(                                                        \
+            BOOST_UNORDERED_CALL_PARAMS(z, num_params));                       \
+    }                                                                          \
+                                                                               \
+    template <class First, class Second, class Key,                            \
+        BOOST_UNORDERED_TEMPLATE_ARGS(z, num_params)                           \
+    >                                                                          \
+    inline void construct_impl(                                                \
+        std::pair<First, Second>*, void* address,                              \
+        Key const& k, BOOST_UNORDERED_FUNCTION_PARAMS(z, num_params))          \
+    {                                                                          \
+        new(address) std::pair<First, Second>(k,                               \
+            Second(BOOST_UNORDERED_CALL_PARAMS(z, num_params)));               \
     }
 
     BOOST_PP_REPEAT_FROM_TO(1, BOOST_UNORDERED_EMPLACE_LIMIT,
@@ -210,20 +197,20 @@ namespace boost { namespace unordered_detail {
     template <class Alloc, class Grouped>
     class hash_node_constructor
     {
-        typedef hash_table_manager<Alloc, Grouped> manager;
-        typedef BOOST_DEDUCED_TYPENAME manager::node node;
-        typedef BOOST_DEDUCED_TYPENAME manager::real_node_ptr real_node_ptr;
-        typedef BOOST_DEDUCED_TYPENAME manager::value_type value_type;
+        typedef hash_buckets<Alloc, Grouped> buckets;
+        typedef BOOST_DEDUCED_TYPENAME buckets::node node;
+        typedef BOOST_DEDUCED_TYPENAME buckets::real_node_ptr real_node_ptr;
+        typedef BOOST_DEDUCED_TYPENAME buckets::value_type value_type;
 
-        manager& manager_;
+        buckets& buckets_;
         real_node_ptr node_;
         bool node_constructed_;
         bool value_constructed_;
 
     public:
 
-        hash_node_constructor(manager& m) :
-            manager_(m),
+        hash_node_constructor(buckets& m) :
+            buckets_(m),
             node_(),
             node_constructed_(false),
             value_constructed_(false)
@@ -244,20 +231,20 @@ namespace boost { namespace unordered_detail {
         }
 #else
 
-#define BOOST_UNORDERED_CONSTRUCT(z, n, _)                                      \
-        template <                                                              \
-            BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                                 \
-        >                                                                       \
-        void construct(                                                         \
-            BOOST_UNORDERED_FUNCTION_PARAMS(z, n)                               \
-        )                                                                       \
-        {                                                                       \
-            construct_preamble();                                               \
-            construct_impl(                                                     \
-                (value_type*) 0, node_->address(),                              \
-                BOOST_UNORDERED_CALL_PARAMS(z, n)                               \
-            );                                                                  \
-            value_constructed_ = true;                                          \
+#define BOOST_UNORDERED_CONSTRUCT(z, num_params, _)                            \
+        template <                                                             \
+            BOOST_UNORDERED_TEMPLATE_ARGS(z, num_params)                       \
+        >                                                                      \
+        void construct(                                                        \
+            BOOST_UNORDERED_FUNCTION_PARAMS(z, num_params)                     \
+        )                                                                      \
+        {                                                                      \
+            construct_preamble();                                              \
+            construct_impl(                                                    \
+                (value_type*) 0, node_->address(),                             \
+                BOOST_UNORDERED_CALL_PARAMS(z, num_params)                     \
+            );                                                                 \
+            value_constructed_ = true;                                         \
         }
 
         BOOST_PP_REPEAT_FROM_TO(1, BOOST_UNORDERED_EMPLACE_LIMIT,
@@ -274,19 +261,19 @@ namespace boost { namespace unordered_detail {
             value_constructed_ = true;
         }
 
-        real_node_ptr get() const
+        value_type& value() const
         {
             BOOST_ASSERT(node_);
-            return node_;
+            return node_->value();
         }
 
         // no throw
-        BOOST_DEDUCED_TYPENAME manager::node_ptr release()
+        BOOST_DEDUCED_TYPENAME buckets::node_ptr release()
         {
             real_node_ptr p = node_;
             node_ = real_node_ptr();
             // node_ptr cast
-            return manager_.bucket_alloc().address(*p);
+            return buckets_.bucket_alloc().address(*p);
         }
 
     private:
@@ -297,34 +284,37 @@ namespace boost { namespace unordered_detail {
     // hash_node_constructor
 
     template <class Alloc, class Grouped>
-    hash_node_constructor<Alloc, Grouped>::~hash_node_constructor()
+    inline hash_node_constructor<Alloc, Grouped>::~hash_node_constructor()
     {
         if (node_) {
             if (value_constructed_) {
-                BOOST_UNORDERED_DESTRUCT(&node_->value(), value_type);
+#if BOOST_WORKAROUND(__CODEGEARC__, BOOST_TESTED_AT(0x0613))
+                struct dummy { hash_node<Alloc, Grouped> x; };
+#endif
+                boost::unordered_detail::destroy(&node_->value());
             }
 
             if (node_constructed_)
-                manager_.node_alloc().destroy(node_);
+                buckets_.node_alloc().destroy(node_);
 
-            manager_.node_alloc().deallocate(node_, 1);
+            buckets_.node_alloc().deallocate(node_, 1);
         }
     }
 
     template <class Alloc, class Grouped>
-    void hash_node_constructor<Alloc, Grouped>::construct_preamble()
+    inline void hash_node_constructor<Alloc, Grouped>::construct_preamble()
     {
         if(!node_) {
             node_constructed_ = false;
             value_constructed_ = false;
 
-            node_ = manager_.node_alloc().allocate(1);
-            manager_.node_alloc().construct(node_, node());
+            node_ = buckets_.node_alloc().allocate(1);
+            buckets_.node_alloc().construct(node_, node());
             node_constructed_ = true;
         }
         else {
             BOOST_ASSERT(node_constructed_ && value_constructed_);
-            BOOST_UNORDERED_DESTRUCT(&node_->value(), value_type);
+            boost::unordered_detail::destroy(&node_->value());
             value_constructed_ = false;
         }
     }
