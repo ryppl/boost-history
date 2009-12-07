@@ -30,8 +30,6 @@ BOOST_CGI_NAMESPACE_BEGIN
 
     // protocol types
     struct cgi {};
-    struct async_cgi {}; // call it acgi?
-    struct acgi {};
     struct fcgi {};
     struct scgi {};
 

@@ -103,6 +103,7 @@ BOOST_CGI_NAMESPACE_BEGIN
         status_ = closed_;
         connection_->close();
       }
+      return ec;
     }
 
     void close(boost::uint64_t app_status = 0)

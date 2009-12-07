@@ -16,7 +16,6 @@
 #include "boost/cgi/common/source_enums.hpp"
 #include "boost/cgi/config.hpp"
 
-#include <iostream> // **FIXME**
 #include <fstream>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/trim.hpp>
@@ -33,8 +32,6 @@ BOOST_CGI_NAMESPACE_BEGIN
       context_ = &ctx;
       
       BOOST_ASSERT(!ctx.content_type.empty());
-
-      std::cerr<< "Parsing " << ctx.content_type << " form.\n";
 
       if (ctx.content_type.find(
          "application/x-www-form-urlencoded") != string_type::npos)
@@ -56,8 +53,6 @@ BOOST_CGI_NAMESPACE_BEGIN
      buffer_type& str(context_->buffer);
      string_type result;
      string_type name;
-
-     std::cerr<< "Parsing data: " << str << '\n';
 
      if (str.size() == 0)
     	 return ec;
@@ -91,7 +86,6 @@ BOOST_CGI_NAMESPACE_BEGIN
             break;
          case '&': // we now have the name/value pair, so save it
             // **FIXME** have to have .c_str() ?
-            std::cerr<< "Data: " << name << " =" << result << '\n';
             context_->data_map[name.c_str()] = result;
             result.clear();
             name.clear();
@@ -102,8 +96,9 @@ BOOST_CGI_NAMESPACE_BEGIN
      }
 #if defined(BOOST_CGI_KEEP_EMPTY_VARS)
       // save the last param (it won't have a trailing &)
-      if( !name.empty() )
+      if( !name.empty() ) {
           context_->data_map[name.c_str()] = result;
+      }
 #endif // BOOST_CGI_KEEP_EMPTY_VARS
      return ec;
     }
@@ -140,8 +135,6 @@ BOOST_CGI_NAMESPACE_BEGIN
       
       string_type meta (buffer.substr(offset,end-offset));
       
-      std::cerr<< "Meta info: " << meta << std::endl;
-
       // sic - short-cut check for Content-Disposition.
       std::size_t pos1 = meta.find("isposition:"); // sic
       std::size_t pos2 = meta.find(";", pos1);
@@ -194,8 +187,6 @@ BOOST_CGI_NAMESPACE_BEGIN
           string_type internal_filename(
             BOOST_CGI_UPLOAD_DIRECTORY+filename+"."+user_ip+"."+randomatter);
           part.path = internal_filename;
-          std::cerr<< "Internal filename: " << internal_filename 
-                   << std::endl;
           std::ofstream file (
               internal_filename.c_str()
             , std::ios::out | std::ios::binary);

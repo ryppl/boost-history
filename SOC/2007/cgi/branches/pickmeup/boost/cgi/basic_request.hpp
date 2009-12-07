@@ -27,6 +27,7 @@
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/common/map.hpp"
 #include "boost/cgi/common/path_info.hpp"
+#include "boost/cgi/common/data_map_proxy.hpp"
 #include "boost/cgi/common/role_type.hpp"
 #include "boost/cgi/common/source_enums.hpp"
 #include "boost/cgi/common/parse_options.hpp"
@@ -62,15 +63,15 @@ BOOST_CGI_NAMESPACE_BEGIN
    * Note: By default, synchronous protocols (ie. cgi) auto-load AND parse
    * STDIN,whereas async protocols don't.
    *
-   * Note: The alternative functions which take a boost::system::error_code are
-   * the non-throwing versions. Instead of a boost::system::system_error being
-   * thrown in case of an error, the passed error_code will be set to the value
-   * of the error, s.t. if (error) evaluates to true.`
+   * Note: The alternative functions which take a boost::system::error_code
+   * are the non-throwing versions. Instead of a boost::system::system_error
+   * being thrown in case of an error, the passed error_code will be set to
+   * the value of the error, s.t. if (error) evaluates to true.`
    * 
    * Note: This class isn't thread safe: carrying around a mutex-per-request
-   * seems prohibitively expensive. There could be functions which take a mutex
-   * as an argument and lock it. (Async calls could get messy if you need a
-   * protected request object).
+   * seems prohibitively expensive. There could be functions which take a
+   * mutex as an argument and lock it. (Async calls could get messy if you
+   * need a protected request object).
   **/
   template<typename RequestService
           , typename ProtocolService
@@ -95,104 +96,17 @@ BOOST_CGI_NAMESPACE_BEGIN
     typedef typename implementation_type::client_type  client_type;
     typedef typename implementation_type::buffer_type  buffer_type;
     
-    /// A proxy class to provide access to the data maps as member variables.
-    /**
-     * This wraps the underlying data map and exposes a std::map-like 
-     * interface for the different data maps.
-     *
-     * It also includes an as<> member function which casts the found data
-     * into any type the user specifies.
-     */
-    template<typename MapType>
-    struct data_map_proxy
-    {
-      typedef MapType                                   map_type;
-      typedef typename map_type::key_type               key_type;
-      typedef typename map_type::value_type             value_type;
-      typedef typename map_type::mapped_type            mapped_type;
-      typedef typename map_type::size_type              size_type;
-      typedef typename map_type::iterator               iterator;
-      typedef typename map_type::const_iterator         const_iterator;
-      typedef typename map_type::reverse_iterator       reverse_iterator;
-      typedef typename map_type::const_reverse_iterator const_reverse_iterator;
-      typedef typename map_type::allocator_type         allocator_type;
-      
-      void set(map_type& data) { impl = &data; }
-      
-      iterator begin() {
-         BOOST_ASSERT(impl); return impl->begin(); }
-      iterator end() {
-         BOOST_ASSERT(impl); return impl->end(); }
-      const_iterator begin() const {
-         BOOST_ASSERT(impl); return impl->begin(); }
-      const_iterator end() const {
-         BOOST_ASSERT(impl); return impl->end(); }
-      reverse_iterator rbegin() {
-         BOOST_ASSERT(impl); return impl->rbegin(); }
-      reverse_iterator rend() {
-         BOOST_ASSERT(impl); return impl->rend(); }
-      const_reverse_iterator rbegin() const {
-         BOOST_ASSERT(impl); return impl->rbegin(); }
-      const_reverse_iterator rend() const {
-         BOOST_ASSERT(impl); return impl->rend(); }
-
-      bool empty() { BOOST_ASSERT(impl); return impl->empty(); }
-      
-      void clear() { BOOST_ASSERT(impl); return impl->clear(); }
-      
-      size_type size() const { BOOST_ASSERT(impl); return impl->size(); }
-      
-      size_type count(const key_type& key) {
-         BOOST_ASSERT(impl);
-         return impl->count(key);
-      }
-      
-      mapped_type const&
-        get(key_type const& key, mapped_type const& default_) const
-      {
-        BOOST_ASSERT(impl);
-        const_iterator iter = impl->find(key);
-        return iter == impl->end() ? default_ : iter->second;
-      }
-      
-      template<typename T>
-      T as(key_type const& key) {
-        BOOST_ASSERT(impl);
-        const_iterator iter = impl->find(key);
-        return iter == impl->end()
-                     ? T()
-                     : boost::lexical_cast<T>(val);
-      }
-      
-      mapped_type& operator[](key_type const& varname) {
-        BOOST_ASSERT(impl); 
-        return (*impl)[varname.c_str()];
-      }
-      
-      mapped_type const& operator[](key_type const& varname) const {
-        BOOST_ASSERT(impl); 
-        return (*impl)[varname.c_str()];
-      }
-      
-      operator map_type&() { BOOST_ASSERT(impl); return *impl; }
-      bool operator!() const { return !impl; }
-
-    private:      
-      map_type* impl;
-    };
-    
-    data_map_proxy<env_map>    env;
-    data_map_proxy<post_map>   post;
-    data_map_proxy<get_map>    get;
-    data_map_proxy<form_map>   form;
-    data_map_proxy<cookie_map> cookies;
+    common::data_map_proxy<env_map>    env;
+    common::data_map_proxy<post_map>   post;
+    common::data_map_proxy<get_map>    get;
+    common::data_map_proxy<form_map>   form;
+    common::data_map_proxy<cookie_map> cookies;
 
     basic_request(const parse_options opts = parse_none
       , char** base_env = NULL)
         : detail::basic_io_object<service_type>()
     {
       if (opts > parse_none) load(opts, base_env);
-      construct();
     }
 
     // Won't throw
@@ -328,6 +242,9 @@ BOOST_CGI_NAMESPACE_BEGIN
         //if (content_length() >= BOOST_CGI_POST_MAX)
         //  ec = common::error::max_post_exceeded;
         this->service.load(this->implementation, parse_opts, ec);
+        
+        if (ec) return ec;
+
         // Load the environment passed by the user.
         if (base_environment)
           this->service.load_environment(
@@ -398,7 +315,7 @@ BOOST_CGI_NAMESPACE_BEGIN
       this->service.close(this->implementation, http_status,
           program_status, ec);
       // Clear the request data so the object can be reused.
-      clear();
+      //clear();
       detail::throw_error(ec);
       return program_status;
     }

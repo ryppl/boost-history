@@ -18,6 +18,7 @@
 #include <boost/asio/buffer.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/algorithm/string/find.hpp>
+#include <boost/fusion/include/vector.hpp>
 ////////////////////////////////////////////////////////////////
 #include "boost/cgi/common/map.hpp"
 #include "boost/cgi/common/form_part.hpp"

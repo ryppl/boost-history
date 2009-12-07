@@ -235,7 +235,9 @@ BOOST_CGI_NAMESPACE_BEGIN
       common::write(sws, headers, boost::asio::transfer_all(), ec);
     }
 
-    common::write(sws, buffer_->data(), boost::asio::transfer_all(), ec);
+    // Only write the body if it is non-empty.
+    if (content_length())
+      common::write(sws, buffer_->data(), boost::asio::transfer_all(), ec);
 
     return ec;
   }

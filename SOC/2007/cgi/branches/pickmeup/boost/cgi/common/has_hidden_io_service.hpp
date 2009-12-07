@@ -24,8 +24,8 @@ BOOST_CGI_NAMESPACE_BEGIN
    };
 
    template<>
-   struct has_hidden_io_service<tags::acgi>
-    : boost::mpl::bool_<false>
+   struct has_hidden_io_service<tags::cgi>
+    : boost::mpl::bool_<true>
    {
    };
 

@@ -29,18 +29,6 @@
 BOOST_CGI_NAMESPACE_BEGIN
 
   namespace cgi  {}
-  namespace acgi
-  {
-    //class acgi_service;
-    class request_service;
-    class request_impl;
-    typedef common::basic_protocol_service<common::tags::acgi> service;
-    typedef
-      common::basic_request<
-        acgi::request_service, acgi::service
-      >
-    request;
-  }
   namespace fcgi
   {
   class fcgi_request_impl;
@@ -59,20 +47,14 @@ BOOST_CGI_NAMESPACE_BEGIN
   // Forward declarations
 
   class cgi_request_impl;
-  class acgi_request_impl;
-  class async_cgi_request_impl;
   class fcgi_request_impl;
 
   class cgi_service_impl;
-  class acgi_service_impl;
-  class async_cgi_service_impl;
   class fcgi_service_impl;
 
-  class acgi_acceptor_service;
   class fcgi_acceptor_service;
 
   class cgi_request_service;
-  class acgi_request_service;
   class fcgi_request_service;
 
  namespace detail {
@@ -98,48 +80,7 @@ BOOST_CGI_NAMESPACE_BEGIN
                 , protocol_service_type
               >                                      request_type; 
       typedef cgi_service_impl                       service_impl_type;
-      typedef common::basic_connection<tags::stdio>  connection_type;
-      typedef boost::none_t                          header_type;
-      typedef common::role_type                      role_type;
-    };
-
-    template<>
-    struct protocol_traits<tags::async_cgi>
-    {
-      typedef protocol_traits<tags::async_cgi>       type;
-      typedef async_cgi_request_impl                 impl_type;
-      typedef acgi::request_service                  request_service_impl;
-      typedef common::basic_protocol_service<
-                  tags::acgi
-               >                                     protocol_service_type;
-      typedef common::basic_request<
-                  request_service_impl
-                , protocol_service_type
-              >                                      request_type; 
-      typedef async_cgi_service_impl                 service_impl_type;
-      typedef common::basic_connection<
-                  tags::async_stdio
-              >                                      connection_type;
-      typedef boost::none_t                          header_type;
-      typedef common::role_type                      role_type;
-    };
-
-    template<>
-    struct protocol_traits<tags::acgi>
-    {
-      typedef protocol_traits<tags::acgi>            type;
-      typedef acgi::request_impl                     impl_type;
-      typedef acgi::request_service                  request_service_impl;
-      typedef common::basic_protocol_service<
-                  tags::acgi
-              >                                      protocol_service_type;
-      typedef common::basic_request<
-                  request_service_impl
-                , protocol_service_type
-              >                                      request_type; 
-      typedef common::basic_connection<
-                  tags::async_stdio
-              >                                      connection_type;
+      typedef common::basic_connection<tags::async_stdio>  connection_type;
       typedef boost::none_t                          header_type;
       typedef common::role_type                      role_type;
     };
