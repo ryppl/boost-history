@@ -61,7 +61,7 @@ void std_copy()
     // We are going to 'std::copy' those segments into an interval_map:
     interval_map<int,int> segmap;
 
-    // Use an 'itl::inserter' from <boost/itl/interator.hpp> to call 
+    // Use an 'itl::inserter' from <boost/itl/iterator.hpp> to call 
     // insertion on the interval container.
     std::copy(segments.begin(), segments.end(), 
               itl::inserter(segmap, segmap.end()));
@@ -72,7 +72,7 @@ void std_copy()
     // intending to compute an aggregation result. So we are not interested
     // the std::insert semantincs but the aggregating itl::addition semantics.
     // To achieve this there is an itl::add_iterator and an itl::adder function 
-    // provided in <boost/itl/interator.hpp>.
+    // provided in <boost/itl/iterator.hpp>.
     std::copy(segments.begin(), segments.end(), 
               itl::adder(segmap, segmap.end())); //Aggregating associated values
     cout << "itl::adding   : " << segmap << endl; 
