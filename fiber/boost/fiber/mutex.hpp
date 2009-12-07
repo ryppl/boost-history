@@ -14,6 +14,8 @@
 #include <boost/utility.hpp>
 
 #include <boost/fiber/object/id.hpp>
+#include <boost/fiber/scheduler.hpp>
+#include <boost/fiber/strategy.hpp>
 
 namespace boost {
 namespace fibers {
@@ -23,11 +25,17 @@ class mutex : private noncopyable
 private:
 	volatile uint32_t	state_;
 	object::id			id_;
+	strategy::ptr_t		strategy_;
 
 public:
 	typedef unique_lock< mutex >			scoped_lock;
 
-	mutex();
+	template< typename Strategy >
+	mutex( scheduler< Strategy > & sched) :
+		state_( 0),
+		id_( * this),
+		strategy_( sched.strategy_)
+	{ strategy_->register_object( id_); }
 
 	~mutex();
 

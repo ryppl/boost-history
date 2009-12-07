@@ -50,6 +50,11 @@ alias fiber_sources
 	manual_reset_event.cpp
 	mutex.cpp
 	round_robin.cpp
+	spin_auto_reset_event.cpp
+	spin_condition.cpp
+	spin_count_down_event.cpp
+	spin_manual_reset_event.cpp
+	spin_mutex.cpp
 	strategy.cpp
     : ## requirements ##
       <fiberapi>win32
@@ -66,6 +71,11 @@ alias fiber_sources
 	manual_reset_event.cpp
 	mutex.cpp
 	round_robin.cpp
+	spin_auto_reset_event.cpp
+	spin_condition.cpp
+	spin_count_down_event.cpp
+	spin_manual_reset_event.cpp
+	spin_mutex.cpp
 	strategy.cpp
     : ## requirements ##
       <fiberapi>posix

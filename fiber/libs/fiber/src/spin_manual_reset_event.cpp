@@ -4,20 +4,27 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "boost/fiber/manual_reset_event.hpp"
+#include "boost/fiber/spin_manual_reset_event.hpp"
 
 #include <boost/assert.hpp>
 
 #include <boost/fiber/detail/atomic.hpp>
+#include <boost/fiber/utility.hpp>
 
 namespace boost {
 namespace fibers {
 
-manual_reset_event::~manual_reset_event()
-{ strategy_->unregister_object( id_); }
+spin_manual_reset_event::spin_manual_reset_event( bool isset) :
+	state_(
+		isset ?
+			static_cast< uint32_t >( SET) :
+			static_cast< uint32_t >( RESET) ),
+	waiters_( 0),
+	enter_mtx_()
+{}
 
 void
-manual_reset_event::set()
+spin_manual_reset_event::set()
 {
 	enter_mtx_.lock();
 
@@ -27,14 +34,12 @@ manual_reset_event::set()
 			static_cast< uint32_t >( SET) ) ||
 		! detail::atomic_load( & waiters_ ) )
 		enter_mtx_.unlock();
-	else
-		strategy_->object_notify_all( id_);
 }
 
 void
-manual_reset_event::reset()
+spin_manual_reset_event::reset()
 {
-	mutex::scoped_lock	lk( enter_mtx_);
+	spin_mutex::scoped_lock lk( enter_mtx_);
 	BOOST_ASSERT( lk);
 
 	detail::atomic_exchange( & state_,
@@ -42,26 +47,26 @@ manual_reset_event::reset()
 }
 
 void
-manual_reset_event::wait()
+spin_manual_reset_event::wait()
 {
 	{
-		mutex::scoped_lock lk( enter_mtx_);
+		spin_mutex::scoped_lock lk( enter_mtx_);
 		BOOST_ASSERT( lk);
 		detail::atomic_fetch_add( & waiters_, 1);
 	}
 
 	while ( static_cast< uint32_t >( RESET) == detail::atomic_load( & state_) )
-		strategy_->wait_for_object( id_);
+		this_fiber::yield();	
 
 	if ( 1 == detail::atomic_fetch_sub( & waiters_, 1) )
 		enter_mtx_.unlock();
 }
 
 bool
-manual_reset_event::try_wait()
+spin_manual_reset_event::try_wait()
 {
 	{
-		mutex::scoped_lock lk( enter_mtx_);
+		spin_mutex::scoped_lock lk( enter_mtx_);
 		BOOST_ASSERT( lk);
 		detail::atomic_fetch_add( & waiters_, 1);
 	}

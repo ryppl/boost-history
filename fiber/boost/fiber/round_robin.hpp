@@ -53,16 +53,16 @@ private:
 		{}
 	};
 
-	typedef std::map< fiber::id, schedulable >		fiber_map;
 	typedef std::list< fiber::id >					fiber_id_list;
 	typedef std::map< object::id, fiber_id_list >	object_map;
+	typedef std::map< fiber::id, schedulable >		fiber_map;
 	typedef std::list< fiber::id >					runnable_queue;
 	typedef std::queue< fiber::id >					terminated_queue;
 
 	fiber_map			fibers_;
+	object_map			objects_;
 	runnable_queue		runnable_fibers_;
 	terminated_queue	terminated_fibers_;
-	object_map			objects_;
 
 public:
 	round_robin();

@@ -4,24 +4,21 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
-//  based on boost::interprocess::sync::interprocess_condition
+//  based on boost::interprocess::sync::interprocess_spin_condition
 
-#ifndef BOOST_FIBERS_CONDITION_H
-#define BOOST_FIBERS_CONDITION_H
+#ifndef BOOST_FIBERS_SPIN_CONDITION_H
+#define BOOST_FIBERS_SPIN_CONDITION_H
 
 #include <boost/cstdint.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/fiber/object/id.hpp>
 #include <boost/fiber/exceptions.hpp>
-#include <boost/fiber/mutex.hpp>
-#include <boost/fiber/scheduler.hpp>
-#include <boost/fiber/strategy.hpp>
+#include <boost/fiber/spin_mutex.hpp>
 
 namespace boost {
 namespace fibers {
 
-class condition : private noncopyable
+class spin_condition : private noncopyable
 {
 private:
 	enum command_t
@@ -33,25 +30,15 @@ private:
 
 	volatile uint32_t	cmd_;
 	volatile uint32_t	waiters_;
-	mutex				enter_mtx_;
-	mutex				check_mtx_;
-	object::id			id_;
-	strategy::ptr_t		strategy_;
+	spin_mutex				enter_mtx_;
+	spin_mutex				check_mtx_;
 
-	void wait_( mutex &);
+	void wait_( spin_mutex &);
+
+	void notify_( uint32_t);
 
 public:
-	template< typename Strategy >
-	condition( scheduler< Strategy > & sched) :
-		cmd_( static_cast< uint32_t >( SLEEPING) ),
-		waiters_( 0),
-		enter_mtx_( sched),
-		check_mtx_( sched),
-		id_( * this),
-		strategy_( sched.strategy_)
-	{ strategy_->register_object( id_); }
-
-	~condition();
+	spin_condition();
 
 	void notify_one();
 
@@ -81,4 +68,4 @@ public:
 
 }}
 
-#endif // BOOST_FIBERS_CONDITION_H
+#endif // BOOST_FIBERS_SPIN_CONDITION_H

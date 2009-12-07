@@ -13,7 +13,6 @@
 #include <vector>
 
 #include <boost/bind.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/function.hpp>
 #include <boost/ref.hpp>
 #include <boost/test/unit_test.hpp>
@@ -24,63 +23,63 @@
 template< typename M >
 struct test_lock
 {
-    typedef M mutex_type;
+    typedef M spin_mutex_type;
     typedef typename M::scoped_lock lock_type;
 
-    void operator()( boost::fibers::scheduler<> & sched)
+    void operator()()
     {
-        mutex_type mtx( sched);
+        spin_mutex_type spin_mutex;
+        boost::fibers::spin_condition condition;
 
         // Test the lock's constructors.
         {
-            lock_type lk(mtx, boost::defer_lock);
-            BOOST_CHECK(!lk);
+            lock_type lock(spin_mutex, boost::defer_lock);
+            BOOST_CHECK(!lock);
         }
-        lock_type lk(mtx);
-        BOOST_CHECK(lk ? true : false);
+        lock_type lock(spin_mutex);
+        BOOST_CHECK(lock ? true : false);
 
         // Test the lock and unlock methods.
-        lk.unlock();
-        BOOST_CHECK(!lk);
-        lk.lock();
-        BOOST_CHECK(lk ? true : false);
+        lock.unlock();
+        BOOST_CHECK(!lock);
+        lock.lock();
+        BOOST_CHECK(lock ? true : false);
     }
 };
 
-void do_test_mutex( boost::fibers::scheduler<> & sched)
+void do_test_spin_mutex()
 {
-    test_lock< boost::fibers::mutex >()( sched);
+    test_lock< boost::fibers::spin_mutex >()();
 }
 
 void test_case1()
 {
 	boost::fibers::scheduler<> sched;
-    sched.make_fiber( & do_test_mutex, boost::ref( sched) );
+    sched.make_fiber( & do_test_spin_mutex);
 	sched.run();
 }
 
 int value1 = 0;
 int value2 = 0;
 
-void test_fn1( boost::fibers::mutex & mtx)
+void test_fn1( boost::fibers::spin_mutex & mtx)
 {
-	boost::fibers::mutex::scoped_lock lk( mtx);
+	boost::fibers::spin_mutex::scoped_lock lk( mtx);
 	++value1;
 	for ( int i = 0; i < 3; ++i)
 		boost::this_fiber::yield();
 }
 
-void test_fn2( boost::fibers::mutex & mtx)
+void test_fn2( boost::fibers::spin_mutex & mtx)
 {
-	++value2;
-	boost::fibers::mutex::scoped_lock lk( mtx);
+	boost::fibers::spin_mutex::scoped_lock lk( mtx);
 	++value2;
 }
 
 void test_case2()
 {
+	boost::fibers::spin_mutex mtx;
 	boost::fibers::scheduler<> sched;
-	boost::fibers::mutex mtx( sched);
     sched.make_fiber( & test_fn1, boost::ref( mtx) );
     sched.make_fiber( & test_fn2, boost::ref( mtx) );
 
@@ -95,30 +94,35 @@ void test_case2()
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value1);
-	BOOST_CHECK_EQUAL( 1, value2);
+	BOOST_CHECK_EQUAL( 0, value2);
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK( sched.run() );
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value1);
+	BOOST_CHECK_EQUAL( 0, value2);
+
+	BOOST_CHECK( sched.run() );
+	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
+	BOOST_CHECK_EQUAL( 1, value1);
+	BOOST_CHECK_EQUAL( 0, value2);
+
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value1);
-	BOOST_CHECK_EQUAL( 1, value2);
+	BOOST_CHECK_EQUAL( 0, value2);
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value1);
-	BOOST_CHECK_EQUAL( 2, value2);
-
-	BOOST_CHECK( ! sched.run() );
-	BOOST_CHECK_EQUAL( std::size_t( 0), sched.size() );
-	BOOST_CHECK_EQUAL( 1, value1);
-	BOOST_CHECK_EQUAL( 2, value2);
+	BOOST_CHECK_EQUAL( 1, value2);
 }
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
     boost::unit_test_framework::test_suite * test =
-		BOOST_TEST_SUITE("Boost.Fiber: mutex test suite");
+		BOOST_TEST_SUITE("Boost.Fiber: spin-mutex test suite");
 
     test->add(BOOST_TEST_CASE(&test_case1));
     test->add(BOOST_TEST_CASE(&test_case2));

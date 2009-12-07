@@ -4,38 +4,40 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "boost/fiber/auto_reset_event.hpp"
+#include "boost/fiber/spin_auto_reset_event.hpp"
 
 #include <boost/fiber/detail/atomic.hpp>
+#include <boost/fiber/utility.hpp>
 
 namespace boost {
 namespace fibers {
 
-auto_reset_event::~auto_reset_event()
-{ strategy_->unregister_object( id_); }
+spin_auto_reset_event::spin_auto_reset_event( bool isset) :
+	state_(
+		isset ?
+		static_cast< uint32_t >( SET) :
+		static_cast< uint32_t >( RESET) )
+{}
 
 void
-auto_reset_event::set()
-{
-	detail::atomic_exchange( & state_, static_cast< uint32_t >( SET) );
-	strategy_->object_notify_one( id_);
-}
+spin_auto_reset_event::set()
+{ detail::atomic_exchange( & state_, static_cast< uint32_t >( SET) ); }
 
 void
-auto_reset_event::wait()
+spin_auto_reset_event::wait()
 {
 	uint32_t expected = static_cast< uint32_t >( SET);
 	while ( ! detail::atomic_compare_exchange_strong(
 			& state_, & expected,
 			static_cast< uint32_t >( RESET) ) )
 	{
-		strategy_->wait_for_object( id_);
+		this_fiber::yield();
 		expected = static_cast< uint32_t >( SET);
 	}
 }
 
 bool
-auto_reset_event::try_wait()
+spin_auto_reset_event::try_wait()
 {
 	uint32_t expected = static_cast< uint32_t >( SET);
 	return detail::atomic_compare_exchange_strong(

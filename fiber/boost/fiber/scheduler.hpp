@@ -11,7 +11,7 @@
 #include <memory>
 
 #include <boost/preprocessor/repetition.hpp>
-#include <boost/thread/tss.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/detail/config.hpp>
@@ -29,49 +29,53 @@
 namespace boost {
 namespace fibers {
 
+class auto_reset_event;
+class condition;
+class count_down_event;
+class manual_reset_event;
+class mutex;
+
 template< typename Strategy = round_robin >
 class BOOST_FIBER_DECL scheduler : private noncopyable
 {
 private:
+	friend class auto_reset_event;
+	friend class condition;
+	friend class count_down_event;
+	friend class manual_reset_event;
+	friend class mutex;
 
-	typedef thread_specific_ptr< strategy >	impl_t;
+	typedef intrusive_ptr< strategy >	strategy_t;
 
-	impl_t	impl_;
-
-	strategy * access_()
-	{
-		if ( ! impl_.get() )
-			impl_.reset( new Strategy() );
-		return impl_.get();
-	}
+	strategy_t	strategy_;
 
 public:
 	scheduler() :
-		impl_()
+		strategy_( new Strategy() )
 	{}
 
 	~scheduler()
-	{ impl_.reset(); }
+	{} 
 
 	bool run()
-	{ return access_()->run(); }
+	{ return strategy_->run(); }
 
 	bool empty()
-	{ return access_()->empty(); }
+	{ return strategy_->empty(); }
 
 	std::size_t size()
-	{ return access_()->size(); }
+	{ return strategy_->size(); }
 
 	void submit_fiber( fiber f)
-	{ access_()->add( f); }
+	{ strategy_->add( f); }
 
 	template< typename Fn >
 	void make_fiber( Fn fn)
-	{ access_()->add( fiber( fn) ); }
+	{ strategy_->add( fiber( fn) ); }
 
 	template< typename Fn >
 	void make_fiber( std::size_t stack_size, Fn fn)
-	{ access_()->add( fiber( stack_size, fn) ); }
+	{ strategy_->add( fiber( stack_size, fn) ); }
 
 #ifndef BOOST_FIBER_MAX_ARITY
 #define BOOST_FIBER_MAX_ARITY 10
@@ -84,10 +88,10 @@ public:
 #define BOOST_FIBER_MAKE_FIBER_FUNCTION(z, n, unused) \
 	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
 	void make_fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-	{ access_()->add( fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); } \
+	{ strategy_->add( fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); } \
 	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
 	void make_fiber( std::size_t stack_size, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-	{ access_()->add( fiber( stack_size, fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); }
+	{ strategy_->add( fiber( stack_size, fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); }
 
 BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTION, ~)
 

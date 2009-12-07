@@ -101,52 +101,8 @@ strategy::cancel_()
 	active->info_()->st->cancel( active_fiber->get_id() );
 }
 
-void
-strategy::register_object_( object::id const& oid)
-{
-	fiber * active( active_fiber.get() );
-	if ( ! active) throw fiber_error("not a fiber");
-	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
-	active->info_()->st->register_object( oid);
-}
-
-void
-strategy::unregister_object_( object::id const& oid)
-{
-	fiber * active( active_fiber.get() );
-	if ( ! active) throw fiber_error("not a fiber");
-	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
-	active->info_()->st->unregister_object( oid);
-}
-
-void
-strategy::wait_for_object_( object::id const& oid)
-{
-	fiber * active( active_fiber.get() );
-	if ( ! active) throw fiber_error("not a fiber");
-	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
-	active->info_()->st->wait_for_object( oid);
-}
-
-void
-strategy::object_notify_one_( object::id const& oid)
-{
-	fiber * active( active_fiber.get() );
-	if ( ! active) throw fiber_error("not a fiber");
-	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
-	active->info_()->st->object_notify_one( oid);
-}
-
-void
-strategy::object_notify_all_( object::id const& oid)
-{
-	fiber * active( active_fiber.get() );
-	if ( ! active) throw fiber_error("not a fiber");
-	if ( ! active->info_()->st) throw scheduler_error("no valid scheduler");
-	active->info_()->st->object_notify_all( oid);
-}
-
 strategy::strategy() :
+	use_count_( 0),
 	master_fiber()
 {
 	fiber::convert_thread_to_fiber();

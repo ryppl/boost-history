@@ -22,9 +22,9 @@ namespace fibers {
 
 round_robin::round_robin() :
 	fibers_(),
+	objects_(),
 	runnable_fibers_(),
-	terminated_fibers_(),
-	objects_()
+	terminated_fibers_()
 {}
 
 round_robin::~round_robin()

@@ -4,30 +4,34 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "boost/fiber/count_down_event.hpp"
+#include "boost/fiber/spin_count_down_event.hpp"
 
 #include <boost/fiber/detail/atomic.hpp>
+#include <boost/fiber/spin_mutex.hpp>
+#include <boost/fiber/utility.hpp>
 
 namespace boost {
 namespace fibers {
 
-count_down_event::~count_down_event()
-{ strategy_->unregister_object( id_); }
+spin_count_down_event::spin_count_down_event( uint32_t initial) :
+	initial_( initial),
+	current_( initial_)
+{}
 
 uint32_t
-count_down_event::initial() const
+spin_count_down_event::initial() const
 { return initial_; }
 
 uint32_t
-count_down_event::current() const
+spin_count_down_event::current() const
 { return detail::atomic_load( & current_); }
 
 bool
-count_down_event::is_set() const
+spin_count_down_event::is_set() const
 { return 0 == detail::atomic_load( & current_); }
 
 void
-count_down_event::set()
+spin_count_down_event::set()
 {
 	for (;;)
 	{
@@ -35,17 +39,15 @@ count_down_event::set()
 			return;
 		uint32_t expected = current_;
 		if ( detail::atomic_compare_exchange_strong( & current_, & expected, expected - 1) )
-			break;
+			return;
 	}
-	if ( 0 == detail::atomic_load( & current_) )
-		strategy_->object_notify_all( id_);
 }
 
 void
-count_down_event::wait()
+spin_count_down_event::wait()
 {
 	while ( 0 != detail::atomic_load( & current_) )
-		strategy_->wait_for_object( id_);
+		this_fiber::yield();	
 }
 
 }}

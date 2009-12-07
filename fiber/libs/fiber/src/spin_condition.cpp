@@ -4,22 +4,40 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "boost/fiber/condition.hpp"
+#include "boost/fiber/spin_condition.hpp"
 
 #include <boost/assert.hpp>
 #include <boost/thread.hpp>
 
 #include <boost/fiber/detail/atomic.hpp>
+#include <boost/fiber/spin_mutex.hpp>
 #include <boost/fiber/utility.hpp>
 
 namespace boost {
 namespace fibers {
 
 void
-condition::wait_( mutex & mtx)
+spin_condition::notify_( uint32_t cmd)
+{
+	enter_mtx_.lock();
+
+	if ( 0 == detail::atomic_load( & waiters_) )
+	{
+		enter_mtx_.unlock();
+		return;
+	}
+
+	uint32_t expected = static_cast< uint32_t >( SLEEPING);
+	while ( ! detail::atomic_compare_exchange_strong(
+				& cmd_, & expected, cmd) )
+		this_fiber::yield();	
+}
+
+void
+spin_condition::wait_( spin_mutex & mtx)
 {
 	{
-		mutex::scoped_lock lk( enter_mtx_);
+		spin_mutex::scoped_lock lk( enter_mtx_);
 		BOOST_ASSERT( lk);
 		detail::atomic_fetch_add( & waiters_, 1);
 		mtx.unlock();
@@ -29,9 +47,9 @@ condition::wait_( mutex & mtx)
 	for (;;)
 	{
 		while ( static_cast< uint32_t >( SLEEPING) == detail::atomic_load( & cmd_) )
-			strategy_->wait_for_object( id_);
+			this_fiber::yield();	
 
-		mutex::scoped_lock lk( check_mtx_);
+		spin_mutex::scoped_lock lk( check_mtx_);
 		BOOST_ASSERT( lk);
 
 		uint32_t expected = static_cast< uint32_t >( NOTIFY_ONE);
@@ -66,47 +84,19 @@ condition::wait_( mutex & mtx)
 	mtx.lock();
 }
 
-condition::~condition()
-{ strategy_->unregister_object( id_); }
+spin_condition::spin_condition() :
+	cmd_( static_cast< uint32_t >( SLEEPING) ),
+	waiters_( 0),
+	enter_mtx_(),
+	check_mtx_()
+{}
 
 void
-condition::notify_one()
-{
-	enter_mtx_.lock();
-
-	if ( 0 == detail::atomic_load( & waiters_) )
-	{
-		enter_mtx_.unlock();
-		return;
-	}
-
-	uint32_t cmd = static_cast< uint32_t >( NOTIFY_ONE);
-	uint32_t expected = static_cast< uint32_t >( SLEEPING);
-	while ( ! detail::atomic_compare_exchange_strong(
-				& cmd_, & expected, cmd) )
-		this_fiber::yield();
-	
-	strategy_->object_notify_one( id_);
-}
+spin_condition::notify_one()
+{ notify_( static_cast< uint32_t >( NOTIFY_ONE) ); }
 
 void
-condition::notify_all()
-{
-	enter_mtx_.lock();
-
-	if ( 0 == detail::atomic_load( & waiters_) )
-	{
-		enter_mtx_.unlock();
-		return;
-	}
-
-	uint32_t cmd = static_cast< uint32_t >( NOTIFY_ALL);
-	uint32_t expected = static_cast< uint32_t >( SLEEPING);
-	while ( ! detail::atomic_compare_exchange_strong(
-				& cmd_, & expected, cmd) )
-		this_fiber::yield();
-
-	strategy_->object_notify_all( id_);
-}
+spin_condition::notify_all()
+{ notify_( static_cast< uint32_t >( NOTIFY_ALL) ); }
 
 }}

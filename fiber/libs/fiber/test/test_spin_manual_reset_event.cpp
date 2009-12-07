@@ -12,7 +12,6 @@
 
 #include <boost/bind.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/function.hpp>
 #include <boost/ref.hpp>
 #include <boost/test/unit_test.hpp>
@@ -22,7 +21,7 @@
 
 int value = 0;
 
-void wait_fn( boost::fibers::manual_reset_event & ev)
+void wait_fn( boost::fibers::spin_manual_reset_event & ev)
 {
 	ev.wait();
 	++value;
@@ -31,8 +30,8 @@ void wait_fn( boost::fibers::manual_reset_event & ev)
 void test_case_1()
 {
 	value = 0;
+	boost::fibers::spin_manual_reset_event ev;
 	boost::fibers::scheduler<> sched;
-	boost::fibers::manual_reset_event ev( sched);
 
 	sched.make_fiber(
 		wait_fn,
@@ -61,8 +60,8 @@ void test_case_1()
 void test_case_2()
 {
 	value = 0;
+	boost::fibers::spin_manual_reset_event ev;
 	boost::fibers::scheduler<> sched;
-	boost::fibers::manual_reset_event ev( sched);
 
 	sched.make_fiber(
 		wait_fn,
@@ -92,7 +91,7 @@ void test_case_2()
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value);
 
-	BOOST_CHECK( ! sched.run() );
+	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
 	BOOST_CHECK_EQUAL( 1, value);
 
@@ -107,8 +106,8 @@ void test_case_2()
 void test_case_3()
 {
 	value = 0;
+	boost::fibers::spin_manual_reset_event ev( true);
 	boost::fibers::scheduler<> sched;
-	boost::fibers::manual_reset_event ev( sched, true);
 
 	sched.make_fiber(
 		wait_fn,
@@ -130,8 +129,7 @@ void test_case_3()
 
 void test_case_4()
 {
-	boost::fibers::scheduler<> sched;
-	boost::fibers::manual_reset_event ev( sched);
+	boost::fibers::spin_manual_reset_event ev;
 
 	BOOST_CHECK_EQUAL( false, ev.try_wait() );
 
@@ -148,7 +146,7 @@ void test_case_4()
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
 	boost::unit_test::test_suite * test =
-		BOOST_TEST_SUITE("Boost.Fiber: manual-reset-event test suite");
+		BOOST_TEST_SUITE("Boost.Fiber: spin-manual-reset-event test suite");
 
 	test->add( BOOST_TEST_CASE( & test_case_1) );
 	test->add( BOOST_TEST_CASE( & test_case_2) );

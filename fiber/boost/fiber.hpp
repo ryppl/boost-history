@@ -17,6 +17,11 @@
 #include <boost/fiber/manual_reset_event.hpp>
 #include <boost/fiber/mutex.hpp>
 #include <boost/fiber/scheduler.hpp>
+#include <boost/fiber/spin_auto_reset_event.hpp>
+#include <boost/fiber/spin_condition.hpp>
+#include <boost/fiber/spin_count_down_event.hpp>
+#include <boost/fiber/spin_manual_reset_event.hpp>
+#include <boost/fiber/spin_mutex.hpp>
 #include <boost/fiber/unbounded_fifo.hpp>
 #include <boost/fiber/utility.hpp>
 

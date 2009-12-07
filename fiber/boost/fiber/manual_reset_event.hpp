@@ -12,6 +12,8 @@
 
 #include <boost/fiber/object/id.hpp>
 #include <boost/fiber/mutex.hpp>
+#include <boost/fiber/scheduler.hpp>
+#include <boost/fiber/strategy.hpp>
 
 namespace boost {
 namespace fibers {
@@ -29,9 +31,20 @@ private:
 	volatile uint32_t	waiters_;
 	mutex				enter_mtx_;
 	object::id			id_;
+	strategy::ptr_t		strategy_;
 
 public:
-	explicit manual_reset_event( bool = false);
+	template< typename Strategy >
+	manual_reset_event( scheduler< Strategy > & sched, bool isset = false) :
+		state_(
+			isset ?
+				static_cast< uint32_t >( SET) :
+				static_cast< uint32_t >( RESET) ),
+		waiters_( 0),
+		enter_mtx_( sched),
+		id_( * this),
+		strategy_( sched.strategy_)
+	{ strategy_->register_object( id_); }
 
 	~manual_reset_event();
 

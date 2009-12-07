@@ -8,10 +8,9 @@
 #define BOOST_FIBERS_STRATEGY_H
 
 #include <cstddef>
-#include <list>
-#include <map>
 
 #include <boost/function.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/thread/tss.hpp>
 
 #include <boost/fiber/detail/interrupt_flags.hpp>
@@ -80,7 +79,7 @@ private:
 	friend class manual_reset_event;
 	friend class mutex;
 
-	typedef function< void() >				callable_t;
+	typedef function< void() >						callable_t;
 
 	static bool runs_as_fiber_();
 
@@ -104,20 +103,12 @@ private:
 
 	static void cancel_();
 
-	static void register_object_( object::id const&);
-
-	static void unregister_object_( object::id const&);
-
-	static void wait_for_object_( object::id const&);
-
-	static void object_notify_one_( object::id const&);
-
-	static void object_notify_all_( object::id const&);
+	uint32_t	use_count_;
 
 protected:
 	typedef thread_specific_ptr< fiber >			fiber_t;
 
-	static fiber_t	active_fiber;
+	static fiber_t		active_fiber;
 
 	fiber			master_fiber;
 
@@ -156,6 +147,8 @@ protected:
 	void set_state_terminated( fiber &);
 
 public:
+	typedef intrusive_ptr< strategy >	ptr_t;
+
 	strategy();
 
 	virtual ~strategy();
@@ -187,6 +180,12 @@ public:
 	virtual bool empty() = 0;
 
 	virtual std::size_t size() = 0;
+
+	inline friend void intrusive_ptr_add_ref( strategy * p)
+	{ ++p->use_count_; }
+	
+	inline friend void intrusive_ptr_release( strategy * p)
+	{ if ( --p->use_count_ == 0) delete p; }
 };
 
 }}
