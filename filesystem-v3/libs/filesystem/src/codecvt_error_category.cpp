@@ -18,6 +18,7 @@
 #include <boost/filesystem/config.hpp>
 #include <boost/filesystem/path_traits.hpp>
 #include <boost/system/error_code.hpp>
+#include <locale>
 #include <vector>
 #include <cstdlib>
 #include <cassert>

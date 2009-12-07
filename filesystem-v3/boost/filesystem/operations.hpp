@@ -195,7 +195,7 @@ namespace boost
     BOOST_FILESYSTEM_DECL
     boost::uintmax_t remove_all(const path& p, system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
-    void rename(const path& from, const path& to, system::error_code* ec=0);
+    void rename(const path& old_p, const path& new_p, system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
     void resize_file(const path& p, uintmax_t size, system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
@@ -422,11 +422,11 @@ namespace boost
   boost::uintmax_t remove_all(const path& p, system::error_code& ec)
                                        {return detail::remove_all(p, &ec);}
   inline
-  void rename(const path& from, const path& to) {detail::rename(from, to);}
+  void rename(const path& old_p, const path& new_p) {detail::rename(old_p, new_p);}
 
   inline
-  void rename(const path& from, const path& to, system::error_code& ec)
-                                       {detail::rename(from, to, &ec);}
+  void rename(const path& old_p, const path& new_p, system::error_code& ec)
+                                       {detail::rename(old_p, new_p, &ec);}
   inline  // name suggested by Scott McMurray
   void resize_file(const path& p, uintmax_t size) {detail::resize_file(p, size);}
 

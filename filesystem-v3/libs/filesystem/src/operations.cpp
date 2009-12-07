@@ -135,7 +135,7 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
 #   define BOOST_COPY_DIRECTORY(F,T)(!(::stat(from.c_str(), &from_stat)!= 0\
          || ::mkdir(to.c_str(),from_stat.st_mode)!= 0))
 #   define BOOST_COPY_FILE(F,T,FailIfExistsBool)copy_file_api(F, T, FailIfExistsBool)
-#   define BOOST_MOVE_FILE(F,T)(::rename(F, T)== 0)
+#   define BOOST_MOVE_FILE(OLD,NEW)(::rename(OLD, NEW)== 0)
 #   define BOOST_RESIZE_FILE(P,SZ)(::truncate(P, SZ)== 0)
 
 #   define BOOST_ERROR_NOT_SUPPORTED ENOSYS
@@ -153,7 +153,7 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
 #   define BOOST_DELETE_FILE(P)(::DeleteFileW(P)!= 0)
 #   define BOOST_COPY_DIRECTORY(F,T)(::CreateDirectoryExW(F, T, 0)!= 0)
 #   define BOOST_COPY_FILE(F,T,FailIfExistsBool)(::CopyFileW(F, T, FailIfExistsBool)!= 0)
-#   define BOOST_MOVE_FILE(F,T)(::MoveFileW(F, T)!= 0)
+#   define BOOST_MOVE_FILE(OLD,NEW)(::MoveFileExW(OLD, NEW, MOVEFILE_REPLACE_EXISTING)!= 0)
 #   define BOOST_RESIZE_FILE(P,SZ)(resize_file_api(P, SZ)!= 0)
 #   define BOOST_READ_SYMLINK(P,T)
 
@@ -1088,7 +1088,7 @@ namespace detail
       {
         if (ec == 0)
           throw_exception(filesystem_error("boost::filesystem::read_symlink",
-            p, errno, system_category));
+            p, error_code(errno, system_category)));
         else ec->assign(errno, system_category);
         break;
       }
@@ -1132,19 +1132,9 @@ namespace detail
   }
 
   BOOST_FILESYSTEM_DECL
-  void rename(const path& from, const path& to, error_code* ec)
+  void rename(const path& old_p, const path& new_p, error_code* ec)
   {
-#   ifdef BOOST_POSIX_API
-
-    // POSIX is too permissive so must check
-    error_code dummy;
-    if (error(fs::exists(to, dummy),
-        error_code(EEXIST, system_category),
-        from, to, ec, "boost::filesystem::rename"))
-      return;
-#   endif
-
-    error(!BOOST_MOVE_FILE(from.c_str(), to.c_str()), from, to, ec,
+    error(!BOOST_MOVE_FILE(old_p.c_str(), new_p.c_str()), old_p, new_p, ec,
       "boost::filesystem::rename");
   }
 
@@ -1275,7 +1265,7 @@ namespace detail
       }
       if (ec == 0)
         throw_exception(filesystem_error("boost::filesystem::status",
-          p, errno, system_category));
+          p, error_code(errno, system_category)));
       return fs::file_status(fs::status_error);
     }
     if (ec != 0) ec->clear();;
@@ -1330,7 +1320,7 @@ namespace detail
       }
       if (ec == 0)
         throw_exception(filesystem_error("boost::filesystem::status",
-          p, errno, system_category));
+          p, error_code(errno, system_category)));
       return fs::file_status(fs::status_error);
     }
     if (ec != 0) ec->clear();

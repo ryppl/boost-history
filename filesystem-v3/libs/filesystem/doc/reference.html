@@ -90,9 +90,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#create_hard_link">create_hard_link</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#create_symlink">create_symlink</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#current_path">current_path</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#is_symlink">exists</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp <a href="#exists">exists</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#equivalent">equivalent</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#resize_file">file_size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp <a href="#file_size">file_size</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp i<a href="#initial_path">nitial_path</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp i<a href="#is_directory">s_directory</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#is_empty">is_empty</a><br>
@@ -2141,16 +2141,16 @@ bool <a name="equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2,
 <pre><span style="background-color: #FFFFFF; ">uintmax_t</span> <a name="file_size">file_size</a>(const path&amp; p);<span style="background-color: #FFFFFF; ">
 uintmax_t</span> <a name="file_size">file_size</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
-  <p><i>Returns:</i> The size 
+  <p><span style="background-color: #FFFF00">Remarks: </span></p>
+  <p><i>Returns:</i> If <code>exists(p) &amp;&amp; is_regular_file(p)</code>, the size 
   <span style="background-color: #FFFFFF; ">in bytes</span> 
   of the file <code>p</code> resolves to, determined as if by the value of 
   the <i>POSIX</i> <code>
   <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">stat</a></code> structure member <code>st_size</code> 
   obtained as if by <i>POSIX</i> <code>
-  <a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>.</p>
-  <p style="font-size: 10pt"><i>Throws:</i> <code>filesystem_error</code><span style="background-color: #FFFFFF">
-  </span>if <code>!exists(p) || !is_regular_file(p)</code>, 
-  otherwise as specified in
+  <a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>. 
+  Otherwise, <code>static_cast&lt;uintmax_t&gt;(-1)</code>.</p>
+  <p style="font-size: 10pt"><i>Throws:</i> As specified in
   <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
@@ -2204,13 +2204,29 @@ bool </span><span style="background-color: #FFFF00; text-decoration:underline"><
   <code>s.type() == regular_file</code></p>
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
-<pre><code>bool <a name="is_regular_file2">is_regular_file</a>(const path&amp; p);
-bool <a name="is_regular_file2">is_regular_file</a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
+<pre><code>bool <a name="is_regular_file2">is_regular_file</a>(const path&amp; p);</code></pre>
 <blockquote>
-  <p><i>Returns:</i> <code>is_regular_file(status(p))</code> or <code>is_regular_file(status(p, ec))</code>, 
-  respectively.</p>
-  <p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
-  nothing.</p>
+  <p><i>Returns:</i> <code>is_regular_file(status(p))</code>.</p>
+  <p><i>Throws:</i> <code>filesystem_error</code> 
+  if <code>status(p)</code> would throw <code>filesystem_error.</code></p>
+  </blockquote>
+<pre><code>bool <a name="is_regular_file2">is_regular_file</a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
+<blockquote>
+  <p><i>Effects:</i> Sets <code>ec</code> as if by <code>status(p, ec)</code>.
+  <span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00">
+  </span>
+      <code><span style="background-color: #FFFF00">status_error</span></code><span style="background-color: #FFFF00">,
+  </span>
+      <code><span style="background-color: #FFFF00">file_not_found</span></code><span style="background-color: #FFFF00"> 
+  and </span>
+      <code><span style="background-color: #FFFF00">type_unknown</span></code><span style="background-color: #FFFF00"> 
+  cases set </span><code><span style="background-color: #FFFF00">ec</span></code><span style="background-color: #FFFF00"> 
+  to error values. To distinguish between cases, call the </span><code>
+  <span style="background-color: #FFFF00">status</span></code><span style="background-color: #FFFF00"> 
+  function directly. </span><i><span style="background-color: #FFFF00">-- end 
+  note</span></i><span style="background-color: #FFFF00">] </span></p>
+  <p><i>Returns:</i> <code>is_regular_file(status(p, ec))</code>.</p>
+  <p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre><span style="background-color: #FFFFFF">bool <a name="is_other">is_other</a>(file_status s);</span></pre>
 <blockquote>
@@ -2301,22 +2317,20 @@ uintmax_t <a name="remove_all">remove_all</a>(const path&amp; p, system::error_c
   <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
-<pre>void <a name="rename">rename</a>(const path&amp; from, const path&amp; to);
-void <a name="rename">rename</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec);</pre>
+<pre>void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p);
+void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p, system::error_code&amp; ec);</pre>
 <blockquote>
-  <p><i>Effects:</i> Renames <code>from</code> to <code>to</code>, as if by
+  <p><i>Effects:</i> Renames <code>old_p</code> to <code>new_p</code>, as if by
   <i>POSIX</i> <code>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/rename.html">
   rename()</a></code>.</p>
   <blockquote>
-  <p>[<i>Note:</i> If <code>from</code> and <code>to</code> resolve to the 
-  same file, no action is taken. Otherwise, if <code>to</code> resolves to an 
-  existing file, it is removed. A symbolic link is itself renamed, rather than 
+  <p>[<i>Note:</i> If <code>old_p</code> and <code>new_p</code> resolve to the 
+  same existing file, no action is taken. Otherwise, if <code>new_p</code> resolves to an 
+  existing non-directory file, it is removed, while if <code>new_p</code> resolves to an 
+  existing directory, it is removed if empty on POSIX but is an error on Windows. A symbolic link is itself renamed, rather than 
   the file it resolves to being renamed. <i>-- end note</i>]</p>
   </blockquote>
-  <p><i>Postconditions:</i> <code>!exists(from) &amp;&amp; exists(to)</code>, and 
-  the contents and attributes of the file originally named <code>from</code> 
-  are otherwise unchanged.</p>
   <p><i>Throws:</i> As specified in
   <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
   Error reporting</a>.</p>
@@ -2351,27 +2365,39 @@ space_info <a name="space">space</a>(const path&amp; p</span>, system::error_cod
   <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
-<pre><a href="#file_status">file_status</a> <a name="status">status</a>(const path&amp; p);
-<a href="#file_status">file_status</a> <a name="status">status</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+<pre><a href="#file_status">file_status</a> <a name="status">status</a>(const path&amp; p);</pre>
+<blockquote>
+  <p><i>Effects: </i>As if:</p>
+  <blockquote>
+    <pre>system::error_code ec;
+file_status result = status(p, ec);
+if (result == status_error)
+  throw filesystem_error(<i>implementation-supplied-message</i>, p, ec);
+return result;</pre>
+  </blockquote>
+  <p><i>Returns:</i> See above.</p>
+  <p><i>Throws:</i> <code>filesystem_error</code>. 
+[<i>Note:</i> <code>result</code> values of <code>
+      file_status(file_not_found)</code>and <code>
+      file_status(type_unknown)</code> are not considered failures and do not 
+  cause an exception to be 
+thrown.<i> -- end note</i>] </p>
+  </blockquote>
+<pre><a href="#file_status">file_status</a> <a name="status">status</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Effects: </i></p>
   <blockquote>
-    <p>Determines the attributes 
-    of
-    <code>p</code> as if by<i> POSIX </i> <code>
+    <p>If possible, determines the attributes 
+    of the file
+    <code>p</code> resolves to, as if by<i> POSIX </i> <code>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>.</p>
       <p>[<i>Note:</i> If a symbolic link is encountered during pathname 
       resolution, 
       pathname resolution continues using the contents of the symbolic link. <i>-- 
     end note</i>]</p>
-      <p>For the <code>error_code&amp;</code> overload:</p>
-    <ul>
-      <li>If, during attribute determination, the underlying file system API reports no error, <code>ec.clear()</code>.<br>
-&nbsp;</li>
-      <li>Otherwise, <code>ec</code> is set according to the error reported by 
-      the underlying file system API.</li>
-    </ul>
-    <blockquote>
+      If, during attribute determination, the underlying file system API reports 
+    an error, sets <code>ec</code> to indicate the specific error reported. 
+    Otherwise, <code>ec.clear()</code>.<blockquote>
       <p>[<i>Note:</i> This allows users to inspect the specifics of underlying 
       API errors even when the value returned by <code>status()</code> is not <code>
       file_status(status_error)</code>.&nbsp; <i>--end note</i>]</p>
@@ -2379,58 +2405,69 @@ space_info <a name="space">space</a>(const path&amp; p</span>, system::error_cod
     </blockquote>
   <p><i>Returns:</i></p>
   <blockquote>
-    <p>If the underlying file system API reported an error during attribute determination:</p>
+    <p>If <code>ec != error_code()</code>:</p>
     <ul>
-      <li>If the error indicated that <code>p</code> could not be resolved, as 
-      if by POSIX errors ENOENT or ENOTDIR, return <code>
-      file_status(file_not_found)</code>. [<i>Note:</i> Windows equivalents 
+      <li>If the specific error indicates that <code>p</code> cannot be resolved 
+      because some element of the path does not exist, return <code>
+      file_status(file_not_found)</code>. [<i>Note:</i> POSIX errors that 
+      indicate this are ENOENT or ENOTDIR. Windows equivalents 
       include ERROR_FILE_NOT_FOUND, ERROR_PATH_NOT_FOUND, ERROR_INVALID_NAME, 
       ERROR_INVALID_PARAMETER, ERROR_BAD_PATHNAME, and ERROR_BAD_NETPATH. <i>-- 
       end note</i>]<br>
 &nbsp;</li>
-      <li>Otherwise, if the error indicates that <code>p</code> can be resolved 
+      <li>Otherwise, if the specific error indicates that <code>p</code> can be resolved 
       but the attributes cannot be determined, return <code>
       file_status(type_unknown)</code>. [<i>Note: </i>For example, Windows 
-      ERROR_SHARING_VIOLATION errors. The case never arises on POSIX. <i>-- end 
+      ERROR_SHARING_VIOLATION errors. For POSIX, the case never arises. <i>-- end 
       note</i>]<br>
-&nbsp;</li>
-      <li>Otherwise, for the overload without <code>error_code&amp;</code>, 
-      throw an exception of type <code>filesystem_error</code>.<br>
 &nbsp;</li>
       <li>Otherwise, return <code>
       file_status(status_error)</code>.</li>
     </ul>
+        <blockquote>
         <p>[<i>Note:</i> These semantics distinguish between 
-        <code>p</code> being known not to exist and not being able to determine the status of <code>p</code>. The 
-        distinction is important to some users.&nbsp; <i>--end note</i>]</p>
+        <code>p</code> being known not to exist, 
+        <code>p</code> existing but not being able to determine its attributes, 
+        and there being an error that prevents even knowing if 
+        <code>p</code> exists. These 
+        distinctions are important to some use cases.&nbsp;<i>--end note</i>]</p>
+    </blockquote>
     <p>Otherwise,</p>
     <ul>
-      <li>If the attributes indicate a regular file, as if by <i>POSIX</i>&nbsp;S_<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">ISREG()</a>, 
+      <li>If the attributes indicate a regular file, as if by <i>POSIX</i>&nbsp;<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">S_ISREG()</a>, 
       return <code>
-      file_status(regular_file)</code>.<br>
+      file_status(regular_file)</code>. [<i>Note:</i> <code>
+regular_file</code> implies appropriate <code>&lt;fstream&gt;</code> operations 
+      would succeed, assuming no hardware, permission, access, or race condition 
+      errors. Lack of
+<code>regular_file</code> does not necessarily imply <code>&lt;fstream&gt;</code> operations would 
+fail on a directory.
+<i>-- end note</i>]<br>
 &nbsp;</li>
-      <li>Otherwise, if the attributes indicate a directory, as if by <i>POSIX</i> S_<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">ISDIR()</a>, 
+      <li>Otherwise, if the attributes indicate a directory, as if by <i>POSIX</i>
+      <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">S_ISDIR()</a>, 
       return <code>
-      file_status(directory_file)</code>.<br>
+      file_status(directory_file)</code>. [<i>Note:</i> <code>directory_file</code> implies <code>
+directory_iterator(p)</code>would succeed.
+<i>-- end note</i>]<br>
 &nbsp;</li>
-      <li>Otherwise, if the attributes indicate a symbolic link, as if by <i>POSIX</i> S_<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">ISLNK()</a>, 
-      return <code>
-      file_status(symlink_file)</code>. <i>[Note: </i>Only possible for <code>
-      symlink_status</code>. <i>--end note]<br>
-&nbsp;</i></li>
-      <li>Otherwise, if the attributes indicate a block special file, as if by <i>POSIX</i> S_<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">ISBLK()</a>, 
+      <li>Otherwise, if the attributes indicate a block special file, as if by <i>POSIX</i>
+      <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">S_ISBLK()</a>, 
       return <code>
       file_status(block_file)</code>.<br>
 &nbsp;</li>
-      <li>Otherwise, if the attributes indicate a character special file, as if by <i>POSIX</i> S_<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">ISCHR()</a>, 
+      <li>Otherwise, if the attributes indicate a character special file, as if by <i>POSIX</i>
+      <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">S_ISCHR()</a>, 
       return <code>
       file_status(character_file)</code>.<br>
 &nbsp;</li>
-      <li>Otherwise, if the attributes indicate a fifo or pipe file, as if by <i>POSIX</i> S_<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">ISFIFO()</a>, 
+      <li>Otherwise, if the attributes indicate a fifo or pipe file, as if by <i>POSIX</i>
+      <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">S_ISFIFO()</a>, 
       return <code>
       file_status(fifo_file)</code>.<br>
 &nbsp;</li>
-      <li>Otherwise, if the attributes indicate a socket, as if by <i>POSIX</i> S_<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">ISSOCK()</a>, 
+      <li>Otherwise, if the attributes indicate a socket, as if by <i>POSIX</i>
+      <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">S_ISSOCK()</a>, 
       return <code>
       file_status(socket_file)</code>.<br>
 &nbsp;</li>
@@ -2438,16 +2475,7 @@ space_info <a name="space">space</a>(const path&amp; p</span>, system::error_cod
       file_status(type_unknown)</code>.</li>
     </ul>
     </blockquote>
-<p>[<i>Note:</i> <code>directory_file</code> implies <code>
-directory_iterator(p)</code>would succeed, and <code>
-regular_file</code> implies appropriate <code>&lt;fstream&gt;</code> operations would succeed, 
-assuming no hardware, permission, access, or race 
-condition errors. For <code>regular_file,</code> the converse is not true; lack of
-<code>regular_file</code> does not necessarily imply <code>&lt;fstream&gt;</code> operations would 
-fail on a directory.
-<i>-- end note</i>]</p>
-<p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
-nothing.</p>
+<p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre><span style="background-color: #FFFFFF">bool <a name="status_known">status_known</a>(file_status s);</span></pre>
 <blockquote>
@@ -2455,8 +2483,8 @@ nothing.</p>
   <code>s.type() != status_error</code></span></p>
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
-<pre>file_status <a name="symlink_status">symlink_status</a>(const path&amp; p);
-file_status <a name="symlink_status">symlink_status</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+<pre><span style="background-color: #FFFF00">file_status</span><span style="background-color: #FFFF00"> </span><a name="symlink_status"><span style="background-color: #FFFF00">symlink_status</span></a><span style="background-color: #FFFF00">(const</span><span style="background-color: #FFFF00"> path&amp; p);
+</span><span style="background-color: #FFFF00">file_status</span><span style="background-color: #FFFF00"> </span><a name="symlink_status"><span style="background-color: #FFFF00">symlink_status</span></a><span style="background-color: #FFFF00">(const</span><span style="background-color: #FFFF00"> path&amp; p, </span><span style="background-color: #FFFF00">system::error_code</span><span style="background-color: #FFFF00">&amp; </span><span style="background-color: #FFFF00">ec</span><span style="background-color: #FFFF00">);</span></pre>
 <blockquote>
   <p><i>Effects:</i>&nbsp; Same as <a href="#status">status()</a>, above, 
   except that the attributes 
@@ -2470,7 +2498,8 @@ file_status <a name="symlink_status">symlink_status</a>(const path&amp; p, syste
       <p>[<i>Note:</i> Pathname resolution is complete if <code>p</code> names a symbolic link. <i>-- 
     end note</i>]</p>
       </blockquote>
-      <p><i>Returns:</i> Same as <a href="#status">status()</a>, above.</p>
+      <p><i>Returns:</i> Same as <a href="#status">status()</a>, above,<span style="background-color: #FFFF00"> 
+      except ....</span></p>
 <p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
 nothing.</p>
 </blockquote>
@@ -3265,7 +3294,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->23 November 2009<!--webbot bot="Timestamp" endspan i-checksum="40588" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->06 December 2009<!--webbot bot="Timestamp" endspan i-checksum="39744" --></p>
 
 </body>
 

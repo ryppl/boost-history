@@ -548,12 +548,10 @@ namespace
   {
     std::cout << "rename_tests..." << std::endl;
 
-    // rename() test case numbers refer to operations.htm#rename table
-
     fs::path file_ph(dir / "f1");
     BOOST_TEST(fs::exists(file_ph));
 
-    // [case 1] make sure can't rename() a non-existent file
+    // error: rename a non-existent old file
     BOOST_TEST(!fs::exists(d1 / "f99"));
     BOOST_TEST(!fs::exists(d1 / "f98"));
     renamer n1a(d1 / "f99", d1 / "f98");
@@ -561,27 +559,38 @@ namespace
     renamer n1b(fs::path(""), d1 / "f98");
     BOOST_TEST(CHECK_EXCEPTION(n1b, ENOENT));
 
-    // [case 2] rename() target.empty()
+    // error: rename an existing file to ""
     renamer n2(file_ph, "");
     BOOST_TEST(CHECK_EXCEPTION(n2, ENOENT));
 
-    // [case 3] make sure can't rename() to an existent file or directory
+    // rename an existing file to an existent file
+    create_file(dir / "ff1", "ff1");
+    create_file(dir / "ff2", "ff2");
+    fs::rename(dir / "ff2", dir / "ff1");
+    BOOST_TEST(fs::exists(dir / "ff1"));
+    verify_file(dir / "ff1", "ff2");
+    BOOST_TEST(!fs::exists(dir / "ff2"));
+
+    // rename an existing file to itself
+    BOOST_TEST(fs::exists(dir / "f1"));
+    fs::rename(dir / "f1", dir / "f1");
+    BOOST_TEST(fs::exists(dir / "f1"));
+
+    // error: rename an existing directory to an existing non-empty directory
     BOOST_TEST(fs::exists(dir / "f1"));
     BOOST_TEST(fs::exists(d1 / "f2"));
-    renamer n3a(dir / "f1", d1 / "f2");
-    BOOST_TEST(CHECK_EXCEPTION(n3a, EEXIST));
     // several POSIX implementations (cygwin, openBSD) report ENOENT instead of EEXIST,
-    // so we don't verify error type on the above test.
+    // so we don't verify error type on the following test.
     renamer n3b(dir, d1);
     BOOST_TEST(CHECK_EXCEPTION(n3b, 0));
 
-    // [case 4A] can't rename() file to a nonexistent parent directory
+    //  error: move existing file to a nonexistent parent directory
     BOOST_TEST(!fs::is_directory(dir / "f1"));
     BOOST_TEST(!fs::exists(dir / "d3/f3"));
     renamer n4a(dir / "f1", dir / "d3/f3");
     BOOST_TEST(CHECK_EXCEPTION(n4a, ENOENT));
 
-    // [case 4B] rename() file in same directory
+    // rename existing file in same directory
     BOOST_TEST(fs::exists(d1 / "f2"));
     BOOST_TEST(!fs::exists(d1 / "f50"));
     fs::rename(d1 / "f2", d1 / "f50");
@@ -591,7 +600,7 @@ namespace
     BOOST_TEST(fs::exists(d1 / "f2"));
     BOOST_TEST(!fs::exists(d1 / "f50"));
 
-    // [case 4C] rename() file d1/f2 to d2/f3
+    // move and rename an existing file to a different directory
     fs::rename(d1 / "f2", d2 / "f3");
     BOOST_TEST(!fs::exists(d1 / "f2"));
     BOOST_TEST(!fs::exists(d2 / "f2"));
@@ -601,14 +610,14 @@ namespace
     fs::rename(d2 / "f3", d1 / "f2");
     BOOST_TEST(fs::exists(d1 / "f2"));
 
-    // [case 5A] rename() directory to nonexistent parent directory
+    // error: move existing directory to nonexistent parent directory
     BOOST_TEST(fs::exists(d1));
     BOOST_TEST(!fs::exists(dir / "d3/d5"));
     BOOST_TEST(!fs::exists(dir / "d3"));
     renamer n5a(d1, dir / "d3/d5");
     BOOST_TEST(CHECK_EXCEPTION(n5a, ENOENT));
 
-    // [case 5B] rename() on directory
+    // rename existing directory
     fs::path d3(dir / "d3");
     BOOST_TEST(fs::exists(d1));
     BOOST_TEST(fs::exists(d1 / "f2"));
@@ -624,7 +633,7 @@ namespace
     BOOST_TEST(fs::exists(d1 / "f2"));
     BOOST_TEST(!fs::exists(d3));
 
-    // [case 5C] rename() rename and move d1 to d2 / "d20"
+    // rename and move d1 to d2 / "d20"
     BOOST_TEST(fs::exists(d1));
     BOOST_TEST(!fs::exists(d2 / "d20"));
     BOOST_TEST(fs::exists(d1 / "f2"));
