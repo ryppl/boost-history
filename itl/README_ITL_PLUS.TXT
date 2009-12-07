@@ -47,8 +47,37 @@ concepts.
 Release Notes:
 ==============
 
+* Boost.Itl 3.2.0 (Review Version, update 1)
+------------------------------------------------------------------------
++ Tested Compilers: gcc-3.4.4, gcc-4.3.2, msvc-8.0, msvc-9.0, msvc-10.0.
++ Addition of itl::insert_iterator and itl::add_iterator that allow to 
+  copy or transform std::containers of intervals or segments into 
+  interval containers.
++ Addition of element_iterators that enable an iteration on the level
+  of elements. This allows to execute std::algorithms on interval 
+  containers of discrete domain types.
++ Updating quickbook documentation. Added examples std_transform and 
+  std_copy that demonstrates the use of itl insert and add iterators
++ Adding a more complex example project "large_bitset" that implement
+  large compressed bitsets class template using interval_map.
+
+* Boost.Itl_xt 3.2.0
+------------------------------------------------------------------------
++ Addition of a class template interval_bitset that implements a 
+  large compressed bitset using an interval_map.
+
+* Boost.Validate 3.2.0
+------------------------------------------------------------------------
++ Addition of a law 'AtomicEquivalence' to validate the equivalence of
+  std::algorithms on element and interval containers.
++ Addition of law based tests validating itl::insert and add iterators
+  element_iterators and the implementation of interval_bitset.
+
+========================================================================
+
+
 * Boost.Itl 3.1.0 (Review Version)
-------------------------------
+------------------------------------------------------------------------
 + Tested Compilers: 
   Itl: gcc-3.4.4, gcc-4.1.0, gcc-4.3.2, msvc-8.0, msvc-9.0.
   Validate (LaBatea): gcc-4.3.2, msvc-8.0, msvc-9.0.

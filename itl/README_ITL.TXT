@@ -37,8 +37,22 @@ feature is called aggregate on overlap.
 Release Notes:
 ==============
 
+* Boost.Itl 3.2.0 (Review Version, update 1)
+------------------------------------------------------------------------
++ Tested Compilers: gcc-3.4.4, gcc-4.3.2, msvc-8.0, msvc-9.0, msvc-10.0.
++ Addition of itl::insert_iterator and itl::add_iterator that allow to 
+  copy or transform std::containers of intervals or segments into 
+  interval containers.
++ Addition of element_iterators that allow for an iteration on the level
+  of elements. This allows to execute std::algorithms on interval 
+  containers of discrete domain types.
++ Updating quickbook documentation. Added examples std_transform and 
+  std_copy that demonstrates the use of itl insert and add iterators
++ Adding a more complex example project "large_bitset" that implements
+  a large compressed bitset class template using interval_map.
+
 * Boost.Itl 3.1.0 (Review Version)
-------------------------------
+------------------------------------------------------------------------
 + Tested Compilers: gcc-3.4.4, gcc-4.1.0, gcc-4.3.2,
   msvc-8.0, msvc-9.0.
 + Improved efficiency of algorithms.
@@ -46,7 +60,7 @@ Release Notes:
 + Completion of quickbook documentation.
 
 * Boost.Itl 3.0.0 (Preview 4)
-------------------------------
+------------------------------------------------------------------------
 + Tested Compilers: gcc-3.4.4, gcc-4.3.0 and msvc-9.0.
 + Interoperability between interval containers,
   segments and elements.
