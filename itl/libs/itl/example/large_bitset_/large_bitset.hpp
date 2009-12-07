@@ -11,6 +11,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 
 //[large_bitset_includes
 #include <iostream>                   // to organize output
+#include <limits>                     // limits and associated constants
 #include <boost/operators.hpp>        // to define operators with minimal effort
 #include "meta_log.hpp"               // a meta logarithm
 #include "bits.hpp"                   // a minimal bitset implementation
