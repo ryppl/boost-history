@@ -142,7 +142,8 @@ public:
 //[large_bitset_impl_constants
 private:                                      // Example value
     static const word_type                    //   8-bit case  
-        digits  = sizeof(word_type)*CHAR_BIT, //   8           Size of the associated bitsets 
+        digits  = std::numeric_limits         // --------------------------------------------------------------
+                  <word_type>::digits       , //   8           Size of the associated bitsets 
         divisor = digits                    , //   8           Divisor to find intervals for values
         last    = digits-1                  , //   7           Last bit (0 based)
         shift   = log2_<divisor>::value     , //   3           To express the division as bit shift
