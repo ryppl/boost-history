@@ -21,7 +21,7 @@ template<class NaturalT> class bits
 {
 public:
     typedef NaturalT word_type;
-    static const int       digits = CHAR_BIT*sizeof(NaturalT);
+    static const int       digits = std::numeric_limits<NaturalT>::digits;
     static const word_type w1     = static_cast<NaturalT>(1) ;
 
     bits():_bits(){}
