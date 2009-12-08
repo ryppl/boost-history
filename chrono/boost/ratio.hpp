@@ -128,7 +128,7 @@ namespace detail
   class ll_add<X, Y, 1>
   {
       static const boost::intmax_t min =
-        (1LL << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
+        (INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
 
       static char test[X <= max - Y];
@@ -148,7 +148,7 @@ namespace detail
   class ll_add<X, Y, -1>
   {
       static const boost::intmax_t min =
-        (1LL << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
+        (INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
 
       static char test[min - Y <= X];
@@ -164,7 +164,7 @@ namespace detail
   class ll_sub<X, Y, 1>
   {
       static const boost::intmax_t min =
-        (1LL << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
+        (INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
 
       static char test[min + Y <= X];
@@ -184,7 +184,7 @@ namespace detail
   class ll_sub<X, Y, -1>
   {
       static const boost::intmax_t min =
-        (1LL << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
+        (INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
 
       static char test[X <= max + Y];
@@ -197,7 +197,7 @@ namespace detail
   class ll_mul
   {
       static const boost::intmax_t nan =
-        (1LL << (sizeof(boost::intmax_t) * CHAR_BIT - 1));
+        (INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1));
       static const boost::intmax_t min = nan + 1;
       static const boost::intmax_t max = -min;
       static const boost::intmax_t a_x = static_abs<X>::value;
@@ -280,7 +280,6 @@ public:
     static const boost::intmax_t num = m_s * m_na / m_gcd;
     static const boost::intmax_t den = m_da / m_gcd;
 
-#if 1   
     ratio() {}
         
     template <intmax_t _N2, intmax_t _D2>
@@ -299,7 +298,6 @@ public:
             ratio&
         >::type
     operator=(const ratio<_N2, _D2>&) {return *this;}
-#endif
 
     typedef ratio<num, den> type;
 };
@@ -313,19 +311,18 @@ public:
 template <class R1, class R2>
 struct ratio_add
 {
-private:
-#if 1
+#if 0
+public:
+    //The nested typedef type shall be a synonym for ratio<T1, T2>::type where T1 has the value R1::num *
+    //R2::den + R2::num * R1::den and T2 has the value R1::den * R2::den.
+    typedef typename ratio<R1::num * R2::den + R2::num * R1::den,R1::den * R2::den>::type type;
+    // The preceding declaration doesn't works because of overflow on intmax_t.
 #else
+private:
     static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
     static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
-#endif
 public:
-    //The nested typedef type shall be a synonym for ratio<T1, T2> where T1 has the value R1::num *
-    //R2::den + R2::num * R1::den and T2 has the value R1::den * R2::den.
-#if 1
-    typedef typename ratio<R1::num * R2::den + R2::num * R1::den,R1::den * R2::den>::type type;
-    //typedef ratio<aux_type::num ,aux_type::den > type;
-#else
+    // No need to normalize as ratio_multiply is already normalized
     typedef typename ratio_multiply
        <
            ratio<gcd_n1_n2, R1::den / gcd_d1_d2>,
@@ -345,19 +342,18 @@ public:
 template <class R1, class R2>
 struct ratio_subtract
 {
-private:
-#if 1
+#if 0
+public:
+    //The nested typedef type shall be a synonym for ratio<T1, T2>::type where T1 has the value
+    // R1::num *R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.
+    typedef typename ratio<R1::num * R2::den - R2::num * R1::den, R1::den * R2::den>::type type;
+    // The preceding declaration doesn't works because of overflow on intmax_t.
 #else
+private:
     static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
     static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
-#endif
 public:
-//The nested typedef type shall be a synonym for ratio<T1, T2> where T1 has the value
-// R1::num *R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.
-#if 1
-    typedef typename ratio<R1::num * R2::den - R2::num * R1::den,R1::den * R2::den>::type type;
-    //typedef ratio<aux_type::num ,aux_type::den > type;
-#else
+    // No need to normalize as ratio_multiply is already normalized
     typedef typename ratio_multiply
        <
            ratio<gcd_n1_n2, R1::den / gcd_d1_d2>,
@@ -377,40 +373,41 @@ public:
 template <class R1, class R2>
 struct ratio_multiply
 {
+#if 0
+public:
+    // The nested typedef type  shall be a synonym for ratio<R1::num * R2::den - R2::num * R1::den, R1::den * R2::den>::type.
+    typedef typename ratio<R1::num * R2::num, R1::den * R2::den>::type type;
+    // The preceding declaration doesn't works because of overflow on intmax_t.
+#else
 private:
-#if 0    
    static const boost::intmax_t gcd_n1_d2 = detail::static_gcd<R1::num, R2::den>::value;
    static const boost::intmax_t gcd_d1_n2 = detail::static_gcd<R1::den, R2::num>::value;
-#endif
 public:
-#if 0
-   typedef ratio
+    typedef typename ratio
        <
            detail::ll_mul<R1::num / gcd_n1_d2, R2::num / gcd_d1_n2>::value,
            detail::ll_mul<R2::den / gcd_n1_d2, R1::den / gcd_d1_n2>::value
-       > type;
-#else
-   typedef typename ratio<R1::num * R2::num, R1::den * R2::den>::type type;
+       >::type type;
 #endif
 };
 
 template <class R1, class R2>
 struct ratio_divide
 {
-private:
-#if 0    
-   static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
-   static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
-#endif
-public:
 #if 0
-   typedef ratio
+public:
+    // The nested typedef type  shall be a synonym for ratio<R1::num * R2::den, R2::num * R1::den>::type. 
+    typedef typename ratio<R1::num * R2::den, R1::den * R2::num>::type type;
+#else    
+private:
+    static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
+    static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+public:
+    typedef typename ratio
        <
            detail::ll_mul<R1::num / gcd_n1_n2, R2::den / gcd_d1_d2>::value,
            detail::ll_mul<R2::num / gcd_n1_n2, R1::den / gcd_d1_d2>::value
-       > type;
-#else
-   typedef typename ratio<R1::num * R2::den, R1::den * R2::num>::type type;
+       >::type type;
 #endif
 };
 

@@ -1,6 +1,7 @@
 index.html
 boost_chrono/overview.html
 boost_chrono/overview/motivation.html
+boost_chrono/overview/caveat_emptor.html
 boost_chrono/users_guide.html
 boost_chrono/users_guide/getting_started.html
 boost_chrono/users_guide/tutorial.html

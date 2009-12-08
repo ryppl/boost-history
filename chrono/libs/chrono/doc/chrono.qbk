@@ -94,7 +94,7 @@ Finally, you can mentally add the following to any code fragments in this docume
 [section Motivation]
 [/=================]
 
-See [@http://www.open-std.org/jtc1/sc22/wg21 [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions for `common_type`, `ratio` and `chrono`. The following sections are an extract from this document.
+See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions for `common_type`, `ratio` and `chrono`. The following sections are an extract from this document.
 
 [section Common type]
 
@@ -166,7 +166,7 @@ These units were chosen as a subset of the boost library because they are the mo
 
 The only context in which these different types differ is when being converted to one another. At this time, unit-specific compile-time conversion constants are used to convert the source unit to the target unit. Only conversions from coarser units to finer units are allowed (in boost). This restriction ensures that all conversions are always exact. That is, microseconds can always represent any value minutes has.
 
-In Boost.DateTime, these units are united via inheritance. Boost.Chrono instead unites these units through the class template `duration`. That is, in Boost.Chrono all six of the above units are nothing but typedefs to different instantiations of `duration`. This change from Boost.DateTime has a far reaching positive impact, while not changing the syntax of the everyday use at all.
+In Boost.DateTime, these units are united via inheritance. __Boost_Chrono__ instead unites these units through the class template `duration`. That is, in __Boost_Chrono__ all six of the above units are nothing but typedefs to different instantiations of `duration`. This change from Boost.DateTime has a far reaching positive impact, while not changing the syntax of the everyday use at all.
 
 The most immediate positive impact is that the library can immediately generate any unit, any precision it needs. This is sometimes necessary when doing comparisons or arithmetic between `duration`s of differing precision, assuming one wants the comparison and arithmetic to be exactly correct.
 
@@ -174,7 +174,7 @@ A secondary benefit is that by publishing the class template `duration` interfac
 
 In Boost.DateTime, hours does not have the same representation as nanoseconds. The former is usually represented with a long whereas a long long is required for the latter. The reason for this is simply range. You don't need many hours to cover an extremely large range of time. But this isn't true of nanoseconds. Being able to reduce the sizeof overhead for some units when possible, can be a significant performance advantage.
 
-Boost.Chrono continues, and generalizes that philosophy. Not only can one specify the precision of a `duration`, one can also specify its representation. This can be any integral type, or even a floating point type. Or it can be a user-defined type which emulates an arithmetic type. The six predefined units all use signed integral types as their representation. And they all have a minimum range of +/- 292 years. nanoseconds needs 64 bits to cover that range. hours needs only 23 bits to cover that range.
+__Boost_Chrono__ continues, and generalizes that philosophy. Not only can one specify the precision of a `duration`, one can also specify its representation. This can be any integral type, or even a floating point type. Or it can be a user-defined type which emulates an arithmetic type. The six predefined units all use signed integral types as their representation. And they all have a minimum range of +/- 292 years. nanoseconds needs 64 bits to cover that range. hours needs only 23 bits to cover that range.
 
 [heading So What Exactly is a `duration` and How Do I Use One?]
 
@@ -306,7 +306,7 @@ A clock is a concept which bundles 3 things:
 # A concrete `time_point` type.
 # A function called now() which returns the concrete `time_point`.
 
-Boost.Chrono proposes 3 concrete clocks:
+__Boost_Chrono__ proposes 3 concrete clocks:
 
 # system_clock
 # monotonic_clock
@@ -353,7 +353,7 @@ A `time_point` represents a point in time, as opposed to a `duration` of time. A
 
 In each of the examples above, a different epoch is implied. Sometimes an epoch has meaning for several millennia. Other times the meaning of an epoch is lost after a while (such as the start of a timer, or when the computer booted). However, if two `time_point`s are known to share the same epoch, they can be subtracted, yielding a valid `duration`, even if the definition of the epoch no longer has meaning.
 
-In Boost.Chrono, an epoch is a purely abstract and unspecified concept. There is no type representing an epoch. It is simply an idea that relates (or doesn't) `time_point`s to a clock, and in the case that they share a clock, `time_point`s to one another. `time_point`s associated with different clocks are generally not interoperable unless the relationship between the epochs associated with each clock is known.
+In __Boost_Chrono__, an epoch is a purely abstract and unspecified concept. There is no type representing an epoch. It is simply an idea that relates (or doesn't) `time_point`s to a clock, and in the case that they share a clock, `time_point`s to one another. `time_point`s associated with different clocks are generally not interoperable unless the relationship between the epochs associated with each clock is known.
 
 [heading So What Exactly is a `time_point` and How Do I Use One?]
 
@@ -407,6 +407,12 @@ The Boost Chrono Library's process times components provide that information:
 
 
 [endsect]
+
+[section Caveat emptor]
+
+The underlying clocks provided by operating systems are subject to many seemingly arbitrary policies and implementation irregularities. That's a polite way of saying they tend to be flakey, and each operating system or even each clock has its own cruel and unusual forms of flakiness. Don't bet the farm on their accuracy, unless you have become deeply familiar with exactly what the specific operating system is guaranteeing, which is often very little.
+
+[endsect]
 [endsect]
 
 
@@ -423,19 +429,19 @@ The Boost Chrono Library's process times components provide that information:
 [/======================================]
 
 [/=================================]
-[heading Getting Boost.Chrono]
+[heading Getting __Boost_Chrono__]
 [/=================================]
 
-You can get the last stable release of Boost.Chrono by downloading [^chrono.zip] from the
+You can get the last stable release of __Boost_Chrono__ by downloading [^chrono.zip] from the
 [@http://www.boost-consulting.com/vault/index.php?directory=System Boost Vault]
 
 You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox].
 
 [/=================================]
-[heading Building Boost.Chrono]
+[heading Building __Boost_Chrono__]
 [/=================================]
 
-__Boost_Chono__ is not a header only library. You need to compile it before use.
+__Boost_Chrono__ is not a header only library. You need to compile it before use.
 
     bjam libs/chrono/build
 
@@ -446,7 +452,7 @@ __Boost_Chono__ is not a header only library. You need to compile it before use.
 
 [*Boost.Bitfield] depends on some Boost libraries. For these specific parts you must use either Boost version 1.39.0 or the version in SVN trunk (even if older version should works also).
 
-In particular, Boost.Chrono depends on:
+In particular, __Boost_Chrono__ depends on:
 
 [variablelist
 [
@@ -563,8 +569,19 @@ In other words, the program took 0.832 real-time (i.e. wall clock) seconds to ex
 ]
 
 [
-    [[@http://www.open-std.org/jtc1/sc22/wg21 [*N2661 - A Foundation to Sleep On]]]
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]]]
     [From Howard E. Hinnant, Walter E. Brown, Jeff Garland  and Marc Paterno. Is very informative and provides motivation for key design decisions]
+]
+
+
+[
+    [[@http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934 [*LGW 934. duration is missing operator%]]]
+    [From Terry Golubiewski. Is very informative and provides motivation for key design decisions]
+]
+
+[
+    [[@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]]]
+    [From Vicente Juan Botet Escriba.]
 ]
 
 ]
@@ -2001,18 +2018,19 @@ Here is the output for this program for several sets of command line arguments:
 
 [section [*Version 0.2.0, December 8, 2009] ['+ Features + Bug fixes + Updated documentation]]
 
-[*Features:]
+[*Features:] 
 
-* Added ratio construction and assignment from an equivalent ratio.
-* Added nested ratio typedef type.
+* Added ratio construction and assignment from an equivalent ratio ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
+* Added nested ratio typedef type ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
 * Added BOOST_CHRONO_HAS_CLOCK_MONOTONIC macro to state if monotonic_clock is provided on this platform.
-* Added duration operator%
+* Added duration operator% ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934 [*934. duration is missing operator%]])
 * Added BOOST_CONSTEXPR when constexpr should be used
 * Complete duration operator* and operator/  
 
 
 [*Implementation:]
 
+* Use INTMAC_C to name intmax_t constants instead of LL.
 * Separate chrono.cpp on # files win/chrono.cpp, mac/chrono.cpp and posix/chrono.cpp to make easier the maintenance on different platforms.
 * Separate process_clock.cpp on # files win/process_clock.cpp, mac/process_clock.cpp and posix/process_clock.cpp to make easir the maintenace on different platforms.
 * Added the error_code prototype for monotonic_clock::now for mac/chono.cpp
@@ -2021,13 +2039,13 @@ Here is the output for this program for several sets of command line arguments:
 
 [*Documentation:]
 
-* The documentation is written now using quick-book using as base [@http://www.open-std.org/jtc1/sc22/wg21 [*N2661 - A Foundation to Sleep On]] .
+* The documentation is written now using quick-book using as base [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] .
 
 [*Bugs]
 
 * operator/ was ambiguous: Disambiguate duration operator/  
 * CLOCK_MONOTONIC is not defined with cygwin/gcc 3.4: Disable code when BOOST_CHRONO_HAS_CLOCK_MONOTONIC is not defined.
-* result of metafunctions ratio_add and ratio_sub were not normalized ratios: Use of the nested ratio typedef type on ratio arithmetic operations.
+* result of metafunctions ratio_multiply and ratio_divide were not normalized ratios: Use of the nested ratio typedef type on ratio arithmetic operations.
 * Copy constructor from similar duration masked the defaulted operations: Added duration defaulted implementations
 
 
@@ -2061,22 +2079,73 @@ Here is the output for this program for several sets of command line arguments:
 
 [section:rationale Appendix B: Rationale]
 
-See [http://www.open-std.org/jtc1/sc22/wg21 [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions. The following sections are an extract from this document.
+See [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions. The following sections are an extract from this document.
 
 [heading Is it possible for the user to pass a `duration` to a function with the units being ambiguous?]
 
 No. No matter which option the author of `f` chooses above, the following client code will not compile:
 
     f(3);  // Will not compile, 3 is not implicitly convertible to any `duration`
-    
+
+[heading Why duration needs operator%]
+
+This operator is convenient for computing where in a time frame a given duration lies. A motivating example is converting a duration into a "broken-down" time duration such as hours::minutes::seconds:
+
+    class ClockTime
+    {
+        typedef std::chrono::hours hours;
+        typedef std::chrono::minutes minutes;
+        typedef std::chrono::seconds seconds;
+    public:
+        hours hours_;
+        minutes minutes_;
+        seconds seconds_;
+
+        template <class Rep, class Period>
+          explicit ClockTime(const std::chrono::duration<Rep, Period>& d)
+            : hours_  (std::chrono::duration_cast<hours>  (d)),
+              minutes_(std::chrono::duration_cast<minutes>(d % hours(1))),
+              seconds_(std::chrono::duration_cast<seconds>(d % minutes(1)))
+              {}
+    };
+
+[heading Why ratio needs CopyConstruction and Assignment from ratios having the same normalized form]
+
+Current [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf [*N3000]] doesn't allows to copy-construct or assign ratio instances of ratio classes having the same normalized form.
+
+This simple example
+
+    ratio<1,3> r1;
+    ratio<3,9> r2;
+    r1 = r2; // (1)
+
+fails to compile in (1). Other example
+
+    ratio<1,3> r1;
+    ratio<2,3> r2;
+    r1 = r2-r1; // (2)
+
+The type of this expression (r2-r1) could be ratio<3,9> so the compilation could fail in (2). It could also be ratio<1,3> and the compilation succeeds.
+
+[heading Why ratio needs the nested normalizer typedef type]
+
+In [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf [*N3000]] 20.4.2 and similar clauses
+
+[/3 The nested typedef type shall be a synonym for ratio<T1, T2> where T1 has the value R1::num * R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.]
+
+The meaning of synonym let think that the result shall be a normalized ratio equivalent to ratio<T1, T2>, but there is not an explicit definition of what synonym means in this context.
+
+If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#12811281 [*LWG 1281]]) is not added we need a typedef for accessing the normalized ratio, and change 20.4.2 to return only this normalized result. In this case the user will need to 
+
+    ratio<1,3>::type r1;
+    ratio<3,9>::type r2;
+    r1 = r2; // compiles as both types are the same.
+
 
 [endsect]
 
 [section:implementation Appendix C: Implementation Notes]
 
-[heading Caveat emptor]
-
-The underlying clocks provided by operating systems are subject to many seemingly arbitrary policies and implementation irregularities. That's a polite way of saying they tend to be flakey, and each operating system or even each clock has its own cruel and unusual forms of flakiness. Don't bet the farm on their accuracy, unless you have become deeply familiar with exactly what the specific operating system is guaranteeing, which is often very little.
 
 [heading Why does run_timer only display millisecond place precision when the underlying timer has nanosecond precision?]
 

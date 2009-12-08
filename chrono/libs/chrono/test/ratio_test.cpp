@@ -11,15 +11,13 @@
 #include <iostream>
 #include <complex>
 
-#if 0
 template <class T, class U>
 typename boost::common_type<std::complex<T>, std::complex<U> >::type
 operator+(std::complex<T>, std::complex<U>);
-#else
+
 template <class T, class U>
 std::complex<typename boost::common_type<T, U>::type>
-operator+(std::complex<T>, std::complex<U>);
-#endif
+operator-(std::complex<T>, std::complex<U>);
 
 typedef boost::ratio<5, 3>   five_thirds;       // five_thirds::num == 5, five_thirds::den == 3
 typedef boost::ratio<25, 15> also_five_thirds;  // also_five_thirds::num == 5, also_five_thirds::den == 3
@@ -31,11 +29,7 @@ typedef boost::ratio_multiply<boost::ratio<5>, boost::nano>::type _5nano;  // _5
 
 //  Test the case described in library working group issue 948.
 
-#if 0
-typedef boost::ratio<0x7FFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFF0> R1;
-#else
-typedef boost::ratio<0x7FFFFFFF, 0x7FFFFFF0> R1;
-#endif
+typedef boost::ratio<INTMAX_C(0x7FFFFFFFFFFFFFFF), INTMAX_C(0x7FFFFFFFFFFFFFF0)> R1;
 typedef boost::ratio<8, 7> R2;
 typedef boost::ratio_multiply<R1, R2>::type RT;
 
@@ -216,25 +210,18 @@ compute_distance(Speed v0, Time t, Acceleration a)
 // Though input can be arbitrary (but type-safe) units, output is always in SI-units
 //   (a limitation of the simplified Units lib demoed here).
 
-#if 0
-    typedef quantity<typename boost::ratio_subtract<R1, R3>::type, typename boost::ratio_subtract<R2, R4>::type> R;
-    R r;
-    r.set(x.get() / y.get());
-    return r;
-typedef quantity<boost::ratio<1>, boost::ratio<0> >  Time;         // second
-typedef quantity<boost::ratio<0>, boost::ratio<1> >  Distance;     // meter
-    typedef R1 time_dim;
-    typedef R2 distance_dim;
-}
-#endif
 
-    typedef User1::quantity<boost::ratio_subtract<boost::ratio<0>, boost::ratio<1> >::type, 
-                             boost::ratio_subtract<boost::ratio<1>, boost::ratio<0> >::type > RR;
-    //typedef User1::quantity<boost::ratio_subtract<boost::ratio<1>, boost::ratio<0> >::type, 
-    //                         boost::ratio_subtract<boost::ratio<0>, boost::ratio<1> >::type > RR;
 
 int main()
 {
+    typedef boost::ratio<8, INTMAX_C(0x7FFFFFFFD)> R1;
+    typedef boost::ratio<3, INTMAX_C(0x7FFFFFFFD)> R2;
+    typedef User1::quantity<boost::ratio_subtract<boost::ratio<0>, boost::ratio<1> >::type, 
+                             boost::ratio_subtract<boost::ratio<1>, boost::ratio<0> >::type > RR;
+    typedef boost::ratio_subtract<R1, R2>::type RS;
+    std::cout << RS::num << '/' << RS::den << '\n';
+    
+    
     std::cout << "*************\n";
     std::cout << "* testUser1 *\n";
     std::cout << "*************\n";

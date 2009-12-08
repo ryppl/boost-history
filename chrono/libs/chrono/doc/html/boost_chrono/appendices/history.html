@@ -43,17 +43,19 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Added ratio construction and assignment from an equivalent ratio.
+            Added ratio construction and assignment from an equivalent ratio (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281" target="_top"><span class="bold"><strong>LWG 1281. CopyConstruction and Assignment between ratios
+            having the same normalized form</strong></span></a>)
           </li>
 <li>
-            Added nested ratio typedef type.
+            Added nested ratio typedef type (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281" target="_top"><span class="bold"><strong>LWG 1281. CopyConstruction and Assignment between ratios
+            having the same normalized form</strong></span></a>)
           </li>
 <li>
             Added BOOST_CHRONO_HAS_CLOCK_MONOTONIC macro to state if monotonic_clock
             is provided on this platform.
           </li>
 <li>
-            Added duration operator%
+            Added duration operator% (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934" target="_top"><span class="bold"><strong>934. duration is missing operator%</strong></span></a>)
           </li>
 <li>
             Added BOOST_CONSTEXPR when constexpr should be used
@@ -66,6 +68,9 @@
           <span class="bold"><strong>Implementation:</strong></span>
         </p>
 <div class="itemizedlist"><ul type="disc">
+<li>
+            Use INTMAC_C to name intmax_t constants instead of LL.
+          </li>
 <li>
             Separate chrono.cpp on # files win/chrono.cpp, mac/chrono.cpp and posix/chrono.cpp
             to make easier the maintenance on different platforms.
@@ -89,8 +94,7 @@
           <span class="bold"><strong>Documentation:</strong></span>
         </p>
 <div class="itemizedlist"><ul type="disc"><li>
-            The documentation is written now using quick-book using as base <a href="http://www.open-std.org/jtc1/sc22/wg21" target="_top"><span class="bold"><strong>N2661
-            - A Foundation to Sleep On</strong></span></a> .
+            The documentation is written now using quick-book using as base <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm" target="_top"><span class="bold"><strong>N2661 - A Foundation to Sleep On</strong></span></a> .
           </li></ul></div>
 <p>
           <span class="bold"><strong>Bugs</strong></span>
@@ -104,8 +108,8 @@
             BOOST_CHRONO_HAS_CLOCK_MONOTONIC is not defined.
           </li>
 <li>
-            result of metafunctions ratio_add and ratio_sub were not normalized ratios:
-            Use of the nested ratio typedef type on ratio arithmetic operations.
+            result of metafunctions ratio_multiply and ratio_divide were not normalized
+            ratios: Use of the nested ratio typedef type on ratio arithmetic operations.
           </li>
 <li>
             Copy constructor from similar duration masked the defaulted operations:
