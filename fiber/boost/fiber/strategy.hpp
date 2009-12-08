@@ -160,7 +160,7 @@ public:
 	virtual void interrupt( fiber::id const&) = 0;
 
 	virtual void reschedule( fiber::id const&) = 0;
-	
+
 	virtual void cancel( fiber::id const&) = 0;
 	
 	virtual void yield() = 0;
@@ -174,6 +174,10 @@ public:
 	virtual void object_notify_one( object::id const&) = 0;
 
 	virtual void object_notify_all( object::id const&) = 0;
+
+	virtual fiber release( fiber::id const&) = 0;
+
+	virtual void migrate( fiber) = 0;
 
 	virtual bool run() = 0;
 

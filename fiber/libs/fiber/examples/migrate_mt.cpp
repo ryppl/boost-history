@@ -10,7 +10,7 @@
 
 #include <boost/fiber.hpp>
 
-void f( std::string const& str, int n)
+void g( std::string const& str, int n)
 {
 	for ( int i = 0; i < n; ++i)
 	{
@@ -23,24 +23,63 @@ void f( std::string const& str, int n)
 	}
 }
 
-void run_thread(
+void fn1(
+		boost::fiber::id const& id,
 		boost::barrier & b,
-		boost::fibers::scheduler<> & sched,
+		boost::fibers::scheduler<> & sched2,
 		std::string const& msg, int n)
 {
 		std::ostringstream os;
 		os << boost::this_thread::get_id();
-		fprintf( stderr, "start (thread: %s)\n", os.str().c_str() );
-		sched.make_fiber( & f, msg, n);
+		fprintf( stderr, "start (thread1: %s)\n", os.str().c_str() );
+
+		boost::fibers::scheduler<> sched1;
+		sched1.make_fiber( & g, msg, n);
+
+		for ( int i = 0; i < 2; ++i)
+			sched1.run();
 
 		b.wait();
+
+		sched1.migrate_fiber( id, sched2);
+
+		b.wait();
+
+		std::ostringstream id_os;
+		id_os << id;
+
+		fprintf( stderr, "thread1: fiber %s migrated\n", id_os.str().c_str() );
+		fprintf( stderr, "thread1: scheduler runs %d fibers\n", static_cast< int >( sched1.size() ) );
+
 		for (;;)
 		{
-			while ( sched.run() );
-			if ( sched.empty() ) break;
+			while ( sched1.run() );
+			if ( sched1.empty() ) break;
 		}
 
-		fprintf( stderr, "finish (thread: %s)\n", os.str().c_str() );
+		fprintf( stderr, "finish (thread1: %s)\n", os.str().c_str() );
+}
+
+void fn2(
+		boost::fiber & f,
+		boost::barrier & b,
+		boost::fibers::scheduler<> & sched)
+{
+		std::ostringstream os;
+		os << boost::this_thread::get_id();
+		fprintf( stderr, "start (thread2: %s)\n", os.str().c_str() );
+
+		sched.submit_fiber( f);
+
+		sched.run();
+		sched.run();
+
+		b.wait();
+		b.wait();
+
+		fprintf( stderr, "thread2: scheduler runs %d fibers\n", static_cast< int >( sched.size() ) );
+
+		fprintf( stderr, "finish (thread2: %s)\n", os.str().c_str() );
 }
 
 int main()
@@ -48,18 +87,23 @@ int main()
 	try
 	{
 		boost::fibers::scheduler<> sched;
+		boost::barrier b( 2);
+
+		boost::fiber f( & g, "xyz", 4);
 
 		std::cout << "start" << std::endl;
 
-		boost::barrier b( 2);
 		boost::thread th1(
-				run_thread,
+				fn1,
+				f.get_id(),
 				boost::ref( b),
-				boost::ref( sched), "abc", 3);
+				boost::ref( sched),
+				"abc", 5);
 		boost::thread th2(
-				run_thread,
+				fn2,
+				f,
 				boost::ref( b),
-				boost::ref( sched), "xyz", 4);
+				boost::ref( sched) );
 
 		th1.join();
 		th2.join();

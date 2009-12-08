@@ -91,6 +91,10 @@ public:
 
 	void object_notify_all( object::id const&);
 
+	fiber release( fiber::id const&);
+
+	void migrate( fiber);
+
 	bool run();
 
 	bool empty();

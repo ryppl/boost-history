@@ -1,3 +1,14 @@
+0.3.0:
+------
+- explicit migration of fibers between two schedulers
+  (even if schedulers are in different threads - see example migrate_mt)
+- locks replaced by locks implementation from boost.thread
+- introduction of spin_mutex, spin_condition, spin_auto_reset_event, ...
+  (can be used to sync fibers between threads)
+- introduction of mutex, condition, auto_reset_event, ...
+  (objects bounded to one scheduler, but more efficient than spin counter-parts)
+- refactoring of internal classes
+
 0.2.0:
 ------
 - classes disable_interruption and restore_interruption moved into namespace boost::this_fiber

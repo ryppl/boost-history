@@ -10,7 +10,8 @@
 
 #include <boost/fiber.hpp>
 
-typedef boost::fibers::unbounded_fifo< std::string >	fifo_t;
+typedef boost::fibers::unbounded_fifo< std::string, boost::fibers::mutex >	fifo_t;
+//typedef boost::fibers::unbounded_fifo< std::string, boost::fibers::spin_mutex >	fifo_t;
 typedef boost::intrusive_ptr< fifo_t >					fifo_ptr_t;
 inline
 void ping(
@@ -64,8 +65,11 @@ void pong(
 
 void f( boost::fibers::scheduler<> & sched)
 {
-	fifo_ptr_t buf1( new fifo_t() );
-	fifo_ptr_t buf2( new fifo_t() );
+	fifo_ptr_t buf1( new fifo_t( sched) );
+	fifo_ptr_t buf2( new fifo_t( sched) );
+	
+//	fifo_ptr_t buf1( new fifo_t() );
+//	fifo_ptr_t buf2( new fifo_t() );
 	
 	sched.make_fiber( & ping, buf1, buf2);
 	sched.make_fiber( & pong, buf2, buf1);

@@ -353,6 +353,50 @@ round_robin::object_notify_all( object::id const& oid)
 	oi->second.clear();
 }
 
+fiber
+round_robin::release( fiber::id const& id)
+{
+	fiber_map::iterator fi = fibers_.find( id);
+	if ( fi == fibers_.end() )
+		throw scheduler_error("fiber not managed by scheduler");
+	schedulable s( fi->second);
+	fiber f( s.f);
+	BOOST_ASSERT( f);
+	BOOST_ASSERT( ! is_master( f) );
+	if ( ! in_state_ready( f) || ! s.joining_fibers.empty() )
+		throw scheduler_error("fiber can not be released");
+	BOOST_ASSERT( ! s.waiting_on_fiber);
+	BOOST_ASSERT( ! s.waiting_on_object);
+
+	runnable_fibers_.remove( id);
+	fibers_.erase( id);
+
+	return f;	
+}
+
+void
+round_robin::migrate( fiber f)
+{
+	BOOST_ASSERT( f);
+	BOOST_ASSERT( in_state_ready( f) );
+
+	// attach to this scheduler
+	attach( f);
+
+	// insert fiber to fiber-list
+	std::pair< std::map< fiber::id, schedulable >::iterator, bool > result(
+		fibers_.insert(
+			std::make_pair(
+				f.get_id(),
+				schedulable( f) ) ) );
+
+	// check result
+	if ( ! result.second) throw scheduler_error("inserting fiber failed");
+
+	// put fiber to runnable-queue
+	runnable_fibers_.push_back( result.first->first);
+}
+
 bool
 round_robin::run()
 {

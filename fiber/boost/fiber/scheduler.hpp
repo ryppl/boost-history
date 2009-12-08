@@ -77,6 +77,10 @@ public:
 	void make_fiber( std::size_t stack_size, Fn fn)
 	{ strategy_->add( fiber( stack_size, fn) ); }
 
+	template< typename OtherStrategy >
+	void migrate_fiber( fiber::id const& id, scheduler< OtherStrategy > & other)
+	{ strategy_->migrate( other.strategy_->release( id) ); }
+
 #ifndef BOOST_FIBER_MAX_ARITY
 #define BOOST_FIBER_MAX_ARITY 10
 #endif
