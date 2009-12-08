@@ -1,6 +1,7 @@
 //  boost/chrono/timer.hpp  ------------------------------------------------------------//
 
 //  Copyright Beman Dawes 2008
+//  Copyright 2009 Vicente J. Botet Escriba
 
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -46,7 +47,9 @@ namespace boost
     };
 
     typedef boost::chrono::timer< boost::chrono::system_clock > system_timer;
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
     typedef boost::chrono::timer< boost::chrono::monotonic_clock > monotonic_timer;
+#endif    
     typedef boost::chrono::timer< boost::chrono::high_resolution_clock > high_resolution_timer;
 
   } // namespace chrono

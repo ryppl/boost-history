@@ -7,7 +7,12 @@
 
 #include <boost/ratio.hpp>
 
+#if 0
+typedef boost::ratio<0x7FFFFFFF, 0x7FFFFFF0> R1;
+typedef boost::ratio<0x7FFFFFFF, 0x7FFFFFF0> R2;
+typedef boost::ratio_multiply<R1, R2>::type RT;
+#else
 typedef boost::ratio<0x7FFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFF0> R1;
 typedef boost::ratio<0x7FFFFFFFFFFFFFFE, 0x7FFFFFFFFFFFFFF0> R2;
 typedef boost::ratio_multiply<R1, R2>::type RT;
-
+#endif

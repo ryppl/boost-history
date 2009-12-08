@@ -1,0 +1,81 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Appendix C:
+      Implementation Notes</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Boost.Chrono">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="rationale.html" title=" Appendix B: Rationale">
+<link rel="next" href="acknowledgements.html" title=" Appendix D:
+      Acknowledgements">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="rationale.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="acknowledgements.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_chrono.appendices.implementation"></a><a href="implementation.html" title=" Appendix C:
+      Implementation Notes"> Appendix C:
+      Implementation Notes</a>
+</h3></div></div></div>
+<a name="boost_chrono.appendices.implementation.caveat_emptor"></a><h4>
+<a name="id4853495"></a>
+        <a href="implementation.html#boost_chrono.appendices.implementation.caveat_emptor">Caveat
+        emptor</a>
+      </h4>
+<p>
+        The underlying clocks provided by operating systems are subject to many seemingly
+        arbitrary policies and implementation irregularities. That's a polite way
+        of saying they tend to be flakey, and each operating system or even each
+        clock has its own cruel and unusual forms of flakiness. Don't bet the farm
+        on their accuracy, unless you have become deeply familiar with exactly what
+        the specific operating system is guaranteeing, which is often very little.
+      </p>
+<a name="boost_chrono.appendices.implementation.why_does_run_timer_only_display_millisecond_place_precision_when_the_underlying_timer_has_nanosecond_precision_"></a><h4>
+<a name="id4853528"></a>
+        <a href="implementation.html#boost_chrono.appendices.implementation.why_does_run_timer_only_display_millisecond_place_precision_when_the_underlying_timer_has_nanosecond_precision_">Why
+        does run_timer only display millisecond place precision when the underlying
+        timer has nanosecond precision?</a>
+      </h4>
+<p>
+        To avoid giving the impression of precision where none exists. See Caveat
+        emptor. You can always specify additional decimal places if you want to live
+        dangerously.
+      </p>
+<a name="boost_chrono.appendices.implementation.why_does_run_timer_sometimes_report_more_cpu_seconds_than_real_seconds_"></a><h4>
+<a name="id4853569"></a>
+        <a href="implementation.html#boost_chrono.appendices.implementation.why_does_run_timer_sometimes_report_more_cpu_seconds_than_real_seconds_">Why
+        does run_timer sometimes report more cpu seconds than real seconds?</a>
+      </h4>
+<p>
+        Ask your operating system supplier. The results have been inspected with
+        a debugger, and both for Windows and Linux, that's what the OS appears to
+        be reporting at times.
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="rationale.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="acknowledgements.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -7,7 +7,17 @@
 
 # See library home page at http://www.boost.org/libs/chrono
 
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
 project boost/chrono
+    : requirements 
+      <include>/boost_1_39_0
+      <include>../../..
+      <include>../src
+      #<library>/boost_1_39_0/libs/system/build//boost_system
     : source-location ../src
     : usage-requirements  # pass these requirement to dependents (i.e. users)
       <link>shared:<define>BOOST_CHRONO_DYN_LINK=1
@@ -16,11 +26,10 @@ project boost/chrono
 
 SOURCES = chrono process_clock run_timer run_timer_static ;
 
-lib boost_chrono
+static-lib boost_chrono
    : $(SOURCES).cpp
-     ../../system/build//boost_system
    : <link>shared:<define>BOOST_ALL_DYN_LINK=1
      <link>static:<define>BOOST_All_STATIC_LINK=1
    ;
 
-boost-install boost_chrono ;
+#boost-install boost_chrono ;

@@ -1,0 +1,715 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Motivation</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Boost.Chrono">
+<link rel="up" href="../overview.html" title="Overview">
+<link rel="prev" href="../overview.html" title="Overview">
+<link rel="next" href="../users_guide.html" title=" Users'Guide">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_chrono.overview.motivation"></a><a href="motivation.html" title="Motivation">Motivation</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="motivation.html#boost_chrono.overview.motivation.common_type">Common
+        type</a></span></dt>
+<dt><span class="section"><a href="motivation.html#boost_chrono.overview.motivation.ratio">Ratio</a></span></dt>
+<dt><span class="section"><a href="motivation.html#boost_chrono.overview.motivation.duration">Duration</a></span></dt>
+<dt><span class="section"><a href="motivation.html#boost_chrono.overview.motivation.clocks">Clocks</a></span></dt>
+<dt><span class="section"><a href="motivation.html#boost_chrono.overview.motivation.time_point">Time Point</a></span></dt>
+<dt><span class="section"><a href="motivation.html#boost_chrono.overview.motivation.timers">Timers</a></span></dt>
+</dl></div>
+<p>
+        See <a href="http://www.open-std.org/jtc1/sc22/wg21" target="_top"><span class="bold"><strong>N2661
+        - A Foundation to Sleep On</strong></span></a> which is very informative and
+        provides motivation for key design decisions for <code class="computeroutput"><span class="identifier">common_type</span></code>,
+        <code class="computeroutput"><span class="identifier">ratio</span></code> and <code class="computeroutput"><span class="identifier">chrono</span></code>.
+        The following sections are an extract from this document.
+      </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.overview.motivation.common_type"></a><a href="motivation.html#boost_chrono.overview.motivation.common_type" title="Common
+        type">Common
+        type</a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><span class="identifier">common_type</span></code> has been a
+          recurring theme in many places for many years. We've previously known it
+          as promote and examples of it are spread throughout boost. It has been
+          reinvented independently several times, because it is so useful.
+        </p>
+<p>
+          Andrei Alexandrescu recently pointed us at a D library: std.traits - D
+          Programming Language - Digital Mars, which became the motivation for this
+          particular name, and the variadic nature of this trait.
+        </p>
+<p>
+          In a nutshell, <code class="computeroutput"><span class="identifier">common_type</span></code>
+          is a trait that takes 1 or more types, and returns a type which all of
+          the types will convert to. The default definition demands this conversion
+          be implicit. However the trait can be specialized for user-defined types
+          which want to limit their inter-type conversions to explicit, and yet still
+          want to interoperate with the <code class="computeroutput"><span class="identifier">common_type</span></code>
+          facility.
+        </p>
+<p>
+          <span class="bold"><strong>Example:</strong></span>
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="keyword">operator</span><span class="special">+(</span><span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;);</span>
+</pre>
+<p>
+          In the above example, "mixed-mode" complex arithmetic is allowed.
+          The return type is described by <code class="computeroutput"><span class="identifier">common_type</span></code>.
+          For example the resulting type of adding a <code class="computeroutput"><span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span></code> and <code class="computeroutput"><span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code> might be a <code class="computeroutput"><span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code>. Another choice for the author might
+          be:
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span>
+<span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">U</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
+<span class="keyword">operator</span><span class="special">+(</span><span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;);</span>
+</pre>
+<p>
+          Here is how someone might produce a variadic comparison function:
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="special">...</span><span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">...&gt;::</span><span class="identifier">type</span>
+<span class="identifier">min</span><span class="special">(</span><span class="identifier">T</span><span class="special">...</span> <span class="identifier">t</span><span class="special">);</span>
+</pre>
+<p>
+          This is a very useful and broadly applicable utility. The <code class="computeroutput"><span class="identifier">duration</span></code> and <code class="computeroutput"><span class="identifier">time_point</span></code>
+          facilities use it to make multi-precision arithmetic seamless and exact.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.overview.motivation.ratio"></a><a href="motivation.html#boost_chrono.overview.motivation.ratio" title="Ratio">Ratio</a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><span class="identifier">ratio</span></code> is a general purpose
+          utility inspired by Walter Brown allowing one to easily and safely compute
+          rational values at compile time. The <code class="computeroutput"><span class="identifier">ratio</span></code>
+          class catches all errors (such as divide by zero and overflow) at compile
+          time. It is used in the <code class="computeroutput"><span class="identifier">duration</span></code>
+          and <code class="computeroutput"><span class="identifier">time_point</span></code> classes
+          to efficiently create units of time. It can also be used in other "quantity"
+          libraries (both std-defined and user-defined), or anywhere there is a rational
+          constant which is known at compile time. The use of this utility can greatly
+          reduce the chances of run time overflow because the <code class="computeroutput"><span class="identifier">ratio</span></code>
+          (and any ratios resulting from <code class="computeroutput"><span class="identifier">ratio</span></code>
+          arithmetic) are always reduced to lowest terms.
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">ratio</span></code> is a template taking
+          two intmax_ts, with the second defaulted to 1. It only has two public members,
+          both of which are static const intmax_t. One is the numerator of the <code class="computeroutput"><span class="identifier">ratio</span></code> and the other is the denominator.
+          The <code class="computeroutput"><span class="identifier">ratio</span></code> is always normalized
+          such that it is expressed in lowest terms, and the denominator is always
+          positive. When the numerator is 0, the denominator is always 1.
+        </p>
+<p>
+          <span class="bold"><strong>Example:</strong></span>
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">5</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span>   <span class="identifier">five_thirds</span><span class="special">;</span>       <span class="comment">// five_thirds::num == 5, five_thirds::den == 3
+</span><span class="keyword">typedef</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">25</span><span class="special">,</span> <span class="number">15</span><span class="special">&gt;</span> <span class="identifier">also_five_thirds</span><span class="special">;</span>  <span class="comment">// also_five_thirds::num == 5, also_five_thirds::den == 3
+</span><span class="keyword">typedef</span> <span class="identifier">ratio_divide</span><span class="special">&lt;</span><span class="identifier">five_thirds</span><span class="special">,</span> <span class="identifier">also_five_thirds</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">one</span><span class="special">;</span>  <span class="comment">// one::num == 1, one::den == 1
+</span></pre>
+<p>
+          This facility also includes convenience typedefs for the SI prefixes atto
+          through exa corresponding to their internationally recognized definitions
+          (in terms of <code class="computeroutput"><span class="identifier">ratio</span></code>). This
+          is a tremendous syntactic convenience. It will prevent errors in specifying
+          constants as one no longer has to double count the number of zeros when
+          trying to write million or billion.
+        </p>
+<p>
+          <span class="bold"><strong>Example:</strong></span>
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">ratio_multiply</span><span class="special">&lt;</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">5</span><span class="special">&gt;,</span> <span class="identifier">giga</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">_5giga</span><span class="special">;</span>  <span class="comment">// _5giga::num == 5000000000, _5giga::den == 1
+</span><span class="keyword">typedef</span> <span class="identifier">ratio_multiply</span><span class="special">&lt;</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">5</span><span class="special">&gt;,</span> <span class="identifier">nano</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">_5nano</span><span class="special">;</span>  <span class="comment">// _5nano::num == 1, _5nano::den == 200000000
+</span></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.overview.motivation.duration"></a><a href="motivation.html#boost_chrono.overview.motivation.duration" title="Duration">Duration</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">duration</span></code> is the heart
+          of this library. The interface that the user will see in everyday use is
+          nearly identical to that of Boost.DateTime time <code class="computeroutput"><span class="identifier">duration</span></code>s
+          authored by Jeff Garland, both in syntax and in behavior. This has been
+          a very popular boost library for 7 years. There is an enormous positive
+          history with this interface.
+        </p>
+<p>
+          The library consists of six units of time <code class="computeroutput"><span class="identifier">duration</span></code>:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            hours
+          </li>
+<li>
+            minutes
+          </li>
+<li>
+            seconds
+          </li>
+<li>
+            milliseconds
+          </li>
+<li>
+            microseconds
+          </li>
+<li>
+            nanoseconds
+          </li>
+</ul></div>
+<p>
+          These units were chosen as a subset of the boost library because they are
+          the most common units used when sleeping, waiting on a condition variable,
+          or waiting to obtain the lock on a mutex. Each of these units is nothing
+          but a thin wrapper around a signed integral count. That is, when you construct
+          <code class="computeroutput"><span class="identifier">minutes</span><span class="special">(</span><span class="number">3</span><span class="special">)</span></code>, all that
+          happens is a 3 is stored inside of minutes. When you construct <code class="computeroutput"><span class="identifier">microseconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span></code>, all that
+          happens is a 3 is stored inside of microseconds.
+        </p>
+<p>
+          The only context in which these different types differ is when being converted
+          to one another. At this time, unit-specific compile-time conversion constants
+          are used to convert the source unit to the target unit. Only conversions
+          from coarser units to finer units are allowed (in boost). This restriction
+          ensures that all conversions are always exact. That is, microseconds can
+          always represent any value minutes has.
+        </p>
+<p>
+          In Boost.DateTime, these units are united via inheritance. Boost.Chrono
+          instead unites these units through the class template <code class="computeroutput"><span class="identifier">duration</span></code>.
+          That is, in Boost.Chrono all six of the above units are nothing but typedefs
+          to different instantiations of <code class="computeroutput"><span class="identifier">duration</span></code>.
+          This change from Boost.DateTime has a far reaching positive impact, while
+          not changing the syntax of the everyday use at all.
+        </p>
+<p>
+          The most immediate positive impact is that the library can immediately
+          generate any unit, any precision it needs. This is sometimes necessary
+          when doing comparisons or arithmetic between <code class="computeroutput"><span class="identifier">duration</span></code>s
+          of differing precision, assuming one wants the comparison and arithmetic
+          to be exactly correct.
+        </p>
+<p>
+          A secondary benefit is that by publishing the class template <code class="computeroutput"><span class="identifier">duration</span></code> interface, user code can very
+          easily create <code class="computeroutput"><span class="identifier">duration</span></code>s
+          with any precision they desire. The <code class="computeroutput"><span class="identifier">ratio</span></code>
+          utility is used to specify the precision, so as long as the precision can
+          be expressed by a rational constant with respect to seconds, this framework
+          can exactly represent it (one third of a second is no problem, and neither
+          is one third of a femto second). All of this utility and flexibility comes
+          at no cost just by making use of the no-run-time-overhead <code class="computeroutput"><span class="identifier">ratio</span></code> facility.
+        </p>
+<p>
+          In Boost.DateTime, hours does not have the same representation as nanoseconds.
+          The former is usually represented with a long whereas a long long is required
+          for the latter. The reason for this is simply range. You don't need many
+          hours to cover an extremely large range of time. But this isn't true of
+          nanoseconds. Being able to reduce the sizeof overhead for some units when
+          possible, can be a significant performance advantage.
+        </p>
+<p>
+          Boost.Chrono continues, and generalizes that philosophy. Not only can one
+          specify the precision of a <code class="computeroutput"><span class="identifier">duration</span></code>,
+          one can also specify its representation. This can be any integral type,
+          or even a floating point type. Or it can be a user-defined type which emulates
+          an arithmetic type. The six predefined units all use signed integral types
+          as their representation. And they all have a minimum range of +/- 292 years.
+          nanoseconds needs 64 bits to cover that range. hours needs only 23 bits
+          to cover that range.
+        </p>
+<a name="boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_"></a><h5>
+<a name="id4759304"></a>
+          <a href="motivation.html#boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_">So
+          What Exactly is a <code class="computeroutput"><span class="identifier">duration</span></code>
+          and How Do I Use One?</a>
+        </h5>
+<p>
+          A <code class="computeroutput"><span class="identifier">duration</span></code> has a representation
+          and a tick period (precision).
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">=</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">duration</span><span class="special">;</span>
+</pre>
+<p>
+          The representation is simply any arithmetic type, or an emulation of such
+          a type. The representation stores a count of ticks. This count is the only
+          data member stored in a <code class="computeroutput"><span class="identifier">duration</span></code>.
+          If the representation is floating point, it can store fractions of a tick
+          to the precision of the representation. The tick period is represented
+          by a <code class="computeroutput"><span class="identifier">ratio</span></code> and is encoded
+          into the <code class="computeroutput"><span class="identifier">duration</span></code>'s type,
+          instead of stored. The tick period only has an impact on the behavior of
+          the <code class="computeroutput"><span class="identifier">duration</span></code> when a conversion
+          between different <code class="computeroutput"><span class="identifier">duration</span></code>'s
+          is attempted. The tick period is completely ignored when simply doing arithmetic
+          among like <code class="computeroutput"><span class="identifier">duration</span></code>s.
+        </p>
+<p>
+          <span class="bold"><strong>Example:</strong></span>
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">,</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">60</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">minutes</span><span class="special">;</span>
+<span class="identifier">minutes</span> <span class="identifier">m1</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>                 <span class="comment">// m1 stores 3
+</span><span class="identifier">minutes</span> <span class="identifier">m2</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>                 <span class="comment">// m2 stores 2
+</span><span class="identifier">minutes</span> <span class="identifier">m3</span> <span class="special">=</span> <span class="identifier">m1</span> <span class="special">+</span> <span class="identifier">m2</span><span class="special">;</span>          <span class="comment">// m3 stores 5
+</span>
+<span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">,</span> <span class="identifier">micro</span><span class="special">&gt;</span> <span class="identifier">microseconds</span><span class="special">;</span>
+<span class="identifier">microseconds</span> <span class="identifier">us1</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>           <span class="comment">// us1 stores 3
+</span><span class="identifier">microseconds</span> <span class="identifier">us2</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>           <span class="comment">// us2 stores 2
+</span><span class="identifier">microseconds</span> <span class="identifier">us3</span> <span class="special">=</span> <span class="identifier">us1</span> <span class="special">+</span> <span class="identifier">us2</span><span class="special">;</span>  <span class="comment">// us3 stores 5
+</span>
+<span class="identifier">microseconds</span> <span class="identifier">us4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>   <span class="comment">// us4 stores 300000005
+</span></pre>
+<p>
+          In the final line of code above, there is an implicit conversion from minutes
+          to microseconds, resulting in a relatively large number of microseconds.
+        </p>
+<p>
+          If you need to access the tick count within a <code class="computeroutput"><span class="identifier">duration</span></code>,
+          there is a member <code class="computeroutput"><span class="identifier">count</span><span class="special">()</span></code> which simply returns the stored tick
+          count.
+        </p>
+<pre class="programlisting"><span class="keyword">long</span> <span class="keyword">long</span> <span class="identifier">tc</span> <span class="special">=</span> <span class="identifier">us4</span><span class="special">.</span><span class="identifier">count</span><span class="special">();</span>    <span class="comment">// tc is 300000005
+</span></pre>
+<p>
+          These <code class="computeroutput"><span class="identifier">duration</span></code>s have very
+          simple, very predictable, and very observable behavior. After all, this
+          is really nothing but the time tested interface of Jeff's boost time <code class="computeroutput"><span class="identifier">duration</span></code> library (unified with templates
+          instead of inheritance).
+        </p>
+<a name="boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to_minutes_instead_of_microseconds_"></a><h5>
+<a name="id4758210"></a>
+          <a href="motivation.html#boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to_minutes_instead_of_microseconds_">What
+          happens if I assign <code class="computeroutput"><span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span></code>
+          to minutes instead of microseconds?</a>
+        </h5>
+<pre class="programlisting"><span class="identifier">minutes</span> <span class="identifier">m4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>
+</pre>
+<p>
+          It won't compile. The rationale is that implicit truncation error should
+          not be allowed to happen. If this were to compile, then <code class="computeroutput"><span class="identifier">m4</span></code>
+          would hold <code class="computeroutput"><span class="number">5</span></code>, the same value
+          as <code class="computeroutput"><span class="identifier">m3</span></code>. The value associated
+          with <code class="computeroutput"><span class="identifier">us3</span></code> has been effectively
+          ignored. This is similar to the problem of assigning a double to an <code class="computeroutput"><span class="keyword">int</span></code>: the fractional part gets silently discarded.
+        </p>
+<a name="boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_"></a><h5>
+<a name="id4813041"></a>
+          <a href="motivation.html#boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_">But
+          what if the truncation behavior is what I want to do?</a>
+        </h5>
+<p>
+          There is a <code class="computeroutput"><span class="identifier">duration_cast</span></code>
+          facility to explicitly ask for this behavior:
+        </p>
+<pre class="programlisting"><span class="identifier">minutes</span> <span class="identifier">m4</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">minutes</span><span class="special">&gt;(</span><span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">);</span>  <span class="comment">// m4.count() == 5
+</span></pre>
+<p>
+          In general, one can perform <code class="computeroutput"><span class="identifier">duration</span></code>
+          arithmetic at will. If <code class="computeroutput"><span class="identifier">duration_cast</span></code>
+          isn't used, and it compiles, the arithmetic is exact. Any place one wants
+          to override this exact arithmetic behavior, duration_cast can be used to
+          explicitly specify that desire. The <code class="computeroutput"><span class="identifier">duration_cast</span></code>
+          has the same efficiency as the implicit conversion, and will even be exact
+          as often as it can.
+        </p>
+<a name="boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation"></a><h5>
+<a name="id4813177"></a>
+          <a href="motivation.html#boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation">I'm
+          trafficking in floating point <code class="computeroutput"><span class="identifier">duration</span></code>s.
+          I don't want to deal with writing <code class="computeroutput"><span class="identifier">duration_cast</span></code>
+          all over the place. I'm content with the precision of my floating point
+          representation</a>
+        </h5>
+<p>
+          Not a problem. When the destination of a conversion has floating point
+          representation, all conversions are allowed to happen implicitly.
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">60</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">dminutes</span><span class="special">;</span>
+<span class="identifier">dminutes</span> <span class="identifier">dm4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>  <span class="comment">// dm4.count() == 5.000000083333333
+</span></pre>
+<a name="boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_"></a><h5>
+<a name="id4813340"></a>
+          <a href="motivation.html#boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_">How
+          expensive is all of this?</a>
+        </h5>
+<p>
+          If you were writing these conversions by hand, you could not make it more
+          efficient. The use of <code class="computeroutput"><span class="identifier">ratio</span></code>
+          ensures that all conversion constants are simplified as much as possible
+          at compile time. This usually results in the numerator or denominator of
+          the conversion factor simplifying to <code class="computeroutput"><span class="number">1</span></code>,
+          and being subsequently ignored in converting the run time values of the
+          tick counts.
+        </p>
+<a name="boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_"></a><h5>
+<a name="id4813390"></a>
+          <a href="motivation.html#boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_">How
+          complicated is it to build a function taking a <code class="computeroutput"><span class="identifier">duration</span></code>
+          parameter?</a>
+        </h5>
+<p>
+          There are several options open to the user:
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            If the author of the function wants to accept any <code class="computeroutput"><span class="identifier">duration</span></code>,
+            and is willing to work in floating point <code class="computeroutput"><span class="identifier">duration</span></code>s,
+            he can simply use any floating point <code class="computeroutput"><span class="identifier">duration</span></code>
+            as the parameter:
+          </li></ul></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>  <span class="comment">// accept floating point seconds
+</span><span class="special">{</span>
+    <span class="comment">// d.count() == 3.e-6 when passed microseconds(3)
+</span><span class="special">}</span>
+
+<span class="identifier">f</span><span class="special">(</span><span class="identifier">microseconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+            If the author of the function wants to traffic only in integral <code class="computeroutput"><span class="identifier">duration</span></code>s, and is content with handling
+            nothing finer than say nanoseconds (just as an example), he can simply
+            specify nanoseconds as the parameter:
+          </li></ul></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">nanoseconds</span> <span class="identifier">d</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="comment">// d.count() == 3000 when passed microseconds(3)
+</span><span class="special">}</span>
+
+<span class="identifier">f</span><span class="special">(</span><span class="identifier">microseconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
+</pre>
+<p>
+          In this design, if the client wants to pass in a floating point <code class="computeroutput"><span class="identifier">duration</span></code>, or a <code class="computeroutput"><span class="identifier">duration</span></code>
+          of finer precision than nanoseconds, then the client is responsible for
+          choosing his own rounding mode in the conversion to nanoseconds.
+        </p>
+<pre class="programlisting"><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">s</span><span class="special">(</span><span class="number">1.</span><span class="special">/</span><span class="number">3</span><span class="special">);</span>  <span class="comment">// 1/3 of a second
+</span><span class="identifier">f</span><span class="special">(</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">nanoseconds</span><span class="special">&gt;(</span><span class="identifier">s</span><span class="special">));</span>  <span class="comment">// round towards zero in conversion to nanoseconds
+</span></pre>
+<p>
+          In the example above, the client of f has chosen "round towards zero"
+          as the desired rounding mode to nanoseconds. If the client has a <code class="computeroutput"><span class="identifier">duration</span></code> that won't exactly convert to
+          nanoseconds, and fails to choose how the conversion will take place, the
+          compiler will refuse the call:
+        </p>
+<pre class="programlisting"><span class="identifier">f</span><span class="special">(</span><span class="identifier">s</span><span class="special">);</span>  <span class="comment">// does not compile
+</span></pre>
+<div class="itemizedlist"><ul type="disc"><li>
+            If the author of the function wants to accept any <code class="computeroutput"><span class="identifier">duration</span></code>,
+            but wants to work with integral representations and wants to control
+            the rounding mode internally, then he can template the function:
+          </li></ul></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="comment">// convert d to nanoseconds, rounding up if it is not an exact conversion
+</span>    <span class="identifier">nanoseconds</span> <span class="identifier">ns</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">nanoseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">ns</span> <span class="special">&lt;</span> <span class="identifier">d</span><span class="special">)</span>
+        <span class="special">++</span><span class="identifier">ns</span><span class="special">;</span>
+    <span class="comment">// ns.count() == 333333334 when passed 1/3 of a floating point second
+</span><span class="special">}</span>
+
+<span class="identifier">f</span><span class="special">(</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="number">1.</span><span class="special">/</span><span class="number">3</span><span class="special">));</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+            If the author in the example does not want to accept floating point based
+            <code class="computeroutput"><span class="identifier">duration</span></code>s, he can enforce
+            that behavior like so:
+          </li></ul></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="comment">// convert d to nanoseconds, rounding up if it is not an exact conversion
+</span>    <span class="identifier">nanoseconds</span> <span class="identifier">ns</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">nanoseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">ns</span> <span class="special">&lt;</span> <span class="identifier">d</span><span class="special">)</span>
+        <span class="special">++</span><span class="identifier">ns</span><span class="special">;</span>
+    <span class="comment">// ns.count() == 333333334 when passed 333333333333 picoseconds
+</span><span class="special">}</span>
+
+<span class="identifier">f</span><span class="special">(</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">,</span> <span class="identifier">pico</span><span class="special">&gt;(</span><span class="number">333333333333</span><span class="special">));</span>  <span class="comment">// About 1/3 of a second worth of picoseconds
+</span></pre>
+<p>
+          Clients with floating point <code class="computeroutput"><span class="identifier">duration</span></code>s
+          who want to use f will now have to convert to an integral <code class="computeroutput"><span class="identifier">duration</span></code> themselves before passing the
+          result to f.
+        </p>
+<p>
+          In summary, the author of f has quite a bit of flexibility and control
+          in the interface he wants to provide his clients with, and easy options
+          for manipulating that <code class="computeroutput"><span class="identifier">duration</span></code>
+          internal to his function.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.overview.motivation.clocks"></a><a href="motivation.html#boost_chrono.overview.motivation.clocks" title="Clocks">Clocks</a>
+</h4></div></div></div>
+<p>
+          While <code class="computeroutput"><span class="identifier">duration</span></code>s only have
+          precision and representation to concern themselves, clocks and <code class="computeroutput"><span class="identifier">time_point</span></code>s are intimately related and
+          refer to one another. Because clocks are simpler to explain, we will do
+          so first without fully explaining <code class="computeroutput"><span class="identifier">time_point</span></code>s.
+          Once clocks are introduced, it will be easier to then fill in what a <code class="computeroutput"><span class="identifier">time_point</span></code> is.
+        </p>
+<p>
+          A clock is a concept which bundles 3 things:
+        </p>
+<div class="orderedlist"><ol type="1">
+<li>
+            A concrete <code class="computeroutput"><span class="identifier">duration</span></code> type.
+          </li>
+<li>
+            A concrete <code class="computeroutput"><span class="identifier">time_point</span></code>
+            type.
+          </li>
+<li>
+            A function called now() which returns the concrete <code class="computeroutput"><span class="identifier">time_point</span></code>.
+          </li>
+</ol></div>
+<p>
+          Boost.Chrono proposes 3 concrete clocks:
+        </p>
+<div class="orderedlist"><ol type="1">
+<li>
+            system_clock
+          </li>
+<li>
+            monotonic_clock
+          </li>
+<li>
+            high_precision_clock
+          </li>
+</ol></div>
+<p>
+          A given platform may not be able to supply all three of these clocks. The
+          user is also able to easily create more clocks.
+        </p>
+<p>
+          Given a clock named Clock, it will have:
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">Clock</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">an</span> <span class="identifier">arithmetic</span><span class="special">-</span><span class="identifier">like</span> <span class="identifier">type</span>            <span class="identifier">rep</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">an</span> <span class="identifier">instantiation</span> <span class="identifier">of</span> <span class="identifier">ratio</span>          <span class="identifier">period</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">rep</span><span class="special">,</span> <span class="identifier">period</span><span class="special">&gt;</span> <span class="identifier">duration</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span>     <span class="identifier">time_point</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>           <span class="keyword">true</span> <span class="keyword">or</span> <span class="keyword">false</span><span class="special">;</span>
+
+    <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+<p>
+          One can get the current time from Clock with:
+        </p>
+<pre class="programlisting"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t1</span> <span class="special">=</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+</pre>
+<p>
+          And one can get the time <code class="computeroutput"><span class="identifier">duration</span></code>
+          between two <code class="computeroutput"><span class="identifier">time_point</span></code>s
+          associated with Clock with:
+        </p>
+<pre class="programlisting"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">t1</span> <span class="special">-</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+</pre>
+<p>
+          And one can specify a past or future <code class="computeroutput"><span class="identifier">time_point</span></code>
+          with:
+        </p>
+<pre class="programlisting"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t2</span> <span class="special">=</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">d</span><span class="special">;</span>
+</pre>
+<p>
+          Note how even if a particular clock becomes obsolete, the next clock in
+          line will have the same API. There is no new learning curve to come up.
+          The only source code changes will be simply changing the type of the clock.
+          The same <code class="computeroutput"><span class="identifier">duration</span></code> and
+          <code class="computeroutput"><span class="identifier">time_point</span></code> framework continues
+          to work as new clocks are introduced. And multiple clocks are safely and
+          easily handled within the same program.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.overview.motivation.time_point"></a><a href="motivation.html#boost_chrono.overview.motivation.time_point" title="Time Point">Time Point</a>
+</h4></div></div></div>
+<p>
+          A <code class="computeroutput"><span class="identifier">time_point</span></code> represents
+          a point in time, as opposed to a <code class="computeroutput"><span class="identifier">duration</span></code>
+          of time. Another way of saying the same thing, is that a <code class="computeroutput"><span class="identifier">time_point</span></code> represents an epoch plus or
+          minus a <code class="computeroutput"><span class="identifier">duration</span></code>. Examples
+          of <code class="computeroutput"><span class="identifier">time_point</span></code>s include:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            3 minutes after the computer booted.
+          </li>
+<li>
+            03:14:07 UTC on Tuesday, January 19, 2038
+          </li>
+<li>
+            20 milliseconds after I started that timer.
+          </li>
+</ul></div>
+<p>
+          In each of the examples above, a different epoch is implied. Sometimes
+          an epoch has meaning for several millennia. Other times the meaning of
+          an epoch is lost after a while (such as the start of a timer, or when the
+          computer booted). However, if two <code class="computeroutput"><span class="identifier">time_point</span></code>s
+          are known to share the same epoch, they can be subtracted, yielding a valid
+          <code class="computeroutput"><span class="identifier">duration</span></code>, even if the definition
+          of the epoch no longer has meaning.
+        </p>
+<p>
+          In Boost.Chrono, an epoch is a purely abstract and unspecified concept.
+          There is no type representing an epoch. It is simply an idea that relates
+          (or doesn't) <code class="computeroutput"><span class="identifier">time_point</span></code>s
+          to a clock, and in the case that they share a clock, <code class="computeroutput"><span class="identifier">time_point</span></code>s
+          to one another. <code class="computeroutput"><span class="identifier">time_point</span></code>s
+          associated with different clocks are generally not interoperable unless
+          the relationship between the epochs associated with each clock is known.
+        </p>
+<a name="boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_"></a><h5>
+<a name="id4815185"></a>
+          <a href="motivation.html#boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_">So
+          What Exactly is a <code class="computeroutput"><span class="identifier">time_point</span></code>
+          and How Do I Use One?</a>
+        </h5>
+<p>
+          A <code class="computeroutput"><span class="identifier">time_point</span></code> has a clock
+          and a <code class="computeroutput"><span class="identifier">duration</span></code>.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">time_point</span><span class="special">;</span>
+</pre>
+<p>
+          The <code class="computeroutput"><span class="identifier">time_point</span></code>'s clock
+          is not stored. It is simply embedded into the <code class="computeroutput"><span class="identifier">time_point</span></code>'s
+          type and serves two purposes:
+        </p>
+<div class="orderedlist"><ol type="1">
+<li>
+            Because <code class="computeroutput"><span class="identifier">time_point</span></code>s originating
+            from different clocks have different types, the compiler can be instructed
+            to fail if incompatible <code class="computeroutput"><span class="identifier">time_point</span></code>s
+            are used in inappropriate ways.
+          </li>
+<li>
+            Given a <code class="computeroutput"><span class="identifier">time_point</span></code>, one
+            often needs to compare that <code class="computeroutput"><span class="identifier">time_point</span></code>
+            to "now". This is very simple as long as the <code class="computeroutput"><span class="identifier">time_point</span></code> knows what clock it is defined
+            with respect to.
+          </li>
+</ol></div>
+<p>
+          A <code class="computeroutput"><span class="identifier">time_point</span></code>'s <code class="computeroutput"><span class="identifier">duration</span></code> is stored as the only data member
+          of the <code class="computeroutput"><span class="identifier">time_point</span></code>. Thus
+          <code class="computeroutput"><span class="identifier">time_point</span></code>s and their corresponding
+          <code class="computeroutput"><span class="identifier">duration</span></code> have exactly the
+          same layout. But they have very different meanings. For example, it is
+          one thing to say I want to sleep for 3 minutes. It is a completely different
+          thing to say I want to sleep until 3 minutes past the time I started that
+          timer (unless you just happened to start that timer now). Both meanings
+          (and options for sleeping) have great practical value in common use cases
+          for sleeping, waiting on a condition variable, and waiting for a mutex's
+          lock. These same concepts and tools are found (for example) in Ada.
+        </p>
+<p>
+          A timer example:
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">start</span> <span class="special">=</span> <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+    <span class="identifier">g</span><span class="special">();</span>
+    <span class="identifier">h</span><span class="special">();</span>
+    <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">sec</span> <span class="special">=</span> <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"f() took "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sec</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" seconds\n"</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Note that if one is using the <code class="computeroutput"><span class="identifier">duration</span></code>
+          between two clock <code class="computeroutput"><span class="identifier">time_point</span></code>s
+          in a way where the precision of the <code class="computeroutput"><span class="identifier">duration</span></code>
+          matters, it is good practice to convert the clock's native <code class="computeroutput"><span class="identifier">duration</span></code> to a known <code class="computeroutput"><span class="identifier">duration</span></code>.
+          This insulates the code from future changes which may be made to the clock's
+          native precision in the future. For example monotonic_clock could easily
+          be based on the clock speed of the cpu. When you upgrade to a faster machine,
+          you do not want your code that assumed a certain tick period of this clock
+          to start experiencing run time failures because your timing code has silently
+          changed meaning.
+        </p>
+<p>
+          A delay loop example:
+        </p>
+<pre class="programlisting"><span class="comment">// delay for at least 500 nanoseconds:
+</span><span class="keyword">auto</span> <span class="identifier">go</span> <span class="special">=</span> <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">nanoseconds</span><span class="special">(</span><span class="number">500</span><span class="special">);</span>
+<span class="keyword">while</span> <span class="special">(</span><span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">go</span><span class="special">)</span>
+    <span class="special">;</span>
+</pre>
+<p>
+          The above code will delay as close as possible to half a microsecond, no
+          matter what the precision of monotonic_clock is. The more precise <code class="computeroutput"><span class="identifier">monotonic_clock</span></code> becomes, the more accurate
+          will be the delay to 500 nanoseconds.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.overview.motivation.timers"></a><a href="motivation.html#boost_chrono.overview.motivation.timers" title="Timers">Timers</a>
+</h4></div></div></div>
+<p>
+          Knowing how long a program takes to execute is useful in both test and
+          production environments. It is also helpful if such timing information
+          is broken down into real (wall clock) time, CPU time spent by the user,
+          and CPU time spent by the operating system servicing user requests.
+        </p>
+<p>
+          The Boost Chrono Library's process times components provide that information:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            At the highest level, class <code class="computeroutput"><span class="identifier">run_timer</span></code>
+            provides a complete run time reporting package that can be invoked in
+            a single line of code.
+          </li>
+<li>
+            At a middle level, class <code class="computeroutput"><span class="identifier">process_timer</span></code>
+            provides a process timer useful when the automatic reporting of <code class="computeroutput"><span class="identifier">run_timer</span></code> isn't desired.
+          </li>
+<li>
+            At the lowest level, <code class="computeroutput"><span class="identifier">process_clock</span></code>
+            provides a thin wrapper around the operating system's process timer API.
+            For POSIX-like systems, that's the times() function, while for Windows,
+            it's the GetProcessTimes() function.
+          </li>
+</ul></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

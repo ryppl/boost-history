@@ -1,6 +1,7 @@
 //  boost run_timer_test.cpp  -----------------------------------------------------//
 
 //  Copyright Beman Dawes 2006, 2008
+//  Copyright 2009 Vicente J. Botet Escriba
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -45,7 +46,7 @@ namespace
     }
     return result;
   }
-  
+
   void run_timer_constructor_overload_test()
   {
     // exercise each supported combination of constructor arguments
@@ -94,7 +95,9 @@ namespace
     timeout_in_clock_t += (timeout_in_secs * CLOCKS_PER_SEC);
 
     boost::chrono::system_timer           sys;
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
     boost::chrono::monotonic_timer        mono;
+#endif    
     boost::chrono::high_resolution_timer  hires;
     boost::chrono::process_timer          process;
     
@@ -105,7 +108,9 @@ namespace
     } while ( now < timeout_in_clock_t );
 
     boost::chrono::system_timer::duration sys_dur = sys.elapsed();
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
     boost::chrono::monotonic_timer::duration mono_dur = mono.elapsed();
+#endif    
     boost::chrono::high_resolution_timer::duration hires_dur = hires.elapsed();
     boost::chrono::process_times times;
     process.elapsed( times );
@@ -126,10 +131,12 @@ namespace
     BOOST_CHECK( sys_dur > timeout_in_nanoseconds - maximum_delta
       && sys_dur < timeout_in_nanoseconds + maximum_delta );
 
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
     std::cout << mono_dur.count() << " mono_dur\n";
 
     BOOST_CHECK( mono_dur > timeout_in_nanoseconds - maximum_delta
       && mono_dur < timeout_in_nanoseconds + maximum_delta );
+#endif    
 
     std::cout << hires_dur.count() << " hires_dur\n";
 

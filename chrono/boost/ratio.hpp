@@ -2,6 +2,7 @@
 
 //  Copyright 2008 Howard Hinnant
 //  Copyright 2008 Beman Dawes
+//  Copyright 2009 Vicente J. Botet Escriba
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -10,7 +11,7 @@
 
 This code was derived by Beman Dawes from Howard Hinnant's time2_demo prototype.
 Many thanks to Howard for making his code available under the Boost license.
-The original code was modified to conform to Boost conventions and to section 
+The original code was modified to conform to Boost conventions and to section
 20.4 Compile-time rational arithmetic [ratio], of the C++ committee working
 paper N2798.
 See http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2798.pdf.
@@ -34,6 +35,7 @@ time2_demo contained this comment:
 #include <limits>
 #include <boost/cstdint.hpp>
 #include <boost/type_traits.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost
 {
@@ -61,22 +63,22 @@ template <class R1, class R2> struct ratio_greater;
 template <class R1, class R2> struct ratio_greater_equal;
 
 // convenience SI typedefs
-typedef ratio<1LL, 1000000000000000000LL> atto;
-typedef ratio<1LL,    1000000000000000LL> femto;
-typedef ratio<1LL,       1000000000000LL> pico;
-typedef ratio<1LL,          1000000000LL> nano;
-typedef ratio<1LL,             1000000LL> micro;
-typedef ratio<1LL,                1000LL> milli;
-typedef ratio<1LL,                 100LL> centi;
-typedef ratio<1LL,                  10LL> deci;
-typedef ratio<                 10LL, 1LL> deca;
-typedef ratio<                100LL, 1LL> hecto;
-typedef ratio<               1000LL, 1LL> kilo;
-typedef ratio<            1000000LL, 1LL> mega;
-typedef ratio<         1000000000LL, 1LL> giga;
-typedef ratio<      1000000000000LL, 1LL> tera;
-typedef ratio<   1000000000000000LL, 1LL> peta;
-typedef ratio<1000000000000000000LL, 1LL> exa;
+typedef ratio<INTMAX_C(1), INTMAX_C(1000000000000000000)> atto;
+typedef ratio<INTMAX_C(1),    INTMAX_C(1000000000000000)> femto;
+typedef ratio<INTMAX_C(1),       INTMAX_C(1000000000000)> pico;
+typedef ratio<INTMAX_C(1),          INTMAX_C(1000000000)> nano;
+typedef ratio<INTMAX_C(1),             INTMAX_C(1000000)> micro;
+typedef ratio<INTMAX_C(1),                INTMAX_C(1000)> milli;
+typedef ratio<INTMAX_C(1),                 INTMAX_C(100)> centi;
+typedef ratio<INTMAX_C(1),                  INTMAX_C(10)> deci;
+typedef ratio<                 INTMAX_C(10), INTMAX_C(1)> deca;
+typedef ratio<                INTMAX_C(100), INTMAX_C(1)> hecto;
+typedef ratio<               INTMAX_C(1000), INTMAX_C(1)> kilo;
+typedef ratio<            INTMAX_C(1000000), INTMAX_C(1)> mega;
+typedef ratio<         INTMAX_C(1000000000), INTMAX_C(1)> giga;
+typedef ratio<      INTMAX_C(1000000000000), INTMAX_C(1)> tera;
+typedef ratio<   INTMAX_C(1000000000000000), INTMAX_C(1)> peta;
+typedef ratio<INTMAX_C(1000000000000000000), INTMAX_C(1)> exa;
 
 //----------------------------------------------------------------------------//
 //                                 helpers                                    //
@@ -271,12 +273,35 @@ class ratio
 //    static_assert(detail::static_abs<D>::value >  0, "ratio denominator is out of range");
     static const boost::intmax_t m_na = detail::static_abs<N>::value;
     static const boost::intmax_t m_da = detail::static_abs<D>::value;
-    static const boost::intmax_t m_s = detail::static_sign<N>::value 
+    static const boost::intmax_t m_s = detail::static_sign<N>::value
       * detail::static_sign<D>::value;
     static const boost::intmax_t m_gcd = detail::static_gcd<m_na, m_da>::value;
 public:
     static const boost::intmax_t num = m_s * m_na / m_gcd;
     static const boost::intmax_t den = m_da / m_gcd;
+
+#if 1   
+    ratio() {}
+        
+    template <intmax_t _N2, intmax_t _D2>
+    ratio(const ratio<_N2, _D2>&,
+        typename enable_if_c
+            <
+                ratio<_N2, _D2>::num == num &&
+                ratio<_N2, _D2>::den == den
+            >::type* = 0) {}
+    
+    template <intmax_t _N2, intmax_t _D2>
+        typename enable_if_c
+        <
+            ratio<_N2, _D2>::num == num &&
+            ratio<_N2, _D2>::den == den,
+            ratio&
+        >::type
+    operator=(const ratio<_N2, _D2>&) {return *this;}
+#endif
+
+    typedef ratio<num, den> type;
 };
 
 //----------------------------------------------------------------------------//
@@ -289,10 +314,19 @@ template <class R1, class R2>
 struct ratio_add
 {
 private:
-   static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
-   static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+#if 1
+#else
+    static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
+    static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+#endif
 public:
-   typedef typename ratio_multiply
+    //The nested typedef type shall be a synonym for ratio<T1, T2> where T1 has the value R1::num *
+    //R2::den + R2::num * R1::den and T2 has the value R1::den * R2::den.
+#if 1
+    typedef typename ratio<R1::num * R2::den + R2::num * R1::den,R1::den * R2::den>::type type;
+    //typedef ratio<aux_type::num ,aux_type::den > type;
+#else
+    typedef typename ratio_multiply
        <
            ratio<gcd_n1_n2, R1::den / gcd_d1_d2>,
            ratio
@@ -305,16 +339,26 @@ public:
                R2::den
            >
        >::type type;
+#endif
 };
 
 template <class R1, class R2>
 struct ratio_subtract
 {
 private:
-   static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
-   static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+#if 1
+#else
+    static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
+    static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+#endif
 public:
-   typedef typename ratio_multiply
+//The nested typedef type shall be a synonym for ratio<T1, T2> where T1 has the value
+// R1::num *R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.
+#if 1
+    typedef typename ratio<R1::num * R2::den - R2::num * R1::den,R1::den * R2::den>::type type;
+    //typedef ratio<aux_type::num ,aux_type::den > type;
+#else
+    typedef typename ratio_multiply
        <
            ratio<gcd_n1_n2, R1::den / gcd_d1_d2>,
            ratio
@@ -327,34 +371,47 @@ public:
                R2::den
            >
        >::type type;
+#endif
 };
 
 template <class R1, class R2>
 struct ratio_multiply
 {
 private:
+#if 0    
    static const boost::intmax_t gcd_n1_d2 = detail::static_gcd<R1::num, R2::den>::value;
    static const boost::intmax_t gcd_d1_n2 = detail::static_gcd<R1::den, R2::num>::value;
+#endif
 public:
+#if 0
    typedef ratio
        <
            detail::ll_mul<R1::num / gcd_n1_d2, R2::num / gcd_d1_n2>::value,
            detail::ll_mul<R2::den / gcd_n1_d2, R1::den / gcd_d1_n2>::value
        > type;
+#else
+   typedef typename ratio<R1::num * R2::num, R1::den * R2::den>::type type;
+#endif
 };
 
 template <class R1, class R2>
 struct ratio_divide
 {
 private:
+#if 0    
    static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
    static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+#endif
 public:
+#if 0
    typedef ratio
        <
            detail::ll_mul<R1::num / gcd_n1_n2, R2::den / gcd_d1_d2>::value,
            detail::ll_mul<R2::num / gcd_n1_n2, R1::den / gcd_d1_d2>::value
        > type;
+#else
+   typedef typename ratio<R1::num * R2::den, R1::den * R2::num>::type type;
+#endif
 };
 
 // ratio_equal
@@ -362,11 +419,11 @@ public:
 template <class R1, class R2>
 struct ratio_equal
     : public boost::integral_constant<bool,
-                               R1::num == R2::num && R1::den == R2::den> {}; 
+                               R1::num == R2::num && R1::den == R2::den> {};
 
 template <class R1, class R2>
 struct ratio_not_equal
-    : public boost::integral_constant<bool, !ratio_equal<R1, R2>::value> {}; 
+    : public boost::integral_constant<bool, !ratio_equal<R1, R2>::value> {};
 
 // ratio_less
 

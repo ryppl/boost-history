@@ -9,10 +9,33 @@
 #include <boost/ratio.hpp>
 #include <boost/chrono/chrono.hpp>
 #include <iostream>
+#include <complex>
+
+#if 0
+template <class T, class U>
+typename boost::common_type<std::complex<T>, std::complex<U> >::type
+operator+(std::complex<T>, std::complex<U>);
+#else
+template <class T, class U>
+std::complex<typename boost::common_type<T, U>::type>
+operator+(std::complex<T>, std::complex<U>);
+#endif
+
+typedef boost::ratio<5, 3>   five_thirds;       // five_thirds::num == 5, five_thirds::den == 3
+typedef boost::ratio<25, 15> also_five_thirds;  // also_five_thirds::num == 5, also_five_thirds::den == 3
+typedef boost::ratio_divide<five_thirds, also_five_thirds>::type one;  // one::num == 1, one::den == 1
+
+
+typedef boost::ratio_multiply<boost::ratio<5>, boost::giga>::type _5giga;  // _5giga::num == 5000000000, _5giga::den == 1
+typedef boost::ratio_multiply<boost::ratio<5>, boost::nano>::type _5nano;  // _5nano::num == 1, _5nano::den == 200000000
 
 //  Test the case described in library working group issue 948.
 
+#if 0
 typedef boost::ratio<0x7FFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFF0> R1;
+#else
+typedef boost::ratio<0x7FFFFFFF, 0x7FFFFFF0> R1;
+#endif
 typedef boost::ratio<8, 7> R2;
 typedef boost::ratio_multiply<R1, R2>::type RT;
 
@@ -85,6 +108,8 @@ class quantity
 {
     double q_;
 public:
+    typedef R1 time_dim;
+    typedef R2 distance_dim;
     quantity() : q_(1) {}
 
     double get() const {return q_;}
@@ -133,6 +158,9 @@ typedef quantity<boost::ratio<1>, boost::ratio<0> >  Time;         // second
 typedef quantity<boost::ratio<0>, boost::ratio<1> >  Distance;     // meter
 typedef quantity<boost::ratio<-1>, boost::ratio<1> > Speed;        // meter/second
 typedef quantity<boost::ratio<-2>, boost::ratio<1> > Acceleration; // meter/second^2
+
+    typedef User1::quantity<boost::ratio_subtract<boost::ratio<0>, boost::ratio<1> >::type, 
+                             boost::ratio_subtract<boost::ratio<1>, boost::ratio<0> >::type > RR;
 
 template <class R1, class R2, class R3, class R4>
 quantity<typename boost::ratio_subtract<R1, R3>::type, typename boost::ratio_subtract<R2, R4>::type>
@@ -188,6 +216,23 @@ compute_distance(Speed v0, Time t, Acceleration a)
 // Though input can be arbitrary (but type-safe) units, output is always in SI-units
 //   (a limitation of the simplified Units lib demoed here).
 
+#if 0
+    typedef quantity<typename boost::ratio_subtract<R1, R3>::type, typename boost::ratio_subtract<R2, R4>::type> R;
+    R r;
+    r.set(x.get() / y.get());
+    return r;
+typedef quantity<boost::ratio<1>, boost::ratio<0> >  Time;         // second
+typedef quantity<boost::ratio<0>, boost::ratio<1> >  Distance;     // meter
+    typedef R1 time_dim;
+    typedef R2 distance_dim;
+}
+#endif
+
+    typedef User1::quantity<boost::ratio_subtract<boost::ratio<0>, boost::ratio<1> >::type, 
+                             boost::ratio_subtract<boost::ratio<1>, boost::ratio<0> >::type > RR;
+    //typedef User1::quantity<boost::ratio_subtract<boost::ratio<1>, boost::ratio<0> >::type, 
+    //                         boost::ratio_subtract<boost::ratio<0>, boost::ratio<1> >::type > RR;
+
 int main()
 {
     std::cout << "*************\n";
@@ -195,6 +240,14 @@ int main()
     std::cout << "*************\n";
     User1::Distance d( User1::mile(110) );
     User1::Time t( boost::chrono::hours(2) );
+    
+    //typedef User1::quantity<boost::ratio_subtract<User1::Distance::time_dim, User1::Time::time_dim >::type, 
+    //                        boost::ratio_subtract<User1::Distance::distance_dim, User1::Time::distance_dim >::type > R;
+    User1::RR r=d / t;
+    //r.set(d.get() / t.get());
+    
+    User1::Speed rc= r;
+    
     User1::Speed s = d / t;
     std::cout << "Speed = " << s.get() << " meters/sec\n";
     User1::Acceleration a = User1::Distance( User1::foot(32.2) ) / User1::Time() / User1::Time();

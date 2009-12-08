@@ -33,6 +33,14 @@ namespace boost
      typedef typename common_type<typename common_type<T, U>::type, V>::type type;
   };
 
+namespace detail {
+template<typename A, typename B>
+struct result_of_conditional 
+{
+    static bool m_f();  // workaround gcc bug; not required by std
+    typedef BOOST_TYPEOF_TPL(m_f()?A():B()) type;
+};
+}
 
   template <class T>
   struct common_type<T, void, void>
@@ -49,6 +57,7 @@ namespace boost
      static U m_u();
      static bool m_f();  // workaround gcc bug; not required by std
   public:
+      
      typedef BOOST_TYPEOF_TPL(m_f() ? m_t() : m_u()) type;
   };
 
