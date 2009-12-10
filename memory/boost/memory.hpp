@@ -34,6 +34,10 @@
 #include "memory/pools.hpp"
 #endif
 
+#ifndef BOOST_MEMORY_CONTAINER_DCL_LIST_HPP
+#include "memory/container/dcl_list.hpp"
+#endif
+
 // -------------------------------------------------------------------------
 // default_alloc
 

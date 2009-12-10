@@ -76,19 +76,9 @@ public:
 	}
 
 public:
-	__forceinline bool BOOST_MEMORY_CALL empty() const
-	{
-		return m_next == this;
-	}
-
 	bool BOOST_MEMORY_CALL valid() const
 	{
 		return m_prev->m_next == this && m_next->m_prev == this;
-	}
-
-	void BOOST_MEMORY_CALL clear()
-	{
-		m_next = m_prev = this;
 	}
 
 	void BOOST_MEMORY_CALL erase()
@@ -97,18 +87,6 @@ public:
 		m_next->m_prev = m_prev;
 		m_prev->m_next = m_next;
 		m_prev = m_next = this;
-	}
-
-	__forceinline void BOOST_MEMORY_CALL pop_front()
-	{
-		BOOST_MEMORY_ASSERT(!empty());
-		static_cast<dcl_list_node_base_*>(m_next)->erase();
-	}
-
-	__forceinline void BOOST_MEMORY_CALL pop_back()
-	{
-		BOOST_MEMORY_ASSERT(!empty());
-		static_cast<dcl_list_node_base_*>(m_prev)->erase();
 	}
 };
 
@@ -194,12 +172,34 @@ public:
 	typedef const NodeT& const_reference;
 
 public:
-	void BOOST_MEMORY_CALL push_front(dcl_list_node<NodeT>* node)
+	__forceinline bool BOOST_MEMORY_CALL empty() const
+	{
+		return m_next == this;
+	}
+
+	__forceinline void BOOST_MEMORY_CALL clear()
+	{
+		m_next = m_prev = this;
+	}
+
+	void BOOST_MEMORY_CALL pop_front()
+	{
+		BOOST_MEMORY_ASSERT(!empty());
+		static_cast<dcl_list_node_base_*>(m_next)->erase();
+	}
+
+	void BOOST_MEMORY_CALL pop_back()
+	{
+		BOOST_MEMORY_ASSERT(!empty());
+		static_cast<dcl_list_node_base_*>(m_prev)->erase();
+	}
+
+	void BOOST_MEMORY_CALL push_front(NodeT* node)
 	{
 		node->insert_me_front_(*this);
 	}
 
-	void BOOST_MEMORY_CALL push_back(dcl_list_node<NodeT>* node)
+	void BOOST_MEMORY_CALL push_back(NodeT* node)
 	{
 		node->insert_me_back_(*this);
 	}
@@ -236,12 +236,9 @@ public:
 		return static_cast<const dcl_list_node_base_*>(node) == this;
 	}
 
-private:
-	typedef dcl_list_node<NodeT> BaseNodeT;
-
 public:
-	typedef dcl_list_iterator_<BaseNodeT, BaseNodeT&, BaseNodeT*> iterator;
-	typedef dcl_list_iterator_<BaseNodeT, const BaseNodeT&, const BaseNodeT*> const_iterator;
+	typedef dcl_list_iterator_<NodeT, NodeT&, NodeT*> iterator;
+	typedef dcl_list_iterator_<NodeT, const NodeT&, const NodeT*> const_iterator;
 
 	iterator BOOST_MEMORY_CALL begin() { return iterator(first()); }
 	const_iterator BOOST_MEMORY_CALL begin() const { return const_iterator(first()); }
