@@ -121,10 +121,13 @@ namespace chrono {
     };
 
     template <class Duration, class Rep2,
-        bool = boost::is_convertible<typename Duration::rep,
-                  typename common_type<typename Duration::rep, Rep2>::type>::value
-               && boost::is_convertible<Rep2,
-                  typename common_type<typename Duration::rep, Rep2>::type>::value>
+        bool = (
+                    boost::is_convertible<typename Duration::rep,
+                        typename common_type<typename Duration::rep, Rep2>::type>::value
+                &&  boost::is_convertible<Rep2,
+                        typename common_type<typename Duration::rep, Rep2>::type>::value
+                )
+        >
     struct duration_divide_imp
     {
     };
@@ -161,52 +164,52 @@ namespace chrono {
   template <class Rep> struct duration_values;
 
   // duration arithmetic
-  template <class Rep1, class Period1, class Rep2, class Period2>
-    typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
-    operator+(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
-  template <class Rep1, class Period1, class Rep2, class Period2>
-    typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
-    operator-(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
-  template <class Rep1, class Period, class Rep2>
-    typename boost::enable_if_c
-    <
-      boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value
-        && boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value,
-      duration<typename common_type<Rep1, Rep2>::type, Period>
-    >::type
-    operator*(const duration<Rep1, Period>& d, const Rep2& s);
-  template <class Rep1, class Period, class Rep2>
-    typename boost::enable_if_c
-    <
-      boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value
-        && boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value,
-      duration<typename common_type<Rep1, Rep2>::type, Period>
-    >::type
-    operator*(const Rep1& s, const duration<Rep2, Period>& d);
+//  template <class Rep1, class Period1, class Rep2, class Period2>
+//    typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
+//    operator+(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+//  template <class Rep1, class Period1, class Rep2, class Period2>
+//    typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
+//    operator-(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+//  template <class Rep1, class Period, class Rep2>
+//    typename boost::enable_if_c
+//    <
+//      boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value
+//        && boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value,
+//      duration<typename common_type<Rep1, Rep2>::type, Period>
+//    >::type
+//   operator*(const duration<Rep1, Period>& d, const Rep2& s);
+//  template <class Rep1, class Period, class Rep2>
+//    typename boost::enable_if_c
+//    <
+//      boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value
+//        && boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value,
+//      duration<typename common_type<Rep1, Rep2>::type, Period>
+//    >::type
+//    operator*(const Rep1& s, const duration<Rep2, Period>& d);
 
-  template <class Rep1, class Period, class Rep2>
-    typename boost::disable_if <detail::is_duration<Rep2>, 
-      typename detail::duration_divide_result<duration<Rep1, Period>, Rep2>::type
-    >::type
-    operator/(const duration<Rep1, Period>& d, const Rep2& s);
+//  template <class Rep1, class Period, class Rep2>
+//    typename boost::disable_if <detail::is_duration<Rep2>, 
+//      typename detail::duration_divide_result<duration<Rep1, Period>, Rep2>::type
+//    >::type
+//    operator/(const duration<Rep1, Period>& d, const Rep2& s);
   
-  template <class Rep1, class Period1, class Rep2, class Period2>
-    typename common_type<Rep1, Rep2>::type
-    operator/(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+//  template <class Rep1, class Period1, class Rep2, class Period2>
+//    typename common_type<Rep1, Rep2>::type
+//    operator/(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
   // duration comparisons
-  template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator==(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
-  template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator!=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
-  template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator< (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
-  template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator<=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
-  template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator> (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
-  template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator>=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+//  template <class Rep1, class Period1, class Rep2, class Period2>
+//    bool operator==(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+//  template <class Rep1, class Period1, class Rep2, class Period2>
+//    bool operator!=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+//  template <class Rep1, class Period1, class Rep2, class Period2>
+//    bool operator< (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+//  template <class Rep1, class Period1, class Rep2, class Period2>
+//    bool operator<=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+//  template <class Rep1, class Period1, class Rep2, class Period2>
+//    bool operator> (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+//  template <class Rep1, class Period1, class Rep2, class Period2>
+//    bool operator>=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
   // duration_cast
 
@@ -472,13 +475,15 @@ namespace chrono {
         BOOST_CONSTEXPR duration() {} // = default;
         template <class Rep2>
         BOOST_CONSTEXPR explicit duration(const Rep2& r,
-              typename boost::enable_if_c
-              <
-              boost::is_convertible<Rep2, rep>::value
-                 && (treat_as_floating_point<rep>::value
-                 || (!treat_as_floating_point<rep>::value
-                   && !treat_as_floating_point<Rep2>::value))
-              >::type* = 0)
+            typename boost::enable_if_c
+                <
+                (   boost::is_convertible<Rep2, rep>::value
+                &&  (treat_as_floating_point<rep>::value
+                    || (    !treat_as_floating_point<rep>::value
+                        &&  !treat_as_floating_point<Rep2>::value)
+                    )
+                )
+                >::type* = 0)
                   : rep_(r) {}
         ~duration() {} //= default;
         duration(const duration& rhs) : rep_(rhs.rep_) {} // = default;
@@ -491,12 +496,13 @@ namespace chrono {
         // conversions
         template <class Rep2, class Period2>
         BOOST_CONSTEXPR duration(const duration<Rep2, Period2>& d,
-              typename boost::enable_if_c
-              <
-                  treat_as_floating_point<rep>::value
-                  || (ratio_divide<Period2, period>::type::den == 1
-                    && !treat_as_floating_point<Rep2>::value)
-              >::type* = 0)
+            typename boost::enable_if_c
+                <
+                (   treat_as_floating_point<rep>::value
+                || (    ratio_divide<Period2, period>::type::den == 1
+                    &&  !treat_as_floating_point<Rep2>::value)
+                )
+                >::type* = 0)
 #ifdef        __GNUC__
             // GCC 4.2.4 refused to accept a definition at this point,
             // yet both VC++ 9.0 SP1 and Intel ia32 11.0 accepted the definition
@@ -570,10 +576,11 @@ namespace chrono {
   template <class Rep1, class Period, class Rep2>
   inline
   typename boost::enable_if_c
-  <
-      boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value
-        && boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value,
-      duration<typename common_type<Rep1, Rep2>::type, Period>
+    <
+        (   boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value
+        &&  boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value
+        ),
+        duration<typename common_type<Rep1, Rep2>::type, Period>
   >::type
   operator*(const duration<Rep1, Period>& d, const Rep2& s)
   {
@@ -586,10 +593,11 @@ namespace chrono {
   template <class Rep1, class Period, class Rep2>
   inline
   typename boost::enable_if_c
-  <
-      boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value
-        && boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value,
-      duration<typename common_type<Rep1, Rep2>::type, Period>
+    <
+        (   boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value
+        &&  boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value
+        ),
+        duration<typename common_type<Rep1, Rep2>::type, Period>
   >::type
   operator*(const Rep1& s, const duration<Rep2, Period>& d)
   {
@@ -990,16 +998,17 @@ template <class Clock, class Duration>
 //----------------------------------------------------------------------------//
 
 #ifdef __GNUC__
-  // see comment above in section 20.9.3 Class template duration [time.duration]
-  template <class Rep, class Period>
-  template <class Rep2, class Period2>
-  BOOST_CONSTEXPR duration<Rep, Period>::duration(const duration<Rep2, Period2>& d,
-          typename boost::enable_if_c
-          <
-              treat_as_floating_point<rep>::value
-              || (ratio_divide<Period2, period>::type::den == 1
-                && !treat_as_floating_point<Rep2>::value)
-          >::type*)
+    // see comment above in section 20.9.3 Class template duration [time.duration]
+    template <class Rep, class Period>
+    template <class Rep2, class Period2>
+    BOOST_CONSTEXPR duration<Rep, Period>::duration(const duration<Rep2, Period2>& d,
+        typename boost::enable_if_c
+            <
+            (   treat_as_floating_point<rep>::value
+            || (    ratio_divide<Period2, period>::type::den == 1
+                &&  !treat_as_floating_point<Rep2>::value)
+            )
+            >::type*)
           : rep_(duration_cast<duration>(d).count()) {}
 #endif
 

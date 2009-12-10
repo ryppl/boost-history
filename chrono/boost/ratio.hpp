@@ -292,15 +292,15 @@ public:
     ratio(const ratio<_N2, _D2>&,
         typename enable_if_c
             <
-                ratio<_N2, _D2>::num == num &&
-                ratio<_N2, _D2>::den == den
+                (ratio<_N2, _D2>::num == num &&
+                ratio<_N2, _D2>::den == den)
             >::type* = 0) {}
     
     template <intmax_t _N2, intmax_t _D2>
         typename enable_if_c
         <
-            ratio<_N2, _D2>::num == num &&
-            ratio<_N2, _D2>::den == den,
+            (ratio<_N2, _D2>::num == num &&
+            ratio<_N2, _D2>::den == den),
             ratio&
         >::type
     operator=(const ratio<_N2, _D2>&) {return *this;}
@@ -422,7 +422,7 @@ public:
 template <class R1, class R2>
 struct ratio_equal
     : public boost::integral_constant<bool,
-                               R1::num == R2::num && R1::den == R2::den> {};
+                               (R1::num == R2::num && R1::den == R2::den)> {};
 
 template <class R1, class R2>
 struct ratio_not_equal
