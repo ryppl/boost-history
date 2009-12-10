@@ -1,0 +1,35 @@
+
+# Copyright 2008-2009 John Doe.
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+doxygen ref
+    :
+        [ glob ../../../boost/example/*.hpp ]
+    :
+        <doxygen:param>MACRO_EXPANSION=YES
+        <doxygen:param>EXPAND_ONLY_PREDEF=YES
+        <doxygen:param>GENERATE_TAGFILE=ref.tag
+    ;
+
+xml example
+    :
+        example.qbk
+    :
+        <dependency>ref
+    ;
+
+boostbook standalone
+    :
+        example
+    :
+        <dependency>css
+        <dependency>images
+    ;
+
+install css : [ glob $(BOOST_ROOT)/doc/src/*.css ]
+    : <location>html ;
+install images : [ glob $(BOOST_ROOT)/doc/src/images/*.png ]
+    : <location>html/images ;
+explicit css ;
+explicit images ;

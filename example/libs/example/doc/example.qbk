@@ -1,0 +1,23 @@
+[library Boost.Example
+    [quickbook 1.5]
+    [authors [Doe, John]]
+    [copyright 2008 2009 John Doe]
+    [id example]
+    [dirname example]
+    [purpose 
+        Demonstrate quickbook and doxygen based documentation.
+    ]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[section:intro Introduction]
+
+This is just an example to demonstrate one way to structure a proposed library.
+
+[endsect]
+
+[xinclude ref.xml]
