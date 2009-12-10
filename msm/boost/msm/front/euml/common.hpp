@@ -1199,6 +1199,7 @@ struct Process_Helper: proto::extends< proto::terminal<process_tag>::type, Proce
 };
 Process_Helper const process_;
 
+#if (!defined(BOOST_MSVC)||(BOOST_MSVC>1400))
 template <class ToProcessEvt,class Value,class Param1=void, class Param2=void, class Param3=void, class Enable=void >                                             
 struct Process2_ : euml_action<Process2_<ToProcessEvt,Value,Param1,Param2,Param3,Enable> > {};        
 
@@ -1356,6 +1357,7 @@ struct Process2_Helper : proto::extends< proto::terminal<process2_tag>::type, Pr
     };
 };
 Process2_Helper const process2_;
+#endif
 
 template <class Flag,class Param1=void, class Enable=void >                                             
 struct Get_Flag_ : euml_action<Get_Flag_<Flag,Param1,Enable> > {};        
