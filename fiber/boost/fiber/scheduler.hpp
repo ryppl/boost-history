@@ -55,7 +55,7 @@ public:
 	{}
 
 	~scheduler()
-	{} 
+	{ strategy_->detach_all(); } 
 
 	bool run()
 	{ return strategy_->run(); }

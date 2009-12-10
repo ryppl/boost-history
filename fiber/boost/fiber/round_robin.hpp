@@ -67,8 +67,6 @@ private:
 public:
 	round_robin();
 
-	~round_robin();
-
 	void add( fiber);
 
 	void join( fiber::id const&);
@@ -94,6 +92,8 @@ public:
 	fiber release( fiber::id const&);
 
 	void migrate( fiber);
+
+	void detach_all();
 
 	bool run();
 

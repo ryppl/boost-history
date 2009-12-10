@@ -42,6 +42,7 @@ feature.set-default fiberapi : [ default_fiberapi ] ;
 alias fiber_sources
     : ## win32 sources ##
 	auto_reset_event.cpp
+	barrier.cpp
 	condition.cpp
 	count_down_event.cpp
 	fiber.cpp
@@ -51,6 +52,7 @@ alias fiber_sources
 	mutex.cpp
 	round_robin.cpp
 	spin_auto_reset_event.cpp
+	spin_barrier.cpp
 	spin_condition.cpp
 	spin_count_down_event.cpp
 	spin_manual_reset_event.cpp
@@ -63,6 +65,7 @@ alias fiber_sources
 alias fiber_sources
     : ## posix sources ##
 	auto_reset_event.cpp
+	barrier.cpp
 	condition.cpp
 	count_down_event.cpp
 	fiber.cpp
@@ -72,6 +75,7 @@ alias fiber_sources
 	mutex.cpp
 	round_robin.cpp
 	spin_auto_reset_event.cpp
+	spin_barrier.cpp
 	spin_condition.cpp
 	spin_count_down_event.cpp
 	spin_manual_reset_event.cpp

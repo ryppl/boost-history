@@ -9,18 +9,16 @@
 
 [section:todo Todo]
 
-* replace spin-waiting in mutex, condition- and event-variables
+* provide a future and task class
+
+* provide a barrier class
+
+* provide an scheduler which deals with priorities
 
 * improve implementation of atomic-ops
 
 * replace system calls related to fiber switching (like swapcontext()) by assembler
 
-* explicit migration of fiber between schedulers (== between threads)
-
-* improve scheduling algorithm (take priorities into acount)
-
-* provide a future and task class
-
-* provide a barrier class
+* replace thread_specific_ptr by an specialiced implementation for fiber (interusive_ptr)
 
 [endsect]

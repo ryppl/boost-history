@@ -27,12 +27,6 @@ round_robin::round_robin() :
 	terminated_fibers_()
 {}
 
-round_robin::~round_robin()
-{
-	BOOST_FOREACH( fiber_map::value_type va, fibers_)
-	{ detach( va.second.f); }
-}
-
 void
 round_robin::add( fiber f)
 {
@@ -364,7 +358,7 @@ round_robin::release( fiber::id const& id)
 	BOOST_ASSERT( f);
 	BOOST_ASSERT( ! is_master( f) );
 	if ( ! in_state_ready( f) || ! s.joining_fibers.empty() )
-		throw scheduler_error("fiber can not be released");
+		throw fiber_error("fiber can not be released");
 	BOOST_ASSERT( ! s.waiting_on_fiber);
 	BOOST_ASSERT( ! s.waiting_on_object);
 
@@ -377,7 +371,8 @@ round_robin::release( fiber::id const& id)
 void
 round_robin::migrate( fiber f)
 {
-	BOOST_ASSERT( f);
+	if ( ! f) throw fiber_moved();
+
 	BOOST_ASSERT( in_state_ready( f) );
 
 	// attach to this scheduler
@@ -391,10 +386,17 @@ round_robin::migrate( fiber f)
 				schedulable( f) ) ) );
 
 	// check result
-	if ( ! result.second) throw scheduler_error("inserting fiber failed");
+	if ( ! result.second) throw scheduler_error("migrating fiber failed");
 
 	// put fiber to runnable-queue
 	runnable_fibers_.push_back( result.first->first);
+}
+
+void
+round_robin::detach_all()
+{
+	BOOST_FOREACH( fiber_map::value_type va, fibers_)
+	{ detach( va.second.f); }
 }
 
 bool

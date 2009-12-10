@@ -179,6 +179,8 @@ public:
 
 	virtual void migrate( fiber) = 0;
 
+	virtual void detach_all() = 0;
+
 	virtual bool run() = 0;
 
 	virtual bool empty() = 0;
