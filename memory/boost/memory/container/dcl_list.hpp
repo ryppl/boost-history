@@ -25,33 +25,33 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class dcl_list_node
 
-class dcl_list_node_base_
+class dcl_list_node_base
 {
 protected:
-	dcl_list_node_base_* m_prev;
-	dcl_list_node_base_* m_next;
+	dcl_list_node_base* m_prev;
+	dcl_list_node_base* m_next;
 
 private:
-	dcl_list_node_base_(const dcl_list_node_base_&);
-	void operator=(const dcl_list_node_base_&);
+	dcl_list_node_base(const dcl_list_node_base&);
+	void operator=(const dcl_list_node_base&);
 
 public:
 	enum InsertFront { insertAtFront = 0 };
 	enum InsertBack { insertAtBack = 1 };
 
 public:
-	dcl_list_node_base_() {
+	dcl_list_node_base() {
 		m_prev = m_next = this;
 	}
 	
-	dcl_list_node_base_(dcl_list_node_base_& head, InsertFront)
+	dcl_list_node_base(dcl_list_node_base& head, InsertFront)
 		: m_prev(&head), m_next(head.m_next)
 	{
 		head.m_next->m_prev = this;
 		head.m_next = this;
 	}
 
-	dcl_list_node_base_(dcl_list_node_base_& head, InsertBack)
+	dcl_list_node_base(dcl_list_node_base& head, InsertBack)
 		: m_prev(head.m_prev), m_next(&head)
 	{
 		head.m_prev->m_next = this;
@@ -59,7 +59,7 @@ public:
 	}
 
 public:
-	void BOOST_MEMORY_CALL insert_me_front_(dcl_list_node_base_& head)
+	void BOOST_MEMORY_CALL insert_me_front_(dcl_list_node_base& head)
 	{
 		m_prev = &head;
 		m_next = head.m_next;
@@ -67,7 +67,7 @@ public:
 		head.m_next = this;
 	}
 
-	void BOOST_MEMORY_CALL insert_me_back_(dcl_list_node_base_& head)
+	void BOOST_MEMORY_CALL insert_me_back_(dcl_list_node_base& head)
 	{
 		m_next = &head;
 		m_prev = head.m_prev;
@@ -91,19 +91,19 @@ public:
 };
 
 template <class NodeT>
-class dcl_list_node : public dcl_list_node_base_
+class dcl_list_node : public dcl_list_node_base
 {
 public:
 	typedef NodeT value_type;
 
 public:
 	dcl_list_node() {}
-	dcl_list_node(dcl_list_node_base_& head, InsertFront)
-		: dcl_list_node_base_(head, insertAtFront)
+	dcl_list_node(dcl_list_node_base& head, InsertFront)
+		: dcl_list_node_base(head, insertAtFront)
 	{
 	}
-	dcl_list_node(dcl_list_node_base_& head, InsertBack)
-		: dcl_list_node_base_(head, insertAtBack)
+	dcl_list_node(dcl_list_node_base& head, InsertBack)
+		: dcl_list_node_base(head, insertAtBack)
 	{
 	}
 
@@ -163,7 +163,7 @@ public:
 // class dcl_list: Doubly-circularly-linked list
 
 template <class NodeT>
-class dcl_list : public dcl_list_node_base_
+class dcl_list : public dcl_list_node_base
 {
 public:
 	typedef NodeT value_type;
@@ -185,13 +185,13 @@ public:
 	void BOOST_MEMORY_CALL pop_front()
 	{
 		BOOST_MEMORY_ASSERT(!empty());
-		static_cast<dcl_list_node_base_*>(m_next)->erase();
+		static_cast<dcl_list_node_base*>(m_next)->erase();
 	}
 
 	void BOOST_MEMORY_CALL pop_back()
 	{
 		BOOST_MEMORY_ASSERT(!empty());
-		static_cast<dcl_list_node_base_*>(m_prev)->erase();
+		static_cast<dcl_list_node_base*>(m_prev)->erase();
 	}
 
 	void BOOST_MEMORY_CALL push_front(NodeT* node)
@@ -233,7 +233,7 @@ public:
 
 	bool BOOST_MEMORY_CALL done(const NodeT* node) const
 	{
-		return static_cast<const dcl_list_node_base_*>(node) == this;
+		return static_cast<const dcl_list_node_base*>(node) == this;
 	}
 
 public:
