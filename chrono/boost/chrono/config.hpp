@@ -33,7 +33,7 @@
 # elif !defined( BOOST_CHRONO_WINDOWS_API ) && !defined( BOOST_CHRONO_MAC_API ) && !defined( BOOST_CHRONO_POSIX_API )
 #   if (defined(_WIN32) || defined(__WIN32__) || defined(WIN32))
 #     define BOOST_CHRONO_WINDOWS_API
-#     define BOOST_HAS_CLOCK_MONOTONIC
+#     define BOOST_CHRONO_HAS_CLOCK_MONOTONIC
 #   elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 #     define BOOST_CHRONO_MAC_API
 #     define BOOST_CHRONO_HAS_CLOCK_MONOTONIC

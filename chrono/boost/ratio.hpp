@@ -37,6 +37,12 @@ time2_demo contained this comment:
 #include <boost/type_traits.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#ifdef INTMAX_C
+#define BOOST_INTMAX_C(a) INTMAX_C(a)
+#else
+#define BOOST_INTMAX_C(a) a##LL
+#endif
+
 namespace boost
 {
 
@@ -63,22 +69,22 @@ template <class R1, class R2> struct ratio_greater;
 template <class R1, class R2> struct ratio_greater_equal;
 
 // convenience SI typedefs
-typedef ratio<INTMAX_C(1), INTMAX_C(1000000000000000000)> atto;
-typedef ratio<INTMAX_C(1),    INTMAX_C(1000000000000000)> femto;
-typedef ratio<INTMAX_C(1),       INTMAX_C(1000000000000)> pico;
-typedef ratio<INTMAX_C(1),          INTMAX_C(1000000000)> nano;
-typedef ratio<INTMAX_C(1),             INTMAX_C(1000000)> micro;
-typedef ratio<INTMAX_C(1),                INTMAX_C(1000)> milli;
-typedef ratio<INTMAX_C(1),                 INTMAX_C(100)> centi;
-typedef ratio<INTMAX_C(1),                  INTMAX_C(10)> deci;
-typedef ratio<                 INTMAX_C(10), INTMAX_C(1)> deca;
-typedef ratio<                INTMAX_C(100), INTMAX_C(1)> hecto;
-typedef ratio<               INTMAX_C(1000), INTMAX_C(1)> kilo;
-typedef ratio<            INTMAX_C(1000000), INTMAX_C(1)> mega;
-typedef ratio<         INTMAX_C(1000000000), INTMAX_C(1)> giga;
-typedef ratio<      INTMAX_C(1000000000000), INTMAX_C(1)> tera;
-typedef ratio<   INTMAX_C(1000000000000000), INTMAX_C(1)> peta;
-typedef ratio<INTMAX_C(1000000000000000000), INTMAX_C(1)> exa;
+typedef ratio<BOOST_INTMAX_C(1), BOOST_INTMAX_C(1000000000000000000)> atto;
+typedef ratio<BOOST_INTMAX_C(1),    BOOST_INTMAX_C(1000000000000000)> femto;
+typedef ratio<BOOST_INTMAX_C(1),       BOOST_INTMAX_C(1000000000000)> pico;
+typedef ratio<BOOST_INTMAX_C(1),          BOOST_INTMAX_C(1000000000)> nano;
+typedef ratio<BOOST_INTMAX_C(1),             BOOST_INTMAX_C(1000000)> micro;
+typedef ratio<BOOST_INTMAX_C(1),                BOOST_INTMAX_C(1000)> milli;
+typedef ratio<BOOST_INTMAX_C(1),                 BOOST_INTMAX_C(100)> centi;
+typedef ratio<BOOST_INTMAX_C(1),                  BOOST_INTMAX_C(10)> deci;
+typedef ratio<                 BOOST_INTMAX_C(10), BOOST_INTMAX_C(1)> deca;
+typedef ratio<                BOOST_INTMAX_C(100), BOOST_INTMAX_C(1)> hecto;
+typedef ratio<               BOOST_INTMAX_C(1000), BOOST_INTMAX_C(1)> kilo;
+typedef ratio<            BOOST_INTMAX_C(1000000), BOOST_INTMAX_C(1)> mega;
+typedef ratio<         BOOST_INTMAX_C(1000000000), BOOST_INTMAX_C(1)> giga;
+typedef ratio<      BOOST_INTMAX_C(1000000000000), BOOST_INTMAX_C(1)> tera;
+typedef ratio<   BOOST_INTMAX_C(1000000000000000), BOOST_INTMAX_C(1)> peta;
+typedef ratio<BOOST_INTMAX_C(1000000000000000000), BOOST_INTMAX_C(1)> exa;
 
 //----------------------------------------------------------------------------//
 //                                 helpers                                    //
@@ -128,7 +134,7 @@ namespace detail
   class ll_add<X, Y, 1>
   {
       static const boost::intmax_t min =
-        (INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
+        (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
 
       static char test[X <= max - Y];
@@ -148,7 +154,7 @@ namespace detail
   class ll_add<X, Y, -1>
   {
       static const boost::intmax_t min =
-        (INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
+        (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
 
       static char test[min - Y <= X];
@@ -164,7 +170,7 @@ namespace detail
   class ll_sub<X, Y, 1>
   {
       static const boost::intmax_t min =
-        (INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
+        (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
 
       static char test[min + Y <= X];
@@ -184,7 +190,7 @@ namespace detail
   class ll_sub<X, Y, -1>
   {
       static const boost::intmax_t min =
-        (INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
+        (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
 
       static char test[X <= max + Y];
@@ -197,7 +203,7 @@ namespace detail
   class ll_mul
   {
       static const boost::intmax_t nan =
-        (INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1));
+        (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1));
       static const boost::intmax_t min = nan + 1;
       static const boost::intmax_t max = -min;
       static const boost::intmax_t a_x = static_abs<X>::value;

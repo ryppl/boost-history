@@ -7,6 +7,6 @@
 
 #include <boost/ratio.hpp>
 
-typedef boost::ratio<INTMAX_C(0x7FFFFFFFFFFFFFFF), INTMAX_C(0x7FFFFFFFFFFFFFF0)> R1;
-typedef boost::ratio<INTMAX_C(0x7FFFFFFFFFFFFFFE), INTMAX_C(0x7FFFFFFFFFFFFFF0)> R2;
+typedef boost::ratio<BOOST_INTMAX_C(0x7FFFFFFFFFFFFFFF), BOOST_INTMAX_C(0x7FFFFFFFFFFFFFF0)> R1;
+typedef boost::ratio<BOOST_INTMAX_C(0x7FFFFFFFFFFFFFFE), BOOST_INTMAX_C(0x7FFFFFFFFFFFFFF0)> R2;
 typedef boost::ratio_multiply<R1, R2>::type RT;

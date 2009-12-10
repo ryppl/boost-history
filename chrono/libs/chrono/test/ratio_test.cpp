@@ -29,7 +29,7 @@ typedef boost::ratio_multiply<boost::ratio<5>, boost::nano>::type _5nano;  // _5
 
 //  Test the case described in library working group issue 948.
 
-typedef boost::ratio<INTMAX_C(0x7FFFFFFFFFFFFFFF), INTMAX_C(0x7FFFFFFFFFFFFFF0)> R1;
+typedef boost::ratio<BOOST_INTMAX_C(0x7FFFFFFFFFFFFFFF), BOOST_INTMAX_C(0x7FFFFFFFFFFFFFF0)> R1;
 typedef boost::ratio<8, 7> R2;
 typedef boost::ratio_multiply<R1, R2>::type RT;
 
@@ -214,8 +214,8 @@ compute_distance(Speed v0, Time t, Acceleration a)
 
 int main()
 {
-    typedef boost::ratio<8, INTMAX_C(0x7FFFFFFFD)> R1;
-    typedef boost::ratio<3, INTMAX_C(0x7FFFFFFFD)> R2;
+    typedef boost::ratio<8, BOOST_INTMAX_C(0x7FFFFFFFD)> R1;
+    typedef boost::ratio<3, BOOST_INTMAX_C(0x7FFFFFFFD)> R2;
     typedef User1::quantity<boost::ratio_subtract<boost::ratio<0>, boost::ratio<1> >::type, 
                              boost::ratio_subtract<boost::ratio<1>, boost::ratio<0> >::type > RR;
     typedef boost::ratio_subtract<R1, R2>::type RS;
