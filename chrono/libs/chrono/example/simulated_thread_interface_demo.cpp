@@ -32,12 +32,15 @@ time2_demo contained this comment:
 #include <boost/type_traits.hpp>
 
 #include <iostream>
+#include <ostream>
+#include <stdexcept>
+#include <climits>
 
-#include <windows.h>  
 #undef min
 #undef max
 
 #if defined(BOOST_CHRONO_WINDOWS_API)
+#include <windows.h>  
 
 namespace
 {
@@ -65,11 +68,12 @@ namespace
 
 #endif
 
+#undef min
+#undef max
+
 //////////////////////////////////////////////////////////
 ///////////// simulated thread interface /////////////////
 //////////////////////////////////////////////////////////
-
-#include <iostream>
 
 namespace std {
 
@@ -229,9 +233,6 @@ void basic_examples()
 // (like IEEE floating point) but otherwise obeys signed integral arithmetic.
 // This class is subsequently used as the rep in boost::chrono::duration to demonstrate a
 // duration class that does not silently ignore overflow.
-#include <ostream>
-#include <stdexcept>
-#include <climits>
 
 namespace User2
 {
@@ -615,7 +616,6 @@ public:
 
 }  // namespace boost
 
-#include <iostream>
 
 void testUser2()
 {

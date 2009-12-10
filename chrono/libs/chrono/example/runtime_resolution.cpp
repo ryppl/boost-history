@@ -25,6 +25,7 @@ time2_demo contained this comment:
                    Daniel Krügler,
                    Anthony Williams.
 */
+#define _CRT_SECURE_NO_WARNINGS  // disable VC++ foolishness
 
 #include <boost/chrono/chrono.hpp>
 #include <boost/type_traits.hpp>
@@ -32,6 +33,7 @@ time2_demo contained this comment:
 #include <iostream>
 
 #if defined(BOOST_CHRONO_WINDOWS_API)
+#include <windows.h>  
 
 namespace
 {

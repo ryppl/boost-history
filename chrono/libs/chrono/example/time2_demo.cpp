@@ -30,7 +30,11 @@ time2_demo contained this comment:
 #include <boost/chrono/chrono.hpp>
 #include <boost/type_traits.hpp>
 
+#include <cassert>
+#include <climits>
 #include <iostream>
+#include <ostream>
+#include <stdexcept>
 
 #include <windows.h>  
 #undef min
@@ -64,7 +68,6 @@ namespace
 ///////////// simulated thread interface /////////////////
 //////////////////////////////////////////////////////////
 
-#include <iostream>
 
 namespace std {
 
@@ -380,7 +383,6 @@ compute_distance(Speed v0, Time t, Acceleration a)
 
 } // User1
 
-#include <iostream>
 
 // Exercise example type-safe physics function and show interoperation
 // of custom time durations (User1::seconds) and standard time durations (std::hours).
@@ -427,9 +429,6 @@ void testUser1()
 // (like IEEE floating point) but otherwise obeys signed integral arithmetic.
 // This class is subsequently used as the rep in boost::chrono::duration to demonstrate a
 // duration class that does not silently ignore overflow.
-#include <ostream>
-#include <stdexcept>
-#include <climits>
 
 namespace User2
 {
@@ -813,7 +812,6 @@ public:
 
 }  // namespace boost
 
-#include <iostream>
 
 void testUser2()
 {
@@ -1141,8 +1139,6 @@ void test()
 
 // miscellaneous tests and demos:
 
-#include <cassert>
-#include <iostream>
 
 using namespace boost::chrono;
 
