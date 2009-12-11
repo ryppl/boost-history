@@ -64,24 +64,11 @@ void testMap()
 		s.insert(std::pair<int, int>(i, i));
 }
 
-void testPoolsAllocSet()
-{
-	typedef NS_BOOST_MEMORY::stl_allocator<int, NS_BOOST_MEMORY::scoped_pools> allocator;
-	
-	printf("\n===== Set (pools_alloc) =====\n");
-	NS_BOOST_MEMORY::block_pool recycle;
-	NS_BOOST_MEMORY::scoped_pools alloc(recycle);
-	std::set<int, std::less<int>, allocator> s(std::less<int>(), alloc);
-	for (int i = 0; i < Count; ++i)
-		s.insert(i);
-}
-
 int main()
 {
 	testDeque();
 	testList();
 	testSet();
-	testPoolsAllocSet();
 	testMap();
 
 	return 0;
