@@ -35,9 +35,6 @@ time2_demo contained this comment:
 #	include <windows.h>  
 #endif
 
-#undef min
-#undef max
-
 //  timeval clock demo
 //     Demonstrate the use of a timeval-like struct to be used as the representation
 //     type for both duraiton and time_point.

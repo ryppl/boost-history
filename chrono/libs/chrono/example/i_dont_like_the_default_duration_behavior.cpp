@@ -31,10 +31,6 @@ time2_demo contained this comment:
 
 #include <iostream>
 
-#undef min
-#undef max
-
-
 namespace I_dont_like_the_default_duration_behavior
 {
 

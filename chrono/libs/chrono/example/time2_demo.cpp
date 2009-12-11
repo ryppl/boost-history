@@ -37,8 +37,6 @@ time2_demo contained this comment:
 #include <stdexcept>
 
 #include <windows.h>  
-#undef min
-#undef max
 
 namespace
 {
@@ -804,8 +802,8 @@ struct duration_values<User2::saturate<I> >
     typedef User2::saturate<I> Rep;
 public:
     static Rep zero() {return Rep(0);}
-    static Rep max()  {return Rep(Rep::pos_inf-1);}
-    static Rep min()  {return -max();}
+    static Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return Rep(Rep::pos_inf-1);}
+    static Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return -(max) ();}
 };
 
 }  // namespace chrono
@@ -1206,7 +1204,7 @@ void inspect_duration(boost::chrono::duration<Rep, Period> d, const std::string&
         boost::chrono::duration<double> dsec = d;
         std::cout << "The precision is " << dsec.count() << " seconds.\n";
     }
-    d = Duration(std::numeric_limits<Rep>::max());
+    d = Duration((std::numeric_limits<Rep>::max)());
     using namespace boost::chrono;
     using namespace std;
     typedef duration<double, boost::ratio_multiply<boost::ratio<24*3652425,10000>, hours::period>::type> Years;
@@ -1469,7 +1467,7 @@ template <class Clock, class Duration1, class Duration2>
 inline
 typename boost::common_type<time_point<Clock, Duration1>,
                      time_point<Clock, Duration2> >::type
-min(time_point<Clock, Duration1> t1, time_point<Clock, Duration2> t2)
+min BOOST_PREVENT_MACRO_SUBSTITUTION (time_point<Clock, Duration1> t1, time_point<Clock, Duration2> t2)
 {
     return t2 < t1 ? t2 : t1;
 }
@@ -1483,7 +1481,7 @@ void test_min()
     typedef boost::common_type<T1, T2>::type T3;
     /*auto*/ T1 t1 = system_clock::now() + seconds(3);
     /*auto*/ T2 t2 = system_clock::now() + nanoseconds(3);
-    /*auto*/ T3 t3 = min(t1, t2);
+    /*auto*/ T3 t3 = (min)(t1, t2);
     print_duration(cout, t1 - t3);
     print_duration(cout, t2 - t3);
 }
@@ -1611,12 +1609,12 @@ void cycle_count_delay()
 
 void test_special_values()
 {
-    std::cout << "duration<unsigned>::min().count()  = " << duration<unsigned>::min().count() << '\n';
+    std::cout << "duration<unsigned>::min().count()  = " << (duration<unsigned>::min()).count() << '\n';
     std::cout << "duration<unsigned>::zero().count() = " << duration<unsigned>::zero().count() << '\n';
-    std::cout << "duration<unsigned>::max().count()  = " << duration<unsigned>::max().count() << '\n';
-    std::cout << "duration<int>::min().count()       = " << duration<int>::min().count() << '\n';
+    std::cout << "duration<unsigned>::max().count()  = " << (duration<unsigned>::max()).count() << '\n';
+    std::cout << "duration<int>::min().count()       = " << (duration<int>::min().count()) << '\n';
     std::cout << "duration<int>::zero().count()      = " << duration<int>::zero().count() << '\n';
-    std::cout << "duration<int>::max().count()       = " << duration<int>::max().count() << '\n';
+    std::cout << "duration<int>::max().count()       = " << (duration<int>::max().count()) << '\n';
 }
 
 int main()

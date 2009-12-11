@@ -33,9 +33,6 @@ time2_demo contained this comment:
 
 #include <iostream>
 
-#undef min
-#undef max
-
 //////////////////////////////////////////////////////////
 //////////////////// User2 Example ///////////////////////
 //////////////////////////////////////////////////////////
@@ -423,8 +420,8 @@ struct duration_values<User2::saturate<I> >
     typedef User2::saturate<I> Rep;
 public:
     static Rep zero() {return Rep(0);}
-    static Rep max()  {return Rep(Rep::pos_inf-1);}
-    static Rep min()  {return -max();}
+    static Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return Rep(Rep::pos_inf-1);}
+    static Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return -(max)();}
 };
 
 }  // namespace chrono

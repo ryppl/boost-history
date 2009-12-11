@@ -61,10 +61,6 @@ namespace
 
 #endif
 
-
-//#undef min
-//#undef max
-
 // Handle duration with resolution not known until run time
 using namespace boost::chrono;
 

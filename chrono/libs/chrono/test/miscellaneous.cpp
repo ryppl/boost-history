@@ -31,9 +31,6 @@ time2_demo contained this comment:
 
 #include <iostream>
 
-#undef min
-#undef max
-
 // miscellaneous tests and demos:
 
 #include <cassert>
@@ -105,7 +102,7 @@ void inspect_duration(boost::chrono::duration<Rep, Period> d, const std::string&
         boost::chrono::duration<double> dsec = d;
         std::cout << "The precision is " << dsec.count() << " seconds.\n";
     }
-    d = Duration(std::numeric_limits<Rep>::max());
+    d = Duration((std::numeric_limits<Rep>::max)());
     using namespace boost::chrono;
     using namespace std;
     typedef duration<double, boost::ratio_multiply<boost::ratio<24*3652425,10000>, hours::period>::type> Years;
