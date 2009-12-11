@@ -88,6 +88,13 @@ public:
 		m_prev->m_next = m_next;
 		m_prev = m_next = this;
 	}
+
+public:
+	dcl_list_node_base* BOOST_MEMORY_CALL next() { return m_next; }
+	const dcl_list_node_base* BOOST_MEMORY_CALL next() const { return m_next; }
+
+	dcl_list_node_base* BOOST_MEMORY_CALL prev() { return m_prev; }
+	const dcl_list_node_base* BOOST_MEMORY_CALL prev() const { return m_prev; }
 };
 
 template <class NodeT>
@@ -133,16 +140,23 @@ public:
 	dcl_list_iterator_(NodePtrT node) : m_node(node) {}
 
 	template <class RefT2, class NPtrT2>
-	dcl_list_iterator_(const dcl_list_iterator_<NodeT, RefT2, NPtrT2>& it) : m_node(it.inner_data__()) {}
+	dcl_list_iterator_(const dcl_list_iterator_<NodeT, RefT2, NPtrT2>& it)
+		: m_node(it.inner_data__()) {}
 
 	NodePtrT BOOST_MEMORY_CALL inner_data__() const { return m_node; }
-	ReferenceT BOOST_MEMORY_CALL operator*() const { return m_node->data(); }
 
-	bool BOOST_MEMORY_CALL operator==(const Myt_& it) const { return m_node == it.inner_data__(); }
-	bool BOOST_MEMORY_CALL operator!=(const Myt_& it) const { return m_node != it.inner_data__(); }
+	template <class RefT2, class NPtrT2>
+	bool BOOST_MEMORY_CALL operator==(const dcl_list_iterator_<NodeT, RefT2, NPtrT2>& it) const
+		{ return m_node == it.inner_data__(); }
 
-	Myt_& BOOST_MEMORY_CALL operator++() { m_node = m_node->next(); return *this; }
-	Myt_& BOOST_MEMORY_CALL operator--() { m_node = m_node->prev(); return *this; }
+	template <class RefT2, class NPtrT2>
+	bool BOOST_MEMORY_CALL operator!=(const dcl_list_iterator_<NodeT, RefT2, NPtrT2>& it) const
+		{ return m_node != it.inner_data__(); }
+
+	ReferenceT BOOST_MEMORY_CALL operator*() const { return *static_cast<NodeT*>(m_node); }
+
+	Myt_& BOOST_MEMORY_CALL operator++() { m_node = m_node->m_next; return *this; }
+	Myt_& BOOST_MEMORY_CALL operator--() { m_node = m_node->m_prev; return *this; }
 
 	Myt_ BOOST_MEMORY_CALL operator++(int)
 	{ 
