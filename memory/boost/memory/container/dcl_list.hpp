@@ -242,8 +242,8 @@ public:
 	}
 
 public:
-	NodeT* BOOST_MEMORY_CALL first() { return (NodeT*)m_next; }
-	const NodeT* BOOST_MEMORY_CALL first() const { return (const NodeT*)m_next; }
+	NodeT* BOOST_MEMORY_CALL first() { return static_cast<NodeT*>(m_next); }
+	const NodeT* BOOST_MEMORY_CALL first() const { return static_cast<const NodeT*>(m_next); }
 
 	bool BOOST_MEMORY_CALL done(const NodeT* node) const
 	{
@@ -257,8 +257,8 @@ public:
 	iterator BOOST_MEMORY_CALL begin() { return iterator(first()); }
 	const_iterator BOOST_MEMORY_CALL begin() const { return const_iterator(first()); }
 
-	iterator BOOST_MEMORY_CALL end() { return iterator((NodeT*)this); }
-	const_iterator BOOST_MEMORY_CALL end() const { return const_iterator((const NodeT*)this); }
+	iterator BOOST_MEMORY_CALL end() { return iterator(static_cast<NodeT*>(this)); }
+	const_iterator BOOST_MEMORY_CALL end() const { return const_iterator(static_cast<const NodeT*>(this)); }
 };
 
 // -------------------------------------------------------------------------
