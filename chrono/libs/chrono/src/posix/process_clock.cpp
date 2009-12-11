@@ -52,7 +52,7 @@ namespace boost
 
       tms tm;
       clock_t c = ::times( &tm );
-      if ( c == -1 ) // error
+      if ( c == clock_t(-1) ) // error
       {
         assert( 0 && "error handling not implemented yet" );
 

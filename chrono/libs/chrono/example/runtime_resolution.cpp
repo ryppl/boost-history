@@ -168,10 +168,11 @@ public:
     friend duration operator-(time_point x, time_point y) {return duration(x.rep_ - y.rep_);}
 };
 
+
 class clock
 {
 public:
-    typedef duration::rep rep;
+    typedef runtime_resolution::duration::rep rep;
     typedef runtime_resolution::duration duration;
     typedef runtime_resolution::time_point time_point;
 
