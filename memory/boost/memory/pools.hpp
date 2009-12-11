@@ -36,7 +36,7 @@ namespace detail {
 #pragma warning(disable:4035)
 #pragma warning(disable:4793)
 
-__forceinline unsigned int log2(IN unsigned int val) {
+__forceinline unsigned int log2(unsigned int val) {
 	BOOST_MEMORY_ASSERT(val != 0);
 	__asm {
 		bsr eax, val
@@ -49,7 +49,7 @@ __forceinline unsigned int log2(IN unsigned int val) {
 
 #elif defined(__GNUG__) || defined(__GNUC__) // g++/gcc
 
-__forceinline unsigned int log2(IN unsigned int val)
+__forceinline unsigned int log2(unsigned int val)
 {
 	BOOST_MEMORY_ASSERT(val != 0);
 	unsigned int result;
@@ -60,7 +60,7 @@ __forceinline unsigned int log2(IN unsigned int val)
 
 #else
 
-__forceinline unsigned int log2(IN unsigned int val)
+__forceinline unsigned int log2(unsigned int val)
 {
 	BOOST_MEMORY_ASSERT(val != 0);
 

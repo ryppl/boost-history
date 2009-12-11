@@ -10,6 +10,7 @@
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
 #include <boost/memory.hpp>
+#include <boost/memory/object_pool.hpp>
 
 // -------------------------------------------------------------------------
 
@@ -122,9 +123,9 @@ void testScopedPools()
 
 	void* p[22];
 	for (i = 0; i < countof(p); ++i)
-		p[i] = alloc.allocate(i * 7);
+		p[i] = alloc.get_pool(i * 7).allocate();
 	for (i = 3; i < countof(p) - 2; ++i)
-		alloc.deallocate(p[i], i * 7);
+		alloc.get_pool(i * 7).deallocate(p[i]);
 }
 
 int main()
