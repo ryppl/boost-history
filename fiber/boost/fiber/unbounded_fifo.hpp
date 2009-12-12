@@ -11,296 +11,178 @@
 
 #include <boost/config.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/condition.hpp>
-#include <boost/fiber/detail/atomic.hpp>
 #include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/mutex.hpp>
 #include <boost/fiber/scheduler.hpp>
-#include <boost/fiber/spin_condition.hpp>
-#include <boost/fiber/spin_mutex.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
 namespace fibers {
 
-template< typename T, typename M >
-class unbounded_fifo;
-
 template< typename T >
-class unbounded_fifo< T, spin_mutex > : private noncopyable
+class unbounded_fifo
 {
-
 public:
 	typedef optional< T >	value_type;
 
 private:
-	struct node
+	class impl : private noncopyable
 	{
-		typedef intrusive_ptr< node >	ptr_t;
+	private:
+		struct node
+		{
+			typedef intrusive_ptr< node >	ptr_t;
 
-		uint32_t	use_count;
-		value_type	va;
-		ptr_t		next;
+			uint32_t	use_count;
+			value_type	va;
+			ptr_t		next;
 
-		node() :
-			use_count( 0),
-			va(),
-			next()
+			node() :
+				use_count( 0),
+				va(),
+				next()
+			{}
+
+			inline friend void intrusive_ptr_add_ref( node * p)
+			{ ++p->use_count; }
+			
+			inline friend void intrusive_ptr_release( node * p)
+			{ if ( --p->use_count == 0) delete p; }
+		};
+
+		uint32_t		state_;
+		typename node::ptr_t	head_;
+		mutex					head_mtx_;
+		typename node::ptr_t	tail_;
+		mutex					tail_mtx_;
+		condition				not_empty_cond_;
+		uint32_t				use_count_;	
+
+		bool active_() const
+		{ return 0 == state_; }
+
+		void deactivate_()
+		{ ++state_; }
+
+		bool empty_()
+		{ return head_ == get_tail_(); }
+
+		typename node::ptr_t get_tail_()
+		{
+			mutex::scoped_lock lk( tail_mtx_);	
+			typename node::ptr_t tmp = tail_;
+			return tmp;
+		}
+
+		typename node::ptr_t pop_head_()
+		{
+			typename node::ptr_t old_head = head_;
+			head_ = old_head->next;
+			return old_head;
+		}
+
+	public:
+		template< typename Strategy >
+		impl( scheduler< Strategy > & sched) :
+			state_( 0),
+			head_( new node),
+			head_mtx_( sched),
+			tail_( head_),
+			tail_mtx_( sched),
+			not_empty_cond_( sched),
+			use_count_( 0)
 		{}
 
-		inline friend void intrusive_ptr_add_ref( node * p)
-		{ ++p->use_count; }
-		
-		inline friend void intrusive_ptr_release( node * p)
-		{ if ( --p->use_count == 0) delete p; }
-	};
+		void deactivate()
+		{ deactivate_(); }
 
-	volatile uint32_t		state_;
-	typename node::ptr_t	head_;
-	spin_mutex				head_mtx_;
-	typename node::ptr_t	tail_;
-	spin_mutex				tail_mtx_;
-	spin_condition			not_empty_cond_;
-	uint32_t				use_count_;	
-
-	bool active_() const
-	{ return 0 == state_; }
-
-	void deactivate_()
-	{ detail::atomic_fetch_add( & state_, 1); }
-
-	bool empty_()
-	{ return head_ == get_tail_(); }
-
-	typename node::ptr_t get_tail_()
-	{
-		spin_mutex::scoped_lock lk( tail_mtx_);	
-		typename node::ptr_t tmp = tail_;
-		return tmp;
-	}
-
-	typename node::ptr_t pop_head_()
-	{
-		typename node::ptr_t old_head = head_;
-		head_ = old_head->next;
-		return old_head;
-	}
-
-public:
-	unbounded_fifo() :
-		state_( 0),
-		head_( new node),
-		head_mtx_(),
-		tail_( head_),
-		tail_mtx_(),
-		not_empty_cond_(),
-		use_count_( 0)
-	{}
-
-	void deactivate()
-	{ deactivate_(); }
-
-	bool empty()
-	{
-		spin_mutex::scoped_lock lk( head_mtx_);
-		return empty_();
-	}
-
-	void put( T const& t)
-	{
-		typename node::ptr_t new_node( new node);
+		bool empty()
 		{
-			spin_mutex::scoped_lock lk( tail_mtx_);
-
-			tail_->va = t;
-			tail_->next = new_node;
-			tail_ = new_node;
+			mutex::scoped_lock lk( head_mtx_);
+			return empty_();
 		}
-		not_empty_cond_.notify_one();
-	}
 
-	bool take( value_type & va)
-	{
-		spin_mutex::scoped_lock lk( head_mtx_);
-		bool empty = empty_();
-		if ( ! active_() && empty)
-			return false;
-		if ( empty)
+		void put( T const& t)
 		{
-			try
+			typename node::ptr_t new_node( new node);
 			{
-				while ( active_() && empty_() )
-					not_empty_cond_.wait( lk);
+				mutex::scoped_lock lk( tail_mtx_);
+
+				tail_->va = t;
+				tail_->next = new_node;
+				tail_ = new_node;
 			}
-			catch ( fiber_interrupted const&)
-			{ return false; }
+			not_empty_cond_.notify_one();
 		}
-		if ( ! active_() && empty_() )
-			return false;
-		swap( va, head_->va);
-		pop_head_();
-		return va;
-	}
 
-	bool try_take( value_type & va)
-	{
-		spin_mutex::scoped_lock lk( head_mtx_);
-		if ( empty_() )
-			return false;
-		swap( va, head_->va);
-		pop_head_();
-		return va;
-	}
+		bool take( value_type & va)
+		{
+			mutex::scoped_lock lk( head_mtx_);
+			bool empty = empty_();
+			if ( ! active_() && empty)
+				return false;
+			if ( empty)
+			{
+				try
+				{
+					while ( active_() && empty_() )
+						not_empty_cond_.wait( lk);
+				}
+				catch ( fiber_interrupted const&)
+				{ return false; }
+			}
+			if ( ! active_() && empty_() )
+				return false;
+			swap( va, head_->va);
+			pop_head_();
+			return va;
+		}
 
-	template< typename R >
-    friend void intrusive_ptr_add_ref( unbounded_fifo< R, spin_mutex > * p)
-    { detail::atomic_fetch_add( & p->use_count_, 1); }
+		bool try_take( value_type & va)
+		{
+			mutex::scoped_lock lk( head_mtx_);
+			if ( empty_() )
+				return false;
+			swap( va, head_->va);
+			pop_head_();
+			return va;
+		}
 
-	template< typename R >
-    friend void intrusive_ptr_release( unbounded_fifo< R, spin_mutex > * p)
-    { if ( detail::atomic_fetch_sub( & p->use_count_, 1) == 1) delete p; }
-};
+		friend void intrusive_ptr_add_ref( impl * p)
+		{ ++( p->use_count_); }
 
-template< typename T >
-class unbounded_fifo< T, mutex > : private noncopyable
-{
-
-public:
-	typedef optional< T >	value_type;
-
-private:
-	struct node
-	{
-		typedef intrusive_ptr< node >	ptr_t;
-
-		uint32_t	use_count;
-		value_type	va;
-		ptr_t		next;
-
-		node() :
-			use_count( 0),
-			va(),
-			next()
-		{}
-
-		inline friend void intrusive_ptr_add_ref( node * p)
-		{ ++p->use_count; }
-		
-		inline friend void intrusive_ptr_release( node * p)
-		{ if ( --p->use_count == 0) delete p; }
+		friend void intrusive_ptr_release( impl * p)
+		{ if ( --( p->use_count_) == 1) delete p; }
 	};
 
-	volatile uint32_t		state_;
-	typename node::ptr_t	head_;
-	mutex					head_mtx_;
-	typename node::ptr_t	tail_;
-	mutex					tail_mtx_;
-	condition				not_empty_cond_;
-	uint32_t				use_count_;	
-
-	bool active_() const
-	{ return 0 == state_; }
-
-	void deactivate_()
-	{ detail::atomic_fetch_add( & state_, 1); }
-
-	bool empty_()
-	{ return head_ == get_tail_(); }
-
-	typename node::ptr_t get_tail_()
-	{
-		mutex::scoped_lock lk( tail_mtx_);	
-		typename node::ptr_t tmp = tail_;
-		return tmp;
-	}
-
-	typename node::ptr_t pop_head_()
-	{
-		typename node::ptr_t old_head = head_;
-		head_ = old_head->next;
-		return old_head;
-	}
+	intrusive_ptr< impl >	impl_;
 
 public:
 	template< typename Strategy >
 	unbounded_fifo( scheduler< Strategy > & sched) :
-		state_( 0),
-		head_( new node),
-		head_mtx_( sched),
-		tail_( head_),
-		tail_mtx_( sched),
-		not_empty_cond_( sched),
-		use_count_( 0)
+		impl_( new impl( sched) )
 	{}
 
 	void deactivate()
-	{ deactivate_(); }
+	{ impl_->deactivate(); }
 
 	bool empty()
-	{
-		mutex::scoped_lock lk( head_mtx_);
-		return empty_();
-	}
+	{ return impl_->empty(); }
 
 	void put( T const& t)
-	{
-		typename node::ptr_t new_node( new node);
-		{
-			mutex::scoped_lock lk( tail_mtx_);
-
-			tail_->va = t;
-			tail_->next = new_node;
-			tail_ = new_node;
-		}
-		not_empty_cond_.notify_one();
-	}
+	{ impl_->put( t); }
 
 	bool take( value_type & va)
-	{
-		mutex::scoped_lock lk( head_mtx_);
-		bool empty = empty_();
-		if ( ! active_() && empty)
-			return false;
-		if ( empty)
-		{
-			try
-			{
-				while ( active_() && empty_() )
-					not_empty_cond_.wait( lk);
-			}
-			catch ( fiber_interrupted const&)
-			{ return false; }
-		}
-		if ( ! active_() && empty_() )
-			return false;
-		swap( va, head_->va);
-		pop_head_();
-		return va;
-	}
+	{ return impl_->take( va); }
 
 	bool try_take( value_type & va)
-	{
-		mutex::scoped_lock lk( head_mtx_);
-		if ( empty_() )
-			return false;
-		swap( va, head_->va);
-		pop_head_();
-		return va;
-	}
-
-	template< typename R >
-    friend void intrusive_ptr_add_ref( unbounded_fifo< R, mutex > * p)
-    { detail::atomic_fetch_add( & p->use_count_, 1); }
-
-	template< typename R >
-    friend void intrusive_ptr_release( unbounded_fifo< R, mutex > * p)
-    { if ( detail::atomic_fetch_sub( & p->use_count_, 1) == 1) delete p; }
+	{ return impl_->try_take( va); }
 };
 
 }}
