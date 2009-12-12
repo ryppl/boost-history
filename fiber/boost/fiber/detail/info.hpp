@@ -11,11 +11,11 @@
 
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
+#include <boost/thread/detail/move.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/detail/info_base.hpp>
-#include <boost/fiber/detail/move.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -59,7 +59,7 @@ public:
 		fn_( fn)
 	{}
 
-	info( boost::detail::fiber_move_t< Fn > fn, std::size_t stack_size) :
+	info( boost::detail::thread_move_t< Fn > fn, std::size_t stack_size) :
 		info_base( stack_size),
 		fn_( fn)
 	{}
