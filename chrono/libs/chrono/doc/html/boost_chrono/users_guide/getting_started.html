@@ -38,13 +38,13 @@
         Installing Chrono">
         Installing Chrono</a>
 </h4></div></div></div>
-<a name="boost_chrono.users_guide.getting_started.install.getting___boost_emphasis_role__underline__chrono__emphasis__"></a><h5>
-<a name="id4816069"></a>
-          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.getting___boost_emphasis_role__underline__chrono__emphasis__">Getting
-          __Boost<span class="underline">Chrono</span>_</a>
+<a name="boost_chrono.users_guide.getting_started.install.getting__emphasis_role__bold__boost_chrono__emphasis__"></a><h5>
+<a name="id4816056"></a>
+          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.getting__emphasis_role__bold__boost_chrono__emphasis__">Getting
+          <span class="bold"><strong>Boost.Chrono</strong></span> </a>
         </h5>
 <p>
-          You can get the last stable release of __Boost<span class="underline">Chrono</span>_
+          You can get the last stable release of <span class="bold"><strong>Boost.Chrono</strong></span>
           by downloading <code class="literal">chrono.zip</code> from the <a href="http://www.boost-consulting.com/vault/index.php?directory=System" target="_top">Boost
           Vault</a>
         </p>
@@ -52,19 +52,35 @@
           You can also access the latest (unstable?) state from the <a href="https://svn.boost.org/svn/boost/sandbox/chrono" target="_top">Boost
           Sandbox</a>.
         </p>
-<a name="boost_chrono.users_guide.getting_started.install.building___boost_emphasis_role__underline__chrono__emphasis__"></a><h5>
-<a name="id4816129"></a>
-          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.building___boost_emphasis_role__underline__chrono__emphasis__">Building
-          __Boost<span class="underline">Chrono</span>_</a>
+<a name="boost_chrono.users_guide.getting_started.install.where_to_install__emphasis_role__bold__boost_chrono__emphasis___"></a><h5>
+<a name="id4816117"></a>
+          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.where_to_install__emphasis_role__bold__boost_chrono__emphasis___">Where
+          to install <span class="bold"><strong>Boost.Chrono</strong></span>? </a>
         </h5>
 <p>
-          __Boost<span class="underline">Chrono</span>_ is not a header only
-          library. You need to compile it before use.
+          The simple way is to decompress (or checkout from SVN) the file in your
+          BOOST_ROOT directory.
+        </p>
+<p>
+          Othesewise, if you decompress in another directory, you will need to comment
+          some lines, and uncomment and change others in the build/Jamfile and test/Jamfile.
+          Sorry for this, but I have not reached yet to write a Jamfile that is able
+          to work in both environements and use the BOOST_ROOT variable. Any help
+          is welcome.
+        </p>
+<a name="boost_chrono.users_guide.getting_started.install.building__emphasis_role__bold__boost_chrono__emphasis__"></a><h5>
+<a name="id4816159"></a>
+          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.building__emphasis_role__bold__boost_chrono__emphasis__">Building
+          <span class="bold"><strong>Boost.Chrono</strong></span> </a>
+        </h5>
+<p>
+          <span class="bold"><strong>Boost.Chrono</strong></span> is not a header only library.
+          You need to compile it before use.
         </p>
 <pre class="programlisting"><span class="identifier">bjam</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">build</span>
 </pre>
 <a name="boost_chrono.users_guide.getting_started.install.requirements"></a><h5>
-<a name="id4816195"></a>
+<a name="id4816227"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.requirements">Requirements</a>
         </h5>
 <p>
@@ -73,8 +89,7 @@
           version in SVN trunk (even if older version should works also).
         </p>
 <p>
-          In particular, __Boost<span class="underline">Chrono</span>_ depends
-          on:
+          In particular, <span class="bold"><strong>Boost.Chrono</strong></span> depends on:
         </p>
 <div class="variablelist">
 <p class="title"><b></b></p>
@@ -87,13 +102,17 @@
 <dd><p>
               for throw_exception, ...
             </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/integer" target="_top"><span class="bold"><strong>Boost.Integer</strong></span></a></span></dt>
+<dd><p>
+              for cstdint conformance, ...
+            </p></dd>
 <dt><span class="term"><a href="http://www.boost.org/libs/system" target="_top"><span class="bold"><strong>Boost.System</strong></span></a></span></dt>
 <dd><p>
               for error_code, ...
             </p></dd>
 <dt><span class="term"><a href="http://www.boost.org/libs/type_traits" target="_top"><span class="bold"><strong>Boost.TypeTraits</strong></span></a></span></dt>
 <dd><p>
-              for ..., ...
+              for is_base, ...
             </p></dd>
 <dt><span class="term"><a href="http://www.boost.org/libs/typeof" target="_top"><span class="bold"><strong>Boost.Typeof</strong></span></a></span></dt>
 <dd><p>
@@ -105,66 +124,74 @@
             </p></dd>
 </dl>
 </div>
-<a name="boost_chrono.users_guide.getting_started.install.exceptions_safety"></a><h5>
-<a name="id4816358"></a>
-          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.exceptions_safety">Exceptions
-          safety</a>
+<a name="boost_chrono.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_chrono__emphasis__"></a><h5>
+<a name="id4816408"></a>
+          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_chrono__emphasis__">Building
+          an executable that uses <span class="bold"><strong>Boost.Chrono</strong></span>
+          </a>
+        </h5>
+<p>
+          In addition to link with the Boost Chrono library you need also to link
+          with the Boost System library.
+        </p>
+<a name="boost_chrono.users_guide.getting_started.install.exceptions_safety_"></a><h5>
+<a name="id4816444"></a>
+          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.exceptions_safety_">Exceptions
+          safety </a>
         </h5>
 <p>
           All functions in the library are exception-neutral and provide strong guarantee
           of exception safety as long as the underlying parameters provide it.
         </p>
-<a name="boost_chrono.users_guide.getting_started.install.thread_safety"></a><h5>
-<a name="id4816384"></a>
-          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.thread_safety">Thread
-          safety</a>
+<a name="boost_chrono.users_guide.getting_started.install.thread_safety_"></a><h5>
+<a name="id4816471"></a>
+          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.thread_safety_">Thread
+          safety </a>
         </h5>
 <p>
           All functions in the library are thread-unsafe except when noted explicitly.
         </p>
-<a name="boost_chrono.users_guide.getting_started.install.tested_compilers"></a><h5>
-<a name="id4816408"></a>
-          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.tested_compilers">Tested
-          compilers</a>
+<a name="boost_chrono.users_guide.getting_started.install.tested_compilers_"></a><h5>
+<a name="id4816495"></a>
+          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.tested_compilers_">Tested
+          compilers </a>
         </h5>
 <p>
           The implementation will eventually work with most C++03 conforming compilers.
           Initial tests have been run on
         </p>
 <p>
-          Windows with
-        </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            VC++ 9.0 SP1
-          </li>
-<li>
-            Intel 11.0
-          </li>
-</ul></div>
-<p>
-          On Ubuntu Linux with
+          On Windows with
         </p>
 <div class="itemizedlist"><ul type="disc"><li>
-            GCC 4.2.4
+            VC++ 9.0 SP1
           </li></ul></div>
-<p>
-          On SL Linux with
-        </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            GCC 3.4.6
-          </li>
-<li>
-            GCC 4.1.2
-          </li>
-</ul></div>
 <p>
           On Cygwin with
         </p>
-<div class="itemizedlist"><ul type="disc"><li>
+<div class="itemizedlist"><ul type="disc">
+<li>
             GCC 3.4.4
+          </li>
+<li>
+            GCC 4.3.2
+          </li>
+</ul></div>
+<p>
+          On MinGW with
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            GCC 4.4.0
           </li></ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Please let me know how this works on other platforms.
+          </p></td></tr>
+</table></div>
 <div class="note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/html/images/note.png"></td>

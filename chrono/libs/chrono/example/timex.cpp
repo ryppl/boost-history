@@ -7,7 +7,7 @@
 
 //  See http://www.boost.org/libs/system for documentation.
 
-#include <boost/system/timer.hpp>
+#include <boost/chrono/process_times.hpp>
 #include <cstdlib>
 #include <string>
 #include <iostream>
@@ -41,7 +41,7 @@ int main( int argc, char * argv[] )
   if ( verbose )
     { std::cout << "command: \"" << s.c_str() << "\"\n"; }
 
-  boost::system::run_timer t;
+  boost::chrono::run_timer t;
 
   return std::system( s.c_str() );
 }

@@ -36,43 +36,14 @@ time2_demo contained this comment:
 #include <stdexcept>
 #include <climits>
 
-#if defined(BOOST_CHRONO_WINDOWS_API)
-#include <windows.h>  
-
-namespace
-{
-  //struct timeval {
-  //        long    tv_sec;         /* seconds */
-  //        long    tv_usec;        /* and microseconds */
-  //};
-
-  int gettimeofday(struct timeval * tp, void *)
-  {
-    FILETIME ft;
-    ::GetSystemTimeAsFileTime( &ft );  // never fails
-    long long t = (static_cast<long long>(ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
-  # if !defined( BOOST_MSVC ) || BOOST_MSVC > 1300 // > VC++ 7.0
-    t -= 116444736000000000LL;
-  # else
-    t -= 116444736000000000;
-  # endif
-    t /= 10;  // microseconds
-    tp->tv_sec = static_cast<long>( t / 1000000UL);
-    tp->tv_usec = static_cast<long>( t % 1000000UL);
-    return 0;
-  }
-}  // unnamed namespace
-
-#endif
-
-
 //////////////////////////////////////////////////////////
 ///////////// simulated thread interface /////////////////
 //////////////////////////////////////////////////////////
 
-namespace std {
+namespace boost {
 
-void __print_time(boost::chrono::system_clock::time_point t)
+namespace detail {
+void print_time(boost::chrono::system_clock::time_point t)
 {
     using namespace boost::chrono;
     time_t c_time = system_clock::to_time_t(t);
@@ -81,7 +52,7 @@ void __print_time(boost::chrono::system_clock::time_point t)
     std::cout << tmptr->tm_hour << ':' << tmptr->tm_min << ':' << tmptr->tm_sec
               << '.' << (d - duration_cast<seconds>(d)).count();
 }
-
+}
 namespace this_thread {
 
 template <class Rep, class Period>
@@ -110,7 +81,7 @@ void sleep_until(const boost::chrono::time_point<Clock, Duration>& t)
             ++us;
         SysTime st = system_clock::now() + us;
         std::cout << "sleep_until    ";
-        __print_time(st);
+        boost::detail::print_time(st);
         std::cout << " which is " << (st - system_clock::now()).count() << " microseconds away\n";
     }
 }
@@ -147,7 +118,7 @@ struct timed_mutex
         microseconds us = duration_cast<microseconds>(d);
         SysTime st = system_clock::now() + us;
         std::cout << "try_lock_until ";
-        __print_time(st);
+        boost::detail::print_time(st);
         std::cout << " which is " << (st - system_clock::now()).count()
           << " microseconds away\n";
         return true;
@@ -178,27 +149,27 @@ struct condition_variable
         microseconds us = duration_cast<microseconds>(d);
         SysTime st = system_clock::now() + us;
          std::cout << "wait_until     ";
-        __print_time(st);
+        boost::detail::print_time(st);
         std::cout << " which is " << (st - system_clock::now()).count()
           << " microseconds away\n";
         return true;
     }
 };
 
-} // namespace std
+}
 
 //////////////////////////////////////////////////////////
 //////////// Simple sleep and wait examples //////////////
 //////////////////////////////////////////////////////////
 
-std::mutex m;
-std::timed_mutex mut;
-std::condition_variable cv;
+boost::mutex m;
+boost::timed_mutex mut;
+boost::condition_variable cv;
 
 void basic_examples()
 {
     std::cout << "Running basic examples\n";
-    using namespace std;
+    using namespace boost;
     using namespace boost::chrono;
     system_clock::time_point time_limit = system_clock::now() + seconds(4) + milliseconds(500);
     this_thread::sleep_for(seconds(3));

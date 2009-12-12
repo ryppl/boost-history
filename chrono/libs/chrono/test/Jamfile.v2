@@ -79,6 +79,10 @@ project
         :
         [ run ../example/run_timer_example.cpp :  :  : <link>static ]
         [ run ../example/run_timer_example.cpp :  :  : <library>/boost/system//boost_system  : run_timer_example_dll ]
+        [ run ../example/run_timer_example2.cpp :  :  : <link>static ]
+        [ run ../example/run_timer_example2.cpp :  :  : <library>/boost/system//boost_system  : run_timer_example2_dll ]
+        [ link ../example/timex.cpp :  <link>static ]
+        [ link ../example/timex.cpp :  <library>/boost/system//boost_system  : timex_dll ]
         [ run run_timer_test.cpp  :  :  : <link>static ]
         [ run run_timer_test.cpp :  :  : <library>/boost/system//boost_system  : run_timer_test_dll ]
         ;

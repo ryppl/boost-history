@@ -43,7 +43,7 @@ namespace User1
 //  and taking advantage of the std::ratio infrastructure and design philosophy.
 
 // length - mimics std::chrono::duration except restricts representation to double.
-//    Uses std::ratio facilities for length units conversions.
+//    Uses boost::ratio facilities for length units conversions.
 
 template <class Ratio>
 class length
@@ -153,9 +153,6 @@ typedef quantity<boost::ratio<0>, boost::ratio<1> >  Distance;     // meter
 typedef quantity<boost::ratio<-1>, boost::ratio<1> > Speed;        // meter/second
 typedef quantity<boost::ratio<-2>, boost::ratio<1> > Acceleration; // meter/second^2
 
-    typedef User1::quantity<boost::ratio_subtract<boost::ratio<0>, boost::ratio<1> >::type, 
-                             boost::ratio_subtract<boost::ratio<1>, boost::ratio<0> >::type > RR;
-
 template <class R1, class R2, class R3, class R4>
 quantity<typename boost::ratio_subtract<R1, R3>::type, typename boost::ratio_subtract<R2, R4>::type>
 operator/(const quantity<R1, R2>& x, const quantity<R3, R4>& y)
@@ -230,7 +227,7 @@ int main()
     
     //typedef User1::quantity<boost::ratio_subtract<User1::Distance::time_dim, User1::Time::time_dim >::type, 
     //                        boost::ratio_subtract<User1::Distance::distance_dim, User1::Time::distance_dim >::type > R;
-    User1::RR r=d / t;
+    RR r=d / t;
     //r.set(d.get() / t.get());
     
     User1::Speed rc= r;

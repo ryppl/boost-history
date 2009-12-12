@@ -85,12 +85,12 @@ This documentation makes use of the following naming and formatting conventions.
 
 Finally, you can mentally add the following to any code fragments in this document:
 
-    // Include all of Chono files
-    #include <boost/chono.hpp>
+    // Include all of Chrono files
+    #include <boost/chrono.hpp>
     #include <boost/ratio.hpp>
     #include <boost/type_traits/common_type.hpp>
-    #include <boost/chono/timer.hpp>
-    #include <boost/chono/process_times.hpp>
+    #include <boost/chrono/timer.hpp>
+    #include <boost/chrono/process_times.hpp>
 
 [/=================]
 [section Motivation]
@@ -439,23 +439,25 @@ You can get the last stable release of __Boost_Chrono__ by downloading [^chrono.
 
 You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox].
 
+[/==========================================]
+[heading Where to install __Boost_Chrono__? ]
+[/==========================================]
+
+The simple way is to decompress (or checkout from SVN) the file in your BOOST_ROOT directory.
+
+Othesewise, if you decompress in another directory, you will need to comment some lines, and uncomment and change others in the build/Jamfile and test/Jamfile. Sorry for this, but I have not reached yet to write a Jamfile that is able to work in both environements and use the BOOST_ROOT variable. Any help is welcome.
+
 [/=================================]
 [heading Building __Boost_Chrono__ ]
 [/=================================]
 
 __Boost_Chrono__ is not a header only library. You need to compile it before use.
 
-The simple way is to decompress the compressed file in the Boost release directory you want to test.
-
     bjam libs/chrono/build
 
-If you decompress in another directory, you will need to comment some lines, and uncomment and change others. Sorry for this, but I have not rached yet to write a Jamfile that is able to work in both environements and use the BOOST_ROOT variable. Any help is welcome.
-
-
-
-[/=========================]
+[/===================]
 [heading Requirements]
-[/=========================]
+[/===================]
 
 [*Boost.Bitfield] depends on some Boost libraries. For these specific parts you must use either Boost version 1.39.0 or the version in SVN trunk (even if older version should works also).
 
@@ -469,10 +471,13 @@ In particular, __Boost_Chrono__ depends on:
     [[@http://www.boost.org/libs/exception [*Boost.Exception]]] [for throw_exception, ...]
 ]
 [
+    [[@http://www.boost.org/libs/integer [*Boost.Integer]]] [for cstdint conformance, ...]
+]
+[
     [[@http://www.boost.org/libs/system [*Boost.System]]] [for error_code, ...]
 ]
 [
-    [[@http://www.boost.org/libs/type_traits [*Boost.TypeTraits]]] [for ..., ...]
+    [[@http://www.boost.org/libs/type_traits [*Boost.TypeTraits]]] [for is_base, ...]
 ]
 [
     [[@http://www.boost.org/libs/typeof [*Boost.Typeof]]] [for typeof, ...]
@@ -482,21 +487,27 @@ In particular, __Boost_Chrono__ depends on:
 ]
 ]
 
-[/========================]
-[heading Exceptions safety]
-[/========================]
+[/=========================================================]
+[heading Building an executable that uses __Boost_Chrono__ ]
+[/=========================================================]
+
+In addition to link with the Boost Chrono library you need also to link with the Boost System library.
+
+[/=========================]
+[heading Exceptions safety ]
+[/=========================]
 
 All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as the underlying parameters provide it.
 
-[/====================]
-[heading Thread safety]
-[/====================]
+[/=====================]
+[heading Thread safety ]
+[/=====================]
 
 All functions in the library are thread-unsafe except when noted explicitly.
 
-[/=======================]
-[heading Tested compilers]
-[/=======================]
+[/========================]
+[heading Tested compilers ]
+[/========================]
 
 The implementation will eventually work with most C++03 conforming compilers. Initial tests have been run on
 
@@ -530,9 +541,9 @@ On MinGW with
 [note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
 
 [endsect]
-[/=============================]
+[/====================]
 [section Hello World! ]
-[/=============================]
+[/====================]
 
 If all you want to do is to time a program's execution:
 
@@ -573,7 +584,9 @@ In other words, the program took 0.832 real-time (i.e. wall clock) seconds to ex
 
 [endsect]
 
+[/================================]
 [section:ext_references References]
+[/================================]
 
 [variablelist
 
@@ -604,12 +617,14 @@ In other words, the program took 0.832 real-time (i.e. wall clock) seconds to ex
 
 [endsect]
 
-[section Reference]
+[/=================]
+[section:reference Reference ]
+[/=================]
 
 
-[/==========================================================================================]
+[/===================================================================]
 [section:common_type_hpp Header `<boost/type_traits/common_type.hpp>`]
-[/==========================================================================================]
+[/===================================================================]
 
     namespace boost {
       template <class ...T>  struct common_type;
@@ -651,9 +666,9 @@ All types in the parameter pack T shall be complete. This trait is permitted to 
 [endsect]
 
 
-[/==========================================================================================]
+[/===========================================]
 [section:ratio_hpp Header `<boost/ratio.hpp>`]
-[/==========================================================================================]
+[/===========================================]
 
 `ratio` is a facility which is useful in specifying compile time rational constants. Compile time rational arithmetic is supported with protection against overflow and divide by zero. Such a facility is very handy when needing to efficiently represent  1/3 of a nanosecond, or specifying an inch in terms of meters (for example 254/10000 meters - which `ratio` will reduce to 127/5000 meters).
 
@@ -852,9 +867,9 @@ Four of the typedefs in the recomendation which can be conditionally supported a
 [endsect]
 
 
-[/==========================================================================================]
+[/=============================================]
 [section:chrono_hpp Header `<boost/chrono.hpp>`]
-[/==========================================================================================]
+[/=============================================]
 
     namespace boost {
     namespace chrono {
@@ -1757,9 +1772,9 @@ time_t to_time_t(const time_point& t);
 
 [endsect]
 
-[/==========================================================================================]
+[/==================================================]
 [section:timer_hpp Header `<boost/chrono/timer.hpp>`]
-[/==========================================================================================]
+[/==================================================]
 
     namespace boost { namespace chrono  {
 
@@ -1789,9 +1804,9 @@ time_t to_time_t(const time_point& t);
 
 [endsect]
 
-[/==========================================================================================]
+[/==================================================================]
 [section:process_times_hpp Header `<boost/chrono/process_times.hpp>`]
-[/==========================================================================================]
+[/==================================================================]
 
     namespace boost { namespace chrono {
 
@@ -1874,25 +1889,301 @@ time_t to_time_t(const time_point& t);
 
 [endsect]
 
-[section Examples]
 
+[/===============]
+[section Examples]
+[/===============]
+
+[/===============]
 [section SI-units]
+[/===============]
 
 Type-safe "physics" code interoperating with std::chrono::duration types and taking advantage of the std::ratio infrastructure and design philosophy.
+
+length - mimics std::chrono::duration except restricts representation to double.
+Uses boost::ratio facilities for length units conversions.
+
+    template <class Ratio>
+    class length {
+    private:
+        double len_;
+    public:
+        typedef Ratio ratio;
+        length() : len_(1) {}
+        length(const double& len) : len_(len) {}
+
+        template <class R>
+        length(const length<R>& d)
+                : len_(d.count() * boost::ratio_divide<Ratio, R>::type::den /
+                                   boost::ratio_divide<Ratio, R>::type::num) {}
+
+        double count() const {return len_;}
+
+        length& operator+=(const length& d) {len_ += d.count(); return *this;}
+        length& operator-=(const length& d) {len_ -= d.count(); return *this;}
+
+        length operator+() const {return *this;}
+        length operator-() const {return length(-len_);}
+
+        length& operator*=(double rhs) {len_ *= rhs; return *this;}
+        length& operator/=(double rhs) {len_ /= rhs; return *this;}
+    };
+
+
+Sparse sampling of length units
+
+    typedef length<boost::ratio<1> >          meter;        // set meter as "unity"
+    typedef length<boost::centi>              centimeter;   // 1/100 meter
+    typedef length<boost::kilo>               kilometer;    // 1000  meters
+    typedef length<boost::ratio<254, 10000> > inch;         // 254/10000 meters
+
+length takes ratio instead of two integral types so that definitions can be made like so:
+
+    typedef length<boost::ratio_multiply<boost::ratio<12>, inch::ratio>::type>   foot;  // 12 inchs
+    typedef length<boost::ratio_multiply<boost::ratio<5280>, foot::ratio>::type> mile;  // 5280 feet
+
+Need a floating point definition of seconds
+
+    typedef boost::chrono::duration<double> seconds;                         // unity
+    
+Demo of (scientific) support for sub-nanosecond resolutions
+
+    typedef boost::chrono::duration<double,  boost::pico> picosecond;  // 10^-12 seconds
+    typedef boost::chrono::duration<double, boost::femto> femtosecond; // 10^-15 seconds
+    typedef boost::chrono::duration<double,  boost::atto> attosecond;  // 10^-18 seconds
+
+A very brief proof-of-concept for SIUnits-like library. Hard-wired to floating point seconds and meters, but accepts other units.
+
+    template <class R1, class R2>
+    class quantity
+    {
+        double q_;
+    public:
+        typedef R1 time_dim;
+        typedef R2 distance_dim;
+        quantity() : q_(1) {}
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+    template <>
+    class quantity<boost::ratio<1>, boost::ratio<0> >
+    {
+        double q_;
+    public:
+        quantity() : q_(1) {}
+        quantity(seconds d) : q_(d.count()) {}  // note:  only User1::seconds needed here
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+    template <>
+    class quantity<boost::ratio<0>, boost::ratio<1> >
+    {
+        double q_;
+    public:
+        quantity() : q_(1) {}
+        quantity(meter d) : q_(d.count()) {}  // note:  only User1::meter needed here
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+    template <>
+    class quantity<boost::ratio<0>, boost::ratio<0> >
+    {
+        double q_;
+    public:
+        quantity() : q_(1) {}
+        quantity(double d) : q_(d) {}
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+Example of SI-Units
+
+    typedef quantity<boost::ratio<0>, boost::ratio<0> >  Scalar;
+    typedef quantity<boost::ratio<1>, boost::ratio<0> >  Time;         // second
+    typedef quantity<boost::ratio<0>, boost::ratio<1> >  Distance;     // meter
+    typedef quantity<boost::ratio<-1>, boost::ratio<1> > Speed;        // meter/second
+    typedef quantity<boost::ratio<-2>, boost::ratio<1> > Acceleration; // meter/second^2
+
+Quantity arithmetics
+
+    template <class R1, class R2, class R3, class R4>
+    quantity<typename boost::ratio_subtract<R1, R3>::type, typename boost::ratio_subtract<R2, R4>::type>
+    operator/(const quantity<R1, R2>& x, const quantity<R3, R4>& y)
+    {
+        typedef quantity<typename boost::ratio_subtract<R1, R3>::type, 
+                        typename boost::ratio_subtract<R2, R4>::type> R;
+        R r;
+        r.set(x.get() / y.get());
+        return r;
+    }
+
+    template <class R1, class R2, class R3, class R4>
+    quantity<typename boost::ratio_add<R1, R3>::type, typename boost::ratio_add<R2, R4>::type>
+    operator*(const quantity<R1, R2>& x, const quantity<R3, R4>& y)
+    {
+        typedef quantity<typename boost::ratio_add<R1, R3>::type, 
+                        typename boost::ratio_add<R2, R4>::type> R;
+        R r;
+        r.set(x.get() * y.get());
+        return r;
+    }
+
+    template <class R1, class R2>
+    quantity<R1, R2>
+    operator+(const quantity<R1, R2>& x, const quantity<R1, R2>& y)
+    {
+        typedef quantity<R1, R2> R;
+        R r;
+        r.set(x.get() + y.get());
+        return r;
+    }
+
+    template <class R1, class R2>
+    quantity<R1, R2>
+    operator-(const quantity<R1, R2>& x, const quantity<R1, R2>& y)
+    {
+        typedef quantity<R1, R2> R;
+        R r;
+        r.set(x.get() - y.get());
+        return r;
+    }
+
+Example type-safe physics function
+
+    Distance
+    compute_distance(Speed v0, Time t, Acceleration a)
+    {
+        return v0 * t + Scalar(.5) * a * t * t;  // if a units mistake is made here it won't compile
+    }
+
+
+Exercise example type-safe physics function and show interoperation
+of custom time durations (User1::seconds) and standard time durations (std::hours).
+Though input can be arbitrary (but type-safe) units, output is always in SI-units
+(a limitation of the simplified Units lib demoed here).
+
+    int main()
+    {
+        typedef boost::ratio<8, BOOST_INTMAX_C(0x7FFFFFFFD)> R1;
+        typedef boost::ratio<3, BOOST_INTMAX_C(0x7FFFFFFFD)> R2;
+        typedef User1::quantity<boost::ratio_subtract<boost::ratio<0>, boost::ratio<1> >::type, 
+                                 boost::ratio_subtract<boost::ratio<1>, boost::ratio<0> >::type > RR;
+        typedef boost::ratio_subtract<R1, R2>::type RS;
+        std::cout << RS::num << '/' << RS::den << '\n';
+        
+        
+        std::cout << "*************\n";
+        std::cout << "* testUser1 *\n";
+        std::cout << "*************\n";
+        User1::Distance d( User1::mile(110) );
+        User1::Time t( boost::chrono::hours(2) );
+        
+        RR r=d / t;
+        //r.set(d.get() / t.get());
+        
+        User1::Speed rc= r;
+        
+        User1::Speed s = d / t;
+        std::cout << "Speed = " << s.get() << " meters/sec\n";
+        User1::Acceleration a = User1::Distance( User1::foot(32.2) ) / User1::Time() / User1::Time();
+        std::cout << "Acceleration = " << a.get() << " meters/sec^2\n";
+        User1::Distance df = compute_distance(s, User1::Time( User1::seconds(0.5) ), a);
+        std::cout << "Distance = " << df.get() << " meters\n";
+        std::cout << "There are " << User1::mile::ratio::den << '/' << User1::mile::ratio::num << " miles/meter";
+        User1::meter mt = 1;
+        User1::mile mi = mt;
+        std::cout << " which is approximately " << mi.count() << '\n';
+        std::cout << "There are " << User1::mile::ratio::num << '/' << User1::mile::ratio::den << " meters/mile";
+        mi = 1;
+        mt = mi;
+        std::cout << " which is approximately " << mt.count() << '\n';
+        User1::attosecond as(1);
+        User1::seconds sec = as;
+        std::cout << "1 attosecond is " << sec.count() << " seconds\n";
+        std::cout << "sec = as;  // compiles\n";
+        sec = User1::seconds(1);
+        as = sec;
+        std::cout << "1 second is " << as.count() << " attoseconds\n";
+        std::cout << "as = sec;  // compiles\n";
+        std::cout << "\n";
+      return 0;
+    }
 
 [/ratio_test_cpp]
 
 [endsect]
 
-
+[/===============]
 [section How you override the duration's default constructor]
 
-How you override the duration's default constructor to do anything you want (in this case zero)
+Next follows how you override the duration's default constructor to do anything you want (in this case zero). All we need to do is to change the representation
 
-[/i_dont_like_the_default_duration_behavior_cpp]
+    namespace I_dont_like_the_default_duration_behavior {
+    
+    template <class R>
+    class zero_default
+    {
+    public:
+        typedef R rep;
+
+    private:
+        rep rep_;
+    public:
+        zero_default(rep i = 0) : rep_(i) {}
+        operator rep() const {return rep_;}
+
+        zero_default& operator+=(zero_default x) {rep_ += x.rep_; return *this;}
+        zero_default& operator-=(zero_default x) {rep_ -= x.rep_; return *this;}
+        zero_default& operator*=(zero_default x) {rep_ *= x.rep_; return *this;}
+        zero_default& operator/=(zero_default x) {rep_ /= x.rep_; return *this;}
+
+        zero_default  operator+ () const {return *this;}
+        zero_default  operator- () const {return zero_default(-rep_);}
+        zero_default& operator++()       {++rep_; return *this;}
+        zero_default  operator++(int)    {return zero_default(rep_++);}
+        zero_default& operator--()       {--rep_; return *this;}
+        zero_default  operator--(int)    {return zero_default(rep_--);}
+
+        friend zero_default operator+(zero_default x, zero_default y) {return x += y;}
+        friend zero_default operator-(zero_default x, zero_default y) {return x -= y;}
+        friend zero_default operator*(zero_default x, zero_default y) {return x *= y;}
+        friend zero_default operator/(zero_default x, zero_default y) {return x /= y;}
+
+        friend bool operator==(zero_default x, zero_default y) {return x.rep_ == y.rep_;}
+        friend bool operator!=(zero_default x, zero_default y) {return !(x == y);}
+        friend bool operator< (zero_default x, zero_default y) {return x.rep_ < y.rep_;}
+        friend bool operator<=(zero_default x, zero_default y) {return !(y < x);}
+        friend bool operator> (zero_default x, zero_default y) {return y < x;}
+        friend bool operator>=(zero_default x, zero_default y) {return !(x < y);}
+    };
+
+    typedef boost::chrono::duration<zero_default<long long>, boost::nano        > nanoseconds;
+    typedef boost::chrono::duration<zero_default<long long>, boost::micro       > microseconds;
+    typedef boost::chrono::duration<zero_default<long long>, boost::milli       > milliseconds;
+    typedef boost::chrono::duration<zero_default<long long>                      > seconds;
+    typedef boost::chrono::duration<zero_default<long long>, boost::ratio<60>   > minutes;
+    typedef boost::chrono::duration<zero_default<long long>, boost::ratio<3600> > hours;
+    }
+
+Usage
+
+    using namespace I_dont_like_the_default_duration_behavior;
+    
+    milliseconds ms;
+    std::cout << ms.count() << '\n';
+
+['See the file i_dont_like_the_default_duration_behavior.cpp]
 
 [endsect]
 
+[/==================]
 [section min utility]
 
 Returns the earliest time_point.
@@ -1919,56 +2210,571 @@ Being able to *easily* write this function is a major feature!
 
 [endsect]
 
+[/==================]
 [section Cycle count]
 
-How you override the duration's default constructor to do anything you want (in this case zero)
+    #include <boost/chrono/chrono.hpp>
+    #include <boost/type_traits.hpp>
 
-[/cycle_count_cpp]
+    #include <iostream>
+
+    using namespace boost::chrono;
+
+
+    template <long long speed>
+    struct cycle_count
+    {
+        typedef typename boost::ratio_multiply<boost::ratio<speed>, boost::mega>::type frequency;  // Mhz
+        typedef typename boost::ratio_divide<boost::ratio<1>, frequency>::type period;
+        typedef long long rep;
+        typedef boost::chrono::duration<rep, period> duration;
+        typedef boost::chrono::time_point<cycle_count> time_point;
+
+        static time_point now()
+        {
+            static long long tick = 0;
+            // return exact cycle count
+            return time_point(duration(++tick));  // fake access to clock cycle count
+        }
+    };
+
+    template <long long speed>
+    struct approx_cycle_count
+    {
+        static const long long frequency = speed * 1000000;  // MHz
+        typedef nanoseconds duration;
+        typedef duration::rep rep;
+        typedef duration::period period;
+        static const long long nanosec_per_sec = period::den;
+        typedef boost::chrono::time_point<approx_cycle_count> time_point;
+
+        static time_point now()
+        {
+            static long long tick = 0;
+            // return cycle count as an approximate number of nanoseconds
+            // compute as if nanoseconds is only duration in the std::lib
+            return time_point(duration(++tick * nanosec_per_sec / frequency));
+        }
+    };
+
+
+['See the file libs/chrono/example/cycle_count.cpp]
 
 [endsect]
 
+[/==================]
+[section xtime conversions]
+
+Example round_up utility:  converts d to To, rounding up for inexact conversions
+Being able to *easily* write this function is a major feature!
+
+    #include <boost/chrono/chrono.hpp>
+    #include <boost/type_traits.hpp>
+
+    #include <iostream>
+
+    using namespace boost::chrono;
+
+    template <class To, class Rep, class Period>
+    To
+    round_up(duration<Rep, Period> d)
+    {
+        To result = duration_cast<To>(d);
+        if (result < d)
+            ++result;
+        return result;
+    }
+
+Demonstrate interaction with xtime-like facility:
+
+
+    struct xtime
+    {
+        long sec;
+        unsigned long usec;
+    };
+
+    template <class Rep, class Period>
+    xtime
+    to_xtime_truncate(duration<Rep, Period> d)
+    {
+        xtime xt;
+        xt.sec = static_cast<long>(duration_cast<seconds>(d).count());
+        xt.usec = static_cast<long>(duration_cast<microseconds>(d - seconds(xt.sec)).count());
+        return xt;
+    }
+
+    template <class Rep, class Period>
+    xtime
+    to_xtime_round_up(duration<Rep, Period> d)
+    {
+        xtime xt;
+        xt.sec = static_cast<long>(duration_cast<seconds>(d).count());
+        xt.usec = static_cast<unsigned long>(round_up<microseconds>(d - seconds(xt.sec)).count());
+        return xt;
+    }
+
+    microseconds
+    from_xtime(xtime xt)
+    {
+        return seconds(xt.sec) + microseconds(xt.usec);
+    }
+
+    void print(xtime xt)
+    {
+        std::cout << '{' << xt.sec << ',' << xt.usec << "}\n";
+    }
+
+Usage
+
+        xtime xt = to_xtime_truncate(seconds(3) + milliseconds(251));
+        print(xt);
+        milliseconds ms = duration_cast<milliseconds>(from_xtime(xt));
+        std::cout << ms.count() << " milliseconds\n";
+        xt = to_xtime_round_up(ms);
+        print(xt);
+        xt = to_xtime_truncate(seconds(3) + nanoseconds(999));
+        print(xt);
+        xt = to_xtime_round_up(seconds(3) + nanoseconds(999));
+        print(xt);
+
+
+[/xtime_cpp]
+
+[endsect]
+
+[/==================]
 [section xtime_clock]
 
+This example demonstrates the use of a timeval-like struct to be used as the representation
+type for both duraiton and time_point.
 
-[/xtime_clock_cpp]
+    class xtime {
+    private:
+        long tv_sec;
+        long tv_usec;
+
+        void fixup() {
+            if (tv_usec < 0) {
+                tv_usec += 1000000;
+                --tv_sec;
+            }
+        }
+
+    public:
+        explicit xtime(long sec, long usec) {
+            tv_sec = sec;
+            tv_usec = usec;
+            if (tv_usec < 0 || tv_usec >= 1000000) {
+                tv_sec += tv_usec / 1000000;
+                tv_usec %= 1000000;
+                fixup();
+            }
+        }
+
+        explicit xtime(long long usec) {
+            tv_usec = static_cast<long>(usec % 1000000);
+            tv_sec  = static_cast<long>(usec / 1000000);
+            fixup();
+        }
+        
+        // explicit
+        operator long long() const {return static_cast<long long>(tv_sec) * 1000000 + tv_usec;}
+
+        xtime& operator += (xtime rhs) {
+            tv_sec += rhs.tv_sec;
+            tv_usec += rhs.tv_usec;
+            if (tv_usec >= 1000000) {
+                tv_usec -= 1000000;
+                ++tv_sec;
+            }
+            return *this;
+        }
+
+        xtime& operator -= (xtime rhs) {
+            tv_sec -= rhs.tv_sec;
+            tv_usec -= rhs.tv_usec;
+            fixup();
+            return *this;
+        }
+
+        xtime& operator %= (xtime rhs) {
+            long long t = tv_sec * 1000000 + tv_usec;
+            long long r = rhs.tv_sec * 1000000 + rhs.tv_usec;
+            t %= r;
+            tv_sec = static_cast<long>(t / 1000000);
+            tv_usec = static_cast<long>(t % 1000000);
+            fixup();
+            return *this;
+        }
+
+        friend xtime operator+(xtime x, xtime y) {return x += y;}
+        friend xtime operator-(xtime x, xtime y) {return x -= y;}
+        friend xtime operator%(xtime x, xtime y) {return x %= y;}
+
+        friend bool operator==(xtime x, xtime y)
+            { return (x.tv_sec == y.tv_sec && x.tv_usec == y.tv_usec); }
+
+        friend bool operator<(xtime x, xtime y) {
+            if (x.tv_sec == y.tv_sec)
+                return (x.tv_usec < y.tv_usec);
+            return (x.tv_sec < y.tv_sec);
+        }
+
+        friend bool operator!=(xtime x, xtime y) { return !(x == y); }
+        friend bool operator> (xtime x, xtime y) { return y < x; }
+        friend bool operator<=(xtime x, xtime y) { return !(y < x); }
+        friend bool operator>=(xtime x, xtime y) { return !(x < y); }
+
+        friend std::ostream& operator<<(std::ostream& os, xtime x)
+            {return os << '{' << x.tv_sec << ',' << x.tv_usec << '}';}
+    };
+
+Clock based on timeval-like struct. 
+
+    class xtime_clock
+    {
+    public:
+        typedef xtime                                  rep;
+        typedef boost::micro                           period;
+        typedef boost::chrono::duration<rep, period>   duration;
+        typedef boost::chrono::time_point<xtime_clock> time_point;
+
+        static time_point now()
+        {
+        #if defined(BOOST_CHRONO_WINDOWS_API)
+            time_point t(duration(xtime(0)));
+            gettimeofday((timeval*)&t, 0);
+            return t;
+
+        #elif defined(BOOST_CHRONO_MAC_API)
+
+            time_point t(duration(xtime(0)));
+            gettimeofday((timeval*)&t, 0);
+            return t;
+
+        #elif defined(BOOST_CHRONO_POSIX_API)
+            //time_point t(0,0);
+
+            timespec ts;
+            ::clock_gettime( CLOCK_REALTIME, &ts );
+
+            xtime xt( ts.tv_sec, ts.tv_nsec/1000);
+            return time_point(duration(xt));
+              
+        #endif  // POSIX   
+        }
+    };
+
+Usage of xtime_clock
+
+        using namespace boost::chrono;
+        std::cout << "sizeof xtime_clock::time_point = " << sizeof(xtime_clock::time_point) << '\n';
+        std::cout << "sizeof xtime_clock::duration = " << sizeof(xtime_clock::duration) << '\n';
+        std::cout << "sizeof xtime_clock::rep = " << sizeof(xtime_clock::rep) << '\n';
+        xtime_clock::duration delay(milliseconds(5));
+        xtime_clock::time_point start = xtime_clock::now();
+        while (xtime_clock::now() - start <= delay) {}
+        xtime_clock::time_point stop = xtime_clock::now();
+        xtime_clock::duration elapsed = stop - start;
+        std::cout << "paused " << nanoseconds(elapsed).count() << " nanoseconds\n";
 
 [endsect]
 
+[/=========================]
 [section runtime_resolution]
 
+Handle duration with resolution not known until run time
 
-[/runtime_resolution_cpp]
+    class duration
+    {
+    public:
+        typedef long long rep;
+    private:
+        rep rep_;
+
+        static const double ticks_per_nanosecond;
+
+    public:
+        typedef boost::chrono::duration<double, boost::nano> tonanosec;
+
+        duration() {} // = default;
+        explicit duration(const rep& r) : rep_(r) {}
+
+        // conversions
+        explicit duration(const tonanosec& d)
+                : rep_(static_cast<rep>(d.count() * ticks_per_nanosecond)) {}
+
+        // explicit
+           operator tonanosec() const {return tonanosec(rep_/ticks_per_nanosecond);}
+
+        // observer
+
+        rep count() const {return rep_;}
+
+        // arithmetic
+
+        duration& operator+=(const duration& d) {rep_ += d.rep_; return *this;}
+        duration& operator-=(const duration& d) {rep_ += d.rep_; return *this;}
+        duration& operator*=(rep rhs)           {rep_ *= rhs; return *this;}
+        duration& operator/=(rep rhs)           {rep_ /= rhs; return *this;}
+
+        duration  operator+() const {return *this;}
+        duration  operator-() const {return duration(-rep_);}
+        duration& operator++()      {++rep_; return *this;}
+        duration  operator++(int)   {return duration(rep_++);}
+        duration& operator--()      {--rep_; return *this;}
+        duration  operator--(int)   {return duration(rep_--);}
+
+        friend duration operator+(duration x, duration y) {return x += y;}
+        friend duration operator-(duration x, duration y) {return x -= y;}
+        friend duration operator*(duration x, rep y)      {return x *= y;}
+        friend duration operator*(rep x, duration y)      {return y *= x;}
+        friend duration operator/(duration x, rep y)      {return x /= y;}
+
+        friend bool operator==(duration x, duration y) {return x.rep_ == y.rep_;}
+        friend bool operator!=(duration x, duration y) {return !(x == y);}
+        friend bool operator< (duration x, duration y) {return x.rep_ < y.rep_;}
+        friend bool operator<=(duration x, duration y) {return !(y < x);}
+        friend bool operator> (duration x, duration y) {return y < x;}
+        friend bool operator>=(duration x, duration y) {return !(x < y);}
+    };
+
+
+['See the file libs/chrono/example/runtime_resolution.cpp]
 
 [endsect]
 
+[/=======================================================]
 [section Simulated thread interface demonstration program]
 
 [/simulated_thread_interface_demo_cpp]
 
+Free sleep functions
+
+    namespace boost { namespace this_thread {
+
+    template <class Rep, class Period>
+    void sleep_for(const boost::chrono::duration<Rep, Period>& d) {
+        boost::chrono::microseconds t = boost::chrono::duration_cast<boost::chrono::microseconds>(d);
+        if (t < d)
+            ++t;
+        if (t > boost::chrono::microseconds(0))
+            std::cout << "sleep_for " << t.count() << " microseconds\n";
+    }
+
+    template <class Clock, class Duration>
+    void sleep_until(const boost::chrono::time_point<Clock, Duration>& t) {
+        using namespace boost::chrono;
+        typedef time_point<Clock, Duration> Time;
+        typedef system_clock::time_point SysTime;
+        if (t > Clock::now()) {
+            typedef typename boost::common_type<typename Time::duration,
+                                         typename SysTime::duration>::type D;
+            /* auto */ D d = t - Clock::now();
+            microseconds us = duration_cast<microseconds>(d);
+            if (us < d)
+                ++us;
+            SysTime st = system_clock::now() + us;
+            std::cout << "sleep_until    ";
+            detail::print_time(st);
+            std::cout << " which is " << (st - system_clock::now()).count() << " microseconds away\n";
+        }
+    }
+
+    }}
+
+
+timed_mutex modified fuctions
+
+    namespace boost {
+    struct timed_mutex {
+        // ...
+        
+        template <class Rep, class Period>
+        bool try_lock_for(const boost::chrono::duration<Rep, Period>& d) {
+            boost::chrono::microseconds t = boost::chrono::duration_cast<boost::chrono::microseconds>(d);
+            if (t <= boost::chrono::microseconds(0))
+                return try_lock();
+            std::cout << "try_lock_for " << t.count() << " microseconds\n";
+            return true;
+        }
+
+        template <class Clock, class Duration>
+        bool try_lock_until(const boost::chrono::time_point<Clock, Duration>& t)
+        {
+            using namespace boost::chrono;
+            typedef time_point<Clock, Duration> Time;
+            typedef system_clock::time_point SysTime;
+            if (t <= Clock::now())
+                return try_lock();
+            typedef typename boost::common_type<typename Time::duration,
+              typename Clock::duration>::type D;
+            /* auto */ D d = t - Clock::now();
+            microseconds us = duration_cast<microseconds>(d);
+            SysTime st = system_clock::now() + us;
+            std::cout << "try_lock_until ";
+            detail::print_time(st);
+            std::cout << " which is " << (st - system_clock::now()).count()
+              << " microseconds away\n";
+            return true;
+        }
+    };
+    }
+
+condition_variable modified fuctions
+
+    namespace boost {
+    struct condition_variable
+    {
+        // ...
+        
+        template <class Rep, class Period>
+        bool wait_for(mutex&, const boost::chrono::duration<Rep, Period>& d) {
+            boost::chrono::microseconds t = boost::chrono::duration_cast<boost::chrono::microseconds>(d);
+            std::cout << "wait_for " << t.count() << " microseconds\n";
+            return true;
+        }
+
+        template <class Clock, class Duration>
+        bool wait_until(mutex&, const boost::chrono::time_point<Clock, Duration>& t) {
+            using namespace boost::chrono;
+            typedef time_point<Clock, Duration> Time;
+            typedef system_clock::time_point SysTime;
+            if (t <= Clock::now())
+                return false;
+            typedef typename boost::common_type<typename Time::duration,
+              typename Clock::duration>::type D;
+            /* auto */ D d = t - Clock::now();
+            microseconds us = duration_cast<microseconds>(d);
+            SysTime st = system_clock::now() + us;
+             std::cout << "wait_until     ";
+            detail::print_time(st);
+            std::cout << " which is " << (st - system_clock::now()).count()
+              << " microseconds away\n";
+            return true;
+        }
+    };
+    }
+
+Usage 
+
+    boost::mutex m;
+    boost::timed_mutex mut;
+    boost::condition_variable cv;
+
+    using namespace boost;
+    using namespace boost::chrono;
+    
+    this_thread::sleep_for(seconds(3));
+    this_thread::sleep_for(nanoseconds(300));
+    system_clock::time_point time_limit = system_clock::now() + seconds(4) + milliseconds(500);   
+    this_thread::sleep_until(time_limit);
+    
+    mut.try_lock_for(milliseconds(30));
+    mut.try_lock_until(time_limit);
+
+    cv.wait_for(m, minutes(1));    // real code would put this in a loop
+    cv.wait_until(m, time_limit);  // real code would put this in a loop
+
+    // For those who prefer floating point
+    this_thread::sleep_for(duration<double>(0.25));
+    this_thread::sleep_until(system_clock::now() + duration<double>(1.5));
+
+
+[/See the file libs/chrono/example/simulated_thread_interface_demo.cpp]
+
 [endsect]
 
-
-
-[section saturating]
+[/================]
+[section Saturating]
 
 A "saturating" signed integral type  is developed.  This type has +/- infinity and a nan (like IEEE floating point) but otherwise obeys signed integral arithmetic. This class is subsequently used as the rep in boost::chrono::duration to demonstrate a duration class that does not silently ignore overflow.
 
-[/ratio_test_cpp]
+['See the file libs/chrono/example/satutating.cpp]
 
 [endsect]
 
+[/======================================================]
 [section Howard Hinnant's original demonstration program]
 
-[/time2_demo_cpp]
+['See the file libs/chrono/example/time2_demo.cpp]
 
 [endsect]
 
+[/===============================================================]
 [section A tiny program that times how long until a key is struck]
 
 [/await_keystroke_cpp]
 
+    #include <boost/chrono/chrono.hpp>
+    #include <iostream>
+    #include <iomanip>
+
+    using namespace boost::chrono;
+
+    template< class Clock >
+    class timer
+    {
+      typename Clock::time_point start;
+    public:
+
+      timer() : start( Clock::now() ) {}
+
+      typename Clock::duration elapsed() const
+      {
+        return Clock::now() - start;
+      }
+
+      double seconds() const
+      {
+        return elapsed().count() * ((double)Clock::period::num/Clock::period::den);
+      }
+    };
+
+    int main()
+    {
+      timer<system_clock> t1;
+      timer<monotonic_clock> t2;
+      timer<high_resolution_clock> t3;
+
+      std::cout << "Strike any key: ";
+      std::cin.get();
+
+      std::cout << std::fixed << std::setprecision(9);
+      std::cout << "system_clock-----------: "
+                << t1.seconds() << " seconds\n";
+      std::cout << "monotonic_clock--------: "
+                << t2.seconds() << " seconds\n";
+      std::cout << "high_resolution_clock--: "
+                << t3.seconds() << " seconds\n";
+
+      system_clock::time_point d4 = system_clock::now();
+      system_clock::time_point d5 = system_clock::now();
+
+      std::cout << "\nsystem_clock latency-----------: " << (d5 - d4).count() << std::endl;
+
+      monotonic_clock::time_point d6 = monotonic_clock::now();
+      monotonic_clock::time_point d7 = monotonic_clock::now();
+
+      std::cout << "monotonic_clock latency--------: " << (d7 - d6).count() << std::endl;
+
+      high_resolution_clock::time_point d8 = high_resolution_clock::now();
+      high_resolution_clock::time_point d9 = high_resolution_clock::now();
+
+      std::cout << "high_resolution_clock latency--: " << (d9 - d8).count() << std::endl;
+
+      std::time_t now = system_clock::to_time_t(system_clock::now());
+      
+      std::cout << "\nsystem_clock::now() reports UTC is "
+        << std::asctime(std::gmtime(&now)) << "\n";
+
+      return 0;
+    }
+
 [endsect]
 
+[/============================]
 [section run_timer_example.cpp]
 
 Here is the run_timer_example.cpp program supplied with the Boost Chrono library:
@@ -1976,6 +2782,19 @@ Here is the run_timer_example.cpp program supplied with the Boost Chrono library
 [/run_timer_example_cpp]
 
 When the run_timer t object is created, it starts timing. When it is destroyed at the end of the program, its destructor stops the timer and displays timing information on cout.
+
+    #include <boost/chrono/process_times.hpp>
+    #include <cmath>
+
+    int main()
+    {
+      boost::chrono::run_timer t;
+
+      for ( long i = 0; i < 10000000; ++i )
+        std::sqrt( 123.456L );  // burn some time
+
+      return 0;
+    }
 
 The output of this program run on a circa 2006 processor looks was this:
 
@@ -1985,6 +2804,8 @@ In other words, this program ran in 0.42 seconds as would be measured by a clock
 
 [endsect]
 
+
+[/=============================]
 [section run_timer_example2.cpp]
 
 The run_timer_example2.cpp program is the same, except that it supplies additional constructor arguments from the command line:
@@ -1997,7 +2818,7 @@ The run_timer_example2.cpp program is the same, except that it supplies addition
       const char * format = argc > 1 ? argv[1] : "%t cpu seconds\n";
       int          places = argc > 2 ? std::atoi( argv[2] ) : 2;
 
-      boost::system::run_timer t( format, places );
+      boost::chrono::run_timer t( format, places );
 
       for ( long i = 0; i < 10000000; ++i )
         std::sqrt( 123.456L ); // burn some time
@@ -2021,6 +2842,49 @@ Here is the output for this program for several sets of command line arguments:
 
 [endsect]
 
+[/===============================================================]
+[section time command]
+
+    #include <boost/chrono/timer.hpp>
+    #include <cstdlib>
+    #include <string>
+    #include <iostream>
+
+    int main( int argc, char * argv[] )
+    {
+      if ( argc == 1 )
+      {
+        std::cout << "invoke: timex [-v] command [args...]\n"
+          "  command will be executed and timings displayed\n"
+          "  -v option causes command and args to be displayed\n";
+        return 1;
+      }
+
+      std::string s;
+
+      bool verbose = false;
+      if ( argc > 1 && *argv[1] == '-' && *(argv[1]+1) == 'v' )
+      {
+        verbose = true;
+        ++argv;
+        --argc;
+      }
+
+      for ( int i = 1; i < argc; ++i )
+      {
+        if ( i > 1 ) s += ' ';
+        s += argv[i];
+      }
+
+      if ( verbose )
+        { std::cout << "command: \"" << s.c_str() << "\"\n"; }
+
+      boost::chrono::run_timer t;
+
+      return std::system( s.c_str() );
+    }
+
+[endsect]
 
 [endsect]
 [/=================]
@@ -2038,7 +2902,7 @@ Here is the output for this program for several sets of command line arguments:
 * Define BOOST_CHRONO_HAS_CLOCK_MONOTONIC when BOOST_CHRONO_WINDOWS_API
 * Commenting invalid operator declarations
 * Take care of Boost min/max recommendations
-* complete qualification boost::chrono::duration to avoid possible BUG in gcc-4.4.0 reporting the following error
+* complete qualification when defining nested typedef duration on clocks to avoid the following compile error:
 
     ./boost/chrono/chrono.hpp:945: error: declaration of 'typedef class boost::chrono::duration<long long int, boost::ratio<1ll, 10000000ll> > boost::chrono::system_clock::duration'
     ./boost/chrono/chrono.hpp:458: error: changes meaning of 'duration' from 'class boost::chrono::duration<long long int, boost::ratio<1ll, 10000000ll> >'
@@ -2070,7 +2934,7 @@ Here is the output for this program for several sets of command line arguments:
 * Use INTMAC_C to name intmax_t constants instead of LL.
 * Separate chrono.cpp on # files win/chrono.cpp, mac/chrono.cpp and posix/chrono.cpp to make easier the maintenance on different platforms.
 * Separate process_clock.cpp on # files win/process_clock.cpp, mac/process_clock.cpp and posix/process_clock.cpp to make easir the maintenace on different platforms.
-* Added the error_code prototype for monotonic_clock::now for mac/chono.cpp
+* Added the error_code prototype for monotonic_clock::now for mac/chrono.cpp
 * Fully implement mac/chrono.cpp with error handling.
 * Take care on POSIX systems when CLOCK_MONOTONIC is not defined.
 
@@ -2114,6 +2978,7 @@ Here is the output for this program for several sets of command line arguments:
 [endsect]
 [endsect]
 
+[/======================================]
 [section:rationale Appendix B: Rationale]
 
 See [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions. The following sections are an extract from this document.
@@ -2181,6 +3046,7 @@ If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/i
 
 [endsect]
 
+[/======================================================]
 [section:implementation Appendix C: Implementation Notes]
 
 
@@ -2194,6 +3060,7 @@ Ask your operating system supplier. The results have been inspected with a debug
 
 [endsect]
 
+[/====================================================]
 [section:acknowledgements Appendix D: Acknowledgements]
 
 The library's code was derived from Howard Hinnant's time2_demo prototype. Many thanks to Howard for making his code available under the Boost license. The original code was modified by Beman Dawes to conform to Boost conventions.
@@ -2202,6 +3069,7 @@ time2_demo contained this comment:
 
 Much thanks to Andrei Alexandrescu, Walter Brown, Peter Dimov, Jeff Garland, Terry Golubiewski, Daniel Krugler, Anthony Williams.
 
+Thanks to Tom Tam to report some compiler issues with MSVC and MinGW-gcc-4.4.0.
 
 [endsect]
 [section  Appendix E: Tests]

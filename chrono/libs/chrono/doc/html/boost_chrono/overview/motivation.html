@@ -197,13 +197,12 @@
           always represent any value minutes has.
         </p>
 <p>
-          In Boost.DateTime, these units are united via inheritance. __Boost<span class="underline">Chrono</span>_ instead unites these units through
-          the class template <code class="computeroutput"><span class="identifier">duration</span></code>.
-          That is, in __Boost<span class="underline">Chrono</span>_ all six
-          of the above units are nothing but typedefs to different instantiations
-          of <code class="computeroutput"><span class="identifier">duration</span></code>. This change
-          from Boost.DateTime has a far reaching positive impact, while not changing
-          the syntax of the everyday use at all.
+          In Boost.DateTime, these units are united via inheritance. <span class="bold"><strong>Boost.Chrono</strong></span>
+          instead unites these units through the class template <code class="computeroutput"><span class="identifier">duration</span></code>.
+          That is, in <span class="bold"><strong>Boost.Chrono</strong></span> all six of the
+          above units are nothing but typedefs to different instantiations of <code class="computeroutput"><span class="identifier">duration</span></code>. This change from Boost.DateTime
+          has a far reaching positive impact, while not changing the syntax of the
+          everyday use at all.
         </p>
 <p>
           The most immediate positive impact is that the library can immediately
@@ -231,7 +230,7 @@
           possible, can be a significant performance advantage.
         </p>
 <p>
-          __Boost<span class="underline">Chrono</span>_ continues, and generalizes
+          <span class="bold"><strong>Boost.Chrono</strong></span> continues, and generalizes
           that philosophy. Not only can one specify the precision of a <code class="computeroutput"><span class="identifier">duration</span></code>, one can also specify its representation.
           This can be any integral type, or even a floating point type. Or it can
           be a user-defined type which emulates an arithmetic type. The six predefined
@@ -240,7 +239,7 @@
           that range. hours needs only 23 bits to cover that range.
         </p>
 <a name="boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_"></a><h5>
-<a name="id4759064"></a>
+<a name="id4759410"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_">So
           What Exactly is a <code class="computeroutput"><span class="identifier">duration</span></code>
           and How Do I Use One?</a>
@@ -298,7 +297,7 @@
           instead of inheritance).
         </p>
 <a name="boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to_minutes_instead_of_microseconds_"></a><h5>
-<a name="id4759770"></a>
+<a name="id4758314"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to_minutes_instead_of_microseconds_">What
           happens if I assign <code class="computeroutput"><span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span></code>
           to minutes instead of microseconds?</a>
@@ -314,7 +313,7 @@
           ignored. This is similar to the problem of assigning a double to an <code class="computeroutput"><span class="keyword">int</span></code>: the fractional part gets silently discarded.
         </p>
 <a name="boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_"></a><h5>
-<a name="id4759923"></a>
+<a name="id4813058"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_">But
           what if the truncation behavior is what I want to do?</a>
         </h5>
@@ -334,7 +333,7 @@
           as often as it can.
         </p>
 <a name="boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation"></a><h5>
-<a name="id4813064"></a>
+<a name="id4813194"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation">I'm
           trafficking in floating point <code class="computeroutput"><span class="identifier">duration</span></code>s.
           I don't want to deal with writing <code class="computeroutput"><span class="identifier">duration_cast</span></code>
@@ -349,7 +348,7 @@
 <span class="identifier">dminutes</span> <span class="identifier">dm4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>  <span class="comment">// dm4.count() == 5.000000083333333
 </span></pre>
 <a name="boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_"></a><h5>
-<a name="id4813226"></a>
+<a name="id4813357"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_">How
           expensive is all of this?</a>
         </h5>
@@ -363,7 +362,7 @@
           tick counts.
         </p>
 <a name="boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_"></a><h5>
-<a name="id4813276"></a>
+<a name="id4813407"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_">How
           complicated is it to build a function taking a <code class="computeroutput"><span class="identifier">duration</span></code>
           parameter?</a>
@@ -485,8 +484,7 @@
           </li>
 </ol></div>
 <p>
-          __Boost<span class="underline">Chrono</span>_ proposes 3 concrete
-          clocks:
+          <span class="bold"><strong>Boost.Chrono</strong></span> proposes 3 concrete clocks:
         </p>
 <div class="orderedlist"><ol type="1">
 <li>
@@ -577,16 +575,16 @@
           of the epoch no longer has meaning.
         </p>
 <p>
-          In __Boost<span class="underline">Chrono</span>_, an epoch is a
-          purely abstract and unspecified concept. There is no type representing
-          an epoch. It is simply an idea that relates (or doesn't) <code class="computeroutput"><span class="identifier">time_point</span></code>s to a clock, and in the case
-          that they share a clock, <code class="computeroutput"><span class="identifier">time_point</span></code>s
+          In <span class="bold"><strong>Boost.Chrono</strong></span>, an epoch is a purely
+          abstract and unspecified concept. There is no type representing an epoch.
+          It is simply an idea that relates (or doesn't) <code class="computeroutput"><span class="identifier">time_point</span></code>s
+          to a clock, and in the case that they share a clock, <code class="computeroutput"><span class="identifier">time_point</span></code>s
           to one another. <code class="computeroutput"><span class="identifier">time_point</span></code>s
           associated with different clocks are generally not interoperable unless
           the relationship between the epochs associated with each clock is known.
         </p>
 <a name="boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_"></a><h5>
-<a name="id4815082"></a>
+<a name="id4815212"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_">So
           What Exactly is a <code class="computeroutput"><span class="identifier">time_point</span></code>
           and How Do I Use One?</a>

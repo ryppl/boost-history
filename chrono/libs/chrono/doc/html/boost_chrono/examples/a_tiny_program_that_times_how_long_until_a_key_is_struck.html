@@ -24,11 +24,78 @@
 <div class="spirit-nav">
 <a accesskey="p" href="howard_hinnant_s_original_demonstration_program.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="run_timer_example_cpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
 <a name="boost_chrono.examples.a_tiny_program_that_times_how_long_until_a_key_is_struck"></a><a href="a_tiny_program_that_times_how_long_until_a_key_is_struck.html" title="A
       tiny program that times how long until a key is struck">A
       tiny program that times how long until a key is struck</a>
-</h3></div></div></div></div>
+</h3></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iomanip</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span> <span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">timer</span>
+<span class="special">{</span>
+  <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">start</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+  <span class="identifier">timer</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">start</span><span class="special">(</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">)</span> <span class="special">{}</span>
+
+  <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">elapsed</span><span class="special">()</span> <span class="keyword">const</span>
+  <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
+  <span class="special">}</span>
+
+  <span class="keyword">double</span> <span class="identifier">seconds</span><span class="special">()</span> <span class="keyword">const</span>
+  <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">elapsed</span><span class="special">().</span><span class="identifier">count</span><span class="special">()</span> <span class="special">*</span> <span class="special">((</span><span class="keyword">double</span><span class="special">)</span><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">num</span><span class="special">/</span><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">den</span><span class="special">);</span>
+  <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="identifier">timer</span><span class="special">&lt;</span><span class="identifier">system_clock</span><span class="special">&gt;</span> <span class="identifier">t1</span><span class="special">;</span>
+  <span class="identifier">timer</span><span class="special">&lt;</span><span class="identifier">monotonic_clock</span><span class="special">&gt;</span> <span class="identifier">t2</span><span class="special">;</span>
+  <span class="identifier">timer</span><span class="special">&lt;</span><span class="identifier">high_resolution_clock</span><span class="special">&gt;</span> <span class="identifier">t3</span><span class="special">;</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Strike any key: "</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cin</span><span class="special">.</span><span class="identifier">get</span><span class="special">();</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">fixed</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">setprecision</span><span class="special">(</span><span class="number">9</span><span class="special">);</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"system_clock-----------: "</span>
+            <span class="special">&lt;&lt;</span> <span class="identifier">t1</span><span class="special">.</span><span class="identifier">seconds</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" seconds\n"</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"monotonic_clock--------: "</span>
+            <span class="special">&lt;&lt;</span> <span class="identifier">t2</span><span class="special">.</span><span class="identifier">seconds</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" seconds\n"</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"high_resolution_clock--: "</span>
+            <span class="special">&lt;&lt;</span> <span class="identifier">t3</span><span class="special">.</span><span class="identifier">seconds</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" seconds\n"</span><span class="special">;</span>
+
+  <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d4</span> <span class="special">=</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+  <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d5</span> <span class="special">=</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nsystem_clock latency-----------: "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">d5</span> <span class="special">-</span> <span class="identifier">d4</span><span class="special">).</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+  <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d6</span> <span class="special">=</span> <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+  <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d7</span> <span class="special">=</span> <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"monotonic_clock latency--------: "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">d7</span> <span class="special">-</span> <span class="identifier">d6</span><span class="special">).</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+  <span class="identifier">high_resolution_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d8</span> <span class="special">=</span> <span class="identifier">high_resolution_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+  <span class="identifier">high_resolution_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d9</span> <span class="special">=</span> <span class="identifier">high_resolution_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"high_resolution_clock latency--: "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">d9</span> <span class="special">-</span> <span class="identifier">d8</span><span class="special">).</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">time_t</span> <span class="identifier">now</span> <span class="special">=</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">to_time_t</span><span class="special">(</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">());</span>
+  
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nsystem_clock::now() reports UTC is "</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">asctime</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">gmtime</span><span class="special">(&amp;</span><span class="identifier">now</span><span class="special">))</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+
+  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+</div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
 <td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 Vicente J. Botet Escriba<p>

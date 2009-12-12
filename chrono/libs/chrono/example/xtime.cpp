@@ -47,8 +47,6 @@ round_up(duration<Rep, Period> d)
 
 // demonstrate interaction with xtime-like facility:
 
-using namespace boost::chrono;
-
 struct xtime
 {
     long sec;

@@ -17,6 +17,7 @@ boost_chrono/examples/si_units.html
 boost_chrono/examples/how_you_override_the_duration_s_default_constructor.html
 boost_chrono/examples/min_utility.html
 boost_chrono/examples/cycle_count.html
+boost_chrono/examples/xtime_conversions.html
 boost_chrono/examples/xtime_clock.html
 boost_chrono/examples/runtime_resolution.html
 boost_chrono/examples/simulated_thread_interface_demonstration_program.html
@@ -25,6 +26,7 @@ boost_chrono/examples/howard_hinnant_s_original_demonstration_program.html
 boost_chrono/examples/a_tiny_program_that_times_how_long_until_a_key_is_struck.html
 boost_chrono/examples/run_timer_example_cpp.html
 boost_chrono/examples/run_timer_example2_cpp.html
+boost_chrono/examples/time_command.html
 boost_chrono/appendices.html
 boost_chrono/appendices/history.html
 boost_chrono/appendices/rationale.html

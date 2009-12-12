@@ -1,0 +1,180 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Simulated
+      thread interface demonstration program</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Boost.Chrono">
+<link rel="up" href="../examples.html" title="Examples">
+<link rel="prev" href="runtime_resolution.html" title="runtime_resolution">
+<link rel="next" href="saturating.html" title="Saturating">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="runtime_resolution.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="saturating.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_chrono.examples.simulated_thread_interface_demonstration_program"></a><a href="simulated_thread_interface_demonstration_program.html" title="Simulated
+      thread interface demonstration program">Simulated
+      thread interface demonstration program</a>
+</h3></div></div></div>
+<p>
+        Free sleep functions
+      </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">this_thread</span> <span class="special">{</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">sleep_for</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">microseconds</span> <span class="identifier">t</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&lt;</span> <span class="identifier">d</span><span class="special">)</span>
+        <span class="special">++</span><span class="identifier">t</span><span class="special">;</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&gt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">(</span><span class="number">0</span><span class="special">))</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"sleep_for "</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" microseconds\n"</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">sleep_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">Time</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">SysTime</span><span class="special">;</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&gt;</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">())</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">common_type</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Time</span><span class="special">::</span><span class="identifier">duration</span><span class="special">,</span>
+                                     <span class="keyword">typename</span> <span class="identifier">SysTime</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">D</span><span class="special">;</span>
+        <span class="comment">/* auto */</span> <span class="identifier">D</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">t</span> <span class="special">-</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+        <span class="identifier">microseconds</span> <span class="identifier">us</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">microseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">us</span> <span class="special">&lt;</span> <span class="identifier">d</span><span class="special">)</span>
+            <span class="special">++</span><span class="identifier">us</span><span class="special">;</span>
+        <span class="identifier">SysTime</span> <span class="identifier">st</span> <span class="special">=</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">us</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"sleep_until    "</span><span class="special">;</span>
+        <span class="identifier">detail</span><span class="special">::</span><span class="identifier">print_time</span><span class="special">(</span><span class="identifier">st</span><span class="special">);</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">" which is "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">st</span> <span class="special">-</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()).</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" microseconds away\n"</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+
+<span class="special">}}</span>
+</pre>
+<p>
+        timed_mutex modified fuctions
+      </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">struct</span> <span class="identifier">timed_mutex</span> <span class="special">{</span>
+    <span class="comment">// ...
+</span>    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">microseconds</span> <span class="identifier">t</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&lt;=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">(</span><span class="number">0</span><span class="special">))</span>
+            <span class="keyword">return</span> <span class="identifier">try_lock</span><span class="special">();</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"try_lock_for "</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" microseconds\n"</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">t</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">Time</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">SysTime</span><span class="special">;</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&lt;=</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">())</span>
+            <span class="keyword">return</span> <span class="identifier">try_lock</span><span class="special">();</span>
+        <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">common_type</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Time</span><span class="special">::</span><span class="identifier">duration</span><span class="special">,</span>
+          <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">D</span><span class="special">;</span>
+        <span class="comment">/* auto */</span> <span class="identifier">D</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">t</span> <span class="special">-</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+        <span class="identifier">microseconds</span> <span class="identifier">us</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">microseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+        <span class="identifier">SysTime</span> <span class="identifier">st</span> <span class="special">=</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">us</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"try_lock_until "</span><span class="special">;</span>
+        <span class="identifier">detail</span><span class="special">::</span><span class="identifier">print_time</span><span class="special">(</span><span class="identifier">st</span><span class="special">);</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">" which is "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">st</span> <span class="special">-</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()).</span><span class="identifier">count</span><span class="special">()</span>
+          <span class="special">&lt;&lt;</span> <span class="string">" microseconds away\n"</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<p>
+        condition_variable modified fuctions
+      </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">struct</span> <span class="identifier">condition_variable</span>
+<span class="special">{</span>
+    <span class="comment">// ...
+</span>    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">mutex</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">microseconds</span> <span class="identifier">t</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"wait_for "</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" microseconds\n"</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">wait_until</span><span class="special">(</span><span class="identifier">mutex</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">Time</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">SysTime</span><span class="special">;</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&lt;=</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">())</span>
+            <span class="keyword">return</span> <span class="keyword">false</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">common_type</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Time</span><span class="special">::</span><span class="identifier">duration</span><span class="special">,</span>
+          <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">D</span><span class="special">;</span>
+        <span class="comment">/* auto */</span> <span class="identifier">D</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">t</span> <span class="special">-</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+        <span class="identifier">microseconds</span> <span class="identifier">us</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">microseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+        <span class="identifier">SysTime</span> <span class="identifier">st</span> <span class="special">=</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">us</span><span class="special">;</span>
+         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"wait_until     "</span><span class="special">;</span>
+        <span class="identifier">detail</span><span class="special">::</span><span class="identifier">print_time</span><span class="special">(</span><span class="identifier">st</span><span class="special">);</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">" which is "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">st</span> <span class="special">-</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()).</span><span class="identifier">count</span><span class="special">()</span>
+          <span class="special">&lt;&lt;</span> <span class="string">" microseconds away\n"</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<p>
+        Usage
+      </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span> <span class="identifier">m</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span> <span class="identifier">mut</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable</span> <span class="identifier">cv</span><span class="special">;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+
+<span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
+<span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">nanoseconds</span><span class="special">(</span><span class="number">300</span><span class="special">));</span>
+<span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">time_limit</span> <span class="special">=</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">seconds</span><span class="special">(</span><span class="number">4</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">milliseconds</span><span class="special">(</span><span class="number">500</span><span class="special">);</span>   
+<span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_until</span><span class="special">(</span><span class="identifier">time_limit</span><span class="special">);</span>
+
+<span class="identifier">mut</span><span class="special">.</span><span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">milliseconds</span><span class="special">(</span><span class="number">30</span><span class="special">));</span>
+<span class="identifier">mut</span><span class="special">.</span><span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">time_limit</span><span class="special">);</span>
+
+<span class="identifier">cv</span><span class="special">.</span><span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">m</span><span class="special">,</span> <span class="identifier">minutes</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>    <span class="comment">// real code would put this in a loop
+</span><span class="identifier">cv</span><span class="special">.</span><span class="identifier">wait_until</span><span class="special">(</span><span class="identifier">m</span><span class="special">,</span> <span class="identifier">time_limit</span><span class="special">);</span>  <span class="comment">// real code would put this in a loop
+</span>
+<span class="comment">// For those who prefer floating point
+</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="number">0.25</span><span class="special">));</span>
+<span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_until</span><span class="special">(</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="number">1.5</span><span class="special">));</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="runtime_resolution.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="saturating.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

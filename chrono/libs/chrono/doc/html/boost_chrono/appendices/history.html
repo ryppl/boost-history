@@ -27,11 +27,63 @@
 <a name="boost_chrono.appendices.history"></a><a href="history.html" title=" Appendix A: History"> Appendix A: History</a>
 </h3></div></div></div>
 <div class="toc"><dl>
+<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_2_1__december_12__2009____bug_fixes_"><span class="bold"><strong>Version 0.2.1, December 12, 2009</strong></span> <span class="emphasis"><em>Bug fixes</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_2_0__december_8__2009______features___bug_fixes___updated_documentation_"><span class="bold"><strong>Version 0.2.0, December 8, 2009</strong></span> <span class="emphasis"><em>+ Features
         + Bug fixes + Updated documentation</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_1_0__april_29__2009____beman_s_boostified_version_chrono_"><span class="bold"><strong>Version 0.1.0, April 29, 2009</strong></span> <span class="emphasis"><em>Beman's boostified
         version Chrono</em></span></a></span></dt>
 </dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.appendices.history.__version_0_2_1__december_12__2009____bug_fixes_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_2_1__december_12__2009____bug_fixes_" title="Version 0.2.1, December 12, 2009 Bug fixes"><span class="bold"><strong>Version 0.2.1, December 12, 2009</strong></span> <span class="emphasis"><em>Bug fixes</em></span></a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Bug Fixes</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Replace INTMAX_C by BOOST_INTMAX_C until boost/cstdint;hpp ensures INTMAX_C
+            is always defined.
+          </li>
+<li>
+            Define BOOST_CHRONO_HAS_CLOCK_MONOTONIC when BOOST_CHRONO_WINDOWS_API
+          </li>
+<li>
+            Commenting invalid operator declarations
+          </li>
+<li>
+            Take care of Boost min/max recommendations
+          </li>
+<li>
+            complete qualification when defining nested typedef duration on clocks
+            to avoid the following compile error:
+          </li>
+</ul></div>
+<pre class="programlisting"><span class="special">./</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">:</span><span class="number">945</span><span class="special">:</span> <span class="identifier">error</span><span class="special">:</span> <span class="identifier">declaration</span> <span class="identifier">of</span> <span class="char">'typedef class boost::chrono::duration&lt;long long int, boost::ratio&lt;1ll, 10000000ll&gt; &gt; boost::chrono::system_clock::duration'</span>
+<span class="special">./</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">:</span><span class="number">458</span><span class="special">:</span> <span class="identifier">error</span><span class="special">:</span> <span class="identifier">changes</span> <span class="identifier">meaning</span> <span class="identifier">of</span> <span class="char">'duration'</span> <span class="identifier">from</span> <span class="char">'class boost::chrono::duration&lt;long long int, boost::ratio&lt;1ll, 10000000ll&gt; &gt;'</span>
+</pre>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            cleanup of simulated...
+          </li>
+<li>
+            warning removal on posix/process_clock.cpp
+          </li>
+<li>
+            disable VC++ foolishness
+          </li>
+<li>
+            Update Jamfiles to manage with dll
+          </li>
+<li>
+            removal of conversion warning in test_duration
+          </li>
+<li>
+            manage with MSVC reporting a warning instead of an error when there is
+            an integral constant overflow
+          </li>
+</ul></div>
+</div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_chrono.appendices.history.__version_0_2_0__december_8__2009______features___bug_fixes___updated_documentation_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_2_0__december_8__2009______features___bug_fixes___updated_documentation_" title="Version 0.2.0, December 8, 2009 + Features
@@ -55,7 +107,7 @@
             is provided on this platform.
           </li>
 <li>
-            Added duration operator% (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934" target="_top"><span class="bold"><strong>934. duration is missing operator%</strong></span></a>)
+            Added duration operator% (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934" target="_top"><span class="bold"><strong>LGW 934. duration is missing operator%</strong></span></a>)
           </li>
 <li>
             Added BOOST_CONSTEXPR when constexpr should be used
@@ -81,7 +133,7 @@
             platforms.
           </li>
 <li>
-            Added the error_code prototype for monotonic_clock::now for mac/chono.cpp
+            Added the error_code prototype for monotonic_clock::now for mac/chrono.cpp
           </li>
 <li>
             Fully implement mac/chrono.cpp with error handling.
@@ -97,7 +149,7 @@
             The documentation is written now using quick-book using as base <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm" target="_top"><span class="bold"><strong>N2661 - A Foundation to Sleep On</strong></span></a> .
           </li></ul></div>
 <p>
-          <span class="bold"><strong>Bugs</strong></span>
+          <span class="bold"><strong>Bug Fixes</strong></span>
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>

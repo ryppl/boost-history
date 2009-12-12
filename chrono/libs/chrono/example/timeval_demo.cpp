@@ -35,6 +35,34 @@ time2_demo contained this comment:
 #	include <windows.h>  
 #endif
 
+#if defined(BOOST_CHRONO_WINDOWS_API)
+
+namespace
+{
+  //struct timeval {
+  //        long    tv_sec;         /* seconds */
+  //        long    tv_usec;        /* and microseconds */
+  //};
+
+  int gettimeofday(struct timeval * tp, void *)
+  {
+    FILETIME ft;
+    ::GetSystemTimeAsFileTime( &ft );  // never fails
+    long long t = (static_cast<long long>(ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+  # if !defined( BOOST_MSVC ) || BOOST_MSVC > 1300 // > VC++ 7.0
+    t -= 116444736000000000LL;
+  # else
+    t -= 116444736000000000;
+  # endif
+    t /= 10;  // microseconds
+    tp->tv_sec = static_cast<long>( t / 1000000UL);
+    tp->tv_usec = static_cast<long>( t % 1000000UL);
+    return 0;
+  }
+}  // unnamed namespace
+
+#endif
+
 //  timeval clock demo
 //     Demonstrate the use of a timeval-like struct to be used as the representation
 //     type for both duraiton and time_point.
@@ -135,34 +163,6 @@ public:
 
     static time_point now();
 };
-
-#if defined(BOOST_CHRONO_WINDOWS_API)
-
-namespace
-{
-  //struct timeval {
-  //        long    tv_sec;         /* seconds */
-  //        long    tv_usec;        /* and microseconds */
-  //};
-
-  int gettimeofday(struct timeval * tp, void *)
-  {
-    FILETIME ft;
-    ::GetSystemTimeAsFileTime( &ft );  // never fails
-    long long t = (static_cast<long long>(ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
-  # if !defined( BOOST_MSVC ) || BOOST_MSVC > 1300 // > VC++ 7.0
-    t -= 116444736000000000LL;
-  # else
-    t -= 116444736000000000;
-  # endif
-    t /= 10;  // microseconds
-    tp->tv_sec = static_cast<long>( t / 1000000UL);
-    tp->tv_usec = static_cast<long>( t % 1000000UL);
-    return 0;
-  }
-}  // unnamed namespace
-
-#endif
 
 
 xtime_clock::time_point
