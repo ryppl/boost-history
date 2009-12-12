@@ -8,47 +8,11 @@
 #include <boost/thread.hpp>
 
 #include <boost/fiber.hpp>
+#include <boost/fiber/spin/future.hpp>
 
 inline
 std::string helloworld_fn()
 { return "Hello World"; }
-
-class callable
-{
-private:
-	struct impl
-	{
-		virtual ~impl() {}
-
-		virtual void exec() = 0;
-	};
-
-	template< typename T >
-	class timpl : public impl
-	{
-	private:
-		boost::packaged_task< T >	pt_;
-
-	public:
-		timpl( boost::packaged_task< T > & pt) :
-			pt_( boost::move( pt) )
-		{}
-
-		void exec()
-		{ pt_(); }
-	};
-
-	boost::shared_ptr< impl >	impl_;
-
-public:
-	template< typename T >
-	callable( boost::packaged_task< T > & pt) :
-		impl_( new timpl< T >( pt) )
-	{}
-
-	void operator()()
-	{ impl_->exec(); }
-};
 
 int main()
 {
@@ -56,10 +20,9 @@ int main()
 	{
 		boost::fibers::scheduler<> sched;
 
-		boost::packaged_task< std::string > pt( helloworld_fn);
-		boost::unique_future< std::string > fu = pt.get_future();
-		callable ca( pt);
-		sched.make_fiber( ca);
+		boost::fibers::spin::packaged_task< std::string > pt( helloworld_fn);
+		boost::fibers::spin::unique_future< std::string > fu = pt.get_future();
+		sched.make_fiber( boost::move( pt) );
 
 		for (;;)
 		{
