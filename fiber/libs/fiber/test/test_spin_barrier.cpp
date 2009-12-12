@@ -15,7 +15,7 @@
 int value1 = 0;
 int value2 = 0;
 
-void fn_1( boost::fibers::spin_barrier & b)
+void fn_1( boost::fibers::spin::barrier & b)
 {
 	++value1;
 	boost::this_fiber::yield();
@@ -31,7 +31,7 @@ void fn_1( boost::fibers::spin_barrier & b)
 	++value1;
 }
 
-void fn_2( boost::fibers::spin_barrier & b)
+void fn_2( boost::fibers::spin::barrier & b)
 {
 	++value2;
 	boost::this_fiber::yield();
@@ -54,7 +54,7 @@ void test_case_1()
 
 	boost::fibers::scheduler<> sched;
 
-	boost::fibers::spin_barrier b( 2);
+	boost::fibers::spin::barrier b( 2);
 	sched.make_fiber( fn_1, boost::ref( b) );
 	sched.make_fiber( fn_2, boost::ref( b) );
 
@@ -149,7 +149,7 @@ void test_case_1()
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
 	boost::unit_test::test_suite * test =
-		BOOST_TEST_SUITE("Boost.Fiber: spin_barrier test suite");
+		BOOST_TEST_SUITE("Boost.Fiber: spin::barrier test suite");
 
 	test->add( BOOST_TEST_CASE( & test_case_1) );
 

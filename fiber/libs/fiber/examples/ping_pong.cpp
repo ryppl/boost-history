@@ -10,69 +10,66 @@
 
 #include <boost/fiber.hpp>
 
-typedef boost::fibers::unbounded_fifo< std::string, boost::fibers::mutex >	fifo_t;
-//typedef boost::fibers::unbounded_fifo< std::string, boost::fibers::spin_mutex >	fifo_t;
-typedef boost::intrusive_ptr< fifo_t >					fifo_ptr_t;
+typedef boost::fibers::unbounded_fifo< std::string >	fifo_t;
+typedef boost::intrusive_ptr< fifo_t >			fifo_ptr_t;
+
 inline
 void ping(
-		fifo_ptr_t & recv_buf,
-		fifo_ptr_t & send_buf)
+		fifo_t & recv_buf,
+		fifo_t & send_buf)
 {
 	boost::optional< std::string > value;
 
-	send_buf->put("ping");
-	BOOST_ASSERT( recv_buf->take( value) );
+	send_buf.put("ping");
+	BOOST_ASSERT( recv_buf.take( value) );
 	std::cout << * value << std::endl;
 	value.reset();
 
-	send_buf->put("ping");
-	BOOST_ASSERT( recv_buf->take( value) );
+	send_buf.put("ping");
+	BOOST_ASSERT( recv_buf.take( value) );
 	std::cout << * value << std::endl;
 	value.reset();
 
-	send_buf->put("ping");
-	BOOST_ASSERT( recv_buf->take( value) );
+	send_buf.put("ping");
+	BOOST_ASSERT( recv_buf.take( value) );
 	std::cout << * value << std::endl;
 	value.reset();
 
-	send_buf->deactivate();
+	send_buf.deactivate();
 }
 
 inline
 void pong(
-		fifo_ptr_t & recv_buf,
-		fifo_ptr_t & send_buf)
+		fifo_t & recv_buf,
+		fifo_t & send_buf)
 {
 	boost::optional< std::string > value;
 
-	BOOST_ASSERT( recv_buf->take( value) );
+	BOOST_ASSERT( recv_buf.take( value) );
 	std::cout << * value << std::endl;
 	value.reset();
-	send_buf->put("pong");
+	send_buf.put("pong");
 
-	BOOST_ASSERT( recv_buf->take( value) );
+	BOOST_ASSERT( recv_buf.take( value) );
 	std::cout << * value << std::endl;
 	value.reset();
-	send_buf->put("pong");
+	send_buf.put("pong");
 
-	BOOST_ASSERT( recv_buf->take( value) );
+	BOOST_ASSERT( recv_buf.take( value) );
 	std::cout << * value << std::endl;
 	value.reset();
-	send_buf->put("pong");
+	send_buf.put("pong");
 
-	send_buf->deactivate();
+	send_buf.deactivate();
 }
 
 void f( boost::fibers::scheduler<> & sched)
 {
-	fifo_ptr_t buf1( new fifo_t( sched) );
-	fifo_ptr_t buf2( new fifo_t( sched) );
+	fifo_t buf1( sched);
+	fifo_t buf2( sched);
 	
-//	fifo_ptr_t buf1( new fifo_t() );
-//	fifo_ptr_t buf2( new fifo_t() );
-	
-	sched.make_fiber( & ping, buf1, buf2);
-	sched.make_fiber( & pong, buf2, buf1);
+	sched.make_fiber( & ping, boost::ref( buf1), boost::ref( buf2) );
+	sched.make_fiber( & pong, boost::ref( buf2), boost::ref( buf1) );
 }
 
 int main()

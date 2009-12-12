@@ -14,7 +14,7 @@ int value1 = 0;
 int value2 = 0;
 
 inline
-void fn1( boost::fibers::spin_barrier & b)
+void fn1( boost::fibers::spin::barrier & b)
 {
 	std::stringstream tss;
 	tss << boost::this_thread::get_id();
@@ -46,7 +46,7 @@ void fn1( boost::fibers::spin_barrier & b)
 }
 
 inline
-void fn2( boost::fibers::spin_barrier & b)
+void fn2( boost::fibers::spin::barrier & b)
 {
 	std::stringstream tss;
 	tss << boost::this_thread::get_id();
@@ -79,7 +79,7 @@ void fn2( boost::fibers::spin_barrier & b)
 
 void f(
 	boost::barrier & tb,
-	boost::fibers::spin_barrier & fb)
+	boost::fibers::spin::barrier & fb)
 {
 	std::stringstream tss;
 	tss << boost::this_thread::get_id();
@@ -103,7 +103,7 @@ void f(
 
 void g(
 	boost::barrier & tb,
-	boost::fibers::spin_barrier & fb)
+	boost::fibers::spin::barrier & fb)
 {
 	std::stringstream tss;
 	tss << boost::this_thread::get_id();
@@ -130,7 +130,7 @@ int main()
 	try
 	{
 		boost::barrier tb( 2);
-		boost::fibers::spin_barrier fb( 2);
+		boost::fibers::spin::barrier fb( 2);
 
 		std::cout << "start" << std::endl;
 

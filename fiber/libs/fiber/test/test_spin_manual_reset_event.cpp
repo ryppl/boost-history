@@ -21,7 +21,7 @@
 
 int value = 0;
 
-void wait_fn( boost::fibers::spin_manual_reset_event & ev)
+void wait_fn( boost::fibers::spin::manual_reset_event & ev)
 {
 	ev.wait();
 	++value;
@@ -30,7 +30,7 @@ void wait_fn( boost::fibers::spin_manual_reset_event & ev)
 void test_case_1()
 {
 	value = 0;
-	boost::fibers::spin_manual_reset_event ev;
+	boost::fibers::spin::manual_reset_event ev;
 	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber(
@@ -60,7 +60,7 @@ void test_case_1()
 void test_case_2()
 {
 	value = 0;
-	boost::fibers::spin_manual_reset_event ev;
+	boost::fibers::spin::manual_reset_event ev;
 	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber(
@@ -106,7 +106,7 @@ void test_case_2()
 void test_case_3()
 {
 	value = 0;
-	boost::fibers::spin_manual_reset_event ev( true);
+	boost::fibers::spin::manual_reset_event ev( true);
 	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber(
@@ -129,7 +129,7 @@ void test_case_3()
 
 void test_case_4()
 {
-	boost::fibers::spin_manual_reset_event ev;
+	boost::fibers::spin::manual_reset_event ev;
 
 	BOOST_CHECK_EQUAL( false, ev.try_wait() );
 

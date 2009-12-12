@@ -13,13 +13,13 @@
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
 #include <boost/preprocessor/repetition.hpp>
+#include <boost/thread/detail/move.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/detail/info.hpp>
-#include <boost/fiber/detail/move.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -78,7 +78,7 @@ private:
 
 	template< typename Fn >
 	static detail::info_base::ptr_t make_info_(
-		std::size_t stack_size, boost::detail::fiber_move_t< Fn > fn)
+		std::size_t stack_size, boost::detail::thread_move_t< Fn > fn)
 	{
 		return detail::info_base::ptr_t(
 			new detail::info< Fn >( fn, stack_size) );
@@ -120,34 +120,34 @@ public:
 	template< typename Fn >
 	explicit fiber(
 			Fn fn,
-				typename disable_if< boost::is_convertible< Fn &, boost::detail::fiber_move_t< Fn > >, dummy * >::type = 0) :
+				typename disable_if< boost::is_convertible< Fn &, boost::detail::thread_move_t< Fn > >, dummy * >::type = 0) :
 		info_base_( make_info_( BOOST_FIBER_DEFAULT_STACKSIZE, fn) )
 	{ init_(); }
 
 	template< typename Fn >
 	explicit fiber(
 			std::size_t stack_size, Fn fn,
-			typename disable_if< boost::is_convertible< Fn &, boost::detail::fiber_move_t< Fn > >, dummy * >::type = 0) :
+			typename disable_if< boost::is_convertible< Fn &, boost::detail::thread_move_t< Fn > >, dummy * >::type = 0) :
 		info_base_( make_info_( stack_size, fn) )
 	{ init_(); }
 #endif
 	template< typename Fn >
-	explicit fiber( boost::detail::fiber_move_t< Fn > fn) :
+	explicit fiber( boost::detail::thread_move_t< Fn > fn) :
 		info_base_( make_info_( BOOST_FIBER_DEFAULT_STACKSIZE, fn) )
 	{ init_(); }
 
 	template< typename Fn >
-	explicit fiber( std::size_t stack_size, boost::detail::fiber_move_t< Fn > fn) :
+	explicit fiber( std::size_t stack_size, boost::detail::thread_move_t< Fn > fn) :
 		info_base_( make_info_( stack_size, fn) )
 	{ init_(); }
 
-	fiber( boost::detail::fiber_move_t< fiber >);
+	fiber( boost::detail::thread_move_t< fiber >);
 	
-	fiber & operator=( boost::detail::fiber_move_t< fiber >);
+	fiber & operator=( boost::detail::thread_move_t< fiber >);
 	
-	operator boost::detail::fiber_move_t< fiber >();
+	operator boost::detail::thread_move_t< fiber >();
 	
-	boost::detail::fiber_move_t< fiber > move();
+	boost::detail::thread_move_t< fiber > move();
 #endif
 
 #define BOOST_FIBER_ARG(z, n, unused) \
@@ -290,7 +290,7 @@ fiber && move( fiber && f)
 { return f; }
 #else
 inline
-fiber move( boost::detail::fiber_move_t< fiber > f)
+fiber move( boost::detail::thread_move_t< fiber > f)
 { return fiber( f); }
 #endif
 

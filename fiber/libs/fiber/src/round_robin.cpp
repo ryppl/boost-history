@@ -11,8 +11,8 @@
 
 #include <boost/assert.hpp>
 #include <boost/foreach.hpp>
+#include <boost/thread/detail/move.hpp>
 
-#include <boost/fiber/detail/move.hpp>
 #include <boost/fiber/exceptions.hpp>
 
 #include <boost/config/abi_prefix.hpp>

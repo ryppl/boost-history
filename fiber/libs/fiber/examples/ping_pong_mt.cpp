@@ -12,13 +12,12 @@
 
 #include <boost/fiber.hpp>
 
-typedef boost::fibers::unbounded_fifo< std::string, boost::fibers::spin_mutex >	fifo_t;
-typedef boost::intrusive_ptr< fifo_t >					fifo_ptr_t;
+typedef boost::fibers::spin::unbounded_fifo< std::string >	fifo_t;
 
 inline
 void ping(
-		fifo_ptr_t & recv_buf,
-		fifo_ptr_t & send_buf)
+		fifo_t & recv_buf,
+		fifo_t & send_buf)
 {
 	std::stringstream tss;
 	tss << boost::this_thread::get_id();
@@ -29,30 +28,30 @@ void ping(
 
 	boost::optional< std::string > value;
 
-	send_buf->put("ping");
-	BOOST_ASSERT( recv_buf->take( value) );
+	send_buf.put("ping");
+	BOOST_ASSERT( recv_buf.take( value) );
 	fprintf( stderr, "ping fiber %s in thread %s recevied %s\n", fss.str().c_str(), tss.str().c_str(), value->c_str());
 	value.reset();
 
-	send_buf->put("ping");
-	BOOST_ASSERT( recv_buf->take( value) );
+	send_buf.put("ping");
+	BOOST_ASSERT( recv_buf.take( value) );
 	fprintf( stderr, "ping fiber %s in thread %s recevied %s\n", fss.str().c_str(), tss.str().c_str(), value->c_str());
 	value.reset();
 
-	send_buf->put("ping");
-	BOOST_ASSERT( recv_buf->take( value) );
+	send_buf.put("ping");
+	BOOST_ASSERT( recv_buf.take( value) );
 	fprintf( stderr, "ping fiber %s in thread %s recevied %s\n", fss.str().c_str(), tss.str().c_str(), value->c_str());
 	value.reset();
 
-	send_buf->deactivate();
+	send_buf.deactivate();
 
 	fprintf( stderr, "end ping fiber %s in thread %s\n", fss.str().c_str(), tss.str().c_str() );
 }
 
 inline
 void pong(
-		fifo_ptr_t & recv_buf,
-		fifo_ptr_t & send_buf)
+		fifo_t & recv_buf,
+		fifo_t & send_buf)
 {
 	std::stringstream tss;
 	tss << boost::this_thread::get_id();
@@ -63,29 +62,29 @@ void pong(
 
 	boost::optional< std::string > value;
 
-	BOOST_ASSERT( recv_buf->take( value) );
+	BOOST_ASSERT( recv_buf.take( value) );
 	fprintf( stderr, "pong fiber %s in thread %s recevied %s\n", fss.str().c_str(), tss.str().c_str(), value->c_str());
 	value.reset();
-	send_buf->put("pong");
+	send_buf.put("pong");
 
-	BOOST_ASSERT( recv_buf->take( value) );
+	BOOST_ASSERT( recv_buf.take( value) );
 	fprintf( stderr, "pong fiber %s in thread %s recevied %s\n", fss.str().c_str(), tss.str().c_str(), value->c_str());
 	value.reset();
-	send_buf->put("pong");
+	send_buf.put("pong");
 
-	BOOST_ASSERT( recv_buf->take( value) );
+	BOOST_ASSERT( recv_buf.take( value) );
 	fprintf( stderr, "pong fiber %s in thread %s recevied %s\n", fss.str().c_str(), tss.str().c_str(), value->c_str());
 	value.reset();
-	send_buf->put("pong");
+	send_buf.put("pong");
 
-	send_buf->deactivate();
+	send_buf.deactivate();
 
 	fprintf( stderr, "end pong fiber %s in thread %s\n", fss.str().c_str(), tss.str().c_str() );
 }
 
 void f(
-		fifo_ptr_t & recv_buf,
-		fifo_ptr_t & send_buf)
+		fifo_t & recv_buf,
+		fifo_t & send_buf)
 {
 	std::stringstream tss;
 	tss << boost::this_thread::get_id();
@@ -106,8 +105,8 @@ void f(
 }
 
 void g(
-		fifo_ptr_t & recv_buf,
-		fifo_ptr_t & send_buf)
+		fifo_t & recv_buf,
+		fifo_t & send_buf)
 {
 	std::stringstream tss;
 	tss << boost::this_thread::get_id();
@@ -131,8 +130,8 @@ int main()
 {
 	try
 	{
-		fifo_ptr_t buf1( new fifo_t() );
-		fifo_ptr_t buf2( new fifo_t() );
+		fifo_t buf1;
+		fifo_t buf2;
 
 		std::cout << "start" << std::endl;
 

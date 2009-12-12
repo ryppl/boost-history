@@ -21,21 +21,21 @@
 
 int value = 0;
 
-void notify_one_fn( boost::fibers::spin_condition & cond)
+void notify_one_fn( boost::fibers::spin::condition & cond)
 {
 	cond.notify_one();
 }
 
-void notify_all_fn( boost::fibers::spin_condition & cond)
+void notify_all_fn( boost::fibers::spin::condition & cond)
 {
 	cond.notify_all();
 }
 
 void wait_fn(
-	boost::fibers::spin_mutex & mtx,
-	boost::fibers::spin_condition & cond)
+	boost::fibers::spin::mutex & mtx,
+	boost::fibers::spin::condition & cond)
 {
-	boost::fibers::spin_mutex::scoped_lock lk( mtx);
+	boost::fibers::spin::mutex::scoped_lock lk( mtx);
 	cond.wait( lk);
 	++value;
 }
@@ -43,8 +43,8 @@ void wait_fn(
 void test_case_1()
 {
 	value = 0;
-	boost::fibers::spin_mutex mtx;
-	boost::fibers::spin_condition cond;
+	boost::fibers::spin::mutex mtx;
+	boost::fibers::spin::condition cond;
 	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber(
@@ -84,8 +84,8 @@ void test_case_1()
 void test_case_2()
 {
 	value = 0;
-	boost::fibers::spin_mutex mtx;
-	boost::fibers::spin_condition cond;
+	boost::fibers::spin::mutex mtx;
+	boost::fibers::spin::condition cond;
 	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber(
@@ -138,8 +138,8 @@ void test_case_2()
 void test_case_3()
 {
 	value = 0;
-	boost::fibers::spin_mutex mtx;
-	boost::fibers::spin_condition cond;
+	boost::fibers::spin::mutex mtx;
+	boost::fibers::spin::condition cond;
 	boost::fibers::scheduler<> sched;
 
 	sched.make_fiber(

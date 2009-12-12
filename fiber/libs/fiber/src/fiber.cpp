@@ -51,27 +51,27 @@ fiber &&
 fiber::move()
 { return static_cast< fiber && >( * this); }
 #else
-fiber::fiber( boost::detail::fiber_move_t< fiber > f)
+fiber::fiber( boost::detail::thread_move_t< fiber > f)
 {
 	info_base_ = f->info_base_;
 	f->info_base_.reset();
 }
 
 fiber &
-fiber::operator=( boost::detail::fiber_move_t< fiber > f)
+fiber::operator=( boost::detail::thread_move_t< fiber > f)
 {
 	fiber new_fiber( f);
 	swap( new_fiber);
 	return * this;
 }
 
-fiber::operator boost::detail::fiber_move_t< fiber >()
+fiber::operator boost::detail::thread_move_t< fiber >()
 { return move(); }
 
-boost::detail::fiber_move_t< fiber >
+boost::detail::thread_move_t< fiber >
 fiber::move()
 {
-	boost::detail::fiber_move_t< fiber > f( * this);
+	boost::detail::thread_move_t< fiber > f( * this);
 	return f;
 }
 #endif
