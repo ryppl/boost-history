@@ -23,7 +23,7 @@
 #include <boost/fiber/spin/bounded_fifo.hpp>
 #include <boost/fiber/spin/condition.hpp>
 #include <boost/fiber/spin/count_down_event.hpp>
-//#include <boost/fiber/spin/future.hpp>
+#include <boost/fiber/spin/future.hpp>
 #include <boost/fiber/spin/manual_reset_event.hpp>
 #include <boost/fiber/spin/mutex.hpp>
 #include <boost/fiber/spin/unbounded_fifo.hpp>

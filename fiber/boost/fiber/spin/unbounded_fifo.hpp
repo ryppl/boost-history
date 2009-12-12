@@ -70,7 +70,7 @@ private:
 		{ return 0 == state_; }
 
 		void deactivate_()
-		{ detail::atomic_fetch_add( & state_, 1); }
+		{ fibers::detail::atomic_fetch_add( & state_, 1); }
 
 		bool empty_()
 		{ return head_ == get_tail_(); }
@@ -156,10 +156,10 @@ private:
 		}
 
 		friend void intrusive_ptr_add_ref( impl * p)
-		{ detail::atomic_fetch_add( & p->use_count_, 1); }
+		{ fibers::detail::atomic_fetch_add( & p->use_count_, 1); }
 
 		friend void intrusive_ptr_release( impl * p)
-		{ if ( detail::atomic_fetch_sub( & p->use_count_, 1) == 1) delete p; }
+		{ if ( fibers::detail::atomic_fetch_sub( & p->use_count_, 1) == 1) delete p; }
 	};
 
 	intrusive_ptr< impl >	impl_;

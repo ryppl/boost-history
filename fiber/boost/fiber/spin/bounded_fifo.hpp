@@ -73,7 +73,7 @@ private:
 		{ return 0 == state_; }
 
 		void deactivate_()
-		{ detail::atomic_fetch_add( & state_, 1); }
+		{ fibers::detail::atomic_fetch_add( & state_, 1); }
 
 		uint32_t size_()
 		{ return count_; }
@@ -95,7 +95,7 @@ private:
 		{
 			typename node::ptr_t old_head = head_;
 			head_ = old_head->next;
-			detail::atomic_fetch_sub( & count_, 1);
+			fibers::detail::atomic_fetch_sub( & count_, 1);
 			return old_head;
 		}
 
@@ -183,7 +183,7 @@ private:
 				tail_->va = t;
 				tail_->next = new_node;
 				tail_ = new_node;
-				detail::atomic_fetch_add( & count_, 1);
+				fibers::detail::atomic_fetch_add( & count_, 1);
 			}
 			not_empty_cond_.notify_one();
 		}
@@ -241,10 +241,10 @@ private:
 		}
 
 		friend void intrusive_ptr_add_ref( impl * p)
-		{ detail::atomic_fetch_add( & p->use_count_, 1); }
+		{ fibers::detail::atomic_fetch_add( & p->use_count_, 1); }
 
 		friend void intrusive_ptr_release( impl * p)
-		{ if ( detail::atomic_fetch_sub( & p->use_count_, 1) == 1) delete p; }
+		{ if ( fibers::detail::atomic_fetch_sub( & p->use_count_, 1) == 1) delete p; }
 	};
 
 	intrusive_ptr< impl >	impl_;
