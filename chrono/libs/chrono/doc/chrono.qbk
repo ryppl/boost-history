@@ -23,6 +23,8 @@
     ]
 ]
 
+[def __Boost_Chrono__ [*Boost.Chrono]]
+
 [/
 [section Preface]
 
@@ -429,7 +431,7 @@ The underlying clocks provided by operating systems are subject to many seemingl
 [/======================================]
 
 [/=================================]
-[heading Getting __Boost_Chrono__]
+[heading Getting __Boost_Chrono__ ]
 [/=================================]
 
 You can get the last stable release of __Boost_Chrono__ by downloading [^chrono.zip] from the
@@ -438,12 +440,17 @@ You can get the last stable release of __Boost_Chrono__ by downloading [^chrono.
 You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox].
 
 [/=================================]
-[heading Building __Boost_Chrono__]
+[heading Building __Boost_Chrono__ ]
 [/=================================]
 
 __Boost_Chrono__ is not a header only library. You need to compile it before use.
 
+The simple way is to decompress the compressed file in the Boost release directory you want to test.
+
     bjam libs/chrono/build
+
+If you decompress in another directory, you will need to comment some lines, and uncomment and change others. Sorry for this, but I have not rached yet to write a Jamfile that is able to work in both environements and use the BOOST_ROOT variable. Any help is welcome.
+
 
 
 [/=========================]
@@ -493,25 +500,32 @@ All functions in the library are thread-unsafe except when noted explicitly.
 
 The implementation will eventually work with most C++03 conforming compilers. Initial tests have been run on
 
-Windows with
+On Windows with
 
 * VC++ 9.0 SP1
-* Intel 11.0
+[/* Intel 11.0]
 
-On Ubuntu Linux with
+[/On Ubuntu Linux with
 
 * GCC 4.2.4
+]
 
-On SL Linux with
+[/On SL Linux with
 
 * GCC 3.4.6
 * GCC 4.1.2
+]
 
 On Cygwin with
 
 * GCC 3.4.4
-[/*  GCC 4.3.2]
+* GCC 4.3.2
 
+On MinGW with
+
+* GCC 4.4.0
+
+[note Please let me know how this works on other platforms.]
 
 [note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
 
@@ -2016,6 +2030,29 @@ Here is the output for this program for several sets of command line arguments:
 [section:history Appendix A: History]
 [/==================================]
 
+[section [*Version 0.2.1, December 12, 2009] ['Bug fixes]]
+
+[*Bug Fixes]
+
+* Replace INTMAX_C by BOOST_INTMAX_C until boost/cstdint;hpp ensures INTMAX_C is always defined. 
+* Define BOOST_CHRONO_HAS_CLOCK_MONOTONIC when BOOST_CHRONO_WINDOWS_API
+* Commenting invalid operator declarations
+* Take care of Boost min/max recommendations
+* complete qualification boost::chrono::duration to avoid possible BUG in gcc-4.4.0 reporting the following error
+
+    ./boost/chrono/chrono.hpp:945: error: declaration of 'typedef class boost::chrono::duration<long long int, boost::ratio<1ll, 10000000ll> > boost::chrono::system_clock::duration'
+    ./boost/chrono/chrono.hpp:458: error: changes meaning of 'duration' from 'class boost::chrono::duration<long long int, boost::ratio<1ll, 10000000ll> >'
+
+* cleanup of simulated...
+* warning removal on posix/process_clock.cpp
+* disable VC++ foolishness
+* Update Jamfiles to manage with dll
+* removal of conversion warning in test_duration 
+* manage with MSVC reporting a warning instead of an error when there is an integral constant overflow
+
+
+[endsect]
+
 [section [*Version 0.2.0, December 8, 2009] ['+ Features + Bug fixes + Updated documentation]]
 
 [*Features:] 
@@ -2023,7 +2060,7 @@ Here is the output for this program for several sets of command line arguments:
 * Added ratio construction and assignment from an equivalent ratio ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
 * Added nested ratio typedef type ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
 * Added BOOST_CHRONO_HAS_CLOCK_MONOTONIC macro to state if monotonic_clock is provided on this platform.
-* Added duration operator% ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934 [*934. duration is missing operator%]])
+* Added duration operator% ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934 [*LGW 934. duration is missing operator%]])
 * Added BOOST_CONSTEXPR when constexpr should be used
 * Complete duration operator* and operator/  
 
@@ -2041,7 +2078,7 @@ Here is the output for this program for several sets of command line arguments:
 
 * The documentation is written now using quick-book using as base [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] .
 
-[*Bugs]
+[*Bug Fixes]
 
 * operator/ was ambiguous: Disambiguate duration operator/  
 * CLOCK_MONOTONIC is not defined with cygwin/gcc 3.4: Disable code when BOOST_CHRONO_HAS_CLOCK_MONOTONIC is not defined.
@@ -2169,7 +2206,7 @@ Much thanks to Andrei Alexandrescu, Walter Brown, Peter Dimov, Jeff Garland, Ter
 [endsect]
 [section  Appendix E: Tests]
 
-In order to test you need to do just
+In order to test you need to do.
 
     bjam libs/chrono/test
 
@@ -2177,7 +2214,7 @@ In order to test you need to do just
 [section `ratio`]
 [table
     [[Name]             [kind]          [Description]          [Result] [Ticket]]
-    [[ratio_fail_1.]    [compile-fails] [...]                  [Pass]   [#]]
+    [[ratio_fail_1]    [compile-fails] [...]                  [Pass]   [#]]
     [[ratio_test]       [run]           [...]                  [Pass]   [#]]
 ]
 [endsect]

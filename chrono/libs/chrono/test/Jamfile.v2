@@ -10,10 +10,10 @@
 project
     : requirements
       #<library>/boost/chrono//boost_chrono
-      <library>/boost/system//boost_system/<link>static
-      #<library>../build//boost_chrono/<link>static
-      <include>/boost_1_39_0
-      <include>../../..
+      #<library>/boost/system//boost_system
+      <library>../build//boost_chrono
+      #<include>/boost_1_39_0
+      #<include>../../..
       <toolset>msvc:<asynch-exceptions>on
     ;
 
@@ -24,36 +24,50 @@ project
 
     test-suite "ratio"
         :
-        [ run ratio_test.cpp ]
-        [ compile-fail ratio_fail_test1.cpp ]
+        [ compile-fail ratio_fail_test1.cpp : <toolset>msvc:<warnings-as-errors>on ]
+        [ run ratio_test.cpp  :  :  : <link>static ]
+        [ run ratio_test.cpp  ../../system/build :  :  :  : ratio_test_dll ]
         ;
 
 
     test-suite "chrono"
         :
-        [ run chrono_unit_test.cpp  ../build//boost_chrono/<link>static ]
-        [ run explore_limits.cpp  ../build//boost_chrono/<link>static ]
-        [ run test_duration.cpp  ../build//boost_chrono/<link>static ]
-        [ run test_system_clock.cpp  ../build//boost_chrono/<link>static ]
-        [ run miscellaneous.cpp  ../build//boost_chrono/<link>static ]
-        [ run test_special_values.cpp  ../build//boost_chrono/<link>static ]
-        [ run manipulate_clock_object.cpp  ../build//boost_chrono/<link>static ]
-        [ run ../example/cycle_count.cpp  ../build//boost_chrono/<link>static ]
-        [ run ../example/runtime_resolution.cpp  ../build//boost_chrono/<link>static ]
-        [ run ../example/xtime.cpp  ../build//boost_chrono/<link>static ]
-        [ run ../example/saturating.cpp  ../build//boost_chrono/<link>static ]
-        [ run ../example/min_time_point.cpp  ../build//boost_chrono/<link>static ]
-        [ run ../example/i_dont_like_the_default_duration_behavior.cpp  ../build//boost_chrono/<link>static ]
-        [ run ../example/simulated_thread_interface_demo.cpp  ../build//boost_chrono/<link>static ]
-        [ run ../example/timeval_demo.cpp  ../build//boost_chrono/<link>static ]
+        [ run chrono_unit_test.cpp :  :  : <link>static ]
+        [ run chrono_unit_test.cpp ../../system/build :  :  :  : chrono_unit_test_dll ]
+        [ run explore_limits.cpp :  :  : <link>static ]
+        [ run explore_limits.cpp ../../system/build :  :  :  : explore_limits_dll ]
+        [ run test_duration.cpp :  :  : <link>static ]
+        [ run test_duration.cpp ../../system/build :  :  :  : test_duration_dll ]
+        [ run test_system_clock.cpp :  :  : <link>static ]
+        [ run test_system_clock.cpp ../../system/build :  :  :  : test_system_clock_dll ]
+        [ run miscellaneous.cpp :  :  : <link>static ]
+        [ run miscellaneous.cpp ../../system/build :  :  :  : miscellaneous_dll ]
+        [ run test_special_values.cpp :  :  : <link>static ]
+        [ run test_special_values.cpp ../../system/build :  :  :  : test_special_values_dll ]
+        [ run manipulate_clock_object.cpp :  :  : <link>static ]
+        [ run manipulate_clock_object.cpp ../../system/build :  :  :  : manipulate_clock_object_dll ]
+        [ run ../example/cycle_count.cpp :  :  : <link>static ]
+        [ run ../example/cycle_count.cpp ../../system/build :  :  :  : cycle_count_dll ]
+        [ run ../example/runtime_resolution.cpp :  :  : <link>static ]
+        [ run ../example/runtime_resolution.cpp ../../system/build :  :  :  : runtime_resolution_dll ]
+        [ run ../example/xtime.cpp :  :  : <link>static ]
+        [ run ../example/xtime.cpp ../../system/build :  :  :  : xtime_dll ]
+        [ run ../example/saturating.cpp :  :  : <link>static ]
+        [ run ../example/saturating.cpp  ../../system/build :  :  :  : saturating_dll ]
+        [ run ../example/min_time_point.cpp :  :  : <link>static ]
+        [ run ../example/min_time_point.cpp  ../../system/build :  :  :  : min_time_point_dll ]
+        [ run ../example/i_dont_like_the_default_duration_behavior.cpp :  :  : <link>static ]
+        [ run ../example/i_dont_like_the_default_duration_behavior.cpp  ../../system/build :  :  :  : i_dont_like_the_default_duration_behavior_dll ]
+        [ run ../example/simulated_thread_interface_demo.cpp :  :  : <link>static ]
+        [ run ../example/simulated_thread_interface_demo.cpp  ../../system/build :  :  :  : simulated_thread_interface_demo_dll ]
+        [ run ../example/timeval_demo.cpp :  :  : <link>static ]
+        [ run ../example/timeval_demo.cpp ../../system/build :  :  :  : timeval_demo_dll ]
         ;
 
     test-suite "timer"
         :
-        [ run ../example/run_timer_example.cpp ../build//boost_chrono/<link>static ]
-        [ run run_timer_test.cpp ../build//boost_chrono/<link>static
-           :  :  : ]
-        #[ run run_timer_test.cpp ../build//boost_chrono/<link>static
-        #  :  :  :  : run_timer_test_dll
-        #]
+        [ run ../example/run_timer_example.cpp :  :  : <link>static ]
+        [ run ../example/run_timer_example.cpp ../../system/build :  :  :  : run_timer_example_dll ]
+        [ run run_timer_test.cpp  :  :  : <link>static ]
+        [ run run_timer_test.cpp ../../system/build :  :  :  : run_timer_test_dll ]
         ;

@@ -179,7 +179,7 @@ int main()
     //tmpl2(3,3);  // Will not compile, 3 is not implicitly convertible to any `duration`
 
     {
-    double r = milliseconds(3) / milliseconds(3);
+    double r = double(milliseconds(3) / milliseconds(3));
     duration<double, boost::milli> d = milliseconds(3) * 2.5;
     duration<double, boost::milli> d2 = 2.5 * milliseconds(3) ;
     duration<double, boost::milli> d3 = milliseconds(3) / 2.5;
