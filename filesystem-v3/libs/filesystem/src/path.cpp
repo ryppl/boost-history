@@ -266,7 +266,7 @@ namespace filesystem
     return path(m_path.c_str() + itr.m_pos);
   }
 
-  path path::parent_path() const
+  string_type::size_type path::m_parent_path_end() const
   {
     size_type end_pos(filename_pos(m_path, m_path.size()));
 
@@ -283,8 +283,22 @@ namespace filesystem
       --end_pos) {}
 
    return (end_pos == 1 && root_dir_pos == 0 && filename_was_separator)
+     ? string_type::npos
+     : end_pos;
+  }
+
+  path path::parent_path() const
+  {
+   size_type end_pos(m_parent_path_end());
+   return end_pos == string_type::npos
      ? path()
      : path(m_path.c_str(), m_path.c_str() + end_pos);
+  }
+
+  path& path::remove_filename()
+  {
+    m_path.erase(m_parent_path_end());
+    return *this;
   }
 
   path path::filename() const
@@ -314,12 +328,6 @@ namespace filesystem
     return pos == string_type::npos
       ? path()
       : path(name.m_path.c_str() + pos);
-  }
-
-  path & path::remove_filename()
-  {
-    m_path.erase(filename_pos(m_path, m_path.size()));
-    return *this;
   }
 
   path & path::replace_extension(const path & source)

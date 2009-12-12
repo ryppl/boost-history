@@ -26,10 +26,13 @@
 
 <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="100%">
   <tr>
-    <td><a href="../../../index.htm">Boost Home</a>&nbsp;&nbsp;&nbsp;
-    <a href="index.htm">Library Home</a>&nbsp; &nbsp;
-    <a href="index.htm#tutorial">Tutorial</a>&nbsp; &nbsp; <a href="reference.html">
-    Reference</a>&nbsp;&nbsp; <a href="faq.htm">FAQ</a></td>
+    <td><a href="../../../index.htm">Boost Home</a>
+    &nbsp;&nbsp;&nbsp; <a href="index.htm">Library Home</a>
+    &nbsp; &nbsp; <a href="index.htm#tutorial">Tutorial</a>
+    &nbsp; &nbsp; <a href="reference.html">Reference</a>
+    &nbsp;&nbsp; <a href="faq.htm">FAQ</a>
+    &nbsp;&nbsp; <a href="v3.html"> V3 Introduction</a>
+    </td>
   </tr>
 </table>
 
@@ -320,8 +323,8 @@ the same object within a file system.</p>
       void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time);
       void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time, system::error_code&amp; ec);
 
-      path         read_symlink(const path&amp; p);
-      path         read_symlink(const path&amp; p, system::error_code&amp; ec);
+      path         <a href="#read_symlink">read_symlink</a>(const path&amp; p);
+      path         <a href="#read_symlink">read_symlink</a>(const path&amp; p, system::error_code&amp; ec);
 
       bool         <a href="#remove">remove</a>(const path&amp; p);
       bool         <a href="#remove">remove</a>(const path&amp; p, system::error_code&amp; ec);
@@ -821,13 +824,10 @@ appends</a></h4>
 </blockquote>
 <pre>path&amp; remove_filename();</pre>
 <blockquote>
-  <p><i>Effects:</i> If <code>has_parent_path()</code> then remove the last filename from the 
-  contained pathname. If that leaves 
-  the contained pathname with one or more trailing separator elements not 
-  representing&nbsp;a root-directory, remove them.</p>
-  <p><i>Returns:</i> <code>*this</code></p>
+  <p><i>Returns: </i>As if, <code>*this = parent_path();</code></p>
   <p>[<i>Note:</i> This function is needed to efficiently implement <code>
-  directory_iterator</code>. It is made public to allow additional uses. <i>-- end 
+  directory_iterator</code>. It is exposed to allow additional uses. The actual 
+  implementation may be much more efficient than <code>*this = parent_path()</code>&nbsp; <i>-- end 
   note</i>]</p>
 </blockquote>
 <pre>path&amp; replace_extension(const path&amp; new_extension = path());</pre>
@@ -967,8 +967,8 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
 </blockquote>
 <pre>path parent_path() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>(empty() || begin() == --end()) ? path() : 
-  <i>br</i></code>, where <code><i>br</i></code> is constructed as if by 
+  <p><i>Returns:</i> <code>(empty() || begin() == --end()) ? path() : <i>pp</i></code>, where
+  <code><i>pp</i></code> is constructed as if by 
   starting with an empty <code>path</code> and successively applying <code>
   operator/=</code> for each element in the range <code>begin()</code>, <code>
   --end()</code>.</p>
@@ -3310,7 +3310,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->11 December 2009<!--webbot bot="Timestamp" endspan i-checksum="39735" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->12 December 2009<!--webbot bot="Timestamp" endspan i-checksum="39737" --></p>
 
 </body>
 

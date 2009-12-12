@@ -1,6 +1,6 @@
 //  filesystem path.hpp  ---------------------------------------------------------------//
 
-//  Copyright Beman Dawes 2002-2005, 2008
+//  Copyright Beman Dawes 2002-2005, 2009
 //  Copyright Vladimir Prus 2002
 
 //  Distributed under the Boost Software License, Version 1.0.
@@ -273,8 +273,8 @@ namespace filesystem
 
     //  -----  modifiers  -----
 
-    void    clear()             { m_path.clear(); }
-    void    swap(path& rhs)     { m_path.swap(rhs.m_path); }
+    void   clear()             { m_path.clear(); }
+    void   swap(path& rhs)     { m_path.swap(rhs.m_path); }
     path&  remove_filename();
     path&  replace_extension(const path& new_extension = path());
 
@@ -445,6 +445,10 @@ namespace filesystem
 //--------------------------------------------------------------------------------------//
 
   private:
+#   if defined(_MSC_VER)
+#     pragma warning(push) // Save warning settings
+#     pragma warning(disable : 4251) // disable warning: class 'std::basic_string<_Elem,_Traits,_Ax>'
+#   endif                            // needs to have dll-interface...
 /*
       m_path has the type, encoding, and format required by the native
       operating system. Thus for POSIX and Windows there is no conversion for
@@ -455,13 +459,16 @@ namespace filesystem
 */
     string_type  m_path;  // Windows: as input; backslashes NOT converted to slashes,
                           // slashes NOT converted to backslashes
+#   if defined(_MSC_VER)
+#     pragma warning(pop) // restore warning settings.
+#   endif 
 
     string_type::size_type m_append_separator_if_needed();
     //  Returns: If separator is to be appended, m_path.size() before append. Otherwise 0.
     //  Note: An append is never performed if size()==0, so a returned 0 is unambiguous.
 
     void m_erase_redundant_separator(string_type::size_type sep_pos);
-    
+    string_type::size_type m_parent_path_end() const;
     void m_portable();
 
     //path&  m_normalize();

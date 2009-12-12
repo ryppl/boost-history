@@ -156,9 +156,9 @@ namespace
     p.directory_string();
   }
 
-  //  rename_test ----------------------------------------------------------------------//
+  //  remove_leaf_test -----------------------------------------------------------------//
 
-  void rename_test()
+  void remove_leaf_test()
   {
     fs::path p("foo/bar/blah");
 
@@ -204,7 +204,7 @@ int main(int /*argc*/, char* /*argv*/[])
   BOOST_TEST(!fs::is_regular(ng));  // verify deprecated name still works
   BOOST_TEST(!fs::symbolic_link_exists("nosuchfileordirectory"));
 
-  rename_test();
+  remove_leaf_test();
 
   //check_normalize();
  

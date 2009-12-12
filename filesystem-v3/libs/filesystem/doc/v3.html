@@ -1,0 +1,69 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Boost.Filesystem Version 3</title>
+<link rel="stylesheet" type="text/css" href="../../../doc/html/minimal.css">
+
+<body>
+
+<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="933">
+  <tr>
+    <td width="277">
+<a href="../../../index.htm">
+<img src="../../../boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86" border="0"></a></td>
+    <td width="633" align="middle">
+    <font size="7">Filesystem Library<br>
+    Version 3<br>
+&nbsp;</font></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="100%">
+  <tr>
+    <td><a href="../../../index.htm">Boost Home</a>&nbsp;&nbsp;&nbsp;
+    <a href="index.htm">Library Home</a>&nbsp; &nbsp;
+    <a href="index.htm#tutorial">Tutorial</a>&nbsp; &nbsp; <a href="reference.html">
+    Reference</a>&nbsp;&nbsp; <a href="faq.htm">FAQ</a></td>
+  </tr>
+</table>
+
+<h1>Boost Filesystem Version 3</h1>
+
+<p>Version 3 is a major revision of the Boost Filesystem library. Important 
+changes include:</p>
+
+<ul>
+  <li>A single class <code>path</code> handles all aspects of 
+  internationalization, replacing the previous template and its <code>path</code> 
+  and <code>wpath</code> instantiations. Character types <code>char</code>,
+  <code>wchar_t</code>, <code>char16_t</code>, and <code>char32_t</code> are 
+  supported. This is a major simplification of the path abstraction, 
+  particularly for functions that take path arguments.<br>
+&nbsp;</li>
+  <li>Support for error reporting via <code>error_code</code> is now uniform 
+  throughout the library.<br>
+&nbsp;</li>
+  <li>New or improved operational functions include:<br>
+&nbsp;<ul>
+    <li><code>create_symlink()</code> now supported on both POSIX and Windows.</li>
+    <li><code>read_symlink()</code> function added. Supported on both POSIX and 
+    Windows.</li>
+    <li><code>resize_file()</code> function added. Supported on both POSIX and 
+    Windows.</li>
+  </ul>
+  </li>
+</ul>
+
+<hr>
+<p>© Copyright Beman Dawes, 2009</p>
+<p>Distributed under the Boost Software License, Version 1.0. See
+<a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
+<p>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->12 December 2009<!--webbot bot="Timestamp" endspan i-checksum="39737" --></p>
+
+</body>
+
+</html>

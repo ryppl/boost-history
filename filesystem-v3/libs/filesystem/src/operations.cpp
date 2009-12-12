@@ -58,6 +58,7 @@ using std::wstring;
 # if defined(BOOST_WINDOWS_API)
 
 #   include <windows.h>
+#   include <winnt.h>
 #   if !defined(_WIN32_WINNT)
 #     define  _WIN32_WINNT   0x0500
 #   endif
@@ -71,9 +72,10 @@ using std::wstring;
 #   endif
 
 //  REPARSE_DATA_BUFFER related definitions are found in ntifs.h, which is part of the 
-//  Windows Device Driver Kit. Since that's inconvient, the needed definitions are
-//  provided here.
-//  See http://msdn.microsoft.com/en-us/library/ms791514.aspx
+//  Windows Device Driver Kit. Since that's inconvenient, the definitions are provided
+//  here. See http://msdn.microsoft.com/en-us/library/ms791514.aspx
+
+#if !defined(REPARSE_DATA_BUFFER_HEADER_SIZE)  // mingw winnt.h does provide the defs
 
 #define SYMLINK_FLAG_RELATIVE 1
 
@@ -112,6 +114,7 @@ typedef struct _REPARSE_DATA_BUFFER {
   FIELD_OFFSET(REPARSE_DATA_BUFFER, GenericReparseBuffer)
 
 #define MAXIMUM_REPARSE_DATA_BUFFER_SIZE  ( 16 * 1024 )
+#endif
 
 
 # else // BOOST_POSIX_API

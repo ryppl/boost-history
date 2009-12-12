@@ -395,7 +395,7 @@ namespace
 
     CHECK(path("").remove_filename() == "");
     CHECK(path("foo").remove_filename() == "");
-    CHECK(path("foo/bar").remove_filename() == "foo/");
+    CHECK(path("foo/bar").remove_filename() == "foo");
 
   }
 

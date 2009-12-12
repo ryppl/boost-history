@@ -767,13 +767,13 @@ namespace
     create_file(f, "1234567890");
 
     BOOST_TEST(fs::exists(f));
-    BOOST_TEST_EQ(fs::file_size(f), 10);
+    BOOST_TEST_EQ(fs::file_size(f), 10U);
     fs::resize_file(f, 5);
     BOOST_TEST(fs::exists(f));
-    BOOST_TEST_EQ(fs::file_size(f), 5);
+    BOOST_TEST_EQ(fs::file_size(f), 5U);
     fs::resize_file(f, 15);
     BOOST_TEST(fs::exists(f));
-    BOOST_TEST_EQ(fs::file_size(f), 15);
+    BOOST_TEST_EQ(fs::file_size(f), 15U);
 
     error_code ec;
     fs::resize_file("no such file", 15, ec);

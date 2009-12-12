@@ -664,17 +664,22 @@ namespace
 
   }
 
-  //  query_and_decomposition_tests  -----------------------------------------//
+  //  query_and_decomposition_tests  ---------------------------------------------------//
+  //
+  //  remove_filename() is also tested here, because its specification depends on
+  //  a decomposition function.
 
   void query_and_decomposition_tests()
   {
     std::cout << "query_and_decomposition_tests..." << std::endl;
 
     path p;
+    path q;
 
-    p = "";
+    p = q = "";
     BOOST_TEST(p.relative_path().string() == "");
     BOOST_TEST(p.parent_path().string() == "");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     BOOST_TEST(p.filename() == "");
     BOOST_TEST(p.root_name() == "");
     BOOST_TEST(p.root_directory() == "");
@@ -687,9 +692,10 @@ namespace
     BOOST_TEST(!p.has_parent_path());
     BOOST_TEST(!p.is_complete());
 
-    p = "/";
+    p = q = "/";
     BOOST_TEST(p.relative_path().string() == "");
     BOOST_TEST(p.parent_path().string() == "");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     BOOST_TEST(p.filename() == "/");
     BOOST_TEST(p.root_name() == "");
     BOOST_TEST(p.root_directory() == "/");
@@ -705,9 +711,10 @@ namespace
     else
       BOOST_TEST(!p.is_complete());
 
-    p = "//";
+    p = q = "//";
     CHECK_EQUAL(p.relative_path().string(), "");
     CHECK_EQUAL(p.parent_path().string(), "");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     CHECK_EQUAL(p.filename(), "//");
     CHECK_EQUAL(p.root_name(), "//");
     CHECK_EQUAL(p.root_directory(), "");
@@ -721,9 +728,10 @@ namespace
     BOOST_TEST(!p.is_complete());
 
 
-    p = "///";
+    p = q = "///";
     CHECK_EQUAL(p.relative_path().string(), "");
     CHECK_EQUAL(p.parent_path().string(), "");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     CHECK_EQUAL(p.filename(), "/");
     CHECK_EQUAL(p.root_name(), "");
     CHECK_EQUAL(p.root_directory(), "/");
@@ -739,9 +747,10 @@ namespace
     else
       BOOST_TEST(!p.is_complete());
 
-    p = ".";
+    p = q = ".";
     BOOST_TEST(p.relative_path().string() == ".");
     BOOST_TEST(p.parent_path().string() == "");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     BOOST_TEST(p.filename() == ".");
     BOOST_TEST(p.root_name() == "");
     BOOST_TEST(p.root_directory() == "");
@@ -754,9 +763,10 @@ namespace
     BOOST_TEST(!p.has_parent_path());
     BOOST_TEST(!p.is_complete());
 
-    p = "..";
+    p = q = "..";
     BOOST_TEST(p.relative_path().string() == "..");
     BOOST_TEST(p.parent_path().string() == "");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     BOOST_TEST(p.filename() == "..");
     BOOST_TEST(p.root_name() == "");
     BOOST_TEST(p.root_directory() == "");
@@ -769,9 +779,10 @@ namespace
     BOOST_TEST(!p.has_parent_path());
     BOOST_TEST(!p.is_complete());
 
-    p = "foo";
+    p = q = "foo";
     BOOST_TEST(p.relative_path().string() == "foo");
     BOOST_TEST(p.parent_path().string() == "");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     BOOST_TEST(p.filename() == "foo");
     BOOST_TEST(p.root_name() == "");
     BOOST_TEST(p.root_directory() == "");
@@ -784,9 +795,10 @@ namespace
     BOOST_TEST(!p.has_parent_path());
     BOOST_TEST(!p.is_complete());
 
-    p = "/foo";
+    p = q = "/foo";
     CHECK_EQUAL(p.relative_path().string(), "foo");
     CHECK_EQUAL(p.parent_path().string(), "/");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     CHECK_EQUAL(p.filename(), "foo");
     CHECK_EQUAL(p.root_name(), "");
     CHECK_EQUAL(p.root_directory(), "/");
@@ -802,9 +814,10 @@ namespace
     else
       BOOST_TEST(!p.is_complete());
 
-    p = "/foo/";
+    p = q = "/foo/";
     CHECK_EQUAL(p.relative_path().string(), "foo/");
     CHECK_EQUAL(p.parent_path().string(), "/foo");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     CHECK_EQUAL(p.filename(), ".");
     CHECK_EQUAL(p.root_name(), "");
     CHECK_EQUAL(p.root_directory(), "/");
@@ -820,9 +833,10 @@ namespace
     else
       BOOST_TEST(!p.is_complete());
 
-    p = "///foo";
+    p = q = "///foo";
     CHECK_EQUAL(p.relative_path().string(), "foo");
     CHECK_EQUAL(p.parent_path().string(), "/");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     CHECK_EQUAL(p.filename(), "foo");
     CHECK_EQUAL(p.root_name(), "");
     CHECK_EQUAL(p.root_directory(), "/");
@@ -838,9 +852,10 @@ namespace
     else
       BOOST_TEST(!p.is_complete());
 
-    p = "foo/bar";
+    p = q = "foo/bar";
     BOOST_TEST(p.relative_path().string() == "foo/bar");
     BOOST_TEST(p.parent_path().string() == "foo");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     BOOST_TEST(p.filename() == "bar");
     BOOST_TEST(p.root_name() == "");
     BOOST_TEST(p.root_directory() == "");
@@ -853,9 +868,10 @@ namespace
     BOOST_TEST(p.has_parent_path());
     BOOST_TEST(!p.is_complete());
 
-    p = "../foo";
+    p = q = "../foo";
     BOOST_TEST(p.relative_path().string() == "../foo");
     BOOST_TEST(p.parent_path().string() == "..");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     BOOST_TEST(p.filename() == "foo");
     BOOST_TEST(p.root_name() == "");
     BOOST_TEST(p.root_directory() == "");
@@ -868,9 +884,10 @@ namespace
     BOOST_TEST(p.has_parent_path());
     BOOST_TEST(!p.is_complete());
 
-    p = "..///foo";
+    p = q = "..///foo";
     CHECK_EQUAL(p.relative_path().string(), "..///foo");
     CHECK_EQUAL(p.parent_path().string(), "..");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     CHECK_EQUAL(p.filename(), "foo");
     CHECK_EQUAL(p.root_name(), "");
     CHECK_EQUAL(p.root_directory(), "");
@@ -883,9 +900,10 @@ namespace
     BOOST_TEST(p.has_parent_path());
     BOOST_TEST(!p.is_complete());
 
-    p = "/foo/bar";
+    p = q = "/foo/bar";
     BOOST_TEST(p.relative_path().string() == "foo/bar");
     BOOST_TEST(p.parent_path().string() == "/foo");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     BOOST_TEST(p.filename() == "bar");
     BOOST_TEST(p.root_name() == "");
     BOOST_TEST(p.root_directory() == "/");
@@ -907,9 +925,10 @@ namespace
     PATH_CHECK(path("//resource/"), "//resource/");
     PATH_CHECK(path("//resource/foo"), "//resource/foo");
 
-    p = path("//net");
+    p = q = path("//net");
     CHECK_EQUAL(p.string(), "//net");
     CHECK_EQUAL(p.relative_path().string(), "");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     CHECK_EQUAL(p.parent_path().string(), "");
     CHECK_EQUAL(p.filename(), "//net");
     CHECK_EQUAL(p.root_name(), "//net");
@@ -923,9 +942,10 @@ namespace
     BOOST_TEST(!p.has_parent_path());
     BOOST_TEST(!p.is_complete());
 
-    p = path("//net/");
+    p = q = path("//net/");
     BOOST_TEST(p.relative_path().string() == "");
     BOOST_TEST(p.parent_path().string() == "//net");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     BOOST_TEST(p.filename() == "/");
     BOOST_TEST(p.root_name() == "//net");
     BOOST_TEST(p.root_directory() == "/");
@@ -938,9 +958,10 @@ namespace
     BOOST_TEST(p.has_parent_path());
     BOOST_TEST(p.is_complete());
 
-    p = path("//net/foo");
+    p = q = path("//net/foo");
     BOOST_TEST(p.relative_path().string() == "foo");
     BOOST_TEST(p.parent_path().string() == "//net/");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     BOOST_TEST(p.filename() == "foo");
     BOOST_TEST(p.root_name() == "//net");
     BOOST_TEST(p.root_directory() == "/");
@@ -953,9 +974,10 @@ namespace
     BOOST_TEST(p.has_parent_path());
     BOOST_TEST(p.is_complete());
 
-    p = path("//net///foo");
+    p = q = path("//net///foo");
     CHECK_EQUAL(p.relative_path().string(), "foo");
     CHECK_EQUAL(p.parent_path().string(), "//net/");
+    BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
     CHECK_EQUAL(p.filename(), "foo");
     CHECK_EQUAL(p.root_name(), "//net");
     CHECK_EQUAL(p.root_directory(), "/");
@@ -971,9 +993,10 @@ namespace
     if (platform == "Windows")
     {
 
-      p = path("c:");
+      p = q = path("c:");
       BOOST_TEST(p.relative_path().string() == "");
       BOOST_TEST(p.parent_path().string() == "");
+      BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
       BOOST_TEST(p.filename() == "c:");
       BOOST_TEST(p.root_name() == "c:");
       BOOST_TEST(p.root_directory() == "");
@@ -986,9 +1009,10 @@ namespace
       BOOST_TEST(!p.has_parent_path());
       BOOST_TEST(!p.is_complete());
 
-      p = path("c:foo");
+      p = q = path("c:foo");
       BOOST_TEST(p.relative_path().string() == "foo");
       BOOST_TEST(p.parent_path().string() == "c:");
+      BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
       BOOST_TEST(p.filename() == "foo");
       BOOST_TEST(p.root_name() == "c:");
       BOOST_TEST(p.root_directory() == "");
@@ -1001,9 +1025,10 @@ namespace
       BOOST_TEST(p.has_parent_path());
       BOOST_TEST(!p.is_complete());
    
-      p = path("c:/");
+      p = q = path("c:/");
       BOOST_TEST(p.relative_path().string() == "");
       BOOST_TEST(p.parent_path().string() == "c:");
+      BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
       BOOST_TEST(p.filename() == "/");
       BOOST_TEST(p.root_name() == "c:");
       BOOST_TEST(p.root_directory() == "/");
@@ -1016,9 +1041,10 @@ namespace
       BOOST_TEST(p.has_parent_path());
       BOOST_TEST(p.is_complete());
 
-      p = path("c:..");
+      p = q = path("c:..");
       BOOST_TEST(p.relative_path().string() == "..");
       BOOST_TEST(p.parent_path().string() == "c:");
+      BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
       BOOST_TEST(p.filename() == "..");
       BOOST_TEST(p.root_name() == "c:");
       BOOST_TEST(p.root_directory() == "");
@@ -1031,9 +1057,10 @@ namespace
       BOOST_TEST(p.has_parent_path());
       BOOST_TEST(!p.is_complete());
 
-      p = path("c:/foo");
+      p = q = path("c:/foo");
       CHECK_EQUAL(p.relative_path().string(), "foo");
       CHECK_EQUAL(p.parent_path().string(), "c:/");
+      BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
       CHECK_EQUAL(p.filename(), "foo");
       CHECK_EQUAL(p.root_name(), "c:");
       CHECK_EQUAL(p.root_directory(), "/");
@@ -1046,9 +1073,10 @@ namespace
       BOOST_TEST(p.has_parent_path());
       BOOST_TEST(p.is_complete());
 
-      p = path("c://foo");
+      p = q = path("c://foo");
       CHECK_EQUAL(p.relative_path().string(), "foo");
       CHECK_EQUAL(p.parent_path().string(), "c:/");
+      BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
       CHECK_EQUAL(p.filename(), "foo");
       CHECK_EQUAL(p.root_name(), "c:");
       CHECK_EQUAL(p.root_directory(), "/");
@@ -1061,9 +1089,10 @@ namespace
       BOOST_TEST(p.has_parent_path());
       BOOST_TEST(p.is_complete());
 
-      p = path("c:\\foo\\bar");
+      p = q = path("c:\\foo\\bar");
       CHECK_EQUAL(p.relative_path().string(), "foo\\bar");
       CHECK_EQUAL(p.parent_path().string(), "c:\\foo");
+      BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
       CHECK_EQUAL(p.filename(), "bar");
       CHECK_EQUAL(p.root_name(), "c:");
       CHECK_EQUAL(p.root_directory(), "\\");
@@ -1076,9 +1105,10 @@ namespace
       BOOST_TEST(p.has_parent_path());
       BOOST_TEST(p.is_complete());
 
-      p = path("prn:");
+      p = q = path("prn:");
       BOOST_TEST(p.relative_path().string() == "");
       BOOST_TEST(p.parent_path().string() == "");
+      BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
       BOOST_TEST(p.filename() == "prn:");
       BOOST_TEST(p.root_name() == "prn:");
       BOOST_TEST(p.root_directory() == "");
@@ -1091,9 +1121,10 @@ namespace
       BOOST_TEST(!p.has_parent_path());
       BOOST_TEST(!p.is_complete());
 
-      p = path("\\\\net\\\\\\foo");
+      p = q = path("\\\\net\\\\\\foo");
       CHECK_EQUAL(p.relative_path().string(), "foo");
       CHECK_EQUAL(p.parent_path().string(), "\\\\net\\");
+      BOOST_TEST_EQ(q.remove_filename().string(), p.parent_path().string());
       CHECK_EQUAL(p.filename(), "foo");
       CHECK_EQUAL(p.root_name(), "\\\\net");
       CHECK_EQUAL(p.root_directory(), "\\");
