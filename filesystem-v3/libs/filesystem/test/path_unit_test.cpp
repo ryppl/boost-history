@@ -646,6 +646,10 @@ namespace
         exception_thrown = true;
         BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::partial, fs::codecvt_error_category()));
       }
+      catch (...)
+      {
+        std::cout << "exception thrown, but of an unexpected type" << std::endl;
+      }
       BOOST_TEST(exception_thrown);
     }
 
@@ -657,6 +661,10 @@ namespace
         exception_thrown = true;
         BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::error, fs::codecvt_error_category()));
       }
+      catch (...)
+      {
+        std::cout << "exception thrown, but of an unexpected type" << std::endl;
+      }
       BOOST_TEST(exception_thrown);
     }
 
@@ -667,6 +675,10 @@ namespace
       {
         exception_thrown = true;
         BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::noconv, fs::codecvt_error_category()));
+      }
+      catch (...)
+      {
+        std::cout << "exception thrown, but of an unexpected type" << std::endl;
       }
       BOOST_TEST(exception_thrown);
     }

@@ -70,6 +70,50 @@ using std::wstring;
 #     include <sys/utime.h>
 #   endif
 
+//  REPARSE_DATA_BUFFER related definitions are found in ntifs.h, which is part of the 
+//  Windows Device Driver Kit. Since that's inconvient, the needed definitions are
+//  provided here.
+//  See http://msdn.microsoft.com/en-us/library/ms791514.aspx
+
+#define SYMLINK_FLAG_RELATIVE 1
+
+typedef struct _REPARSE_DATA_BUFFER {
+  ULONG  ReparseTag;
+  USHORT  ReparseDataLength;
+  USHORT  Reserved;
+  union {
+    struct {
+      USHORT  SubstituteNameOffset;
+      USHORT  SubstituteNameLength;
+      USHORT  PrintNameOffset;
+      USHORT  PrintNameLength;
+      ULONG  Flags;
+      WCHAR  PathBuffer[1];
+  /*  Example of distinction between substitute and print names:
+        mklink /d ldrive c:\
+        SubstituteName: c:\\??\
+        PrintName: c:\
+  */
+     } SymbolicLinkReparseBuffer;
+    struct {
+      USHORT  SubstituteNameOffset;
+      USHORT  SubstituteNameLength;
+      USHORT  PrintNameOffset;
+      USHORT  PrintNameLength;
+      WCHAR  PathBuffer[1];
+      } MountPointReparseBuffer;
+    struct {
+      UCHAR  DataBuffer[1];
+    } GenericReparseBuffer;
+  };
+} REPARSE_DATA_BUFFER, *PREPARSE_DATA_BUFFER;
+
+#define REPARSE_DATA_BUFFER_HEADER_SIZE \
+  FIELD_OFFSET(REPARSE_DATA_BUFFER, GenericReparseBuffer)
+
+#define MAXIMUM_REPARSE_DATA_BUFFER_SIZE  ( 16 * 1024 )
+
+
 # else // BOOST_POSIX_API
 #   include <sys/types.h>
 #   if !defined(__APPLE__) && !defined(__OpenBSD__)
@@ -1069,17 +1113,43 @@ namespace detail
   BOOST_FILESYSTEM_DECL
   path read_symlink(const path& p, system::error_code* ec)
   {
-#   ifdef BOOST_WINDOWS_API
-
-    if (ec == 0)
-      throw_exception(filesystem_error("boost::filesystem::read_symlink",
-        p, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category)));
-    else ec->assign(BOOST_ERROR_NOT_SUPPORTED, system_category);
-    return path();
-
-#   else
-
     path symlink_path;
+
+# if defined(BOOST_WINDOWS_API)
+    
+#   if _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
+      error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category), p, ec,
+            "boost::filesystem::read_symlink");
+#   else  // Vista and Server 2008 SDK, or later
+
+      union info_t
+      {
+        char buf[REPARSE_DATA_BUFFER_HEADER_SIZE+MAXIMUM_REPARSE_DATA_BUFFER_SIZE];
+        REPARSE_DATA_BUFFER rdb;
+      } info;
+
+      handle_wrapper h(
+        create_file_handle(p.c_str(),GENERIC_READ, 0, 0, OPEN_EXISTING,
+          FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, 0));
+
+      if (error(h.handle == INVALID_HANDLE_VALUE, p, ec, "boost::filesystem::read_symlink"))
+        return symlink_path;
+
+      DWORD sz;
+
+      if (!error(::DeviceIoControl(h.handle, FSCTL_GET_REPARSE_POINT,
+            0, 0, info.buf, sizeof(info), &sz, 0) == 0, p, ec,
+            "boost::filesystem::read_symlink" ))
+        symlink_path.assign(
+          static_cast<wchar_t*>(info.rdb.SymbolicLinkReparseBuffer.PathBuffer)
+          + info.rdb.SymbolicLinkReparseBuffer.PrintNameOffset/sizeof(wchar_t),
+          static_cast<wchar_t*>(info.rdb.SymbolicLinkReparseBuffer.PathBuffer)
+          + info.rdb.SymbolicLinkReparseBuffer.PrintNameOffset/sizeof(wchar_t)
+          + info.rdb.SymbolicLinkReparseBuffer.PrintNameLength/sizeof(wchar_t));
+#   endif
+
+# else
+
     for (std::size_t path_max = 64;; path_max *= 2)// loop 'til buffer large enough
     {
       boost::scoped_array<char> buf(new char[path_max]);
@@ -1102,9 +1172,9 @@ namespace detail
         }
       }
     }
-    return symlink_path;
 
-#   endif
+# endif
+    return symlink_path;
   }
   
   BOOST_FILESYSTEM_DECL

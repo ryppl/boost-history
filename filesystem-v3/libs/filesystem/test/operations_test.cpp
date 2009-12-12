@@ -505,12 +505,7 @@ namespace
       BOOST_TEST(fs::is_symlink(from_ph));
       BOOST_TEST(fs::exists(file_ph));
       BOOST_TEST(fs::equivalent(from_ph, file_ph));
-
-      if (platform == "POSIX")
-	  {
-		  //std::cout << fs::read_symlink(from_ph).string() << ", " << file_ph.string() << "\n";
 		  BOOST_TEST(fs::read_symlink(from_ph) == file_ph);
-	  }
 
       fs::file_status stat = fs::symlink_status(from_ph);
       BOOST_TEST(fs::exists(stat));
