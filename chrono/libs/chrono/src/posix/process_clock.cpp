@@ -12,7 +12,7 @@
 
 // define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
-#define BOOST_CHRONO_SOURCE 
+#define BOOST_CHRONO_SOURCE
 
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/process_times.hpp>
@@ -42,42 +42,36 @@ namespace
   }
 }
 
-namespace boost
-{
-  namespace chrono
-  {
+namespace boost { namespace chrono {
 
-    void process_clock::now( process_times & times_, system::error_code & ec )
-    {
+    void process_clock::now( process_times & times_, system::error_code & ec ) {
 
-      tms tm;
-      clock_t c = ::times( &tm );
-      if ( c == clock_t(-1) ) // error
-      {
-        assert( 0 && "error handling not implemented yet" );
-
-        ec = system::error_code( errno, system::system_category );
-        times_.real = times_.system = times_.user = nanoseconds(-1);
-      }
-      else
-      {
-        times_.real = microseconds(c);
-        times_.system = microseconds(tm.tms_stime + tm.tms_cstime);
-        times_.user = microseconds(tm.tms_utime + tm.tms_cutime);
-        if ( tick_factor() != -1 )
+        tms tm;
+        clock_t c = ::times( &tm );
+        if ( c == clock_t(-1) ) // error
         {
-          times_.real *= tick_factor();
-          times_.user *= tick_factor();
-          times_.system *= tick_factor();
+            assert( 0 && "error handling not implemented yet" );
+            ec = system::error_code( errno, system::system_category );
+            times_.real = times_.system = times_.user = nanoseconds(-1);
         }
         else
         {
-        assert( 0 && "error handling not implemented yet" );
-          ec = system::error_code( errno, system::system_category );
-          times_.real = times_.user = times_.system = nanoseconds(-1);
+            times_.real = microseconds(c);
+            times_.system = microseconds(tm.tms_stime + tm.tms_cstime);
+            times_.user = microseconds(tm.tms_utime + tm.tms_cutime);
+            if ( tick_factor() != -1 )
+            {
+                times_.real *= tick_factor();
+                times_.user *= tick_factor();
+                times_.system *= tick_factor();
+            }
+            else
+            {
+                assert( 0 && "error handling not implemented yet" );
+                ec = system::error_code( errno, system::system_category );
+                times_.real = times_.user = times_.system = nanoseconds(-1);
+            }
         }
-      }
 
     }
-  } // namespace chrono
-} // namespace boost
+} }

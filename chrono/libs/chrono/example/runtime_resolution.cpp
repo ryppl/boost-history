@@ -11,8 +11,8 @@
 This code was extracted by Vicente J. Botet Escriba from Beman Dawes time2_demo.cpp which
 was derived by Beman Dawes from Howard Hinnant's time2_demo prototype.
 Many thanks to Howard for making his code available under the Boost license.
-The original code was modified to conform to Boost conventions and to section 
-20.9 Time utilities [time] of the C++ committee's working paper N2798. 
+The original code was modified to conform to Boost conventions and to section
+20.9 Time utilities [time] of the C++ committee's working paper N2798.
 See http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2798.pdf.
 
 time2_demo contained this comment:
@@ -33,7 +33,7 @@ time2_demo contained this comment:
 #include <iostream>
 
 #if defined(BOOST_CHRONO_WINDOWS_API)
-#include <windows.h>  
+#include <windows.h>
 
 namespace
 {
@@ -126,15 +126,15 @@ double
 init_duration()
 {
 #if defined(BOOST_CHRONO_WINDOWS_API)
-    return static_cast<double>(1) / 1000; // Windows FILETIME is 1 per microsec 
-#elif defined(BOOST_CHRONO_MAC_API) 
+    return static_cast<double>(1) / 1000; // Windows FILETIME is 1 per microsec
+#elif defined(BOOST_CHRONO_MAC_API)
     mach_timebase_info_data_t MachInfo;
     mach_timebase_info(&MachInfo);
     return static_cast<double>(MachInfo.denom) / MachInfo.numer;
 #elif defined(BOOST_CHRONO_POSIX_API)
     return static_cast<double>(1) / 1000;
 #endif
-    
+
 }
 
 const double duration::ticks_per_nanosecond = init_duration();
@@ -178,7 +178,7 @@ public:
 
     static time_point now()
     {
-        
+
 #if defined(BOOST_CHRONO_WINDOWS_API)
       timeval tv;
       gettimeofday( &tv, 0 );
@@ -196,7 +196,7 @@ public:
 
     return time_point(duration((static_cast<rep>(ts.tv_sec)<<32) | ts.tv_nsec/1000));
 
-        
+
 #endif  // POSIX
 
     }

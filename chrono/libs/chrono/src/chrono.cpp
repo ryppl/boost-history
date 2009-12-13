@@ -8,7 +8,7 @@
 
 // define BOOST_CHRONO_SOURCE so that <boost/filesystem/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
-#define BOOST_CHRONO_SOURCE 
+#define BOOST_CHRONO_SOURCE
 
 #include <boost/chrono/chrono.hpp>
 #include <boost/system/system_error.hpp>

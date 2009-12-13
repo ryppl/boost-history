@@ -11,8 +11,8 @@
 This code was extracted by Vicente J. Botet Escriba from Beman Dawes time2_demo.cpp which
 was derived by Beman Dawes from Howard Hinnant's time2_demo prototype.
 Many thanks to Howard for making his code available under the Boost license.
-The original code was modified to conform to Boost conventions and to section 
-20.9 Time utilities [time] of the C++ committee's working paper N2798. 
+The original code was modified to conform to Boost conventions and to section
+20.9 Time utilities [time] of the C++ committee's working paper N2798.
 See http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2798.pdf.
 
 time2_demo contained this comment:
@@ -32,7 +32,7 @@ time2_demo contained this comment:
 
 #include <iostream>
 #if defined(BOOST_CHRONO_WINDOWS_API)
-#	include <windows.h>  
+#	include <windows.h>
 #endif
 
 #if defined(BOOST_CHRONO_WINDOWS_API)
@@ -100,7 +100,7 @@ public:
         tv_sec  = static_cast<long>(usec / 1000000);
         fixup();
     }
-    
+
     // explicit
     operator long long() const {return static_cast<long long>(tv_sec) * 1000000 + tv_usec;}
 
@@ -187,9 +187,9 @@ xtime_clock::now()
 
     xtime xt( ts.tv_sec, ts.tv_nsec/1000);
     return time_point(duration(xt));
-      
+
 #endif  // POSIX
-    
+
 }
 
 void test_xtime_clock()

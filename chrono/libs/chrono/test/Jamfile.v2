@@ -35,7 +35,7 @@ project
 
     test-suite "ratio"
         :
-        [ compile-fail ratio_fail_test1.cpp : <warnings-as-errors>on ]
+        [ compile-fail ratio_fail_test1.cpp  ]
         [ run ratio_test.cpp  :  :  : <link>static ]
         [ run ratio_test.cpp  :  :  : <library>/boost/system//boost_system  : ratio_test_dll ]
         ;
