@@ -11,8 +11,8 @@
 
 This code was derived by Beman Dawes from Howard Hinnant's time2_demo prototype.
 Many thanks to Howard for making his code available under the Boost license.
-The original code was modified to conform to Boost conventions and to section 
-20.9 Time utilities [time] of the C++ committee's working paper N2798. 
+The original code was modified to conform to Boost conventions and to section
+20.9 Time utilities [time] of the C++ committee's working paper N2798.
 See http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2798.pdf.
 
 time2_demo contained this comment:
@@ -77,6 +77,31 @@ TODO:
 #include <boost/type_traits.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/detail/workaround.hpp>
+
+#ifndef BOOST_CHRONO_USES_MPL_ASSERT
+#define BOOST_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION        "A duration representation can not be a duration"
+#define BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO "Second template parameter of duration must be a std::ratio"
+#define BOOST_CHRONO_DURATION_PERIOD_MUST_BE_POSITIVE "duration period must be positive"
+#define BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_TIME_POINT_MUST_BE_A_BOOST_CHRONO_DURATION "Second template parameter of time_point must be a boost::chrono::duration"
+#endif
+
+#ifndef BOOST_NO_STATIC_ASSERT
+#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) static_assert(CND,MSG)
+#elif defined(BOOST_CHRONO_USES_STATIC_ASSERT)
+#include <boost/static_assert.hpp>
+#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) BOOST_STATIC_ASSERT(CND)
+#elif defined(BOOST_CHRONO_USES_MPL_ASSERT)
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/bool.hpp>
+#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES)                                 \
+    BOOST_MPL_ASSERT_MSG(boost::mpl::bool_< (CND) >::type::value, MSG, TYPES)
+#elif defined(BOOST_CHRONO_USES_ARRAY_ASSERT)
+#define BOOST_CHRONO_CONCAT(A,B) A##B
+#define BOOST_CHRONO_NAME(A,B) BOOST_CHRONO_CONCAT(A,B)
+#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_CHRONO_NAME(__boost_chrono_test_,__LINE__)[CND];
+#else
+#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES)
+#endif
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
@@ -188,11 +213,11 @@ namespace chrono {
 //    operator*(const Rep1& s, const duration<Rep2, Period>& d);
 
 //  template <class Rep1, class Period, class Rep2>
-//    typename boost::disable_if <detail::is_duration<Rep2>, 
+//    typename boost::disable_if <detail::is_duration<Rep2>,
 //      typename detail::duration_divide_result<duration<Rep1, Period>, Rep2>::type
 //    >::type
 //    operator/(const duration<Rep1, Period>& d, const Rep2& s);
-  
+
 //  template <class Rep1, class Period1, class Rep2, class Period2>
 //    typename common_type<Rep1, Rep2>::type
 //    operator/(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
@@ -265,11 +290,11 @@ namespace chrono {
 
   // Clocks
   class BOOST_CHRONO_DECL system_clock;
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
   class BOOST_CHRONO_DECL monotonic_clock; // as permitted by [time.clock.monotonic]
-#endif  
+#endif
 
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC   
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
   typedef monotonic_clock high_resolution_clock;  // as permitted by [time.clock.hires]
 #else
   typedef system_clock high_resolution_clock;  // as permitted by [time.clock.hires]
@@ -437,7 +462,7 @@ struct common_type<chrono::duration<Rep1, Period1>,
                    chrono::duration<Rep2, Period2> >
 {
   typedef chrono::duration<typename common_type<Rep1, Rep2>::type,
-                      typename detail::ratio_gcd<Period1, Period2>::type> type;
+                      typename boost::detail::ratio_gcd<Period1, Period2>::type> type;
 };
 
 template <class Clock, class Duration1, class Duration2>
@@ -454,17 +479,15 @@ struct common_type<chrono::time_point<Clock, Duration1>,
 //                                                                            //
 //----------------------------------------------------------------------------//
 
+
 namespace chrono {
 
     template <class Rep, class Period>
     class duration
     {
-    //    static char test0[!detail::is_duration<Rep>];
-    ////  static_assert(!detail::is_duration<Rep>, "A duration representation can not be a duration");
-    //    static char test1[detail::is_ratio<Period>];
-    ////  static_assert(detail::is_ratio<Period>::value, "Second template parameter of duration must be a std::ratio");
-    //    static char test2[Period::num > 0];
-    ////  static_assert(Period::num > 0, "duration period must be positive");
+    BOOST_CHRONO_STATIC_ASSERT(!boost::chrono::detail::is_duration<Rep>::value, BOOST_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION, ());
+    BOOST_CHRONO_STATIC_ASSERT(boost::detail::is_ratio<Period>::value, BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO, ());
+    BOOST_CHRONO_STATIC_ASSERT(Period::num>0, BOOST_CHRONO_DURATION_PERIOD_MUST_BE_POSITIVE, ());
     public:
         typedef Rep rep;
         typedef Period period;
@@ -492,7 +515,7 @@ namespace chrono {
             if (rhs != *this) rep_= rhs.rep_;
             return *this;
         }
-                      
+
         // conversions
         template <class Rep2, class Period2>
         BOOST_CONSTEXPR duration(const duration<Rep2, Period2>& d,
@@ -513,7 +536,7 @@ namespace chrono {
 #else
             : rep_(duration_cast<duration>(d).count()) {}
 #endif
- 
+
         // observer
 
         BOOST_CONSTEXPR rep count() const {return rep_;}
@@ -610,9 +633,9 @@ namespace chrono {
 
   template <class Rep1, class Period, class Rep2>
   inline
-  typename boost::disable_if <detail::is_duration<Rep2>, 
-    //duration<typename common_type<Rep1, Rep2>::type, Period> 
-  typename detail::duration_divide_result<duration<Rep1, Period>, Rep2>::type
+  typename boost::disable_if <boost::chrono::detail::is_duration<Rep2>,
+    //duration<typename common_type<Rep1, Rep2>::type, Period>
+  typename boost::chrono::detail::duration_divide_result<duration<Rep1, Period>, Rep2>::type
   >::type
   operator/(const duration<Rep1, Period>& d, const Rep2& s)
   {
@@ -681,7 +704,7 @@ namespace chrono {
   bool
   operator==(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs)
   {
-      return detail::duration_eq<duration<Rep1, Period1>, duration<Rep2, Period2> >()(lhs, rhs);
+      return boost::chrono::detail::duration_eq<duration<Rep1, Period1>, duration<Rep2, Period2> >()(lhs, rhs);
   }
 
   // Duration !=
@@ -701,7 +724,7 @@ namespace chrono {
   bool
   operator< (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs)
   {
-      return detail::duration_lt<duration<Rep1, Period1>, duration<Rep2, Period2> >()(lhs, rhs);
+      return boost::chrono::detail::duration_lt<duration<Rep1, Period1>, duration<Rep2, Period2> >()(lhs, rhs);
   }
 
   // Duration >
@@ -741,10 +764,10 @@ namespace chrono {
   // Compile-time select the most efficient algorithm for the conversion...
   template <class ToDuration, class Rep, class Period>
   inline
-  typename boost::enable_if <detail::is_duration<ToDuration>, ToDuration>::type
+  typename boost::enable_if <boost::chrono::detail::is_duration<ToDuration>, ToDuration>::type
   duration_cast(const duration<Rep, Period>& fd)
   {
-      return detail::duration_cast<duration<Rep, Period>, ToDuration>()(fd);
+      return boost::chrono::detail::duration_cast<duration<Rep, Period>, ToDuration>()(fd);
   }
 
 //----------------------------------------------------------------------------//
@@ -756,9 +779,8 @@ namespace chrono {
 template <class Clock, class Duration>
   class time_point
   {
-  //  static char test1[detail::is_duration<Duration>];
-  ////  static_assert(detail::is_duration<Duration>,
-  ////                "Second template parameter of time_point must be a std::datetime::duration");
+  BOOST_CHRONO_STATIC_ASSERT(boost::chrono::detail::is_duration<Duration>::value,
+      BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_TIME_POINT_MUST_BE_A_BOOST_CHRONO_DURATION, (Duration));
   public:
       typedef Clock                     clock;
       typedef Duration                  duration;
@@ -969,8 +991,8 @@ template <class Clock, class Duration>
 
 // As permitted  by [time.clock.monotonic]
 // The class monotonic_clock is conditionally supported.
-  
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC   
+
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
   class BOOST_CHRONO_DECL monotonic_clock
   {
   public:
@@ -1017,6 +1039,12 @@ template <class Clock, class Duration>
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
+#ifdef BOOST_CONSTEXPR
 #undef BOOST_CONSTEXPR
+#endif
+
+#ifdef BOOST_CHRONO_STATIC_ASSERT
+#undef BOOST_CHRONO_STATIC_ASSERT
+#endif
 
 #endif // BOOST_CHRONO_HPP

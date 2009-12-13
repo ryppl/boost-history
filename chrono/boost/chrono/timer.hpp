@@ -8,12 +8,12 @@
 
 //  See http://www.boost.org/libs/system for documentation.
 
-#ifndef BOOST_CHRONO_TIMER_HPP                  
+#ifndef BOOST_CHRONO_TIMER_HPP
 #define BOOST_CHRONO_TIMER_HPP
 
 #include <boost/chrono/chrono.hpp>
 #include <boost/system/error_code.hpp>
-    
+
 namespace boost
 {
   namespace chrono
@@ -47,9 +47,9 @@ namespace boost
     };
 
     typedef boost::chrono::timer< boost::chrono::system_clock > system_timer;
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
     typedef boost::chrono::timer< boost::chrono::monotonic_clock > monotonic_timer;
-#endif    
+#endif
     typedef boost::chrono::timer< boost::chrono::high_resolution_clock > high_resolution_timer;
 
   } // namespace chrono
