@@ -310,7 +310,7 @@
           a native <code class="computeroutput"><span class="identifier">time_point</span></code>, and
           a function <code class="computeroutput"><span class="identifier">now</span><span class="special">()</span></code>
           to get the current <code class="computeroutput"><span class="identifier">time_point</span></code>.
-          A clock shall meet the requirements in the following Table.
+          A clock must meet the requirements in the following Table.
         </p>
 <p>
           In this table <code class="computeroutput"><span class="identifier">C1</span></code> and <code class="computeroutput"><span class="identifier">C2</span></code> denote <code class="computeroutput"><span class="identifier">clock</span></code>
@@ -320,7 +320,7 @@
           and both of these calls happen before <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">::</span><span class="identifier">max</span><span class="special">()</span></code>.
         </p>
 <div class="table">
-<a name="id4829640"></a><p class="title"><b>Table 1. Clock Requirements</b></p>
+<a name="id4829637"></a><p class="title"><b>Table 1. Clock Requirements</b></p>
 <table class="table" summary="Clock Requirements">
 <colgroup>
 <col>
@@ -418,7 +418,7 @@
                 Different clocks are permitted to share a <code class="computeroutput"><span class="identifier">time_point</span></code>
                 definition if it is valid to compare their time_points by comparing
                 their respective <code class="computeroutput"><span class="identifier">duration</span></code>s.
-                <code class="computeroutput"><span class="identifier">C1</span></code> and <code class="computeroutput"><span class="identifier">C2</span></code> shall refer to the same epoch.
+                <code class="computeroutput"><span class="identifier">C1</span></code> and <code class="computeroutput"><span class="identifier">C2</span></code> must refer to the same epoch.
               </p>
               </td>
 </tr>
@@ -552,8 +552,8 @@
               as an uninitialized value.
             </p>
 <p>
-              <span class="bold"><strong>Remarks:</strong></span> The value returned shall
-              correspond to the additive identity.
+              <span class="bold"><strong>Remarks:</strong></span> The value returned corresponds
+              to the additive identity.
             </p>
 </div>
 <div class="section" lang="en">
@@ -568,8 +568,8 @@
               <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">&gt;::</span><span class="identifier">max</span><span class="special">()</span></code>.
             </p>
 <p>
-              <span class="bold"><strong>Remarks:</strong></span> The value returned shall
-              compare greater than zero().
+              <span class="bold"><strong>Remarks:</strong></span> The value returned compares
+              greater than zero().
             </p>
 </div>
 <div class="section" lang="en">
@@ -584,8 +584,8 @@
               <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">&gt;::</span><span class="identifier">lowest</span><span class="special">()</span></code>.
             </p>
 <p>
-              <span class="bold"><strong>Remarks:</strong></span> The value returned shall
-              compare less than or equal to <code class="computeroutput"><span class="identifier">zero</span><span class="special">()</span></code>.
+              <span class="bold"><strong>Remarks:</strong></span> The value returned compares
+              less than or equal to <code class="computeroutput"><span class="identifier">zero</span><span class="special">()</span></code>.
             </p>
 </div>
 </div>
@@ -602,7 +602,7 @@
 <p>
             The period of the <code class="computeroutput"><span class="identifier">duration</span></code>
             indicated by this specialization of <code class="computeroutput"><span class="identifier">common_type</span></code>
-            shall be the greatest common divisor of <code class="computeroutput"><span class="identifier">Period1</span></code>
+            is the greatest common divisor of <code class="computeroutput"><span class="identifier">Period1</span></code>
             and <code class="computeroutput"><span class="identifier">Period2</span></code>. This can
             be computed by forming a <code class="computeroutput"><span class="identifier">ratio</span></code>
             of the greatest common divisor of <code class="computeroutput"><span class="identifier">Period1</span><span class="special">::</span><span class="identifier">num</span></code>
@@ -626,7 +626,7 @@
 </pre>
 <p>
             The <code class="computeroutput"><span class="identifier">common_type</span></code> of two
-            <code class="computeroutput"><span class="identifier">time_point</span></code>s is a <code class="computeroutput"><span class="identifier">time_point</span></code> with the same <code class="computeroutput"><span class="identifier">clock</span></code> (both shall have the same <code class="computeroutput"><span class="identifier">clock</span></code>), and the <code class="computeroutput"><span class="identifier">common_type</span></code>
+            <code class="computeroutput"><span class="identifier">time_point</span></code>s is a <code class="computeroutput"><span class="identifier">time_point</span></code> with the same <code class="computeroutput"><span class="identifier">clock</span></code> (both have the same <code class="computeroutput"><span class="identifier">clock</span></code>), and the <code class="computeroutput"><span class="identifier">common_type</span></code>
             of the two <code class="computeroutput"><span class="identifier">duration</span></code>s.
           </p>
 </div>
@@ -745,18 +745,18 @@
 <span class="special">}}</span>
 </pre>
 <p>
-          Rep shall be an arithmetic type, or a class emulating an arithmetic type.
+          Rep must be an arithmetic type, or a class emulating an arithmetic type.
           If <code class="computeroutput"><span class="identifier">duration</span></code> is instantiated
           with the type of <code class="computeroutput"><span class="identifier">Rep</span></code> being
           a <code class="computeroutput"><span class="identifier">duration</span></code>, a diagnostic
           is required.
         </p>
 <p>
-          Period shall be an instantiation of <code class="computeroutput"><span class="identifier">ratio</span></code>,
-          diagnostic required.
+          Period must be an instantiation of <code class="computeroutput"><span class="identifier">ratio</span></code>,
+          compile diagnostic otherwise.
         </p>
 <p>
-          Period::num shall be positive, diagnostic required.
+          Period::num must be positive, compile diagnostic otherwise.
         </p>
 <p>
           Examples:
@@ -805,7 +805,7 @@
 <p>
             <span class="bold"><strong>Example:</strong></span>
           </p>
-<pre class="programlisting"><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">milli</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">(</span><span class="number">3.5</span><span class="special">);</span>  <span class="comment">// shall not compile
+<pre class="programlisting"><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">milli</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">(</span><span class="number">3.5</span><span class="special">);</span>  <span class="comment">// do not compile
 </span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">milli</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>    <span class="comment">// ok
 </span></pre>
 <p>
@@ -842,7 +842,7 @@
           </p>
 <pre class="programlisting"><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">milli</span><span class="special">&gt;</span> <span class="identifier">ms</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
 <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">micro</span><span class="special">&gt;</span> <span class="identifier">us</span> <span class="special">=</span> <span class="identifier">ms</span><span class="special">;</span>  <span class="comment">// ok
-</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">milli</span><span class="special">&gt;</span> <span class="identifier">ms2</span> <span class="special">=</span> <span class="identifier">us</span><span class="special">;</span> <span class="comment">// shall not compile
+</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">milli</span><span class="special">&gt;</span> <span class="identifier">ms2</span> <span class="special">=</span> <span class="identifier">us</span><span class="special">;</span> <span class="comment">// do not compile
 </span></pre>
 <p>
             <span class="bold"><strong>Effects:</strong></span> Constructs an object of type
@@ -1133,10 +1133,10 @@
 <p>
             <span class="bold"><strong>Requires:</strong></span> Let <code class="computeroutput"><span class="identifier">CR</span></code>
             represent the <code class="computeroutput"><span class="identifier">common_type</span></code>
-            of <code class="computeroutput"><span class="identifier">Rep1</span></code> and <code class="computeroutput"><span class="identifier">Rep2</span></code>. Both <code class="computeroutput"><span class="identifier">Rep1</span></code>
-            and <code class="computeroutput"><span class="identifier">Rep2</span></code> shall be implicitly
-            convertible to <code class="computeroutput"><span class="identifier">CR</span></code>, diagnostic
-            required.
+            of <code class="computeroutput"><span class="identifier">Rep1</span></code> and <code class="computeroutput"><span class="identifier">Rep2</span></code>. This function will not participate
+            in overload resolution unless both <code class="computeroutput"><span class="identifier">Rep1</span></code>
+            and <code class="computeroutput"><span class="identifier">Rep2</span></code> are implicitly
+            convertible to <code class="computeroutput"><span class="identifier">CR</span></code>.
           </p>
 <p>
             <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">CR</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">)</span> <span class="special">*=</span> <span class="identifier">s</span></code>.
@@ -1155,10 +1155,10 @@
 <p>
             <span class="bold"><strong>Requires:</strong></span> Let <code class="computeroutput"><span class="identifier">CR</span></code>
             represent the <code class="computeroutput"><span class="identifier">common_type</span></code>
-            of <code class="computeroutput"><span class="identifier">Rep1</span></code> and <code class="computeroutput"><span class="identifier">Rep2</span></code>. Both <code class="computeroutput"><span class="identifier">Rep1</span></code>
-            and <code class="computeroutput"><span class="identifier">Rep2</span></code> shall be implicitly
-            convertible to <code class="computeroutput"><span class="identifier">CR</span></code>, diagnostic
-            required.
+            of <code class="computeroutput"><span class="identifier">Rep1</span></code> and <code class="computeroutput"><span class="identifier">Rep2</span></code>. This function will not participate
+            in overload resolution unless both <code class="computeroutput"><span class="identifier">Rep1</span></code>
+            and <code class="computeroutput"><span class="identifier">Rep2</span></code> are implicitly
+            convertible to <code class="computeroutput"><span class="identifier">CR</span></code>.
           </p>
 <p>
             <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="identifier">d</span>
@@ -1178,12 +1178,12 @@
 <p>
             <span class="bold"><strong>Requires:</strong></span> Let <code class="computeroutput"><span class="identifier">CR</span></code>
             represent the <code class="computeroutput"><span class="identifier">common_type</span></code>
-            of <code class="computeroutput"><span class="identifier">Rep1</span></code> and <code class="computeroutput"><span class="identifier">Rep2</span></code>. Both <code class="computeroutput"><span class="identifier">Rep1</span></code>
-            and <code class="computeroutput"><span class="identifier">Rep2</span></code> shall be implicitly
+            of <code class="computeroutput"><span class="identifier">Rep1</span></code> and <code class="computeroutput"><span class="identifier">Rep2</span></code>. This function will not participate
+            in overload resolution unless both <code class="computeroutput"><span class="identifier">Rep1</span></code>
+            and <code class="computeroutput"><span class="identifier">Rep2</span></code> are implicitly
             convertible to <code class="computeroutput"><span class="identifier">CR</span></code>, and
-            <code class="computeroutput"><span class="identifier">Rep2</span></code> shall not be an
-            instantiation of <code class="computeroutput"><span class="identifier">duration</span></code>,
-            diagnostic required.
+            <code class="computeroutput"><span class="identifier">Rep2</span></code> is not an instantiation
+            of <code class="computeroutput"><span class="identifier">duration</span></code>.
           </p>
 <p>
             <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">CR</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">)</span> <span class="special">/=</span> <span class="identifier">s</span></code>.
@@ -1325,9 +1325,9 @@
 <span class="identifier">ToDuration</span> <span class="identifier">duration_cast</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
 </pre>
 <p>
-          <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">ToDuration</span></code>
-          is an instantiation of <code class="computeroutput"><span class="identifier">duration</span></code>,
-          diagnostic required.
+          <span class="bold"><strong>Requires:</strong></span> This function will not participate
+          in overload resolution unless <code class="computeroutput"><span class="identifier">ToDuration</span></code>
+          is an instantiation of <code class="computeroutput"><span class="identifier">duration</span></code>.
         </p>
 <p>
           <span class="bold"><strong>Returns:</strong></span> Forms <code class="computeroutput"><span class="identifier">CF</span></code>
@@ -1356,13 +1356,13 @@
 </li>
 </ul></div>
 <p>
-          <span class="bold"><strong>Remarks:</strong></span> This function shall not rely
-          on any implicit conversions. All conversions shall be accomplished through
+          <span class="bold"><strong>Remarks:</strong></span> This function does not rely on
+          any implicit conversions. All conversions must be accomplished through
           <code class="computeroutput"><span class="keyword">static_cast</span></code>. The implementation
-          shall avoid all multiplications or divisions when it is known at compile
-          time that it can be avoided because one or more arguments are <code class="computeroutput"><span class="number">1</span></code>. All intermediate computations shall be
-          carried out in the widest possible representation and only converted to
-          the destination representation at the final step.
+          avoids all multiplications or divisions when it is known at compile time
+          that it can be avoided because one or more arguments are <code class="computeroutput"><span class="number">1</span></code>. All intermediate computations are carried
+          out in the widest possible representation and only converted to the destination
+          representation at the final step.
         </p>
 </div>
 <div class="section" lang="en">
@@ -1430,11 +1430,11 @@
 <span class="special">};</span>
 </pre>
 <p>
-          Clock shall meet the Clock Requirements.
+          Clock must meet the Clock Requirements.
         </p>
 <p>
-          Duration shall be an instantiation of <code class="computeroutput"><span class="identifier">duration</span></code>,
-          diagnostic required.
+          Duration must be an instantiation of <code class="computeroutput"><span class="identifier">duration</span></code>,
+          compile diagnostic otherwise.
         </p>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
@@ -1472,9 +1472,9 @@
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="identifier">time_point</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;&amp;</span> <span class="identifier">t</span><span class="special">);</span>
 </pre>
 <p>
-            <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">Duration2</span></code>
-            shall be implicitly convertible to <code class="computeroutput"><span class="identifier">duration</span></code>,
-            diagnostic required.
+            <span class="bold"><strong>Requires:</strong></span> This function will not participate
+            in overload resolution unless <code class="computeroutput"><span class="identifier">Duration2</span></code>
+            is implicitly convertible to <code class="computeroutput"><span class="identifier">duration</span></code>.
           </p>
 <p>
             <span class="bold"><strong>Effects:</strong></span> Constructs an object of <code class="computeroutput"><span class="identifier">time_point</span></code>, initializing <code class="computeroutput"><span class="identifier">d_</span></code> with <code class="computeroutput"><span class="identifier">t</span><span class="special">.</span><span class="identifier">time_since_epoch</span><span class="special">()</span></code>.
@@ -1743,9 +1743,9 @@
 <span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">ToDuration</span><span class="special">&gt;</span> <span class="identifier">time_point_cast</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">t</span><span class="special">);</span>
 </pre>
 <p>
-            <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">ToDuration</span></code>
-            is an instantiation of <code class="computeroutput"><span class="identifier">duration</span></code>,
-            diagnostic required.
+            <span class="bold"><strong>Requires:</strong></span> This function will not participate
+            in overload resolution unless <code class="computeroutput"><span class="identifier">ToDuration</span></code>
+            is an instantiation of <code class="computeroutput"><span class="identifier">duration</span></code>.
           </p>
 <p>
             <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">ToDuration</span><span class="special">&gt;(</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">ToDuration</span><span class="special">&gt;(</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">time_since_epoch</span><span class="special">()))</span></code>.

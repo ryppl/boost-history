@@ -120,7 +120,7 @@
 <span class="special">};</span>
 </pre>
 <p>
-          A diagnostic shall be emitted if <code class="computeroutput"><span class="identifier">ratio</span></code>
+          A diagnostic will be emitted if <code class="computeroutput"><span class="identifier">ratio</span></code>
           is instantiated with <code class="computeroutput"><span class="identifier">D</span> <span class="special">==</span> <span class="number">0</span></code>, or
           if the absolute value of <code class="computeroutput"><span class="identifier">N</span></code>
           or <code class="computeroutput"><span class="identifier">D</span></code> can not be represented.
@@ -137,12 +137,10 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-<code class="computeroutput"><span class="identifier">num</span></code> shall have the value
-            <code class="computeroutput"><span class="identifier">sign</span><span class="special">(</span><span class="identifier">N</span><span class="special">)*</span><span class="identifier">sign</span><span class="special">(</span><span class="identifier">D</span><span class="special">)*</span><span class="identifier">abs</span><span class="special">(</span><span class="identifier">N</span><span class="special">)/</span><span class="identifier">gcd</span></code>.
+<code class="computeroutput"><span class="identifier">num</span></code> has the value <code class="computeroutput"><span class="identifier">sign</span><span class="special">(</span><span class="identifier">N</span><span class="special">)*</span><span class="identifier">sign</span><span class="special">(</span><span class="identifier">D</span><span class="special">)*</span><span class="identifier">abs</span><span class="special">(</span><span class="identifier">N</span><span class="special">)/</span><span class="identifier">gcd</span></code>.
           </li>
 <li>
-<code class="computeroutput"><span class="identifier">den</span></code> shall have the value
-            <code class="computeroutput"><span class="identifier">abs</span><span class="special">(</span><span class="identifier">D</span><span class="special">)/</span><span class="identifier">gcd</span></code>.
+<code class="computeroutput"><span class="identifier">den</span></code> has the value <code class="computeroutput"><span class="identifier">abs</span><span class="special">(</span><span class="identifier">D</span><span class="special">)/</span><span class="identifier">gcd</span></code>.
           </li>
 </ul></div>
 <p>
@@ -167,8 +165,8 @@
             <span class="bold"><strong>Effects:</strong></span> Constructs a <code class="computeroutput"><span class="identifier">ratio</span></code> object.
           </p>
 <p>
-            <span class="bold"><strong>Remarks:</strong></span> This constructor shall not
-            participate in overload resolution unless <code class="computeroutput"><span class="identifier">r</span></code>
+            <span class="bold"><strong>Remarks:</strong></span> This constructor will not participate
+            in overload resolution unless <code class="computeroutput"><span class="identifier">r</span></code>
             has the same normalized form as <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">intmax_t</span> <span class="identifier">N2</span><span class="special">,</span> <span class="identifier">intmax_t</span> <span class="identifier">D2</span><span class="special">&gt;</span>
@@ -182,7 +180,7 @@
             <span class="bold"><strong>Returns:</strong></span> *this.
           </p>
 <p>
-            <span class="bold"><strong>Remarks:</strong></span> This operator shall not participate
+            <span class="bold"><strong>Remarks:</strong></span> This operator will not participate
             in overload resolution unless <code class="computeroutput"><span class="identifier">r</span></code>
             has the same normalized form as <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
           </p>
@@ -196,9 +194,9 @@
 </h4></div></div></div>
 <p>
           For each of the class templates in this clause, each template parameter
-          shall refer to a <code class="computeroutput"><span class="identifier">ratio</span></code>.
-          If the implementation is unable to form the indicated <code class="computeroutput"><span class="identifier">ratio</span></code>
-          due to overflow, a diagnostic shall be issued.
+          refers to a <code class="computeroutput"><span class="identifier">ratio</span></code>. If the
+          implementation is unable to form the indicated <code class="computeroutput"><span class="identifier">ratio</span></code>
+          due to overflow, a diagnostic will be issued.
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ratio_add</span> <span class="special">{</span>
    <span class="keyword">typedef</span> <span class="special">[/</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">]</span> <span class="identifier">type</span><span class="special">;</span>
@@ -206,7 +204,7 @@
 </pre>
 <p>
           The nested typedef <code class="computeroutput"><span class="identifier">type</span></code>
-          shall be a synonym for <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span> <span class="special">+</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span><span class="special">,</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
+          is a synonym for <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span> <span class="special">+</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span><span class="special">,</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ratio_subtract</span> <span class="special">{</span>
    <span class="keyword">typedef</span>  <span class="special">[/</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">]</span>  <span class="identifier">type</span><span class="special">;</span>
@@ -214,7 +212,7 @@
 </pre>
 <p>
           The nested typedef <code class="computeroutput"><span class="identifier">type</span></code>
-          shall be a synonym for <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span> <span class="special">-</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span><span class="special">,</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
+          is a synonym for <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span> <span class="special">-</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span><span class="special">,</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ratio_multiply</span> <span class="special">{</span>
    <span class="keyword">typedef</span>  <span class="special">[/</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">]</span>  <span class="identifier">type</span><span class="special">;</span>
@@ -222,7 +220,7 @@
 </pre>
 <p>
           The nested typedef <code class="computeroutput"><span class="identifier">type</span></code>
-          shall be a synonym for <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">num</span><span class="special">,</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
+          is a synonym for <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">num</span><span class="special">,</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ratio_divide</span> <span class="special">{</span>
    <span class="keyword">typedef</span>  <span class="special">[/</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">]</span>  <span class="identifier">type</span><span class="special">;</span>
@@ -230,7 +228,7 @@
 </pre>
 <p>
           The nested typedef <code class="computeroutput"><span class="identifier">type</span></code>
-          shall be a synonym for <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span><span class="special">,</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
+          is a synonym for <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span><span class="special">,</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
         </p>
 </div>
 <div class="section" lang="en">
@@ -254,8 +252,7 @@
           If R1::num * R2::den &lt; R2::num * R1::den, ratio_less derives from true_type,
           else derives from false_type. Implementations are permitted to use more
           complex algorithms to compute the above relationship to avoid overflow.
-          If the implementation is not able to avoid overflow, a diagnostic shall
-          be emitted.
+          If the implementation is not able to avoid overflow, a diagnostic is emitted.
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span>  <span class="keyword">struct</span> <span class="identifier">ratio_not_equal</span>
     <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integral_constant</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span> <span class="special">!</span><span class="identifier">ratio_equal</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">,</span> <span class="identifier">R2</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">&gt;</span> <span class="special">{};</span>

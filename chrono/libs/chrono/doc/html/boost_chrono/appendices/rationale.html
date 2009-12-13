@@ -33,7 +33,7 @@
         are an extract from this document.
       </p>
 <a name="boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a__code__phrase_role__identifier__duration__phrase___code__to_a_function_with_the_units_being_ambiguous_"></a><h4>
-<a name="id4880902"></a>
+<a name="id4880918"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a__code__phrase_role__identifier__duration__phrase___code__to_a_function_with_the_units_being_ambiguous_">Is
         it possible for the user to pass a <code class="computeroutput"><span class="identifier">duration</span></code>
         to a function with the units being ambiguous?</a>
@@ -45,7 +45,7 @@
 <pre class="programlisting"><span class="identifier">f</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>  <span class="comment">// Will not compile, 3 is not implicitly convertible to any `duration`
 </span></pre>
 <a name="boost_chrono.appendices.rationale.why_duration_needs_operator_"></a><h4>
-<a name="id4880992"></a>
+<a name="id4881008"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.why_duration_needs_operator_">Why
         duration needs operator%</a>
       </h4>
@@ -73,7 +73,7 @@
 <span class="special">};</span>
 </pre>
 <a name="boost_chrono.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form"></a><h4>
-<a name="id4881570"></a>
+<a name="id4881586"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form">Why
         ratio needs CopyConstruction and Assignment from ratios having the same normalized
         form</a>
@@ -102,7 +102,7 @@
         succeeds.
       </p>
 <a name="boost_chrono.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type"></a><h4>
-<a name="id4881859"></a>
+<a name="id4881875"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type">Why
         ratio needs the nested normalizer typedef type</a>
       </h4>
@@ -110,7 +110,12 @@
         In <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf" target="_top"><span class="bold"><strong>N3000</strong></span></a> 20.4.2 and similar clauses
       </p>
 <p>
-        The meaning of synonym let think that the result shall be a normalized ratio
+        <span class="emphasis"><em>3 The nested typedef type shall be a synonym for ratio&lt;T1, T2&gt;
+        where T1 has the value R1::num * R2::den - R2::num * R1::den and T2 has the
+        value R1::den * R2::den.</em></span>
+      </p>
+<p>
+        The meaning of synonym let think that the result should be a normalized ratio
         equivalent to ratio&lt;T1, T2&gt;, but there is not an explicit definition
         of what synonym means in this context.
       </p>

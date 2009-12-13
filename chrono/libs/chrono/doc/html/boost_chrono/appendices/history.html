@@ -27,7 +27,7 @@
 <a name="boost_chrono.appendices.history"></a><a href="history.html" title=" Appendix A: History"> Appendix A: History</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_2_1__december_12__2009____bug_fixes_"><span class="bold"><strong>Version 0.2.1, December 12, 2009</strong></span> <span class="emphasis"><em>Bug fixes</em></span></a></span></dt>
+<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_2_1__december_13__2009____bug_fixes_"><span class="bold"><strong>Version 0.2.1, December 13, 2009</strong></span> <span class="emphasis"><em>Bug fixes</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_2_0__december_8__2009______features___bug_fixes___updated_documentation_"><span class="bold"><strong>Version 0.2.0, December 8, 2009</strong></span> <span class="emphasis"><em>+ Features
         + Bug fixes + Updated documentation</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_1_0__april_29__2009____beman_s_boostified_version_chrono_"><span class="bold"><strong>Version 0.1.0, April 29, 2009</strong></span> <span class="emphasis"><em>Beman's boostified
@@ -35,7 +35,7 @@
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.appendices.history.__version_0_2_1__december_12__2009____bug_fixes_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_2_1__december_12__2009____bug_fixes_" title="Version 0.2.1, December 12, 2009 Bug fixes"><span class="bold"><strong>Version 0.2.1, December 12, 2009</strong></span> <span class="emphasis"><em>Bug fixes</em></span></a>
+<a name="boost_chrono.appendices.history.__version_0_2_1__december_13__2009____bug_fixes_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_2_1__december_13__2009____bug_fixes_" title="Version 0.2.1, December 13, 2009 Bug fixes"><span class="bold"><strong>Version 0.2.1, December 13, 2009</strong></span> <span class="emphasis"><em>Bug fixes</em></span></a>
 </h4></div></div></div>
 <p>
           <span class="bold"><strong>Bug Fixes</strong></span>
@@ -82,7 +82,20 @@
             manage with MSVC reporting a warning instead of an error when there is
             an integral constant overflow
           </li>
+<li>
+            Use STATIC_ASSERT specific macro to solve the compile failing issue
+          </li>
+<li>
+            Qualify with boost::detail boost::chrono::detail to avoid ambiguities
+            with MSVC
+          </li>
 </ul></div>
+<p>
+          <span class="bold"><strong>Documentation:</strong></span>
+        </p>
+<p>
+          More updated documentation.
+        </p>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">

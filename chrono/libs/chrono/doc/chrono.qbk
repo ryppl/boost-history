@@ -634,7 +634,7 @@ In other words, the program took 0.832 real-time (i.e. wall clock) seconds to ex
 
 `common_type` is a facility which is useful in specifying the type of the result of functions and operators which take a variety of types (e.g. "mixed mode" complex arithmetic).
 
-The nested typedef `common_type::type` shall be defined as follows:
+The nested typedef `common_type::type` could be defined as follows:
 
     template <class T, class U = void, class V = void>
     struct common_type {
@@ -656,7 +656,7 @@ The nested typedef `common_type::type` shall be defined as follows:
         typedef BOOST_TYPEOF_TPL(m_f() ? m_t() : m_u()) type;
     };
 
-All types in the parameter pack T shall be complete. This trait is permitted to be specialized by a user if at least one template parameter is a user-defined type.
+All parameter types must be complete. This trait is permitted to be specialized by a user if at least one template parameter is a user-defined type.
 
 [*Note:] Such specializations are required when only explicit conversions are desired among the `common_type` arguments.
 
@@ -739,13 +739,13 @@ All types in the parameter pack T shall be complete. This trait is permitted to 
             operator=(const ratio<_N2, _D2>&) {return *this;}
         };
 
-A diagnostic shall be emitted if `ratio` is instantiated with `D == 0`, or if the absolute value of `N` or `D` can not be represented. [*Note:] These rules ensure that infinite ratios are avoided and that for any negative input, there exists a representable value of its absolute value which is positive. In a two's complement representation, this excludes the most negative value.
+A diagnostic will be emitted if `ratio` is instantiated with `D == 0`, or if the absolute value of `N` or `D` can not be represented. [*Note:] These rules ensure that infinite ratios are avoided and that for any negative input, there exists a representable value of its absolute value which is positive. In a two's complement representation, this excludes the most negative value.
 
 Let `gcd` denote the greatest common divisor of `N`'s absolute value and of `D`'s absolute value.
 
-* `num` shall have the value `sign(N)*sign(D)*abs(N)/gcd`.
+* `num` has the value `sign(N)*sign(D)*abs(N)/gcd`.
 
-* `den` shall have the value `abs(D)/gcd`.
+* `den` has the value `abs(D)/gcd`.
 
 The nested typedef `type` denotes the normalized form of this ratio type. It should be used when the template parameters don't give a normalized form.
 
@@ -758,7 +758,7 @@ Two `ratio` classes `ratio<N1,D1>` and `ratio<N2,D2>` have the same normalized f
 
 [*Effects:] Constructs a `ratio` object.
 
-[*Remarks:] This constructor shall not participate in overload resolution unless `r` has the same normalized form as `*this`.
+[*Remarks:] This constructor will not participate in overload resolution unless `r` has the same normalized form as `*this`.
 
     template <intmax_t N2, intmax_t D2>
       ratio& operator=(const ratio<N2, D2>& r);
@@ -767,7 +767,7 @@ Two `ratio` classes `ratio<N1,D1>` and `ratio<N2,D2>` have the same normalized f
 
 [*Returns:] *this.
 
-[*Remarks:] This operator shall not participate in overload resolution unless `r` has the same normalized form as `*this`.
+[*Remarks:] This operator will not participate in overload resolution unless `r` has the same normalized form as `*this`.
 
 [endsect]
 
@@ -777,31 +777,31 @@ Two `ratio` classes `ratio<N1,D1>` and `ratio<N2,D2>` have the same normalized f
 
 [section:ratio_arithmetic `ratio` arithmetic]
 
-For each of the class templates in this clause, each template parameter shall refer to a `ratio`. If the implementation is unable to form the indicated `ratio` due to overflow, a diagnostic shall be issued.
+For each of the class templates in this clause, each template parameter refers to a `ratio`. If the implementation is unable to form the indicated `ratio` due to overflow, a diagnostic will be issued.
 
         template <class R1, class R2> struct ratio_add {
            typedef [/see below] type;
         };
 
-The nested typedef `type` shall be a synonym for `ratio<R1::num * R2::den + R2::num * R1::den, R1::den * R2::den>::type`.
+The nested typedef `type` is a synonym for `ratio<R1::num * R2::den + R2::num * R1::den, R1::den * R2::den>::type`.
 
         template <class R1, class R2> struct ratio_subtract {
            typedef  [/see below]  type;
         };
 
-The nested typedef `type` shall be a synonym for `ratio<R1::num * R2::den - R2::num * R1::den, R1::den * R2::den>::type`.
+The nested typedef `type` is a synonym for `ratio<R1::num * R2::den - R2::num * R1::den, R1::den * R2::den>::type`.
 
         template <class R1, class R2> struct ratio_multiply {
            typedef  [/see below]  type;
         };
 
-The nested typedef `type` shall be a synonym for `ratio<R1::num * R2::num, R1::den * R2::den>::type`.
+The nested typedef `type` is a synonym for `ratio<R1::num * R2::num, R1::den * R2::den>::type`.
 
         template <class R1, class R2> struct ratio_divide {
            typedef  [/see below]  type;
         };
 
-The nested typedef `type` shall be a synonym for `ratio<R1::num * R2::den, R2::num * R1::den>::type`.
+The nested typedef `type` is a synonym for `ratio<R1::num * R2::den, R2::num * R1::den>::type`.
 
 [endsect]
 
@@ -816,7 +816,7 @@ If R1::num == R2::num && R1::den == R2::den, ratio_equal derives from true_type,
         struct ratio_less
             : public boost::integral_constant<bool, [/see below] > {};
 
-If R1::num * R2::den < R2::num * R1::den, ratio_less derives from true_type, else derives from false_type. Implementations are permitted to use more complex algorithms to compute the above relationship to avoid overflow. If the implementation is not able to avoid overflow, a diagnostic shall be emitted.
+If R1::num * R2::den < R2::num * R1::den, ratio_less derives from true_type, else derives from false_type. Implementations are permitted to use more complex algorithms to compute the above relationship to avoid overflow. If the implementation is not able to avoid overflow, a diagnostic is emitted.
 
 
     template <class R1, class R2>  struct ratio_not_equal
@@ -999,7 +999,7 @@ Four of the typedefs in the recomendation which can be conditionally supported a
 
 [section `Clock` Requirements]
 
-A clock represents a bundle consisting of a native `duration`, a native `time_point`, and a function `now()` to get the current `time_point`. A clock shall meet the requirements in the following Table.
+A clock represents a bundle consisting of a native `duration`, a native `time_point`, and a function `now()` to get the current `time_point`. A clock must meet the requirements in the following Table.
 
 In this table `C1` and `C2` denote `clock` types. `t1` and `t2` are values returned from `C1::now()` where the call returning `t1` happens before the call returning `t2` and both of these calls happen before `C1::time_point::max()`.
 
@@ -1008,7 +1008,7 @@ In this table `C1` and `C2` denote `clock` types. `t1` and `t2` are values retur
     [[`C1::rep`]        [An arithmetic type or class emulating an arithmetic type. ]  [The representation type of the native `duration` and `time_point`.]]
     [[`C1::period`]        [`ratio`]  [The tick period of the clock in seconds.]]
     [[`C1::duration`]        [`chrono::duration<C1::rep, C1::period>`]  [The native `duration` type of the `clock`.]]
-    [[`C1::time_point`]        [`chrono::time_point<C1> or chrono::time_point<C2, C1::duration>`]  [The native `time_point` type of the `clock`. Different clocks are permitted to share a `time_point` definition if it is valid to compare their time_points by comparing their respective `duration`s. `C1` and `C2` shall refer to the same epoch.]]
+    [[`C1::time_point`]        [`chrono::time_point<C1> or chrono::time_point<C2, C1::duration>`]  [The native `time_point` type of the `clock`. Different clocks are permitted to share a `time_point` definition if it is valid to compare their time_points by comparing their respective `duration`s. `C1` and `C2` must refer to the same epoch.]]
     [[`C1::is_monotonic`]        [`const bool`]  [`true` if `t1 <= t2` is always `true`, else `false`. [*Note: A `clock` that can be adjusted backwards is not monotonic]]]
     [[`C1::now()`]        [`C1::time_point`]  [Returns a `time_point` representing the current point in time.]]
 ]
@@ -1044,7 +1044,7 @@ The `duration` template uses the `duration_values` trait to construct special va
 
 [*Returns:] `Rep(0)`. [*Note:] `Rep(0)` is specified instead of `Rep()` since `Rep()` may have some other meaning, such as an uninitialized value.
 
-[*Remarks:] The value returned shall correspond to the additive identity.
+[*Remarks:] The value returned corresponds to the additive identity.
 
 [endsect]
 [section:max Static member function `max()`]
@@ -1053,7 +1053,7 @@ The `duration` template uses the `duration_values` trait to construct special va
 
 [*Returns:] `numeric_limits<Rep>::max()`.
 
-[*Remarks:] The value returned shall compare greater than zero().
+[*Remarks:] The value returned compares greater than zero().
 
 [endsect]
 [section:min Static member function `min()`]
@@ -1062,7 +1062,7 @@ The `duration` template uses the `duration_values` trait to construct special va
 
 [*Returns:] `numeric_limits<Rep>::lowest()`.
 
-[*Remarks:] The value returned shall compare less than or equal to `zero()`.
+[*Remarks:] The value returned compares less than or equal to `zero()`.
 
 [endsect]
 
@@ -1076,7 +1076,7 @@ The `duration` template uses the `duration_values` trait to construct special va
         typedef chrono::duration<typename common_type<Rep1, Rep2>::type, see below> type;
     };
 
-The period of the `duration` indicated by this specialization of `common_type` shall be the greatest common divisor of `Period1` and `Period2`. This can be computed by forming a `ratio` of the greatest common divisor of `Period1::num` and `Period2::num`, and the least common multiple of `Period1::den` and `Period2::den`.
+The period of the `duration` indicated by this specialization of `common_type` is the greatest common divisor of `Period1` and `Period2`. This can be computed by forming a `ratio` of the greatest common divisor of `Period1::num` and `Period2::num`, and the least common multiple of `Period1::den` and `Period2::den`.
 
 [*Note:] The typedef type is the `duration` with the largest tick period possible where both `duration` arguments will convert to it without requiring a division operation. The representation of this type is intended to be able to hold any value resulting from this conversion, with the possible exception of round-off error when floating point `duration`s are involved (but not truncation error).
 
@@ -1086,7 +1086,7 @@ The period of the `duration` indicated by this specialization of `common_type` s
         typedef chrono::time_point<Clock, typename common_type<Duration1, Duration2>::type> type;
     };
 
-The `common_type` of two `time_point`s is a `time_point` with the same `clock` (both shall have the same `clock`), and the `common_type` of the two `duration`s.
+The `common_type` of two `time_point`s is a `time_point` with the same `clock` (both have the same `clock`), and the `common_type` of the two `duration`s.
 
 [endsect]
 
@@ -1155,11 +1155,11 @@ A `duration` measures time between two points in time (`time_point`). A `duratio
 
     }}
 
-Rep shall be an arithmetic type, or a class emulating an arithmetic type. If `duration` is instantiated with the type of `Rep` being a `duration`, a diagnostic is required.
+Rep must be an arithmetic type, or a class emulating an arithmetic type. If `duration` is instantiated with the type of `Rep` being a `duration`, a diagnostic is required.
 
-Period shall be an instantiation of `ratio`, diagnostic required.
+Period must be an instantiation of `ratio`, compile diagnostic otherwise.
 
-Period::num shall be positive, diagnostic required.
+Period::num must be positive, compile diagnostic otherwise.
 
 Examples:
 
@@ -1185,7 +1185,7 @@ A diagnostic is required if this requirement is not met. [*Note:] This requireme
 
 [*Example:]
 
-        duration<int, milli> d(3.5);  // shall not compile
+        duration<int, milli> d(3.5);  // do not compile
         duration<int, milli> d(3);    // ok
 
 [*Effects:] Constructs an object of type `duration`.
@@ -1208,7 +1208,7 @@ A diagnostic is required if this requirement is not met. [*Note:] This requireme
 
         duration<int, milli> ms(3);
         duration<int, micro> us = ms;  // ok
-        duration<int, milli> ms2 = us; // shall not compile
+        duration<int, milli> ms2 = us; // do not compile
 
 [*Effects:] Constructs an object of type `duration`, constructing `rep_` from `duration_cast<duration>(d).count()`.
 
@@ -1370,7 +1370,7 @@ A diagnostic is required if this requirement is not met. [*Note:] This requireme
     duration<typename common_type<Rep1, Rep2>::type, Period>
     operator*(const duration<Rep1, Period>& d, const Rep2& s);
 
-[*Requires:] Let `CR` represent the `common_type` of `Rep1` and `Rep2`. Both `Rep1` and `Rep2` shall be implicitly convertible to `CR`, diagnostic required.
+[*Requires:] Let `CR` represent the `common_type` of `Rep1` and `Rep2`. This function will not participate in overload resolution unless both `Rep1` and `Rep2` are implicitly convertible to `CR`.
 
 [*Returns:] `duration<CR, Period>(d) *= s`.
 
@@ -1381,7 +1381,7 @@ A diagnostic is required if this requirement is not met. [*Note:] This requireme
     duration<typename common_type<Rep1, Rep2>::type, Period>
     operator*(const Rep1& s, const duration<Rep2, Period>& d);
 
-[*Requires:] Let `CR` represent the `common_type` of `Rep1` and `Rep2`. Both `Rep1` and `Rep2` shall be implicitly convertible to `CR`, diagnostic required.
+[*Requires:] Let `CR` represent the `common_type` of `Rep1` and `Rep2`. This function will not participate in overload resolution unless both `Rep1` and `Rep2` are implicitly convertible to `CR`.
 
 [*Returns:] `d * s`.
 
@@ -1392,7 +1392,7 @@ A diagnostic is required if this requirement is not met. [*Note:] This requireme
     duration<typename common_type<Rep1, Rep2>::type, Period>
     operator/(const duration<Rep1, Period>& d, const Rep2& s);
 
-[*Requires:] Let `CR` represent the `common_type` of `Rep1` and `Rep2`. Both `Rep1` and `Rep2` shall be implicitly convertible to `CR`, and `Rep2` shall not be an instantiation of `duration`, diagnostic required.
+[*Requires:] Let `CR` represent the `common_type` of `Rep1` and `Rep2`. This function will not participate in overload resolution unless both `Rep1` and `Rep2` are implicitly convertible to `CR`, and `Rep2` is  not an instantiation of `duration`.
 
 [*Returns:] `duration<CR, Period>(d) /= s`.
 
@@ -1465,7 +1465,7 @@ A diagnostic is required if this requirement is not met. [*Note:] This requireme
     template <class ToDuration, class Rep, class Period>
     ToDuration duration_cast(const duration<Rep, Period>& d);
 
-[*Requires:] `ToDuration` is an instantiation of `duration`, diagnostic required.
+[*Requires:] This function will not participate in overload resolution unless `ToDuration` is an instantiation of `duration`.
 
 [*Returns:] Forms `CF` which is a `ratio` resulting from `ratio_divide<Period, typename ToDuration::period>::type`. Let `CR` be the `common_type` of `ToDuration::rep`, `Rep`, and `intmax_t`.
 
@@ -1481,7 +1481,7 @@ A diagnostic is required if this requirement is not met. [*Note:] This requireme
                                                                static_cast<CR>(CF::num)   /
                                                                static_cast<CR>(CF::den)))`
 
-[*Remarks:] This function shall not rely on any implicit conversions. All conversions shall be accomplished through `static_cast`. The implementation shall avoid all multiplications or divisions when it is known at compile time that it can be avoided because one or more arguments are `1`. All intermediate computations shall be carried out in the widest possible representation and only converted to the destination representation at the final step.
+[*Remarks:] This function does not rely on any implicit conversions. All conversions must be accomplished through `static_cast`. The implementation avoids all multiplications or divisions when it is known at compile time that it can be avoided because one or more arguments are `1`. All intermediate computations are carried out in the widest possible representation and only converted to the destination representation at the final step.
 
 
 [endsect]
@@ -1528,9 +1528,9 @@ A `time_point` represents a point in time with respect to a specific clock.
         static BOOST_CONSTEXPR time_point max();
     };
 
-Clock shall meet the Clock Requirements.
+Clock must meet the Clock Requirements.
 
-Duration shall be an instantiation of `duration`, diagnostic required.
+Duration must be an instantiation of `duration`, compile diagnostic otherwise.
 
 [section:time_point_c_1 Constructor `time_point()`]
 
@@ -1550,7 +1550,7 @@ Duration shall be an instantiation of `duration`, diagnostic required.
 
     template <class Duration2> time_point(const time_point<clock, Duration2>& t);
 
-[*Requires:] `Duration2` shall be implicitly convertible to `duration`, diagnostic required.
+[*Requires:] This function will not participate in overload resolution unless `Duration2` is implicitly convertible to `duration`.
 
 [*Effects:] Constructs an object of `time_point`, initializing `d_` with `t.time_since_epoch()`.
 
@@ -1693,7 +1693,7 @@ template <class Clock, class Duration1, class Duration2>
     template <class ToDuration, class Clock, class Duration>
     time_point<Clock, ToDuration> time_point_cast(const time_point<Clock, Duration>& t);
 
-[*Requires:] `ToDuration` is an instantiation of `duration`, diagnostic required.
+[*Requires:] This function will not participate in overload resolution unless `ToDuration` is an instantiation of `duration`.
 
 [*Returns:] `time_point<Clock, ToDuration>(duration_cast<ToDuration>(t.time_since_epoch()))`.
 
@@ -3150,6 +3150,9 @@ Here is the output for this program for several sets of command line arguments:
 * Update Jamfiles to manage with dll
 * removal of conversion warning in test_duration 
 * manage with MSVC reporting a warning instead of an error when there is an integral constant overflow
+* Use STATIC_ASSERT specific macro to solve the compile failing issue
+* Qualify with boost::detail boost::chrono::detail to avoid ambiguities with MSVC
+
 
 [*Documentation:]
 
@@ -3273,9 +3276,9 @@ The type of this expression (r2-r1) could be ratio<3,9> so the compilation could
 
 In [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf [*N3000]] 20.4.2 and similar clauses
 
-[/3 The nested typedef type shall be a synonym for ratio<T1, T2> where T1 has the value R1::num * R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.]
+['3 The nested typedef type shall be a synonym for ratio<T1, T2> where T1 has the value R1::num * R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.]
 
-The meaning of synonym let think that the result shall be a normalized ratio equivalent to ratio<T1, T2>, but there is not an explicit definition of what synonym means in this context.
+The meaning of synonym let think that the result should be a normalized ratio equivalent to ratio<T1, T2>, but there is not an explicit definition of what synonym means in this context.
 
 If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#12811281 [*LWG 1281]]) is not added we need a typedef for accessing the normalized ratio, and change 20.4.2 to return only this normalized result. In this case the user will need to 
 

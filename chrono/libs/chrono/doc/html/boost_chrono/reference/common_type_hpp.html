@@ -45,7 +45,7 @@
         </p>
 <p>
           The nested typedef <code class="computeroutput"><span class="identifier">common_type</span><span class="special">::</span><span class="identifier">type</span></code>
-          shall be defined as follows:
+          could be defined as follows:
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U</span> <span class="special">=</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">V</span> <span class="special">=</span> <span class="keyword">void</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">common_type</span> <span class="special">{</span>
@@ -68,9 +68,8 @@
 <span class="special">};</span>
 </pre>
 <p>
-          All types in the parameter pack T shall be complete. This trait is permitted
-          to be specialized by a user if at least one template parameter is a user-defined
-          type.
+          All parameter types must be complete. This trait is permitted to be specialized
+          by a user if at least one template parameter is a user-defined type.
         </p>
 <p>
           <span class="bold"><strong>Note:</strong></span> Such specializations are required
