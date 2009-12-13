@@ -116,11 +116,13 @@
         </p>
 <p>
           <code class="computeroutput"><span class="identifier">ratio</span></code> is a template taking
-          two intmax_ts, with the second defaulted to 1. It only has two public members,
-          both of which are static const intmax_t. One is the numerator of the <code class="computeroutput"><span class="identifier">ratio</span></code> and the other is the denominator.
-          The <code class="computeroutput"><span class="identifier">ratio</span></code> is always normalized
-          such that it is expressed in lowest terms, and the denominator is always
-          positive. When the numerator is 0, the denominator is always 1.
+          two intmax_ts, with the second defaulted to 1. In addition to cop^y constructors
+          and assignement, it only has two public members, both of which are static
+          const intmax_t. One is the numerator of the <code class="computeroutput"><span class="identifier">ratio</span></code>
+          and the other is the denominator. The <code class="computeroutput"><span class="identifier">ratio</span></code>
+          is always normalized such that it is expressed in lowest terms, and the
+          denominator is always positive. When the numerator is 0, the denominator
+          is always 1.
         </p>
 <p>
           <span class="bold"><strong>Example:</strong></span>
@@ -130,12 +132,12 @@
 </span><span class="keyword">typedef</span> <span class="identifier">ratio_divide</span><span class="special">&lt;</span><span class="identifier">five_thirds</span><span class="special">,</span> <span class="identifier">also_five_thirds</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">one</span><span class="special">;</span>  <span class="comment">// one::num == 1, one::den == 1
 </span></pre>
 <p>
-          This facility also includes convenience typedefs for the SI prefixes atto
-          through exa corresponding to their internationally recognized definitions
-          (in terms of <code class="computeroutput"><span class="identifier">ratio</span></code>). This
-          is a tremendous syntactic convenience. It will prevent errors in specifying
-          constants as one no longer has to double count the number of zeros when
-          trying to write million or billion.
+          This facility also includes convenience typedefs for the SI prefixes <code class="computeroutput"><span class="identifier">atto</span></code> through <code class="computeroutput"><span class="identifier">exa</span></code>
+          corresponding to their internationally recognized definitions (in terms
+          of <code class="computeroutput"><span class="identifier">ratio</span></code>). This is a tremendous
+          syntactic convenience. It will prevent errors in specifying constants as
+          one no longer has to double count the number of zeros when trying to write
+          million or billion.
         </p>
 <p>
           <span class="bold"><strong>Example:</strong></span>
@@ -160,24 +162,12 @@
           The library consists of six units of time <code class="computeroutput"><span class="identifier">duration</span></code>:
         </p>
 <div class="itemizedlist"><ul type="disc">
-<li>
-            hours
-          </li>
-<li>
-            minutes
-          </li>
-<li>
-            seconds
-          </li>
-<li>
-            milliseconds
-          </li>
-<li>
-            microseconds
-          </li>
-<li>
-            nanoseconds
-          </li>
+<li><code class="computeroutput"><span class="identifier">hours</span></code></li>
+<li><code class="computeroutput"><span class="identifier">minutes</span></code></li>
+<li><code class="computeroutput"><span class="identifier">seconds</span></code></li>
+<li><code class="computeroutput"><span class="identifier">milliseconds</span></code></li>
+<li><code class="computeroutput"><span class="identifier">microseconds</span></code></li>
+<li><code class="computeroutput"><span class="identifier">nanoseconds</span></code></li>
 </ul></div>
 <p>
           These units were chosen as a subset of the boost library because they are
@@ -185,16 +175,19 @@
           or waiting to obtain the lock on a mutex. Each of these units is nothing
           but a thin wrapper around a signed integral count. That is, when you construct
           <code class="computeroutput"><span class="identifier">minutes</span><span class="special">(</span><span class="number">3</span><span class="special">)</span></code>, all that
-          happens is a 3 is stored inside of minutes. When you construct <code class="computeroutput"><span class="identifier">microseconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span></code>, all that
-          happens is a 3 is stored inside of microseconds.
+          happens is a <code class="computeroutput"><span class="number">3</span></code> is stored inside
+          of minutes. When you construct <code class="computeroutput"><span class="identifier">microseconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span></code>,
+          all that happens is a <code class="computeroutput"><span class="number">3</span></code> is
+          stored inside of microseconds.
         </p>
 <p>
           The only context in which these different types differ is when being converted
           to one another. At this time, unit-specific compile-time conversion constants
           are used to convert the source unit to the target unit. Only conversions
           from coarser units to finer units are allowed (in boost). This restriction
-          ensures that all conversions are always exact. That is, microseconds can
-          always represent any value minutes has.
+          ensures that all conversions are always exact. That is, <code class="computeroutput"><span class="identifier">microseconds</span></code>
+          can always represent any value <code class="computeroutput"><span class="identifier">minutes</span></code>
+          has.
         </p>
 <p>
           In Boost.DateTime, these units are united via inheritance. <span class="bold"><strong>Boost.Chrono</strong></span>
@@ -218,16 +211,20 @@
           utility is used to specify the precision, so as long as the precision can
           be expressed by a rational constant with respect to seconds, this framework
           can exactly represent it (one third of a second is no problem, and neither
-          is one third of a femto second). All of this utility and flexibility comes
-          at no cost just by making use of the no-run-time-overhead <code class="computeroutput"><span class="identifier">ratio</span></code> facility.
+          is one third of a <code class="computeroutput"><span class="identifier">femto</span></code>
+          second). All of this utility and flexibility comes at no cost just by making
+          use of the no-run-time-overhead <code class="computeroutput"><span class="identifier">ratio</span></code>
+          facility.
         </p>
 <p>
-          In Boost.DateTime, hours does not have the same representation as nanoseconds.
-          The former is usually represented with a long whereas a long long is required
-          for the latter. The reason for this is simply range. You don't need many
-          hours to cover an extremely large range of time. But this isn't true of
-          nanoseconds. Being able to reduce the sizeof overhead for some units when
-          possible, can be a significant performance advantage.
+          In Boost.DateTime, <code class="computeroutput"><span class="identifier">hours</span></code>
+          does not have the same representation as <code class="computeroutput"><span class="identifier">nanoseconds</span></code>.
+          The former is usually represented with a <code class="computeroutput"><span class="keyword">long</span></code>
+          whereas a <code class="computeroutput"><span class="keyword">long</span> <span class="keyword">long</span></code>
+          is required for the latter. The reason for this is simply range. You don't
+          need many hours to cover an extremely large range of time. But this isn't
+          true of nanoseconds. Being able to reduce the sizeof overhead for some
+          units when possible, can be a significant performance advantage.
         </p>
 <p>
           <span class="bold"><strong>Boost.Chrono</strong></span> continues, and generalizes
@@ -235,11 +232,12 @@
           This can be any integral type, or even a floating point type. Or it can
           be a user-defined type which emulates an arithmetic type. The six predefined
           units all use signed integral types as their representation. And they all
-          have a minimum range of +/- 292 years. nanoseconds needs 64 bits to cover
-          that range. hours needs only 23 bits to cover that range.
+          have a minimum range of +/- 292 years. <code class="computeroutput"><span class="identifier">nanoseconds</span></code>
+          needs 64 bits to cover that range. <code class="computeroutput"><span class="identifier">hours</span></code>
+          needs only 23 bits to cover that range.
         </p>
 <a name="boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_"></a><h5>
-<a name="id4759410"></a>
+<a name="id4759345"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_">So
           What Exactly is a <code class="computeroutput"><span class="identifier">duration</span></code>
           and How Do I Use One?</a>
@@ -296,11 +294,12 @@
           is really nothing but the time tested interface of Jeff's boost time <code class="computeroutput"><span class="identifier">duration</span></code> library (unified with templates
           instead of inheritance).
         </p>
-<a name="boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to_minutes_instead_of_microseconds_"></a><h5>
-<a name="id4758314"></a>
-          <a href="motivation.html#boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to_minutes_instead_of_microseconds_">What
+<a name="boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to__code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__"></a><h5>
+<a name="id4759354"></a>
+          <a href="motivation.html#boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to__code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__">What
           happens if I assign <code class="computeroutput"><span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span></code>
-          to minutes instead of microseconds?</a>
+          to <code class="computeroutput"><span class="identifier">minutes</span></code> instead of
+          <code class="computeroutput"><span class="identifier">microseconds</span></code>?</a>
         </h5>
 <pre class="programlisting"><span class="identifier">minutes</span> <span class="identifier">m4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>
 </pre>
@@ -313,7 +312,7 @@
           ignored. This is similar to the problem of assigning a double to an <code class="computeroutput"><span class="keyword">int</span></code>: the fractional part gets silently discarded.
         </p>
 <a name="boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_"></a><h5>
-<a name="id4813058"></a>
+<a name="id4813279"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_">But
           what if the truncation behavior is what I want to do?</a>
         </h5>
@@ -333,7 +332,7 @@
           as often as it can.
         </p>
 <a name="boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation"></a><h5>
-<a name="id4813194"></a>
+<a name="id4813416"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation">I'm
           trafficking in floating point <code class="computeroutput"><span class="identifier">duration</span></code>s.
           I don't want to deal with writing <code class="computeroutput"><span class="identifier">duration_cast</span></code>
@@ -348,7 +347,7 @@
 <span class="identifier">dminutes</span> <span class="identifier">dm4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>  <span class="comment">// dm4.count() == 5.000000083333333
 </span></pre>
 <a name="boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_"></a><h5>
-<a name="id4813357"></a>
+<a name="id4813578"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_">How
           expensive is all of this?</a>
         </h5>
@@ -362,7 +361,7 @@
           tick counts.
         </p>
 <a name="boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_"></a><h5>
-<a name="id4813407"></a>
+<a name="id4813628"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_">How
           complicated is it to build a function taking a <code class="computeroutput"><span class="identifier">duration</span></code>
           parameter?</a>
@@ -584,7 +583,7 @@
           the relationship between the epochs associated with each clock is known.
         </p>
 <a name="boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_"></a><h5>
-<a name="id4815212"></a>
+<a name="id4815433"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_">So
           What Exactly is a <code class="computeroutput"><span class="identifier">time_point</span></code>
           and How Do I Use One?</a>
