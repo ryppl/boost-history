@@ -777,18 +777,18 @@ registered with `at_fiber_exit()`]]
 
 [endsect]
 
-[section:scheduler_ref Scheduler]
+[section:scheduler Scheduler]
 
 [heading Synopsis]
 
-The template __scheduler__ is responsible for managing and scheduling of fibers passed to it. The fibers are
-thread-affine, e.g. the fibers remain local for the thread passing the fiber to the scheduler.
-(Maybe futher version of __boost_fiber__ will support explicit migration of fibers between threads.)
+The template __scheduler__ is responsible for managing and scheduling of fibers passed to it. The scheduling-
+algorithm is provided as an template argument to __scheduler__ (default is __round_robin__). The class implementing
+the scheduling algorithm must derive from class __strategy__. It is possible to migrate fibers between schedulers.
 
-The scheduling-algorithm is provided as an template arguemnt to __scheduler__. The class implementing the
-scheduling algorithm must derive from class __strategy__.
+[note If the fiber is not thread-affine (using thread-local-storage) it can be migrated to a scheduler running in
+another thread.]
 
-Usally __scheduler__ will be invoked until all fibers have finished.
+Usally __scheduler__ will be invoked until all fibers are scheduled and finished.
 
 	boost::fibers::scheduler<> sched;
 	
@@ -801,7 +801,7 @@ Usally __scheduler__ will be invoked until all fibers have finished.
 	}
 
 
-[section:scheduler Template `scheduler`]
+[section:scheduler Template `template< typename Strategy > scheduler`]
 
 	#include <boost/fiber/scheduler.hpp>
 
@@ -832,6 +832,11 @@ Usally __scheduler__ will be invoked until all fibers have finished.
 
 		template< typename Fn, typename A1, typename A2,... >
 		void make_fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...);
+
+		void migrate_fiber( fiber f);
+
+		template< typename OtherStrategy >
+		void migrate_fiber( fiber::id const& id, scheduler< OtherStrategy & sched);
 	};
 
 
@@ -851,7 +856,7 @@ Usally __scheduler__ will be invoked until all fibers have finished.
         ~scheduler();
 
 [variablelist
-[[Effects:] [Destroys the scheduler.]]
+[[Effects:] [Detaches all managed fibers and destroys the scheduler.]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]
@@ -862,7 +867,7 @@ Usally __scheduler__ will be invoked until all fibers have finished.
         bool run();
 
 [variablelist
-[[Effects:] [Executes a fiber from the internal storage and removes terminated fibers. The fnction returns
+[[Effects:] [Executes a fiber from the internal storage and removes terminated fibers. The function returns
 `true` if a fiber could be executed or a terminated fiber could be removed - otherwise `false`.]]
 [[Throws:] [__system_error__ if a system call failed.]]
 ]
@@ -913,8 +918,29 @@ Usally __scheduler__ will be invoked until all fibers have finished.
 		void make_fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...);
 
 [variablelist
-[[Effects:] [The functionscreate a fiber which gets stored in the internal structures from scheduler.]]
+[[Effects:] [The functions create a fiber which gets stored in the internal structures from scheduler.]]
 [[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:migrate_fiber member function `migrate_fiber( fiber f)`]
+
+		void migrate_fiber( fiber f);
+
+[variablelist
+[[Effects:] [The fiber will be migrated to the scheduler.]]
+[[Throws:] [Throws __fiber_moved_, fiber_error, scheduler_error.]]
+]
+[endsect]
+
+[section:migrate_fiber_t Template member function `template< typename OtherStrategy > migrate_fiber( fiber::id const& id, scheduler< OtherStrategy > & sched)`]
+
+		template< typename OtherStrategy >
+		void migrate_fiber( fiber::id const& id, scheduler< OtherStrategy > & sched);
+
+[variablelist
+[[Effects:] [The fiber will be migrated to the scheduler.]]
+[[Throws:] [Throws __fiber_moved_, fiber_error, scheduler_error.]]
 ]
 [endsect]
 
@@ -922,14 +948,14 @@ Usally __scheduler__ will be invoked until all fibers have finished.
 
 [endsect]
 
-[section:strategy_ref Strategy]
+[section:strategy Strategy]
 
 [heading Synopsis]
 
 The template __scheduler__ accepts the implementation of the scheduling-algorithm as a template argument
 (currently round-robin is the choosen as the default).
-Each class destined to implement a scheduling algorithm must derive from __strategy__. The memeber `active_fiber`
-old the current (running) fiber and `master_fiber` executes the scheduling logic.
+Each class destined to implement a scheduling algorithm must derive from __strategy__. The member `active_fiber`
+holds the current (running) fiber and `master_fiber` executes the scheduling logic.
 
 
 [section:strategy Class `strategy`]
@@ -957,12 +983,14 @@ old the current (running) fiber and `master_fiber` executes the scheduling logic
 		bool in_state_not_started( fiber const&);
 		bool in_state_ready( fiber const&);
 		bool in_state_running( fiber const&);
-		bool in_state_wait_for_join( fiber const&);
+		bool in_state_wait_for_fiber( fiber const&);
+		bool in_state_wait_for_object( fiber const&);
 		bool in_state_terminated( fiber const&);
 
 		void set_state_ready( fiber &);
 		void set_state_running( fiber &);
-		void set_state_wait_for_join( fiber &);
+		void set_state_wait_for_fiber( fiber &);
+		void set_state_wait_for_object( fiber &);
 		void set_state_terminated( fiber &);
 
 	public:
@@ -971,16 +999,32 @@ old the current (running) fiber and `master_fiber` executes the scheduling logic
 		virtual ~strategy();
 
 		virtual void add( fiber) = 0;
-		
-		virtual void yield( fiber::id const&) = 0;
-		
-		virtual void cancel( fiber::id const&) = 0;
 
 		virtual void join( fiber::id const&) = 0;
 
 		virtual void interrupt( fiber::id const&) = 0;
 
 		virtual void reschedule( fiber::id const&) = 0;
+		
+		virtual void cancel( fiber::id const&) = 0;
+		
+		virtual void yield( fiber::id const&) = 0;
+
+		virtual void register_object( object::id const&) = 0;
+		
+		virtual void unregister_object( object::id const&) = 0;
+		
+		virtual void wait_for_object( object::id const&) = 0;
+		
+		virtual void object_notify_one( object::id const&) = 0;
+		
+		virtual void object_notify_all( object::id const&) = 0;
+		
+		virtual fiber release( fiber::id const&) = 0;
+		
+		virtual void migrate( fiber) = 0;
+		
+		virtual void detach_all() = 0;
 
 		virtual bool run() = 0;
 
@@ -1091,12 +1135,23 @@ internal storage from the fiber.]]
 [endsect]
 
 
-[section:in_state_wait_for_join Protected member function `in_state_wait_for_join( fiber const&)`]
+[section:in_state_wait_for_fiber Protected member function `in_state_wait_for_fiber( fiber const&)`]
 
-        bool in_state_wait_for_join( fiber const&);
+        bool in_state_wait_for_fiber( fiber const&);
 
 [variablelist
-[[Effects:] [Protected member function tests if the fiber is in the state `wait for join`.]] 
+[[Effects:] [Protected member function tests if the fiber is in the state `wait for fiber`.]] 
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:in_state_wait_for_object Protected member function `in_state_wait_for_object( fiber const&)`]
+
+        bool in_state_wait_for_object( fiber const&);
+
+[variablelist
+[[Effects:] [Protected member function tests if the fiber is in the state `wait for object`.]] 
 [[Throws:] [Nothing.]]
 ]
 [endsect]
@@ -1135,12 +1190,23 @@ internal storage from the fiber.]]
 [endsect]
 
 
-[section:set_state_wait_for_join Protected member function `set_state_wait_for_join( fiber &)`]
+[section:set_state_wait_for_fiber Protected member function `set_state_wait_for_fiber( fiber &)`]
 
-        void set_state_wait_for_join( fiber &);
+        void set_state_wait_for_fiber( fiber &);
 
 [variablelist
-[[Effects:] [Protected member function sets the state of the fiber to `wait for join`.]] 
+[[Effects:] [Protected member function sets the state of the fiber to `wait for fiber`.]] 
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+
+[section:set_state_wait_for_object Protected member function `set_state_wait_for_object( fiber &)`]
+
+        void set_state_wait_for_object( fiber &);
+
+[variablelist
+[[Effects:] [Protected member function sets the state of the fiber to `wait for object`.]] 
 [[Throws:] [Nothing.]]
 ]
 [endsect]
@@ -1179,29 +1245,6 @@ internal storage from the fiber.]]
 [endsect]
 
 
-[section:yield Virtual member function `yield( fiber::id const&)`]
-
-        virtual void yield( fiber::id const&) = 0;
-
-[variablelist
-[[Precondition:] [Fiber is the active fiber.]]
-[[Effects:] [Yield active fiber and switch back to `master_fiber` in order to schedule
-another fiber from the internal storage.]]
-]
-[endsect]
-
-
-[section:cancel Virtual member function `cancel( fiber::id const&)`]
-
-        virtual void cancel( fiber::id const&) = 0;
-
-[variablelist
-[[Precondition:] [Fiber belongs to this scheduler.]]
-[[Effects:] [The fiber with passed identifier will be stopped, e.g. removed from the run-queue.]]
-]
-[endsect]
-
-
 [section:join Virtual member function `join( fiber::id const&)`]
 
         virtual void join( fiber::id const&) = 0;
@@ -1236,6 +1279,112 @@ execution or was interrupted.]]
 [endsect]
 
 
+[section:cancel Virtual member function `cancel( fiber::id const&)`]
+
+        virtual void cancel( fiber::id const&) = 0;
+
+[variablelist
+[[Precondition:] [Fiber belongs to this scheduler.]]
+[[Effects:] [The fiber with passed identifier will be stopped, e.g. removed from the run-queue.]]
+]
+[endsect]
+
+
+[section:yield Virtual member function `yield( fiber::id const&)`]
+
+        virtual void yield( fiber::id const&) = 0;
+
+[variablelist
+[[Precondition:] [Fiber is the active fiber.]]
+[[Effects:] [Yield active fiber and switch back to `master_fiber` in order to schedule
+another fiber from the internal storage.]]
+]
+[endsect]
+
+
+[section:register_object Virtual member function `register_object( object::id const&)`]
+
+        virtual void register_object( object::id const&) = 0;
+
+[variablelist
+[[Effects:] [Register the object (mutex, condition, event-variable).]]
+]
+[endsect]
+
+
+[section:unregister_object Virtual member function `unregister_object( object::id const&)`]
+
+        virtual void unregister_object( object::id const&) = 0;
+
+[variablelist
+[[Effects:] [Remove the object (mutex, condition, event-variable)i from the register.]]
+]
+[endsect]
+
+
+[section:wait_for_object Virtual member function `wait_for_object( object::id const&)`]
+
+        virtual void wait_for_object( object::id const&) = 0;
+
+[variablelist
+[[Effects:] [The active fiber waits on object until notified.]]
+]
+[endsect]
+
+
+[section:object_notify_one Virtual member function `object_notify_one( object::id const&)`]
+
+        virtual void object_notify_one( object::id const&) = 0;
+
+[variablelist
+[[Effects:] [Notify one fiber waiting on the object. The fiber gets ready for scheduling.]]
+]
+[endsect]
+
+
+[section:object_notify_all Virtual member function `object_notify_all( object::id const&)`]
+
+        virtual void object_notify_all( object::id const&) = 0;
+
+[variablelist
+[[Effects:] [Notify all fibers waiting on the object. The fibers get ready for scheduling.]]
+]
+[endsect]
+
+
+[section:release Virtual member function `release( fiber::id const&)`]
+
+        virtual void release( fiber::id const&) = 0;
+
+[variablelist
+[[Postcondition:] [The fiber is not terminated or waits on fiber or object.]]
+[[Effects:] [Release fiber from scheduler.]]
+]
+[endsect]
+
+
+[section:migrate Virtual member function `migrate( fiber)`]
+
+        virtual void migrate( fiber) = 0;
+
+[variablelist
+[[Postcondition:] [The fiber is not already managed by scheduler.]]
+[[Effects:] [Adds fiber to scheduler.]]
+]
+[endsect]
+
+
+[section:detach_all Virtual member function `detach_all()`]
+
+        virtual void detach_all() = 0;
+
+[variablelist
+[[Effects:] [Detaches all managed fibers from this.]]
+]
+[endsect]
+
+
+
 [section:run Virtual member function `run()`]
 
         virtual bool run() = 0;
@@ -1266,6 +1415,13 @@ execution or was interrupted.]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]
+
+[endsect]
+
+[section:round_robin Class `round_robin`]
+
+The class `round_robin` dervives from __strategy__ and implements a simple round-robin schduling-axpglorithm.
+It does not respect priorities offibers.
 
 [endsect]
 

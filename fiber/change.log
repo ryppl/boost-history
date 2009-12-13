@@ -1,10 +1,17 @@
+0.3.1:
+------
+- scheduler< Strategy >::migrate_fiber() overloaded - passing only fiber to be migrated
+
 0.3.0:
 ------
+- support of barrier (more efficient in on scheduler) and spin::barrier
+  (sync .between threads possible)
+- support of future and packaged_task (example future_mt)
 - explicit migration of fibers between two schedulers
   (even if schedulers are in different threads - see example migrate_mt)
 - locks replaced by locks implementation from boost.thread
-- introduction of spin_mutex, spin_condition, spin_auto_reset_event, ...
-  (can be used to sync fibers between threads)
+- introduction of spin::mutex, spin::condition, spin::auto_reset_event, ...
+  (can be used to sync fibers between threads see ping_pong_mt example)
 - introduction of mutex, condition, auto_reset_event, ...
   (objects bounded to one scheduler, but more efficient than spin counter-parts)
 - refactoring of internal classes

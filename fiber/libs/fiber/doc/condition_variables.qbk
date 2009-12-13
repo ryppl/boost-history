@@ -5,26 +5,25 @@
   http://www.boost.org/LICENSE_1_0.txt).
 ]
 
-[section:condvar_ref Condition Variables]
+[section:conditions Condition Variables]
 
 [heading Synopsis]
 
-The class `condition` provides a mechanism for one fiber to wait for notification
-`condition` or `condition_any`. When the fiber is woken from
-the wait, then it checks to see if the appropriate condition is now true, and
-continues if so. If the condition is not true, then the fiber then calls `wait`
-again to resume waiting. In the simplest case, this condition is just a boolean
-variable:
+The class `condition` provides a mechanism for one fiber to wait for notification `condition`. When the fiber is
+woken from the wait, then it checks to see if the appropriate condition is now true, and continues if so. If the
+condition is not true, then the fiber then calls `wait` again to resume waiting. In the simplest case, this
+condition is just a boolean variable:
 
-    boost::fibers::condition cond;
-    boost::fibers::mutex mtx;
+	boost::fibers::scheduler<> sched;
+    boost::fibers::condition cond( sched);
+    boost::fibers::mutex mtx( sched);
     bool data_ready;
 
     void process_data();
 
     void wait_for_data_to_process()
     {
-        boost::fibers::unique_lock< boost::fibers::mutex > lk( mtx);
+        boost::unique_lock< boost::fibers::mutex > lk( mtx);
         while ( ! data_ready)
         {
             cond.wait( lk);
@@ -32,16 +31,13 @@ variable:
         process_data();
     }
 
-Notice that the `lk` is passed to `wait`: `wait` will atomically add the
-fiber to the set of fibers waiting on the condition variable, and unlock the
-mutex. When the fiber is woken, the mutex will be locked again before the call
-to `wait` returns. This allows other fibers to acquire the mutex in order to
-update the shared data, and ensures that the data associated with the condition
-is correctly synchronized.
+Notice that the `lk` is passed to `wait`: `wait` will atomically add the fiber to the set of fibers waiting on the
+condition variable, and unlock the mutex. When the fiber is woken, the mutex will be locked again before the call
+to `wait` returns. This allows other fibers to acquire the mutex in order to update the shared data, and ensures
+that the data associated with the condition is correctly synchronized.
 
-In the mean time, another fiber sets the condition to `true`, and then calls
-either `notify_one` or `notify_all` on the condition variable to wake one
-waiting fiber or all the waiting fibers respectively.
+In the mean time, another fiber sets the condition to `true`, and then calls either `notify_one` or `notify_all` on
+the condition variable to wake one waiting fiber or all the waiting fibers respectively.
 
     void retrieve_data();
     void prepare_data();
@@ -57,8 +53,10 @@ waiting fiber or all the waiting fibers respectively.
         cond.notify_one();
     }
 
-Note that the same mutex is locked before the shared data is updated, but that
-the mutex does not have to be locked across the call to `notify_one`.
+Note that the same mutex is locked before the shared data is updated, but that the mutex does not have to be locked
+across the call to `notify_one`.
+
+[note __condition__ is bound to a given __scheduler__ an can only be used by fibers managed by this scheduler.]
 
 [section:condition Class `condition`]
 
@@ -67,16 +65,23 @@ the mutex does not have to be locked across the call to `notify_one`.
     class condition
     {
     public:
-        condition();
+		template< typename Strategy >
+        condition( scheduler< Strategy > & sched);
         ~condition();
 
         void notify_one();
         void notify_all();
 
-        void wait( boost::fibers::unique_lock< boost::fibers::mutex > & lk);
+        void wait( boost::unique_lock< boost::fibers::mutex > & lk);
 
-        template< typename predicate_type >
-        void wait( boost::fibers::unique_lock< boost::fibers::mutex > & lk,predicate_type predicate);
+        template< typename Pred >
+        void wait( boost::unique_lock< boost::fibers::mutex > & lk, Pred pred);
+
+		template< typename LockType >
+        void wait( LockType & lk);
+
+        template< typename LockType, typename Pred >
+        void wait( LockType & lk, Pred predicate);
     };
 
 [section:constructor `condition()`]
@@ -88,9 +93,8 @@ the mutex does not have to be locked across the call to `notify_one`.
 
 [section:destructor `~condition()`]
 [variablelist
-[[Precondition:] [All fibers waiting on `*this` have been notified by a call to
-`notify_one` or `notify_all` (though the respective calls to `wait` need not have
-returned).]]
+[[Precondition:] [All fibers waiting on `*this` have been notified by a call to `notify_one` or `notify_all`
+(though the respective calls to `wait` need not have returned).]]
 [[Effects:] [Destroys the object.]]
 [[Throws:] [Nothing.]]
 ]
@@ -98,42 +102,68 @@ returned).]]
 
 [section:notify_one `void notify_one()`]
 [variablelist
-[[Effects:] [If any fibers are currently __blocked__ waiting on `*this` in a call
-to `wait`, unblocks one of those fibers.]]
+[[Effects:] [If any fibers are currently __blocked__ waiting on `*this` in a call to `wait`, unblocks one of
+those fibers.]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]
 
 [section:notify_all `void notify_all()`]
 [variablelist
-[[Effects:] [If any fibers are currently __blocked__ waiting on `*this` in a call
-to `wait`, unblocks all of those fibers.]]
+[[Effects:] [If any fibers are currently __blocked__ waiting on `*this` in a call to `wait`, unblocks all of
+those fibers.]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]
 
-[section:wait `void wait( boost::fibers::unique_lock< boost::fibers::mutex> & lk)`]
+[section:wait `void wait( boost::unique_lock< boost::fibers::mutex > & lk)`]
 [variablelist
-[[Precondition:] [`lock` is locked by the current fiber, and either no other
+[[Precondition:] [`lk` is locked by the current fiber, and either no other
 fiber is currently waiting on `*this`, or the execution of the `mutex()` member
 function on the `lk` objects supplied in the calls to `wait` in all the fibers
-currently waiting on `*this` would return the same value as `lock->mutex()` for
+currently waiting on `*this` would return the same value as `lk->mutex()` for
 this call to `wait`.]]
-[[Effects:] [Atomically call `lock.unlock()` and blocks the current fiber. The
+[[Effects:] [Atomically call `lk.unlock()` and blocks the current fiber. The
 fiber will unblock when notified by a call to `this->notify_one()` or
 `this->notify_all()`, or spuriously. When the fiber is unblocked (for whatever
-reason), the lock is reacquired by invoking `lock.lock()` before the call to
-`wait` returns. The lock is also reacquired by invoking `lock.lock()` if the
+reason), the lock is reacquired by invoking `lk.lock()` before the call to
+`wait` returns. The lock is also reacquired by invoking `lk.lock()` if the
 function exits with an exception.]]
-[[Postcondition:] [`lock` is locked by the current fiber.]]
+[[Postcondition:] [`lk` is locked by the current fiber.]]
 [[Throws:] [__fiber_error__ if an error
 occurs. __fiber_interrupted__ if the wait was interrupted by a call to
 __interrupt__ on the __fiber__ object associated with the current fiber of execution.]]
+]
+[endsect]
+
+[section:wait_predicate `template< typename Pred > void wait( boost::unique_lock< boost::fibers::mutex > & lk, Pred pred)`]
+[variablelist
+[[Effects:] [As-if ``
+while ( ! pred())
+{
+    wait( lk);
+}
+``]]
 
 ]
 [endsect]
 
-[section:wait_predicate `void wait( boost::fibers::unique_lock< boost::fibers::mutex > & lk, predicate_type pred)`]
+[section:wait_t `template< typename LockType > void wait( LockType & lk)`]
+[variablelist
+[[Effects:] [Atomically call `lk.unlock()` and blocks the current fiber. The
+fiber will unblock when notified by a call to `this->notify_one()` or
+`this->notify_all()`, or spuriously. When the fiber is unblocked (for whatever
+reason), the lock is reacquired by invoking `lk.lock()` before the call to
+`wait` returns. The lock is also reacquired by invoking `lk.lock()` if the
+function exits with an exception.]]
+[[Postcondition:] [`lk` is locked by the current fiber.]]
+[[Throws:] [__fiber_error__ if an error
+occurs. __fiber_interrupted__ if the wait was interrupted by a call to
+__interrupt__ on the __fiber__ object associated with the current fiber of execution.]]
+]
+[endsect]
+
+[section:wait_predicate_t `template< typename LockType, typename Pred > void wait( LockType & lk, Pred pred)`]
 [variablelist
 [[Effects:] [As-if ``
 while ( ! pred())

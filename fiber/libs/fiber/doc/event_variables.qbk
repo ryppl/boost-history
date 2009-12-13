@@ -12,6 +12,9 @@
 __boost_fiber__ provides event variables to facilitate coordination between fibers.
 A event-variable has two states `set` (`signaled`) or `reset` (`nonsignaled`).
 
+[note event-variables are bound to a given __scheduler__ an can only be used by fibers
+managed by this scheduler.]
+
     boost::fibers::auto_reset_event ev;
 
     void process_data();

@@ -28,6 +28,9 @@ __mutex__ implements the __lockable_concept__ to provide an exclusive-ownership 
 lock on a given instance of __mutex__ at any time. Multiple concurrent calls to __lock_ref__, __try_lock_ref__ and
 __unlock_ref__ shall be permitted.
 
+[note __mutex__ is bound to a given __scheduler__ an can only be used by fibers
+managed by this scheduler.]
+
 [endsect]
 
 [endsect]

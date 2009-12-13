@@ -7,7 +7,7 @@
 
 [section:overview Overview]
 
-__boost_fiber__ provides an framework utilizing lightweight threads of execution also known
+__boost_fiber__ provides an framework utilizing lightweight threads of execution - also known
 as user-level/user-space threads or fibers (Win32 API).  The API of the library is
 modeled after __boost_thread__ and contains classes, functions to manage fibers and to synchronize
 data between the fibers.
