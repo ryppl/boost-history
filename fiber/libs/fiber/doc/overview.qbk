@@ -34,6 +34,8 @@ header:
 which includes all the other headers in turn. The classes and functions reside in namespaces
 `boost::fibers` and `boost::this_fiber`.
 
+[note __boost_fiber__ requires [*Boost Library 1.41.0] .]
+
 [warning This library is NOT an official Boost library]
 
 [note Please note that __boost_fiber__ is not optimized yet.]
