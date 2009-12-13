@@ -180,12 +180,12 @@ struct future_object: future_object_base
 
     void mark_finished_with_result(source_reference_type result_)
     {
-        boost::lock_guard<mutex> lock(mutex);
+        boost::lock_guard<mutex> lock(mtx);
         mark_finished_with_result_internal(result_);
     }
     void mark_finished_with_result(rvalue_source_type result_)
     {
-        boost::lock_guard<mutex> lock(mutex);
+        boost::lock_guard<mutex> lock(mtx);
         mark_finished_with_result_internal(result_);
     }
 
@@ -197,7 +197,7 @@ struct future_object: future_object_base
 
     future_state::state get_state()
     {
-        boost::lock_guard<mutex> guard(mutex);
+        boost::lock_guard<mutex> guard(mtx);
         if(!done)
         {
             return future_state::waiting;
@@ -226,7 +226,7 @@ struct future_object<void>: future_object_base
 
     void mark_finished_with_result()
     {
-        boost::lock_guard<mutex> lock(mutex);
+        boost::lock_guard<mutex> lock(mtx);
         mark_finished_with_result_internal();
     }
 
@@ -237,7 +237,7 @@ struct future_object<void>: future_object_base
     
     future_state::state get_state()
     {
-        boost::lock_guard<mutex> guard(mutex);
+        boost::lock_guard<mutex> guard(mtx);
         if(!done)
         {
             return future_state::waiting;

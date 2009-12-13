@@ -127,7 +127,7 @@ round_robin::interrupt( fiber::id const& id)
 		// remove it from the waiting-queue, reset waiting-on
 		// and reset the waiting state
 		BOOST_ASSERT( s.waiting_on_object);
-		objects_.at( * s.waiting_on_object).remove( id);
+		objects_[* s.waiting_on_object].remove( id);
 		fibers_[id].waiting_on_object.reset();
 		set_state_ready( f);
 		runnable_fibers_.push_back( id);
@@ -261,7 +261,7 @@ round_robin::wait_for_object( object::id const& oid)
 	BOOST_ASSERT( ! s.waiting_on_object);
 
 	// register on object to be waiting on
-	objects_.at( oid).push_back( id);
+	objects_[oid].push_back( id);
 	
 	// set state waiting
 	set_state_wait_for_object( f);
