@@ -15,6 +15,11 @@
 #include <boost/fiber/scheduler.hpp>
 #include <boost/fiber/strategy.hpp>
 
+# if defined(BOOST_MSVC)
+# pragma warning(push)
+# pragma warning(disable:4355)
+# endif
+
 namespace boost {
 namespace fibers {
 
@@ -49,5 +54,9 @@ public:
 };
 
 }}
+
+# if defined(BOOST_MSVC)
+# pragma warning(pop)
+# endif
 
 #endif // BOOST_FIBERS_COUNT_DOWN_EVENT_H
