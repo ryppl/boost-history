@@ -343,6 +343,69 @@ void test_case_6()
 	BOOST_CHECK_EQUAL( 3, value2);
 }
 
+void test_case_7()
+{
+	value1 = 0;
+	value2 = 0;
+
+	boost::fibers::scheduler<> sched1, sched2;
+
+	boost::fiber f( & yield1_fn); 
+	boost::fiber::id id = f.get_id();
+	sched1.submit_fiber( f);
+	sched2.make_fiber( & yield2_fn);
+
+	BOOST_CHECK( ! sched1.empty() );
+	BOOST_CHECK( ! sched2.empty() );
+	BOOST_CHECK_EQUAL( std::size_t( 1), sched1.size() );
+	BOOST_CHECK_EQUAL( std::size_t( 1), sched2.size() );
+	BOOST_CHECK_EQUAL( 0, value1);
+	BOOST_CHECK_EQUAL( 0, value2);
+
+	BOOST_CHECK( sched1.run() );
+	BOOST_CHECK( ! sched1.empty() );
+	BOOST_CHECK_EQUAL( std::size_t( 1), sched1.size() );
+	BOOST_CHECK_EQUAL( 1, value1);	
+	BOOST_CHECK_EQUAL( 0, value2);
+
+	BOOST_CHECK( sched2.run() );
+	BOOST_CHECK( ! sched2.empty() );
+	BOOST_CHECK_EQUAL( std::size_t( 1), sched2.size() );
+	BOOST_CHECK_EQUAL( 1, value1);	
+	BOOST_CHECK_EQUAL( 1, value2);
+
+	BOOST_CHECK( sched1.run() );
+	BOOST_CHECK( ! sched1.empty() );
+	BOOST_CHECK_EQUAL( std::size_t( 1), sched1.size() );
+	BOOST_CHECK_EQUAL( 2, value1);	
+	BOOST_CHECK_EQUAL( 1, value2);
+
+	BOOST_CHECK( sched2.run() );
+	BOOST_CHECK( ! sched2.empty() );
+	BOOST_CHECK_EQUAL( std::size_t( 1), sched2.size() );
+	BOOST_CHECK_EQUAL( 2, value1);	
+	BOOST_CHECK_EQUAL( 2, value2);
+
+	sched2.migrate_fiber( f);
+	BOOST_CHECK_EQUAL( std::size_t( 0), sched1.size() );
+	BOOST_CHECK_EQUAL( std::size_t( 2), sched2.size() );
+
+	BOOST_CHECK( ! sched1.run() );
+	BOOST_CHECK( sched1.empty() );
+
+	BOOST_CHECK( sched2.run() );
+	BOOST_CHECK( ! sched2.empty() );
+	BOOST_CHECK_EQUAL( std::size_t( 2), sched2.size() );
+	BOOST_CHECK_EQUAL( 2, value1);	
+	BOOST_CHECK_EQUAL( 3, value2);
+
+	BOOST_CHECK( sched2.run() );
+	BOOST_CHECK( ! sched2.empty() );
+	BOOST_CHECK_EQUAL( std::size_t( 2), sched2.size() );
+	BOOST_CHECK_EQUAL( 3, value1);	
+	BOOST_CHECK_EQUAL( 3, value2);
+}
+
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
 	boost::unit_test::test_suite * test =
@@ -354,6 +417,7 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_TEST_CASE( & test_case_4) );
 	test->add( BOOST_TEST_CASE( & test_case_5) );
 	test->add( BOOST_TEST_CASE( & test_case_6) );
+	test->add( BOOST_TEST_CASE( & test_case_7) );
 
 	return test;
 }

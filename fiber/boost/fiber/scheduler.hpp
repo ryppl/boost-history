@@ -15,6 +15,7 @@
 #include <boost/utility.hpp>
 
 #include <boost/fiber/detail/config.hpp>
+#include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/fiber.hpp>
 #include <boost/fiber/round_robin.hpp>
 #include <boost/fiber/strategy.hpp>
@@ -76,6 +77,15 @@ public:
 	template< typename Fn >
 	void make_fiber( std::size_t stack_size, Fn fn)
 	{ strategy_->add( fiber( stack_size, fn) ); }
+
+	void migrate_fiber( fiber f)
+	{
+		if ( ! f) throw fiber_moved();
+
+		strategy * st( f.info_()->st);
+		if ( ! st) throw fiber_error("fiber not attached");
+		strategy_->migrate( f.info_()->st->release( f.get_id() ) );
+	}
 
 	template< typename OtherStrategy >
 	void migrate_fiber( fiber::id const& id, scheduler< OtherStrategy > & other)

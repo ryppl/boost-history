@@ -33,11 +33,15 @@ namespace fibers {
 
 #define BOOST_FIBER_DEFAULT_STACKSIZE 64000
 
+template< typename Strategy >
+class scheduler;
 class strategy;
 
 class BOOST_FIBER_DECL fiber
 {
 private:
+	template< typename Strategy >
+	friend class scheduler;
 	friend class strategy;
 
 	struct dummy;
