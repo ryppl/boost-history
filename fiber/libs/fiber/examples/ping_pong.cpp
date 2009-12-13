@@ -68,8 +68,8 @@ void f( boost::fibers::scheduler<> & sched)
 	fifo_t buf1( sched);
 	fifo_t buf2( sched);
 	
-	sched.make_fiber( & ping, boost::ref( buf1), boost::ref( buf2) );
-	sched.make_fiber( & pong, boost::ref( buf2), boost::ref( buf1) );
+	sched.make_fiber( & ping, buf1, buf2);
+	sched.make_fiber( & pong, buf2, buf1);
 }
 
 int main()
