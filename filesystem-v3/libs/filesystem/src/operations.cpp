@@ -972,11 +972,11 @@ namespace detail
     struct stat path_stat;
     if (error(::stat(p.c_str(), &path_stat)!= 0,
         p, ec, "boost::filesystem::file_size"))
-      return 0;
+      return static_cast<boost::uintmax_t>(-1);
    if (error(!S_ISREG(path_stat.st_mode),
       error_code(EPERM, system_category),
         p, ec, "boost::filesystem::file_size"))
-      return 0;
+      return static_cast<boost::uintmax_t>(-1);
 
     return static_cast<boost::uintmax_t>(path_stat.st_size);
 #   endif

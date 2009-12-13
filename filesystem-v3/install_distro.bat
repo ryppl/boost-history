@@ -26,7 +26,7 @@ if not exist %2\boost-build.jam (
 )
 
 pushd %2
-echo Delete prior version of Filesystem...
+echo Delete prior version of Filesystem library...
 del boost\filesystem.hpp
 rmdir /S /Q boost\filesystem
 rmdir /S /Q libs\filesystem
@@ -38,7 +38,7 @@ if not exist bjam.exe (
 )
 
 echo Copy files from %1 to %2...
-xcopy /s /q C:\temp\filesystem-v3-alpha-0.1\* .
+xcopy /s /q %1\* .
 
 echo Build libraries...
 time /t

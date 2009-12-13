@@ -632,53 +632,47 @@ namespace
     std::cout << "  imbuing error locale ..." << std::endl;
     std::locale old_loc = path::imbue(loc);
 
-# ifdef BOOST_WINDOWS_PATH
-#   define STRING_FOO_
-# else
-#   define STRING_FOO_ L
-# endif
+    //  These tests rely on a path constructor that fails in the locale conversion.
+    //  Thus construction has to call codecvt. Force that by using a narrow string
+    //  for Windows, and a wide string for POSIX.
+#   ifdef BOOST_WINDOWS_PATH
+#     define STRING_FOO_ "foo"
+#   else
+#     define STRING_FOO_ L"foo"
+#   endif
 
     {
       bool exception_thrown (false);
-      try { path(STRING_FOO_"foo"); }
+      try { path(STRING_FOO_); }
       catch (const bs::system_error & ex)
       {
         exception_thrown = true;
-        BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::partial, fs::codecvt_error_category()));
-      }
-      catch (...)
-      {
-        std::cout << "exception thrown, but of an unexpected type" << std::endl;
+        BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::partial,
+          fs::codecvt_error_category()));
       }
       BOOST_TEST(exception_thrown);
     }
 
     {
       bool exception_thrown (false);
-      try { path(STRING_FOO_"foo"); }
+      try { path(STRING_FOO_); }
       catch (const bs::system_error & ex)
       {
         exception_thrown = true;
-        BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::error, fs::codecvt_error_category()));
-      }
-      catch (...)
-      {
-        std::cout << "exception thrown, but of an unexpected type" << std::endl;
+        BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::error,
+          fs::codecvt_error_category()));
       }
       BOOST_TEST(exception_thrown);
     }
 
     {
       bool exception_thrown (false);
-      try { path(STRING_FOO_"foo"); }
+      try { path(STRING_FOO_); }
       catch (const bs::system_error & ex)
       {
         exception_thrown = true;
-        BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::noconv, fs::codecvt_error_category()));
-      }
-      catch (...)
-      {
-        std::cout << "exception thrown, but of an unexpected type" << std::endl;
+        BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::noconv,
+          fs::codecvt_error_category()));
       }
       BOOST_TEST(exception_thrown);
     }
