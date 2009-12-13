@@ -25,6 +25,35 @@
 
 namespace boost
 {
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+    template<typename... T>
+    struct common_type;
+
+    template<typename T>
+    struct common_type<T> {
+        static_assert(sizeof(T) > 0, "must be complete type");
+        typedef T type;
+    };
+
+    template<typename T, typename U>
+    class common_type<T, U> {
+        static_assert(sizeof(T) > 0, "must be complete type");
+        static_assert(sizeof(U) > 0, "must be complete type");
+        static T&& m_t();
+        static U&& m_u();
+
+        static bool m_f();  // workaround gcc bug; not required by std
+
+    public:
+        typedef decltype(m_true_or_false() ? m_t() : m_u()) type;
+    };
+
+    template<typename T, typename U, typename... V>
+    struct common_type<T, U, V...> {
+        typedef typename
+            common_type<typename common_type<T, U>::type, V...>::type type;
+    };
+#else
 
   template <class T, class U = void, class V = void>
   struct common_type
@@ -32,15 +61,6 @@ namespace boost
   public:
      typedef typename common_type<typename common_type<T, U>::type, V>::type type;
   };
-
-namespace detail {
-template<typename A, typename B>
-struct result_of_conditional 
-{
-    static bool m_f();  // workaround gcc bug; not required by std
-    typedef BOOST_TYPEOF_TPL(m_f()?A():B()) type;
-};
-}
 
   template <class T>
   struct common_type<T, void, void>
@@ -57,10 +77,10 @@ struct result_of_conditional
      static U m_u();
      static bool m_f();  // workaround gcc bug; not required by std
   public:
-      
+
      typedef BOOST_TYPEOF_TPL(m_f() ? m_t() : m_u()) type;
   };
-
+#endif
 }  // namespace boost
 
 #endif  // BOOST_COMMON_TYPE_HPP

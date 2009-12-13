@@ -36,6 +36,36 @@ time2_demo contained this comment:
 #include <boost/cstdint.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/integer_traits.hpp>
+
+#ifndef BOOST_RATIO_USES_MPL_ASSERT
+#define BOOST_RATIO_OVERFLOW_IN_LL_ADD "overflow in ll_add"
+#define BOOST_RATIO_OVERFLOW_IN_LL_ADD "overflow in ll_add"
+#define BOOST_RATIO_OVERFLOW_IN_LL_SUB "overflow in ll_sub"
+#define BOOST_RATIO_OVERFLOW_IN_LL_MUL "overflow in ll_mul"
+#define BOOST_RATIO_OVERFLOW_IN_LL_DIV "overflow in ll_div"
+#define BOOST_RATIO_RATIO_NUMERATOR_IS_OUT_OF_RANGE "ratio numerator is out of range"
+#define BOOST_RATIO_RATIO_DIVIDE_BY_0 "ratio divide by 0"
+#define BOOST_RATIO_RATIO_DENOMINATOR_IS_OUT_OF_RANGE "ratio denominator is out of range"
+#endif
+
+#ifndef BOOST_NO_STATIC_ASSERT
+#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES) static_assert(CND,MSG)
+#elif defined(BOOST_RATIO_USES_STATIC_ASSERT)
+#include <boost/static_assert.hpp>
+#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES) BOOST_STATIC_ASSERT(CND)
+#elif defined(BOOST_RATIO_USES_MPL_ASSERT)
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/bool.hpp>
+#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES)                                 \
+    BOOST_MPL_ASSERT_MSG(boost::mpl::bool_< (CND) >::type::value, MSG, TYPES)
+#elif defined(BOOST_RATIO_USES_ARRAY_ASSERT)
+#define BOOST_RATIO_CONCAT(A,B) A##B
+#define BOOST_RATIO_NAME(A,B) BOOST_RATIO_CONCAT(A,B)
+#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_RATIO_NAME(__boost_chrono_test_,__LINE__)[CND];
+#else
+#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES)
+#endif
 
 #ifdef INTMAX_C
 #define BOOST_INTMAX_C(a) INTMAX_C(a)
@@ -133,12 +163,16 @@ namespace detail
   template <boost::intmax_t X, boost::intmax_t Y>
   class ll_add<X, Y, 1>
   {
+      #if BOOST_RATIO_OLD_MIN_MAX
       static const boost::intmax_t min =
         (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
+      #else
+      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      #endif
 
-      static char test[X <= max - Y];
-  //    static_assert(X <= max - Y, "overflow in ll_add");
+      BOOST_RATIO_STATIC_ASSERT(X <= max - Y , BOOST_RATIO_OVERFLOW_IN_LL_ADD, ());
   public:
       static const boost::intmax_t value = X + Y;
   };
@@ -153,12 +187,16 @@ namespace detail
   template <boost::intmax_t X, boost::intmax_t Y>
   class ll_add<X, Y, -1>
   {
+      #if BOOST_RATIO_OLD_MIN_MAX
       static const boost::intmax_t min =
         (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
+      #else
+      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      #endif
 
-      static char test[min - Y <= X];
-  //    static_assert(min - Y <= X, "overflow in ll_add");
+      BOOST_RATIO_STATIC_ASSERT(min - Y <= X, BOOST_RATIO_OVERFLOW_IN_LL_ADD, ());
   public:
       static const boost::intmax_t value = X + Y;
   };
@@ -169,12 +207,16 @@ namespace detail
   template <boost::intmax_t X, boost::intmax_t Y>
   class ll_sub<X, Y, 1>
   {
+      #if BOOST_RATIO_OLD_MIN_MAX
       static const boost::intmax_t min =
         (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
+      #else
+      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      #endif
 
-      static char test[min + Y <= X];
-  //    static_assert(min + Y <= X, "overflow in ll_sub");
+      BOOST_RATIO_STATIC_ASSERT(min + Y <= X, BOOST_RATIO_OVERFLOW_IN_LL_SUB, ());
   public:
       static const boost::intmax_t value = X - Y;
   };
@@ -189,12 +231,16 @@ namespace detail
   template <boost::intmax_t X, boost::intmax_t Y>
   class ll_sub<X, Y, -1>
   {
+      #if BOOST_RATIO_OLD_MIN_MAX
       static const boost::intmax_t min =
         (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
+      #else
+      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      #endif
 
-      static char test[X <= max + Y];
-  //    static_assert(X <= max + Y, "overflow in ll_sub");
+      BOOST_RATIO_STATIC_ASSERT(X <= max + Y, BOOST_RATIO_OVERFLOW_IN_LL_SUB, ());
   public:
       static const boost::intmax_t value = X - Y;
   };
@@ -204,15 +250,20 @@ namespace detail
   {
       static const boost::intmax_t nan =
         (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1));
+      #if BOOST_RATIO_OLD_MIN_MAX
       static const boost::intmax_t min = nan + 1;
       static const boost::intmax_t max = -min;
+      #else
+      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      #endif
+
       static const boost::intmax_t a_x = static_abs<X>::value;
       static const boost::intmax_t a_y = static_abs<Y>::value;
 
-      static char test1[X != nan];
-      static char test2[Y != nan];
-      static char test[a_x <= max / a_y];
-  //    static_assert(X != nan && Y != nan && a_x <= max / a_y, "overflow in ll_mul");
+      BOOST_RATIO_STATIC_ASSERT(X != nan, BOOST_RATIO_OVERFLOW_IN_LL_MUL, ());
+      BOOST_RATIO_STATIC_ASSERT(Y != nan, BOOST_RATIO_OVERFLOW_IN_LL_MUL, ());
+      BOOST_RATIO_STATIC_ASSERT(a_x <= max / a_y, BOOST_RATIO_OVERFLOW_IN_LL_MUL, ());
   public:
       static const boost::intmax_t value = X * Y;
   };
@@ -243,23 +294,28 @@ namespace detail
   class ll_div
   {
       static const boost::intmax_t nan = (1LL << (sizeof(boost::intmax_t) * CHAR_BIT - 1));
+      #if BOOST_RATIO_OLD_MIN_MAX
       static const boost::intmax_t min = nan + 1;
       static const boost::intmax_t max = -min;
+      #else
+      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      #endif
 
-      static char test1[X != nan];
-      static char test2[Y != nan];
-      static char test3[Y != 0];
-  //    static_assert(X != nan && Y != nan && Y != 0, "overflow in ll_div");
+      BOOST_RATIO_STATIC_ASSERT(X != nan, BOOST_RATIO_OVERFLOW_IN_LL_DIV, ());
+      BOOST_RATIO_STATIC_ASSERT(Y != nan, BOOST_RATIO_OVERFLOW_IN_LL_DIV, ());
+      BOOST_RATIO_STATIC_ASSERT(Y != 0, BOOST_RATIO_OVERFLOW_IN_LL_DIV, ());
   public:
       static const boost::intmax_t value = X / Y;
   };
 
-  //template <class T>
-  //  struct is_ratio : public false_type {};
-  //template <intmax_t N, intmax_t D>
-  //  struct is_ratio<ratio<N, D> > : public true_type  {};
+  template <class T>
+    struct is_ratio : public boost::false_type {};
+  template <intmax_t N, intmax_t D>
+    struct is_ratio<ratio<N, D> > : public boost::true_type  {};
   //template <class T>
   //  struct is_ratio : is_ratio<typename remove_cv<T>::type> {};
+
 
 }  // namespace detail
 
@@ -272,22 +328,20 @@ namespace detail
 template <boost::intmax_t N, boost::intmax_t D>
 class ratio
 {
-    static char test1[detail::static_abs<N>::value >= 0];
-    static char test2[detail::static_abs<D>::value >  0];
-//    static_assert(detail::static_abs<N>::value >= 0, "ratio numerator is out of range");
-//    static_assert(D != 0, "ratio divide by 0");
-//    static_assert(detail::static_abs<D>::value >  0, "ratio denominator is out of range");
-    static const boost::intmax_t m_na = detail::static_abs<N>::value;
-    static const boost::intmax_t m_da = detail::static_abs<D>::value;
-    static const boost::intmax_t m_s = detail::static_sign<N>::value
-      * detail::static_sign<D>::value;
-    static const boost::intmax_t m_gcd = detail::static_gcd<m_na, m_da>::value;
+      BOOST_RATIO_STATIC_ASSERT(boost::detail::static_abs<N>::value >= 0, BOOST_RATIO_RATIO_NUMERATOR_IS_OUT_OF_RANGE, ());
+      BOOST_RATIO_STATIC_ASSERT(boost::detail::static_abs<D>::value > 0, BOOST_RATIO_RATIO_DENOMINATOR_IS_OUT_OF_RANGE, ());
+      BOOST_RATIO_STATIC_ASSERT(D != 0, BOOST_RATIO_RATIO_DIVIDE_BY_0 , ());
+    static const boost::intmax_t m_na = boost::detail::static_abs<N>::value;
+    static const boost::intmax_t m_da = boost::detail::static_abs<D>::value;
+    static const boost::intmax_t m_s = boost::detail::static_sign<N>::value
+      * boost::detail::static_sign<D>::value;
+    static const boost::intmax_t m_gcd = boost::detail::static_gcd<m_na, m_da>::value;
 public:
     static const boost::intmax_t num = m_s * m_na / m_gcd;
     static const boost::intmax_t den = m_da / m_gcd;
 
     ratio() {}
-        
+
     template <intmax_t _N2, intmax_t _D2>
     ratio(const ratio<_N2, _D2>&,
         typename enable_if_c
@@ -295,7 +349,7 @@ public:
                 (ratio<_N2, _D2>::num == num &&
                 ratio<_N2, _D2>::den == den)
             >::type* = 0) {}
-    
+
     template <intmax_t _N2, intmax_t _D2>
         typename enable_if_c
         <
@@ -325,8 +379,8 @@ public:
     // The preceding declaration doesn't works because of overflow on intmax_t.
 #else
 private:
-    static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
-    static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+    static const boost::intmax_t gcd_n1_n2 = boost::detail::static_gcd<R1::num, R2::num>::value;
+    static const boost::intmax_t gcd_d1_d2 = boost::detail::static_gcd<R1::den, R2::den>::value;
 public:
     // No need to normalize as ratio_multiply is already normalized
     typedef typename ratio_multiply
@@ -334,10 +388,10 @@ public:
            ratio<gcd_n1_n2, R1::den / gcd_d1_d2>,
            ratio
            <
-               detail::ll_add
+               boost::detail::ll_add
                <
-                   detail::ll_mul<R1::num / gcd_n1_n2, R2::den / gcd_d1_d2>::value,
-                   detail::ll_mul<R2::num / gcd_n1_n2, R1::den / gcd_d1_d2>::value
+                   boost::detail::ll_mul<R1::num / gcd_n1_n2, R2::den / gcd_d1_d2>::value,
+                   boost::detail::ll_mul<R2::num / gcd_n1_n2, R1::den / gcd_d1_d2>::value
                >::value,
                R2::den
            >
@@ -356,8 +410,8 @@ public:
     // The preceding declaration doesn't works because of overflow on intmax_t.
 #else
 private:
-    static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
-    static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+    static const boost::intmax_t gcd_n1_n2 = boost::detail::static_gcd<R1::num, R2::num>::value;
+    static const boost::intmax_t gcd_d1_d2 = boost::detail::static_gcd<R1::den, R2::den>::value;
 public:
     // No need to normalize as ratio_multiply is already normalized
     typedef typename ratio_multiply
@@ -365,10 +419,10 @@ public:
            ratio<gcd_n1_n2, R1::den / gcd_d1_d2>,
            ratio
            <
-               detail::ll_sub
+               boost::detail::ll_sub
                <
-                   detail::ll_mul<R1::num / gcd_n1_n2, R2::den / gcd_d1_d2>::value,
-                   detail::ll_mul<R2::num / gcd_n1_n2, R1::den / gcd_d1_d2>::value
+                   boost::detail::ll_mul<R1::num / gcd_n1_n2, R2::den / gcd_d1_d2>::value,
+                   boost::detail::ll_mul<R2::num / gcd_n1_n2, R1::den / gcd_d1_d2>::value
                >::value,
                R2::den
            >
@@ -386,13 +440,13 @@ public:
     // The preceding declaration doesn't works because of overflow on intmax_t.
 #else
 private:
-   static const boost::intmax_t gcd_n1_d2 = detail::static_gcd<R1::num, R2::den>::value;
-   static const boost::intmax_t gcd_d1_n2 = detail::static_gcd<R1::den, R2::num>::value;
+   static const boost::intmax_t gcd_n1_d2 = boost::detail::static_gcd<R1::num, R2::den>::value;
+   static const boost::intmax_t gcd_d1_n2 = boost::detail::static_gcd<R1::den, R2::num>::value;
 public:
     typedef typename ratio
        <
-           detail::ll_mul<R1::num / gcd_n1_d2, R2::num / gcd_d1_n2>::value,
-           detail::ll_mul<R2::den / gcd_n1_d2, R1::den / gcd_d1_n2>::value
+           boost::detail::ll_mul<R1::num / gcd_n1_d2, R2::num / gcd_d1_n2>::value,
+           boost::detail::ll_mul<R2::den / gcd_n1_d2, R1::den / gcd_d1_n2>::value
        >::type type;
 #endif
 };
@@ -402,17 +456,17 @@ struct ratio_divide
 {
 #if 0
 public:
-    // The nested typedef type  shall be a synonym for ratio<R1::num * R2::den, R2::num * R1::den>::type. 
+    // The nested typedef type  shall be a synonym for ratio<R1::num * R2::den, R2::num * R1::den>::type.
     typedef typename ratio<R1::num * R2::den, R1::den * R2::num>::type type;
-#else    
+#else
 private:
-    static const boost::intmax_t gcd_n1_n2 = detail::static_gcd<R1::num, R2::num>::value;
-    static const boost::intmax_t gcd_d1_d2 = detail::static_gcd<R1::den, R2::den>::value;
+    static const boost::intmax_t gcd_n1_n2 = boost::detail::static_gcd<R1::num, R2::num>::value;
+    static const boost::intmax_t gcd_d1_d2 = boost::detail::static_gcd<R1::den, R2::den>::value;
 public:
     typedef typename ratio
        <
-           detail::ll_mul<R1::num / gcd_n1_n2, R2::den / gcd_d1_d2>::value,
-           detail::ll_mul<R2::num / gcd_n1_n2, R1::den / gcd_d1_d2>::value
+           boost::detail::ll_mul<R1::num / gcd_n1_n2, R2::den / gcd_d1_d2>::value,
+           boost::detail::ll_mul<R2::num / gcd_n1_n2, R1::den / gcd_d1_d2>::value
        >::type type;
 #endif
 };
@@ -511,8 +565,8 @@ namespace detail
   template <class R1, class R2>
   struct ratio_gcd
   {
-    typedef ratio<detail::static_gcd<R1::num, R2::num>::value,
-                  detail::static_lcm<R1::den, R2::den>::value> type;
+    typedef ratio<boost::detail::static_gcd<R1::num, R2::num>::value,
+                  boost::detail::static_lcm<R1::den, R2::den>::value> type;
   };
 }  // namespace detail
 
@@ -524,7 +578,7 @@ namespace detail
 
 template <class R1, class R2>
 struct ratio_less
-  : public boost::integral_constant<bool, detail::ratio_less<R1, R2>::value> {};
+  : public boost::integral_constant<bool, boost::detail::ratio_less<R1, R2>::value> {};
 
 template <class R1, class R2>
 struct ratio_less_equal
@@ -539,5 +593,9 @@ struct ratio_greater_equal
     : public boost::integral_constant<bool, !ratio_less<R1, R2>::value> {};
 
 }  // namespace boost
+
+#ifdef BOOST_RATIO_STATIC_ASSERT
+#undef BOOST_RATIO_STATIC_ASSERT
+#endif
 
 #endif  // BOOST_RATIO_HPP
