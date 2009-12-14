@@ -3,6 +3,7 @@
 
 #include <map>
 #include "boost/cgi/common/name.hpp"
+#include "boost/cgi/common/cookie.hpp"
 
 /// You can define your 
 #ifndef BOOST_CGI_SESSION_MAP_TYPE
@@ -29,7 +30,10 @@ BOOST_CGI_NAMESPACE_BEGIN
   typedef map        get_map;
   typedef map        post_map;
   typedef map        form_map;
-  typedef map        cookie_map;
+  typedef std::map<
+      ::BOOST_CGI_NAMESPACE::common::name,
+      ::BOOST_CGI_NAMESPACE::common::cookie
+  >                  cookie_map;
   typedef map        session_map;
 
  } // namespace common

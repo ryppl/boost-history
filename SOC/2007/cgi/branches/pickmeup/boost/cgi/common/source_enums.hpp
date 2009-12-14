@@ -46,13 +46,6 @@ BOOST_CGI_NAMESPACE_BEGIN
      session_map&
        session_vars(Impl& impl) { return boost::fusion::at_c<4>(impl); }
 
-/// This is used in `class basic_request<>` to add the request data accessors operators.
-#define BOOST_CGI_DETAIL_MAP_ACCESS(x) \
-   x##_map& operator[](common::##x##_data_type const&) \
-   { \
-     return x##_vars(this->implementation.vars_); \
-   }
-
  } // namespace common
 BOOST_CGI_NAMESPACE_END
 

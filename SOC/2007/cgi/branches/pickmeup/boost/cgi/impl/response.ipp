@@ -110,11 +110,15 @@ BOOST_CGI_NAMESPACE_BEGIN
 
     /// Clear the response buffer.
   template<typename T> BOOST_CGI_INLINE
-  void basic_response<T>::clear()
+  void basic_response<T>::clear(bool clear_headers)
   {
     ostream_.clear();
-    headers_.clear();
-    headers_terminated_ = false;
+    buffer_.reset(new common::streambuf);
+    ostream_.rdbuf(buffer_.get());
+    if (clear_headers) {
+      headers_.clear();
+      headers_terminated_ = false;
+    }
   }
 
   /// Return the response to the 'just constructed' state.
@@ -339,7 +343,6 @@ BOOST_CGI_NAMESPACE_BEGIN
       ) {
         body += *iter;
       }
-      if (!headers_terminated_)   body += "\r\n";
     }
     
     body += string_type(

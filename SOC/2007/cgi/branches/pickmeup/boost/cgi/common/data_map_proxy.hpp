@@ -61,22 +61,38 @@ BOOST_CGI_NAMESPACE_BEGIN
        BOOST_ASSERT(impl);
        return impl->count(key);
     }
-
-    mapped_type const&
-      get(key_type const& key, mapped_type const& default_) const
-    {
-      BOOST_ASSERT(impl);
-      const_iterator iter = impl->find(key);
-      return iter == impl->end() ? default_ : iter->second;
-    }
     
+    /// Get a value for the key, with fallback.
+    mapped_type const&
+      pick(key_type const& key, mapped_type const& default_value) const
+    {
+      BOOST_ASSERT(impl);
+      const_iterator iter = impl->find(key);
+      return iter == impl->end() ? default_value : iter->second;
+    }
+
+    /// Get a value for the key as a specified type, with fallback.
+    /**
+     * @param key   The name of CGI parameter to look for.
+     * @param default_value
+     *              The default return value. If no data exists in the map
+     *              for the specified key, or the data cannot be converted
+     *              into the type of the default_ value, then this value is
+     *              returned.
+     *
+     * If the key cannot be found, returns a default-constructed object
+     * of type T.
+     *
+     * If the key is found, attempts to convert the value into the type
+     * T. This throws a boost::bad_lexical_cast when it fails.
+     */
     template<typename T>
-    T get_as(key_type const& key, T const& default_) const
+    T as(key_type const& key, T const& default_value = T()) const
     {
       BOOST_ASSERT(impl);
       const_iterator iter = impl->find(key);
 
-      T val (default_);
+      T val (default_value);
 
       if (iter != impl->end()) {
         try {
@@ -88,13 +104,14 @@ BOOST_CGI_NAMESPACE_BEGIN
       return val;
     }
     
-    template<typename T>
-    T as(key_type const& key) {
-      BOOST_ASSERT(impl);
-      const_iterator iter = impl->find(key);
-      return iter == impl->end()
-                   ? T()
-                   : boost::lexical_cast<T>(val);
+    mapped_type& operator[](const char* varname) {
+      BOOST_ASSERT(impl); 
+      return (*impl)[varname];
+    }
+    
+    mapped_type& operator[](const char* varname) const {
+      BOOST_ASSERT(impl); 
+      return (*impl)[varname];
     }
     
     mapped_type& operator[](key_type const& varname) {

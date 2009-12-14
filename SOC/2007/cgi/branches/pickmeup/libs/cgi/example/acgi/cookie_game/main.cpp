@@ -1,13 +1,13 @@
 //                     -- main.hpp --
 //
-//           Copyright (c) Darren Garvey 2007.
+//         Copyright (c) Darren Garvey 2007-2009.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
 //
-//[acgi_cookie_game
+//[cgi_cookie_game
 //
 // Cookie Tests
 // ------------
@@ -15,7 +15,7 @@
 // This simple example shows the user their cookies and lets them set and
 // delete them.
 //
-#include <boost/cgi/acgi.hpp>
+#include <boost/cgi/cgi.hpp>
 #include <boost/cgi/utility.hpp>
 
 // The styling information for the page.
@@ -173,7 +173,7 @@ static const char* gJS_text =
  * the source code.
  */
 
-using namespace boost::acgi;
+using namespace boost::cgi;
 
 template<typename Response, typename MapT>
 void print_formatted_data(Response& resp, MapT& data)
@@ -202,16 +202,19 @@ void print_formatted_data(Response& resp, MapT& data)
 
 int main()
 {
-  request req;
+  request req(parse_all);
 
   // Load up the request data
-  req.load(parse_all);
+  //req.load(parse_all);
 
   response resp;
-  resp<< content_type("text/plain");
+  //resp<< content_type("text/plain");
 
+  using namespace std;
+  cerr<< "Here" << endl;
   if (req.form.count("reset") && req.form["reset"] == "true")
   {
+    cerr<< "Here." << endl;
     resp<< cookie("name")
         << redirect(req, req.script_name()); // redirect them.
     return commit(req, resp);
@@ -219,12 +222,17 @@ int main()
 
   if (req.form.count("name"))
   {
+    cerr<< "Here!" << endl;
+
     if (req.form.count("del"))
       resp<< cookie(req.form["name"]);
     else
       resp<< cookie(req.form["name"], req.form["value"]);
     resp<< redirect(req, req.script_name());
-    return commit(req, resp);
+    cerr<< "Committing: " << resp.str() << endl;
+    int ret = commit(req, resp);
+    cerr<< "Committed response (got: " << ret << ")." << endl;  
+    return ret;
   }
 
   resp<< content_type("text/html")
@@ -276,6 +284,7 @@ int main()
          "</body>"
          "</html>";
 
+  cerr<< "Committing: " << resp.str() << endl;
   return commit(req, resp);
 }
 //]

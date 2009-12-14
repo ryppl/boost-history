@@ -9,28 +9,45 @@
 //
 //[cgi_hello_world
 //
-// The simplest CGI program, outputs only "Hello there, universe."
+// A simple CGI program.
 //
-// If you think this is a pointless example, try getting it to work;
-// It doesn't always go to plan... ;)
+// Outputs only "Hello there, universe." and saves a session cookie "test=check" to the browser.
 //
 
 #include <boost/cgi/cgi.hpp>
 
-using namespace boost::cgi;
+namespace cgi = boost::cgi;
 
 int main()
 {
-  request req;      // Our request (POST data won't be parsed yet).
-  response resp;    // A response object to make our lives easier.
-
-  // This is a minimal response. The content_type(...) may go before or after
+try {
+  // Construct a request. Parses all GET, POST and environment data,
+  // as well as cookies.
+  cgi::request req(cgi::parse_all);
+  // Using a response is the simplest way to write data back to the client.
+  cgi::response resp;
+  
+  // This is a minimal response. The cgi::cookie(...) may go before or after
   // the response text.
-  resp<< content_type("text/plain")
-      << "Hello there, universe.";
+  resp<< "Hello there, universe."
+      << cgi::cookie("test", "check")
+      ;
 
   // Leave this function, after sending the response and closing the request.
-  return commit(req, resp);
+  // Returns 0 on success.
+  return cgi::commit(req, resp);
+  
+} catch(std::exception& e) {
+  using namespace std;
+  cout<< "Content-type: text/plain\r\n\r\n"
+      << "Error: " << e.what() << endl;
+  return 1;
+} catch(...) {
+  using namespace std;
+  cout<< "Content-type: text/plain\r\n\r\n"
+      << "Unexpected exception." << endl;
+  return 1;
+}
 }
 //]
 

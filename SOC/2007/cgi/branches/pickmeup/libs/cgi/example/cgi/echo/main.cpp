@@ -1,6 +1,6 @@
-//                    -- main.hpp --
+//                              -- main.hpp --
 //
-//           Copyright (c) Darren Garvey 2007.
+//           Copyright (c) Darren Garvey 2007-2009.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -17,7 +17,7 @@
 
 #include <boost/cgi/cgi.hpp>
 
-using namespace boost::cgi;
+namespace cgi = boost::cgi;
 
 // The styling information for the page, just to make things look nicer.
 static const char* gCSS_text =
@@ -25,7 +25,7 @@ static const char* gCSS_text =
 ".var_map_title"
     "{ font-weight: bold; font-size: large; }"
 ".var_map"
-    "{ border: 1px dotted; padding: 2px 3px 2px 3px; margin-bottom: 3%; }"
+    "{ border: 1px dotted; padding: 2px 3px; margin-bottom: 3%; }"
 ".var_pair"
     "{ border-top: 1px dotted; overflow: auto; padding: 0; margin: 0; }"
 ".var_name"
@@ -40,6 +40,10 @@ static const char* gCSS_text =
 // This function writes the title and map contents to the ostream in an
 // HTML-encoded format (to make them easier on the eye).
 //
+// The request data is all held in std::map<>-like containers and can use the same
+// member functions. There are some additional functions included for common
+// CGI tasks, such as lexical casting.
+//
 template<typename OStream, typename Request, typename Map>
 void format_map(OStream& os, Request& req, Map& m, const std::string& title)
 {
@@ -51,36 +55,29 @@ void format_map(OStream& os, Request& req, Map& m, const std::string& title)
   if (m.empty())
     os<< "<div class=\"var_pair\">EMPTY</div>";
   else
-    for (typename Map::const_iterator i = m.begin(); i != m.end(); ++i)
+  {
+    for (typename Map::const_iterator iter(m.begin()), end(m.end());
+         iter != m.end();
+         ++iter)
     {
       os<< "<div class=\"var_pair\">"
              "<div class=\"var_name\">"
-        <<       i->first
+        <<       iter->first
         <<   "</div>"
              "<div class=\"var_value\">"
-        <<       i->second
-             << (req.is_file(i->first) ? " (file)" : "")
+        <<       iter->second
+             << (req.is_file(iter->first) ? " (file)" : "")
         <<   "</div>"
            "</div>";
     }
   os<< "</div>";
 }
 
-std::size_t process_id()
-{
-#if defined(BOOST_WINDOWS)
-  return _getpid();
-#else
-  return getpid();
-#endif
-}
-
-
 int main()
 {
   // A basic CGI request auto-parses everything (including POST data).
-  request req(parse_all);
-  response resp;
+  cgi::request req;
+  cgi::response resp;
 
   // You can also stream text to a response. 
   // All of this just prints out the form 
@@ -93,7 +90,6 @@ int main()
          "<head>"
          "<body>"
            "Request ID = " << req.id() << "<br />"
-           "Process ID = " << process_id() << "<br />"
            "<form method=post enctype=\"multipart/form-data\">"
              "<input type=text name=name value='"
       <<         req.post["name"] << "' />"
@@ -109,15 +105,15 @@ int main()
 
   format_map(resp, req, req.env, "Environment Variables");
   //format_map(resp, req, req.get, "GET Variables");
-  format_map(resp, req, req.form, "Form [" + req.request_method() + "] Variables");
+  format_map(resp, req, req.form, "Form [" + req.method() + "] Variables");
   format_map(resp, req, req.cookies, "Cookie Variables");
 
   // Note that this (and any other) HTTP header can go either before or after
   // the response contents.
-  resp<< content_type("text/html");
+  resp<< cgi::content_type("text/html");
 
   // Send the response to the client that made the request.
-  return commit(req, resp);
+  return cgi::commit(req, resp);
 }
 //]
 

@@ -14,6 +14,7 @@
 #include <boost/system/error_code.hpp>
 
 #include "boost/cgi/detail/url_decode.hpp"
+#include "boost/cgi/common/cookie.hpp"
 
 BOOST_CGI_NAMESPACE_BEGIN
  namespace detail {
@@ -36,10 +37,13 @@ BOOST_CGI_NAMESPACE_BEGIN
 
      typedef typename boost::tokenizer<Separator>    tokenizer;
      typedef typename Map::value_type                value_type;
+     typedef typename Map::mapped_type               mapped_type;
 
      tokenizer toker(input, separator);
 
      std::string name, current_token;
+
+     using std::make_pair;
 
      for(typename tokenizer::iterator iter = toker.begin()
         ; iter != toker.end()
@@ -58,12 +62,15 @@ BOOST_CGI_NAMESPACE_BEGIN
 // on by default).
 // Note that you'll want to check that your server keeps empty query string 
 // parameters.
+         mapped_type val(name.empty() ? "" : current_token);
 #if defined(BOOST_CGI_KEEP_EMPTY_VARS)
          if (name.empty())
-           destination.insert(value_type(current_token.c_str(), ""));
+           destination.insert(
+              make_pair(current_token.c_str(), val));
          else
 #endif // BOOST_CGI_KEEP_EMPTY_VARS
-           destination.insert(value_type(name.c_str(), current_token));
+           destination.insert(
+              make_pair(name.c_str(), val));
          current_token.clear();
          name.clear();
        }else
@@ -71,13 +78,15 @@ BOOST_CGI_NAMESPACE_BEGIN
          current_token = url_decode(*iter);
        }
      }
+     
+     mapped_type val(name.empty() ? "" : current_token);
      // Save the name if the last n/v pair has no value.
      if ( !name.empty() )
-       destination.insert(value_type(name.c_str(), current_token));
+       destination.insert(make_pair(name.c_str(), val));
 #if defined(BOOST_CGI_KEEP_EMPTY_VARS)
      else // Save the final 'toggle' - eg /path/to/script?foo=bar&toggle
      if ( !current_token.empty() )
-       destination.insert(value_type(current_token.c_str(), ""));
+       destination.insert(make_pair(current_token.c_str(), val));
 #endif
 
      return ec;

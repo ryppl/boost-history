@@ -147,7 +147,6 @@ BOOST_CGI_NAMESPACE_BEGIN
     int close(implementation_type& impl, common::http::status_code& http_s
       , int status, boost::system::error_code& ec)
     {
-      std::cerr<< "In close." << std::endl;
       impl.status() = common::closed;
       impl.http_status() = http_s;
       return status;

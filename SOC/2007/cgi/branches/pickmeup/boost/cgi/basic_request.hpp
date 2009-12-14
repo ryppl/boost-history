@@ -600,6 +600,10 @@ BOOST_CGI_NAMESPACE_BEGIN
     string_type& http_from ()
     { return env["HTTP_FROM"]; }
 
+    /// The cookies sent by the user making the request.
+    string_type& http_cookie ()
+    { return env["HTTP_COOKIE"]; }
+
     /// The role that the request is playing
     /**
      * The default role type is responder.

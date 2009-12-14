@@ -51,7 +51,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     ~basic_response();
 
     /// Clear the response buffer.
-    void clear();
+    void clear(bool clear_headers = true);
 
     /// Return the response to the 'just constructed' state.
     void reset();
@@ -170,6 +170,9 @@ BOOST_CGI_NAMESPACE_BEGIN
 
     /// Get the headers
     std::vector<string_type>& headers();
+    
+    template<typename T>
+    friend self_type& operator<<(self_type& resp, T t);
 
   protected:
    // Vector of all the headers, each followed by a CRLF

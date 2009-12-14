@@ -9,12 +9,16 @@
 #ifndef CGI_COOKIE_HPP_INCLUDED__
 #define CGI_COOKIE_HPP_INCLUDED__
 
+#include <iostream>
 #include <string>
 #include <boost/system/error_code.hpp>
 #include <boost/tokenizer.hpp>
+#include "boost/cgi/common/name.hpp"
 #include "boost/cgi/config.hpp"
 
-#define BOOST_CGI_DATE_IN_THE_PAST "Fri, 05-Jun-1989 15:30:00 GMT"
+#ifndef BOOST_CGI_DATE_IN_THE_PAST
+#  define BOOST_CGI_DATE_IN_THE_PAST "Fri, 05-Jun-1989 15:30:00 GMT"
+#endif // BOOST_CGI_DATE_IN_THE_PAST
 
 BOOST_CGI_NAMESPACE_BEGIN
 
@@ -45,6 +49,15 @@ BOOST_CGI_NAMESPACE_BEGIN
     typedef typename std::basic_string<CharT> string_type;
 
     basic_cookie() {}
+    basic_cookie(const char* _name)
+      : name(_name)
+      , value()
+      , expires(BOOST_CGI_DATE_IN_THE_PAST)
+      , path("/")
+      , secure(false)
+      , http_only(false)
+    {
+    }
 
     /// Create a cookie for deleting the cookie named `_name`.
     basic_cookie(const string_type& _name)
@@ -140,20 +153,48 @@ BOOST_CGI_NAMESPACE_BEGIN
       return str;
     }
     
-    //friend std::ostream& operator<<(std::ostream& os, self_type const& ck);
+    operator const char_type () const { return value.c_str(); }
+    operator string_type const& () const { return value; }
+    operator string_type () const { return value; }
+    template<typename T>
+    operator std::basic_string<T> () { return value; }
+    //template<typename T>
+    //operator T () const { return value; }
+    
+    template<typename T>
+    friend std::ostream& operator<<(std::ostream& os, basic_cookie<T> const& ck);
+    /*
+    template<typename T>
+    friend response& operator<< (response& resp, self_type const& ck) {
+      resp<< "Set-Cookie: " << ck.to_string();
+      return resp;
+    }
+    */
   };
 
- } // namespace common
-BOOST_CGI_NAMESPACE_END
+  inline
+  std::pair<common::name, common::cookie>
+    make_pair (const char* n, common::cookie& ck)
+  {
+    ck.value.swap(ck.name);
+    ck.name = n;
+    return std::make_pair(n, ck);
+  }
 
-/*
-template<typename OutStream, typename CharT>
-inline OutStream& operator<< (OutStream& os, BOOST_CGI_NAMESPACE::common::basic_cookie<CharT> const& ck)
+
+template<typename CharT>
+inline std::ostream& operator<< (std::ostream& os, BOOST_CGI_NAMESPACE::common::basic_cookie<CharT> const& ck)
 {
-  os<< ck.to_string();
+  os<< ck.value;
   return os;
 }
-*/
+
+
+  
+ } // namespace common
+
+BOOST_CGI_NAMESPACE_END
+
 
 #endif // CGI_COOKIE_HPP_INCLUDED__
 

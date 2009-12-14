@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="cgi_file_browser"
+	Name="cgi_file_browser_"
 	ProjectGUID="{FFF275FA-323A-4699-9D04-A5C9BDD6048B}"
 	RootNamespace="cgi_echo"
 	Keyword="Win32Proj"

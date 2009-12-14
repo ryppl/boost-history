@@ -1,12 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "acgi_cookie_game", "acgi_cookie_game\acgi_cookie_game.vcproj", "{7B825743-52B4-44DC-932F-29F4D2547F38}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "acgi_echo", "acgi_echo\acgi_echo.vcproj", "{83BF52DF-C606-4BB7-B06F-EDC28DE829B1}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "acgi_ctemplate_cookie_game", "acgi_ctemplate_cookie_game\acgi_ctemplate_cookie_game.vcproj", "{AC2E336C-7C32-468C-9847-470436CF668F}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_ctemplate_debug_server", "cgi_ctemplate_debug_server\cgi_ctemplate_debug_server.vcproj", "{CED278B4-18C9-41F5-9026-1DB8CD0AC5D4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xcgi_accept", "xcgi_accept\xcgi_accept.vcproj", "{D24DD1E5-B8E3-4686-AB93-D17D44A73730}"
@@ -16,8 +10,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_echo", "cgi_echo\cgi_echo.vcproj", "{12AA5F5E-EA1E-4602-98E4-9244872739C1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_debug_server", "cgi_debug_server\cgi_debug_server.vcproj", "{730E95B0-DEBE-4CEB-9E9D-9C2A521ACC05}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "acgi_hello_world", "acgi_hello_world\acgi_hello_world.vcproj", "{FEAD8671-B7BE-4F52-A308-6B337171F0B6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fcgi_hello_world", "fcgi_hello_world\fcgi_hello_world.vcproj", "{9FACC40E-538D-4625-B8C7-7B2BC57B88BC}"
 EndProject
@@ -31,11 +23,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fcgi_echo_debug", "fcgi_ech
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fcgi_file_browser", "fcgi_file_browser\fcgi_file_browser.vcproj", "{54333641-E5E5-4B30-A9D4-1054BFA95511}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_file_browser", "cgi_file_browser\cgi_file_browser.vcproj", "{FFF275FA-323A-4699-9D04-A5C9BDD6048B}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_file_browser_debug", "cgi_file_browser_debug\cgi_file_browser_debug.vcproj", "{E266C18C-F482-459C-9805-EBAF5C68E50A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_file_browser", "cgi_file_browser_debug\cgi_file_browser_debug.vcproj", "{E266C18C-F482-459C-9805-EBAF5C68E50A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fcgi_speed_check", "fcgi_speed_check\fcgi_speed_check.vcproj", "{8F7D1DD8-FE44-419B-BE93-6A78C708ACDA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_cookie_game", "cgi_cookie_game\cgi_cookie_game.vcproj", "{10157442-F0A7-4D8D-8169-242F44FCF035}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_ctemplate_cookie_game", "cgi_ctemplate_cookie_game\cgi_ctemplate_cookie_game.vcproj", "{C18D47EA-742B-4256-8D9B-A3D2A1EB6E1C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_stencil", "cgi_stencil\cgi_stencil.vcproj", "{B08A2E6D-9973-42F3-9621-90F3BD4A1721}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,18 +39,6 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7B825743-52B4-44DC-932F-29F4D2547F38}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7B825743-52B4-44DC-932F-29F4D2547F38}.Debug|Win32.Build.0 = Debug|Win32
-		{7B825743-52B4-44DC-932F-29F4D2547F38}.Release|Win32.ActiveCfg = Release|Win32
-		{7B825743-52B4-44DC-932F-29F4D2547F38}.Release|Win32.Build.0 = Release|Win32
-		{83BF52DF-C606-4BB7-B06F-EDC28DE829B1}.Debug|Win32.ActiveCfg = Debug|Win32
-		{83BF52DF-C606-4BB7-B06F-EDC28DE829B1}.Debug|Win32.Build.0 = Debug|Win32
-		{83BF52DF-C606-4BB7-B06F-EDC28DE829B1}.Release|Win32.ActiveCfg = Release|Win32
-		{83BF52DF-C606-4BB7-B06F-EDC28DE829B1}.Release|Win32.Build.0 = Release|Win32
-		{AC2E336C-7C32-468C-9847-470436CF668F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{AC2E336C-7C32-468C-9847-470436CF668F}.Debug|Win32.Build.0 = Debug|Win32
-		{AC2E336C-7C32-468C-9847-470436CF668F}.Release|Win32.ActiveCfg = Release|Win32
-		{AC2E336C-7C32-468C-9847-470436CF668F}.Release|Win32.Build.0 = Release|Win32
 		{CED278B4-18C9-41F5-9026-1DB8CD0AC5D4}.Debug|Win32.ActiveCfg = Debug|Win32
 		{CED278B4-18C9-41F5-9026-1DB8CD0AC5D4}.Debug|Win32.Build.0 = Debug|Win32
 		{CED278B4-18C9-41F5-9026-1DB8CD0AC5D4}.Release|Win32.ActiveCfg = Release|Win32
@@ -74,10 +58,6 @@ Global
 		{730E95B0-DEBE-4CEB-9E9D-9C2A521ACC05}.Debug|Win32.Build.0 = Debug|Win32
 		{730E95B0-DEBE-4CEB-9E9D-9C2A521ACC05}.Release|Win32.ActiveCfg = Release|Win32
 		{730E95B0-DEBE-4CEB-9E9D-9C2A521ACC05}.Release|Win32.Build.0 = Release|Win32
-		{FEAD8671-B7BE-4F52-A308-6B337171F0B6}.Debug|Win32.ActiveCfg = Debug|Win32
-		{FEAD8671-B7BE-4F52-A308-6B337171F0B6}.Debug|Win32.Build.0 = Debug|Win32
-		{FEAD8671-B7BE-4F52-A308-6B337171F0B6}.Release|Win32.ActiveCfg = Release|Win32
-		{FEAD8671-B7BE-4F52-A308-6B337171F0B6}.Release|Win32.Build.0 = Release|Win32
 		{9FACC40E-538D-4625-B8C7-7B2BC57B88BC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{9FACC40E-538D-4625-B8C7-7B2BC57B88BC}.Debug|Win32.Build.0 = Debug|Win32
 		{9FACC40E-538D-4625-B8C7-7B2BC57B88BC}.Release|Win32.ActiveCfg = Release|Win32
@@ -102,10 +82,6 @@ Global
 		{54333641-E5E5-4B30-A9D4-1054BFA95511}.Debug|Win32.Build.0 = Debug|Win32
 		{54333641-E5E5-4B30-A9D4-1054BFA95511}.Release|Win32.ActiveCfg = Release|Win32
 		{54333641-E5E5-4B30-A9D4-1054BFA95511}.Release|Win32.Build.0 = Release|Win32
-		{FFF275FA-323A-4699-9D04-A5C9BDD6048B}.Debug|Win32.ActiveCfg = Debug|Win32
-		{FFF275FA-323A-4699-9D04-A5C9BDD6048B}.Debug|Win32.Build.0 = Debug|Win32
-		{FFF275FA-323A-4699-9D04-A5C9BDD6048B}.Release|Win32.ActiveCfg = Release|Win32
-		{FFF275FA-323A-4699-9D04-A5C9BDD6048B}.Release|Win32.Build.0 = Release|Win32
 		{E266C18C-F482-459C-9805-EBAF5C68E50A}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E266C18C-F482-459C-9805-EBAF5C68E50A}.Debug|Win32.Build.0 = Debug|Win32
 		{E266C18C-F482-459C-9805-EBAF5C68E50A}.Release|Win32.ActiveCfg = Release|Win32
@@ -114,6 +90,18 @@ Global
 		{8F7D1DD8-FE44-419B-BE93-6A78C708ACDA}.Debug|Win32.Build.0 = Debug|Win32
 		{8F7D1DD8-FE44-419B-BE93-6A78C708ACDA}.Release|Win32.ActiveCfg = Release|Win32
 		{8F7D1DD8-FE44-419B-BE93-6A78C708ACDA}.Release|Win32.Build.0 = Release|Win32
+		{10157442-F0A7-4D8D-8169-242F44FCF035}.Debug|Win32.ActiveCfg = Debug|Win32
+		{10157442-F0A7-4D8D-8169-242F44FCF035}.Debug|Win32.Build.0 = Debug|Win32
+		{10157442-F0A7-4D8D-8169-242F44FCF035}.Release|Win32.ActiveCfg = Release|Win32
+		{10157442-F0A7-4D8D-8169-242F44FCF035}.Release|Win32.Build.0 = Release|Win32
+		{C18D47EA-742B-4256-8D9B-A3D2A1EB6E1C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C18D47EA-742B-4256-8D9B-A3D2A1EB6E1C}.Debug|Win32.Build.0 = Debug|Win32
+		{C18D47EA-742B-4256-8D9B-A3D2A1EB6E1C}.Release|Win32.ActiveCfg = Release|Win32
+		{C18D47EA-742B-4256-8D9B-A3D2A1EB6E1C}.Release|Win32.Build.0 = Release|Win32
+		{B08A2E6D-9973-42F3-9621-90F3BD4A1721}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B08A2E6D-9973-42F3-9621-90F3BD4A1721}.Debug|Win32.Build.0 = Debug|Win32
+		{B08A2E6D-9973-42F3-9621-90F3BD4A1721}.Release|Win32.ActiveCfg = Release|Win32
+		{B08A2E6D-9973-42F3-9621-90F3BD4A1721}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
