@@ -38,7 +38,7 @@ namespace boost { namespace fusion
     inline typename result_of::front<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     front(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return *fusion::begin(BOOST_FUSION_FORWARD(Seq,seq));
+        return fusion::deref(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -46,7 +46,7 @@ namespace boost { namespace fusion
     inline typename result_of::front<Seq&>::type
     front(Seq& seq)
     {
-        return *fusion::begin(seq);
+        return fusion::deref(fusion::begin(seq));
     }
 #endif
 }}

@@ -39,7 +39,7 @@ namespace boost { namespace fusion { namespace detail
         call(It1 const& it1, It2 const& it1, mpl::false_)
         {
             return fusion::deref(it1) >= fusion::deref(it2) ||
-                   (!(*fusion::deref(it2) >= *fusion::deref(it1)) &&
+                   (!(fusion::deref(it2) >= fusion::deref(it1)) &&
                        call(fusion::next(a), fusion::next(b)));
         }
 

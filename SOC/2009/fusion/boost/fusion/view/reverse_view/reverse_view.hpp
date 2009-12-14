@@ -51,25 +51,18 @@ namespace boost { namespace fusion
 
         typedef detail::view_storage<Seq> storage_type;
         typedef typename storage_type::type seq_type;
-        typedef typename traits::category_of<seq_type>::type seq_category;
 
-        typedef typename
-            mpl::eval_if<
-                traits::is_associative<seq_type>
-              , mpl::inherit2<seq_category,associative_tag>
-              , mpl::identity<seq_category>
-            >::type
-        category;
+        typedef typename traits::category_of<seq_type>::type category;
         typedef typename result_of::size<seq_type>::type size;
         typedef reverse_view_tag fusion_tag;
         typedef fusion_sequence_tag tag; 
         typedef mpl::true_ is_view;
 
-#define BOOST_FUSION_REVERSE_VIEW_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_REVERSE_VIEW_CTOR(MODIFIER,_)\
         template<typename OtherSeq>\
-        reverse_view(reverse_view<OtherSeq> COMBINATION view)\
+        reverse_view(reverse_view<OtherSeq> MODIFIER view)\
           : seq(BOOST_FUSION_FORWARD(\
-                reverse_view<OtherSeq> COMBINATION,view).seq)\
+                reverse_view<OtherSeq> MODIFIER,view).seq)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_REVERSE_VIEW_CTOR,_)

@@ -32,10 +32,10 @@ namespace boost { namespace fusion
             vector<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_VECTOR_SIZE)>
         base_type;
 
-#define TUPLE_CTOR(COMBINATION,_)\
+#define TUPLE_CTOR(MODIFIER,_)\
         template <typename A1, typename A2>\
-        tuple(std::pair<A1, A2> COMBINATION pair)\
-          : base_type(static_cast<std::pair<A1, A2> COMBINATION>(pair))\
+        tuple(std::pair<A1, A2> MODIFIER pair)\
+          : base_type(static_cast<std::pair<A1, A2> MODIFIER>(pair))\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(TUPLE_CTOR,_)

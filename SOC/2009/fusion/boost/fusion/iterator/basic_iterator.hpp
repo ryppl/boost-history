@@ -15,6 +15,7 @@
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/minus.hpp>
 #include <boost/mpl/int.hpp>
+#include <boost/utility/addressof.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion
@@ -37,13 +38,13 @@ namespace boost { namespace fusion
         struct deref_data_impl;
     }
 
-    template<typename Tag, typename Category, typename SeqRef, int Index>
+    template<typename Tag, typename Category, typename SeqRef, int I>
     struct basic_iterator
-      : iterator_facade<basic_iterator<Tag,Category,SeqRef,Index>, Category>
+      : iterator_facade<basic_iterator<Tag,Category,SeqRef,I>, Category>
     {
         BOOST_FUSION_MPL_ASSERT((detail::is_lrref<SeqRef>));
 
-        typedef mpl::int_<Index> index;
+        typedef mpl::int_<I> index;
         typedef SeqRef seq_type;
 
         template <typename It>
@@ -75,7 +76,7 @@ namespace boost { namespace fusion
         struct advance
         {
             typedef
-                basic_iterator<Tag, Category, SeqRef, Index + N::value>
+                basic_iterator<Tag, Category, SeqRef, I + N::value>
             type;
 
             static type
@@ -120,17 +121,17 @@ namespace boost { namespace fusion
         };
 
         template<typename OtherSeqRef>
-        basic_iterator(basic_iterator<Tag,Category,OtherSeqRef,Index> const& it)
+        basic_iterator(basic_iterator<Tag,Category,OtherSeqRef,I> const& it)
           : seq(it.seq)
         {}
 
         basic_iterator(SeqRef seq, int)
-          : seq(&seq)
+          : seq(addressof(seq))
         {}
 
         template<typename OtherSeqRef>
         basic_iterator&
-        operator=(basic_iterator<Tag,Category,OtherSeqRef,Index> const& it)
+        operator=(basic_iterator<Tag,Category,OtherSeqRef,I> const& it)
         {
             seq=it.seq;
             return *this;

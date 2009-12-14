@@ -39,7 +39,7 @@ namespace boost { namespace fusion
     inline typename result_of::back<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     back(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return *fusion::prior(fusion::end(seq));
+        return fusion::deref(fusion::prior(fusion::end(seq)));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -47,7 +47,7 @@ namespace boost { namespace fusion
     inline typename result_of::back<Seq&>::type
     back(Seq& seq)
     {
-        return *fusion::prior(fusion::end(seq));
+        return fusion::deref(fusion::prior(fusion::end(seq)));
     }
 #endif
 }}

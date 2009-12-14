@@ -30,7 +30,13 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 typename detail::forward_as<
                     vector
-#ifdef BOOST_FUSION_PREFER_MPL
+#ifdef BOOST_FUSION_TAGGED_VECTOR
+                  , decltype(
+                        detail::at_type_helper<it::index::value>(*static_cast<
+                            typename detail::remove_reference<vector>::type*
+                        >(0))
+                    )
+#elif defined(BOOST_FUSION_PREFER_MPL)
                   , typename mpl::at<
                         typename detail::remove_reference<
                             vector
@@ -49,7 +55,11 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(It it)
             {
+#ifdef BOOST_FUSION_TAGGED_VECTOR
+                return detail::at_helper<it::index::value>(*it.seq);
+#else
                 return it.seq->at_impl(typename it::index());
+#endif
             }
         };
     };

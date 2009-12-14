@@ -41,9 +41,9 @@ namespace boost { namespace fusion
           : f(std::forward<Args>(args)...)
         {}
 
-#define BOOST_FUSION_CTOR_SPECIALIZATION(COMBINATION,_)\
-        BOOST_FUSION_ADAPTER_NAME(BOOST_FUSION_ADAPTER_NAME COMBINATION adapter)\
-          : f(std::forward<BOOST_FUSION_ADAPTER_NAME COMBINATION>(adapter).f)\
+#define BOOST_FUSION_CTOR_SPECIALIZATION(MODIFIER,_)\
+        BOOST_FUSION_ADAPTER_NAME(BOOST_FUSION_ADAPTER_NAME MODIFIER adapter)\
+          : f(std::forward<BOOST_FUSION_ADAPTER_NAME MODIFIER>(adapter).f)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CTOR_SPECIALIZATION,_)
@@ -58,11 +58,11 @@ namespace boost { namespace fusion
             return *this;
         }
 
-#define BOOST_FUSION_ASSIGN_SPECIALIZATION(COMBINATION,_)\
+#define BOOST_FUSION_ASSIGN_SPECIALIZATION(MODIFIER,_)\
         BOOST_FUSION_ADAPTER_NAME&\
-        operator=(BOOST_FUSION_ADAPTER_NAME COMBINATION other_adapter)\
+        operator=(BOOST_FUSION_ADAPTER_NAME MODIFIER other_adapter)\
         {\
-            f=std::forward<BOOST_FUSION_ADAPTER_NAME COMBINATION>(\
+            f=std::forward<BOOST_FUSION_ADAPTER_NAME MODIFIER>(\
                     other_adapter).f;\
             return *this;\
         }
@@ -72,27 +72,27 @@ namespace boost { namespace fusion
 #undef BOOST_FUSION_ASSIGN_SPECIALIZATION
 
 #ifdef BOOST_FUSION_TYPED
-#   define BOOST_FUSION_CALL_OPERATOR(COMBINATION)\
+#   define BOOST_FUSION_CALL_OPERATOR(MODIFIER)\
         template<typename... Args>\
         typename boost::result_of<\
             typename detail::get_func_base<\
-                typename detail::forward_as<int COMBINATION, F>::type\
+                typename detail::forward_as<int MODIFIER, F>::type\
             >::type(typename result_of::as_vector<TransformSeq&&>::type&&)\
         >::type\
-        operator()(Args&&... args) COMBINATION\
+        operator()(Args&&... args) MODIFIER\
         {\
             return f(fusion::as_vector(\
                 TransformSeq(std::forward<Args>(args)...)));\
         }
 #else
-#   define BOOST_FUSION_CALL_OPERATOR(COMBINATION)\
+#   define BOOST_FUSION_CALL_OPERATOR(MODIFIER)\
         template<typename... Args>\
         typename boost::result_of<\
             typename detail::get_func_base<\
-                typename detail::forward_as<int COMBINATION, F>::type\
+                typename detail::forward_as<int MODIFIER, F>::type\
             >::type(typename result_of::vector_tie<Args&&...>::type&&)\
         >::type\
-        operator()(Args&&... args) COMBINATION\
+        operator()(Args&&... args) MODIFIER\
         {\
             return f(vector_tie(std::forward<Args>(args)...));\
         }

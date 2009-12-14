@@ -19,14 +19,14 @@
 #else
 
 #   ifdef BOOST_FUSION_USE_BASE_TYPE
-#       define BOOST_FUSION_SEQ_CTOR(COMBINATION,_)\
-        BOOST_FUSION_SEQ_NAME(BOOST_FUSION_SEQ_NAME COMBINATION seq)\
-          : base_type(static_cast<base_type COMBINATION>(seq))\
+#       define BOOST_FUSION_SEQ_CTOR(MODIFIER,_)\
+        BOOST_FUSION_SEQ_NAME(BOOST_FUSION_SEQ_NAME MODIFIER seq)\
+          : base_type(static_cast<base_type MODIFIER>(seq))\
         {}
 #   else
-#       define BOOST_FUSION_SEQ_CTOR(COMBINATION,_)\
-        BOOST_FUSION_SEQ_NAME(BOOST_FUSION_SEQ_NAME COMBINATION seq)\
-          : data(static_cast<BOOST_FUSION_SEQ_NAME COMBINATION>(seq).data)\
+#       define BOOST_FUSION_SEQ_CTOR(MODIFIER,_)\
+        BOOST_FUSION_SEQ_NAME(BOOST_FUSION_SEQ_NAME MODIFIER seq)\
+          : data(static_cast<BOOST_FUSION_SEQ_NAME MODIFIER>(seq).data)\
         {}
 #   endif
 

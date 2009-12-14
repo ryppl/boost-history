@@ -60,28 +60,28 @@ namespace boost { namespace fusion
         {}
     };
 
-#define BOOST_FUSION_NIL_ITERATOR(COMBINATION,_)\
+#define BOOST_FUSION_NIL_ITERATOR(MODIFIER,_)\
       template <>\
-      struct cons_iterator<nil COMBINATION>\
+      struct cons_iterator<nil MODIFIER>\
         : nil_iterator\
       {\
           cons_iterator()\
           {}\
           \
           explicit\
-          cons_iterator(nil COMBINATION, int)\
+          cons_iterator(nil MODIFIER, int)\
           {}\
       };\
       \
       template <>\
-      struct cons_iterator<list<> COMBINATION>\
+      struct cons_iterator<list<> MODIFIER>\
         : nil_iterator\
       {\
           cons_iterator()\
           {}\
           \
           explicit\
-          cons_iterator(nil COMBINATION, int)\
+          cons_iterator(nil MODIFIER, int)\
           {}\
       };
 

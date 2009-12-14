@@ -57,9 +57,9 @@ namespace boost { namespace fusion
         typedef mpl::true_ is_view;
         typedef mpl::int_<1> size;
 
-#define BOOST_FUSION_SINGLE_VIEW_CTOR(COMBINATION,_)\
-        single_view(single_view COMBINATION view)\
-          : val(static_cast<single_view COMBINATION>(view).val)\
+#define BOOST_FUSION_SINGLE_VIEW_CTOR(MODIFIER,_)\
+        single_view(single_view MODIFIER view)\
+          : val(static_cast<single_view MODIFIER>(view).val)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_SINGLE_VIEW_CTOR,_)
@@ -79,7 +79,10 @@ namespace boost { namespace fusion
 #   else
         template<typename Arg>
         explicit
-        single_view(Arg&& val);
+        single_view(Arg&& val
+          , typename enable_if<
+                is_convertible<BOOST_FUSION_R_ELSE_CLREF(Arg),value_type>
+            >::type* =0)
           : val(std::forward<Arg>(val))
         {}
 #   endif
@@ -97,15 +100,15 @@ namespace boost { namespace fusion
           , BOOST_FUSION_R_ELSE_CLREF(Arg2) arg2
           , BOOST_FUSION_R_ELSE_CLREF(Args)... args)
           : val(BOOST_FUSION_FORWARD(Arg1,arg1),
-              BOOST_FUSION_FORWARD(Arg2,arg2),
-              BOOST_FUSION_FORWARD(Args,args)...)
+                BOOST_FUSION_FORWARD(Arg2,arg2),
+                BOOST_FUSION_FORWARD(Args,args)...)
         {}
 #endif
 
         template<typename Seq>
         single_view(
-            BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
-            typename disable_if<
+            BOOST_FUSION_R_ELSE_CLREF(Seq) seq
+          , typename disable_if<
                 is_convertible<BOOST_FUSION_R_ELSE_CLREF(Seq), value_type>
             >::type* =0)
           : val(fusion::front(BOOST_FUSION_FORWARD(Seq,seq)))
@@ -113,10 +116,10 @@ namespace boost { namespace fusion
             BOOST_FUSION_STATIC_ASSERT((result_of::size<Seq>::value==1));
         }
 
-#define BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR(MODIFIER,_)\
         template<typename SeqRef>\
         single_view(\
-            detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+            detail::sequence_assign_type<SeqRef> MODIFIER seq_assign)\
           : val(fusion::front(seq_assign.get()))\
         {\
             BOOST_FUSION_STATIC_ASSERT((result_of::size<SeqRef>::value==1));\
@@ -134,10 +137,10 @@ namespace boost { namespace fusion
             return *this;
         }
 
-#define BOOST_FUSION_SINGLE_VIEW_SEQ_ASSIGN(COMBINATION,_)\
+#define BOOST_FUSION_SINGLE_VIEW_SEQ_ASSIGN(MODIFIER,_)\
         template<typename SeqRef>\
         single_view&\
-        operator=(detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+        operator=(detail::sequence_assign_type<SeqRef> MODIFIER seq_assign)\
         {\
             BOOST_FUSION_STATIC_ASSERT((result_of::size<SeqRef>::value==1));\
             \
@@ -166,7 +169,8 @@ namespace boost { namespace fusion
         result_of::make_single_view<BOOST_FUSION_R_ELSE_CLREF(T)>::type
     make_single_view(BOOST_FUSION_R_ELSE_CLREF(T) val)
     {
-        return typename result_of::make_single_view<T>::type(
+        return typename
+            result_of::make_single_view<BOOST_FUSION_R_ELSE_CLREF(T)>::type(
                 BOOST_FUSION_FORWARD(T,val));
     }
 

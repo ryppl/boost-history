@@ -21,7 +21,7 @@
 namespace boost { namespace fusion { namespace detail
 {
     template <int Size>
-    struct BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME);
+    struct BOOST_PP_CAT(BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl);
 
 #define BOOST_PP_FILENAME_1 <boost/fusion/container/detail/pp/as_seq.hpp>
 #define BOOST_PP_ITERATION_LIMITS (0, BOOST_FUSION_MAX_SEQ_SIZE)
@@ -33,7 +33,9 @@ namespace boost { namespace fusion { namespace detail
 #define BOOST_FUSION_N BOOST_PP_ITERATION()
 
     template <>
-    struct BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)<BOOST_FUSION_N>
+    struct BOOST_PP_CAT(BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl)<
+        BOOST_FUSION_N
+    >
     {
         template <typename It0>
         struct apply

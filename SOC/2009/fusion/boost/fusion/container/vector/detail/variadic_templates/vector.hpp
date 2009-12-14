@@ -21,20 +21,22 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
 
-#include <boost/preprocessor/inc.hpp>
-#include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/repetition/repeat.hpp>
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
-#include <boost/preprocessor/repetition/enum.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/mpl/int.hpp>
+#ifndef BOOST_FUSION_TAGGED_VECTOR
+#   include <boost/preprocessor/inc.hpp>
+#   include <boost/preprocessor/cat.hpp>
+#   include <boost/preprocessor/repetition/repeat.hpp>
+#   include <boost/preprocessor/repetition/repeat_from_to.hpp>
+#   include <boost/preprocessor/repetition/enum.hpp>
+#   include <boost/preprocessor/repetition/enum_params.hpp>
+#   include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#endif
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
 #include <boost/type_traits/is_convertible.hpp>
+#include <boost/type_traits/add_const.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <utility>
@@ -53,7 +55,107 @@ namespace boost { namespace fusion
           : is_convertible<From, Head>
         {};
 
-        template<int Index,typename... Elements>
+#ifdef BOOST_FUSION_TAGGED_VECTOR
+        template<int...>
+        struct package
+        {};
+
+        template<int Max,int... Args>
+        struct make_package
+          : make_package<Max-1,Max-1,Args...>
+        {};
+
+        template<int... Args>
+        struct make_package<0,Args...>
+        {
+            typedef package<Args...> type;
+        };
+
+        template<int I, typename Element>
+        struct element
+        {
+            Element _element;
+
+            element()
+              : _element()
+            {}
+
+            template<typename It>
+            element(assign_by_deref,It const& it)
+              : _element(fusion::deref(fusion::advance_c<I>(it)))
+            {}
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
+            template<typename OtherArgument>
+#endif
+            element(
+                assign_directly,
+#ifdef BOOST_NO_RVALUE_REFERENCES
+                typename call_traits<Element>::param_type argument
+#else
+                OtherArgument&& argument
+#endif
+                )
+              : _element(BOOST_FUSION_FORWARD(OtherArgument,argument))
+            {}
+        };
+
+        template<typename Keys, typename... Elements>
+        struct vector_impl;
+
+        template<int... Indices, typename... Elements>
+        struct vector_impl<package<Indices...>, Elements...>
+          : element<Indices, Elements>...
+        {
+            vector_impl()
+            {}
+
+            template<typename It>
+            vector_impl(assign_by_deref,It const& it)
+              : element<Indices, Elements>(assign_by_deref(),it)...
+            {}
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
+            template<typename... OtherArguments>
+#endif
+            vector_impl(
+                assign_directly,
+#ifdef BOOST_NO_RVALUE_REFERENCES
+                typename call_traits<Elements>::param_type...  arguments
+#else
+                OtherArguments&&... arguments
+#endif
+                )
+              : element<Indices, Elements>(
+                    assign_directly(),
+                    BOOST_FUSION_FORWARD(OtherArguments,arguments))...
+            {}
+
+            template<typename It,int FirstIndex,int... OtherIndices>
+            void
+            assign(package<FirstIndex,OtherIndices...>,It const& it)
+            {
+                detail::at_helper<FirstIndex>(*this)=
+                    fusion::deref(fusion::advance_c<FirstIndex>(it));
+
+                assign(package<OtherIndices...>(),it);
+            }
+
+            template<typename It>
+            void
+            assign(package<>,It const& it)
+            {}
+
+            template<typename It>
+            void
+            assign(It const& it)
+            {
+                assign(package<Indices...>(),it);
+            }
+        };
+    }
+#else
+        template<int I,typename... Elements>
         struct vector_impl;
 
         template<>
@@ -75,14 +177,14 @@ namespace boost { namespace fusion
             {}
         };
 
-#define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEFAULT_INIT(Z,N,_)\
+#   define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEFAULT_INIT(Z,N,_)\
         BOOST_PP_CAT(_element,N)()
 
-#define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN_PARAMS(Z,N,_)\
+#   define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN_PARAMS(Z,N,_)\
         BOOST_PP_CAT(_element,N)(\
             fusion::deref(fusion::advance_c<N>(it)))
 
-#define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN(Z,N,_)\
+#   define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN(Z,N,_)\
         BOOST_PP_CAT(_element,N)=fusion::deref(BOOST_PP_CAT(it,N));\
         \
         typedef typename\
@@ -91,51 +193,51 @@ namespace boost { namespace fusion
         BOOST_PP_CAT(It,BOOST_PP_INC(N)) BOOST_PP_CAT(it,BOOST_PP_INC(N))=\
             fusion::next(BOOST_PP_CAT(it,N));
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
-#   define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_TEMPLATE_ARGS(N)
+#   ifdef BOOST_NO_RVALUE_REFERENCES
+#       define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_TEMPLATE_ARGS(N)
 
-#   define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(N)\
+#       define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(N)\
         BOOST_PP_ENUM_BINARY_PARAMS(N, typename call_traits<H,>::type _)
-#else
-#   define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_TEMPLATE_ARGS(N)\
+#   else
+#       define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_TEMPLATE_ARGS(N)\
         template<BOOST_PP_ENUM_PARAMS(N, typename OtherH)>
 
-#   define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(N)\
+#       define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(N)\
         BOOST_PP_ENUM_BINARY_PARAMS(N, OtherH,&& _)
-#endif
+#   endif
 
-#define BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN(Z,N,_)\
+#   define BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN(Z,N,_)\
         BOOST_PP_CAT(_element,N)(BOOST_PP_CAT(_,N))
 
-#ifdef BOOST_FUSION_PREFER_MPL
-#   define BOOST_FUSION_META_VALUE_AT(N)
-#else
-#   define BOOST_FUSION_META_VALUE_AT(N)\
+#   ifdef BOOST_FUSION_PREFER_MPL
+#       define BOOST_FUSION_META_VALUE_AT(N)
+#   else
+#       define BOOST_FUSION_META_VALUE_AT(N)\
         typedef BOOST_PP_CAT(H,N) BOOST_PP_CAT(h,N);
-#endif
+#   endif
 
-#define BOOST_FUSION_UNROLLED_VECTOR_AT(Z,N,_)\
+#   define BOOST_FUSION_UNROLLED_VECTOR_AT(Z,N,_)\
         BOOST_FUSION_META_VALUE_AT(N)\
         \
-        typename detail::add_lref<BOOST_PP_CAT(H,N)>::type\
-        at_impl(mpl::int_<Index+N>)\
+        typename add_lref<BOOST_PP_CAT(H,N)>::type\
+        at_impl(mpl::int_<I+N>)\
         {\
             return BOOST_PP_CAT(_element,N) ;\
         }\
         \
-        typename detail::add_lref<\
+        typename add_lref<\
             typename add_const<BOOST_PP_CAT(H,N)>::type\
         >::type\
-        at_impl(mpl::int_<Index+N>)const\
+        at_impl(mpl::int_<I+N>)const\
         {\
             return BOOST_PP_CAT(_element,N) ;\
         }\
         \
         BOOST_PP_CAT(H,N) BOOST_PP_CAT(_element,N);
 
-#define BOOST_FUSION_UNROLLED_VECTOR_IMPL(Z, N, MAX)\
-        template<int Index, BOOST_PP_ENUM_PARAMS(N, typename H)>\
-        struct vector_impl<Index,BOOST_PP_ENUM_PARAMS(N, H)>\
+#   define BOOST_FUSION_UNROLLED_VECTOR_IMPL(Z, N, MAX)\
+        template<int I, BOOST_PP_ENUM_PARAMS(N, typename H)>\
+        struct vector_impl<I,BOOST_PP_ENUM_PARAMS(N, H)>\
         {\
             vector_impl()\
               : BOOST_PP_ENUM(\
@@ -151,6 +253,14 @@ namespace boost { namespace fusion
                     _)\
             {}\
             \
+            BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_TEMPLATE_ARGS(N)\
+            vector_impl(\
+                assign_directly,\
+                BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(N)\
+            )\
+              : BOOST_PP_ENUM(N, BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN, _)\
+            {}\
+            \
             template<typename It0>\
             void\
             assign(It0 const& it0)\
@@ -160,28 +270,16 @@ namespace boost { namespace fusion
                         _)\
             }\
             \
-            BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_TEMPLATE_ARGS(N)\
-            vector_impl(\
-                assign_directly,\
-                BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(N)\
-            )\
-              : BOOST_PP_ENUM(N, BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN, _)\
-            {}\
-            \
             BOOST_PP_REPEAT(N,BOOST_FUSION_UNROLLED_VECTOR_AT,_)\
         };
 
         BOOST_PP_REPEAT_FROM_TO(1, 5, BOOST_FUSION_UNROLLED_VECTOR_IMPL, _)
 
-        template<
-            int Index
-          , BOOST_PP_ENUM_PARAMS(4, typename H)
-          , typename... Others
-        >
-        struct vector_impl<Index,BOOST_PP_ENUM_PARAMS(4, H),Others...>
-          : vector_impl<Index+4,Others...>
+        template<int I, BOOST_PP_ENUM_PARAMS(4, typename H), typename... Others>
+        struct vector_impl<I,BOOST_PP_ENUM_PARAMS(4, H),Others...>
+          : vector_impl<I+4,Others...>
         {
-            typedef vector_impl<Index+4,Others...> base_type;
+            typedef vector_impl<I+4,Others...> base_type;
             typedef base_type chain_upper;
 
             using base_type::at_impl;
@@ -200,6 +298,26 @@ namespace boost { namespace fusion
                     _)
             {}
 
+#   ifndef BOOST_NO_RVALUE_REFERENCES
+            template<
+                BOOST_PP_ENUM_PARAMS(4, typename OtherH)
+              , typename... OtherElements
+            >
+#   endif
+            vector_impl(
+                assign_directly,
+                BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(4),
+#   ifdef BOOST_NO_RVALUE_REFERENCES
+                typename call_traits<Others>::param_type...  elements
+#   else
+                OtherElements&&... elements
+#   endif
+            )
+              : base_type(assign_directly(),
+                        BOOST_FUSION_FORWARD(OtherElements,elements)...)
+              , BOOST_PP_ENUM(4, BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN, _)
+            {}
+
             template<typename It0>
             void
             assign(It0 const& it0)
@@ -211,47 +329,27 @@ namespace boost { namespace fusion
                 static_cast<base_type*>(this)->assign(fusion::next(it4));
             }
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
-            template<
-                BOOST_PP_ENUM_PARAMS(4, typename OtherH)
-              , typename... OtherElements
-            >
-#endif
-            vector_impl(
-                assign_directly,
-                BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(4),
-#ifdef BOOST_NO_RVALUE_REFERENCES
-                typename call_traits<Others>::param_type...  elements
-#else
-                OtherElements&&... elements
-#endif
-            )
-              : base_type(assign_directly(),
-                        BOOST_FUSION_FORWARD(OtherElements,elements)...)
-              , BOOST_PP_ENUM(4, BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN, _)
-            {}
-
             BOOST_PP_REPEAT(4,BOOST_FUSION_UNROLLED_VECTOR_AT,_)
         };
 
-#undef BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEFAULT_INIT
-#undef BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN_PARAMS
-#undef BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN
-#undef BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_TEMPLATE_ARGS
-#undef BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS
-#undef BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN
-#undef BOOST_FUSION_META_VALUE_AT
-#undef BOOST_FUSION_UNROLLED_VECTOR_AT
-#undef BOOST_FUSION_UNROLLED_VECTOR_IMPL
+#   undef BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEFAULT_INIT
+#   undef BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN_PARAMS
+#   undef BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN
+#   undef BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_TEMPLATE_ARGS
+#   undef BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS
+#   undef BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN
+#   undef BOOST_FUSION_META_VALUE_AT
+#   undef BOOST_FUSION_UNROLLED_VECTOR_AT
+#   undef BOOST_FUSION_UNROLLED_VECTOR_IMPL
     }
 
-#ifndef BOOST_FUSION_PREFER_MPL
-    template<typename Vector, int Index>
+#   ifndef BOOST_FUSION_PREFER_MPL
+    template<typename Vector, int I>
     struct vector_meta_value_at
-      : vector_meta_value_at<typename Vector::chain_upper, Index-4>
+      : vector_meta_value_at<typename Vector::chain_upper, I-4>
     {};
 
-#   define BOOST_FUSION_META_VALUE_AT_SPECIALIZATION(Z,N,_)\
+#       define BOOST_FUSION_META_VALUE_AT_SPECIALIZATION(Z,N,_)\
     template<typename Vector>\
     struct vector_meta_value_at<Vector,N>\
     {\
@@ -260,20 +358,37 @@ namespace boost { namespace fusion
 
     BOOST_PP_REPEAT(4, BOOST_FUSION_META_VALUE_AT_SPECIALIZATION, _)
 
-#   undef BOOST_FUSION_META_VALUE_AT_SPECIALIZATION
+#       undef BOOST_FUSION_META_VALUE_AT_SPECIALIZATION
+#   endif
 #endif
 
     template<typename... Elements>
     struct vector
       : sequence_base<vector<Elements...> >
+#ifdef BOOST_FUSION_TAGGED_VECTOR
+      , detail::vector_impl<
+            typename detail::make_package<sizeof...(Elements)>::type
+          , Elements...
+        >
+#else
       , detail::vector_impl<0,Elements...>
+#endif
     {
+#ifdef BOOST_FUSION_TAGGED_VECTOR
+        typedef
+            detail::vector_impl<
+                typename detail::make_package<sizeof...(Elements)>::type
+              , Elements...
+            >
+        base_type;
+#else
         typedef detail::vector_impl<0,Elements...> base_type;
 
-#ifdef BOOST_FUSION_PREFER_MPL
+#   ifdef BOOST_FUSION_PREFER_MPL
         typedef typename
             detail::variadic_arguments_to_vector<Elements...>::type
         types;
+#   endif
 #endif
 
         typedef vector_tag fusion_tag;
@@ -285,10 +400,10 @@ namespace boost { namespace fusion
         vector()
         {}
 
-#define VECTOR_CTOR(COMBINATION,_)\
-        vector(vector COMBINATION vec)\
+#define VECTOR_CTOR(MODIFIER,_)\
+        vector(vector MODIFIER vec)\
           : base_type(detail::assign_by_deref(),\
-                fusion::begin(static_cast<vector COMBINATION>(vec)))\
+                fusion::begin(static_cast<vector MODIFIER>(vec)))\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_CTOR,_)
@@ -313,9 +428,9 @@ namespace boost { namespace fusion
                     sizeof...(Elements)==sizeof...(OtherArguments)));
         }
 
-#define BOOST_FUSION_VECTOR_ASSIGN_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_VECTOR_ASSIGN_CTOR(MODIFIER,_)\
         template<typename SeqRef>\
-        vector(detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+        vector(detail::sequence_assign_type<SeqRef> MODIFIER seq_assign)\
           : base_type(detail::assign_by_deref(),fusion::begin(seq_assign.get()))\
         {\
             BOOST_FUSION_STATIC_ASSERT((\
@@ -356,6 +471,5 @@ namespace boost { namespace fusion
             return *this;
         }
     };
-
 }}
 #endif

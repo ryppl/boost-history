@@ -121,12 +121,12 @@ namespace boost { namespace fusion
 
         //cschmidt: iterators so we do not have to deal with the cv-ness
         //of cons_.car/cons_.cdr explicitly
-#define BOOST_FUSION_CONS_CTOR(COMBINATION,_)\
-        cons(cons COMBINATION cons_)\
-          : car(fusion::front(static_cast<cons COMBINATION>(cons_)))\
+#define BOOST_FUSION_CONS_CTOR(MODIFIER,_)\
+        cons(cons MODIFIER cons_)\
+          : car(fusion::front(static_cast<cons MODIFIER>(cons_)))\
           , cdr(detail::assign_by_deref(),\
                 fusion::next(fusion::begin(\
-                    static_cast<cons COMBINATION>(cons_))))\
+                    static_cast<cons MODIFIER>(cons_))))\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CONS_CTOR,_);
@@ -199,9 +199,9 @@ namespace boost { namespace fusion
                     mpl::equal_to<size,result_of::size<Seq> >));
         }
 
-#define BOOST_FUSION_CONS_ASSIGN_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_CONS_ASSIGN_CTOR(MODIFIER,_)\
         template<typename SeqRef>\
-        cons(detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+        cons(detail::sequence_assign_type<SeqRef> MODIFIER seq_assign)\
           : car(fusion::front(seq_assign.get()))\
           , cdr(detail::assign_by_deref(),\
                   fusion::next(fusion::begin(seq_assign.get())))\

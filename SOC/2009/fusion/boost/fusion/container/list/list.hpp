@@ -31,9 +31,9 @@ namespace boost { namespace fusion
         typedef list_tag fusion_tag;
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   define BOOST_FUSION_LIST_CTOR(COMBINATION,_)\
-        list(list COMBINATION list_)\
-          : base_type(static_cast<base_type COMBINATION>(list_))\
+#   define BOOST_FUSION_LIST_CTOR(MODIFIER,_)\
+        list(list MODIFIER list_)\
+          : base_type(static_cast<base_type MODIFIER>(list_))\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_LIST_CTOR,_)

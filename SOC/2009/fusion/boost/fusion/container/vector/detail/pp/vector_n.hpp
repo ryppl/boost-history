@@ -8,6 +8,9 @@
 
 #ifndef BOOST_PP_IS_ITERATING
 #   include <boost/fusion/container/vector/vector_fwd.hpp>
+#   ifdef BOOST_FUSION_TAGGED_VECTOR
+#       include <boost/fusion/container/vector/detail/variadic_templates/tagged_impl.hpp>
+#   endif
 #   ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #       include <boost/fusion/sequence/intrinsic/size.hpp>
 #       include <boost/fusion/sequence/intrinsic/empty.hpp>
@@ -111,28 +114,29 @@ namespace boost { namespace fusion
 #   undef BOOST_FUSION_DEFAULT_MEMBER_INIT
 
 #   if BOOST_FUSION_N
-#       define BOOST_FUSION_MEMBER_INIT(Z, N, COMBINATION)\
+#       define BOOST_FUSION_MEMBER_INIT(Z, N, MODIFIER)\
             BOOST_PP_CAT(m,N)(\
                 BOOST_FUSION_FORWARD(\
-                    BOOST_PP_CAT(vector, N)<EXPAND_TEMPLATE_ARGUMENTS(N)>\
-                        COMBINATION,vec).\
+                    BOOST_PP_CAT(vector, N)<\
+                        EXPAND_TEMPLATE_ARGUMENTS(N)\
+                    > MODIFIER,vec).\
                     BOOST_PP_CAT(m,N))
 
-#       define BOOST_FUSION_VECTOR_CTOR(COMBINATION,_)\
+#       define BOOST_FUSION_VECTOR_CTOR(MODIFIER,_)\
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(\
             BOOST_PP_CAT(vector, BOOST_FUSION_N)<\
                 EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)\
-            > COMBINATION vec)\
-          : BOOST_PP_ENUM(BOOST_FUSION_N, BOOST_FUSION_MEMBER_INIT, COMBINATION)\
+            > MODIFIER vec)\
+          : BOOST_PP_ENUM(BOOST_FUSION_N, BOOST_FUSION_MEMBER_INIT, MODIFIER)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_CTOR,_)
 
 #       undef BOOST_FUSION_MEMBER_INIT
 #   else
-#       define BOOST_FUSION_VECTOR_CTOR(COMBINATION,_)\
+#       define BOOST_FUSION_VECTOR_CTOR(MODIFIER,_)\
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(\
-            BOOST_PP_CAT(vector, BOOST_FUSION_N)<void_> COMBINATION vec)\
+            BOOST_PP_CAT(vector, BOOST_FUSION_N)<void_> MODIFIER vec)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_CTOR,_)
@@ -180,24 +184,24 @@ namespace boost { namespace fusion
             fusion::advance_c<N>(fusion::begin(SEQ))))
 
 #       if BOOST_FUSION_N==1
-#           define BOOST_FUSION_VECTOR_SEQ_ASSIGN_CTOR(COMBINATION)
+#           define BOOST_FUSION_VECTOR_SEQ_ASSIGN_CTOR(MODIFIER)
 #       else
-#           define BOOST_FUSION_VECTOR_SEQ_ASSIGN_CTOR(COMBINATION)\
+#           define BOOST_FUSION_VECTOR_SEQ_ASSIGN_CTOR(MODIFIER)\
         template<typename Seq>\
-        BOOST_PP_CAT(vector,BOOST_FUSION_N)(Seq COMBINATION seq)\
+        BOOST_PP_CAT(vector,BOOST_FUSION_N)(Seq MODIFIER seq)\
           : BOOST_PP_ENUM(BOOST_FUSION_N,\
                   BOOST_FUSION_MEMBER_INIT,\
-                  static_cast<Seq COMBINATION>(seq))\
+                  static_cast<Seq MODIFIER>(seq))\
         {\
             BOOST_FUSION_MPL_ASSERT((\
                     mpl::equal_to<size,result_of::size<Seq> >));\
         }
         #endif
 
-#       define BOOST_FUSION_VECTOR_ASSIGN_CTOR(COMBINATION,_)\
+#       define BOOST_FUSION_VECTOR_ASSIGN_CTOR(MODIFIER,_)\
         template<typename SeqRef>\
         BOOST_PP_CAT(vector,BOOST_FUSION_N)(\
-            detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+            detail::sequence_assign_type<SeqRef> MODIFIER seq_assign)\
           : BOOST_PP_ENUM(BOOST_FUSION_N,\
                   BOOST_FUSION_MEMBER_INIT,\
                   seq_assign.get())\
@@ -206,7 +210,7 @@ namespace boost { namespace fusion
                     mpl::equal_to<size,result_of::size<SeqRef> >));\
         }\
         \
-        BOOST_FUSION_VECTOR_SEQ_ASSIGN_CTOR(COMBINATION)
+        BOOST_FUSION_VECTOR_SEQ_ASSIGN_CTOR(MODIFIER)
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_ASSIGN_CTOR,_);
 
@@ -214,16 +218,16 @@ namespace boost { namespace fusion
 #       undef BOOST_FUSION_VECTOR_SEQ_ASSIGN_CTOR
 #       undef BOOST_FUSION_MEMBER_INIT
 #   else
-#       define BOOST_FUSION_VECTOR_ASSIGN_CTOR(COMBINATION,_)\
+#       define BOOST_FUSION_VECTOR_ASSIGN_CTOR(MODIFIER,_)\
         template<typename SeqRef>\
         BOOST_PP_CAT(vector,BOOST_FUSION_N)(\
-            detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+            detail::sequence_assign_type<SeqRef> MODIFIER seq_assign)\
         {\
             BOOST_FUSION_MPL_ASSERT((result_of::empty<SeqRef>));\
         }\
         \
         template<typename Seq>\
-        BOOST_PP_CAT(vector,BOOST_FUSION_N)(Seq COMBINATION seq)\
+        BOOST_PP_CAT(vector,BOOST_FUSION_N)(Seq MODIFIER seq)\
         {\
             BOOST_FUSION_MPL_ASSERT((result_of::empty<Seq>));\
         }

@@ -25,7 +25,6 @@ namespace boost { namespace fusion
 #define BOOST_PP_FILENAME_1 <boost/fusion/container/generation/detail/pp/make_seq.hpp>
 #define BOOST_PP_ITERATION_LIMITS (0, BOOST_FUSION_MAX_SEQ_SIZE)
 #include BOOST_PP_ITERATE()
-
 }}
 
 #else

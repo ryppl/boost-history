@@ -71,10 +71,10 @@ namespace boost { namespace fusion
         typedef fusion_sequence_tag tag;
         typedef mpl::true_ is_view;
 
-#define BOOST_FUSION_REPETITIVE_VIEW_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_REPETITIVE_VIEW_CTOR(MODIFIER,_)\
         template<typename OtherSeq>\
-        repetitive_view(repetitive_view<OtherSeq,Size> COMBINATION view)\
-          : seq(static_cast<repetitive_view<OtherSeq,Size> COMBINATION>(\
+        repetitive_view(repetitive_view<OtherSeq,Size> MODIFIER view)\
+          : seq(static_cast<repetitive_view<OtherSeq,Size> MODIFIER>(\
                 view).seq)\
         {}
 

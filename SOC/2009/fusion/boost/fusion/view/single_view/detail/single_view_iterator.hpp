@@ -16,9 +16,6 @@ namespace boost { namespace fusion
 {
     struct single_view_iterator_tag;
 
-    //cschmidt: Due to a nasty bug in Proto (ticket #3583,
-    //https://svn.boost.org/trac/boost/ticket/3583) store value_type and
-    //value_ref_type directly, rather than a reference to the view itself.
     template<typename Value, typename ValueRef, bool End>
     struct single_view_iterator
       : iterator_base<single_view_iterator<Value, ValueRef, End> >

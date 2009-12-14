@@ -23,18 +23,29 @@ namespace boost { namespace fusion { namespace extension
     {
         template <typename Seq, typename N>
         struct apply
-#ifdef BOOST_FUSION_PREFER_MPL
+#ifdef BOOST_FUSION_TAGGED_VECTOR
+        {
+            typedef
+                decltype(
+                    detail::at_type_helper<N::value>(*static_cast<
+                        typename detail::remove_reference<Seq>::type*
+                    >(0))
+                )
+            type;
+        };
+#elif defined(BOOST_FUSION_PREFER_MPL)
           : mpl::at<
                 typename detail::remove_reference<Seq>::type::types
               , N
             >
+        {};
 #else
           : vector_meta_value_at<
                 typename detail::remove_reference<Seq>::type
               , N::value
             >
-#endif
         {};
+#endif
     };
 }}}
 

@@ -15,6 +15,9 @@
 #else
 #   include <boost/fusion/container/vector/vector_fwd.hpp>
 #   include <boost/fusion/support/internal/ref.hpp>
+#   ifdef BOOST_FUSION_TAGGED_VECTOR
+#       include <boost/fusion/container/vector/detail/variadic_templates/tagged_impl.hpp>
+#   endif
 
 #   include <boost/fusion/container/vector/detail/at_impl.hpp>
 #   include <boost/fusion/container/vector/detail/value_at_impl.hpp>

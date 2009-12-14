@@ -26,9 +26,9 @@ namespace boost { namespace fusion
           : f(std::forward<Args>(args)...)
         {}
 
-#define BOOST_FUSION_CTOR_SPECIALIZATION(COMBINATION,_)\
-        BOOST_FUSION_ADAPTER_NAME(BOOST_FUSION_ADAPTER_NAME COMBINATION adapter)\
-          : f(std::forward<BOOST_FUSION_ADAPTER_NAME COMBINATION>(adapter).f)\
+#define BOOST_FUSION_CTOR_SPECIALIZATION(MODIFIER,_)\
+        BOOST_FUSION_ADAPTER_NAME(BOOST_FUSION_ADAPTER_NAME MODIFIER adapter)\
+          : f(std::forward<BOOST_FUSION_ADAPTER_NAME MODIFIER>(adapter).f)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CTOR_SPECIALIZATION,_)
@@ -43,11 +43,11 @@ namespace boost { namespace fusion
             return *this;
         }
 
-#define BOOST_FUSION_ASSIGN_SPECIALIZATION(COMBINATION,_)\
+#define BOOST_FUSION_ASSIGN_SPECIALIZATION(MODIFIER,_)\
         BOOST_FUSION_ADAPTER_NAME&\
-        operator=(BOOST_FUSION_ADAPTER_NAME COMBINATION other_adapter)\
+        operator=(BOOST_FUSION_ADAPTER_NAME MODIFIER other_adapter)\
         {\
-            f=std::forward<BOOST_FUSION_ADAPTER_NAME COMBINATION>(\
+            f=std::forward<BOOST_FUSION_ADAPTER_NAME MODIFIER>(\
                     other_adapter).f;\
             return *this;\
         }
@@ -56,19 +56,19 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_ASSIGN_SPECIALIZATION
 
-#define BOOST_FUSION_CALL_OPERATOR(COMBINATION)\
+#define BOOST_FUSION_CALL_OPERATOR(MODIFIER)\
         template<typename Seq>\
         typename result_of::invoke<\
-            typename detail::forward_as<int COMBINATION, F>::type, Seq&&\
+            typename detail::forward_as<int MODIFIER, F>::type, Seq&&\
         >::type\
-        operator()(Seq&& seq) COMBINATION\
+        operator()(Seq&& seq) MODIFIER\
         {\
             /*BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));*/\
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));\
             \
             return invoke(\
                 static_cast<\
-                    typename detail::forward_as<int COMBINATION, F>::type\
+                    typename detail::forward_as<int MODIFIER, F>::type\
                 >(f),\
                 std::forward<Seq>(seq));\
         }

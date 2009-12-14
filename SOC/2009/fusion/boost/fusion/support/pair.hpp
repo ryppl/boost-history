@@ -30,10 +30,10 @@ namespace boost { namespace fusion
         typedef First first_type;
         typedef Second second_type;
 
-#define BOOST_FUSION_PAIR_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_PAIR_CTOR(MODIFIER,_)\
         template<class OtherSecond>\
-        pair(pair<First,OtherSecond> COMBINATION pair_)\
-          : second(static_cast<pair<First,OtherSecond> COMBINATION>\
+        pair(pair<First,OtherSecond> MODIFIER pair_)\
+          : second(static_cast<pair<First,OtherSecond> MODIFIER>\
                 (pair_).second)\
         {}
 

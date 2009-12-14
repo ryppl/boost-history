@@ -36,11 +36,11 @@ namespace boost { namespace fusion
             typedef T& type;
         };
 
-#define BOOST_FUSION_CV_REF_SPECIALIZATION(COMBINATION,_)\
+#define BOOST_FUSION_CV_REF_SPECIALIZATION(MODIFIER,_)\
         template <typename T>\
-        struct deduce<T COMBINATION>\
+        struct deduce<T MODIFIER>\
         {\
-            typedef detail::is_po_callable<T COMBINATION> is_po_callable;\
+            typedef detail::is_po_callable<T MODIFIER> is_po_callable;\
             \
             typedef typename\
                 mpl::eval_if<\
@@ -48,7 +48,7 @@ namespace boost { namespace fusion
                   , mpl::if_<\
                         typename is_po_callable::is_pointer\
                       , T\
-                      , T COMBINATION\
+                      , T MODIFIER\
                     >\
                   , deduce<T>\
                 >::type\
@@ -56,7 +56,7 @@ namespace boost { namespace fusion
         };\
         \
         template <typename T>\
-        struct deduce<reference_wrapper<T> COMBINATION>\
+        struct deduce<reference_wrapper<T> MODIFIER>\
         {\
             typedef T& type;\
         };

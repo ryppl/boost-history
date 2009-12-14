@@ -26,16 +26,24 @@ namespace boost { namespace fusion { namespace extension
         {
             typedef typename detail::remove_reference<It>::type it;
 
-            typedef typename
-#ifdef BOOST_FUSION_PREFER_MPL
-                mpl::at<
+            typedef
+#ifdef BOOST_FUSION_TAGGED_VECTOR
+                decltype(
+                    detail::at_type_helper<it::index::value>(*static_cast<
+                        typename detail::remove_reference<
+                            typename it::seq_type
+                        >::type*
+                    >(0))
+                )
+#elif defined(BOOST_FUSION_PREFER_MPL)
+                typename mpl::at<
                     typename detail::remove_reference<
                         typename it::seq_type
                     >::type::types
                   , typename it::index
                 >::type
 #else
-                vector_meta_value_at<
+                typename vector_meta_value_at<
                     typename detail::remove_reference<
                         typename it::seq_type
                     >::type

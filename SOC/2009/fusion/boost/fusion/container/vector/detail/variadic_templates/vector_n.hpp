@@ -11,6 +11,7 @@
 #   include <boost/preprocessor/iteration/iterate.hpp>
 #   include <boost/preprocessor/cat.hpp>
 #   include <boost/preprocessor/repetition/enum.hpp>
+#   include <boost/preprocessor/repetition/enum_params.hpp>
 #   include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #   include <boost/call_traits.hpp>
 
@@ -43,11 +44,11 @@ namespace boost { namespace fusion
         BOOST_PP_CAT(vector, BOOST_FUSION_N)()
         {}
 
-#   define BOOST_FUSION_VECTOR_CTOR(COMBINATION,_)\
+#   define BOOST_FUSION_VECTOR_CTOR(MODIFIER,_)\
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(\
-            BOOST_PP_CAT(vector, BOOST_FUSION_N) COMBINATION vec)\
+            BOOST_PP_CAT(vector, BOOST_FUSION_N) MODIFIER vec)\
           : base_type(sequence_assign(BOOST_FUSION_FORWARD(\
-                  BOOST_PP_CAT(vector, BOOST_FUSION_N) COMBINATION,vec)))\
+                  BOOST_PP_CAT(vector, BOOST_FUSION_N) MODIFIER,vec)))\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_CTOR,_)

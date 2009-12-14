@@ -40,10 +40,10 @@ namespace boost { namespace fusion
             typedef fusion_sequence_tag tag;
             typedef mpl::true_ is_view;
 
-#define BOOST_FUSION_FILTER_KEY_VIEW_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_FILTER_KEY_VIEW_CTOR(MODIFIER,_)\
             template<typename OtherSeq>\
-            filter_key_view(filter_key_view<OtherSeq,Pred> COMBINATION view)\
-              : seq(static_cast<filter_key_view<OtherSeq,Pred>COMBINATION>(\
+            filter_key_view(filter_key_view<OtherSeq,Pred> MODIFIER view)\
+              : seq(static_cast<filter_key_view<OtherSeq,Pred>MODIFIER>(\
                     view).seq)\
             {\
                 BOOST_FUSION_TAG_CHECK(OtherSeq,filter_key_view);\

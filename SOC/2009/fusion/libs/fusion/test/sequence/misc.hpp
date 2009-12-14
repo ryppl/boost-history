@@ -9,6 +9,8 @@
 #include <boost/fusion/sequence/intrinsic.hpp>
 #include <boost/fusion/support/is_sequence.hpp>
 #include <boost/fusion/mpl.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/mpl/advance.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/find.hpp>
@@ -18,6 +20,7 @@
 #include <boost/mpl/push_front.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/integral_c.hpp>
+#include <boost/mpl/size.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
 #include <string>

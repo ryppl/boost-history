@@ -14,12 +14,16 @@
 
 #include <boost/preprocessor/cat.hpp>
 
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   include <boost/fusion/container/detail/pp/as_seq.hpp>
-#else
+//cschmidt: mpl's maximum supported arity is set to 5 by default. We need more
+//for the variadic templates implementations though. Therefore use the pp
+//implementation for now.
+//TODO: native variadic template unrolled workaround!.
 
-#   include <boost/fusion/container/detail/variadic_templates/as_seq.hpp>
-#endif
+//#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/fusion/container/detail/pp/as_seq.hpp>
+//#else
+//#   include <boost/fusion/container/detail/variadic_templates/as_seq.hpp>
+//#endif
 
 namespace boost { namespace fusion
 {
@@ -34,24 +38,26 @@ namespace boost { namespace fusion
             template <typename Seq>
             struct apply
             {
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
+//#ifdef BOOST_NO_VARIADIC_TEMPLATES
                 typedef typename
-                    detail::BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)<
+                    detail::BOOST_PP_CAT(
+                        BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl)<
                         result_of::size<Seq>::value
                     >::template apply<
                         typename result_of::begin<Seq>::type
                     >::type
                 type;
-#else
-                typedef typename
-                    detail::BOOST_PP_CAT(
-                        BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl)<
-                        Seq
-                    >::type
-                type;
-#endif
+//#else
+//              typedef typename
+//                  detail::BOOST_PP_CAT(
+//                      BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl)<
+//                      Seq
+//                  >::type
+//              type;
+//#endif
 
-                static type call(Seq seq)
+                static type
+                call(Seq seq)
                 {
                     return type(fusion::sequence_assign(
                             BOOST_FUSION_FORWARD(Seq,seq)));

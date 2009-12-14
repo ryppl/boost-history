@@ -58,9 +58,9 @@ namespace boost { namespace fusion { namespace detail
         call_param;
 #endif
 
-#define BOOST_FUSION_VIEW_STORAGE_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_VIEW_STORAGE_CTOR(MODIFIER,_)\
         template<typename OtherT>\
-        view_storage(view_storage<OtherT> COMBINATION storage)\
+        view_storage(view_storage<OtherT> MODIFIER storage)\
           : t(get_init_type(storage.get(), typename traits::is_view<T>::type()))\
         {}
 

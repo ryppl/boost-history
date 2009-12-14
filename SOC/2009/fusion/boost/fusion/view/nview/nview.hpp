@@ -74,10 +74,10 @@ namespace boost { namespace fusion
         typedef mpl::true_ is_view;
         typedef typename mpl::size<Indices>::type size;
 
-#define BOOST_FUSION_NVIEW_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_NVIEW_CTOR(MODIFIER,_)\
         template<typename OtherSeq>\
-        nview(nview<OtherSeq, Indices> COMBINATION view)\
-          : seq(static_cast<nview<OtherSeq, Indices> COMBINATION>(view).seq)\
+        nview(nview<OtherSeq, Indices> MODIFIER view)\
+          : seq(static_cast<nview<OtherSeq, Indices> MODIFIER>(view).seq)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_NVIEW_CTOR,_)
