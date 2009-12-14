@@ -1,0 +1,121 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template basic_transaction_manager</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Intrusive">
+<link rel="up" href="../../persistent/reference.html#header.boost.persistent.basic_transaction_manager_hpp" title="Header &lt;boost/persistent/basic_transaction_manager.hpp&gt;">
+<link rel="prev" href="../../BOOST_PERSISTENT_BASIC_RETRY.html" title="Macro BOOST_PERSISTENT_BASIC_RETRY">
+<link rel="next" href="basic_transaction_manager/resource_type.html" title="Struct template resource_type">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../BOOST_PERSISTENT_BASIC_RETRY.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.basic_transaction_manager_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_transaction_manager/resource_type.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.persistent.basic_transaction_manager"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template basic_transaction_manager</span></h2>
+<p>boost::persistent::basic_transaction_manager</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../persistent/reference.html#header.boost.persistent.basic_transaction_manager_hpp" title="Header &lt;boost/persistent/basic_transaction_manager.hpp&gt;">boost/persistent/basic_transaction_manager.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Resources, <span class="bold"><strong>bool</strong></span> Threads = <span class="bold"><strong>true</strong></span>&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="basic_transaction_manager.html" title="Class template basic_transaction_manager">basic_transaction_manager</a> : <span class="bold"><strong>private</strong></span> noncopyable {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.basic_transaction_manager.resource_types"></a>resource_types;
+
+  <span class="emphasis"><em>// member classes/structs/unions</em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Tag&gt; 
+  <span class="bold"><strong>struct</strong></span> <a class="link" href="basic_transaction_manager/resource_type.html" title="Struct template resource_type">resource_type</a> {
+    <span class="emphasis"><em>// types</em></span>
+    <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="basic_transaction_manager/resource_type.html#boost.persistent.basic_transaction_manager.resource_type.type">type</a>;
+  };
+
+  <span class="bold"><strong>class</strong></span> <a class="link" href="basic_transaction_manager/transaction.html" title="Class transaction">transaction</a> : <span class="bold"><strong>private</strong></span> noncopyable {
+  };
+
+  <span class="emphasis"><em>// <a class="link" href="basic_transaction_manager.html#boost.persistent.basic_transaction_managerconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <a class="link" href="basic_transaction_manager.html#id2655483-bb">basic_transaction_manager</a>(T &amp;);
+
+  <span class="emphasis"><em>// <a class="link" href="basic_transaction_manager.html#id2655342-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Tag&gt; <span class="type">resource_type&lt; Tag &gt;::type &amp;</span> <a class="link" href="basic_transaction_manager.html#id2655345-bb">resource</a>(Tag = Tag()) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Tag&gt; 
+    <span class="type">resource_type&lt; Tag &gt;::type::transaction &amp;</span> 
+    <a class="link" href="basic_transaction_manager.html#id2655369-bb">resource_transaction</a>(transaction &amp;, Tag = Tag()) ;
+  <span class="type"><span class="emphasis"><em>unspecified</em></span></span> <a class="link" href="basic_transaction_manager.html#id2655399-bb">begin_transaction</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_transaction_manager.html#id2655408-bb">commit_transaction</a>(transaction &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_transaction_manager.html#id2655422-bb">rollback_transaction</a>(transaction &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_transaction_manager.html#id2655436-bb">bind_transaction</a>(transaction &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_transaction_manager.html#id2655450-bb">unbind_transaction</a>() ;
+  <span class="type">transaction &amp;</span> <a class="link" href="basic_transaction_manager.html#id2655458-bb">active_transaction</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a class="link" href="basic_transaction_manager.html#id2655467-bb">has_active_transaction</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_transaction_manager.html#id2655475-bb">bind</a>() ;
+
+  <span class="emphasis"><em>// <a class="link" href="basic_transaction_manager.html#id2655497-bb">public static functions</a></em></span>
+  <span class="type"><span class="bold"><strong>static</strong></span> basic_transaction_manager &amp;</span> <a class="link" href="basic_transaction_manager.html#id2655500-bb">active</a>() ;
+  <span class="type"><span class="bold"><strong>static</strong></span> <span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_transaction_manager.html#id2655509-bb">unbind</a>() ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id3023713"></a><h2>Description</h2>
+<div class="refsect2" lang="en">
+<a name="id3023717"></a><h3>
+<a name="boost.persistent.basic_transaction_managerconstruct-copy-destruct"></a><code class="computeroutput">basic_transaction_manager</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1"><li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <a name="id2655483-bb"></a>basic_transaction_manager(T &amp; t);</pre></li></ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id3023764"></a><h3>
+<a name="id2655342-bb"></a><code class="computeroutput">basic_transaction_manager</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Tag&gt; <span class="type">resource_type&lt; Tag &gt;::type &amp;</span> <a name="id2655345-bb"></a>resource(Tag tag = Tag()) ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Tag&gt; 
+  <span class="type">resource_type&lt; Tag &gt;::type::transaction &amp;</span> 
+  <a name="id2655369-bb"></a>resource_transaction(transaction &amp; tx, Tag tag = Tag()) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="emphasis"><em>unspecified</em></span></span> <a name="id2655399-bb"></a>begin_transaction() ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2655408-bb"></a>commit_transaction(transaction &amp; tx) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2655422-bb"></a>rollback_transaction(transaction &amp; tx) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2655436-bb"></a>bind_transaction(transaction &amp; newtx) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2655450-bb"></a>unbind_transaction() ;</pre></li>
+<li><pre class="literallayout"><span class="type">transaction &amp;</span> <a name="id2655458-bb"></a>active_transaction() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id2655467-bb"></a>has_active_transaction() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2655475-bb"></a>bind() ;</pre></li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id3024022"></a><h3>
+<a name="id2655497-bb"></a><code class="computeroutput">basic_transaction_manager</code> public static functions</h3>
+<div class="orderedlist"><ol type="1">
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> basic_transaction_manager &amp;</span> <a name="id2655500-bb"></a>active() ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> <span class="bold"><strong>void</strong></span></span> <a name="id2655509-bb"></a>unbind() ;</pre></li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../BOOST_PERSISTENT_BASIC_RETRY.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.basic_transaction_manager_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_transaction_manager/resource_type.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

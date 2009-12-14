@@ -1,0 +1,343 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Introduction</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Intrusive">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Intrusive">
+<link rel="prev" href="../index.html" title="Chapter 1. Boost.Intrusive">
+<link rel="next" href="tutorials.html" title="Tutorials">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorials.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="persistent.introduction"></a><a class="link" href="introduction.html" title="Introduction"> Introduction</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="introduction.html#persistent.introduction.motivation"> Motivation</a></span></dt>
+<dt><span class="section"><a href="introduction.html#persistent.introduction.locators"> Locators (vs. pointers)</a></span></dt>
+<dt><span class="section"><a href="introduction.html#persistent.introduction.transactions"> Transactions</a></span></dt>
+<dt><span class="section"><a href="introduction.html#persistent.introduction.object_requirements"> Object
+      requirements</a></span></dt>
+<dt><span class="section"><a href="introduction.html#persistent.introduction.persistent_objects"> Persistent
+      objects</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.introduction.motivation"></a><a class="link" href="introduction.html#persistent.introduction.motivation" title="Motivation"> Motivation</a>
+</h3></div></div></div>
+<p>
+        Boost.Serialization provides an easy way for a C++ application to save its
+        state to disk and later reconstruct it from that saved data:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="comment">//saving:
+</span><span class="identifier">ofstream</span> <span class="identifier">os</span><span class="special">(</span><span class="string">"file"</span><span class="special">,</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">out</span> <span class="special">|</span> <span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">binary</span><span class="special">);</span>
+<span class="identifier">binary_oarchive</span> <span class="identifier">oa</span><span class="special">(</span><span class="identifier">os</span><span class="special">);</span>
+<span class="identifier">oa</span> <span class="special">&lt;&lt;</span> <span class="identifier">obj</span><span class="special">;</span>
+
+<span class="comment">//loading:
+</span><span class="identifier">ifstream</span> <span class="identifier">is</span><span class="special">(</span><span class="string">"file"</span><span class="special">,</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">in</span> <span class="special">|</span> <span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">binary</span><span class="special">);</span>
+<span class="identifier">binary_iarchive</span> <span class="identifier">ia</span><span class="special">(</span><span class="identifier">is</span><span class="special">);</span>
+<span class="identifier">oa</span> <span class="special">&gt;&gt;</span> <span class="identifier">obj</span><span class="special">;</span>
+</pre>
+<p>
+      </p>
+<p>
+        Once the problem of serialization itself is solved, there are several more
+        questions to be answered to make an application preserve (part of) its state
+        beyond its runtime:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          When and where should serialization from/to disk take place?
+        </li>
+<li>
+          Is it acceptable to serialize the whole application state at that point
+          or are there resource limitations which require some information to be
+          loaded on demand?
+        </li>
+<li>
+          What if an application is aborted unexpectedly? Is it acceptable to have
+          lost all changes since application startup?
+        </li>
+<li>
+          What if the application is aborted when only a part of its state was written
+          to disk, e.g. while serialization took place?
+        </li>
+<li>
+          Is concurrent access from multiple threads to the application's state necessary?
+          How is that concurrent access synchronized?
+        </li>
+</ul></div>
+<p>
+        Boost.Persistent is built upon Boost.Serialization and seeks to provide a
+        generic solution to these problems.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.introduction.locators"></a><a class="link" href="introduction.html#persistent.introduction.locators" title="Locators (vs. pointers)"> Locators (vs. pointers)</a>
+</h3></div></div></div>
+<p>
+        An object pointer of a specific object type can be summarized as a concept
+        that provides information about how a specific object in memory can be accessed.
+        Dereferencing a pointer provides read or write access to the object referenced
+        by the pointer, depending on the const-ness of the pointer.
+      </p>
+<p>
+        Boost.Persistent defines a <span class="emphasis"><em>locator</em></span> to be a similar but
+        abstracted concept: A locator also describes how an object can be accessed,
+        but it is not restrained to objects that currently reside in memory. In practice,
+        the object may be in memory, in a file or e.g. mapped in a SQL database.
+        How exactly the object is stored is not exposed by the locator. Dereferencing
+        a locator moves the object referenced by it to memory and returns a <span class="bold"><strong>pointer</strong></span>, that can be used to access the object.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">Locator</span>   <span class="special">---</span><span class="identifier">indirection</span><span class="special">---&gt;</span>   <span class="identifier">Pointer</span>      <span class="special">---</span><span class="identifier">indirection</span><span class="special">---&gt;</span>   <span class="identifier">Object</span></pre>
+<p>
+      </p>
+<p>
+        A locator can be created from an object, just like a pointer. By doing so,
+        the object now referenced by a locator will be moved to a storage device
+        once the pointer to the object is no longer in use, so the object can outlive
+        the application that created it, i.e. it can be made persistent.
+      </p>
+<p>
+        Boost.Persistent implements several locator types that model the ownership
+        concepts of Boost.SmartPtr/C++: shared, weak shared, exclusive or no ownership
+        management.
+      </p>
+<p>
+        They are respectively called <code class="computeroutput">shared_loc</code>,
+        <code class="computeroutput"><a class="link" href="../boost/persistent/basic_weak_loc.html" title="Class template basic_weak_loc">weak_loc</a></code>,
+        <code class="computeroutput"><a class="link" href="../boost/persistent/basic_scoped_loc.html" title="Class template basic_scoped_loc">scoped_loc</a></code>
+        and <code class="computeroutput"><a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">loc</a></code>.
+      </p>
+<p>
+        An object managed by a shared_<span class="bold"><strong>loc</strong></span>, as an
+        example, exists as long as there are shared_<span class="bold"><strong>loc</strong></span>s
+        referencing it, either in memory or on disk. When a shared_<span class="bold"><strong>loc</strong></span>
+        is dereferenced, it returns a shared_<span class="bold"><strong>ptr</strong></span>.
+        As long as that shared_<span class="bold"><strong>ptr</strong></span> (or copies of
+        it) exist, the object is guaranteed to reside in memory. When the last shared_<span class="bold"><strong>ptr</strong></span> goes out of scope, the object lives on, but Boost.Persistent
+        is free to move it whereever it chooses to. Once there are no more shared_<span class="bold"><strong>loc</strong></span>s referencing the object, the object will be removed
+        from the storage device.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.introduction.transactions"></a><a class="link" href="introduction.html#persistent.introduction.transactions" title="Transactions"> Transactions</a>
+</h3></div></div></div>
+<p>
+        To address several of the questions raised in the introduction, <span class="emphasis"><em>transactions</em></span>
+        are introduced. A transaction consists of one or more operations changing
+        persistent objects. Once all operations have been recorded, the transaction
+        is either applied to the global state (<span class="emphasis"><em>commit</em></span>) or undone
+        (<span class="emphasis"><em>rollback</em></span>).
+      </p>
+<p>
+        <span class="bold"><strong>Atomicity</strong></span>
+      </p>
+<p>
+        A transaction pools several operations into one atomic operation. It is guaranteed
+        that either all operations of one transaction are applied, or none of them,
+        thus preventing that only a part of an application's state is written to
+        disk.
+      </p>
+<p>
+        <span class="bold"><strong>Consistency</strong></span>
+      </p>
+<p>
+        The objects accessible through Boost.Persistent are in a consistent state
+        at all times. They either represent the state before a transaction, or after
+        a transaction, but nothing in between. If a transaction can not be applied
+        to the global state it is undone as a whole.
+      </p>
+<p>
+        Note: Consistency is somewhat limited by the optimistic transaction approach
+        Boost.Persistent uses by default. This means that the inter-object state
+        may be inconsistent while a transaction is running, but the transactions
+        will fail with an exception on commit if the state presented to the transaction
+        was inconsistent. No inconsistent transactions will be committed, and no
+        single intra-object state is ever inconsistent. Read more about optimistic
+        transactions here. TODO
+      </p>
+<p>
+        <span class="bold"><strong>Isolation</strong></span>
+      </p>
+<p>
+        Persistent objects can be accessed from multiple threads concurrently, without
+        manual synchronization. Changes made by one transaction are not visible to
+        other transactions until the transaction was successfully committed. Transactions
+        can run concurrently, but once committed, the resulting state is equal to
+        the state that would have been reached if all successful transactions had
+        been executed in sequence.
+      </p>
+<p>
+        If a transaction conflicts with a another transaction an exception is thrown
+        and the transaction can be repeated.
+      </p>
+<p>
+        <span class="bold"><strong>Durability</strong></span>
+      </p>
+<p>
+        When a transaction was successfully committed, the changes made by it are
+        guaranteed to be permanent, even if the application crashes shortly thereafter.
+      </p>
+<p>
+        Note: There are different sync-modes in Boost.Persistent that may loosen
+        this requirement. See TODO.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.introduction.object_requirements"></a><a class="link" href="introduction.html#persistent.introduction.object_requirements" title="Object requirements"> Object
+      requirements</a>
+</h3></div></div></div>
+<p>
+        Objects that are to be used as persistent objects are required to model the
+        <span class="emphasis"><em>Serializable</em></span> concept, as defined by <a href="http://www.boost.org/doc/libs/1_40_0/libs/serialization/doc/serialization.html" target="_top">Boost.Serialization</a>.
+      </p>
+<p>
+        Example: 
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">bank_account</span><span class="special">{</span>
+<span class="keyword">private</span><span class="special">:</span>
+	<span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">serialization</span><span class="special">::</span><span class="identifier">access</span><span class="special">;</span>
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">account_no</span><span class="special">;</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">balance</span><span class="special">;</span>
+	<span class="special">}</span>
+
+	<span class="keyword">int</span> <span class="identifier">account_no</span><span class="special">;</span>
+	<span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">balance</span><span class="special">;</span>	
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        There are several Persistent-specific functions that can be implemented to
+        improve performance, but Serializable is the only requirement.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.introduction.persistent_objects"></a><a class="link" href="introduction.html#persistent.introduction.persistent_objects" title="Persistent objects"> Persistent
+      objects</a>
+</h3></div></div></div>
+<p>
+        A persistent object is a <span class="emphasis"><em>Serializable</em></span> C++ object that
+        is passed to a locator.
+      </p>
+<p>
+        However, a persistent object can contain more than one C++ object. As an
+        example: 
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">person</span><span class="special">{</span>
+	<span class="identifier">string</span> <span class="identifier">name</span><span class="special">;</span>
+	<span class="identifier">address</span> <span class="special">*</span><span class="identifier">addr</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        There are 2 C++ objects, one of type <span class="emphasis"><em>person</em></span> and one
+        of type <span class="emphasis"><em>address</em></span>, but both are considered to be part
+        of one persistent object.
+      </p>
+<p>
+        Each persistent object must be serializable independently into its own <span class="emphasis"><em>Boost.Serialization</em></span>
+        archive, meaning that C++ objects may not be shared among persistent objects.
+      </p>
+<p>
+        For example:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">bank_account</span><span class="special">{</span>
+<span class="keyword">private</span><span class="special">:</span>
+	<span class="keyword">int</span> <span class="identifier">account_no</span><span class="special">;</span>
+	<span class="identifier">bank</span> <span class="special">*</span><span class="identifier">b</span><span class="special">;</span> <span class="comment">//the bank this account belongs to
+</span>	<span class="comment">//Serializable
+</span><span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        When instances of this <span class="emphasis"><em>bank_account</em></span> type are used as
+        persistent objects, the <span class="emphasis"><em>bank</em></span> will get serialized once
+        for each <span class="emphasis"><em>bank_account</em></span>, resulting in duplication of the
+        <span class="emphasis"><em>bank</em></span> object if it was shared among the <span class="emphasis"><em>bank_accounts</em></span>
+        before. For example, with the arrows representing pointers, not locators:
+        
+</p>
+<pre class="programlisting"><span class="identifier">before</span><span class="special">:</span>
+                  <span class="special">-----------</span>
+          <span class="special">------&gt;</span> <span class="special">|</span>   <span class="identifier">bank</span>  <span class="special">|</span>  <span class="special">&lt;-----</span>
+          <span class="special">|</span>        <span class="special">-----------</span>      <span class="special">|</span>
+          <span class="special">|</span>             <span class="special">^</span>           <span class="special">|</span>
+          <span class="special">|</span>             <span class="special">|</span>           <span class="special">|</span>
+     <span class="special">-----------</span>  <span class="special">-----------</span>  <span class="special">-----------</span>
+     <span class="special">|</span> <span class="identifier">account</span> <span class="special">|</span>  <span class="special">|</span> <span class="identifier">account</span> <span class="special">|</span>  <span class="special">|</span> <span class="identifier">account</span> <span class="special">|</span>
+     <span class="special">-----------</span>  <span class="special">-----------</span>  <span class="special">-----------</span>
+
+<span class="identifier">after</span><span class="special">:</span>
+
+
+     <span class="special">-----------</span>  <span class="special">------------</span> <span class="special">----------</span>
+     <span class="special">|</span>   <span class="identifier">bank</span>  <span class="special">|</span>   <span class="special">|</span>   <span class="identifier">bank</span>  <span class="special">|</span> <span class="special">|</span>   <span class="identifier">bank</span>  <span class="special">|</span>
+     <span class="special">----------</span>    <span class="special">----------</span>  <span class="special">----------</span>
+          <span class="special">^</span>             <span class="special">^</span>           <span class="special">^</span>
+          <span class="special">|</span>             <span class="special">|</span>           <span class="special">|</span>
+     <span class="special">-----------</span>  <span class="special">-----------</span>  <span class="special">-----------</span>
+     <span class="special">|</span> <span class="identifier">account</span> <span class="special">|</span>  <span class="special">|</span> <span class="identifier">account</span> <span class="special">|</span>  <span class="special">|</span> <span class="identifier">account</span> <span class="special">|</span>
+     <span class="special">-----------</span>  <span class="special">-----------</span>  <span class="special">-----------</span>
+
+</pre>
+<p>
+        In this case, a locator to a persistent <span class="emphasis"><em>bank</em></span> object
+        should be used instead of a pointer to a C++ <span class="emphasis"><em>bank</em></span> object,
+        so that the bank is not considered part of the <span class="emphasis"><em>bank_account</em></span>
+        persistent object.
+      </p>
+<p>
+        Inside of persistent objects, C++ objects can still be shared and Boost.Serialization's
+        object tracking works as usual. Read the <a href="http://www.boost.org/doc/libs/1_40_0/libs/serialization/doc/tutorial.html#pointers" target="_top">Tutorial
+        of Boost.Serialization</a> for more information.
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorials.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

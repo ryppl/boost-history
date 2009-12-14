@@ -1,0 +1,131 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template multiversion_object_resource</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Intrusive">
+<link rel="up" href="../../persistent/reference.html#header.boost.persistent.multiversion_object_resource_hpp" title="Header &lt;boost/persistent/multiversion_object_resource.hpp&gt;">
+<link rel="prev" href="loc.html" title="Class template loc">
+<link rel="next" href="object_pinning_multiver_id2657995.html" title="Struct template object_pinning&lt;multiversion_object_resource&lt; AtomicStorage, Tag, Threads &gt;&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="loc.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.multiversion_object_resource_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="object_pinning_multiver_id2657995.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.persistent.multiversion_object_res_id2657480"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template multiversion_object_resource</span></h2>
+<p>boost::persistent::multiversion_object_resource</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../persistent/reference.html#header.boost.persistent.multiversion_object_resource_hpp" title="Header &lt;boost/persistent/multiversion_object_resource.hpp&gt;">boost/persistent/multiversion_object_resource.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> AtomicStorage, <span class="bold"><strong>typename</strong></span> Tag = default_tag, 
+         <span class="bold"><strong>bool</strong></span> Threads = <span class="bold"><strong>true</strong></span>&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="multiversion_object_res_id2657480.html" title="Class template multiversion_object_resource">multiversion_object_resource</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> object_resource_tag      <a name="boost.persistent.multiversion_object_res_id2657480.category"></a>category; 
+  <span class="bold"><strong>typedef</strong></span> Tag                      <a name="boost.persistent.multiversion_object_res_id2657480.tag"></a>tag;      
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span>              <a name="boost.persistent.multiversion_object_res_id2657480.object"></a>object;   
+  <span class="bold"><strong>typedef</strong></span> AtomicStorage::object_id <a name="boost.persistent.multiversion_object_res_id2657480.object_id"></a>object_id;
+
+  <span class="emphasis"><em>// <a class="link" href="multiversion_object_res_id2657480.html#boost.persistent.multiversion_object_res_id2657480construct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="multiversion_object_res_id2657480.html#id2657977-bb">multiversion_object_resource</a>(AtomicStorage &amp;, 
+                               <a class="link" href="caching_policy.html" title="Struct caching_policy">caching_policy</a> <span class="bold"><strong>const</strong></span> &amp; = caching_policy());
+
+  <span class="emphasis"><em>// <a class="link" href="multiversion_object_res_id2657480.html#id2657532-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+    <span class="type">shared_ptr&lt; T <span class="bold"><strong>const</strong></span>  &gt;</span> <a class="link" href="multiversion_object_res_id2657480.html#id2657535-bb">get_read_instance</a>(object <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+    <span class="type">shared_ptr&lt; T <span class="bold"><strong>const</strong></span>  &gt;</span> <a class="link" href="multiversion_object_res_id2657480.html#id2657557-bb">get_read_instance</a>(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+    <span class="type">shared_ptr&lt; T &gt;</span> <a class="link" href="multiversion_object_res_id2657480.html#id2657584-bb">get_write_instance</a>(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+    <span class="type">shared_ptr&lt; T &gt;</span> <a class="link" href="multiversion_object_res_id2657480.html#id2657611-bb">get_autodetect_instance</a>(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">object</span> <a class="link" href="multiversion_object_res_id2657480.html#id2657638-bb">new_object</a>(transaction &amp;, T *) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="multiversion_object_res_id2657480.html#id2657665-bb">remove_object</a>(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> PinTag&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="multiversion_object_res_id2657480.html#id2657685-bb">pin_object</a>(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> PinTag&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="multiversion_object_res_id2657480.html#id2657711-bb">unpin_object</a>(transaction &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> PinTag&gt; <span class="type">object</span> <a class="link" href="multiversion_object_res_id2657480.html#id2657732-bb">get_pinned_object</a>() ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> PinTag&gt; 
+    <span class="type">object</span> <a class="link" href="multiversion_object_res_id2657480.html#id2657752-bb">get_pinned_object</a>(transaction &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">object</span> <a class="link" href="multiversion_object_res_id2657480.html#id2657778-bb">new_shared_object</a>(transaction &amp;, T *) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="multiversion_object_res_id2657480.html#id2657805-bb">make_object_shared</a>(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a class="link" href="multiversion_object_res_id2657480.html#id2657825-bb">object_expired</a>(object <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a class="link" href="multiversion_object_res_id2657480.html#id2657839-bb">object_expired</a>(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="type"><span class="emphasis"><em>unspecified</em></span></span> <a class="link" href="multiversion_object_res_id2657480.html#id2657859-bb">begin_root_transaction</a>() ;
+  <span class="type"><span class="emphasis"><em>unspecified</em></span></span> <a class="link" href="multiversion_object_res_id2657480.html#id2657868-bb">begin_nested_transaction</a>(transaction &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="multiversion_object_res_id2657480.html#id2657883-bb">commit_transaction</a>(transaction &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="multiversion_object_res_id2657480.html#id2657897-bb">rollback_transaction</a>(transaction &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">object</span> <a class="link" href="multiversion_object_res_id2657480.html#id2657911-bb">get_object</a>(object_id) ;
+  <span class="type">object_id</span> <a class="link" href="multiversion_object_res_id2657480.html#id2657932-bb">get_object_id</a>(object <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="multiversion_object_res_id2657480.html#id2657946-bb">count_object</a>(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;, <span class="bold"><strong>int</strong></span>, <span class="bold"><strong>int</strong></span>) ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id3032204"></a><h2>Description</h2>
+<div class="refsect2" lang="en">
+<a name="id3032207"></a><h3>
+<a name="boost.persistent.multiversion_object_res_id2657480construct-copy-destruct"></a><code class="computeroutput">multiversion_object_resource</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1"><li><pre class="literallayout"><a name="id2657977-bb"></a>multiversion_object_resource(AtomicStorage &amp; s, 
+                             <a class="link" href="caching_policy.html" title="Struct caching_policy">caching_policy</a> <span class="bold"><strong>const</strong></span> &amp; cpolicy = caching_policy());</pre></li></ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id3032260"></a><h3>
+<a name="id2657532-bb"></a><code class="computeroutput">multiversion_object_resource</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">shared_ptr&lt; T <span class="bold"><strong>const</strong></span>  &gt;</span> <a name="id2657535-bb"></a>get_read_instance(object <span class="bold"><strong>const</strong></span> &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+  <span class="type">shared_ptr&lt; T <span class="bold"><strong>const</strong></span>  &gt;</span> <a name="id2657557-bb"></a>get_read_instance(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+  <span class="type">shared_ptr&lt; T &gt;</span> <a name="id2657584-bb"></a>get_write_instance(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+  <span class="type">shared_ptr&lt; T &gt;</span> <a name="id2657611-bb"></a>get_autodetect_instance(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">object</span> <a name="id2657638-bb"></a>new_object(transaction &amp;, T *) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2657665-bb"></a>remove_object(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> PinTag&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2657685-bb"></a>pin_object(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> PinTag&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2657711-bb"></a>unpin_object(transaction &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> PinTag&gt; <span class="type">object</span> <a name="id2657732-bb"></a>get_pinned_object() ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> PinTag&gt; <span class="type">object</span> <a name="id2657752-bb"></a>get_pinned_object(transaction &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">object</span> <a name="id2657778-bb"></a>new_shared_object(transaction &amp;, T *) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2657805-bb"></a>make_object_shared(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id2657825-bb"></a>object_expired(object <span class="bold"><strong>const</strong></span> &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id2657839-bb"></a>object_expired(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="emphasis"><em>unspecified</em></span></span> <a name="id2657859-bb"></a>begin_root_transaction() ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="emphasis"><em>unspecified</em></span></span> <a name="id2657868-bb"></a>begin_nested_transaction(transaction &amp; parent) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2657883-bb"></a>commit_transaction(transaction &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2657897-bb"></a>rollback_transaction(transaction &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">object</span> <a name="id2657911-bb"></a>get_object(object_id) ;</pre></li>
+<li><pre class="literallayout"><span class="type">object_id</span> <a name="id2657932-bb"></a>get_object_id(object <span class="bold"><strong>const</strong></span> &amp;) ;</pre></li>
+<li><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2657946-bb"></a>count_object(transaction &amp;, object <span class="bold"><strong>const</strong></span> &amp;, <span class="bold"><strong>int</strong></span>, <span class="bold"><strong>int</strong></span>) ;</pre></li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="loc.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.multiversion_object_resource_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="object_pinning_multiver_id2657995.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

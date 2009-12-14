@@ -1,0 +1,73 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template basic_cmultiset</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../../index.html" title="Chapter 1. Boost.Intrusive">
+<link rel="up" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_cset_hpp" title="Header &lt;boost/persistent/intrusive/basic_cset.hpp&gt;">
+<link rel="prev" href="basic_cset.html" title="Class template basic_cset">
+<link rel="next" href="../basic_cset.html" title="Class template basic_cset">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basic_cset.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_cset_hpp"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../basic_cset.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.persistent.intrusive.basic_cmultiset"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template basic_cmultiset</span></h2>
+<p>boost::persistent::intrusive::basic_cmultiset</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_cset_hpp" title="Header &lt;boost/persistent/intrusive/basic_cset.hpp&gt;">boost/persistent/intrusive/basic_cset.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+         <span class="bold"><strong>typename</strong></span> Compare = std::less&lt;T&gt;, 
+         <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="basic_cmultiset.html" title="Class template basic_cmultiset">basic_cmultiset</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a class="link" href="basic_cmultiset.html#boost.persistent.intrusive.basic_cmultisetconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="basic_cmultiset.html#id2653594-bb">basic_cmultiset</a>(Compare <span class="bold"><strong>const</strong></span> &amp; = Compare());
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; 
+    <a class="link" href="basic_cmultiset.html#id2653603-bb">basic_cmultiset</a>(Iterator, Iterator, Compare <span class="bold"><strong>const</strong></span> &amp; = Compare());
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id3017610"></a><h2>Description</h2>
+<div class="refsect2" lang="en">
+<a name="id3017614"></a><h3>
+<a name="boost.persistent.intrusive.basic_cmultisetconstruct-copy-destruct"></a><code class="computeroutput">basic_cmultiset</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li><pre class="literallayout"><a name="id2653594-bb"></a>basic_cmultiset(Compare <span class="bold"><strong>const</strong></span> &amp; comp = Compare());</pre></li>
+<li><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; 
+  <a name="id2653603-bb"></a>basic_cmultiset(Iterator begin, Iterator end, 
+                  Compare <span class="bold"><strong>const</strong></span> &amp; comp = Compare());</pre></li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basic_cset.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_cset_hpp"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../basic_cset.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

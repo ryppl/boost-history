@@ -1,0 +1,786 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Using Boost.Persistent</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Intrusive">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Intrusive">
+<link rel="prev" href="tutorials.html" title="Tutorials">
+<link rel="next" href="configuring.html" title="Configuring Boost.Persistent">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorials.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="configuring.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="persistent.using"></a><a class="link" href="using.html" title="Using Boost.Persistent"> Using Boost.Persistent</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="using.html#persistent.using.transactions"> Transactions</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.locators"> Locators</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.finalizers"> Finalizers</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.ccontainers"> Concurrent Access Containers</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.accessors"> Type accessors</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.pitfalls"> Pitfalls</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.using.transactions"></a><a class="link" href="using.html#persistent.using.transactions" title="Transactions"> Transactions</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="using.html#persistent.using.transactions.nested"> Nested transactions</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.transactions.concurrent"> Concurrent
+        transactions</a></span></dt>
+</dl></div>
+<p>
+        Transactions are used to combine multiple changes of persistent objects to
+        one atomic operation. See <a class="link" href="introduction.html#persistent.introduction.transactions" title="Transactions">this
+        section</a> for an introduction to transactions. A transaction is created
+        by constructing a <code class="computeroutput"><a class="link" href="../boost/persistent/basic_transaction.html" title="Class template basic_transaction">transaction</a></code>
+        object, which binds itself to the current thread. If a new thread is created,
+        operations by this thread are not considered to be part of the transaction,
+        it has to be bound to the thread by calling <code class="computeroutput"><a class="link" href="../boost/persistent/basic_transaction.html#id2655164-bb">transaction::bind()</a></code>
+        first.
+      </p>
+<p>
+        There are two ways to open a transaction scope:
+      </p>
+<p>
+        1. Constructing a <code class="computeroutput"><a class="link" href="../boost/persistent/basic_transaction.html" title="Class template basic_transaction">transaction</a></code>
+        object 
+</p>
+<pre class="programlisting"><span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+<span class="comment">//modify persistent objects
+</span><span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+</pre>
+<p>
+      </p>
+<p>
+        If between construction of the <span class="emphasis"><em>transaction</em></span> object and
+        the call to <code class="computeroutput"><a class="link" href="../boost/persistent/basic_transaction.html#id2655050-bb">commit()</a></code>
+        there is an exception thrown that can not be handled inside the scope, commit()
+        won't get called and all changes made are undone.
+      </p>
+<p>
+        2. Creating an <span class="emphasis"><em>atomic</em></span> scope 
+</p>
+<pre class="programlisting"><span class="identifier">atomic</span><span class="special">{</span>
+  <span class="comment">//modify persistent objects
+</span><span class="special">}</span> <span class="identifier">retry</span><span class="special">;</span>
+</pre>
+<p>
+      </p>
+<p>
+        In the latter code snippet, BOOST_PERSISTENT_ATOMIC and BOOST_PERSISTENT_RETRY
+        are defined to atomic and retry, respectively. It is equivalent to 1, with
+        the exception of concurrent transactions. See below for more information.
+      </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.transactions.nested"></a><a class="link" href="using.html#persistent.using.transactions.nested" title="Nested transactions"> Nested transactions</a>
+</h4></div></div></div>
+<p>
+          Transactions can be nested:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">transaction</span> <span class="identifier">outer</span><span class="special">;</span>
+
+<span class="identifier">transaction</span> <span class="identifier">inner</span><span class="special">;</span>
+<span class="comment">//modify persistent objects
+</span><span class="identifier">inner</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+
+<span class="identifier">outer</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+</pre>
+<p>
+        </p>
+<p>
+          <span class="emphasis"><em>inner.commit()</em></span> makes the changes made by <span class="emphasis"><em>inner</em></span>
+          part of the <span class="emphasis"><em>outer</em></span> transaction. If the call to <span class="emphasis"><em>inner.commit()</em></span>
+          is omitted, all changes made in that nested transactions are undone, without
+          affecting the outer transaction.
+        </p>
+<p>
+          This is especially useful if a function that creates its own transaction
+          scope should be called from within another transaction scope.
+        </p>
+<p>
+          Note that nested transactions are much more efficient than root transactions,
+          because they require much less I/O operations since they are not durable
+          (as defined by ACID transactions) in any case, commit or rollback, until
+          the outer transaction is committed. So another use case of nested transactions
+          is to use nested transactions to maintain consistency at application runtime,
+          with commits of the (large) outer transaction representing the savepoints
+          of the application.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.transactions.concurrent"></a><a class="link" href="using.html#persistent.using.transactions.concurrent" title="Concurrent transactions"> Concurrent
+        transactions</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="using.html#persistent.using.transactions.concurrent.optimistic">
+          vs. pessimistic transactions</a></span></dt></dl></div>
+<p>
+          Transactions may run concurrently. It is guaranteed that no transaction
+          is successfully committed that would result in a state that is different
+          from the state that would have been achieved if all transactions were executed
+          in sequence.
+        </p>
+<p>
+          If a transaction conflicts with another, concurrent, transaction a <code class="computeroutput"><a class="link" href="../boost/persistent/isolation_exception.html" title="Struct isolation_exception">isolation_exception</a></code>
+          is thrown, which needs to be handled by user code. The standard behaviour
+          is to repeat a tranasction until it was successfully committed. To achieve
+          this standard behaviour, Boost.Persistent provides two macros, BOOST_PERSISTENT_ATOMIC
+          and BOOST_PERSISTENT_RETRY, which can be used instead of constructing a
+          <code class="computeroutput"><a class="link" href="../boost/persistent/basic_transaction.html" title="Class template basic_transaction">transaction</a></code>
+          object.
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">atomic</span> <span class="identifier">BOOST_PERSISTENT_ATOMIC</span>
+<span class="preprocessor">#define</span> <span class="identifier">retry</span> <span class="identifier">BOOST_PERSISTENT_RETRY</span>
+
+<span class="identifier">atomic</span><span class="special">{</span>
+  <span class="comment">//modify persistent objects
+</span><span class="special">}</span><span class="identifier">retry</span><span class="special">;</span>
+</pre>
+<p>
+        </p>
+<p>
+          atomic{} retry; expands to code equivalent to the following:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">repeat</span><span class="special">:</span>
+  <span class="keyword">try</span><span class="special">{</span>
+    <span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+    <span class="comment">//modify persistent objects
+</span>    <span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+  <span class="special">}</span><span class="keyword">catch</span><span class="special">(</span><span class="identifier">isolation_exception</span> <span class="special">&amp;){</span>
+    <span class="keyword">goto</span> <span class="identifier">repeat</span><span class="special">;</span>
+  <span class="special">}</span>
+</pre>
+<p>
+        </p>
+<p>
+          Note that the contents of the <span class="emphasis"><em>atomic</em></span> scope can be
+          repeated multiple times if isolation_exceptions are thrown, so the code
+          inside the scope should not have any side effects that are not repeatable.
+        </p>
+<p>
+          For example, if the following code snippet:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">InputIterator</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">InputIterator</span> <span class="identifier">it</span><span class="special">){</span>
+  <span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+  <span class="special">...</span>
+  <span class="identifier">persobj</span><span class="special">-&gt;</span><span class="identifier">use_value</span><span class="special">(*</span><span class="identifier">it</span><span class="special">++);</span>
+  <span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+<p>
+          should be changed to handle concurrent transactions, the iterator increment
+          should be moved outside of the transaction scope:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">InputIterator</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">InputIterator</span> <span class="identifier">it</span><span class="special">){</span>
+  <span class="identifier">atomic</span><span class="special">{</span>
+    <span class="special">...</span>
+    <span class="identifier">persobj</span><span class="special">-&gt;</span><span class="identifier">use_value</span><span class="special">(*</span><span class="identifier">it</span><span class="special">);</span>
+  <span class="special">}</span><span class="identifier">retry</span><span class="special">;</span>
+  <span class="special">++</span><span class="identifier">it</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+<p>
+          Only if the transaction is successful, the side effects of f() are applied.
+        </p>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.using.transactions.concurrent.optimistic"></a><a class="link" href="using.html#persistent.using.transactions.concurrent.optimistic" title="vs. pessimistic transactions">
+          vs. pessimistic transactions</a>
+</h5></div></div></div></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.using.locators"></a><a class="link" href="using.html#persistent.using.locators" title="Locators"> Locators</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="using.html#persistent.using.locators.loc"> loc</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.locators.scoped_loc"> scoped_loc</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.locators.shared_loc"> shared_loc</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.locators.weak_loc"> weak_loc</a></span></dt>
+</dl></div>
+<p>
+        See <a class="link" href="introduction.html#persistent.introduction.locators" title="Locators (vs. pointers)">the introduction</a>
+        for a definition of a locator. This section describes the various types of
+        locators provided by Boost.Persistent.
+      </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.locators.loc"></a><a class="link" href="using.html#persistent.using.locators.loc" title="loc"> loc</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="using.html#persistent.using.locators.loc.pinning"> Object pinning</a></span></dt></dl></div>
+<p>
+          <code class="computeroutput"><a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">loc</a></code> is a locator
+          equivalent to a C++ raw pointer: It does not manage the lifetime of the
+          referenced persistent object. This introduces typical problems of raw pointers
+          like leaks and "dangling" pointers, but extended to the persistent
+          space, i.e. disk space leaks and undefined behaviour even after an application
+          restart due to a dangling locator in the database. Locators that manage
+          the lifetime of the referenced object should be preferred, but <span class="emphasis"><em>locs</em></span>
+          have their use cases, especially in controlled environments like containers,
+          and for object pinning (see below).
+        </p>
+<p>
+          Objects handled by a <span class="emphasis"><em>loc</em></span> are created by constructing
+          a loc and passing a new C++ object to it. They are deleted by calling
+          <code class="computeroutput"><a class="link" href="../boost/persistent/basic_loc.html#id2654219-bb">remove() loc::remove()</a></code>.
+          remove() is the equivalent to the C++ <span class="emphasis"><em>delete</em></span> keyword:
+          It calls the objects finalizer and erases the object from the database.
+          Accessing a (non-existent) persistent object that was removed results in
+          undefined behaviour.
+        </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.using.locators.loc.pinning"></a><a class="link" href="using.html#persistent.using.locators.loc.pinning" title="Object pinning"> Object pinning</a>
+</h5></div></div></div>
+<p>
+            <span class="emphasis"><em>locs</em></span> can be used to form the <span class="emphasis"><em>database
+            roots</em></span> of a database.
+          </p>
+<p>
+            Most objects of an object database can be accessed by retrieving a locator
+            to them from other persistent objects and accessing them through the
+            locator. However, at least one object needs to be reachable from the
+            start, often called the <span class="emphasis"><em>entry point</em></span> or the <span class="emphasis"><em>root</em></span>
+            of an object graph, otherwise the whole stored graph would be unreachable.
+          </p>
+<p>
+            This can be accomplished by calling <code class="computeroutput"><a class="link" href="../boost/persistent/basic_loc.html#id2654096-bb">pin()</a></code>
+            on a locator. It associates an object with a type, by default the object's
+            own type. The object can be retrieved later, also after an application
+            restart, by passing the same type to <code class="computeroutput"><a class="link" href="../boost/persistent/basic_loc.html#id2654655-bb">pinned()</a></code>.
+          </p>
+<p>
+            For example:
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">loc</span><span class="special">=</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;::</span><span class="identifier">pinned</span><span class="special">();</span>
+<span class="keyword">if</span><span class="special">(!</span><span class="identifier">loc</span><span class="special">){</span>
+  <span class="identifier">loc</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">pers_type</span><span class="special">);</span>
+  <span class="identifier">loc</span><span class="special">.</span><span class="identifier">pin</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+          </p>
+<p>
+            This code snippet gets a locator to a previously stored object of type
+            <span class="emphasis"><em>pers_type</em></span>. If no object was previously associated
+            with <span class="emphasis"><em>pers_type</em></span>, a new object is created and associated
+            with that type.
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.locators.scoped_loc"></a><a class="link" href="using.html#persistent.using.locators.scoped_loc" title="scoped_loc"> scoped_loc</a>
+</h4></div></div></div>
+<p>
+          A <code class="computeroutput"><a class="link" href="../boost/persistent/basic_scoped_loc.html" title="Class template basic_scoped_loc">scoped_loc</a></code>
+          exclusively holds a reference to a persistent object, and removes it from
+          that database as soon as itself is removed from the database. It is not
+          CopyConstructible or Assignable. Note that a <span class="emphasis"><em>scoped_loc</em></span>
+          implements a <span class="emphasis"><em>finalizer</em></span>, so its finalizer needs to
+          called to be effective, see <a class="link" href="using.html#persistent.using.finalizers" title="Finalizers">Finalizers</a>
+          for more information.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.locators.shared_loc"></a><a class="link" href="using.html#persistent.using.locators.shared_loc" title="shared_loc"> shared_loc</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="using.html#persistent.using.locators.shared_loc.refcycles">
+          Reference cycles</a></span></dt></dl></div>
+<p>
+          A <code class="computeroutput">shared_loc</code>,
+          like a <span class="emphasis"><em>scoped_loc</em></span>, automatically removes objects from
+          the database as soon as itself is removed from the database, but is able
+          to share the object ownership with other <span class="emphasis"><em>shared_locs</em></span>
+          to the same object. Only when the last <span class="emphasis"><em>shared_loc</em></span>
+          to an object is removed from the database, the referenced object will be
+          removed as well.
+        </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.using.locators.shared_loc.refcycles"></a><a class="link" href="using.html#persistent.using.locators.shared_loc.refcycles" title="Reference cycles">
+          Reference cycles</a>
+</h5></div></div></div>
+<p>
+            A resource manager may choose to implement <span class="emphasis"><em>shared_locs</em></span>
+            by reference counting (the default resource manager does). The downside
+            of reference counting is that <span class="emphasis"><em>reference cycles</em></span> are
+            not detected, i.e. if an object is referenced by an object which it references
+            itself, even if not directly but through multiple other objects, the
+            <span class="emphasis"><em>cycle</em></span> will never be removed from the database.
+            <span class="emphasis"><em>weak_locs</em></span> can be used to "break" <span class="emphasis"><em>reference
+            cycles</em></span>.
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.locators.weak_loc"></a><a class="link" href="using.html#persistent.using.locators.weak_loc" title="weak_loc"> weak_loc</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="using.html#persistent.using.locators.weak_loc.expired"> expired()/lock()
+          behaviour</a></span></dt></dl></div>
+<p>
+          A <code class="computeroutput"><a class="link" href="../boost/persistent/basic_weak_loc.html" title="Class template basic_weak_loc">weak_loc</a></code>
+          can reference persistent objects that are managed by a <span class="emphasis"><em>shared_loc</em></span>,
+          with the difference that <span class="emphasis"><em>weak_locs</em></span> do not constitute
+          a reference that keeps a persistent object from being removed from the
+          database. This means that an object can be removed from the database if
+          the last <span class="emphasis"><em>shared_loc</em></span> referencing it is removed, even
+          though a <span class="emphasis"><em>weak_loc</em></span> referencing the object still exists.
+          <code class="computeroutput"><a class="link" href="../boost/persistent/basic_weak_loc.html#id2655555-bb">expired()</a></code>
+          will return <span class="emphasis"><em>true</em></span> if that is the case, and <code class="computeroutput"><a class="link" href="../boost/persistent/basic_weak_loc.html#id2655626-bb">lock()</a></code> will
+          return an empty <span class="emphasis"><em>shared_loc</em></span>.
+        </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.using.locators.weak_loc.expired"></a><a class="link" href="using.html#persistent.using.locators.weak_loc.expired" title="expired()/lock() behaviour"> expired()/lock()
+          behaviour</a>
+</h5></div></div></div>
+<p>
+            The behaviour of expired() and lock() may differ slightly from the behaviour
+            one might expect after using boost::weak_ptr. When a transaction removes
+            the last <span class="emphasis"><em>shared_loc</em></span> to a persistent object, the
+            return value of <code class="computeroutput"><a class="link" href="../boost/persistent/basic_weak_loc.html#id2655555-bb">weak_loc::expired()</a></code>
+            is undefined in the current transaction until the transaction is committed.
+            Effectively that means that an object may still be reachable through
+            a <span class="emphasis"><em>weak_loc</em></span> even though there is no <span class="emphasis"><em>shared_loc</em></span>
+            left that is referencing the object. However, it is specified that the
+            value returned by expired() may not change spontaniously: The value either
+            changes by removing the last <span class="emphasis"><em>shared_loc</em></span> or by committing
+            the transaction.
+          </p>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.using.finalizers"></a><a class="link" href="using.html#persistent.using.finalizers" title="Finalizers"> Finalizers</a>
+</h3></div></div></div>
+<p>
+        <span class="emphasis"><em>Finalizers</em></span> are functions that get called when a persistent
+        object is removed from the database. This might either be triggered by calling
+        <code class="computeroutput"><a class="link" href="../boost/persistent/basic_loc.html#id2654219-bb">basic_loc::remove()</a></code>
+        or the object being removed by a locator managing its lifetime. It is the
+        persistent equivalent of a C++ destructor and has the purpose of cleaning
+        up persistent resources, in particular calling <span class="emphasis"><em>basic_loc::remove()</em></span>
+        on other persistent objects.
+      </p>
+<p>
+        An object implements a <span class="emphasis"><em>finalizer</em></span> by implementing a friend
+        function called <span class="emphasis"><em>finalize()</em></span>: 
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">pers_type</span><span class="special">{</span>
+	<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">finalize</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">pers_obj</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        Note that <span class="emphasis"><em>pers_obj</em></span> is passed <span class="emphasis"><em>const</em></span>
+        to the <span class="emphasis"><em>finalizer</em></span>, as a <span class="emphasis"><em>finalizer</em></span>
+        may not make any changes to persistent objects. Any attempt to access other
+        persistent objects through locators will result in a <code class="computeroutput"><a class="link" href="../boost/persistent/finalize_error.html" title="Struct finalize_error">finalize_error</a></code>
+        exception.
+      </p>
+<p>
+        A finalizer can have side effects, but note that <span class="emphasis"><em>finalizers</em></span>
+        may be called more than once until the persistent object is finally removed
+        from the database. This results from the fact that a transaction may still
+        fail due to an <code class="computeroutput"><a class="link" href="../boost/persistent/isolation_exception.html" title="Struct isolation_exception">isolation_exception</a></code>
+        after a finalizer has been called. When there is another attempt to remove
+        the object from the database the finalizer will get called again.
+      </p>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.using.ccontainers"></a><a class="link" href="using.html#persistent.using.ccontainers" title="Concurrent Access Containers"> Concurrent Access Containers</a>
+</h3></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.using.accessors"></a><a class="link" href="using.html#persistent.using.accessors" title="Type accessors"> Type accessors</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="using.html#persistent.using.accessors.clone"> clone()</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.accessors.equal"> equal()</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.accessors.finalize"> finalize()</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.accessors.serialize"> serialize()</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.accessors.load"> load()</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.accessors.save"> save()</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.accessors.reconstruct"> reconstruct()</a></span></dt>
+</dl></div>
+<p>
+        The only <span class="bold"><strong>requirement</strong></span> on persistent types
+        is to model <span class="emphasis"><em>Serializable</em></span> as defined by Boost.Persistent.
+        However, to improve performance of certain operations performed by Boost.Persistence,
+        one or more of the following friend functions can be implemented for persistent
+        types that are critical to overall performance:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">pers_type</span><span class="special">{</span>
+  <span class="keyword">friend</span> <span class="identifier">pers_type</span> <span class="special">*</span><span class="identifier">clone</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+  <span class="keyword">friend</span> <span class="keyword">bool</span> <span class="identifier">equal</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o1</span><span class="special">,</span><span class="identifier">pers_typ</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o2</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+  <span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">finalize</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+  <span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+
+  <span class="comment">//instead of serialize():
+</span>  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+  <span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">save</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+  <span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">load</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+
+  <span class="comment">//instead of load()
+</span>  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+  <span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">construct</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">*&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.accessors.clone"></a><a class="link" href="using.html#persistent.using.accessors.clone" title="clone()"> clone()</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">friend</span> <span class="identifier">pers_type</span> <span class="special">*</span><span class="identifier">clone</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span></pre>
+<p>
+        </p>
+<p>
+          <span class="emphasis"><em>clone</em></span> returns a <span class="emphasis"><em>deep copy</em></span> of
+          <span class="emphasis"><em>o</em></span>. That means that not only is <span class="emphasis"><em>o</em></span>
+          copied, but all objects contained by <span class="emphasis"><em>o</em></span> are copied
+          as well.
+        </p>
+<p>
+          For example: 
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">pers_type</span><span class="special">{</span>
+  <span class="identifier">other_type</span> <span class="special">*</span><span class="identifier">other</span><span class="special">;</span>
+  <span class="keyword">friend</span> <span class="identifier">pers_type</span> <span class="special">*</span><span class="identifier">clone</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">){</span>
+    <span class="identifier">pers_type</span> <span class="special">*</span><span class="identifier">c</span><span class="special">=</span><span class="keyword">new</span> <span class="identifier">pers_type</span><span class="special">;</span>
+    <span class="identifier">c</span><span class="special">-&gt;</span><span class="identifier">other</span><span class="special">=</span><span class="keyword">new</span> <span class="identifier">other_type</span><span class="special">(*</span><span class="identifier">o</span><span class="special">.</span><span class="identifier">other</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="identifier">c</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+          The original object and the clone may not share any data.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.accessors.equal"></a><a class="link" href="using.html#persistent.using.accessors.equal" title="equal()"> equal()</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">friend</span> <span class="keyword">bool</span> <span class="identifier">equal</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o1</span><span class="special">,</span><span class="identifier">pers_typ</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o2</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span></pre>
+<p>
+        </p>
+<p>
+          <span class="emphasis"><em>equal</em></span> performs a <span class="emphasis"><em>deep comparison</em></span>
+          for equality between <span class="emphasis"><em>o1</em></span> and <span class="emphasis"><em>o2</em></span>.
+          This means <span class="emphasis"><em>o1</em></span> is compared to <span class="emphasis"><em>o2</em></span>
+          by value, including all objects that are contained in <span class="emphasis"><em>o1</em></span>
+          and <span class="emphasis"><em>o2</em></span>.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.accessors.finalize"></a><a class="link" href="using.html#persistent.using.accessors.finalize" title="finalize()"> finalize()</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">finalize</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span></pre>
+<p>
+        </p>
+<p>
+          <span class="emphasis"><em>finalize(T const &amp;o,deep_tag)</em></span> calls <span class="emphasis"><em>finalize(o)</em></span>
+          and <span class="emphasis"><em>finalize(x)</em></span> for all objects that are contained
+          in <span class="emphasis"><em>o</em></span>.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.accessors.serialize"></a><a class="link" href="using.html#persistent.using.accessors.serialize" title="serialize()"> serialize()</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span></pre>
+<p>
+        </p>
+<p>
+          <span class="emphasis"><em>serialize</em></span> (de)serializes all data to(from) <span class="emphasis"><em>ar</em></span>,
+          including all objects contained by <span class="emphasis"><em>o</em></span>. (i.e. the whole
+          object graph represented by <span class="emphasis"><em>o</em></span>). No pointer tracking
+          is supported, serialize() needs to generate a flat representation of the
+          whole graph.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.accessors.load"></a><a class="link" href="using.html#persistent.using.accessors.load" title="load()"> load()</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">load</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span></pre>
+<p>
+        </p>
+<p>
+          Can be implemented along with <span class="emphasis"><em>save</em></span> instead of <span class="emphasis"><em>serialize</em></span>
+          to split the serializing into saving and loading.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.accessors.save"></a><a class="link" href="using.html#persistent.using.accessors.save" title="save()"> save()</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">save</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span></pre>
+<p>
+        </p>
+<p>
+          Can be implemented along with <span class="emphasis"><em>load</em></span> instead of <span class="emphasis"><em>serialize</em></span>
+          to split the serializing into saving and loading.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.accessors.reconstruct"></a><a class="link" href="using.html#persistent.using.accessors.reconstruct" title="reconstruct()"> reconstruct()</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">construct</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">*&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span></pre>
+<p>
+        </p>
+<p>
+          Allocates and deserializes a new object of type <span class="emphasis"><em>pers_type</em></span>
+          and stores a pointer to it in <span class="emphasis"><em>o</em></span>.
+        </p>
+<p>
+          Can be implemented instead of <span class="emphasis"><em>load</em></span> to reconstruct
+          <span class="emphasis"><em>o</em></span> based on data serialized by <span class="emphasis"><em>save</em></span>.
+          For example, <span class="emphasis"><em>pers_type</em></span> may be the base class of multiple
+          derived classes and <span class="emphasis"><em>save</em></span> has saved data that represents
+          the type actually serialized. <span class="emphasis"><em>construct</em></span> allocates
+          the correct type based on that data and deserializes the object from <span class="emphasis"><em>ar</em></span>.
+        </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.using.pitfalls"></a><a class="link" href="using.html#persistent.using.pitfalls" title="Pitfalls"> Pitfalls</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="using.html#persistent.using.pitfalls.tbound"> Transaction boundaries</a></span></dt>
+<dt><span class="section"><a href="using.html#persistent.using.pitfalls.lifetime"> Lifetime of instances</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.pitfalls.tbound"></a><a class="link" href="using.html#persistent.using.pitfalls.tbound" title="Transaction boundaries"> Transaction boundaries</a>
+</h4></div></div></div>
+<p>
+          Instances of persistent objects obtained under one transaction shall not
+          be used in another transaction.
+        </p>
+<p>
+          The result of dereferencing a locator may be saved for efficiency, for
+          example instead of: 
+</p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="identifier">obj</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+<span class="identifier">obj</span><span class="special">-&gt;</span><span class="identifier">b</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+</pre>
+<p>
+        </p>
+<p>
+          one could write:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">inst</span><span class="special">=*</span><span class="identifier">obj</span><span class="special">;</span>
+<span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+<span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">b</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+</pre>
+<p>
+        </p>
+<p>
+          The first code snippet does not cause the persistent object to be loaded
+          from disk twice, since objects are cached, but it is less efficient than
+          the second code snippet.
+        </p>
+<p>
+          However, instances may not be used across transaction boundaries:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">inst</span><span class="special">;</span>
+
+<span class="special">{</span>
+  <span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+  <span class="identifier">inst</span><span class="special">=*</span><span class="identifier">obj</span><span class="special">;</span>
+  <span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+  <span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+<span class="special">{</span>
+  <span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+  <span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">b</span><span class="special">=</span><span class="number">1</span><span class="special">;</span> <span class="comment">//error
+</span>  <span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+<p>
+          The resulting object state of this is undefined.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.using.pitfalls.lifetime"></a><a class="link" href="using.html#persistent.using.pitfalls.lifetime" title="Lifetime of instances"> Lifetime of instances</a>
+</h4></div></div></div>
+<p>
+          Boost.Persistent is free to remove an instance not referenced from a shared_ptr
+          from memory at any time.
+        </p>
+<p>
+          For example: 
+</p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="keyword">int</span> <span class="special">&amp;</span><span class="identifier">a</span><span class="special">=</span><span class="identifier">obj</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">;</span> <span class="comment">//error
+</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span> 
+</pre>
+<p>
+        </p>
+<p>
+          A locator references an object that may or may not be currently in memory,
+          it is not a shared_ptr that keeps an object in memory. So taking a C++
+          reference to a member of <span class="emphasis"><em>obj</em></span> is undefined.
+        </p>
+<p>
+          Instead, the object must be kept in memory by a shared_ptr if references
+          or pointers are to be taken to the instance: 
+</p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">inst</span><span class="special">=*</span><span class="identifier">obj</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="special">&amp;</span><span class="identifier">a</span><span class="special">=</span><span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">;</span> <span class="comment">//ok
+</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+</pre>
+<p>
+        </p>
+<p>
+          A similar, but less obvious example is iterators. An iterator into a container
+          that is part of a persistent object also is a reference into a persistent
+          object, which may turn into a "dangling" reference if the persistent
+          object is moved from memory to disk.
+        </p>
+<p>
+          For example:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">pers_type</span><span class="special">{</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vec</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(){</span>
+  <span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">it</span><span class="special">=</span><span class="identifier">obj</span><span class="special">-&gt;</span><span class="identifier">vec</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="comment">//error
+</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="special">*</span><span class="identifier">it</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+<p>
+          After obtaining the iterator, Boost.Persistent is free to move the persistent
+          object back to disk, invalidating <span class="emphasis"><em>it</em></span>. If iterators
+          into persistent object are to be used, the persistent object must be kept
+          in memory by a shared_ptr:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(){</span>
+  <span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">;</span>
+  <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">inst</span><span class="special">=*</span><span class="identifier">obj</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">it</span><span class="special">=</span><span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">vec</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="comment">//ok
+</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="special">*</span><span class="identifier">it</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorials.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="configuring.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

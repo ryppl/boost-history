@@ -1,0 +1,151 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template basic_scoped_loc</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Intrusive">
+<link rel="up" href="../../persistent/reference.html#header.boost.persistent.basic_scoped_loc_hpp" title="Header &lt;boost/persistent/basic_scoped_loc.hpp&gt;">
+<link rel="prev" href="basic_loc.html" title="Class template basic_loc">
+<link rel="next" href="basic_transaction.html" title="Class template basic_transaction">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basic_loc.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.basic_scoped_loc_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_transaction.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.persistent.basic_scoped_loc"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template basic_scoped_loc</span></h2>
+<p>boost::persistent::basic_scoped_loc &#8212; Holds a locator with exclusive ownership. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../persistent/reference.html#header.boost.persistent.basic_scoped_loc_hpp" title="Header &lt;boost/persistent/basic_scoped_loc.hpp&gt;">boost/persistent/basic_scoped_loc.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="basic_scoped_loc.html" title="Class template basic_scoped_loc">basic_scoped_loc</a> : <span class="bold"><strong>private</strong></span> noncopyable {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> T <a name="boost.persistent.basic_scoped_loc.element_type"></a>element_type;
+
+  <span class="emphasis"><em>// <a class="link" href="basic_scoped_loc.html#boost.persistent.basic_scoped_locconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="basic_scoped_loc.html#id2654918-bb">basic_scoped_loc</a>();
+  <a class="link" href="basic_scoped_loc.html#id2654926-bb">basic_scoped_loc</a>(T *);
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Tag&gt; <a class="link" href="basic_scoped_loc.html#id2654985-bb">basic_scoped_loc</a>(T *, Tag);
+  <a class="link" href="basic_scoped_loc.html#id2655007-bb">basic_scoped_loc</a>(<a class="link" href="basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp;);
+
+  <span class="emphasis"><em>// <a class="link" href="basic_scoped_loc.html#id2654772-bb">public member functions</a></em></span>
+  <span class="type">shared_ptr&lt; T &gt;</span> <a class="link" href="basic_scoped_loc.html#id2654776-bb"><span class="bold"><strong>operator</strong></span>*</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">shared_ptr&lt; T &gt;</span> <a class="link" href="basic_scoped_loc.html#id2654787-bb"><span class="bold"><strong>operator</strong></span>-&gt;</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">shared_ptr&lt; T <span class="bold"><strong>const</strong></span>  &gt;</span> <a class="link" href="basic_scoped_loc.html#id2654798-bb">read</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">shared_ptr&lt; T &gt;</span> <a class="link" href="basic_scoped_loc.html#id2654809-bb">write</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><a class="link" href="basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp;</span> <a class="link" href="basic_scoped_loc.html#id2654820-bb">get</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_scoped_loc.html#id2654837-bb">reset</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_scoped_loc.html#id2654848-bb">reset</a>(T *) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_scoped_loc.html#id2654864-bb">reset</a>(<a class="link" href="basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_scoped_loc.html#id2654883-bb">swap</a>(<a class="link" href="basic_scoped_loc.html" title="Class template basic_scoped_loc">basic_scoped_loc</a> &amp;) ;
+  <a class="link" href="basic_scoped_loc.html#id2654906-bb"><span class="bold"><strong>operator</strong></span> unspecified_bool_type</a>() <span class="bold"><strong>const</strong></span>;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id3022016"></a><h2>Description</h2>
+<div class="refsect2" lang="en">
+<a name="id3022020"></a><h3>
+<a name="boost.persistent.basic_scoped_locconstruct-copy-destruct"></a><code class="computeroutput">basic_scoped_loc</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><a name="id2654918-bb"></a>basic_scoped_loc();</pre>
+<p>Constructs an empty basic_scoped_loc</p>
+<p>Throws: Nothing </p>
+</li>
+<li>
+<pre class="literallayout"><a name="id2654926-bb"></a>basic_scoped_loc(T * p);</pre>
+<p>Constructs a basic_scoped_loc to a new database object. Takes ownership of p. If an exception is thrown, delete p is called.</p>
+<p>Throws: </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><code class="computeroutput">no_active_database</code> </p></li>
+<li><p><code class="computeroutput">no_active_transaction</code> </p></li>
+<li><p><code class="computeroutput">finalize_error</code> </p></li>
+<li><p><code class="computeroutput">io_failure</code> </p></li>
+<li><p><code class="computeroutput">thread_resource_error</code> 
+</p></li>
+</ul></div>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">p</code></span></p></td>
+<td><p>Pointer to the new object. </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Tag&gt; <a name="id2654985-bb"></a>basic_scoped_loc(T * p, Tag tag);</pre>TODO. </li>
+<li><pre class="literallayout"><a name="id2655007-bb"></a>basic_scoped_loc(<a class="link" href="basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp; p);</pre></li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id3022210"></a><h3>
+<a name="id2654772-bb"></a><code class="computeroutput">basic_scoped_loc</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="type">shared_ptr&lt; T &gt;</span> <a name="id2654776-bb"></a><span class="bold"><strong>operator</strong></span>*() <span class="bold"><strong>const</strong></span>;</pre>Equivalent to *get(). </li>
+<li>
+<pre class="literallayout"><span class="type">shared_ptr&lt; T &gt;</span> <a name="id2654787-bb"></a><span class="bold"><strong>operator</strong></span>-&gt;() <span class="bold"><strong>const</strong></span>;</pre>Equivalent to get().operator-&gt;(). </li>
+<li>
+<pre class="literallayout"><span class="type">shared_ptr&lt; T <span class="bold"><strong>const</strong></span>  &gt;</span> <a name="id2654798-bb"></a>read() <span class="bold"><strong>const</strong></span>;</pre>Equivalent to get().read(). </li>
+<li>
+<pre class="literallayout"><span class="type">shared_ptr&lt; T &gt;</span> <a name="id2654809-bb"></a>write() <span class="bold"><strong>const</strong></span>;</pre>Equivalent to get().write(). </li>
+<li>
+<pre class="literallayout"><span class="type"><a class="link" href="basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp;</span> <a name="id2654820-bb"></a>get() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Returns the stored locator.</p>
+<p>Throws: Nothing </p>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2654837-bb"></a>reset() ;</pre>Equivalent to basic_scoped_loc().swap(*this). </li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2654848-bb"></a>reset(T * p) ;</pre>Equivalent to basic_scoped_loc(p).swap(*this). </li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2654864-bb"></a>reset(<a class="link" href="basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp; p) ;</pre>DOCTODO. </li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2654883-bb"></a>swap(<a class="link" href="basic_scoped_loc.html" title="Class template basic_scoped_loc">basic_scoped_loc</a> &amp; o) ;</pre>
+<p>Exchanges the contents of the two basic_scoped_locs.</p>
+<p>Throws: Nothing </p>
+</li>
+<li>
+<pre class="literallayout"><a name="id2654906-bb"></a><span class="bold"><strong>operator</strong></span> unspecified_bool_type() <span class="bold"><strong>const</strong></span>;</pre>Returns an unspecified value that evaluates to "true" if the locator is not empty. </li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basic_loc.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.basic_scoped_loc_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_transaction.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
