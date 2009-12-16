@@ -90,6 +90,42 @@ namespace boost
 {
   namespace chrono
   {
+  
+
+      run_timer::run_timer( system::error_code & ec  )
+        : m_places(m_default_places), m_os(m_cout()) { start(ec); }
+      run_timer::run_timer( std::ostream & os,
+        system::error_code & ec  )
+        : m_places(m_default_places), m_os(os) { start(ec); }
+
+      run_timer::run_timer( const std::string & format,
+        system::error_code & ec  )
+        : m_places(m_default_places), m_os(m_cout()), m_format(format) { start(ec); }
+      run_timer::run_timer( std::ostream & os, const std::string & format,
+        system::error_code & ec  )
+        : m_places(m_default_places), m_os(os), m_format(format) { start(ec); }
+
+      run_timer::run_timer( const std::string & format, int places,
+        system::error_code & ec  )
+        : m_places(places), m_os(m_cout()), m_format(format) { start(ec); }
+      run_timer::run_timer( std::ostream & os, const std::string & format,
+        int places, system::error_code & ec  )
+        : m_places(places), m_os(os), m_format(format) { start(ec); }
+
+      run_timer::run_timer( int places,
+        system::error_code & ec  )
+        : m_places(places), m_os(m_cout()) { start(ec); }
+      run_timer::run_timer( std::ostream & os, int places,
+        system::error_code & ec  )
+        : m_places(places), m_os(os) { start(ec); }
+
+      run_timer::run_timer( int places, const std::string & format,
+        system::error_code & ec  )
+        : m_places(places), m_os(m_cout()), m_format(format) { start(ec); }
+      run_timer::run_timer( std::ostream & os, int places, const std::string & format,
+        system::error_code & ec  )
+        : m_places(places), m_os(os), m_format(format) { start(ec); }
+
     //  run_timer::report  -------------------------------------------------------------//
 
     void run_timer::report( system::error_code & ec )
