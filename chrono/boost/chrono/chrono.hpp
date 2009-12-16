@@ -447,8 +447,8 @@ namespace chrono {
       static BOOST_CONSTEXPR Rep m_min_imp(boost::true_type)  {return zero();}
   public:
       static BOOST_CONSTEXPR Rep zero() {return Rep(0);}
-      static BOOST_CONSTEXPR Rep max()  {return std::numeric_limits<Rep>::max();}
-      static BOOST_CONSTEXPR Rep min()  {return m_min_imp(boost::is_unsigned<Rep>());}
+      static BOOST_CONSTEXPR Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return (std::numeric_limits<Rep>::max)();}
+      static BOOST_CONSTEXPR Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return m_min_imp(boost::is_unsigned<Rep>());}
   };
 
 }  // namespace chrono
@@ -560,8 +560,8 @@ namespace chrono {
         // 20.9.3.4 duration special values [time.duration.special]
 
         static BOOST_CONSTEXPR duration zero() {return duration(duration_values<rep>::zero());}
-        static BOOST_CONSTEXPR duration min()  {return duration(duration_values<rep>::min());}
-        static BOOST_CONSTEXPR duration max()  {return duration(duration_values<rep>::max());}
+        static BOOST_CONSTEXPR duration min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return duration((duration_values<rep>::min)());}
+        static BOOST_CONSTEXPR duration max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return duration((duration_values<rep>::max)());}
     };
 
 //----------------------------------------------------------------------------//
@@ -813,8 +813,8 @@ template <class Clock, class Duration>
 
       // special values
 
-      static BOOST_CONSTEXPR time_point min() {return time_point(duration::min());}
-      static BOOST_CONSTEXPR time_point max() {return time_point(duration::max());}
+      static BOOST_CONSTEXPR time_point min BOOST_PREVENT_MACRO_SUBSTITUTION () {return time_point((duration::min)());}
+      static BOOST_CONSTEXPR time_point max BOOST_PREVENT_MACRO_SUBSTITUTION () {return time_point((duration::max)());}
   };
 
 //----------------------------------------------------------------------------//
