@@ -99,47 +99,38 @@ namespace boost
 
     class BOOST_CHRONO_DECL run_timer : public process_timer
     {
+      // every function making use of inlined functions of class string are not inlined to avoid DLL issues
     public:
 
       // each constructor form has two overloads to avoid a visible default to
       // std::cout, which in turn would require including <iostream>, with its
       // high associated cost, even when the standard streams are not used.
 
-      explicit run_timer( system::error_code & ec = system::throws )
-        : m_places(m_default_places), m_os(m_cout()) { start(ec); }
+      explicit run_timer( system::error_code & ec = system::throws );
       explicit run_timer( std::ostream & os,
-        system::error_code & ec = system::throws )
-        : m_places(m_default_places), m_os(os) { start(ec); }
+        system::error_code & ec = system::throws );
 
       explicit run_timer( const std::string & format,
-        system::error_code & ec = system::throws )
-        : m_places(m_default_places), m_os(m_cout()), m_format(format) { start(ec); }
+        system::error_code & ec = system::throws );
       explicit run_timer( std::ostream & os, const std::string & format,
-        system::error_code & ec = system::throws )
-        : m_places(m_default_places), m_os(os), m_format(format) { start(ec); }
+        system::error_code & ec = system::throws );
 
       explicit run_timer( const std::string & format, int places,
-        system::error_code & ec = system::throws )
-        : m_places(places), m_os(m_cout()), m_format(format) { start(ec); }
+        system::error_code & ec = system::throws );
       explicit run_timer( std::ostream & os, const std::string & format,
-        int places, system::error_code & ec = system::throws )
-        : m_places(places), m_os(os), m_format(format) { start(ec); }
+        int places, system::error_code & ec = system::throws );
 
       explicit run_timer( int places,
-        system::error_code & ec = system::throws )
-        : m_places(places), m_os(m_cout()) { start(ec); }
+        system::error_code & ec = system::throws );
       explicit run_timer( std::ostream & os, int places,
-        system::error_code & ec = system::throws )
-        : m_places(places), m_os(os) { start(ec); }
+        system::error_code & ec = system::throws );
 
       explicit run_timer( int places, const std::string & format,
-        system::error_code & ec = system::throws )
-        : m_places(places), m_os(m_cout()), m_format(format) { start(ec); }
+        system::error_code & ec = system::throws );
       explicit run_timer( std::ostream & os, int places, const std::string & format,
-        system::error_code & ec = system::throws )
-        : m_places(places), m_os(os), m_format(format) { start(ec); }
+        system::error_code & ec = system::throws );
 
-     ~run_timer()  // never throws
+      ~run_timer()  // never throws
       {
         system::error_code ec;
         if ( !reported() ) report( ec );
