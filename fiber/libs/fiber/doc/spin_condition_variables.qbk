@@ -5,7 +5,7 @@
   http://www.boost.org/LICENSE_1_0.txt).
 ]
 
-[section:conditions Condition Variables]
+[section:conditions Condition Variables using spinwait]
 
 [heading Synopsis]
 
@@ -14,16 +14,15 @@ woken from the wait, then it checks to see if the appropriate condition is now t
 condition is not true, then the fiber then calls `wait` again to resume waiting. In the simplest case, this
 condition is just a boolean variable:
 
-    boost::fibers::scheduler<> sched;
-    boost::fibers::condition cond( sched);
-    boost::fibers::mutex mtx( sched);
+    boost::fibers::spin::condition cond;
+    boost::fibers::spin::mutex mtx;
     bool data_ready;
 
     void process_data();
 
     void wait_for_data_to_process()
     {
-        boost::unique_lock< boost::fibers::mutex > lk( mtx);
+        boost::unique_lock< boost::fibers::spin::mutex > lk( mtx);
         while ( ! data_ready)
         {
             cond.wait( lk);
@@ -56,17 +55,16 @@ the condition variable to wake one waiting fiber or all the waiting fibers respe
 Note that the same mutex is locked before the shared data is updated, but that the mutex does not have to be locked
 across the call to `notify_one`.
 
-[note __condition__ is bound to the __scheduler__ passed to the construtor and can only be used by fibers managed by this scheduler.]
+[note __condition__ is [*not] bound to a __scheduler__ an can be used to synchronize fibers managed by different schedulers.]
 
 [section:condition Class `condition`]
 
-    #include <boost/fiber/condition.hpp>
+    #include <boost/fiber/spin/condition.hpp>
 
     class condition
     {
     public:
-        < typename Strategy >
-        condition( scheduler< Strategy > & sched);
+        condition();
         ~condition();
 
         void notify_one();
@@ -75,16 +73,16 @@ across the call to `notify_one`.
         void wait( boost::unique_lock< boost::fibers::mutex > & lk);
 
         template< typename Pred >
-        void wait( boost::unique_lock< boost::fibers::mutex > & lk, Pred pred);
+        void wait( boost::unique_lock< boost::fibers::spin::mutex > & lk, Pred pred);
 
-        template< typename LockType >
+		template< typename LockType >
         void wait( LockType & lk);
 
         template< typename LockType, typename Pred >
         void wait( LockType & lk, Pred predicate);
     };
 
-[section:constructor `template< typename Strategy > condition( scheduler< Strategy > & sched)`]
+[section:constructor `condition()`]
 [variablelist
 [[Effects:] [Constructs an object of class `condition`.]]
 [[Throws:] [Nothing.]]
@@ -116,7 +114,7 @@ those fibers.]]
 ]
 [endsect]
 
-[section:wait `void wait( boost::unique_lock< boost::fibers::mutex > & lk)`]
+[section:wait `void wait( boost::unique_lock< boost::fibers::spin::mutex > & lk)`]
 [variablelist
 [[Precondition:] [`lk` is locked by the current fiber, and either no other
 fiber is currently waiting on `*this`, or the execution of the `mutex()` member
@@ -136,7 +134,7 @@ __interrupt__ on the __fiber__ object associated with the current fiber of execu
 ]
 [endsect]
 
-[section:wait_predicate `template< typename Pred > void wait( boost::unique_lock< boost::fibers::mutex > & lk, Pred pred)`]
+[section:wait_predicate `template< typename Pred > void wait( boost::unique_lock< boost::fibers::spin::mutex > & lk, Pred pred)`]
 [variablelist
 [[Effects:] [As-if ``
 while ( ! pred())

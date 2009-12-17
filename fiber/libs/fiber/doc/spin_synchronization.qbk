@@ -5,6 +5,10 @@
           http://www.boost.org/LICENSE_1_0.txt
 ]
 
-[section:acknowledgements Acknowledgments]
-
+[section:spin_synchronization Synchronization using spinwait]
+[include spin_mutexes.qbk]
+[include spin_condition_variables.qbk]
+[include spin_barrier.qbk]
+[include spin_event_variables.qbk]
+[include spin_fifos.qbk]
 [endsect]

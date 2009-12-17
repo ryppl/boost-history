@@ -31,7 +31,7 @@
 namespace boost {
 namespace fibers {
 
-#define BOOST_FIBER_DEFAULT_STACKSIZE 64000
+#define BOOST_FIBER_DEFAULT_STACKSIZE 8192
 
 template< typename Strategy >
 class scheduler;

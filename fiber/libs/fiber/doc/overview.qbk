@@ -1,28 +1,28 @@
 [/
-  (C) Copyright 2007-8 Anthony Williams.
-  Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or copy at
-  http://www.boost.org/LICENSE_1_0.txt).
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
 ]
 
 [section:overview Overview]
 
 __boost_fiber__ provides an framework utilizing lightweight threads of execution - also known
-as user-level/user-space threads or fibers (Win32 API).  The API of the library is
-modeled after __boost_thread__ and contains classes, functions to manage fibers and to synchronize
-data between the fibers.
+as user-space threads, microthreads or fibers.  The API of the library exposes an interface similiar
+to __boost_thread__ and contains classes, functions to manage fibers and to synchronize fibers.
 
-A fiber owns a user-space stack, a context (processor register state) and is a lighter scheduling
-item which is scheduled cooperatively (threads are preemptively scheduled) - the running fiber
-decides explicitly when its yields to allow another fiber to run (fiber switching). 
-Fibers are less expensive than threads because the kernel doesn't know anything about fibers -
-no kernel transitions are required for scheduling (done in the user-space). A context switch
-between threads costs usally thousends of CPU cycles on x86 compared to a fiber switch with few
-hundreds of cycles.
+A fiber is able to store the current execution state, including all registers and CPU flags, the
+instruction pointer, and the stack pointer and later restore this state. The idea is to have multiple
+execution paths running on a single thread using a sort of cooperative scheduling (threads are
+preemptively scheduled) - the running fiber decides explicitly when its yields to allow another fiber
+to run (fiber switching). Fibers are less expensive than threads because the kernel doesn't know
+anything about fibers - no kernel transitions are required for scheduling (done in the user-space).
+A context switch between threads costs usally thousends of CPU cycles on x86 compared to a fiber
+switch with few hundreds of cycles.
 A fiber can only run on a single thread at any point in time but may be migrated between threads.
-Because a thread can run many different fibers during its life cycle the name __fiber__ was choosen.
+Because a thread can run many different fibers during its life cycle the name ['fiber] was choosen.
 
-Beside fibers conceptualy equivalent constructs are coroutines. A coroutine can be seen as a 
+Beside fibers a conceptualy equivalent constructs are coroutines. A coroutine can be seen as a 
 language-level construct while a fiber is a system-level construct.
 
 In order to use the classes and functions described here, you can either include the specific
@@ -38,8 +38,6 @@ which includes all the other headers in turn. The classes and functions reside i
 
 [warning This library is NOT an official Boost library]
 
-[note Please note that __boost_fiber__ is not optimized yet.]
-
 
 [heading Tested Platforms]
 
@@ -47,7 +45,7 @@ __boost_fiber__ has been tested on the following platforms and compilers:
 
 *  Debian GNU/Linux 2.6.31.6 (x86_64), GCC 4.3.4
 *  Ubuntu GNU/Linux 2.6.28.11 (x86), GCC 4.3.3
-*  FreeBSD 7.2 (x86), GCC 4.2.1
+*  FreeBSD 8.0 (x86), GCC 4.2.1
 *  OpenSolaris 2009.06 (x86_64), GCC 4.3.2
 *  Windows XP Professional (x86), MSVC 9.0
 

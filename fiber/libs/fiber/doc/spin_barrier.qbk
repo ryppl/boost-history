@@ -12,7 +12,7 @@ contexts of execution (thread or fiber). The barrier is configured for a particu
 fibers reach the barrier they must wait until all `n` fibers have arrived. Once the `n`-th fiber has reached the
 barrier, all the waiting fibers can proceed, and the barrier is reset.
 
-[note __barrier__ is bound to the __scheduler__ passed to the constructor and can only be used by fibers managed by this scheduler.]
+[note __barrier__ is bound to a given __scheduler__ and can only be used by fibers managed by this scheduler.]
 
 [section:barrier Class `barrier`]
 
@@ -21,7 +21,7 @@ barrier, all the waiting fibers can proceed, and the barrier is reset.
     class barrier
     {
     public:
-        template< typename Strategy >
+		template< typename Strategy >
         barrier( scheduler< Strategy > & sched, uint32_t initial);
 
         bool wait();
@@ -29,14 +29,21 @@ barrier, all the waiting fibers can proceed, and the barrier is reset.
 
 Instances of __barrier__ are not copyable or movable.
 
-[section:constructor `template< typename Strategy > barrier( scheduler< Strategy > & sched, uint32_t initial)`]
+[section:constructor Constructor]
+
+		template< typename Strategy >
+        barrier( scheduler< Strategy > & sched, uint32_t initial);
+
 [variablelist
 [[Effects:] [Construct a barrier for `initial` fibers.]]
 [[Throws:] [__invalid_argument__ if an error occurs.]]
 ]
 [endsect]
 
-[section:wait `bool wait()`]
+[section:wait Member function `wait`]
+
+    bool wait();
+
 [variablelist
 [[Effects:] [Block until `initial` fibers have called `wait` on `*this`. When the `initial`-th fiber calls `wait`,
 all waiting fibers are unblocked, and the barrier is reset. ]]

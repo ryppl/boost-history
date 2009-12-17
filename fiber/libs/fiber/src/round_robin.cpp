@@ -63,7 +63,7 @@ round_robin::join( fiber::id const& id)
 	if ( i == fibers_.end() ) return;
 	schedulable s( i->second);
 	fiber f( s.f);
-	BOOST_ASSERT( f);
+	if ( ! f) return;
 	BOOST_ASSERT( ! is_master( f) );
 	BOOST_ASSERT( ! in_state_not_started( f) );
 
@@ -406,26 +406,30 @@ round_robin::run()
 	if ( ! runnable_fibers_.empty() )
 	{
 		schedulable s = fibers_[runnable_fibers_.front()];
+		runnable_fibers_.pop_front();
 		std::auto_ptr< fiber > orig( active_fiber.release() );
 		active_fiber.reset( new fiber( s.f) );
 		BOOST_ASSERT( ! s.waiting_on_fiber);
+		BOOST_ASSERT( ! s.waiting_on_object);
 		BOOST_ASSERT( in_state_ready( ( * active_fiber) ) );
 		set_state_running( ( * active_fiber) );
 		switch_between( master_fiber, * active_fiber);
 		active_fiber.reset( orig.release() );
-		runnable_fibers_.pop_front();
 		result = true;
 	}
 
 	while ( ! terminated_fibers_.empty() )
 	{
-		schedulable s = fibers_[terminated_fibers_.front()];
+		fiber_map::iterator i( fibers_.find( terminated_fibers_.front() ) );
+		BOOST_ASSERT( i != fibers_.end() );
+		schedulable s( i->second);
 		fiber f( s.f);
 		terminated_fibers_.pop();
 		BOOST_ASSERT( s.joining_fibers.empty() );	
+		BOOST_ASSERT( ! s.waiting_on_fiber);
+		BOOST_ASSERT( ! s.waiting_on_object);
 		BOOST_ASSERT( in_state_terminated( f) );	
-		fibers_.erase( f.get_id() );
-		result = true;
+		fibers_.erase( i);
 	}
 	return result;
 }

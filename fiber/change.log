@@ -1,6 +1,8 @@
 0.3.1:
 ------
 - scheduler< Strategy >::migrate_fiber() overloaded - passing only fiber to be migrated
+- default stacksize set to 8kB
+- documetnation updated
 
 0.3.0:
 ------
