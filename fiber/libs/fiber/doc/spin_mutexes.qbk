@@ -5,7 +5,7 @@
   http://www.boost.org/LICENSE_1_0.txt).
 ]
 
-[section:mutex_types Mutex Types using spinwait]
+[section:mutex_types Mutex Types]
 
 [section:mutex Class `mutex`]
 
@@ -16,19 +16,19 @@
     public:
         mutex();
         ~mutex();
-        
+
         void lock();
         bool try_lock();
         void unlock();
 
-        typedef unique_lock<mutex> scoped_lock;
+        typedef unique_lock< mutex > scoped_lock;
     };
 
-__mutex__ implements the __lockable_concept__ to provide an exclusive-ownership mutex. At most one fiber can own the
-lock on a given instance of __mutex__ at any time. Multiple concurrent calls to __lock_ref__, __try_lock_ref__ and
-__unlock_ref__ shall be permitted.
+__spin_mutex__ implements the __lockable_concept__ to provide an exclusive-ownership mutex. At most one fiber can own the
+lock on a given instance of __spin_mutex__ at any time. Multiple concurrent calls to __lock__, __try_lock__ and
+__unlock__ shall be permitted.
 
-[note __mutex__ is [*not] bound to a __scheduler__ and can be used to synchronize fibers
+[note __spin_mutex__ is ['not] bound to a __scheduler__ and can only be used by fibers
 managed by different schedulers.]
 
 [endsect]

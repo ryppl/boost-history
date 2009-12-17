@@ -6,6 +6,9 @@
 ]
 
 [section:spin_synchronization Synchronization using spinwait]
+
+Synch. objects using spin-wait ops. reside in namespace `boost::fibers::spin`.
+
 [include spin_mutexes.qbk]
 [include spin_condition_variables.qbk]
 [include spin_barrier.qbk]

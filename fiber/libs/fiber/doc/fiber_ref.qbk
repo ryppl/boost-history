@@ -721,7 +721,7 @@ the scheduling algorithm must derive from class __strategy__. It is possible to 
 [note If the fiber is not thread-affine (using thread-local-storage) it can be migrated to a scheduler running in
 another thread.]
 
-[warning The current implementation on Windows uses the Win32 Fiber API which does not allow to migrate fibers
+[warning The current implementation for Windows uses the Win32 Fiber API which does not allow to migrate fibers
 to other threads.]
 
 Usally __scheduler__ will be invoked until all fibers are scheduled and finished.

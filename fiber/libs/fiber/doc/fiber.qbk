@@ -39,6 +39,10 @@
 [template interrupt_link[link_text] [link fiber.fiber_management.fiber.interrupt [link_text]]]
 [template join_link[link_text] [link fiber.fiber_management.fiber.join [link_text]]]
 
+[template spin_barrier_link[link_text] [link fiber.spin_synchronization.barriers [link_text]]]
+[template spin_condition_link[link_text] [link fiber.spin_synchronization.conditions [link_text]]]
+[template spin_mutex_link[link_text] [link fiber.spin_synchronization.mutex_types.mutex [link_text]]]
+
 [template interr_enabled_link[link_text] [link fiber.fiber_management.this_fiber.interruption_enabled [link_text]]]
 [template interr_requested_link[link_text] [link fiber.fiber_management.this_fiber.interruption_requested [link_text]]]
 [template interr_point_link[link_text] [link fiber.fiber_management.this_fiber.interruption_point [link_text]]]
@@ -60,6 +64,10 @@
 [def __scheduler__ [scheduler_link ['scheduler]]]
 [def __strategy__ [strategy_link ['strategy]]]
 [def __round_robin__ [round_robin_link ['round_robin]]]
+
+[def __spin_barrier__ [spin_barrier_link ['spin-barrier]]]
+[def __spin_condition__ [spin_condition_link ['spin-condition]]]
+[def __spin_mutex__ [spin_mutex_link ['spin-mutex]]]
 
 [def __cond_wait__ [cond_wait_link `wait()`]]
 [def __interrupt__ [interrupt_link `interrupt()`]]
