@@ -1,0 +1,2547 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Win32)">
+	<META NAME="CREATED" CONTENT="20080922;21044300">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
+	<META NAME="CHANGED" CONTENT="20090326;22005200">
+	<META NAME="Info 1" CONTENT="">
+	<META NAME="Info 2" CONTENT="">
+	<META NAME="Info 3" CONTENT="">
+	<META NAME="Info 4" CONTENT="">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
+	<META NAME="CHANGEDBY" CONTENT="xtoff">
+	<META NAME="CHANGEDBY" CONTENT="xtoff">
+	<META NAME="CHANGEDBY" CONTENT="xtoff">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { margin-left: 2.2cm; margin-right: 1.99cm; margin-top: 2cm; margin-bottom: 2cm }
+		P { margin-bottom: 0.21cm }
+		TD P { margin-bottom: 0cm }
+		H1 { margin-bottom: 0.21cm }
+		H1.western { font-family: "Arial", sans-serif; font-size: 16pt }
+		H1.cjk { font-family: "MS Mincho"; font-size: 16pt }
+		H1.ctl { font-family: "Tahoma"; font-size: 16pt }
+		H2.western { font-family: "Albany", sans-serif; font-size: 14pt; font-style: italic }
+		H2.cjk { font-family: "HG Mincho Light J"; font-size: 14pt; font-style: italic }
+		H2.ctl { font-family: "Arial Unicode MS"; font-size: 14pt; font-style: italic }
+		H3.western { font-family: "Albany", sans-serif }
+		H3.cjk { font-family: "HG Mincho Light J" }
+		H3.ctl { font-family: "Arial Unicode MS" }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<P STYLE="margin-top: 0.42cm; margin-bottom: 0.5cm; page-break-after: avoid">
+<FONT FACE="Albany, sans-serif"><FONT SIZE=4>The Msm (Meta State
+Machine) library v1.20</FONT></FONT></P>
+<P>Christophe Henry, 
+</P>
+<P>henry UNDERSCORE christophe AT hotmail DOT com</P>
+<P STYLE="margin-top: 0.42cm; margin-bottom: 0.5cm; page-break-after: avoid">
+<FONT FACE="Albany, sans-serif"><FONT SIZE=4>Contents</FONT></FONT></P>
+<P><BR><BR>
+</P>
+<P><A HREF="#1.Introduction|outline">Introduction</A></P>
+<P><A HREF="#2.Changes compared to previous version|outline"><U>Changes
+compared to previous version</U></A></P>
+<P><A HREF="#3.Design Goals|outline">Design Goals</A></P>
+<P><A HREF="#4.Framework Interface|outline">Framework Interface</A></P>
+<P><A HREF="#5.Workarounds|outline">Workarounds</A></P>
+<P><A HREF="#6.Tutorials|outline">Tutorials</A></P>
+<UL>
+	<LI><P><A HREF="#0.1.Your first finite state machine|outline">Your
+	first finite state machine</A></P>
+	<LI><P><A HREF="#5.2.A more advanced example|outline">A more
+	advanced example</A></P>
+	<LI><P><A HREF="#4.3.Orthogonal States (+Defer and Terminate State)|outline">Orthogonal
+	States (+Defer and Terminate states)</A></P>
+	<LI><P><A HREF="#0.4.Adding an history|outline">Adding an history</A></P>
+	<LI><P><A HREF="#5.5.Using &ldquo;flags&rdquo;|outline">Using
+	&ldquo;flags&rdquo;</A></P>
+	<LI><P><A HREF="#The many ways to enter a composite state|outline">The
+	many ways to enter a composite state</A></P>
+</UL>
+<P><A HREF="#7.Advanced|outline">Advanced</A></P>
+<UL>
+	<LI><P><A HREF="#Conflicting Transitions|outline">Conflicting
+	Transitions</A></P>
+	<LI><P><A HREF="#5.1.Containing state machine|outline">Containing
+	state machine</A></P>
+	<LI><P><A HREF="#5.2.Getting a pointer to a state|outline">Getting a
+	pointer to a state</A></P>
+	<LI><P><A HREF="#5.3.Copying|outline">Copying</A></P>
+	<LI><P><A HREF="#7.4.Exceptions|outline">Exceptions</A></P>
+	<LI><P><A HREF="#Helpers methods|outline">Helpers methods</A></P>
+	<LI><P><A HREF="#Getting more speed|outline">Getting more speed</A></P>
+</UL>
+<P><A HREF="#8.Customizing states|outline">Customizing states</A></P>
+<UL>
+	<LI><P><A HREF="#User-defined base state / Polymorphic states|outline">User-defined
+	base state / Polymorphic states</A></P>
+	<LI><P><A HREF="#Visiting active states|outline">Visiting active
+	states</A></P>
+</UL>
+<P><A HREF="#8.Performance|outline">Performance</A></P>
+<P><A HREF="#8.Compilers|outline">Compilers</A></P>
+<P><A HREF="#8.Limitations|outline">Limitations</A></P>
+<P><A HREF="#8.Acknowledgments|outline">Acknowledgments</A></P>
+<P><A HREF="#9.Questions &amp; Answers|outline"><U>Questions &amp;
+Answers</U></A></P>
+<P><A HREF="#10.Case Studies|outline"><U>Case Studies</U></A></P>
+<P><A HREF="#10.Annex A Debugging|outline">Annex A Debugging</A></P>
+<P><A HREF="#12.Annex B Metaprogramming tools|outline">Annex B
+Metaprogramming tools</A></P>
+<H1 CLASS="western" STYLE="page-break-before: always"><A NAME="1.Introduction|outline"></A>
+Introduction</H1>
+<P>Msm is a framework which enables you to build a Finite State
+Machine in a straightforward, descriptive and easy-to-use manner . It
+requires minimal effort to generate a working program from an UML
+state machine diagram. This work was inspired by the state machine
+described in the book of David Abrahams and Aleksey Gurtovoy &ldquo;C++
+Template Metaprogramming&rdquo; and adds most of what UML Designers
+are expecting from an UML State Machine framework:</P>
+<UL>
+	<LI><P>Entry and Exit Methods</P>
+	<LI><P>Guard Conditions</P>
+	<LI><P>Sub state machines (also called composite states in UML)</P>
+	<LI><P>History</P>
+	<LI><P>Terminate Pseudo-State</P>
+	<LI><P>Deferred Events</P>
+	<LI><P>Orthogonal zones</P>
+	<LI><P>Explicit entry into sub state machine states</P>
+	<LI><P>Fork</P>
+	<LI><P>Entry / Exit pseudo states</P>
+	<LI><P>Conflicting transitions</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>Additional features, absent from the UML specification but
+nevertheless relevant were also implemented :</P>
+<UL>
+	<LI><P>Event Queue</P>
+	<LI><P>A new concept named &ldquo;flags&rdquo;. This can be seen as
+	an alternative to Boost.Statechart state_downcast</P>
+	<LI><P>Interrupted Pseudo-State. A kind of Terminate pseudo-state
+	which can still be left.</P>
+	<LI><P>Visitors, polymorphic states when needed.</P>
+</UL>
+<P><BR><BR>
+</P>
+<H1 CLASS="western" STYLE="page-break-before: always"><A NAME="2.Changes compared to previous version|outline"></A>
+Changes compared to previous version</H1>
+<P>Changes from 1.10 to 1.20 (RC1)</P>
+<UL>
+	<LI><P>Added visitor implementation</P>
+	<LI><P>Added by state&lt;&gt;, terminate_state&lt;&gt;... a BASE
+	template parameter in first position defaulting to
+	default_base_state. No breaking change if no SMPtr policy chosen.</P>
+	<LI><P>Renamed SMPtr/NoSMPtr to sm_ptr / no_sm_ptr. Old names
+	deprecated by still supported.</P>
+	<LI><P>Added possibility to manually deactivate queuing of messages
+	and exception handling for more speed.</P>
+	<LI><P>Added automatic deactivation of terminate/interrupt state
+	checking and deferred events if not used.</P>
+</UL>
+<P>Changes from 1.0 to 1.10</P>
+<UL>
+	<LI><P>Corrected bugs that events were not forwarded to the sub-
+	state machine if this sub- state machine appeared only as target in
+	the transition table.</P>
+	<LI><P>Added explicit entry states into a sub-state machine.</P>
+	<LI><P>Added fork entry: activation of several explicit entry states
+	from different orthogonal zones.</P>
+	<LI><P>Added entry pseudo states.</P>
+	<LI><P>Added exit pseudo states.</P>
+	<LI><P>Added support for transition conflicts: different transitions
+	triggered by the same event and starting from the same source state,
+	differentiated simply by guard conditions or depth.</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>Two minor breaking changes had to be done:</P>
+<UL>
+	<LI><P><FONT FACE="Courier New, monospace">terminate_state</FONT> is
+	now a template type in order to give him, like for normal states,
+	the <FONT FACE="Courier New, monospace">SMPtrPolicy</FONT> which
+	allows the state to get a pointer to its containing state machine.</P>
+	<LI><P>The <FONT FACE="Courier New, monospace">no_transition</FONT>
+	method is not called any more in case of an impossible transition if
+	the state machine is used as a composite state in another state
+	machine to better respect the UML specification.</P>
+</UL>
+<P><BR><BR>
+</P>
+<H1 CLASS="western" STYLE="page-break-before: always"><A NAME="3.Design Goals|outline"></A>
+Design Goals</H1>
+<P>While Boost.Statechart already offers many of the aforementioned
+features, one may question the very existence of this framework. The
+following advantages are offered:</P>
+<UL>
+	<LI><P>Efficiency: The heavily-used metaprogramming techniques
+	described in the book allow a O(1) double dispatch and the non-use
+	of virtual calls. The result is a very efficient code, at the cost
+	of a longer compilation time and bigger executable size.</P>
+	<LI><P>Declarativeness: At the heart of the framework is a
+	transition table. Boost.Statechart is a very good tool, but to
+	deduce the original state machine diagram from its source code can
+	sometimes be quite a challenge. 
+	</P>
+	<LI><P>Expressiveness: The Domain-Specific-Language represents well
+	the abstraction domain and displays a high ratio of information to
+	syntactic noise. 
+	</P>
+	<LI><P>Metaprogramming tools (see <A HREF="#12.Annex B Metaprogramming tools|outline">Annex
+	B</A>) can be easily written and add much value to your state
+	machine.</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>For people working on embedded systems, selling Boost.Statechart
+has got the handicap O(n) double-dispatch, the virtual calls and the
+fact that many of them are coming from the C world and thus no fans
+of big template argument lists or forward-declarations.</P>
+<P>The declarative interface of Msm is transparent, and a developer
+not needing the more complex features is not required to learn them,
+reducing the &quot;entry cost&quot;. As needed, the user may choose
+to delve further in the more advanced policies and underlying
+concepts of the library.</P>
+<P>What the framework does not yet offer:</P>
+<UL>
+	<LI><P>built-in multithreading. For the time being, it is not fully
+	decided whether this should be implemented directly in the library
+	or if this should remain at the user's discretion.</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>If you are looking for an efficient and straightforward UML-based
+finite state machine framework, we sincerely hope you will enjoy this
+work!</P>
+<H1 CLASS="western" STYLE="page-break-before: always"><A NAME="4.Framework Interface|outline"></A>
+Framework Interface</H1>
+<P>Let's start with an example taken from C++ Template
+Metaprogramming:</P>
+<P><CODE>int main()</CODE></P>
+<P><CODE>{</CODE></P>
+<P><CODE>player p; // an instance of the concrete state Machine</CODE></P>
+<P><CODE>p.start(); // activates the init state (calls on_entry)</CODE></P>
+<P><CODE>p.process_event(open_close()); // user opens CD player</CODE></P>
+<P><CODE>p.process_event(open_close()); // inserts CD and closes</CODE></P>
+<P><CODE>p.process_event(cd_detected(&ldquo;louie&rdquo;,&rdquo;louie&rdquo;));</CODE></P>
+<P><CODE>p.process_event(play());</CODE></P>
+<P><CODE>...</CODE></P>
+<P><CODE>return 0;</CODE></P>
+<P><CODE>}</CODE></P>
+<P>The transition table is at the heart of the framework, and is
+implemented using the following DSL (Domain-Specific-Language):</P>
+<P><BR><BR>
+</P>
+<P><CODE>struct transition_table: mpl::vector&lt;</CODE></P>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0>
+	<COL WIDTH=28*>
+	<COL WIDTH=34*>
+	<COL WIDTH=37*>
+	<COL WIDTH=31*>
+	<COL WIDTH=59*>
+	<COL WIDTH=54*>
+	<COL WIDTH=14*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Start</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Event</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Next</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Action</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Guard</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Stopped,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">play,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Playing,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::start_playback</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Stopped,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">open_close,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Open,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::open_drawer</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Stopped,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">stop,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Stopped</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Open,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">open_close,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Empty,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::close_drawer</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Empty,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">open_close,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Open,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::open_drawer</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Empty,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">cd_detected,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Stopped,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::store_cd_info</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::good_disk_format</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Playing,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">stop,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Stopped,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::stop_playback</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Playing,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">pause,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Paused,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::pause_playback</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Playing,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">open_close,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Open,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::stop_and_open</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Paused,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">end_pause,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Playing,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::resume_playback</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Paused,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">stop,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Stopped,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::stop_playback</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Paused,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><CODE><FONT COLOR="#0000ff">open_close,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Open,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::stop_and_open</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>&gt; {};</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=15%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P>Not very imaginative are we? As you can suspect, this is also
+taken from the book. 
+</P>
+<P>You get one row for every transition. A transition is made of:</P>
+<UL>
+	<LI><P>a current state</P>
+	<LI><P>an event provoking the current state to be left and moving
+	to:</P>
+	<LI><P>a next state, which becomes the next current state</P>
+	<LI><P>an action method which gets called during the transition, if
+	and only if</P>
+	<LI><P>a guard condition gives its ok by returning true</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>For every <U>concrete</U> event, the action method has the
+following signature:</P>
+<P><CODE><FONT COLOR="#0000ff">void</FONT></CODE><CODE>
+action_method(</CODE><CODE><FONT COLOR="#0000ff">SomeEvent const&amp;</FONT></CODE><CODE>)
+//SomeEvent can be play,stop, etc.</CODE></P>
+<P>And for the guard method:</P>
+<P><CODE><FONT COLOR="#0000ff">bool</FONT></CODE><CODE> guard_method(
+</CODE><CODE><FONT COLOR="#0000ff">SomeEvent const&amp;</FONT></CODE><CODE>)
+//SomeEvent can be play,stop, etc.</CODE></P>
+<P>The event being passed the action/guard methods may contain data,
+while evident for action methods, is also very useful for guards
+methods offering a nice alternative to Boost.Statechart's explicit
+branching requirements.</P>
+<P><BR><BR>
+</P>
+<P>To define a state, simply derive it from:</P>
+<UL>
+	<LI><P><CODE>terminate_state&lt;&gt;</CODE>: if the state is a
+	terminal pseudo-state</P>
+	<LI><P><FONT FACE="Courier New, monospace">interrupt_state&lt;EndInterruptEvent&gt;</FONT>:
+	if the state is only interrupting the state machine until the event
+	<FONT FACE="Courier New, monospace">EndInterruptEvent </FONT>is
+	fired.</P>
+	<LI><P><CODE>state_machine&lt;State&gt;</CODE> if State must itself
+	be a sub- state machine (composite in UML)</P>
+	<LI><P><CODE>state&lt;&gt; </CODE>if it is a normal state</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>You just need to define the initial state:</P>
+<P><CODE>typedef Empty initial_state;</CODE></P>
+<P><BR><BR>
+</P>
+<P><CODE><FONT FACE="Times New Roman, serif"><FONT SIZE=3>As shown in
+the above code, you need to start the state machine by calling
+start(). This is to avoid calling on_entry immediately at object
+creation time and allows you to delay starting the state machine.</FONT></FONT></CODE></P>
+<P><BR><BR>
+</P>
+<P><FONT FACE="Times New Roman, serif">And you're ready for the
+minimal state machine! </FONT>
+</P>
+<P><FONT FACE="Times New Roman, serif">Unfortunately, on some
+compilers, you will need a small workaround:</FONT></P>
+<P><BR><BR>
+</P>
+<H1 CLASS="western" STYLE="page-break-before: always"><A NAME="5.Workarounds|outline"></A>
+Workarounds</H1>
+<P>While VC9 seems perfectly happy with the row syntax, other
+compilers would not accept it, no matter how much sweet talking is
+used.</P>
+<P>This means that it is not portable to omit the action and guard
+methods and a transition (row) must be defined by a start state, an
+event, a next state, an action method and a guard method.</P>
+<P>As only the Start, Event and Next are absolutely necessary, and to
+still allow the nice syntax, Msm provides a few extra row classes:</P>
+<UL>
+	<LI><P><FONT FACE="Courier New, monospace">row</FONT> takes 5
+	arguments and only VC9 accepts the last 2 as default</P>
+	<LI><P><FONT FACE="Courier New, monospace">a_row</FONT> (&ldquo;a&rdquo;
+	for action) allows defining only the action and omit the guard
+	condition</P>
+	<LI><P><FONT FACE="Courier New, monospace">g_row</FONT> (&ldquo;g&rdquo;
+	for guard) allows omitting the action method and defining only the
+	guard</P>
+	<LI><P><FONT FACE="Courier New, monospace">_row</FONT> allows
+	omitting action and guard methods.</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>For example:</P>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0>
+	<COL WIDTH=28*>
+	<COL WIDTH=34*>
+	<COL WIDTH=37*>
+	<COL WIDTH=31*>
+	<COL WIDTH=59*>
+	<COL WIDTH=54*>
+	<COL WIDTH=14*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Start</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Event</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Next</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Action</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Guard</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>a_row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Stopped,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><CODE><FONT COLOR="#0000ff">play,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Playing,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::start_playback</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>g_row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Stopped,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><CODE><FONT COLOR="#0000ff">open_close,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Open,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;p::some_guard</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=11%>
+			<P><CODE>_row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Stopped,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><CODE><FONT COLOR="#0000ff">stop,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><CODE><FONT COLOR="#0000ff">Stopped</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=23%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;</CODE></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">For greater compatibility, these will
+be used instead of <FONT FACE="Courier New, monospace">row</FONT> <FONT FACE="Times New Roman, serif">in
+the tutorials.</FONT></P>
+<H1 CLASS="western" STYLE="page-break-before: always"><A NAME="6.Tutorials|outline"></A>
+Tutorials</H1>
+<H2 CLASS="western"><A NAME="0.1.Your first finite state machine|outline"></A>
+Your first finite state machine</H2>
+<P><A HREF="SimpleTutorial.cpp">SimpleTutorial.cpp</A></P>
+<P>The previously described transition table is an easily-generated
+view of the following UML State Machine Diagram:</P>
+<P><IMG SRC="index_html_64d3c88c.jpg" NAME="graphics1" ALIGN=LEFT WIDTH=750 HEIGHT=726 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P>Now, all we still have to do is to define events, state machine
+and states, for example:</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>play</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>{};</FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>player</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>state_machine</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>player</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;{...}</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>Empty</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;&gt;
+</FONT></FONT></CODE>
+</P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT SIZE=2>{</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#008000"><FONT SIZE=2>//
+every (optional) entry/exit methods get the event as parameter.</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>template
+&lt;class Event&gt; </FONT></FONT></CODE>
+</P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>void</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#c5000b"><FONT SIZE=2>on_entry</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>(</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>Event
+const</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&amp;
+) {</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>std</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>::</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>cout</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;&lt;
+</FONT></FONT></CODE><CODE><FONT COLOR="#a31515"><FONT SIZE=2>&quot;entering:
+Empty&quot;</FONT></FONT></CODE><CODE><FONT COLOR="#000000"> </FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;&lt;
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>std</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>::</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>endl</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>;}</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>template
+&lt;class Event&gt;</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>void</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#c5000b"><FONT SIZE=2>on_exit</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>(</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>Event
+const</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&amp;
+) {</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>std</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>::</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>cout</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;&lt;
+</FONT></FONT></CODE><CODE><FONT COLOR="#a31515"><FONT SIZE=2>&quot;leaving:
+Empty&quot;</FONT></FONT></CODE><CODE><FONT COLOR="#000000"> </FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;&lt;
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>std</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>::</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>endl</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>;}</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT SIZE=2>};</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P>The <FONT FACE="Courier New, monospace">on_entry</FONT> and
+<FONT FACE="Courier New, monospace">on_exit</FONT> methods are
+optional. The argument is the event which triggered the state
+switching.</P>
+<P>An initial state must still be defined:</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>typedef</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>Empty</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>initial_state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>;</FONT></FONT></CODE></P>
+<P><BR><BR>
+</P>
+<P>The action methods for every transition get the event as argument:</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>void</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>start_playback</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>(</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>play</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>const</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&amp;)</FONT></FONT></CODE></P>
+<P><BR><BR>
+</P>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Guard
+conditions simply inhibit a transition from occurring, even if an
+acceptable event arrives. The event is passed as parameter, thus
+allowing event-data-dependent decisions on whether to take the
+transition.</FONT></FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>bool</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#c5000b"><FONT SIZE=2>good_disk_format</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>(</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>cd_detected
+const&amp;</FONT></FONT></CODE><CODE><FONT COLOR="#000000"> </FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>evt)
+{...}</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>By
+default, a </FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>no_transition</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>method
+is called when an unexpected event is fired. This method simply
+asserts when called.</FONT></FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>It
+is possible to overwrite the </FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>no_transition</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>method
+to define a different error handling:</FONT></FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#008000"><FONT SIZE=2>//
+Replaces the default no-transition response.</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>template</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>class</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>Event</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>int</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>no_transition</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>(</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>int</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>,
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>Event</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>const</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&amp;
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>e</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>){</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=3>...}</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>That's
+it! People familiar to the player state machines of the boost::mpl
+example will notice just a few changes:</FONT></FONT></FONT></CODE></P>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><U>states
+	are now classes/structs</U></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>so
+	they can have data. The states get default-constructed at
+	initialization time.</FONT></FONT></FONT></CODE></P>
+	<LI><P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><U>No
+	id as an int has to be defined</U></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>,
+	which allows reuse of states in other state machines. The ids get
+	generated at compile-time. The disadvantage is that it makes
+	debugging harder. See <A HREF="#12.Annex A Debugging|outline">Annex
+	A</A> for an explanation of how to find the generated id. A small
+	helper to get a state array as typeid-generated names is explained
+	in <A HREF="#13.Annex B Metaprogramming tools|outline">Annex A</A>
+	and an example is shown at the end of <A HREF="SM.cpp">this example</A>.</FONT></FONT></FONT></CODE></P>
+	<LI><P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><U>A
+	Guard condition</U></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>was
+	added.</FONT></FONT></FONT></CODE></P>
+	<LI><P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><U>A
+	message queue</U></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>was
+	added so that new events can be generated during a transition.</FONT></FONT></FONT></CODE></P>
+</UL>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Quite
+easy, isn't it? You may however think the added value is not as great
+as promised, which leads us to the next example...</FONT></FONT></FONT></CODE></P>
+<H2 CLASS="western" STYLE="page-break-before: always"><A NAME="5.2.A more advanced example|outline"></A>
+A more advanced example</H2>
+<P><A HREF="CompositeTutorial.cpp">CompositeTutorial.cpp</A></P>
+<P><BR><BR>
+</P>
+<P>The framework would not be a very big subset of an UML state
+machine if it didn't support composite states. Now, the UML
+specification isn't too clear about the difference between composite
+states and sub-state machines, so let us ignore it for simplicity and
+define a composite state as a state machine.</P>
+<P>A small example is better as a long explanation, so, we had player
+defined as:</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>player</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>state_machine</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>player</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;{...}</FONT></FONT></CODE></P>
+<P>And playing was a sub-state of it:</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>Playing</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;&gt;</FONT></FONT></CODE>
+</P>
+<P>But now we want Playing to be a nested state machine, like the
+following diagram shows:</P>
+<P><IMG SRC="index_html_m26c048b0.jpg" NAME="graphics2" ALIGN=LEFT WIDTH=770 HEIGHT=1034 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P>We just need to change its declaration to:</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>Playing</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>state_machine</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>Playing</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;{...}</FONT></FONT></CODE></P>
+<P>And that's it! You can even define the Playing state machine in
+another file and compile separately. Inside, you just need to define
+a (public defined) transition table (the heart of the whole system)
+and the same action / guard, exactly like you did for player.</P>
+<P><BR><BR>
+</P>
+<P>And keep in mind: <U>no change to </U><CODE><U>player</U></CODE>
+is required!</P>
+<P><BR><BR>
+</P>
+<P>For example, as a transition table I defined:</P>
+<P><CODE>struct transition_table: mpl::vector&lt;</CODE></P>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0>
+	<COL WIDTH=26*>
+	<COL WIDTH=34*>
+	<COL WIDTH=50*>
+	<COL WIDTH=32*>
+	<COL WIDTH=54*>
+	<COL WIDTH=45*>
+	<COL WIDTH=13*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Start</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=20%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Event</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Next</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Action</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=18%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Guard</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10%>
+			<P><CODE>a_row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Song1,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=20%>
+			<P><CODE><FONT COLOR="#0000ff">NextSong,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Song2,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;pl::start_next_song</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=18%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10%>
+			<P><CODE>a_row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Song2,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=20%>
+			<P><CODE><FONT COLOR="#0000ff">PreviousSong,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Song1,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;pl::start_prev_song</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=18%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10%>
+			<P><CODE>a_row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Song2,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=20%>
+			<P><CODE><FONT COLOR="#0000ff">NextSong,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Song3,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;pl::start_next_song</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=18%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;,</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10%>
+			<P><CODE>a_row&lt;</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Song3,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=20%>
+			<P><CODE><FONT COLOR="#0000ff">PreviousSong,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><CODE><FONT COLOR="#0000ff">Song2,</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><CODE><FONT COLOR="#c5000b">&amp;pl::start_prev_song</FONT></CODE></P>
+		</TD>
+		<TD WIDTH=18%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><CODE>&gt;</CODE></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10%>
+			<P><CODE>&gt; {};</CODE></P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=20%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=13%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=21%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=18%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=5%>
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+</TABLE>
+<P><BR><BR>
+</P>
+<H2 CLASS="western" STYLE="page-break-before: always"><A NAME="4.3.Orthogonal States (+Defer and Terminate State)|outline"></A>
+Orthogonal States (+Defer and Terminate State)</H2>
+<P><A HREF="Orthogonal-deferred.cpp">Orthogonal-deferred.cpp</A></P>
+<P>This tutorial will demonstrate three more features that UML
+defines: Othogonal zones, deferring of events and Terminal States.</P>
+<P>It is a very common problem in many state machines to have to
+handle errors. It usually involves defining a transition from all the
+states to a special error state. Translation : not fun. Luckily, UML
+provides some helpful concepts here. The first one is orthogonal
+zones. See them as state machines running at the same time in a same
+state machine. The effect is that you have several active states at
+any time. Actually, you have always the same number of active states
+as the number of zones is fixed.</P>
+<P>We can therefore keep our state machine from the previous example
+and just define a new zone made of two states, <CODE>AllOk</CODE> and
+<CODE>ErrorMode</CODE>.</P>
+<P><CODE>AllOk</CODE> is most of the time active. But the <CODE>error_found</CODE>
+error event makes the second zone move to the new active state
+<CODE>ErrorMode</CODE>. This event does not interest the main zone so
+it will simply be ignored. Only if no zone at all handles it will
+<CODE>no</CODE>_<CODE>transition</CODE> get called.</P>
+<P>Usually, when you get an error, you do not want other events to be
+handled. To achieve this, we use another UML feature, terminate
+states. When any zone moves to a terminate state, the state machine
+terminates and all further events are ignored.</P>
+<P>This is not mandatory, one can use orthogonal zones without
+terminate states.</P>
+<P>We also added a small extension to UML here, interrupt states. If
+you declare <CODE>ErrorMode</CODE> as interrupt state instead, the
+state machine will not handle any event other than the one which ends
+the interrupt. So it's like a terminate state, with the difference
+that you are allowed to resume the state machine when a condition
+(like handling of the original error) is met.</P>
+<P><BR><BR>
+</P>
+<P>Last but not least, this example also shows here the handling of
+event deferring. Let's say someone puts a disc and immediately
+presses play. The event cannot be handled, yet you'd want it to be
+handled and not force the user to press play again. The solution is
+to define it as deferred in the <FONT FACE="Courier New, monospace">Empty</FONT>
+and <FONT FACE="Courier New, monospace">Open</FONT> states and get it
+handled in the first state where the event is not to be deferred. It
+can then be handled or rejected. In this example, only when <FONT FACE="Courier New, monospace">Stopped</FONT>
+becomes active will the event be handled.</P>
+<P><IMG SRC="index_html_m23e6b7d5.jpg" NAME="graphics3" ALIGN=LEFT WIDTH=803 HEIGHT=997 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P>Although it may sound arcane, it is rather mundane. You only need
+to add these two new states and change the definition of
+<FONT FACE="Courier New, monospace">initial_state</FONT> to reflect
+the second zone:</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>typedef</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>mpl</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>::</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>vector</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>Empty</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>,</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>AllOk</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>initial_state;</FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#030003"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Now
+for the terminate state, simply define ErrorMode as a terminate
+state:</FONT></FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>ErrorMode</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>terminate_state&lt;&gt;</FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#030003"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Or
+as an interrupt state, which can be ended with the event </FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>end_error</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>:</FONT></FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>ErrorMode</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>interrupt_state&lt;end_error&gt;</FONT></FONT></CODE></P>
+<P><BR><BR>
+</P>
+<P><CODE><FONT COLOR="#030003"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>And
+you're done with the orthogonal zones! You don't have to give the
+zones an id. Please be advised that there is currently no compile
+time enforcement of the zone consistency (Msm does not yet check that
+the zones are truly orthogonal)</FONT></FONT></FONT></CODE></P>
+<P><BR><BR>
+</P>
+<P><CODE><FONT COLOR="#030003"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>As
+for our deferred event, the following typedef in </FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>Empty</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>and
+</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>Open</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>will
+do:</FONT></FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>typedef</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>mpl</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>::</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>vector</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>play</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>deferred_events</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>;</FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#030003"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>With
+this, the event will be put in the deferred queue until a state
+without this typedef handles or rejects it (with a call to
+</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>no_transition</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>).</FONT></FONT></FONT></CODE></P>
+<H2 CLASS="western" STYLE="page-break-before: always"><A NAME="0.4.Adding an history|outline"></A>
+Adding an history</H2>
+<P><A HREF="History.cpp">History.cpp</A></P>
+<P>UML defines two types of histories, Shallow History and Deep
+History. 
+</P>
+<P>What is it and when do you need it? In the previous examples, if
+the player was playing the second song and the user pressed pause, at
+the next press on the play button, the <FONT FACE="Courier New, monospace">Playing</FONT>
+state would become active and the first song would play again. Soon
+would the first client complains follow. They'd of course demand,
+that if the player was paused, then it should remember which song was
+playing. But it the player was stopped, then it should restart from
+the first song. 
+</P>
+<P>Now, how can it be done? Of course, you could add a bit of
+programming logic and generate extra events to make the second song
+start if coming from Pause. Something like:</P>
+<P><CODE>if (Event == end_pause) </CODE>
+</P>
+<P><CODE>{</CODE></P>
+<P><CODE>for (int i=0;i&lt; song number;++i)</CODE></P>
+<P><CODE>{</CODE></P>
+<P><CODE>player.process_event(NextSong());</CODE></P>
+<P><CODE>}</CODE></P>
+<P><CODE>}</CODE></P>
+<P>Not much to like in this example, isn't it? To solve this problem,
+you define what is called a shallow or a deep history, the difference
+being that the deep history goes recursively into a sub state machine
+and reactivates any previously active State.</P>
+<P>This is described in the following UML diagram:</P>
+<P><IMG SRC="index_html_m6fc8a34.jpg" NAME="graphics4" ALIGN=LEFT WIDTH=712 HEIGHT=1029 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P>You define this in state machine very simply using a policy:</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>Playing</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>state_machine</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>Playing</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>,</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>ShallowHistory</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>mpl</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>::</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>vector</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>end_pause</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;
+&gt; &gt;</FONT></FONT></CODE></P>
+<P>This states that a shallow history must be activated if the
+<FONT FACE="Courier New, monospace">Playing</FONT> state machine gets
+activated by the <FONT FACE="Courier New, monospace">end_pause</FONT>
+event and only this one. If the state machine was in the <FONT FACE="Courier New, monospace">Stopped</FONT>
+state and the event <FONT FACE="Courier New, monospace">play</FONT>
+was generated, the history would not be activated and the normal
+initial state would become active.</P>
+<P>By default, history is disabled. For your convenience the library
+also provides a non-UML standard AlwaysHistory policy which always
+activates history.</P>
+<P>Deep history is not directly available. The reason is that it
+would conflict with policies which sub- state machines could define.
+Of course, if say Song1 were a state machine itself, it could use the
+ShallowHistory policy itself thus creating Deep History.</P>
+<P><A HREF="SM.cpp">An example defining Song1 as a state machine</A>
+is also provided for your entertainment.</P>
+<H2 CLASS="western" STYLE="page-break-before: always"><A NAME="5.5.Using &ldquo;flags&rdquo;|outline"></A>
+Using &ldquo;flags&rdquo;</H2>
+<P><A HREF="Flags.cpp">Flags.cpp</A></P>
+<P>The last tutorial is devoted to a concept not defined in UML :
+flags. It has been added after proving itself useful on many
+occasions. Please, do not be frightened as we are not talking about
+ugly shortcuts made of an improbable collusion of booleans.</P>
+<P>So what is it and what is its use?</P>
+<P>If you look into the Boost.Statechart documentation you'll find
+some code like:</P>
+<PRE>if ( ( state_downcast&lt; const <FONT COLOR="#0000ff">NumLockOff</FONT> * &gt;() != 0 ) &amp;&amp;
+     ( state_downcast&lt; const <FONT COLOR="#0000ff">CapsLockOff</FONT> * &gt;() != 0 ) &amp;&amp;
+     ( state_downcast&lt; const <FONT COLOR="#0000ff">ScrollLockOff</FONT> * &gt;() != 0 ) )</PRE><P>
+While correct, this can be error-prone and a potential time-bomb when
+you add new states or orthogonal zones.</P>
+<P>And most of all, it hides the real question, which would be &ldquo;Does
+my state machine's current state define a special property?&rdquo;.
+In this special case &ldquo;are my keys in a lock state?&rdquo;. So
+let's apply the Fundamental Theorem of Software Engineering and move
+one level of abstraction higher.</P>
+<P>In our player example, let's say we need to know if the player has
+a loaded CD. We could do the same:</P>
+<PRE>if ( ( state_downcast&lt; const <FONT COLOR="#0000ff">Stopped</FONT> * &gt;() != 0 ) &amp;&amp;
+     ( state_downcast&lt; const <FONT COLOR="#0000ff">Open</FONT> * &gt;() != 0 ) &amp;&amp;
+     ( state_downcast&lt; const <FONT COLOR="#0000ff">Paused</FONT> * &gt;() != 0 ) &amp;&amp;
+     ( state_downcast&lt; const <FONT COLOR="#0000ff">Playing</FONT> * &gt;() != 0 ) )</PRE><P>
+Or flag these 4 states as CDLoaded-able. You can do it like this:</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>typedef</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>mpl</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>::</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>vector1</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>CDLoaded</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>flag_list</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>;</FONT></FONT></CODE></P>
+<P>Inside each of them. Or make a list of flags, like in playing:</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>typedef</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>mpl</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>::</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>vector2</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>PlayingPaused</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>,</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>CDLoaded</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>flag_list</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>;</FONT></FONT></CODE></P>
+<P>Now all you need to do, is to check if your flag is active in the
+current state:</P>
+<P><CODE><FONT COLOR="#030003"><FONT SIZE=2>player</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>p</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>;</FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#000000"><FONT SIZE=2>if
+(</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>p</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>.</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>is_flag_active</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>CDLoaded</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;())
+...</FONT></FONT></CODE></P>
+<P>And what if you have orthogonal zones? How to decide if a state
+machine is in a flagged state? By default, you keep the same code and
+the current states will be OR'ed, meaning if one of the active states
+has the flag, then <FONT FACE="Courier New, monospace">is_flag_active</FONT>
+returns true. Now in some cases, you might want that all of the
+active states are flagged for the state to be active, then you need
+to replace the previous line by:</P>
+<P><CODE><FONT COLOR="#000000"><FONT SIZE=2>if
+(</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>p</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>.</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>is_flag_active</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>CDLoaded</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>,</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>player::Flag_AND</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;())
+...</FONT></FONT></CODE></P>
+<P>The following diagram displays the flag situation in the tutorial.</P>
+<P><IMG SRC="index_html_2cb96cb.jpg" NAME="graphics5" ALIGN=LEFT WIDTH=770 HEIGHT=1092 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="page-break-before: always"><BR><BR>
+</P>
+<H2 CLASS="western" STYLE="page-break-before: always"><A NAME="The many ways to enter a composite state|outline"></A><A NAME="The many ways to enter a composite state|outline"></A><A NAME="The many ways to enter a composite state|outline"></A>
+The many ways to enter a composite state</H2>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3>Please have a look at the
+<A HREF="DirectEntryTutorial.cpp">DirectEntryTutorial</A>.</FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P>Let me count you the ways to enter a composite state, as specified
+by UML:</P>
+<UL>
+	<LI><P>Default entry: A transition leads to the edge of a composite
+	state. This is the default entry as seen in the previous tutorials.
+	The initial state in each orthogonal zone becomes active.</P>
+	<LI><P>Shallow/Deep History entry. See History tutorial.</P>
+	<LI><P>Explicit entry: if a transition goes to a sub-state of a
+	composite state, this state becomes active and like in the previous
+	examples, its entry action is executed after the entry action form
+	the composite state.</P>
+	<LI><P>Fork: an explicit entry into more than one region.</P>
+	<LI><P>Entry point entry: Entering a composite state through an
+	entry point pseudo state. A pseudo state is defined as connecting
+	exactly one transition ending on the pseudo state to one transition
+	inside the composite state having the pseudo state as source. There
+	are two differences with explicit entries. First you have two
+	transitions, meaning two actions (but just one guard as UML forbids
+	guard conditions on the inside transition), second you have only one
+	transition inside the composite. It is defined as a kind of
+	encapsulation.</P>
+	<LI><P>If the entered composite has more than one region, the
+	regions not directly entered are starting at the initial state.</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>Exiting is somehow easier:</P>
+<UL>
+	<LI><P>&ldquo;Standard&rdquo; exit: a transition originating from
+	the edge of a composite state to another state</P>
+	<LI><P>Exit point pseudo state: connects one transition inside a
+	composite state to a transition outside the composite and leading to
+	another (outside) state.</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>Msm (almost) fully supports these features. Almost because there
+is currently one limitation, that it is only possible to explicitly
+enter a sub- composite and not exit it &ldquo;upwards&rdquo; this
+way. To exit, Msm just supports the two previously described methods.</P>
+<P>Sounds a bit complicated? Let's explain using an example were all
+of the previously named methods are used:</P>
+<P><BR><BR>
+</P>
+<P STYLE="page-break-before: always"><IMG SRC="index_html_55a3569b.jpg" NAME="graphics7" ALIGN=LEFT WIDTH=793 HEIGHT=958 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P>We find in this diagram:</P>
+<UL>
+	<LI><P>a &ldquo;normal&rdquo; entering into SubFsm2 triggered by
+	event1 and back to State1 using the same event. In each zone is the
+	initial state activated, so SubState1 and SubState1b.</P>
+	<LI><P>An explicit entry into SubFsm2::SubState2 for zone a with
+	event2 as trigger, meaning zone b gets the initial state activated,
+	SubState1b.</P>
+	<LI><P>A fork into zones a and b to the explicit entries SubState2
+	and SubState2b, triggered by event 3. Both states become active so
+	no zone is default activated (if we had a third zone, it would be).</P>
+	<LI><P>A connection of two transitions through an entry pseudo
+	state, SubFsm2::PseudoEntry1, triggered by event4 and triggering
+	also the second transition on the same event (both transitions must
+	be triggered by the same event). Zone b gets default-activated and
+	SubState1b becomes active. The event is forwarded from one
+	transition to the other.</P>
+	<LI><P>An exiting from SubFsm2 using an exit pseudo-state,
+	PseudoExit1, triggered by event5 and again connecting two
+	transitions using the same event. Again, the event is forwarded to
+	the second transition and both zones are left, as SubFsm2 becomes
+	inactive. Note that if event5 is triggered and PseudoExit1 is
+	inactive, a wrong transition will be detected and <FONT FACE="Courier New, monospace">no_transition</FONT>
+	called.</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>Sounds like an awful lot of code to write? Not at all, as Msm
+offers an easy syntax. 
+</P>
+<H3 CLASS="western">Explicit entry</H3>
+<P>First to define that a state is an explicit entry, you have to
+make it a state and mark it as explicit, giving as template
+parameters the owning composite and the zone id (the zone id starts
+with 0 and corresponds to the first initial state of the
+initial_state type sequence).</P>
+<P><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">SubState2</FONT><FONT COLOR="#000000"> :
+</FONT><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">state</FONT><FONT COLOR="#000000">&lt;&gt;
+, </FONT><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">explicit_entry</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#030003">SubFsm2</FONT><FONT COLOR="#000000">,0&gt;</FONT></FONT></FONT></P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>You can then simply use it in a
+transition from State1:</FONT></FONT></P>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0>
+	<COL WIDTH=25*>
+	<COL WIDTH=36*>
+	<COL WIDTH=41*>
+	<COL WIDTH=76*>
+	<COL WIDTH=77*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10%>
+			<P><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=2>_row
+			&lt;</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>State1,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=16%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>Event2,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=30%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>SubFsm2::SubState2</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=30%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&gt;,</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>We here use a _row but it can
+be any of the available rows.</FONT></FONT></P>
+<P><U>Note (also valid for forks)</U>: in order to make compile time
+more bearable for the more standard cases, and unlike initial states,
+explicit entry states which are not found in the transition table do
+NOT get automatically created. To explicitly create such states, you
+need to add in the state machine containing the explicit states a
+simple typedef giving a sequence of states to be created like:</P>
+<P><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">typedef</FONT><FONT COLOR="#000000">
+mpl::vector&lt;SubState2,SubState2b&gt; explicit_creation;</FONT></FONT></FONT></P>
+<P>Of course, if these states are found in the transition table,
+which is the common case, this is not necessary. The tutorial makes
+use of this typedef for teaching purposes.</P>
+<H3 CLASS="western">Fork</H3>
+<P><FONT COLOR="#000000"><FONT SIZE=3>Need a fork instead of an
+explicit entry?</FONT></FONT></P>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0>
+	<COL WIDTH=25*>
+	<COL WIDTH=36*>
+	<COL WIDTH=41*>
+	<COL WIDTH=127*>
+	<COL WIDTH=27*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10%>
+			<P><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=2>_row
+			&lt;</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>State1,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=16%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>Event3,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=50%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>mpl::vector&lt;SubFsm2::SubState2,SubFsm2::SubState2b&gt;</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=11%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&gt;,</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>With SubState2 defined as
+before and SubState2b defined as being in the second zone (Caution:
+Msm does not check yet that the zone is correct):</FONT></FONT></P>
+<P><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">SubState2b</FONT><FONT COLOR="#000000">
+: </FONT><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">state</FONT><FONT COLOR="#000000">&lt;&gt;
+, </FONT><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">explicit_entry</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#030003">SubFsm2</FONT><FONT COLOR="#000000">,1&gt;</FONT></FONT></FONT></P>
+<P><BR><BR>
+</P>
+<H3 CLASS="western">Entry pseudo states</H3>
+<P><FONT COLOR="#000000"><FONT SIZE=3>To define an entry pseudo
+state, you need derive from the corresponding class and give the zone
+id:</FONT></FONT></P>
+<P><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">PseudoEntry1</FONT><FONT COLOR="#000000">
+: </FONT><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">entry_pseudo_state</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#030003">SubFsm2</FONT><FONT COLOR="#000000">,0&gt;</FONT></FONT></FONT></P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>And add the corresponding
+transition in Fsm's transition table:</FONT></FONT></P>
+<P><BR><BR>
+</P>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0>
+	<COL WIDTH=25*>
+	<COL WIDTH=36*>
+	<COL WIDTH=41*>
+	<COL WIDTH=127*>
+	<COL WIDTH=27*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10%>
+			<P><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=2>_row
+			&lt;</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=14%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>State1,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=16%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>Event4,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=50%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>SubFsm2::PseudoEntry1</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=11%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&gt;,</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>And another in SubFsm2 (yes,
+UML does want it that way), for example this time with an action
+method:</FONT></FONT></P>
+<P><BR><BR>
+</P>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0>
+	<COL WIDTH=24*>
+	<COL WIDTH=52*>
+	<COL WIDTH=23*>
+	<COL WIDTH=29*>
+	<COL WIDTH=109*>
+	<COL WIDTH=19*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=9%>
+			<P><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=2>_row
+			&lt;</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=20%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>PseudoEntry1,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=9%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>Event4,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=11%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>SubState3,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&amp;SubFsm2::entry_action</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=8%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&gt;,</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H3 CLASS="western">Exit pseudo states</H3>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT SIZE=3>And
+finally, exit pseudo states are to be used almost the same way, but
+defined differently, with the first template argument being the
+owning Composite state and the second argument the event to be
+forwarded (no zone is necessary as the composite is exited anyway):</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">PseudoExit1</FONT><FONT COLOR="#000000">
+: </FONT><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">exit_pseudo_state</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#030003">SubFsm2</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#030003">event5</FONT><FONT COLOR="#000000">&gt;
+</FONT></FONT></FONT>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT SIZE=3>And
+you need, as for entry pseudo states, two transitions, one in
+SubFsm2:</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0>
+	<COL WIDTH=24*>
+	<COL WIDTH=44*>
+	<COL WIDTH=32*>
+	<COL WIDTH=50*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=9%>
+			<P><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=2>_row
+			&lt;</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=17%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>SubState3,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>Event5,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=20%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>PseudoExit1</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&gt;,</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3>And one in the containing
+state machine:</FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0>
+	<COL WIDTH=24*>
+	<COL WIDTH=44*>
+	<COL WIDTH=32*>
+	<COL WIDTH=50*>
+	<COL WIDTH=107*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=9%>
+			<P><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=2>_row
+			&lt;</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=17%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>SubFsm2::PseudoExit1,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=12%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>Event5,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=20%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>State2</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=42%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&gt;,</FONT></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3><U>Important note 1:</U>
+UML defines transiting to an entry pseudo state and having either no
+second transition or one with a guard as an error but defines no
+error handling. Msm will tolerate this behavior, the entry pseudo
+state will simply be the newly active state.</FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3><U>Important note 2:</U>
+UML defines transiting to an exit pseudo state and having no second
+transition as an error, and also defines no error handling.
+Therefore, it was decided to implement exit pseudo state as terminate
+states and the containing composite not properly exited will stay
+terminated as it was technically &ldquo;exited&rdquo;.</FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3><U>Important note 3:</U>
+For both pseudo state types are the event to be the same in both
+transitions.</FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H1 CLASS="western" STYLE="page-break-before: always"><A NAME="7.Advanced|outline"></A>
+Advanced</H1>
+<H2 CLASS="western"><A NAME="Conflicting Transitions|outline"></A>Conflicting
+Transitions</H2>
+<P>Two transitions are said to be in conflict if they both exit the
+same states, according to the UML standard, meaning if for a given
+event, these two transitions can be triggered.</P>
+<P>There are two kinds of conflicts, both supported by Msm:</P>
+<UL>
+	<LI><P>for a given source state, several transitions have been
+	defined, triggered by the same event but <U>different guards</U>.</P>
+	<LI><P>An internal transition of a composite state can conflict with
+	a transition causing an exit from the state.</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>Unfortunately, UML does not fully specify the correct behavior.
+Msm supports what UML specifies, that the most nested transition has
+the higher priority.</P>
+<P>If two transitions at the same depth are possible, there is no
+specification, so Msm gives higher priority to the last defined in
+the transition table.</P>
+<P>So, for example you can define (see in <A HREF="SimpleTutorial.cpp">SimpleTutorial</A>):</P>
+<P><BR><BR>
+</P>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0>
+	<COL WIDTH=21*>
+	<COL WIDTH=17*>
+	<COL WIDTH=26*>
+	<COL WIDTH=48*>
+	<COL WIDTH=48*>
+	<COL WIDTH=48*>
+	<COL WIDTH=49*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=8%>
+			<P><BR>
+			</P>
+		</TD>
+		<TD WIDTH=7%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Start</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=10%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Event</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Next</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Action</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><CODE><FONT COLOR="#008000"><FONT SIZE=2>Guard</FONT></FONT></CODE></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=8%>
+			<P><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=2>_row
+			&lt;</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=7%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>Empty,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=10%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>cd_detected,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>Stopped</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&amp;fsm::store_cd_info</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&amp;fsm::good_disk_format</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&gt;,</FONT></FONT></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=8%>
+			<P><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=2>_row
+			&lt;</FONT></FONT></FONT></P>
+		</TD>
+		<TD WIDTH=7%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>Empty,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=10%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>cd_detected,</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>Playing</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&amp;fsm::store_cd_info</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><FONT FACE="Courier New, monospace"><FONT SIZE=3>&amp;fsm::auto_start</FONT></FONT></P>
+		</TD>
+		<TD WIDTH=19%>
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">The last transition has the highest
+priority so only if <FONT FACE="Courier New, monospace">auto_start</FONT>
+returns false will the other transition be tested.</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">To see why the deeper transition has
+higher priority, check the<A HREF="#The many ways to enter a composite state|outline">
+exit pseudo state tutorial</A>. As you see, there is a transition on
+event5 inside SubFsm2 leading to the exit pseudo state and another
+one going from SubFsm2 to State2. So while SubFsm2 is active, we have
+a conflict. If the deepest-level transition would not have priority,
+exit pseudo states would not be possible to realize.</P>
+<H2 CLASS="western"><A NAME="5.1.Containing state machine|outline"></A>
+Containing state machine</H2>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P>All of the states defined in the state machine are created upon
+program initialization. This has the huge advantage of a reduced
+syntactic noise. The cost is a small loss of control of the user on
+the state creation and access. Quite fast came from the beta testers
+the request of a way for a state to get access to its containing
+state machine. This is implemented via another policy. An example of
+this can be found <A HREF="SM.cpp">in a bigger player
+example</A>(defining a state machine with a sub-sub-state machine and
+several sub-state machines). Basically, a state needs to change its
+declaration to:</P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>Stopped</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>sm_ptr</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">And to provide a set_sm_ptr function:</P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>void</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>set_sm_ptr</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>(</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>player</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>*
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>pl</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>)</FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">to get a pointer to the containing
+state machine. The same applies to terminate_state / interrupt_state
+and entry_pseudo_state / exit_pseudo_state.</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H2 CLASS="western"><A NAME="5.2.Getting a pointer to a state|outline"></A>
+Getting a pointer to a state</H2>
+<P>It is a very valid request to have the client code get access to
+the states' data. After all, the states are created once for good and
+hang around as long as the state machine does so why not use it? You
+simply just need sometimes to get information about any state, even
+inactive ones. An example is if you want to write a coverage tool and
+know how many times a state is visited. How to do it? Again, quite
+simply:</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>player::Stopped</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>*
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>tempstate</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>=
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>p</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>.</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>get_state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>player::Stopped*</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;();</FONT></FONT></CODE></P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>or</FONT></FONT></P>
+<P><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>player::Stopped&amp;</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>tempstate2</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>=
+</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>p</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>.</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>get_state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>player::Stopped&amp;</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;();</FONT></FONT></CODE></P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>Depending on your personal
+taste.</FONT></FONT></P>
+<H2 CLASS="western"><A NAME="5.3.Copying|outline"></A>Copying</H2>
+<P STYLE="margin-bottom: 0cm">As the framework creates automatically
+all the states, it has to manage copying a state machine. Once again,
+a policy enables this. 
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">First you need to know that all the
+states are created and given to a boost::shared_ptr following the
+RAII principle. Copying would therefore mean by default shallow
+copying and if states have data, or worse self-managed pointers, Bad
+Things happen.</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">To avoid accidents, assignment and copy
+constructors are deactivated by default. Too many accidents happened
+because of accidental copies.</P>
+<P STYLE="margin-bottom: 0cm">Now, it is possible to copy, but you
+must state it explicitly. But which copy? Shallow? Deep? Why to pay
+for a deep copy if you don't want it? The choice is yours. The
+default policy is NoCopy, but ShallowCopy and DeepCopy policies are
+also provided. You can use it like:</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff">struct</FONT></CODE><CODE>
+player: </CODE><CODE><FONT COLOR="#0000ff">public</FONT></CODE><CODE>
+state_machine&lt;player,NoHistory,DeepCopy&gt;</CODE></P>
+<H2 CLASS="western"><A NAME="7.4.Exceptions|outline"></A><CODE><FONT FACE="Albany, sans-serif">Exceptions</FONT></CODE></H2>
+<P><CODE><FONT FACE="Times New Roman, serif">Normally, you should not
+need exceptions. UML also says little about exceptions. To handle
+error, the best UML-safe method is to add an orthogonal zone, like
+previously shown.</FONT></CODE></P>
+<P><CODE><FONT FACE="Times New Roman, serif">Now, errors happen. In
+this case, the state machine is said to be unstable, because some
+exit, actions or entries may have executed. The framework offers a
+chance to set it straight by catching </FONT></CODE><CODE><FONT FACE="Courier New, monospace">std::exception</FONT></CODE><CODE>
+</CODE><CODE><FONT FACE="Times New Roman, serif">and calling: </FONT></CODE>
+</P>
+<P><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>void</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>exception_caught
+(std::exception&amp; e)</FONT></FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Thus
+giving you a chance to handle the exception.</FONT></FONT></FONT></CODE></P>
+<P><BR><BR>
+</P>
+<H2 CLASS="western"><A NAME="Helpers methods|outline"></A><CODE><FONT COLOR="#000000"><FONT FACE="Albany, sans-serif"><FONT SIZE=4>Helpers
+methods</FONT></FONT></FONT></CODE></H2>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>msm::state_machine
+also provides a few helper methods which you might need but will
+probably not:</FONT></FONT></FONT></CODE></P>
+<UL>
+	<LI><P><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>const</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>std</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>::</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>vector</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>&lt;</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>int</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>&gt;&amp;
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>current_state</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>()
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>const</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>:
+	the ids of currently active states</FONT></FONT></FONT></CODE></P>
+	<LI><P><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>const</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>BaseState</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>*
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>get_state_by_id</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>(</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>int</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>id</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>)
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>const</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>:
+	returns the state with the given id as a pointer to a (user- or
+	default-) base state.</FONT></FONT></FONT></CODE></P>
+	<LI><P><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>bool</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>is_contained</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>()
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>const</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>:
+	returns true if the state machine is used as a composite in another
+	state machine, false otherwise.</FONT></FONT></FONT></CODE></P>
+</UL>
+<P><BR><BR>
+</P>
+<H2 CLASS="western"><A NAME="Getting more speed|outline"></A><CODE><FONT COLOR="#000000"><FONT FACE="Albany, sans-serif"><FONT SIZE=4>Getting
+more speed</FONT></FONT></FONT></CODE></H2>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Msm
+is offering many features at a high-speed, but sometimes, for example
+in embedded systems, you need more speed and are ready to give up
+some features in exchange.</FONT></FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>A
+</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>process_event</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>is
+doing 5 different jobs:</FONT></FONT></FONT></CODE></P>
+<UL>
+	<LI><P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>checking
+	for terminate/interrupt states</FONT></FONT></FONT></CODE></P>
+	<LI><P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>handling
+	the message queue (for entry/exit/transition actions generating
+	themselves events)</FONT></FONT></FONT></CODE></P>
+	<LI><P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>handling
+	deferred events</FONT></FONT></FONT></CODE></P>
+	<LI><P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>catching
+	exceptions</FONT></FONT></FONT></CODE></P>
+	<LI><P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>handling
+	the state switching and action calls</FONT></FONT></FONT></CODE></P>
+</UL>
+<P><BR><BR>
+</P>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Of
+these jobs, only the last is absolutely necessary to a state machine
+(its core job), the other ones are nice-to-haves which cost CPU time.
+In many cases, it is not so important, but in embedded systems, this
+can lead to ad-hoc state machine implementations.</FONT></FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Msm
+detects itself if a concrete state machine makes use of
+terminate/interrupt states and deferred events and deactivates them
+if not used. For the other two, if you want them out, you need to
+help by indicating in your implementation that you want them out.
+This is done with two simple typedefs, for example:</FONT></FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#008000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>//
+Concrete FSM implementation </FONT></FONT></FONT></CODE>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">player</FONT><FONT COLOR="#000000"> :
+</FONT><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">state_machine</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#030003">player</FONT><FONT COLOR="#000000">&gt;</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT SIZE=3>{</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT SIZE=3>//
+no need for exception handling or message queue</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3><FONT COLOR="#0000ff">typedef</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">int</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">no_exception_thrown</FONT><FONT COLOR="#000000">;</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3><FONT COLOR="#0000ff">typedef</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">int</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">no_message_queue</FONT><FONT COLOR="#000000">;</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT SIZE=3>...</FONT></FONT></CODE><CODE><FONT COLOR="#008000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>//
+rest of implementation</FONT></FONT></FONT></CODE></P>
+<P><BR><BR>
+</P>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>What
+is the gain? It will depend on your compiler and target system, so
+please refer to the <A HREF="#9.Performance|outline">performance page</A>
+(where an example is also provided). If you use none of these
+nice-to-haves, a </FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>process_event</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>can
+execute up to 4 times faster. On my Q6600, an average transition
+execution lasts 45ns with a full state machine, 10ns in the minimal
+case.</FONT></FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H1 CLASS="western"><A NAME="8.Customizing states|outline"></A><CODE><FONT COLOR="#000000"><FONT FACE="Arial, sans-serif"><FONT SIZE=4 STYLE="font-size: 16pt"><SPAN STYLE="font-style: normal">Customizing
+states</SPAN></FONT></FONT></FONT></CODE></H1>
+<P>By default, all states derive from msm::default_base_state, which
+is neither polymorphic nor has other useful purpose than to define a
+base for all states. The following part will describe the
+customization possibilities offered by Msm.</P>
+<H2 CLASS="western"><A NAME="User-defined base state / Polymorphic states|outline"></A>
+<CODE><FONT COLOR="#000000"><FONT FACE="Albany, sans-serif"><FONT SIZE=3>User-defined
+base state / Polymorphic states</FONT></FONT></FONT></CODE></H2>
+<P>Sometimes you will need states to be polymorphic. You might want
+to use <FONT FACE="Times New Roman, serif">typeid</FONT> on them,
+like the tutorials do for logging.</P>
+<P>You might also need some added functionality in form of a virtual
+function.</P>
+<P>Msm offers these possibilities by allowing the base state to be
+user-defined. To do this, you need two simple changes:</P>
+<UL>
+	<LI><P>add the non-default base state in your <FONT FACE="Courier New, monospace">msm::state&lt;&gt;
+	</FONT>definition, as first template argument (except for
+	<FONT FACE="Courier New, monospace">interrupt_states</FONT> for
+	which it is the second argument, the first one being the event
+	ending the interrupt), for example, <FONT FACE="Courier New, monospace">my_base_state</FONT>
+	being your new base state for <U>all states</U> in a given state
+	machine: <BR><CODE><FONT COLOR="#0000ff"><FONT SIZE=3>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=3>Empty</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=3>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=3>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=3>state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=3>&lt;my_base_state&gt;</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2><BR></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Now,
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>my_base_state</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>is
+	your new base state. If it has a virtual function, your states
+	become polymorphic. Msm also provides a default polymorphic base
+	type for your convenience, </FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>msm::polymorphic_</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>state</FONT></FONT></FONT></CODE></P>
+	<LI><P><CODE><FONT COLOR="#030003"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Add
+	the user-defined base state in the state machine definition, as a
+	third template argument (after History), for example:<BR></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>struct</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>player
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>:
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>public</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>state_machine</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>&lt;</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>player</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>,</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>NoHistory</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>,</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>my_base_state</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>&gt;</FONT></FONT></FONT></CODE></P>
+</UL>
+<P><BR><BR>
+</P>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>You
+now have polymorphic states. Please have a look at <A HREF="SM-0arg.cpp">an
+example using polymorphic states</A> and the concept presented in the
+next paragraph, visitors.</FONT></FONT></FONT></CODE></P>
+<H2 CLASS="western"><A NAME="Visiting active states|outline"></A><FONT SIZE=3>Visiting
+active states</FONT></H2>
+<P><FONT SIZE=3>In some cases, having only the id or a
+pointer-to-base of the currently active states is not enough. You
+might want to call non-virtually a method of the currently active
+states. It will not be said that Msm forces the <FONT FACE="Courier New, monospace">virtual</FONT>
+keyword down your throat! </FONT>
+</P>
+<P><FONT SIZE=3>To achieve this goal, Msm provides its own variation
+of a visitor pattern using the previously described user-defined
+state technique. If you add to your user-defined base state an
+<FONT FACE="Courier New, monospace">accept_sig</FONT> typedef giving
+the return value (unused for the moment) and signature and provide an
+<FONT FACE="Courier New, monospace">accept</FONT> method with the
+same signature, calling <FONT FACE="Courier New, monospace">state_machine::visit_current_states</FONT>
+will cause <FONT FACE="Courier New, monospace">accept</FONT> to be
+called on the currently active states. Typically, you will also want
+to provide an empty default <FONT FACE="Courier New, monospace">accept</FONT>
+in your base state in order to not force all your states to implement
+<FONT FACE="Courier New, monospace">accept</FONT>. For example your
+base state could be:</FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace">struct</FONT></FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003"><FONT FACE="Courier New, monospace">my_visitable_state</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>{</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+signature of the accept function</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">typedef</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">args</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">&gt;
+</FONT><FONT COLOR="#030003">accept_sig</FONT><FONT COLOR="#000000">;</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+we also want polymorphic states</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">virtual</FONT><FONT COLOR="#000000">
+~</FONT><FONT COLOR="#030003">my_visitable_state</FONT><FONT COLOR="#000000">()
+{}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+default implementation for states who do not need to be visited</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">accept</FONT><FONT COLOR="#000000">()
+</FONT><FONT COLOR="#0000ff">const</FONT><FONT COLOR="#000000"> {}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>};</FONT></FONT></FONT></P>
+<P><BR><BR>
+</P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>This makes your states
+polymorphic and visitable. In this case, </FONT></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>accept</FONT></FONT></FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#000000"><FONT SIZE=3>is made const and takes no
+argument. It could also be:</FONT></FONT></P>
+<P><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">SomeVisitor</FONT><FONT COLOR="#000000">
+{&hellip;};</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">my_visitable_state</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>{</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+signature of the accept function</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">typedef</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">args</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#030003">SomeVisitor</FONT><FONT COLOR="#000000">&amp;&gt;
+</FONT><FONT COLOR="#030003">accept_sig</FONT><FONT COLOR="#000000">;</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+we also want polymorphic states</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">virtual</FONT><FONT COLOR="#000000">
+~</FONT><FONT COLOR="#030003">my_visitable_state</FONT><FONT COLOR="#000000">()
+{}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+default implementation for states who do not need to be visited</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">accept</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#030003">SomeVisitor</FONT><FONT COLOR="#000000">&amp;)
+</FONT><FONT COLOR="#0000ff">const</FONT><FONT COLOR="#000000"> {}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>};</FONT></FONT></FONT></P>
+<P><BR><BR>
+</P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>And now, </FONT></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>accept</FONT></FONT></FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#000000"><FONT SIZE=3>will take one argument. It
+could also be non-const. </FONT></FONT>
+</P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>By default, </FONT></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>accept</FONT></FONT></FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#000000"><FONT SIZE=3>takes up to 2 arguments. To
+get more, simply #define </FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2>BOOST_MSM_VISITOR_ARG_SIZE</FONT></FONT><FONT COLOR="#030003">
+</FONT><FONT COLOR="#030003"><FONT SIZE=3>to another value before
+including state_machine.hpp. For example:</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">#define</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">BOOST_MSM_VISITOR_ARG_SIZE</FONT><FONT COLOR="#000000">
+3</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">#include</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#a31515">&lt;boost/msm/state_machine.hpp&gt;</FONT></FONT></FONT></P>
+<P><FONT COLOR="#030003"><FONT SIZE=3>...</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">my_visitable_state</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>{</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+signature of the accept function</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">typedef</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">args</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#030003">SomeVisitor</FONT><FONT COLOR="#000000">&amp;,</FONT><FONT COLOR="#0000ff">int</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#0000ff">const</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">char</FONT><FONT COLOR="#000000">*&gt;
+</FONT><FONT COLOR="#030003">accept_sig</FONT><FONT COLOR="#000000">;</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+we also want polymorphic states</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">virtual</FONT><FONT COLOR="#000000">
+~</FONT><FONT COLOR="#030003">my_visitable_state</FONT><FONT COLOR="#000000">()
+{}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+default implementation for states who do not need to be visited. Not
+const</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">accept</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#030003">SomeVisitor</FONT><FONT COLOR="#000000">&amp;,</FONT><FONT COLOR="#0000ff">int</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#0000ff">const</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">char</FONT><FONT COLOR="#000000">*) {}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>};</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><FONT COLOR="#000000">You
+now only need implement </FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">accept</FONT></FONT><FONT COLOR="#000000">
+in states needing it. Note that </FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">accept</FONT></FONT><FONT COLOR="#000000">
+will be called on ALL active states but not automatically on
+substates of a composite. You can however choose to have it called by
+calling </FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">visit_current_states</FONT></FONT><FONT COLOR="#000000">
+in the </FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">accept</FONT></FONT><FONT COLOR="#000000">
+of the composite.</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><FONT COLOR="#000000"><U>Important
+warning:</U></FONT><FONT COLOR="#000000"> The method
+</FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">visit_current_states</FONT></FONT><FONT COLOR="#000000">
+takes its parameter by value, so if the signature of the accept
+function is to contain a parameter passed by reference, pass this
+parameter with a boost:ref/cref to avoid undesired copies or slicing.
+So, for example, in the above case, call:</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">SomeVisitor</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">
+</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">vis</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">;</SPAN></FONT></FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">sm</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">.</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">visit_current_states</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">(</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">boost</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">::</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">ref</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">(</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">vis</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">));</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=3>
+</FONT></FONT></FONT>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Please
+have a look at the example using accept <A HREF="SM-0arg.cpp">with 0
+argument</A>, <A HREF="SM-1arg.cpp">with 1</A>, and <A HREF="SM-3arg.cpp">with
+3</A>.</FONT></FONT></FONT></P>
+<H1 CLASS="western"><A NAME="9.Performance|outline"></A><A NAME="8.Performance|outline"></A>
+Performance</H1>
+<P>Tests were made on different PCs running either Windows XP and
+Vista and compiled with VC9 SP1 or Ubuntu and compiled with g++
+4.2.3.</P>
+<P>For these tests, the same player state machine was written using
+Boost.Statechart and Msm, as a <A HREF="SC%20Simple.cpp">state
+machine with only simple states</A> and as a <A HREF="SC%20Composite.cpp">state
+machine with a composite state</A>. As these simple machines need no
+terminate/interrupt states, no message queue and have no-throw
+guarantee on their actions, the tests are made in full- and minimum-
+functionalities.</P>
+<P>Minimum (no exception handling, no message queue):</P>
+<P>VC9:</P>
+<UL>
+	<LI><P>the simple test completes 38 times faster with Msm than with
+	Boost.Statechart</P>
+	<LI><P>the composite test completes 4 times faster with Msm</P>
+</UL>
+<P>gcc 4.2.3:</P>
+<UL>
+	<LI><P>the simple test completes 16 times faster with Msm</P>
+	<LI><P>the composite test completes 9 times faster with Msm</P>
+</UL>
+<P>gcc 3.3:</P>
+<UL>
+	<LI><P>the simple test completes 9-12 times faster with Msm</P>
+	<LI><P>the composite compile but does not work (events of composites
+	lead to no_transition)</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>Full:</P>
+<P>VC9:</P>
+<UL>
+	<LI><P>the simple test completes 12 times faster with Msm than with
+	Boost.Statechart</P>
+	<LI><P>the composite test completes 3 times faster with Msm</P>
+</UL>
+<P>gcc 4.2.3:</P>
+<UL>
+	<LI><P>the simple test completes 10 times faster with Msm</P>
+	<LI><P>the composite test completes 9-10 times faster with Msm</P>
+</UL>
+<P>gcc 3.3:</P>
+<UL>
+	<LI><P>the simple test completes 9 times faster with Msm</P>
+	<LI><P>the composite compile but does not work (events of composites
+	lead to no_transition)</P>
+</UL>
+<H1 CLASS="western" STYLE="margin-left: 0.66cm; text-indent: -0.83cm"><A NAME="8.Compilers|outline"></A>
+Compilers</H1>
+<P>Msm was successfully tested with:</P>
+<UL>
+	<LI><P>VC8,VC9, VC9SP1</P>
+	<LI><P>g++ 4.1 and g++ 4.2.3</P>
+	<LI><P>partially g++ 3.3-3.4 (only <A HREF="SC%20Simple.cpp">simple
+	state machines</A>). Composite state machines will compile but not
+	work properly.</P>
+</UL>
+<H1 CLASS="western" STYLE="margin-left: 0.68cm; text-indent: -0.76cm"><A NAME="8.Limitations|outline"></A>
+Limitations</H1>
+<UL>
+	<LI><P>Compilation times that are going to make you storm the CFO's
+	office and make sure you get a shiny octocore with 8GB RAM by next
+	week, unless he's interested in paying you watch the compiler
+	agonize for hours... (Make sure you ask for dual 24&quot; as well,
+	it doesn't hurt).</P>
+	<LI><P>Quick need to overwrite the mpl::vector/list
+	default-size-limit of 20.</P>
+</UL>
+<H1 CLASS="western" STYLE="page-break-before: always"><A NAME="8.Acknowledgments|outline"></A>
+Acknowledgments</H1>
+<UL>
+	<LI><P>This framework is based on the brilliant work of David
+	Abrahams and Aleksey Gurtovoy who laid down the base and the
+	principles of the framework in their excellent book, &ldquo;C++
+	template Metaprogramming&rdquo;. The implementation also makes heavy
+	use of the boost::mpl.</P>
+	<LI><P>Other libraries from Boost also helped me much, like
+	Boost.Bind, Boost.Function, Boost.Shared_ptr.</P>
+	<LI><P>Special thanks to my beta testers, <A HREF="mailto:woch%20AT%20hrz%20DOT%20tu%20MINUS%20chemnitz%20DOT%20de">Christoph
+	Woskowski</A> and <A HREF="mailto:f%20DOT%20alt%20AT%20gmx%20DOT%20net">Franz
+	Alt</A> for using the framework with little documentation and to my
+	private reviewer, <A HREF="mailto:%20edouard%20DOT%20alligand%20AT%20bureau14%20DOT%20fr">Edouard
+	Alligand</A>.</P>
+	<LI><P>Thanks to Jeff Flinn for his idea of the user-defined base
+	state.</P>
+</UL>
+<P><BR><BR>
+</P>
+<H1 CLASS="western" STYLE="page-break-before: always"><A NAME="9.Questions &amp; Answers|outline"></A>
+Questions &amp; Answers</H1>
+<P><U>Question</U>: on_entry gets an argument, the sent event. What
+event do I get when the state becomes default-activated (because it
+is an initial state)?</P>
+<P><U>Answer</U>: To allow you to know that the state was
+default-activated, Msm generates a boost::msm::InitEvent default
+event.</P>
+<P><BR><BR>
+</P>
+<P><U>Question</U>: Why do I see no call to <FONT FACE="Courier New, monospace">no_transition</FONT>
+in my composite state?</P>
+<P><U>Answer</U>: Because of the priority rule defined by UML. It
+says that in case of transition conflict, the most inner state has a
+higher priority. So after asking the inner state, the containing
+composite has to be also asked to handled the transition. So it makes
+more sense to call his <FONT FACE="Courier New, monospace">no_transition</FONT>.</P>
+<P><BR><BR>
+</P>
+<P><U>Question</U>: Why do I get a compile error saying the compiler
+cannot convert to a function ...<FONT FACE="Courier New, monospace">Fsm::*(some_event)</FONT>?</P>
+<P><U>Answer</U>: Probably you defined a transition triggered by the
+event <FONT FACE="Courier New, monospace">some_event</FONT>, but used
+a guard/action method taking another event.</P>
+<P><BR><BR>
+</P>
+<P><U>Question</U>: Why do I get a compile error saying something
+like &ldquo;too few&rdquo; or &ldquo;too many&rdquo; template
+arguments?</P>
+<P><U>Answer</U>: Probably you defined a transition in form of a
+a_row where you wanted just a _row or the other way around.</P>
+<P><BR><BR>
+</P>
+<P><U>Question</U>: Why do I get a very long compile error when I
+define more than 20 rows in the transition table?</P>
+<P><U>Answer</U>: Msm uses Boost.MPL under the hood and this is the
+default maximum size. Please define the following 2 macros before
+including headers:</P>
+<DIV ID="limit-vector-size" DIR="LTR">
+	<P><BR><BR>
+	</P>
+	<DIV ID="configuration-limit-example" DIR="LTR">
+		<PRE>#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+#define BOOST_MPL_LIMIT_VECTOR_SIZE 30 // or whatever you need</PRE>
+	</DIV>
+</DIV>
+<P><BR><BR>
+</P>
+<H1 CLASS="western" STYLE="page-break-before: always"><A NAME="10.Case Studies|outline"></A>
+Case Studies</H1>
+<H2 CLASS="western">Explicit Entry vs Orthogonal zones</H2>
+<P>Let us try to implement the state machine defined in a paper from
+David Harel (Figure 8 in
+<A HREF="http://www.wisdom.weizmann.ac.il/~dharel/SCANNED.PAPERS/Statecharts.pdf">http://www.wisdom.weizmann.ac.il/~dharel/SCANNED.PAPERS/Statecharts.pdf</A>).</P>
+<P>We will discuss here two possible implementations. The first one,
+shown in the figure 8, is using the UML equivalent of what Harel uses
+in this chart, explicit entries, described in a <A HREF="#The many ways to enter a composite state|outline">previous
+tutorial.</A></P>
+<P>Please have a look at the <A HREF="HarelWithEntry.cpp">source code
+implementation with Msm</A>.</P>
+<P>The biggest advantage of using this method is that the code is
+very simple and easy to understand.</P>
+<P><BR><BR>
+</P>
+<P>Now, this method has quite a few disadvantages. 
+</P>
+<P>First, we notice that &ldquo;alarm-beeps&rdquo; has an
+implementation visible to the outside world. This particularity is
+being used and this leads to three states with close names, &ldquo;alarm1
+beeps&rdquo;, &ldquo;alarm2 beeps&rdquo;, &ldquo;both beep&rdquo;. If
+you think that this starts sounding like duplication of information,
+you are not the only one. The second point is about design and reuse.
+Let us imagine what could happen if Harel really was working for a
+company producing watches.</P>
+<UL>
+	<LI><P>Harel would implement this state machine.</P>
+	<LI><P>Some time later, he would be asked to do the same for a new
+	model of watch. But this model would have 3 alarms.</P>
+	<LI><P>Or maybe 4 alarms?</P>
+	<LI><P>The alarm could be triggered with only a few seconds
+	interval.</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>Please keep in mind that these companies produce hundreds of
+slightly different products, which makes this quite a realistic
+scenario.</P>
+<P>What would be the result? New states like &ldquo;alarm3 beeps&rdquo;
+or &ldquo;three beep&rdquo; + &ldquo;both beep&rdquo; (backward
+compatibility). Maintenance would quickly become a nightmare. The
+reason? A breach of encapsulation caused by &ldquo;alarm beeps&rdquo;
+letting other state machines use its internals.</P>
+<P>Luckily, UML provides not only the dangerous explicit entry
+weapons but also some much more powerful ones, which Msm also
+supports, for example orthogonal zones and instances of a same state
+machine.</P>
+<P>Let us redesign Alarm-Beeps by:</P>
+<UL>
+	<LI><P>encapsulating the alarm functionality in its own state
+	(machine).</P>
+	<LI><P>defining orthogonal zones, one for each sub alarm instance.
+	This way it can easily be extended to support new alarms. This leads
+	to the following diagram:</P>
+</UL>
+<P><IMG SRC="index_html_m743a147d.jpg" NAME="graphics8" ALIGN=LEFT WIDTH=693 HEIGHT=648 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P>As you see, it is quite simple. You only need define an instance
+of Alarm in each zone. To add a new alarm is as simple as adding a
+new instance. The Alarm submachine is simply defined as:</P>
+<P><IMG SRC="index_html_m312ff8f2.jpg" NAME="graphics9" ALIGN=LEFT WIDTH=584 HEIGHT=382 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P>All what still has to be done is to forward the event in the entry
+method of alarmBeeps to give each alarm instance a chance to handle
+or reject the event in its <FONT FACE="Courier New, monospace">check_beep</FONT>
+guard condition.</P>
+<P>To make implementation easier, each alarm is identified by a bit
+and <FONT FACE="Courier New, monospace">check_beep </FONT>is simply
+calling operator&amp; to decide if it wants to accept the event.</P>
+<P>How are instances defined with Msm? Msm knows only types, not
+instances, so you need to define Alarms as: 
+</P>
+<P><FONT COLOR="#0000ff"><FONT SIZE=3>template</FONT></FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#000000"><FONT SIZE=3>&lt;</FONT></FONT><FONT COLOR="#0000ff"><FONT SIZE=3>int</FONT></FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#000000"><FONT SIZE=3>Index&gt; </FONT></FONT><FONT COLOR="#0000ff"><FONT SIZE=3>struct</FONT></FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#000000"><FONT SIZE=3>Alarm...</FONT></FONT></P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>And identify each instance in
+alarmBeeps as Alarm&lt;1&gt;, Alarm&lt;2&gt;, etc. in the
+<FONT FACE="Courier New, monospace">initial_state</FONT> typedef of
+alarmBeeps, which can therefore do without a single row in its
+transition table:</FONT></FONT></P>
+<P><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>typedef
+mpl::vector&lt;Alarm&lt;1&gt;,Alarm&lt;2&gt; &gt; initial_state;</FONT></FONT></FONT></P>
+<P>This way, if Harel ever needs to support a third alarm, he simply
+needs a third entry in this typedef.</P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>Please have a look at the
+example <A HREF="HarelWithoutEntry.cpp">not using any explicit entry</A>.</FONT></FONT></P>
+<P>As g++ refuses to accept template state machines, you might need a
+small workaround: define alarms as a non-template type, then derive
+each instance from this base type, like:</P>
+<P><FONT FACE="Courier New, monospace">struct AlarmImpl : public
+state_machine&lt;AlarmImpl &gt;...</FONT></P>
+<P><FONT FACE="Courier New, monospace">struct Alarm1 : public
+AlarmImpl...</FONT></P>
+<P><FONT FACE="Courier New, monospace">struct Alarm2 : public
+AlarmImpl...</FONT></P>
+<P>An <A HREF="HarelWithoutEntryNoTemplateSM.cpp">example</A> is also
+provided.</P>
+<P><BR><BR>
+</P>
+<P>Which of both methods should you use? It is a matter of taste and
+you will hear different opinions from different designers. If you
+need something fast and with a short life cycle, then you could
+consider the method with explicit entries. If you are more interested
+in reusable design, then the method using instances is for you.</P>
+<H1 CLASS="western" STYLE="page-break-before: always"><A NAME="12.Annex A Debugging|outline"></A><A NAME="10.Annex A Debugging|outline"></A>
+Annex A Debugging</H1>
+<P>Normally, one does not need to know the ids generated for all the
+states of a state machine, unless for debugging purposes, like the
+<FONT FACE="Courier New, monospace">pstate</FONT> function does in
+the tutorials in order to display the name of the current state. The
+next annex will show how to automatically display typeid-generated
+names, but these are not very readable on all platforms, so it can
+help to know how the ids are generated. 
+</P>
+<P>The ids are generated using the transition table, from the &ldquo;Start&rdquo;
+column up to down, then from the &ldquo;Next&rdquo; column, up to
+down,like shown in the next image:</P>
+<P><BR><BR>
+</P>
+<P><IMG SRC="index_html_m2ed87c03.jpg" NAME="graphics6" ALIGN=LEFT WIDTH=759 HEIGHT=516 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P><FONT FACE="Courier New, monospace">Stopped</FONT> will get id 0,
+<FONT FACE="Courier New, monospace">Open</FONT> id 1, <FONT FACE="Courier New, monospace">ErrorMode</FONT>
+id 6 and <FONT FACE="Courier New, monospace">SleepMode</FONT> (seen
+only in the &ldquo;Next&rdquo; column) id 7.</P>
+<P>If you have some implicitly created states, like transition-less
+initial states or states created using the <FONT FACE="Courier New, monospace"><FONT SIZE=3>explicit_creation</FONT></FONT>
+typedef, these will be added as a source at the end of the transition
+table.</P>
+<P>If you have composite states, a row will be added for them at the
+end of the table, after the automatically or explicitly created
+states, which can change their id.</P>
+<P><BR><BR>
+</P>
+<P>The next help you will need for debugging would be to call the
+<FONT FACE="Courier New, monospace">current_state</FONT> method of
+the <FONT FACE="Courier New, monospace">state_machine</FONT> class,
+then the <FONT FACE="Courier New, monospace">display_type</FONT>
+helper to generate a readable name from the id.</P>
+<P>If you do not want to go through the transition table to fill an
+array of names, the library provides another helper,
+<FONT FACE="Courier New, monospace">fill_state_names</FONT>, which,
+given an array of sufficient size (please see Annex B to know how
+many states are defined in the state machine), will fill it with
+typeid-generated names.</P>
+<H1 CLASS="western"><A NAME="13.Annex B Metaprogramming tools|outline"></A><A NAME="12.Annex B Metaprogramming tools|outline"></A><A NAME="12.Annex B Metaprogramming tools|outline"></A>
+Annex B Metaprogramming tools</H1>
+<P>We can find for the transition table even more uses than what we
+have seen so far. Let's suppose you need to write a coverage tool. A
+state machine would be perfect for such a job, if only it could
+provide some information about its structure. As a matter of fact,
+thanks to the transition table and Boost.Mpl, it does.</P>
+<P><BR><BR>
+</P>
+<P>What would you need for a coverage tool? You'd probably need to
+know how many states are defined in the state machine, and how many
+events can be fired. This way you could log the fired events and the
+states visited in the life of a concrete machine and be able to
+perform some coverage analysis, like &ldquo;fired 65% of all possible
+events and visited 80% of the states defined in the state machine&rdquo;.</P>
+<P>To achieve this, Msm provides a few useful tools:</P>
+<UL>
+	<LI><P><FONT FACE="Courier New, monospace">generate_state_set&lt;transition
+	table&gt;</FONT>: returns a mpl::set of all the states defined in
+	the table.</P>
+	<LI><P><FONT FACE="Courier New, monospace">generate_event_set&lt;transition
+	table&gt;</FONT><FONT FACE="Times New Roman, serif">: returns a
+	mpl::set of all the events defined in the table.</FONT></P>
+	<LI><P><FONT FACE="Times New Roman, serif">Using </FONT><FONT FACE="Courier New, monospace">mpl::size&lt;&gt;::value</FONT>
+	<FONT FACE="Times New Roman, serif">you can get the number of
+	elements in the set.</FONT></P>
+	<LI><P><FONT FACE="Courier New, monospace">display_type </FONT><FONT FACE="Times New Roman, serif">defines
+	an </FONT><FONT FACE="Courier New, monospace">operator()</FONT>
+	<FONT FACE="Times New Roman, serif">sending t</FONT><FONT FACE="Courier New, monospace">ypeid(Type).name()
+	</FONT><FONT FACE="Times New Roman, serif">to </FONT><FONT FACE="Courier New, monospace">cout</FONT><FONT FACE="Times New Roman, serif">.</FONT></P>
+	<LI><P><FONT FACE="Times New Roman, serif">Using a mpl::for_each on
+	the result of </FONT><FONT FACE="Courier New, monospace">generate_state_set
+	</FONT><FONT FACE="Times New Roman, serif">and</FONT>
+	<FONT FACE="Courier New, monospace">generate_event_set </FONT><FONT FACE="Times New Roman, serif">passing
+	</FONT><FONT FACE="Courier New, monospace">display_type</FONT> <FONT FACE="Times New Roman, serif">as
+	argument will display all the states of the state machine.</FONT></P>
+	<LI><P><FONT FACE="Times New Roman, serif">Let's suppose you need
+	even more and recursively find the states and events defined in the
+	composite states and thus also having a transition table. No
+	problem! Calling </FONT><FONT FACE="Courier New, monospace">recursive_get_transition_table&lt;Composite&gt;</FONT>
+	<FONT FACE="Times New Roman, serif">will return you the transition
+	table of the composite state, recursively adding the transition
+	tables of all sub-state machines and sub-sub...-sub-state machines.
+	Then call </FONT><FONT FACE="Courier New, monospace">generate_state_set
+	</FONT><FONT FACE="Times New Roman, serif">or</FONT>
+	<FONT FACE="Courier New, monospace">generate_event_set </FONT><FONT FACE="Times New Roman, serif">on
+	the result to get the full list of states and events. </FONT>
+	</P>
+</UL>
+<P><BR><BR>
+</P>
+<P><FONT FACE="Times New Roman, serif">Again, please have a look at
+the end of <A HREF="SM.cpp">this example</A> to see the tools in
+action.</FONT></P>
+</BODY>
+</HTML>
