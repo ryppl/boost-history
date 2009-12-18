@@ -442,6 +442,10 @@ std::size_t
 round_robin::size()
 { return fibers_.size(); }
 
+std::size_t
+round_robin::ready()
+{ return runnable_fibers_.size(); }
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

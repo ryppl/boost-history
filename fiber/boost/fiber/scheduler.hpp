@@ -67,6 +67,9 @@ public:
 	std::size_t size()
 	{ return strategy_->size(); }
 
+	std::size_t ready()
+	{ return strategy_->ready(); }
+
 	void submit_fiber( fiber f)
 	{ strategy_->add( f); }
 

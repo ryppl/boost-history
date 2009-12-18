@@ -754,6 +754,8 @@ Usally __scheduler__ will be invoked until all fibers are scheduled and finished
 
 		std::size_t size();
 
+		std::size_t ready();
+
 		void submit_fiber( fiber);
 
 		template< typename Fn >
@@ -809,6 +811,13 @@ Usally __scheduler__ will be invoked until all fibers are scheduled and finished
 [section:size `std::size_t size()`]
 [variablelist
 [[Effects:] [Returns how many fibers the scheduler contains (maybe runnable or waiting).]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:ready `std::size_t ready()`]
+[variablelist
+[[Effects:] [Returns how many fibers are ready to run in the scheduler.]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]
@@ -925,6 +934,7 @@ holds the current (running) fiber and `master_fiber` executes the scheduling log
 		virtual bool run() = 0;
 		virtual bool empty() = 0;
 		virtual std::size_t size() = 0;
+		virtual std::size_t ready() = 0;
 	};
 
 
@@ -1200,6 +1210,13 @@ another fiber from the internal storage.]]
 [section:size `virtual std::size_t size() = 0`]
 [variablelist
 [[Effects:] [Returns how many fibers the scheduler contains (maybe runnable or waiting).]]
+[[Throws:] [Nothing.]]
+]
+[endsect]
+
+[section:ready `virtual std::size_t ready() = 0`]
+[variablelist
+[[Effects:] [Returns how many fibers are ready to run in the scheduler.]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]

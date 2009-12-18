@@ -187,6 +187,8 @@ public:
 
 	virtual std::size_t size() = 0;
 
+	virtual std::size_t ready() = 0;
+
 	inline friend void intrusive_ptr_add_ref( strategy * p)
 	{ ++p->use_count_; }
 	
