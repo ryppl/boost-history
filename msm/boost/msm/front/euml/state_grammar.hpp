@@ -615,6 +615,7 @@ struct BuildInit
  {};
 
 template <class Expr1,class Expr2,class Attr,class Configure,class BASE>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -640,6 +641,7 @@ build_state(Expr1 const& ,Expr2 const& , Attr const&, Configure const&, BASE )
 }
 
 template <class Expr1,class Expr2,class Attr,class Configure>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -664,6 +666,7 @@ build_state(Expr1 const& ,Expr2 const& ,Attr const&, Configure const&)
 }
 
 template <class Expr1,class Expr2,class Attr>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -684,6 +687,7 @@ build_state(Expr1 const& ,Expr2 const& ,Attr const&)
 }
 
 template <class Expr1,class Expr2>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -702,6 +706,7 @@ build_state(Expr1 const& ,Expr2 const& )
 }
 
 template <class Expr1>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -714,6 +719,7 @@ build_state(Expr1 const& )
 	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
 	return func_state<entry_action,NoAction>();
 }
+inline
 func_state<
 NoAction,
 NoAction
@@ -785,6 +791,7 @@ protected:
 };
 
 template <class STT,class Init>
+inline
 func_state_machine<
 STT,
 typename boost::result_of<BuildInit(Init)>::type
@@ -796,6 +803,7 @@ build_sm(STT ,Init)
 }
 
 template <class STT,class Init,class Expr1>
+inline
 func_state_machine<
 STT,
 typename boost::result_of<BuildInit(Init)>::type,
@@ -812,6 +820,7 @@ build_sm(STT ,Init , Expr1 const&)
 }
 
 template <class STT,class Init,class Expr1,class Expr2>
+inline
 func_state_machine<
 STT,
 typename boost::result_of<BuildInit(Init)>::type,
@@ -833,6 +842,7 @@ build_sm(STT ,Init , Expr1 const& ,Expr2 const& )
 }
 
 template <class STT,class Init,class Expr1,class Expr2,class Attr>
+inline
 func_state_machine<
 STT,
 typename boost::result_of<BuildInit(Init)>::type,
@@ -856,6 +866,7 @@ build_sm(STT ,Init , Expr1 const& ,Expr2 const& ,Attr const&)
 }
 
 template <class STT,class Init,class Expr1,class Expr2,class Attr,class Configure>
+inline
 func_state_machine<
 STT,
 typename boost::result_of<BuildInit(Init)>::type,
@@ -887,6 +898,7 @@ build_sm(STT ,Init , Expr1 const& ,Expr2 const& , Attr const&, Configure const& 
 }
 
 template <class STT,class Init,class Expr1,class Expr2,class Attr,class Configure,class Expr3>
+inline
 func_state_machine<
 STT,
 typename boost::result_of<BuildInit(Init)>::type,
@@ -922,6 +934,7 @@ build_sm(STT ,Init , Expr1 const& ,Expr2 const& ,Attr const&, Configure const&, 
 }
 
 template <class STT,class Init,class Expr1,class Expr2,class Attr,class Configure,class Expr3,class Expr4>
+inline
 func_state_machine<
 STT,
 typename boost::result_of<BuildInit(Init)>::type,
@@ -962,6 +975,7 @@ build_sm(STT ,Init , Expr1 const& ,Expr2 const& , Attr const&, Configure const&,
 }
 
 template <class STT,class Init,class Expr1,class Expr2,class Attr,class Configure,class Expr3,class Expr4,class BASE>
+inline
 func_state_machine<
 STT,
 typename boost::result_of<BuildInit(Init)>::type,
@@ -1003,6 +1017,7 @@ build_sm(STT ,Init , Expr1 const& ,Expr2 const& ,Attr const& , Configure const&,
 }
 
 template <class Expr>
+inline
 inherit_attributes<typename boost::result_of<BuildAttributes(Expr)>::type>
 build_attributes (Expr const&)
 {
@@ -1010,6 +1025,7 @@ build_attributes (Expr const&)
 }
 
 template <class Expr1,class Expr2,class Attr,class Configure,class BASE>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -1038,6 +1054,7 @@ build_terminate_state(Expr1 const& ,Expr2 const& , Attr const&, Configure const&
 }
 
 template <class Expr1,class Expr2,class Attr,class Configure>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -1066,6 +1083,7 @@ build_terminate_state(Expr1 const& ,Expr2 const& ,Attr const&, Configure const&)
 }
 
 template <class Expr1,class Expr2,class Attr>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -1087,6 +1105,7 @@ build_terminate_state(Expr1 const& ,Expr2 const& ,Attr const&)
 }
 
 template <class Expr1,class Expr2>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -1108,6 +1127,7 @@ build_terminate_state(Expr1 const& ,Expr2 const& )
 }
 
 template <class Expr1>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -1122,6 +1142,7 @@ build_terminate_state(Expr1 const& )
 	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
 	return func_state<entry_action,NoAction,::boost::fusion::vector<>,::boost::mpl::vector<boost::msm::TerminateFlag> >();
 }
+inline
 func_state<
 NoAction,
 NoAction,
@@ -1134,6 +1155,7 @@ build_terminate_state()
 }
 
 template <class Expr1,class Expr2,class Attr,class Configure,class BASE,class EndInterruptEvent>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -1168,6 +1190,7 @@ build_interrupt_state(EndInterruptEvent const&,Expr1 const& ,Expr2 const& , Attr
 }
 
 template <class Expr1,class Expr2,class Attr,class Configure,class EndInterruptEvent>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -1203,6 +1226,7 @@ build_interrupt_state(EndInterruptEvent const&,Expr1 const& ,Expr2 const& ,Attr 
 }
 
 template <class Expr1,class Expr2,class Attr,class EndInterruptEvent>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -1225,6 +1249,7 @@ build_interrupt_state(EndInterruptEvent const&,Expr1 const& ,Expr2 const& ,Attr 
 }
 
 template <class Expr1,class Expr2,class EndInterruptEvent>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -1247,6 +1272,7 @@ build_interrupt_state(EndInterruptEvent const&,Expr1 const& ,Expr2 const& )
 }
 
 template <class Expr1,class EndInterruptEvent>
+inline
 func_state<
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr1,BuildActionSequence>::type,
@@ -1264,6 +1290,7 @@ build_interrupt_state(EndInterruptEvent const&, Expr1 const&)
 }
 
 template <class EndInterruptEvent>
+inline
 func_state<
 NoAction,
 NoAction,
@@ -1277,6 +1304,7 @@ build_interrupt_state(EndInterruptEvent const&)
 }
 
 template <int ZoneIndex,class Expr1,class Expr2,class Attr,class Configure,class BASE>
+inline
 entry_func_state<
 ZoneIndex,
 typename ::boost::mpl::eval_if<
@@ -1303,6 +1331,7 @@ build_entry_state(Expr1 const& ,Expr2 const& , Attr const&, Configure const&, BA
 }
 
 template <int ZoneIndex,class Expr1,class Expr2,class Attr,class Configure>
+inline
 entry_func_state<
 ZoneIndex,
 typename ::boost::mpl::eval_if<
@@ -1328,6 +1357,7 @@ build_entry_state(Expr1 const& ,Expr2 const& ,Attr const&, Configure const&)
 }
 
 template <int ZoneIndex,class Expr1,class Expr2,class Attr>
+inline
 entry_func_state<
 ZoneIndex,
 typename ::boost::mpl::eval_if<
@@ -1349,6 +1379,7 @@ build_entry_state(Expr1 const& ,Expr2 const& ,Attr const&)
 }
 
 template <int ZoneIndex,class Expr1,class Expr2>
+inline
 entry_func_state<
 ZoneIndex,
 typename ::boost::mpl::eval_if<
@@ -1368,6 +1399,7 @@ build_entry_state(Expr1 const& ,Expr2 const& )
 }
 
 template <int ZoneIndex,class Expr1>
+inline
 entry_func_state<
 ZoneIndex,
 typename ::boost::mpl::eval_if<
@@ -1383,6 +1415,7 @@ build_entry_state(Expr1 const& )
 }
 
 template <int ZoneIndex>
+inline
 entry_func_state<
 ZoneIndex,
 NoAction,
@@ -1394,6 +1427,7 @@ build_entry_state()
 }
 
 template <class Event,class Expr1,class Expr2,class Attr,class Configure,class BASE>
+inline
 exit_func_state<
 Event,
 typename ::boost::mpl::eval_if<
@@ -1420,6 +1454,7 @@ build_exit_state(Event const&,Expr1 const& ,Expr2 const& , Attr const&, Configur
 }
 
 template <class Event,class Expr1,class Expr2,class Attr,class Configure>
+inline
 exit_func_state<
 Event,
 typename ::boost::mpl::eval_if<
@@ -1445,6 +1480,7 @@ build_exit_state(Event const&,Expr1 const& ,Expr2 const& ,Attr const&, Configure
 }
 
 template <class Event,class Expr1,class Expr2,class Attr>
+inline
 exit_func_state<
 Event,
 typename ::boost::mpl::eval_if<
@@ -1466,6 +1502,7 @@ build_exit_state(Event const&,Expr1 const& ,Expr2 const& ,Attr const&)
 }
 
 template <class Event,class Expr1,class Expr2>
+inline
 exit_func_state<
 Event,
 typename ::boost::mpl::eval_if<
@@ -1485,6 +1522,7 @@ build_exit_state(Event const&,Expr1 const& ,Expr2 const& )
 }
 
 template <class Event,class Expr1>
+inline
 exit_func_state<
 Event,
 typename ::boost::mpl::eval_if<
@@ -1500,6 +1538,7 @@ build_exit_state(Event const&, Expr1 const& )
 }
 
 template <class Event>
+inline
 exit_func_state<
 Event,
 NoAction,
@@ -1511,6 +1550,7 @@ build_exit_state(Event const&)
 }
 
 template <int ZoneIndex,class Expr1,class Expr2,class Attr,class Configure,class BASE>
+inline
 explicit_entry_func_state<
 ZoneIndex,
 typename ::boost::mpl::eval_if<
@@ -1537,6 +1577,7 @@ build_explicit_entry_state(Expr1 const& ,Expr2 const& , Attr const&, Configure c
 }
 
 template <int ZoneIndex,class Expr1,class Expr2,class Attr,class Configure>
+inline
 explicit_entry_func_state<
 ZoneIndex,
 typename ::boost::mpl::eval_if<
@@ -1562,6 +1603,7 @@ build_explicit_entry_state(Expr1 const& ,Expr2 const& ,Attr const&, Configure co
 }
 
 template <int ZoneIndex,class Expr1,class Expr2,class Attr>
+inline
 explicit_entry_func_state<
 ZoneIndex,
 typename ::boost::mpl::eval_if<
@@ -1583,6 +1625,7 @@ build_explicit_entry_state(Expr1 const& ,Expr2 const& ,Attr const&)
 }
 
 template <int ZoneIndex,class Expr1,class Expr2>
+inline
 explicit_entry_func_state<
 ZoneIndex,
 typename ::boost::mpl::eval_if<
@@ -1602,6 +1645,7 @@ build_explicit_entry_state(Expr1 const& ,Expr2 const& )
 }
 
 template <int ZoneIndex,class Expr1>
+inline
 explicit_entry_func_state<
 ZoneIndex,
 typename ::boost::mpl::eval_if<
@@ -1617,6 +1661,7 @@ build_explicit_entry_state(Expr1 const& )
 }
 
 template <int ZoneIndex>
+inline
 explicit_entry_func_state<
 ZoneIndex,
 NoAction,

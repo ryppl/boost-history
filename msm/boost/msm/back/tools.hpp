@@ -28,7 +28,7 @@ struct fill_state_names
 {
     fill_state_names(char const** names):m_names(names){}
     template <class StateType>
-    void operator()(boost::msm::back::wrap<StateType> const&)
+    void operator()(boost::msm::wrap<StateType> const&)
     {
         m_names[get_state_id<stt,StateType>::value]= typeid(StateType).name();
     }
@@ -42,7 +42,7 @@ struct get_state_name
 {
     get_state_name(std::string& name_to_fill, int state_id):m_name(name_to_fill),m_state_id(state_id){}
     template <class StateType>
-    void operator()(boost::msm::back::wrap<StateType> const&)
+    void operator()(boost::msm::wrap<StateType> const&)
     {
         if (get_state_id<stt,StateType>::value == m_state_id)
         {
@@ -58,7 +58,7 @@ private:
 struct display_type 
 {
     template <class Type>
-    void operator()(boost::msm::back::wrap<Type> const&)
+    void operator()(boost::msm::wrap<Type> const&)
     {
         std::cout << typeid(Type).name() << std::endl;
     }

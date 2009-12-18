@@ -16,6 +16,8 @@
 
 #include <boost/typeof/typeof.hpp>
 
+#include <boost/msm/row_tags.hpp>
+#include <boost/msm/common.hpp>
 #include <boost/msm/front/automatic_event.hpp>
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
@@ -120,7 +122,7 @@ namespace boost { namespace msm { namespace front
             Call(EVT const& evt,FSM& fsm,STATE& state):
         evt_(evt),fsm_(fsm),state_(state){}
         template <class FCT>
-        void operator()(::boost::msm::back::wrap<FCT> const& )
+        void operator()(::boost::msm::wrap<FCT> const& )
         {
             FCT()(evt_,fsm_,state_);
         }
@@ -140,7 +142,7 @@ namespace boost { namespace msm { namespace front
             Call2(EVT const& evt,FSM& fsm,SourceState& src,TargetState& tgt):
         evt_(evt),fsm_(fsm),src_(src),tgt_(tgt){}
         template <class FCT>
-        void operator()(::boost::msm::back::wrap<FCT> const& )
+        void operator()(::boost::msm::wrap<FCT> const& )
         {
             FCT()(evt_,fsm_,src_,tgt_);
         }
@@ -156,13 +158,13 @@ namespace boost { namespace msm { namespace front
         template <class EVT,class FSM,class STATE>
         void operator()(EVT const& evt,FSM& fsm,STATE& state)
         {
-            mpl::for_each<Sequence,boost::msm::back::wrap< ::boost::mpl::placeholders::_1> >
+            mpl::for_each<Sequence,boost::msm::wrap< ::boost::mpl::placeholders::_1> >
                 (Call<EVT,FSM,STATE>(evt,fsm,state));
         }
         template <class EVT,class FSM,class SourceState,class TargetState>
         void operator()(EVT const& evt,FSM& fsm,SourceState& src,TargetState& tgt)
         {
-            mpl::for_each<Sequence,boost::msm::back::wrap< ::boost::mpl::placeholders::_1> >
+            mpl::for_each<Sequence,boost::msm::wrap< ::boost::mpl::placeholders::_1> >
                 (Call2<EVT,FSM,SourceState,TargetState>(evt,fsm,src,tgt));
         }
     };

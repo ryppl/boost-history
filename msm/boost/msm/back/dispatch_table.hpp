@@ -33,7 +33,7 @@ struct dispatch_table
 {
  private:
     // This is a table of these function pointers.
-    typedef std::pair<int,HandledEnum> (*cell)(Fsm&, int,Event const&);
+    typedef HandledEnum (*cell)(Fsm&, int,int,Event const&);
     typedef bool (*guard)(Fsm&, Event const&);
 
     // class used to build a chain (or sequence) of transitions for a given event and start state
@@ -49,42 +49,44 @@ struct dispatch_table
         {
             template <class Sequence>
             static
-            typename ::boost::enable_if<typename ::boost::mpl::empty<Sequence>::type,std::pair<int,HandledEnum> >::type
-            execute(Fsm& , int state, Event const& ,
-                    ::boost::msm::back::dummy<0> = 0)
+            HandledEnum
+            execute(Fsm& , int, int, Event const& , ::boost::mpl::true_ const & )
             {
                 // if at least one guard rejected, this will be ignored, otherwise will generate an error
-                return std::make_pair(state,HANDLED_FALSE);
+                return HANDLED_FALSE;
             }
 
             template <class Sequence>
             static
-            typename ::boost::disable_if<typename ::boost::mpl::empty<Sequence>::type,std::pair<int,HandledEnum> >::type
-            execute(Fsm& fsm, int state, Event const& evt,
-                    ::boost::msm::back::dummy<1> = 0)
+            HandledEnum
+            execute(Fsm& fsm, int region_index , int state, Event const& evt,
+                    ::boost::mpl::false_ const & )
             {
                  // try the first guard
                  typedef typename ::boost::mpl::front<Sequence>::type first_row;
-                 std::pair<int,HandledEnum> res = first_row::execute(fsm,state,evt);
-                 if (HANDLED_TRUE!=res.second)
+                 HandledEnum res = first_row::execute(fsm,region_index,state,evt);
+                 if (HANDLED_TRUE!=res)
                  {
                      // if the first rejected, move on to the next one
-                     std::pair<int,HandledEnum> sub_res = 
-                         execute<typename ::boost::mpl::pop_front<Sequence>::type>(fsm,state,evt);
+                    HandledEnum sub_res = 
+                         execute<typename ::boost::mpl::pop_front<Sequence>::type>(fsm,region_index,state,evt,
+                            ::boost::mpl::bool_<
+                                ::boost::mpl::empty<typename ::boost::mpl::pop_front<Sequence>::type>::type::value>());
                      // if at least one guards rejects, the event will not generate a call to no_transition
-                     HandledEnum handled = ((HANDLED_GUARD_REJECT==sub_res.second) || 
-                                            (HANDLED_GUARD_REJECT==res.second))?
-                                                HANDLED_GUARD_REJECT:sub_res.second;
-                     return std::make_pair(sub_res.first,handled);
+                     HandledEnum handled = ((HANDLED_GUARD_REJECT==sub_res) || 
+                                            (HANDLED_GUARD_REJECT==res))?
+                                                HANDLED_GUARD_REJECT:sub_res;
+                     return handled;
                  }
                  return res;
             }
         };
         // Take the transition action and return the next state.
-        static std::pair<int,HandledEnum> execute(Fsm& fsm, int state, Event const& evt)
+        static HandledEnum execute(Fsm& fsm, int region_index, int state, Event const& evt)
         {
             // forward to helper
-            return execute_helper::template execute<Seq>(fsm,state,evt);
+            return execute_helper::template execute<Seq>(fsm,region_index,state,evt,
+                ::boost::mpl::bool_< ::boost::mpl::empty<Seq>::type::value>());
         }
     };
     // nullary metafunction whose only job is to prevent early evaluation of _1
@@ -138,7 +140,7 @@ struct dispatch_table
 	    {}
         template <class State>
         typename ::boost::enable_if<typename has_state_delayed_event<State,Event>::type,void>::type
-        operator()(boost::msm::back::wrap<State> const&,boost::msm::back::dummy<0> = 0)
+        operator()(boost::msm::wrap<State> const&,boost::msm::back::dummy<0> = 0)
 	    {
             typedef typename create_stt<Fsm>::type stt; 
             BOOST_STATIC_CONSTANT(int, state_id = (get_state_id<stt,State>::value));
@@ -147,7 +149,7 @@ struct dispatch_table
 	    }
         template <class State>
         typename ::boost::disable_if<typename has_state_delayed_event<State,Event>::type,void >::type
-        operator()(boost::msm::back::wrap<State> const&,boost::msm::back::dummy<0> = 0)
+        operator()(boost::msm::wrap<State> const&,boost::msm::back::dummy<0> = 0)
         {
             typedef typename create_stt<Fsm>::type stt; 
             BOOST_STATIC_CONSTANT(int, state_id = (get_state_id<stt,State>::value));
@@ -172,7 +174,7 @@ struct dispatch_table
         // this event is an automatic one (not a real one, just one for use in event-less transitions)
         // Note this event cannot be used as deferred!
 	    template <class State>
-        void operator()(boost::msm::back::wrap<State> const&)
+        void operator()(boost::msm::wrap<State> const&)
 	    {
             typedef typename create_stt<Fsm>::type stt; 
             BOOST_STATIC_CONSTANT(int, state_id = (get_state_id<stt,State>::value));
@@ -190,7 +192,7 @@ struct dispatch_table
     {
         // Initialize cells for no transition
 	    ::boost::mpl::for_each<typename generate_state_set<Stt>::type, 
-                               boost::msm::back::wrap< ::boost::mpl::placeholders::_1> >
+                               boost::msm::wrap< ::boost::mpl::placeholders::_1> >
                         (default_init_cell<Event>(this,entries));
 
         // build chaining rows for rows coming from the same state and the current event

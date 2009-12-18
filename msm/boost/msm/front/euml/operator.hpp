@@ -18,6 +18,7 @@
 #include <boost/mpl/has_key.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/set.hpp>
+#include <boost/type_traits.hpp>
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(reference)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(key_type)

@@ -12,6 +12,7 @@
 #define BOOST_MSM_COMMON_TYPES_H
 
 #include <boost/tuple/tuple.hpp>
+#include <boost/msm/common.hpp>
 
 namespace boost { namespace msm { namespace back
 {
@@ -27,10 +28,6 @@ typedef enum
 } HandledEnum;
 
 typedef HandledEnum execute_return;
-
-// wrapper for mpl::for_each as showed in the C++ Template Metaprogramming ch. 9
-template <class T>
-struct wrap{};
 
 }}}
 
