@@ -14,4 +14,5 @@ Synch. objects using spin-wait ops. reside in namespace `boost::fibers::spin`.
 [include spin_barrier.qbk]
 [include spin_event_variables.qbk]
 [include spin_fifos.qbk]
+[include spin_futures.qbk]
 [endsect]
