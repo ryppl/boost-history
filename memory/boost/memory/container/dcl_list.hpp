@@ -193,7 +193,7 @@ public:
 
 	__forceinline void BOOST_MEMORY_CALL clear()
 	{
-		m_next = m_prev = this;
+		dcl_list_node_base::erase();
 	}
 
 	void BOOST_MEMORY_CALL pop_front()
