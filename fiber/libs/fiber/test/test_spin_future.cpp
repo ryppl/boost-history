@@ -9,28 +9,21 @@
 #include <memory>
 #include <string>
 
+#include <boost/move/move.hpp>
 #include <boost/test/unit_test.hpp>
 
-#ifdef BOOST_HAS_RVALUE_REFS
-    template<typename T>
-    typename boost::remove_reference<T>::type&& cast_to_rval(T&& t)
-    {
-        return t;
-    }
-#else
-    template<typename T>
-    boost::detail::thread_move_t<T> cast_to_rval(T& t)
-    {
-        return boost::move(t);
-    }
-#endif
+template<typename T>
+BOOST_RV_REF( T) cast_to_rval(T& t)
+{
+    return boost::move(t);
+}
 
 struct X
 {
 private:
     
-    X(X& other);
-    
+   BOOST_MOVABLE_BUT_NOT_COPYABLE(X);
+
 public:
     
     int i;
@@ -38,23 +31,11 @@ public:
     X():
         i(42)
     {}
-#ifdef BOOST_HAS_RVALUE_REFS
-    X(X&& other):
+    X( BOOST_RV_REF( X) other):
         i(other.i)
     {
         other.i=0;
     }
-#else
-    X(boost::detail::thread_move_t<X> other):
-        i(other->i)
-    {
-        other->i=0;
-    }
-    operator boost::detail::thread_move_t<X>()
-    {
-        return boost::detail::thread_move_t<X>(*this);
-    }
-#endif
     ~X()
     {}
 };

@@ -1,8 +1,13 @@
+0.3.2:
+------
+- default stacksize = 64kB because of seg fault if value is too small
+- using boost.move library for move support
+
 0.3.1:
 ------
 - scheduler< Strategy >::migrate_fiber() overloaded - passing only fiber to be migrated
-- default stacksize set to 8kB
-- documetnation updated
+- documentation updated
+- default stacksize = 8kB
 
 0.3.0:
 ------

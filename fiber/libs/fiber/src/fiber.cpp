@@ -18,15 +18,6 @@
 namespace boost {
 namespace fibers {
 
-#ifdef BOOST_HAS_RVALUE_REFS
-detail::info_base::ptr_t
-fiber::make_info_( std::size_t stack_size, void ( * fn)() )
-{
-	return detail::info_base::ptr_t(
-		new detail::info< void( *)() >( fn, stack_size) );
-}
-#endif
-
 fiber::fiber() :
 	info_base_()
 {}
@@ -35,46 +26,31 @@ fiber::fiber( detail::info_base::ptr_t info_base) :
 	info_base_( info_base)
 {}
 
-#ifdef BOOST_HAS_RVALUE_REFS
-fiber::fiber( fiber && other)
-{ info_base_.swap( other.info_base_); }
+fiber::fiber( fiber const& other) :
+	info_base_( other.info_base_)
+{}
 
 fiber &
-fiber::operator=( fiber && other)
+fiber::operator=( BOOST_COPY_ASSIGN_REF( fiber) other)
+{
+	if ( this == & other) return * this;
+	info_base_ = other.info_base_;
+	return * this;
+}
+
+fiber::fiber( BOOST_RV_REF( fiber) other)
 {
 	info_base_ = other.info_base_;
 	other.info_base_.reset();
-	return * this;
-}
-
-fiber &&
-fiber::move()
-{ return static_cast< fiber && >( * this); }
-#else
-fiber::fiber( boost::detail::thread_move_t< fiber > f)
-{
-	info_base_ = f->info_base_;
-	f->info_base_.reset();
 }
 
 fiber &
-fiber::operator=( boost::detail::thread_move_t< fiber > f)
+fiber::operator=( BOOST_RV_REF( fiber) other)
 {
-	fiber new_fiber( f);
-	swap( new_fiber);
+	fiber tmp( other);
+	swap( tmp);
 	return * this;
 }
-
-fiber::operator boost::detail::thread_move_t< fiber >()
-{ return move(); }
-
-boost::detail::thread_move_t< fiber >
-fiber::move()
-{
-	boost::detail::thread_move_t< fiber > f( * this);
-	return f;
-}
-#endif
 
 detail::info_base::ptr_t
 fiber::info_() const

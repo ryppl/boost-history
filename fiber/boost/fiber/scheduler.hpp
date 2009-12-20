@@ -12,6 +12,7 @@
 
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/intrusive_ptr.hpp>
+#include <boost/move/move.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/detail/config.hpp>
@@ -78,7 +79,15 @@ public:
 	{ strategy_->add( fiber( fn) ); }
 
 	template< typename Fn >
+	void make_fiber( BOOST_RV_REF( Fn) fn)
+	{ strategy_->add( fiber( fn) ); }
+
+	template< typename Fn >
 	void make_fiber( std::size_t stack_size, Fn fn)
+	{ strategy_->add( fiber( stack_size, fn) ); }
+
+	template< typename Fn >
+	void make_fiber( std::size_t stack_size, BOOST_RV_REF( Fn) fn)
 	{ strategy_->add( fiber( stack_size, fn) ); }
 
 	void migrate_fiber( fiber f)

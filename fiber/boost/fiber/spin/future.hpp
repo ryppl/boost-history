@@ -16,11 +16,11 @@
 #include <boost/config.hpp>
 #include <boost/exception_ptr.hpp>
 #include <boost/function.hpp>
+#include <boost/move/move.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/ref.hpp>
 #include <boost/scoped_array.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/thread/detail/move.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/fiber/detail/future_traits.hpp>
@@ -473,10 +473,9 @@ class packaged_task;
 template <typename R>
 class unique_future
 {
-    unique_future(unique_future & rhs);// = delete;
-    unique_future& operator=(unique_future& rhs);// = delete;
-
     typedef boost::shared_ptr<detail::future_object<R> > future_ptr;
+
+	BOOST_MOVABLE_BUT_NOT_COPYABLE( unique_future);
     
     future_ptr future;
 
@@ -500,37 +499,19 @@ public:
     ~unique_future()
     {}
 
-#ifdef BOOST_HAS_RVALUE_REFS
-	unique_future(unique_future && other)
+	unique_future( BOOST_RV_REF( unique_future) other):
+	    future(other.future)
 	{
-	    future.swap(other.future);
+	    other.future.reset();
 	}
-	unique_future& operator=(unique_future && other)
+	
+	unique_future& operator=( BOOST_RV_REF( unique_future) other)
 	{
 	    future=other.future;
 	    other.future.reset();
 	    return *this;
 	}
-#else
-	unique_future(boost::detail::thread_move_t<unique_future> other):
-	    future(other->future)
-	{
-	    other->future.reset();
-	}
 	
-	unique_future& operator=(boost::detail::thread_move_t<unique_future> other)
-	{
-	    future=other->future;
-	    other->future.reset();
-	    return *this;
-	}
-	
-	operator boost::detail::thread_move_t<unique_future>()
-	{
-	    return boost::detail::thread_move_t<unique_future>(*this);
-	}
-#endif
-
 	void swap(unique_future& other)
 	{
 	    future.swap(other.future);
@@ -587,11 +568,10 @@ template <typename R>
 class shared_future
 {
     typedef boost::shared_ptr<detail::future_object<R> > future_ptr;
+
+	BOOST_COPYABLE_AND_MOVABLE( shared_future);
     
     future_ptr future;
-
-//         shared_future(const unique_future<R>& other);
-//         shared_future& operator=(const unique_future<R>& other);
 
 	friend class detail::future_waiter;
 	friend class promise<R>;
@@ -614,64 +594,35 @@ public:
 	~shared_future()
 	{}
 	
-	shared_future& operator=(shared_future const& other)
+	shared_future& operator=( BOOST_COPY_ASSIGN_REF( shared_future) other)
 	{
 	    future=other.future;
 	    return *this;
 	}
-#ifdef BOOST_HAS_RVALUE_REFS
-	shared_future(shared_future && other)
-	{
-	    future.swap(other.future);
-	}
-	shared_future(unique_future<R> && other)
-	{
-	    future.swap(other.future);
-	}
-	shared_future& operator=(shared_future && other)
-	{
-	    future.swap(other.future);
-	    other.future.reset();
-	    return *this;
-	}
-	shared_future& operator=(unique_future<R> && other)
-	{
-	    future.swap(other.future);
-	    other.future.reset();
-	    return *this;
-	}
-#else            
-	shared_future(boost::detail::thread_move_t<shared_future> other):
-	    future(other->future)
-	{
-	    other->future.reset();
-	}
-//         shared_future(const unique_future<R> &) = delete;
-	shared_future(boost::detail::thread_move_t<unique_future<R> > other):
-	    future(other->future)
-	{
-	    other->future.reset();
-	}
-	shared_future& operator=(boost::detail::thread_move_t<shared_future> other)
-	{
-	    future.swap(other->future);
-	    other->future.reset();
-	    return *this;
-	}
-	shared_future& operator=(boost::detail::thread_move_t<unique_future<R> > other)
-	{
-	    future.swap(other->future);
-	    other->future.reset();
-	    return *this;
-	}
-	
-	operator boost::detail::thread_move_t<shared_future>()
-	{
-	    return boost::detail::thread_move_t<shared_future>(*this);
-	}
-	
-#endif
 
+	shared_future( BOOST_RV_REF( shared_future) other):
+	    future(other.future)
+	{
+	    other->future.reset();
+	}
+	shared_future( BOOST_RV_REF( unique_future<R>) other):
+	    future(other.future)
+	{
+	    other.future.reset();
+	}
+	shared_future& operator=(BOOST_RV_REF( shared_future) other)
+	{
+	    future.swap(other.future);
+	    other.future.reset();
+	    return *this;
+	}
+	shared_future& operator=( BOOST_RV_REF( unique_future<R>) other)
+	{
+	    future.swap(other.future);
+	    other.future.reset();
+	    return *this;
+	}
+	
 	void swap(shared_future& other)
 	{
 	    future.swap(other.future);
@@ -728,13 +679,12 @@ template <typename R>
 class promise
 {
     typedef boost::shared_ptr<detail::future_object<R> > future_ptr;
+
+	BOOST_MOVABLE_BUT_NOT_COPYABLE( promise);
     
     future_ptr future;
     bool future_obtained;
     
-    promise(promise & rhs);// = delete;
-    promise & operator=(promise & rhs);// = delete;
-
     void lazy_init()
     {
         if(!future)
@@ -764,39 +714,18 @@ public:
 	    }
 	}
 	
-	// Assignment
-#ifdef BOOST_HAS_RVALUE_REFS
-	promise(promise && rhs):
-	    future_obtained(rhs.future_obtained)
+	promise( BOOST_RV_REF( promise) rhs):
+	    future(rhs.future),future_obtained(rhs.future_obtained)
 	{
-	    future.swap(rhs.future);
+	    rhs.future.reset();
 	}
-	promise & operator=(promise&& rhs)
+	promise & operator=( BOOST_RV_REF( promise) rhs)
 	{
-	    future.swap(rhs.future);
+	    future=rhs.future;
 	    future_obtained=rhs.future_obtained;
 	    rhs.future.reset();
 	    return *this;
 	}
-#else
-	promise(boost::detail::thread_move_t<promise> rhs):
-	    future(rhs->future),future_obtained(rhs->future_obtained)
-	{
-	    rhs->future.reset();
-	}
-	promise & operator=(boost::detail::thread_move_t<promise> rhs)
-	{
-	    future=rhs->future;
-	    future_obtained=rhs->future_obtained;
-	    rhs->future.reset();
-	    return *this;
-	}
-	
-	operator boost::detail::thread_move_t<promise>()
-	{
-	    return boost::detail::thread_move_t<promise>(*this);
-	}
-#endif   
         
 	void swap(promise& other)
 	{
@@ -863,13 +792,12 @@ template <>
 class promise<void>
 {
     typedef boost::shared_ptr<detail::future_object<void> > future_ptr;
+
+	BOOST_MOVABLE_BUT_NOT_COPYABLE( promise);
     
     future_ptr future;
     bool future_obtained;
     
-    promise(promise & rhs);// = delete;
-    promise & operator=(promise & rhs);// = delete;
-
     void lazy_init()
     {
         if(!future)
@@ -879,8 +807,6 @@ class promise<void>
         }
     }
 public:
-//         template <class Allocator> explicit promise(Allocator a);
-
 	promise():
 	    future(),future_obtained(false)
 	{}
@@ -898,39 +824,18 @@ public:
 	    }
 	}
 	
-	// Assignment
-#ifdef BOOST_HAS_RVALUE_REFS
-	promise(promise && rhs):
-	    future_obtained(rhs.future_obtained)
+	promise( BOOST_RV_REF( promise) rhs):
+	    future(rhs.future),future_obtained(rhs.future_obtained)
 	{
-	    future.swap(rhs.future);
+	    rhs.future.reset();
 	}
-	promise & operator=(promise&& rhs)
+	promise & operator=( BOOST_RV_REF( promise) rhs)
 	{
-	    future.swap(rhs.future);
+	    future=rhs.future;
 	    future_obtained=rhs.future_obtained;
 	    rhs.future.reset();
 	    return *this;
 	}
-#else
-	promise(boost::detail::thread_move_t<promise> rhs):
-	    future(rhs->future),future_obtained(rhs->future_obtained)
-	{
-	    rhs->future.reset();
-	}
-	promise & operator=(boost::detail::thread_move_t<promise> rhs)
-	{
-	    future=rhs->future;
-	    future_obtained=rhs->future_obtained;
-	    rhs->future.reset();
-	    return *this;
-	}
-	
-	operator boost::detail::thread_move_t<promise>()
-	{
-	    return boost::detail::thread_move_t<promise>(*this);
-	}
-#endif
 	
 	void swap(promise& other)
 	{
@@ -1029,7 +934,7 @@ struct task_object:
     task_object(F const& f_):
         f(f_)
     {}
-    task_object(boost::detail::thread_move_t<F> f_):
+    task_object( BOOST_RV_REF( F) f_):
         f(f_)
     {}
     
@@ -1054,7 +959,7 @@ struct task_object<void,F>:
     task_object(F const& f_):
         f(f_)
     {}
-    task_object(boost::detail::thread_move_t<F> f_):
+    task_object( BOOST_RV_REF( F) f_):
         f(f_)
     {}
     
@@ -1078,11 +983,10 @@ struct task_object<void,F>:
 template<typename R>
 class packaged_task
 {
+	BOOST_MOVABLE_BUT_NOT_COPYABLE( packaged_task);
+
     boost::shared_ptr<detail::task_base<R> > task;
     bool future_obtained;
-
-    packaged_task(packaged_task&);// = delete;
-    packaged_task& operator=(packaged_task&);// = delete;
     
 public:
     packaged_task():
@@ -1099,7 +1003,7 @@ public:
     {}
     
     template <class F>
-    explicit packaged_task(boost::detail::thread_move_t<F> f):
+    explicit packaged_task( BOOST_RV_REF( F) f):
         task(new detail::task_object<R,F>(f)),future_obtained(false)
     {}
 
@@ -1117,38 +1021,18 @@ public:
 	    }
 	}
 
-        // assignment
-#ifdef BOOST_HAS_RVALUE_REFS
-	packaged_task(packaged_task&& other):
+	packaged_task( BOOST_RV_REF( packaged_task) other):
 	    future_obtained(other.future_obtained)
 	{
 	    task.swap(other.task);
 	    other.future_obtained=false;
 	}
-	packaged_task& operator=(packaged_task&& other)
-	{
-	    packaged_task temp(static_cast<packaged_task&&>(other));
-	    swap(temp);
-	    return *this;
-	}
-#else
-	packaged_task(boost::detail::thread_move_t<packaged_task> other):
-	    future_obtained(other->future_obtained)
-	{
-	    task.swap(other->task);
-	    other->future_obtained=false;
-	}
-	packaged_task& operator=(boost::detail::thread_move_t<packaged_task> other)
+	packaged_task& operator=( BOOST_RV_REF( packaged_task) other)
 	{
 	    packaged_task temp(other);
 	    swap(temp);
 	    return *this;
 	}
-	operator boost::detail::thread_move_t<packaged_task>()
-	{
-	    return boost::detail::thread_move_t<packaged_task>(*this);
-	}
-#endif
 	
 	void swap(packaged_task& other)
 	{

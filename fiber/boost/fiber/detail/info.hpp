@@ -11,7 +11,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
-#include <boost/thread/detail/move.hpp>
+#include <boost/move/move.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
 #include <boost/fiber/detail/config.hpp>
@@ -48,22 +48,15 @@ private:
 	info & operator=( info const&);
 
 public:
-#ifdef BOOST_HAS_RVALUE_REFS
-	thread_data( Fn && fn, std::size_t stack_size) :
-		info_base( stack_size),
-		fn_( static_cast< Fn && >( fn) )
-	{}
-#else
 	info( Fn fn, std::size_t stack_size) :
 		info_base( stack_size),
 		fn_( fn)
 	{}
 
-	info( boost::detail::thread_move_t< Fn > fn, std::size_t stack_size) :
+	info( BOOST_RV_REF( Fn) fn, std::size_t stack_size) :
 		info_base( stack_size),
 		fn_( fn)
 	{}
-#endif            
 
 	void run()
 	{ fn_(); }

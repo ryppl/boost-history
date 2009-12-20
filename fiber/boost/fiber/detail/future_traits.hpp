@@ -13,10 +13,10 @@
 #include <vector>
 
 #include <boost/config.hpp>
+#include <boost/move/move.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/scoped_ptr.hpp>
-#include <boost/thread/detail/move.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_fundamental.hpp>
 
@@ -35,8 +35,8 @@ struct future_traits
 	typedef typename boost::mpl::if_<boost::is_fundamental<T>,T,T&&>::type move_dest_type;
 #else
 	typedef T& source_reference_type;
-	typedef typename boost::mpl::if_<boost::is_convertible<T&,boost::detail::thread_move_t<T> >,boost::detail::thread_move_t<T>,T const&>::type rvalue_source_type;
-	typedef typename boost::mpl::if_<boost::is_convertible<T&,boost::detail::thread_move_t<T> >,boost::detail::thread_move_t<T>,T>::type move_dest_type;
+	typedef typename boost::mpl::if_<boost::is_convertible<T&, BOOST_RV_REF( T) >, BOOST_RV_REF( T),T const&>::type rvalue_source_type;
+	typedef typename boost::mpl::if_<boost::is_convertible<T&,BOOST_RV_REF( T) >,BOOST_RV_REF( T),T>::type move_dest_type;
 #endif
 
 	static void init(storage_type& storage,source_reference_type t)
