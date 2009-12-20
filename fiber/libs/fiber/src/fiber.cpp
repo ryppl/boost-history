@@ -18,6 +18,9 @@
 namespace boost {
 namespace fibers {
 
+std::size_t
+fiber::default_stacksize = 64000;
+
 fiber::fiber() :
 	info_base_()
 {}

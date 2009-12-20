@@ -31,8 +31,6 @@
 namespace boost {
 namespace fibers {
 
-#define BOOST_FIBER_DEFAULT_STACKSIZE 64000
-
 template< typename Strategy >
 class scheduler;
 class strategy;
@@ -46,6 +44,8 @@ private:
 
 	static void convert_thread_to_fiber();
 	static void convert_fiber_to_thread();
+
+	static std::size_t default_stacksize;
 
 	BOOST_COPYABLE_AND_MOVABLE( fiber);
 
@@ -82,7 +82,7 @@ public:
 
 	template< typename Fn >
 	explicit fiber( Fn fn) :
-		info_base_( make_info_( BOOST_FIBER_DEFAULT_STACKSIZE, fn) )
+		info_base_( make_info_( default_stacksize, fn) )
 	{ init_(); }
 
 	template< typename Fn >
@@ -99,7 +99,7 @@ public:
 	fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n)) : \
 		info_base_( \
 			make_info_( \
-				BOOST_FIBER_DEFAULT_STACKSIZE, \
+				default_stacksize, \
 				boost::bind( boost::type< void >(), fn, BOOST_PP_ENUM_PARAMS(n, a)) ) ) \
 	{ init_(); } \
 	\
@@ -121,7 +121,7 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_FIBER_CTOR, ~)
 
 	template< typename Fn >
 	explicit fiber( BOOST_RV_REF( Fn) fn) :
-		info_base_( make_info_( BOOST_FIBER_DEFAULT_STACKSIZE, fn) )
+		info_base_( make_info_( default_stacksize, fn) )
 	{ init_(); }
 
 	template< typename Fn >
@@ -233,8 +233,6 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTI
 #undef BOOST_ENUM_FIBER_ARGS
 #undef BOOST_FIBER_ARG
 #undef BOOST_FIBER_MAX_ARITY
-
-#undef BOOST_FIBER_DEFAULT_STACKSIZE
 
 }
 
