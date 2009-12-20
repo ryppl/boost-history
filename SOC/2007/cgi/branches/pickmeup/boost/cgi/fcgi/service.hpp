@@ -17,8 +17,8 @@ BOOST_CGI_NAMESPACE_BEGIN
  
    // typedef for standard fcgi::service (a model of ProtocolService)
    typedef
-   ::BOOST_CGI_NAMESPACE::common::basic_protocol_service<
-       ::BOOST_CGI_NAMESPACE::common::fcgi_
+   common::basic_protocol_service<
+       common::tags::fcgi
      >
    service;
    

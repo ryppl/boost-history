@@ -1,12 +1,12 @@
 //                     -- main.hpp --
 //
-//           Copyright (c) Darren Garvey 2007.
+//         Copyright (c) Darren Garvey 2007-2009.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 //////////////////////////////////////////////////////////////////
-//[acgi_cookie_game2
+//[cgi_cookie_game2
 //
 // Cookie Test With cTemplate
 // --------------------------
@@ -19,7 +19,7 @@
 //
 // [1] - http://code.google.com/p/google-ctemplate/
 //
-#include <boost/cgi/acgi.hpp>
+#include <boost/cgi/cgi.hpp>
 #include <boost/cgi/utility.hpp>
 #include <ctemplate/template.h>
 #include <boost/throw_exception.hpp>
@@ -35,7 +35,7 @@
 
 //[main
 
-using namespace boost::acgi;
+using namespace boost::cgi;
 namespace fs = boost::filesystem;
 
 // The types we use. Only here because this is an example.
@@ -59,11 +59,11 @@ typedef request request_type;
 typedef response response_type;
 
 // These are some of the functions / types / enums used in this example.
-using boost::acgi::cookie;
-using boost::acgi::header;
-using boost::acgi::redirect;
-using boost::acgi::parse_all;
-using boost::acgi::content_type;
+using boost::cgi::cookie;
+using boost::cgi::header;
+using boost::cgi::redirect;
+using boost::cgi::parse_all;
+using boost::cgi::content_type;
 
 // This function just makes it easier to change the templating engine. It's
 // only here to keep the cTemplate code out of the core of this example...
@@ -90,7 +90,7 @@ void print_formatted_data(MapT& data, Dict& dict)
     {
       Dict* row_dict = subd->AddSectionDictionary("ROW");
       row_dict->SetValue("NAME", iter->first.c_str());
-      row_dict->SetValue("VALUE", iter->second);
+      row_dict->SetValue("VALUE", iter->second.c_str());
       row_dict->ShowSection("ROW");
     }
 }
@@ -131,7 +131,7 @@ int main()
 
     // First, see if they have a cookie set
     if (req.cookies.count("name"))
-      dict.SetValueAndShowSection("USER_NAME", req.cookies["name"],
+      dict.SetValueAndShowSection("USER_NAME", req.cookies["name"].c_str(),
         "HAS_NAME_IN_COOKIE_true");
     else
       dict.ShowSection("HAS_NAME_IN_COOKIE_false");
@@ -139,10 +139,9 @@ int main()
     print_formatted_data(req.cookies, dict);
 
     dict.SetValue("SCRIPT_NAME", req.script_name());
-    // get_value is defined in boost/cgi/util/
-    // Looks up the key in the map, returns a default value if the key 
-    // isn't found.
-    dict.SetValue("COOKIE_NAME", req.form.get("name", ""));
+    // pick() looks up the key in the map, returns a default value
+    // (ie. anonymous) if the key isn't found.
+    dict.SetValue("COOKIE_NAME", req.form.pick("name", "anonymous"));
     dict.SetValue("COOKIE_VALUE", req.form["value"]);
 
     // Load the HTML stencil now from the index.html file.

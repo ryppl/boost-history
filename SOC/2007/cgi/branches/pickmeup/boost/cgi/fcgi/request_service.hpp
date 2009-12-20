@@ -32,57 +32,33 @@ BOOST_CGI_NAMESPACE_BEGIN
  
   /// The IoObjectService class for a FCGI basic_request<>s
   class fcgi_request_service
-    : public detail::service_base<fcgi_request_service>
-    , public common::request_base<fcgi_request_service>
+    : public common::request_base<common::tags::fcgi>
+    , public detail::service_base<fcgi_request_service>
   {
   public:
     /// The actual implementation date for an FCGI request.
     struct implementation_type
-      : common::request_base<fcgi_request_service>::impl_base
+      : base_type::impl_base
     {
-      typedef ::BOOST_CGI_NAMESPACE::common::fcgi_  protocol_type;
-      typedef ::BOOST_CGI_NAMESPACE::fcgi::client   client_type;
-      typedef client_type::connection_type          connection_type;
       typedef client_type::header_buffer_type       header_buffer_type;
       typedef spec_detail::Header                   header_type;
 
-      typedef detail::protocol_traits<
-        protocol_type
-      >::protocol_service_type                  protocol_service_type;
-      typedef detail::protocol_traits<
-        protocol_type
-      >::request_type                           request_type;
-
       implementation_type()
         : id_(0)
-        , client_()
-        , stdin_parsed_(false)
-        , http_status_(::BOOST_CGI_NAMESPACE::common::http::no_content)
-        , request_status_(common::unloaded)
         , request_role_(spec_detail::ANY)
         , all_done_(false)
       {
       }
 
-      protocol_service_type* service_;
-
       boost::uint16_t id_;
 
-      client_type client_;
-
-      bool stdin_parsed_;
-      ::BOOST_CGI_NAMESPACE::common::http::status_code http_status_;
-      common::request_status request_status_;
       fcgi::spec_detail::role_types request_role_;
-      std::size_t characters_left_;
 
       bool all_done_;
 
       header_buffer_type header_buf_;
       header_type header_;
-      typedef detail::form_parser form_parser_type;
-
-      boost::scoped_ptr<form_parser_type> fp_;
+      
       // Buffer to hold param records and filter data, etc.
       buffer_type param_buffer_;
 

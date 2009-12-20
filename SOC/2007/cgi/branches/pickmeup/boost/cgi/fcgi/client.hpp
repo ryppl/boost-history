@@ -171,6 +171,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     total_sent_bytes_ += bytes_transferred;
     total_sent_packets_ += 1;
     
+#ifndef NDEBUG
     if (ec)
       std::cerr<< "Error " << ec << ": " << ec.message() << '\n';
     else    
@@ -179,6 +180,7 @@ BOOST_CGI_NAMESPACE_BEGIN
         << " / " << total_buffer_size << " bytes (running total: "
         << total_sent_bytes_ << " bytes; "
         << total_sent_packets_ << " packets).\n";
+#endif // NDEBUG
 
     // Now remove the protocol overhead for the caller, who
     // doesn't care about them.

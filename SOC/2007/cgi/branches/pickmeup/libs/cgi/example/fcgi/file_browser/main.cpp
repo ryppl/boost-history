@@ -200,11 +200,11 @@ boost::system::error_code& show_file(
           ifs.seekg(0, std::ios::beg);
           while (!ifs.eof() && size > 0 && !ec)
           {
-            ifs.read(buf, size < bufsize ? size : bufsize);
+            ifs.read(buf, (std::streamsize)(size < bufsize ? size : bufsize));
             read_bytes = ifs.gcount();
             size -= read_bytes;
 
-            output.push_back(boost::asio::buffer(buf, read_bytes));
+            output.push_back(boost::asio::buffer(buf, (std::size_t)read_bytes));
             // Write unbuffered (ie. not using a response).
             write(client, output
                  , boost::asio::transfer_all(), ec);

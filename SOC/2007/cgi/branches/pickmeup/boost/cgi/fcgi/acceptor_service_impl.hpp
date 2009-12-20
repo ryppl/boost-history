@@ -13,7 +13,7 @@
 
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
-#include <boost/asio.hpp> // **FIXME**
+#include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/static_assert.hpp>
@@ -75,7 +75,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     * If the protocol isn't async then the class can be used without a
     * ProtocolService.
     */
-   template<typename Protocol_ = ::BOOST_CGI_NAMESPACE::common::fcgi_>
+   template<typename Protocol_ = common::tags::fcgi>
    class acceptor_service_impl
      : public detail::service_base<
          ::BOOST_CGI_NAMESPACE::fcgi::acceptor_service_impl<Protocol_>

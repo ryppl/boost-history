@@ -23,7 +23,7 @@ int main()
 try {
   // Construct a request. Parses all GET, POST and environment data,
   // as well as cookies.
-  cgi::request req(cgi::parse_all);
+  cgi::request req;
   // Using a response is the simplest way to write data back to the client.
   cgi::response resp;
   

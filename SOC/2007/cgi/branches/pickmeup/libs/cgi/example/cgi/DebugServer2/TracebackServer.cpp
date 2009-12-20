@@ -35,7 +35,7 @@ void TracebackServer::expand_map(dictionary_type& dict, MapT& data, std::string 
         {
             dictionary_type* nvpair_dict = sub_dict->AddSectionDictionary("REQUEST_DATA_PAIR");
             nvpair_dict->SetValue("REQUEST_DATA_NAME", iter->first.c_str());
-            nvpair_dict->SetValue("REQUEST_DATA_VALUE", iter->second);
+            nvpair_dict->SetValue("REQUEST_DATA_VALUE", iter->second.c_str());
         }
     }
 }
@@ -125,7 +125,7 @@ bool TracebackServer::run(callback_type const& callback)
                     , response, request);
         }else
         if (!ret) {
-            return boost::cgi::commit(request, response);
+            return 0 == boost::cgi::commit(request, response);
         } else {
             bomb_out("Callback returned code #" + boost::lexical_cast<std::string>(ret) + "; unknown error", response, request);
         }

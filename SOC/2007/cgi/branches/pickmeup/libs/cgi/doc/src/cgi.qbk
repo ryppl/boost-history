@@ -104,14 +104,14 @@ These documents are either hosted at [@http://sourceforge.net/projects/cgi/ sour
 
 [/include:reference reference.qbk]
 
-[include:future future_development.qbk]
+[/include:future future_development.qbk]
 
-[include:server_support user_guide/server_support.qbk]
+[/include:server_support user_guide/server_support.qbk]
 
-[include troubleshooting.qbk]
+[/include troubleshooting.qbk]
 
 [include acknowledgements.qbk]
 
-[xinclude index.xml]
+[/xinclude index.xml]
 
-[include reference.qbk]
+[/include reference.qbk]

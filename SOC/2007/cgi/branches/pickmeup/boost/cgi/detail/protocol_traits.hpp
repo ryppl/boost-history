@@ -22,32 +22,29 @@
 #include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 #include "boost/cgi/common/tags.hpp"
 #include "boost/cgi/common/role_type.hpp"
+#include "boost/cgi/common/parse_options.hpp"
 #include "boost/cgi/fcgi/specification.hpp"
 #include "boost/cgi/fwd/basic_request_fwd.hpp"
 #include "boost/cgi/fwd/basic_connection_fwd.hpp"
+#include "boost/cgi/fwd/basic_client_fwd.hpp"
 
 BOOST_CGI_NAMESPACE_BEGIN
 
   namespace cgi  {}
   namespace fcgi
   {
-  class fcgi_request_impl;
   class fcgi_service_impl;
   class fcgi_request_service;
   class fcgi_acceptor_service;
   }
   namespace scgi
   {
-  class scgi_request_impl;
   class scgi_service_impl;
   class scgi_request_service;
   class scgi_acceptor_service;
   }
 
   // Forward declarations
-
-  class cgi_request_impl;
-  class fcgi_request_impl;
 
   class cgi_service_impl;
   class fcgi_service_impl;
@@ -60,6 +57,8 @@ BOOST_CGI_NAMESPACE_BEGIN
  namespace detail {
 
    namespace tags = ::BOOST_CGI_NAMESPACE::common::tags;
+   
+   class form_parser;
 
    template<typename Protocol>
     struct protocol_traits
@@ -70,33 +69,46 @@ BOOST_CGI_NAMESPACE_BEGIN
     struct protocol_traits<tags::cgi>
     {
       typedef protocol_traits<tags::cgi>             type;
-      typedef cgi_request_impl                       impl_type;
       typedef cgi_request_service                    request_service_impl;
+      typedef cgi_request_service                    service_type;
       typedef common::basic_protocol_service<
                   tags::cgi
               >                                      protocol_service_type;
       typedef common::basic_request<
-                  request_service_impl
-                , protocol_service_type
+                  tags::cgi
               >                                      request_type; 
       typedef cgi_service_impl                       service_impl_type;
-      typedef common::basic_connection<tags::async_stdio>  connection_type;
+      typedef common::basic_connection<
+                  tags::async_stdio
+              >                                      connection_type;
+      typedef common::basic_client<
+                  connection_type,
+                  tags::cgi
+              >                                      client_type;
+      typedef detail::form_parser                    form_parser_type;
       typedef boost::none_t                          header_type;
+      typedef char                                   char_type;
+      typedef std::basic_string<char_type>           string_type;
+      typedef string_type                            buffer_type;
+      typedef boost::asio::const_buffers_1           const_buffers_type;
+      typedef boost::asio::mutable_buffers_1         mutable_buffers_type;
       typedef common::role_type                      role_type;
+      typedef boost::shared_ptr<request_type>        pointer;
+      
+      static const common::parse_options parse_opts = common::parse_all;
     };
 
     template<>
     struct protocol_traits<tags::fcgi>
     {
       typedef protocol_traits<tags::fcgi>            type;
-      typedef fcgi::fcgi_request_impl                impl_type;
       typedef fcgi::fcgi_request_service             request_service_impl;
+      typedef fcgi::fcgi_request_service             service_type;
       typedef common::basic_protocol_service<
-                  common::fcgi_
+                  tags::fcgi
               >                                      protocol_service_type;
       typedef common::basic_request<
-                  request_service_impl
-                , protocol_service_type
+                  tags::fcgi
               >                                      request_type; 
       typedef boost::shared_ptr<request_type>        request_ptr;
       typedef fcgi::fcgi_service_impl                service_impl_type;
@@ -104,37 +116,50 @@ BOOST_CGI_NAMESPACE_BEGIN
       typedef common::basic_connection<
                   tags::shareable_tcp_socket
               >                                      connection_type;
+      typedef common::basic_client<
+                  connection_type,
+                  tags::fcgi
+              >                                      client_type;
+      typedef detail::form_parser                    form_parser_type;
       typedef fcgi::spec::header                     header_type;
       typedef fcgi::spec_detail::role_types          role_type;
+
+      typedef char                                   char_type;
+      typedef std::basic_string<char_type>           string_type;
+      typedef string_type                            buffer_type;
+      typedef boost::asio::const_buffers_1           const_buffers_type;
+      typedef boost::asio::mutable_buffers_1         mutable_buffers_type;
+      typedef boost::shared_ptr<request_type>        pointer;
+
+      static const common::parse_options parse_opts = common::parse_none;
     };
 
     template<>
     struct protocol_traits<tags::scgi>
     {
       typedef protocol_traits<tags::scgi>            type;
-      typedef scgi::scgi_request_impl                impl_type;
       typedef scgi::scgi_request_service             request_service_impl;
+      typedef scgi::scgi_request_service             service_type;
       typedef common::basic_protocol_service<tags::scgi>     protocol_service_type;
       typedef common::basic_request<
-        request_service_impl, protocol_service_type
+                  tags::scgi
       >                                              request_type; 
       typedef scgi::scgi_service_impl                service_impl_type;
       typedef scgi::scgi_acceptor_service            acceptor_service_impl;
       typedef common::basic_connection<tags::tcp_socket>     connection_type;
-    };
+      typedef common::basic_client<
+                  connection_type,
+                  tags::scgi
+              >                                      client_type;
+      typedef detail::form_parser                    form_parser_type;
+      typedef char                                   char_type;
+      typedef std::basic_string<char_type>           string_type;
+      typedef string_type                            buffer_type;
+      typedef boost::asio::const_buffers_1           const_buffers_type;
+      typedef boost::asio::mutable_buffers_1         mutable_buffers_type;
+      typedef boost::shared_ptr<request_type>        pointer;
 
-    // **FIXME** (remove)
-    template<>
-    struct protocol_traits< ::BOOST_CGI_NAMESPACE::common::scgi_>
-      : protocol_traits<tags::scgi>
-    {
-    };
-
-    // **FIXME** (remove)
-    template<>
-    struct protocol_traits< ::BOOST_CGI_NAMESPACE::common::fcgi_>
-      : protocol_traits<tags::fcgi>
-    {
+      static const common::parse_options parse_opts = common::parse_none;
     };
 
  } // namespace detail

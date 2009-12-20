@@ -14,7 +14,7 @@
 #define BOOST_CGI_COMMON_NAME_HPP_INCLUDED__
 
 #include <string>
-#include <ostream>
+//#include <ostream>
 #include <cstdlib>
 #include <ctype.h>
 #include "boost/cgi/config.hpp"

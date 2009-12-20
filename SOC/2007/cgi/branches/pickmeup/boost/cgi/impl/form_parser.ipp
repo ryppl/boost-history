@@ -162,14 +162,14 @@ BOOST_CGI_NAMESPACE_BEGIN
            buffer.substr(meta.length()+4, next_pos-meta.length()-4));
         
         // Load the data to the request's post map.
-        context_->data_map[part.name.c_str()] = content;
+        part.value = content;
       }
       else
       {
         string_type filename (meta.substr(pos6+9, pos5-pos6-9));
         algo::trim_if(filename, algo::is_any_of("\" "));
         // Load the filename as the value on the request's post map.
-        context_->data_map[part.name.c_str()] = filename;
+        part.value = filename;
         // Empty parameters could probably be left out, but setting even
         // an empty variable is consistent with the rest of the library.
         // **FIXME** Might be useful to respect BOOST_CGI_KEEP_EMPTY_VARS
@@ -194,6 +194,8 @@ BOOST_CGI_NAMESPACE_BEGIN
           file.flush();
         }
       }
+      // Load the data to the request's post map.
+      context_->data_map[part.name.c_str()] = part.value;
       context_->form_parts.push_back(part);
       
       buffer.erase(0, next_pos+marker.length()+2);

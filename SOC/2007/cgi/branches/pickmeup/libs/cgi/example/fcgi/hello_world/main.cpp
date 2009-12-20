@@ -12,17 +12,10 @@
 // The simplest FastCGI program, outputs only "Hello there, universe."
 //
 
-#include <boost/cgi/config.hpp>
-#include <cmath>
-#include <iostream>
-#include <boost/asio.hpp>
-#include <boost/system/system_error.hpp>
 #include <boost/cgi/fcgi.hpp>
 
 using namespace std;
 using namespace boost::fcgi;
-
-#include <iostream>
 
 template<typename Request, typename Response>
 int handle_request(Request& req, Response& resp)

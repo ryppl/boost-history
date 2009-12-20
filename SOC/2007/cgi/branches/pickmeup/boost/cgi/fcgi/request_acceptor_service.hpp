@@ -15,6 +15,7 @@
 #include "boost/cgi/import/io_service.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/detail/service_base.hpp"
+#include "boost/cgi/common/tags.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
 #include "boost/cgi/fcgi/acceptor_service_impl.hpp"
 #include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
@@ -23,13 +24,13 @@ BOOST_CGI_NAMESPACE_BEGIN
 
   /// The service class for FCGI basic_request_acceptor<>s
   /**
-   * Note: If the protocol is an asynchronous protocol, which means it requires
-   * access to a boost::asio::io_service instance, then this class becomes a
-   * model of the Service concept (**LINK**) and must only use the constructor
-   * which takes a ProtocolService (**LINK**). If the protocol isn't async then
-   * the class can be used without a ProtocolService.
+   * Note: If the protocol is an asynchronous protocol, which means it 
+   * requires access to a boost::asio::io_service instance, then this class
+   * becomes a model of the Service concept (**LINK**) and must only use the
+   * constructor which takes a ProtocolService (**LINK**). If the protocol
+   * isn't async then the class can be used without a ProtocolService.
    */
-  template<typename Protocol_ = common::fcgi_>
+  template<typename Protocol_ = common::tags::fcgi>
   class fcgi_request_acceptor_service
     : public detail::service_base<fcgi_request_acceptor_service<Protocol_> >
   {

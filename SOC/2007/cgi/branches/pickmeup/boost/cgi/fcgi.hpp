@@ -11,13 +11,11 @@
 
 // #include all fcgi-related files only
 #include "boost/cgi/config.hpp"
-#include "boost/cgi/fcgi/service.hpp"
+#include "boost/cgi/detail/common_headers.hpp"
 #include "boost/cgi/fcgi/acceptor.hpp"
 #include "boost/cgi/fcgi/client.hpp"
 #include "boost/cgi/fcgi/request.hpp"
-//#include "boost/cgi/fcgi/request_service.hpp"
-//#include "boost/cgi/fcgi/request_acceptor_service.hpp"
-#include "boost/cgi/detail/common_headers.hpp"
+#include "boost/cgi/fcgi/service.hpp"
 
 BOOST_CGI_NAMESPACE_BEGIN
  namespace fcgi {

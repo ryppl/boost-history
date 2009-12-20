@@ -671,9 +671,7 @@ BOOST_CGI_NAMESPACE_BEGIN
       return ec;
     }
 
-
  } // namespace fcgi
- 
 BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_FCGI_REQUEST_SERVICE_IPP_INCLUDED__

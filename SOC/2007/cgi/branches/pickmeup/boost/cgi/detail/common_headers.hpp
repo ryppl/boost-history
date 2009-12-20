@@ -12,8 +12,6 @@
 // #include all protocol-independent headers only. Protocol-specific
 // headers can just include this after other headers.
 
-#include <iostream> // **FIXME** - only for debugging info
-
 //#include "boost/cgi/logger.hpp"
 #include "boost/cgi/config.hpp"
 #include "boost/cgi/basic_request.hpp"

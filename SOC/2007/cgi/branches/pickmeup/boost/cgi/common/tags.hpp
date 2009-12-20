@@ -18,11 +18,6 @@
 BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
-   /// SCGI (note, this must be removed)
-   struct scgi_{};
-   /// FastCGI
-   struct fcgi_{};
- 
   namespace tags {
 
     // the null tag type

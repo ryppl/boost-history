@@ -30,7 +30,7 @@ int cgi_handler(request& req, response& resp)
     // We can expand it into a string.
     std::string output;
     tmpl->Expand(&output, NULL);
-    resp<< header("X-Custom-Header: some value")
+    resp<< header("X-Custom-Header", "some value")
         << content_type("text/html")
         << output;
 

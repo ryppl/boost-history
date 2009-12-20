@@ -18,7 +18,7 @@ using boost::cgi::content_type;
 
 int cgi_handler(request& req, response& resp)
 {
-    resp<< header("X-Custom-Header: some value")
+    resp<< header("X-Custom-Header", "some value")
         << content_type("text/html")
         << "<html>"
            "<head>"

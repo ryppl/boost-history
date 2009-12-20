@@ -29,14 +29,14 @@ BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
   /// The response class: a helper for responding to requests.
-  template<typename T>
+  template<typename CharT>
   class basic_response
   {
   public:
-    typedef basic_response<T>              self_type;
-    typedef T                              char_type;
-    typedef typename std::basic_string<T>  string_type;
-    typedef typename std::basic_ostream<T> ostream_type;
+    typedef basic_response<CharT>              self_type;
+    typedef CharT                              char_type;
+    typedef typename std::basic_string<CharT>  string_type;
+    typedef typename std::basic_ostream<CharT> ostream_type;
 
     basic_response(common::http::status_code sc = common::http::ok);
 

@@ -50,15 +50,14 @@ BOOST_CGI_NAMESPACE_BEGIN
     typedef boost::mutex                              mutex_type;
     struct condition_type : public boost::condition_variable
         { typedef boost::shared_ptr<boost::condition_variable> pointer; };
-	typedef boost::mutex::scoped_lock                 scoped_lock_type;
+  	typedef boost::mutex::scoped_lock                 scoped_lock_type;
     typedef boost::asio::ip::tcp::socket              next_layer_type;
 
     /** FastCGI specific stuff **/
-    //typedef ::BOOST_CGI_NAMESPACE::fcgi::client                      client_type;
-    typedef //typename
-      detail::protocol_traits<fcgi_>::request_type   request_type;
+    typedef
+      detail::protocol_traits<tags::fcgi>::request_type   request_type;
     typedef 
-      detail::protocol_traits<fcgi_>::request_ptr    request_ptr;
+      detail::protocol_traits<tags::fcgi>::request_ptr    request_ptr;
     typedef std::map<boost::uint16_t, request_type*> request_map_type;
     typedef std::vector<request_type*>               request_vector_type;
 

@@ -13,7 +13,6 @@
 
 #include "boost/cgi/common/tags.hpp"
 #include "boost/cgi/common/map.hpp"
-#include "boost/cgi/cgi/request_impl.hpp"
 #include "boost/cgi/import/io_service.hpp"
 #include "boost/cgi/detail/service_base.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
@@ -43,36 +42,31 @@
 BOOST_CGI_NAMESPACE_BEGIN
 
   class cgi_request_service
-    : public common::request_base<cgi_request_impl>
+    : public common::request_base<common::tags::cgi>
     , public detail::service_base<cgi_request_service>
   {
   public:
     typedef common::tags::cgi                   protocol_type;
     typedef cgi_service                         protocol_service_type;
-    typedef cgi_request_impl                    impl_type;
     typedef cgi_request_service                 self_type;
-    typedef common::request_base<self_type>     base_type;
-    typedef ::BOOST_CGI_NAMESPACE::common::map  map_type;
 
     struct implementation_type
-      : impl_type
-      , base_type::impl_base
+      : base_type::impl_base
     {
-      typedef impl_type::client_type  client_type;
-      typedef detail::form_parser     form_parser_type;
-
       implementation_type()
-        : fp_(NULL)
+        : stdin_data_read_(false)
+        , stdin_bytes_left_(-1)
       {
       }
 
-      client_type client_;
+      protocol_service_type* service_;
+        
+      conn_ptr& connection()                   { return connection_;     }
 
-      // The number of characters left to read (ie. "content_length - 
-      // bytes_read")
-      std::size_t characters_left_;
-      
-      boost::scoped_ptr<form_parser_type> fp_;
+      bool stdin_data_read_;
+      std::size_t stdin_bytes_left_;
+    
+      conn_ptr connection_;
     };
 
     template<typename Service>
@@ -164,10 +158,10 @@ BOOST_CGI_NAMESPACE_BEGIN
       }
 
       std::string const& cl = env_vars(impl.vars_)["CONTENT_LENGTH"];
-      impl.characters_left_
+      impl.bytes_left_
          = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
       impl.client_.bytes_left()
-         = impl.characters_left_;
+         = impl.bytes_left_;
       std::string const& request_method
          = env_vars(impl.vars_)["REQUEST_METHOD"];
 

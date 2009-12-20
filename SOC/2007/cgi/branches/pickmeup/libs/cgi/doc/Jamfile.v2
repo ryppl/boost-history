@@ -5,6 +5,24 @@
 
 project boost.cgi.docs
   ;
+  
+#exe doc_quickstart_cgi
+#  :
+#    src/quickstart/quickstart_cgi.cpp /boost/cgi/
+#  :
+#    <threading>multi
+#    <library>/boost//thread
+#  ;
+
+# Our install rule (builds binaries and copies them to <location>)
+#install install_quickstart_cgi
+# : doc_quickstart_cgi
+# : <location>$(cgi-bin)
+# ;
+
+# Only install example if you use `bjam install' or equivalent
+#explicit install_quickstart_cgi ;
+
 
 import boostbook : boostbook ;
 import doxygen ;
@@ -28,9 +46,6 @@ doxygen autodoc
     $(top)/boost/cgi/fcgi/service.hpp
     $(top)/boost/cgi/fcgi/acceptor.hpp
     $(top)/boost/cgi/fcgi/request.hpp
-    $(top)/boost/cgi/acgi/service.hpp
-    $(top)/boost/cgi/acgi/acceptor.hpp
-    $(top)/boost/cgi/acgi/request.hpp
     $(top)/boost/cgi/cgi/service.hpp
     $(top)/boost/cgi/cgi/request.hpp
     $(top)/boost/cgi/http/status_code.hpp
@@ -119,6 +134,7 @@ boostbook standalone
     # How far down we go with TOC's
     <xsl:param>generate.section.toc.level=10
     #<xsl:param>root.filename="svg_plot"
+    <xsl:param>boost.image.src="../../../../boost/boostified/release/doc/html/images"
 
     # <xsl:param>project.root=http://beta.boost.org/development
     # <xsl:param>annotation.support=1
@@ -156,8 +172,10 @@ boostbook standalone
 install html
 	:
 	  /boost//doc/html/boostbook.css
-#	  /bin/doc/$(toolset)/debug/cgi_xml.xml 
+	  /bin/doc/$(toolset)/debug/cgi_xml.xml 
 	;
 
 install pdf-install : standalone : <location>. <install-type>PDF ;
 
+explicit install ;
+explicit pdf-install ;

@@ -1,4 +1,4 @@
-//                              -- main.hpp --
+//                       -- main.hpp --
 //
 //           Copyright (c) Darren Garvey 2007-2009.
 // Distributed under the Boost Software License, Version 1.0.
@@ -70,6 +70,7 @@ void format_map(OStream& os, Request& req, Map& m, const std::string& title)
         <<   "</div>"
            "</div>";
     }
+  }
   os<< "</div>";
 }
 
@@ -107,6 +108,16 @@ int main()
   //format_map(resp, req, req.get, "GET Variables");
   format_map(resp, req, req.form, "Form [" + req.method() + "] Variables");
   format_map(resp, req, req.cookies, "Cookie Variables");
+
+  boost::optional<cgi::common::form_part&> part = req.get_form_part("user_file");
+  if (part)
+    resp<< "File path: " << (*part).path;
+  else
+    resp<< "File not found.";
+    
+  if (req.is_file("user_file"))
+    resp<< " (uploaded as a file)";
+
 
   // Note that this (and any other) HTTP header can go either before or after
   // the response contents.

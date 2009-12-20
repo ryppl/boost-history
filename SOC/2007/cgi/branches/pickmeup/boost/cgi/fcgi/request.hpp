@@ -20,7 +20,7 @@ BOOST_CGI_NAMESPACE_BEGIN
    // typedef for typical usage (FCGI)
    typedef
      common::basic_request<
-          fcgi_request_service, service
+          common::tags::fcgi
      >
    request;
 

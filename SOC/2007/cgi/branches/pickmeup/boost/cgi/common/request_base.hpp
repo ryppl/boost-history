@@ -24,6 +24,7 @@
 #include "boost/cgi/common/form_part.hpp"
 #include "boost/cgi/common/parse_options.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
+#include "boost/cgi/detail/protocol_traits.hpp"
 #include "boost/cgi/detail/save_environment.hpp"
 #include "boost/cgi/config.hpp"
 
@@ -35,10 +36,11 @@ BOOST_CGI_NAMESPACE_BEGIN
    * This class provides generic member functions that can be used by any
    * request type.
    */
-  template<typename T>
+  template<typename Protocol>
   class request_base
   {
   public:
+    typedef common::request_base<Protocol> base_type;
 
     /// Get the request ID of a FastCGI request, or 1.
     template<typename ImplType>
@@ -51,20 +53,30 @@ BOOST_CGI_NAMESPACE_BEGIN
     // implementation_type and should be inherited by it.
     struct impl_base
     {
-      typedef char                              char_type; // **FIXME**
-      typedef std::basic_string<char_type>      string_type;
-      typedef string_type                       buffer_type;
-      //typedef std::vector<char_type>            buffer_type;
-      typedef boost::asio::const_buffers_1      const_buffers_type;
-      typedef boost::asio::mutable_buffers_1    mutable_buffers_type;
+      typedef impl_base                              base_type;
+      typedef Protocol                               protocol_type;
+      typedef detail::protocol_traits<Protocol>      traits;
+
+      typedef typename traits::char_type             char_type;
+      typedef typename traits::string_type           string_type;
+      typedef typename traits::buffer_type           buffer_type;
+      typedef typename traits::const_buffers_type    const_buffers_type;
+      typedef typename traits::mutable_buffers_type  mutable_buffers_type;
+      
+      typedef typename traits::form_parser_type      form_parser_type;
  
+      typedef typename traits::client_type           client_type;
+      typedef typename traits::connection_type       connection_type;
+      typedef typename connection_type::pointer      conn_ptr;
+      typedef typename traits::request_type          request_type;
+      typedef typename traits::protocol_service_type protocol_service_type;
+      
       /**
        * If you want to add a new data type to a request you need to:
        *   > Update this file (just below)
        *   > Update source_enums.hpp
        *   > Update map.hpp with a new map type
-       *   > Use the `BOOST_CGI_DETAIL_MAP_ACCESS` macro in `basic_request<>`,
-       *     next to the other uses of it.
+       *   > Add a member variable to basic_request<>
        */
       typedef boost::fusion::vector<
           common::env_map, common::get_map
@@ -74,16 +86,40 @@ BOOST_CGI_NAMESPACE_BEGIN
       
       /// Construct.
       impl_base()
-        : vars_(), post_buffer_()
-        , get_parsed_(false), env_parsed_(false)
+        : service_(NULL)
+        , vars_(), post_buffer_()
+        , get_parsed_(false), env_parsed_(false), stdin_parsed_(false)
+        , bytes_left_(0)
+        , http_status_(common::http::no_content)
+        , request_status_(common::unloaded)
+        , client_()
+        , fp_(NULL)
       {}
+      
+      bool stdin_parsed()                      { return stdin_parsed_;   }
+      common::http::status_code& http_status() { return http_status_;    }
+      common::request_status& status()         { return request_status_; }
 
+      protocol_service_type* service_;
+      
       var_map_type vars_;
       buffer_type post_buffer_;
       /// Whether the get data has been parsed yet.
       bool get_parsed_;
       /// Whether the environment has been parsed yet.
       bool env_parsed_;
+      /// Whether the post data has been parsed yet.
+      bool stdin_parsed_;
+      
+      // The number of bytes left to read (ie. content_length - bytes_read)
+      std::size_t bytes_left_;
+
+      common::http::status_code http_status_;
+      common::request_status request_status_;
+      
+      client_type client_;
+      
+      boost::scoped_ptr<form_parser_type> fp_;
 
       std::vector<common::form_part> form_parts_;
 
@@ -100,15 +136,19 @@ BOOST_CGI_NAMESPACE_BEGIN
     /// Load the base_environment into the current environment.
     /**
      * Parsed the base_environment and add it to the current request's
-     * environment. This overwrites any environment variables with the existing
-     * key.
-	 *
-     * If `is_command_line` is true, then the first argument is skipped as this
-     * is the name of the program and ignored. Using it actually causes a crash
-     * on Windows (MSVC 9) anyway: I'm not exactly sure why.
+     * environment. This overwrites any environment variables with the
+     * existing key.
+     *
+     * If `is_command_line` is true, then the first argument is skipped as
+     * this is the name of the program and ignored. Using it actually causes
+     * a crash on Windows (MSVC 9) anyway: I'm not exactly sure why.
      */
     template<typename ImplType>
-    void load_environment(ImplType& impl, char** base_environment, bool is_command_line)
+    void load_environment(
+        ImplType& impl,
+        char** base_environment,
+        bool is_command_line
+      )
     {
       if (is_command_line) ++base_environment;
       detail::save_environment(env_vars(impl.vars_), base_environment);
@@ -136,16 +176,26 @@ BOOST_CGI_NAMESPACE_BEGIN
     bool is_file(ImplType& impl
                 , typename ImplType::string_type const& key)
     {
-       typedef std::vector<common::form_part>::const_iterator
+      boost::optional<common::form_part&>
+        part = get_form_part(impl, key);
+      return part && !part->filename.empty();
+    }
+    
+    /// Get the form_part for the passed key, which may not exist.
+    template<typename ImplType>
+    boost::optional<common::form_part&>
+      get_form_part(ImplType& impl, typename ImplType::string_type const& key)
+    {
+       typedef std::vector<common::form_part>::iterator
           iter_t;
 
        for(iter_t iter (impl.form_parts_.begin())
           , end (impl.form_parts_.end()); iter != end; ++iter)
        {
-          if (iter->name == key.c_str() && !iter->filename.empty())
-             return true;
+          if (iter->name == key.c_str())
+             return boost::optional<common::form_part&>(*iter);
        }
-       return false;
+       return boost::optional<common::form_part&>();
     }
 
     /// Synchronously read/parse the request meta-data
@@ -163,9 +213,9 @@ BOOST_CGI_NAMESPACE_BEGIN
       std::string const& cl = env_vars(impl.vars_)["CONTENT_LENGTH"];
       // This will throw if the content-length isn't a valid number 
       // (which shouldn't ever happen).
-      impl.characters_left_
+      impl.bytes_left_
          = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
-      impl.client_.bytes_left() = impl.characters_left_;
+      impl.client_.bytes_left() = impl.bytes_left_;
 
       std::string const& request_method
          = env_vars(impl.vars_)["REQUEST_METHOD"];

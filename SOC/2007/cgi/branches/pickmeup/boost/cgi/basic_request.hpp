@@ -55,8 +55,8 @@ BOOST_CGI_NAMESPACE_BEGIN
     * request, but it should be quite useful anyway.
     * You can use this for logging or tracking, for example.
     */
-   template<typename T, typename S>
-   std::size_t hash_value(basic_request<T,S> const& req);
+   template<typename P>
+   std::size_t hash_value(basic_request<P> const& req);
 
   /// The basic_request class, primary entry point to the library
   /**
@@ -73,28 +73,24 @@ BOOST_CGI_NAMESPACE_BEGIN
    * mutex as an argument and lock it. (Async calls could get messy if you
    * need a protected request object).
   **/
-  template<typename RequestService
-          , typename ProtocolService
-          , typename Allocator>
+  template<typename Protocol>
   class basic_request
-    : public detail::basic_io_object<RequestService>
+    : public detail::basic_io_object<
+        typename detail::protocol_traits<Protocol>::service_type
+    >
   {
   public:
-    typedef
-    basic_request<
-        RequestService, ProtocolService
-      , Allocator
-    >                                                  self_type;
-    typedef ::BOOST_CGI_NAMESPACE::common::map         map_type;
-    typedef RequestService                             service_type;
-    typedef typename service_type::protocol_type       protocol_type;
-    typedef ProtocolService                            protocol_service_type;
-    typedef boost::shared_ptr<self_type>               pointer;
+    typedef basic_request<Protocol>                    self_type;
+    typedef Protocol                                   protocol_type;
+    typedef detail::protocol_traits<protocol_type>     traits;
+    typedef typename traits::protocol_service_type     protocol_service_type;
+    typedef typename traits::service_type              service_type;
+    typedef typename traits::pointer                   pointer;
     typedef typename service_type::implementation_type implementation_type;
-    typedef typename implementation_type::char_type    char_type;
-    typedef typename implementation_type::string_type  string_type;
-    typedef typename implementation_type::client_type  client_type;
-    typedef typename implementation_type::buffer_type  buffer_type;
+    typedef typename traits::char_type                 char_type;
+    typedef typename traits::string_type               string_type;
+    typedef typename traits::client_type               client_type;
+    typedef typename traits::buffer_type               buffer_type;
     
     common::data_map_proxy<env_map>    env;
     common::data_map_proxy<post_map>   post;
@@ -102,7 +98,8 @@ BOOST_CGI_NAMESPACE_BEGIN
     common::data_map_proxy<form_map>   form;
     common::data_map_proxy<cookie_map> cookies;
 
-    basic_request(const parse_options opts = parse_none
+    basic_request(
+        const parse_options opts = traits::parse_opts
       , char** base_env = NULL)
         : detail::basic_io_object<service_type>()
     {
@@ -111,7 +108,7 @@ BOOST_CGI_NAMESPACE_BEGIN
 
     // Won't throw
     basic_request(boost::system::error_code& ec
-                 , const parse_options opts = parse_none
+                 , const parse_options opts = traits::parse_opts
                  , char** base_env = NULL)
       : detail::basic_io_object<service_type>()
     {
@@ -120,7 +117,7 @@ BOOST_CGI_NAMESPACE_BEGIN
 
     // Throws
     basic_request(protocol_service_type& s
-                 , const parse_options opts = parse_none
+                 , const parse_options opts = traits::parse_opts
                  , char** base_env = NULL)
       : detail::basic_io_object<service_type>(s.io_service())
     {
@@ -131,7 +128,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     // Won't throw
     basic_request(protocol_service_type& s
                  , boost::system::error_code& ec
-                 , const parse_options opts = parse_none
+                 , const parse_options opts = traits::parse_opts
                  , char** base_env = NULL)
       : detail::basic_io_object<service_type>(s.io_service())
     {
@@ -365,7 +362,7 @@ BOOST_CGI_NAMESPACE_BEGIN
      * If you expect a field to be a file upload, check if it is using
      * this function.
      */
-    bool is_file(string_type const& key)
+    bool is_file(string_type& key)
     {
       return this->service.is_file(this->implementation, key);
     }
@@ -637,12 +634,19 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
       this->service.set_status(this->implementation, status);
     }
+    
+    /// Get the form_part for the passed key, which may not exist.
+    boost::optional<common::form_part&> get_form_part(string_type const& key)
+    {
+      return this->service.get_form_part(this->implementation, key);
+    }
+    
   };
 
-   template<typename T, typename S>
-   std::size_t hash_value(basic_request<T,S> const& req)
+   template<typename P>
+   std::size_t hash_value(basic_request<P> const& req)
    {
-     boost::hash<typename basic_request<T,S>::string_type> hasher;
+     boost::hash<typename basic_request<P>::string_type> hasher;
      return hasher(req.env["REMOTE_ADDR"] + ":"
                  + req.env["REMOTE_PORT"] + ":"
                  + req.env["HTTP_USER_AGENT"] + ":"

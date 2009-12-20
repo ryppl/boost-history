@@ -15,9 +15,7 @@
 BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
-  template<typename RequestService
-          , typename ProtocolService
-          , typename Allocator = std::allocator<char> >
+  template<typename Protocol>
   class basic_request;
 
  } // namespace common

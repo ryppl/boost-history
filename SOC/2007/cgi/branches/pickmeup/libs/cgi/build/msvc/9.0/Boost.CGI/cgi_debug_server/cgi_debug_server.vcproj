@@ -139,7 +139,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="libboost_system-vc90-mt-1_38.lib"
 				LinkIncremental="1"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
