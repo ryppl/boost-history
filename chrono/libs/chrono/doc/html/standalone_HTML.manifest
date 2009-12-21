@@ -7,11 +7,11 @@ boost_chrono/users_guide/getting_started.html
 boost_chrono/users_guide/tutorial.html
 boost_chrono/users_guide/ext_references.html
 boost_chrono/reference.html
-boost_chrono/reference/common_type_hpp.html
-boost_chrono/reference/ratio_hpp.html
-boost_chrono/reference/chrono_hpp.html
-boost_chrono/reference/timer_hpp.html
-boost_chrono/reference/process_times_hpp.html
+boost_chrono/reference/cpp0x.html
+boost_chrono/reference/process_cpu_related.html
+boost_chrono/reference/stopwatches.html
+boost_chrono/reference/stopwatch_reporters.html
+boost_chrono/reference/deprecated_headers.html
 boost_chrono/examples.html
 boost_chrono/examples/si_units.html
 boost_chrono/examples/how_you_override_the_duration_s_default_constructor.html
@@ -24,8 +24,8 @@ boost_chrono/examples/simulated_thread_interface_demonstration_program.html
 boost_chrono/examples/saturating.html
 boost_chrono/examples/howard_hinnant_s_original_demonstration_program.html
 boost_chrono/examples/a_tiny_program_that_times_how_long_until_a_key_is_struck.html
-boost_chrono/examples/run_timer_example_cpp.html
-boost_chrono/examples/run_timer_example2_cpp.html
+boost_chrono/examples/process_stopwatches_reporter_example_cpp.html
+boost_chrono/examples/process_stopwatches_reporter_example2_cpp.html
 boost_chrono/examples/time_command.html
 boost_chrono/appendices.html
 boost_chrono/appendices/history.html

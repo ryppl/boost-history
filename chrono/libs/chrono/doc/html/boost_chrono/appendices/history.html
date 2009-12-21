@@ -27,12 +27,68 @@
 <a name="boost_chrono.appendices.history"></a><a href="history.html" title=" Appendix A: History"> Appendix A: History</a>
 </h3></div></div></div>
 <div class="toc"><dl>
+<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_3_0__december_20__2009____new_stopwatch_feature___bug_fixes_"><span class="bold"><strong>Version 0.3.0, December 20, 2009</strong></span> <span class="emphasis"><em>New stopwatch
+        feature + Bug fixes</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_2_1__december_13__2009____bug_fixes_"><span class="bold"><strong>Version 0.2.1, December 13, 2009</strong></span> <span class="emphasis"><em>Bug fixes</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_2_0__december_8__2009______features___bug_fixes___updated_documentation_"><span class="bold"><strong>Version 0.2.0, December 8, 2009</strong></span> <span class="emphasis"><em>+ Features
         + Bug fixes + Updated documentation</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_1_0__april_29__2009____beman_s_boostified_version_chrono_"><span class="bold"><strong>Version 0.1.0, April 29, 2009</strong></span> <span class="emphasis"><em>Beman's boostified
         version Chrono</em></span></a></span></dt>
 </dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.appendices.history.__version_0_3_0__december_20__2009____new_stopwatch_feature___bug_fixes_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_3_0__december_20__2009____new_stopwatch_feature___bug_fixes_" title="Version 0.3.0, December 20, 2009 New stopwatch
+        feature + Bug fixes"><span class="bold"><strong>Version 0.3.0, December 20, 2009</strong></span> <span class="emphasis"><em>New stopwatch
+        feature + Bug fixes</em></span></a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Features:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            independent cpu clocks for real, user, system process CPU time.
+          </li>
+<li>
+            new Stopwatch concept measuring elapsed time between different points
+            in time associated to the operations start, stop, suspend and resume.
+          </li>
+<li>
+            stopwatch is a model Stopwatch measuring the elapsed time between the
+            start and the stop operations.
+          </li>
+<li>
+            stopwatch_accumulator is a model Stopwatch allowing to accumulate several
+            time samples and give the average, ...
+          </li>
+<li>
+            scoped helper classes allowing to pairwise start/stop operations, suspend/resume
+            and resume/suspend a Stopwatch.
+          </li>
+<li>
+            new Stopwatch Formatter concept
+          </li>
+<li>
+            stopwatch_reporter is a generic class reporting elapsed time for the
+            Stopwatch concept.
+          </li>
+<li>
+            process_times.hpp has been deprecated, see process_clocks.hpp, process_stopwhatches.hpp
+            and process_stopwhatches_reporter.hpp.
+          </li>
+<li>
+            timer.hpp has been deprecated, see stopwatch.
+          </li>
+</ul></div>
+<p>
+          <span class="bold"><strong>Bug Fixes</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            Try to correct warning C4251: 'boost::chrono::run_timer::m_format' :
+            class 'std::basic_string&lt;_Elem,_Traits,_Ax&gt;' needs to have dll-interface
+            to be used by clients of class 'boost::chrono::run_timer', by don't including
+            inlines functions using the std::string m_format.
+          </li></ul></div>
+</div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_chrono.appendices.history.__version_0_2_1__december_13__2009____bug_fixes_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_2_1__december_13__2009____bug_fixes_" title="Version 0.2.1, December 13, 2009 Bug fixes"><span class="bold"><strong>Version 0.2.1, December 13, 2009</strong></span> <span class="emphasis"><em>Bug fixes</em></span></a>

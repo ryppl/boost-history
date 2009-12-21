@@ -1,6 +1,7 @@
-//  boost run_timer.cpp  ---------------------------------------------------------------//
+//  boost process_stopwatches_reporter.cpp  ---------------------------------------------------------------//
 
 //  Copyright Beman Dawes 1994, 2006, 2008
+//  Copyright 2009-2010 Vicente J. Botet Escriba
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -92,43 +93,43 @@ namespace boost
   {
   
 
-      run_timer::run_timer( system::error_code & ec  )
+      process_stopwatches_reporter::process_stopwatches_reporter( system::error_code & ec  )
         : m_places(m_default_places), m_os(m_cout()) { start(ec); }
-      run_timer::run_timer( std::ostream & os,
+      process_stopwatches_reporter::process_stopwatches_reporter( std::ostream & os,
         system::error_code & ec  )
         : m_places(m_default_places), m_os(os) { start(ec); }
 
-      run_timer::run_timer( const std::string & format,
+      process_stopwatches_reporter::process_stopwatches_reporter( const std::string & format,
         system::error_code & ec  )
         : m_places(m_default_places), m_os(m_cout()), m_format(format) { start(ec); }
-      run_timer::run_timer( std::ostream & os, const std::string & format,
+      process_stopwatches_reporter::process_stopwatches_reporter( std::ostream & os, const std::string & format,
         system::error_code & ec  )
         : m_places(m_default_places), m_os(os), m_format(format) { start(ec); }
 
-      run_timer::run_timer( const std::string & format, int places,
+      process_stopwatches_reporter::process_stopwatches_reporter( const std::string & format, int places,
         system::error_code & ec  )
         : m_places(places), m_os(m_cout()), m_format(format) { start(ec); }
-      run_timer::run_timer( std::ostream & os, const std::string & format,
+      process_stopwatches_reporter::process_stopwatches_reporter( std::ostream & os, const std::string & format,
         int places, system::error_code & ec  )
         : m_places(places), m_os(os), m_format(format) { start(ec); }
 
-      run_timer::run_timer( int places,
+      process_stopwatches_reporter::process_stopwatches_reporter( int places,
         system::error_code & ec  )
         : m_places(places), m_os(m_cout()) { start(ec); }
-      run_timer::run_timer( std::ostream & os, int places,
+      process_stopwatches_reporter::process_stopwatches_reporter( std::ostream & os, int places,
         system::error_code & ec  )
         : m_places(places), m_os(os) { start(ec); }
 
-      run_timer::run_timer( int places, const std::string & format,
+      process_stopwatches_reporter::process_stopwatches_reporter( int places, const std::string & format,
         system::error_code & ec  )
         : m_places(places), m_os(m_cout()), m_format(format) { start(ec); }
-      run_timer::run_timer( std::ostream & os, int places, const std::string & format,
+      process_stopwatches_reporter::process_stopwatches_reporter( std::ostream & os, int places, const std::string & format,
         system::error_code & ec  )
         : m_places(places), m_os(os), m_format(format) { start(ec); }
 
-    //  run_timer::report  -------------------------------------------------------------//
+    //  process_stopwatches_reporter::report  -------------------------------------------------------------//
 
-    void run_timer::report( system::error_code & ec )
+    void process_stopwatches_reporter::report( system::error_code & ec )
     {
       m_reported = true;
       if ( m_format.empty() ) m_format = default_format;
@@ -156,9 +157,9 @@ namespace boost
       }
     }
 
-    //  run_timer::test_report  --------------------------------------------------------//
+    //  process_stopwatches_reporter::test_report  --------------------------------------------------------//
 
-    void run_timer::test_report( duration real_, duration user_, duration system_ )
+    void process_stopwatches_reporter::test_report( duration real_, duration user_, duration system_ )
     {
       if ( m_format.empty() ) m_format = default_format;
 

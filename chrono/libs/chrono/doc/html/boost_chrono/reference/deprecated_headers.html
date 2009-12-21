@@ -1,0 +1,352 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Deprecated
+      Headers</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Boost.Chrono">
+<link rel="up" href="../reference.html" title=" Reference ">
+<link rel="prev" href="stopwatch_reporters.html" title="Stopwatch
+      Reporters">
+<link rel="next" href="../examples.html" title="Examples">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="stopwatch_reporters.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../examples.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_chrono.reference.deprecated_headers"></a><a href="deprecated_headers.html" title="Deprecated
+      Headers">Deprecated
+      Headers</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.timer_hpp">
+        Deprecated Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">timer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.timer_hpp.template_class__timer___">Template
+          Class <code class="computeroutput"><span class="identifier">timer</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.timer_hpp._timer__useful_typedefs"><code class="computeroutput"><span class="identifier">timer</span></code> useful typedefs</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp">
+        Deprecated Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">process_times</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.class__process_clock_">Class
+          <code class="computeroutput"><span class="identifier">process_clock</span></code></a></span></dt>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.typedef__process_times_">Typedef
+          <code class="computeroutput"><span class="identifier">process_times</span></code></a></span></dt>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.class__process_timer_">Class
+          <code class="computeroutput"><span class="identifier">process_timer</span></code></a></span></dt>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.class__run_timer_">Class
+          <code class="computeroutput"><span class="identifier">run_timer</span></code></a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.reference.deprecated_headers.timer_hpp"></a><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.timer_hpp" title="
+        Deprecated Header &lt;boost/chrono/timer.hpp&gt;">
+        Deprecated Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">timer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.timer_hpp.template_class__timer___">Template
+          Class <code class="computeroutput"><span class="identifier">timer</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.timer_hpp._timer__useful_typedefs"><code class="computeroutput"><span class="identifier">timer</span></code> useful typedefs</a></span></dt>
+</dl></div>
+<p>
+          This header has been replaced by the header &lt;boost/chrono/stopwatch.hpp&gt;.
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span>  <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">high_resolution_clock</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">timer</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">system_timer</span><span class="special">;</span>
+    <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+    <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">monotonic_timer</span><span class="special">;</span>
+    <span class="preprocessor">#endif</span>
+    <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">high_resolution_timer</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.deprecated_headers.timer_hpp.template_class__timer___"></a><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.timer_hpp.template_class__timer___" title="Template
+          Class timer&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">timer</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<p>
+            Knowing how long a part of a program takes to execute is useful in both
+            test and production environments. A <code class="computeroutput"><span class="identifier">timer</span></code>
+            object measures elapsed time. It is recommended to use it with clocks
+            that measure wall clock rather than CPU time since the intended use is
+            performance measurement on systems where total elapsed time is more important
+            than just process or CPU time.
+          </p>
+<p>
+            The maximum measurable elapsed time depends on the Clock parameter. The
+            accuracy of timings depends on the accuracy of timing information provided
+            the Clock, and this coudl varies a great deal from one clock to another.
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">timer</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">Clock</span>                       <span class="identifier">clock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span>    <span class="identifier">duration</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">time_point</span>  <span class="identifier">time_point</span><span class="special">;</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">timer</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="special">~</span><span class="identifier">timer</span><span class="special">();</span>
+
+    <span class="keyword">void</span> <span class="identifier">start</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+    <span class="identifier">duration</span> <span class="identifier">elapsed</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.deprecated_headers.timer_hpp._timer__useful_typedefs"></a><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.timer_hpp._timer__useful_typedefs" title="timer useful typedefs"><code class="computeroutput"><span class="identifier">timer</span></code> useful typedefs</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">timer</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_timer</span><span class="special">;</span>
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">timer</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_timer</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">timer</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_timer</span><span class="special">;</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.reference.deprecated_headers.process_times_hpp"></a><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp" title="
+        Deprecated Header &lt;boost/chrono/process_times.hpp&gt;">
+        Deprecated Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">process_times</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.class__process_clock_">Class
+          <code class="computeroutput"><span class="identifier">process_clock</span></code></a></span></dt>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.typedef__process_times_">Typedef
+          <code class="computeroutput"><span class="identifier">process_times</span></code></a></span></dt>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.class__process_timer_">Class
+          <code class="computeroutput"><span class="identifier">process_timer</span></code></a></span></dt>
+<dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.class__run_timer_">Class
+          <code class="computeroutput"><span class="identifier">run_timer</span></code></a></span></dt>
+</dl></div>
+<p>
+          This header has been deprecated. See the <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">process_clocks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>,
+          <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">process_stopwatches</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> and <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">process_stopwatches_reporter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+          files.
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
+
+    <span class="keyword">class</span> <span class="identifier">process_clock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">process_times</span><span class="special">;</span>
+    <span class="keyword">class</span> <span class="identifier">process_timer</span><span class="special">;</span>
+    <span class="keyword">class</span> <span class="identifier">run_timer</span><span class="special">;</span>
+
+<span class="special">}</span> <span class="special">}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.deprecated_headers.process_times_hpp.class__process_clock_"></a><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.class__process_clock_" title="Class
+          process_clock">Class
+          <code class="computeroutput"><span class="identifier">process_clock</span></code></a>
+</h5></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.class__process_clock_.class__process_times_">Class
+            <code class="computeroutput"><span class="identifier">process_times</span></code></a></span></dt></dl></div>
+<p>
+            <code class="computeroutput"><span class="identifier">process_clock</span></code> doesn't
+            satisfy the Clock Requirements as the function now do not follows the
+            Clock prototype.
+          </p>
+<p>
+            <code class="computeroutput"><span class="identifier">process_clock</span></code> provides
+            a thin wrapper around the operating system's process timer API. For POSIX-like
+            systems, that's the times() function, while for Windows, it's the GetProcessTimes()
+            function.
+          </p>
+<p>
+            The process relative real, user and system current time can be obtained
+            at once by calling <code class="computeroutput"><span class="identifier">process_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>.
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">process_clock</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">nanoseconds</span>                          <span class="identifier">duration</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_clock</span><span class="special">&gt;</span>    <span class="identifier">time_point</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
+
+    <span class="keyword">struct</span> <span class="identifier">process_times</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">process_times</span> <span class="special">&amp;</span> <span class="identifier">times</span><span class="special">,</span>
+                     <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="boost_chrono.reference.deprecated_headers.process_times_hpp.class__process_clock_.class__process_times_"></a><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.class__process_clock_.class__process_times_" title="Class
+            process_times">Class
+            <code class="computeroutput"><span class="identifier">process_times</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">process_times</span> <span class="special">{</span>
+    <span class="identifier">process_clock</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">real</span><span class="special">;</span>    <span class="comment">// real (i.e wall clock) time
+</span>    <span class="identifier">process_clock</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">user</span><span class="special">;</span>    <span class="comment">// user cpu time
+</span>    <span class="identifier">process_clock</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">system</span><span class="special">;</span>  <span class="comment">// system cpu time
+</span><span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.deprecated_headers.process_times_hpp.typedef__process_times_"></a><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.typedef__process_times_" title="Typedef
+          process_times">Typedef
+          <code class="computeroutput"><span class="identifier">process_times</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">process_clock</span><span class="special">::</span><span class="identifier">process_times</span> <span class="identifier">process_times</span><span class="special">;</span>
+</pre>
+<p>
+            This is a synonym of process_clock::process_times included for backward
+            compatibility.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.deprecated_headers.process_times_hpp.class__process_timer_"></a><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.class__process_timer_" title="Class
+          process_timer">Class
+          <code class="computeroutput"><span class="identifier">process_timer</span></code></a>
+</h5></div></div></div>
+<p>
+            Knowing how long a program takes to execute is useful in both test and
+            production environments. It is also helpful if such timing information
+            is broken down into real (wall clock) time, CPU time spent by the user,
+            and CPU time spent by the operating system servicing user requests.
+          </p>
+<p>
+            <code class="computeroutput"><span class="identifier">process_timer</span><span class="special">&lt;&gt;</span></code>
+            is the <code class="computeroutput"><span class="identifier">timer</span><span class="special">&lt;&gt;</span></code>
+            equivalent associated to the pseudo-clock <code class="computeroutput"><span class="identifier">process_clock</span></code>.
+            It behaves like <code class="computeroutput"><span class="identifier">timer</span><span class="special">&lt;&gt;</span></code> but it uses the specific <code class="computeroutput"><span class="identifier">process_clock</span><span class="special">:</span><span class="identifier">now</span><span class="special">()</span></code>
+            function.
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">process_timer</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">process_clock</span>                          <span class="identifier">clock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">process_clock</span><span class="special">::</span><span class="identifier">duration</span>                <span class="identifier">duration</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">process_clock</span><span class="special">::</span><span class="identifier">time_point</span>              <span class="identifier">time_point</span><span class="special">;</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">process_timer</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="special">~</span><span class="identifier">process_timer</span><span class="special">();</span>
+    <span class="keyword">void</span>  <span class="identifier">start</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+    <span class="keyword">void</span>  <span class="identifier">elapsed</span><span class="special">(</span> <span class="identifier">process_times</span> <span class="special">&amp;</span> <span class="identifier">times</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.deprecated_headers.process_times_hpp.class__run_timer_"></a><a href="deprecated_headers.html#boost_chrono.reference.deprecated_headers.process_times_hpp.class__run_timer_" title="Class
+          run_timer">Class
+          <code class="computeroutput"><span class="identifier">run_timer</span></code></a>
+</h5></div></div></div>
+<p>
+            class <code class="computeroutput"><span class="identifier">run_timer</span></code> provides
+            a complete run time reporting package that can be invoked in a single
+            line of code. The reporting is controled by two parameters:
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              format : The output format
+            </li>
+<li>
+              places(precission): the number of decimal placess used.
+            </li>
+</ul></div>
+<p>
+            The default places is given by default_places and is 3. The default format
+            is "\nreal %rs, cpu %cs (%p%), user %us, system %ss\n", where
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">r</span></code>
+              : real process clock
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">u</span></code>
+              : user process clock
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
+              : system process clock
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">c</span></code>
+              : user+system process clock
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">p</span></code>
+              : percentage (user+system)/real process clock
+            </li>
+</ul></div>
+<p>
+            All the units are given using the suffix "s" following the
+            System International d'Unites Std.
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">run_timer</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">process_timer</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">explicit</span> <span class="identifier">run_timer</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+    <span class="keyword">explicit</span> <span class="identifier">run_timer</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">run_timer</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+    <span class="keyword">explicit</span> <span class="identifier">run_timer</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">run_timer</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+    <span class="keyword">explicit</span> <span class="identifier">run_timer</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">run_timer</span><span class="special">(</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+    <span class="keyword">explicit</span> <span class="identifier">run_timer</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">run_timer</span><span class="special">(</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+    <span class="keyword">explicit</span> <span class="identifier">run_timer</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="special">~</span><span class="identifier">run_timer</span><span class="special">();</span>
+
+    <span class="keyword">void</span> <span class="identifier">start</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">report</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">test_report</span><span class="special">(</span> <span class="identifier">duration</span> <span class="identifier">real_</span><span class="special">,</span> <span class="identifier">duration</span> <span class="identifier">user_</span><span class="special">,</span> <span class="identifier">duration</span> <span class="identifier">system_</span> <span class="special">);</span>
+    <span class="keyword">bool</span> <span class="identifier">reported</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">int</span> <span class="identifier">default_places</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="stopwatch_reporters.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../examples.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

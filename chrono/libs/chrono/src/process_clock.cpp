@@ -1,6 +1,7 @@
 //  boost process_timer.cpp  -----------------------------------------------------------//
 
 //  Copyright Beman Dawes 1994, 2006, 2008
+//  Copyright 2009 Vicente J. Botet Escriba
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -36,5 +37,15 @@
 #include "posix/process_clock.cpp"
 
 #endif  // POSIX
+namespace boost { namespace chrono {
 
+    void process_clocks::now( time_points & tps, system::error_code & ec ) {
+        process_times t;
+        process_clock::now(t,ec);
+        tps.real=process_clock::time_point(t.real);
+        tps.user=process_clock::time_point(t.user);
+        tps.system=process_clock::time_point(t.system);
+        
+    }
 
+}}

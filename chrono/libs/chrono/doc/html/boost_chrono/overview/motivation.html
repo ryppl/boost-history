@@ -33,7 +33,7 @@
 <dt><span class="section"><a href="motivation.html#boost_chrono.overview.motivation.duration">Duration</a></span></dt>
 <dt><span class="section"><a href="motivation.html#boost_chrono.overview.motivation.clocks">Clocks</a></span></dt>
 <dt><span class="section"><a href="motivation.html#boost_chrono.overview.motivation.time_point">Time Point</a></span></dt>
-<dt><span class="section"><a href="motivation.html#boost_chrono.overview.motivation.timers">Timers</a></span></dt>
+<dt><span class="section"><a href="motivation.html#boost_chrono.overview.motivation.stopwatches">Stopwatches</a></span></dt>
 </dl></div>
 <p>
         See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm" target="_top"><span class="bold"><strong>N2661 - A Foundation to Sleep On</strong></span></a> which is
@@ -237,7 +237,7 @@
           needs only 23 bits to cover that range.
         </p>
 <a name="boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_"></a><h5>
-<a name="id4759345"></a>
+<a name="id4759672"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_">So
           What Exactly is a <code class="computeroutput"><span class="identifier">duration</span></code>
           and How Do I Use One?</a>
@@ -295,7 +295,7 @@
           instead of inheritance).
         </p>
 <a name="boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to__code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__"></a><h5>
-<a name="id4759354"></a>
+<a name="id4813150"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to__code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__">What
           happens if I assign <code class="computeroutput"><span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span></code>
           to <code class="computeroutput"><span class="identifier">minutes</span></code> instead of
@@ -312,7 +312,7 @@
           ignored. This is similar to the problem of assigning a double to an <code class="computeroutput"><span class="keyword">int</span></code>: the fractional part gets silently discarded.
         </p>
 <a name="boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_"></a><h5>
-<a name="id4813279"></a>
+<a name="id4813318"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_">But
           what if the truncation behavior is what I want to do?</a>
         </h5>
@@ -332,7 +332,7 @@
           as often as it can.
         </p>
 <a name="boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation"></a><h5>
-<a name="id4813416"></a>
+<a name="id4813455"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation">I'm
           trafficking in floating point <code class="computeroutput"><span class="identifier">duration</span></code>s.
           I don't want to deal with writing <code class="computeroutput"><span class="identifier">duration_cast</span></code>
@@ -347,7 +347,7 @@
 <span class="identifier">dminutes</span> <span class="identifier">dm4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>  <span class="comment">// dm4.count() == 5.000000083333333
 </span></pre>
 <a name="boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_"></a><h5>
-<a name="id4813578"></a>
+<a name="id4813617"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_">How
           expensive is all of this?</a>
         </h5>
@@ -361,7 +361,7 @@
           tick counts.
         </p>
 <a name="boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_"></a><h5>
-<a name="id4813628"></a>
+<a name="id4813667"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_">How
           complicated is it to build a function taking a <code class="computeroutput"><span class="identifier">duration</span></code>
           parameter?</a>
@@ -583,7 +583,7 @@
           the relationship between the epochs associated with each clock is known.
         </p>
 <a name="boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_"></a><h5>
-<a name="id4815433"></a>
+<a name="id4815472"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_">So
           What Exactly is a <code class="computeroutput"><span class="identifier">time_point</span></code>
           and How Do I Use One?</a>
@@ -666,34 +666,81 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.overview.motivation.timers"></a><a href="motivation.html#boost_chrono.overview.motivation.timers" title="Timers">Timers</a>
+<a name="boost_chrono.overview.motivation.stopwatches"></a><a href="motivation.html#boost_chrono.overview.motivation.stopwatches" title="Stopwatches">Stopwatches</a>
 </h4></div></div></div>
 <p>
-          Knowing how long a program takes to execute is useful in both test and
-          production environments. It is also helpful if such timing information
-          is broken down into real (wall clock) time, CPU time spent by the user,
-          and CPU time spent by the operating system servicing user requests.
+          Knowing how long a program, a function or a specific block takes to execute
+          is useful in both test and production environments. <span class="bold"><strong>Boost.Chrono</strong></span>
+          introduces the Stopwatch concept which captures the mechanism to measure
+          the elapsed time. <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code> is the basic model of Stopwatch
         </p>
 <p>
-          The Boost Chrono Library's process times components provide that information:
+          It is also interesting to have an statisitical view of these times. <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span></code>
+          associates an accumulator with a stopwatch, so we are able to retrieve
+          any statistical feature Boost.Accumulator provides. the Aprovides stopwatches
+          utilities useful when the automatic reporting of <code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code>
+          isn't desired.
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            At the highest level, class <code class="computeroutput"><span class="identifier">run_timer</span></code>
-            provides a complete run time reporting package that can be invoked in
-            a single line of code.
-          </li>
-<li>
-            At a middle level, class <code class="computeroutput"><span class="identifier">process_timer</span></code>
-            provides a process timer useful when the automatic reporting of <code class="computeroutput"><span class="identifier">run_timer</span></code> isn't desired.
-          </li>
-<li>
-            At the lowest level, <code class="computeroutput"><span class="identifier">process_clock</span></code>
-            provides a thin wrapper around the operating system's process timer API.
-            For POSIX-like systems, that's the times() function, while for Windows,
-            it's the GetProcessTimes() function.
-          </li>
-</ul></div>
+<p>
+          The highest level use case of measuring the elapsed time is to report these
+          times on the display. <code class="computeroutput"><span class="identifier">stopwatch_reporter</span><span class="special">&lt;&gt;</span></code> provides a run time reporting package
+          that can be invoked in a single line of code to report the usage of a Clock.
+        </p>
+<p>
+          For example
+        </p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+<span class="keyword">int</span> <span class="identifier">f1</span><span class="special">(</span><span class="keyword">long</span> <span class="identifier">j</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">static</span> <span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;::</span><span class="identifier">reporter</span> <span class="identifier">sw</span><span class="special">;</span>
+    <span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;::</span><span class="identifier">reporter</span><span class="special">::</span><span class="identifier">scoped_run</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">sw</span><span class="special">);</span>
+
+    <span class="keyword">for</span> <span class="special">(</span> <span class="keyword">long</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">j</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">sqrt</span><span class="special">(</span> <span class="number">123.456L</span> <span class="special">);</span>  <span class="comment">// burn some time
+</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>    
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>  <span class="special">{</span>
+    <span class="identifier">f1</span><span class="special">(</span><span class="number">100000</span><span class="special">);</span>
+    <span class="identifier">f1</span><span class="special">(</span><span class="number">200000</span><span class="special">);</span>
+    <span class="identifier">f1</span><span class="special">(</span><span class="number">300000</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Will produce the following output
+        </p>
+<pre class="programlisting"><span class="identifier">Count</span><span class="special">=</span><span class="number">3</span> <span class="identifier">times</span> <span class="identifier">Sum</span><span class="special">=</span><span class="number">0.034</span><span class="identifier">s</span> <span class="identifier">Min</span><span class="special">=</span><span class="number">0.006</span><span class="identifier">s</span> <span class="identifier">Max</span><span class="special">=</span><span class="number">0.017</span><span class="identifier">s</span> <span class="identifier">Mean</span><span class="special">=</span><span class="number">0.011</span><span class="identifier">s</span>
+</pre>
+<p>
+          It is also helpful if such timing information is broken down into real
+          (wall clock) time, CPU time spent by the user, and CPU time spent by the
+          operating system servicing user requests. <code class="computeroutput"><span class="identifier">process_real_CPU_clock</span></code>,
+          <code class="computeroutput"><span class="identifier">process_user_CPU_clock</span></code>,
+          <code class="computeroutput"><span class="identifier">process_system_CPU_clock</span></code>
+          and <code class="computeroutput"><span class="identifier">process_clocks</span></code> provides
+          a thin wrappers around the operating system's process timer API. The first
+          three captre the a specific time unitarily, the last captures the three
+          times at once. For POSIX-like systems, that's the times() function, while
+          for Windows, it's the GetProcessTimes() function.
+        </p>
+<p>
+          As <code class="computeroutput"><span class="identifier">process_clocks</span></code> do not
+          conform to the Stopwatch concept, <span class="bold"><strong>Boost.Chrono</strong></span>
+          provides the equivalent of <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">process_clocks</span><span class="special">&gt;</span></code> and <code class="computeroutput"><span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">process_clocks</span><span class="special">&gt;</span></code> with the classes <code class="computeroutput"><span class="identifier">process_stopwatches</span></code>
+          and <code class="computeroutput"><span class="identifier">process_stopwatches_reporter</span></code>
+        </p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">process_stopwatches_reporter</span> <span class="identifier">_</span><span class="special">;</span>
+  <span class="comment">// ...
+</span><span class="special">}</span>
+</pre>
+<p>
+          Will produce the following output
+        </p>
+<pre class="programlisting"><span class="identifier">real</span> <span class="number">0.034</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">cpu</span> <span class="number">0.031</span><span class="identifier">s</span> <span class="special">(</span><span class="number">93.0</span><span class="special">%),</span> <span class="identifier">user</span> <span class="number">0.031</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">system</span> <span class="number">0.000</span><span class="identifier">s</span>
+</pre>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

@@ -1,0 +1,227 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Process CPU
+      related</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Boost.Chrono">
+<link rel="up" href="../reference.html" title=" Reference ">
+<link rel="prev" href="cpp0x.html" title=" Included on the C++0x
+      recommendation">
+<link rel="next" href="stopwatches.html" title="Stopwatches">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="cpp0x.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="stopwatches.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_chrono.reference.process_cpu_related"></a><a href="process_cpu_related.html" title="Process CPU
+      related">Process CPU
+      related</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">process_clocks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_real_cpu_clock_">Class
+          <code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a></span></dt>
+<dt><span class="section"><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_user_cpu_clock_">Class
+          <code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code></a></span></dt>
+<dt><span class="section"><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_system_cpu_clock_">Class
+          <code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a></span></dt>
+<dt><span class="section"><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_clocks_">Class
+          <code class="computeroutput"><span class="identifier">process_clocks</span></code></a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.reference.process_cpu_related.process_clocks_hpp"></a><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp" title="
+        Header &lt;boost/chrono/process_clocks.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">process_clocks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_real_cpu_clock_">Class
+          <code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a></span></dt>
+<dt><span class="section"><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_user_cpu_clock_">Class
+          <code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code></a></span></dt>
+<dt><span class="section"><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_system_cpu_clock_">Class
+          <code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a></span></dt>
+<dt><span class="section"><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_clocks_">Class
+          <code class="computeroutput"><span class="identifier">process_clocks</span></code></a></span></dt>
+</dl></div>
+<p>
+          Knowing how long a program takes to execute is useful in both test and
+          production environments. It is also helpful if such timing information
+          is broken down into real (wall clock) time, CPU time spent by the user,
+          and CPU time spent by the operating system servicing user requests.
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
+
+    <span class="keyword">class</span> <span class="identifier">process_real_cpu_clock</span><span class="special">;</span>
+    <span class="keyword">class</span> <span class="identifier">process_user_cpu_clock</span><span class="special">;</span>
+    <span class="keyword">class</span> <span class="identifier">process_system_cpu_clock</span><span class="special">;</span>
+    <span class="keyword">class</span> <span class="identifier">process_clocks</span><span class="special">;</span>
+
+<span class="special">}</span> <span class="special">}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_real_cpu_clock_"></a><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_real_cpu_clock_" title="Class
+          process_real_cpu_clock">Class
+          <code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a>
+</h5></div></div></div>
+<p>
+            <code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code>
+            satisfy the Clock Requirements.
+          </p>
+<p>
+            <code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code>
+            class provides access to the real process wall-clock monotonic clock,
+            i.e. the real CPU-time clock of the calling process. The process relative
+            current time can be obtained by calling <code class="computeroutput"><span class="identifier">process_real_cpu_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>.
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">process_real_cpu_clock</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">nanoseconds</span>                          <span class="identifier">duration</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_real_cpu_clock</span><span class="special">&gt;</span>    <span class="identifier">time_point</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
+
+    <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_user_cpu_clock_"></a><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_user_cpu_clock_" title="Class
+          process_user_cpu_clock">Class
+          <code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code></a>
+</h5></div></div></div>
+<p>
+            <code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code>
+            satisfy the Clock Requirements.
+          </p>
+<p>
+            <code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code>
+            class provides access to the user CPU-time monotonic clock of the calling
+            process. The process relative user current time can be obtained by calling
+            <code class="computeroutput"><span class="identifier">process_user_cpu_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>.
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">process_user_cpu_clock</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">nanoseconds</span>                          <span class="identifier">duration</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_user_cpu_clock</span><span class="special">&gt;</span>    <span class="identifier">time_point</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
+
+    <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_system_cpu_clock_"></a><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_system_cpu_clock_" title="Class
+          process_system_cpu_clock">Class
+          <code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a>
+</h5></div></div></div>
+<p>
+            <code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code>
+            satisfy the Clock Requirements.
+          </p>
+<p>
+            <code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code>
+            class provides access to the system CPU-time monotonic clockof the calling
+            process. The process relative system current time can be obtained by
+            calling <code class="computeroutput"><span class="identifier">process_system_cpu_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>.
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">process_system_cpu_clock</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">nanoseconds</span>                          <span class="identifier">duration</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_system_cpu_clock</span><span class="special">&gt;</span>    <span class="identifier">time_point</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
+
+    <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_clocks_"></a><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_clocks_" title="Class
+          process_clocks">Class
+          <code class="computeroutput"><span class="identifier">process_clocks</span></code></a>
+</h5></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_clocks_.class__durations_">Class
+            <code class="computeroutput"><span class="identifier">durations</span></code></a></span></dt></dl></div>
+<p>
+            <code class="computeroutput"><span class="identifier">process_clocks</span></code> can be
+            considered as a <code class="computeroutput"><span class="identifier">tuple</span><span class="special">&lt;</span><span class="identifier">process_real_cpu_clock</span><span class="special">,</span> <span class="identifier">process_user_cpu_clock</span><span class="special">,</span> <span class="identifier">process_system_cpu_clock</span><span class="special">&gt;</span></code>. Obviously it doesn't satisfy the
+            Clock Requirements.
+          </p>
+<p>
+            <code class="computeroutput"><span class="identifier">process_clocks</span></code> provides
+            a thin wrapper around the operating system's process timer API. For POSIX-like
+            systems, that's the times() function, while for Windows, it's the GetProcessTimes()
+            function.
+          </p>
+<p>
+            The process relative real, user and system current time can be obtained
+            at once by calling <code class="computeroutput"><span class="identifier">process_clocks</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>.
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">process_clocks</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">nanoseconds</span>                          <span class="identifier">duration</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_clocks</span><span class="special">&gt;</span>    <span class="identifier">time_point</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
+
+    <span class="keyword">struct</span> <span class="identifier">durations</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">process_clocks</span><span class="special">::</span><span class="identifier">durations</span> <span class="special">&amp;</span> <span class="identifier">times</span><span class="special">,</span>
+                     <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_clocks_.class__durations_"></a><a href="process_cpu_related.html#boost_chrono.reference.process_cpu_related.process_clocks_hpp.class__process_clocks_.class__durations_" title="Class
+            durations">Class
+            <code class="computeroutput"><span class="identifier">durations</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">durations</span> <span class="special">{</span>
+    <span class="identifier">process_clocks</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">real</span><span class="special">;</span>    <span class="comment">// real (i.e wall clock) time
+</span>    <span class="identifier">process_clocks</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">user</span><span class="special">;</span>    <span class="comment">// user cpu time
+</span>    <span class="identifier">process_clocks</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">system</span><span class="special">;</span>  <span class="comment">// system cpu time
+</span><span class="special">};</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="cpp0x.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="stopwatches.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

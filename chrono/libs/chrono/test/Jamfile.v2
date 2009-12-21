@@ -87,3 +87,9 @@ project
         [ run run_timer_test.cpp :  :  : <library>/boost/system//boost_system  : run_timer_test_dll ]
         [ run test_minmax.cpp :  :  : <library>/boost/system//boost_system  : test_min_max_dll ]
         ;
+
+    test-suite "stopwatch"
+        :
+        [ run ../example/stopwatch_example.cpp :  :  : <link>static ]
+        [ run ../example/stopwatch_example.cpp :  :  : <library>/boost/system//boost_system  : stopwatch_example_dll ]
+        ;

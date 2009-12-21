@@ -1,6 +1,7 @@
 //  boost process_timer.cpp  -----------------------------------------------------------//
 
 //  Copyright Beman Dawes 1994, 2006, 2008
+//  Copyright 2009 Vicente J. Botet Escriba
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -50,7 +51,7 @@ namespace boost
   namespace chrono
   {
 
-    void process_clock::now( process_times & times_, system::error_code & ec )
+    void process_clocks::now( process_times & times_, system::error_code & ec )
     {
 
       tms tm;
