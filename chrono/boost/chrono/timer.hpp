@@ -23,7 +23,7 @@ namespace boost
 //                                    timer                                             //
 //--------------------------------------------------------------------------------------//
 
-    template <class Clock>
+    template <class Clock=high_resolution_clock>
     class timer
     {
     public:

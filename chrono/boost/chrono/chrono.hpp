@@ -58,6 +58,7 @@ TODO:
 
 #ifndef BOOST_CHRONO_HPP
 #define BOOST_CHRONO_HPP
+#include <iostream>
 
 #include <ctime>
 #include <climits>
@@ -103,14 +104,14 @@ TODO:
 #define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES)
 #endif
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
-
 #ifdef BOOST_CHRONO_WINDOWS_API
 // The system_clock tick is 100 nanoseconds
 # define BOOST_SYSTEM_CLOCK_DURATION boost::chrono::duration<boost::int_least64_t, ratio<BOOST_INTMAX_C(1), BOOST_INTMAX_C(10000000)> >
 #else
 # define BOOST_SYSTEM_CLOCK_DURATION boost::chrono::nanoseconds
 #endif
+
+#include <boost/config/abi_prefix.hpp> // must be the last #include
 
 //----------------------------------------------------------------------------//
 //                                                                            //
@@ -495,7 +496,7 @@ namespace chrono {
         rep rep_;
     public:
 
-        BOOST_CONSTEXPR duration() {} // = default;
+        BOOST_CONSTEXPR duration() { } // = default;
         template <class Rep2>
         BOOST_CONSTEXPR explicit duration(const Rep2& r,
             typename boost::enable_if_c
@@ -507,7 +508,7 @@ namespace chrono {
                     )
                 )
                 >::type* = 0)
-                  : rep_(r) {}
+                  : rep_(r) { }
         ~duration() {} //= default;
         duration(const duration& rhs) : rep_(rhs.rep_) {} // = default;
         duration& operator=(const duration& rhs) // = default;
