@@ -94,56 +94,30 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
     }
 
-    void shutdown_service()
-    {
-    }
-
-    void construct(implementation_type& impl)
+    template<typename ImplType>
+    void construct(ImplType& impl)
     {
       impl.client_.set_connection(
-        implementation_type::connection_type::create(this->get_io_service())
+        typename ImplType::connection_type::create(this->get_io_service())
       );
     }
 
-    void destroy(implementation_type& impl)
+    void shutdown_service()
     {
-    }
-    
-    void set_service(implementation_type& impl, protocol_service_type& ps)
-    {
-      impl.service_ = &ps;
-    }
-
-    /// Return if the request is still open
-    /**
-     * For CGI, this always returns true. However, in the case that a
-     * "Location: xxx" header is sent and the header is terminated, the
-     * request can be taken to be 'closed'.
-     */
-    bool is_open(implementation_type& impl)
-    {
-      return impl.status() >= common::accepted 
-          && impl.status() <= common::aborted;
     }
 
     void clear(implementation_type& impl) { }
 
     int request_id(implementation_type& impl) { return 1; }
 
-    /// Return the connection associated with the request
-    implementation_type::client_type&
-      client(implementation_type& impl)
-    {
-      return impl.client_;
-    }
-
     // **FIXME** should return error_code
     int close(implementation_type& impl, common::http::status_code& http_s
-      , int status, boost::system::error_code& ec)
+      , int program_status, boost::system::error_code& ec)
     {
-      impl.status() = common::closed;
+      status(impl, common::closed);
       impl.http_status() = http_s;
-      return status;
+      impl.all_done_ = true;
+      return program_status;
     }
 
     /// Synchronously read/parse the request data
@@ -186,22 +160,16 @@ BOOST_CGI_NAMESPACE_BEGIN
           return ec;
       }
 
-      set_status(impl, common::loaded);
+      status(impl, common::loaded);
 
       return ec;
     }
 
+    /// CGI is always a responser.
     common::role_type
-    get_role(implementation_type& impl)
+    role(implementation_type& impl) const
     {
       return common::responder;
-    }
-
-    /// Set the request status
-    void set_status(
-       implementation_type& impl, common::request_status status)
-    {
-      impl.status() = status;
     }
 
     std::size_t
@@ -217,9 +185,11 @@ BOOST_CGI_NAMESPACE_BEGIN
     read_env_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
       // Only call this once.
-      if (!impl.env_parsed_)
+      if (!(status(impl) & common::env_read))
+      {
         detail::save_environment(env_vars(impl.vars_));
-      impl.env_parsed_ = true;
+        status(impl, (common::request_status)(status(impl) | common::env_read));
+      }
       return ec;
     }
 
@@ -243,27 +213,11 @@ BOOST_CGI_NAMESPACE_BEGIN
         else
           return ec;
 
-      if (!impl.fp_)
-        // Construct a form_parser instance.
-        impl.fp_.reset(new typename implementation_type::form_parser_type());
-
-      // Create a context for this request.      
-      typename implementation_type::form_parser_type::context
-          context
-              = { env_vars(impl.vars_)["CONTENT_TYPE"]
-                , impl.post_buffer_
-                , impl.form_parts_
-                , impl.client_.bytes_left_
-                , post_vars(impl.vars_)
-                , callback_functor<self_type>(impl, this)
-                , impl.stdin_parsed_
-                , env_vars(impl.vars_)["REMOTE_ADDR"]
-                };
-
-      // Parse the current request.
-      impl.fp_->parse(context, ec);
-      
-      return ec;
+      return base_type::parse_post_vars(
+          impl,
+          callback_functor<self_type>(impl, this),
+          ec
+        );
     }
   };
 

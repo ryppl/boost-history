@@ -23,7 +23,7 @@
 
 BOOST_CGI_NAMESPACE_BEGIN
 
- namespace detail {
+ namespace common {
 
     BOOST_CGI_INLINE
     boost::system::error_code
@@ -78,7 +78,7 @@ BOOST_CGI_NAMESPACE_BEGIN
            {
              char ch = *++iter; // need this because order of function arg
                                 // evaluation is UB.
-             result.append(1, hex_to_char(ch, *++iter));
+             result.append(1, detail::hex_to_char(ch, *++iter));
            }
            break;
          case '=': // the name is complete, now get the corresponding value
@@ -252,7 +252,7 @@ BOOST_CGI_NAMESPACE_BEGIN
       return ec;
     }
 
- } // namespace detail
+ } // namespace common
  
 BOOST_CGI_NAMESPACE_END
 

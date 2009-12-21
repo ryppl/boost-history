@@ -125,7 +125,6 @@ BOOST_CGI_NAMESPACE_BEGIN
       common::cookie_vars(impl.vars_).clear();
       common::env_vars(impl.vars_).clear();
       impl.stdin_parsed_ = false;
-      impl.get_parsed_ = false;
       impl.http_status_ = common::http::no_content;
       impl.request_status_ = common::null;
       impl.request_role_ = spec_detail::ANY;
@@ -257,44 +256,21 @@ BOOST_CGI_NAMESPACE_BEGIN
       return impl.client_.status() >= common::params_read;
     }
 
-    BOOST_CGI_INLINE
-    void fcgi_request_service::set_status(
-        implementation_type& impl, common::request_status status)
-    {
-      impl.request_status_ = status;
-    }
-
     /// Read and parse the cgi POST meta variables (greedily)
     BOOST_CGI_INLINE boost::system::error_code&
     fcgi_request_service::parse_post_vars(
         implementation_type& impl
       , boost::system::error_code& ec)
     {
-      if (!impl.fp_)
-        // Construct a form_parser instance.
-        impl.fp_.reset(new implementation_type::form_parser_type());
-
       impl.client_.bytes_left_
          = boost::lexical_cast<std::size_t>(
              env_vars(impl.vars_)["CONTENT_LENGTH"]);
       
-      // Create a context for this request.      
-      implementation_type::form_parser_type::context
-          context
-              = { env_vars(impl.vars_)["CONTENT_TYPE"]
-                , impl.post_buffer_
-                , impl.form_parts_
-                , impl.client_.bytes_left_
-                , post_vars(impl.vars_)
-                , callback_functor<self_type>(impl, this)
-                , impl.stdin_parsed_
-                , env_vars(impl.vars_)["REMOTE_ADDR"]
-                };
-
-      // Parse the current request.
-      impl.fp_->parse(context, ec);
-
-      return ec;
+      return base_type::parse_post_vars(
+          impl,
+          callback_functor<implementation_type, self_type>(impl, this),
+          ec
+        );
     }
 
     /// Read and parse a single cgi POST meta variable (greedily)
@@ -335,7 +311,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     fcgi_request_service::read_env_vars(
         implementation_type& impl, boost::system::error_code& ec)
     {
-      while(!ec && !params_read(impl))
+      while(!ec && !(status(impl) & common::env_read))
       {
         if (this->read_header(impl, ec))
           return ec;
@@ -343,12 +319,15 @@ BOOST_CGI_NAMESPACE_BEGIN
         boost::tribool state = this->parse_header(impl);
 
         if (state)
-          // the header has been handled and all is ok; continue.
+        { // the header has been handled and all is ok; continue.
           impl.client_.status(common::params_read);
+          status(impl, (common::request_status)(status(impl) | common::env_read));
+        }
         else
         if (!state)
-          // The header is confusing; something's wrong. Abort.
+        { // The header is confusing; something's wrong. Abort.
           ec = error::bad_header_type;
+        }
         else // => (state == boost::indeterminate)
         {
           std::size_t remaining(

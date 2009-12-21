@@ -20,25 +20,28 @@
 #include <boost/assert.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/optional.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/utility/enable_if.hpp>
 ///////////////////////////////////////////////////////////
-#include "boost/cgi/common/map.hpp"
-#include "boost/cgi/common/path_info.hpp"
 #include "boost/cgi/common/data_map_proxy.hpp"
+#include "boost/cgi/common/form_part.hpp"
+#include "boost/cgi/common/has_hidden_io_service.hpp"
+#include "boost/cgi/common/map.hpp"
+#include "boost/cgi/common/parse_options.hpp"
+#include "boost/cgi/common/path_info.hpp"
+#include "boost/cgi/common/request_service.hpp"
+#include "boost/cgi/common/request_status.hpp"
 #include "boost/cgi/common/role_type.hpp"
 #include "boost/cgi/common/source_enums.hpp"
-#include "boost/cgi/common/parse_options.hpp"
-#include "boost/cgi/common/request_service.hpp"
-#include "boost/cgi/http/status_code.hpp"
-#include "boost/cgi/fwd/basic_request_fwd.hpp"
-#include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 #include "boost/cgi/detail/basic_io_object.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
-#include "boost/cgi/common/has_hidden_io_service.hpp"
+#include "boost/cgi/fwd/basic_request_fwd.hpp"
+#include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
+#include "boost/cgi/http/status_code.hpp"
 
 #ifndef BOOST_CGI_POST_MAX
     /// Restrict POST data to less than 7MB per request.
@@ -609,9 +612,9 @@ BOOST_CGI_NAMESPACE_BEGIN
      * different
      * eg. `authorizer`, or `filter`.
      */
-    role_type& role()
+    role_type& role() const
     {
-      return this->service.get_role(this->implementation);
+      return this->service.role(this->implementation);
     }
 
     /// Get a hashed interpretation of the request.
@@ -625,14 +628,29 @@ BOOST_CGI_NAMESPACE_BEGIN
       return boost::hash<self_type>()(*this);
     }
 
-    /// Set the status of a request.
+    /// Get / Set the status of a request.
     /**
      * The usual way to set the request status is to set it
      * when calling `close`.
      */
-    void set_status(common::http::status_code const& status)
+    common::request_status status() const
     {
-      this->service.set_status(this->implementation, status);
+      return this->service.status(this->implementation);
+    }
+    
+    void status(common::request_status const& status)
+    {
+      this->service.status(this->implementation, status);
+    }
+    
+    common::http::status_code status(common::http::status_code const& status) const
+    {
+      return this->service.status(this->implementation);
+    }
+    
+    void status(common::http::status_code const& status)
+    {
+      this->service.status(this->implementation, status);
     }
     
     /// Get the form_part for the passed key, which may not exist.

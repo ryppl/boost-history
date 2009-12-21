@@ -6,6 +6,7 @@
 #include <string>
 #include <boost/range.hpp>
 #include "boost/cgi/config.hpp"
+#include "boost/cgi/common/name.hpp"
 
 BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
@@ -34,7 +35,7 @@ BOOST_CGI_NAMESPACE_BEGIN
      bool operator==(form_part& other) {
         return this->name == other.name;
      }
-   
+
      meta_data_map_type meta_data_;
 
      /// The boundary marker that's needed.
@@ -51,7 +52,7 @@ BOOST_CGI_NAMESPACE_BEGIN
      string_type filename;
      // Where the actual uploaded file is stored.
      string_type path;
-     
+
    public:
      /// TODO: Check that the uploaded file isn't empty too.
      bool empty() const { return value.empty(); }

@@ -75,10 +75,10 @@ BOOST_CGI_NAMESPACE_BEGIN
     * If the protocol isn't async then the class can be used without a
     * ProtocolService.
     */
-   template<typename Protocol_ = common::tags::fcgi>
+   template<typename Protocol = common::tags::fcgi>
    class acceptor_service_impl
      : public detail::service_base<
-         ::BOOST_CGI_NAMESPACE::fcgi::acceptor_service_impl<Protocol_>
+         ::BOOST_CGI_NAMESPACE::fcgi::acceptor_service_impl<Protocol>
        >
    {
    public:
@@ -88,21 +88,20 @@ BOOST_CGI_NAMESPACE_BEGIN
 
      struct implementation_type
      {
-       typedef Protocol_                             protocol_type;
-       typedef common::basic_protocol_service<
-                 protocol_type
-               >                                     protocol_service_type;
-       typedef boost::asio::ip::tcp                  native_protocol_type;
-       typedef fcgi::request                         request_type;
+       typedef Protocol                               protocol_type;
+       typedef detail::protocol_traits<Protocol>      traits;
+       typedef typename traits::protocol_service_type protocol_service_type;
+       typedef typename traits::native_protocol_type  native_protocol_type;
+       typedef typename traits::request_type          request_type;
        typedef boost::asio::socket_acceptor_service<
                  native_protocol_type
                >                                     acceptor_service_type;
-       typedef unsigned short                        port_number_type;
-       typedef boost::asio::ip::tcp::endpoint        endpoint_type;
-       //typedef typename
-       //  acceptor_service_type::native_type          native_type;
+       typedef typename
+         acceptor_service_type::implementation_type  acceptor_impl_type;
+       typedef typename traits::port_number_type     port_number_type;
+       typedef typename traits::endpoint_type        endpoint_type;
 
-       acceptor_service_type::implementation_type    acceptor_;
+       acceptor_impl_type                            acceptor_;
        boost::mutex                                  mutex_;
        std::queue<boost::shared_ptr<request_type> >  waiting_requests_;
        protocol_service_type*                        service_;
@@ -110,8 +109,8 @@ BOOST_CGI_NAMESPACE_BEGIN
        endpoint_type                                 endpoint_;
      };
 
-     typedef acceptor_service_impl<Protocol_>            type;
-     typedef Protocol_                                   protocol_type;
+     typedef acceptor_service_impl<Protocol>            type;
+     typedef Protocol                                   protocol_type;
      typedef typename
        type::implementation_type::protocol_service_type
                                                          protocol_service_type;
@@ -129,9 +128,8 @@ BOOST_CGI_NAMESPACE_BEGIN
 
 
      explicit acceptor_service_impl(::BOOST_CGI_NAMESPACE::common::io_service& ios)
-       : detail::service_base< ::BOOST_CGI_NAMESPACE::fcgi::acceptor_service_impl<Protocol_> >(ios)
+       : detail::service_base< ::BOOST_CGI_NAMESPACE::fcgi::acceptor_service_impl<Protocol> >(ios)
        , acceptor_service_(boost::asio::use_service<acceptor_service_type>(ios))
-       //, endpoint(boost::asio::ip::tcp::v4())
      {
      }
 
@@ -169,13 +167,11 @@ BOOST_CGI_NAMESPACE_BEGIN
      void construct(implementation_type& impl)
      {
        acceptor_service_.construct(impl.acceptor_);
-       //impl.acceptor_ptr().reset(impl::acceptor_type(this->io_service()));
      }
 
      void destroy(implementation_type& impl)
      {
        // close/reject all the waiting requests
-       /***/
        acceptor_service_.destroy(impl.acceptor_);
      }
 
@@ -268,8 +264,11 @@ BOOST_CGI_NAMESPACE_BEGIN
          return ec;
 
        // ...otherwise accept a new connection.
-       return acceptor_service_.accept(impl.acceptor_,
+       ec = acceptor_service_.accept(impl.acceptor_,
                 request.client().connection()->next_layer(), endpoint, ec);
+       if (!ec)
+         request.status(common::accepted);
+       return ec;
      }
 
      /// Asynchronously accepts one request.

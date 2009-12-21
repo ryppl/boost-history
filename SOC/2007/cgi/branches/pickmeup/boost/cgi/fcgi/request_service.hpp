@@ -46,15 +46,12 @@ BOOST_CGI_NAMESPACE_BEGIN
       implementation_type()
         : id_(0)
         , request_role_(spec_detail::ANY)
-        , all_done_(false)
       {
       }
 
       boost::uint16_t id_;
 
       fcgi::spec_detail::role_types request_role_;
-
-      bool all_done_;
 
       header_buffer_type header_buf_;
       header_type header_;
@@ -78,25 +75,6 @@ BOOST_CGI_NAMESPACE_BEGIN
     typedef self_type::implementation_type::string_type    string_type;
     typedef self_type::implementation_type::request_type   request_type;
 
-    template<typename Service>
-    struct callback_functor
-    {
-      callback_functor(implementation_type& impl, Service* service)
-        : impl_(impl)
-        , service_(service)
-      {
-      }
-
-      std::size_t operator()(boost::system::error_code& ec)
-      {
-        return service_->read_some(impl_, ec);
-      }
-
-    private:
-      implementation_type& impl_;
-      Service* service_;
-    };
-    
     fcgi_request_service(::BOOST_CGI_NAMESPACE::common::io_service& ios)
       : detail::service_base<fcgi_request_service>(ios)
     {
@@ -106,35 +84,16 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
     }
 
-    void construct(implementation_type& impl)
+    template<typename ImplType>
+    void construct(ImplType& impl)
     {
       impl.client_.set_connection(
-        implementation_type::connection_type::create(this->io_service())
+        typename ImplType::connection_type::create(this->get_io_service())
       );
-    }
-
-    void destroy(implementation_type& impl)
-    {
-      //if (!impl.all_done_)
-      //  detail::abort_impl(impl); // this function isn't implemented yet!
-      //impl.set_state(aborted);
     }
 
     void shutdown_service()
     {
-    }
-
-    void set_service(implementation_type& impl
-                    , implementation_type::protocol_service_type& ps)
-    {
-      impl.service_ = &ps;
-    }
-
-    /// Check if the request is still open.
-    bool is_open(implementation_type& impl)
-    {
-      return impl.request_status_ != common::null
-          && !impl.all_done_ && impl.client_.is_open();
     }
 
     /// Close the request.
@@ -145,7 +104,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     int close(implementation_type& impl, ::BOOST_CGI_NAMESPACE::common::http::status_code& hsc
              , int program_status, boost::system::error_code& ec);
 
-    /// Clear all request data (object is then safe to remove).
+    /// Clear all request data (object is then safe to reuse).
     void clear(implementation_type& impl);
 
     /// Load the request to a point where it can be usefully used.
@@ -170,7 +129,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     /// Returns true if the request environment params have been read.
     bool params_read(implementation_type& impl);
 
-    common::role_type get_role(implementation_type& impl)
+    common::role_type role(implementation_type& impl) const
     {
       return common::responder;
     }
@@ -180,8 +139,6 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
       return impl.client_;
     }
-
-    void set_status(implementation_type& impl, common::request_status status);
 
   protected:
     /// Read and parse the cgi POST meta variables (greedily)

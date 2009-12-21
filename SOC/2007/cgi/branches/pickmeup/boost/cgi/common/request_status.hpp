@@ -14,13 +14,16 @@ BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
    enum request_status
-     { null
-     , unloaded
-     , activated
-     , accepted = activated
-     , env_read
-     , loaded
-     , ok = loaded
+     { null           = 0
+     , unloaded       = null
+     , activated      = 1
+     , accepted       = activated
+     , env_read       = 2
+     , get_read       = 4
+     , post_read      = 8
+     , cookies_read   = 16
+     , loaded         = 32
+     , ok             = loaded
      , aborted
      , closed
      };

@@ -23,6 +23,7 @@
 #include "boost/cgi/common/map.hpp"
 #include "boost/cgi/common/form_part.hpp"
 #include "boost/cgi/common/parse_options.hpp"
+#include "boost/cgi/common/request_status.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
 #include "boost/cgi/detail/save_environment.hpp"
@@ -88,7 +89,8 @@ BOOST_CGI_NAMESPACE_BEGIN
       impl_base()
         : service_(NULL)
         , vars_(), post_buffer_()
-        , get_parsed_(false), env_parsed_(false), stdin_parsed_(false)
+        , stdin_parsed_(false)
+        , all_done_(false)
         , bytes_left_(0)
         , http_status_(common::http::no_content)
         , request_status_(common::unloaded)
@@ -98,19 +100,18 @@ BOOST_CGI_NAMESPACE_BEGIN
       
       bool stdin_parsed()                      { return stdin_parsed_;   }
       common::http::status_code& http_status() { return http_status_;    }
-      common::request_status& status()         { return request_status_; }
+      common::request_status status() const    { return request_status_; }
+      void status(common::request_status& st)  { request_status_ = st; }
 
       protocol_service_type* service_;
       
       var_map_type vars_;
       buffer_type post_buffer_;
-      /// Whether the get data has been parsed yet.
-      bool get_parsed_;
-      /// Whether the environment has been parsed yet.
-      bool env_parsed_;
       /// Whether the post data has been parsed yet.
       bool stdin_parsed_;
       
+      bool all_done_;
+
       // The number of bytes left to read (ie. content_length - bytes_read)
       std::size_t bytes_left_;
 
@@ -133,6 +134,25 @@ BOOST_CGI_NAMESPACE_BEGIN
       }
     };
     
+    template<typename ImplType, typename Service>
+    struct callback_functor
+    {
+      callback_functor(ImplType& impl, Service* service)
+        : impl_(impl)
+        , service_(service)
+      {
+      }
+
+      std::size_t operator()(boost::system::error_code& ec)
+      {
+        return service_->read_some(impl_, ec);
+      }
+
+    private:
+      ImplType& impl_;
+      Service* service_;
+    };
+     
     /// Load the base_environment into the current environment.
     /**
      * Parsed the base_environment and add it to the current request's
@@ -169,6 +189,52 @@ BOOST_CGI_NAMESPACE_BEGIN
              , boost::system::error_code& ec)
     {
       return impl.client_.read_some(buf,ec);
+    }
+
+    template<typename ImplType>
+    void destroy(ImplType& impl)
+    {
+    }
+    
+    /// Return the connection associated with the request
+    template<typename ImplType>
+    typename ImplType::client_type&
+      client(ImplType& impl)
+    {
+      return impl.client_;
+    }
+
+    template<typename ImplType>
+    void set_service(
+        ImplType& impl,
+        typename ImplType::protocol_service_type& ps
+      )
+    {
+      impl.service_ = &ps;
+    }
+
+    /// Get the request status.
+    template<typename ImplType>
+    common::request_status status(ImplType& impl) const
+    {
+      return impl.status();
+    }
+
+    /// Set the request status.
+    template<typename ImplType>
+    void status(ImplType& impl, common::request_status status)
+    {
+      impl.status(status);
+    }
+
+    /// Return if the request is still open.
+    template<typename ImplType>
+    bool is_open(ImplType& impl)
+    {
+      return !impl.all_done_ 
+          && impl.status() >= common::accepted 
+          && impl.status() <= common::aborted
+          && impl.client_.is_open();
     }
 
     /// Check if a given POST variable represents a file upload.
@@ -240,7 +306,7 @@ BOOST_CGI_NAMESPACE_BEGIN
           return ec;
       }
 
-      set_status(impl, common::loaded);
+      status(impl, common::loaded);
 
       return ec;
     }
@@ -252,7 +318,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
       // Make sure the request is in a pre-loaded state
       //BOOST_ASSERT (impl.status() <= unloaded);
-      if (!impl.get_parsed_)
+      if (!(status(impl) & common::get_read))
       {
         std::string const& vars (env_vars(impl.vars_)["QUERY_STRING"]);
         if (!vars.empty())
@@ -260,8 +326,8 @@ BOOST_CGI_NAMESPACE_BEGIN
                                 , boost::char_separator<char>
                                    ("", "=&", boost::keep_empty_tokens)
                                 , ec);
-        impl.get_parsed_ = true;
-      }
+        status(impl, (common::request_status)(status(impl) | common::get_read));
+      }  
       return ec;
     }
 
@@ -272,14 +338,47 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
       // Make sure the request is in a pre-loaded state
       //BOOST_ASSERT (impl.status() <= unloaded);
+      if (!(status(impl) & common::cookies_read))
+      {
+        std::string const& vars (env_vars(impl.vars_)["HTTP_COOKIE"]);
+        if (!vars.empty())
+          detail::extract_params(vars, cookie_vars(impl.vars_)
+                                , boost::char_separator<char>
+                                    ("", "=;", boost::keep_empty_tokens)
+                                , ec);
+        status(impl, (common::request_status)(status(impl) | common::cookies_read));
+      }
+      return ec;
+    }
+    
+    /// Read and parse the cgi POST meta variables.
+    template<typename ImplType, typename Callback>
+    boost::system::error_code&
+      parse_post_vars(ImplType& impl, Callback callback, boost::system::error_code& ec)
+    {
+      if (!(status(impl) & common::post_read))
+      {
+        if (!impl.fp_)
+          // Construct a form_parser instance.
+          impl.fp_.reset(new typename ImplType::form_parser_type());
 
-      std::string const& vars (env_vars(impl.vars_)["HTTP_COOKIE"]);
-      if (!vars.empty())
-        detail::extract_params(vars, cookie_vars(impl.vars_)
-                              , boost::char_separator<char>
-                                  ("", "=;", boost::keep_empty_tokens)
-                              , ec);
+        // Create a context for this request.      
+        typename ImplType::form_parser_type::context
+            context
+                = { env_vars(impl.vars_)["CONTENT_TYPE"]
+                  , impl.post_buffer_
+                  , impl.form_parts_
+                  , impl.client_.bytes_left_
+                  , post_vars(impl.vars_)
+                  , callback
+                  , impl.stdin_parsed_
+                  , env_vars(impl.vars_)["REMOTE_ADDR"]
+                  };
 
+        // Parse the current request.
+        impl.fp_->parse(context, ec);
+        status(impl, (common::request_status)(status(impl) | common::post_read));
+      }  
       return ec;
     }
   };

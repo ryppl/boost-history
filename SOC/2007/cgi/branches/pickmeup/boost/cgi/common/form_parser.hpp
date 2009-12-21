@@ -44,7 +44,7 @@
 #endif // BOOST_CGI_UPLOAD_DIRECTORY
 
 BOOST_CGI_NAMESPACE_BEGIN
- namespace detail {
+ namespace common {
 
   /// A class for parsing POST data sent to a CGI process.
   /**
@@ -151,7 +151,7 @@ private:
     context* context_;
   };
 
- } // namespace detail
+ } // namespace common
 
 BOOST_CGI_NAMESPACE_END
 
