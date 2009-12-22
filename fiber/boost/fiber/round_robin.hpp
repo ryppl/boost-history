@@ -54,6 +54,7 @@ private:
 
 		schedulable( schedulable const& other) :
 			f( other.f),
+			joining_fibers( other.joining_fibers),
 			waiting_on_fiber( other.waiting_on_fiber),
 			waiting_on_object( other.waiting_on_object)
 		{}	
