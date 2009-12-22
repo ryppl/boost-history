@@ -51,6 +51,23 @@ private:
 			f( f_), joining_fibers(),
 			waiting_on_fiber(), waiting_on_object()
 		{}
+
+		schedulable( schedulable const& other) :
+			f( other.f),
+			waiting_on_fiber( other.waiting_on_fiber),
+			waiting_on_object( other.waiting_on_object)
+		{}	
+
+		schedulable &
+		operator=( schedulable const& other)
+		{
+			if ( this == & other) return * this;
+			f = other.f;
+			joining_fibers = other.joining_fibers;
+			waiting_on_fiber = other.waiting_on_fiber;
+			waiting_on_object = other.waiting_on_object;
+			return * this;
+		}
 	};
 
 	typedef std::list< fiber::id >					fiber_id_list;
