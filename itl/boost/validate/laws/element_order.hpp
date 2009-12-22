@@ -11,7 +11,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_ITL_ELEMENT_ORDER_HPP_JOFA_090202
 
 #include <boost/itl/type_traits/value_size.hpp>
-#include <boost/itl/interval_morphism.hpp>
+#include <boost/itl/detail/interval_morphism.hpp>
 #include <boost/validate/laws/law.hpp>
 
 namespace boost{namespace itl
@@ -44,8 +44,8 @@ namespace boost{namespace itl
             Type b = this->template getInputValue<operand_b>();
             typename Type::atomized_type a_atomic;
             typename Type::atomized_type b_atomic;
-            Interval::atomize(a_atomic, a);
-            Interval::atomize(b_atomic, b);
+            segmental::atomize(a_atomic, a);
+            segmental::atomize(b_atomic, b);
 
             bool lhs = is_element_equal(a, b);
             bool rhs = (a_atomic == b_atomic);
@@ -62,8 +62,8 @@ namespace boost{namespace itl
             Type b = this->template getInputValue<operand_b>();
             typename Type::atomized_type a_atomic;
             typename Type::atomized_type b_atomic;
-            Interval::atomize(a_atomic, a);
-            Interval::atomize(b_atomic, b);
+            segmental::atomize(a_atomic, a);
+            segmental::atomize(b_atomic, b);
 
             bool lhs = is_element_equal(a, b);
             bool rhs = (a_atomic == b_atomic);
@@ -108,8 +108,8 @@ namespace boost{namespace itl
             Type b = this->template getInputValue<operand_b>();
             typename Type::atomized_type a_atomic;
             typename Type::atomized_type b_atomic;
-            Interval::atomize(a_atomic, a);
-            Interval::atomize(b_atomic, b);
+            segmental::atomize(a_atomic, a);
+            segmental::atomize(b_atomic, b);
 
             bool lhs = is_element_less(a, b);
             bool rhs = a_atomic < b_atomic;
@@ -126,8 +126,8 @@ namespace boost{namespace itl
             Type b = this->template getInputValue<operand_b>();
             typename Type::atomized_type a_atomic;
             typename Type::atomized_type b_atomic;
-            Interval::atomize(a_atomic, a);
-            Interval::atomize(b_atomic, b);
+            segmental::atomize(a_atomic, a);
+            segmental::atomize(b_atomic, b);
 
             bool lhs = is_element_less(a, b);
             bool rhs = a_atomic < b_atomic;
@@ -174,8 +174,8 @@ namespace boost{namespace itl
             Type b = this->template getInputValue<operand_b>();
             typename Type::atomized_type a_atomic;
             typename Type::atomized_type b_atomic;
-            Interval::atomize(a_atomic, a);
-            Interval::atomize(b_atomic, b);
+            segmental::atomize(a_atomic, a);
+            segmental::atomize(b_atomic, b);
 
             bool lhs = is_element_greater(a, b);
             bool rhs = a_atomic > b_atomic;
@@ -192,8 +192,8 @@ namespace boost{namespace itl
             Type b = this->template getInputValue<operand_b>();
             typename Type::atomized_type a_atomic;
             typename Type::atomized_type b_atomic;
-            Interval::atomize(a_atomic, a);
-            Interval::atomize(b_atomic, b);
+            segmental::atomize(a_atomic, a);
+            segmental::atomize(b_atomic, b);
 
             bool lhs = is_element_greater(a, b);
             bool rhs = a_atomic > b_atomic;

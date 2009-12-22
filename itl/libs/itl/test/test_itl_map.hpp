@@ -28,7 +28,7 @@ void itl_map_find_4_bicremental_types()
     itv_map_a.add(IDv(2,4,1)).add(IIv(6,7,3));
 
     MapT map_a;
-    Interval::atomize(map_a, itv_map_a);
+    segmental::atomize(map_a, itv_map_a);
 
     typename MapT::const_iterator found = map_a.find(MK_v(6));
 
@@ -69,10 +69,10 @@ void itl_map_inclusion_compare_4_bicremental_types()
     itv_map_b.set(IIv(6,7,2));
 
     MapT map_sub_a, map_a, map_a2, map_b, map_c;
-    Interval::atomize(map_a, itv_map_a);
-    Interval::atomize(map_b, itv_map_b);
-    Interval::atomize(map_c, itv_map_c);
-    Interval::atomize(map_sub_a, itv_map_sub_a);
+    segmental::atomize(map_a, itv_map_a);
+    segmental::atomize(map_b, itv_map_b);
+    segmental::atomize(map_c, itv_map_c);
+    segmental::atomize(map_sub_a, itv_map_sub_a);
 
     map_a2 = map_a;
     BOOST_CHECK_EQUAL( inclusion_compare(MapT(), MapT()), inclusion::equal );

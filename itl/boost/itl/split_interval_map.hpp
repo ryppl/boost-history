@@ -22,7 +22,8 @@ namespace boost{namespace itl
 #pragma warning(disable:4127) // conditional expression is constant
 #endif                        
 
-/** implements a map as a map of intervals - on insertion overlapping intervals are split and associated values are combined. */
+/** \brief implements a map as a map of intervals - on insertion 
+    overlapping intervals are split and associated values are combined. */
 template
 <
     typename DomainT,

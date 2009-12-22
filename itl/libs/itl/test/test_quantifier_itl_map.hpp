@@ -33,9 +33,9 @@ void quantifier_map_check_monoid_plus_4_bicremental_types()
     itv_map_c.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
     MapT map_a, map_b, map_c;
-    Interval::atomize(map_a, itv_map_a);
-    Interval::atomize(map_b, itv_map_b);
-    Interval::atomize(map_c, itv_map_c);
+    segmental::atomize(map_a, itv_map_a);
+    segmental::atomize(map_b, itv_map_b);
+    segmental::atomize(map_c, itv_map_c);
 
     typename MapT::value_type map_pair1 = sK_v(5,1);
     typename MapT::value_type map_pair2 = sK_v(9,3);
@@ -66,9 +66,9 @@ void quantifier_map_check_monoid_et_4_bicremental_types()
     itv_map_c.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
     MapT map_a, map_b, map_c;
-    Interval::atomize(map_a, itv_map_a);
-    Interval::atomize(map_b, itv_map_b);
-    Interval::atomize(map_c, itv_map_c);
+    segmental::atomize(map_a, itv_map_a);
+    segmental::atomize(map_b, itv_map_b);
+    segmental::atomize(map_c, itv_map_c);
 
     typename MapT::value_type map_pair1 = sK_v(5,1);
     typename MapT::value_type map_pair2 = sK_v(9,3);
@@ -102,9 +102,9 @@ void quantifier_map_check_abelian_monoid_plus_4_bicremental_types()
     itv_map_c.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
     MapT map_a, map_b, map_c;
-    Interval::atomize(map_a, itv_map_a);
-    Interval::atomize(map_b, itv_map_b);
-    Interval::atomize(map_c, itv_map_c);
+    segmental::atomize(map_a, itv_map_a);
+    segmental::atomize(map_b, itv_map_b);
+    segmental::atomize(map_c, itv_map_c);
 
     typename MapT::value_type map_pair1 = sK_v(5,1);
     typename MapT::value_type map_pair2 = sK_v(9,3);
@@ -135,9 +135,9 @@ void quantifier_map_check_abelian_monoid_et_4_bicremental_types()
     itv_map_c.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
     MapT map_a, map_b, map_c;
-    Interval::atomize(map_a, itv_map_a);
-    Interval::atomize(map_b, itv_map_b);
-    Interval::atomize(map_c, itv_map_c);
+    segmental::atomize(map_a, itv_map_a);
+    segmental::atomize(map_b, itv_map_b);
+    segmental::atomize(map_c, itv_map_c);
 
     typename MapT::value_type map_pair1 = sK_v(5,1);
     typename MapT::value_type map_pair2 = sK_v(9,3);
@@ -171,9 +171,9 @@ void quantifier_map_check_partial_invertive_monoid_plus_4_bicremental_types()
     itv_map_c.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
     MapT map_a, map_b, map_c;
-    Interval::atomize(map_a, itv_map_a);
-    Interval::atomize(map_b, itv_map_b);
-    Interval::atomize(map_c, itv_map_c);
+    segmental::atomize(map_a, itv_map_a);
+    segmental::atomize(map_b, itv_map_b);
+    segmental::atomize(map_c, itv_map_c);
 
     typename MapT::value_type map_pair1 = sK_v(5,1);
     typename MapT::value_type map_pair2 = sK_v(9,3);
@@ -206,9 +206,9 @@ void quantifier_map_check_partial_invertive_monoid_plus_prot_inv_4_bicremental_t
     itv_map_c.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
     MapT map_a, map_b, map_c;
-    Interval::atomize(map_a, itv_map_a);
-    Interval::atomize(map_b, itv_map_b);
-    Interval::atomize(map_c, itv_map_c);
+    segmental::atomize(map_a, itv_map_a);
+    segmental::atomize(map_b, itv_map_b);
+    segmental::atomize(map_c, itv_map_c);
 
     typename MapT::value_type map_pair1 = sK_v(5,1);
     typename MapT::value_type map_pair2 = sK_v(9,3);
@@ -245,9 +245,9 @@ void quantifier_map_check_abelian_group_plus_4_bicremental_types()
     itv_map_c.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
     MapT map_a, map_b, map_c;
-    Interval::atomize(map_a, itv_map_a);
-    Interval::atomize(map_b, itv_map_b);
-    Interval::atomize(map_c, itv_map_c);
+    segmental::atomize(map_a, itv_map_a);
+    segmental::atomize(map_b, itv_map_b);
+    segmental::atomize(map_c, itv_map_c);
 
     typename MapT::value_type map_pair1 = sK_v(5,1);
     typename MapT::value_type map_pair2 = sK_v(9,3);
@@ -280,9 +280,9 @@ void quantifier_map_check_abelian_group_plus_prot_inv_4_bicremental_types()
     itv_map_c.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
     MapT map_a, map_b, map_c;
-    Interval::atomize(map_a, itv_map_a);
-    Interval::atomize(map_b, itv_map_b);
-    Interval::atomize(map_c, itv_map_c);
+    segmental::atomize(map_a, itv_map_a);
+    segmental::atomize(map_b, itv_map_b);
+    segmental::atomize(map_c, itv_map_c);
 
     typename MapT::value_type map_pair1 = sK_v(5,1);
     typename MapT::value_type map_pair2 = sK_v(9,3);

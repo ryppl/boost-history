@@ -70,7 +70,7 @@ template<>
 inline std::string type_to_string<total_enricher>::apply() { return "e^0"; }
 
 
-/** adds addition, subtraction and intersection to std::maps */
+/** \brief Addable, subractable and intersectable maps */
 template 
 <
     typename DomainT, 

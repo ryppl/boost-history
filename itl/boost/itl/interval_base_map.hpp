@@ -47,7 +47,7 @@ struct mapping_pair
 
 
 
-/** Implements a map as a map of intervals (base class) */
+/** \brief Implements a map as a map of intervals (base class) */
 template
 <
     class SubType,
@@ -150,6 +150,15 @@ public:
     /// data type of the implementing container
     typedef typename ImplMapT::value_type::second_type data_type;
 
+    /// pointer type
+    typedef typename ImplMapT::pointer         pointer;
+    /// const pointer type
+    typedef typename ImplMapT::const_pointer   const_pointer;
+    /// reference type
+    typedef typename ImplMapT::reference       reference;
+    /// const reference type
+    typedef typename ImplMapT::const_reference const_reference;
+
     /// iterator for iteration over intervals
     typedef typename ImplMapT::iterator iterator;
     /// const_iterator for iteration over intervals
@@ -167,11 +176,6 @@ public:
     typedef boost::itl::element_iterator<reverse_iterator> element_reverse_iterator; 
     /// element const reverse iterator: Depreciated, see documentation.
     typedef boost::itl::element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
-
-    typedef typename ImplMapT::pointer                 pointer;
-    typedef typename ImplMapT::const_pointer           const_pointer;
-    typedef typename ImplMapT::reference               reference;
-    typedef typename ImplMapT::const_reference         const_reference;
     
 public:
     enum { is_itl_container = true };
@@ -1287,7 +1291,7 @@ template
 >
 void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::uniform_bounds(itl::bound_type bounded)
 {
-    // I can do this only, because I am shure that the contents and the
+    // I can do this only, because I am sure that the contents and the
     // ordering < on interval is invariant wrt. this transformation on bounds
     FOR_IMPLMAP(it_) const_cast<interval_type&>(it_->first).as(bounded);
 }

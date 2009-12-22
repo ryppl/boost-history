@@ -21,6 +21,10 @@ boost. A renaming will not be done before completion of the
 formal review.
 ]
 
+["A bug crawls across the boost docs on my laptop screen.
+Let him be! We need all the readers we can get.] -- 
+Freely adapted from [@http://en.wikipedia.org/wiki/Jack_Kornfield Jack Kornfield]
+
 Intervals are almost ubiquitous in software development. Yet they are
 very easily coded into user defined classes by a pair of numbers
 so they are only /implicitly/ used most of the time. The meaning of
@@ -158,13 +162,10 @@ an ['*accumulative one*] (on the associated values).
 In addition to interval containers the *itl* provides element containers
 __itl_set__ and __itl_map__. 
 
-* An __itl_set__ is behavioral equal to __itv_bsets__ 
-  except for iteration, that is to say behavioral equal on 
-  the __bi_conceptual__ aspect.
+* An __itl_set__ is behavioral equal to __itv_bsets__ on the __bi_conceptual__ aspect.
 
-* An __itl_map__ is behavioral equal to __itv_bmaps__ 
-  except for iteration, that is to say behavioral equal on 
-  the __bi_conceptual__  aspect. Specifically a __itl_map__
+* An __itl_map__ is behavioral equal to __itv_bmaps__ on the __bi_conceptual__  aspect. 
+  Specifically a __itl_map__
   implements ['*aggregate on overlap*], which is
   named ['*aggregate on collision*] for an element container.
 

@@ -19,7 +19,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/separate_interval_set.hpp>
 #include <boost/itl/split_interval_set.hpp>
-#include <boost/itl/interval_morphism.hpp>
+#include <boost/itl/detail/interval_morphism.hpp>
 
 using namespace std;
 using namespace boost;

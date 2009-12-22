@@ -14,14 +14,14 @@
 
 [table
 [[['*Equivalences and Orderings*]][interval][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]]
-[[['Lexicographical Ordering]]                 [ ]       [ ]      [ ]     [ ]      [ ]   ]
+[[['Segment Ordering]]                         [ ]       [ ]      [ ]     [ ]      [ ]   ]
 [[`bool operator == (const T&, const T&)`]     [1]       [1]      [1]     [1]      [1]   ]
 [[`bool operator != (const T&, const T&)`]     [1]       [1]      [1]     [1]      [1]   ]
 [[`bool operator <  (const T&, const T&)`]     [1]       [1]      [1]     [1]      [1]   ]
 [[`bool operator >  (const T&, const T&)`]     [1]       [1]      [1]     [1]      [1]   ]
 [[`bool operator <= (const T&, const T&)`]     [1]       [1]      [1]     [1]      [1]   ]
 [[`bool operator >= (const T&, const T&)`]     [1]       [1]      [1]     [1]      [1]   ]
-[[['Sequential Element Ordering]]              [ ]       [ ]      [ ]     [ ]      [ ]   ]
+[[['Element Ordering]]                         [ ]       [ ]      [ ]     [ ]      [ ]   ]
 [[`bool is_element_equal(const T&, const P&)`] [ ]     [__S]    [__M]     [1]      [1]   ]
 [[`bool is_element_less(const T&, const P&)`]  [ ]     [__S]    [__M]     [1]      [1]   ]
 [[`bool is_element_greater(const T&, const P&)`][ ]    [__S]    [__M]     [1]      [1]   ]

@@ -14,7 +14,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-/** Performes an addition using a container's memberfunction add, when operator= is called. */
+/** \brief Performes an addition using a container's memberfunction add, when operator= is called. */
 template<class ContainerT> class add_iterator
     : public std::iterator<std::output_iterator_tag, void, void, void, void>
 {
@@ -55,7 +55,7 @@ inline add_iterator<ContainerT> adder(ContainerT& cont, IteratorT iter_)
     return add_iterator<ContainerT>(cont, typename ContainerT::iterator(iter_));
 }
 
-/** Performes an insertion using a container's memberfunction add, when operator= is called. */
+/** \brief Performes an insertion using a container's memberfunction add, when operator= is called. */
 template<class ContainerT> class insert_iterator
     : public std::iterator<std::output_iterator_tag, void, void, void, void>
 {

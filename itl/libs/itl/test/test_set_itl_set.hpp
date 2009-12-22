@@ -30,9 +30,9 @@ void itl_set_check_monoid_plus_4_bicremental_types()
     itv_set_c.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
 
     SetT set_a, set_b, set_c;
-    Interval::atomize(set_a, itv_set_a);
-    Interval::atomize(set_b, itv_set_b);
-    Interval::atomize(set_c, itv_set_c);
+    segmental::atomize(set_a, itv_set_a);
+    segmental::atomize(set_b, itv_set_b);
+    segmental::atomize(set_c, itv_set_c);
 
     T val1 = MK_v(7);
     T val2 = MK_v(5);
@@ -60,9 +60,9 @@ void itl_set_check_monoid_et_4_bicremental_types()
     itv_set_c.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
 
     SetT set_a, set_b, set_c;
-    Interval::atomize(set_a, itv_set_a);
-    Interval::atomize(set_b, itv_set_b);
-    Interval::atomize(set_c, itv_set_c);
+    segmental::atomize(set_a, itv_set_a);
+    segmental::atomize(set_b, itv_set_b);
+    segmental::atomize(set_c, itv_set_c);
 
     T val1 = MK_v(7);
     T val2 = MK_v(5);
@@ -93,9 +93,9 @@ void itl_set_check_abelian_monoid_plus_4_bicremental_types()
     itv_set_c.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
 
     SetT set_a, set_b, set_c;
-    Interval::atomize(set_a, itv_set_a);
-    Interval::atomize(set_b, itv_set_b);
-    Interval::atomize(set_c, itv_set_c);
+    segmental::atomize(set_a, itv_set_a);
+    segmental::atomize(set_b, itv_set_b);
+    segmental::atomize(set_c, itv_set_c);
 
     T val1 = MK_v(7);
     T val2 = MK_v(5);
@@ -122,9 +122,9 @@ void itl_set_check_abelian_monoid_et_4_bicremental_types()
     itv_set_c.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
 
     SetT set_a, set_b, set_c;
-    Interval::atomize(set_a, itv_set_a);
-    Interval::atomize(set_b, itv_set_b);
-    Interval::atomize(set_c, itv_set_c);
+    segmental::atomize(set_a, itv_set_a);
+    segmental::atomize(set_b, itv_set_b);
+    segmental::atomize(set_c, itv_set_c);
 
     T val1 = MK_v(7);
     T val2 = MK_v(5);
@@ -155,9 +155,9 @@ void itl_set_check_partial_invertive_monoid_plus_4_bicremental_types()
     itv_set_c.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
 
     SetT set_a, set_b, set_c;
-    Interval::atomize(set_a, itv_set_a);
-    Interval::atomize(set_b, itv_set_b);
-    Interval::atomize(set_c, itv_set_c);
+    segmental::atomize(set_a, itv_set_a);
+    segmental::atomize(set_b, itv_set_b);
+    segmental::atomize(set_c, itv_set_c);
 
     T val1 = MK_v(7);
     T val2 = MK_v(5);

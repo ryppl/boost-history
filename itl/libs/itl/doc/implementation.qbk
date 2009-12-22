@@ -65,7 +65,11 @@ __Omlgn__ will refer to sizes
 n = y.iterative_size();
 m = x.iterative_size();
 ``
-for containers `y` and `x`.
+for containers `y` and `x`. 
+Note that ``iterative_size`` refers to the primary entities,
+that we can iterate over. For interval containers these
+are intervals or segments. ``Itervative_size`` never refers
+to element iteration for interval containers. 
 
 [endsect][/ Iterative size]
 

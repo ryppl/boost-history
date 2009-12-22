@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <boost/itl/set.hpp>
 #include <boost/itl/map.hpp>
-#include <boost/itl/interval_morphism.hpp>
+#include <boost/itl/detail/interval_morphism.hpp>
 #include <boost/validate/itl/functors.hpp>
 #include <boost/validate/laws/induced_relation.hpp>
 #include <boost/validate/laws/symmetric_difference.hpp>
@@ -45,77 +45,6 @@ using namespace boost::posix_time;
 
 void test_LawValidater()
 {
-    //typedef BinaryPushout<itl::split_interval_map<int,int,partial_enricher>, itl::map<int,int,partial_enricher>, Interval::Atomize, inplace_caret>
-    //    TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef BinaryPushout<itl::map<int,double>, itl::split_interval_map<int,double>, Interval::Cluster, inplace_et>
-    //    Map_Cluster_Intersect_DiagramT;
-    //LawValidater<Map_Cluster_Intersect_DiagramT, RandomGentor> map_cluster_star_pushout;
-    //map_cluster_star_pushout.setTrialsCount(1000);
-    //map_cluster_star_pushout.run();
-
-    //typedef InplaceFlip
-    //    <itl::interval_map<int, int, partial_enricher > >  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef InplaceSymmetricDifference
-    //    <itl::interval_map<int, int, partial_enricher > >  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef InplaceNaturalInversion
-    //    <itl::interval_map<int, int, partial_enricher>, inplace_plus, protonic_equal>  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef InplaceAssociativity
-    //    <itl::split_interval_map<int, int, partial_enricher> >  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef InducedRelation
-    //    <itl::interval_map<int, int, partial_enricher>, 
-    //    typename itl::interval_map<int, int, partial_enricher>::atomized_type, 
-    //    Interval::Atomize, protonic_equal> TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef Balance<itl::tree<int> >  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef InplaceDeMorgan
-    //<itl::split_interval_map<int, itl::bits16, partial_enricher, 
-    //                         std::less, inplace_bit_add, inplace_bit_and>, 
-    //inplace_bit_add, inplace_bit_and>  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef IntersectsDefined
-    //    <itl::interval_map<int, int, total_absorber> >  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef Interinclusion
-    //    <interval_map<int,int>, interval_set<int> >  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef Interinclusion
-    //    <interval_map<int, itl::set<int> >, interval_map<int, itl::set<int> > >  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef AddendInclusion
-    //    <interval_set<int>, itl::interval<int> >  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
-
-    //typedef FunctionEquality
-    //<
-    //    itl::list<std::pair<int,int> >, 
-    //    itl::map<int,int,partial_absorber>,
-    //    base_insertion, 
-    //    hint_insertion
-    //> TestLawT;
-
-    //typedef UnaryAtomicEquivalence
-    //<
-    //    itl::interval_bitset<int,itl::bits16>,
-    //    itl::list<int>,
-    //    itl::std_reverse_copy_forward
-    //> TestLawT;
 
     typedef UnaryAtomicEquivalence2
     <

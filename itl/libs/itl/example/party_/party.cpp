@@ -50,7 +50,7 @@ using namespace boost::itl;
     The accumulative behavior accumulates associated values on every overlap of
     an insertion for the associated values.
 
-    \include party/party.cpp
+    \include party_/party.cpp
 */
 
 // Type itl::set<string> collects the names of party guests. Therefore it needs to

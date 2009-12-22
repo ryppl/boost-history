@@ -10,7 +10,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #pragma once
 
 #include <boost/itl/functors.hpp>
-#include <boost/itl/interval_morphism.hpp>
+#include <boost/itl/detail/interval_morphism.hpp>
 #include <boost/validate/laws/induced_relation.hpp>
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/validater/algebra_validater.hpp>
@@ -50,9 +50,9 @@ namespace boost{namespace itl
         {
             switch(_lawChoice.some())
             {
-            case atomize_subset:        return new LawValidater<InducedRelation<Type, typename Type::atomized_type, Interval::Atomize, sub_super_set>, RandomGentor>();
-            case atomize_superset:      return new LawValidater<InducedRelation<Type, typename Type::atomized_type, Interval::Atomize, super_sub_set>, RandomGentor>();
-            case atomize_element_equal: return new LawValidater<InducedRelation<Type, typename Type::atomized_type, Interval::Atomize, element_equal>, RandomGentor>();
+            case atomize_subset:        return new LawValidater<InducedRelation<Type, typename Type::atomized_type, segmental::atomizer, sub_super_set>, RandomGentor>();
+            case atomize_superset:      return new LawValidater<InducedRelation<Type, typename Type::atomized_type, segmental::atomizer, super_sub_set>, RandomGentor>();
+            case atomize_element_equal: return new LawValidater<InducedRelation<Type, typename Type::atomized_type, segmental::atomizer, element_equal>, RandomGentor>();
             default: return NULL;
             }
         }

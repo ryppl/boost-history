@@ -15,7 +15,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-/** Implements a set as a set of intervals - leaving adjoining intervals separate */
+/** \brief Implements a set as a set of intervals - leaving adjoining intervals separate */
 template 
 <
     typename                         DomainT, 

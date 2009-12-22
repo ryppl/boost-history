@@ -15,7 +15,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
     This program gives a very short samlpe of different interval instances.
 
-    \include example/interval_/interval.cpp
+    \include interval_/interval.cpp
 */
 //[example_interval
 #include <iostream>

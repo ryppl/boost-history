@@ -31,7 +31,7 @@ using namespace boost::itl;
     value v:
     (t1, ..., tn) -> v
 
-    The values v can be amounts like integers, but also sets, an more complex 
+    The values v can be amounts like integers, but also sets and more complex 
     classes, provided an operator += for aggregation is defined on them.
 
     A TupelComputerT can be conceived as an n-dimensional cube.
@@ -54,13 +54,13 @@ using namespace boost::itl;
     This is the most basic instance of a TupelComputerT. It is demonstrated in this 
     sampe file.
     
-    \include amount_cube/amount_cube.cpp
+    \include amount_cube_/amount_cube.cpp
 */
 
-/*    Consider a hospital administration that want's to count their patients 
+/*  Consider a hospital administration that want's to count their patients 
     according to the attributes sex, age, and diagnosis ... */
-enum sex            { female=0,      male=1 };
-enum diagnosis        { anorexia=0, stroke=1 };
+enum sex       { female=0, male=1 };
+enum diagnosis { anorexia=0, stroke=1 };
 
 // These are the components of the tupel (indendent variables) that are to 
 // be counted ...
@@ -71,27 +71,27 @@ typedef var_tuple<PatientVarsET_size> PatientInfoTD;
 typedef    amount_tuple_computer<PatientVarsET_size, int>    AmountCubeTD;
 
 // This macro helps the notation a little
-#define TRIPEL(tp,x0,x1,x2) tp[0]=x0; tp[1]=x1; tp[2]=x2 
+#define TRIPLE(tp,x0,x1,x2) tp[0]=x0; tp[1]=x1; tp[2]=x2 
 
 
 void evaluate_by_tupel_insertion(AmountCubeTD& cube)
 {
-    /*    So, counting of cases is done just by inserting tupels of attributes with
+    /*  So, counting of cases is done just by inserting tupels of attributes with
         an associated 1. Equal tupel are summed up. So we expect a total of
         2 for 17 year old annorectic females. All other tupels are obviously unique. */
-    PatientInfoTD marys_data;  TRIPEL(marys_data,  female, 17, anorexia); cube.insert(marys_data, 1);
-    PatientInfoTD sallys_data; TRIPEL(sallys_data, female, 17, anorexia); cube.insert(sallys_data, 1);
-    PatientInfoTD peters_data; TRIPEL(peters_data, male,   36, anorexia); cube.insert(peters_data, 1);
-    PatientInfoTD anns_data;   TRIPEL(anns_data,   female, 34, stroke);   cube.insert(anns_data, 1);
-    PatientInfoTD pauls_data;  TRIPEL(pauls_data,  male,   72, stroke);   cube.insert(pauls_data, 1);
-    PatientInfoTD franks_data; TRIPEL(franks_data, male,   82, stroke);   cube.insert(franks_data, 1);
+    PatientInfoTD marys_data;  TRIPLE(marys_data,  female, 17, anorexia); cube.insert(marys_data, 1);
+    PatientInfoTD sallys_data; TRIPLE(sallys_data, female, 17, anorexia); cube.insert(sallys_data, 1);
+    PatientInfoTD peters_data; TRIPLE(peters_data, male,   36, anorexia); cube.insert(peters_data, 1);
+    PatientInfoTD anns_data;   TRIPLE(anns_data,   female, 34, stroke);   cube.insert(anns_data, 1);
+    PatientInfoTD pauls_data;  TRIPLE(pauls_data,  male,   72, stroke);   cube.insert(pauls_data, 1);
+    PatientInfoTD franks_data; TRIPLE(franks_data, male,   82, stroke);   cube.insert(franks_data, 1);
 }
 
-/*    Shows frequencies of attribute tupels for patients. Sums up frequencies for
+/*  Shows frequencies of attribute tupels for patients. Sums up frequencies for
     equal attribute combinations (tupels) */
 void accumulate_identical_tupel()
 {
-    /*    Every TupelComputer need an order for their tupel. In the most simple case
+    /*  Every TupelComputer need an order for their tupel. In the most simple case
         we take the default order provided by the default constructor */
     var_tuple_order<PatientInfoTD> defaultOrder;
     AmountCubeTD amountCube(defaultOrder);
@@ -105,11 +105,11 @@ void accumulate_identical_tupel()
 }
 
 
-/*    We do not want to count each age separately but to evaluate frequencies
+/*  We do not want to count each age separately but to evaluate frequencies
     for groups of ages. So we define: */
 enum AgeGroupsET    { young=0,      old=1 };
 
-/*    Modifying the tupel order we can indeed change the computation. Class
+/*  Modifying the tupel order we can indeed change the computation. Class
     GroupByAge shows how a grouping on age can be introduced to the computing
     of a TupelComputer. */
 class GroupByAge : public group_order<PatientVarsET_size> 
@@ -139,15 +139,15 @@ private:
 
 void accumulate_for_grouped_age()
 {
-    //    Now we can modify the tupel order
+    // Now we can modify the tupel order
     var_tuple_order<PatientInfoTD> groupedAgeOrder;
 
-    //    Grouping for age is introduced that way
+    // Grouping for age is introduced that way
     GroupByAge ageGrouper;
     groupedAgeOrder.setGroupOrder(&ageGrouper);
     AmountCubeTD amountCube(groupedAgeOrder);
 
-    /*    The same data collection now yield a different result. As desired countig
+    /*  The same data collection now yield a different result. As desired countig
         of ages is now grouped for two rough age groups */
     evaluate_by_tupel_insertion(amountCube);
 
@@ -157,7 +157,7 @@ void accumulate_for_grouped_age()
     cout << "----------------------------------------------------------------------------" << endl;
 }
 
-/*    We can compute partial sums by switching components off the tupel.
+/*  We can compute partial sums by switching components off the tupel.
     Components to be counted are defined by a PermutationT Object.
     A PermutationT is a selection that permutes the iteration order as well. */
 void accumulate_for_sex()

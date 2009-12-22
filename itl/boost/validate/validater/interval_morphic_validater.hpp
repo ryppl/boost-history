@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_continuous.hpp>
 #include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/functors.hpp>
-#include <boost/itl/interval_morphism.hpp>
+#include <boost/itl/detail/interval_morphism.hpp>
 #include <boost/validate/laws/set_laws.hpp>
 #include <boost/validate/laws/order.hpp>
 #include <boost/validate/laws/pushouts.hpp>
@@ -76,21 +76,21 @@ namespace boost{namespace itl
         {
             switch(_lawChoice.some())
             {
-            case atomize_plus:   return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_plus>,  RandomGentor>();
-            case atomize_minus:  return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_minus>, RandomGentor>();
-            case atomize_et:     return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_et>,    RandomGentor>();
-            case atomize_caret:  return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_caret>, RandomGentor>();
-            case cluster_plus:   return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_plus>,  RandomGentor>();
-            case cluster_minus:  return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_minus>, RandomGentor>();
-            case cluster_et:     return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_et>,    RandomGentor>();
-            case cluster_caret:  return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_caret>, RandomGentor>();
-            case atomize_insert: return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_insert>,RandomGentor>();
-            case atomize_erase:  return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_erase>, RandomGentor>();
-            case cluster_insert: return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_insert>,RandomGentor>();
-            case cluster_erase:  return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_erase>, RandomGentor>();
-            case join_plus:      return new LawValidater<BinaryPushout<Type, typename Type::joint_type,    Interval::Join,    inplace_plus>,  RandomGentor>();
+            case atomize_plus:   return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, segmental::atomizer, inplace_plus>,  RandomGentor>();
+            case atomize_minus:  return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, segmental::atomizer, inplace_minus>, RandomGentor>();
+            case atomize_et:     return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, segmental::atomizer, inplace_et>,    RandomGentor>();
+            case atomize_caret:  return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, segmental::atomizer, inplace_caret>, RandomGentor>();
+            case cluster_plus:   return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, segmental::clusterer, inplace_plus>,  RandomGentor>();
+            case cluster_minus:  return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, segmental::clusterer, inplace_minus>, RandomGentor>();
+            case cluster_et:     return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, segmental::clusterer, inplace_et>,    RandomGentor>();
+            case cluster_caret:  return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, segmental::clusterer, inplace_caret>, RandomGentor>();
+            case atomize_insert: return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, segmental::atomizer, inplace_insert>,RandomGentor>();
+            case atomize_erase:  return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, segmental::atomizer, inplace_erase>, RandomGentor>();
+            case cluster_insert: return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, segmental::clusterer, inplace_insert>,RandomGentor>();
+            case cluster_erase:  return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, segmental::clusterer, inplace_erase>, RandomGentor>();
+            case join_plus:      return new LawValidater<BinaryPushout<Type, typename Type::joint_type,    segmental::joiner,    inplace_plus>,  RandomGentor>();
             //JODO absorb_plus holds for interval_map. For split_interval_map element_equal has to be used as equality-relation.
-            //case absorb_plus:    return new LawValidater<BinaryPushout<Type, typename Type::partial_absorber_type, Interval::AbsorbNeutrons, inplace_plus>,  RandomGentor>();
+            //case absorb_plus:    return new LawValidater<BinaryPushout<Type, typename Type::partial_absorber_type, segmental::neutron_absorber, inplace_plus>,  RandomGentor>();
             //JODO doc: violated: inverse required: case absorb_minus:    return new LawValidater<BinaryPushout<Type, typename Type::partial_absorber_type, Interval::AbsorbNeutrons, inplace_minus>,  RandomGentor>();
             default: return NULL;
             }

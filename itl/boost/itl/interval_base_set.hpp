@@ -23,7 +23,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 namespace boost{namespace itl
 {
 
-/** Implements a set as a set of intervals (base class) */
+/** \brief Implements a set as a set of intervals (base class) */
 template 
 <
     typename             SubType,
@@ -108,6 +108,15 @@ public:
     /// value type of the implementing container
     typedef typename ImplSetT::value_type value_type;
 
+    /// pointer type
+    typedef typename ImplSetT::pointer         pointer;
+    /// const pointer type
+    typedef typename ImplSetT::const_pointer   const_pointer;
+    /// reference type
+    typedef typename ImplSetT::reference       reference;
+    /// const reference type
+    typedef typename ImplSetT::const_reference const_reference;
+
     /// iterator for iteration over intervals
     typedef typename ImplSetT::iterator iterator;
     /// const_iterator for iteration over intervals
@@ -125,11 +134,6 @@ public:
     typedef boost::itl::element_iterator<reverse_iterator> element_reverse_iterator; 
     /// element const reverse iterator: Depreciated, see documentation.
     typedef boost::itl::element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
-
-    typedef typename ImplSetT::pointer                 pointer;
-    typedef typename ImplSetT::const_pointer           const_pointer;
-    typedef typename ImplSetT::reference               reference;
-    typedef typename ImplSetT::const_reference         const_reference;
 
     enum { fineness = 4 };
 
@@ -701,7 +705,7 @@ template<class SubType,
          class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::uniform_bounds(itl::bound_type bounded)
 {
-    // I can do this only, because I am shure that the contents and the
+    // I can do this only, because I am sure that the contents and the
     // ordering < on interval is invariant wrt. this transformation on bounds
     FOR_IMPL(it_) const_cast<interval_type&>(*it_).as(bounded);
 }

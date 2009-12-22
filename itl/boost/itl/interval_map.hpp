@@ -26,7 +26,8 @@ template<class DomainT, class CodomainT, class Traits,
          template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 class split_interval_map;
 
-/** implements a map as a map of intervals - on insertion overlapping intervals are split and associated values are combined.*/
+/** \brief implements a map as a map of intervals - on insertion 
+    overlapping intervals are split and associated values are combined.*/
 template
 <
     typename DomainT,

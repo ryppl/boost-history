@@ -17,13 +17,27 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl_xt/bits.hpp>      // a bitset implementation
 #include <boost/itl_xt/detail/bit_element_iterator.hpp>
 
-#include <boost/itl/interval_morphism.hpp> //JODO Separate aspects and concerns
+#include <boost/itl/detail/interval_morphism.hpp> //JODO Separate aspects and concerns
 
 
 
 namespace boost{namespace itl
 {
 
+/** \brief Large bitsets that combine interval compression and bitcompression. 
+
+    Class interval_bitset implements a set as an interval_map of bitsets.
+    An interval_bitset is selfcompressing in two ways.
+    Large contiguous runs of bits can be represented by intervals in the
+    same way as for itl::interval_set or itl::interval_map (interval compression).
+    Individual bits that spread over narrow ranges are represented in 
+    machine words as bitsets (bit compression).
+
+    There is a datailed description on how an interval_bitset is
+    implemented using itl::interval_map in the project section
+    of the boost book documentation here:
+    http://www.herold-faulhaber.de/boost_itl/doc/libs/itl/doc/html/boost_itl/projects.html
+*/
 template 
 <
     typename    DomainT = unsigned long, 
@@ -431,10 +445,10 @@ struct type_to_string<itl::interval_bitset<DomainT,BitSetT,Compare,Interval,Allo
     }
 };
 
-namespace Interval
+namespace segmental
 {
     template <typename DomainT, typename BitSetT>
-    struct Atomize<itl::set<DomainT>, interval_bitset<DomainT, BitSetT> >
+    struct atomizer<itl::set<DomainT>, interval_bitset<DomainT, BitSetT> >
     {
         void operator()(                      itl::set<DomainT>& atomized, 
                         const interval_bitset<DomainT, BitSetT>& clustered)
@@ -446,7 +460,7 @@ namespace Interval
         }
     };
 
-} // namespace Interval
+} // namespace segmental
 
 
 }} // namespace itl boost

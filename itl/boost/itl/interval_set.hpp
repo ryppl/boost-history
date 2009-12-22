@@ -16,7 +16,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 namespace boost{namespace itl
 {
 
-/** Implements a set as a set of intervals - merging adjoining intervals */
+/** \brief Implements a set as a set of intervals - merging adjoining intervals */
 template 
 <
     typename    DomainT, 

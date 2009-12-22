@@ -15,7 +15,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 namespace boost{namespace itl
 {
 
-/** implements a set as a set of intervals - on insertion overlapping intervals are split */
+/** \brief implements a set as a set of intervals - on insertion 
+    overlapping intervals are split */
 template 
 <
     typename             DomainT, 

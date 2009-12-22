@@ -11,15 +11,13 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <stdio.h>
 #include <iostream>
 #include <boost/itl/type_traits/to_string.hpp>
-#include <boost/itl/split_interval_map.hpp>
 #include "../toytime.h"
 
 /** Example history.cpp \file history.cpp
 
 History demonstrates further possibilities of an interval map
 (interval_map or split_interval_map). For a more basic example see party.cpp.
-
-Here we show the mechanics of a product_history which is split_interval_map that
+Here we show the mechanics of a product_history which is an interval_map that
 maps intervals to products of attributes that change over time.
 
 Using product_histories, we can monitor a set of attributes in a history:
@@ -71,7 +69,7 @@ Stays:
 A product_history allows to compute the history of events by simply adding all
 separate episode data to a history object.
 
-\include history/history.cpp
+\include history_/history.cpp
 */
 
 

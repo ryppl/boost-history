@@ -8,7 +8,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 
-#ifdef BOOST_MSVC 
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable:4996) // This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 #endif                        
@@ -66,7 +66,7 @@ std::basic_ostream<CharType, CharTraits> &operator<<
     return stream << value.as_string();
 }
 
-#ifdef BOOST_MSVC
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 

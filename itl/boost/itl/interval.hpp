@@ -49,7 +49,7 @@ enum BoundTypes {
 
 typedef unsigned char bound_type;
 
-/** A class template for intervals */
+/** \brief A class template for intervals */
 template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
 class interval
 {

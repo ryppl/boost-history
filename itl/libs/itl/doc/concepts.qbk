@@ -69,7 +69,7 @@ aspect is called __bi_conceptual__. The second and minor aspect is called __bi_i
 [[][sequence of elements is irrelevant][sequence of elements is relevant]]
 [[][iterator independent][iterator dependent]]
 [[Informs about][membership of elements][sequence of intervals (segmentation)]]
-[[Equality][equality of elements][lexicographical equality]]
+[[Equality][equality of elements][equality of segments]]
 [[Practical][interval_sets(maps) can be used as sets(maps) 
              of elements(element value pairs)             ]
                                                            [Segmentation information is available. 
@@ -113,9 +113,8 @@ mathematical notion of a set.
 ]
 
 Equality on `Sets` is not implemented as `operator ==`, because `operator ==`
-is used for the stronger lexicographical equality, that takes the 
-sequence of elements into account. The sequence of elements belongs to
-the __iterative__ aspect. 
+is used for the stronger lexicographical equality on segments, that takes the 
+segmentation of elements into account.
 
 Being models of concept `Set`, __itl_set__ and all __itv_bsets__ 
 implement these 
@@ -132,6 +131,12 @@ be defined on __itvs__. Two intervals `[1,2]` and `[4,5]` are not addable to
 a ['*single*] new __itv__. In other words __itvs__ are incomplete w.r.t. union and
 difference. __Itv_sets__ can be defined as the ['*completion*] of intervals
 for the union and difference operations.
+
+When we claim that addition or subtraction can not be defined
+on intervals, we are not considering things like e.g. 
+interval arithmetics, where these operations can be defined, 
+but with a different semantics.
+
 
 [h5 A Map Concept]
 
@@ -298,7 +303,7 @@ like e.g. numeric multiplication:
 Therefore itl functors,
 that serve as `Combiner` parameters of itl Maps
 implement a static function `neutron()` to make
-shure that the correct `neutron()` is used
+sure that the correct `neutron()` is used
 in the implementation
 of ['aggregate on overlap].
 ``

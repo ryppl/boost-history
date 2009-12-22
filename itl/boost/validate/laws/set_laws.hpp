@@ -126,15 +126,15 @@ namespace boost{namespace itl
         : public Law<InplaceDeMorgan<Type,Operator1,Operator2,Subtraction,Equality>, 
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
-        /** a - (b + c) == (a - b) & (a - c)
+        /** a - (b o c) == (a - b) $ (a - c)
             a - (b(1)c) == (a - b)(2)(a - c)
-        computed using inplace operators +=, += and &=
+        computed using inplace operators +=, -= and &=
         Input  = (a := inVal1, b := inVal2, c := inVal3)
         Output = (lhs_result, rhs_result)
         */
     public:
         std::string name()const { return "InplacePlusDeMorgan"; }
-        std::string formula()const { return "a - (b + c) == (a - b) & (a - c) 'inplace'"; }
+        std::string formula()const { return "a - (b o c) == (a - b) $ (a - c) 'inplace'"; }
 
         std::string typeString()const
         {
@@ -148,12 +148,12 @@ namespace boost{namespace itl
 
         bool holds()
         {
-            // a - (b + c) == (a - b) & (a - c)
+            // a - (b o c) == (a - b) $ (a - c)
             // --- left hand side ------------------------
             Type b_plus_c = this->template getInputValue<operand_b>();
             Operator1<Type>()(b_plus_c, this->template getInputValue<operand_c>());
 
-            // lhs := a - (b + c)
+            // lhs := a - (b o c)
             Type lhs = this->template getInputValue<operand_a>();
             Subtraction<Type>()(lhs, b_plus_c);
 
@@ -164,7 +164,7 @@ namespace boost{namespace itl
             Type a_minus_c = this->template getInputValue<operand_a>();
             Subtraction<Type>()(a_minus_c, this->template getInputValue<operand_c>());
 
-            // rhs := (a - b) & (a - c)
+            // rhs := (a - b) $ (a - c)
             Type rhs = a_minus_b;
             Operator2<Type>()(rhs, a_minus_c);
 
@@ -176,33 +176,41 @@ namespace boost{namespace itl
 
         bool debug_holds()
         { 
-            // a - (b + c) == (a - b) & (a - c)
+            // a - (b o c) == (a - b) $ (a - c)
             Type val_a = this->template getInputValue<operand_a>();
             Type val_b = this->template getInputValue<operand_b>();
             Type val_c = this->template getInputValue<operand_c>();
-            std::cout << "a = " << val_a << std::endl;
-            std::cout << "b = " << val_b << std::endl;
-            std::cout << "c = " << val_c << std::endl;
+
+            std::cout << "--- function debug_holds -----------------------------\n" ;
+            std::cout << "          a = " << val_a << std::endl;
+            std::cout << "          b = " << val_b << std::endl;
+            std::cout << "          c = " << val_c << std::endl;
             // --- left hand side ------------------------
             Type b_plus_c = val_b;
             Operator1<Type>()(b_plus_c, val_c);
 
-            // lhs := a - (b + c)
+            std::cout << "lhs: \n";
+            std::cout << "    (b o c) = " << b_plus_c << std::endl;
+            // lhs := a - (b o c)
             Type lhs = this->template getInputValue<operand_a>();
             Subtraction<Type>()(lhs, b_plus_c);
+            std::cout << "a - (b o c) = " << lhs << std::endl;
 
             // --- right hand side -----------------------
             Type a_minus_b = this->template getInputValue<operand_a>();
             Subtraction<Type>()(a_minus_b, this->template getInputValue<operand_b>());
-            std::cout << "a-b = " << a_minus_b << std::endl;
+            std::cout << "rhs: \n";
+            std::cout << "      a - b = " << a_minus_b << std::endl;
 
             Type a_minus_c = this->template getInputValue<operand_a>();
             Subtraction<Type>()(a_minus_c, this->template getInputValue<operand_c>());
-            std::cout << "a-c = " << a_minus_c << std::endl;
+            std::cout << "      a - c = " << a_minus_c << std::endl;
 
-            // rhs := (a - b) & (a - c)
+            // rhs := (a - b) $ (a - c)
             Type rhs = a_minus_b;
             Operator2<Type>()(rhs, a_minus_c);
+            std::cout << "(a-b)$(a-c) = " << rhs << std::endl;
+            std::cout << "------------------------------------------------------\n" ;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);

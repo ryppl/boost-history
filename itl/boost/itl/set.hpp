@@ -32,7 +32,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-/** adds addition, subtraction and intersection to std::set */
+/** \brief Addable, subractable and intersectable sets. */
 template 
 <
     typename DomainT, 

@@ -96,6 +96,8 @@ namespace boost{namespace itl
         void reportViolations()const;
         void reportSuccess()const;
 
+        int violation_count()const { return _lawViolations.size(); }
+
     private:
         typedef LawViolations<LawT> LawViolationsT;
 
@@ -146,12 +148,6 @@ namespace boost{namespace itl
             bool law_is_violated = false;
             start = posix_time::ptime(posix_time::microsec_clock::local_time());
             // In order to measure small time intervals, evaluation must be repeated.
-
-            //std::cout << idx << " "; //CL..
-            //if(idx==0)
-            //{
-            //    int dbg_ = 1;
-            //}
 
             for(int repeat=0; repeat<_repeat_count; repeat++)
                 law_is_violated = !_law.holds();

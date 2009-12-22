@@ -5,13 +5,13 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_INTERVAL_MORPHISM_HPP_JOFA_080315
-#define BOOST_ITL_INTERVAL_MORPHISM_HPP_JOFA_080315
+#ifndef BOOST_ITL_DETAIL_INTERVAL_MORPHISM_HPP_JOFA_080315
+#define BOOST_ITL_DETAIL_INTERVAL_MORPHISM_HPP_JOFA_080315
 
 #include <boost/itl/detail/notate.hpp>
 namespace boost{namespace itl
 {
-    namespace Interval
+    namespace segmental
     {
         template <typename ElementContainerT, typename IntervalContainerT>
         void atomize(ElementContainerT& result, const IntervalContainerT& src)
@@ -41,25 +41,25 @@ namespace boost{namespace itl
         }
 
         template <typename AtomizedType, typename ClusteredType>
-        struct Atomize
+        struct atomizer
         {
             void operator()(AtomizedType& atomized, const ClusteredType& clustered)
             {
-                Interval::atomize(atomized, clustered);
+                segmental::atomize(atomized, clustered);
             }
         };
 
         template <typename ClusteredType, typename AtomizedType>
-        struct Cluster
+        struct clusterer
         {
             void operator()(ClusteredType& clustered, const AtomizedType& atomized)
             {
-                Interval::cluster(clustered, atomized);
+                segmental::cluster(clustered, atomized);
             }
         };
 
         template <typename JointType, typename SplitType>
-        struct Join
+        struct joiner
         {
             void operator()(JointType& joint, SplitType& split)
             {
@@ -70,7 +70,7 @@ namespace boost{namespace itl
         };
 
         template <typename AbsorberType, typename EnricherType>
-        struct AbsorbNeutrons
+        struct neutron_absorber
         {
             void operator()(AbsorberType& absorber, EnricherType& enricher)
             {
@@ -84,16 +84,16 @@ namespace boost{namespace itl
 
 
     template<> 
-    inline std::string binary_template_to_string<Interval::Atomize>::apply() { return "@"; }
+    inline std::string binary_template_to_string<segmental::atomizer>::apply() { return "@"; }
     template<> 
-    inline std::string binary_template_to_string<Interval::Cluster>::apply() { return "&"; }
+    inline std::string binary_template_to_string<segmental::clusterer>::apply() { return "&"; }
     template<> 
-    inline std::string binary_template_to_string<Interval::Join>::apply() { return "j"; }
+    inline std::string binary_template_to_string<segmental::joiner>::apply() { return "j"; }
     template<> 
-    inline std::string binary_template_to_string<Interval::AbsorbNeutrons>::apply() { return "a0"; }
+    inline std::string binary_template_to_string<segmental::neutron_absorber>::apply() { return "a0"; }
 }} // namespace boost itl
 
-#endif
+#endif // BOOST_ITL_DETAIL_INTERVAL_MORPHISM_HPP_JOFA_080315
 
 
 
