@@ -7,7 +7,9 @@
 #ifndef BOOST_FIBERS_SPIN_MANUAL_RESET_EVENT_H
 #define BOOST_FIBERS_SPIN_MANUAL_RESET_EVENT_H
 
-#include <boost/cstdint.hpp>
+#include <cstddef>
+
+#include <boost/atomic.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/spin/mutex.hpp>
@@ -19,15 +21,15 @@ namespace spin {
 class manual_reset_event : private noncopyable
 {
 private:
-	enum state_t
+	enum state
 	{
-		RESET = 0,
-		SET
+		SET = 0,
+		RESET
 	};
 
-	volatile uint32_t	state_;
-	volatile uint32_t	waiters_;
-	mutex				enter_mtx_;
+	atomic< state >			state_;
+	atomic< std::size_t >	waiters_;
+	mutex					enter_mtx_;
 
 public:
 	explicit manual_reset_event( bool = false);

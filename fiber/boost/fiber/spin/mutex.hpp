@@ -9,9 +9,11 @@
 #ifndef BOOST_FIBERS_SPIN_MUTEX_H
 #define BOOST_FIBERS_SPIN_MUTEX_H
 
-#include <boost/cstdint.hpp>
+#include <boost/atomic.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/utility.hpp>
+
+#include <boost/fiber/fiber.hpp>
 
 namespace boost {
 namespace fibers {
@@ -20,7 +22,13 @@ namespace spin {
 class mutex : private noncopyable
 {
 private:
-	volatile uint32_t	state_;
+	enum state
+	{
+		LOCKED = 0,
+		UNLOCKED
+	};
+
+	atomic< state >			state_;
 
 public:
 	typedef unique_lock< mutex >	scoped_lock;

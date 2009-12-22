@@ -6,7 +6,7 @@
 
 #include <boost/fiber/mutex.hpp>
 
-#include <boost/fiber/detail/atomic.hpp>
+#include <boost/fiber/utility.hpp>
 
 namespace boost {
 namespace fibers {
@@ -17,27 +17,26 @@ mutex::~mutex()
 void
 mutex::lock()
 {
-	for (;;)
-	{
-		uint32_t expected = 0;
-		if ( detail::atomic_compare_exchange_strong( & state_, & expected, 1) )
-			break;
-		else
-			strategy_->wait_for_object( id_);
-	}
+	while ( LOCKED == state_)
+		strategy_->wait_for_object( id_);
+	state_ = LOCKED;
 }
 
 bool
 mutex::try_lock()
 {
-	uint32_t expected = 0;
-	return detail::atomic_compare_exchange_strong( & state_, & expected, 1);
+	if ( UNLOCKED == state_)
+	{
+		state_ = LOCKED;
+		return true;
+	}
+	return false;
 }
 
 void
 mutex::unlock()
 {
-	detail::atomic_exchange( & state_, 0);
+	state_ = UNLOCKED;
 	strategy_->object_notify_one( id_);
 }
 

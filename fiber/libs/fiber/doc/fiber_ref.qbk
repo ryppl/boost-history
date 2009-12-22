@@ -71,6 +71,9 @@ Another alternative is to use `scheduler<>::make_fiber()` which creates and stor
 	boost::fibers::scheduler<> sched;
 	sched.make_fiber( new_fn, arg1, arg2, arg3);
 
+[caution If you encounter segmentation faults or bus errors it may be possible that the stacksize for the fibers is
+too small.]
+
 
 [heading Exceptions]
 

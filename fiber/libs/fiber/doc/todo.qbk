@@ -7,11 +7,11 @@
 
 [section:todo Todo]
 
+* optimize memory ordering in atomic ops.
+
 * replace system calls related to fiber switching (like swapcontext()) by assembler
 
 * replace thread_specific_ptr by an specialiced implementation for fiber (interusive_ptr)
-
-* replace implementation of atomic-ops by boost.atomic
 
 * provide an scheduler which deals with priorities
 

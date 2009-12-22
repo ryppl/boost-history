@@ -6,7 +6,6 @@
 
 #include "boost/fiber/spin/count_down_event.hpp"
 
-#include <boost/fiber/detail/atomic.hpp>
 #include <boost/fiber/spin/mutex.hpp>
 #include <boost/fiber/utility.hpp>
 
@@ -14,32 +13,32 @@ namespace boost {
 namespace fibers {
 namespace spin {
 
-count_down_event::count_down_event( uint32_t initial) :
+count_down_event::count_down_event( std::size_t initial) :
 	initial_( initial),
 	current_( initial_)
 {}
 
-uint32_t
+std::size_t
 count_down_event::initial() const
 { return initial_; }
 
-uint32_t
+std::size_t
 count_down_event::current() const
-{ return detail::atomic_load( & current_); }
+{ return current_.load(); }
 
 bool
 count_down_event::is_set() const
-{ return 0 == detail::atomic_load( & current_); }
+{ return 0 == current_.load(); }
 
 void
 count_down_event::set()
 {
 	for (;;)
 	{
-		if ( 0 == detail::atomic_load( & current_) )
+		if ( 0 == current_.load() )
 			return;
-		uint32_t expected = current_;
-		if ( detail::atomic_compare_exchange_strong( & current_, & expected, expected - 1) )
+		std::size_t expected = current_.load();
+		if ( current_.compare_exchange_strong( expected, expected - 1) )
 			return;
 	}
 }
@@ -47,7 +46,7 @@ count_down_event::set()
 void
 count_down_event::wait()
 {
-	while ( 0 != detail::atomic_load( & current_) )
+	while ( 0 != current_.load() )
 		this_fiber::yield();	
 }
 

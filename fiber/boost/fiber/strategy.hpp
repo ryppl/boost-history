@@ -9,6 +9,7 @@
 
 #include <cstddef>
 
+#include <boost/atomic.hpp>
 #include <boost/function.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/thread/tss.hpp>
@@ -103,51 +104,51 @@ private:
 
 	static void cancel_();
 
-	uint32_t	use_count_;
+	atomic< std::size_t >	use_count_;
 
 protected:
-	typedef thread_specific_ptr< fiber >			fiber_t;
+	typedef thread_specific_ptr< fiber >			fiber_tss;
 
-	static fiber_t		active_fiber;
+	static fiber_tss	active_fiber;
 
-	fiber			master_fiber;
+	fiber				master_fiber;
 
 	void attach( fiber &);
 
-	void detach( fiber &);
+	static void detach( fiber &);
 
-	void switch_between( fiber &, fiber &);
+	static void switch_between( fiber &, fiber &);
 
-	void enable_interruption( fiber &);
+	static void enable_interruption( fiber &);
 
-	bool interruption_enabled( fiber const&);
+	static bool interruption_enabled( fiber const&);
 
 	bool is_master( fiber const&);
 
-	bool in_state_not_started( fiber const&);
+	static bool in_state_not_started( fiber const&);
 
-	bool in_state_ready( fiber const&);
+	static bool in_state_ready( fiber const&);
 
-	bool in_state_running( fiber const&);
+	static bool in_state_running( fiber const&);
 
-	bool in_state_wait_for_fiber( fiber const&);
+	static bool in_state_wait_for_fiber( fiber const&);
 
-	bool in_state_wait_for_object( fiber const&);
+	static bool in_state_wait_for_object( fiber const&);
 
-	bool in_state_terminated( fiber const&);
+	static bool in_state_terminated( fiber const&);
 
-	void set_state_ready( fiber &);
+	static void set_state_ready( fiber &);
 
-	void set_state_running( fiber &);
+	static void set_state_running( fiber &);
 
-	void set_state_wait_for_fiber( fiber &);
+	static void set_state_wait_for_fiber( fiber &);
 
-	void set_state_wait_for_object( fiber &);
+	static void set_state_wait_for_object( fiber &);
 
-	void set_state_terminated( fiber &);
+	static void set_state_terminated( fiber &);
 
 public:
-	typedef intrusive_ptr< strategy >	ptr_t;
+	typedef intrusive_ptr< strategy >	ptr;
 
 	strategy();
 
@@ -183,17 +184,23 @@ public:
 
 	virtual bool run() = 0;
 
-	virtual bool empty() = 0;
+	virtual bool empty() const = 0;
 
-	virtual std::size_t size() = 0;
+	virtual std::size_t size() const = 0;
 
-	virtual std::size_t ready() = 0;
+	virtual std::size_t ready() const = 0;
 
 	inline friend void intrusive_ptr_add_ref( strategy * p)
-	{ ++p->use_count_; }
+	{ p->use_count_.fetch_add( 1, memory_order_relaxed); }
 	
 	inline friend void intrusive_ptr_release( strategy * p)
-	{ if ( --p->use_count_ == 0) delete p; }
+	{
+		if ( p->use_count_.fetch_sub( 1, memory_order_release) == 1)
+		{
+			atomic_thread_fence( memory_order_acquire);
+			delete p;
+		}
+	}
 };
 
 }}

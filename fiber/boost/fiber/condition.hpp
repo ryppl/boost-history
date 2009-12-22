@@ -9,12 +9,12 @@
 #ifndef BOOST_FIBERS_CONDITION_H
 #define BOOST_FIBERS_CONDITION_H
 
+#include <cstddef>
+
 #include <boost/assert.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/utility.hpp>
 #include <boost/thread/locks.hpp>
 
-#include <boost/fiber/detail/atomic.hpp>
 #include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/mutex.hpp>
 #include <boost/fiber/object/id.hpp>
@@ -32,24 +32,24 @@ namespace fibers {
 class condition : private noncopyable
 {
 private:
-	enum command_t
+	enum command
 	{
 		SLEEPING = 0,
 		NOTIFY_ONE,
 		NOTIFY_ALL
 	};
 
-	volatile uint32_t	cmd_;
-	volatile uint32_t	waiters_;
-	mutex				enter_mtx_;
-	mutex				check_mtx_;
-	object::id			id_;
-	strategy::ptr_t		strategy_;
+	command			cmd_;
+	std::size_t		waiters_;
+	mutex			enter_mtx_;
+	mutex			check_mtx_;
+	object::id		id_;
+	strategy::ptr	strategy_;
 
 public:
 	template< typename Strategy >
 	condition( scheduler< Strategy > & sched) :
-		cmd_( static_cast< uint32_t >( SLEEPING) ),
+		cmd_( SLEEPING),
 		waiters_( 0),
 		enter_mtx_( sched),
 		check_mtx_( sched),
@@ -86,41 +86,33 @@ public:
 		{
 			mutex::scoped_lock lk( enter_mtx_);
 			BOOST_ASSERT( lk);
-			detail::atomic_fetch_add( & waiters_, 1);
+			++waiters_;
 			lt.unlock();
 		}
 
 		bool unlock_enter_mtx = false;
 		for (;;)
 		{
-			while ( static_cast< uint32_t >( SLEEPING) == detail::atomic_load( & cmd_) )
+			while ( SLEEPING == cmd_)
 				strategy_->wait_for_object( id_);
 
 			mutex::scoped_lock lk( check_mtx_);
 			BOOST_ASSERT( lk);
 
-			uint32_t expected = static_cast< uint32_t >( NOTIFY_ONE);
-			detail::atomic_compare_exchange_strong(
-					& cmd_, & expected,
-					static_cast< uint32_t >( SLEEPING) );
-			if ( static_cast< uint32_t >( SLEEPING) == expected)
+			if ( SLEEPING == cmd_)
 				continue;
-			else if ( static_cast< uint32_t >( NOTIFY_ONE) == expected)
+			else if ( NOTIFY_ONE == cmd_)
 			{
+				cmd_ = SLEEPING;	
 				unlock_enter_mtx = true;
-				detail::atomic_fetch_sub( & waiters_, 1);
+				--waiters_;
 				break;
 			}
 			else
 			{
-				unlock_enter_mtx = 1 == detail::atomic_fetch_sub( & waiters_, 1);
+				unlock_enter_mtx = 0 == --waiters_;
 				if ( unlock_enter_mtx)
-				{
-					expected = static_cast< uint32_t >( NOTIFY_ALL);
-					detail::atomic_compare_exchange_strong(
-							& cmd_, & expected,
-							static_cast< uint32_t >( SLEEPING) );
-				}
+					cmd_ = SLEEPING;
 				break;
 			}
 		}

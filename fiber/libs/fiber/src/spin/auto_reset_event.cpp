@@ -6,7 +6,6 @@
 
 #include "boost/fiber/spin/auto_reset_event.hpp"
 
-#include <boost/fiber/detail/atomic.hpp>
 #include <boost/fiber/utility.hpp>
 
 namespace boost {
@@ -14,36 +13,29 @@ namespace fibers {
 namespace spin {
 
 auto_reset_event::auto_reset_event( bool isset) :
-	state_(
-		isset ?
-		static_cast< uint32_t >( SET) :
-		static_cast< uint32_t >( RESET) )
+	state_( isset ? SET : RESET)
 {}
 
 void
 auto_reset_event::set()
-{ detail::atomic_exchange( & state_, static_cast< uint32_t >( SET) ); }
+{ state_.exchange( SET); }
 
 void
 auto_reset_event::wait()
 {
-	uint32_t expected = static_cast< uint32_t >( SET);
-	while ( ! detail::atomic_compare_exchange_strong(
-			& state_, & expected,
-			static_cast< uint32_t >( RESET) ) )
+	state expected = SET;
+	while ( ! state_.compare_exchange_strong( expected, RESET) )
 	{
 		this_fiber::yield();
-		expected = static_cast< uint32_t >( SET);
+		expected = SET;
 	}
 }
 
 bool
 auto_reset_event::try_wait()
 {
-	uint32_t expected = static_cast< uint32_t >( SET);
-	return detail::atomic_compare_exchange_strong(
-			& state_, & expected,
-			static_cast< uint32_t >( RESET) );
+	state expected = SET;
+	return state_.compare_exchange_strong( expected, RESET);
 }
 
 }}}

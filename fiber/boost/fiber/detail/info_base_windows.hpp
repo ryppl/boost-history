@@ -40,7 +40,7 @@ namespace detail {
 
 struct BOOST_FIBER_DECL info_base
 {
-	typedef intrusive_ptr< info_base >	ptr_t;	
+	typedef intrusive_ptr< info_base >	ptr;	
 	typedef function< void() >					callable_t;
 	typedef std::stack< callable_t >			callable_stack_t;
 

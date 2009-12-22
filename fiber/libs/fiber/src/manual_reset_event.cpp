@@ -8,8 +8,6 @@
 
 #include <boost/assert.hpp>
 
-#include <boost/fiber/detail/atomic.hpp>
-
 namespace boost {
 namespace fibers {
 
@@ -21,11 +19,15 @@ manual_reset_event::set()
 {
 	enter_mtx_.lock();
 
-	uint32_t expected = static_cast< uint32_t >( RESET);
-	if ( ! detail::atomic_compare_exchange_strong(
-			& state_, & expected,
-			static_cast< uint32_t >( SET) ) ||
-		! detail::atomic_load( & waiters_ ) )
+	if ( SET == state_)
+	{
+		enter_mtx_.unlock();
+		return;
+	}
+
+	state_ = SET;
+
+	if ( 0 == waiters_)
 		enter_mtx_.unlock();
 	else
 		strategy_->object_notify_all( id_);
@@ -37,8 +39,7 @@ manual_reset_event::reset()
 	mutex::scoped_lock	lk( enter_mtx_);
 	BOOST_ASSERT( lk);
 
-	detail::atomic_exchange( & state_,
-		static_cast< uint32_t >( RESET) );
+	state_ = RESET;
 }
 
 void
@@ -47,13 +48,13 @@ manual_reset_event::wait()
 	{
 		mutex::scoped_lock lk( enter_mtx_);
 		BOOST_ASSERT( lk);
-		detail::atomic_fetch_add( & waiters_, 1);
+		++waiters_;
 	}
 
-	while ( static_cast< uint32_t >( RESET) == detail::atomic_load( & state_) )
+	while ( RESET == state_)
 		strategy_->wait_for_object( id_);
 
-	if ( 1 == detail::atomic_fetch_sub( & waiters_, 1) )
+	if ( 0 == --waiters_)
 		enter_mtx_.unlock();
 }
 
@@ -63,12 +64,12 @@ manual_reset_event::try_wait()
 	{
 		mutex::scoped_lock lk( enter_mtx_);
 		BOOST_ASSERT( lk);
-		detail::atomic_fetch_add( & waiters_, 1);
+		++waiters_;
 	}
 
-	bool result = static_cast< uint32_t >( SET) == detail::atomic_load( & state_);
+	bool result = SET == state_;
 
-	if ( 1 == detail::atomic_fetch_sub( & waiters_, 1) )
+	if ( 0 == --waiters_)
 		enter_mtx_.unlock();
 
 	return result;

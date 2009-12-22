@@ -6,45 +6,36 @@
 
 #include "boost/fiber/count_down_event.hpp"
 
-#include <boost/fiber/detail/atomic.hpp>
-
 namespace boost {
 namespace fibers {
 
 count_down_event::~count_down_event()
 { strategy_->unregister_object( id_); }
 
-uint32_t
+std::size_t
 count_down_event::initial() const
 { return initial_; }
 
-uint32_t
+std::size_t
 count_down_event::current() const
-{ return detail::atomic_load( & current_); }
+{ return current_; }
 
 bool
 count_down_event::is_set() const
-{ return 0 == detail::atomic_load( & current_); }
+{ return 0 == current_; }
 
 void
 count_down_event::set()
 {
-	for (;;)
-	{
-		if ( 0 == detail::atomic_load( & current_) )
-			return;
-		uint32_t expected = current_;
-		if ( detail::atomic_compare_exchange_strong( & current_, & expected, expected - 1) )
-			break;
-	}
-	if ( 0 == detail::atomic_load( & current_) )
+	if ( 0 == current_) return;
+	if ( 0 == --current_)
 		strategy_->object_notify_all( id_);
 }
 
 void
 count_down_event::wait()
 {
-	while ( 0 != detail::atomic_load( & current_) )
+	while ( 0 != current_)
 		strategy_->wait_for_object( id_);
 }
 

@@ -7,7 +7,8 @@
 #ifndef BOOST_FIBERS_COUNT_DOWN_EVENT_H
 #define BOOST_FIBERS_COUNT_DOWN_EVENT_H
 
-#include <boost/cstdint.hpp>
+#include <cstddef>
+
 #include <boost/utility.hpp>
 
 #include <boost/fiber/object/id.hpp>
@@ -26,14 +27,14 @@ namespace fibers {
 class count_down_event : private noncopyable
 {
 private:
-	uint32_t			initial_;
-	volatile uint32_t	current_;
-	object::id			id_;
-	strategy::ptr_t		strategy_;
+	std::size_t		initial_;
+	std::size_t		current_;
+	object::id		id_;
+	strategy::ptr	strategy_;
 
 public:
 	template< typename Strategy >
-	count_down_event( scheduler< Strategy > & sched, uint32_t initial) :
+	count_down_event( scheduler< Strategy > & sched, std::size_t initial) :
 		initial_( initial),
 		current_( initial_),
 		id_( * this),
@@ -42,9 +43,9 @@ public:
 
 	~count_down_event();
 
-	uint32_t initial() const;
+	std::size_t initial() const;
 
-	uint32_t current() const;
+	std::size_t current() const;
 
 	bool is_set() const;
 

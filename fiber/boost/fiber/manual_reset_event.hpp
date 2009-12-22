@@ -7,7 +7,8 @@
 #ifndef BOOST_FIBERS_MANUAL_RESET_EVENT_H
 #define BOOST_FIBERS_MANUAL_RESET_EVENT_H
 
-#include <boost/cstdint.hpp>
+#include <cstddef>
+
 #include <boost/utility.hpp>
 
 #include <boost/fiber/object/id.hpp>
@@ -26,25 +27,22 @@ namespace fibers {
 class manual_reset_event : private noncopyable
 {
 private:
-	enum state_t
+	enum state
 	{
-		RESET = 0,
-		SET
+		SET = 0,
+		RESET
 	};
 
-	volatile uint32_t	state_;
-	volatile uint32_t	waiters_;
-	mutex				enter_mtx_;
-	object::id			id_;
-	strategy::ptr_t		strategy_;
+	state			state_;
+	std::size_t		waiters_;
+	mutex			enter_mtx_;
+	object::id		id_;
+	strategy::ptr	strategy_;
 
 public:
 	template< typename Strategy >
 	manual_reset_event( scheduler< Strategy > & sched, bool isset = false) :
-		state_(
-			isset ?
-				static_cast< uint32_t >( SET) :
-				static_cast< uint32_t >( RESET) ),
+		state_( isset ? SET : RESET),
 		waiters_( 0),
 		enter_mtx_( sched),
 		id_( * this),

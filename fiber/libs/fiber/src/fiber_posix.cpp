@@ -48,21 +48,21 @@ fiber::init_()
 	typedef void ( * st_fn)();
 	fn_type * fn_ptr( trampoline);
 
-	if ( ! info_base_) throw fiber_moved();
+	if ( ! info_) throw fiber_moved();
 
 	::makecontext(
-		& info_base_->uctx,
+		& info_->uctx,
 		( st_fn)( fn_ptr),
 		1,
-		info_base_.get() );
+		info_.get() );
 }
 
 void
 fiber::switch_to_( fiber & to)
 {
-	if ( ! info_base_ || ! to.info_base_) throw fiber_moved();
+	if ( ! info_ || ! to.info_) throw fiber_moved();
 
-	if ( ::swapcontext( & info_base_->uctx, & to.info_base_->uctx) != 0)
+	if ( ::swapcontext( & info_->uctx, & to.info_->uctx) != 0)
 		throw system::system_error(
 			system::error_code(
 				errno,

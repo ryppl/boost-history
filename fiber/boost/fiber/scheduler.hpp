@@ -62,13 +62,13 @@ public:
 	bool run()
 	{ return strategy_->run(); }
 
-	bool empty()
+	bool empty() const
 	{ return strategy_->empty(); }
 
-	std::size_t size()
+	std::size_t size() const
 	{ return strategy_->size(); }
 
-	std::size_t ready()
+	std::size_t ready() const
 	{ return strategy_->ready(); }
 
 	void submit_fiber( fiber f)
@@ -94,9 +94,9 @@ public:
 	{
 		if ( ! f) throw fiber_moved();
 
-		strategy * st( f.info_()->st);
+		strategy * st( f.info_->st);
 		if ( ! st) throw fiber_error("fiber not attached");
-		strategy_->migrate( f.info_()->st->release( f.get_id() ) );
+		strategy_->migrate( f.info_->st->release( f.get_id() ) );
 	}
 
 	template< typename OtherStrategy >

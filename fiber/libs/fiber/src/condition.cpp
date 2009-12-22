@@ -19,18 +19,14 @@ condition::notify_one()
 {
 	enter_mtx_.lock();
 
-	if ( 0 == detail::atomic_load( & waiters_) )
+	if ( 0 == waiters_)
 	{
 		enter_mtx_.unlock();
 		return;
 	}
 
-	uint32_t cmd = static_cast< uint32_t >( NOTIFY_ONE);
-	uint32_t expected = static_cast< uint32_t >( SLEEPING);
-	while ( ! detail::atomic_compare_exchange_strong(
-				& cmd_, & expected, cmd) )
-		this_fiber::yield();
-	
+	cmd_ = NOTIFY_ONE;
+
 	strategy_->object_notify_one( id_);
 }
 
@@ -39,17 +35,13 @@ condition::notify_all()
 {
 	enter_mtx_.lock();
 
-	if ( 0 == detail::atomic_load( & waiters_) )
+	if ( 0 == waiters_)
 	{
 		enter_mtx_.unlock();
 		return;
 	}
 
-	uint32_t cmd = static_cast< uint32_t >( NOTIFY_ALL);
-	uint32_t expected = static_cast< uint32_t >( SLEEPING);
-	while ( ! detail::atomic_compare_exchange_strong(
-				& cmd_, & expected, cmd) )
-		this_fiber::yield();
+	cmd_ = NOTIFY_ALL;
 
 	strategy_->object_notify_all( id_);
 }

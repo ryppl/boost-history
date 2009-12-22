@@ -7,7 +7,6 @@
 #ifndef BOOST_FIBERS_AUTO_RESET_EVENT_H
 #define BOOST_FIBERS_AUTO_RESET_EVENT_H
 
-#include <boost/cstdint.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/object/id.hpp>
@@ -25,23 +24,20 @@ namespace fibers {
 class auto_reset_event : private noncopyable
 {
 private:
-	enum state_t
+	enum state
 	{
-		RESET = 0,
-		SET
+		SET = 0,
+		RESET
 	};
 
-	volatile uint32_t	state_;
-	object::id			id_;
-	strategy::ptr_t		strategy_;
+	state			state_;
+	object::id		id_;
+	strategy::ptr	strategy_;
 
 public:
 	template< typename Strategy >
 	auto_reset_event( scheduler< Strategy > & sched, bool isset = false) :
-		state_(
-			isset ?
-			static_cast< uint32_t >( SET) :
-			static_cast< uint32_t >( RESET) ),
+		state_( isset ? SET : RESET),
 		id_( * this),
 		strategy_( sched.strategy_)
 	{ strategy_->register_object( id_); }

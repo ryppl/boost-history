@@ -9,10 +9,10 @@
 #ifndef BOOST_FIBERS_MUTEX_H
 #define BOOST_FIBERS_MUTEX_H
 
-#include <boost/cstdint.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/fiber/fiber.hpp>
 #include <boost/fiber/object/id.hpp>
 #include <boost/fiber/scheduler.hpp>
 #include <boost/fiber/strategy.hpp>
@@ -28,16 +28,22 @@ namespace fibers {
 class mutex : private noncopyable
 {
 private:
-	volatile uint32_t	state_;
-	object::id			id_;
-	strategy::ptr_t		strategy_;
+	enum state
+	{
+		LOCKED = 0,
+		UNLOCKED
+	};
+
+	state					state_;
+	object::id				id_;
+	strategy::ptr			strategy_;
 
 public:
 	typedef unique_lock< mutex >			scoped_lock;
 
 	template< typename Strategy >
 	mutex( scheduler< Strategy > & sched) :
-		state_( 0),
+		state_( UNLOCKED),
 		id_( * this),
 		strategy_( sched.strategy_)
 	{ strategy_->register_object( id_); }

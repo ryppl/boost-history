@@ -19,9 +19,10 @@
 ]
 
 
+[def __boost_atomic__ [@http://www.chaoticmind.net/~hcb/projects/boost.atomic/doc/index.html [*Boost.Atomic]]]
 [def __boost_fiber__ [*Boost.Fiber]]
-[def __boost_task__ [*Boost.Task]]
-[def __boost_thread__ [*Boost.Thread]]
+[def __boost_move__ [@http://svn.boost.org/svn/boost/sandbox/move/libs/move/doc/html/index.html [*Boost.Move]]]
+[def __boost_thread__ [@http://www.boost.org/libs/thread [*Boost.Thread]]]
 
 [template barrier_link[link_text] [link fiber.synchronization.barriers [link_text]]]
 [template condition_link[link_text] [link fiber.synchronization.conditions [link_text]]]

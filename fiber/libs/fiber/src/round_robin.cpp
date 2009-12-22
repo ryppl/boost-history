@@ -435,15 +435,15 @@ round_robin::run()
 }
 
 bool
-round_robin::empty()
+round_robin::empty() const
 { return fibers_.empty(); }
 
 std::size_t
-round_robin::size()
+round_robin::size() const
 { return fibers_.size(); }
 
 std::size_t
-round_robin::ready()
+round_robin::ready() const
 { return runnable_fibers_.size(); }
 
 }}

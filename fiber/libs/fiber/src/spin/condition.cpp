@@ -11,24 +11,26 @@ namespace fibers {
 namespace spin {
 
 void
-condition::notify_( uint32_t cmd)
+condition::notify_( command cmd)
 {
 	enter_mtx_.lock();
 
-	if ( 0 == detail::atomic_load( & waiters_) )
+	if ( 0 == waiters_.load() )
 	{
 		enter_mtx_.unlock();
 		return;
 	}
 
-	uint32_t expected = static_cast< uint32_t >( SLEEPING);
-	while ( ! detail::atomic_compare_exchange_strong(
-				& cmd_, & expected, cmd) )
-		this_fiber::yield();	
+	command expected = SLEEPING;
+	while ( ! cmd_.compare_exchange_strong( expected, cmd) )
+	{
+		this_fiber::yield();
+		expected = SLEEPING;
+	}
 }
 
 condition::condition() :
-	cmd_( static_cast< uint32_t >( SLEEPING) ),
+	cmd_( SLEEPING),
 	waiters_( 0),
 	enter_mtx_(),
 	check_mtx_()
@@ -36,10 +38,10 @@ condition::condition() :
 
 void
 condition::notify_one()
-{ notify_( static_cast< uint32_t >( NOTIFY_ONE) ); }
+{ notify_( NOTIFY_ONE); }
 
 void
 condition::notify_all()
-{ notify_( static_cast< uint32_t >( NOTIFY_ALL) ); }
+{ notify_( NOTIFY_ALL); }
 
 }}}

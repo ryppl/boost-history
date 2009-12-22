@@ -6,7 +6,6 @@
 
 #include <boost/fiber/spin/mutex.hpp>
 
-#include <boost/fiber/detail/atomic.hpp>
 #include <boost/fiber/utility.hpp>
 
 namespace boost {
@@ -14,7 +13,7 @@ namespace fibers {
 namespace spin {
 
 mutex::mutex() :
-	state_( 0)
+	state_( UNLOCKED)
 {}
 
 void
@@ -22,8 +21,8 @@ mutex::lock()
 {
 	for (;;)
 	{
-		uint32_t expected = 0;
-		if ( detail::atomic_compare_exchange_strong( & state_, & expected, 1) )
+		state expected = UNLOCKED;
+		if ( state_.compare_exchange_strong( expected, LOCKED) )
 			break;
 		else
 			this_fiber::yield();	
@@ -33,12 +32,12 @@ mutex::lock()
 bool
 mutex::try_lock()
 {
-	uint32_t expected = 0;
-	return detail::atomic_compare_exchange_strong( & state_, & expected, 1);
+	state expected = UNLOCKED;
+	return state_.compare_exchange_strong( expected, LOCKED);
 }
 
 void
 mutex::unlock()
-{ detail::atomic_exchange( & state_, 0); }
+{ state_.exchange( UNLOCKED); }
 
 }}}

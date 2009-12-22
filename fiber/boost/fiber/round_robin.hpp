@@ -97,11 +97,11 @@ public:
 
 	bool run();
 
-	bool empty();
+	bool empty() const;
 
-	std::size_t size();
+	std::size_t size() const;
 
-	std::size_t ready();
+	std::size_t ready() const;
 };
 
 }}

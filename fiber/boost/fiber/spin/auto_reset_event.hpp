@@ -7,7 +7,7 @@
 #ifndef BOOST_FIBERS_SPIN_AUTO_RESET_EVENT_H
 #define BOOST_FIBERS_SPIN_AUTO_RESET_EVENT_H
 
-#include <boost/cstdint.hpp>
+#include <boost/atomic.hpp>
 #include <boost/utility.hpp>
 
 namespace boost {
@@ -17,13 +17,13 @@ namespace spin {
 class auto_reset_event : private noncopyable
 {
 private:
-	enum state_t
+	enum state
 	{
-		RESET = 0,
-		SET
+		SET = 0,
+		RESET
 	};
 
-	volatile uint32_t	state_;
+	atomic< state >		state_;
 
 public:
 	explicit auto_reset_event( bool = false);

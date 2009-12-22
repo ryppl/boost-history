@@ -10,7 +10,6 @@
 #include <cstddef>
 #include <stdexcept>
 
-#include <boost/cstdint.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility.hpp>
@@ -36,11 +35,11 @@ private:
 	private:
 		struct node
 		{
-			typedef intrusive_ptr< node >	ptr_t;
+			typedef intrusive_ptr< node >	ptr;
 
-			uint32_t	use_count;
-			value_type	va;
-			ptr_t		next;
+			std::size_t		use_count;
+			value_type		va;
+			ptr				next;
 
 			node() :
 				use_count( 0),
@@ -55,43 +54,49 @@ private:
 			{ if ( --p->use_count == 0) delete p; }
 		};
 
-		uint32_t		state_;
-		uint32_t		count_;
-		typename node::ptr_t	head_;
-		mutex				head_mtx_;
-		typename node::ptr_t	tail_;
-		mutex				tail_mtx_;
+		enum state
+		{
+			ACTIVE = 0,
+			DEACTIVE
+		};
+
+		state				state_;
+		std::size_t			count_;
+		typename node::ptr	head_;
+		mutable mutex		head_mtx_;
+		typename node::ptr	tail_;
+		mutable mutex		tail_mtx_;
 		condition			not_empty_cond_;
 		condition			not_full_cond_;
-		std::size_t				hwm_;
-		std::size_t				lwm_;
-		uint32_t		use_count_;
+		std::size_t			hwm_;
+		std::size_t			lwm_;
+		std::size_t			use_count_;
 
 		bool active_() const
-		{ return 0 == state_; }
+		{ return ACTIVE == state_; }
 
 		void deactivate_()
-		{ ++state_; }
+		{ state_ = DEACTIVE; }
 
-		uint32_t size_()
+		std::size_t size_() const
 		{ return count_; }
 
-		bool empty_()
+		bool empty_() const
 		{ return head_ == get_tail_(); }
 
-		bool full_()
+		bool full_() const
 		{ return size_() >= hwm_; }
 
-		typename node::ptr_t get_tail_()
+		typename node::ptr get_tail_() const
 		{
 			mutex::scoped_lock lk( tail_mtx_);	
-			typename node::ptr_t tmp = tail_;
+			typename node::ptr tmp = tail_;
 			return tmp;
 		}
 
-		typename node::ptr_t pop_head_()
+		typename node::ptr pop_head_()
 		{
-			typename node::ptr_t old_head = head_;
+			typename node::ptr old_head = head_;
 			head_ = old_head->next;
 			--count_;
 			return old_head;
@@ -101,11 +106,11 @@ private:
 		template< typename Strategy >
 		impl(
 				scheduler< Strategy > & sched,
-				std::size_t const& hwm,
-				std::size_t const& lwm) :
-			state_( 0),
+				std::size_t hwm,
+				std::size_t lwm) :
+			state_( ACTIVE),
 			count_( 0),
-			head_( new node),
+			head_( new node() ),
 			head_mtx_( sched),
 			tail_( head_),
 			tail_mtx_( sched),
@@ -122,10 +127,10 @@ private:
 		template< typename Strategy >
 		impl(
 				scheduler< Strategy > & sched,
-				std::size_t const& wm) :
-			state_( 0),
+				std::size_t wm) :
+			state_( ACTIVE),
 			count_( 0),
-			head_( new node),
+			head_( new node() ),
 			head_mtx_( sched),
 			tail_( head_),
 			tail_mtx_( sched),
@@ -140,30 +145,30 @@ private:
 		{
 			if ( hwm < lwm_)
 				throw invalid_watermark();
-			std::size_t tmp( hwm_);
+			unsigned int tmp( hwm_);
 			hwm_ = hwm;
 			if ( hwm_ > tmp) not_full_cond_.notify_one();
 		}
 
-		std::size_t upper_bound()
+		std::size_t upper_bound() const
 		{ return hwm_; }
 
 		void lower_bound( std::size_t lwm)
 		{
 			if ( lwm > hwm_ )
 				throw invalid_watermark();
-			std::size_t tmp( lwm_);
+			unsigned int tmp( lwm_);
 			lwm_ = lwm;
 			if ( lwm_ > tmp) not_full_cond_.notify_one();
 		}
 
-		std::size_t lower_bound()
+		std::size_t lower_bound() const
 		{ return lwm_; }
 
 		void deactivate()
 		{ deactivate_(); }
 
-		bool empty()
+		bool empty() const
 		{
 			mutex::scoped_lock lk( head_mtx_);
 			return empty_();
@@ -171,7 +176,7 @@ private:
 
 		void put( T const& t)
 		{
-			typename node::ptr_t new_node( new node);
+			typename node::ptr new_node( new node() );
 			{
 				mutex::scoped_lock lk( tail_mtx_);
 
@@ -256,34 +261,34 @@ public:
 	template< typename Strategy >
 	bounded_fifo(
 			scheduler< Strategy > & sched,
-			std::size_t const& hwm,
-			std::size_t const& lwm) :
+			unsigned int hwm,
+			unsigned int lwm) :
 		impl_( new impl( sched, hwm, lwm) )
 	{}
 	
 	template< typename Strategy >
 	bounded_fifo(
 			scheduler< Strategy > & sched,
-			std::size_t const& wm) :
+			unsigned int wm) :
 		impl_( new impl( sched, wm) )
 	{}
 	
 	void upper_bound( std::size_t hwm)
 	{ impl_->upper_bound( hwm); }
 	
-	std::size_t upper_bound()
+	std::size_t upper_bound() const
 	{ return impl_->upper_bound(); }
 	
 	void lower_bound( std::size_t lwm)
 	{ impl_->lower_bound( lwm); }
 	
-	std::size_t lower_bound()
+	std::size_t lower_bound() const
 	{ return impl_->lower_bound(); }
 	
 	void deactivate()
 	{ impl_->deactivate(); }
 	
-	bool empty()
+	bool empty() const
 	{ return impl_->empty(); }
 	
 	void put( T const& t)

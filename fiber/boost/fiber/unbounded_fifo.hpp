@@ -10,7 +10,6 @@
 #include <cstddef>
 
 #include <boost/config.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility.hpp>
@@ -37,11 +36,11 @@ private:
 	private:
 		struct node
 		{
-			typedef intrusive_ptr< node >	ptr_t;
+			typedef intrusive_ptr< node >	ptr;
 
-			uint32_t	use_count;
-			value_type	va;
-			ptr_t		next;
+			std::size_t		use_count;
+			value_type		va;
+			ptr				next;
 
 			node() :
 				use_count( 0),
@@ -56,33 +55,39 @@ private:
 			{ if ( --p->use_count == 0) delete p; }
 		};
 
-		uint32_t		state_;
-		typename node::ptr_t	head_;
-		mutex					head_mtx_;
-		typename node::ptr_t	tail_;
-		mutex					tail_mtx_;
-		condition				not_empty_cond_;
-		uint32_t				use_count_;	
+		enum state
+		{
+			ACTIVE = 0,
+			DEACTIVE
+		};
+
+		state				state_;
+		typename node::ptr	head_;
+		mutable mutex		head_mtx_;
+		typename node::ptr	tail_;
+		mutable mutex		tail_mtx_;
+		condition			not_empty_cond_;
+		std::size_t			use_count_;	
 
 		bool active_() const
-		{ return 0 == state_; }
+		{ return ACTIVE == state_; }
 
 		void deactivate_()
-		{ ++state_; }
+		{ state_ = DEACTIVE; }
 
-		bool empty_()
+		bool empty_() const
 		{ return head_ == get_tail_(); }
 
-		typename node::ptr_t get_tail_()
+		typename node::ptr get_tail_() const
 		{
 			mutex::scoped_lock lk( tail_mtx_);	
-			typename node::ptr_t tmp = tail_;
+			typename node::ptr tmp = tail_;
 			return tmp;
 		}
 
-		typename node::ptr_t pop_head_()
+		typename node::ptr pop_head_()
 		{
-			typename node::ptr_t old_head = head_;
+			typename node::ptr old_head = head_;
 			head_ = old_head->next;
 			return old_head;
 		}
@@ -90,8 +95,8 @@ private:
 	public:
 		template< typename Strategy >
 		impl( scheduler< Strategy > & sched) :
-			state_( 0),
-			head_( new node),
+			state_( ACTIVE),
+			head_( new node() ),
 			head_mtx_( sched),
 			tail_( head_),
 			tail_mtx_( sched),
@@ -102,7 +107,7 @@ private:
 		void deactivate()
 		{ deactivate_(); }
 
-		bool empty()
+		bool empty() const
 		{
 			mutex::scoped_lock lk( head_mtx_);
 			return empty_();
@@ -110,7 +115,7 @@ private:
 
 		void put( T const& t)
 		{
-			typename node::ptr_t new_node( new node);
+			typename node::ptr new_node( new node() );
 			{
 				mutex::scoped_lock lk( tail_mtx_);
 
@@ -172,7 +177,7 @@ public:
 	void deactivate()
 	{ impl_->deactivate(); }
 
-	bool empty()
+	bool empty() const
 	{ return impl_->empty(); }
 
 	void put( T const& t)

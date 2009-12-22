@@ -7,7 +7,9 @@
 #ifndef BOOST_FIBERS_SPIN_COUNT_DOWN_EVENT_H
 #define BOOST_FIBERS_SPIN_COUNT_DOWN_EVENT_H
 
-#include <boost/cstdint.hpp>
+#include <cstddef>
+
+#include <boost/atomic.hpp>
 #include <boost/utility.hpp>
 
 namespace boost {
@@ -17,15 +19,15 @@ namespace spin {
 class count_down_event : private noncopyable
 {
 private:
-	uint32_t			initial_;
-	volatile uint32_t	current_;
+	std::size_t				initial_;
+	atomic< std::size_t >	current_;
 
 public:
-	explicit count_down_event( uint32_t);
+	explicit count_down_event( std::size_t);
 
-	uint32_t initial() const;
+	std::size_t initial() const;
 
-	uint32_t current() const;
+	std::size_t current() const;
 
 	bool is_set() const;
 

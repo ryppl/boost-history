@@ -7,7 +7,8 @@
 #ifndef BOOST_FIBERS_SPIN_BARRIER_H
 #define BOOST_FIBERS_SPIN_BARRIER_H
 
-#include <boost/cstdint.hpp>
+#include <cstddef>
+
 #include <boost/utility.hpp>
 
 #include <boost/fiber/spin/condition.hpp>
@@ -20,14 +21,14 @@ namespace spin {
 class barrier : private noncopyable
 {
 private:
-	uint32_t	initial_;
-	uint32_t	current_;
-	bool		cycle_;
-	mutex		mtx_;
-	condition	cond_;
+	std::size_t		initial_;
+	std::size_t		current_;
+	bool			cycle_;
+	mutex			mtx_;
+	condition		cond_;
 
 public:
-	barrier( uint32_t);
+	barrier( std::size_t);
 
 	bool wait();
 };

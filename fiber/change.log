@@ -2,6 +2,7 @@
 ------
 - default stacksize = 64kB because of seg fault if value is too small
 - using boost.move library for move support
+- using boost.atomic for atomic ops.
 
 0.3.1:
 ------

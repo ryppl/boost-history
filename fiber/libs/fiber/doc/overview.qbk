@@ -38,7 +38,8 @@ which includes all the other headers in turn. The classes and functions reside i
 
 [warning This library is ['not] an official Boost library]
 
-__boost_fiber__ uses some code from __boost_thread__ (especially a specialisation of future)!
+__boost_fiber__ depends uppon __boost_atomic__, __boost_move__ and uses some code from __boost_thread__
+(especially a specialisation of future).
 
 
 [heading Tested Platforms]

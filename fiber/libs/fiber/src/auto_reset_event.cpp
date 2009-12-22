@@ -6,8 +6,6 @@
 
 #include "boost/fiber/auto_reset_event.hpp"
 
-#include <boost/fiber/detail/atomic.hpp>
-
 namespace boost {
 namespace fibers {
 
@@ -17,30 +15,27 @@ auto_reset_event::~auto_reset_event()
 void
 auto_reset_event::set()
 {
-	detail::atomic_exchange( & state_, static_cast< uint32_t >( SET) );
+	state_ = SET;
 	strategy_->object_notify_one( id_);
 }
 
 void
 auto_reset_event::wait()
 {
-	uint32_t expected = static_cast< uint32_t >( SET);
-	while ( ! detail::atomic_compare_exchange_strong(
-			& state_, & expected,
-			static_cast< uint32_t >( RESET) ) )
-	{
+	while ( RESET == state_)
 		strategy_->wait_for_object( id_);
-		expected = static_cast< uint32_t >( SET);
-	}
+	state_ = RESET;
 }
 
 bool
 auto_reset_event::try_wait()
 {
-	uint32_t expected = static_cast< uint32_t >( SET);
-	return detail::atomic_compare_exchange_strong(
-			& state_, & expected,
-			static_cast< uint32_t >( RESET) );
+	if ( SET == state_)
+	{
+		state_ = RESET;
+		return true;
+	}
+	return false;
 }
 
 }}

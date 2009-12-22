@@ -9,14 +9,13 @@
 
 #include <cstddef>
 
+#include <boost/atomic.hpp>
 #include <boost/config.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/fiber/detail/atomic.hpp>
 #include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/spin/condition.hpp>
 #include <boost/fiber/spin/mutex.hpp>
@@ -39,11 +38,11 @@ private:
 	private:
 		struct node
 		{
-			typedef intrusive_ptr< node >	ptr_t;
+			typedef intrusive_ptr< node >	ptr;
 
-			uint32_t	use_count;
-			value_type	va;
-			ptr_t		next;
+			atomic< std::size_t >	use_count;
+			value_type				va;
+			ptr						next;
 
 			node() :
 				use_count( 0),
@@ -52,47 +51,59 @@ private:
 			{}
 
 			inline friend void intrusive_ptr_add_ref( node * p)
-			{ ++p->use_count; }
+			{ p->use_count.fetch_add( 1, memory_order_relaxed); }
 			
 			inline friend void intrusive_ptr_release( node * p)
-			{ if ( --p->use_count == 0) delete p; }
+			{
+				if ( p->use_count.fetch_sub( 1, memory_order_release) == 1)
+				{
+					atomic_thread_fence( memory_order_acquire);
+					delete p;
+				}
+			}
 		};
 
-		volatile uint32_t		state_;
-		typename node::ptr_t	head_;
-		mutex					head_mtx_;
-		typename node::ptr_t	tail_;
-		mutex					tail_mtx_;
+		enum state
+		{
+			ACTIVE = 0,
+			DEACTIVE
+		};
+
+		atomic< state >			state_;
+		typename node::ptr		head_;
+		mutable mutex			head_mtx_;
+		typename node::ptr		tail_;
+		mutable mutex			tail_mtx_;
 		condition				not_empty_cond_;
-		uint32_t				use_count_;	
+		atomic< std::size_t >	use_count_;
 
 		bool active_() const
-		{ return 0 == state_; }
+		{ return ACTIVE == state_.load(); }
 
 		void deactivate_()
-		{ fibers::detail::atomic_fetch_add( & state_, 1); }
+		{ state_.store( DEACTIVE); }
 
-		bool empty_()
+		bool empty_() const
 		{ return head_ == get_tail_(); }
 
-		typename node::ptr_t get_tail_()
+		typename node::ptr get_tail_() const
 		{
 			mutex::scoped_lock lk( tail_mtx_);	
-			typename node::ptr_t tmp = tail_;
+			typename node::ptr tmp = tail_;
 			return tmp;
 		}
 
-		typename node::ptr_t pop_head_()
+		typename node::ptr pop_head_()
 		{
-			typename node::ptr_t old_head = head_;
+			typename node::ptr old_head = head_;
 			head_ = old_head->next;
 			return old_head;
 		}
 
 	public:
 		impl() :
-			state_( 0),
-			head_( new node),
+			state_( ACTIVE),
+			head_( new node() ),
 			head_mtx_(),
 			tail_( head_),
 			tail_mtx_(),
@@ -103,7 +114,7 @@ private:
 		void deactivate()
 		{ deactivate_(); }
 
-		bool empty()
+		bool empty() const
 		{
 			mutex::scoped_lock lk( head_mtx_);
 			return empty_();
@@ -111,7 +122,7 @@ private:
 
 		void put( T const& t)
 		{
-			typename node::ptr_t new_node( new node);
+			typename node::ptr new_node( new node() );
 			{
 				mutex::scoped_lock lk( tail_mtx_);
 
@@ -155,11 +166,17 @@ private:
 			return va;
 		}
 
-		friend void intrusive_ptr_add_ref( impl * p)
-		{ fibers::detail::atomic_fetch_add( & p->use_count_, 1); }
-
-		friend void intrusive_ptr_release( impl * p)
-		{ if ( fibers::detail::atomic_fetch_sub( & p->use_count_, 1) == 1) delete p; }
+		inline friend void intrusive_ptr_add_ref( impl * p)
+		{ p->use_count_.fetch_add( 1, memory_order_relaxed); }
+		
+		inline friend void intrusive_ptr_release( impl * p)
+		{
+			if ( p->use_count_.fetch_sub( 1, memory_order_release) == 1)
+			{
+				atomic_thread_fence( memory_order_acquire);
+				delete p;
+			}
+		}
 	};
 
 	intrusive_ptr< impl >	impl_;

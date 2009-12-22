@@ -12,7 +12,7 @@ namespace boost {
 namespace fibers {
 namespace spin {
 
-barrier::barrier( uint32_t initial) :
+barrier::barrier( std::size_t initial) :
 	initial_( initial),
 	current_( initial_),
 	cycle_( true),
