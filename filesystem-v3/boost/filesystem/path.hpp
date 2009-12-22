@@ -411,6 +411,7 @@ namespace filesystem
 
 # if !defined(BOOST_FILESYSTEM_NO_DEPRECATED)
     //  recently deprecated functions supplied by default
+    path&   normalize()              { return m_normalize(); }
     path&   remove_leaf()            { return remove_filename(); }
     path    leaf() const             { return filename(); }
     path    branch_path() const      { return parent_path(); }
@@ -437,7 +438,6 @@ namespace filesystem
     //static void default_name_check(name_check) {}
     //static name_check default_name_check() { return 0; }
     //basic_path& canonize();
-    //basic_path& normalize();
 # endif
 
 //--------------------------------------------------------------------------------------//
@@ -471,7 +471,7 @@ namespace filesystem
     string_type::size_type m_parent_path_end() const;
     void m_portable();
 
-    //path&  m_normalize();
+    path& m_normalize();
 
     // Was qualified; como433beta8 reports:
     //    warning #427-D: qualified name is not allowed in member declaration 

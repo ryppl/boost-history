@@ -47,11 +47,19 @@ namespace
     CHECK(status("no-such-file") == file_status(file_not_found));
 
     CHECK(exists("/"));
+    CHECK(is_directory("/"));
     CHECK(!exists("no-such-file"));
 
-    CHECK(is_directory("/"));
-    CHECK(!is_directory(this_file));
+    exists(this_file, ec);
+    if (ec)
+    {
+      std::cout << "ec non-zero: " << ec.value() << ", message: "<< ec.message() << std::endl;
+      std::cout << "  file: " << this_file << std::endl; 
+    }
+    CHECK(!ec);
 
+    CHECK(exists(this_file));
+    CHECK(!is_directory(this_file));
     CHECK(is_regular_file(this_file));
     CHECK(!boost::filesystem::is_empty(this_file));
     CHECK(!is_other(this_file));

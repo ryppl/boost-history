@@ -38,8 +38,9 @@
 # if defined( BOOST_WINDOWS_API ) && defined( BOOST_POSIX_API )
 #   error both BOOST_WINDOWS_API and BOOST_POSIX_API are defined
 # elif !defined( BOOST_WINDOWS_API ) && !defined( BOOST_POSIX_API )
-#   if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-#     define BOOST_WINDOWS_API
+#   if defined(_WIN32)||defined(__WIN32__)||defined(WIN32) // true for all Windows
+                                                           // compilers, including MingW
+#     define BOOST_WINDOWS_API 
 #   else
 #     define BOOST_POSIX_API 
 #   endif
@@ -49,10 +50,10 @@
 #   error Boost.Filesystem V3 and later requires std::wstring support
 # endif
 
-//  BOOST_WINDOWS_PATH enables Windows path syntax recognition
-
-//  filesystem.v2 defined BOOST_WINDOWS_PATH unconditionally for __CYGWIN__, but
-//  that isn't possible for v3 because BOOST_WINDOWS_PATH requires wstring support
+//  BOOST_WINDOWS_PATH enables Windows path syntax recognition.
+//  BOOST_WINDOWS_API always imples BOOST_WINDOWS_PATH, but BOOST_WINDOWS_PATH is also
+//  defined for Cygwin, even though it uses BOOST_POSIX_API, because it is a Windows only
+//  environment.
 
 # if !defined(BOOST_POSIX_PATH) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) \
   || defined(__CYGWIN__))

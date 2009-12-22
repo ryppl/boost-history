@@ -94,20 +94,20 @@ namespace
       ;
   }
 
-  bool is_non_root_separator(const string_type & str, size_type pos);
+  bool is_non_root_separator(const string_type& str, size_type pos);
     // pos is position of the separator
 
-  size_type filename_pos(const string_type & str,
+  size_type filename_pos(const string_type& str,
                           size_type end_pos); // end_pos is past-the-end position
   //  Returns: 0 if str itself is filename (or empty)
 
-  size_type root_directory_start(const string_type & path, size_type size);
+  size_type root_directory_start(const string_type& path, size_type size);
   //  Returns:  npos if no root_directory found
 
   void first_element(
-      const string_type & src,
-      size_type & element_pos,
-      size_type & element_size,
+      const string_type& src,
+      size_type& element_pos,
+      size_type& element_size,
 #    if !BOOST_WORKAROUND(BOOST_MSVC, <= 1310) // VC++ 7.1
       size_type size = string_type::npos
 #    else
@@ -345,75 +345,73 @@ namespace filesystem
     return *this;
   }
 
-//
-//  // m_normalize  ------------------------------------------------------------//
-//  // 
-//
-//  path & path::m_normalize()
-//  {
-//    if (m_path.empty()) return *this;
-//      
-//    path_type temp;
-//    iterator start(begin());
-//    iterator last(end());
-//    iterator stop(last--);
-//    for (iterator itr(start); itr != stop; ++itr)
-//    {
-//      // ignore "." except at start and last
-//      if (itr->size() == 1
-//        && (*itr)[0] == dot
-//        && itr != start
-//        && itr != last) continue;
-//
-//      // ignore a name and following ".."
-//      if (!temp.empty()
-//        && itr->size() == 2
-//        && (*itr)[0] == dot
-//        && (*itr)[1] == dot) // dot dot
-//      {
-//        string_type lf(temp.filename());  
-//        if (lf.size() > 0  
-//          && (lf.size() != 1
-//            || (lf[0] != dot
-//              && lf[0] != separator))
-//          && (lf.size() != 2 
-//            || (lf[0] != dot
-//              && lf[1] != dot
-//#             ifdef BOOST_WINDOWS_PATH
-//              && lf[1] != colon
-//#             endif
-//               )
-//             )
-//          )
-//        {
-//          temp.remove_filename();
-//          // if not root directory, must also remove "/" if any
-//          if (temp.m_path.size() > 0
-//            && temp.m_path[temp.m_path.size()-1]
-//              == separator)
-//          {
-//            typename string_type::size_type rds(
-//              detail::root_directory_start<String,Traits>(temp.m_path,
-//                temp.m_path.size()));
-//            if (rds == string_type::npos
-//              || rds != temp.m_path.size()-1) 
-//              { temp.m_path.erase(temp.m_path.size()-1); }
-//          }
-//
-//          iterator next(itr);
-//          if (temp.empty() && ++next != stop
-//            && next == last && *last == dot_str) temp /= dot_str;
-//          continue;
-//        }
-//      }
-//
-//      temp /= *itr;
-//    };
-//
-//    if (temp.empty()) temp /= dot_str;
-//    m_path = temp.m_path;
-//    return *this;
-//  }
+
+  // m_normalize  ----------------------------------------------------------------------//
+
+  path& path::m_normalize()
+  {
+    if (m_path.empty()) return *this;
+      
+    path temp;
+    iterator start(begin());
+    iterator last(end());
+    iterator stop(last--);
+    for (iterator itr(start); itr != stop; ++itr)
+    {
+      // ignore "." except at start and last
+      if (itr->native().size() == 1
+        && (itr->native())[0] == dot
+        && itr != start
+        && itr != last) continue;
+
+      // ignore a name and following ".."
+      if (!temp.empty()
+        && itr->native().size() == 2
+        && (itr->native())[0] == dot
+        && (itr->native())[1] == dot) // dot dot
+      {
+        string_type lf(temp.filename().native());  
+        if (lf.size() > 0  
+          && (lf.size() != 1
+            || (lf[0] != dot
+              && lf[0] != separator))
+          && (lf.size() != 2 
+            || (lf[0] != dot
+              && lf[1] != dot
+#             ifdef BOOST_WINDOWS_PATH
+              && lf[1] != colon
+#             endif
+               )
+             )
+          )
+        {
+          temp.remove_filename();
+          // if not root directory, must also remove "/" if any
+          if (temp.m_path.size() > 0
+            && temp.m_path[temp.m_path.size()-1]
+              == separator)
+          {
+            string_type::size_type rds(
+              root_directory_start(temp.m_path, temp.m_path.size()));
+            if (rds == string_type::npos
+              || rds != temp.m_path.size()-1) 
+              { temp.m_path.erase(temp.m_path.size()-1); }
+          }
+
+          iterator next(itr);
+          if (temp.empty() && ++next != stop
+            && next == last && *last == dot_path) temp /= dot_path;
+          continue;
+        }
+      }
+
+      temp /= *itr;
+    };
+
+    if (temp.empty()) temp /= dot_path;
+    m_path = temp.m_path;
+    return *this;
+  }
 
 }  // namespace filesystem
 }  // namespace boost
@@ -448,7 +446,7 @@ namespace
         ;
   }
 
-  //  filename_pos  ----------------------------------------------------------//
+  //  filename_pos  --------------------------------------------------------------------//
 
   size_type filename_pos(const string_type & str,
                           size_type end_pos) // end_pos is past-the-end position
@@ -477,7 +475,7 @@ namespace
         : pos + 1; // or starts after delimiter
   }
 
-  //  root_directory_start  --------------------------------------------------//
+  //  root_directory_start  ------------------------------------------------------------//
 
   size_type root_directory_start(const string_type & path, size_type size)
   // return npos if no root_directory found
@@ -511,7 +509,7 @@ namespace
     return string_type::npos;
   }
 
-  //  first_element ----------------------------------------------------------//
+  //  first_element --------------------------------------------------------------------//
   //   sets pos and len of first element, excluding extra separators
   //   if src.empty(), sets pos,len, to 0,0.
 

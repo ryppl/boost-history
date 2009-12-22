@@ -15,7 +15,7 @@
 <a href="../../../index.htm">
 <img src="../../../boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86" border="0"></a></td>
     <td width="633" align="middle">
-    <font size="7">Filesystem Library<br>
+    <font size="7">Filesystem
     Version 3<br>
 &nbsp;</font></td>
   </tr>
@@ -57,12 +57,40 @@ changes include:</p>
   </li>
 </ul>
 
+<h2>Breaking changes</h2>
+<h3>Class <code>path</code></h3>
+<ul>
+  <li>Class template <code>basic_path</code> and its specializations are gone.
+  <span style="background-color: #FFFF00">...</span></li>
+  <li>Certain functions now return <code>path</code> objects rather than <code>
+  basic_string</code> objects:<ul>
+    <li><code>root_name()</code></li>
+    <li><code>root_directory()</code></li>
+    <li><code>filename()</code></li>
+    <li><code>stem()</code></li>
+    <li><code>extension()</code></li>
+  </ul>
+  </li>
+  <li>&nbsp;<code>path::iterator::value_type</code> and&nbsp; <code>
+  path::const_iterator::value_type</code> is <code>path</code> rather than <code>
+  basic_string</code>.</li>
+</ul>
+<h3>Compiler support</h3>
+<ul>
+  <li>Compilers and standard libraries that do not fully support wide characters 
+  and wide character strings (<code>wstring</code>) are no longer supported. 
+  This impacts primarily Cygwin users; versions prior to 1.7 are no longer 
+  supported.<br>
+&nbsp;</li>
+  <li>Microsoft VC++ 7.1 and earlier are not currently supported.</li>
+</ul>
+
 <hr>
 <p>© Copyright Beman Dawes, 2009</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->12 December 2009<!--webbot bot="Timestamp" endspan i-checksum="39737" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 December 2009<!--webbot bot="Timestamp" endspan i-checksum="39738" --></p>
 
 </body>
 

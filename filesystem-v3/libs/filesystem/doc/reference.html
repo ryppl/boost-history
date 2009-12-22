@@ -1606,12 +1606,10 @@ compliant iteration over the contents of a directory. Also see class <code>
     {
       class directory_iterator
         : public boost::iterator_facade&lt; directory_iterator,
-                                         directory_entry,
+                                         <a href="#Class-directory_entry">directory_entry</a>,
                                          boost::single_pass_traversal_tag &gt;
       {
       public:
-        typedef Path path_type;
-
         // <a href="#directory_iterator-members">member functions</a>
 
         directory_iterator();  // creates the &quot;end&quot; iterator
@@ -3310,7 +3308,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->12 December 2009<!--webbot bot="Timestamp" endspan i-checksum="39737" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 December 2009<!--webbot bot="Timestamp" endspan i-checksum="39738" --></p>
 
 </body>
 
