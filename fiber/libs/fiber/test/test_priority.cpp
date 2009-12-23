@@ -18,7 +18,7 @@ void zero_args_fn()
 
 void test_case_1()
 {
-	boost::fiber f( zero_args_fn);
+	boost::fiber f( zero_args_fn, boost::fiber::default_stacksize);
 	BOOST_CHECK_EQUAL( 0, f.priority() );
 
 	f.priority( 5);

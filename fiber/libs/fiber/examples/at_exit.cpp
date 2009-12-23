@@ -22,7 +22,7 @@ int main()
 	{
 		boost::fibers::scheduler<> sched;
 
-		sched.make_fiber( fn);
+		sched.make_fiber( fn, boost::fiber::default_stacksize);
 
 		std::cout << "start" << std::endl;
 

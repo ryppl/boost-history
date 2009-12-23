@@ -53,8 +53,8 @@ void test_case_1()
 
 	boost::fibers::scheduler<> sched;
 
-	sched.make_fiber( fn_1);
-	sched.make_fiber( fn_2);
+	sched.make_fiber( fn_1, boost::fiber::default_stacksize);
+	sched.make_fiber( fn_2, boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( 0, value1);
 	BOOST_CHECK_EQUAL( 0, value2);
@@ -115,9 +115,9 @@ void test_case_2()
 
 	boost::fibers::scheduler<> sched;
 
-	boost::fiber f( fn_2);
+	boost::fiber f( fn_2, boost::fiber::default_stacksize);
 	sched.submit_fiber( f);
-	sched.make_fiber( fn_3, f);
+	sched.make_fiber( fn_3, f, boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( 0, value2);
 	BOOST_CHECK_EQUAL( 0, value3);

@@ -88,7 +88,7 @@ void f(
 
 	boost::fibers::scheduler<> sched;
 	
-	sched.make_fiber( & fn1, boost::ref( fb) );
+	sched.make_fiber( & fn1, boost::ref( fb), boost::fiber::default_stacksize);
 
 	tb.wait();
 
@@ -112,7 +112,7 @@ void g(
 
 	boost::fibers::scheduler<> sched;
 	
-	sched.make_fiber( & fn2, boost::ref( fb) );
+	sched.make_fiber( & fn2, boost::ref( fb), boost::fiber::default_stacksize);
 
 	tb.wait();
 

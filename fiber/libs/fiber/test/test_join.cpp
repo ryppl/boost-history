@@ -68,9 +68,9 @@ void test_case_1()
 
 	boost::fibers::scheduler<> sched;
 
-	boost::fiber f( fn_1);
+	boost::fiber f( fn_1, boost::fiber::default_stacksize);
 	sched.submit_fiber( f);
-	sched.make_fiber( fn_2, f);
+	sched.make_fiber( fn_2, f, boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( 0, value1);
 	BOOST_CHECK_EQUAL( 0, value2);
@@ -168,10 +168,10 @@ void test_case_2()
 
 	boost::fibers::scheduler<> sched;
 
-	boost::fiber f( fn_1);
+	boost::fiber f( fn_1, boost::fiber::default_stacksize);
 	sched.submit_fiber( f);
-	sched.make_fiber( fn_2, f);
-	sched.make_fiber( fn_3, f);
+	sched.make_fiber( fn_2, f, boost::fiber::default_stacksize);
+	sched.make_fiber( fn_3, f, boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( 0, value1);
 	BOOST_CHECK_EQUAL( 0, value2);
@@ -312,11 +312,11 @@ void test_case_3()
 
 	boost::fibers::scheduler<> sched;
 
-	boost::fiber f1( fn_1);
+	boost::fiber f1( fn_1, boost::fiber::default_stacksize);
 	sched.submit_fiber( f1);
-	boost::fiber f2( fn_2, f1);
+	boost::fiber f2( fn_2, f1, boost::fiber::default_stacksize);
 	sched.submit_fiber( f2);
-	sched.make_fiber( fn_4, f2);
+	sched.make_fiber( fn_4, f2, boost::fiber::default_stacksize);
 
 	BOOST_CHECK( ! sched.empty() );
 	BOOST_CHECK_EQUAL( std::size_t( 3), sched.size() );

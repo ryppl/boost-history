@@ -18,7 +18,7 @@
 namespace boost {
 namespace fibers {
 
-unsigned int
+std::size_t
 fiber::default_stacksize = 65536;
 
 fiber::fiber() :

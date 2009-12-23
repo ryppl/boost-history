@@ -1,3 +1,8 @@
+0.3.3:
+------
+- default_stacksize is public static member of fiber
+- stacksize mußt be given if a fiber is created
+
 0.3.2:
 ------
 - default stacksize = 64kB because of seg fault if value is too small

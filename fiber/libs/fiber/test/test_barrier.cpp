@@ -55,8 +55,8 @@ void test_case_1()
 	boost::fibers::scheduler<> sched;
 
 	boost::fibers::barrier b( sched, 2);
-	sched.make_fiber( fn_1, boost::ref( b) );
-	sched.make_fiber( fn_2, boost::ref( b) );
+	sched.make_fiber( fn_1, boost::ref( b), boost::fiber::default_stacksize);
+	sched.make_fiber( fn_2, boost::ref( b), boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( 0, value1);
 	BOOST_CHECK_EQUAL( 0, value2);

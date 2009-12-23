@@ -67,9 +67,9 @@ int main()
 	{
 		boost::fibers::scheduler<> sched;
 
-		boost::fiber f1( fn_1);
+		boost::fiber f1( fn_1, boost::fiber::default_stacksize);
 		sched.submit_fiber( f1);
-		sched.make_fiber( fn_4, f1);
+		sched.make_fiber( fn_4, f1, boost::fiber::default_stacksize);
 
 		std::cout << "start: interrupt fn_1()" << std::endl;
 
@@ -81,9 +81,9 @@ int main()
 
 		std::cout << "finish: value1 == " << value1 << std::endl;
 
-		boost::fiber f2( fn_2);
+		boost::fiber f2( fn_2, boost::fiber::default_stacksize);
 		sched.submit_fiber( f2);
-		sched.make_fiber( fn_4, f2);
+		sched.make_fiber( fn_4, f2, boost::fiber::default_stacksize);
 		std::cout << "start: interrupt fn_2()" << std::endl;
 
 		for (;;)
@@ -94,9 +94,9 @@ int main()
 
 		std::cout << "finish: value2 == " << value2 << std::endl;
 
-		boost::fiber f3( fn_3);
+		boost::fiber f3( fn_3, boost::fiber::default_stacksize);
 		sched.submit_fiber( f3);
-		sched.make_fiber( fn_4, f3);
+		sched.make_fiber( fn_4, f3, boost::fiber::default_stacksize);
 		std::cout << "start: interrupt fn_3()" << std::endl;
 
 		for (;;)

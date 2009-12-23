@@ -69,7 +69,7 @@ void test_store_value_from_thread()
     boost::fibers::spin::promise<int> pi2;
     boost::fibers::spin::unique_future<int> fi2=pi2.get_future();
     boost::fibers::scheduler<> sched;
-	sched.make_fiber(set_promise_thread,&pi2);
+	sched.make_fiber(set_promise_thread,&pi2, boost::fiber::default_stacksize);
 	for (;;)
 	{
 		while ( sched.run() );
@@ -89,7 +89,7 @@ void test_store_exception()
     boost::fibers::spin::promise<int> pi3;
     boost::fibers::spin::unique_future<int> fi3=pi3.get_future();
     boost::fibers::scheduler<> sched;
-	sched.make_fiber(set_promise_exception_thread,&pi3);
+	sched.make_fiber(set_promise_exception_thread,&pi3, boost::fiber::default_stacksize);
 	for (;;)
 	{
 		while ( sched.run() );
@@ -673,7 +673,7 @@ void test_wait_for_either_of_two_futures_1()
     boost::fibers::spin::unique_future<int> f2(pt2.get_future());
     
     boost::fibers::scheduler<> sched;
-	sched.make_fiber(::cast_to_rval(pt));
+	sched.make_fiber(::cast_to_rval(pt), boost::fiber::default_stacksize);
 	for (;;)
 	{
 		while ( sched.run() );

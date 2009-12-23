@@ -34,7 +34,7 @@ void fn1(
 		fprintf( stderr, "start (thread1: %s)\n", os.str().c_str() );
 
 		boost::fibers::scheduler<> sched1;
-		sched1.make_fiber( & g, msg, n);
+		sched1.make_fiber( & g, msg, n, boost::fiber::default_stacksize);
 
 		for ( int i = 0; i < 2; ++i)
 			sched1.run();
@@ -89,7 +89,7 @@ int main()
 		boost::fibers::scheduler<> sched;
 		boost::barrier b( 2);
 
-		boost::fiber f( & g, "xyz", 4);
+		boost::fiber f( & g, "xyz", 4, boost::fiber::default_stacksize);
 
 		std::cout << "start" << std::endl;
 

@@ -22,7 +22,7 @@ int main()
 
 		boost::fibers::spin::packaged_task< std::string > pt( helloworld_fn);
 		boost::fibers::spin::unique_future< std::string > fu = pt.get_future();
-		sched.make_fiber( boost::move( pt) );
+		sched.make_fiber( boost::move( pt), boost::fiber::default_stacksize);
 
 		for (;;)
 		{

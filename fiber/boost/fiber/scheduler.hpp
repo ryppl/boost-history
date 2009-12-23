@@ -75,20 +75,30 @@ public:
 	{ strategy_->add( f); }
 
 	template< typename Fn >
-	void make_fiber( Fn fn)
-	{ strategy_->add( fiber( fn) ); }
+	void make_fiber( Fn fn, std::size_t stack_size)
+	{ strategy_->add( fiber( fn, stack_size) ); }
 
 	template< typename Fn >
-	void make_fiber( BOOST_RV_REF( Fn) fn)
-	{ strategy_->add( fiber( fn) ); }
+	void make_fiber( BOOST_RV_REF( Fn) fn, std::size_t stack_size)
+	{ strategy_->add( fiber( fn, stack_size) ); }
 
-	template< typename Fn >
-	void make_fiber( std::size_t stack_size, Fn fn)
-	{ strategy_->add( fiber( stack_size, fn) ); }
+#ifndef BOOST_FIBER_MAX_ARITY
+#define BOOST_FIBER_MAX_ARITY 10
+#endif
 
-	template< typename Fn >
-	void make_fiber( std::size_t stack_size, BOOST_RV_REF( Fn) fn)
-	{ strategy_->add( fiber( stack_size, fn) ); }
+#define BOOST_FIBER_ARG(z, n, unused) \
+   BOOST_PP_CAT(A, n) BOOST_PP_CAT(a, n)
+#define BOOST_ENUM_FIBER_ARGS(n) BOOST_PP_ENUM(n, BOOST_FIBER_ARG, ~)
+
+#define BOOST_FIBER_MAKE_FIBER_FUNCTION(z, n, unused) \
+	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
+	void make_fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n), std::size_t stack_size) \
+	{ strategy_->add( fiber( fn, BOOST_PP_ENUM_PARAMS(n, a), stack_size) ); }
+
+BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTION, ~)
+
+#undef BOOST_FIBER_MAKE_FIBER_FUNCTION
+#undef BOOST_FIBER_MAX_ARITY
 
 	void migrate_fiber( fiber f)
 	{
@@ -102,27 +112,6 @@ public:
 	template< typename OtherStrategy >
 	void migrate_fiber( fiber::id const& id, scheduler< OtherStrategy > & other)
 	{ strategy_->migrate( other.strategy_->release( id) ); }
-
-#ifndef BOOST_FIBER_MAX_ARITY
-#define BOOST_FIBER_MAX_ARITY 10
-#endif
-
-#define BOOST_FIBER_ARG(z, n, unused) \
-   BOOST_PP_CAT(A, n) BOOST_PP_CAT(a, n)
-#define BOOST_ENUM_FIBER_ARGS(n) BOOST_PP_ENUM(n, BOOST_FIBER_ARG, ~)
-
-#define BOOST_FIBER_MAKE_FIBER_FUNCTION(z, n, unused) \
-	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
-	void make_fiber( Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-	{ strategy_->add( fiber( fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); } \
-	template< typename Fn, BOOST_PP_ENUM_PARAMS(n, typename A) > \
-	void make_fiber( std::size_t stack_size, Fn fn, BOOST_ENUM_FIBER_ARGS(n)) \
-	{ strategy_->add( fiber( stack_size, fn, BOOST_PP_ENUM_PARAMS(n, a) ) ); }
-
-BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTION, ~)
-
-#undef BOOST_FIBER_MAKE_FIBER_FUNCTION
-#undef BOOST_FIBER_MAX_ARITY
 };
 
 }}

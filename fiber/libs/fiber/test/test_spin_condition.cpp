@@ -50,7 +50,8 @@ void test_case_1()
 	sched.make_fiber(
 		wait_fn,
 		boost::ref( mtx),
-		boost::ref( cond) );
+		boost::ref( cond),
+		boost::fiber::default_stacksize);
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
@@ -66,7 +67,8 @@ void test_case_1()
 
 	sched.make_fiber(
 		notify_one_fn,
-		boost::ref( cond) );
+		boost::ref( cond),
+		boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
@@ -91,12 +93,14 @@ void test_case_2()
 	sched.make_fiber(
 		wait_fn,
 		boost::ref( mtx),
-		boost::ref( cond) );
+		boost::ref( cond),
+		boost::fiber::default_stacksize);
 
 	sched.make_fiber(
 		wait_fn,
 		boost::ref( mtx),
-		boost::ref( cond) );
+		boost::ref( cond),
+		boost::fiber::default_stacksize);
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
@@ -112,7 +116,8 @@ void test_case_2()
 
 	sched.make_fiber(
 		notify_one_fn,
-		boost::ref( cond) );
+		boost::ref( cond),
+		boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( std::size_t( 3), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
@@ -145,12 +150,14 @@ void test_case_3()
 	sched.make_fiber(
 		wait_fn,
 		boost::ref( mtx),
-		boost::ref( cond) );
+		boost::ref( cond),
+		boost::fiber::default_stacksize);
 
 	sched.make_fiber(
 		wait_fn,
 		boost::ref( mtx),
-		boost::ref( cond) );
+		boost::ref( cond),
+		boost::fiber::default_stacksize);
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
@@ -166,7 +173,8 @@ void test_case_3()
 
 	sched.make_fiber(
 		notify_all_fn,
-		boost::ref( cond) );
+		boost::ref( cond),
+		boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( std::size_t( 3), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
@@ -187,7 +195,8 @@ void test_case_3()
 	sched.make_fiber(
 		wait_fn,
 		boost::ref( mtx),
-		boost::ref( cond) );
+		boost::ref( cond),
+		boost::fiber::default_stacksize);
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( std::size_t( 1), sched.size() );
@@ -203,7 +212,8 @@ void test_case_3()
 
 	sched.make_fiber(
 		notify_all_fn,
-		boost::ref( cond) );
+		boost::ref( cond),
+		boost::fiber::default_stacksize);
 
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK( sched.run() );

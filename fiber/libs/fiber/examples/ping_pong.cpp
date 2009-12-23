@@ -68,8 +68,8 @@ void f( boost::fibers::scheduler<> & sched)
 	fifo_t buf1( sched);
 	fifo_t buf2( sched);
 	
-	sched.make_fiber( & ping, buf1, buf2);
-	sched.make_fiber( & pong, buf2, buf1);
+	sched.make_fiber( & ping, buf1, buf2, boost::fiber::default_stacksize);
+	sched.make_fiber( & pong, buf2, buf1, boost::fiber::default_stacksize);
 }
 
 int main()
@@ -78,7 +78,7 @@ int main()
 	{
 		boost::fibers::scheduler<> sched;
 
-		sched.make_fiber( & f, boost::ref( sched) );
+		sched.make_fiber( & f, boost::ref( sched), boost::fiber::default_stacksize);
 
 		std::cout << "start" << std::endl;
 

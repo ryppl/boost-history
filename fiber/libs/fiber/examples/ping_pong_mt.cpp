@@ -93,7 +93,7 @@ void f(
 
 	boost::fibers::scheduler<> sched;
 	
-	sched.make_fiber( & ping, recv_buf, send_buf);
+	sched.make_fiber( & ping, recv_buf, send_buf, boost::fiber::default_stacksize);
 
 	for (;;)
 	{
@@ -115,7 +115,7 @@ void g(
 
 	boost::fibers::scheduler<> sched;
 	
-	sched.make_fiber( & pong, recv_buf, send_buf);
+	sched.make_fiber( & pong, recv_buf, send_buf, boost::fiber::default_stacksize);
 
 	for (;;)
 	{

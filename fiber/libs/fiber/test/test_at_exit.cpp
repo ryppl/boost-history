@@ -31,7 +31,7 @@ void test_case_1()
 {
 	boost::fibers::scheduler<> sched;
 
-	sched.make_fiber( fn);
+	sched.make_fiber( fn, boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( std::size_t( 0), vec.size() );
 	BOOST_CHECK( vec.empty() );

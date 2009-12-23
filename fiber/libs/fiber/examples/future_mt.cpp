@@ -112,8 +112,8 @@ void thread_fn1( boost::fibers::spin::shared_future< std::string > fu)
 
 	boost::fibers::scheduler<> sched;
 
-	sched.make_fiber( & increment_fn1);
-	sched.make_fiber( & waiting_fn, fu);
+	sched.make_fiber( & increment_fn1, boost::fiber::default_stacksize);
+	sched.make_fiber( & waiting_fn, fu, boost::fiber::default_stacksize);
 
 	for (;;)
 	{
@@ -132,8 +132,8 @@ void thread_fn2( callable ca)
 
 	boost::fibers::scheduler<> sched;
 
-	sched.make_fiber( & increment_fn2);
-	sched.make_fiber( ca);
+	sched.make_fiber( & increment_fn2, boost::fiber::default_stacksize);
+	sched.make_fiber( ca, boost::fiber::default_stacksize);
 
 	for (;;)
 	{

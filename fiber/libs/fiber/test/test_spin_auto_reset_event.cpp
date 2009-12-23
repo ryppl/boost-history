@@ -36,11 +36,13 @@ void test_case_1()
 
 	sched.make_fiber(
 		wait_fn,
-		boost::ref( ev) );
+		boost::ref( ev),
+		boost::fiber::default_stacksize);
 
 	sched.make_fiber(
 		wait_fn,
-		boost::ref( ev) );
+		boost::ref( ev),
+		boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);
@@ -74,11 +76,13 @@ void test_case_2()
 
 	sched.make_fiber(
 		wait_fn,
-		boost::ref( ev) );
+		boost::ref( ev),
+		boost::fiber::default_stacksize);
 
 	sched.make_fiber(
 		wait_fn,
-		boost::ref( ev) );
+		boost::ref( ev),
+		boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( std::size_t( 2), sched.size() );
 	BOOST_CHECK_EQUAL( 0, value);

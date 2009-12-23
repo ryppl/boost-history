@@ -65,7 +65,8 @@ void test_case_2()
 
 	sched.make_fiber(
 		wait_fn,
-		boost::ref( ev) );
+		boost::ref( ev),
+		boost::fiber::default_stacksize);
 
 	ev.set();
 	BOOST_CHECK( sched.run() );

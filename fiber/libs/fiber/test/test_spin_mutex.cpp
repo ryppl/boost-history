@@ -55,7 +55,7 @@ void do_test_spin_mutex()
 void test_case1()
 {
 	boost::fibers::scheduler<> sched;
-    sched.make_fiber( & do_test_spin_mutex);
+    sched.make_fiber( & do_test_spin_mutex, boost::fiber::default_stacksize);
 	sched.run();
 }
 
@@ -80,8 +80,8 @@ void test_case2()
 {
 	boost::fibers::spin::mutex mtx;
 	boost::fibers::scheduler<> sched;
-    sched.make_fiber( & test_fn1, boost::ref( mtx) );
-    sched.make_fiber( & test_fn2, boost::ref( mtx) );
+    sched.make_fiber( & test_fn1, boost::ref( mtx), boost::fiber::default_stacksize);
+    sched.make_fiber( & test_fn2, boost::ref( mtx), boost::fiber::default_stacksize);
 
 	BOOST_CHECK_EQUAL( 0, value1);
 	BOOST_CHECK_EQUAL( 0, value2);

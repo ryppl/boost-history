@@ -24,7 +24,7 @@ void two_args_fn( int, std::string const&)
 
 void test_case_1()
 {
-	boost::fiber f1( one_args_fn, 10);
+	boost::fiber f1( one_args_fn, 10, boost::fiber::default_stacksize);
 	boost::fiber f2;
 	BOOST_CHECK( f1);
 	BOOST_CHECK( ! f2);
@@ -34,15 +34,23 @@ void test_case_1()
 void test_case_2()
 {
 	boost::fiber f1;
-	f1 = boost::fibers::make_fiber( zero_args_fn);
-	boost::fiber f2 = boost::fibers::make_fiber( one_args_fn, 1);
+	f1 = boost::fibers::make_fiber( zero_args_fn, boost::fiber::default_stacksize);
+	boost::fiber f2 = boost::fibers::make_fiber( one_args_fn, 1, boost::fiber::default_stacksize);
 	boost::fiber f3;
-	f3 = boost::fibers::make_fiber( two_args_fn, 1, "abc");
+	f3 = boost::fibers::make_fiber( two_args_fn, 1, "abc", boost::fiber::default_stacksize);
 }
 
 void test_case_3()
 {
-	boost::fiber f1( one_args_fn, 10);
+	boost::fiber f1( & zero_args_fn, boost::fiber::default_stacksize);
+	f1 = boost::fibers::make_fiber( zero_args_fn, boost::fiber::default_stacksize);
+	boost::fiber f2( one_args_fn, 1, boost::fiber::default_stacksize);
+	f2 = boost::fibers::make_fiber( one_args_fn, 1, boost::fiber::default_stacksize);
+}
+
+void test_case_4()
+{
+	boost::fiber f1( one_args_fn, 10, boost::fiber::default_stacksize);
 	BOOST_CHECK( f1);
 	boost::fiber f2( boost::move( f1) );
 	BOOST_CHECK( ! f1);
@@ -54,10 +62,10 @@ void test_case_3()
 	BOOST_CHECK_EQUAL( f2, f3);
 }
 
-void test_case_4()
+void test_case_5()
 {
-	boost::fiber f1( zero_args_fn);
-	boost::fiber f2( zero_args_fn);
+	boost::fiber f1( zero_args_fn, boost::fiber::default_stacksize);
+	boost::fiber f2( zero_args_fn, boost::fiber::default_stacksize);
 	boost::fiber f3;
 	BOOST_CHECK( f1);
 	BOOST_CHECK( f2);
@@ -83,10 +91,10 @@ void test_case_4()
 	BOOST_CHECK( os3.str() == not_a_fiber);
 }
 
-void test_case_5()
+void test_case_6()
 {
-	boost::fiber f1( zero_args_fn);
-	boost::fiber f2( zero_args_fn);
+	boost::fiber f1( zero_args_fn, boost::fiber::default_stacksize);
+	boost::fiber f2( zero_args_fn, boost::fiber::default_stacksize);
 
 	boost::fiber::id id1 = f1.get_id();
 	boost::fiber::id id2 = f2.get_id();
@@ -107,6 +115,7 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_TEST_CASE( & test_case_3) );
 	test->add( BOOST_TEST_CASE( & test_case_4) );
 	test->add( BOOST_TEST_CASE( & test_case_5) );
+	test->add( BOOST_TEST_CASE( & test_case_6) );
 
 	return test;
 }

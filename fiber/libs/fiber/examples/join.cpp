@@ -42,9 +42,9 @@ int main()
 	{
 		boost::fibers::scheduler<> sched;
 
-		boost::fiber f( fn_1);
+		boost::fiber f( fn_1, boost::fiber::default_stacksize);
 		sched.submit_fiber( f);
-		sched.make_fiber( fn_2, f);
+		sched.make_fiber( fn_2, f, boost::fiber::default_stacksize);
 
 		std::cout << "start" << std::endl;
 		std::cout << "fiber to be joined " << f.get_id() << std::endl;

@@ -23,9 +23,9 @@ int main()
 	{
 		boost::fibers::scheduler<> sched;
 
-		boost::fiber f( fn, "abc", 5);
+		boost::fiber f( fn, "abc", 5, boost::fiber::default_stacksize);
 		sched.submit_fiber( boost::move( f) );
-		sched.make_fiber( & fn, "xyz", 7);
+		sched.make_fiber( & fn, "xyz", 7, boost::fiber::default_stacksize);
 
 		std::cout << "start" << std::endl;
 
