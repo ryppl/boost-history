@@ -48,6 +48,10 @@
 #   define BOOST_CGI_POST_MAX 6663322
 #endif // BOOST_CGI_POST_MAX
 
+#ifndef BOOST_CGI_DEFAULT_CHARSET
+#   define BOOST_CGI_DEFAULT_CHARSET "UTF-8"
+#endif 
+
 BOOST_CGI_NAMESPACE_BEGIN
  
  namespace common {
@@ -102,6 +106,14 @@ BOOST_CGI_NAMESPACE_BEGIN
     common::data_map_proxy<cookie_map> cookies;
 
     basic_request(
+        int opts
+      , char** base_env = NULL)
+        : detail::basic_io_object<service_type>()
+    {
+      if ((parse_options)opts > parse_none) load((parse_options)opts, base_env);
+    }
+
+     basic_request(
         const parse_options opts = traits::parse_opts
       , char** base_env = NULL)
         : detail::basic_io_object<service_type>()
@@ -587,13 +599,11 @@ BOOST_CGI_NAMESPACE_BEGIN
     /// Get the charset from the CONTENT_TYPE header
     string_type charset()
     {
-      // Not sure if regex is needlessly heavy-weight here.
-      boost::regex re(";[ ]?charset=([-\\w]+);");
-      boost::smatch match;
-      if (!boost::regex_match(this->content_type(), match, re))
-        return ""; // A default could go here.
-
-      return match[1];
+      string_type ctype(content_type());
+      std::size_t pos = ctype.find("charset=");
+      string_type val(ctype.substr(pos+8, ctype.find(";", pos)));
+      boost::algorithm::trim(val);
+      return val.empty() ?  BOOST_CGI_DEFAULT_CHARSET : val;
     }
     
     /// The email of the user making the request.

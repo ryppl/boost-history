@@ -3,6 +3,7 @@
 #define BOOST_CGI_DATA_MAP_PROXY_HPP_INCLUDED_20091206_
 
 #include <boost/assert.hpp>
+#include <boost/lexical_cast.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/config.hpp"
 

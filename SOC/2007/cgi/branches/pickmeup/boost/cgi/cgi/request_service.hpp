@@ -36,6 +36,7 @@
 #include "boost/cgi/common/request_base.hpp"
 #include "boost/cgi/common/parse_options.hpp"
 #include "boost/cgi/common/request_status.hpp"
+#include "boost/cgi/connections/async_stdio.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
 #include "boost/cgi/detail/save_environment.hpp"
 
@@ -94,11 +95,10 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
     }
 
-    template<typename ImplType>
-    void construct(ImplType& impl)
+    void construct(implementation_type& impl)
     {
       impl.client_.set_connection(
-        typename ImplType::connection_type::create(this->get_io_service())
+        implementation_type::connection_type::create(this->get_io_service())
       );
     }
 
@@ -208,10 +208,12 @@ BOOST_CGI_NAMESPACE_BEGIN
       
       // Return an error, except ignore EOF, as this is expected.
       if (ec)
+      {
         if (ec == boost::cgi::common::error::eof)
           ec = boost::system::error_code();
         else
           return ec;
+      }
 
       return base_type::parse_post_vars(
           impl,

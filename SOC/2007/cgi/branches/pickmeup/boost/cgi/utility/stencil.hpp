@@ -38,10 +38,19 @@ public:
 class section
 {
 public:
-  typedef std::string string_type;
+  typedef char                          char_type;
+  typedef std::basic_string<char_type>  string_type;
   
   section() {}
   section(
+      const char_type* name,
+      const char_type* filename = ""
+    )
+    : name(name)
+    , filename(filename)
+  {
+  }
+   section(
       string_type const& name,
       string_type const& filename = ""
     )
@@ -82,15 +91,7 @@ public:
     return *this;
   }
 
-  /// Set the varible `name` to `value` in the stencil.
-  template<>
-  self_type& set(string_type const& name, string_type const& value)
-  {
-    impl->SetValue(name, value);
-    return *this;
-  }
-  
-  /// Set a variable and show a section in one go.
+ /// Set a variable and show a section in one go.
   template<typename T>
   self_type& set(string_type const& name, T value, section const& sec)
   {
@@ -102,22 +103,15 @@ public:
     return *this;
   }
   
-  /// Set a variable and show a section in one go.
-  template<>
-  self_type& set(
-      string_type const& name,
-      string_type const& value,
-      section const& sec
-    )
-  {
-    impl->SetValueAndShowSection(name, value, sec.name);
-    return *this;
-  }
-  
   /// Show a section.
-  self_type& show(string_type const& section_name)
+  self_type& show(section const& sec)
   {
-    impl->ShowSection(section_name);
+    if (sec.filename.empty())
+      impl->ShowSection(sec.name);
+    else {
+      dictionary d = include(sec);
+      impl->ShowSection(sec.name);
+    }
     return *this;
   }
 
@@ -170,20 +164,34 @@ public:
     return d;
   }
 
-  /// Add a section into the stencil.
-  dictionary add(string_type const& section_name)
-  {
-    dictionary d;
-    d.impl = impl->AddSectionDictionary(section_name);
-    return d;
-  }
-
   impl_type* impl;
 };
 
-}
+  /// Set the varible `name` to `value` in the stencil.
+  template<>
+  dictionary& dictionary::set(string_type const& name, string_type const& value)
+  {
+    impl->SetValue(name, value);
+    return *this;
+  }
+  
+  /// Set a variable and show a section in one go.
+  template<>
+  dictionary& dictionary::set(
+      string_type const& name,
+      string_type const& value,
+      section const& sec
+    )
+  {
+    impl->SetValueAndShowSection(name, value, sec.name);
+    return *this;
+  }
+  
+ }
 
 namespace boost { namespace cgi { namespace common {
+
+  using namespace stencils;
 
 class stencil
   : public boost::cgi::common::response
@@ -204,19 +212,19 @@ public:
   };
   
   stencil(impl_type* parent_dict)
-    : dict(parent_dict->MakeCopy("response"))
+    : impl(parent_dict->MakeCopy("response"))
   {
   }
   
   stencil(string_type const& root_dir = "")
-    : dict(new impl_type("response"))
+    : impl(new impl_type("response"))
   {
     if (!root_dir.empty())
       ctemplate::Template::SetTemplateRootDirectory(root_dir);
   }
   
   /// Get the implementation type of the template.
-  impl_type& impl() { return *dict; }
+  impl_type& native() { return *impl; }
 
   bool expand(
       string_type const& template_name,
@@ -242,7 +250,7 @@ public:
     
     // Expand the template and write it to the response.
     string_type body;
-    tmpl->Expand(&body, dict.get());
+    tmpl->Expand(&body, impl.get());
     write(body);
 
     // All ok.
@@ -255,7 +263,7 @@ public:
     )
   {
     dictionary d;
-    d.impl = dict->AddIncludeDictionary(section_name);
+    d.impl = impl->AddIncludeDictionary(section_name);
     d.impl->SetFilename(filename);
     return d;
   }
@@ -263,7 +271,7 @@ public:
   dictionary include(section const& sec)
   {
     dictionary d;
-    d.impl = dict->AddIncludeDictionary(sec.name);
+    d.impl = impl->AddIncludeDictionary(sec.name);
     d.impl->SetFilename(sec.filename);
     return d;
   }
@@ -271,14 +279,7 @@ public:
   dictionary add(section const& sec)
   {
     dictionary d;
-    d.impl = dict->AddSectionDictionary(sec.name);
-    return d;
-  }
-
-  dictionary add(string_type const& section_name)
-  {
-    dictionary d;
-    d.impl = dict->AddSectionDictionary(section_name);
+    d.impl = impl->AddSectionDictionary(sec.name);
     return d;
   }
 
@@ -292,23 +293,15 @@ public:
   template<typename T>
   self_type& set(string_type const& name, T value)
   {
-    dict->SetValue(name, boost::lexical_cast<string_type>(value));
+    impl->SetValue(name, boost::lexical_cast<string_type>(value));
     return *this;
   }
 
-  /// Set the varible `name` to `value` in the stencil.
-  template<>
-  self_type& set(string_type const& name, string_type const& value)
-  {
-    dict->SetValue(name, value);
-    return *this;
-  }
-  
   /// Set a variable and show a section in one go.
   template<typename T>
   self_type& set(string_type const& name, T value, section const& sec)
   {
-    dict->SetValueAndShowSection(
+    impl->SetValueAndShowSection(
         name,
         boost::lexical_cast<string_type>(value),
         sec.name
@@ -316,30 +309,49 @@ public:
     return *this;
   }
   
+  /// Show a section.
+  self_type& show(section const& sec)
+  {
+    if (sec.filename.empty())
+      impl->ShowSection(sec.name);
+    else {
+      dictionary d = include(sec);
+      impl->ShowSection(sec.name);
+    }
+    return *this;
+  }
+
+  stencil_type* tmpl;
+  boost::scoped_ptr<impl_type> impl;
+  bool expanded;
+};
+
+  /// Set the varible `name` to `value` in the stencil.
+  template<>
+  stencil& stencil::set(string_type const& name, string_type const& value)
+  {
+    impl->SetValue(name, value);
+    return *this;
+  }
+
   /// Set a variable and show a section in one go.
   template<>
-  self_type& set(
+  stencil& stencil::set(
       string_type const& name,
       string_type const& value,
       section const& sec
     )
   {
-    dict->SetValueAndShowSection(name, value, sec.name);
+    impl->SetValueAndShowSection(name, value, sec.name);
     return *this;
   }
-  
-  /// Show a section.
-  self_type& show(string_type const& section_name)
-  {
-    dict->ShowSection(section_name);
-    return *this;
-  }
-
-  stencil_type* tmpl;
-  boost::scoped_ptr<impl_type> dict;
-  bool expanded;
-};
 
 } } } // namespace boost::cgi::common
+
+namespace boost { namespace cgi {
+
+  using common::stencil;
+  
+} } // namespace boost::cgi
 
 #endif // BOOST_CGI_UTILITY_STENCIL_HPP_INCLUDED_20091222_

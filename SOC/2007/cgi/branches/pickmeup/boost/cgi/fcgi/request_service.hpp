@@ -13,19 +13,20 @@
 #include <boost/system/error_code.hpp>
 #include <boost/fusion/include/vector.hpp>
 ////////////////////////////////////////////////////////////////
-#include "boost/cgi/common/map.hpp"
-#include "boost/cgi/common/tags.hpp"
-#include "boost/cgi/fcgi/client.hpp"
-#include "boost/cgi/import/read.hpp"
-#include "boost/cgi/http/status_code.hpp"
-#include "boost/cgi/common/role_type.hpp"
-#include "boost/cgi/import/io_service.hpp"
-#include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/common/form_parser.hpp"
-#include "boost/cgi/common/source_enums.hpp"
-#include "boost/cgi/common/request_base.hpp"
-#include "boost/cgi/detail/service_base.hpp"
+#include "boost/cgi/common/map.hpp"
 #include "boost/cgi/common/parse_options.hpp"
+#include "boost/cgi/common/request_base.hpp"
+#include "boost/cgi/common/role_type.hpp"
+#include "boost/cgi/common/source_enums.hpp"
+#include "boost/cgi/common/tags.hpp"
+#include "boost/cgi/connections/shareable_tcp_socket.hpp"
+#include "boost/cgi/detail/service_base.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/fcgi/client.hpp"
+#include "boost/cgi/http/status_code.hpp"
+#include "boost/cgi/import/read.hpp"
+#include "boost/cgi/import/io_service.hpp"
 
 BOOST_CGI_NAMESPACE_BEGIN
  namespace fcgi {
@@ -44,7 +45,8 @@ BOOST_CGI_NAMESPACE_BEGIN
       typedef spec_detail::Header                   header_type;
 
       implementation_type()
-        : id_(0)
+        : base_type::impl_base()
+        , id_(0)
         , request_role_(spec_detail::ANY)
       {
       }
@@ -84,11 +86,10 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
     }
 
-    template<typename ImplType>
-    void construct(ImplType& impl)
+    void construct(implementation_type& impl)
     {
       impl.client_.set_connection(
-        typename ImplType::connection_type::create(this->get_io_service())
+        implementation_type::connection_type::create(this->get_io_service())
       );
     }
 

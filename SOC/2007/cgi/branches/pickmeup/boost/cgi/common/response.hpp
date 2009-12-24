@@ -123,10 +123,10 @@ BOOST_CGI_NAMESPACE_BEGIN
 
     /// Set the status code associated with the response.
     basic_response<char_type>&
-      set_status(const http::status_code& num);
+      status(const http::status_code& num);
 
     /// Get the status code associated with the response.
-    http::status_code& status();
+    http::status_code status() const;
 
     /// Allow more headers to be added (WARNING: avoid using this).
     void unterminate_headers();
@@ -135,6 +135,23 @@ BOOST_CGI_NAMESPACE_BEGIN
     std::size_t content_length();
 
     /// Add a header after appending the CRLF sequence.
+    basic_response<char_type>&
+      set(basic_header<char_type> const& hdr)
+    {
+      if (hdr.content.empty())
+        end_headers();
+      else
+        set_header(hdr.content);
+      return *this;
+    }
+
+    basic_response<char_type>&
+      set(const basic_cookie<char_type>& ck)
+    {
+      set_header("Set-Cookie", ck.to_string());
+      return *this;
+    }
+
     basic_response<char_type>&
       set_header(const string_type& value);
       
@@ -170,10 +187,54 @@ BOOST_CGI_NAMESPACE_BEGIN
 
     /// Get the headers
     std::vector<string_type>& headers();
-    
-    template<typename T>
-    friend self_type& operator<<(self_type& resp, T t);
 
+    template<typename T>
+    self_type& operator<<(T t)
+    {
+      ostream_<< t;
+      return *this;
+    }
+
+    self_type& operator<< (charset_header<char_type> const& hdr)
+    {
+      charset(hdr.content);
+      return *this;
+    }
+ 
+     self_type& operator<< (basic_header<char_type> const& hdr)
+    {
+      return set(hdr);
+    }
+ 
+    self_type& operator<< (basic_cookie<char_type> const& ck)
+    {
+      return set(ck);
+    }
+ 
+    self_type& operator<< (http::status_code stat)
+    {
+      status(stat);
+      return *this;
+    }
+
+    self_type& operator<< (self_type& other)
+    {
+      if (!headers_terminated())
+      {
+        typedef std::vector<std::string>::const_iterator iter_t;
+        for(iter_t iter (other.headers().begin()), end (other.headers().end());
+            iter != end;
+            ++iter
+          )
+        {
+          if (iter->substr(0,13) != "Content-type:") // Don't overwrite the content-type.
+            headers_.push_back(*iter);
+        }
+      }
+      ostream_<< other.ostream().rdbuf();
+      return *this;
+    }
+ 
   protected:
    // Vector of all the headers, each followed by a CRLF
     std::vector<string_type> headers_;
@@ -206,20 +267,11 @@ BOOST_CGI_NAMESPACE_END
 
 
   /// Generic ostream template
+  /*
   template<typename CharT, typename T>
   BOOST_CGI_NAMESPACE::common::basic_response<CharT>&
-    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<CharT>& resp, T const& t);
-
-  template<typename CharT>
-  BOOST_CGI_NAMESPACE::common::basic_response<CharT>&
-    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<CharT>& resp
-               , BOOST_CGI_NAMESPACE::common::basic_header<CharT> const& hdr);
-
-  template<typename CharT>
-  BOOST_CGI_NAMESPACE::common::basic_response<CharT>&
-    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<CharT>& resp
-               , BOOST_CGI_NAMESPACE::common::charset_header<CharT> const& hdr);
-
+    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<CharT>& resp, T t);
+  */
   /// You can stream a BOOST_CGI_NAMESPACE::cookie into a response.
   /**
    * This is just a shorthand way of setting a header that will set a
@@ -231,21 +283,13 @@ BOOST_CGI_NAMESPACE_END
    * http://tinyurl.com/33znkj), but this is outside the scope of this
    * library.
    */
-  template<typename charT>
+              
+  /*
+   template<typename charT>
   BOOST_CGI_NAMESPACE::common::basic_response<charT>&
     operator<< (BOOST_CGI_NAMESPACE::common::basic_response<charT>&
                , BOOST_CGI_NAMESPACE::common::basic_cookie<charT>);
-               
-  template<typename charT, typename T>
-  BOOST_CGI_NAMESPACE::common::basic_response<charT>&
-    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<charT>&
-               , BOOST_CGI_NAMESPACE::common::http::status_code);
-
-  template<typename charT, typename T>
-  BOOST_CGI_NAMESPACE::common::basic_response<charT>&
-    operator<< (BOOST_CGI_NAMESPACE::common::basic_response<charT>&
-               , BOOST_CGI_NAMESPACE::common::basic_response<charT>&);
-
+  */             
 #include "boost/cgi/detail/pop_options.hpp"
 
 #if !defined(BOOST_CGI_BUILD_LIB)

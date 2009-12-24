@@ -12,11 +12,13 @@
 #include <boost/shared_ptr.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/common/map.hpp"
-#include "boost/cgi/http/status_code.hpp"
 #include "boost/cgi/common/role_type.hpp"
 #include "boost/cgi/common/request_status.hpp"
-#include "boost/cgi/detail/protocol_traits.hpp"
 #include "boost/cgi/connections/tcp_socket.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/detail/protocol_traits.hpp"
+#include "boost/cgi/error.hpp"
+#include "boost/cgi/http/status_code.hpp"
 
 
 BOOST_CGI_NAMESPACE_BEGIN

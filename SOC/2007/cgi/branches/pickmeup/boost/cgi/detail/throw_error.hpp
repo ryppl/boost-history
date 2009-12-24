@@ -12,6 +12,8 @@
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/throw_exception.hpp>
+/////////////////////////////////////////////////
+#include "boost/cgi/config.hpp"
 
 BOOST_CGI_NAMESPACE_BEGIN
  namespace detail {

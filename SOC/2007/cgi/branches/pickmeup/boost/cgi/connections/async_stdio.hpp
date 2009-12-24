@@ -21,7 +21,13 @@
 BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
 
-  // Asynchronous access to stdio
+  // Asynchronous access to stdio.
+  /**
+   * This class doesn't do real async I/O, but fakes it by posting
+   * a read / write to an io_service, which may be run in a background
+   * thread. On most systems this won't actually mean true async I/O,
+   * but this emulates it as an interim solution.
+   */
   template<>
   class basic_connection<tags::async_stdio>
     : public basic_connection<tags::stdio>

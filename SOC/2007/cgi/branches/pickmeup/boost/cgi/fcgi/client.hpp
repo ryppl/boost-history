@@ -15,22 +15,26 @@
 #include <boost/logic/tribool.hpp>
 #include <boost/asio/buffer.hpp>
 ///////////////////////////////////////////////////////////
-#include "boost/cgi/error.hpp"
+#include "boost/cgi/basic_client.hpp"
 #include "boost/cgi/common/map.hpp"
 #include "boost/cgi/common/tags.hpp"
+#include "boost/cgi/connections/shareable_tcp_socket.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/detail/protocol_traits.hpp"
+#include "boost/cgi/fcgi/specification.hpp"
+#include "boost/cgi/fwd/basic_request_fwd.hpp"
+#include "boost/cgi/error.hpp"
 #include "boost/cgi/import/read.hpp"
-#include "boost/cgi/basic_client.hpp"
 #include "boost/cgi/import/buffer.hpp"
 #include "boost/cgi/import/io_service.hpp"
-#include "boost/cgi/fcgi/specification.hpp"
-#include "boost/cgi/detail/throw_error.hpp"
-#include "boost/cgi/fwd/basic_request_fwd.hpp"
-#include "boost/cgi/detail/protocol_traits.hpp"
-#include "boost/cgi/connections/shareable_tcp_socket.hpp"
 
 #undef min
 #undef max
 #include <algorithm>
+
+#ifndef NDEBUG
+#   include <iostream>
+#endif 
 
 BOOST_CGI_NAMESPACE_BEGIN
  namespace common {
@@ -44,11 +48,11 @@ BOOST_CGI_NAMESPACE_BEGIN
   >::basic_client()
     : request_id_(-1)
     , status_(none_)
-    , keep_connection_(false)
     , total_sent_bytes_(0)
     , total_sent_packets_(0)
     , header_()
     , outbuf_()
+    , keep_connection_(false)
   {
   }
 
@@ -60,11 +64,11 @@ BOOST_CGI_NAMESPACE_BEGIN
   >::basic_client(io_service_type& ios)
     : request_id_(-1)
     , status_(none_)
-    , keep_connection_(false)
     , total_sent_bytes_(0)
     , total_sent_packets_(0)
     , header_()
     , outbuf_()
+    , keep_connection_(false)
   {
   }
 
@@ -186,7 +190,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     // doesn't care about them.
     bytes_transferred -= fcgi::spec::header_length::value;
     // Check everything was written ok.
-    if (!ec && bytes_transferred != total_buffer_size)
+    if (!ec && bytes_transferred != static_cast<std::size_t>(total_buffer_size))
       ec = ::BOOST_CGI_NAMESPACE::fcgi::error::couldnt_write_complete_packet;
 
     return bytes_transferred;

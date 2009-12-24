@@ -48,11 +48,13 @@ BOOST_CGI_NAMESPACE_BEGIN
      {
      }
 
+     /*
      /// Construct an header from a cookie.
      basic_header(const basic_cookie<char_type>& ck)
        : content("Set-cookie: " + ck.to_string())
      {
      }
+     */
      
      operator string_type () {
         return content + "\r\n";

@@ -11,9 +11,6 @@
 
 #include <cstdio>
 #include <string>
-#   include <stdio.h> // for _setmode
-#   include <io.h>    // for _setmode
-#   include <fcntl.h> // for _setmode
 #if BOOST_WINDOWS
 #   include <stdio.h> // for _setmode
 #   include <io.h>    // for _setmode

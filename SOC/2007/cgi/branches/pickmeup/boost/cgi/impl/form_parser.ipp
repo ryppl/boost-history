@@ -191,7 +191,7 @@ BOOST_CGI_NAMESPACE_BEGIN
               internal_filename.c_str()
             , std::ios::out | std::ios::binary);
           file<< content;
-          file.flush();
+          //file.flush();
         }
       }
       // Load the data to the request's post map.

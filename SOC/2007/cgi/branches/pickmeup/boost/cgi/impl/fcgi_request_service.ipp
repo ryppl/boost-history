@@ -644,8 +644,8 @@ BOOST_CGI_NAMESPACE_BEGIN
         //std::cerr<< "**FIXME** Role: " 
         //  << fcgi::spec::begin_request::get_role(impl.header_buf_) << std::endl;
 
-        implementation_type::client_type::connection_type&
-          conn = *impl.client_.connection();
+        //implementation_type::client_type::connection_type&
+        //  conn = *impl.client_.connection();
       }
       return ec;
     }
