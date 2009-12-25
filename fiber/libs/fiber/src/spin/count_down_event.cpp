@@ -6,6 +6,8 @@
 
 #include "boost/fiber/spin/count_down_event.hpp"
 
+#include <boost/thread/thread.hpp>
+
 #include <boost/fiber/spin/mutex.hpp>
 #include <boost/fiber/utility.hpp>
 
@@ -47,7 +49,12 @@ void
 count_down_event::wait()
 {
 	while ( 0 != current_.load() )
-		this_fiber::yield();	
+	{
+		if ( this_fiber::runs_as_fiber() )
+			this_fiber::yield();
+		else
+			this_thread::yield();
+	}
 }
 
 }}}

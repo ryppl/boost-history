@@ -16,8 +16,8 @@ __scheduler__ class. Objects of type __fiber__ are copy- and moveable.
 
 	void f()
 	{
-		boost::fiber f1( boost::fibers::make_fiber( some_fn) );
-		boost::fiber f2( boost::fibers::make_fiber( another_fn) );
+		boost::fiber f1( boost::fibers::make_fiber( some_fn, boost::fiber::default_stacksize) );
+		boost::fiber f2( boost::fibers::make_fiber( another_fn, boost::fiber::default_stacksize) );
 
 		boost::fibers::scheduler<> s;
 		s.submit( f1); // f1 gets copied
@@ -48,7 +48,7 @@ must ensure that the referred-to object outlives the newly-created fiber.
 	boost::fiber oops()
 	{
 		callable x;
-		return boost::fiber( boost::ref( x) );
+		return boost::fiber( boost::ref( x), boost::fiber::default_stacksize);
 	} // x is destroyed, but the newly-created fiber still has a reference
 	  // this leads to undefined behaviour
 
@@ -57,19 +57,19 @@ supplied, this can be done by passing additional arguments to the __fiber__ cons
 
 	void find_the_question( int the_answer);
 
-	boost::fiber deep_thought_2( find_the_question, 42);
+	boost::fiber deep_thought_2( find_the_question, 42, boost::fiber::default_stacksize);
 
 The arguments are ['copied] into the internal fiber structure: if a reference is required, use `boost::ref`, just as
 for references to callable functions.
 
 For convinience `boost::fibers::make_fiber()` is provided:
 
-	boost::fiber f( boost::fibers::make_fiber( new_fn, arg1, arg2, arg3) );
+	boost::fiber f( boost::fibers::make_fiber( new_fn, arg1, arg2, arg3, boost::fiber::default_stacksize) );
 
 Another alternative is to use `scheduler<>::make_fiber()` which creates and stores the new fiber inside the scheduler.
 
 	boost::fibers::scheduler<> sched;
-	sched.make_fiber( new_fn, arg1, arg2, arg3);
+	sched.make_fiber( new_fn, arg1, arg2, arg3, boost::fiber_default_stacksize);
 
 [caution If you encounter segmentation faults or bus errors it may be possible that the stacksize for the fibers is
 too small.]
@@ -96,9 +96,9 @@ immediately.
 	{ f.join(); }
 
 	boost:.fibers::scheduler<> sched;
-	boost::fiber f( some_fn);
+	boost::fiber f( some_fn, boost::fiber_default_stacksize);
 	sched.submit_fiber( f);
-	sched.make_fiber( joining_fiber, f);
+	sched.make_fiber( joining_fiber, f, boost::fiber_default_stacksize);
 	for (;;)
 	{
 		while ( sched.run() );
@@ -191,25 +191,17 @@ The comparison operators on __fiber_id__ yield a total order for every non-equal
 		~fiber();
 
 		template< typename Fn >
-		explicit fiber( Fn fn);
+		explicit fiber( Fn fn, std::size_t stack_size);
+
+		template< typename Fn, typename A1, typename A2,..., typename A10 >
+		fiber( Fn fn, A1 a1, A2 a2,..., A10 a10, std::size_t stack_size);
 
 		template< typename Fn >
-		explicit fiber( std::size_t stack_size, Fn fn);
-
-		template< typename Fn, typename A1, typename A2,...>
-		fiber( Fn fn, A1 a1, A2 a2,...);
-
-		template< typename Fn, typename A1, typename A2,...>
-		fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...);
-
-		template< typename Fn >
-		fiber( detail::fiber_move_t< Fn > f);
+		explicit fiber( Fn && fn, std::size_t stack_size);
 
 		// move support
-		fiber( detail::fiber_move_t< fiber > x);
-		fiber & operator=( detail::fiber_move_t< fiber > x);
-		operator detail::fiber_move_t< fiber >();
-		detail::fiber_move_t< fiber > move();
+		fiber( fiber && x);
+		fiber & operator=( fiber && x);
 
 		operator unspecified-bool-type() const;
 		
@@ -239,16 +231,10 @@ The comparison operators on __fiber_id__ yield a total order for every non-equal
 	void swap( fiber & lhs, fiber & rhs);
 
 	template< typename Fn >
-	fiber make_fiber( Fn fn);
+	fiber make_fiber( Fn fn, std::size_t stack_size);
 
-	template< typename Fn >
-	fiber make_fiber( std::size_t stack_size, Fn fn);
-
-	template< typename Fn, typename A1, typename A2,... >
-	fiber make_fiber( Fn fn, A1 a1, A2 a2,...);
-
-	template< typename Fn, typename A1, typename A2,... >
-	fiber make_fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...);
+	template< typename Fn, typename A1, typename A2,..., typename A10 >
+	fiber make_fiber( Fn fn, A1 a1, A2 a2,..., A10 a10, std::size_t stack_size);
 
 
 [section:default_constructor `fiber()`]
@@ -258,7 +244,7 @@ The comparison operators on __fiber_id__ yield a total order for every non-equal
 ]
 [endsect]
 
-[section:callable_constructor `template< typename Callable > fiber( Callable fn)`]
+[section:callable_constructor_stack `template< typename Fn > fiber( Fn fn, std::size_t stack_size)`]
 [variablelist
 [[Preconditions:] [`Callable` must by copyable.]]
 [[Effects:] [`fn` is copied into storage managed internally by the fiber library, and that copy is invoked on a
@@ -268,29 +254,7 @@ newly-created fiber. Second version sets the stack-size of the fiber.]]
 ]
 [endsect]
 
-[section:callable_constructor_stack `template< typename Callable > fiber( std::size_t stack_size, Callable fn)`]
-[variablelist
-[[Preconditions:] [`Callable` must by copyable.]]
-[[Effects:] [`fn` is copied into storage managed internally by the fiber library, and that copy is invoked on a
-newly-created fiber. Second version sets the stack-size of the fiber.]]
-[[Postconditions:] [`*this` refers to the newly created fiber.]]
-[[Throws:] [__system_error__ if system call failed.]]
-]
-[endsect]
-
-[section:multiple_argument_constructor `template< typename Fn, typename A1, typename A2,...> fiber( Fn fn, A1 a1, A2 a2,...)`]
-[variablelist
-[[Preconditions:] [`Fn` and each `A`n must by copyable or movable.]]
-[[Effects:] [As if `fiber( boost::bind( fn, a1, a2,...) )`. Consequently, `fn` and each `a`n
-are copied into internal storage for access by the new fiber.
-Second version additionaly sets the stack-size used by the fiber.]]
-[[Postconditions:] [`*this` refers to the newly created fiber.]]
-[[Throws:] [__system_error__ if system call failed.]]
-[[Note:] [Currently up to nine additional arguments `a1` to `a9` can be specified in addition to the function `fn`.]]
-]
-[endsect]
-
-[section:multiple_argument_constructor_stack `template< typename Fn, typename A1, typename A2,...> fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...)`]
+[section:multiple_argument_constructor `template< typename Fn, typename A1, typename A2,..., typename A10 > fiber( Fn fn, A1 a1, A2 a2,..., A10 a10, std::size_t stack_size)`]
 [variablelist
 [[Preconditions:] [`Fn` and each `A`n must by copyable or movable.]]
 [[Effects:] [As if `fiber( boost::bind( fn, a1, a2,...) )`. Consequently, `fn` and each `a`n
@@ -315,6 +279,7 @@ Second version additionaly sets the stack-size used by the fiber.]]
 a default-constructed __fiber_id__.]]
 [[Throws:] [Nothing.]]
 ]
+
 [endsect]
 
 [section:join `void join()`]
@@ -414,16 +379,10 @@ returns the same value as `this->get_id()` prior to the call.]]
     #include <boost/fiber/fiber.hpp>
     
     template< typename Fn >
-    fiber make_fiber( Fn fn);
+    fiber make_fiber( Fn fn, std::size_t stack_size);
     
-    template< typename Fn >
-    fiber make_fiber( std::size_t stack_size, Fn fn);
-    
-    template< typename Fn, typename A1, typename A2,... >
-    fiber make_fiber( Fn fn, A1 a1, A2 a2,...);
-    
-    template< typename Fn, typename A1, typename A2,... >
-    fiber make_fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...);
+    template< typename Fn, typename A1, typename A2,..., typename A10 >
+    fiber make_fiber( Fn fn, A1 a1, A2 a2,..., A10 a10, std::size_t stack_size);
 
 [variablelist
 [[Effects:] [Creates a fiber.]]
@@ -762,16 +721,13 @@ Usally __scheduler__ will be invoked until all fibers are scheduled and finished
 		void submit_fiber( fiber);
 
 		template< typename Fn >
-		void make_fiber( Fn fn);
+		void make_fiber( Fn fn, std::size_t stack_size);
 
 		template< typename Fn >
-		void make_fiber( std::size_t stack_size, Fn fn);
+		void make_fiber( Fn && fn, std::size_t stack_size);
 
-		template< typename Fn, typename A1, typename A2,... >
-		void make_fiber( Fn fn, A0 a0, A1 a1,...);
-
-		template< typename Fn, typename A1, typename A2,... >
-		void make_fiber( std::size_t stack_size, Fn fn, A1 a1, A2 a2,...);
+		template< typename Fn, typename A1, typename A2,..., typename A10 >
+		void make_fiber( Fn fn, A0 a0, A1 a1,..., A10 a10, std:size_t stack_size);
 
 		void migrate_fiber( fiber f);
 
@@ -832,21 +788,14 @@ Usally __scheduler__ will be invoked until all fibers are scheduled and finished
 ]
 [endsect]
 
-[section:make_fiber1 `template< typename Fn > void make_fiber( Fn fn)`]
+[section:make_fiber2 `template< typename Fn > void make_fiber( Fn fn, std::size_t stack_size)`]
 [variablelist
 [[Effects:] [The functions create a fiber which gets stored in the internal structures from scheduler.]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]
 
-[section:make_fiber2 `template< typename Fn > void make_fiber( std::size_t stack_size, Fn fn)`]
-[variablelist
-[[Effects:] [The functions create a fiber which gets stored in the internal structures from scheduler.]]
-[[Throws:] [Nothing.]]
-]
-[endsect]
-
-[section:make_fiber3 `template< typename Fn, typename A1, typename A2,... > void make_fiber( Fn fn, A0 a0, A1 a1,...)`]
+[section:make_fiber3 `template< typename Fn, typename A1, typename A2,..., typename A10 > void make_fiber( Fn fn, A0 a0, A1 a1,..., A10 a10, std::size_t stack_size)`]
 [variablelist
 [[Effects:] [The functions create a fiber which gets stored in the internal structures from scheduler.]]
 [[Throws:] [Nothing.]]

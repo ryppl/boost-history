@@ -6,6 +6,8 @@
 
 #include "boost/fiber/spin/auto_reset_event.hpp"
 
+#include <boost/thread/thread.hpp>
+
 #include <boost/fiber/utility.hpp>
 
 namespace boost {
@@ -26,7 +28,10 @@ auto_reset_event::wait()
 	state expected = SET;
 	while ( ! state_.compare_exchange_strong( expected, RESET) )
 	{
-		this_fiber::yield();
+		if ( this_fiber::runs_as_fiber() )
+			this_fiber::yield();
+		else
+			this_thread::yield();
 		expected = SET;
 	}
 }

@@ -6,6 +6,8 @@
 
 #include <boost/fiber/spin/mutex.hpp>
 
+#include <boost/thread/thread.hpp>
+
 #include <boost/fiber/utility.hpp>
 
 namespace boost {
@@ -24,8 +26,10 @@ mutex::lock()
 		state expected = UNLOCKED;
 		if ( state_.compare_exchange_strong( expected, LOCKED) )
 			break;
+		if ( this_fiber::runs_as_fiber() )
+			this_fiber::yield();
 		else
-			this_fiber::yield();	
+			this_thread::yield();
 	}
 }
 

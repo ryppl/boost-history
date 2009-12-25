@@ -1,3 +1,7 @@
+0.3.4:
+------
+- spinning sync. primitives check if invoked in a fiber
+
 0.3.3:
 ------
 - default_stacksize is public static member of fiber

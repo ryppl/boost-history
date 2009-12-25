@@ -12,7 +12,8 @@ contexts of execution (thread or fiber). The barrier is configured for a particu
 fibers reach the barrier they must wait until all `n` fibers have arrived. Once the `n`-th fiber has reached the
 barrier, all the waiting fibers can proceed, and the barrier is reset.
 
-[note __spin_barrier__ is ['not] bound to a __scheduler__ and can be used by fibers managed by different schedulers.]
+[note __spin_barrier__ is ['not] bound to a __scheduler__ and can be used by fibers managed by different schedulers
+or code not running in a fiber.]
 
 [section:barrier Class `barrier`]
 

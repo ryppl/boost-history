@@ -6,6 +6,8 @@
 
 #include "boost/fiber/spin/condition.hpp"
 
+#include <boost/thread/thread.hpp>
+
 namespace boost {
 namespace fibers {
 namespace spin {
@@ -24,7 +26,10 @@ condition::notify_( command cmd)
 	command expected = SLEEPING;
 	while ( ! cmd_.compare_exchange_strong( expected, cmd) )
 	{
-		this_fiber::yield();
+		if ( this_fiber::runs_as_fiber() )
+			this_fiber::yield();
+		else
+			this_thread::yield();
 		expected = SLEEPING;
 	}
 }
