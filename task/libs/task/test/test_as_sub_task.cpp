@@ -23,7 +23,7 @@
 #include "test_functions.hpp"
 
 namespace pt = boost::posix_time;
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 
 namespace {
 

@@ -14,7 +14,7 @@
 
 #include "condition_test_common.hpp"
 
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 
 void do_test_condition_notify_one_wakes_from_wait()
 {
@@ -23,7 +23,7 @@ void do_test_condition_notify_one_wakes_from_wait()
     boost::thread thread(boost::bind(&wait_for_flag::wait_without_predicate, boost::ref(data)));
 
     {
-        tsk::spin_mutex::scoped_lock lock(data.mutex);
+        tsk::spin::mutex::scoped_lock lock(data.mutex);
         data.flag=true;
         data.cond_var.notify_one();
     }
@@ -39,7 +39,7 @@ void do_test_condition_notify_one_wakes_from_wait_with_predicate()
     boost::thread thread(boost::bind(&wait_for_flag::wait_with_predicate, boost::ref(data)));
 
     {
-        tsk::spin_mutex::scoped_lock lock(data.mutex);
+        tsk::spin::mutex::scoped_lock lock(data.mutex);
         data.flag=true;
         data.cond_var.notify_one();
     }
@@ -55,7 +55,7 @@ void do_test_condition_notify_one_wakes_from_timed_wait()
     boost::thread thread(boost::bind(&wait_for_flag::timed_wait_without_predicate, boost::ref(data)));
 
     {
-        tsk::spin_mutex::scoped_lock lock(data.mutex);
+        tsk::spin::mutex::scoped_lock lock(data.mutex);
         data.flag=true;
         data.cond_var.notify_one();
     }
@@ -71,7 +71,7 @@ void do_test_condition_notify_one_wakes_from_timed_wait_with_predicate()
     boost::thread thread(boost::bind(&wait_for_flag::timed_wait_with_predicate, boost::ref(data)));
 
     {
-        tsk::spin_mutex::scoped_lock lock(data.mutex);
+        tsk::spin::mutex::scoped_lock lock(data.mutex);
         data.flag=true;
         data.cond_var.notify_one();
     }
@@ -87,7 +87,7 @@ void do_test_condition_notify_one_wakes_from_relative_timed_wait_with_predicate(
     boost::thread thread(boost::bind(&wait_for_flag::relative_timed_wait_with_predicate, boost::ref( data)));
 
     {
-        tsk::spin_mutex::scoped_lock lock(data.mutex);
+        tsk::spin::mutex::scoped_lock lock(data.mutex);
         data.flag=true;
         data.cond_var.notify_one();
     }
@@ -98,13 +98,13 @@ void do_test_condition_notify_one_wakes_from_relative_timed_wait_with_predicate(
 
 namespace
 {
-    tsk::spin_mutex multiple_wake_mutex;
-    tsk::spin_condition multiple_wake_cond;
+    tsk::spin::mutex multiple_wake_mutex;
+    tsk::spin::condition multiple_wake_cond;
     unsigned multiple_wake_count=0;
 
     void wait_for_condvar_and_increase_count()
     {
-        tsk::spin_mutex::scoped_lock lk(multiple_wake_mutex);
+        tsk::spin::mutex::scoped_lock lk(multiple_wake_mutex);
         multiple_wake_cond.wait(lk);
         ++multiple_wake_count;
     }
@@ -128,7 +128,7 @@ void do_test_multiple_notify_one_calls_wakes_multiple_threads()
     boost::this_thread::sleep(boost::posix_time::milliseconds(200));
     
     {
-        tsk::spin_mutex::scoped_lock lk(multiple_wake_mutex);
+        tsk::spin::mutex::scoped_lock lk(multiple_wake_mutex);
         BOOST_CHECK(multiple_wake_count==3);
     }
 

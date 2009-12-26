@@ -4,33 +4,36 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_SPIN_MANUAL_RESET_EVENT_H
-#define BOOST_TASK_SPIN_MANUAL_RESET_EVENT_H
+#ifndef BOOST_TASKS_SPIN_MANUAL_RESET_EVENT_H
+#define BOOST_TASKS_SPIN_MANUAL_RESET_EVENT_H
 
-#include <boost/cstdint.hpp>
+#include <cstddef>
+
+#include <boost/atomic.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/task/spin_mutex.hpp>
+#include <boost/task/spin/mutex.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
+namespace spin {
 
-class spin_manual_reset_event : private noncopyable
+class manual_reset_event : private noncopyable
 {
 private:
-	enum state_t
+	enum state
 	{
-		RESET = 0,
-		SET
+		SET = 0,
+		RESET
 	};
 
-	volatile uint32_t	state_;
-	volatile uint32_t	waiters_;
-	spin_mutex			enter_mtx_;
+	atomic< state >			state_;
+	atomic< std::size_t >	waiters_;
+	mutex					enter_mtx_;
 
 public:
-	explicit spin_manual_reset_event( bool = false);
+	explicit manual_reset_event( bool = false);
 
 	void set();
 
@@ -38,15 +41,15 @@ public:
 
 	void wait();
 
+	bool try_wait();
+
 	bool wait( system_time const&);
 
 	template< typename TimeDuration >
 	bool wait( TimeDuration const& rel_time)
 	{ return wait( get_system_time() + rel_time); }
-
-	bool try_wait();
 };
 
-}}
+}}}
 
-#endif // BOOST_TASK_SPIN_MANUAL_RESET_EVENT_H
+#endif // BOOST_TASKS_SPIN_MANUAL_RESET_EVENT_H

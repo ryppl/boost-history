@@ -16,11 +16,11 @@
 
 #include "boost/task.hpp"
 
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 
 typedef tsk::static_pool< tsk::unbounded_twolock_fifo > pool_type;
 
-void sub_task( int i, int n, tsk::spin_count_down_event & ev)
+void sub_task( int i, int n, tsk::spin::count_down_event & ev)
 {
 	BOOST_ASSERT( boost::this_task::runs_in_pool() );
 
@@ -34,13 +34,13 @@ void sub_task( int i, int n, tsk::spin_count_down_event & ev)
 void main_task(
 		pool_type & pool,
 		int n,
-		tsk::spin_count_down_event & outer_ev)
+		tsk::spin::count_down_event & outer_ev)
 {
 	BOOST_ASSERT( boost::this_task::runs_in_pool() );
 
 	fprintf( stderr, "main-task running %d sub-tasks\n", n);
 
-	tsk::spin_count_down_event inner_ev( n);
+	tsk::spin::count_down_event inner_ev( n);
 
 	for ( int i = 0; i < n; ++i)
 		tsk::async(
@@ -63,7 +63,7 @@ int main( int argc, char *argv[])
 		pool_type pool( psize);
 
 		int n = 32;	
-		tsk::spin_count_down_event ev( 1);
+		tsk::spin::count_down_event ev( 1);
 		tsk::async(
 			tsk::make_task(
 				& main_task,

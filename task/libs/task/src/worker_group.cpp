@@ -10,7 +10,7 @@
 #include <boost/utility.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 namespace detail {
 
 worker_group::worker_group() :

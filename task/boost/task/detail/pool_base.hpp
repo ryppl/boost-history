@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_DETAIL_POOL_BASE_H
-#define BOOST_TASK_DETAIL_POOL_BASE_H
+#ifndef BOOST_TASKS_DETAIL_POOL_BASE_H
+#define BOOST_TASKS_DETAIL_POOL_BASE_H
 
 #include <cstddef>
 
@@ -26,11 +26,10 @@
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
 #include <boost/task/exceptions.hpp>
-#include <boost/task/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
-#include <boost/task/spin_manual_reset_event.hpp>
 #include <boost/task/stacksize.hpp>
 #include <boost/task/task.hpp>
 #include <boost/task/watermark.hpp>
@@ -38,14 +37,14 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 namespace detail {
 
 template<
 	typename Queue,
 	typename UMS
 >
-class pool_base : public UMS
+class pool_base
 {
 private:
 	friend class worker;
@@ -55,14 +54,15 @@ private:
 
 	typedef Queue							queue_type;
 	typedef typename queue_type::value_type	value_type;
+	typedef UMS								ums_type;
 
-	worker_group			wg_;
-	shared_mutex			mtx_wg_;
-	volatile uint32_t		state_;
-	queue_type			 	queue_;
-	volatile uint32_t		idle_worker_;
-	spin_manual_reset_event	shtdwn_ev_;
-	spin_manual_reset_event	shtdwn_now_ev_;
+	worker_group		wg_;
+	shared_mutex		mtx_wg_;
+	volatile uint32_t	state_;
+	queue_type		 	queue_;
+	volatile uint32_t	idle_worker_;
+	bool				shtdwn_;
+	bool				shtdwn_now_;
 
 	void worker_entry_()
 	{
@@ -141,8 +141,8 @@ public:
 		state_( 0),
 		queue_(),
 		idle_worker_( 0),
-		shtdwn_ev_(),
-		shtdwn_now_ev_()
+		shtdwn_( false),
+		shtdwn_now_( false)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
@@ -163,8 +163,8 @@ public:
 		state_( 0),
 		queue_( hwm, lwm),
 		idle_worker_( 0),
-		shtdwn_ev_(),
-		shtdwn_now_ev_()
+		shtdwn_( false),
+		shtdwn_now_( false)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
@@ -183,8 +183,8 @@ public:
 		state_( 0),
 		queue_(),
 		idle_worker_( 0),
-		shtdwn_ev_(),
-		shtdwn_now_ev_()
+		shtdwn_( false),
+		shtdwn_now_( false)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
@@ -206,8 +206,8 @@ public:
 		state_( 0),
 		queue_( hwm, lwm),
 		idle_worker_( 0),
-		shtdwn_ev_(),
-		shtdwn_now_ev_()
+		shtdwn_( false),
+		shtdwn_now_( false)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
@@ -236,7 +236,7 @@ public:
 
 		queue_.deactivate();
 		shared_lock< shared_mutex > lk( mtx_wg_);
-		shtdwn_ev_.set();
+		shtdwn_ = true;
 		wg_.join_all();
 	}
 
@@ -246,7 +246,7 @@ public:
 
 		queue_.deactivate();
 		shared_lock< shared_mutex > lk( mtx_wg_);
-		shtdwn_now_ev_.set();
+		shtdwn_now_ = true;
 		wg_.interrupt_all();
 		wg_.join_all();
 	}
@@ -310,5 +310,5 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_DETAIL_POOL_BASE_H
+#endif // BOOST_TASKS_DETAIL_POOL_BASE_H
 

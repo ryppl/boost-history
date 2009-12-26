@@ -10,7 +10,7 @@
 
 #include <boost/task/detail/atomic.hpp>
 
-namespace boost { namespace task {
+namespace boost { namespace tasks {
 namespace detail
 {
 

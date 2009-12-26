@@ -12,7 +12,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 namespace detail {
 
 struct replace_oldest
@@ -64,4 +64,4 @@ struct take_oldest
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_DETAIL_SMART_H
+#endif // BOOST_TASKS_DETAIL_SMART_H

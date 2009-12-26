@@ -4,13 +4,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_DETAIL_WORKER_H
-#define BOOST_TASK_DETAIL_WORKER_H
+#ifndef BOOST_TASKS_DETAIL_WORKER_H
+#define BOOST_TASKS_DETAIL_WORKER_H
 
 #include <cstddef>
 #include <utility>
 
 #include <boost/assert.hpp>
+#include <boost/fiber.hpp>
 #include <boost/function.hpp>
 #include <boost/random.hpp>
 #include <boost/shared_ptr.hpp>
@@ -19,13 +20,11 @@
 
 #include <boost/task/callable.hpp>
 #include <boost/task/detail/config.hpp>
-#include <boost/task/detail/fiber.hpp>
 #include <boost/task/detail/guard.hpp>
 #include <boost/task/detail/wsq.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
 #include <boost/task/stacksize.hpp>
-#include <boost/task/semaphore.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -35,7 +34,7 @@
 # endif
 
 namespace boost {
-namespace task {
+namespace tasks {
 namespace detail {
 
 struct worker_base
@@ -87,16 +86,17 @@ private:
 
 	typedef shared_ptr< thread >	thread_t;
 
-	Pool					&	pool_;
-	thread_t					thrd_;
-	fiber::sptr_t				fib_;
-	wsq							wsq_;
-	bool						shtdwn_;
-	posix_time::time_duration	asleep_;
-	scanns						max_scns_;
-	std::size_t					scns_;
-	std::size_t					stack_size_;
-	random_idx					rnd_idx_;
+	Pool						&	pool_;
+	thread_t						thrd_;
+	fibers::scheduler<
+		typename Pool::ums_type >	sched_;
+	wsq								wsq_;
+	bool							shtdwn_;
+	posix_time::time_duration		asleep_;
+	scanns							max_scns_;
+	std::size_t						scns_;
+	std::size_t						stack_size_;
+	random_idx						rnd_idx_;
 
 	void execute_( callable & ca)
 	{
@@ -134,38 +134,22 @@ private:
 		return false;
 	}
 
-	bool try_blocked_fibers_()
-	{
-		if ( pool_.has_blocked() )
-		{
-			fiber::sptr_t this_fib = fib_;
-			BOOST_ASSERT( this_fib);
-			pool_.put_runnable( this_fib);
-			fiber::sptr_t blocked_fib;
-			pool_.try_take_blocked( blocked_fib);
-			BOOST_ASSERT( blocked_fib);
-			fib_ = blocked_fib;
-			BOOST_ASSERT( this_fib->running() );
-			this_fib->switch_to( blocked_fib);
-			BOOST_ASSERT( this_fib->running() );
-			fib_ = this_fib;
-			return true;
-		}
-		return false;
-	}
-
 	void run_()
 	{	
 		while ( ! shutdown_() )
 		{
-			try_blocked_fibers_();
 			callable ca;
 			if ( try_take_local_callable_( ca) || 
 				 try_steal_other_callable_( ca) ||
 				 try_take_global_callable_( ca) )
 			{
+			fprintf(stdout,"run_(): execute_( ca)\n");
 				execute_( ca);
 				scns_ = 0;
+			if ( 0 < sched_.ready() ){
+		fprintf(stdout,"run_(): return because %d fibers are ready\n", sched_.ready() );
+				return;
+			}
 			}
 			else
 			{
@@ -176,9 +160,12 @@ private:
 					if ( pool_.size_() > pool_.idle_worker_)
 					{
 						if ( take_global_callable_( ca, asleep_) )
+						{
 							execute_( ca);
+							if ( 0 < sched_.ready() ) return;
+						}
 					}
-					else if ( ! pool_.has_blocked() )
+					else if ( 0 == sched_.ready() )
 					{
 						try
 						{ this_thread::sleep( asleep_); }
@@ -188,14 +175,19 @@ private:
 					scns_ = 0;
 				}
 				else
-					this_thread::yield();
+				{
+					if ( 0 < sched_.ready() )
+						return;
+					else
+						this_thread::yield();
+				}
 			}
 		}
 	}
 
 	bool shutdown_()
 	{
-		if ( shutdown__() && pool_.queue_.empty() && ! pool_.has_blocked() )
+		if ( shutdown__() && pool_.queue_.empty() && 0 == sched_.ready() )
 			return true;
 		else if ( shutdown_now__() )
 			return true;
@@ -205,12 +197,12 @@ private:
 	bool shutdown__()
 	{
 		if ( ! shtdwn_)
-			shtdwn_ = pool_.shtdwn_ev_.try_wait();
+			shtdwn_ = pool_.shtdwn_;
 		return shtdwn_;
 	}
 	
 	bool shutdown_now__()
-	{ return pool_.shtdwn_now_ev_.try_wait(); }
+	{ return pool_.shtdwn_now_; }
 
 public:
 	worker_object(
@@ -222,7 +214,7 @@ public:
 			function< void() > const& fn) :
 		pool_( pool),
 		thrd_( new thread( fn) ),
-		fib_(),
+		sched_(),
 		wsq_(),
 		shtdwn_( false),
 		asleep_( asleep),
@@ -255,44 +247,57 @@ public:
 	{
 		BOOST_ASSERT( get_id() == this_thread::get_id() );
 
-		fiber::convert_thread_to_fiber();
-
-		pool_.attach();
-
-		fib_ = fiber::create(
-			bind( & worker_object::run_, this),
-			stack_size_);
-		fib_->run();
-		BOOST_ASSERT( fib_->exited() );
+		sched_.make_fiber(
+				bind(
+					& worker_object::run_,
+					this),
+				stack_size_);
+		while ( ! shutdown_() )
+		{
+			fprintf(stdout,"run(): call scheduler::run()\n");
+			sched_.run();	
+		}
 	}
 
 	void reschedule_until( function< bool() > const& pred)
 	{
-		while ( ! pred() )
-			block();
+		while (true)
+		{
+			if ( pred() )
+			{
+				fprintf(stdout,"predicate is true- will return\n");
+				break;
+			}
+			else
+			{	
+				fprintf(stdout,"predicate is not true - will block\n");
+				block();
+			}
+		}
 	}
 
 	void block()
 	{
-		fiber::sptr_t this_fib = fib_;
-		pool_.put_blocked( this_fib);
-		fiber::sptr_t runnable_fib;
-		if ( pool_.has_runnable() )
-			pool_.try_take_runnable( runnable_fib);
-		else
-			runnable_fib = fiber::create(
-				bind( & worker_object::run_, this),
+		if ( 0 == sched_.ready() )
+		{
+			sched_.make_fiber(
+				bind(
+					& worker_object::run_,
+					this),
 				stack_size_);
-		BOOST_ASSERT( runnable_fib);
-		fib_ = runnable_fib;
-		BOOST_ASSERT( this_fib->running() );
-		this_fib->switch_to( runnable_fib);
-		BOOST_ASSERT( this_fib->running() );
-		fib_ = this_fib;
+			fprintf(stdout,"block(): new fiber added to scheduler\n");
+		}
+		else
+		{
+			fprintf(stdout,"block(): scheduler has == ready fibers%d\n", sched_.ready() );
+		}
+		fprintf(stdout,"block(): before this_fiber::yield()\n");
+		this_fiber::yield();
+		fprintf(stdout,"block: after this_fiber::yield()\n");
 	}
 };
 
-class BOOST_TASK_DECL worker
+class BOOST_TASKS_DECL worker
 {
 private:
 	static thread_specific_ptr< worker >	tss_;
@@ -341,5 +346,5 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_DETAIL_WORKER_H
+#endif // BOOST_TASKS_DETAIL_WORKER_H
 

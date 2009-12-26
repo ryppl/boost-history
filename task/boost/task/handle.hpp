@@ -6,21 +6,21 @@
 //
 //  parts are based on boost.future by Anthony Williams
 
-#ifndef BOOST_TASK_HANDLE_H
-#define BOOST_TASK_HANDLE_H
+#ifndef BOOST_TASKS_HANDLE_H
+#define BOOST_TASKS_HANDLE_H
 
 #include <boost/thread.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/task/context.hpp>
-#include <boost/task/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/task/exceptions.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 
 template< typename R >
 class handle
@@ -246,4 +246,4 @@ unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_HANDLE_H
+#endif // BOOST_TASKS_HANDLE_H

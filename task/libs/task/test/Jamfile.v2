@@ -10,6 +10,7 @@ import testing ;
 project boost/task/test
     : requirements
         <library>../../test/build//boost_unit_test_framework
+        <library>../../fiber/build//boost_fiber
         <library>../../thread/build//boost_thread
         <library>../../system/build//boost_system
         <library>../build//boost_task
@@ -25,7 +26,6 @@ rule task-test ( source )
 }
 
 test-suite task :
-    [ task-test test_futures ]
     [ task-test test_task ]
     [ task-test test_own_thread ]
     [ task-test test_new_thread ]
@@ -34,14 +34,11 @@ test-suite task :
     [ task-test test_bounded_twolock_pool ]
     [ task-test test_bounded_onelock_pool ]
     [ task-test test_as_sub_task ]
-    [ task-test test_semaphore ]
-    [ task-test test_spin_mutex ]
-    [ task-test test_spin_unique_lock ]
-    [ task-test test_generic_locks ]
-    [ task-test test_spin_condition ]
-    [ task-test test_spin_condition_notify_all ]
-    [ task-test test_spin_condition_notify_one ]
-    [ task-test test_spin_condition_timed_wait_times_out ]
+    [ task-test test_spin::mutex ]
+    [ task-test test_spin::condition ]
+    [ task-test test_spin::condition_notify_all ]
+    [ task-test test_spin::condition_notify_one ]
+    [ task-test test_spin::condition_timed_wait_times_out ]
     [ task-test test_spin_count_down_event ]
     [ task-test test_spin_auto_reset_event ]
     [ task-test test_spin_manual_reset_event ]

@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_UNBOUNDED_ONELOCK_PRIO_QUEUE_H
-#define BOOST_TASK_UNBOUNDED_ONELOCK_PRIO_QUEUE_H
+#ifndef BOOST_TASKS_UNBOUNDED_ONELOCK_PRIO_QUEUE_H
+#define BOOST_TASKS_UNBOUNDED_ONELOCK_PRIO_QUEUE_H
 
 #include <algorithm>
 #include <cstddef>
@@ -27,7 +27,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 
 template<
 	typename Attr,
@@ -214,4 +214,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_UNBOUNDED_ONELOCK_PRIO_QUEUE_H
+#endif // BOOST_TASKS_UNBOUNDED_ONELOCK_PRIO_QUEUE_H

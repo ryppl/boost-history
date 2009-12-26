@@ -25,7 +25,7 @@
 #include <libs/task/test/util.ipp>
 
 namespace pt = boost::posix_time;
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 
 template< typename M >
 struct test_lock
@@ -36,7 +36,7 @@ struct test_lock
     void operator()()
     {
         mutex_type mutex;
-        tsk::spin_condition condition;
+        tsk::spin::condition condition;
 
         // Test the lock's constructors.
         {
@@ -65,7 +65,7 @@ struct test_lock
 
 void do_test_mutex()
 {
-    test_lock< tsk::spin_mutex >()();
+    test_lock< tsk::spin::mutex >()();
 }
 
 void test_mutex()

@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_ASYNC_H
-#define BOOST_TASK_ASYNC_H
+#ifndef BOOST_TASKS_ASYNC_H
+#define BOOST_TASKS_ASYNC_H
 
 #include <boost/config.hpp>
 #include <boost/thread/detail/move.hpp>
@@ -18,7 +18,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 
 template< typename R >
 handle< R > async( task< R > t)
@@ -40,4 +40,4 @@ handle< R > async( task< R > t, Attr attr, static_pool< Queue, UMS > & pool)
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_ASYNC_H
+#endif // BOOST_TASKS_ASYNC_H

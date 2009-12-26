@@ -16,7 +16,7 @@
 
 #include "boost/task.hpp"
 
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 
 typedef tsk::static_pool< tsk::unbounded_twolock_fifo > pool_type;
 
@@ -56,8 +56,8 @@ int parallel_fib( int n, int cutof)
 
 inline
 void submit(
-		tsk::unbounded_buffer< int > & send,
-		tsk::unbounded_buffer< std::pair< int , int > > & recv,
+		tsk::spin::unbounded_channel< int > & send,
+		tsk::spin::unbounded_channel< std::pair< int , int > > & recv,
 		int n)
 {
 	for ( int i = 0; i <= n; ++i)
@@ -73,8 +73,8 @@ void submit(
 
 inline
 void calculate(
-		tsk::unbounded_buffer< int > & recv,
-		tsk::unbounded_buffer< std::pair< int , int > > & send)
+		tsk::spin::unbounded_channel< int > & recv,
+		tsk::spin::unbounded_channel< std::pair< int , int > > & send)
 {
 	boost::optional< int > n;
 	while ( recv.take( n) )
@@ -92,8 +92,8 @@ int main( int argc, char *argv[])
 	{
 		pool_type pool( tsk::poolsize( 2) );
 
-		tsk::unbounded_buffer< int > buf1;
-		tsk::unbounded_buffer< std::pair< int , int > > buf2;
+		tsk::spin::unbounded_channel< int > buf1;
+		tsk::spin::unbounded_channel< std::pair< int , int > > buf2;
 		
 		tsk::async(
 			tsk::make_task( submit, buf1, buf2, 15),

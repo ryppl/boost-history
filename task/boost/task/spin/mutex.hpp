@@ -4,29 +4,35 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
-//  based on boost::interprocess::sync::interprocess_mutex
+//  based on boost::interprocess::sync::interprocess_spin::mutex
 
-#ifndef BOOST_TASK_SPIN_MUTEX_H
-#define BOOST_TASK_SPIN_MUTEX_H
+#ifndef BOOST_TASKS_SPIN_MUTEX_H
+#define BOOST_TASKS_SPIN_MUTEX_H
 
-#include <boost/cstdint.hpp>
+#include <boost/atomic.hpp>
+#include <boost/thread/locks.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/task/spin_unique_lock.hpp>
-
 namespace boost {
-namespace task {
+namespace tasks {
+namespace spin {
 
-class spin_mutex : private noncopyable
+class mutex : private noncopyable
 {
 private:
-	volatile uint32_t	state_;
+	enum state
+	{
+		LOCKED = 0,
+		UNLOCKED
+	};
+
+	atomic< state >			state_;
 
 public:
-	typedef spin_unique_lock< spin_mutex >			scoped_lock;
+	typedef unique_lock< mutex >	scoped_lock;
 
-	spin_mutex();
+	mutex();
 
 	void lock();
 
@@ -41,8 +47,8 @@ public:
 	void unlock();
 };
 
-typedef spin_mutex spin_try_mutex;
+typedef mutex try_mutex;
 
-}}
+}}}
 
-#endif // BOOST_TASK_SPIN_MUTEX_H
+#endif // BOOST_TASKS_SPIN_MUTEX_H

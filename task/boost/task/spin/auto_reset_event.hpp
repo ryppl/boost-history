@@ -4,36 +4,36 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_SPIN_COUNT_DOWN_EVENT_H
-#define BOOST_TASK_SPIN_COUNT_DOWN_EVENT_H
+#ifndef BOOST_TASKS_SPIN_AUTO_RESET_EVENT_H
+#define BOOST_TASKS_SPIN_AUTO_RESET_EVENT_H
 
-#include <boost/cstdint.hpp>
+#include <boost/atomic.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/task/spin_mutex.hpp>
-
 namespace boost {
-namespace task {
+namespace tasks {
+namespace spin {
 
-class spin_count_down_event : private noncopyable
+class auto_reset_event : private noncopyable
 {
 private:
-	uint32_t			initial_;
-	volatile uint32_t	current_;
+	enum state
+	{
+		SET = 0,
+		RESET
+	};
+
+	atomic< state >		state_;
 
 public:
-	explicit spin_count_down_event( uint32_t);
-
-	uint32_t initial() const;
-
-	uint32_t current() const;
-
-	bool is_set() const;
+	explicit auto_reset_event( bool = false);
 
 	void set();
 
 	void wait();
+
+	bool try_wait();
 
 	bool wait( system_time const&);
 
@@ -42,6 +42,6 @@ public:
 	{ return wait( get_system_time() + rel_time); }
 };
 
-}}
+}}}
 
-#endif // BOOST_TASK_SPIN_COUNT_DOWN_EVENT_H
+#endif // BOOST_TASKS_SPIN_AUTO_RESET_EVENT_H

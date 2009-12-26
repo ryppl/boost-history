@@ -15,7 +15,7 @@
 #include "boost/task.hpp"
 
 namespace pt = boost::posix_time;
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 
 inline
 void fibonacci_fn( int n)

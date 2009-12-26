@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_EXCEPTIONS_H
-#define BOOST_TASK_EXCEPTIONS_H
+#ifndef BOOST_TASKS_EXCEPTIONS_H
+#define BOOST_TASKS_EXCEPTIONS_H
 
 #include <stdexcept>
 #include <string>
@@ -13,7 +13,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 
 class invalid_poolsize : public std::invalid_argument
 {
@@ -118,4 +118,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_EXCEPTIONS_H
+#endif // BOOST_TASKS_EXCEPTIONS_H

@@ -4,23 +4,23 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_TASK_H
-#define BOOST_TASK_TASK_H
+#ifndef BOOST_TASKS_TASK_H
+#define BOOST_TASKS_TASK_H
 
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
 #include <boost/preprocessor/repetition.hpp>
-#include <boost/thread.hpp>
+#include <boost/move/move.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/result_of.hpp>
 
 #include <boost/task/exceptions.hpp>
-#include <boost/task/future.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 namespace detail {
 
 template< typename R >
@@ -170,18 +170,16 @@ public:
 		task_base< void >(), fn_( fn)
 	{}
 };
+
 }
 
 template< typename R >
 class task
 {
 private:
-	struct dummy;
+	BOOST_MOVABLE_BUT_NOT_COPYABLE( task);	
 
 	shared_ptr< detail::task_base< R > >	task_;
-
-	task( task &);
-	task & operator=( task &);
 
 public:
 	task() :
@@ -192,74 +190,31 @@ public:
 		task_( new detail::task_wrapper< R, R( *)() >( fn) )
 	{}
 
-# if defined(BOOST_HAS_RVALUE_REFS)
 	template< typename Fn >
-	task( Fn && fn) :
+	explicit task( BOOST_RV_REF( Fn) fn) :
 		task_( new detail::task_wrapper< R, Fn >( fn) )
 	{}
 
-	task( task && other) :
+	task( BOOST_RV_REF( task) other) :
 		task_()
 	{ task_.swap( other.task_); }
 
-	task & operator=( task && other)
-	{
-		task tmp( static_cast< task && >( other) );
-		swap( tmp);
-		return * this;
-	}
-
-	task && move()
-	{ return static_cast< task && >( * this); }
-# else
-#ifdef BOOST_NO_SFINAE
-	template< typename Fn >
-	explicit task( Fn fn) :
-		task_( new detail::task_wrapper< R, Fn >( fn) )
-	{}
-#else
-	template< typename Fn >
-	explicit task(
-			Fn fn,
-			typename disable_if< boost::is_convertible< Fn &, boost::detail::thread_move_t< Fn > >, dummy * >::type = 0) :
-		task_( new detail::task_wrapper< R, Fn >( fn) )
-	{}
-#endif
-	template< typename Fn >
-	explicit task( boost::detail::thread_move_t< Fn > fn) :
-		task_( new detail::task_wrapper< R, Fn >( fn) )
-	{}
-
-	task( boost::detail::thread_move_t< task > other) :
-		task_()
-	{ task_.swap( other->task_); }
-
-	task & operator=( boost::detail::thread_move_t< task > other)
+	task & operator=( BOOST_RV_REF( task) other)
 	{
 		task tmp( other);
 		swap( tmp);
 		return * this;
 	}
 
-	operator boost::detail::thread_move_t< task >()
-	{ return move(); }
-
-	boost::detail::thread_move_t< task > move()
-	{
-		boost::detail::thread_move_t< task > t( * this);
-		return t;
-	}
+# ifndef BOOST_TASKS_MAX_ARITY
+#   define BOOST_TASKS_MAX_ARITY 10
 # endif
 
-# ifndef BOOST_TASK_MAX_ARITY
-#   define BOOST_TASK_MAX_ARITY 10
-# endif
-
-# define BOOST_TASK_ARG(z, n, unused) \
+# define BOOST_TASKS_ARG(z, n, unused) \
    BOOST_PP_CAT(A, n) BOOST_PP_CAT(a, n)
-# define BOOST_ENUM_TASK_ARGS(n) BOOST_PP_ENUM(n, BOOST_TASK_ARG, ~)
+# define BOOST_ENUM_TASK_ARGS(n) BOOST_PP_ENUM(n, BOOST_TASKS_ARG, ~)
 
-# define BOOST_TASK_CTOR(z, n, unused)	\
+# define BOOST_TASKS_CTOR(z, n, unused)	\
 template<								\
 	typename Fn,						\
 	BOOST_PP_ENUM_PARAMS(n, typename A)	\
@@ -270,9 +225,9 @@ explicit task( Fn fn, BOOST_ENUM_TASK_ARGS(n))	\
 				bind( fn, BOOST_PP_ENUM_PARAMS(n, a)) ) )	\
 	{}
 
-BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASK_MAX_ARITY, BOOST_TASK_CTOR, ~)
+BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASKS_MAX_ARITY, BOOST_TASKS_CTOR, ~)
 
-# undef BOOST_TASK_CTOR
+# undef BOOST_TASKS_CTOR
 
 	void operator()()
 	{
@@ -312,7 +267,7 @@ template< typename Fn >
 task< typename result_of< Fn() >::type > make_task( Fn fn)
 { return task< typename boost::result_of< Fn() >::type >( fn); }
 
-# define BOOST_TASK_MAKE_TASK_FUNCTION(z, n, unused)	\
+# define BOOST_TASKS_MAKE_TASK_FUNCTION(z, n, unused)	\
 template<												\
 	typename Fn,										\
 	BOOST_PP_ENUM_PARAMS(n, typename A)					\
@@ -321,30 +276,23 @@ task< typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type >		\
 make_task( Fn fn, BOOST_ENUM_TASK_ARGS(n))				\
 { return task< typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type >( fn, BOOST_PP_ENUM_PARAMS(n, a)); }
 
-BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASK_MAX_ARITY, BOOST_TASK_MAKE_TASK_FUNCTION, ~)
+BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASKS_MAX_ARITY, BOOST_TASKS_MAKE_TASK_FUNCTION, ~)
 
-# undef BOOST_TASK_MAKE_TASK_FUNCTION
+# undef BOOST_TASKS_MAKE_TASK_FUNCTION
 # undef BOOST_ENUM_TASK_ARGS
-# undef BOOST_TASK_ARG
-# undef BOOST_TASK_MAX_ARITY
+# undef BOOST_TASKS_ARG
+# undef BOOST_TASKS_MAX_ARITY
 
 }
 
+using tasks::task;
+
 template< typename R >
-void swap( task::task< R > & l, task::task< R > & r)
+void swap( task< R > & l, task< R > & r)
 { return l.swap( r); }
 
-# if defined(BOOST_HAS_RVALUE_REFS)
-template< typename R >
-task::task< R > && move( task::task< R > && t)
-{ return t; }
-# else
-template< typename R >
-task::task< R > move( boost::detail::thread_move_t< task::task< R > > t)
-{ return task::task< R >( t); }
-# endif
 }
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_TASK_H
+#endif // BOOST_TASKS_TASK_H

@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_CALLABLE_H
-#define BOOST_TASK_CALLABLE_H
+#ifndef BOOST_TASKS_CALLABLE_H
+#define BOOST_TASKS_CALLABLE_H
 
 #include <boost/config.hpp>
 #include <boost/shared_ptr.hpp>
@@ -23,9 +23,9 @@
 # endif
 
 namespace boost {
-namespace task {
+namespace tasks {
 
-class BOOST_TASK_DECL callable
+class BOOST_TASKS_DECL callable
 {
 private:
 	struct impl
@@ -101,5 +101,5 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_CALLABLE_H
+#endif // BOOST_TASKS_CALLABLE_H
 

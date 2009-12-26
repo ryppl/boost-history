@@ -13,22 +13,22 @@
 
 #include <libs/task/test/util.ipp>
 
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 namespace pt = boost::posix_time;
 
 struct condition_test_data
 {
     condition_test_data() : notified(0), awoken(0) { }
 
-    tsk::spin_mutex mutex;
-    tsk::spin_condition condition;
+    tsk::spin::mutex mutex;
+    tsk::spin::condition condition;
     int notified;
     int awoken;
 };
 
 void condition_test_thread(condition_test_data* data)
 {
-    tsk::spin_mutex::scoped_lock lock(data->mutex);
+    tsk::spin::mutex::scoped_lock lock(data->mutex);
     BOOST_CHECK(lock ? true : false);
     while (!(data->notified > 0))
         data->condition.wait(lock);
@@ -51,7 +51,7 @@ private:
 
 void condition_test_waits(condition_test_data* data)
 {
-    tsk::spin_mutex::scoped_lock lock(data->mutex);
+    tsk::spin::mutex::scoped_lock lock(data->mutex);
     BOOST_CHECK(lock ? true : false);
 
     // Test wait.
@@ -105,7 +105,7 @@ void do_test_condition_waits()
     boost::thread thread(bind(&condition_test_waits, &data));
 
     {
-        tsk::spin_mutex::scoped_lock lock(data.mutex);
+        tsk::spin::mutex::scoped_lock lock(data.mutex);
         BOOST_CHECK(lock ? true : false);
 
         boost::this_thread::sleep(pt::seconds(1));

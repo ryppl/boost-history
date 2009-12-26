@@ -7,7 +7,7 @@
 #include "boost/task/callable.hpp"
 
 namespace boost {
-namespace task {
+namespace tasks {
 
 callable::callable() :
 	impl_()

@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_DETAIL_ATOMIC_GCC_H
-#define BOOST_TASK_DETAIL_ATOMIC_GCC_H
+#ifndef BOOST_TASKS_DETAIL_ATOMIC_GCC_H
+#define BOOST_TASKS_DETAIL_ATOMIC_GCC_H
 
 // based on boost/smart_ptr/detail/atomic_count_gcc.hpp
 
@@ -22,7 +22,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 namespace detail {
 
 #if defined(__GLIBCXX__) // g++ 3.4+
@@ -73,5 +73,5 @@ uint32_t atomic_fetch_sub( uint32_t volatile * object, uint32_t operand)
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_DETAIL_ATOMIC_GCC_H
+#endif // BOOST_TASKS_DETAIL_ATOMIC_GCC_H
 

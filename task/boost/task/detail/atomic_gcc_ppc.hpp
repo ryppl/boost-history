@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_DETAIL_ATOMIC_GCC_PPC_H
-#define BOOST_TASK_DETAIL_ATOMIC_GCC_PPC_H
+#ifndef BOOST_TASKS_DETAIL_ATOMIC_GCC_PPC_H
+#define BOOST_TASKS_DETAIL_ATOMIC_GCC_PPC_H
 
 #include <boost/assert.hpp>
 #include <boost/cstdint.hpp>
@@ -13,7 +13,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 namespace detail {
 
 inline
@@ -110,5 +110,5 @@ uint32_t atomic_fetch_sub( uint32_t volatile * object, uint32_t operand)
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_DETAIL_ATOMIC_GCC_PPC_H
+#endif // BOOST_TASKS_DETAIL_ATOMIC_GCC_PPC_H
 

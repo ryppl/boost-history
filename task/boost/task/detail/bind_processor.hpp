@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_DETAIL_BIND_PROCESSOR_H
-#define BOOST_TASK_DETAIL_BIND_PROCESSOR_H
+#ifndef BOOST_TASKS_DETAIL_BIND_PROCESSOR_H
+#define BOOST_TASKS_DETAIL_BIND_PROCESSOR_H
 
 #include <boost/task/detail/config.hpp>
 
@@ -34,4 +34,4 @@
 #   undef BOOST_HAS_PROCESSOR_BINDINGS
 # endif
 
-#endif // BOOST_TASK_DETAIL_BIND_PROCESSOR_H
+#endif // BOOST_TASKS_DETAIL_BIND_PROCESSOR_H

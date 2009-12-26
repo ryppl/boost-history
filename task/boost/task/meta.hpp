@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_META_H
-#define BOOST_TASK_META_H
+#ifndef BOOST_TASKS_META_H
+#define BOOST_TASKS_META_H
 
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -15,7 +15,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 
 template< typename Pool >
 struct has_attribute : public mpl::bool_<
@@ -36,5 +36,5 @@ struct attribute_type
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_META_H
+#endif // BOOST_TASKS_META_H
 

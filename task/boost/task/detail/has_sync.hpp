@@ -1,5 +1,5 @@
-#ifndef BOOST_TASK_DETAIL_HAS_SYNC_H
-#define BOOST_TASK_DETAIL_HAS_SYNC_H
+#ifndef BOOST_TASKS_DETAIL_HAS_SYNC_H
+#define BOOST_TASKS_DETAIL_HAS_SYNC_H
 
 // MS compatible compilers support #pragma once
 
@@ -22,28 +22,28 @@
 
 #if defined(__GNUC__) && ( __GNUC__ * 100 + __GNUC_MINOR__ >= 401 )
 
-#define BOOST_TASK_HAS_SYNC
+#define BOOST_TASKS_HAS_SYNC
 
 #if defined( __arm__ )  || defined( __armel__ )
-#undef BOOST_TASK_HAS_SYNC
+#undef BOOST_TASKS_HAS_SYNC
 #endif
 
 #if defined( __hppa ) || defined( __hppa__ )
-#undef BOOST_TASK_HAS_SYNC
+#undef BOOST_TASKS_HAS_SYNC
 #endif
 
 #if defined( __m68k__ )
-#undef BOOST_TASK_HAS_SYNC
+#undef BOOST_TASKS_HAS_SYNC
 #endif
 
 #if defined( __sparc__ )
-#undef BOOST_TASK_HAS_SYNC
+#undef BOOST_TASKS_HAS_SYNC
 #endif
 
 #if defined( __INTEL_COMPILER ) && !defined( __ia64__ )
-#undef BOOST_TASK_HAS_SYNC
+#undef BOOST_TASKS_HAS_SYNC
 #endif
 
 #endif // __GNUC__ * 100 + __GNUC_MINOR__ >= 401
 
-#endif // BOOST_TASK_DETAIL_HAS_SYNC_H
+#endif // BOOST_TASKS_DETAIL_HAS_SYNC_H

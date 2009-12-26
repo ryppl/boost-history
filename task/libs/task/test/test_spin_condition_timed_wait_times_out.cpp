@@ -11,7 +11,7 @@
 
 #include <libs/task/test/util.ipp>
 
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 
 bool fake_predicate()
 {
@@ -25,11 +25,11 @@ boost::posix_time::milliseconds const timeout_resolution(100);
 
 void do_test_timed_wait_times_out()
 {
-    tsk::spin_condition cond;
-    tsk::spin_mutex m;
+    tsk::spin::condition cond;
+    tsk::spin::mutex m;
 
     boost::posix_time::seconds const delay(timeout_seconds);
-    tsk::spin_mutex::scoped_lock lock(m);
+    tsk::spin::mutex::scoped_lock lock(m);
     boost::system_time const start=boost::get_system_time();
     boost::system_time const timeout=start+delay;
 
@@ -41,11 +41,11 @@ void do_test_timed_wait_times_out()
 
 void do_test_timed_wait_with_predicate_times_out()
 {
-    tsk::spin_condition cond;
-    tsk::spin_mutex m;
+    tsk::spin::condition cond;
+    tsk::spin::mutex m;
 
     boost::posix_time::seconds const delay(timeout_seconds);
-    tsk::spin_mutex::scoped_lock lock(m);
+    tsk::spin::mutex::scoped_lock lock(m);
     boost::system_time const start=boost::get_system_time();
     boost::system_time const timeout=start+delay;
 
@@ -58,11 +58,11 @@ void do_test_timed_wait_with_predicate_times_out()
 
 void do_test_relative_timed_wait_with_predicate_times_out()
 {
-    tsk::spin_condition cond;
-    tsk::spin_mutex m;
+    tsk::spin::condition cond;
+    tsk::spin::mutex m;
 
     boost::posix_time::seconds const delay(timeout_seconds);
-    tsk::spin_mutex::scoped_lock lock(m);
+    tsk::spin::mutex::scoped_lock lock(m);
     boost::system_time const start=boost::get_system_time();
 
     bool const res=cond.timed_wait(lock,delay,fake_predicate);
@@ -74,11 +74,11 @@ void do_test_relative_timed_wait_with_predicate_times_out()
 
 void do_test_timed_wait_relative_times_out()
 {
-    tsk::spin_condition cond;
-    tsk::spin_mutex m;
+    tsk::spin::condition cond;
+    tsk::spin::mutex m;
 
     boost::posix_time::seconds const delay(timeout_seconds);
-    tsk::spin_mutex::scoped_lock lock(m);
+    tsk::spin::mutex::scoped_lock lock(m);
     boost::system_time const start=boost::get_system_time();
 
     while(cond.timed_wait(lock,delay));
@@ -89,11 +89,11 @@ void do_test_timed_wait_relative_times_out()
 
 void do_test_cv_any_timed_wait_times_out()
 {
-    tsk::spin_condition cond;
-    tsk::spin_mutex m;
+    tsk::spin::condition cond;
+    tsk::spin::mutex m;
 
     boost::posix_time::seconds const delay(timeout_seconds);
-    tsk::spin_mutex::scoped_lock lock(m);
+    tsk::spin::mutex::scoped_lock lock(m);
     boost::system_time const start=boost::get_system_time();
     boost::system_time const timeout=start+delay;
 
@@ -105,11 +105,11 @@ void do_test_cv_any_timed_wait_times_out()
 
 void do_test_cv_any_timed_wait_with_predicate_times_out()
 {
-    tsk::spin_condition cond;
-    tsk::spin_mutex m;
+    tsk::spin::condition cond;
+    tsk::spin::mutex m;
 
     boost::posix_time::seconds const delay(timeout_seconds);
-    tsk::spin_mutex::scoped_lock lock(m);
+    tsk::spin::mutex::scoped_lock lock(m);
     boost::system_time const start=boost::get_system_time();
     boost::system_time const timeout=start+delay;
 
@@ -122,11 +122,11 @@ void do_test_cv_any_timed_wait_with_predicate_times_out()
 
 void do_test_cv_any_relative_timed_wait_with_predicate_times_out()
 {
-    tsk::spin_condition cond;
-    tsk::spin_mutex m;
+    tsk::spin::condition cond;
+    tsk::spin::mutex m;
 
     boost::posix_time::seconds const delay(timeout_seconds);
-    tsk::spin_mutex::scoped_lock lock(m);
+    tsk::spin::mutex::scoped_lock lock(m);
     boost::system_time const start=boost::get_system_time();
 
     bool const res=cond.timed_wait(lock,delay,fake_predicate);
@@ -138,11 +138,11 @@ void do_test_cv_any_relative_timed_wait_with_predicate_times_out()
 
 void do_test_cv_any_timed_wait_relative_times_out()
 {
-    tsk::spin_condition cond;
-    tsk::spin_mutex m;
+    tsk::spin::condition cond;
+    tsk::spin::mutex m;
 
     boost::posix_time::seconds const delay(timeout_seconds);
-    tsk::spin_mutex::scoped_lock lock(m);
+    tsk::spin::mutex::scoped_lock lock(m);
     boost::system_time const start=boost::get_system_time();
 
     while(cond.timed_wait(lock,delay));

@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_DETAIL_BIND_PROCESSOR_SOLARIS_H
-#define BOOST_TASK_DETAIL_BIND_PROCESSOR_SOLARIS_H
+#ifndef BOOST_TASKS_DETAIL_BIND_PROCESSOR_SOLARIS_H
+#define BOOST_TASKS_DETAIL_BIND_PROCESSOR_SOLARIS_H
 
 extern "C"
 {
@@ -50,4 +50,4 @@ void bind_to_any_processor()
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_DETAIL_BIND_PROCESSOR_SOLARIS_H
+#endif // BOOST_TASKS_DETAIL_BIND_PROCESSOR_SOLARIS_H

@@ -6,8 +6,8 @@
 
 // this file is based on config.hpp of boost.thread
 
-#ifndef BOOST_TASK_DETAIL_CONFIG_H
-#define BOOST_TASK_DETAIL_CONFIG_H
+#ifndef BOOST_TASKS_DETAIL_CONFIG_H
+#define BOOST_TASKS_DETAIL_CONFIG_H
 
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
@@ -19,9 +19,9 @@
 #   pragma warn -8066 // Unreachable code
 # endif
 
-# if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_TASK_DYN_LINK)
-#   undef  BOOST_TASK_USE_LIB
-#   define BOOST_TASK_USE_DLL
+# if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_TASKS_DYN_LINK)
+#   undef  BOOST_TASKS_USE_LIB
+#   define BOOST_TASKS_USE_DLL
 # endif
 
 # if defined(BOOST_WINDOWS_API) && defined(BOOST_POSIX_API)
@@ -34,49 +34,49 @@
 #   endif
 # endif
 
-# if defined(BOOST_TASK_BUILD_DLL)   //Build dll
-# elif defined(BOOST_TASK_BUILD_LIB) //Build lib
-# elif defined(BOOST_TASK_USE_DLL)   //Use dll
-# elif defined(BOOST_TASK_USE_LIB)   //Use lib
+# if defined(BOOST_TASKS_BUILD_DLL)   //Build dll
+# elif defined(BOOST_TASKS_BUILD_LIB) //Build lib
+# elif defined(BOOST_TASKS_USE_DLL)   //Use dll
+# elif defined(BOOST_TASKS_USE_LIB)   //Use lib
 # else //Use default
-#   if defined(BOOST_TASK_PLATFORM_WIN32)
+#   if defined(BOOST_TASKS_PLATFORM_WIN32)
 #      if defined(BOOST_MSVC) || defined(BOOST_INTEL_WIN)
             //For compilers supporting auto-tss cleanup
             //with Boost.Threads lib, use Boost.Threads lib
-#         define BOOST_TASK_USE_LIB
+#         define BOOST_TASKS_USE_LIB
 #      else
             //For compilers not yet supporting auto-tss cleanup
             //with Boost.Threads lib, use Boost.Threads dll
-#         define BOOST_TASK_USE_DLL
+#         define BOOST_TASKS_USE_DLL
 #      endif
 #   else
-#      define BOOST_TASK_USE_LIB
+#      define BOOST_TASKS_USE_LIB
 #   endif
 # endif
 
 # if defined(BOOST_HAS_DECLSPEC)
-#   if defined(BOOST_TASK_BUILD_DLL) //Build dll
-#      define BOOST_TASK_DECL __declspec(dllexport)
-#   elif defined(BOOST_TASK_USE_DLL) //Use dll
-#      define BOOST_TASK_DECL __declspec(dllimport)
+#   if defined(BOOST_TASKS_BUILD_DLL) //Build dll
+#      define BOOST_TASKS_DECL __declspec(dllexport)
+#   elif defined(BOOST_TASKS_USE_DLL) //Use dll
+#      define BOOST_TASKS_DECL __declspec(dllimport)
 #   else
-#      define BOOST_TASK_DECL
+#      define BOOST_TASKS_DECL
 #   endif
 # else
-#   define BOOST_TASK_DECL
+#   define BOOST_TASKS_DECL
 # endif
 
 // Automatically link to the correct build variant where possible.
-# if ! defined(BOOST_ALL_NO_LIB) && ! defined(BOOST_TASK_NO_LIB) && ! defined(BOOST_TASK_BUILD_DLL) && ! defined(BOOST_TASK_BUILD_LIB)
+# if ! defined(BOOST_ALL_NO_LIB) && ! defined(BOOST_TASKS_NO_LIB) && ! defined(BOOST_TASKS_BUILD_DLL) && ! defined(BOOST_TASKS_BUILD_LIB)
 
 // Tell the autolink to link dynamically, this will get undef'ed by auto_link.hpp
-# if defined(BOOST_TASK_USE_DLL)
+# if defined(BOOST_TASKS_USE_DLL)
 #   define BOOST_DYN_LINK
 # endif
 
 // Set the name of our library, this will get undef'ed by auto_link.hpp
-# if defined(BOOST_TASK_LIB_NAME)
-#   define BOOST_LIB_NAME BOOST_TASK_LIB_NAME
+# if defined(BOOST_TASKS_LIB_NAME)
+#   define BOOST_LIB_NAME BOOST_TASKS_LIB_NAME
 # else
 #   define BOOST_LIB_NAME boost_task
 # endif
@@ -86,5 +86,5 @@
 #include <boost/config/auto_link.hpp>
 # endif  // auto-linking disabled
 
-#endif // BOOST_TASK_DETAIL_CONFIG_H
+#endif // BOOST_TASKS_DETAIL_CONFIG_H
 

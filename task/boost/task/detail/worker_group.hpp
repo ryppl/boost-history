@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_DETAIL_WORKER_GROUP_H
-#define BOOST_TASK_DETAIL_WORKER_GROUP_H
+#ifndef BOOST_TASKS_DETAIL_WORKER_GROUP_H
+#define BOOST_TASKS_DETAIL_WORKER_GROUP_H
 
 #include <cstddef>
 
@@ -17,7 +17,6 @@
 
 #include <boost/task/detail/config.hpp>
 #include <boost/task/detail/worker.hpp>
-#include <boost/task/spin_manual_reset_event.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -27,10 +26,10 @@
 # endif
 
 namespace boost {
-namespace task {
+namespace tasks {
 namespace detail {
 
-class BOOST_TASK_DECL worker_group
+class BOOST_TASKS_DECL worker_group
 {
 private:
 	struct id_idx_tag {};
@@ -98,5 +97,5 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_DETAIL_WORKER_GROUP_H
+#endif // BOOST_TASKS_DETAIL_WORKER_GROUP_H
 

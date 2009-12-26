@@ -9,7 +9,7 @@
 #include <boost/assert.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 
 void
 context::impl::reset_( shared_ptr< thread > const& thrd)

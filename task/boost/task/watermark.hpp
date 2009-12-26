@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_WATER_MARK_H
-#define BOOST_TASK_WATER_MARK_H
+#ifndef BOOST_TASKS_WATER_MARK_H
+#define BOOST_TASKS_WATER_MARK_H
 
 #include <cstddef>
 
@@ -19,9 +19,9 @@
 # endif
 
 namespace boost {
-namespace task {
+namespace tasks {
 
-class BOOST_TASK_DECL high_watermark
+class BOOST_TASKS_DECL high_watermark
 {
 private:
 	std::size_t	value_;
@@ -32,7 +32,7 @@ public:
 	operator std::size_t () const;
 };
 
-class BOOST_TASK_DECL low_watermark
+class BOOST_TASKS_DECL low_watermark
 {
 private:
 	std::size_t	value_;
@@ -51,4 +51,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_WATER_MARK_H
+#endif // BOOST_TASKS_WATER_MARK_H

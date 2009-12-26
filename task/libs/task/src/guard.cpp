@@ -11,7 +11,7 @@
 #include <boost/task/detail/atomic.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 namespace detail {
 
 guard::guard( volatile uint32_t & active_worker) :

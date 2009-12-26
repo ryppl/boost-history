@@ -12,7 +12,7 @@
 
 #include "boost/task.hpp"
 
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 
 inline
 int fibonacci_fn( int n)

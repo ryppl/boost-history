@@ -22,7 +22,7 @@
 #include <boost/task.hpp>
 
 namespace pt = boost::posix_time;
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 
 boost::uint32_t wait_fn( boost::uint32_t n, tsk::spin_manual_reset_event & ev)
 {

@@ -16,7 +16,7 @@
 #include "boost/task.hpp"
 
 namespace pt = boost::posix_time;
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 
 typedef tsk::static_pool< tsk::unbounded_onelock_fifo > pool_type;
 

@@ -4,12 +4,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_H
-#define BOOST_TASK_H
+#ifndef BOOST_TASKS_H
+#define BOOST_TASKS_H
 
 #include <boost/task/as_sub_task.hpp>
 #include <boost/task/async.hpp>
-#include <boost/task/bounded_buffer.hpp>
 #include <boost/task/bounded_onelock_fifo.hpp>
 #include <boost/task/bounded_onelock_prio_queue.hpp>
 #include <boost/task/bounded_onelock_smart_queue.hpp>
@@ -17,25 +16,23 @@
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
 #include <boost/task/exceptions.hpp>
-#include <boost/task/future.hpp>
 #include <boost/task/handle.hpp>
-#include <boost/task/local_rr_ums.hpp>
 #include <boost/task/meta.hpp>
 #include <boost/task/new_thread.hpp>
 #include <boost/task/own_thread.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
-#include <boost/task/semaphore.hpp>
-#include <boost/task/spin_auto_reset_event.hpp>
-#include <boost/task/spin_condition.hpp>
-#include <boost/task/spin_count_down_event.hpp>
-#include <boost/task/spin_manual_reset_event.hpp>
-#include <boost/task/spin_mutex.hpp>
-#include <boost/task/spin_unique_lock.hpp>
+#include <boost/task/spin/auto_reset_event.hpp>
+#include <boost/task/spin/barrier.hpp>
+#include <boost/task/spin/bounded_channel.hpp>
+#include <boost/task/spin/condition.hpp>
+#include <boost/task/spin/count_down_event.hpp>
+#include <boost/task/spin/manual_reset_event.hpp>
+#include <boost/task/spin/mutex.hpp>
+#include <boost/task/spin/unbounded_channel.hpp>
 #include <boost/task/stacksize.hpp>
 #include <boost/task/static_pool.hpp>
 #include <boost/task/task.hpp>
-#include <boost/task/unbounded_buffer.hpp>
 #include <boost/task/unbounded_onelock_fifo.hpp>
 #include <boost/task/unbounded_onelock_prio_queue.hpp>
 #include <boost/task/unbounded_onelock_smart_queue.hpp>
@@ -43,5 +40,5 @@
 #include <boost/task/utility.hpp>
 #include <boost/task/watermark.hpp>
 
-#endif // BOOST_TASK_H
+#endif // BOOST_TASKS_H
 

@@ -10,14 +10,14 @@
 
 #include <boost/task.hpp>
 
-namespace tsk = boost::task;
+namespace tsk = boost::tasks;
 
 unsigned const timeout_seconds=5;
 
 struct wait_for_flag : private boost::noncopyable
 {
-    tsk::spin_mutex mutex;
-    tsk::spin_condition cond_var;
+    tsk::spin::mutex mutex;
+    tsk::spin::condition cond_var;
     bool flag;
     unsigned woken;
         
@@ -44,7 +44,7 @@ struct wait_for_flag : private boost::noncopyable
         
     void wait_without_predicate()
     {
-        tsk::spin_mutex::scoped_lock lock(mutex);
+        tsk::spin::mutex::scoped_lock lock(mutex);
         while(!flag)
         {
             cond_var.wait(lock);
@@ -54,7 +54,7 @@ struct wait_for_flag : private boost::noncopyable
 
     void wait_with_predicate()
     {
-        tsk::spin_mutex::scoped_lock lock(mutex);
+        tsk::spin::mutex::scoped_lock lock(mutex);
         cond_var.wait(lock,check_flag(flag));
         if(flag)
         {
@@ -66,7 +66,7 @@ struct wait_for_flag : private boost::noncopyable
     {
         boost::system_time const timeout=boost::get_system_time()+boost::posix_time::seconds(timeout_seconds);
             
-        tsk::spin_mutex::scoped_lock lock(mutex);
+        tsk::spin::mutex::scoped_lock lock(mutex);
         while(!flag)
         {
             if(!cond_var.timed_wait(lock,timeout))
@@ -80,7 +80,7 @@ struct wait_for_flag : private boost::noncopyable
     void timed_wait_with_predicate()
     {
         boost::system_time const timeout=boost::get_system_time()+boost::posix_time::seconds(timeout_seconds);
-        tsk::spin_mutex::scoped_lock lock(mutex);
+        tsk::spin::mutex::scoped_lock lock(mutex);
         if(cond_var.timed_wait(lock,timeout,check_flag(flag)) && flag)
         {
             ++woken;
@@ -88,7 +88,7 @@ struct wait_for_flag : private boost::noncopyable
     }
     void relative_timed_wait_with_predicate()
     {
-        tsk::spin_mutex::scoped_lock lock(mutex);
+        tsk::spin::mutex::scoped_lock lock(mutex);
         if(cond_var.timed_wait(lock,boost::posix_time::seconds(timeout_seconds),check_flag(flag)) && flag)
         {
             ++woken;

@@ -4,22 +4,21 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_STATIC_POOL_H
-#define BOOST_TASK_STATIC_POOL_H
+#ifndef BOOST_TASKS_STATIC_POOL_H
+#define BOOST_TASKS_STATIC_POOL_H
 
 #include <cstddef>
 
 #include <boost/config.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/thread/detail/move.hpp>
+#include <boost/fiber/round_robin.hpp>
+#include <boost/move/move.hpp>
 
 #include <boost/task/detail/bind_processor.hpp>
 #include <boost/task/detail/pool_base.hpp>
-
 #include <boost/task/detail/worker_group.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/handle.hpp>
-#include <boost/task/local_rr_ums.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
 #include <boost/task/stacksize.hpp>
@@ -29,11 +28,11 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 
 template<
 	typename Queue,
-	typename UMS = local_rr_ums
+	typename UMS = fibers::round_robin
 >
 class static_pool
 {
@@ -47,14 +46,13 @@ private:
 	template< typename T, typename X >
 	friend class detail::worker_object;
 
+	BOOST_MOVABLE_BUT_NOT_COPYABLE( static_pool);	
+
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
 	struct tag_bind_to_processors {};
 # endif
 	
 	shared_ptr< base_type >		pool_;
-
-	static_pool( static_pool &);
-	static_pool & operator=( static_pool &);
 
 public:
 	static_pool() :
@@ -102,41 +100,16 @@ public:
 	{ return tag_bind_to_processors(); }
 # endif
 
-# if defined(BOOST_HAS_RVALUE_REFS)
-	static_pool( static_pool && other) :
+	static_pool( BOOST_RV_REF( static_pool) other) :
 		pool_()
 	{ pool_.swap( other.pool_); }
 
-	static_pool & operator=( static_pool && other)
-	{
-	    static_pool tmp( static_cast< static_pool && >( other) );
-	    swap( tmp);
-	    return * this;
-	}
-
-	static_pool && move()
-	{ return static_cast< static_pool && >( * this); }
-# else
-	static_pool( boost::detail::thread_move_t< static_pool > other) :
-		pool_()
-	{ pool_.swap( other->pool_); }
-
-	static_pool & operator=( boost::detail::thread_move_t< static_pool > other)
+	static_pool & operator=( BOOST_RV_REF( static_pool) other)
 	{
 		static_pool tmp( other);
 		swap( tmp);
 		return * this;
 	}
-
-	operator boost::detail::thread_move_t< static_pool >()
-	{ return move(); }
-
-	boost::detail::thread_move_t< static_pool > move()
-	{
-		boost::detail::thread_move_t< static_pool > t( * this);
-		return t;
-	}
-# endif
 
 	void interrupt_all_worker()
 	{
@@ -232,22 +205,12 @@ public:
 }
 
 template< typename Queue, typename UMS >
-void swap( task::static_pool< Queue, UMS > & l, task::static_pool< Queue, UMS > & r)
+void swap( tasks::static_pool< Queue, UMS > & l, tasks::static_pool< Queue, UMS > & r)
 { return l.swap( r); }
-
-# if defined(BOOST_HAS_RVALUE_REFS)
-template< typename Queue, typename UMS >
-task::static_pool< Queue, UMS > && move( task::static_pool< Queue, UMS > && t)
-{ return t; }
-# else
-template< typename Queue, typename UMS >
-task::static_pool< Queue, UMS >  move( boost::detail::thread_move_t< task::static_pool< Queue, UMS > > t)
-{ return task::static_pool< Queue, UMS >( t); }
-# endif
 
 }
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_STATIC_POOL_H
+#endif // BOOST_TASKS_STATIC_POOL_H
 

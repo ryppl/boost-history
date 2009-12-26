@@ -9,7 +9,7 @@
 #include <boost/task/exceptions.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 
 scanns::scanns( std::size_t value) :
 	value_( value)

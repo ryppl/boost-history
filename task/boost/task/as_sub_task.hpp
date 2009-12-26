@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_AS_SUB_TASK_H
-#define BOOST_TASK_AS_SUB_TASK_H
+#ifndef BOOST_TASKS_AS_SUB_TASK_H
+#define BOOST_TASKS_AS_SUB_TASK_H
 
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
@@ -17,7 +17,7 @@
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
 #include <boost/task/detail/worker.hpp>
-#include <boost/task/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/new_thread.hpp>
 #include <boost/task/task.hpp>
@@ -25,7 +25,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 namespace {
 
 template< typename R >
@@ -33,7 +33,12 @@ bool future_ready( weak_ptr< shared_future< R > > wptr)
 {
 	shared_ptr< shared_future< R > > sptr = wptr.lock();
 	BOOST_ASSERT( sptr);
-	return sptr->is_ready();
+	bool res = sptr->is_ready();
+	if ( res)
+		fprintf(stdout,"future is ready\n");
+	else
+		fprintf(stdout,"future is not ready\n");
+	return res;
 }
 
 }
@@ -72,4 +77,4 @@ struct as_sub_task
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_AS_SUB_TASK_H
+#endif // BOOST_TASKS_AS_SUB_TASK_H

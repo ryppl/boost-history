@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_DETAIL_ATOMIC_H
-#define BOOST_TASK_DETAIL_ATOMIC_H
+#ifndef BOOST_TASKS_DETAIL_ATOMIC_H
+#define BOOST_TASKS_DETAIL_ATOMIC_H
 
 // MS compatible compilers support #pragma once
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
@@ -25,7 +25,7 @@
 # elif defined( __GNUC__ ) && ( defined(__PPC__) || defined(__ppc__) )
 #include <boost/task/detail/atomic_gcc_ppc.hpp>
 
-# elif defined( BOOST_TASK_HAS_SYNC)
+# elif defined( BOOST_TASKS_HAS_SYNC)
 #include <boost/task/detail/atomic_sync.hpp>
 
 # elif defined(__GLIBCPP__) || defined(__GLIBCXX__)
@@ -45,5 +45,5 @@
 
 # endif
 
-#endif // BOOST_TASK_DETAIL_ATOMIC_H
+#endif // BOOST_TASKS_DETAIL_ATOMIC_H
 

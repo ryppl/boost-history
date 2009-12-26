@@ -14,10 +14,11 @@ project boost/task
     : source-location
         ../src
     : requirements
-        <library>/boost/system//boost_system
+        <library>/boost/fiber//boost_fiber
         <library>/boost/thread//boost_thread
-        <link>static:<define>BOOST_TASK_BUILD_LIB=1
-        <link>shared:<define>BOOST_TASK_BUILD_DLL=1
+        <library>/boost/system//boost_system
+        <link>static:<define>BOOST_TASKS_BUILD_LIB=1
+        <link>shared:<define>BOOST_TASKS_BUILD_DLL=1
         <threading>multi
     : default-build
         <threading>multi
@@ -40,12 +41,12 @@ alias task_sources
 	guard.cpp
 	poolsize.cpp
 	scanns.cpp
-	semaphore_windows.cpp
-	spin_auto_reset_event.cpp
-	spin_condition.cpp
-	spin_count_down_event.cpp
-	spin_manual_reset_event.cpp
-	spin_mutex.cpp
+	spin/auto_reset_event.cpp
+	spin/barrier.cpp
+	spin/condition.cpp
+	spin/count_down_event.cpp
+	spin/manual_reset_event.cpp
+	spin/mutex.cpp
 	stacksize.cpp
 	watermark.cpp
 	worker.cpp
@@ -62,12 +63,12 @@ alias task_sources
 	guard.cpp
 	poolsize.cpp
 	scanns.cpp
-	semaphore_posix.cpp
-	spin_auto_reset_event.cpp
-	spin_condition.cpp
-	spin_count_down_event.cpp
-	spin_manual_reset_event.cpp
-	spin_mutex.cpp
+	spin/auto_reset_event.cpp
+	spin/barrier.cpp
+	spin/condition.cpp
+	spin/count_down_event.cpp
+	spin/manual_reset_event.cpp
+	spin/mutex.cpp
 	stacksize.cpp
 	watermark.cpp
 	worker.cpp
@@ -81,8 +82,8 @@ explicit task_sources ;
 
 lib boost_task
     : task_sources
-    : <link>shared:<define>BOOST_TASK_USE_DLL=1
-      <link>static:<define>BOOST_TASK_USE_LIB=1
+    : <link>shared:<define>BOOST_TASKS_USE_DLL=1
+      <link>static:<define>BOOST_TASKS_USE_LIB=1
    ;
 
 boost-install boost_task ;

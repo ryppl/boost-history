@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_BOUNDED_ONELOCK_FIFO_H
-#define BOOST_TASK_BOUNDED_ONELOCK_FIFO_H
+#ifndef BOOST_TASKS_BOUNDED_ONELOCK_FIFO_H
+#define BOOST_TASKS_BOUNDED_ONELOCK_FIFO_H
 
 #include <cstddef>
 #include <list>
@@ -26,7 +26,7 @@
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
-namespace task {
+namespace tasks {
 
 class bounded_onelock_fifo
 {
@@ -309,4 +309,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_BOUNDED_ONELOCK_FIFO_H
+#endif // BOOST_TASKS_BOUNDED_ONELOCK_FIFO_H
