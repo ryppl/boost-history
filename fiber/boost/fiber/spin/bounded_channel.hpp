@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBERS_SPIN_BOUNDED_FIFO_H
-#define BOOST_FIBERS_SPIN_BOUNDED_FIFO_H
+#ifndef BOOST_FIBERS_SPIN_BOUNDED_CHANNEL_H
+#define BOOST_FIBERS_SPIN_BOUNDED_CHANNEL_H
 
 #include <cstddef>
 #include <stdexcept>
@@ -26,7 +26,7 @@ namespace fibers {
 namespace spin {
 
 template< typename T >
-class bounded_fifo
+class bounded_channel
 {
 public:
 	typedef optional< T >	value_type;
@@ -188,6 +188,7 @@ private:
 					while ( active_() && full_() )
 						not_full_cond_.wait( lk);
 				}
+
 				if ( ! active_() )
 					throw std::runtime_error("queue is not active");
 
@@ -267,13 +268,13 @@ private:
 	intrusive_ptr< impl >	impl_;
 
 public:
-	bounded_fifo(
+	bounded_channel(
 			std::size_t hwm,
 			std::size_t lwm) :
 		impl_( new impl( hwm, lwm) )
 	{}
 	
-	bounded_fifo( std::size_t wm) :
+	bounded_channel( std::size_t wm) :
 		impl_( new impl( wm) )
 	{}
 	
@@ -309,4 +310,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBERS_SPIN_BOUNDED_FIFO_H
+#endif // BOOST_FIBERS_SPIN_BOUNDED_CHANNEL_H

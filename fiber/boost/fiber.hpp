@@ -9,7 +9,7 @@
 
 #include <boost/fiber/auto_reset_event.hpp>
 #include <boost/fiber/barrier.hpp>
-#include <boost/fiber/bounded_fifo.hpp>
+#include <boost/fiber/bounded_channel.hpp>
 #include <boost/fiber/condition.hpp>
 #include <boost/fiber/count_down_event.hpp>
 #include <boost/fiber/exceptions.hpp>
@@ -20,14 +20,14 @@
 #include <boost/fiber/scheduler.hpp>
 #include <boost/fiber/spin/auto_reset_event.hpp>
 #include <boost/fiber/spin/barrier.hpp>
-#include <boost/fiber/spin/bounded_fifo.hpp>
+#include <boost/fiber/spin/bounded_channel.hpp>
 #include <boost/fiber/spin/condition.hpp>
 #include <boost/fiber/spin/count_down_event.hpp>
 #include <boost/fiber/spin/future.hpp>
 #include <boost/fiber/spin/manual_reset_event.hpp>
 #include <boost/fiber/spin/mutex.hpp>
-#include <boost/fiber/spin/unbounded_fifo.hpp>
-#include <boost/fiber/unbounded_fifo.hpp>
+#include <boost/fiber/spin/unbounded_channel.hpp>
+#include <boost/fiber/unbounded_channel.hpp>
 #include <boost/fiber/utility.hpp>
 
 #endif // BOOST_FIBER_H

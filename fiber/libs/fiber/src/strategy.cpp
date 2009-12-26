@@ -101,6 +101,24 @@ strategy::cancel_()
 	active->info_->st->cancel( active_fiber->get_id() );
 }
 
+void
+strategy::submit_fiber_( fiber f)
+{
+	fiber * active( active_fiber.get() );
+	if ( ! active) throw fiber_error("not a fiber");
+	if ( ! active->info_->st) throw scheduler_error("no valid scheduler");
+	active->info_->st->add( f);
+}
+
+void
+strategy::submit_fiber_( BOOST_RV_REF( fiber) f)
+{
+	fiber * active( active_fiber.get() );
+	if ( ! active) throw fiber_error("not a fiber");
+	if ( ! active->info_->st) throw scheduler_error("no valid scheduler");
+	active->info_->st->add( f);
+}
+
 strategy::strategy() :
 	use_count_( 0),
 	master_fiber()

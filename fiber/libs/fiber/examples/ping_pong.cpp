@@ -10,7 +10,7 @@
 
 #include <boost/fiber.hpp>
 
-typedef boost::fibers::unbounded_fifo< std::string >	fifo_t;
+typedef boost::fibers::unbounded_channel< std::string >	fifo_t;
 typedef boost::intrusive_ptr< fifo_t >			fifo_ptr;
 
 inline

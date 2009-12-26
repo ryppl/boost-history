@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBERS_BOUNDED_FIFO_H
-#define BOOST_FIBERS_BOUNDED_FIFO_H
+#ifndef BOOST_FIBERS_BOUNDED_CHANNEL_H
+#define BOOST_FIBERS_BOUNDED_CHANNEL_H
 
 #include <cstddef>
 #include <stdexcept>
@@ -24,7 +24,7 @@ namespace boost {
 namespace fibers {
 
 template< typename T >
-class bounded_fifo
+class bounded_channel
 {
 public:
 	typedef optional< T >	value_type;
@@ -185,6 +185,7 @@ private:
 					while ( active_() && full_() )
 						not_full_cond_.wait( lk);
 				}
+
 				if ( ! active_() )
 					throw std::runtime_error("queue is not active");
 
@@ -259,7 +260,7 @@ private:
 
 public:
 	template< typename Strategy >
-	bounded_fifo(
+	bounded_channel(
 			scheduler< Strategy > & sched,
 			unsigned int hwm,
 			unsigned int lwm) :
@@ -267,7 +268,7 @@ public:
 	{}
 	
 	template< typename Strategy >
-	bounded_fifo(
+	bounded_channel(
 			scheduler< Strategy > & sched,
 			unsigned int wm) :
 		impl_( new impl( sched, wm) )
@@ -305,4 +306,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBERS_BOUNDED_FIFO_H
+#endif // BOOST_FIBERS_BOUNDED_CHANNEL_H

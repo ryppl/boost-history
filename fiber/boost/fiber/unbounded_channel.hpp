@@ -4,30 +4,29 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBERS_SPIN_UNBOUNDED_FIFO_H
-#define BOOST_FIBERS_SPIN_UNBOUNDED_FIFO_H
+#ifndef BOOST_FIBERS_UNBOUNDED_CHANNEL_H
+#define BOOST_FIBERS_UNBOUNDED_CHANNEL_H
 
 #include <cstddef>
+#include <stdexcept>
 
-#include <boost/atomic.hpp>
 #include <boost/config.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/fiber/condition.hpp>
 #include <boost/fiber/exceptions.hpp>
-#include <boost/fiber/spin/condition.hpp>
-#include <boost/fiber/spin/mutex.hpp>
+#include <boost/fiber/mutex.hpp>
+#include <boost/fiber/scheduler.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
 namespace fibers {
-namespace spin {
 
 template< typename T >
-class unbounded_fifo
+class unbounded_channel
 {
 public:
 	typedef optional< T >	value_type;
@@ -40,9 +39,9 @@ private:
 		{
 			typedef intrusive_ptr< node >	ptr;
 
-			atomic< std::size_t >	use_count;
-			value_type				va;
-			ptr						next;
+			std::size_t		use_count;
+			value_type		va;
+			ptr				next;
 
 			node() :
 				use_count( 0),
@@ -51,16 +50,10 @@ private:
 			{}
 
 			inline friend void intrusive_ptr_add_ref( node * p)
-			{ p->use_count.fetch_add( 1, memory_order_relaxed); }
+			{ ++p->use_count; }
 			
 			inline friend void intrusive_ptr_release( node * p)
-			{
-				if ( p->use_count.fetch_sub( 1, memory_order_release) == 1)
-				{
-					atomic_thread_fence( memory_order_acquire);
-					delete p;
-				}
-			}
+			{ if ( --p->use_count == 0) delete p; }
 		};
 
 		enum state
@@ -69,19 +62,19 @@ private:
 			DEACTIVE
 		};
 
-		atomic< state >			state_;
-		typename node::ptr		head_;
-		mutable mutex			head_mtx_;
-		typename node::ptr		tail_;
-		mutable mutex			tail_mtx_;
-		condition				not_empty_cond_;
-		atomic< std::size_t >	use_count_;
+		state				state_;
+		typename node::ptr	head_;
+		mutable mutex		head_mtx_;
+		typename node::ptr	tail_;
+		mutable mutex		tail_mtx_;
+		condition			not_empty_cond_;
+		std::size_t			use_count_;	
 
 		bool active_() const
-		{ return ACTIVE == state_.load(); }
+		{ return ACTIVE == state_; }
 
 		void deactivate_()
-		{ state_.store( DEACTIVE); }
+		{ state_ = DEACTIVE; }
 
 		bool empty_() const
 		{ return head_ == get_tail_(); }
@@ -101,13 +94,14 @@ private:
 		}
 
 	public:
-		impl() :
+		template< typename Strategy >
+		impl( scheduler< Strategy > & sched) :
 			state_( ACTIVE),
 			head_( new node() ),
-			head_mtx_(),
+			head_mtx_( sched),
 			tail_( head_),
-			tail_mtx_(),
-			not_empty_cond_(),
+			tail_mtx_( sched),
+			not_empty_cond_( sched),
 			use_count_( 0)
 		{}
 
@@ -125,6 +119,9 @@ private:
 			typename node::ptr new_node( new node() );
 			{
 				mutex::scoped_lock lk( tail_mtx_);
+
+				if ( ! active_() )
+					throw std::runtime_error("channel is not active");
 
 				tail_->va = t;
 				tail_->next = new_node;
@@ -166,30 +163,25 @@ private:
 			return va;
 		}
 
-		inline friend void intrusive_ptr_add_ref( impl * p)
-		{ p->use_count_.fetch_add( 1, memory_order_relaxed); }
-		
-		inline friend void intrusive_ptr_release( impl * p)
-		{
-			if ( p->use_count_.fetch_sub( 1, memory_order_release) == 1)
-			{
-				atomic_thread_fence( memory_order_acquire);
-				delete p;
-			}
-		}
+		friend void intrusive_ptr_add_ref( impl * p)
+		{ ++( p->use_count_); }
+
+		friend void intrusive_ptr_release( impl * p)
+		{ if ( --( p->use_count_) == 1) delete p; }
 	};
 
 	intrusive_ptr< impl >	impl_;
 
 public:
-	unbounded_fifo() :
-		impl_( new impl() )
+	template< typename Strategy >
+	unbounded_channel( scheduler< Strategy > & sched) :
+		impl_( new impl( sched) )
 	{}
 
 	void deactivate()
 	{ impl_->deactivate(); }
 
-	bool empty()
+	bool empty() const
 	{ return impl_->empty(); }
 
 	void put( T const& t)
@@ -202,8 +194,8 @@ public:
 	{ return impl_->try_take( va); }
 };
 
-}}}
+}}
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBERS_SPIN_UNBOUNDED_FIFO_H
+#endif // BOOST_FIBERS_UNBOUNDED_CHANNEL_H

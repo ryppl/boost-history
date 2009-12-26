@@ -4,28 +4,30 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBERS_UNBOUNDED_FIFO_H
-#define BOOST_FIBERS_UNBOUNDED_FIFO_H
+#ifndef BOOST_FIBERS_SPIN_UNBOUNDED_CHANNEL_H
+#define BOOST_FIBERS_SPIN_UNBOUNDED_CHANNEL_H
 
 #include <cstddef>
+#include <stdexcept>
 
+#include <boost/atomic.hpp>
 #include <boost/config.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/fiber/condition.hpp>
 #include <boost/fiber/exceptions.hpp>
-#include <boost/fiber/mutex.hpp>
-#include <boost/fiber/scheduler.hpp>
+#include <boost/fiber/spin/condition.hpp>
+#include <boost/fiber/spin/mutex.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
 namespace fibers {
+namespace spin {
 
 template< typename T >
-class unbounded_fifo
+class unbounded_channel
 {
 public:
 	typedef optional< T >	value_type;
@@ -38,9 +40,9 @@ private:
 		{
 			typedef intrusive_ptr< node >	ptr;
 
-			std::size_t		use_count;
-			value_type		va;
-			ptr				next;
+			atomic< std::size_t >	use_count;
+			value_type				va;
+			ptr						next;
 
 			node() :
 				use_count( 0),
@@ -49,10 +51,16 @@ private:
 			{}
 
 			inline friend void intrusive_ptr_add_ref( node * p)
-			{ ++p->use_count; }
+			{ p->use_count.fetch_add( 1, memory_order_relaxed); }
 			
 			inline friend void intrusive_ptr_release( node * p)
-			{ if ( --p->use_count == 0) delete p; }
+			{
+				if ( p->use_count.fetch_sub( 1, memory_order_release) == 1)
+				{
+					atomic_thread_fence( memory_order_acquire);
+					delete p;
+				}
+			}
 		};
 
 		enum state
@@ -61,19 +69,19 @@ private:
 			DEACTIVE
 		};
 
-		state				state_;
-		typename node::ptr	head_;
-		mutable mutex		head_mtx_;
-		typename node::ptr	tail_;
-		mutable mutex		tail_mtx_;
-		condition			not_empty_cond_;
-		std::size_t			use_count_;	
+		atomic< state >			state_;
+		typename node::ptr		head_;
+		mutable mutex			head_mtx_;
+		typename node::ptr		tail_;
+		mutable mutex			tail_mtx_;
+		condition				not_empty_cond_;
+		atomic< std::size_t >	use_count_;
 
 		bool active_() const
-		{ return ACTIVE == state_; }
+		{ return ACTIVE == state_.load(); }
 
 		void deactivate_()
-		{ state_ = DEACTIVE; }
+		{ state_.store( DEACTIVE); }
 
 		bool empty_() const
 		{ return head_ == get_tail_(); }
@@ -93,14 +101,13 @@ private:
 		}
 
 	public:
-		template< typename Strategy >
-		impl( scheduler< Strategy > & sched) :
+		impl() :
 			state_( ACTIVE),
 			head_( new node() ),
-			head_mtx_( sched),
+			head_mtx_(),
 			tail_( head_),
-			tail_mtx_( sched),
-			not_empty_cond_( sched),
+			tail_mtx_(),
+			not_empty_cond_(),
 			use_count_( 0)
 		{}
 
@@ -118,6 +125,9 @@ private:
 			typename node::ptr new_node( new node() );
 			{
 				mutex::scoped_lock lk( tail_mtx_);
+
+				if ( ! active_() )
+					throw std::runtime_error("queue is not active");
 
 				tail_->va = t;
 				tail_->next = new_node;
@@ -159,25 +169,30 @@ private:
 			return va;
 		}
 
-		friend void intrusive_ptr_add_ref( impl * p)
-		{ ++( p->use_count_); }
-
-		friend void intrusive_ptr_release( impl * p)
-		{ if ( --( p->use_count_) == 1) delete p; }
+		inline friend void intrusive_ptr_add_ref( impl * p)
+		{ p->use_count_.fetch_add( 1, memory_order_relaxed); }
+		
+		inline friend void intrusive_ptr_release( impl * p)
+		{
+			if ( p->use_count_.fetch_sub( 1, memory_order_release) == 1)
+			{
+				atomic_thread_fence( memory_order_acquire);
+				delete p;
+			}
+		}
 	};
 
 	intrusive_ptr< impl >	impl_;
 
 public:
-	template< typename Strategy >
-	unbounded_fifo( scheduler< Strategy > & sched) :
-		impl_( new impl( sched) )
+	unbounded_channel() :
+		impl_( new impl() )
 	{}
 
 	void deactivate()
 	{ impl_->deactivate(); }
 
-	bool empty() const
+	bool empty()
 	{ return impl_->empty(); }
 
 	void put( T const& t)
@@ -190,8 +205,8 @@ public:
 	{ return impl_->try_take( va); }
 };
 
-}}
+}}}
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_FIBERS_UNBOUNDED_FIFO_H
+#endif // BOOST_FIBERS_SPIN_UNBOUNDED_CHANNEL_H

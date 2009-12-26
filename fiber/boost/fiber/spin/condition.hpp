@@ -14,6 +14,7 @@
 #include <boost/assert.hpp>
 #include <boost/atomic.hpp>
 #include <boost/thread/locks.hpp>
+#include <boost/thread/thread.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/exceptions.hpp>
@@ -79,7 +80,12 @@ public:
 		for (;;)
 		{
 			while ( SLEEPING == cmd_.load() )
-				this_fiber::yield();	
+			{
+				if ( this_fiber::runs_as_fiber() )
+					this_fiber::yield();
+				else
+					this_thread::yield();
+			}
 
 			mutex::scoped_lock lk( check_mtx_);
 			BOOST_ASSERT( lk);

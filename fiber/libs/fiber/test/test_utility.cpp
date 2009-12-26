@@ -47,6 +47,13 @@ void cancel_fn( int n)
 	}	
 }
 
+void submit_fn( int n)
+{
+	boost::this_fiber::submit_fiber(
+			boost::fibers::make_fiber(
+				& yield_fn, n, boost::fiber::default_stacksize) );
+}
+
 void test_case_1()
 {
 	boost::fibers::scheduler<> sched;
@@ -111,6 +118,21 @@ void test_case_4()
 	BOOST_CHECK_EQUAL( 2, value);
 }
 
+void test_case_5()
+{
+	value = 0;
+	boost::fibers::scheduler<> sched;
+	sched.make_fiber( submit_fn, 5, boost::fiber::default_stacksize);
+	BOOST_CHECK_EQUAL( 0, value);
+	
+	for (;;)
+	{
+		while ( sched.run() );
+		if ( sched.empty() ) break;
+	}
+	BOOST_CHECK_EQUAL( 5, value);
+}
+
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
 	boost::unit_test::test_suite * test =
@@ -120,6 +142,7 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_TEST_CASE( & test_case_2) );
 	test->add( BOOST_TEST_CASE( & test_case_3) );
 	test->add( BOOST_TEST_CASE( & test_case_4) );
+	test->add( BOOST_TEST_CASE( & test_case_5) );
 
 	return test;
 }

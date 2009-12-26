@@ -9,6 +9,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
+#include <boost/move/move.hpp>
 
 #include <boost/fiber/fiber.hpp>
 #include <boost/fiber/strategy.hpp>
@@ -65,6 +66,14 @@ void yield()
 inline
 void cancel()
 { fibers::strategy::cancel_(); }
+
+inline
+void submit_fiber( fiber f)
+{ fibers::strategy::submit_fiber_( f); }
+
+inline
+void submit_fiber( BOOST_RV_REF( fiber) f)
+{ fibers::strategy::submit_fiber_( f); }
 
 }}
 

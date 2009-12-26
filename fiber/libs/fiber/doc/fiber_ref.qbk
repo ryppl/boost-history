@@ -596,6 +596,21 @@ registered with `at_fiber_exit()`]]
 ]
 [endsect]
 
+[section:submit Non-member function `submit_fiber( fiber)`]
+
+    #include <boost/fiber/utility.hpp>
+
+    namespace this_fiber
+    {
+        void submit_fiber( fiber);
+    }
+
+[variablelist
+[[Effects:] [Submits the passed fiber to the scheduler running the active fiber.]]
+[[Throws:] [__fiber_error__ if an error occurs.]]
+]
+[endsect]
+
 [section:disable_interruption Class `disable_interruption`]
 
     #include <boost/fiber/interruption.hpp>

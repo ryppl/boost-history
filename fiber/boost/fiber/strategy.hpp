@@ -12,6 +12,7 @@
 #include <boost/atomic.hpp>
 #include <boost/function.hpp>
 #include <boost/intrusive_ptr.hpp>
+#include <boost/move/move.hpp>
 #include <boost/thread/tss.hpp>
 
 #include <boost/fiber/detail/interrupt_flags.hpp>
@@ -42,6 +43,8 @@ template< typename Callable >
 void at_fiber_exit( Callable);
 void at_fiber_exit( function< void() >);
 void at_fiber_exit( void (*)() );
+void submit_fiber( fiber);
+void submit_fiber( BOOST_RV_REF( fiber) );
 
 class disable_interruption;
 class restore_interruption;
@@ -72,6 +75,8 @@ private:
 	friend void this_fiber::at_fiber_exit( Callable);
 	friend void this_fiber::at_fiber_exit( function< void() >);
 	friend void this_fiber::at_fiber_exit( void (*)() );
+	friend void this_fiber::submit_fiber( fiber);
+	friend void this_fiber::submit_fiber( BOOST_RV_REF( fiber) );
 	friend class this_fiber::disable_interruption;
 	friend class this_fiber::restore_interruption;
 	friend class auto_reset_event;
@@ -103,6 +108,10 @@ private:
 	static void yield_();
 
 	static void cancel_();
+
+	static void submit_fiber_( fiber);
+
+	static void submit_fiber_( BOOST_RV_REF( fiber) );
 
 	atomic< std::size_t >	use_count_;
 

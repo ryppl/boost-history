@@ -12,7 +12,7 @@ __boost_fiber__ provides a bounded and a unbounded fifo suitable to synchonize f
 [note fifos are bound to the __scheduler__ passed to the construtor and can only be used by fibers
 managed by this scheduler.]
 
-    typedef boost::fibers::unbounded_fifo< int > fifo_t;
+    typedef boost::fibers::unbounded_channel< int > fifo_t;
 
     void send( fifo_t fifo)
     {
@@ -40,16 +40,16 @@ managed by this scheduler.]
     }
 
 
-[section:unbounded_fifo Template `template< typename T > unbounded_fifo`]
+[section:unbounded_channel Template `template< typename T > unbounded_channel`]
 
-    #include <boost/fiber/unbounded_fifo.hpp>
+    #include <boost/fiber/unbounded_channel.hpp>
 
     template< typename T >
-    class unbounded_fifo : private noncopyable
+    class unbounded_channel : private noncopyable
     {
     public:
         template< typename Strategy >
-        unbounded_fifo( scheduler< Strategy > & sched);
+        unbounded_channel( scheduler< Strategy > & sched);
 
         void deactivate();
 
@@ -62,9 +62,9 @@ managed by this scheduler.]
         bool try_take( boost::optional< T > & va);
     };
 
-[section:constructor `template< typename Strategy > unbounded_fifo( scheduler< Strategy > & sched)`]
+[section:constructor `template< typename Strategy > unbounded_channel( scheduler< Strategy > & sched)`]
 [variablelist
-[[Effects:] [Constructs an object of class `unbounded_fifo`.]]
+[[Effects:] [Constructs an object of class `unbounded_channel`.]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]
@@ -112,19 +112,19 @@ Otherwise it returns `true` and `va` contains the dequed value.]]
 [endsect]
 
 
-[section:bounded_fifo Template `template< typename T > bounded_fifo`]
+[section:bounded_channel Template `template< typename T > bounded_channel`]
 
-    #include <boost/fiber/bounded_fifo.hpp>
+    #include <boost/fiber/bounded_channel.hpp>
 
     template< typename T >
-    class bounded_fifo : private noncopyable
+    class bounded_channel : private noncopyable
     {
     public:
         template< typename Strategy >
-        bounded_fifo( scheduler< Strategy > & sched, std::size_t wm);
+        bounded_channel( scheduler< Strategy > & sched, std::size_t wm);
 
         template< typename Strategy >
-        bounded_fifo( scheduler< Strategy > & sched, std::size_t hwm, std::size_t lwm);
+        bounded_channel( scheduler< Strategy > & sched, std::size_t hwm, std::size_t lwm);
 
         void deactivate();
 
@@ -137,16 +137,16 @@ Otherwise it returns `true` and `va` contains the dequed value.]]
         bool try_take( boost::optional< T > & va);
     };
 
-[section:constructor `template< typename Strategy > bounded_fifo( scheduler< Strategy > & sched, std::size_t wm)`]
+[section:constructor `template< typename Strategy > bounded_channel( scheduler< Strategy > & sched, std::size_t wm)`]
 [variablelist
-[[Effects:] [Constructs an object of class `bounded_fifo` which will contain a maximum of `wm` items.]]
+[[Effects:] [Constructs an object of class `bounded_channel` which will contain a maximum of `wm` items.]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]
 
-[section:constructor2 `template< typename Strategy > bounded_fifo( scheduler< Strategy > & sched, std::size_t wm)`]
+[section:constructor2 `template< typename Strategy > bounded_channel( scheduler< Strategy > & sched, std::size_t wm)`]
 [variablelist
-[[Effects:] [Constructs an object of class `bounded_fifo` which will contain a maximum of `wm` items.]]
+[[Effects:] [Constructs an object of class `bounded_channel` which will contain a maximum of `wm` items.]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]

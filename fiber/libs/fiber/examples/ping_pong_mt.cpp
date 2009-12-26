@@ -12,7 +12,7 @@
 
 #include <boost/fiber.hpp>
 
-typedef boost::fibers::spin::unbounded_fifo< std::string >	fifo_t;
+typedef boost::fibers::spin::unbounded_channel< std::string >	fifo_t;
 
 inline
 void ping(
