@@ -1,0 +1,576 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Struct AtomicStorageEngine</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../../persistent/reference.html#header.boost.persistent.concept.AtomicStorageEngine_hpp" title="Header &lt;boost/persistent/concept/AtomicStorageEngine.hpp&gt;">
+<link rel="prev" href="../../persistent/reference.html" title="Reference">
+<link rel="next" href="DataBlock.html" title="Struct DataBlock">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../persistent/reference.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.concept.AtomicStorageEngine_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="DataBlock.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.persistent.AtomicStorageEngine"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Struct AtomicStorageEngine</span></h2>
+<p>boost::persistent::AtomicStorageEngine</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../persistent/reference.html#header.boost.persistent.concept.AtomicStorageEngine_hpp" title="Header &lt;boost/persistent/concept/AtomicStorageEngine.hpp&gt;">boost/persistent/concept/AtomicStorageEngine.hpp</a>&gt;
+
+</em></span>
+<span class="bold"><strong>struct</strong></span> <a class="link" href="AtomicStorageEngine.html" title="Struct AtomicStorageEngine">AtomicStorageEngine</a> {
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.AtomicStorageEngine.transaction_id"></a>transaction_id;
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.AtomicStorageEngine.object_id"></a>object_id;       <span class="emphasis"><em>// Must be POD. </em></span>
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.AtomicStorageEngine.instance_id"></a>instance_id;   
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.AtomicStorageEngine.object_count"></a>object_count;    <span class="emphasis"><em>// Must be an integral type. </em></span>
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.AtomicStorageEngine.transaction"></a>transaction;   
+
+  <span class="emphasis"><em>// <a class="link" href="AtomicStorageEngine.html#id2427240-bb">public member functions</a></em></span>
+  <span class="type"><span class="emphasis"><em>unspecified</em></span></span> <a class="link" href="AtomicStorageEngine.html#id2427244-bb">begin_transaction</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2427274-bb">commit_transaction</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2427307-bb">apply_transaction</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2427342-bb">rollback_transaction</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> ResourceTag&gt; 
+    <span class="type">T *</span> <a class="link" href="AtomicStorageEngine.html#id2427368-bb">load_instance</a>(object_id, instance_id) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> ResourceTag&gt; 
+    <span class="type">instance_id</span> <a class="link" href="AtomicStorageEngine.html#id2427440-bb">save_instance</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;, object_id, T <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2427529-bb">free_instance</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;, instance_id) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2427573-bb">apply_free_instance</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;, instance_id) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2427618-bb">free_local_instance</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;, instance_id) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2427663-bb">load_object</a>(object_id, transaction_id &amp;, instance_id &amp;, object_count &amp;, 
+                   object_count &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2427741-bb">update_object_state</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;, object_id, transaction_id, 
+                           instance_id) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2533180-bb">apply_object_state</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;, object_id, transaction_id, 
+                          instance_id) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2533244-bb">update_object_count</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;, object_id, object_count, 
+                           object_count) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2533307-bb">apply_object_count</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;, object_id, object_count, 
+                          object_count) ;
+  <span class="type">object_id</span> <a class="link" href="AtomicStorageEngine.html#id2533371-bb">allocate_object</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2533409-bb">free_object</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;, object_id) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2533453-bb">apply_free_object</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;, object_id) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="AtomicStorageEngine.html#id2533497-bb">free_local_object</a>(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp;, object_id) ;
+  <span class="type">transaction_id</span> <a class="link" href="AtomicStorageEngine.html#id2533543-bb">allocate_transaction_id</a>() ;
+  <span class="type">object_id</span> <a class="link" href="AtomicStorageEngine.html#id2533569-bb">root_object_id</a>() ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2812309"></a><h2>Description</h2>
+<p>AtomicStorageEngines don't record changes but need to be called twice with the same information, once before and once after a transaction commit.</p>
+<p>For example:</p>
+<p>tx=begin_transaction(...)</p>
+<p>update_object_state(tx,...)</p>
+<p>commit_transaction(tx,...)</p>
+<p>apply_object_state(tx,...) //same arguments as above</p>
+<p>apply_transaction(tx,...) </p>
+<div class="refsect2" lang="en">
+<a name="id2812334"></a><h3>
+<a name="id2427240-bb"></a><code class="computeroutput">AtomicStorageEngine</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="type"><span class="emphasis"><em>unspecified</em></span></span> <a name="id2427244-bb"></a>begin_transaction() ;</pre>Begin a storage transaction. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>An unspecified value that is convertible to <code class="computeroutput">transaction</code> </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2427274-bb"></a>commit_transaction(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx) ;</pre>Commits a storage transactions. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The transaction </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2427307-bb"></a>apply_transaction(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx) ;</pre>Applies a previously committed transaction. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The transaction </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2427342-bb"></a>rollback_transaction(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx) ;</pre>Rolls back a storage transaction. <p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The transaction </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> ResourceTag&gt; 
+  <span class="type">T *</span> <a name="id2427368-bb"></a>load_instance(object_id oid, instance_id iid) ;</pre>Loads an instance from the storage device. <p>Template parameters: </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><code class="computeroutput">T</code> The type or a base class of the instance </p></li>
+<li><p><code class="computeroutput">ResourceTag</code> The tag of the resource this instance is saved in</p></li>
+</ul></div>
+<p>
+Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by user-supplied functions loading persistent types 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">iid</code></span></p></td>
+<td><p>The instance id </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">oid</code></span></p></td>
+<td><p>The id of the object this instance belongs to </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> ResourceTag&gt; 
+  <span class="type">instance_id</span> <a name="id2427440-bb"></a>save_instance(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx, object_id oid, T <span class="bold"><strong>const</strong></span> &amp; inst) ;</pre>Saves an instance to the storage device. <p>Template parameters: </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><code class="computeroutput">T</code> The type or a base class of the instance </p></li>
+<li><p><code class="computeroutput">ResourceTag</code> The tag of the resource this instance is saved in</p></li>
+</ul></div>
+<p>
+Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by user-supplied functions saving persistent types 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">inst</code></span></p></td>
+<td><p>The instance to save </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">oid</code></span></p></td>
+<td><p>The id of the object this instance belongs to </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The storage transaction that is used to save the instance </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The instance id of the saved instance </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2427529-bb"></a>free_instance(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx, instance_id iid) ;</pre>Deallocates a previously saved instance. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">iid</code></span></p></td>
+<td><p>The id of the instance </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The storage transaction the deallocation takes place in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2427573-bb"></a>apply_free_instance(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx, instance_id iid) ;</pre>Applies the deallocation of a freed instance once the storage transaction is committed. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">iid</code></span></p></td>
+<td><p>The id of the instance </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The committed storage transaction </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2427618-bb"></a>free_local_instance(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx, instance_id iid) ;</pre>Deallocates an instance that was saved in this storage transaction and applies the deallocation. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">iid</code></span></p></td>
+<td><p>The id of the instance </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The storage transaction the instance was saved and should be deallocated in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2427663-bb"></a>load_object(object_id oid, transaction_id &amp; tid, instance_id &amp; iid, 
+                 object_count &amp; strong, object_count &amp; weak) ;</pre>Loads an object. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">iid</code></span></p></td>
+<td><p>A reference that is used to store the loaded instance id </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">oid</code></span></p></td>
+<td><p>The id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">strong</code></span></p></td>
+<td><p>A reference that is used to store the <code class="computeroutput">strong</code> reference count </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tid</code></span></p></td>
+<td><p>A reference that is used to store the loaded transaction id </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">weak</code></span></p></td>
+<td><p>A reference that is used to store the <code class="computeroutput">weak</code> reference count </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2427741-bb"></a>update_object_state(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx, object_id oid, transaction_id tid, 
+                         instance_id iid) ;</pre>Updates the state of a previously allocated object. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">iid</code></span></p></td>
+<td><p>The new instance id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">oid</code></span></p></td>
+<td><p>The id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tid</code></span></p></td>
+<td><p>The new transaction id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The storage transaction the state is updated in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2533180-bb"></a>apply_object_state(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx, object_id oid, transaction_id tid, 
+                        instance_id iid) ;</pre>Applies an updated object state once the storage transaction has been committed. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">iid</code></span></p></td>
+<td><p>The new instance id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">oid</code></span></p></td>
+<td><p>The id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tid</code></span></p></td>
+<td><p>The new transaction id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The committed storage transaction </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2533244-bb"></a>update_object_count(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx, object_id oid, object_count strong, 
+                         object_count weak) ;</pre>Updates the reference counts of a previously allocated object. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">oid</code></span></p></td>
+<td><p>The id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">strong</code></span></p></td>
+<td><p>The new <code class="computeroutput">strong</code> reference count of the objcet </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The storage transaction the counts are updated in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2533307-bb"></a>apply_object_count(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx, object_id oid, object_count strong, 
+                        object_count weak) ;</pre>Applies the updated reference counts once the storage transaction has been committed. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">oid</code></span></p></td>
+<td><p>The id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">strong</code></span></p></td>
+<td><p>The new <code class="computeroutput">strong</code> reference count of the objcet </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The committed storage transaction. </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">object_id</span> <a name="id2533371-bb"></a>allocate_object(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx) ;</pre>Allocates an object id. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The storage transaction </p></td>
+</tr></tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The new object id </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2533409-bb"></a>free_object(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx, object_id oid) ;</pre>Deallocates a previously allocated object. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">oid</code></span></p></td>
+<td><p>The id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The storage transaction the deallocation takes place in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2533453-bb"></a>apply_free_object(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx, object_id oid) ;</pre>Applies the deallocation of a freed object once the storage transaction is committed. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">oid</code></span></p></td>
+<td><p>The id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The committed storage transaction </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2533497-bb"></a>free_local_object(<a class="link" href="AtomicStorageEngine.html#boost.persistent.AtomicStorageEngine.transaction">transaction</a> &amp; tx, object_id oid) ;</pre>Deallocates an object that was allocated in this storage transaction and applies the deallocation. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">oid</code></span></p></td>
+<td><p>The id of the object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The storage transaction the object was allocated and should be deallocated in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">transaction_id</span> <a name="id2533543-bb"></a>allocate_transaction_id() ;</pre>Allocates a new transaction id. <p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The new transaction id </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">object_id</span> <a name="id2533569-bb"></a>root_object_id() ;</pre>
+<p>Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The object id of the first object created, if any </p></td>
+</tr></tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../persistent/reference.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.concept.AtomicStorageEngine_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="DataBlock.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

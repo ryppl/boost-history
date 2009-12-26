@@ -1,0 +1,1173 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Accessing Persistent Objects</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="prev" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="next" href="transactions.html" title="Using Transactions">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="transactions.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="persistent.access"></a><a class="link" href="access.html" title="Accessing Persistent Objects"> Accessing Persistent Objects</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="access.html#persistent.access.typereq"> Persistent type requirements</a></span></dt>
+<dt><span class="section"><a href="access.html#persistent.access.persistentobject"> Persistent objects</a></span></dt>
+<dt><span class="section"><a href="access.html#persistent.access.locators"> Locators</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="access.html#persistent.access.locators.concept"> Concept</a></span></dt>
+<dt><span class="section"><a href="access.html#persistent.access.locators.models"> Models</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="access.html#persistent.access.savepoints"> Savepoints</a></span></dt>
+<dt><span class="section"><a href="access.html#persistent.access.tutorials"> Tutorials</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="access.html#persistent.access.tutorials.tutorial1"> Tutorial 1:
+        Storing an object</a></span></dt>
+<dt><span class="section"><a href="access.html#persistent.access.tutorials.tutorial2"> Tutorial 2:
+        Linked list</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="access.html#persistent.access.pitfalls"> Pitfalls</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="access.html#persistent.access.pitfalls.boundaries"> Savepoint boundaries</a></span></dt>
+<dt><span class="section"><a href="access.html#persistent.access.pitfalls.objectboundaries"> Persistent
+        Object boundaries</a></span></dt>
+<dt><span class="section"><a href="access.html#persistent.access.pitfalls.lifetime"> Lifetime of instances</a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.access.typereq"></a><a class="link" href="access.html#persistent.access.typereq" title="Persistent type requirements"> Persistent type requirements</a>
+</h3></div></div></div>
+<p>
+        Types that are to be used for <span class="emphasis"><em>persistent objects</em></span> are
+        required to model the <span class="emphasis"><em>Serializable</em></span> concept, as defined
+        by <a href="http://www.boost.org/doc/libs/1_40_0/libs/serialization/doc/serialization.html" target="_top">Boost.Serialization</a>.
+      </p>
+<p>
+        Example:
+      </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">bank_account</span><span class="special">{</span>
+<span class="keyword">private</span><span class="special">:</span>
+	<span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">serialization</span><span class="special">::</span><span class="identifier">access</span><span class="special">;</span>
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">account_no</span><span class="special">;</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">balance</span><span class="special">;</span>
+	<span class="special">}</span>
+	<span class="keyword">int</span> <span class="identifier">account_no</span><span class="special">;</span>
+	<span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">balance</span><span class="special">;</span>	
+<span class="special">};</span>
+</pre>
+<p>
+        There are several <a class="link" href="advanced.html#persistent.advanced.optmem" title="Optional members of persistent types">optional functions</a>
+        that can be implemented to improve performance, but <span class="emphasis"><em>Serializable</em></span>
+        is the only <span class="bold"><strong>requirement</strong></span>.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.access.persistentobject"></a><a class="link" href="access.html#persistent.access.persistentobject" title="Persistent objects"> Persistent objects</a>
+</h3></div></div></div>
+<p>
+        A <span class="emphasis"><em>persistent object</em></span> is a C++ object of a <span class="emphasis"><em>persistent
+        type</em></span> that is passed to a <span class="emphasis"><em>locator</em></span>.
+      </p>
+<p>
+        However, a <span class="emphasis"><em>persistent object</em></span> can contain more than one
+        C++ object.
+      </p>
+<p>
+        Example:
+      </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">person</span><span class="special">{</span>
+	<span class="identifier">string</span> <span class="identifier">name</span><span class="special">;</span>
+	<span class="identifier">address</span> <span class="special">*</span><span class="identifier">addr</span><span class="special">;</span>
+	<span class="comment">//Serializable
+</span><span class="special">};</span>
+</pre>
+<p>
+        There are 2 C++ objects, one of type <span class="emphasis"><em>person</em></span> and one
+        of type <span class="emphasis"><em>address</em></span>, but both are considered to be part
+        of one <span class="emphasis"><em>persistent object</em></span>. On the other hand, if the
+        object contains a <span class="emphasis"><em>locator</em></span> to another object instead
+        of a pointer, that object is a seperate <span class="emphasis"><em>persistent object</em></span>.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.access.locators"></a><a class="link" href="access.html#persistent.access.locators" title="Locators"> Locators</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="access.html#persistent.access.locators.concept"> Concept</a></span></dt>
+<dt><span class="section"><a href="access.html#persistent.access.locators.models"> Models</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.access.locators.concept"></a><a class="link" href="access.html#persistent.access.locators.concept" title="Concept"> Concept</a>
+</h4></div></div></div>
+<p>
+          An object pointer of a specific object type can be summarized as a concept
+          that provides information about how a specific object in memory can be
+          accessed. Dereferencing a pointer provides read or write access to the
+          object referenced by the pointer, depending on the const-ness of the pointer.
+        </p>
+<p>
+          Boost.Persistent defines a <span class="emphasis"><em>locator</em></span> to be a similar
+          but abstracted concept: A <span class="emphasis"><em>locator</em></span> also describes how
+          an object can be accessed, but it is not restrained to objects that currently
+          reside in memory. In practice, the object may be in memory, in a file or
+          e.g. mapped in a SQL database. How exactly the object is stored is not
+          exposed by the locator. Dereferencing a <span class="emphasis"><em>locator</em></span> moves
+          the object referenced by it to memory and returns a <span class="bold"><strong>pointer</strong></span>,
+          that can be used to access the object.
+        </p>
+<pre class="programlisting"><span class="identifier">Locator</span>   <span class="special">---</span><span class="identifier">indirection</span><span class="special">---&gt;</span>   <span class="identifier">Pointer</span>      <span class="special">---</span><span class="identifier">indirection</span><span class="special">---&gt;</span>   <span class="identifier">Object</span>
+</pre>
+<p>
+          When a locator to a new object is created, the object is moved to a storage
+          device once it is no longer used in memory, so the object can outlive the
+          application that created it, i.e. it is made persistent.
+        </p>
+<p>
+          When a <span class="emphasis"><em>locator</em></span> is dereferenced, it returns a shared_<span class="bold"><strong>ptr</strong></span>. As long as that shared_<span class="bold"><strong>ptr</strong></span>
+          (or copies of it) exist, the object is guaranteed to reside in memory.
+          When the last shared_<span class="bold"><strong>ptr</strong></span> goes out of scope,
+          the object lives on, but Boost.Persistent is free to move it back to a
+          storage device.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.access.locators.models"></a><a class="link" href="access.html#persistent.access.locators.models" title="Models"> Models</a>
+</h4></div></div></div>
+<p>
+          Boost.Persistent implements several <span class="emphasis"><em>locator</em></span> types,
+          that model the ownership concepts of C++ and Boost.SmartPtr:
+        </p>
+<div class="table">
+<a name="id2787993"></a><p class="title"><b>Table 1.1. Models of the Locator concept</b></p>
+<div class="table-contents"><table class="table" summary="Models of the Locator concept">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Name
+              </p>
+              </th>
+<th>
+              <p>
+                Ownership concept
+              </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <a class="link" href="access.html#persistent.access.locators.models.loc" title="loc">loc</a>
+              </p>
+              </td>
+<td>
+              <p>
+                No ownership management
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="access.html#persistent.access.locators.models.pinned_loc" title="pinned_loc">pinned_loc</a>
+              </p>
+              </td>
+<td>
+              <p>
+                Singleton
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="access.html#persistent.access.locators.models.scoped_loc" title="scoped_loc">scoped_loc</a>
+              </p>
+              </td>
+<td>
+              <p>
+                Exclusive ownership
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="access.html#persistent.access.locators.models.shared_loc" title="shared_loc">shared_loc</a>
+              </p>
+              </td>
+<td>
+              <p>
+                Shared ownership
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="access.html#persistent.access.locators.models.weak_loc" title="weak_loc">weak_loc</a>
+              </p>
+              </td>
+<td>
+              <p>
+                Weak shared ownership
+              </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.locators.models.loc"></a><a class="link" href="access.html#persistent.access.locators.models.loc" title="loc"> loc</a>
+</h5></div></div></div>
+<p>
+            <code class="computeroutput"><a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">loc</a></code> is a <span class="emphasis"><em>locator</em></span>
+            equivalent to a C++ raw pointer: It does not manage the lifetime of the
+            referenced persistent object. This introduces typical problems of raw
+            pointers like leaks and "dangling" pointers, but extended to
+            the persistent space, i.e. disk space leaks and undefined behaviour even
+            after an application restart due to a dangling <span class="emphasis"><em>locator</em></span>.
+            <span class="emphasis"><em>Locators</em></span> that manage the lifetime of the referenced
+            object like <span class="emphasis"><em>shared_loc</em></span> should be preferred, but
+            <span class="emphasis"><em>locs</em></span> have their use cases, especially in controlled
+            environments like containers.
+          </p>
+<p>
+            Objects handled by a <code class="computeroutput"><a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">loc</a></code>
+            are created by passing a new C++ object to its constructor. They are
+            deleted by calling <code class="computeroutput"><a class="link" href="../boost/persistent/basic_loc.html#id2538094-bb">loc::remove()</a></code>.
+            remove() is the equivalent to the C++ <span class="emphasis"><em>delete</em></span> keyword:
+            It calls the object's <span class="emphasis"><em>finalizer</em></span> and erases the object.
+          </p>
+<p>
+            Example:
+          </p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">pers_type</span><span class="special">);</span>
+
+<span class="comment">//use obj until it is no longer needed
+</span>
+<span class="identifier">obj</span><span class="special">.</span><span class="identifier">remove</span><span class="special">();</span>
+</pre>
+<p>
+            Accessing a (non-existent) <span class="emphasis"><em>persistent object</em></span> that
+            was removed results in undefined behaviour.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.locators.models.pinned_loc"></a><a class="link" href="access.html#persistent.access.locators.models.pinned_loc" title="pinned_loc"> pinned_loc</a>
+</h5></div></div></div>
+<p>
+            A <code class="computeroutput"><a class="link" href="../boost/persistent/basic_pinned_loc.html" title="Class template basic_pinned_loc">pinned_loc</a></code>
+            can be used to form the <span class="emphasis"><em>roots</em></span> of a stored object
+            graph.
+          </p>
+<p>
+            Most objects of a persistent object graph can be accessed by retrieving
+            a <span class="emphasis"><em>locator</em></span> to them from another persistent object,
+            and accessing them through this locator. However, at least one object
+            needs to be reachable from the start, often called the <span class="emphasis"><em>entry
+            point</em></span> or the <span class="emphasis"><em>root</em></span> of an object graph,
+            otherwise the whole stored graph would be unreachable. A <code class="computeroutput"><a class="link" href="../boost/persistent/basic_pinned_loc.html" title="Class template basic_pinned_loc">pinned_loc</a></code>
+            can be used to accomplish this.
+          </p>
+<p>
+            A <code class="computeroutput"><a class="link" href="../boost/persistent/basic_pinned_loc.html" title="Class template basic_pinned_loc">pinned_loc</a></code>
+            represents a <span class="emphasis"><em>locator</em></span> to an object that is <span class="emphasis"><em>pinned</em></span>
+            to a certain type, by default its own type. So when the application is
+            restarted the same object can be accessed by that type alone, without
+            having a locator to it.
+          </p>
+<p>
+            The <code class="computeroutput"><a class="link" href="../boost/persistent/basic_pinned_loc.html" title="Class template basic_pinned_loc">pinned_loc</a></code>
+            constructor initializes the locator to the <span class="emphasis"><em>pinned</em></span>
+            object, if there is one. By calling <code class="computeroutput">pinned_loc::reset</code>
+            a new <span class="emphasis"><em>persistent object</em></span> can be associated with that
+            type.
+          </p>
+<p>
+            Example:
+          </p>
+<pre class="programlisting"><span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">;</span>
+<span class="keyword">if</span><span class="special">(</span><span class="identifier">obj</span><span class="special">){</span>
+	<span class="comment">//obj contains the object pinned to pers_type
+</span><span class="special">}</span><span class="keyword">else</span><span class="special">{</span>
+	<span class="comment">//there is no object pinned to pers_type
+</span><span class="special">}</span>
+<span class="special">...</span>
+<span class="identifier">obj</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">pers_type</span><span class="special">);</span> <span class="comment">//unpins the object in obj and pins the new object to pers_type
+</span><span class="special">...</span>
+<span class="identifier">obj</span><span class="special">.</span><span class="identifier">remove</span><span class="special">();</span> <span class="comment">//unpins the object and removes it from the storage device
+</span></pre>
+<p>
+            Typically, this is used to retrieve the <span class="emphasis"><em>root</em></span> of
+            an object graph if it already exists, and create a new one if it does
+            not:
+          </p>
+<pre class="programlisting"><span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">root</span><span class="special">;</span>
+<span class="keyword">if</span><span class="special">(!</span><span class="identifier">root</span><span class="special">)</span> <span class="identifier">root</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">pers_type</span><span class="special">);</span>
+</pre>
+<p>
+            This code snippet gets a <span class="emphasis"><em>locator</em></span> to a previously
+            stored object of type <span class="emphasis"><em>pers_type</em></span>. If no object was
+            previously associated with <span class="emphasis"><em>pers_type</em></span>, a new object
+            is created and associated with that type.
+          </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              <code class="computeroutput"><a class="link" href="../boost/persistent/basic_pinned_loc.html" title="Class template basic_pinned_loc">pinned_loc</a></code>
+              has a template parameter named <span class="emphasis"><em>PinTag</em></span> to be able
+              to <span class="emphasis"><em>pin</em></span> more than one object of the same type.
+            </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.locators.models.scoped_loc"></a><a class="link" href="access.html#persistent.access.locators.models.scoped_loc" title="scoped_loc"> scoped_loc</a>
+</h5></div></div></div>
+<p>
+            A <code class="computeroutput"><a class="link" href="../boost/persistent/basic_scoped_loc.html" title="Class template basic_scoped_loc">scoped_loc</a></code>
+            exclusively holds a <span class="emphasis"><em>locator</em></span> to a <span class="emphasis"><em>persistent
+            object</em></span>, and removes it as soon as itself is removed. It is
+            not CopyConstructible or Assignable.
+          </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              <code class="computeroutput"><a class="link" href="../boost/persistent/basic_scoped_loc.html" title="Class template basic_scoped_loc">scoped_loc</a></code>
+              is implemented using a <span class="emphasis"><em>finalizer</em></span>.
+            </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.locators.models.shared_loc"></a><a class="link" href="access.html#persistent.access.locators.models.shared_loc" title="shared_loc"> shared_loc</a>
+</h5></div></div></div>
+<p>
+            A <code class="computeroutput"><a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">shared_loc</a></code>,
+            like a <span class="emphasis"><em>scoped_loc</em></span>, automatically removes objects
+            as soon as itself is removed, but is able to share the object ownership
+            with other <span class="emphasis"><em>shared_locs</em></span> to the same object. Only
+            when the last <code class="computeroutput"><a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">shared_loc</a></code>
+            to an object is removed, the object is removed as well.
+          </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              A resource manager may choose to implement <span class="emphasis"><em>shared_locs</em></span>
+              by reference counting (the default resource manager does). The downside
+              of reference counting is that <span class="emphasis"><em>reference cycles</em></span>
+              are not detected, i.e. if object A is referenced through a <code class="computeroutput"><a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">shared_loc</a></code> by
+              object B, but object B is also referenced by object A, even if not
+              directly but through multiple other objects, the <span class="emphasis"><em>reference
+              cycle</em></span> will never be removed, although it is no longer reachable.
+              <span class="emphasis"><em>weak_locs</em></span> can be used to "break" <span class="emphasis"><em>reference
+              cycles</em></span>.
+            </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.locators.models.weak_loc"></a><a class="link" href="access.html#persistent.access.locators.models.weak_loc" title="weak_loc"> weak_loc</a>
+</h5></div></div></div>
+<p>
+            A <code class="computeroutput"><a class="link" href="../boost/persistent/basic_weak_loc.html" title="Class template basic_weak_loc">weak_loc</a></code>
+            can reference <span class="emphasis"><em>persistent objects</em></span> that are managed
+            by a <span class="emphasis"><em>shared_loc</em></span>, with the difference that <span class="emphasis"><em>weak_locs</em></span>
+            do not constitute a reference that keeps a <span class="emphasis"><em>persistent object</em></span>
+            from being removed. This means that an object is removed when the last
+            <span class="emphasis"><em>shared_loc</em></span> referencing it is removed, even though
+            a <code class="computeroutput"><a class="link" href="../boost/persistent/basic_weak_loc.html" title="Class template basic_weak_loc">weak_loc</a></code>
+            referencing the object still exists. <code class="computeroutput"><a class="link" href="../boost/persistent/basic_weak_loc.html#id2542079-bb">expired()</a></code>
+            returns <span class="emphasis"><em>true</em></span> if that is the case, and <code class="computeroutput"><a class="link" href="../boost/persistent/basic_weak_loc.html#id2542135-bb">lock()</a></code> returns
+            an empty <span class="emphasis"><em>shared_loc</em></span>.
+          </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              The behaviour of expired() and lock() may differ slightly from the
+              behaviour one might expect after using boost::weak_ptr. When the last
+              <span class="emphasis"><em>shared_loc</em></span> to a <span class="emphasis"><em>persistent object</em></span>
+              is removed, the return value of <code class="computeroutput"><a class="link" href="../boost/persistent/basic_weak_loc.html#id2542079-bb">weak_loc::expired()</a></code>
+              is undefined until the <span class="emphasis"><em>transaction</em></span> is committed
+              or the next <span class="emphasis"><em>savepoint</em></span> is reached. Effectively
+              that means that an object may still be reachable through a <code class="computeroutput"><a class="link" href="../boost/persistent/basic_weak_loc.html" title="Class template basic_weak_loc">weak_loc</a></code> even though
+              there is no <span class="emphasis"><em>shared_loc</em></span> left that is referencing
+              the object. However, it is specified that the value returned by expired()
+              must not change spontaniously: The value either changes by removing
+              the last <span class="emphasis"><em>shared_loc</em></span> or by committing the <span class="emphasis"><em>transaction</em></span>
+              or saving.
+            </p></td></tr>
+</table></div>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.access.savepoints"></a><a class="link" href="access.html#persistent.access.savepoints" title="Savepoints"> Savepoints</a>
+</h3></div></div></div>
+<p>
+        A <span class="emphasis"><em>savepoint</em></span> is a point in code where Boost.Persistent
+        is instructed to make the changes made to <span class="emphasis"><em>persistent objects</em></span>
+        permanent. A <span class="emphasis"><em>savepoint</em></span> is conducted as an <span class="emphasis"><em>atomic
+        operation</em></span> by the library, i.e. when a <span class="emphasis"><em>savepoint</em></span>
+        was passed successfully, <span class="bold"><strong>all</strong></span> changes to
+        <span class="emphasis"><em>persistent objects</em></span> up to that point are guaranteed to
+        be permanently saved, even if the application crashes shortly thereafter.
+      </p>
+<p>
+        If the application is aborted before or during the execution of the <span class="emphasis"><em>savepoint</em></span>,
+        it is guaranteed that <span class="bold"><strong>none</strong></span> of the changes
+        made since the last <span class="emphasis"><em>savepoint</em></span> are made permanent.
+      </p>
+<p>
+        Example:
+      </p>
+<pre class="programlisting"><span class="identifier">savepoints_session</span> <span class="identifier">session</span><span class="special">(</span><span class="string">"mydb"</span><span class="special">);</span>
+<span class="comment">// make changes
+</span><span class="identifier">session</span><span class="special">.</span><span class="identifier">save</span><span class="special">();</span> <span class="comment">// State 1 is saved.
+</span><span class="comment">// make changes
+</span><span class="identifier">session</span><span class="special">.</span><span class="identifier">save</span><span class="special">();</span> <span class="comment">// State 2 is saved.
+</span></pre>
+<p>
+        If saving State 2 fails, or if this point is not reached e.g. due to an exception,
+        State 1 is in force. If saving State 2 succeeds, State 2 is in force. The
+        state is never a mix between State 1 and State 2, no matter how many objects
+        were changed or at what point an application or system failure occurs.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          <span class="emphasis"><em>Savepoints</em></span> are a simplified representation of <span class="emphasis"><em>transactions</em></span>,
+          designed for applications that don't need fine-grained control over atomic
+          operations, but only need to make sure there is a consistent application
+          state at all times.
+        </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.access.tutorials"></a><a class="link" href="access.html#persistent.access.tutorials" title="Tutorials"> Tutorials</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="access.html#persistent.access.tutorials.tutorial1"> Tutorial 1:
+        Storing an object</a></span></dt>
+<dt><span class="section"><a href="access.html#persistent.access.tutorials.tutorial2"> Tutorial 2:
+        Linked list</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.access.tutorials.tutorial1"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial1" title="Tutorial 1: Storing an object"> Tutorial 1:
+        Storing an object</a>
+</h4></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial1.type"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial1.type" title="Defining a persistent type"> Defining
+          a persistent type</a>
+</h5></div></div></div>
+<p>
+            A type that is to be used for a <span class="emphasis"><em>persistent object</em></span>
+            must by <span class="emphasis"><em>Serializable</em></span> as defined by Boost.Serialization:
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">address</span><span class="special">{</span>
+	<span class="identifier">string</span> <span class="identifier">name</span><span class="special">;</span>
+	<span class="identifier">string</span> <span class="identifier">street</span><span class="special">;</span>
+	<span class="keyword">int</span> <span class="identifier">number</span><span class="special">;</span>
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">name</span> <span class="special">&amp;</span> <span class="identifier">street</span> <span class="special">&amp;</span> <span class="identifier">number</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../../doc/html/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              <a class="link" href="access.html#persistent.access.typereq" title="Persistent type requirements">Persistent type requirements</a>
+            </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial1.open"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial1.open" title="Opening a session"> Opening
+          a session</a>
+</h5></div></div></div>
+<p>
+            A session using the default configuration can be opened by using a <code class="computeroutput"><a class="link" href="../boost/persistent/savepoints_session.html" title="Class savepoints_session">savepoints_session</a></code>
+            object:
+          </p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">persistent</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(){</span>
+	<span class="identifier">savepoints_session</span> <span class="identifier">session</span><span class="special">(</span><span class="string">"mydb"</span><span class="special">);</span>
+	<span class="comment">//make changes
+</span>	<span class="identifier">session</span><span class="special">.</span><span class="identifier">save</span><span class="special">();</span>
+	<span class="comment">//make changes
+</span>	<span class="identifier">session</span><span class="special">.</span><span class="identifier">save</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+            <span class="emphasis"><em>mydb</em></span> is, extended by various file extensions, used
+            as a filename to store the objects.
+          </p>
+<p>
+            To automatically save all changes made to objects on shutdown, a <code class="computeroutput"><a class="link" href="../boost/persistent/save_on_shutdown.html" title="Class save_on_shutdown">save_on_shutdown</a></code>
+            object can be used:
+          </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(){</span>
+	<span class="identifier">savepoints_session</span> <span class="identifier">session</span><span class="special">(</span><span class="string">"mydb"</span><span class="special">);</span>
+	<span class="identifier">save_on_shutdown</span> <span class="identifier">save</span><span class="special">(</span><span class="identifier">session</span><span class="special">);</span>
+
+	<span class="comment">//make changes
+</span><span class="special">}</span>
+</pre>
+<p>
+            In case an uncaught exception is thrown or the application is aborted
+            for another reason, when the application is restarted all <span class="emphasis"><em>persistent
+            objects</em></span> will have the state they had at the last call to
+            <span class="emphasis"><em>save()</em></span>.
+          </p>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../../doc/html/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              <a class="link" href="access.html#persistent.access.savepoints" title="Savepoints">Savepoints</a>
+            </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial1.createobj"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial1.createobj" title="Creating a persistent object">
+          Creating a persistent object</a>
+</h5></div></div></div>
+<p>
+            <span class="emphasis"><em>locators</em></span> are used to create <span class="emphasis"><em>persistent
+            objects</em></span>. A <span class="emphasis"><em>locator</em></span> is similar to a pointer,
+            but is not restricted to objects in memory:
+          </p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">address</span><span class="special">&gt;</span> <span class="identifier">myaddress</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">address</span><span class="special">);</span>
+</pre>
+<p>
+            A <a class="link" href="access.html#persistent.access.locators.models.loc" title="loc">loc</a> is
+            a <span class="emphasis"><em>locator</em></span> that is equivalent to a C++ raw pointer:
+            There is no ownership management, the <span class="emphasis"><em>persistent object</em></span>
+            needs to be deleted manually when it is no longer used.
+          </p>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../../doc/html/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              <a class="link" href="access.html#persistent.access.locators" title="Locators">Locators</a>
+            </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial1.pinning"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial1.pinning" title="Object pinning"> Object
+          pinning</a>
+</h5></div></div></div>
+<p>
+            The <span class="emphasis"><em>address</em></span> object is stored by the code above alone,
+            but once the application has shut down the <span class="emphasis"><em>locator</em></span>
+            to the object is lost and there is no way to retrieve the stored object
+            when the application is restarted.
+          </p>
+<p>
+            Instead, a <a class="link" href="access.html#persistent.access.locators.models.pinned_loc" title="pinned_loc">pinned_loc</a>
+            can be used:
+          </p>
+<pre class="programlisting"><span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">address</span><span class="special">&gt;</span> <span class="identifier">myaddress</span><span class="special">;</span>
+<span class="keyword">if</span><span class="special">(!</span><span class="identifier">myaddress</span><span class="special">)</span> <span class="identifier">myaddress</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">address</span><span class="special">);</span>
+</pre>
+<p>
+            This code snippet tries to retrieve a previously stored object. If there
+            is none, it creates a new one and associates the new object with its
+            own type, so it can be retrieved by <span class="emphasis"><em>pinned_loc</em></span> the
+            next time.
+          </p>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../../doc/html/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              <a class="link" href="access.html#persistent.access.locators.models.pinned_loc" title="pinned_loc">pinned_loc</a>
+            </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial1.modify"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial1.modify" title="Accessing an object"> Accessing
+          an object</a>
+</h5></div></div></div>
+<p>
+            A <span class="emphasis"><em>persistent object</em></span> can be read or modified by dereferencing
+            a <span class="emphasis"><em>locator</em></span>:
+          </p>
+<pre class="programlisting"><span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">address</span><span class="special">&gt;</span> <span class="identifier">myaddress</span><span class="special">;</span>
+<span class="identifier">myaddress</span><span class="special">-&gt;</span><span class="identifier">name</span><span class="special">=</span><span class="string">"Mike"</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial1.delete"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial1.delete" title="Deleting an object"> Deleting
+          an object</a>
+</h5></div></div></div>
+<p>
+            A pinned object can be deleted by calling <code class="computeroutput"><a class="link" href="../boost/persistent/basic_pinned_loc.html#id2539252-bb">pinned_loc::remove()</a></code>.
+          </p>
+<p>
+            It <span class="emphasis"><em>unpins</em></span> and erases the object:
+          </p>
+<pre class="programlisting"><span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">address</span><span class="special">&gt;</span> <span class="identifier">myaddress</span><span class="special">;</span>
+<span class="identifier">myaddress</span><span class="special">.</span><span class="identifier">remove</span><span class="special">();</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial1.example"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial1.example" title="Example"> Example</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">savepoints_session</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">pinned_loc</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">persistent</span><span class="special">;</span>
+
+<span class="keyword">class</span> <span class="identifier">address</span><span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+	<span class="identifier">address</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">name</span><span class="special">,</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">street</span><span class="special">)</span>
+		<span class="special">:</span> <span class="identifier">name</span><span class="special">(</span><span class="identifier">name</span><span class="special">),</span> <span class="identifier">street</span><span class="special">(</span><span class="identifier">street</span><span class="special">){}</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">name</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">street</span><span class="special">;</span>
+<span class="keyword">private</span><span class="special">:</span>
+	<span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">serialization</span><span class="special">::</span><span class="identifier">access</span><span class="special">;</span>
+	<span class="identifier">address</span><span class="special">(){}</span>
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">name</span> <span class="special">&amp;</span> <span class="identifier">street</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(){</span>
+	<span class="identifier">savepoints_session</span> <span class="identifier">session</span><span class="special">(</span><span class="string">"mydb"</span><span class="special">);</span>
+	<span class="identifier">save_on_shutdown</span> <span class="identifier">save</span><span class="special">(</span><span class="identifier">session</span><span class="special">);</span>
+
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">address</span><span class="special">&gt;</span> <span class="identifier">myaddress</span><span class="special">;</span>
+	<span class="keyword">if</span><span class="special">(!</span><span class="identifier">myaddress</span><span class="special">){</span>
+		<span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"What's your name: "</span><span class="special">;</span>
+		<span class="identifier">string</span> <span class="identifier">name</span><span class="special">;</span> <span class="identifier">cin</span> <span class="special">&gt;&gt;</span> <span class="identifier">name</span><span class="special">;</span>
+		<span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Where do you live: "</span><span class="special">;</span>
+		<span class="identifier">string</span> <span class="identifier">address</span><span class="special">;</span> <span class="identifier">cin</span> <span class="special">&gt;&gt;</span> <span class="identifier">address</span><span class="special">;</span>
+
+		<span class="identifier">myaddress</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">address</span><span class="special">(</span><span class="identifier">name</span><span class="special">,</span><span class="identifier">address</span><span class="special">));</span>
+	<span class="special">}</span>
+
+	<span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Your name is: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">myaddress</span><span class="special">-&gt;</span><span class="identifier">name</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+	<span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"You live at: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">myaddress</span><span class="special">-&gt;</span><span class="identifier">street</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.access.tutorials.tutorial2"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial2" title="Tutorial 2: Linked list"> Tutorial 2:
+        Linked list</a>
+</h4></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial2.intro"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial2.intro" title="Introduction"> Introduction</a>
+</h5></div></div></div>
+<p>
+            Locators can not only be used at runtime to access <span class="emphasis"><em>persistent
+            objects</em></span>, but they can be stored as a part of a <span class="emphasis"><em>persistent
+            object</em></span>:
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">node</span><span class="special">{</span>
+	<span class="keyword">explicit</span> <span class="identifier">node</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">v</span><span class="special">,</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">n</span><span class="special">)</span>
+		<span class="special">:</span> <span class="identifier">value</span><span class="special">(</span><span class="identifier">v</span><span class="special">),</span><span class="identifier">next</span><span class="special">(</span><span class="identifier">n</span><span class="special">){}</span>
+
+	<span class="keyword">int</span> <span class="identifier">value</span><span class="special">;</span>
+	<span class="identifier">shared_loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">next</span><span class="special">;</span>
+
+	<span class="identifier">node</span><span class="special">(){}</span>
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">value</span> <span class="special">&amp;</span> <span class="identifier">next</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+            <span class="emphasis"><em>node</em></span> represents a node of a singly linked list of
+            <span class="emphasis"><em>persistent objects</em></span> in this tutorial.
+          </p>
+<p>
+            Here, a <a class="link" href="access.html#persistent.access.locators.models.shared_loc" title="shared_loc">shared_loc</a>
+            is used to reference the next object in a singly linked list, so there
+            is no need to remove the objects manually when they are no longer used
+            by the list, because <span class="emphasis"><em>shared_loc</em></span> removes the object
+            automatically when it is no longer reachable.
+          </p>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../../doc/html/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              <a class="link" href="access.html#persistent.access.locators.models.shared_loc" title="shared_loc">shared_loc</a>
+            </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              STL containers can be stored as part of a <span class="emphasis"><em>persistent object</em></span>,
+              and there are <a class="link" href="advanced.html#persistent.advanced.containers" title="Intrusive Persistent Object Containers">Intrusive
+              Persistent Object Containers</a>. The singly linked list is implemented
+              manually for the purpose of this tutorial only.
+            </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial2.add"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial2.add" title="Inserting an object"> Inserting
+          an object</a>
+</h5></div></div></div>
+<p>
+            A new node is inserted at the front of the list:
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">push_front</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">value</span><span class="special">){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">begin</span><span class="special">;</span>
+	<span class="identifier">begin</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">node</span><span class="special">(</span><span class="identifier">value</span><span class="special">,</span><span class="identifier">begin</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="special">}</span>
+</pre>
+<p>
+            Again, <a class="link" href="access.html#persistent.access.locators.models.pinned_loc" title="pinned_loc">pinned_loc</a>
+            is used to store the first node of the list.
+          </p>
+<p>
+            The constructor of <span class="emphasis"><em>node</em></span> takes a <span class="emphasis"><em>loc</em></span>,
+            not a <span class="emphasis"><em>pinned_loc</em></span>, as not every node that is part
+            of a list is a <span class="emphasis"><em>pinned</em></span> object obviously, so <code class="computeroutput"><a class="link" href="../boost/persistent/basic_pinned_loc.html#id2539064-bb">pinned_loc::get()</a></code>
+            is used to retrieve the <span class="emphasis"><em>locator</em></span> that is managed
+            by the <span class="emphasis"><em>pinned_loc</em></span>.
+          </p>
+<p>
+            Once the new node is created it is made the new <span class="emphasis"><em>begin</em></span>
+            node by calling <code class="computeroutput"><a class="link" href="../boost/persistent/basic_pinned_loc.html#id2539082-bb">pinned_loc::reset()</a></code>,
+            and the old <span class="emphasis"><em>begin</em></span> node will be the second node in
+            the list.
+          </p>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../../doc/html/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              <a class="link" href="access.html#persistent.access.locators.models.pinned_loc" title="pinned_loc">pinned_loc</a>
+            </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial2.print"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial2.print" title="Printing the list"> Printing
+          the list</a>
+</h5></div></div></div>
+<p>
+            The singly linked list is iterated to write its values to <span class="emphasis"><em>cout</em></span>:
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">print</span><span class="special">(){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">begin</span><span class="special">;</span>
+	<span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">current</span><span class="special">=</span><span class="identifier">begin</span><span class="special">.</span><span class="identifier">get</span><span class="special">();</span>
+	<span class="keyword">while</span><span class="special">(</span><span class="identifier">current</span><span class="special">){</span>
+		<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">current</span><span class="special">-&gt;</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="string">", "</span><span class="special">;</span>
+		<span class="identifier">current</span><span class="special">=</span><span class="identifier">current</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">.</span><span class="identifier">get</span><span class="special">();</span>
+	<span class="special">}</span>
+	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+            Again, so that <span class="emphasis"><em>current</em></span> can point to the first node,
+            which is managed by a <span class="emphasis"><em>pinned_loc</em></span>, and any another
+            node in the list, which are managed by <span class="emphasis"><em>shared_locs</em></span>,
+            the managed locators are retrieved by calling <span class="emphasis"><em>get()</em></span>.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial2.remove"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial2.remove" title="Removing objects"> Removing
+          objects</a>
+</h5></div></div></div>
+<p>
+            Since the list is a singly linked list, a reference to the node before
+            the node that ought to be removed is needed:
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">erase_after</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">){</span>
+	<span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">=</span><span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+            <span class="emphasis"><em>node::next</em></span> is a <span class="emphasis"><em>shared_loc</em></span>,
+            so prev-&gt;next can simply be overwritten by skipping a node in the
+            list: The object that was previously referred to by prev-&gt;next is
+            removed automatically.
+          </p>
+<p>
+            Similarily, all objects after a specific node can be removed:
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">erase_all_after</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">){</span>
+	<span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">.</span><span class="identifier">reset</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+            The thousands of nodes that might have been after <span class="emphasis"><em>prev</em></span>
+            are removed from the list and from the storage device.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.access.tutorials.tutorial2.example"></a><a class="link" href="access.html#persistent.access.tutorials.tutorial2.example" title="Example"> Example</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">lexical_cast</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">savepoints_session</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">loc</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">pinned_loc</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">shared_loc</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">persistent</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">node</span><span class="special">{</span>
+	<span class="keyword">explicit</span> <span class="identifier">node</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">v</span><span class="special">,</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">n</span><span class="special">)</span>
+		<span class="special">:</span> <span class="identifier">value</span><span class="special">(</span><span class="identifier">v</span><span class="special">),</span><span class="identifier">next</span><span class="special">(</span><span class="identifier">n</span><span class="special">){}</span>
+
+	<span class="keyword">int</span> <span class="identifier">value</span><span class="special">;</span>
+	<span class="identifier">shared_loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">next</span><span class="special">;</span>
+<span class="keyword">private</span><span class="special">:</span>
+	<span class="identifier">node</span><span class="special">(){}</span>
+	<span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">serialization</span><span class="special">::</span><span class="identifier">access</span><span class="special">;</span>
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">value</span> <span class="special">&amp;</span> <span class="identifier">next</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">void</span> <span class="identifier">print</span><span class="special">(){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">begin</span><span class="special">;</span>
+	<span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">current</span><span class="special">=</span><span class="identifier">begin</span><span class="special">.</span><span class="identifier">get</span><span class="special">();</span>
+	<span class="keyword">while</span><span class="special">(</span><span class="identifier">current</span><span class="special">){</span>
+		<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">current</span><span class="special">-&gt;</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="string">", "</span><span class="special">;</span>
+		<span class="identifier">current</span><span class="special">=</span><span class="identifier">current</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">.</span><span class="identifier">get</span><span class="special">();</span>
+	<span class="special">}</span>
+	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">push_front</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">value</span><span class="special">){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">begin</span><span class="special">;</span>
+	<span class="identifier">begin</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">node</span><span class="special">(</span><span class="identifier">value</span><span class="special">,</span><span class="identifier">begin</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">erase_after</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">){</span>
+	<span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">=</span><span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">erase_all_after</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">){</span>
+	<span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">.</span><span class="identifier">reset</span><span class="special">();</span>
+<span class="special">}</span>
+
+<span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">get_nth_node</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">n</span><span class="special">){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">begin</span><span class="special">;</span>
+	<span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">current</span><span class="special">=</span><span class="identifier">begin</span><span class="special">.</span><span class="identifier">get</span><span class="special">();</span>
+	<span class="keyword">for</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">c</span><span class="special">=</span><span class="number">0</span><span class="special">;</span><span class="identifier">c</span><span class="special">&lt;</span><span class="identifier">n</span><span class="special">;++</span><span class="identifier">c</span><span class="special">)</span> <span class="identifier">current</span><span class="special">=</span><span class="identifier">current</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">.</span><span class="identifier">get</span><span class="special">();</span>
+	<span class="keyword">return</span> <span class="identifier">current</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span><span class="keyword">char</span> <span class="special">*</span><span class="identifier">argv</span><span class="special">[]){</span>
+	<span class="identifier">savepoints_session</span> <span class="identifier">session</span><span class="special">(</span><span class="string">"mydb"</span><span class="special">);</span>
+	<span class="identifier">save_on_shutdown</span> <span class="identifier">save</span><span class="special">(</span><span class="identifier">session</span><span class="special">);</span>
+
+	<span class="keyword">if</span><span class="special">(</span><span class="identifier">argc</span> <span class="special">&lt;</span> <span class="number">2</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">EXIT_FAILURE</span><span class="special">;</span>
+	<span class="identifier">string</span> <span class="identifier">cmd</span><span class="special">=</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
+	<span class="keyword">if</span><span class="special">(</span><span class="identifier">cmd</span> <span class="special">==</span> <span class="string">"print"</span><span class="special">)</span> <span class="identifier">print</span><span class="special">();</span>
+	<span class="keyword">else</span><span class="special">{</span>
+		<span class="keyword">if</span><span class="special">(</span><span class="identifier">argc</span> <span class="special">&lt;</span> <span class="number">3</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">EXIT_FAILURE</span><span class="special">;</span>
+		<span class="keyword">if</span><span class="special">(</span><span class="identifier">cmd</span> <span class="special">==</span> <span class="string">"push_front"</span><span class="special">){</span>
+			<span class="identifier">push_front</span><span class="special">(</span><span class="identifier">lexical_cast</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">2</span><span class="special">]));</span>
+		<span class="special">}</span><span class="keyword">else</span> <span class="keyword">if</span><span class="special">(</span><span class="identifier">cmd</span> <span class="special">==</span> <span class="string">"erase_after"</span><span class="special">){</span>
+			<span class="identifier">erase_after</span><span class="special">(</span><span class="identifier">get_nth_node</span><span class="special">(</span><span class="identifier">lexical_cast</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">2</span><span class="special">])));</span>
+		<span class="special">}</span><span class="keyword">else</span> <span class="keyword">if</span><span class="special">(</span><span class="identifier">cmd</span> <span class="special">==</span> <span class="string">"erase_all_after"</span><span class="special">){</span>
+			<span class="identifier">erase_all_after</span><span class="special">(</span><span class="identifier">get_nth_node</span><span class="special">(</span><span class="identifier">lexical_cast</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">2</span><span class="special">])));</span>
+		<span class="special">}</span>
+	<span class="special">}</span>
+<span class="special">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.access.pitfalls"></a><a class="link" href="access.html#persistent.access.pitfalls" title="Pitfalls"> Pitfalls</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="access.html#persistent.access.pitfalls.boundaries"> Savepoint boundaries</a></span></dt>
+<dt><span class="section"><a href="access.html#persistent.access.pitfalls.objectboundaries"> Persistent
+        Object boundaries</a></span></dt>
+<dt><span class="section"><a href="access.html#persistent.access.pitfalls.lifetime"> Lifetime of instances</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.access.pitfalls.boundaries"></a><a class="link" href="access.html#persistent.access.pitfalls.boundaries" title="Savepoint boundaries"> Savepoint boundaries</a>
+</h4></div></div></div>
+<p>
+          Instances obtained before a savepoint shall not be used after the savepoint.
+        </p>
+<p>
+          The result of dereferencing a <span class="emphasis"><em>locator</em></span> can be saved
+          for efficiency, for example instead of:
+        </p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="identifier">obj</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+<span class="identifier">obj</span><span class="special">-&gt;</span><span class="identifier">b</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+</pre>
+<p>
+          one could write:
+        </p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">inst</span><span class="special">=*</span><span class="identifier">obj</span><span class="special">;</span>
+<span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+<span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">b</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+</pre>
+<p>
+          Although the first code snippet does not cause the <span class="emphasis"><em>persistent
+          object</em></span> to be loaded from disk twice, since objects are cached,
+          it is less efficient than the second code snippet.
+        </p>
+<p>
+          However, instances must not be used across savepoints:
+        </p>
+<pre class="programlisting"><span class="identifier">savepoints_session</span> <span class="identifier">session</span><span class="special">(</span><span class="string">"mydb"</span><span class="special">);</span>
+
+<span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">inst</span><span class="special">=*</span><span class="identifier">obj</span><span class="special">;</span>
+
+<span class="identifier">session</span><span class="special">.</span><span class="identifier">save</span><span class="special">();</span> <span class="comment">//savepoint
+</span>
+<span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span> <span class="comment">//error
+</span></pre>
+<p>
+          The resulting object state of this is undefined.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.access.pitfalls.objectboundaries"></a><a class="link" href="access.html#persistent.access.pitfalls.objectboundaries" title="Persistent Object boundaries"> Persistent
+        Object boundaries</a>
+</h4></div></div></div>
+<p>
+          A <span class="emphasis"><em>persistent object</em></span> can contain more than one C++
+          object.
+        </p>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../../doc/html/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            <a class="link" href="access.html#persistent.access.persistentobject" title="Persistent objects">Persistent Objects</a>
+          </p></td></tr>
+</table></div>
+<p>
+          The C++ objects that are part of a <span class="emphasis"><em>persistent object</em></span>
+          must not be shared among <span class="emphasis"><em>persistent objects</em></span>.
+        </p>
+<p>
+          Example:
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">bank_account</span><span class="special">{</span>
+	<span class="keyword">int</span> <span class="identifier">account_no</span><span class="special">;</span>
+	<span class="identifier">bank</span> <span class="special">*</span><span class="identifier">b</span><span class="special">;</span> <span class="comment">//the bank this account belongs to
+</span>	<span class="comment">//Serializable
+</span><span class="special">};</span>
+</pre>
+<p>
+          When instances of this <span class="emphasis"><em>bank_account</em></span> type are used
+          as <span class="emphasis"><em>persistent objects</em></span>, the <span class="emphasis"><em>bank</em></span>
+          object is part of the <span class="emphasis"><em>persistent object</em></span> of type <span class="emphasis"><em>bank_account</em></span>.
+          If multiple <span class="emphasis"><em>bank_accounts</em></span> point to the same <span class="emphasis"><em>bank</em></span>,
+          multiple <span class="emphasis"><em>persistent objects</em></span> share a C++ object, which
+          must not be the case.
+        </p>
+<p>
+          Instead, a locator to a seperate <span class="emphasis"><em>persistent object</em></span>
+          of type <span class="emphasis"><em>bank</em></span> can be used:
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">bank_account</span><span class="special">{</span>
+	<span class="keyword">int</span> <span class="identifier">account_no</span><span class="special">;</span>
+	<span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">bank</span><span class="special">&gt;</span> <span class="identifier">b</span><span class="special">;</span>
+	<span class="comment">//Serializable
+</span><span class="special">};</span>
+</pre>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Inside of <span class="emphasis"><em>persistent objects</em></span>, C++ objects can still
+            be shared and Boost.Serialization's pointer tracking works as usual.
+            Read the <a href="http://www.boost.org/doc/libs/1_40_0/libs/serialization/doc/tutorial.html#pointers" target="_top">Tutorial
+            of Boost.Serialization</a> for more information.
+          </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.access.pitfalls.lifetime"></a><a class="link" href="access.html#persistent.access.pitfalls.lifetime" title="Lifetime of instances"> Lifetime of instances</a>
+</h4></div></div></div>
+<p>
+          Boost.Persistent is free to remove an instance not referenced by a shared_ptr
+          from memory at any time.
+        </p>
+<p>
+          Example:
+        </p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="keyword">int</span> <span class="special">*</span><span class="identifier">a</span><span class="special">=&amp;</span><span class="identifier">obj</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">;</span> <span class="comment">//error
+</span><span class="special">*</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span> <span class="comment">//undefined
+</span></pre>
+<p>
+          A <span class="emphasis"><em>locator</em></span> refers to an object that may or may not
+          be currently in memory. It is not a <span class="emphasis"><em>shared_ptr</em></span> that
+          keeps an object in memory, so taking a pointer to a member of <span class="emphasis"><em>obj</em></span>
+          is undefined.
+        </p>
+<p>
+          Instead, the object must be kept in memory by a <span class="emphasis"><em>shared_ptr</em></span>,
+          or an <code class="computeroutput"><a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a></code>
+          can be used:
+        </p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="identifier">interior_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">a</span><span class="special">(&amp;</span><span class="identifier">obj</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">,</span><span class="identifier">obj</span><span class="special">);</span>
+<span class="special">*</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span> <span class="comment">//ok
+</span></pre>
+<p>
+          An <code class="computeroutput"><a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a></code>
+          can point to members of a <span class="emphasis"><em>persistent object</em></span> and keeps
+          it in memory.
+        </p>
+<p>
+          A similar, but less obvious example is iterators. An iterator into a container
+          that is part of a <span class="emphasis"><em>persistent object</em></span> also is a pointer
+          into a <span class="emphasis"><em>persistent object</em></span>. The iterator can be invalidated
+          by Boost.Persistent moving the object back to disk.
+        </p>
+<p>
+          Example:
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">pers_type</span><span class="special">{</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vec</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(){</span>
+	<span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">it</span><span class="special">=</span><span class="identifier">obj</span><span class="special">-&gt;</span><span class="identifier">vec</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="comment">//error
+</span>	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="special">*</span><span class="identifier">it</span><span class="special">;</span> <span class="comment">//undefined
+</span><span class="special">}</span>
+</pre>
+<p>
+          After obtaining the iterator, Boost.Persistent is free to move the <span class="emphasis"><em>persistent
+          object</em></span> back to disk, invalidating <span class="emphasis"><em>it</em></span>. If
+          iterators into <span class="emphasis"><em>persistent objects</em></span> are to be used,
+          the <span class="emphasis"><em>persistent object</em></span> must be kept in memory by a
+          <span class="emphasis"><em>shared_ptr</em></span>:
+        </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(){</span>
+	<span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">;</span>
+	<span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">inst</span><span class="special">=*</span><span class="identifier">obj</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">it</span><span class="special">=</span><span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">vec</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="special">*</span><span class="identifier">it</span><span class="special">;</span> <span class="comment">//ok
+</span><span class="special">}</span>
+</pre>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Iterators into <span class="emphasis"><em>Intrusive Persistent Object Containers</em></span>
+            don't have that problem as they use <span class="emphasis"><em>locators</em></span> to
+            refer to container nodes
+          </p></td></tr>
+</table></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="transactions.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

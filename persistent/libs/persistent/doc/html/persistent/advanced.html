@@ -1,0 +1,795 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Advanced topics</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="prev" href="transactions.html" title="Using Transactions">
+<link rel="next" href="configuring.html" title="Configuring Boost.Persistent">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="transactions.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="configuring.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="persistent.advanced"></a><a class="link" href="advanced.html" title="Advanced topics"> Advanced topics</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.containers"> Intrusive Persistent
+      Object Containers</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.containers.intro"> Introduction</a></span></dt>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.containers.concept"> Concept</a></span></dt>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.containers.models"> Models</a></span></dt>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.containers.tutorial"> Tutorial
+        4: Intrusive linked list</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.threads"> Thread safety</a></span></dt>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.finalizers"> Finalizers</a></span></dt>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.optmem"> Optional members of persistent
+      types</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.advanced.containers"></a><a class="link" href="advanced.html#persistent.advanced.containers" title="Intrusive Persistent Object Containers"> Intrusive Persistent
+      Object Containers</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.containers.intro"> Introduction</a></span></dt>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.containers.concept"> Concept</a></span></dt>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.containers.models"> Models</a></span></dt>
+<dt><span class="section"><a href="advanced.html#persistent.advanced.containers.tutorial"> Tutorial
+        4: Intrusive linked list</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.advanced.containers.intro"></a><a class="link" href="advanced.html#persistent.advanced.containers.intro" title="Introduction"> Introduction</a>
+</h4></div></div></div>
+<p>
+          <a class="link" href="access.html#persistent.access.tutorials.tutorial2" title="Tutorial 2: Linked list">Tutorial2</a>
+          shows the manual implementation of a singly linked list of <span class="emphasis"><em>persistent
+          objects</em></span>. In addition to that, STL containers can be stored.
+        </p>
+<p>
+          Example:
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">pers_type</span><span class="special">{</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">l</span><span class="special">;</span>
+	<span class="comment">//Serializable
+</span><span class="special">};</span>
+</pre>
+<p>
+          Similarily, containers of <span class="emphasis"><em>locators</em></span> can be stored:
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">pers_type</span><span class="special">{</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span> <span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">other_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">l</span><span class="special">;</span>
+	<span class="comment">//Serializable
+</span><span class="special">};</span>
+</pre>
+<p>
+          However, containers of <span class="emphasis"><em>locators</em></span> stored like that are
+          part of the particular <span class="emphasis"><em>persistent object</em></span>, so when
+          the object is accessed, the entire object including the STL container is
+          loaded, and on <span class="emphasis"><em>transaction commit</em></span> the entire object
+          including the STL container must be saved to disk. If the container reaches
+          a certain size this can be a performance problem.
+        </p>
+<p>
+          The singly linked list implemented in <a class="link" href="access.html#persistent.access.tutorials.tutorial2" title="Tutorial 2: Linked list">Tutorial2</a>
+          does not have that problem: If a new node is added to the list, only one
+          node of the list is accessed. The list can even be accessed concurrently
+          by multiple <span class="emphasis"><em>transactions</em></span>.
+        </p>
+<p>
+          <span class="emphasis"><em>Intrusive Persistent Object Containers</em></span> implement these
+          characteristics generically.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.advanced.containers.concept"></a><a class="link" href="advanced.html#persistent.advanced.containers.concept" title="Concept"> Concept</a>
+</h4></div></div></div>
+<p>
+          <span class="emphasis"><em>Intrusive Persistent Object Containers</em></span> are containers
+          modelled after the containers of Boost.Intrusive that implement each container
+          node as its own <span class="emphasis"><em>persistent object</em></span>.
+        </p>
+<p>
+          The links between container nodes are therefore <span class="emphasis"><em>locators</em></span>,
+          which are intrusively stored as part of the <span class="emphasis"><em>persistent type</em></span>.
+        </p>
+<a name="persistent.advanced.containers.concept.properties"></a><h6>
+<a name="id2802183"></a>
+          <a class="link" href="advanced.html#persistent.advanced.containers.concept.properties">Properties</a>
+        </h6>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Slower than STL/Boost.Intrusive containers, if these containers are readily
+            available in memory
+          </li>
+<li>
+            Most of the nodes of a container can remain on disk while it is accessed.
+            Only accessed nodes are loaded to memory, e.g. in the case of a <span class="emphasis"><em>set</em></span>,
+            find() loads log2(size()) <span class="emphasis"><em>persistent objects</em></span> from
+            disk.
+          </li>
+<li>
+            Containers can be accessed concurrently with very few <span class="emphasis"><em>isolation_exceptions</em></span>:
+            Only if the same container nodes are modified by two <span class="emphasis"><em>transactions</em></span>
+            concurrently, an <span class="emphasis"><em>isolation_exception</em></span> is raised.
+          </li>
+</ul></div>
+<a name="persistent.advanced.containers.concept.constant_time_size"></a><h6>
+<a name="id2802245"></a>
+          <a class="link" href="advanced.html#persistent.advanced.containers.concept.constant_time_size">Constant
+          time size</a>
+        </h6>
+<p>
+          Like Boost.Intrusive containers, <span class="emphasis"><em>Intrusive Persistent Object
+          Containers</em></span> can be configured to not store the container's size
+          but to evaluate it when <span class="emphasis"><em>size()</em></span> is called. However,
+          this has an additional effect with these containers:
+        </p>
+<p>
+          When <span class="emphasis"><em>Intrusive Persistent Object Containers</em></span> are modified
+          concurrently by multiple <span class="emphasis"><em>transactions</em></span>, an <span class="emphasis"><em>isolation_exception</em></span>
+          is only thrown if the same container node is modified by two <span class="emphasis"><em>transactions</em></span>.
+          If <span class="emphasis"><em>ConstantTimeSize</em></span> is true, each time the size of
+          the container is changed, the stored size needs to be updated. For that
+          reason, ConstantTimeSize reduces the concurrency of <span class="emphasis"><em>Intrusive
+          Persistent Object Containers</em></span> and more <span class="emphasis"><em>isolation_exceptions</em></span>
+          are thrown, as can be seen in the following performance comparisons.
+        </p>
+<a name="persistent.advanced.containers.concept.performance_comparison"></a><h6>
+<a name="id2802322"></a>
+          <a class="link" href="advanced.html#persistent.advanced.containers.concept.performance_comparison">Performance
+          comparison</a>
+        </h6>
+<p>
+          The following graph indicates the performance of a <span class="emphasis"><em>std::set</em></span>
+          compared to a <span class="emphasis"><em>persistent::intrusive::loc_set</em></span> both
+          stored as part of a <span class="emphasis"><em>persistent object</em></span>:
+        </p>
+<p>
+          <span class="inlinemediaobject"><img src="../container_time.jpg" alt="container_time"></span>
+        </p>
+<p>
+          For the purpose of generating this graph, each <span class="emphasis"><em>transaction</em></span>
+          called <span class="emphasis"><em>insert()</em></span> only once and then <span class="emphasis"><em>commited</em></span>.
+          The standard STL container outperforms for small container sizes, but it
+          has to be saved on each <span class="emphasis"><em>transaction commit</em></span> entirely,
+          resulting in performance linear to the container size. <span class="emphasis"><em>loc_set</em></span>
+          on the other hand keeps its log2(size()) complexity guarantee.
+        </p>
+<p>
+          The following graph shows the rate of <span class="emphasis"><em>isolation_exceptions</em></span>
+          when multiple threads concurrently insert into a set:
+        </p>
+<p>
+          <span class="inlinemediaobject"><img src="../container_iso.jpg" alt="container_iso"></span>
+        </p>
+<p>
+          Here, 10 threads concurrently ran <span class="emphasis"><em>transactions</em></span> that
+          called <span class="emphasis"><em>insert()</em></span> only once and then <span class="emphasis"><em>committed</em></span>.
+          When two <span class="emphasis"><em>transactions</em></span> conflict with each other, an
+          <span class="emphasis"><em>isolation_exception</em></span> is thrown. The percentage of
+          <span class="emphasis"><em>isolation_exceptions</em></span> to successful <span class="emphasis"><em>transactions</em></span>
+          was measured.
+        </p>
+<p>
+          Because of the linear complexity of a stored std::set (see above), the
+          time it takes to commit a <span class="emphasis"><em>transaction</em></span> gets longer
+          as the container grows, and therefore the chance that another <span class="emphasis"><em>transaction</em></span>
+          modifies the container concurrently increases.
+        </p>
+<p>
+          The time it takes to commit a <span class="emphasis"><em>transaction</em></span> inserting
+          into a <span class="emphasis"><em>loc_set</em></span> does not increase dramatically with
+          the container's size, so the rate of failed <span class="emphasis"><em>transactions</em></span>
+          with ConstantTimeSize enabled is relatively constant.
+        </p>
+<p>
+          With ConstantTimeSize disabled, the chance that the same node is modified
+          by two transactions concurrently as the container grows drops towards zero.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.advanced.containers.models"></a><a class="link" href="advanced.html#persistent.advanced.containers.models" title="Models"> Models</a>
+</h4></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.advanced.containers.models.loc_slist"></a><a class="link" href="advanced.html#persistent.advanced.containers.models.loc_slist" title="loc_slist">
+          loc_slist</a>
+</h5></div></div></div>
+<p>
+            <code class="computeroutput"><a class="link" href="../boost/persistent/intrusive/basic_loc_slist.html" title="Class template basic_loc_slist">loc_slist</a></code>
+            is a singly linked list of <span class="emphasis"><em>persistent objects</em></span>. It
+            offers most of the interface of boost::intrusive::slist.
+          </p>
+<p>
+            Persistent types that can be added to a <span class="emphasis"><em>loc_slist</em></span>
+            must be derived from <code class="computeroutput"><a class="link" href="../boost/persistent/intrusive/basic_loc_slist_hook.html" title="Struct template basic_loc_slist_hook">loc_slist_hook</a></code>.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.advanced.containers.models.loc_list"></a><a class="link" href="advanced.html#persistent.advanced.containers.models.loc_list" title="loc_list">
+          loc_list</a>
+</h5></div></div></div>
+<p>
+            <code class="computeroutput"><a class="link" href="../boost/persistent/intrusive/basic_loc_list.html" title="Class template basic_loc_list">loc_list</a></code>
+            is a doubly linked list of <span class="emphasis"><em>persistent objects</em></span>. It
+            offers most of the interface of boost::intrusive::list.
+          </p>
+<p>
+            Persistent types that can be added to a <span class="emphasis"><em>loc_list</em></span>
+            must be derived from <code class="computeroutput"><a class="link" href="../boost/persistent/intrusive/basic_loc_list_hook.html" title="Struct template basic_loc_list_hook">loc_list_hook</a></code>.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.advanced.containers.models.loc_set"></a><a class="link" href="advanced.html#persistent.advanced.containers.models.loc_set" title="loc_set"> loc_set</a>
+</h5></div></div></div>
+<p>
+            <code class="computeroutput"><a class="link" href="../boost/persistent/intrusive/basic_loc_set.html" title="Class template basic_loc_set">loc_set</a></code>
+            is a sorted associative container of <span class="emphasis"><em>persistent objects</em></span>.
+            The keys in the set are unique. It offers most of the interface of boost::intrusive::set.
+          </p>
+<p>
+            Persistent types that can be added to a <span class="emphasis"><em>loc_set</em></span>
+            must be derived from <code class="computeroutput"><a class="link" href="../boost/persistent/intrusive/basic_loc_set_hook.html" title="Struct template basic_loc_set_hook">loc_set_hook</a></code>.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.advanced.containers.models.loc_multiset"></a><a class="link" href="advanced.html#persistent.advanced.containers.models.loc_multiset" title="loc_multiset">
+          loc_multiset</a>
+</h5></div></div></div>
+<p>
+            <code class="computeroutput"><a class="link" href="../boost/persistent/intrusive/basic_loc_multiset.html" title="Class template basic_loc_multiset">loc_multiset</a></code>
+            is a sorted associative container of <span class="emphasis"><em>persistent objects</em></span>.
+            There can be multiple objects with the same key in the set. It offers
+            most of the interface of boost::intrusive::multiset.
+          </p>
+<p>
+            Persistent types that can be added to a <span class="emphasis"><em>loc_multiset</em></span>
+            must be derived from <code class="computeroutput"><a class="link" href="../boost/persistent/intrusive/basic_loc_set_hook.html" title="Struct template basic_loc_set_hook">loc_set_hook</a></code>.
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.advanced.containers.tutorial"></a><a class="link" href="advanced.html#persistent.advanced.containers.tutorial" title="Tutorial 4: Intrusive linked list"> Tutorial
+        4: Intrusive linked list</a>
+</h4></div></div></div>
+<p>
+          This tutorial reimplements the singly linked list of <a class="link" href="access.html#persistent.access.tutorials.tutorial2" title="Tutorial 2: Linked list">Tutorial
+          2</a> using a <span class="emphasis"><em>Intrusive Persistent Object Container</em></span>.
+        </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.advanced.containers.tutorial.def"></a><a class="link" href="advanced.html#persistent.advanced.containers.tutorial.def" title="Defining a node type"> Defining
+          a node type</a>
+</h5></div></div></div>
+<p>
+            Nodes of a <code class="computeroutput"><a class="link" href="../boost/persistent/intrusive/basic_loc_slist.html" title="Class template basic_loc_slist">loc_slist</a></code>
+            must be derived from <code class="computeroutput"><a class="link" href="../boost/persistent/intrusive/basic_loc_slist_hook.html" title="Struct template basic_loc_slist_hook">loc_slist_hook</a></code>:
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">node</span> <span class="special">:</span> <span class="identifier">loc_slist_hook</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;{</span>
+	<span class="keyword">explicit</span> <span class="identifier">node</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">v</span><span class="special">)</span>  <span class="identifier">value</span><span class="special">(</span><span class="identifier">v</span><span class="special">){}</span>
+	<span class="keyword">int</span> <span class="identifier">value</span><span class="special">;</span>
+
+	<span class="identifier">node</span><span class="special">(){}</span>
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">serialization</span><span class="special">::</span><span class="identifier">base_object</span><span class="special">&lt;</span> <span class="identifier">loc_slist_hook</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;(*</span><span class="keyword">this</span><span class="special">);</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.advanced.containers.tutorial.add"></a><a class="link" href="advanced.html#persistent.advanced.containers.tutorial.add" title="Inserting an object"> Inserting
+          an object</a>
+</h5></div></div></div>
+<p>
+            A new node is inserted at the front of the list:
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">push_front</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">value</span><span class="special">){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span> <span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">list</span><span class="special">;</span>
+	<span class="identifier">list</span><span class="special">-&gt;</span><span class="identifier">push_front</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">node</span><span class="special">(</span><span class="identifier">value</span><span class="special">)));</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.advanced.containers.tutorial.print"></a><a class="link" href="advanced.html#persistent.advanced.containers.tutorial.print" title="Printing the list"> Printing
+          the list</a>
+</h5></div></div></div>
+<p>
+            The singly linked list is iterated to write its values to <span class="emphasis"><em>cout</em></span>:
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">print</span><span class="special">(){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span> <span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">list</span><span class="special">;</span>
+	<span class="identifier">BOOST_FOREACH</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">node</span><span class="special">,**</span><span class="identifier">list</span><span class="special">){</span>
+		<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">node</span><span class="special">-&gt;</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="string">", "</span><span class="special">;</span>
+	<span class="special">}</span>
+	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+            BOOST_FOREACH or any other construct that can handle iterators can now
+            be used to iterate the container.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.advanced.containers.tutorial.remove"></a><a class="link" href="advanced.html#persistent.advanced.containers.tutorial.remove" title="Removing objects">
+          Removing objects</a>
+</h5></div></div></div>
+<p>
+            Since the list is a singly linked list, a reference to the node before
+            the node that ought to be removed is needed:
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">disposer</span><span class="special">{</span>
+	<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">l</span><span class="special">){</span>
+		<span class="identifier">l</span><span class="special">.</span><span class="identifier">remove</span><span class="special">();</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+<span class="keyword">void</span> <span class="identifier">erase_after</span><span class="special">(</span><span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">prev</span><span class="special">){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span> <span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">list</span><span class="special">;</span>
+	<span class="identifier">list</span><span class="special">-&gt;</span><span class="identifier">erase_after_and_dispose</span><span class="special">(</span><span class="identifier">prev</span><span class="special">,</span><span class="identifier">disposer</span><span class="special">());</span>
+<span class="special">}</span>
+</pre>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../../doc/html/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              See the documentation of Boost.Intrusive for information on disposers.
+            </p></td></tr>
+</table></div>
+<p>
+            Similarily, all objects after a specific node can be removed:
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">erase_all_after</span><span class="special">(</span><span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">prev</span><span class="special">){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span> <span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">list</span><span class="special">;</span>
+	<span class="identifier">list</span><span class="special">-&gt;</span><span class="identifier">erase_after_and_dispose</span><span class="special">(</span><span class="identifier">prev</span><span class="special">,</span><span class="identifier">list</span><span class="special">-&gt;</span><span class="identifier">end</span><span class="special">(),</span><span class="identifier">disposer</span><span class="special">());</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.advanced.containers.tutorial.example"></a><a class="link" href="advanced.html#persistent.advanced.containers.tutorial.example" title="Example">
+          Example</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">lexical_cast</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">savepoints_session</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">loc</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">pinned_loc</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">intrusive</span><span class="special">/</span><span class="identifier">loc_slist</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">foreach</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">persistent</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">persistent</span><span class="special">::</span><span class="identifier">intrusive</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">node</span> <span class="special">:</span> <span class="identifier">loc_slist_hook</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;{</span>
+	<span class="keyword">explicit</span> <span class="identifier">node</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">v</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">value</span><span class="special">(</span><span class="identifier">v</span><span class="special">){}</span>
+	<span class="keyword">int</span> <span class="identifier">value</span><span class="special">;</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+	<span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">serialization</span><span class="special">::</span><span class="identifier">access</span><span class="special">;</span>
+	<span class="identifier">node</span><span class="special">(){}</span>
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">serialization</span><span class="special">::</span><span class="identifier">base_object</span><span class="special">&lt;</span> <span class="identifier">loc_slist_hook</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;(*</span><span class="keyword">this</span><span class="special">);</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">void</span> <span class="identifier">print</span><span class="special">(){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span> <span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">list</span><span class="special">;</span>
+	<span class="identifier">BOOST_FOREACH</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">node</span><span class="special">,**</span><span class="identifier">list</span><span class="special">){</span>
+		<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">node</span><span class="special">-&gt;</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="string">", "</span><span class="special">;</span>
+	<span class="special">}</span>
+	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">push_front</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">value</span><span class="special">){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span> <span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">list</span><span class="special">;</span>
+	<span class="identifier">list</span><span class="special">-&gt;</span><span class="identifier">push_front</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">node</span><span class="special">(</span><span class="identifier">value</span><span class="special">)));</span>
+<span class="special">}</span>
+
+<span class="keyword">struct</span> <span class="identifier">disposer</span><span class="special">{</span>
+	<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="identifier">l</span><span class="special">){</span>
+		<span class="identifier">l</span><span class="special">.</span><span class="identifier">remove</span><span class="special">();</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+<span class="keyword">void</span> <span class="identifier">erase_after</span><span class="special">(</span><span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">prev</span><span class="special">){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span> <span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">list</span><span class="special">;</span>
+	<span class="identifier">list</span><span class="special">-&gt;</span><span class="identifier">erase_after_and_dispose</span><span class="special">(</span><span class="identifier">prev</span><span class="special">,</span><span class="identifier">disposer</span><span class="special">());</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">erase_all_after</span><span class="special">(</span><span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">prev</span><span class="special">){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span> <span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">list</span><span class="special">;</span>
+	<span class="identifier">list</span><span class="special">-&gt;</span><span class="identifier">erase_after_and_dispose</span><span class="special">(</span><span class="identifier">prev</span><span class="special">,</span><span class="identifier">list</span><span class="special">-&gt;</span><span class="identifier">end</span><span class="special">(),</span><span class="identifier">disposer</span><span class="special">());</span>
+<span class="special">}</span>
+
+<span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">get_nth_node</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">n</span><span class="special">){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span> <span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">list</span><span class="special">;</span>
+	<span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">current</span><span class="special">=</span><span class="identifier">list</span><span class="special">-&gt;</span><span class="identifier">begin</span><span class="special">();</span>
+	<span class="keyword">for</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">c</span><span class="special">=</span><span class="number">0</span><span class="special">;</span><span class="identifier">c</span><span class="special">&lt;</span><span class="identifier">n</span><span class="special">;++</span><span class="identifier">c</span><span class="special">)</span> <span class="special">++</span><span class="identifier">current</span><span class="special">;</span>
+	<span class="keyword">return</span> <span class="identifier">current</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span><span class="keyword">char</span> <span class="special">*</span><span class="identifier">argv</span><span class="special">[]){</span>
+	<span class="identifier">savepoints_session</span> <span class="identifier">session</span><span class="special">(</span><span class="string">"mydb"</span><span class="special">);</span>
+	<span class="identifier">save_on_shutdown</span> <span class="identifier">save</span><span class="special">(</span><span class="identifier">session</span><span class="special">);</span>
+
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span> <span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">list</span><span class="special">;</span>
+	<span class="keyword">if</span><span class="special">(!</span><span class="identifier">list</span><span class="special">)</span> <span class="identifier">list</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">loc_slist</span><span class="special">&lt;</span><span class="identifier">node</span><span class="special">&gt;);</span>
+
+	<span class="keyword">if</span><span class="special">(</span><span class="identifier">argc</span> <span class="special">&lt;</span> <span class="number">2</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">EXIT_FAILURE</span><span class="special">;</span>
+	<span class="identifier">string</span> <span class="identifier">cmd</span><span class="special">=</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
+	<span class="keyword">if</span><span class="special">(</span><span class="identifier">cmd</span> <span class="special">==</span> <span class="string">"print"</span><span class="special">)</span> <span class="identifier">print</span><span class="special">();</span>
+	<span class="keyword">else</span><span class="special">{</span>
+		<span class="keyword">if</span><span class="special">(</span><span class="identifier">argc</span> <span class="special">&lt;</span> <span class="number">3</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">EXIT_FAILURE</span><span class="special">;</span>
+		<span class="keyword">if</span><span class="special">(</span><span class="identifier">cmd</span> <span class="special">==</span> <span class="string">"push_front"</span><span class="special">){</span>
+			<span class="identifier">push_front</span><span class="special">(</span><span class="identifier">lexical_cast</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">2</span><span class="special">]));</span>
+		<span class="special">}</span><span class="keyword">else</span> <span class="keyword">if</span><span class="special">(</span><span class="identifier">cmd</span> <span class="special">==</span> <span class="string">"erase_after"</span><span class="special">){</span>
+			<span class="identifier">erase_after</span><span class="special">(</span><span class="identifier">get_nth_node</span><span class="special">(</span><span class="identifier">lexical_cast</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">2</span><span class="special">])));</span>
+		<span class="special">}</span><span class="keyword">else</span> <span class="keyword">if</span><span class="special">(</span><span class="identifier">cmd</span> <span class="special">==</span> <span class="string">"erase_all_after"</span><span class="special">){</span>
+			<span class="identifier">erase_all_after</span><span class="special">(</span><span class="identifier">get_nth_node</span><span class="special">(</span><span class="identifier">lexical_cast</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">2</span><span class="special">])));</span>
+		<span class="special">}</span>
+	<span class="special">}</span>
+<span class="special">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.advanced.threads"></a><a class="link" href="advanced.html#persistent.advanced.threads" title="Thread safety"> Thread safety</a>
+</h3></div></div></div>
+<a name="persistent.advanced.threads.object_access"></a><h5>
+<a name="id2806419"></a>
+        <a class="link" href="advanced.html#persistent.advanced.threads.object_access">Object access</a>
+      </h5>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          This section does not apply to <a class="link" href="transactions.html#persistent.transactions.concurrent" title="Concurrent transactions">Concurrent
+          Transactions</a>. Concurrent access to the same <span class="emphasis"><em>persistent
+          object</em></span> from different <span class="emphasis"><em>transactions</em></span> is safe
+          in any case, without manual synchronization
+        </p></td></tr>
+</table></div>
+<p>
+        When accessing <span class="emphasis"><em>persistent objects</em></span> concurrently within
+        one <span class="emphasis"><em>transaction</em></span> (or in a <span class="emphasis"><em>savepoints</em></span>
+        session), the same thread safety guarantee is given as for regular C++ objects.
+      </p>
+<p>
+        Usually, objects can be read from concurrently without synchronization, but
+        write access has to be synchronized, but this is not a general rule: The
+        thread safety of concurrent access to <span class="emphasis"><em>persistent objects</em></span>
+        depends on the thread safety guarantee given by the type of the object /
+        of its members.
+      </p>
+<a name="persistent.advanced.threads.transactions"></a><h5>
+<a name="id2806494"></a>
+        <a class="link" href="advanced.html#persistent.advanced.threads.transactions">Transactions</a>
+      </h5>
+<p>
+        Transactions can be started without synchronization. However, if multiple
+        threads are accessing the same transaction, <code class="computeroutput"><a class="link" href="../boost/persistent/basic_transaction.html#id2541456-bb">transaction::commit()</a></code>
+        has to be called by exactly one thread, and all other threads must have stopped
+        accessing <span class="emphasis"><em>persistent objects</em></span> through that <span class="emphasis"><em>transaction</em></span>.
+      </p>
+<p>
+        Example:
+      </p>
+<pre class="programlisting"><span class="special">{</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+	
+	<span class="comment">//start 3 more threads, all accessing objects through 'tx'
+</span>
+	<span class="comment">//do work
+</span>
+	<span class="comment">//wait until all 3 threads have finishing their work
+</span>
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<a name="persistent.advanced.threads.binding"></a><h5>
+<a name="id2806617"></a>
+        <a class="link" href="advanced.html#persistent.advanced.threads.binding">Binding</a>
+      </h5>
+<p>
+        When a <span class="emphasis"><em>transaction</em></span> is created, the current thread is
+        bound to the new <span class="emphasis"><em>transaction</em></span>. When a <span class="emphasis"><em>transaction</em></span>
+        is <span class="emphasis"><em>committed</em></span> or <span class="emphasis"><em>rolled back</em></span>, the
+        current thread is either bound to the parent <span class="emphasis"><em>transaction</em></span>
+        (if the <span class="emphasis"><em>transaction</em></span> was nested), or unbound.
+      </p>
+<p>
+        This default behaviour is not always what is intended, e.g. when a new thread
+        is started, it is bound to no <span class="emphasis"><em>transaction</em></span>. If the new
+        thread is supposed to start a <span class="emphasis"><em>nested transaction</em></span> in
+        an existing <span class="emphasis"><em>transaction</em></span>, created by another thread,
+        it has to bind itself to that <span class="emphasis"><em>transaction</em></span> first, and
+        then start its <span class="emphasis"><em>nested transaction</em></span>. This can be accomplished
+        by calling <code class="computeroutput">transaction::bind()</code>.
+      </p>
+<p>
+        When the <span class="emphasis"><em>parent transaction</em></span> is finally committed by
+        the other thread, the thread that worked on the <span class="emphasis"><em>nested transaction</em></span>
+        is, if it still exists, is still bound to the, now non-existing, <span class="emphasis"><em>parent
+        transaction</em></span>. It has to be unbound by calling <code class="computeroutput"><a class="link" href="../boost/persistent/basic_transaction.html#id2541559-bb">transaction::unbind()</a></code>
+        before it accesses objects or starts transactions again.
+      </p>
+<a name="persistent.advanced.threads.exceptions"></a><h5>
+<a name="id2806737"></a>
+        <a class="link" href="advanced.html#persistent.advanced.threads.exceptions">Exceptions</a>
+      </h5>
+<p>
+        The user has to make sure that exceptions thrown by Boost.Persistent propagate
+        to other threads.
+      </p>
+<p>
+        For example, if one <span class="emphasis"><em>transaction</em></span> is accessed concurrently
+        by multiple threads, and one of the threads receives an <code class="computeroutput">isolation_exception</code>,
+        the thread responsible for <span class="emphasis"><em>committing</em></span> the <span class="emphasis"><em>transaction</em></span>
+        must refrain from doing so on this transaction.
+      </p>
+<p>
+        The exception is not thrown in all threads.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.advanced.finalizers"></a><a class="link" href="advanced.html#persistent.advanced.finalizers" title="Finalizers"> Finalizers</a>
+</h3></div></div></div>
+<p>
+        <span class="emphasis"><em>Finalizers</em></span> are functions that get called when a <span class="emphasis"><em>persistent
+        object</em></span> is removed. This can either be triggered by calling <code class="computeroutput"><a class="link" href="../boost/persistent/basic_loc.html#id2538094-bb">basic_loc::remove()</a></code>
+        or the object being removed by a <span class="emphasis"><em>locator</em></span> managing its
+        lifetime, like a <span class="emphasis"><em>shared_loc</em></span>.s It is the persistent equivalent
+        of a C++ destructor and has the purpose of cleaning up persistent resources,
+        in particular calling <span class="emphasis"><em>basic_loc::remove()</em></span> on other persistent
+        objects.
+      </p>
+<p>
+        An object implements a <span class="emphasis"><em>finalizer</em></span> by implementing a friend
+        function called <span class="emphasis"><em>finalize()</em></span>:
+      </p>
+<p>
+        Example:
+      </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">pers_type</span><span class="special">{</span>
+	<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">finalize</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">obj</span><span class="special">){</span>
+		<span class="identifier">obj</span><span class="special">.</span><span class="identifier">other</span><span class="special">.</span><span class="identifier">remove</span><span class="special">();</span>
+	<span class="special">}</span>
+	<span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">other_type</span><span class="special">&gt;</span> <span class="identifier">other</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          A <span class="emphasis"><em>scoped_loc</em></span> could have been used in this case instead.
+        </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          <span class="emphasis"><em>pers_obj</em></span> is passed <span class="emphasis"><em>const</em></span> to the
+          <span class="emphasis"><em>finalizer</em></span>, as a <span class="emphasis"><em>finalizer</em></span> must
+          not make any changes to <span class="emphasis"><em>persistent objects</em></span>. Any attempt
+          to access other <span class="emphasis"><em>persistent objects</em></span> through <span class="emphasis"><em>locators</em></span>
+          will result in a <code class="computeroutput"><a class="link" href="../boost/persistent/finalize_error.html" title="Struct finalize_error">finalize_error</a></code>
+          exception.
+        </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Like any function, a finalizer can have side effects, but note that <span class="emphasis"><em>finalizers</em></span>
+          may be called more than once until the <span class="emphasis"><em>persistent object</em></span>
+          is finally removed. This results from the fact that a transaction may still
+          fail due to an <code class="computeroutput"><a class="link" href="../boost/persistent/isolation_exception.html" title="Struct isolation_exception">isolation_exception</a></code>
+          after a <span class="emphasis"><em>finalizer</em></span> has been called. When there is another
+          attempt to remove the object the finalizer is called again.
+        </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.advanced.optmem"></a><a class="link" href="advanced.html#persistent.advanced.optmem" title="Optional members of persistent types"> Optional members of persistent
+      types</a>
+</h3></div></div></div>
+<p>
+        The only <span class="bold"><strong>requirement</strong></span> of <span class="emphasis"><em>persistent
+        types</em></span> is to model <span class="emphasis"><em>Serializable</em></span> as defined
+        by Boost.Persistent. However, to improve performance of certain operations
+        performed by Boost.Persistent, one or more of the following friend functions
+        can be implemented for <span class="emphasis"><em>persistent types</em></span> that are critical
+        to overall <span class="bold"><strong>performance</strong></span>:
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">pers_type</span><span class="special">{</span>
+	<span class="keyword">friend</span> <span class="identifier">pers_type</span> <span class="special">*</span><span class="identifier">clone</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+	<span class="keyword">friend</span> <span class="keyword">bool</span> <span class="identifier">equal</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o1</span><span class="special">,</span><span class="identifier">pers_typ</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o2</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+	<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">finalize</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>	<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+	
+	<span class="comment">//instead of serialize():
+</span>	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>	<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">save</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>	<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">load</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+	
+	<span class="comment">//instead of load()
+</span>	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>	<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">construct</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">*&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<p>
+        These functions are found via Argument Dependent Lookup(ADL) by Boost.Persistent.
+      </p>
+<a name="persistent.advanced.optmem.clone__"></a><h5>
+<a name="id2807772"></a>
+        <a class="link" href="advanced.html#persistent.advanced.optmem.clone__">clone()</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">friend</span> <span class="identifier">pers_type</span> <span class="special">*</span><span class="identifier">clone</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+</pre>
+<p>
+        <span class="emphasis"><em>clone</em></span> returns a <span class="emphasis"><em>deep copy</em></span> of <span class="emphasis"><em>o</em></span>.
+        That means that not only is <span class="emphasis"><em>o</em></span> copied, but all objects
+        contained by <span class="emphasis"><em>o</em></span> are copied as well.
+      </p>
+<p>
+        Example:
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">pers_type</span><span class="special">{</span>
+<span class="identifier">other_type</span> <span class="special">*</span><span class="identifier">other</span><span class="special">;</span>
+<span class="keyword">friend</span> <span class="identifier">pers_type</span> <span class="special">*</span><span class="identifier">clone</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">){</span>
+	<span class="identifier">pers_type</span> <span class="special">*</span><span class="identifier">c</span><span class="special">=</span><span class="keyword">new</span> <span class="identifier">pers_type</span><span class="special">;</span>
+	<span class="identifier">c</span><span class="special">-&gt;</span><span class="identifier">other</span><span class="special">=</span><span class="keyword">new</span> <span class="identifier">other_type</span><span class="special">(*</span><span class="identifier">o</span><span class="special">.</span><span class="identifier">other</span><span class="special">);</span>
+	<span class="keyword">return</span> <span class="identifier">c</span><span class="special">;</span>
+<span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        The original object and the clone must not share any data. The result must
+        be equivalent to first serializing and then deserializing the object using
+        Boost.Serialization.
+      </p>
+<a name="persistent.advanced.optmem.equal__"></a><h5>
+<a name="id2808106"></a>
+        <a class="link" href="advanced.html#persistent.advanced.optmem.equal__">equal()</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">friend</span> <span class="keyword">bool</span> <span class="identifier">equal</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o1</span><span class="special">,</span><span class="identifier">pers_typ</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o2</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+</pre>
+<p>
+        <span class="emphasis"><em>equal</em></span> performs a <span class="emphasis"><em>deep comparison</em></span>
+        for equality between <span class="emphasis"><em>o1</em></span> and <span class="emphasis"><em>o2</em></span>.
+        This means <span class="emphasis"><em>o1</em></span> is compared to <span class="emphasis"><em>o2</em></span>
+        by value, including all objects that are contained in <span class="emphasis"><em>o1</em></span>
+        and <span class="emphasis"><em>o2</em></span>.
+      </p>
+<p>
+        The result must be equivalent to serializing both objects using Boost.Serialization
+        and comparing the serialized streams for equality.
+      </p>
+<a name="persistent.advanced.optmem.finalize__"></a><h5>
+<a name="id2808252"></a>
+        <a class="link" href="advanced.html#persistent.advanced.optmem.finalize__">finalize()</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">finalize</span><span class="special">(</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+</pre>
+<p>
+        <span class="emphasis"><em>finalize(T const &amp;o,deep_tag)</em></span> calls <span class="emphasis"><em>finalize(o)</em></span>
+        and <span class="emphasis"><em>finalize(x)</em></span> for all objects that are contained in
+        <span class="emphasis"><em>o</em></span>.
+      </p>
+<a name="persistent.advanced.optmem.serialize__"></a><h5>
+<a name="id2808354"></a>
+        <a class="link" href="advanced.html#persistent.advanced.optmem.serialize__">serialize()</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+</pre>
+<p>
+        <span class="emphasis"><em>serialize</em></span> (de)serializes all data to(from) <span class="emphasis"><em>ar</em></span>,
+        including all objects contained by <span class="emphasis"><em>o</em></span> (i.e. the whole
+        object graph represented by <span class="emphasis"><em>o</em></span>).
+      </p>
+<p>
+        No pointer tracking or type registration is supported, serialize() needs
+        to generate a flat representation of the whole graph using primitives. If
+        versioning is required, a version number has to be serialized manually.
+      </p>
+<a name="persistent.advanced.optmem.load__"></a><h5>
+<a name="id2808502"></a>
+        <a class="link" href="advanced.html#persistent.advanced.optmem.load__">load()</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">load</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+</pre>
+<p>
+        Can be implemented along with <span class="emphasis"><em>save</em></span> instead of <span class="emphasis"><em>serialize</em></span>
+        to split the serializing into saving and loading.
+      </p>
+<a name="persistent.advanced.optmem.save__"></a><h5>
+<a name="id2808636"></a>
+        <a class="link" href="advanced.html#persistent.advanced.optmem.save__">save()</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">save</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+</pre>
+<p>
+        Can be implemented along with <span class="emphasis"><em>load</em></span> instead of <span class="emphasis"><em>serialize</em></span>
+        to split the serializing into saving and loading.
+      </p>
+<a name="persistent.advanced.optmem.construct__"></a><h5>
+<a name="id2808775"></a>
+        <a class="link" href="advanced.html#persistent.advanced.optmem.construct__">construct()</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+<span class="keyword">friend</span> <span class="keyword">void</span> <span class="identifier">construct</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="identifier">pers_type</span> <span class="special">*&amp;</span><span class="identifier">o</span><span class="special">,</span><span class="identifier">deep_tag</span><span class="special">);</span>
+</pre>
+<p>
+        Allocates and deserializes a new object of type <span class="emphasis"><em>pers_type</em></span>
+        and stores a pointer to it in <span class="emphasis"><em>o</em></span>.
+      </p>
+<p>
+        Can be implemented instead of <span class="emphasis"><em>load()</em></span> to reconstruct
+        <span class="emphasis"><em>o</em></span> based on data serialized by <span class="emphasis"><em>save()</em></span>.
+        For example, <span class="emphasis"><em>pers_type</em></span> could be the base class of multiple
+        derived classes and <span class="emphasis"><em>save</em></span> has saved data that represents
+        the type actually serialized. <span class="emphasis"><em>construct</em></span> allocates the
+        correct type based on that data and deserializes the object from <span class="emphasis"><em>ar</em></span>.
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="transactions.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="configuring.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

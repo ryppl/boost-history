@@ -1,0 +1,1203 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template basic_loc_multiset</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_loc_set_hpp" title="Header &lt;boost/persistent/intrusive/basic_loc_set.hpp&gt;">
+<link rel="prev" href="basic_loc_set.html" title="Class template basic_loc_set">
+<link rel="next" href="basic_loc_slist_hook.html" title="Struct template basic_loc_slist_hook">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basic_loc_set.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_loc_set_hpp"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_loc_slist_hook.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.persistent.intrusive.basic_loc_multiset"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template basic_loc_multiset</span></h2>
+<p>boost::persistent::intrusive::basic_loc_multiset &#8212; A non-unique intrusive set of locators. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_loc_set_hpp" title="Header &lt;boost/persistent/intrusive/basic_loc_set.hpp&gt;">boost/persistent/intrusive/basic_loc_set.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+         <span class="bold"><strong>typename</strong></span> Compare = std::less&lt;T&gt;, 
+         <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="../basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt;                   <a name="boost.persistent.intrusive.basic_loc_multiset.pointer"></a>pointer;               
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="../basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T <span class="bold"><strong>const</strong></span>, TxMgr &gt;             <a name="boost.persistent.intrusive.basic_loc_multiset.const_pointer"></a>const_pointer;         
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="../basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt;                   <a name="boost.persistent.intrusive.basic_loc_multiset.value_type"></a>value_type;            
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="../basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt;                   <a name="boost.persistent.intrusive.basic_loc_multiset.reference"></a>reference;             
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="../basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T <span class="bold"><strong>const</strong></span>, TxMgr &gt;             <a name="boost.persistent.intrusive.basic_loc_multiset.const_reference"></a>const_reference;       
+  <span class="bold"><strong>typedef</strong></span> std::ptrdiff_t                          <a name="boost.persistent.intrusive.basic_loc_multiset.difference_type"></a>difference_type;       
+  <span class="bold"><strong>typedef</strong></span> std::size_t                             <a name="boost.persistent.intrusive.basic_loc_multiset.size_type"></a>size_type;             
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span>                             <a name="boost.persistent.intrusive.basic_loc_multiset.iterator"></a>iterator;              
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span>                             <a name="boost.persistent.intrusive.basic_loc_multiset.const_iterator"></a>const_iterator;        
+  <span class="bold"><strong>typedef</strong></span> std::reverse_iterator&lt; iterator &gt;       <a name="boost.persistent.intrusive.basic_loc_multiset.reverse_iterator"></a>reverse_iterator;      
+  <span class="bold"><strong>typedef</strong></span> std::reverse_iterator&lt; const_iterator &gt; <a name="boost.persistent.intrusive.basic_loc_multiset.const_reverse_iterator"></a>const_reverse_iterator;
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span>                             <a name="boost.persistent.intrusive.basic_loc_multiset.insert_commit_data"></a>insert_commit_data;    
+  <span class="bold"><strong>typedef</strong></span> Compare                                 <a name="boost.persistent.intrusive.basic_loc_multiset.value_compare"></a>value_compare;         
+  <span class="bold"><strong>typedef</strong></span> Compare                                 <a name="boost.persistent.intrusive.basic_loc_multiset.key_compare"></a>key_compare;           
+
+  <span class="emphasis"><em>// <a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multisetconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="basic_loc_multiset.html#id2556966-bb">basic_loc_multiset</a>(Compare <span class="bold"><strong>const</strong></span> &amp; = Compare());
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; 
+    <a class="link" href="basic_loc_multiset.html#id2556985-bb">basic_loc_multiset</a>(Iterator, Iterator, Compare <span class="bold"><strong>const</strong></span> &amp; = Compare());
+
+  <span class="emphasis"><em>// <a class="link" href="basic_loc_multiset.html#id2553448-bb">public member functions</a></em></span>
+  <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2553452-bb">begin</a>() ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_multiset.html#id2553470-bb">begin</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_multiset.html#id2553489-bb">cbegin</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2553508-bb">end</a>() ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_multiset.html#id2553526-bb">end</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_multiset.html#id2553545-bb">cend</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">reverse_iterator</span> <a class="link" href="basic_loc_multiset.html#id2553564-bb">rbegin</a>() ;
+  <span class="type">const_reverse_iterator</span> <a class="link" href="basic_loc_multiset.html#id2553583-bb">rbegin</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">const_reverse_iterator</span> <a class="link" href="basic_loc_multiset.html#id2553602-bb">crbegin</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">reverse_iterator</span> <a class="link" href="basic_loc_multiset.html#id2553621-bb">rend</a>() ;
+  <span class="type">const_reverse_iterator</span> <a class="link" href="basic_loc_multiset.html#id2553640-bb">rend</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">const_reverse_iterator</span> <a class="link" href="basic_loc_multiset.html#id2553659-bb">crend</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">key_compare</span> <a class="link" href="basic_loc_multiset.html#id2553678-bb">key_comp</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">value_compare</span> <a class="link" href="basic_loc_multiset.html#id2553697-bb">value_comp</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a class="link" href="basic_loc_multiset.html#id2553716-bb">empty</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">size_type</span> <a class="link" href="basic_loc_multiset.html#id2553734-bb">size</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_multiset.html#id2553790-bb">swap</a>(<a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Cloner, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_multiset.html#id2553864-bb">clone_from</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp;, Cloner, Disposer) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2553980-bb">insert</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a>) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2554062-bb">insert</a>(const_iterator, <a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a>) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_multiset.html#id2554151-bb">insert</a>(Iterator, Iterator) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2554251-bb">insert_before</a>(const_iterator, <a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a>) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_multiset.html#id2554340-bb">push_back</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a>) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_multiset.html#id2554424-bb">push_front</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a>) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2554507-bb">erase</a>(const_iterator) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2554587-bb">erase</a>(const_iterator, iterator) ;
+  <span class="type">size_type</span> <a class="link" href="basic_loc_multiset.html#id2554673-bb">erase</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+    <span class="type">size_type</span> <a class="link" href="basic_loc_multiset.html#id2554755-bb">erase</a>(<span class="bold"><strong>const</strong></span> KeyType &amp;, KeyValueCompare) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2554853-bb">erase_and_dispose</a>(const_iterator, Disposer) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2554951-bb">erase_and_dispose</a>(const_iterator, const_iterator, Disposer) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type">size_type</span> <a class="link" href="basic_loc_multiset.html#id2555055-bb">erase_and_dispose</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>, Disposer) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type">size_type</span> <a class="link" href="basic_loc_multiset.html#id2555154-bb">erase_and_dispose</a>(<span class="bold"><strong>const</strong></span> KeyType &amp;, KeyValueCompare, Disposer) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_multiset.html#id2555268-bb">clear</a>() ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_multiset.html#id2555290-bb">clear_and_dispose</a>(Disposer) ;
+  <span class="type">size_type</span> <a class="link" href="basic_loc_multiset.html#id2555366-bb">count</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+    <span class="type">size_type</span> <a class="link" href="basic_loc_multiset.html#id2555429-bb">count</a>(<span class="bold"><strong>const</strong></span> KeyType &amp;, KeyValueCompare) <span class="bold"><strong>const</strong></span>;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2555508-bb">lower_bound</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+    <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2555571-bb">lower_bound</a>(<span class="bold"><strong>const</strong></span> KeyType &amp;, KeyValueCompare) ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_multiset.html#id2555663-bb">lower_bound</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+    <span class="type">const_iterator</span> <a class="link" href="basic_loc_multiset.html#id2555726-bb">lower_bound</a>(<span class="bold"><strong>const</strong></span> KeyType &amp;, KeyValueCompare) <span class="bold"><strong>const</strong></span>;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2555817-bb">upper_bound</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+    <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2555880-bb">upper_bound</a>(<span class="bold"><strong>const</strong></span> KeyType &amp;, KeyValueCompare) ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_multiset.html#id2555972-bb">upper_bound</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+    <span class="type">const_iterator</span> <a class="link" href="basic_loc_multiset.html#id2556035-bb">upper_bound</a>(<span class="bold"><strong>const</strong></span> KeyType &amp;, KeyValueCompare) <span class="bold"><strong>const</strong></span>;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2556126-bb">find</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+    <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2556188-bb">find</a>(<span class="bold"><strong>const</strong></span> KeyType &amp;, KeyValueCompare) ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_multiset.html#id2556279-bb">find</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+    <span class="type">const_iterator</span> <a class="link" href="basic_loc_multiset.html#id2556341-bb">find</a>(<span class="bold"><strong>const</strong></span> KeyType &amp;, KeyValueCompare) <span class="bold"><strong>const</strong></span>;
+  <span class="type">std::pair&lt; iterator, iterator &gt;</span> <a class="link" href="basic_loc_multiset.html#id2556431-bb">equal_range</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+    <span class="type">std::pair&lt; iterator, iterator &gt;</span> 
+    <a class="link" href="basic_loc_multiset.html#id2556494-bb">equal_range</a>(<span class="bold"><strong>const</strong></span> KeyType &amp;, KeyValueCompare) ;
+  <span class="type">std::pair&lt; const_iterator, const_iterator &gt;</span> 
+  <a class="link" href="basic_loc_multiset.html#id2556586-bb">equal_range</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+    <span class="type">std::pair&lt; const_iterator, const_iterator &gt;</span> 
+    <a class="link" href="basic_loc_multiset.html#id2556650-bb">equal_range</a>(<span class="bold"><strong>const</strong></span> KeyType &amp;, KeyValueCompare) <span class="bold"><strong>const</strong></span>;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_multiset.html#id2556742-bb">iterator_to</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a>) ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_multiset.html#id2556772-bb">iterator_to</a>(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a>) <span class="bold"><strong>const</strong></span>;
+  <span class="type"><a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.pointer">pointer</a></span> <a class="link" href="basic_loc_multiset.html#id2556803-bb">unlink_leftmost_without_rebalance</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_multiset.html#id2556875-bb">replace_node</a>(iterator, <a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a>) ;
+
+  <span class="emphasis"><em>// <a class="link" href="basic_loc_multiset.html#id2557078-bb">public static functions</a></em></span>
+  <span class="type"><span class="bold"><strong>static</strong></span> <a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp;</span> <a class="link" href="basic_loc_multiset.html#id2557082-bb">container_from_end_iterator</a>(iterator) ;
+  <span class="type"><span class="bold"><strong>static</strong></span> <span class="bold"><strong>const</strong></span> <a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp;</span> 
+  <a class="link" href="basic_loc_multiset.html#id2557115-bb">container_from_end_iterator</a>(const_iterator) ;
+  <span class="type"><span class="bold"><strong>static</strong></span> <a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp;</span> <a class="link" href="basic_loc_multiset.html#id2557148-bb">container_from_iterator</a>(iterator) ;
+  <span class="type"><span class="bold"><strong>static</strong></span> <span class="bold"><strong>const</strong></span> <a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp;</span> <a class="link" href="basic_loc_multiset.html#id2557216-bb">container_from_iterator</a>(const_iterator) ;
+  <span class="bold"><strong>static</strong></span> <span class="type"><span class="bold"><strong>const</strong></span> <span class="bold"><strong>bool</strong></span></span> constant_time_size;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2863084"></a><h2>Description</h2>
+<p>Template parameters: </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><code class="computeroutput">T</code> The type this container can store locators to </p></li>
+<li><p><code class="computeroutput">TxMgr</code> The transaction manager that is used to access the stored objects </p></li>
+<li><p><code class="computeroutput">ConstantTimeSize</code> <code class="computeroutput">true</code> if member <code class="computeroutput">size()</code> should return in constant time. This reduces concurrency of threads. </p></li>
+<li><p><code class="computeroutput">Compare</code> A <code class="computeroutput">BinaryPredicate</code> that can less-than compare two objects of type T </p></li>
+<li><p><code class="computeroutput">Tag</code> The tag of the <code class="computeroutput">basic_loc_set_hook</code> that is used by this <code class="computeroutput">basic_loc_set</code> </p></li>
+</ul></div>
+<p>
+</p>
+<div class="refsect2" lang="en">
+<a name="id2863171"></a><h3>
+<a name="boost.persistent.intrusive.basic_loc_multisetconstruct-copy-destruct"></a><code class="computeroutput">basic_loc_multiset</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><a name="id2556966-bb"></a>basic_loc_multiset(Compare <span class="bold"><strong>const</strong></span> &amp; comp = Compare());</pre>Constructs an empty multiset. <p>Complexity: Constant.</p>
+<p>Throws: If the copy constructor/operator() of comp throws. </p>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; 
+  <a name="id2556985-bb"></a>basic_loc_multiset(Iterator begin, Iterator end, 
+                     Compare <span class="bold"><strong>const</strong></span> &amp; comp = Compare());</pre>Constructs an empty multiset and inserts elements from [b, e). <p>Complexity: Linear in N if [b, e) is already sorted using comp and otherwise N * log N, where N is the distance between first and last</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the copy constructor/operator() of the value_compare object. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Dereferencing iterator must yield an value of type value_type. cmp must be a comparison function that induces a strict weak ordering. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id2863352"></a><h3>
+<a name="id2553448-bb"></a><code class="computeroutput">basic_loc_multiset</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2553452-bb"></a>begin() ;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator pointing to the beginning of the multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2553470-bb"></a>begin() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_iterator pointing to the beginning of the multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2553489-bb"></a>cbegin() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_iterator pointing to the beginning of the multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2553508-bb"></a>end() ;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator pointing to the end of the multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2553526-bb"></a>end() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_iterator pointing to the end of the multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2553545-bb"></a>cend() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_iterator pointing to the end of the multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">reverse_iterator</span> <a name="id2553564-bb"></a>rbegin() ;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a reverse_iterator pointing to the beginning of the reversed multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_reverse_iterator</span> <a name="id2553583-bb"></a>rbegin() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_reverse_iterator pointing to the beginning of the reversed multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_reverse_iterator</span> <a name="id2553602-bb"></a>crbegin() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_reverse_iterator pointing to the beginning of the reversed multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">reverse_iterator</span> <a name="id2553621-bb"></a>rend() ;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a reverse_iterator pointing to the end of the reversed multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_reverse_iterator</span> <a name="id2553640-bb"></a>rend() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_reverse_iterator pointing to the end of the reversed multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_reverse_iterator</span> <a name="id2553659-bb"></a>crend() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_reverse_iterator pointing to the end of the reversed multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">key_compare</span> <a name="id2553678-bb"></a>key_comp() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: If key_compare copy-constructor throws. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the key_compare object used by the multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">value_compare</span> <a name="id2553697-bb"></a>value_comp() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: If value_compare copy-constructor throws. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the value_compare object used by the multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id2553716-bb"></a>empty() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>true if the container is empty. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">size_type</span> <a name="id2553734-bb"></a>size() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Linear to elements contained in *this if, constant-time size option is enabled. Constant-time otherwise.</p>
+<p>Throws: Nothing, if ConstantTimeSize is true. Otherwise: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the number of elements stored in the multiset. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2553790-bb"></a>swap(<a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp; other) ;</pre>Swaps the contents of two multisets. <p>Complexity: Constant.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the swap() call for the comparison functor found using ADL. </p>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Cloner, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2553864-bb"></a>clone_from(<span class="bold"><strong>const</strong></span> <a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp; src, Cloner cloner, 
+                  Disposer disposer) ;</pre>Erases all the elements from *this. <p>calls Disposer::operator()(pointer), clones all the elements from src calling Cloner::operator()(const_reference ) and inserts them on *this. Copies the predicate from the source container.</p>
+<p>If cloner throws, all cloned elements are unlinked and disposed calling Disposer::operator()(pointer).</p>
+<p>Complexity: Linear to erased plus inserted elements.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the cloner or the predicate copy assignment. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>Disposer::operator()(pointer) shouldn't throw. </p>
+<p>Cloner should yield to nodes equivalent to the original nodes. </p>
+</td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2553980-bb"></a>insert(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a> value) ;</pre>Inserts value into the multiset. <p>Complexity: Average complexity for insert element is at most logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the internal value_compare ordering function. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>An iterator that points to the position where the new element was inserted. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Does not affect the validity of iterators. No copy-constructors are called. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2554062-bb"></a>insert(const_iterator hint, <a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a> value) ;</pre>Inserts x into the multiset, using pos as a hint to where it will be inserted. <p>Complexity: Logarithmic in general, but it is amortized constant time if t is inserted immediately before hint.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the internal value_compare ordering function. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>An iterator that points to the position where the new element was inserted. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Does not affect the validity of iterators. No copy-constructors are called. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2554151-bb"></a>insert(Iterator b, Iterator e) ;</pre>Inserts a range into the multiset. <p>Complexity: Insert range is in general O(N * log(N)), where N is the size of the range. However, it is linear in N if the range is already sorted by value_comp().</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the internal value_compare ordering function. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Dereferencing iterator must yield an value of type value_type. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>An iterator that points to the position where the new element was inserted. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Does not affect the validity of iterators. No copy-constructors are called. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2554251-bb"></a>insert_before(const_iterator pos, <a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a> value) ;</pre>Inserts x into the tree before "pos". <p>Complexity: Constant time.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>"pos" must be a valid iterator (or end) and must be the succesor of value once inserted according to the predicate </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function does not check preconditions so if "pos" is not the successor of "value" tree ordering invariant will be broken. This is a low-level function to be used only for performance reasons by advanced users. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2554340-bb"></a>push_back(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a> value) ;</pre>Inserts x into the tree in the last position. <p>Complexity: Constant time.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>it must be no less than the greatest inserted key </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function does not check preconditions so if value is less than the greatest inserted key tree ordering invariant will be broken. This function is slightly more efficient than using "insert_before". This is a low-level function to be used only for performance reasons by advanced users. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2554424-bb"></a>push_front(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a> value) ;</pre>Inserts x into the tree in the first position. <p>Complexity: Constant time.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>it must be no greater than the minimum inserted key </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function does not check preconditions so if value is greater than the minimum inserted key tree ordering invariant will be broken. This function is slightly more efficient than using "insert_before". This is a low-level function to be used only for performance reasons by advanced users. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2554507-bb"></a>erase(const_iterator i) ;</pre>Erases the element pointed to by pos. <p>Complexity: Average complexity is constant time.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>An iterator to the element after the erased element. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. No destructors are called. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2554587-bb"></a>erase(const_iterator b, iterator e) ;</pre>Erases the range pointed to by b end e. <p>Complexity: Average complexity for erase range is at most O(log(size() + N)), where N is the number of elements in the range.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>An iterator to the element after the erased elements. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. No destructors are called. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">size_type</span> <a name="id2554673-bb"></a>erase(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value) ;</pre>Erases all the elements with the given value. <p>Complexity: O(log(size() + this-&gt;count(value)).</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the internal value_compare ordering function. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The number of erased elements. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. No destructors are called. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+  <span class="type">size_type</span> <a name="id2554755-bb"></a>erase(<span class="bold"><strong>const</strong></span> KeyType &amp; key, KeyValueCompare comp) ;</pre>Erases all the elements that compare equal with the given key and the given comparison functor. <p>Complexity: O(log(size() + this-&gt;count(key, comp)).</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the comp ordering function. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The number of erased elements. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. No destructors are called. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type">iterator</span> <a name="id2554853-bb"></a>erase_and_dispose(const_iterator i, Disposer disposer) ;</pre>Erases the element pointed to by pos. Disposer::operator()(pointer) is called for the removed element. <p>Complexity: Average complexity for erase element is constant time.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>An iterator to the element after the erased element. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type">iterator</span> <a name="id2554951-bb"></a>erase_and_dispose(const_iterator b, const_iterator e, 
+                             Disposer disposer) ;</pre>Erases the range pointed to by b end e. Disposer::operator()(pointer) is called for the removed elements. <p>Complexity: Average complexity for erase range is at most O(log(size() + N)), where N is the number of elements in the range.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>An iterator to the element after the erased elements. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type">size_type</span> <a name="id2555055-bb"></a>erase_and_dispose(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value, Disposer disposer) ;</pre>Erases all the elements with the given value. Disposer::operator()(pointer) is called for the removed elements. <p>Complexity: O(log(size() + this-&gt;count(value)).</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the internal value_compare ordering function. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The number of erased elements. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. No destructors are called. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type">size_type</span> <a name="id2555154-bb"></a>erase_and_dispose(<span class="bold"><strong>const</strong></span> KeyType &amp; key, KeyValueCompare comp, 
+                              Disposer disposer) ;</pre>Erases all the elements with the given key. according to the comparison functor "comp". Disposer::operator()(pointer) is called for the removed elements. <p>Complexity: O(log(size() + this-&gt;count(key, comp)).</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the comp ordering function. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The number of erased elements. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2555268-bb"></a>clear() ;</pre>Erases all the elements of the container. <p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. No destructors are called. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2555290-bb"></a>clear_and_dispose(Disposer disposer) ;</pre>Erases all the elements of the container. <p>Complexity: Linear to the number of elements on the container. Disposer::operator()(pointer) is called for the removed elements.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code> 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. No destructors are called. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">size_type</span> <a name="id2555366-bb"></a>count(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Logarithmic to the number of elements contained plus lineal to number of objects with the given key.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the internal value_compare ordering function. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the number of contained elements with the given key </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+  <span class="type">size_type</span> <a name="id2555429-bb"></a>count(<span class="bold"><strong>const</strong></span> KeyType &amp; key, KeyValueCompare comp) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Logarithmic to the number of elements contained plus lineal to number of objects with the given key. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the number of contained elements with the same key compared with the given comparison functor. Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the comp ordering function. Throws: If comp ordering function throws. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2555508-bb"></a>lower_bound(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value) ;</pre>
+<p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the internal value_compare ordering function. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator to the first element whose key is not less than k or end() if that element does not exist. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+  <span class="type">iterator</span> <a name="id2555571-bb"></a>lower_bound(<span class="bold"><strong>const</strong></span> KeyType &amp; key, KeyValueCompare comp) ;</pre>
+<p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the comp ordering function. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>comp must imply the same element order as value_compare. Usually key is the part of the value_type that is used in the ordering functor. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator to the first element whose key according to the comparison functor is not less than k or end() if that element does not exist. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function is used when constructing a value_type is expensive and the value_type can be compared with a cheaper key type. Usually this key is part of the value_type. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2555663-bb"></a>lower_bound(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the internal value_compare ordering function. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const iterator to the first element whose key is not less than k or end() if that element does not exist. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+  <span class="type">const_iterator</span> <a name="id2555726-bb"></a>lower_bound(<span class="bold"><strong>const</strong></span> KeyType &amp; key, KeyValueCompare comp) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the comp ordering function. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>comp must imply the same element order as value_compare. Usually key is the part of the value_type that is used in the ordering functor. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_iterator to the first element whose key according to the comparison functor is not less than k or end() if that element does not exist. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function is used when constructing a value_type is expensive and the value_type can be compared with a cheaper key type. Usually this key is part of the value_type. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2555817-bb"></a>upper_bound(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value) ;</pre>
+<p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the internal value_compare ordering function. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator to the first element whose key is greater than k or end() if that element does not exist. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+  <span class="type">iterator</span> <a name="id2555880-bb"></a>upper_bound(<span class="bold"><strong>const</strong></span> KeyType &amp; key, KeyValueCompare comp) ;</pre>
+<p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the comp ordering function. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>comp must imply the same element order as value_compare. Usually key is the part of the value_type that is used in the ordering functor. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator to the first element whose key according to the comparison functor is greater than key or end() if that element does not exist. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function is used when constructing a value_type is expensive and the value_type can be compared with a cheaper key type. Usually this key is part of the value_type. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2555972-bb"></a>upper_bound(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the internal value_compare ordering function. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator to the first element whose key is greater than k or end() if that element does not exist. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+  <span class="type">const_iterator</span> <a name="id2556035-bb"></a>upper_bound(<span class="bold"><strong>const</strong></span> KeyType &amp; key, KeyValueCompare comp) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the comp ordering function. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>comp must imply the same element order as value_compare. Usually key is the part of the value_type that is used in the ordering functor. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_iterator to the first element whose key according to the comparison functor is greater than key or end() if that element does not exist. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function is used when constructing a value_type is expensive and the value_type can be compared with a cheaper key type. Usually this key is part of the value_type. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2556126-bb"></a>find(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value) ;</pre>Finds an iterator to the first element whose value is "value" or end() if that element does not exist. <p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the internal value_compare ordering function. </p>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+  <span class="type">iterator</span> <a name="id2556188-bb"></a>find(<span class="bold"><strong>const</strong></span> KeyType &amp; key, KeyValueCompare comp) ;</pre>Finds an iterator to the first element whose key is "key" according to the comparison functor or end() if that element does not exist. <p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the comp ordering function. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>comp must imply the same element order as value_compare. Usually key is the part of the value_type that is used in the ordering functor. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function is used when constructing a value_type is expensive and the value_type can be compared with a cheaper key type. Usually this key is part of the value_type. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2556279-bb"></a>find(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value) <span class="bold"><strong>const</strong></span>;</pre>Finds a const_iterator to the first element whose value is "value" or end() if that element does not exist. <p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the internal value_compare ordering function. </p>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+  <span class="type">const_iterator</span> <a name="id2556341-bb"></a>find(<span class="bold"><strong>const</strong></span> KeyType &amp; key, KeyValueCompare comp) <span class="bold"><strong>const</strong></span>;</pre>Finds a const_iterator to the first element whose key is "key" according to the comparison functor or end() if that element does not exist. <p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the comp ordering function. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>comp must imply the same element order as value_compare. Usually key is the part of the value_type that is used in the ordering functor. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function is used when constructing a value_type is expensive and the value_type can be compared with a cheaper key type. Usually this key is part of the value_type. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">std::pair&lt; iterator, iterator &gt;</span> <a name="id2556431-bb"></a>equal_range(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value) ;</pre>Finds a range containing all elements whose key is k or an empty range that indicates the position where those elements would be if they there is no elements with key k. <p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the internal value_compare ordering function. </p>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+  <span class="type">std::pair&lt; iterator, iterator &gt;</span> 
+  <a name="id2556494-bb"></a>equal_range(<span class="bold"><strong>const</strong></span> KeyType &amp; key, KeyValueCompare comp) ;</pre>Finds a range containing all elements whose key is k according to the comparison functor or an empty range that indicates the position where those elements would be if they there is no elements with key k. <p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the comp ordering function. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>comp must imply the same element order as value_compare. Usually key is the part of the value_type that is used in the ordering functor. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function is used when constructing a value_type is expensive and the value_type can be compared with a cheaper key type. Usually this key is part of the value_type. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">std::pair&lt; const_iterator, const_iterator &gt;</span> 
+<a name="id2556586-bb"></a>equal_range(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value) <span class="bold"><strong>const</strong></span>;</pre>Finds a range containing all elements whose key is k or an empty range that indicates the position where those elements would be if they there is no elements with key k. <p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the internal value_compare ordering function. </p>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> KeyType, <span class="bold"><strong>typename</strong></span> KeyValueCompare&gt; 
+  <span class="type">std::pair&lt; const_iterator, const_iterator &gt;</span> 
+  <a name="id2556650-bb"></a>equal_range(<span class="bold"><strong>const</strong></span> KeyType &amp; key, KeyValueCompare comp) <span class="bold"><strong>const</strong></span>;</pre>Finds a range containing all elements whose key is k according to the comparison functor or an empty range that indicates the position where those elements would be if they there is no elements with key k. <p>Complexity: Logarithmic.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, exceptions thrown by the comp ordering function. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>comp must imply the same element order as value_compare. Usually key is the part of the value_type that is used in the ordering functor. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function is used when constructing a value_type is expensive and the value_type can be compared with a cheaper key type. Usually this key is part of the value_type. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2556742-bb"></a>iterator_to(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a> value) ;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>value shall be in a set of appropriate type. Otherwise the behavior is undefined. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a valid iterator i belonging to the set that points to the value </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2556772-bb"></a>iterator_to(<a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.const_reference">const_reference</a> value) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Complexity: Constant.</p>
+<p>Throws: Nothing. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>value shall be in a set of appropriate type. Otherwise the behavior is undefined. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a valid const_iterator i belonging to the set that points to the value </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.pointer">pointer</a></span> <a name="id2556803-bb"></a>unlink_leftmost_without_rebalance() ;</pre>Unlinks the leftmost node from the tree. <p>Complexity: Average complexity is constant time.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function breaks the tree and the tree can only be used for more unlink_leftmost_without_rebalance calls. This function is normally used to achieve a step by step controlled destruction of the tree. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2556875-bb"></a>replace_node(iterator replace_this, <a class="link" href="basic_loc_multiset.html#boost.persistent.intrusive.basic_loc_multiset.reference">reference</a> with_this) ;</pre>Replaces replace_this in its position in the tree with with_this. The tree does not need to be rebalanced. <p>Complexity: Constant.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>replace_this must be a valid iterator of *this and with_this must not be inserted in any tree. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function will break container ordering invariants if with_this is not equivalent to *replace_this according to the ordering rules. This function is faster than erasing and inserting the node, since no rebalancing or comparison is needed. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id2868883"></a><h3>
+<a name="id2557078-bb"></a><code class="computeroutput">basic_loc_multiset</code> public static functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> <a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp;</span> 
+<a name="id2557082-bb"></a>container_from_end_iterator(iterator end_iterator) ;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>end_iterator must be a valid end iterator of multiset. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const reference to the multiset associated to the end iterator </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> <span class="bold"><strong>const</strong></span> <a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp;</span> 
+<a name="id2557115-bb"></a>container_from_end_iterator(const_iterator end_iterator) ;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>end_iterator must be a valid end const_iterator of multiset. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const reference to the multiset associated to the end iterator </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> <a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp;</span> <a name="id2557148-bb"></a>container_from_iterator(iterator it) ;</pre>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code> </p>
+<p>Complexity: Logarithmic. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>it must be a valid iterator of multiset. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const reference to the multiset associated to the iterator </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> <span class="bold"><strong>const</strong></span> <a class="link" href="basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a> &amp;</span> <a name="id2557216-bb"></a>container_from_iterator(const_iterator it) ;</pre>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code> </p>
+<p>Complexity: Logarithmic. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>it must be a valid const_iterator of multiset. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const reference to the multiset associated to the iterator </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basic_loc_set.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_loc_set_hpp"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="basic_loc_slist_hook.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

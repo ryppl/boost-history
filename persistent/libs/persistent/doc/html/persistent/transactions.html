@@ -1,0 +1,719 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Using Transactions</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="prev" href="access.html" title="Accessing Persistent Objects">
+<link rel="next" href="advanced.html" title="Advanced topics">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="access.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="advanced.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="persistent.transactions"></a><a class="link" href="transactions.html" title="Using Transactions"> Using Transactions</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="transactions.html#persistent.transactions.intro"> Introduction</a></span></dt>
+<dt><span class="section"><a href="transactions.html#persistent.transactions.scopes"> Transaction scopes</a></span></dt>
+<dt><span class="section"><a href="transactions.html#persistent.transactions.vssavepoints"> Transactions vs.
+      savepoints</a></span></dt>
+<dt><span class="section"><a href="transactions.html#persistent.transactions.access"> Object access outside
+      of transactions</a></span></dt>
+<dt><span class="section"><a href="transactions.html#persistent.transactions.nested"> Nested transactions</a></span></dt>
+<dt><span class="section"><a href="transactions.html#persistent.transactions.concurrent"> Concurrent transactions</a></span></dt>
+<dd><dl><dt><span class="section"><a href="transactions.html#persistent.transactions.concurrent.tutorial"> Tutorial
+        3: Concurrent transactions</a></span></dt></dl></dd>
+<dt><span class="section"><a href="transactions.html#persistent.transactions.pitfalls"> Pitfalls</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="transactions.html#persistent.transactions.pitfalls.tbound"> Transaction
+        boundaries</a></span></dt>
+<dt><span class="section"><a href="transactions.html#persistent.transactions.pitfalls.non_repeatable_side_effects_of_atomic_scopes">Non-repeatable
+        side effects of atomic scopes</a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.transactions.intro"></a><a class="link" href="transactions.html#persistent.transactions.intro" title="Introduction"> Introduction</a>
+</h3></div></div></div>
+<p>
+        A <span class="emphasis"><em>transaction</em></span> consists of one or more operations changing
+        <span class="emphasis"><em>persistent objects</em></span>. Once all operations have been recorded,
+        the transaction is either applied to the global state (<span class="emphasis"><em>commit</em></span>)
+        or undone (<span class="emphasis"><em>rollback</em></span>).
+      </p>
+<p>
+        Atomicity
+      </p>
+<p>
+        A transaction pools several operations into one atomic operation. It is guaranteed
+        that either all operations of one transaction are applied, or none of them,
+        thus preventing that only a part of an application's state is written to
+        disk.
+      </p>
+<p>
+        Consistency
+      </p>
+<p>
+        The objects accessible through Boost.Persistent are in a consistent state.
+        If a transaction is successful, the state presented to it was either the
+        state before another transaction, or after another transaction, but nothing
+        in between. If a transaction can not be applied to the global state it is
+        undone as a whole.
+      </p>
+<p>
+        Isolation
+      </p>
+<p>
+        <span class="emphasis"><em>Persistent objects</em></span> can be accessed from multiple threads
+        concurrently, without manual synchronization. Changes made by one transaction
+        are not visible to other transactions until the transaction was successfully
+        committed. Transactions can run concurrently, but once committed, the resulting
+        state is equal to the state that would have been reached if all successful
+        transactions had been executed in sequence.
+      </p>
+<p>
+        If a transaction conflicts with a another transaction an exception is thrown
+        and the transaction can be repeated.
+      </p>
+<p>
+        Durability
+      </p>
+<p>
+        When a transaction was successfully committed, the changes made by it are
+        guaranteed to be permanent, even if the application crashes shortly thereafter.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.transactions.scopes"></a><a class="link" href="transactions.html#persistent.transactions.scopes" title="Transaction scopes"> Transaction scopes</a>
+</h3></div></div></div>
+<p>
+        A transaction is started by creating a <span class="emphasis"><em>transaction scope</em></span>.
+        There are two ways to open a <span class="emphasis"><em>transaction scope</em></span>:
+      </p>
+<p>
+        1. Constructing a <code class="computeroutput"><a class="link" href="../boost/persistent/basic_transaction.html" title="Class template basic_transaction">transaction</a></code>
+        object:
+      </p>
+<pre class="programlisting"><span class="special">{</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+	<span class="special">...</span>
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+        2. Using an <span class="emphasis"><em>atomic</em></span> scope:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">atomic</span> <span class="identifier">BOOST_PERSISTENT_ATOMIC</span>
+<span class="preprocessor">#define</span> <span class="identifier">retry</span> <span class="identifier">BOOST_PERSISTENT_RETRY</span>
+
+<span class="identifier">atomic</span><span class="special">{</span>
+	<span class="special">...</span>
+<span class="special">}</span> <span class="identifier">retry</span><span class="special">;</span>
+</pre>
+<p>
+      </p>
+<p>
+        In case the end of the <span class="emphasis"><em>transaction scope</em></span> is not reached,
+        e.g. due to an exception, the transaction is <span class="emphasis"><em>rolled back</em></span>,
+        i.e. all changes made to <span class="emphasis"><em>persistent objects</em></span> in the
+        <span class="emphasis"><em>transaction scope</em></span> are undone.
+      </p>
+<p>
+        The two ways to open a <span class="emphasis"><em>transaction scope</em></span> are equivalent,
+        except in the case of <a class="link" href="transactions.html#persistent.transactions.concurrent" title="Concurrent transactions">Concurrent
+        transactions</a>.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.transactions.vssavepoints"></a><a class="link" href="transactions.html#persistent.transactions.vssavepoints" title="Transactions vs. savepoints"> Transactions vs.
+      savepoints</a>
+</h3></div></div></div>
+<p>
+        <span class="emphasis"><em>Savepoints</em></span> are a simplified representation of <span class="emphasis"><em>transactions</em></span>,
+        designed for applications that don't need fine-grained control over transactions.
+      </p>
+<p>
+        The following two code snippets are equivalent:
+      </p>
+<p>
+        1. Using <span class="emphasis"><em>savepoints</em></span>:
+      </p>
+<pre class="programlisting"><span class="identifier">savepoints_session</span> <span class="identifier">session</span><span class="special">(</span><span class="string">"mydb"</span><span class="special">);</span>
+
+<span class="special">...</span>
+<span class="identifier">session</span><span class="special">.</span><span class="identifier">save</span><span class="special">();</span>
+<span class="special">...</span>
+<span class="identifier">session</span><span class="special">.</span><span class="identifier">save</span><span class="special">();</span>
+<span class="special">...</span>
+<span class="identifier">session</span><span class="special">.</span><span class="identifier">save</span><span class="special">();</span>
+</pre>
+<p>
+        2. Using <span class="emphasis"><em>transactions</em></span>:
+      </p>
+<pre class="programlisting"><span class="identifier">transactional_session</span> <span class="identifier">session</span><span class="special">(</span><span class="string">"mydb"</span><span class="special">);</span>
+
+<span class="special">{</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+	<span class="special">...</span>
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+<span class="special">{</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+	<span class="special">...</span>
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+<span class="special">{</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+	<span class="special">...</span>
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.transactions.access"></a><a class="link" href="transactions.html#persistent.transactions.access" title="Object access outside of transactions"> Object access outside
+      of transactions</a>
+</h3></div></div></div>
+<p>
+        <span class="emphasis"><em>Persistent objects</em></span> can not be modified outside of a
+        <span class="emphasis"><em>transaction scope</em></span>, any attempt to do so results in a
+        <code class="computeroutput"><a class="link" href="../boost/persistent/no_active_transaction.html" title="Struct no_active_transaction">no_active_transaction</a></code>
+        exception.
+      </p>
+<p>
+        However, <span class="emphasis"><em>persistent objects</em></span> can be read outside of
+        <span class="emphasis"><em>transaction scopes</em></span>.
+      </p>
+<p>
+        Example:
+      </p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span> <span class="keyword">const</span><span class="special">&gt;</span> <span class="identifier">pers_obj</span><span class="special">=...;</span> <span class="comment">//const!
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">pers_obj</span><span class="special">-&gt;</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">//ok
+</span></pre>
+<p>
+        Due to the fact that the <span class="emphasis"><em>locator</em></span> <span class="emphasis"><em>pers_obj</em></span>
+        refers to a <span class="emphasis"><em>const</em></span> object, the intent of read-only access
+        is clear.
+      </p>
+<p>
+        If a <span class="emphasis"><em>locator</em></span> to a non-<span class="emphasis"><em>const</em></span> object
+        is dereferenced outside of a <span class="emphasis"><em>transaction scope</em></span>, an exception
+        is thrown, even if the object is only accessed for reading:
+      </p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">pers_obj</span><span class="special">=...;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">pers_obj</span><span class="special">-&gt;</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">//throws
+</span></pre>
+<p>
+        To avoid this, <span class="emphasis"><em>pers_obj</em></span> must either be (implicitely)
+        converted to a <span class="emphasis"><em>const</em></span> <span class="emphasis"><em>locator</em></span>, or
+        <code class="computeroutput"><a class="link" href="../boost/persistent/basic_loc.html#id2537599-bb">loc::read()</a></code>
+        can be used:
+      </p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">pers_obj</span><span class="special">=...;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">pers_obj</span><span class="special">.</span><span class="identifier">read</span><span class="special">()-&gt;</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">//ok
+</span></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.transactions.nested"></a><a class="link" href="transactions.html#persistent.transactions.nested" title="Nested transactions"> Nested transactions</a>
+</h3></div></div></div>
+<p>
+        Transactions can be nested:
+      </p>
+<pre class="programlisting"><span class="special">{</span>
+	<span class="identifier">transaction</span> <span class="identifier">outer</span><span class="special">;</span>
+	
+	<span class="special">{</span>
+		<span class="identifier">transaction</span> <span class="identifier">inner</span><span class="special">;</span>
+		<span class="comment">//modify persistent objects
+</span>		<span class="identifier">inner</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+	<span class="special">}</span>
+	
+	<span class="identifier">outer</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+        <span class="emphasis"><em>inner.commit()</em></span> makes the changes made by <span class="emphasis"><em>inner</em></span>
+        part of the <span class="emphasis"><em>outer</em></span> transaction. It does not write the
+        changes by <span class="emphasis"><em>inner</em></span> to disk. If the call to <span class="emphasis"><em>inner.commit()</em></span>
+        is omitted, e.g. due to an exception that is caught by the <span class="emphasis"><em>outer</em></span>
+        scope, all changes made in that <span class="emphasis"><em>nested transaction</em></span> are
+        undone, without affecting the <span class="emphasis"><em>outer</em></span> <span class="emphasis"><em>transaction</em></span>.
+      </p>
+<p>
+        This is especially useful if a function that creates its own <span class="emphasis"><em>transaction
+        scope</em></span> is called from within another <span class="emphasis"><em>transaction scope</em></span>:
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f2</span><span class="special">(){</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+	<span class="special">...</span>
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">f1</span><span class="special">(){</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+	<span class="special">...</span>
+	<span class="identifier">f2</span><span class="special">();</span>
+	<span class="special">...</span>
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+          Nested transactions are much more efficient than root transactions since
+          they are not <span class="emphasis"><em>durable</em></span> (as defined by <span class="emphasis"><em>ACID</em></span>
+          transactions) in any case, either <span class="emphasis"><em>commit</em></span> or <span class="emphasis"><em>rollback</em></span>,
+          until the outer <span class="emphasis"><em>transaction</em></span> is committed.
+        </p>
+<p>
+          So another use case of <span class="emphasis"><em>nested transactions</em></span> is efficiently
+          maintaining consistency at application runtime, with <span class="emphasis"><em>commits</em></span>
+          of the (large) outer <span class="emphasis"><em>transaction</em></span> representing the
+          <span class="emphasis"><em>savepoints</em></span> of the application.
+        </p>
+</td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.transactions.concurrent"></a><a class="link" href="transactions.html#persistent.transactions.concurrent" title="Concurrent transactions"> Concurrent transactions</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="transactions.html#persistent.transactions.concurrent.tutorial"> Tutorial
+        3: Concurrent transactions</a></span></dt></dl></div>
+<p>
+        Transactions can be started <span class="emphasis"><em>concurrently</em></span> by different
+        threads.
+      </p>
+<p>
+        It is guaranteed that no <span class="emphasis"><em>transaction</em></span> is successfully
+        committed that would result in a state that is different from the state that
+        would have been reached if all <span class="emphasis"><em>transactions</em></span> were executed
+        in sequence.
+      </p>
+<p>
+        If a <span class="emphasis"><em>transaction</em></span> conflicts with another <span class="emphasis"><em>concurrent
+        transaction</em></span> an <code class="computeroutput"><a class="link" href="../boost/persistent/isolation_exception.html" title="Struct isolation_exception">isolation_exception</a></code>
+        is thrown in one of the <span class="emphasis"><em>transactions</em></span>, which needs to
+        be handled by user code.
+      </p>
+<p>
+        Example:
+      </p>
+<pre class="programlisting"><span class="keyword">try</span><span class="special">{</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+	<span class="special">...</span>
+	<span class="identifier">bank_account1</span><span class="special">-&gt;</span><span class="identifier">balance</span> <span class="special">+=</span> <span class="identifier">amount</span><span class="special">;</span>
+	<span class="identifier">bank_account2</span><span class="special">-&gt;</span><span class="identifier">balance</span> <span class="special">-=</span> <span class="identifier">amount</span><span class="special">;</span>
+
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span><span class="keyword">catch</span><span class="special">(</span><span class="identifier">isolation_exception</span> <span class="special">&amp;){</span>
+	<span class="comment">//another transaction modified the same bank accounts simultaniously, which would have
+</span>	<span class="comment">//resulted in an inconsistent state.
+</span>	<span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+        The standard behaviour is to repeat a <span class="emphasis"><em>transaction</em></span> until
+        it was successfully <span class="emphasis"><em>committed</em></span>.
+      </p>
+<p>
+        To achieve this behaviour, Boost.Persistent provides two macros, BOOST_PERSISTENT_ATOMIC
+        and BOOST_PERSISTENT_RETRY, which can be used to create a <span class="emphasis"><em>transaction
+        scope</em></span> instead of constructing a <code class="computeroutput"><a class="link" href="../boost/persistent/basic_transaction.html" title="Class template basic_transaction">transaction</a></code>
+        object.
+      </p>
+<p>
+        Example:
+      </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">atomic</span> <span class="identifier">BOOST_PERSISTENT_ATOMIC</span>
+<span class="preprocessor">#define</span> <span class="identifier">retry</span> <span class="identifier">BOOST_PERSISTENT_RETRY</span>
+
+<span class="identifier">atomic</span><span class="special">{</span>
+	<span class="special">...</span>
+	<span class="identifier">bank_account1</span><span class="special">-&gt;</span><span class="identifier">balance</span> <span class="special">+=</span> <span class="identifier">amount</span><span class="special">;</span>
+	<span class="identifier">bank_account2</span><span class="special">-&gt;</span><span class="identifier">balance</span> <span class="special">-=</span> <span class="identifier">amount</span><span class="special">;</span>
+<span class="special">}</span><span class="identifier">retry</span><span class="special">;</span>
+</pre>
+<p>
+        The transaction is repeated until it can be committed successfully.
+      </p>
+<a name="persistent.transactions.concurrent.concurrent_nested_transactions"></a><h5>
+<a name="id2797104"></a>
+        <a class="link" href="transactions.html#persistent.transactions.concurrent.concurrent_nested_transactions">Concurrent
+        nested transactions</a>
+      </h5>
+<p>
+        Multiple <span class="emphasis"><em>concurrent transactions</em></span> can be started as
+        <span class="emphasis"><em>nested transactions</em></span> of a given <span class="emphasis"><em>transaction</em></span>.
+      </p>
+<p>
+        When a new thread is started though, it is not bound to any <span class="emphasis"><em>transaction</em></span>,
+        so any <span class="emphasis"><em>transaction</em></span> started by it will be a <span class="emphasis"><em>root
+        transaction</em></span>. To avoid this, the new thread has to call <code class="computeroutput"><a class="link" href="../boost/persistent/basic_transaction.html#id2541545-bb">transaction::bind()</a></code>
+        on the existing <span class="emphasis"><em>transaction</em></span> first, and then start its
+        <span class="emphasis"><em>transaction scope</em></span> to create a <span class="emphasis"><em>nested transaction</em></span>
+        in the existing <span class="emphasis"><em>transaction</em></span>.
+      </p>
+<p>
+        Example:
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">thread_start</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">parenttx</span><span class="special">){</span>
+	<span class="identifier">parenttx</span><span class="special">.</span><span class="identifier">bind</span><span class="special">();</span>
+	<span class="identifier">atomic</span><span class="special">{</span>
+		<span class="comment">//do work
+</span>	<span class="special">}</span><span class="identifier">retry</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(){</span>
+	<span class="identifier">transaction</span> <span class="identifier">parenttx</span><span class="special">;</span>
+
+	<span class="comment">//start more threads, passing 'parenttx'
+</span>	
+	<span class="comment">//do work
+</span>
+	<span class="comment">//wait for all threads working on nested transactions to complete
+</span>
+	<span class="identifier">parenttx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.transactions.concurrent.tutorial"></a><a class="link" href="transactions.html#persistent.transactions.concurrent.tutorial" title="Tutorial 3: Concurrent transactions"> Tutorial
+        3: Concurrent transactions</a>
+</h4></div></div></div>
+<p>
+          This tutorial implements the example of multiple threads concurrently withdrawing
+          and depositing from bank accounts, without money being lost due to concurrent
+          write accesses to the bank accounts.
+        </p>
+<p>
+          First, a <span class="emphasis"><em>account</em></span> type is needed:
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">account</span><span class="special">{</span>
+	<span class="keyword">int</span> <span class="identifier">balance</span><span class="special">;</span>
+	<span class="identifier">account</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">balance</span><span class="special">(</span><span class="number">0</span><span class="special">){}</span>
+
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">balance</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+          The <span class="emphasis"><em>accounts</em></span> are stored in a <span class="emphasis"><em>vector</em></span>
+          in the <span class="emphasis"><em>bank</em></span> type to enable random access to the accounts:
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">bank</span><span class="special">{</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">account</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">accounts</span><span class="special">;</span>
+	
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">accounts</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+          The bank is prepared by adding some accounts:
+        </p>
+<pre class="programlisting"><span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">bank</span><span class="special">&gt;</span> <span class="identifier">create_bank</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">nr_of_accounts</span><span class="special">){</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">bank</span><span class="special">&gt;</span> <span class="identifier">mybank</span><span class="special">;</span>
+	<span class="identifier">mybank</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">bank</span><span class="special">);</span>
+	<span class="keyword">for</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">c</span><span class="special">=</span><span class="number">0</span><span class="special">;</span><span class="identifier">c</span><span class="special">&lt;</span><span class="identifier">nr_of_accounts</span><span class="special">;++</span><span class="identifier">c</span><span class="special">){</span>
+		<span class="identifier">mybank</span><span class="special">-&gt;</span><span class="identifier">accounts</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">account</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">account</span><span class="special">));</span>
+	<span class="special">}</span>
+
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+	<span class="keyword">return</span> <span class="identifier">mybank</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Finally, a function withdrawing and depositing a random amount of money
+          from random bank accounts is implemented:
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">thread_start</span><span class="special">(){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">bank</span><span class="special">&gt;</span> <span class="identifier">mybank</span><span class="special">;</span>
+	<span class="keyword">int</span> <span class="identifier">nr_of_accounts</span><span class="special">=</span><span class="identifier">mybank</span><span class="special">.</span><span class="identifier">read</span><span class="special">()-&gt;</span><span class="identifier">accounts</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
+	<span class="keyword">while</span><span class="special">(!</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruption_requested</span><span class="special">()){</span>
+		<span class="keyword">int</span> <span class="identifier">amount</span><span class="special">=</span><span class="identifier">rand</span><span class="special">()</span> <span class="special">%</span> <span class="number">10000</span><span class="special">;</span>
+		<span class="keyword">int</span> <span class="identifier">account1</span><span class="special">=</span><span class="identifier">rand</span><span class="special">()</span> <span class="special">%</span> <span class="identifier">nr_of_accounts</span><span class="special">;</span>
+		<span class="keyword">int</span> <span class="identifier">account2</span><span class="special">=</span><span class="identifier">rand</span><span class="special">()</span> <span class="special">%</span> <span class="identifier">nr_of_accounts</span><span class="special">;</span>
+		<span class="identifier">atomic</span><span class="special">{</span>
+			<span class="identifier">mybank</span><span class="special">-&gt;</span><span class="identifier">accounts</span><span class="special">[</span><span class="identifier">account1</span><span class="special">]-&gt;</span><span class="identifier">balance</span> <span class="special">-=</span> <span class="identifier">amount</span><span class="special">;</span>
+			<span class="identifier">mybank</span><span class="special">-&gt;</span><span class="identifier">accounts</span><span class="special">[</span><span class="identifier">account2</span><span class="special">]-&gt;</span><span class="identifier">balance</span> <span class="special">+=</span> <span class="identifier">amount</span><span class="special">;</span>
+		<span class="special">}</span><span class="identifier">retry</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The overall balance of all bank accounts in the bank is initialized with
+          0, so it must stay 0 since no money is added or removed. A member function
+          is added to <span class="emphasis"><em>bank</em></span> to check for that:
+        </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">overall_balance</span><span class="special">()</span> <span class="keyword">const</span><span class="special">{</span>
+	<span class="keyword">int</span> <span class="identifier">tmp</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>
+	<span class="identifier">BOOST_FOREACH</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">account</span> <span class="keyword">const</span><span class="special">&gt;</span> <span class="identifier">ac</span><span class="special">,</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">accounts</span><span class="special">){</span>
+		<span class="identifier">tmp</span><span class="special">+=</span><span class="identifier">ac</span><span class="special">-&gt;</span><span class="identifier">balance</span><span class="special">;</span>
+	<span class="special">}</span>
+	<span class="keyword">return</span> <span class="identifier">tmp</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="persistent.transactions.concurrent.tutorial.example"></a><a class="link" href="transactions.html#persistent.transactions.concurrent.tutorial.example" title="Example">
+          Example</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">foreach</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">thread</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">bind</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">serialization</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">lexical_cast</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">date_time</span><span class="special">/</span><span class="identifier">posix_time</span><span class="special">/</span><span class="identifier">ptime</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">transactional_session</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">loc</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">pinned_loc</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">persistent</span><span class="special">/</span><span class="identifier">transaction</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#define</span> <span class="identifier">atomic</span> <span class="identifier">BOOST_PERSISTENT_ATOMIC</span>
+<span class="preprocessor">#define</span> <span class="identifier">retry</span> <span class="identifier">BOOST_PERSISTENT_RETRY</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">persistent</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">account</span><span class="special">{</span>
+	<span class="keyword">int</span> <span class="identifier">balance</span><span class="special">;</span>
+	<span class="identifier">account</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">balance</span><span class="special">(</span><span class="number">0</span><span class="special">){}</span>
+
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">balance</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">bank</span><span class="special">{</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">account</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">accounts</span><span class="special">;</span>
+	
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Archive</span><span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="identifier">serialize</span><span class="special">(</span><span class="identifier">Archive</span> <span class="special">&amp;</span><span class="identifier">ar</span><span class="special">,</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">){</span>
+		<span class="identifier">ar</span> <span class="special">&amp;</span> <span class="identifier">accounts</span><span class="special">;</span>
+	<span class="special">}</span>
+	<span class="keyword">int</span> <span class="identifier">overall_balance</span><span class="special">()</span> <span class="keyword">const</span><span class="special">{</span>
+		<span class="keyword">int</span> <span class="identifier">tmp</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>
+		<span class="identifier">BOOST_FOREACH</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">account</span> <span class="keyword">const</span><span class="special">&gt;</span> <span class="identifier">ac</span><span class="special">,</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">accounts</span><span class="special">){</span>
+			<span class="identifier">tmp</span><span class="special">+=</span><span class="identifier">ac</span><span class="special">-&gt;</span><span class="identifier">balance</span><span class="special">;</span>
+		<span class="special">}</span>
+		<span class="keyword">return</span> <span class="identifier">tmp</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+
+<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">bank</span><span class="special">&gt;</span> <span class="identifier">create_bank</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">nr_of_accounts</span><span class="special">){</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">bank</span><span class="special">&gt;</span> <span class="identifier">mybank</span><span class="special">;</span>
+	<span class="identifier">mybank</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">bank</span><span class="special">);</span>
+	<span class="keyword">for</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">c</span><span class="special">=</span><span class="number">0</span><span class="special">;</span><span class="identifier">c</span><span class="special">&lt;</span><span class="identifier">nr_of_accounts</span><span class="special">;++</span><span class="identifier">c</span><span class="special">){</span>
+		<span class="identifier">mybank</span><span class="special">-&gt;</span><span class="identifier">accounts</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">account</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">account</span><span class="special">));</span>
+	<span class="special">}</span>
+
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+	<span class="keyword">return</span> <span class="identifier">mybank</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">thread_start</span><span class="special">(){</span>
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">bank</span><span class="special">&gt;</span> <span class="identifier">mybank</span><span class="special">;</span>
+	<span class="keyword">int</span> <span class="identifier">nr_of_accounts</span><span class="special">=</span><span class="identifier">mybank</span><span class="special">.</span><span class="identifier">read</span><span class="special">()-&gt;</span><span class="identifier">accounts</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
+	<span class="keyword">while</span><span class="special">(!</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruption_requested</span><span class="special">()){</span>
+		<span class="keyword">int</span> <span class="identifier">amount</span><span class="special">=</span><span class="identifier">rand</span><span class="special">()</span> <span class="special">%</span> <span class="number">10000</span><span class="special">;</span>
+		<span class="keyword">int</span> <span class="identifier">account1</span><span class="special">=</span><span class="identifier">rand</span><span class="special">()</span> <span class="special">%</span> <span class="identifier">nr_of_accounts</span><span class="special">;</span>
+		<span class="keyword">int</span> <span class="identifier">account2</span><span class="special">=</span><span class="identifier">rand</span><span class="special">()</span> <span class="special">%</span> <span class="identifier">nr_of_accounts</span><span class="special">;</span>
+		<span class="identifier">atomic</span><span class="special">{</span>
+			<span class="identifier">mybank</span><span class="special">-&gt;</span><span class="identifier">accounts</span><span class="special">[</span><span class="identifier">account1</span><span class="special">]-&gt;</span><span class="identifier">balance</span> <span class="special">-=</span> <span class="identifier">amount</span><span class="special">;</span>
+			<span class="identifier">mybank</span><span class="special">-&gt;</span><span class="identifier">accounts</span><span class="special">[</span><span class="identifier">account2</span><span class="special">]-&gt;</span><span class="identifier">balance</span> <span class="special">+=</span> <span class="identifier">amount</span><span class="special">;</span>
+		<span class="special">}</span><span class="identifier">retry</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(){</span>
+	<span class="identifier">srand</span><span class="special">(</span><span class="identifier">time</span><span class="special">(</span><span class="number">0</span><span class="special">));</span>
+	<span class="identifier">transactional_session</span> <span class="identifier">session</span><span class="special">(</span><span class="string">"mydb"</span><span class="special">);</span>
+
+	<span class="identifier">pinned_loc</span><span class="special">&lt;</span><span class="identifier">bank</span> <span class="keyword">const</span><span class="special">&gt;</span> <span class="identifier">mybank</span><span class="special">;</span>
+	<span class="keyword">if</span><span class="special">(!</span><span class="identifier">mybank</span><span class="special">)</span> <span class="identifier">mybank</span><span class="special">=</span><span class="identifier">create_bank</span><span class="special">(</span><span class="number">200</span><span class="special">);</span>
+
+	<span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"overall balance before: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">mybank</span><span class="special">-&gt;</span><span class="identifier">overall_balance</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+
+	<span class="identifier">thread</span> <span class="identifier">threads</span><span class="special">[</span><span class="number">10</span><span class="special">];</span> <span class="comment">//start 10 threads
+</span>	<span class="keyword">for</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">c</span><span class="special">=</span><span class="number">0</span><span class="special">;</span><span class="identifier">c</span><span class="special">&lt;</span><span class="number">10</span><span class="special">;++</span><span class="identifier">c</span><span class="special">){</span>
+		<span class="identifier">thread</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(&amp;</span><span class="identifier">thread_start</span><span class="special">)).</span><span class="identifier">swap</span><span class="special">(</span><span class="identifier">threads</span><span class="special">[</span><span class="identifier">c</span><span class="special">]);</span>
+	<span class="special">}</span>
+
+	<span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep</span><span class="special">(</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">30</span><span class="special">));</span>
+
+	<span class="keyword">for</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">c</span><span class="special">=</span><span class="number">0</span><span class="special">;</span><span class="identifier">c</span><span class="special">&lt;</span><span class="number">10</span><span class="special">;++</span><span class="identifier">c</span><span class="special">){</span> <span class="comment">//stop threads
+</span>		<span class="identifier">threads</span><span class="special">[</span><span class="identifier">c</span><span class="special">].</span><span class="identifier">interrupt</span><span class="special">();</span>
+		<span class="identifier">threads</span><span class="special">[</span><span class="identifier">c</span><span class="special">].</span><span class="identifier">join</span><span class="special">();</span>
+	<span class="special">}</span>
+
+	<span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"overall balance after: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">mybank</span><span class="special">-&gt;</span><span class="identifier">overall_balance</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.transactions.pitfalls"></a><a class="link" href="transactions.html#persistent.transactions.pitfalls" title="Pitfalls"> Pitfalls</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="transactions.html#persistent.transactions.pitfalls.tbound"> Transaction
+        boundaries</a></span></dt>
+<dt><span class="section"><a href="transactions.html#persistent.transactions.pitfalls.non_repeatable_side_effects_of_atomic_scopes">Non-repeatable
+        side effects of atomic scopes</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.transactions.pitfalls.tbound"></a><a class="link" href="transactions.html#persistent.transactions.pitfalls.tbound" title="Transaction boundaries"> Transaction
+        boundaries</a>
+</h4></div></div></div>
+<p>
+          Instances of <span class="emphasis"><em>persistent objects</em></span> obtained in one <span class="emphasis"><em>transaction</em></span>
+          must not be used in another <span class="emphasis"><em>transaction</em></span>.
+        </p>
+<p>
+          The result of dereferencing a <span class="emphasis"><em>locator</em></span> can be saved
+          for efficiency, for example instead of:
+        </p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="identifier">obj</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+<span class="identifier">obj</span><span class="special">-&gt;</span><span class="identifier">b</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+</pre>
+<p>
+          one could write:
+        </p>
+<pre class="programlisting"><span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+<span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">inst</span><span class="special">=*</span><span class="identifier">obj</span><span class="special">;</span>
+<span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+<span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">b</span><span class="special">=</span><span class="number">1</span><span class="special">;</span>
+</pre>
+<p>
+          Although the first code snippet does not cause the <span class="emphasis"><em>persistent
+          object</em></span> to be loaded from disk twice, since objects are cached,
+          it is less efficient than the second code snippet.
+        </p>
+<p>
+          However, instances must not be used across <span class="emphasis"><em>transaction</em></span>
+          boundaries:
+        </p>
+<pre class="programlisting"><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">inst</span><span class="special">;</span>
+<span class="special">{</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+
+	<span class="identifier">loc</span><span class="special">&lt;</span><span class="identifier">pers_type</span><span class="special">&gt;</span> <span class="identifier">obj</span><span class="special">=...;</span>
+	<span class="identifier">inst</span><span class="special">=*</span><span class="identifier">obj</span><span class="special">;</span>
+
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+<span class="special">{</span>
+	<span class="identifier">transaction</span> <span class="identifier">tx</span><span class="special">;</span>
+
+	<span class="identifier">inst</span><span class="special">-&gt;</span><span class="identifier">a</span><span class="special">=</span><span class="number">1</span><span class="special">;</span> <span class="comment">//error
+</span>	
+	<span class="identifier">tx</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The resulting object state of this is undefined.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="persistent.transactions.pitfalls.non_repeatable_side_effects_of_atomic_scopes"></a><a class="link" href="transactions.html#persistent.transactions.pitfalls.non_repeatable_side_effects_of_atomic_scopes" title="Non-repeatable side effects of atomic scopes">Non-repeatable
+        side effects of atomic scopes</a>
+</h4></div></div></div>
+<p>
+          Since <span class="emphasis"><em>atomic</em></span> scopes are repeated until a <span class="emphasis"><em>transaction</em></span>
+          is successfully <span class="emphasis"><em>committed</em></span>, the side effects of the
+          scope, if any, must be repeatable.
+        </p>
+<p>
+          Example:
+        </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">InputIterator</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">InputIterator</span> <span class="identifier">it</span><span class="special">){</span>
+	<span class="identifier">atomic</span><span class="special">{</span>
+		<span class="special">...</span>
+		<span class="identifier">pers_obj</span><span class="special">-&gt;</span><span class="identifier">use_value</span><span class="special">(*</span><span class="identifier">it</span><span class="special">++);</span> <span class="comment">//error
+</span>	<span class="special">}</span><span class="identifier">retry</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The <span class="emphasis"><em>transaction</em></span> may still fail due to a <span class="emphasis"><em>concurrent
+          transaction</em></span> changing the same object, after the InputIterator
+          <span class="emphasis"><em>it</em></span> has been incremented. When the <span class="emphasis"><em>transaction</em></span>
+          is repeated, it starts with an already incremented <span class="emphasis"><em>it</em></span>.
+        </p>
+<p>
+          If <span class="emphasis"><em>atomic</em></span> scopes have side effects, i.e. effects other
+          than changing <span class="emphasis"><em>persistent objects</em></span>, they must be moved
+          outside of the <span class="emphasis"><em>atomic</em></span> scope:
+        </p>
+<p>
+          Example:
+        </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">InputIterator</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">InputIterator</span> <span class="identifier">it</span><span class="special">){</span>
+	<span class="identifier">atomic</span><span class="special">{</span>
+		<span class="special">...</span>
+		<span class="identifier">persobj</span><span class="special">-&gt;</span><span class="identifier">use_value</span><span class="special">(*</span><span class="identifier">it</span><span class="special">);</span>
+	<span class="special">}</span><span class="identifier">retry</span><span class="special">;</span>
+	<span class="special">++</span><span class="identifier">it</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Only if the <span class="emphasis"><em>transaction</em></span> is successful, the side effects
+          of f() are applied.
+        </p>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="access.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="advanced.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

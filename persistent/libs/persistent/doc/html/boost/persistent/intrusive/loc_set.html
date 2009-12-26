@@ -1,0 +1,60 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template loc_set</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../../../persistent/reference.html#header.boost.persistent.intrusive.loc_set_hpp" title="Header &lt;boost/persistent/intrusive/loc_set.hpp&gt;">
+<link rel="prev" href="loc_set_hook.html" title="Struct template loc_set_hook">
+<link rel="next" href="loc_multiset.html" title="Class template loc_multiset">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="loc_set_hook.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../persistent/reference.html#header.boost.persistent.intrusive.loc_set_hpp"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="loc_multiset.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.persistent.intrusive.loc_set"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template loc_set</span></h2>
+<p>boost::persistent::intrusive::loc_set &#8212; A template alias of <code class="computeroutput">basic_loc_set</code> using the default transaction manager. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../../persistent/reference.html#header.boost.persistent.intrusive.loc_set_hpp" title="Header &lt;boost/persistent/intrusive/loc_set.hpp&gt;">boost/persistent/intrusive/loc_set.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+         <span class="bold"><strong>typename</strong></span> Compare = std::less&lt;T&gt;, 
+         <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="loc_set.html" title="Class template loc_set">loc_set</a> {
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2880570"></a><h2>Description</h2>
+<pre class="programlisting"> template&lt;class T,bool ConstantTimeSize=true,class Compare=std::less&lt;T&gt;,class Tag=default_tag&gt;
+ using loc_set = basic_loc_set&lt;T,transaction_manager,ConstantTimeSize,Compare,Tag&gt;;
+</pre>
+<p> In C++98, <code class="computeroutput">loc_set</code> ist implemented as a class that acts like a template alias. </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="loc_set_hook.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../persistent/reference.html#header.boost.persistent.intrusive.loc_set_hpp"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="loc_multiset.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

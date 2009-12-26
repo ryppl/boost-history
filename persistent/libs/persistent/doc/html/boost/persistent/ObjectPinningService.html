@@ -1,0 +1,148 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Struct ObjectPinningService</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../../persistent/reference.html#header.boost.persistent.concept.ObjectPinningService_hpp" title="Header &lt;boost/persistent/concept/ObjectPinningService.hpp&gt;">
+<link rel="prev" href="DataBlock.html" title="Struct DataBlock">
+<link rel="next" href="ObjectStorageService.html" title="Struct ObjectStorageService">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="DataBlock.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.concept.ObjectPinningService_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ObjectStorageService.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.persistent.ObjectPinningService"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Struct ObjectPinningService</span></h2>
+<p>boost::persistent::ObjectPinningService</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../persistent/reference.html#header.boost.persistent.concept.ObjectPinningService_hpp" title="Header &lt;boost/persistent/concept/ObjectPinningService.hpp&gt;">boost/persistent/concept/ObjectPinningService.hpp</a>&gt;
+
+</em></span>
+<span class="bold"><strong>struct</strong></span> <a class="link" href="ObjectPinningService.html" title="Struct ObjectPinningService">ObjectPinningService</a> {
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.ObjectPinningService.services"></a>services;     <span class="emphasis"><em>// A MPL Sequence that contains <code class="computeroutput">object_pinning_tag</code>. </em></span>
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.ObjectPinningService.transaction"></a>transaction;
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.ObjectPinningService.object"></a>object;     
+
+  <span class="emphasis"><em>// <a class="link" href="ObjectPinningService.html#id2533838-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Tag&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="ObjectPinningService.html#id2533842-bb">pin_object</a>(<a class="link" href="ObjectPinningService.html#boost.persistent.ObjectPinningService.transaction">transaction</a> &amp;, object) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Tag&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="ObjectPinningService.html#id2533920-bb">unpin_object</a>(<a class="link" href="ObjectPinningService.html#boost.persistent.ObjectPinningService.transaction">transaction</a> &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Tag&gt; <span class="type">object</span> <a class="link" href="ObjectPinningService.html#id2533988-bb">get_pinned_object</a>() ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Tag&gt; <span class="type">object</span> <a class="link" href="ObjectPinningService.html#id2534045-bb">get_pinned_object</a>(<a class="link" href="ObjectPinningService.html#boost.persistent.ObjectPinningService.transaction">transaction</a> &amp;) ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2814921"></a><h2>Description</h2>
+<div class="refsect2" lang="en">
+<a name="id2814924"></a><h3>
+<a name="id2533838-bb"></a><code class="computeroutput">ObjectPinningService</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Tag&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2533842-bb"></a>pin_object(<a class="link" href="ObjectPinningService.html#boost.persistent.ObjectPinningService.transaction">transaction</a> &amp; tx, object obj) ;</pre>Associates an object with <code class="computeroutput">Tag</code>. <p>Template parameters: </p>
+<div class="itemizedlist"><ul type="disc"><li><p><code class="computeroutput">Tag</code> The type the object is associated with</p></li></ul></div>
+<p>
+Throws: <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">obj</code></span></p></td>
+<td><p>The object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The transaction the pin is created in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Tag&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2533920-bb"></a>unpin_object(<a class="link" href="ObjectPinningService.html#boost.persistent.ObjectPinningService.transaction">transaction</a> &amp; tx) ;</pre>Deassociates the object associated with <code class="computeroutput">Tag</code>, if any. <p>Template parameters: </p>
+<div class="itemizedlist"><ul type="disc"><li><p><code class="computeroutput">Tag</code> The type the object is associated with</p></li></ul></div>
+<p>
+Throws: <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The transaction the pin should be removed in. </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Tag&gt; <span class="type">object</span> <a name="id2533988-bb"></a>get_pinned_object() ;</pre>Returns the object associated with <code class="computeroutput">Tag</code>, if any. <p>Template parameters: </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><code class="computeroutput">T</code> The type or a base class of the object </p></li>
+<li><p><code class="computeroutput">Tag</code> The type the object is associated with</p></li>
+</ul></div>
+<p>
+Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> </p>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Tag&gt; <span class="type">object</span> <a name="id2534045-bb"></a>get_pinned_object(<a class="link" href="ObjectPinningService.html#boost.persistent.ObjectPinningService.transaction">transaction</a> &amp; tx) ;</pre>Returns the object associated with <code class="computeroutput">Tag</code>, if any. <p>Template parameters: </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><code class="computeroutput">T</code> The type or a base class of the object </p></li>
+<li><p><code class="computeroutput">Tag</code> The type the object is associated with</p></li>
+</ul></div>
+<p>
+Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, <code class="computeroutput">no_active_transaction</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The transaction this access should be registered in </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="DataBlock.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.concept.ObjectPinningService_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ObjectStorageService.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

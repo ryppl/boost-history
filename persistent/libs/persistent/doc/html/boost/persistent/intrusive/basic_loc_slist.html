@@ -1,0 +1,1485 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template basic_loc_slist</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_loc_slist_hpp" title="Header &lt;boost/persistent/intrusive/basic_loc_slist.hpp&gt;">
+<link rel="prev" href="basic_loc_slist_hook.html" title="Struct template basic_loc_slist_hook">
+<link rel="next" href="loc_list_hook.html" title="Struct template loc_list_hook">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basic_loc_slist_hook.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_loc_slist_hpp"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="loc_list_hook.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.persistent.intrusive.basic_loc_slist"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template basic_loc_slist</span></h2>
+<p>boost::persistent::intrusive::basic_loc_slist &#8212; A singly linked intrusive list of locators. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_loc_slist_hpp" title="Header &lt;boost/persistent/intrusive/basic_loc_slist.hpp&gt;">boost/persistent/intrusive/basic_loc_slist.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+         <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="../basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt;       <a name="boost.persistent.intrusive.basic_loc_slist.pointer"></a>pointer;        
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="../basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T <span class="bold"><strong>const</strong></span>, TxMgr &gt; <a name="boost.persistent.intrusive.basic_loc_slist.const_pointer"></a>const_pointer;  
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="../basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt;       <a name="boost.persistent.intrusive.basic_loc_slist.value_type"></a>value_type;     
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="../basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt;       <a name="boost.persistent.intrusive.basic_loc_slist.reference"></a>reference;      
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="../basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T <span class="bold"><strong>const</strong></span>, TxMgr &gt; <a name="boost.persistent.intrusive.basic_loc_slist.const_reference"></a>const_reference;
+  <span class="bold"><strong>typedef</strong></span> std::ptrdiff_t              <a name="boost.persistent.intrusive.basic_loc_slist.difference_type"></a>difference_type;
+  <span class="bold"><strong>typedef</strong></span> std::size_t                 <a name="boost.persistent.intrusive.basic_loc_slist.size_type"></a>size_type;      
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span>                 <a name="boost.persistent.intrusive.basic_loc_slist.iterator"></a>iterator;       
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span>                 <a name="boost.persistent.intrusive.basic_loc_slist.const_iterator"></a>const_iterator; 
+
+  <span class="emphasis"><em>// <a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slistconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="basic_loc_slist.html#id2562822-bb">basic_loc_slist</a>();
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; <a class="link" href="basic_loc_slist.html#id2562832-bb">basic_loc_slist</a>(Iterator, Iterator);
+
+  <span class="emphasis"><em>// <a class="link" href="basic_loc_slist.html#id2557807-bb">public member functions</a></em></span>
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2557811-bb">clear</a>() ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2557832-bb">clear_and_dispose</a>(Disposer) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2557910-bb">push_front</a>(<a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.reference">reference</a>) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2557988-bb">pop_front</a>() ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2558012-bb">pop_front_and_dispose</a>(Disposer) ;
+  <span class="type"><a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.reference">reference</a></span> <a class="link" href="basic_loc_slist.html#id2558054-bb">front</a>() ;
+  <span class="type"><a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.const_reference">const_reference</a></span> <a class="link" href="basic_loc_slist.html#id2558073-bb">front</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2558092-bb">begin</a>() ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_slist.html#id2558111-bb">begin</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_slist.html#id2558130-bb">cbegin</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2558148-bb">end</a>() ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_slist.html#id2558167-bb">end</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_slist.html#id2558185-bb">cend</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2558203-bb">before_begin</a>() ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_slist.html#id2558225-bb">before_begin</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_slist.html#id2558246-bb">cbefore_begin</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">size_type</span> <a class="link" href="basic_loc_slist.html#id2558268-bb">size</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a class="link" href="basic_loc_slist.html#id2558324-bb">empty</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2558343-bb">swap</a>(<a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2558420-bb">shift_backwards</a>(size_type = 1) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2558501-bb">shift_forward</a>(size_type = 1) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Cloner, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2558582-bb">clone_from</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;, Cloner, Disposer) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2558697-bb">insert_after</a>(const_iterator, <a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.reference">reference</a>) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; 
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2558789-bb">insert_after</a>(const_iterator, Iterator, Iterator) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2558891-bb">insert</a>(const_iterator, <a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.reference">reference</a>) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2558980-bb">insert</a>(const_iterator, Iterator, Iterator) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2559084-bb">erase_after</a>(const_iterator) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2559167-bb">erase_after</a>(const_iterator, const_iterator) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2559255-bb">erase_after</a>(const_iterator, const_iterator, difference_type) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2559353-bb">erase</a>(const_iterator) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2559435-bb">erase</a>(const_iterator, const_iterator) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2559528-bb">erase</a>(const_iterator, const_iterator, difference_type) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2559627-bb">erase_after_and_dispose</a>(const_iterator, Disposer) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2559727-bb">erase_after_and_dispose</a>(const_iterator, const_iterator, Disposer) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2559834-bb">erase_and_dispose</a>(const_iterator, Disposer) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2559935-bb">erase_and_dispose</a>(const_iterator, const_iterator, Disposer) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2560045-bb">assign</a>(Iterator, Iterator) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2560141-bb">dispose_and_assign</a>(Disposer, Iterator, Iterator) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2560251-bb">splice_after</a>(const_iterator, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;, const_iterator * = 0) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2560359-bb">splice_after</a>(const_iterator, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;, const_iterator) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2560461-bb">splice_after</a>(const_iterator, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;, const_iterator, 
+                    const_iterator) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2560569-bb">splice_after</a>(const_iterator, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;, const_iterator, 
+                    const_iterator, difference_type) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2560684-bb">splice</a>(const_iterator, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;, iterator * = 0) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2560792-bb">splice</a>(const_iterator, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;, const_iterator) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2560890-bb">splice</a>(const_iterator, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;, const_iterator, 
+              const_iterator) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2560997-bb">splice</a>(const_iterator, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;, const_iterator, 
+              const_iterator, difference_type) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Predicate&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2561114-bb">sort</a>(Predicate) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2561201-bb">sort</a>() ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Predicate&gt; 
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2561284-bb">merge</a>(<a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;, Predicate, const_iterator * = 0) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2561402-bb">merge</a>(<a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2561485-bb">reverse</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2561554-bb">remove</a>(<a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.const_reference">const_reference</a>) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2561637-bb">remove_and_dispose</a>(<a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.const_reference">const_reference</a>, Disposer) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Pred&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2561735-bb">remove_if</a>(Pred) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Pred, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2561823-bb">remove_and_dispose_if</a>(Pred, Disposer) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2561925-bb">unique</a>() ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> BinaryPredicate&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2562000-bb">unique</a>(BinaryPredicate) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2562088-bb">unique_and_dispose</a>(Disposer) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> BinaryPredicate, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2562180-bb">unique_and_dispose</a>(BinaryPredicate, Disposer) ;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2562283-bb">iterator_to</a>(<a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.reference">reference</a>) ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_slist.html#id2562313-bb">iterator_to</a>(<a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.const_reference">const_reference</a>) <span class="bold"><strong>const</strong></span>;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2562343-bb">previous</a>(iterator) ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_slist.html#id2562406-bb">previous</a>(const_iterator) <span class="bold"><strong>const</strong></span>;
+  <span class="type">iterator</span> <a class="link" href="basic_loc_slist.html#id2562471-bb">previous</a>(const_iterator, iterator) ;
+  <span class="type">const_iterator</span> <a class="link" href="basic_loc_slist.html#id2562541-bb">previous</a>(const_iterator, const_iterator) <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2562612-bb">incorporate_after</a>(const_iterator, node_ptr, node_ptr) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="basic_loc_slist.html#id2562713-bb">incorporate_after</a>(const_iterator, node_ptr, node_ptr, difference_type) ;
+
+  <span class="emphasis"><em>// <a class="link" href="basic_loc_slist.html#id2562915-bb">public static functions</a></em></span>
+  <span class="type"><span class="bold"><strong>static</strong></span> <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;</span> <a class="link" href="basic_loc_slist.html#id2562919-bb">container_from_end_iterator</a>(iterator) ;
+  <span class="type"><span class="bold"><strong>static</strong></span> <span class="bold"><strong>const</strong></span> <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;</span> <a class="link" href="basic_loc_slist.html#id2562952-bb">container_from_end_iterator</a>(const_iterator) ;
+  <span class="bold"><strong>static</strong></span> <span class="type"><span class="bold"><strong>const</strong></span> <span class="bold"><strong>bool</strong></span></span> constant_time_size;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2872174"></a><h2>Description</h2>
+<p>Template parameters: </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><code class="computeroutput">T</code> The type this container can store locators to </p></li>
+<li><p><code class="computeroutput">TxMgr</code> The transaction manager that is used to access the stored objects </p></li>
+<li><p><code class="computeroutput">ConstantTimeSize</code> <code class="computeroutput">true</code> if member <code class="computeroutput">size()</code> should return in constant time. This reduces concurrency of threads. </p></li>
+<li><p><code class="computeroutput">Tag</code> The tag of the <code class="computeroutput">basic_loc_slist_hook</code> that is used by this <code class="computeroutput">basic_loc_slist</code> </p></li>
+</ul></div>
+<p>
+</p>
+<div class="refsect2" lang="en">
+<a name="id2872246"></a><h3>
+<a name="boost.persistent.intrusive.basic_loc_slistconstruct-copy-destruct"></a><code class="computeroutput">basic_loc_slist</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><a name="id2562822-bb"></a>basic_loc_slist();</pre>constructs an empty list. <p>Complexity: Constant</p>
+<p>Throws: Nothing. </p>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; <a name="id2562832-bb"></a>basic_loc_slist(Iterator begin, Iterator end);</pre>Constructs a list equal to [first,last). <p>No copy constructors are called.</p>
+<p>Complexity: Linear in std::distance(b, e).</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Dereferencing iterator must yield an value of type value_type. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id2872409"></a><h3>
+<a name="id2557807-bb"></a><code class="computeroutput">basic_loc_slist</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2557811-bb"></a>clear() ;</pre>Erases all the elements of the container. <p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2557832-bb"></a>clear_and_dispose(Disposer disposer) ;</pre>Erases all the elements of the container. <p>Disposer::operator()(pointer) is called for the removed elements.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code> </p>
+<p>Complexity: Linear to the number of elements of the list. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2557910-bb"></a>push_front(<a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.reference">reference</a> value) ;</pre>Inserts the value in the front of the list. <p>No copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Does not affect the validity of iterators. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2557988-bb"></a>pop_front() ;</pre>Erases the first element of the list. <p>No destructors are called.</p>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased element. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2558012-bb"></a>pop_front_and_dispose(Disposer disposer) ;</pre>Erases the first element of the list. <p>Disposer::operator()(pointer) is called for the removed element.</p>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased element. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.reference">reference</a></span> <a name="id2558054-bb"></a>front() ;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element of the list. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.const_reference">const_reference</a></span> <a name="id2558073-bb"></a>front() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element of the list. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2558092-bb"></a>begin() ;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator to the first element contained in the list. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2558111-bb"></a>begin() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_iterator to the first element contained in the list. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2558130-bb"></a>cbegin() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_iterator to the first element contained in the list. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2558148-bb"></a>end() ;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator to the end of the list. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2558167-bb"></a>end() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_iterator to the end of the list. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2558185-bb"></a>cend() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_iterator to the end of the list. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2558203-bb"></a>before_begin() ;</pre>
+<p>Equivalent to "end()"</p>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator that points to a position before the first element. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2558225-bb"></a>before_begin() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Equivalent to "end()"</p>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator that points to a position before the first element. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2558246-bb"></a>cbefore_begin() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Equivalent to "end()"</p>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator that points to a position before the first element. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">size_type</span> <a name="id2558268-bb"></a>size() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing, if ConstantTimeSize is true. Otherwise: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code> </p>
+<p>Complexity: Linear to the number of elements contained in the list. if ConstantTimeSize is false. Constant time otherwise. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the number of the elements contained in the list. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id2558324-bb"></a>empty() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>true if the list contains no elements. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2558343-bb"></a>swap(<a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; other) ;</pre>Swaps the elements of x and *this. <p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the number of elements of both lists. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Does not affect the validity of iterators. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2558420-bb"></a>shift_backwards(size_type n = 1) ;</pre>Moves backwards all the elements. <p>The first element becomes the second, the second becomes the third... the last element becomes the first one.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the number of elements plus the number shifts. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Does not affect the validity of iterators. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2558501-bb"></a>shift_forward(size_type n = 1) ;</pre>Moves forward all the elements. <p>The second element becomes the first, the third becomes the second... the first element becomes the last one.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the number of elements plus the number shifts. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Does not affect the validity of iterators. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Cloner, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2558582-bb"></a>clone_from(<span class="bold"><strong>const</strong></span> <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; src, Cloner cloner, 
+                  Disposer disposer) ;</pre>Erases all the elements from *this. <p>calls Disposer::operator()(pointer), clones all the elements from src calling Cloner::operator()(const_reference ) and inserts them on *this.</p>
+<p>If cloner throws, all cloned elements are unlinked and disposed calling Disposer::operator()(pointer).</p>
+<p>Complexity: Linear to erased plus inserted elements.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the cloner 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>Disposer::operator()(pointer) shouldn't throw. </p>
+<p>Cloner should yield to nodes equivalent to the original nodes. </p>
+</td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2558697-bb"></a>insert_after(const_iterator prev_p, <a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.reference">reference</a> value) ;</pre>Inserts the value after the position pointed by prev_p. <p>No copy constructor is called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Constant. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>prev_p must point to an element contained by the list or to end(). </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>An iterator to the inserted element. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Does not affect the validity of iterators. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; 
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2558789-bb"></a>insert_after(const_iterator prev_p, Iterator first, Iterator last) ;</pre>Inserts the [first, last) after the position prev_p. <p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the number of elements inserted. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>Dereferencing iterator must yield an value of type value_type </p>
+<p>prev_p must point to an element contained by the list or to the end node. </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Does not affect the validity of iterators. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2558891-bb"></a>insert(const_iterator p, <a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.reference">reference</a> value) ;</pre>Inserts the value before the position pointed by p. <p>No copy constructor is called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the number of elements before p. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>p must point to an element contained by the list or to end(). </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Does not affect the validity of iterators. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; 
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2558980-bb"></a>insert(const_iterator p, Iterator b, Iterator e) ;</pre>Inserts the pointed by b and e before the position p. <p>No copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the number of elements inserted plus linear to the elements before b. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>Dereferencing iterator must yield an value of type value_type </p>
+<p>p must point to an element contained by the list or to the end node. </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Does not affect the validity of iterators. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2559084-bb"></a>erase_after(const_iterator prev) ;</pre>Erases the element after the element pointed by prev of the list. <p>No destructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Constant. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element remaining beyond the removed elements, or end() if no such element exists. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased element. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2559167-bb"></a>erase_after(const_iterator before_first, const_iterator last) ;</pre>Erases the range (before_first, last) from the list. <p>No destructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Constant. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element remaining beyond the removed elements, or end() if no such element exists. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased element. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2559255-bb"></a>erase_after(const_iterator before_first, const_iterator last, 
+                     difference_type n) ;</pre>Erases the range (before_first, last) from the list. <p>No destructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Constant. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>n must be std::distance(before_first, last) - 1. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element remaining beyond the removed elements, or end() if no such element exists. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased element. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2559353-bb"></a>erase(const_iterator i) ;</pre>Erases the element pointed by i of the list. <p>No destructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the elements before i. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element remaining beyond the removed element, or end() if no such element exists. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased element. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2559435-bb"></a>erase(const_iterator first, const_iterator last) ;</pre>Erases the range pointed by b and e. <p>No destructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the elements before last. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>first and last must be valid iterator to elements in *this. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element remaining beyond the removed elements, or end() if no such element exists. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2559528-bb"></a>erase(const_iterator first, const_iterator last, difference_type n) ;</pre>Erases the range [first, last) from the list. <p>No destructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: linear to the elements before first if ConstantTimeSize is true. Linear to the elements before last otherwise. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>n must be std::distance(first, last). </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element remaining beyond the removed elements, or end() if no such element exists. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased element. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type">iterator</span> <a name="id2559627-bb"></a>erase_after_and_dispose(const_iterator prev, Disposer disposer) ;</pre>Erases the element after the element pointed by prev of the list. <p>Disposer::operator()(pointer) is called for the removed element.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Constant. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element remaining beyond the removed elements, or end() if no such element exists. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased element. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type">iterator</span> <a name="id2559727-bb"></a>erase_after_and_dispose(const_iterator before_first, 
+                                   const_iterator last, Disposer disposer) ;</pre>Erases the range (before_first, last) from the list. <p>Disposer::operator()(pointer) is called for the removed elements.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Lineal to the elements (last - before_first + 1). 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element remaining beyond the removed elements, or end() if no such element exists. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased element. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type">iterator</span> <a name="id2559834-bb"></a>erase_and_dispose(const_iterator i, Disposer disposer) ;</pre>Erases the element pointed by i of the list. <p>No destructors are called. Disposer::operator()(pointer) is called for the removed element.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the elements before i. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element remaining beyond the removed element, or end() if no such element exists. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased element. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type">iterator</span> <a name="id2559935-bb"></a>erase_and_dispose(const_iterator first, const_iterator last, 
+                             Disposer disposer) ;</pre>Erases the range pointed by b and e. <p>No destructors are called. Disposer::operator()(pointer) is called for the removed elements.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the number of erased elements plus linear to the elements before first. 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>first and last must be valid iterator to elements in *this. </p>
+<p>Disposer::operator()(pointer) shouldn't throw. </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>the first element remaining beyond the removed elements, or end() if no such element exists. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2560045-bb"></a>assign(Iterator b, Iterator e) ;</pre>Clears the list and inserts the range pointed by b and e. <p>No destructors or copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the number of elements inserted in the list. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Dereferencing iterator must yield an value of type value_type. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2560141-bb"></a>dispose_and_assign(Disposer disposer, Iterator b, Iterator e) ;</pre>Clears the list and inserts the range pointed by b and e. <p>No destructors or copy constructors are called. Disposer::operator()(pointer) is called for the removed elements.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the number of elements inserted plus linear to the elements contained in the list. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>Disposer::operator()(pointer) shouldn't throw. </p>
+<p>Dereferencing iterator must yield an value of type value_type. </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Invalidates the iterators to the erased elements. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2560251-bb"></a>splice_after(const_iterator prev, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; x, 
+                  const_iterator * last = 0) ;</pre>Transfers all the elements of list x to this list, after the the element pointed by prev. <p>No destructors or copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the elements contained in x. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>prev is an iterator to an element or x.end()/x.before_begin() in x. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td>
+<p>Iterators of values obtained from list x now point to elements of this list. Iterators of this list are not invalidated. </p>
+<p>If the optional parameter "last" is provided, it will be assigned to the last spliced element or prev if x is empty. This iterator can be used as new "prev" iterator for a new splice_after call. that will splice new values after the previously spliced values. </p>
+</td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2560359-bb"></a>splice_after(const_iterator prev_pos, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; x, 
+                  const_iterator prev_ele) ;</pre>Transfers the element after prev_ele, from list x to this list, after the element pointed by prev. <p>No destructors or copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Constant. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>prev must point to an element contained by this list or to the before_begin() element. </p>
+<p>prev_ele must point to an element contained in list x or must be x.before_begin(). </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators of values obtained from list x now point to elements of this list. Iterators of this list are not invalidated. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2560461-bb"></a>splice_after(const_iterator prev_pos, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; x, 
+                  const_iterator before_first, const_iterator before_last) ;</pre>Transfers the range (before_first, before_last] from list x to this list, after the element pointed by prev_pos. <p>No destructors or copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the number of elements transferred if ConstantTimeSize is true. Constant-time otherwise. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>prev_pos must be a dereferenceable iterator in *this or be before_begin(), and before_first and before_last belong to x and ++before_first != x.end() &amp;&amp; before_last != x.end(). </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators of values obtained from list x now point to elements of this list. Iterators of this list are not invalidated. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2560569-bb"></a>splice_after(const_iterator prev_pos, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; x, 
+                  const_iterator before_first, const_iterator before_last, 
+                  difference_type n) ;</pre>Transfers the range (before_first, before_last] from list x to this list, after the element pointed by p. <p>No destructors or copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Constant time. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>prev_pos must be a dereferenceable iterator in *this or be before_begin(), and before_first and before_last belong to x and ++before_first != x.end() &amp;&amp; before_last != x.end() </p>
+<p>n == std::distance(before_first, before_last). </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators of values obtained from list x now point to elements of this list. Iterators of this list are not invalidated. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2560684-bb"></a>splice(const_iterator it, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; x, iterator * last = 0) ;</pre>Transfers all the elements of list x to this list, before the the element pointed by it. <p>No destructors or copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the elements contained in x plus linear to the elements before it. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>it is an iterator to an element in x. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td>
+<p>Iterators of values obtained from list x now point to elements of this list. Iterators of this list are not invalidated. </p>
+<p>If the optional parameter "last" is provided, it will be assigned to the last spliced element or prev if x is empty. This iterator can be used as new "prev" iterator for a new splice_after call. that will splice new values after the previously spliced values. </p>
+</td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2560792-bb"></a>splice(const_iterator pos, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; x, const_iterator elem) ;</pre>Transfers the element elem, from list x to this list, before the element pointed by pos. <p>No destructors or copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the elements before pos and before elem. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>it p must be a valid iterator of *this. elem must point to an element contained in list x. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators of values obtained from list x now point to elements of this list. Iterators of this list are not invalidated. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2560890-bb"></a>splice(const_iterator pos, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; x, const_iterator first, 
+            const_iterator last) ;</pre>Transfers the range [first, last) from list x to this list, before the element pointed by pos. <p>No destructors or copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the sum of elements before pos, first, and last plus linear to the number of elements transferred if constant_time_size is true. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>pos must be a dereferenceable iterator in *this and first and last belong to x and first and last a valid range on x. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators of values obtained from list x now point to elements of this list. Iterators of this list are not invalidated. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2560997-bb"></a>splice(const_iterator pos, <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; x, const_iterator first, 
+            const_iterator last, difference_type n) ;</pre>Transfers the range [first, last) from list x to this list, before the element pointed by pos. <p>No destructors or copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the sum of elements before pos, first, and last. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>pos must be a dereferenceable iterator in *this </p>
+<p>first and last must belong to x and first and last must be a valid range on x. </p>
+<p>n == std::distance(first, last). </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators of values obtained from list x now point to elements of this list. Iterators of this list are not invalidated. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Predicate&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2561114-bb"></a>sort(Predicate p) ;</pre>This function sorts the list *this according to std::less&lt;T&gt;. <p>The sort is stable, that is, the relative order of equivalent elements is preserved.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the predicate</p>
+<p>Complexity: The number of comparisons is approximately N log N, where N is the list's size. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators are not invalidated </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2561201-bb"></a>sort() ;</pre>This function removes all of x's elements and inserts them in order into *this. <p>The merge is stable; that is, if an element from *this is equivalent to one from x, then the element from *this will precede the one from x.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by std::less&lt;T&gt;</p>
+<p>Complexity: This function is linear time: it performs at most size() + x.size() - 1 comparisons. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>p must be a comparison function that induces a strict weak ordering and both *this and x must be sorted according to that ordering </p>
+<p>The lists x and *this must be distinct. </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators are not invalidated. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Predicate&gt; 
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2561284-bb"></a>merge(<a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; x, Predicate p, const_iterator * last = 0) ;</pre>This function removes all of x's elements and inserts them in order into *this. <p>The merge is stable; that is, if an element from *this is equivalent to one from x, then the element from *this will precede the one from x.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the predicate</p>
+<p>Complexity: This function is linear time: it performs at most size() + x.size() - 1 comparisons. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>p must be a comparison function that induces a strict weak ordering and both *this and x must be sorted according to that ordering </p>
+<p>The lists x and *this must be distinct. </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td>
+<p>Iterators are not invalidated. </p>
+<p>If optional "last" argument is passed, it is assigned to an iterator to the last transferred value or end() is x is empty. </p>
+</td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2561402-bb"></a>merge(<a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp; x) ;</pre>This function removes all of x's elements and inserts them in order into *this according to std::less&lt;T&gt;. <p>The merge is stable; that is, if an element from *this is equivalent to one from x, then the element from *this will precede the one from x.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by std::less&lt;T&gt;</p>
+<p>Complexity: This function is linear time: it performs at most size() + x.size() - 1 comparisons. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators are not invalidated </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2561485-bb"></a>reverse() ;</pre>Reverses the order of elements in the list. <p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: This function is linear to the contained elements. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators are not invalidated </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2561554-bb"></a>remove(<a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.const_reference">const_reference</a> value) ;</pre>Removes all the elements that compare equal to value. <p>No destructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by std::equal_to&lt;T&gt;</p>
+<p>Complexity: Linear time. It performs exactly size() comparisons for equality. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>The relative order of elements that are not removed is unchanged, and iterators to elements that are not removed remain valid. This function is linear time: it performs exactly size() comparisons for equality. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2561637-bb"></a>remove_and_dispose(<a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.const_reference">const_reference</a> value, Disposer disposer) ;</pre>Removes all the elements that compare equal to value. <p>Disposer::operator()(pointer) is called for every removed element.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by std::equal_to&lt;T&gt;</p>
+<p>Complexity: Linear time. It performs exactly size() comparisons for equality. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>The relative order of elements that are not removed is unchanged, and iterators to elements that are not removed remain valid. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Pred&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2561735-bb"></a>remove_if(Pred pred) ;</pre>Removes all the elements for which a specified predicate is satisfied. <p>No destructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the predicate</p>
+<p>Complexity: Linear time. It performs exactly size() calls to the predicate. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>The relative order of elements that are not removed is unchanged, and iterators to elements that are not removed remain valid. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Pred, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2561823-bb"></a>remove_and_dispose_if(Pred pred, Disposer disposer) ;</pre>Removes all the elements for which a specified predicate is satisfied. <p>Disposer::operator()(pointer) is called for every removed element.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the predicate</p>
+<p>Complexity: Linear time. It performs exactly size() comparisons for equality. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>The relative order of elements that are not removed is unchanged, and iterators to elements that are not removed remain valid. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2561925-bb"></a>unique() ;</pre>Removes adjacent duplicate elements or adjacent elements that are equal from the list. <p>No destructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by std::equal_to&lt;T&gt;</p>
+<p>Complexity: Linear time (size()-1) comparisons calls to pred()). 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>The relative order of elements that are not removed is unchanged, and iterators to elements that are not removed remain valid. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> BinaryPredicate&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2562000-bb"></a>unique(BinaryPredicate pred) ;</pre>Removes adjacent duplicate elements or adjacent elements that satisfy some binary predicate from the list. <p>No destructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the predicate</p>
+<p>Complexity: Linear time (size()-1) comparisons equality comparisons. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>The relative order of elements that are not removed is unchanged, and iterators to elements that are not removed remain valid. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Disposer&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2562088-bb"></a>unique_and_dispose(Disposer disposer) ;</pre>Removes adjacent duplicate elements or adjacent elements that satisfy some binary predicate from the list. <p>Disposer::operator()(pointer) is called for every removed element.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by std::equal_to&lt;T&gt;</p>
+<p>Complexity: Linear time (size()-1) comparisons equality comparisons. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>The relative order of elements that are not removed is unchanged, and iterators to elements that are not removed remain valid. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> BinaryPredicate, <span class="bold"><strong>typename</strong></span> Disposer&gt; 
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2562180-bb"></a>unique_and_dispose(BinaryPredicate pred, Disposer disposer) ;</pre>Removes adjacent duplicate elements or adjacent elements that satisfy some binary predicate from the list. <p>Disposer::operator()(pointer) is called for every removed element.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code>, exceptions thrown by the predicate</p>
+<p>Complexity: Linear time (size()-1) comparisons equality comparisons. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Disposer::operator()(pointer) shouldn't throw. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>The relative order of elements that are not removed is unchanged, and iterators to elements that are not removed remain valid. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2562283-bb"></a>iterator_to(<a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.reference">reference</a> value) ;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant time. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>value must be a reference to a value inserted in a list. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const_iterator pointing to the element </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2562313-bb"></a>iterator_to(<a class="link" href="basic_loc_slist.html#boost.persistent.intrusive.basic_loc_slist.const_reference">const_reference</a> value) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant time. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>value must be a const reference to a value inserted in a list. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>an iterator pointing to the element. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2562343-bb"></a>previous(iterator i) ;</pre>
+<p>Returns the end-iterator, if either i is the begin-iterator or the list is empty.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code> </p>
+<p>Complexity: Linear to the number of elements before i. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The iterator to the element before i in the list. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2562406-bb"></a>previous(const_iterator i) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Returns the end-const_iterator, if either i is the begin-const_iterator or the list is empty.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code> </p>
+<p>Complexity: Linear to the number of elements before i. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The const_iterator to the element before i in the list. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">iterator</span> <a name="id2562471-bb"></a>previous(const_iterator prev_from, iterator i) ;</pre>
+<p>Returns the end-iterator, if either i is the begin-iterator or the list is empty.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code> </p>
+<p>Complexity: Linear to the number of elements before i. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The iterator to the element before i in the list, starting the search on element after prev_from. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">const_iterator</span> <a name="id2562541-bb"></a>previous(const_iterator prev_from, const_iterator i) <span class="bold"><strong>const</strong></span>;</pre>
+<p>Returns the end-const_iterator, if either i is the begin-const_iterator or the list is empty.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code> </p>
+<p>Complexity: Linear to the number of elements before i. 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The const_iterator to the element before i in the list, starting the search on element after prev_from. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2562612-bb"></a>incorporate_after(const_iterator prev_from, node_ptr first, 
+                       node_ptr before_last) ;</pre>Transfers the range (before_first, before_last] to this list, after the element pointed by prev_pos. <p>No destructors or copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Linear to the number of elements transferred if constant_time_size is true. Constant-time otherwise. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>prev_pos must be a dereferenceable iterator in *this or be before_begin() </p>
+<p>before_first and before_last belong to x and ++before_first != x.end() &amp;&amp; before_last != x.end(). </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators of values obtained from list x now point to elements of this list. Iterators of this list are not invalidated. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2562713-bb"></a>incorporate_after(const_iterator prev_pos, node_ptr first, 
+                       node_ptr before_last, difference_type n) ;</pre>Transfers the range (before_first, before_last] from list x to this list, after the element pointed by p. <p>No destructors or copy constructors are called.</p>
+<p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> </p>
+<p>Complexity: Constant time. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td>
+<p>prev_pos must be a dereferenceable iterator in *this or be before_begin() </p>
+<p>before_first and before_last belong to x and ++before_first != x.end() &amp;&amp; before_last != x.end() </p>
+<p>n == std::distance(first, before_last) + 1. </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>Iterators of values obtained from list x now point to elements of this list. Iterators of this list are not invalidated. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id2879734"></a><h3>
+<a name="id2562915-bb"></a><code class="computeroutput">basic_loc_slist</code> public static functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;</span> <a name="id2562919-bb"></a>container_from_end_iterator(iterator end_iterator) ;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>end_iterator must be a valid end iterator of slist. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const reference to the slist associated to the end iterator </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> <span class="bold"><strong>const</strong></span> <a class="link" href="basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a> &amp;</span> 
+<a name="id2562952-bb"></a>container_from_end_iterator(const_iterator end_iterator) ;</pre>
+<p>Throws: Nothing.</p>
+<p>Complexity: Constant. 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>end_iterator must be a valid end const_iterator of slist. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>a const reference to the slist associated to the end iterator </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basic_loc_slist_hook.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../persistent/reference.html#header.boost.persistent.intrusive.basic_loc_slist_hpp"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="loc_list_hook.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

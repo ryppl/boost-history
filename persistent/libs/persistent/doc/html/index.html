@@ -1,0 +1,262 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Chapter 1. Boost.Persistent</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Chapter 1. Boost.Persistent">
+<link rel="next" href="persistent/access.html" title="Accessing Persistent Objects">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="persistent/access.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="chapter" lang="en">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="persistent"></a>Chapter 1. Boost.Persistent</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Stefan</span> <span class="surname">Strasser</span>
+</h3></div></div>
+<div><p class="copyright">Copyright © 2009 Stefan Strasser</p></div>
+<div><div class="legalnotice">
+<a name="id2778158"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#persistent.intro"> Introduction</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#persistent.intro.motivation"> Motivation</a></span></dt>
+<dt><span class="section"><a href="index.html#persistent.intro.aproach"> Approach</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="persistent/access.html"> Accessing Persistent Objects</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.typereq"> Persistent type requirements</a></span></dt>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.persistentobject"> Persistent objects</a></span></dt>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.locators"> Locators</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.locators.concept"> Concept</a></span></dt>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.locators.models"> Models</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.savepoints"> Savepoints</a></span></dt>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.tutorials"> Tutorials</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.tutorials.tutorial1"> Tutorial 1:
+        Storing an object</a></span></dt>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.tutorials.tutorial2"> Tutorial 2:
+        Linked list</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.pitfalls"> Pitfalls</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.pitfalls.boundaries"> Savepoint boundaries</a></span></dt>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.pitfalls.objectboundaries"> Persistent
+        Object boundaries</a></span></dt>
+<dt><span class="section"><a href="persistent/access.html#persistent.access.pitfalls.lifetime"> Lifetime of instances</a></span></dt>
+</dl></dd>
+</dl></dd>
+<dt><span class="section"><a href="persistent/transactions.html"> Using Transactions</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="persistent/transactions.html#persistent.transactions.intro"> Introduction</a></span></dt>
+<dt><span class="section"><a href="persistent/transactions.html#persistent.transactions.scopes"> Transaction scopes</a></span></dt>
+<dt><span class="section"><a href="persistent/transactions.html#persistent.transactions.vssavepoints"> Transactions vs.
+      savepoints</a></span></dt>
+<dt><span class="section"><a href="persistent/transactions.html#persistent.transactions.access"> Object access outside
+      of transactions</a></span></dt>
+<dt><span class="section"><a href="persistent/transactions.html#persistent.transactions.nested"> Nested transactions</a></span></dt>
+<dt><span class="section"><a href="persistent/transactions.html#persistent.transactions.concurrent"> Concurrent transactions</a></span></dt>
+<dd><dl><dt><span class="section"><a href="persistent/transactions.html#persistent.transactions.concurrent.tutorial"> Tutorial
+        3: Concurrent transactions</a></span></dt></dl></dd>
+<dt><span class="section"><a href="persistent/transactions.html#persistent.transactions.pitfalls"> Pitfalls</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="persistent/transactions.html#persistent.transactions.pitfalls.tbound"> Transaction
+        boundaries</a></span></dt>
+<dt><span class="section"><a href="persistent/transactions.html#persistent.transactions.pitfalls.non_repeatable_side_effects_of_atomic_scopes">Non-repeatable
+        side effects of atomic scopes</a></span></dt>
+</dl></dd>
+</dl></dd>
+<dt><span class="section"><a href="persistent/advanced.html"> Advanced topics</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="persistent/advanced.html#persistent.advanced.containers"> Intrusive Persistent
+      Object Containers</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="persistent/advanced.html#persistent.advanced.containers.intro"> Introduction</a></span></dt>
+<dt><span class="section"><a href="persistent/advanced.html#persistent.advanced.containers.concept"> Concept</a></span></dt>
+<dt><span class="section"><a href="persistent/advanced.html#persistent.advanced.containers.models"> Models</a></span></dt>
+<dt><span class="section"><a href="persistent/advanced.html#persistent.advanced.containers.tutorial"> Tutorial
+        4: Intrusive linked list</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="persistent/advanced.html#persistent.advanced.threads"> Thread safety</a></span></dt>
+<dt><span class="section"><a href="persistent/advanced.html#persistent.advanced.finalizers"> Finalizers</a></span></dt>
+<dt><span class="section"><a href="persistent/advanced.html#persistent.advanced.optmem"> Optional members of persistent
+      types</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="persistent/configuring.html"> Configuring Boost.Persistent</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="persistent/configuring.html#persistent.configuring.intro"> Introduction</a></span></dt>
+<dt><span class="section"><a href="persistent/configuring.html#persistent.configuring.defaultconf"> Changing the default
+      configuration</a></span></dt>
+<dt><span class="section"><a href="persistent/configuring.html#persistent.configuring.defaulttrans"> Configuring the
+      default transaction manager</a></span></dt>
+<dt><span class="section"><a href="persistent/configuring.html#persistent.configuring.defaultres"> Configuring the default
+      resource manager</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="persistent/extending.html"> Extending Boost.Persistent</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="persistent/extending.html#persistent.extending.intro"> Introduction</a></span></dt>
+<dt><span class="section"><a href="persistent/extending.html#persistent.extending.concepts"> Concepts</a></span></dt>
+<dt><span class="section"><a href="persistent/extending.html#persistent.extending.services"> Services</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="persistent/future.html"> Future development</a></span></dt>
+<dt><span class="section"><a href="persistent/ackn.html"> Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.concept.AtomicStorageEngine_hpp">Header &lt;boost/persistent/concept/AtomicStorageEngine.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.concept.DataBlock_hpp">Header &lt;boost/persistent/concept/DataBlock.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.concept.ObjectPinningService_hpp">Header &lt;boost/persistent/concept/ObjectPinningService.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.concept.ObjectStorageService_hpp">Header &lt;boost/persistent/concept/ObjectStorageService.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.concept.ResourceManager_hpp">Header &lt;boost/persistent/concept/ResourceManager.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.concept.SharedObjectStorageService_hpp">Header &lt;boost/persistent/concept/SharedObjectStorageService.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.concept.StorageEngine_hpp">Header &lt;boost/persistent/concept/StorageEngine.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.concept.TransactionManager_hpp">Header &lt;boost/persistent/concept/TransactionManager.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.access_hpp">Header &lt;boost/persistent/access.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.basic_loc_hpp">Header &lt;boost/persistent/basic_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.basic_pinned_loc_hpp">Header &lt;boost/persistent/basic_pinned_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.basic_scoped_loc_hpp">Header &lt;boost/persistent/basic_scoped_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.basic_shared_loc_hpp">Header &lt;boost/persistent/basic_shared_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.basic_transaction_hpp">Header &lt;boost/persistent/basic_transaction.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.basic_transaction_manager_hpp">Header &lt;boost/persistent/basic_transaction_manager.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.basic_weak_loc_hpp">Header &lt;boost/persistent/basic_weak_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.block_storage_hpp">Header &lt;boost/persistent/block_storage.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.default_tag_hpp">Header &lt;boost/persistent/default_tag.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.exception_hpp">Header &lt;boost/persistent/exception.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.interior_ptr_hpp">Header &lt;boost/persistent/interior_ptr.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.intrusive.basic_loc_list_hpp">Header &lt;boost/persistent/intrusive/basic_loc_list.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.intrusive.basic_loc_set_hpp">Header &lt;boost/persistent/intrusive/basic_loc_set.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.intrusive.basic_loc_slist_hpp">Header &lt;boost/persistent/intrusive/basic_loc_slist.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.intrusive.loc_list_hpp">Header &lt;boost/persistent/intrusive/loc_list.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.intrusive.loc_set_hpp">Header &lt;boost/persistent/intrusive/loc_set.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.intrusive.loc_slist_hpp">Header &lt;boost/persistent/intrusive/loc_slist.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.loc_hpp">Header &lt;boost/persistent/loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.mapped_file_block_hpp">Header &lt;boost/persistent/mapped_file_block.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.multiversion_object_resource_hpp">Header &lt;boost/persistent/multiversion_object_resource.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.null_atomic_storage_hpp">Header &lt;boost/persistent/null_atomic_storage.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.pinned_loc_hpp">Header &lt;boost/persistent/pinned_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.redo_storage_hpp">Header &lt;boost/persistent/redo_storage.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.resource_manager_hpp">Header &lt;boost/persistent/resource_manager.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.savepoints_session_hpp">Header &lt;boost/persistent/savepoints_session.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.scoped_loc_hpp">Header &lt;boost/persistent/scoped_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.shared_loc_hpp">Header &lt;boost/persistent/shared_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.streambuf_block_hpp">Header &lt;boost/persistent/streambuf_block.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.transaction_hpp">Header &lt;boost/persistent/transaction.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.transaction_manager_hpp">Header &lt;boost/persistent/transaction_manager.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.transactional_session_hpp">Header &lt;boost/persistent/transactional_session.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="persistent/reference.html#header.boost.persistent.weak_loc_hpp">Header &lt;boost/persistent/weak_loc.hpp&gt;</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="persistent.intro"></a><a class="link" href="index.html#persistent.intro" title="Introduction"> Introduction</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#persistent.intro.motivation"> Motivation</a></span></dt>
+<dt><span class="section"><a href="index.html#persistent.intro.aproach"> Approach</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.intro.motivation"></a><a class="link" href="index.html#persistent.intro.motivation" title="Motivation"> Motivation</a>
+</h3></div></div></div>
+<p>
+        Boost.Serialization provides an easy way for a C++ application to save its
+        state to disk and later reconstruct it from that saved data:
+      </p>
+<pre class="programlisting"><span class="comment">//saving:
+</span><span class="identifier">ofstream</span> <span class="identifier">os</span><span class="special">(</span><span class="string">"file"</span><span class="special">,</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">out</span> <span class="special">|</span> <span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">binary</span><span class="special">);</span>
+<span class="identifier">binary_oarchive</span> <span class="identifier">oa</span><span class="special">(</span><span class="identifier">os</span><span class="special">);</span>
+<span class="identifier">oa</span> <span class="special">&lt;&lt;</span> <span class="identifier">obj</span><span class="special">;</span>
+
+<span class="comment">//loading:
+</span><span class="identifier">ifstream</span> <span class="identifier">is</span><span class="special">(</span><span class="string">"file"</span><span class="special">,</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">in</span> <span class="special">|</span> <span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">binary</span><span class="special">);</span>
+<span class="identifier">binary_iarchive</span> <span class="identifier">ia</span><span class="special">(</span><span class="identifier">is</span><span class="special">);</span>
+<span class="identifier">ia</span> <span class="special">&gt;&gt;</span> <span class="identifier">obj</span><span class="special">;</span>
+</pre>
+<p>
+        Once the problem of serialization itself is solved, there are several more
+        questions to be answered to make an application preserve (part of) its state
+        beyond its runtime:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          When and where should serialization from/to disk take place?
+        </li>
+<li>
+          Is it acceptable to serialize the whole application state at that point?
+          Are there resource limitations which require some information to be loaded
+          on demand?
+        </li>
+<li>
+          What if an application is aborted unexpectedly? Is it acceptable to have
+          lost all changes since application startup?
+        </li>
+<li>
+          What if the application is aborted when only a part of its state was written
+          to disk, e.g. while serialization took place?
+        </li>
+<li>
+          Is concurrent access from multiple threads to the application's state necessary?
+          How is that concurrent access synchronized?
+        </li>
+</ul></div>
+<p>
+        Boost.Persistent is built upon Boost.Serialization and seeks to provide a
+        generic solution to these problems.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.intro.aproach"></a><a class="link" href="index.html#persistent.intro.aproach" title="Approach"> Approach</a>
+</h3></div></div></div>
+<p>
+        Boost.Persistent introduces the concept of a <span class="emphasis"><em>persistent object</em></span>.
+        <span class="emphasis"><em>Persistent objects</em></span> can be accessed through <span class="emphasis"><em>locators</em></span>,
+        which are similar to pointers, but can refer to objects that are stored on
+        disk. The user only expresses the intention of accessing a <span class="emphasis"><em>persistent
+        object</em></span> but lets the library decide when and how to perform disk
+        I/O.
+      </p>
+<p>
+        The persistent state of the application can be updated in small increments,
+        instead of serializing the whole application state at one point. Those updates
+        are conducted as <span class="emphasis"><em>atomic operations</em></span> by the library, that
+        are presented to the user either as <span class="emphasis"><em>savepoints</em></span> or as
+        <span class="emphasis"><em>transactions</em></span>. The library maintains a consistent application
+        state and recovers it from application and system failures.
+      </p>
+<p>
+        Finally, a <span class="emphasis"><em>persistent object</em></span> can be accessed from multiple
+        <span class="emphasis"><em>transactions</em></span> in different threads concurrently and independent
+        from each other, making manual synchronization obsolete.
+      </p>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: December 26, 2009 at 18:16:33 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="persistent/access.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+</body>
+</html>

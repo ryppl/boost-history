@@ -1,0 +1,334 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Struct ObjectStorageService</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../../persistent/reference.html#header.boost.persistent.concept.ObjectStorageService_hpp" title="Header &lt;boost/persistent/concept/ObjectStorageService.hpp&gt;">
+<link rel="prev" href="ObjectPinningService.html" title="Struct ObjectPinningService">
+<link rel="next" href="ResourceManager.html" title="Struct ResourceManager">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="ObjectPinningService.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.concept.ObjectStorageService_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ResourceManager.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.persistent.ObjectStorageService"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Struct ObjectStorageService</span></h2>
+<p>boost::persistent::ObjectStorageService</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../persistent/reference.html#header.boost.persistent.concept.ObjectStorageService_hpp" title="Header &lt;boost/persistent/concept/ObjectStorageService.hpp&gt;">boost/persistent/concept/ObjectStorageService.hpp</a>&gt;
+
+</em></span>
+<span class="bold"><strong>struct</strong></span> <a class="link" href="ObjectStorageService.html" title="Struct ObjectStorageService">ObjectStorageService</a> {
+  <span class="emphasis"><em>// <a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageServicetypes">types</a></em></span>
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.ObjectStorageService.services"></a>services;     <span class="emphasis"><em>// A MPL Sequence that contains <code class="computeroutput">object_storage_tag</code>. </em></span>
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.ObjectStorageService.transaction"></a>transaction;
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.ObjectStorageService.object"></a>object;     
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageService.object_id">object_id</a>;
+
+  <span class="emphasis"><em>// <a class="link" href="ObjectStorageService.html#id2534175-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">shared_ptr&lt; T <span class="bold"><strong>const</strong></span>  &gt;</span> <a class="link" href="ObjectStorageService.html#id2534179-bb">get_read_instance</a>(object) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+    <span class="type">shared_ptr&lt; T <span class="bold"><strong>const</strong></span>  &gt;</span> <a class="link" href="ObjectStorageService.html#id2534239-bb">get_read_instance</a>(<a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageService.transaction">transaction</a> &amp;, object) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+    <span class="type">shared_ptr&lt; T &gt;</span> <a class="link" href="ObjectStorageService.html#id2534315-bb">get_write_instance</a>(<a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageService.transaction">transaction</a> &amp;, object) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+    <span class="type">shared_ptr&lt; T &gt;</span> <a class="link" href="ObjectStorageService.html#id2534402-bb">get_autodetect_instance</a>(<a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageService.transaction">transaction</a> &amp;, object) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">object</span> <a class="link" href="ObjectStorageService.html#id2534486-bb">get_object</a>(object_id) ;
+  <span class="type">object_id</span> <a class="link" href="ObjectStorageService.html#id2534557-bb">get_object_id</a>(object) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">object</span> <a class="link" href="ObjectStorageService.html#id2534601-bb">new_object</a>(<a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageService.transaction">transaction</a> &amp;, T *) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="ObjectStorageService.html#id2534666-bb">remove_object</a>(<a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageService.transaction">transaction</a> &amp;, object) ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2815818"></a><h2>Description</h2>
+<div class="refsect2" lang="en">
+<a name="id2815822"></a><h3>
+<a name="boost.persistent.ObjectStorageServicetypes"></a><code class="computeroutput">ObjectStorageService</code> 
+        public
+       types</h3>
+<div class="orderedlist"><ol type="1"><li>
+<p>
+<span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.persistent.ObjectStorageService.object_id"></a>object_id;</p>
+<p>A type that is used by other <code class="computeroutput">ResourceManagers</code> to store references. Must be POD. </p>
+</li></ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id2815870"></a><h3>
+<a name="id2534175-bb"></a><code class="computeroutput">ObjectStorageService</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">shared_ptr&lt; T <span class="bold"><strong>const</strong></span>  &gt;</span> <a name="id2534179-bb"></a>get_read_instance(object obj) ;</pre>
+<p>Template Parameters: </p>
+<div class="itemizedlist"><ul type="disc"><li><p><code class="computeroutput">T</code> The type or a base class of the object</p></li></ul></div>
+<p>
+Throws: <code class="computeroutput">isolation_exception</code> <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by functions that load the object 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">obj</code></span></p></td>
+<td><p>The object </p></td>
+</tr></tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>A read-only instance of object <code class="computeroutput">obj</code>. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+  <span class="type">shared_ptr&lt; T <span class="bold"><strong>const</strong></span>  &gt;</span> <a name="id2534239-bb"></a>get_read_instance(<a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageService.transaction">transaction</a> &amp; tx, object obj) ;</pre>
+<p>Template Parameters: </p>
+<div class="itemizedlist"><ul type="disc"><li><p><code class="computeroutput">T</code> The type or a base class of the object</p></li></ul></div>
+<p>
+Throws: <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by functions that load the object 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">obj</code></span></p></td>
+<td><p>The object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The transaction this access should be registered in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>A read-only instance of object <code class="computeroutput">obj</code>. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+  <span class="type">shared_ptr&lt; T &gt;</span> <a name="id2534315-bb"></a>get_write_instance(<a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageService.transaction">transaction</a> &amp; tx, object obj) ;</pre>
+<p>This function indicates write access. The <code class="computeroutput">ResourceManager</code> can assume that the object will be modified by user code.</p>
+<p>Template Parameters: </p>
+<div class="itemizedlist"><ul type="disc"><li><p><code class="computeroutput">T</code> The type or a base class of the object</p></li></ul></div>
+<p>
+Throws: <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by functions that load the object 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">obj</code></span></p></td>
+<td><p>The object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The transaction this access should be registered in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>A instance of object <code class="computeroutput">obj</code>. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+  <span class="type">shared_ptr&lt; T &gt;</span> <a name="id2534402-bb"></a>get_autodetect_instance(<a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageService.transaction">transaction</a> &amp; tx, object obj) ;</pre>
+<p>This function does not indicate write access. The returned object may or may not be modified by user code.</p>
+<p>Template Parameters: </p>
+<div class="itemizedlist"><ul type="disc"><li><p><code class="computeroutput">T</code> The type or a base class of the object</p></li></ul></div>
+<p>
+Throws: <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by functions that load the object 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">obj</code></span></p></td>
+<td><p>The object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The transaction this access should be registered in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>A instance of object <code class="computeroutput">obj</code>. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">object</span> <a name="id2534486-bb"></a>get_object(object_id id) ;</pre>
+<p>Template parameters: </p>
+<div class="itemizedlist"><ul type="disc"><li><p><code class="computeroutput">T</code> The type or a base class of the object</p></li></ul></div>
+<p>
+Throws: <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code> 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">id</code></span></p></td>
+<td><p>An object id </p></td>
+</tr></tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The <code class="computeroutput">object</code> associated with <code class="computeroutput">id</code> </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function can be used by other resource managers to turn a stored <code class="computeroutput">object_id</code> intos an <code class="computeroutput">object</code> </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">object_id</span> <a name="id2534557-bb"></a>get_object_id(object obj) ;</pre>
+<p>Throws: <code class="computeroutput">thread_resource_error</code> 
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">obj</code></span></p></td>
+<td><p>The object </p></td>
+</tr></tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The <code class="computeroutput">object_id</code> associated with <code class="computeroutput">obj</code> </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This function can be used by other resource managers to get an <code class="computeroutput">object_id</code> to store a reference to an object. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">object</span> <a name="id2534601-bb"></a>new_object(<a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageService.transaction">transaction</a> &amp; tx, T * userobj) ;</pre>Creates a new object. <p>Takes ownership of <code class="computeroutput">userobj</code>.</p>
+<p>Throws: <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, <code class="computeroutput">no_active_transaction</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The transaction the object is created in </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">userobj</code></span></p></td>
+<td><p>A pointer to the user object </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2534666-bb"></a>remove_object(<a class="link" href="ObjectStorageService.html#boost.persistent.ObjectStorageService.transaction">transaction</a> &amp; tx, object obj) ;</pre>Removes an object. <p>Throws: <code class="computeroutput">thread_resource_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">no_active_transaction</code> 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">obj</code></span></p></td>
+<td><p>The object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">tx</code></span></p></td>
+<td><p>The transaction the object is removed in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="ObjectPinningService.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.concept.ObjectStorageService_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ResourceManager.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

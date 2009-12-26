@@ -1,0 +1,303 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template interior_ptr</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../../persistent/reference.html#header.boost.persistent.interior_ptr_hpp" title="Header &lt;boost/persistent/interior_ptr.hpp&gt;">
+<link rel="prev" href="isolation_exception.html" title="Struct isolation_exception">
+<link rel="next" href="intrusive/basic_loc_list_hook.html" title="Struct template basic_loc_list_hook">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="isolation_exception.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.interior_ptr_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="intrusive/basic_loc_list_hook.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.persistent.interior_ptr"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template interior_ptr</span></h2>
+<p>boost::persistent::interior_ptr &#8212; A pointer to a member of a persistent object. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../persistent/reference.html#header.boost.persistent.interior_ptr_hpp" title="Header &lt;boost/persistent/interior_ptr.hpp&gt;">boost/persistent/interior_ptr.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> T <a name="boost.persistent.interior_ptr.element_type"></a>element_type;
+
+  <span class="emphasis"><em>// <a class="link" href="interior_ptr.html#boost.persistent.interior_ptrconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="interior_ptr.html#id2543540-bb">interior_ptr</a>();
+  <a class="link" href="interior_ptr.html#id2543548-bb">interior_ptr</a>(T *);
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> PT, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+    <a class="link" href="interior_ptr.html#id2543576-bb">interior_ptr</a>(T *, <a class="link" href="basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; PT, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  <a class="link" href="interior_ptr.html#id2543675-bb">interior_ptr</a>(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a> <span class="bold"><strong>const</strong></span> &amp;);
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <a class="link" href="interior_ptr.html#id2543694-bb">interior_ptr</a>(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  interior_ptr&amp; <a class="link" href="interior_ptr.html#id2543725-bb"><span class="bold"><strong>operator</strong></span>=</a>(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a> <span class="bold"><strong>const</strong></span> &amp;);
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; interior_ptr&amp; <a class="link" href="interior_ptr.html#id2543741-bb"><span class="bold"><strong>operator</strong></span>=</a>(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt; <span class="bold"><strong>const</strong></span> &amp;);
+
+  <span class="emphasis"><em>// <a class="link" href="interior_ptr.html#id2543196-bb">public member functions</a></em></span>
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="interior_ptr.html#id2543200-bb">reset</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="interior_ptr.html#id2543215-bb">reset</a>(T *) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> PT, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="interior_ptr.html#id2543235-bb">reset</a>(T *, <a class="link" href="basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; PT, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp;) ;
+  <span class="type">T &amp;</span> <a class="link" href="interior_ptr.html#id2543275-bb"><span class="bold"><strong>operator</strong></span>*</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">T *</span> <a class="link" href="interior_ptr.html#id2543295-bb"><span class="bold"><strong>operator</strong></span>-&gt;</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">T *</span> <a class="link" href="interior_ptr.html#id2543314-bb">get</a>() <span class="bold"><strong>const</strong></span>;
+  <a class="link" href="interior_ptr.html#id2543329-bb"><span class="bold"><strong>operator</strong></span> unspecified_bool_type</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="interior_ptr.html#id2543350-bb">swap</a>(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a> &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a class="link" href="interior_ptr.html#id2543378-bb"><span class="bold"><strong>operator</strong></span>==</a>(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt; <span class="bold"><strong>const</strong></span> &amp;) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a class="link" href="interior_ptr.html#id2543408-bb"><span class="bold"><strong>operator</strong></span>!=</a>(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt; <span class="bold"><strong>const</strong></span> &amp;) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a class="link" href="interior_ptr.html#id2543438-bb"><span class="bold"><strong>operator</strong></span>&lt;</a>(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt; <span class="bold"><strong>const</strong></span> &amp;) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt;</span> <a class="link" href="interior_ptr.html#id2543468-bb">cast_const</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt;</span> <a class="link" href="interior_ptr.html#id2543492-bb">cast_static</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt;</span> <a class="link" href="interior_ptr.html#id2543516-bb">cast_dynamic</a>() <span class="bold"><strong>const</strong></span>;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2840986"></a><h2>Description</h2>
+<p>An interior_ptr can contain a normal pointer or a pointer to a member of a persistent object. If it contains a pointer to a member of a persistent object, it keeps the persistent object in memory as long as it exists, to make sure the pointer is not invalidated. </p>
+<div class="refsect2" lang="en">
+<a name="id2840996"></a><h3>
+<a name="boost.persistent.interior_ptrconstruct-copy-destruct"></a><code class="computeroutput">interior_ptr</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><a name="id2543540-bb"></a>interior_ptr();</pre>Constructs an empty interior_ptr. <p>Throws: Nothing </p>
+</li>
+<li>
+<pre class="literallayout"><a name="id2543548-bb"></a>interior_ptr(T * ptr);</pre>Constructs an interior_ptr to <code class="computeroutput">ptr</code>. <p>Throws: Nothing 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">ptr</code></span></p></td>
+<td><p></p></td>
+</tr></tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Notes:</span></p></td>
+<td><p>This constructor exists so that native pointers are convertible to <code class="computeroutput">interior_ptrs</code>. It can not be used to create an interior_ptr to a member of a persistent object. </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> PT, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+  <a name="id2543576-bb"></a>interior_ptr(T * ptr, <a class="link" href="basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; PT, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp; l);</pre>Constructs an interior_ptr to a member of a persistent object. <p>Throws: <code class="computeroutput">no_active_transaction_manager</code>, <code class="computeroutput">no_active_transaction</code>, <code class="computeroutput">isolation_exception</code>, <code class="computeroutput">archive::archive_exception</code>, <code class="computeroutput">finalize_error</code>, <code class="computeroutput">io_failure</code>, <code class="computeroutput">thread_resource_error</code>, any exception thrown by the following user-supplied functions: <code class="computeroutput">T::T()</code>, <code class="computeroutput">serialize()</code>, <code class="computeroutput">load()</code>, <code class="computeroutput">construct()</code>, <code class="computeroutput">clone()</code> 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">l</code></span></p></td>
+<td><p>Locator to the persistent object </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">ptr</code></span></p></td>
+<td><p>Pointer to the member of a persistent object </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p><code class="computeroutput">l</code> must not be empty if <code class="computeroutput">ptr</code> is not 0 </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><a name="id2543675-bb"></a>interior_ptr(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a> <span class="bold"><strong>const</strong></span> &amp; o);</pre>Constructs a copy of another interior_ptr. <p>Throws: Nothing 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">o</code></span></p></td>
+<td><p>Source </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <a name="id2543694-bb"></a>interior_ptr(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt; <span class="bold"><strong>const</strong></span> &amp; o);</pre>Constructs a copy of another interior_ptr. <p>Throws: Nothing 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">o</code></span></p></td>
+<td><p>Source </p></td>
+</tr></tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>Y * must be convertible to T * </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout">interior_ptr&amp; <a name="id2543725-bb"></a><span class="bold"><strong>operator</strong></span>=(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a> <span class="bold"><strong>const</strong></span> &amp; o);</pre>Equivalent to <code class="computeroutput">interior_ptr(o).swap(*this)</code>. </li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; interior_ptr&amp; <a name="id2543741-bb"></a><span class="bold"><strong>operator</strong></span>=(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt; <span class="bold"><strong>const</strong></span> &amp; o);</pre>Equivalent to <code class="computeroutput">interior_ptr(o).swap(*this)</code>. </li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id2841502"></a><h3>
+<a name="id2543196-bb"></a><code class="computeroutput">interior_ptr</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2543200-bb"></a>reset() ;</pre>Equivalent to <code class="computeroutput">interior_ptr().swap(*this)</code>. </li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2543215-bb"></a>reset(T * p) ;</pre>Equivalent to <code class="computeroutput">interior_ptr(p).swap(*this)</code>. </li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> PT, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2543235-bb"></a>reset(T * p, <a class="link" href="basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; PT, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp; l) ;</pre>Equivalent to <code class="computeroutput">interior_ptr(p,l).swap(*this)</code>. </li>
+<li>
+<pre class="literallayout"><span class="type">T &amp;</span> <a name="id2543275-bb"></a><span class="bold"><strong>operator</strong></span>*() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>The interior_ptr must not be empty </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>A reference to the object pointed to by this interior_ptr </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">T *</span> <a name="id2543295-bb"></a><span class="bold"><strong>operator</strong></span>-&gt;() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing 
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>The interior_ptr must not be empty </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The stored pointer </p></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type">T *</span> <a name="id2543314-bb"></a>get() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The stored pointer </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><a name="id2543329-bb"></a><span class="bold"><strong>operator</strong></span> unspecified_bool_type() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Throws: Nothing 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>An unspecified value that evaluates to <code class="computeroutput">true</code> if the interior_ptr is not empty </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2543350-bb"></a>swap(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a> &amp; o) ;</pre>Exchanges the contents of the two <code class="computeroutput">interior_ptrs</code>. <p>Throws: Nothing 
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">o</code></span></p></td>
+<td><p></p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id2543378-bb"></a><span class="bold"><strong>operator</strong></span>==(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt; <span class="bold"><strong>const</strong></span> &amp; o) <span class="bold"><strong>const</strong></span>;</pre>Equivalent to <code class="computeroutput">get() == o.get()</code>. </li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id2543408-bb"></a><span class="bold"><strong>operator</strong></span>!=(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt; <span class="bold"><strong>const</strong></span> &amp; o) <span class="bold"><strong>const</strong></span>;</pre>Equivalent to <code class="computeroutput">!(*this == o)</code>. </li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id2543438-bb"></a><span class="bold"><strong>operator</strong></span>&lt;(<a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt; <span class="bold"><strong>const</strong></span> &amp; o) <span class="bold"><strong>const</strong></span>;</pre>Equivalent to <code class="computeroutput">get() &lt; o.get()</code>. </li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt;</span> <a name="id2543468-bb"></a>cast_const() <span class="bold"><strong>const</strong></span>;</pre>Performs a const_cast on the pointer. <p>Throws: Nothing </p>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt;</span> <a name="id2543492-bb"></a>cast_static() <span class="bold"><strong>const</strong></span>;</pre>Performs a static_cast on the pointer. <p>Throws: Nothing </p>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y&gt; <span class="type"><a class="link" href="interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt;</span> <a name="id2543516-bb"></a>cast_dynamic() <span class="bold"><strong>const</strong></span>;</pre>Performs a dynamic_cast on the pointer. <p>Throws: Nothing </p>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="isolation_exception.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../persistent/reference.html#header.boost.persistent.interior_ptr_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="intrusive/basic_loc_list_hook.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

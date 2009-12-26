@@ -1,0 +1,117 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Future development</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="prev" href="extending.html" title="Extending Boost.Persistent">
+<link rel="next" href="ackn.html" title="Acknowledgements">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="extending.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ackn.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="persistent.future"></a><a class="link" href="future.html" title="Future development"> Future development</a>
+</h2></div></div></div>
+<p>
+      This section describes possible future directions of further development, and
+      why they are not considered to be an essential part of the initial version
+      of this library.
+    </p>
+<a name="persistent.future.distributed_transactions"></a><h4>
+<a name="id2811396"></a>
+      <a class="link" href="future.html#persistent.future.distributed_transactions">Distributed transactions</a>
+    </h4>
+<p>
+      Boost.Persistent can be configured to use more than one <span class="emphasis"><em>resource
+      manager</em></span>, and <span class="emphasis"><em>locators</em></span> can refer to objects
+      stored in any resource. However, when objects of two or more <span class="emphasis"><em>resource
+      managers</em></span> take part in a <span class="emphasis"><em>transaction</em></span> a <span class="emphasis"><em>two-phase-commit</em></span>
+      must be conducted. Currently, an <code class="computeroutput"><a class="link" href="../boost/persistent/unsupported_exception.html" title="Struct unsupported_exception">unsupported_exception</a></code>
+      is thrown instead.
+    </p>
+<p>
+      Boost.Persistent contains only one <span class="emphasis"><em>resource manager</em></span> at
+      this point.
+    </p>
+<a name="persistent.future.indexing"></a><h4>
+<a name="id2811464"></a>
+      <a class="link" href="future.html#persistent.future.indexing">Indexing</a>
+    </h4>
+<p>
+      Indexing is an integral part of most databases, some embedded databases even
+      consist entirely of indexes.
+    </p>
+<p>
+      Indexing is not considered to be an integral part of Boost.Persistent, as for
+      the most common tasks there are no index lookups needed: When traversing an
+      object graph, <span class="emphasis"><em>locators</em></span> are dereferenced instead of an
+      Id looked up in an index of a relational database. To store relations that
+      are not 1:1, STL containers and <span class="emphasis"><em>Intrusive Persistent Object Containers</em></span>
+      can be used.
+    </p>
+<p>
+      However, there are still cases where efficient indexing is needed. Possible
+      directions are: Definition of an indexing service concept and implementation
+      of a <span class="emphasis"><em>ResourceManager</em></span> that offers that service, either
+      based on an external embedded database library or a custom implementation of
+      B-Tree/Hash indexing. User interface based on STL containers.
+    </p>
+<a name="persistent.future.storage_backends"></a><h4>
+<a name="id2811519"></a>
+      <a class="link" href="future.html#persistent.future.storage_backends">Storage backends</a>
+    </h4>
+<p>
+      Implementation of AtomicStorageEngines based on external libraries, e.g. Berkeley
+      DB, to store the application state in a proven storage backend.
+    </p>
+<a name="persistent.future.object_relational_mapping"></a><h4>
+<a name="id2811547"></a>
+      <a class="link" href="future.html#persistent.future.object_relational_mapping">Object relational
+      mapping</a>
+    </h4>
+<p>
+      Implementation of a ResourceManager offering an <span class="emphasis"><em>object_storage</em></span>
+      service based on the upcoming Boost.Rdb library, which provides a interface
+      to relational databases. Object relational mapping is non-trivial and would
+      probably be a seperate boost library, but can be integrated into Boost.Persistent
+      by implementing a <span class="emphasis"><em>resource manager</em></span> that uses that library.
+    </p>
+<a name="persistent.future.remote_resource_manager"></a><h4>
+<a name="id2811585"></a>
+      <a class="link" href="future.html#persistent.future.remote_resource_manager">Remote resource manager</a>
+    </h4>
+<p>
+      Implementation of a ResourceManager offering all defined Service concepts that
+      serializes all requests and sends them through a stream to a remote <span class="emphasis"><em>resource
+      manager</em></span>, to enable client-server-access to <span class="emphasis"><em>persistent
+      objects</em></span>.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="extending.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ackn.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

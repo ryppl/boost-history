@@ -1,0 +1,282 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Extending Boost.Persistent</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="prev" href="configuring.html" title="Configuring Boost.Persistent">
+<link rel="next" href="future.html" title="Future development">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="configuring.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="future.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="persistent.extending"></a><a class="link" href="extending.html" title="Extending Boost.Persistent"> Extending Boost.Persistent</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="extending.html#persistent.extending.intro"> Introduction</a></span></dt>
+<dt><span class="section"><a href="extending.html#persistent.extending.concepts"> Concepts</a></span></dt>
+<dt><span class="section"><a href="extending.html#persistent.extending.services"> Services</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.extending.intro"></a><a class="link" href="extending.html#persistent.extending.intro" title="Introduction"> Introduction</a>
+</h3></div></div></div>
+<p>
+        The configuration options shown in <a class="link" href="configuring.html" title="Configuring Boost.Persistent">Configuring
+        Boost.Persistent</a> can not only be used to change template arguments
+        of existing types, but also to replace types with own types that implement
+        the same concept.
+      </p>
+<p>
+        For example, instead of <code class="computeroutput"><a class="link" href="../boost/persistent/multiversion_object_res_id2563531.html" title="Class template multiversion_object_resource">boost::persistent::multiversion_object_resource</a></code>
+        any other type implementing the <span class="emphasis"><em>ResourceManager</em></span> concept
+        can be used.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.extending.concepts"></a><a class="link" href="extending.html#persistent.extending.concepts" title="Concepts"> Concepts</a>
+</h3></div></div></div>
+<p>
+        The following concepts can be implemented to extend Boost.Persistent:
+      </p>
+<div class="table">
+<a name="id2810818"></a><p class="title"><b>Table 1.2. Concepts for extending Boost.Persistent</b></p>
+<div class="table-contents"><table class="table" summary="Concepts for extending Boost.Persistent">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Concept
+            </p>
+            </th>
+<th>
+            <p>
+              Usage
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><a class="link" href="../boost/persistent/TransactionManager.html" title="Struct TransactionManager">TransactionManager</a></code>
+            </p>
+            </td>
+<td>
+            <p>
+              By implementing a <span class="emphasis"><em>TransactionManager</em></span>, the start,
+              commit, rollback of global transactions and how they are bound to threads
+              can be controlled. A <span class="emphasis"><em>TransactionManager</em></span> also decides
+              which <span class="emphasis"><em>ResourceManagers</em></span> are used for a certain
+              <span class="emphasis"><em>Service</em></span>.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><a class="link" href="../boost/persistent/ResourceManager.html" title="Struct ResourceManager">ResourceManager</a></code>
+            </p>
+            </td>
+<td>
+            <p>
+              A <span class="emphasis"><em>ResourceManager</em></span> offers one or more Services
+              to the user interface. For example a <span class="emphasis"><em>ResourceManager</em></span>
+              that offers an <span class="emphasis"><em>ObjectStorageService</em></span> and that is
+              chosen by the <span class="emphasis"><em>TransactionManager</em></span> to be used for
+              the storage of an object is called by <span class="emphasis"><em>locators</em></span>
+              (the user interface) to access the object. <span class="emphasis"><em>ResourceManagers</em></span>
+              have control over local transactions.
+            </p>
+            <p>
+              An example of a <span class="emphasis"><em>ResourceManager</em></span> implementation
+              is one that stores objects in an external database that is able to
+              perform ACID transactions on its own, so requests to the ResourceManager
+              by the <span class="emphasis"><em>TransactionManager</em></span> to start a local transaction
+              can be forwarded to that external database.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><a class="link" href="../boost/persistent/AtomicStorageEngine.html" title="Struct AtomicStorageEngine">AtomicStorageEngine</a></code>
+            </p>
+            </td>
+<td>
+            <p>
+              An <span class="emphasis"><em>AtomicStorageEngine</em></span> is typically used by a
+              <span class="emphasis"><em>ResourceManager</em></span> offering a <span class="emphasis"><em>ObjectStorageService</em></span>.
+              It also implements functions to store objects and local transactions,
+              but transactions of an <span class="emphasis"><em>AtomicStorageEngine</em></span> are
+              much simpler: The only guarantee is that changes to objects are written
+              <span class="emphasis"><em>atomically</em></span>, so if a local transaction of an <span class="emphasis"><em>AtomicStorageEngine</em></span>
+              is committed it must be able to recover that state on restart. No automatic
+              rollbacks are necessary and no other guarantees like isolation or concurrency.
+            </p>
+            <p>
+              For example, an external database that is able to recover from system
+              failures but does not offer the necessary isolation guarantees can
+              be used as a storage backend by implementing this concept.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><a class="link" href="../boost/persistent/StorageEngine.html" title="Struct StorageEngine">StorageEngine</a></code>
+            </p>
+            </td>
+<td>
+            <p>
+              A <span class="emphasis"><em>StorageEngine</em></span> must be able to store objects,
+              without knowing about transactions. The only requirement is that writes
+              must be repeatable: If writing to the <span class="emphasis"><em>StorageEngine</em></span>
+              was aborted and the application is restarted, the same calls using
+              the same arguments must yield the same result.
+            </p>
+            <p>
+              <code class="computeroutput"><a class="link" href="../boost/persistent/redo_storage.html" title="Class template redo_storage">redo_storage</a></code>
+              can be used to turn a <span class="emphasis"><em>StorageEngine</em></span> into an <span class="emphasis"><em>AtomicStorageEngine</em></span>.
+            </p>
+            <p>
+              <span class="emphasis"><em>StorageEngine</em></span> can be implemented to store objects
+              in files, in external databases not aware of transactions, etc.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><a class="link" href="../boost/persistent/DataBlock.html" title="Struct DataBlock">DataBlock</a></code>
+            </p>
+            </td>
+<td>
+            <p>
+              A <span class="emphasis"><em>DataBlock</em></span> is a very simple concept that offers
+              random access to a stream of bytes. It can be used by <code class="computeroutput"><a class="link" href="../boost/persistent/block_storage.html" title="Class template block_storage">block_storage</a></code>
+              to create a <span class="emphasis"><em>StorageEngine</em></span>.
+            </p>
+            <p>
+              Implementations of <span class="emphasis"><em>DataBlock</em></span> include files, files
+              mapped to memory, other regions in memory, etc.
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="persistent.extending.services"></a><a class="link" href="extending.html#persistent.extending.services" title="Services"> Services</a>
+</h3></div></div></div>
+<p>
+        A <span class="emphasis"><em>ResourceManager</em></span> implements one or more <span class="emphasis"><em>services</em></span>
+        that can be used by the user interface. It is queried (statically) by the
+        <span class="emphasis"><em>TransactionManager</em></span> which <span class="emphasis"><em>services</em></span>
+        it offsers.
+      </p>
+<p>
+        The <span class="emphasis"><em>services</em></span> that are currently defined by Boost.Persistent
+        are:
+      </p>
+<div class="table">
+<a name="id2811224"></a><p class="title"><b>Table 1.3. Service concepts</b></p>
+<div class="table-contents"><table class="table" summary="Service concepts">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Concept
+            </p>
+            </th>
+<th>
+            <p>
+              Usage
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><a class="link" href="../boost/persistent/ObjectStorageService.html" title="Struct ObjectStorageService">ObjectStorageService</a></code>
+            </p>
+            </td>
+<td>
+            <p>
+              A <span class="emphasis"><em>ResourceManager</em></span> offering <span class="emphasis"><em>ObjectStorageService</em></span>
+              must implement several functions providing access to persistent objects.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><a class="link" href="../boost/persistent/SharedObjectStorageService.html" title="Struct SharedObjectStorageService">SharedObjectStorageService</a></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Functions providing access to shared objects, to be used for example
+              by a <span class="emphasis"><em>shared_loc</em></span>. Can be implemented e.g. by reference
+              counting.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><a class="link" href="../boost/persistent/ObjectPinningService.html" title="Struct ObjectPinningService">ObjectPinningService</a></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Functions that provide the ability to associate an object with a type,
+              and later retrieve the same object by that type.
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="configuring.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="future.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

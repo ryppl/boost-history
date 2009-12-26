@@ -1,0 +1,619 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Reference</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Persistent">
+<link rel="prev" href="ackn.html" title="Acknowledgements">
+<link rel="next" href="../boost/persistent/AtomicStorageEngine.html" title="Struct AtomicStorageEngine">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="ackn.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/persistent/AtomicStorageEngine.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="persistent.reference"></a>Reference</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.concept.AtomicStorageEngine_hpp">Header &lt;boost/persistent/concept/AtomicStorageEngine.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.concept.DataBlock_hpp">Header &lt;boost/persistent/concept/DataBlock.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.concept.ObjectPinningService_hpp">Header &lt;boost/persistent/concept/ObjectPinningService.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.concept.ObjectStorageService_hpp">Header &lt;boost/persistent/concept/ObjectStorageService.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.concept.ResourceManager_hpp">Header &lt;boost/persistent/concept/ResourceManager.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.concept.SharedObjectStorageService_hpp">Header &lt;boost/persistent/concept/SharedObjectStorageService.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.concept.StorageEngine_hpp">Header &lt;boost/persistent/concept/StorageEngine.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.concept.TransactionManager_hpp">Header &lt;boost/persistent/concept/TransactionManager.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.access_hpp">Header &lt;boost/persistent/access.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.basic_loc_hpp">Header &lt;boost/persistent/basic_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.basic_pinned_loc_hpp">Header &lt;boost/persistent/basic_pinned_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.basic_scoped_loc_hpp">Header &lt;boost/persistent/basic_scoped_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.basic_shared_loc_hpp">Header &lt;boost/persistent/basic_shared_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.basic_transaction_hpp">Header &lt;boost/persistent/basic_transaction.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.basic_transaction_manager_hpp">Header &lt;boost/persistent/basic_transaction_manager.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.basic_weak_loc_hpp">Header &lt;boost/persistent/basic_weak_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.block_storage_hpp">Header &lt;boost/persistent/block_storage.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.default_tag_hpp">Header &lt;boost/persistent/default_tag.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.exception_hpp">Header &lt;boost/persistent/exception.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.interior_ptr_hpp">Header &lt;boost/persistent/interior_ptr.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.intrusive.basic_loc_list_hpp">Header &lt;boost/persistent/intrusive/basic_loc_list.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.intrusive.basic_loc_set_hpp">Header &lt;boost/persistent/intrusive/basic_loc_set.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.intrusive.basic_loc_slist_hpp">Header &lt;boost/persistent/intrusive/basic_loc_slist.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.intrusive.loc_list_hpp">Header &lt;boost/persistent/intrusive/loc_list.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.intrusive.loc_set_hpp">Header &lt;boost/persistent/intrusive/loc_set.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.intrusive.loc_slist_hpp">Header &lt;boost/persistent/intrusive/loc_slist.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.loc_hpp">Header &lt;boost/persistent/loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.mapped_file_block_hpp">Header &lt;boost/persistent/mapped_file_block.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.multiversion_object_resource_hpp">Header &lt;boost/persistent/multiversion_object_resource.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.null_atomic_storage_hpp">Header &lt;boost/persistent/null_atomic_storage.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.pinned_loc_hpp">Header &lt;boost/persistent/pinned_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.redo_storage_hpp">Header &lt;boost/persistent/redo_storage.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.resource_manager_hpp">Header &lt;boost/persistent/resource_manager.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.savepoints_session_hpp">Header &lt;boost/persistent/savepoints_session.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.scoped_loc_hpp">Header &lt;boost/persistent/scoped_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.shared_loc_hpp">Header &lt;boost/persistent/shared_loc.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.streambuf_block_hpp">Header &lt;boost/persistent/streambuf_block.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.transaction_hpp">Header &lt;boost/persistent/transaction.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.transaction_manager_hpp">Header &lt;boost/persistent/transaction_manager.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.transactional_session_hpp">Header &lt;boost/persistent/transactional_session.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.persistent.weak_loc_hpp">Header &lt;boost/persistent/weak_loc.hpp&gt;</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.concept.AtomicStorageEngine_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/concept/AtomicStorageEngine.hpp" target="_top">boost/persistent/concept/AtomicStorageEngine.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/AtomicStorageEngine.html" title="Struct AtomicStorageEngine">AtomicStorageEngine</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.concept.DataBlock_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/concept/DataBlock.hpp" target="_top">boost/persistent/concept/DataBlock.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/DataBlock.html" title="Struct DataBlock">DataBlock</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.concept.ObjectPinningService_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/concept/ObjectPinningService.hpp" target="_top">boost/persistent/concept/ObjectPinningService.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/ObjectPinningService.html" title="Struct ObjectPinningService">ObjectPinningService</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.concept.ObjectStorageService_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/concept/ObjectStorageService.hpp" target="_top">boost/persistent/concept/ObjectStorageService.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/ObjectStorageService.html" title="Struct ObjectStorageService">ObjectStorageService</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.concept.ResourceManager_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/concept/ResourceManager.hpp" target="_top">boost/persistent/concept/ResourceManager.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/ResourceManager.html" title="Struct ResourceManager">ResourceManager</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.concept.SharedObjectStorageService_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/concept/SharedObjectStorageService.hpp" target="_top">boost/persistent/concept/SharedObjectStorageService.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/SharedObjectStorageService.html" title="Struct SharedObjectStorageService">SharedObjectStorageService</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.concept.StorageEngine_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/concept/StorageEngine.hpp" target="_top">boost/persistent/concept/StorageEngine.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/StorageEngine.html" title="Struct StorageEngine">StorageEngine</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.concept.TransactionManager_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/concept/TransactionManager.hpp" target="_top">boost/persistent/concept/TransactionManager.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/TransactionManager.html" title="Struct TransactionManager">TransactionManager</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.access_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/access.hpp" target="_top">boost/persistent/access.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/deep_tag.html" title="Struct deep_tag">deep_tag</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.basic_loc_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/basic_loc.hpp" target="_top">boost/persistent/basic_loc.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/is_locator.html" title="Struct template is_locator">is_locator</a>;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">basic_loc</a>;
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">r.cast_static&lt;Y&gt;()</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+      <span class="type"><a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; Y, TxMgr &gt;</span> 
+      <a name="boost.persistent.static_pointer_cast_id2538722"></a>static_pointer_cast(<a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp; r);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">r.cast_const&lt;Y&gt;();</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+      <span class="type"><a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; Y, TxMgr &gt;</span> 
+      <a name="boost.persistent.const_pointer_cast_id2538762"></a>const_pointer_cast(<a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp; r);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">r.cast_dynamic&lt;Y&gt;()</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+      <span class="type"><a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; Y, TxMgr &gt;</span> 
+      <a name="boost.persistent.dynamic_pointer_cast_id2538802"></a>dynamic_pointer_cast(<a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp; r);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">a.swap(b)</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+      <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="boost.persistent.swap_id2538841"></a>swap(<a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt; &amp; a, <a class="link" href="../boost/persistent/basic_loc.html" title="Class template basic_loc">basic_loc</a>&lt; T, TxMgr &gt; &amp; b);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.basic_pinned_loc_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/basic_pinned_loc.hpp" target="_top">boost/persistent/basic_pinned_loc.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, 
+             <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+      <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/basic_pinned_loc.html" title="Class template basic_pinned_loc">basic_pinned_loc</a>;
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">r.cast_const&lt;Y&gt;();</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, <span class="bold"><strong>typename</strong></span> Tag&gt; 
+      <span class="type"><a class="link" href="../boost/persistent/basic_pinned_loc.html" title="Class template basic_pinned_loc">basic_pinned_loc</a>&lt; Y, TxMgr, Tag &gt;</span> 
+      <a name="boost.persistent.const_pointer_cast_id2539649"></a>const_pointer_cast(<a class="link" href="../boost/persistent/basic_pinned_loc.html" title="Class template basic_pinned_loc">basic_pinned_loc</a>&lt; T, TxMgr, Tag &gt; <span class="bold"><strong>const</strong></span> &amp; r);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">a.swap(b)</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, <span class="bold"><strong>typename</strong></span> Tag&gt; 
+      <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="boost.persistent.swap_id2539693"></a>swap(<a class="link" href="../boost/persistent/basic_pinned_loc.html" title="Class template basic_pinned_loc">basic_pinned_loc</a>&lt; T, TxMgr, Tag &gt; &amp; a, 
+                <a class="link" href="../boost/persistent/basic_pinned_loc.html" title="Class template basic_pinned_loc">basic_pinned_loc</a>&lt; T, TxMgr, Tag &gt; &amp; b);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.basic_scoped_loc_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/basic_scoped_loc.hpp" target="_top">boost/persistent/basic_scoped_loc.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/basic_scoped_loc.html" title="Class template basic_scoped_loc">basic_scoped_loc</a>;
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">a.swap(b)</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+      <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="boost.persistent.swap_id2540311"></a>swap(<a class="link" href="../boost/persistent/basic_scoped_loc.html" title="Class template basic_scoped_loc">basic_scoped_loc</a>&lt; T, TxMgr &gt; &amp; a, 
+                <a class="link" href="../boost/persistent/basic_scoped_loc.html" title="Class template basic_scoped_loc">basic_scoped_loc</a>&lt; T, TxMgr &gt; &amp; b);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.basic_shared_loc_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/basic_shared_loc.hpp" target="_top">boost/persistent/basic_shared_loc.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">basic_shared_loc</a>;
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">r.cast_static&lt;Y&gt;()</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+      <span class="type"><a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">basic_shared_loc</a>&lt; Y, TxMgr &gt;</span> 
+      <a name="boost.persistent.static_pointer_cast_id2541250"></a>static_pointer_cast(<a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">basic_shared_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp; r);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">r.cast_const&lt;Y&gt;()</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+      <span class="type"><a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">basic_shared_loc</a>&lt; Y, TxMgr &gt;</span> 
+      <a name="boost.persistent.const_pointer_cast_id2541290"></a>const_pointer_cast(<a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">basic_shared_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp; r);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">r.cast_dynamic&lt;Y&gt;()</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+      <span class="type"><a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">basic_shared_loc</a>&lt; Y, TxMgr &gt;</span> 
+      <a name="boost.persistent.dynamic_pointer_cast_id2541330"></a>dynamic_pointer_cast(<a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">basic_shared_loc</a>&lt; T, TxMgr &gt; <span class="bold"><strong>const</strong></span> &amp; r);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">a.swap(b)</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; 
+      <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="boost.persistent.swap_id2541370"></a>swap(<a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">basic_shared_loc</a>&lt; T, TxMgr &gt; &amp; a, 
+                <a class="link" href="../boost/persistent/basic_shared_loc.html" title="Class template basic_shared_loc">basic_shared_loc</a>&lt; T, TxMgr &gt; &amp; b);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.basic_transaction_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/basic_transaction.hpp" target="_top">boost/persistent/basic_transaction.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis">
+
+<a class="link" href="../BOOST_PERSISTENT_BASIC_ATOMIC.html" title="Macro BOOST_PERSISTENT_BASIC_ATOMIC">BOOST_PERSISTENT_BASIC_ATOMIC</a>(TXMGR)
+<a class="link" href="../BOOST_PERSISTENT_BASIC_RETRY.html" title="Macro BOOST_PERSISTENT_BASIC_RETRY">BOOST_PERSISTENT_BASIC_RETRY</a>(TXMGR)</pre>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TxMgr&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/basic_transaction.html" title="Class template basic_transaction">basic_transaction</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.basic_transaction_manager_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/basic_transaction_manager.hpp" target="_top">boost/persistent/basic_transaction_manager.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Resources, <span class="bold"><strong>bool</strong></span> Threads = <span class="bold"><strong>true</strong></span>, <span class="bold"><strong>bool</strong></span> TThreads = <span class="bold"><strong>true</strong></span>&gt; 
+      <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/basic_transaction_manager.html" title="Class template basic_transaction_manager">basic_transaction_manager</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.basic_weak_loc_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/basic_weak_loc.hpp" target="_top">boost/persistent/basic_weak_loc.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/basic_weak_loc.html" title="Class template basic_weak_loc">basic_weak_loc</a>;
+
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/bad_weak_loc.html" title="Struct bad_weak_loc">bad_weak_loc</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.block_storage_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/block_storage.hpp" target="_top">boost/persistent/block_storage.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Block, <span class="bold"><strong>bool</strong></span> Threads = <span class="bold"><strong>true</strong></span>&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/block_storage.html" title="Class template block_storage">block_storage</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.default_tag_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/default_tag.hpp" target="_top">boost/persistent/default_tag.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/default_tag.html" title="Struct default_tag">default_tag</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.exception_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/exception.hpp" target="_top">boost/persistent/exception.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/exception.html" title="Struct exception">exception</a>;
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/recovery_failure.html" title="Struct recovery_failure">recovery_failure</a>;
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/io_failure.html" title="Struct io_failure">io_failure</a>;
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/finalize_error.html" title="Struct finalize_error">finalize_error</a>;
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/no_active_transaction.html" title="Struct no_active_transaction">no_active_transaction</a>;
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/no_active_transaction_m_id2543091.html" title="Struct no_active_transaction_manager">no_active_transaction_manager</a>;
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/unsupported_exception.html" title="Struct unsupported_exception">unsupported_exception</a>;
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/isolation_exception.html" title="Struct isolation_exception">isolation_exception</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.interior_ptr_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/interior_ptr.hpp" target="_top">boost/persistent/interior_ptr.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>;
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">a.swap(b)</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+      <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="boost.persistent.swap_id2543764"></a>swap(<a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; T &gt; &amp; a, <a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; T &gt; &amp; b);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">p.get()</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type">T *</span> <a name="boost.persistent.get_pointer"></a>get_pointer(<a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; p);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">p.cast_static&lt;Y&gt;()</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> T&gt; 
+      <span class="type"><a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt;</span> <a name="boost.persistent.static_pointer_cast_id2543827"></a>static_pointer_cast(<a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; p);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">p.cast_dynamic&lt;Y&gt;()</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> T&gt; 
+      <span class="type"><a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt;</span> <a name="boost.persistent.dynamic_pointer_cast_id2543862"></a>dynamic_pointer_cast(<a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; p);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">p.cast_const&lt;Y&gt;()</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> T&gt; 
+      <span class="type"><a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt;</span> <a name="boost.persistent.const_pointer_cast_id2543897"></a>const_pointer_cast(<a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; T &gt; <span class="bold"><strong>const</strong></span> &amp; p);
+
+    <span class="emphasis"><em>// Equivalent to <code class="computeroutput">os &lt;&lt; p.get()</code>. </em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> E, <span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Y&gt; 
+      <span class="type">std::basic_ostream&lt; E, T &gt; &amp;</span> 
+      <a name="boost.persistent.operator_id2543932"></a><span class="bold"><strong>operator</strong></span>&lt;&lt;(std::basic_ostream&lt; E, T &gt; &amp; os, <a class="link" href="../boost/persistent/interior_ptr.html" title="Class template interior_ptr">interior_ptr</a>&lt; Y &gt; <span class="bold"><strong>const</strong></span> &amp; p);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.intrusive.basic_loc_list_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/intrusive/basic_loc_list.hpp" target="_top">boost/persistent/intrusive/basic_loc_list.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>namespace</strong></span> intrusive {
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, 
+               <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/intrusive/basic_loc_list_hook.html" title="Struct template basic_loc_list_hook">basic_loc_list_hook</a>;
+
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+               <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/intrusive/basic_loc_list.html" title="Class template basic_loc_list">basic_loc_list</a>;
+    }
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.intrusive.basic_loc_set_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/intrusive/basic_loc_set.hpp" target="_top">boost/persistent/intrusive/basic_loc_set.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>namespace</strong></span> intrusive {
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, 
+               <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/intrusive/basic_loc_set_hook.html" title="Struct template basic_loc_set_hook">basic_loc_set_hook</a>;
+
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+               <span class="bold"><strong>typename</strong></span> Compare = std::less&lt;T&gt;, 
+               <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/intrusive/basic_loc_set.html" title="Class template basic_loc_set">basic_loc_set</a>;
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+               <span class="bold"><strong>typename</strong></span> Compare = std::less&lt;T&gt;, 
+               <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/intrusive/basic_loc_multiset.html" title="Class template basic_loc_multiset">basic_loc_multiset</a>;
+    }
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.intrusive.basic_loc_slist_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/intrusive/basic_loc_slist.hpp" target="_top">boost/persistent/intrusive/basic_loc_slist.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>namespace</strong></span> intrusive {
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, 
+               <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/intrusive/basic_loc_slist_hook.html" title="Struct template basic_loc_slist_hook">basic_loc_slist_hook</a>;
+
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> TxMgr, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+               <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/intrusive/basic_loc_slist.html" title="Class template basic_loc_slist">basic_loc_slist</a>;
+    }
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.intrusive.loc_list_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/intrusive/loc_list.hpp" target="_top">boost/persistent/intrusive/loc_list.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>namespace</strong></span> intrusive {
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/intrusive/loc_list_hook.html" title="Struct template loc_list_hook">loc_list_hook</a>;
+
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+               <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/intrusive/loc_list.html" title="Class template loc_list">loc_list</a>;
+    }
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.intrusive.loc_set_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/intrusive/loc_set.hpp" target="_top">boost/persistent/intrusive/loc_set.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>namespace</strong></span> intrusive {
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/intrusive/loc_set_hook.html" title="Struct template loc_set_hook">loc_set_hook</a>;
+
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+               <span class="bold"><strong>typename</strong></span> Compare = std::less&lt;T&gt;, 
+               <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/intrusive/loc_set.html" title="Class template loc_set">loc_set</a>;
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+               <span class="bold"><strong>typename</strong></span> Compare = std::less&lt;T&gt;, 
+               <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/intrusive/loc_multiset.html" title="Class template loc_multiset">loc_multiset</a>;
+    }
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.intrusive.loc_slist_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/intrusive/loc_slist.hpp" target="_top">boost/persistent/intrusive/loc_slist.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>namespace</strong></span> intrusive {
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/intrusive/loc_slist_hook.html" title="Struct template loc_slist_hook">loc_slist_hook</a>;
+
+      <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>bool</strong></span> ConstantTimeSize = <span class="bold"><strong>true</strong></span>, 
+               <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+        <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/intrusive/loc_slist.html" title="Class template loc_slist">loc_slist</a>;
+    }
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.loc_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/loc.hpp" target="_top">boost/persistent/loc.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/loc.html" title="Class template loc">loc</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.mapped_file_block_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/mapped_file_block.hpp" target="_top">boost/persistent/mapped_file_block.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/mapped_file_block.html" title="Class mapped_file_block">mapped_file_block</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.multiversion_object_resource_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/multiversion_object_resource.hpp" target="_top">boost/persistent/multiversion_object_resource.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> AStorage, <span class="bold"><strong>bool</strong></span> Threads = <span class="bold"><strong>true</strong></span>, <span class="bold"><strong>bool</strong></span> TThreads = <span class="bold"><strong>true</strong></span>, 
+             <span class="bold"><strong>typename</strong></span> Tag = default_tag&gt; 
+      <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/multiversion_object_res_id2563531.html" title="Class template multiversion_object_resource">multiversion_object_resource</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.null_atomic_storage_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/null_atomic_storage.hpp" target="_top">boost/persistent/null_atomic_storage.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Storage, <span class="bold"><strong>bool</strong></span> Threads&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/null_atomic_storage.html" title="Class template null_atomic_storage">null_atomic_storage</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.pinned_loc_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/pinned_loc.hpp" target="_top">boost/persistent/pinned_loc.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Tag = persistent::default_tag&gt; 
+      <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/pinned_loc.html" title="Class template pinned_loc">pinned_loc</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.redo_storage_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/redo_storage.hpp" target="_top">boost/persistent/redo_storage.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Storage, <span class="bold"><strong>bool</strong></span> Threads = <span class="bold"><strong>true</strong></span>, <span class="bold"><strong>bool</strong></span> Sync = <span class="bold"><strong>true</strong></span>&gt; 
+      <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/redo_storage.html" title="Class template redo_storage">redo_storage</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.resource_manager_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/resource_manager.hpp" target="_top">boost/persistent/resource_manager.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/object_storage_tag.html" title="Struct object_storage_tag">object_storage_tag</a>;
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/shared_object_storage_tag.html" title="Struct shared_object_storage_tag">shared_object_storage_tag</a>;
+    <span class="bold"><strong>struct</strong></span> <a class="link" href="../boost/persistent/object_pinning_tag.html" title="Struct object_pinning_tag">object_pinning_tag</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.savepoints_session_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/savepoints_session.hpp" target="_top">boost/persistent/savepoints_session.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/savepoints_session.html" title="Class savepoints_session">savepoints_session</a>;
+    <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/save_on_shutdown.html" title="Class save_on_shutdown">save_on_shutdown</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.scoped_loc_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/scoped_loc.hpp" target="_top">boost/persistent/scoped_loc.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/scoped_loc.html" title="Class template scoped_loc">scoped_loc</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.shared_loc_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/shared_loc.hpp" target="_top">boost/persistent/shared_loc.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/shared_loc.html" title="Class template shared_loc">shared_loc</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.streambuf_block_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/streambuf_block.hpp" target="_top">boost/persistent/streambuf_block.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/streambuf_block.html" title="Class streambuf_block">streambuf_block</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.transaction_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/transaction.hpp" target="_top">boost/persistent/transaction.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis">
+
+<a class="link" href="../BOOST_PERSISTENT_ATOMIC.html" title="Macro BOOST_PERSISTENT_ATOMIC">BOOST_PERSISTENT_ATOMIC</a>
+<a class="link" href="../BOOST_PERSISTENT_RETRY.html" title="Macro BOOST_PERSISTENT_RETRY">BOOST_PERSISTENT_RETRY</a></pre>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>typedef</strong></span> <a class="link" href="../boost/persistent/basic_transaction.html" title="Class template basic_transaction">basic_transaction</a>&lt; transaction_manager &gt; <a name="boost.persistent.transaction"></a>transaction;  <span class="emphasis"><em>// An alias of <code class="computeroutput">basic_transaction</code> using the default transaction manager. </em></span>
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.transaction_manager_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/transaction_manager.hpp" target="_top">boost/persistent/transaction_manager.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis">
+
+<a class="link" href="../BOOST_PERSISTENT_CONFIGURATION.html" title="Macro BOOST_PERSISTENT_CONFIGURATION">BOOST_PERSISTENT_CONFIGURATION</a></pre>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>typedef</strong></span> BOOST_PERSISTENT_CONFIGURATION <a name="boost.persistent.transaction_manager"></a>transaction_manager;  <span class="emphasis"><em>// An alias of the configured transaction manager. </em></span>
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.transactional_session_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/transactional_session.hpp" target="_top">boost/persistent/transactional_session.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/transactional_session.html" title="Class transactional_session">transactional_session</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.persistent.weak_loc_hpp"></a>Header &lt;<a href="../../../../../boost/persistent/weak_loc.hpp" target="_top">boost/persistent/weak_loc.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> persistent {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/persistent/weak_loc.html" title="Class template weak_loc">weak_loc</a>;
+  }
+}</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Stefan Strasser<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="ackn.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/persistent/AtomicStorageEngine.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
