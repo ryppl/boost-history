@@ -4,21 +4,20 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASKS_UNBOUNDED_TWOLOCK_FIFO_H
-#define BOOST_TASKS_UNBOUNDED_TWOLOCK_FIFO_H
+#ifndef BOOST_TASKS_UNBOUNDED_FIFO_H
+#define BOOST_TASKS_UNBOUNDED_FIFO_H
 
 #include <cstddef>
 
 #include <boost/assert.hpp>
+#include <boost/atomic.hpp>
 #include <boost/bind.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/foreach.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 
 #include <boost/task/callable.hpp>
-#include <boost/task/detail/atomic.hpp>
 #include <boost/task/detail/meta.hpp>
 #include <boost/task/exceptions.hpp>
 
@@ -27,7 +26,7 @@
 namespace boost {
 namespace tasks {
 
-class unbounded_twolock_fifo
+class unbounded_fifo
 {
 public:
 	typedef detail::has_no_attribute	attribute_tag_type;
@@ -42,23 +41,29 @@ private:
 		sptr_t		next;
 	};
 
-	volatile uint32_t	state_;
+	enum state
+	{
+		ACTIVE = 0,
+		DEACTIVE
+	};
+
+	atomic< state >		state_;
 	node::sptr_t		head_;
-	mutex				head_mtx_;
+	mutable mutex		head_mtx_;
 	node::sptr_t		tail_;
-	mutex				tail_mtx_;
+	mutable mutex		tail_mtx_;
 	condition			not_empty_cond_;
 
 	bool active_() const
-	{ return 0 == state_; }
+	{ return ACTIVE == state_.load(); }
 
 	void deactivate_()
-	{ detail::atomic_fetch_add( & state_, 1); }
+	{ state_.store( DEACTIVE); }
 
-	bool empty_()
+	bool empty_() const
 	{ return head_ == get_tail_(); }
 
-	node::sptr_t get_tail_()
+	node::sptr_t get_tail_() const
 	{
 		lock_guard< mutex > lk( tail_mtx_);	
 		node::sptr_t tmp = tail_;
@@ -73,8 +78,8 @@ private:
 	}
 
 public:
-	unbounded_twolock_fifo() :
-		state_( 0),
+	unbounded_fifo() :
+		state_( ACTIVE),
 		head_( new node),
 		head_mtx_(),
 		tail_( head_),
@@ -82,10 +87,13 @@ public:
 		not_empty_cond_()
 	{}
 
+	bool active() const
+	{ return active_(); }
+
 	void deactivate()
 	{ deactivate_(); }
 
-	bool empty()
+	bool empty() const
 	{
 		unique_lock< mutex > lk( head_mtx_);
 		return empty_();
@@ -126,10 +134,10 @@ public:
 		return ! va.empty();
 	}
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	bool take(
 		value_type & va,
-		Duration const& rel_time)
+		TimeDuration const& rel_time)
 	{
 		unique_lock< mutex > lk( head_mtx_);
 		bool empty = empty_();
@@ -168,4 +176,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASKS_UNBOUNDED_TWOLOCK_FIFO_H
+#endif // BOOST_TASKS_UNBOUNDED_FIFO_H

@@ -4,13 +4,16 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASKS_UNBOUNDED_ONELOCK_FIFO_H
-#define BOOST_TASKS_UNBOUNDED_ONELOCK_FIFO_H
+#ifndef BOOST_TASKS_UNBOUNDED_PRIO_QUEUE_H
+#define BOOST_TASKS_UNBOUNDED_PRIO_QUEUE_H
 
+#include <algorithm>
 #include <cstddef>
-#include <list>
+#include <functional>
+#include <queue>
 
 #include <boost/assert.hpp>
+#include <boost/atomic.hpp>
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include <boost/thread/condition.hpp>
@@ -18,7 +21,6 @@
 #include <boost/thread/shared_mutex.hpp>
 
 #include <boost/task/callable.hpp>
-#include <boost/task/detail/atomic.hpp>
 #include <boost/task/detail/meta.hpp>
 #include <boost/task/exceptions.hpp>
 
@@ -27,25 +29,63 @@
 namespace boost {
 namespace tasks {
 
-class unbounded_onelock_fifo
+template<
+	typename Attr,
+	typename Comp = std::less< Attr >
+>
+class unbounded_prio_queue
 {
 public:
-	typedef detail::has_no_attribute	attribute_tag_type;
-	typedef callable					value_type;
+	typedef detail::has_attribute	attribute_tag_type;
+	typedef Attr					attribute_type;
+
+	struct value_type
+	{
+		callable		ca;
+		attribute_type	attr;
+
+		value_type(
+				callable const& ca_,
+				attribute_type const& attr_) :
+			ca( ca_), attr( attr_)
+		{ BOOST_ASSERT( ! ca.empty() ); }
+
+		void swap( value_type & other)
+		{
+			ca.swap( other.ca);
+			std::swap( attr, other.attr);
+		}
+	};
 
 private:
-	typedef std::list< value_type >		queue_type;
+	struct compare : public std::binary_function< value_type, value_type, bool >
+	{
+		bool operator()( value_type const& va1, value_type const& va2)
+		{ return Comp()( va1.attr, va2.attr); }
+	};
 
-	volatile uint32_t	state_;
-	queue_type			queue_;
-	shared_mutex		mtx_;
-	condition			not_empty_cond_;
+	typedef std::priority_queue<
+		value_type,
+		std::deque< value_type >,
+		compare
+	>								queue_type;
+
+	enum state
+	{
+		ACTIVE = 0,
+		DEACTIVE
+	};
+
+	atomic< state >			state_;
+	queue_type				queue_;
+	mutable shared_mutex	mtx_;
+	condition				not_empty_cond_;
 
 	bool active_() const
-	{ return 0 == state_; }
+	{ return ACTIVE == state_.load(); }
 
 	void deactivate_()
-	{ detail::atomic_fetch_add( & state_, 1); }
+	{ state_.store( DEACTIVE); }
 
 	bool empty_() const
 	{ return queue_.empty(); }
@@ -54,12 +94,12 @@ private:
 	{
 		if ( ! active_() )
 			throw task_rejected("queue is not active");
-		queue_.push_back( va);
+		queue_.push( va);
 		not_empty_cond_.notify_one();
 	}
 
 	bool take_(
-		value_type & va,
+		callable & ca,
 		unique_lock< shared_mutex > & lk)
 	{
 		bool empty = empty_();
@@ -72,7 +112,7 @@ private:
 				not_empty_cond_.wait(
 					lk,
 					bind(
-						& unbounded_onelock_fifo::consumers_activate_,
+						& unbounded_prio_queue::consumers_activate_,
 						this) );
 			}
 			catch ( thread_interrupted const&)
@@ -80,15 +120,16 @@ private:
 		}
 		if ( ! active_() && empty_() )
 			return false;
-		va.swap( queue_.front() );
-		queue_.pop_front();
-		return ! va.empty();
+		callable tmp( queue_.top().ca);
+		queue_.pop();
+		ca.swap( tmp);
+		return ! ca.empty();
 	}
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	bool take_(
-		value_type & va,
-		Duration const& rel_time,
+		callable & ca,
+		TimeDuration const& rel_time,
 		unique_lock< shared_mutex > & lk)
 	{
 		bool empty = empty_();
@@ -102,7 +143,7 @@ private:
 					lk,
 					rel_time,
 					bind(
-						& unbounded_onelock_fifo::consumers_activate_,
+						& unbounded_prio_queue::consumers_activate_,
 						this) ) )
 					return false;
 			}
@@ -111,35 +152,40 @@ private:
 		}
 		if ( ! active_() && empty_() )
 			return false;
-		va.swap( queue_.front() );
-		queue_.pop_front();
-		return ! va.empty();
+		callable tmp( queue_.top().ca);
+		queue_.pop();
+		ca.swap( tmp);
+		return ! ca.empty();
 	}
 
-	bool try_take_( value_type & va)
+	bool try_take_( callable & ca)
 	{
 		if ( empty_() )
 			return false;
-		va.swap( queue_.front() );
-		queue_.pop_front();
-		return ! va.empty();
+		callable tmp( queue_.top().ca);
+		queue_.pop();
+		ca.swap( tmp);
+		return ! ca.empty();
 	}
 
 	bool consumers_activate_() const
 	{ return ! active_() || ! empty_(); }
 
 public:
-	unbounded_onelock_fifo() :
-		state_( 0),
+	unbounded_prio_queue() :
+		state_( ACTIVE),
 		queue_(),
 		mtx_(),
 		not_empty_cond_()
 	{}
 
+	bool active() const
+	{ return active_(); }
+
 	void deactivate()
 	{ deactivate_(); }
 
-	bool empty()
+	bool empty() const
 	{
 		shared_lock< shared_mutex > lk( mtx_);
 		return empty_();
@@ -151,25 +197,25 @@ public:
 		put_( va);
 	}
 
-	bool take( value_type & va)
+	bool take( callable & ca)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
-		return take_( va, lk);
+		return take_( ca, lk);
 	}
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	bool take(
-		value_type & va,
-		Duration const& rel_time)
+		callable & ca,
+		TimeDuration const& rel_time)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
-		return take_( va, rel_time, lk);
+		return take_( ca, rel_time, lk);
 	}
 
-	bool try_take( value_type & va)
+	bool try_take( callable & ca)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
-		return try_take_( va);
+		return try_take_( ca);
 	}
 };
 
@@ -177,4 +223,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASKS_UNBOUNDED_ONELOCK_FIFO_H
+#endif // BOOST_TASKS_UNBOUNDED_PRIO_QUEUE_H

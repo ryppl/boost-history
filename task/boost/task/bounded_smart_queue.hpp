@@ -4,13 +4,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASKS_BOUNDED_ONELOCK_SMART_QUEUE_H
-#define BOOST_TASKS_BOUNDED_ONELOCK_SMART_QUEUE_H
+#ifndef BOOST_TASKS_BOUNDED_SMART_QUEUE_H
+#define BOOST_TASKS_BOUNDED_SMART_QUEUE_H
 
 #include <algorithm>
 #include <cstddef>
 
 #include <boost/assert.hpp>
+#include <boost/atomic.hpp>
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include <boost/multi_index_container.hpp>
@@ -21,7 +22,6 @@
 #include <boost/thread/shared_mutex.hpp>
 
 #include <boost/task/callable.hpp>
-#include <boost/task/detail/atomic.hpp>
 #include <boost/task/detail/meta.hpp>
 #include <boost/task/detail/smart.hpp>
 #include <boost/task/exceptions.hpp>
@@ -38,7 +38,7 @@ template<
 	typename Enq = detail::replace_oldest,
 	typename Deq = detail::take_oldest
 >
-class bounded_onelock_smart_queue
+class bounded_smart_queue
 {
 public:
 	typedef detail::has_attribute	attribute_tag_type;
@@ -78,22 +78,28 @@ private:
 	>															queue_type;
 	typedef typename queue_type::template nth_index< 0 >::type	queue_index;
 
-	volatile uint32_t	state_;
-	queue_type			queue_;
-	queue_index	&		idx_;
-	shared_mutex		mtx_;
-	condition			not_empty_cond_;
-	condition			not_full_cond_;
-	Enq					enq_op_;
-	Deq					deq_op_;
-	std::size_t			hwm_;
-	std::size_t			lwm_;
+	enum state
+	{
+		ACTIVE = 0,
+		DEACTIVE
+	};
+
+	atomic< state >			state_;
+	queue_type				queue_;
+	queue_index	&			idx_;
+	mutable shared_mutex	mtx_;
+	condition				not_empty_cond_;
+	condition				not_full_cond_;
+	Enq						enq_op_;
+	Deq						deq_op_;
+	std::size_t				hwm_;
+	std::size_t				lwm_;
 
 	bool active_() const
-	{ return 0 == state_; }
+	{ return ACTIVE == state_.load(); }
 
 	void deactivate_()
-	{ detail::atomic_fetch_add( & state_, 1); }
+	{ state_.store( DEACTIVE); }
 
 	bool empty_() const
 	{ return queue_.empty(); }
@@ -107,7 +113,7 @@ private:
 	void upper_bound_( std::size_t hwm)
 	{
 		if ( lwm_ > hwm )
-			throw invalid_watermark("low watermark must be less than or equal to high watermark");
+			throw invalid_watermark();
 		std::size_t tmp( hwm_);
 		hwm_ = hwm;
 		if ( hwm_ > tmp) not_full_cond_.notify_one();
@@ -116,7 +122,7 @@ private:
 	void lower_bound_( std::size_t lwm)
 	{
 		if ( lwm > hwm_ )
-			throw invalid_watermark("low watermark must be less than or equal to high watermark");
+			throw invalid_watermark();
 		std::size_t tmp( lwm_);
 		lwm_ = lwm;
 		if ( lwm_ > tmp) not_full_cond_.notify_one();
@@ -131,7 +137,7 @@ private:
 			not_full_cond_.wait(
 				lk,
 				bind(
-					& bounded_onelock_smart_queue::producers_activate_,
+					& bounded_smart_queue::producers_activate_,
 					this) );
 		}
 		if ( ! active_() )
@@ -140,10 +146,10 @@ private:
 		not_empty_cond_.notify_one();
 	}
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	void put_(
 		value_type const& va,
-		Duration const& rel_time,
+		TimeDuration const& rel_time,
 		unique_lock< shared_mutex > & lk)
 	{
 		if ( full_() )
@@ -152,7 +158,7 @@ private:
 				lk,
 				rel_time,
 				bind(
-					& bounded_onelock_smart_queue::producers_activate_,
+					& bounded_smart_queue::producers_activate_,
 					this) ) )
 				throw task_rejected("timed out");
 		}
@@ -176,7 +182,7 @@ private:
 				not_empty_cond_.wait(
 					lk,
 					bind(
-						& bounded_onelock_smart_queue::consumers_activate_,
+						& bounded_smart_queue::consumers_activate_,
 						this) );
 			}
 			catch ( thread_interrupted const&)
@@ -197,10 +203,10 @@ private:
 		return ! ca.empty();
 	}
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	bool take_(
 		callable & ca,
-		Duration const& rel_time,
+		TimeDuration const& rel_time,
 		unique_lock< shared_mutex > & lk)
 	{
 		bool empty = empty_();
@@ -214,7 +220,7 @@ private:
 					lk,
 					rel_time,
 					bind(
-						& bounded_onelock_smart_queue::consumers_activate_,
+						& bounded_smart_queue::consumers_activate_,
 						this) ) )
 					return false;
 			}
@@ -261,10 +267,10 @@ private:
 	{ return ! active_() || ! empty_(); }
 
 public:
-	bounded_onelock_smart_queue(
+	bounded_smart_queue(
 			high_watermark const& hwm,
 			low_watermark const& lwm) :
-		state_( 0),
+		state_( ACTIVE),
 		queue_(),
 		idx_( queue_.get< 0 >() ),
 		mtx_(),
@@ -276,19 +282,22 @@ public:
 		lwm_( lwm)
 	{
 		if ( lwm_ > hwm_ )
-			throw invalid_watermark("low watermark must be less than or equal to high watermark");
+			throw invalid_watermark();
 	}
+
+	bool active() const
+	{ return active_(); }
 
 	void deactivate()
 	{ deactivate_(); }
 
-	bool empty()
+	bool empty() const
 	{
 		shared_lock< shared_mutex > lk( mtx_);
 		return empty_();
 	}
 
-	std::size_t upper_bound()
+	std::size_t upper_bound() const
 	{
 		shared_lock< shared_mutex > lk( mtx_);
 		return hwm_;
@@ -300,7 +309,7 @@ public:
 		upper_bound_( hwm);
 	}
 
-	std::size_t lower_bound()
+	std::size_t lower_bound() const
 	{
 		shared_lock< shared_mutex > lk( mtx_);
 		return lwm_;
@@ -318,10 +327,10 @@ public:
 		put_( va, lk);
 	}
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	void put(
 		value_type const& va,
-		Duration const& rel_time)
+		TimeDuration const& rel_time)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		put_( va, rel_time, lk);
@@ -333,10 +342,10 @@ public:
 		return take_( ca, lk);
 	}
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	bool take(
 		callable & ca,
-		Duration const& rel_time)
+		TimeDuration const& rel_time)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		return take_( ca, rel_time, lk);
@@ -353,4 +362,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASKS_BOUNDED_ONELOCK_SMART_QUEUE_H
+#endif // BOOST_TASKS_BOUNDED_SMART_QUEUE_H

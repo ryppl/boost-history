@@ -26,9 +26,9 @@ namespace tsk = boost::tasks;
 
 struct send_data
 {
-	tsk::bounded_buffer< int >	&	buf;
+	tsk::spin::unbounded_channel< int >	&	buf;
 
-	send_data( tsk::bounded_buffer< int > & buf_) :
+	send_data( tsk::spin::unbounded_channel< int > & buf_) :
 		buf( buf_)
 	{}
 
@@ -38,10 +38,10 @@ struct send_data
 
 struct recv_data
 {
-	tsk::bounded_buffer< int >	&	buf;
+	tsk::spin::unbounded_channel< int >	&	buf;
 	int									value;
 
-	recv_data( tsk::bounded_buffer< int > & buf_) :
+	recv_data( tsk::spin::unbounded_channel< int > & buf_) :
 		buf( buf_), value( 0)
 	{}
 
@@ -55,7 +55,7 @@ struct recv_data
 
 void test_case_1()
 {
-	tsk::bounded_buffer< int > buf( tsk::high_watermark( 10), tsk::low_watermark( 10) );
+	tsk::spin::unbounded_channel< int > buf;
 	BOOST_CHECK_EQUAL( true, buf.empty() );
 	BOOST_CHECK_EQUAL( true, buf.active() );
 	int n = 1;
@@ -67,12 +67,12 @@ void test_case_1()
 	BOOST_CHECK_EQUAL( n, res.get() );
 	buf.deactivate();
 	BOOST_CHECK_EQUAL( false, buf.active() );
-	BOOST_CHECK_THROW( buf.put( 1), tsk::task_rejected);
+	BOOST_CHECK_THROW( buf.put( 1), std::runtime_error);
 }
 
 void test_case_2()
 {
-	tsk::bounded_buffer< int > buf( tsk::high_watermark( 10), tsk::low_watermark( 10) );
+	tsk::spin::unbounded_channel< int > buf;
 	BOOST_CHECK_EQUAL( true, buf.empty() );
 	BOOST_CHECK_EQUAL( true, buf.active() );
 	int n = 1;
@@ -89,10 +89,10 @@ void test_case_2()
 void test_case_3()
 {
 	tsk::static_pool<
-		tsk::unbounded_onelock_fifo
+		tsk::unbounded_fifo
 	> pool( tsk::poolsize( 2) );
 
-	tsk::bounded_buffer< int > buf( tsk::high_watermark( 10), tsk::low_watermark( 10) );
+	tsk::spin::unbounded_channel< int > buf;
 
 	int n = 37;
 
@@ -119,10 +119,10 @@ void test_case_3()
 void test_case_4()
 {
 	tsk::static_pool<
-		tsk::unbounded_onelock_fifo
+		tsk::unbounded_fifo
 	> pool( tsk::poolsize( 2) );
 
-	tsk::bounded_buffer< int > buf( tsk::high_watermark( 10), tsk::low_watermark( 10) );
+	tsk::spin::unbounded_channel< int > buf;
 
 	int n = 37;
 
@@ -160,7 +160,7 @@ void test_case_4()
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
 	boost::unit_test::test_suite * test =
-		BOOST_TEST_SUITE("Boost.Task: bounded-buffer test suite");
+		BOOST_TEST_SUITE("Boost.Task: unbounded-buffer test suite");
 
 	test->add( BOOST_TEST_CASE( & test_case_1) );
 	test->add( BOOST_TEST_CASE( & test_case_2) );

@@ -31,7 +31,7 @@ namespace tsk = boost::tasks;
 void test_case_1()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool1(
 		tsk::poolsize( 3),
 		tsk::high_watermark( 10),
@@ -42,7 +42,7 @@ void test_case_1()
 	BOOST_CHECK_EQUAL( pool1.lower_bound(), std::size_t( 5) );
 
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool2;
 	BOOST_CHECK( ! pool2);
 	BOOST_CHECK_THROW( pool2.size(), tsk::pool_moved);
@@ -71,7 +71,7 @@ void test_case_1()
 void test_case_2()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 1),
 		tsk::high_watermark( 10),
@@ -86,7 +86,7 @@ void test_case_2()
 void test_case_3()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 10),
@@ -104,7 +104,7 @@ void test_case_3()
 void test_case_4()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 10),
@@ -126,7 +126,7 @@ void test_case_4()
 void test_case_5()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 1),
 		tsk::high_watermark( 10),
@@ -141,7 +141,7 @@ void test_case_5()
 void test_case_6()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 1),
 		tsk::high_watermark( 10),
@@ -158,7 +158,7 @@ void test_case_6()
 void test_case_7()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 1),
 		tsk::high_watermark( 10),
@@ -174,7 +174,7 @@ void test_case_7()
 void test_case_8()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 1),
 		tsk::high_watermark( 10),
@@ -191,7 +191,7 @@ void test_case_8()
 void test_case_9()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 1),
 		tsk::high_watermark( 1),
@@ -211,7 +211,7 @@ void test_case_9()
 void test_case_10()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 1),
@@ -230,7 +230,7 @@ void test_case_10()
 void test_case_11()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 1),
@@ -248,7 +248,7 @@ void test_case_11()
 void test_case_12()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 1),
@@ -266,7 +266,7 @@ void test_case_12()
 void test_case_13()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 1),
@@ -284,7 +284,7 @@ void test_case_13()
 void test_case_14()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 1),
@@ -302,7 +302,7 @@ void test_case_14()
 void test_case_15()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 10),
@@ -319,7 +319,7 @@ void test_case_15()
 void test_case_16()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 10),
@@ -348,7 +348,7 @@ void test_case_16()
 void test_case_17()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 10),
@@ -370,7 +370,7 @@ void test_case_17()
 void test_case_18()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 10),
@@ -392,7 +392,7 @@ void test_case_18()
 void test_case_19()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 10),
@@ -407,7 +407,7 @@ void test_case_19()
 void test_case_20()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 10),
@@ -432,7 +432,7 @@ void test_case_20()
 void test_case_21()
 {
 	tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool(
 		tsk::poolsize( 5),
 		tsk::high_watermark( 10),
@@ -447,7 +447,7 @@ void test_case_21()
 void test_case_22()
 {
 	typedef tsk::static_pool<
-		tsk::bounded_twolock_fifo
+		tsk::bounded_fifo
 	> pool_type;
 	BOOST_CHECK( ! tsk::has_attribute< pool_type >::value);
 	pool_type pool(
@@ -479,7 +479,7 @@ void test_case_22()
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
 	boost::unit_test::test_suite * test =
-		BOOST_TEST_SUITE("Boost.Task: bounded-twolock-pool test suite");
+		BOOST_TEST_SUITE("Boost.Task: bounded-pool test suite");
 
 	test->add( BOOST_TEST_CASE( & test_case_1) );
 	test->add( BOOST_TEST_CASE( & test_case_2) );

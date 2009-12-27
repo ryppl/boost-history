@@ -4,21 +4,20 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASKS_BOUNDED_TWOLOCK_FIFO_H
-#define BOOST_TASKS_BOUNDED_TWOLOCK_FIFO_H
+#ifndef BOOST_TASKS_BOUNDED_FIFO_H
+#define BOOST_TASKS_BOUNDED_FIFO_H
 
 #include <cstddef>
 
 #include <boost/assert.hpp>
+#include <boost/atomic.hpp>
 #include <boost/bind.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/foreach.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 
 #include <boost/task/callable.hpp>
-#include <boost/task/detail/atomic.hpp>
 #include <boost/task/detail/meta.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/watermark.hpp>
@@ -28,7 +27,7 @@
 namespace boost {
 namespace tasks {
 
-class bounded_twolock_fifo
+class bounded_fifo
 {
 public:
 	typedef detail::has_no_attribute	attribute_tag_type;
@@ -43,33 +42,39 @@ private:
 		sptr_t		next;
 	};
 
-	volatile uint32_t	state_;
-	volatile uint32_t	count_;
-	node::sptr_t		head_;
-	mutex				head_mtx_;
-	node::sptr_t		tail_;
-	mutex				tail_mtx_;
-	condition			not_empty_cond_;
-	condition			not_full_cond_;
-	std::size_t			hwm_;
-	std::size_t			lwm_;
+	enum state
+	{
+		ACTIVE = 0,
+		DEACTIVE
+	};
+
+	atomic< state >			state_;
+	atomic< std::size_t >	count_;
+	node::sptr_t			head_;
+	mutable mutex			head_mtx_;
+	node::sptr_t			tail_;
+	mutable mutex			tail_mtx_;
+	condition				not_empty_cond_;
+	condition				not_full_cond_;
+	std::size_t				hwm_;
+	std::size_t				lwm_;
 
 	bool active_() const
-	{ return 0 == state_; }
+	{ return ACTIVE == state_.load(); }
 
 	void deactivate_()
-	{ detail::atomic_fetch_add( & state_, 1); }
+	{ state_.store( DEACTIVE); }
 
-	uint32_t size_()
-	{ return count_; }
+	std::size_t size_() const
+	{ return count_.load(); }
 
-	bool empty_()
+	bool empty_() const
 	{ return head_ == get_tail_(); }
 
-	bool full_()
+	bool full_() const
 	{ return size_() >= hwm_; }
 
-	node::sptr_t get_tail_()
+	node::sptr_t get_tail_() const
 	{
 		lock_guard< mutex > lk( tail_mtx_);	
 		node::sptr_t tmp = tail_;
@@ -80,15 +85,15 @@ private:
 	{
 		node::sptr_t old_head = head_;
 		head_ = old_head->next;
-		detail::atomic_fetch_sub( & count_, 1);
+		count_.fetch_sub( 1);
 		return old_head;
 	}
 
 public:
-	bounded_twolock_fifo(
+	bounded_fifo(
 			high_watermark const& hwm,
 			low_watermark const& lwm) :
-		state_( 0),
+		state_( ACTIVE),
 		count_( 0),
 		head_( new node),
 		head_mtx_(),
@@ -103,31 +108,34 @@ public:
 	void upper_bound_( std::size_t hwm)
 	{
 		if ( lwm_ > hwm )
-			throw invalid_watermark("low watermark must be less than or equal to high watermark");
+			throw invalid_watermark();
 		std::size_t tmp( hwm_);
 		hwm_ = hwm;
 		if ( hwm_ > tmp) not_full_cond_.notify_one();
 	}
 
-	std::size_t upper_bound()
+	std::size_t upper_bound() const
 	{ return hwm_; }
 
 	void lower_bound_( std::size_t lwm)
 	{
 		if ( lwm > hwm_ )
-			throw invalid_watermark("low watermark must be less than or equal to high watermark");
+			throw invalid_watermark();
 		std::size_t tmp( lwm_);
 		lwm_ = lwm;
 		if ( lwm_ > tmp) not_full_cond_.notify_one();
 	}
 
-	std::size_t lower_bound()
+	std::size_t lower_bound() const
 	{ return lwm_; }
+
+	bool active() const
+	{ return active_(); }
 
 	void deactivate()
 	{ deactivate_(); }
 
-	bool empty()
+	bool empty() const
 	{
 		unique_lock< mutex > lk( head_mtx_);
 		return empty_();
@@ -150,15 +158,15 @@ public:
 			tail_->va = va;
 			tail_->next = new_node;
 			tail_ = new_node;
-			detail::atomic_fetch_add( & count_, 1);
+			count_.fetch_add( 1);
 		}
 		not_empty_cond_.notify_one();
 	}
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	void put(
 		value_type const& va,
-		Duration const& rel_time)
+		TimeDuration const& rel_time)
 	{
 		node::sptr_t new_node( new node);
 		{
@@ -176,7 +184,7 @@ public:
 			tail_->va = va;
 			tail_->next = new_node;
 			tail_ = new_node;
-			detail::atomic_fetch_add( & count_, 1);
+			count_.fetch_add( 1);
 		}
 		not_empty_cond_.notify_one();
 	}
@@ -213,10 +221,10 @@ public:
 		return ! va.empty();
 	}
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	bool take(
 		value_type & va,
-		Duration const& rel_time)
+		TimeDuration const& rel_time)
 	{
 		unique_lock< mutex > lk( head_mtx_);
 		bool empty = empty_();
@@ -274,4 +282,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASKS_BOUNDED_TWOLOCK_FIFO_H
+#endif // BOOST_TASKS_BOUNDED_FIFO_H
