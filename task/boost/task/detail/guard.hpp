@@ -7,7 +7,7 @@
 #ifndef BOOST_TASKS_DETAIL_GUARD_H
 #define BOOST_TASKS_DETAIL_GUARD_H
 
-#include <boost/cstdint.hpp>
+#include <boost/atomic.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/task/detail/config.hpp>
@@ -26,10 +26,10 @@ namespace detail {
 class BOOST_TASKS_DECL guard : private noncopyable
 {
 private:
-	volatile uint32_t	&	active_worker_;
+	atomic< unsigned int >	&	active_worker_;
 
 public:
-	guard( volatile uint32_t & active_worker);
+	guard( atomic< unsigned int > & active_worker);
 
 	~guard();
 };

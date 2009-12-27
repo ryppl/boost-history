@@ -38,7 +38,7 @@ manual_reset_event::reset()
 	mutex::scoped_lock lk( enter_mtx_);
 	BOOST_ASSERT( lk);
 
-	state_.exchange( RESET);
+	state_.store( RESET);
 }
 
 void

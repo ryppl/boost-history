@@ -8,7 +8,7 @@
 #define BOOST_TASKS_ASYNC_H
 
 #include <boost/config.hpp>
-#include <boost/thread/detail/move.hpp>
+#include <boost/move/move.hpp>
 
 #include <boost/task/as_sub_task.hpp>
 #include <boost/task/handle.hpp>
@@ -24,17 +24,33 @@ template< typename R >
 handle< R > async( task< R > t)
 { return as_sub_task()( boost::move( t) ); }
 
+template< typename R >
+handle< R > async( BOOST_RV_REF( task< R >) t)
+{ return as_sub_task()( t); }
+
 template< typename R, typename EP >
 handle< R > async( task< R > t, EP ep)
 { return ep( boost::move( t) ); }
+
+template< typename R, typename EP >
+handle< R > async( BOOST_RV_REF( task< R >) t, EP ep)
+{ return ep( t); }
 
 template< typename R, typename Queue, typename UMS >
 handle< R > async( task< R > t, static_pool< Queue, UMS > & pool)
 { return pool.submit( boost::move( t) ); }
 
+template< typename R, typename Queue, typename UMS >
+handle< R > async( BOOST_RV_REF( task< R >) t, static_pool< Queue, UMS > & pool)
+{ return pool.submit( t); }
+
 template< typename R, typename Attr, typename Queue, typename UMS >
 handle< R > async( task< R > t, Attr attr, static_pool< Queue, UMS > & pool)
 { return pool.submit( boost::move( t), attr); }
+
+template< typename R, typename Attr, typename Queue, typename UMS >
+handle< R > async( BOOST_RV_REF( task< R >) t, Attr attr, static_pool< Queue, UMS > & pool)
+{ return pool.submit( t, attr); }
 
 }}
 

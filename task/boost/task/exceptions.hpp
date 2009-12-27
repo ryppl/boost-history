@@ -50,8 +50,8 @@ public:
 class invalid_watermark : public std::invalid_argument
 {
 public:
-    invalid_watermark( std::string const& msg) :
-		std::invalid_argument( msg)
+    invalid_watermark() :
+		std::invalid_argument("invalid watermark")
 	{}
 };
 

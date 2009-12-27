@@ -10,15 +10,14 @@
 #include <cstddef>
 
 #include <boost/assert.hpp>
+#include <boost/atomic.hpp>
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/detail/move.hpp>
 
-#include <boost/task/detail/atomic.hpp>
 #include <boost/task/detail/bind_processor.hpp>
 #include <boost/task/detail/worker.hpp>
 #include <boost/task/detail/worker_group.hpp>
@@ -56,13 +55,19 @@ private:
 	typedef typename queue_type::value_type	value_type;
 	typedef UMS								ums_type;
 
-	worker_group		wg_;
-	shared_mutex		mtx_wg_;
-	volatile uint32_t	state_;
-	queue_type		 	queue_;
-	volatile uint32_t	idle_worker_;
-	bool				shtdwn_;
-	bool				shtdwn_now_;
+	enum state
+	{
+		ACTIVE = 0,
+		DEACTIVE	
+	};
+
+	worker_group			wg_;
+	shared_mutex			mtx_wg_;
+	atomic< state >			state_;
+	queue_type				queue_;
+	atomic< unsigned int >	idle_worker_;
+	atomic< bool >			shtdwn_;
+	atomic< bool >			shtdwn_now_;
 
 	void worker_entry_()
 	{
@@ -124,11 +129,11 @@ private:
 	std::size_t size_() const
 	{ return wg_.size(); }
 
-	bool closed_() const
-	{ return state_ > 0; }
+	bool deactivated_() const
+	{ return DEACTIVE == state_.load(); }
 
-	bool close_()
-	{ return atomic_fetch_add( & state_, 1) > 0; }
+	bool deactivate_()
+	{ return ACTIVE == state_.exchange( DEACTIVE); }
 
 public:
 	explicit pool_base(
@@ -138,7 +143,7 @@ public:
 			stacksize const& stack_size) :
 		wg_(),
 		mtx_wg_(),
-		state_( 0),
+		state_( ACTIVE),
 		queue_(),
 		idle_worker_( 0),
 		shtdwn_( false),
@@ -160,7 +165,7 @@ public:
 			stacksize const& stack_size) :
 		wg_(),
 		mtx_wg_(),
-		state_( 0),
+		state_( ACTIVE),
 		queue_( hwm, lwm),
 		idle_worker_( 0),
 		shtdwn_( false),
@@ -180,7 +185,7 @@ public:
 			stacksize const& stack_size) :
 		wg_(),
 		mtx_wg_(),
-		state_( 0),
+		state_( ACTIVE),
 		queue_(),
 		idle_worker_( 0),
 		shtdwn_( false),
@@ -203,7 +208,7 @@ public:
 			stacksize const& stack_size) :
 		wg_(),
 		mtx_wg_(),
-		state_( 0),
+		state_( ACTIVE),
 		queue_( hwm, lwm),
 		idle_worker_( 0),
 		shtdwn_( false),
@@ -224,7 +229,7 @@ public:
 
 	void interrupt_all_worker()
 	{
-		if ( closed_() ) return;
+		if ( deactivated_() ) return;
 
 		shared_lock< shared_mutex > lk( mtx_wg_);
 		wg_.interrupt_all();
@@ -232,21 +237,21 @@ public:
 
 	void shutdown()
 	{
-		if ( closed_() || close_() ) return;
+		if ( deactivated_() || ! deactivate_() ) return;
 
 		queue_.deactivate();
 		shared_lock< shared_mutex > lk( mtx_wg_);
-		shtdwn_ = true;
+		shtdwn_.store( true);
 		wg_.join_all();
 	}
 
 	const void shutdown_now()
 	{
-		if ( closed_() || close_() ) return;
+		if ( deactivated_() || ! deactivate_() ) return;
 
 		queue_.deactivate();
 		shared_lock< shared_mutex > lk( mtx_wg_);
-		shtdwn_now_ = true;
+		shtdwn_now_.store( true);
 		wg_.interrupt_all();
 		wg_.join_all();
 	}
@@ -258,7 +263,7 @@ public:
 	}
 
 	bool closed()
-	{ return closed_(); }
+	{ return deactivated_(); }
 
 	std::size_t upper_bound()
 	{ return queue_.upper_bound(); }
@@ -275,7 +280,7 @@ public:
 	template< typename R >
 	handle< R > submit( task< R > t)
 	{
-		if ( closed_() )
+		if ( deactivated_() )
 			throw task_rejected("pool is closed");
 
 		shared_ptr< shared_future< R > > f(
@@ -290,7 +295,7 @@ public:
 	template< typename R, typename Attr >
 	handle< R > submit( task< R > t, Attr const& attr)
 	{
-		if ( closed_() )
+		if ( deactivated_() )
 			throw task_rejected("pool is closed");
 
 		shared_ptr< shared_future< R > > f(

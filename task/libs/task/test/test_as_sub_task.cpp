@@ -47,7 +47,7 @@ void test_runs_not_in_pool()
 void test_runs_in_pool()
 {
 	tsk::static_pool<
-		tsk::unbounded_onelock_fifo
+		tsk::unbounded_fifo
 	> pool( tsk::poolsize( 1) );
 	tsk::handle< bool > h(
 		tsk::async(

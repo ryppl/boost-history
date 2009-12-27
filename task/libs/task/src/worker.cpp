@@ -41,10 +41,6 @@ worker::run()
 }
 
 void
-worker::reschedule_until( function< bool() > const& pred)
-{ impl_->reschedule_until( pred); }
-
-void
 worker::block()
 { impl_->block(); }
 

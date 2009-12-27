@@ -246,16 +246,15 @@ void test_case_16()
 // check waitfor_any()
 void test_case_17()
 {
-	tsk::task< void > t1( delay_fn, pt::seconds( 3) );
-	tsk::task< int > t2( fibonacci_fn, 10);
+	tsk::task< void > t1( delay_fn, pt::seconds( 2) );
+	tsk::task< void > t2( delay_fn, pt::seconds( 1) );
 	tsk::handle< void > h1(
 		tsk::async( boost::move( t1), tsk::new_thread() ) );
-	tsk::handle< int > h2(
+	tsk::handle< void > h2(
 		tsk::async( boost::move( t2), tsk::new_thread() ) );
 	tsk::waitfor_any( h1, h2);
 	BOOST_CHECK( ! h1.is_ready() );
 	BOOST_CHECK( h2.is_ready() );
-	BOOST_CHECK_EQUAL( h2.get(), 55);
 }
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])

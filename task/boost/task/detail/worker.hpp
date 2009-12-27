@@ -53,8 +53,6 @@ struct worker_base
 
 	virtual void run() = 0;
 
-	virtual void reschedule_until( function< bool() > const&) = 0;
-
 	virtual void block() = 0;
 };
 
@@ -259,23 +257,6 @@ public:
 		}
 	}
 
-	void reschedule_until( function< bool() > const& pred)
-	{
-		while (true)
-		{
-			if ( pred() )
-			{
-				fprintf(stdout,"predicate is true- will return\n");
-				break;
-			}
-			else
-			{	
-				fprintf(stdout,"predicate is not true - will block\n");
-				block();
-			}
-		}
-	}
-
 	void block()
 	{
 		if ( 0 == sched_.ready() )
@@ -326,13 +307,15 @@ public:
 	const thread::id get_id() const;
 
 	void join() const;
+
 	void interrupt() const;
 
 	void put( callable const&);
+
 	bool try_steal( callable &);
 
 	void run();
-	void reschedule_until( function< bool() > const&);
+
 	void block();
 
 	static worker * tss_get();

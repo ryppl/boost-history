@@ -19,7 +19,7 @@
 		void interrupt();
 		void interrupt_and_wait();
 		void interrupt_and_wait_until( system_time const& abs_time);
-		template< typename Duration >
+		template< typename TimeDuration >
 		void interrupt_and_wait_for( Duration const& rel_time);
 		bool interruption_requested();
 
@@ -116,7 +116,7 @@
 
 [heading Member function `interrupt_and_wait_for()`]
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	bool interrupt_and_wait_for( Duration const& rel_time)
 
 [variablelist
@@ -148,7 +148,7 @@
 
 [heading Member function `wait_for()`]
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	bool wait_for( Duration const& rel_time) const
 
 [variablelist

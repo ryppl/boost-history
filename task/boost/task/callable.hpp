@@ -8,11 +8,13 @@
 #define BOOST_TASKS_CALLABLE_H
 
 #include <boost/config.hpp>
+#include <boost/move/move.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
 #include <boost/task/context.hpp>
 #include <boost/task/detail/config.hpp>
+#include <boost/task/spin/future.hpp>
 #include <boost/task/task.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -36,17 +38,38 @@ private:
 	};
 
 	template< typename R >
-	class impl_wrapper : public impl
+	class task_wrapper : public impl
 	{
 	private:
 		task< R >	t_;
 		context		ctx_;
 
 	public:
-		impl_wrapper(
-				task< R > t,
+		task_wrapper(
+				BOOST_RV_REF( task< R >) t,
 				context const& ctx) :
-			t_( boost::move( t) ), ctx_( ctx)
+			t_( t), ctx_( ctx)
+		{}
+
+		void run()
+		{ t_(); }
+
+		void reset( shared_ptr< thread > const& thrd)
+		{ ctx_.reset( thrd); }
+	};
+
+	template< typename R >
+	class packaged_task_wrapper : public impl
+	{
+	private:
+		spin::packaged_task< R >	t_;
+		context						ctx_;
+
+	public:
+		packaged_task_wrapper(
+				BOOST_RV_REF( spin::packaged_task< R >) t,
+				context const& ctx) :
+			t_( t), ctx_( ctx)
 		{}
 
 		void run()
@@ -63,9 +86,16 @@ public:
 
 	template< typename R >
 	callable(
-			task< R > t,
+			BOOST_RV_REF( task< R >) t,
 			context const& ctx) :
-		impl_( new impl_wrapper<  R >( boost::move( t), ctx) )
+		impl_( new task_wrapper< R >( t, ctx) )
+	{}
+
+	template< typename R >
+	callable(
+			BOOST_RV_REF( spin::packaged_task< R >) t,
+			context const& ctx) :
+		impl_( new packaged_task_wrapper< R >( t, ctx) )
 	{}
 
 	void operator()();

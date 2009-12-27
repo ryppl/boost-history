@@ -60,6 +60,8 @@ template< typename R, typename Fn >
 class task_wrapper : public task_base< R >
 {
 private:
+	friend struct as_sub_task;
+
 	Fn		fn_;
 
 	void do_run()
@@ -116,6 +118,8 @@ template< typename Fn >
 class task_wrapper< void, Fn > : public task_base< void >
 {
 private:
+	friend struct as_sub_task;
+
 	Fn		fn_;
 
 	void do_run()
@@ -177,6 +181,8 @@ template< typename R >
 class task
 {
 private:
+	friend struct as_sub_task;
+
 	BOOST_MOVABLE_BUT_NOT_COPYABLE( task);	
 
 	shared_ptr< detail::task_base< R > >	task_;

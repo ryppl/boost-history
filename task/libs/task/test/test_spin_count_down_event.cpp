@@ -24,7 +24,7 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::tasks;
 
-boost::uint32_t wait_fn( boost::uint32_t n, tsk::spin_count_down_event & ev)
+boost::uint32_t wait_fn( boost::uint32_t n, tsk::spin::count_down_event & ev)
 {
 	ev.wait();
 	return n;
@@ -34,7 +34,7 @@ boost::uint32_t wait_fn( boost::uint32_t n, tsk::spin_count_down_event & ev)
 void test_case_1()
 {
 	boost::uint32_t n = 3;
-	tsk::spin_count_down_event ev( n);
+	tsk::spin::count_down_event ev( n);
 	BOOST_CHECK_EQUAL( ev.initial(), n);
 	BOOST_CHECK_EQUAL( ev.current(), n);
 
@@ -59,7 +59,7 @@ void test_case_1()
 void test_case_2()
 {
 	boost::uint32_t n = 3;
-	tsk::spin_count_down_event ev( n);
+	tsk::spin::count_down_event ev( n);
 	BOOST_CHECK_EQUAL( ev.initial(), n);
 	BOOST_CHECK_EQUAL( ev.current(), n);
 
@@ -84,11 +84,11 @@ void test_case_2()
 void test_case_3()
 {
 	tsk::static_pool<
-		tsk::unbounded_onelock_fifo
+		tsk::unbounded_fifo
 	> pool( tsk::poolsize( 3) );
 
 	boost::uint32_t n = 3;
-	tsk::spin_count_down_event ev( n);
+	tsk::spin::count_down_event ev( n);
 	BOOST_CHECK_EQUAL( ev.initial(), n);
 	BOOST_CHECK_EQUAL( ev.current(), n);
 

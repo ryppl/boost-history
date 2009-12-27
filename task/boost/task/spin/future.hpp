@@ -4,8 +4,8 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIBERS_SPIN_FUTURE_HPP
-#define BOOST_FIBERS_SPIN_FUTURE_HPP
+#ifndef BOOST_TASKS_SPIN_FUTURE_HPP
+#define BOOST_TASKS_SPIN_FUTURE_HPP
 
 #include <algorithm>
 #include <list>
@@ -23,12 +23,12 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <boost/fiber/detail/future_traits.hpp>
-#include <boost/fiber/spin/condition.hpp>
-#include <boost/fiber/spin/mutex.hpp>
+#include <boost/task/detail/future_traits.hpp>
+#include <boost/task/spin/condition.hpp>
+#include <boost/task/spin/mutex.hpp>
 
 namespace boost {
-namespace fibers {
+namespace tasks {
 
 namespace future_state {
 
@@ -44,8 +44,8 @@ struct future_object_base
     boost::exception_ptr exception;
     bool done;
     mutex mtx;
-    condition waiters;
-    typedef std::list<condition*> waiter_list;
+	spin::condition waiters;
+    typedef std::list<spin::condition*> waiter_list;
     waiter_list external_waiters;
     boost::function<void()> callback;
 
@@ -56,7 +56,7 @@ struct future_object_base
     virtual ~future_object_base()
     {}
 
-    waiter_list::iterator register_external_waiter(condition& cv)
+    waiter_list::iterator register_external_waiter(spin::condition& cv)
     {
         boost::unique_lock<mutex> lock(mtx);
         do_callback(lock);
@@ -1078,4 +1078,4 @@ public:
 
 }}}
 
-#endif // BOOST_FIBERS_SPIN_FUTURE_H
+#endif // BOOST_TASKS_SPIN_FUTURE_H

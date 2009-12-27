@@ -15,7 +15,7 @@ high_watermark::high_watermark( std::size_t value) :
 	value_( value)
 {
 	if ( value <= 0)
-		throw invalid_watermark("high watermark must be greater than zero");
+		throw invalid_watermark();
 }
 
 high_watermark::operator std::size_t () const
@@ -25,7 +25,7 @@ low_watermark::low_watermark( std::size_t value)
 : value_( value)
 {
 	if ( value < 0)
-		throw invalid_watermark("low watermark must be greater than or equal to zero");
+		throw invalid_watermark();
 }
 
 low_watermark::operator std::size_t () const

@@ -169,6 +169,9 @@ private:
 		std::size_t lower_bound() const
 		{ return lwm_; }
 
+		bool active() const
+		{ return active_(); }
+
 		void deactivate()
 		{ deactivate_(); }
 
@@ -348,6 +351,9 @@ public:
 	
 	std::size_t lower_bound() const
 	{ return impl_->lower_bound(); }
+
+	bool active() const
+	{ return impl_->active(); }
 	
 	void deactivate()
 	{ impl_->deactivate(); }

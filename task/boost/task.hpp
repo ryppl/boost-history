@@ -9,10 +9,9 @@
 
 #include <boost/task/as_sub_task.hpp>
 #include <boost/task/async.hpp>
-#include <boost/task/bounded_onelock_fifo.hpp>
-#include <boost/task/bounded_onelock_prio_queue.hpp>
-#include <boost/task/bounded_onelock_smart_queue.hpp>
-#include <boost/task/bounded_twolock_fifo.hpp>
+#include <boost/task/bounded_fifo.hpp>
+#include <boost/task/bounded_prio_queue.hpp>
+#include <boost/task/bounded_smart_queue.hpp>
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
 #include <boost/task/exceptions.hpp>
@@ -33,10 +32,9 @@
 #include <boost/task/stacksize.hpp>
 #include <boost/task/static_pool.hpp>
 #include <boost/task/task.hpp>
-#include <boost/task/unbounded_onelock_fifo.hpp>
-#include <boost/task/unbounded_onelock_prio_queue.hpp>
-#include <boost/task/unbounded_onelock_smart_queue.hpp>
-#include <boost/task/unbounded_twolock_fifo.hpp>
+#include <boost/task/unbounded_prio_queue.hpp>
+#include <boost/task/unbounded_smart_queue.hpp>
+#include <boost/task/unbounded_fifo.hpp>
 #include <boost/task/utility.hpp>
 #include <boost/task/watermark.hpp>
 

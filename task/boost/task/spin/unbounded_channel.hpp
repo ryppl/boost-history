@@ -112,6 +112,9 @@ private:
 			use_count_( 0)
 		{}
 
+		bool active() const
+		{ return active_(); }
+
 		void deactivate()
 		{ deactivate_(); }
 
@@ -214,6 +217,9 @@ public:
 	unbounded_channel() :
 		impl_( new impl() )
 	{}
+
+	bool active() const
+	{ return impl_->active(); }
 
 	void deactivate()
 	{ impl_->deactivate(); }

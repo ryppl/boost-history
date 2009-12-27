@@ -8,23 +8,21 @@
 
 #include <boost/assert.hpp>
 
-#include <boost/task/detail/atomic.hpp>
-
 namespace boost {
 namespace tasks {
 namespace detail {
 
-guard::guard( volatile uint32_t & active_worker) :
+guard::guard( atomic< unsigned int > & active_worker) :
 	active_worker_( active_worker)
 {
-	BOOST_ASSERT( active_worker_ >= 0);
-	atomic_fetch_add( & active_worker_, 1);
+	BOOST_ASSERT( 0 <= active_worker_.load() );
+	active_worker_.fetch_add( 1);
 }
 
 guard::~guard()
 {
-	atomic_fetch_sub( & active_worker_, 1);
-	BOOST_ASSERT( active_worker_ >= 0);
+	active_worker_.fetch_sub( 1);
+	BOOST_ASSERT( 0 <= active_worker_.load() );
 }
 
 }}}

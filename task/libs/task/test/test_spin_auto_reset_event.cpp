@@ -24,7 +24,7 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::tasks;
 
-boost::uint32_t wait_fn( boost::uint32_t n, tsk::spin_auto_reset_event & ev)
+boost::uint32_t wait_fn( boost::uint32_t n, tsk::spin::auto_reset_event & ev)
 {
 	ev.wait();
 	return n;
@@ -34,7 +34,7 @@ boost::uint32_t wait_fn( boost::uint32_t n, tsk::spin_auto_reset_event & ev)
 void test_case_1()
 {
 	boost::uint32_t n = 3;
-	tsk::spin_auto_reset_event ev;
+	tsk::spin::auto_reset_event ev;
 
 	tsk::handle< boost::uint32_t > h1(
 			tsk::async(
@@ -87,11 +87,11 @@ void test_case_1()
 void test_case_2()
 {
 	tsk::static_pool<
-		tsk::unbounded_onelock_fifo
+		tsk::unbounded_fifo
 	> pool( tsk::poolsize( 3) );
 
 	boost::uint32_t n = 3;
-	tsk::spin_auto_reset_event ev;
+	tsk::spin::auto_reset_event ev;
 
 	tsk::handle< boost::uint32_t > h1(
 			tsk::async(
@@ -142,7 +142,7 @@ void test_case_2()
 void test_case_3()
 {
 	boost::uint32_t n = 3;
-	tsk::spin_auto_reset_event ev( true);
+	tsk::spin::auto_reset_event ev( true);
 
 	tsk::handle< boost::uint32_t > h1(
 			tsk::async(
@@ -187,7 +187,7 @@ void test_case_3()
 
 void test_case_4()
 {
-	tsk::spin_auto_reset_event ev;
+	tsk::spin::auto_reset_event ev;
 
 	BOOST_CHECK_EQUAL( false, ev.try_wait() );
 

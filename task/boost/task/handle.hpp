@@ -22,10 +22,32 @@
 namespace boost {
 namespace tasks {
 
+template< typename T >
+struct is_handle_type;
+
 template< typename R >
 class handle
 {
 private:
+	template< typename T1, typename T2 >
+	friend void waitfor_all( handle< T1 > &, handle< T2 > &);
+	template< typename T1, typename T2, typename T3 >
+	friend void waitfor_all( handle< T1 > &, handle< T2 > &, handle< T3 > &);
+	template< typename T1, typename T2, typename T3, typename T4 >
+	friend void waitfor_all( handle< T1 > &, handle< T2 > &, handle< T3 > &, handle< T4 > &);
+	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
+	friend void waitfor_all( handle< T1 > &, handle< T2 > &, handle< T3 > &, handle< T4 > &, handle< T5 > &);
+	template< typename Iterator >
+	friend typename disable_if< is_handle_type< Iterator >, Iterator >::type waitfor_any( Iterator begin, Iterator end);
+	template< typename H1, typename H2 >
+	friend typename enable_if< is_handle_type< H1 >, unsigned >::type waitfor_any( H1 &, H2 &);
+	template< typename T1, typename T2, typename T3 >
+	friend unsigned int waitfor_any( handle< T1 > &, handle< T2 > &, handle< T3 > &);
+	template< typename T1, typename T2, typename T3, typename T4 >
+	friend unsigned int waitfor_any( handle< T1 > &, handle< T2 > &, handle< T3 > &, handle< T4 > &);
+	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
+	friend unsigned int waitfor_any( handle< T1 > &, handle< T2 > &, handle< T3 > &, handle< T4 > &, handle< T5 > &);
+
 	shared_ptr< shared_future< R > >	fut_;
 	context								ctx_;
 
@@ -56,8 +78,8 @@ public:
 		return wait_until( abs_time);
 	}
 
-	template< typename Duration >
-	bool interrupt_and_wait_for( Duration const& rel_time)
+	template< typename TimeDuration >
+	bool interrupt_and_wait_for( TimeDuration const& rel_time)
 	{
 		interrupt();
 		return wait_for( rel_time);
@@ -99,8 +121,8 @@ public:
 		{ throw task_interrupted(); }
 	}
 
-	template< typename Duration >
-	bool wait_for( Duration const& rel_time) const
+	template< typename TimeDuration >
+	bool wait_for( TimeDuration const& rel_time) const
 	{
 		try
 		{ return fut_->timed_wait( rel_time); }
@@ -123,9 +145,6 @@ public:
 		catch ( thread_interrupted const&)
 		{ throw task_interrupted(); }
 	}
-
-	shared_future< R > & get_future()
-	{ return * fut_; }
 
 	void swap( handle< R > & other)
 	{
@@ -160,7 +179,7 @@ template< typename T1, typename T2 >
 void waitfor_all( handle< T1 > & t1, handle< T2 > & t2)
 {
 	try
-	{ wait_for_all( t1.get_future(), t2.get_future()); }
+	{ wait_for_all( * t1.fut_, * t2.fut_); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -169,7 +188,7 @@ template< typename T1, typename T2, typename T3 >
 void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3)
 {
 	try
-	{ wait_for_all( t1.get_future(), t2.get_future(), t3.get_future()); }
+	{ wait_for_all( * t1.fut_, * t2.fut_, * t3.fut_); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -178,7 +197,7 @@ template< typename T1, typename T2, typename T3, typename T4 >
 void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4)
 {
 	try
-	{ wait_for_all( t1.get_future(), t2.get_future(), t3.get_future(), t4.get_future()); }
+	{ wait_for_all( * t1.fut_, * t2.fut_, * t3.fut_, * t4.fut_); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -187,7 +206,7 @@ template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5)
 {
 	try
-	{ wait_for_all( t1.get_future(), t2.get_future(), t3.get_future(), t4.get_future(), t5.get_future()); }
+	{ wait_for_all( * t1.fut_, * t2.fut_, * t3.fut_, * t4.fut_, * t5.fut_); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -199,18 +218,18 @@ typename disable_if< is_handle_type< Iterator >, Iterator >::type waitfor_any( I
 	{
 		boost::detail::future_waiter waiter;
 		for ( Iterator i = begin; i != end; ++i)
-			waiter.add( i->fut_);
+			waiter.add( * ( i->fut_) );
 		return next( begin, waiter.wait() );
 	}
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
 
-template< typename T1, typename T2 >
-unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2)
+template< typename H1, typename H2 >
+typename enable_if< is_handle_type< H1 >, unsigned >::type waitfor_any( H1 & h1, H2 & h2)
 {
 	try
-	{ return wait_for_any( t1.get_future(), t2.get_future() ); }
+	{ return wait_for_any( * h1.fut_, * h2.fut_ ); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -219,7 +238,7 @@ template< typename T1, typename T2, typename T3 >
 unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3)
 {
 	try
-	{ return wait_for_any( t1.get_future(), t2.get_future(), t3.get_future() ); }
+	{ return wait_for_any( * t1.fut_, * t2.fut_, * t3.fut_ ); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -228,7 +247,7 @@ template< typename T1, typename T2, typename T3, typename T4 >
 unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4)
 {
 	try
-	{ return wait_for_any( t1.get_future(), t2.get_future(), t3.get_future(), t4.get_future() ); }
+	{ return wait_for_any( * t1.fut_, * t2.fut_, * t3.fut_, * t4.fut_ ); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -237,7 +256,7 @@ template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5)
 {
 	try
-	{ return wait_for_any( t1.get_future(), t2.get_future(), t3.get_future(), t4.get_future(), t5.get_future() ); }
+	{ return wait_for_any( * t1.fut_, * t2.fut_, * t3.fut_, * t4.fut_, * t5.fut_ ); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }

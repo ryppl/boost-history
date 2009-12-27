@@ -20,7 +20,7 @@ auto_reset_event::auto_reset_event( bool isset) :
 
 void
 auto_reset_event::set()
-{ state_.exchange( SET); }
+{ state_.store( SET); }
 
 void
 auto_reset_event::wait()

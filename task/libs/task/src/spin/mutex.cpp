@@ -72,6 +72,6 @@ mutex::try_lock()
 
 void
 mutex::unlock()
-{ state_.exchange( UNLOCKED); }
+{ state_.store( UNLOCKED); }
 
 }}}

@@ -9,67 +9,42 @@
 
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
-#include <boost/function.hpp>
+#include <boost/move/move.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/thread/detail/move.hpp>
 #include <boost/weak_ptr.hpp>
 
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
 #include <boost/task/detail/worker.hpp>
-#include <boost/thread/future.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/new_thread.hpp>
+#include <boost/task/spin/future.hpp>
 #include <boost/task/task.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
 namespace tasks {
-namespace {
-
-template< typename R >
-bool future_ready( weak_ptr< shared_future< R > > wptr)
-{
-	shared_ptr< shared_future< R > > sptr = wptr.lock();
-	BOOST_ASSERT( sptr);
-	bool res = sptr->is_ready();
-	if ( res)
-		fprintf(stdout,"future is ready\n");
-	else
-		fprintf(stdout,"future is not ready\n");
-	return res;
-}
-
-}
 
 struct as_sub_task
 {
 	template< typename R >
-	handle< R > operator()( task< R > t)
+	handle< R > operator()( BOOST_RV_REF( task< R >) t_)
 	{
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
-			shared_ptr< shared_future< R > > f(
-				new shared_future< R >(
+			spin::packaged_task< R > t( t_.task_.fn_);
+			shared_ptr< spin::shared_future< R > > f(
+				new spin::shared_future< R >(
 					t.get_future() ) );
-			function< bool() > wcb(
-				bind(
-					( bool (*) ( weak_ptr< shared_future< R > >) ) & future_ready,
-					weak_ptr< shared_future< R > >( f) ) );
-			t.set_wait_callback(
-				bind(
-					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
-					w,
-					wcb) );
 			context ctx;
 			handle< R > h( f, ctx);
-			w->put( callable( boost::move( t), ctx) );
+			w->put( callable( t, ctx) );
 			return h;
 		}
 		else
-			return new_thread()( boost::move( t) );
+			return new_thread()( t_);
 	}
 };
 

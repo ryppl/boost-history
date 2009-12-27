@@ -83,7 +83,7 @@
 
 	void delay( system_time abs_time)
 
-	template< typename Duration >
+	template< typename TimeDuration >
 	void delay( Duration const& rel_time)
 ``
 

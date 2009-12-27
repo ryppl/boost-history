@@ -8,14 +8,11 @@
 
 #include <boost/thread/locks.hpp>
 
-#include <boost/task/detail/atomic.hpp>
+namespace boost {
+namespace tasks {
+namespace detail {
 
-namespace boost { namespace tasks {
-namespace detail
-{
-
-wsq::wsq()
-:
+wsq::wsq() :
 initial_size_( 32),
 array_( new callable[ initial_size_]),
 capacity_( initial_size_),
@@ -27,25 +24,25 @@ mtx_()
 
 bool
 wsq::empty() const
-{ return head_idx_ >= tail_idx_; }
+{ return head_idx_.load() >= tail_idx_.load(); }
 
 std::size_t
 wsq::size() const
-{ return tail_idx_ - head_idx_; }
+{ return tail_idx_.load() - head_idx_.load(); }
 
 void
 wsq::put( callable const& ca)
 {
-	uint32_t tail( tail_idx_);
-	if ( tail <= head_idx_ + mask_)
+	unsigned int tail( tail_idx_.load() );
+	if ( tail <= head_idx_.load() + mask_)
 	{
 		array_[tail & mask_] = ca;
-		tail_idx_ = tail + 1;
+		tail_idx_.fetch_add( 1);
 	}
 	else
 	{
 		lock_guard< recursive_mutex > lk( mtx_);
-		uint32_t head( head_idx_);
+		unsigned int head( head_idx_.load() );
 		int count( size() );
 
 		if ( count >= mask_)
@@ -55,24 +52,26 @@ wsq::put( callable const& ca)
 			for ( int i( 0); i != count; ++i)
 				array[i] = array_[(i + head) & mask_];
 			array_.swap( array);
-			head_idx_ = 0;
-			tail_idx_ = tail = count;
+			head_idx_.store( 0);
+			tail = count;
+			tail_idx_.store( tail);
 			mask_ = (mask_ << 1) | 1;
 		}
 		array_[tail & mask_] = ca;
-		tail_idx_ = tail + 1;
+		tail_idx_.fetch_add( 1);
 	}
 }
 
 bool
 wsq::try_take( callable & ca)
 {
-	uint32_t tail( tail_idx_);
+	unsigned int tail( tail_idx_.load() );
 	if ( tail == 0)
 		return false;
 	tail -= 1;
-	atomic_exchange( & tail_idx_, tail);
-	if ( head_idx_ <= tail)
+	tail_idx_.exchange( tail);
+	//tail_idx_.store( tail);
+	if ( head_idx_.load() <= tail)
 	{
 		ca.swap( array_[tail & mask_]);
 		return true;
@@ -80,14 +79,14 @@ wsq::try_take( callable & ca)
 	else
 	{
 		lock_guard< recursive_mutex > lk( mtx_);
-		if ( head_idx_ <= tail)
+		if ( head_idx_.load() <= tail)
 		{
 			ca.swap( array_[tail & mask_]);
 			return true;
 		}
 		else
 		{
-			tail_idx_ = tail + 1;
+			tail_idx_.fetch_add( 1);
 			return false;
 		}
 	}
@@ -99,16 +98,17 @@ wsq::try_steal( callable & ca)
 	recursive_mutex::scoped_try_lock lk( mtx_);
 	if ( lk.owns_lock() )
 	{
-		uint32_t head( head_idx_);
-		atomic_exchange( & head_idx_, head + 1);
-		if ( head < tail_idx_)
+		unsigned int head( head_idx_.load() );
+		head_idx_.exchange( head + 1);
+		//head_idx_.store( head + 1);
+		if ( head < tail_idx_.load() )
 		{
 			ca.swap( array_[head & mask_]);
 			return true;
 		}
 		else
 		{
-			head_idx_ = head;
+			head_idx_.store( head);
 			return false;
 		}
 	}

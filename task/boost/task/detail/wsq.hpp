@@ -7,7 +7,7 @@
 #ifndef BOOST_TASKS_DETAIL_WSQ_H
 #define BOOST_TASKS_DETAIL_WSQ_H
 
-#include <boost/cstdint.hpp>
+#include <boost/atomic.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
@@ -33,8 +33,8 @@ private:
 	shared_array< callable >	array_;
 	int							capacity_;
 	int							mask_;
-	volatile uint32_t			head_idx_;
-	volatile uint32_t			tail_idx_;
+	atomic< unsigned int >		head_idx_;
+	atomic< unsigned int >		tail_idx_;
 	recursive_mutex				mtx_;
 
 public:
