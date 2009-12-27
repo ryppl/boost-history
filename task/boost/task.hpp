@@ -26,6 +26,7 @@
 #include <boost/task/spin/bounded_channel.hpp>
 #include <boost/task/spin/condition.hpp>
 #include <boost/task/spin/count_down_event.hpp>
+#include <boost/task/spin/future.hpp>
 #include <boost/task/spin/manual_reset_event.hpp>
 #include <boost/task/spin/mutex.hpp>
 #include <boost/task/spin/unbounded_channel.hpp>
