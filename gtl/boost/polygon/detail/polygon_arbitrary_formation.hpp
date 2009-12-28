@@ -66,6 +66,11 @@ namespace boost { namespace polygon{
       return cross_1 == cross_2 && (cross_1_sign == cross_2_sign || cross_1 == 0);
     }
 
+    template <typename T>
+    static inline bool equal_slope_hp(const T& dx1, const T& dy1, const T& dx2, const T& dy2) {
+      return dx1 * dy2 == dx2 * dy1;
+    }
+
     static inline bool equal_slope(const Unit& x, const Unit& y,
                                    const Point& pt1, const Point& pt2) {
       const Point* pts[2] = {&pt1, &pt2};
@@ -170,20 +175,52 @@ namespace boost { namespace polygon{
     }
 
     static inline typename high_precision_type<Unit>::type evalAtXforY(Unit xIn, Point pt, Point other_pt) { 
+      typename high_precision_type<Unit>::type
+        evalAtXforYret, evalAtXforYxIn, evalAtXforYx1, evalAtXforYy1, evalAtXforYdx1, evalAtXforYdx, 
+        evalAtXforYdy, evalAtXforYx2, evalAtXforYy2, evalAtXforY0;
       //y = (x - x1)dy/dx + y1
       //y = (xIn - pt.x)*(other_pt.y-pt.y)/(other_pt.x-pt.x) + pt.y
       //assert pt.x != other_pt.x
-      Unit x1 = pt.get(HORIZONTAL);
-      Unit y1 = pt.get(VERTICAL);
       typedef typename high_precision_type<Unit>::type high_precision;
-      high_precision dx1 = (high_precision)xIn - (high_precision)pt.get(HORIZONTAL);
-      if(dx1 == high_precision(0)) return (high_precision)(pt.get(VERTICAL)); 
-      high_precision dx = (high_precision)(other_pt.get(HORIZONTAL)) - (high_precision)x1;
-      high_precision dy = (high_precision)(other_pt.get(VERTICAL)) - (high_precision)y1;
-      high_precision y = (((high_precision)dx1) * (high_precision)dy / (high_precision)dx + (high_precision)y1);
-      return y;
+      evalAtXforYxIn = (high_precision)xIn;
+      evalAtXforYx1 = pt.get(HORIZONTAL);
+      evalAtXforYy1 = pt.get(VERTICAL);
+      evalAtXforYdx1 = evalAtXforYxIn - evalAtXforYx1;
+      evalAtXforY0 = high_precision(0);
+      if(evalAtXforYdx1 == evalAtXforY0) return evalAtXforYret = evalAtXforYy1;
+      evalAtXforYx2 = (high_precision)other_pt.get(HORIZONTAL);
+      evalAtXforYy2 = (high_precision)other_pt.get(VERTICAL);
+      
+      evalAtXforYdx = evalAtXforYx2 - evalAtXforYx1;
+      evalAtXforYdy = evalAtXforYy2 - evalAtXforYy1;
+      evalAtXforYret = ((evalAtXforYdx1) * evalAtXforYdy / evalAtXforYdx + evalAtXforYy1);
+      return evalAtXforYret;
     }
   
+    struct evalAtXforYPack {
+    typename high_precision_type<Unit>::type
+    evalAtXforYret, evalAtXforYxIn, evalAtXforYx1, evalAtXforYy1, evalAtXforYdx1, evalAtXforYdx, 
+                           evalAtXforYdy, evalAtXforYx2, evalAtXforYy2, evalAtXforY0;
+      inline const typename high_precision_type<Unit>::type& evalAtXforY(Unit xIn, Point pt, Point other_pt) { 
+        //y = (x - x1)dy/dx + y1
+        //y = (xIn - pt.x)*(other_pt.y-pt.y)/(other_pt.x-pt.x) + pt.y
+        //assert pt.x != other_pt.x
+        typedef typename high_precision_type<Unit>::type high_precision;
+        evalAtXforYxIn = (high_precision)xIn;
+        evalAtXforYx1 = pt.get(HORIZONTAL);
+        evalAtXforYy1 = pt.get(VERTICAL);
+        evalAtXforYdx1 = evalAtXforYxIn - evalAtXforYx1;
+        evalAtXforY0 = high_precision(0);
+        if(evalAtXforYdx1 == evalAtXforY0) return evalAtXforYret = evalAtXforYy1;
+        evalAtXforYx2 = (high_precision)other_pt.get(HORIZONTAL);
+        evalAtXforYy2 = (high_precision)other_pt.get(VERTICAL);
+        
+        evalAtXforYdx = evalAtXforYx2 - evalAtXforYx1;
+        evalAtXforYdy = evalAtXforYy2 - evalAtXforYy1;
+        evalAtXforYret = ((evalAtXforYdx1) * evalAtXforYdy / evalAtXforYdx + evalAtXforYy1);
+        return evalAtXforYret;
+      }
+    };
 
     static inline bool is_vertical(const half_edge& he) {
       return he.first.get(HORIZONTAL) == he.second.get(HORIZONTAL);
@@ -202,17 +239,25 @@ namespace boost { namespace polygon{
     private:
       Unit *x_; //x value at which to apply comparison
       int *justBefore_;
+      evalAtXforYPack * pack_;
     public:
-      inline less_half_edge() : x_(0), justBefore_(0) {}
-      inline less_half_edge(Unit *x, int *justBefore) : x_(x), justBefore_(justBefore) {}
-      inline less_half_edge(const less_half_edge& that) : x_(that.x_), justBefore_(that.justBefore_) {}
-      inline less_half_edge& operator=(const less_half_edge& that) { x_ = that.x_; justBefore_ = that.justBefore_; return *this; }
+      inline less_half_edge() : x_(0), justBefore_(0), pack_(0) {}
+      inline less_half_edge(Unit *x, int *justBefore, evalAtXforYPack * packIn) : x_(x), justBefore_(justBefore), pack_(packIn) {}
+      inline less_half_edge(const less_half_edge& that) : x_(that.x_), justBefore_(that.justBefore_),
+                                                          pack_(that.pack_){}
+      inline less_half_edge& operator=(const less_half_edge& that) { 
+        x_ = that.x_; 
+        justBefore_ = that.justBefore_; 
+        pack_ = that.pack_; 
+        return *this; }
       inline bool operator () (const half_edge& elm1, const half_edge& elm2) const {
-        //Unit y1 = evalAtXforY(*x_ + !*justBefore_, elm1.first, elm1.second);
-        //Unit y2 = evalAtXforY(*x_ + !*justBefore_, elm2.first, elm2.second);
+        if(std::max(elm1.first.y(), elm1.second.y()) < std::min(elm2.first.y(), elm2.second.y()))
+          return true;
+        if(std::min(elm1.first.y(), elm1.second.y()) > std::max(elm2.first.y(), elm2.second.y()))
+          return false;
         typedef typename high_precision_type<Unit>::type high_precision;
-        high_precision y1 = evalAtXforY(*x_, elm1.first, elm1.second);
-        high_precision y2 = evalAtXforY(*x_, elm2.first, elm2.second);
+        high_precision y1 = pack_->evalAtXforY(*x_, elm1.first, elm1.second);
+        high_precision y2 = pack_->evalAtXforY(*x_, elm2.first, elm2.second);
         if(y1 < y2) return true;
         if(y1 == y2) {
           //if justBefore is true we invert the result of the comparison of slopes
@@ -337,6 +382,83 @@ namespace boost { namespace polygon{
       return q + r;
     }
 
+    struct compute_intersection_pack {
+      typedef typename high_precision_type<Unit>::type high_precision;
+      high_precision y_high, dx1, dy1, dx2, dy2, x11, x21, y11, y21, x_num, y_num, x_den, y_den, x, y;
+      inline bool compute_intersection(Point& intersection, const half_edge& he1, const half_edge& he2) {
+        typedef rectangle_data<Unit> Rectangle;
+        Rectangle rect1, rect2;
+        set_points(rect1, he1.first, he1.second);
+        set_points(rect2, he2.first, he2.second);
+        if(!::boost::polygon::intersects(rect1, rect2, true)) return false;
+        if(is_vertical(he1)) {
+          if(is_vertical(he2)) return false;
+          y_high = evalAtXforY(he1.first.get(HORIZONTAL), he2.first, he2.second);
+          Unit y = convert_high_precision_type<Unit>(y_high);
+          if(y_high < (high_precision)y) --y;
+          if(contains(rect1.get(VERTICAL), y, true)) {
+            intersection = Point(he1.first.get(HORIZONTAL), y);
+            return true;
+          } else {
+            return false;
+          }
+        } else if(is_vertical(he2)) {
+          y_high = evalAtXforY(he2.first.get(HORIZONTAL), he1.first, he1.second);
+          Unit y = convert_high_precision_type<Unit>(y_high);
+          if(y_high < (high_precision)y) --y;
+          if(contains(rect2.get(VERTICAL), y, true)) {
+            intersection = Point(he2.first.get(HORIZONTAL), y);
+            return true;
+          } else {
+            return false;
+          }
+        }
+        //the bounding boxes of the two line segments intersect, so we check closer to find the intersection point
+        dy2 = (high_precision)(he2.second.get(VERTICAL)) - 
+          (high_precision)(he2.first.get(VERTICAL));
+        dy1 = (high_precision)(he1.second.get(VERTICAL)) - 
+          (high_precision)(he1.first.get(VERTICAL));
+        dx2 = (high_precision)(he2.second.get(HORIZONTAL)) - 
+          (high_precision)(he2.first.get(HORIZONTAL));
+        dx1 = (high_precision)(he1.second.get(HORIZONTAL)) - 
+          (high_precision)(he1.first.get(HORIZONTAL));
+        if(equal_slope_hp(dx1, dy1, dx2, dy2)) return false;
+        //the line segments have different slopes
+        //we can assume that the line segments are not vertical because such an intersection is handled elsewhere
+        x11 = (high_precision)(he1.first.get(HORIZONTAL));
+        x21 = (high_precision)(he2.first.get(HORIZONTAL));
+        y11 = (high_precision)(he1.first.get(VERTICAL));
+        y21 = (high_precision)(he2.first.get(VERTICAL));
+        //Unit exp_x = ((at)x11 * (at)dy1 * (at)dx2 - (at)x21 * (at)dy2 * (at)dx1 + (at)y21 * (at)dx1 * (at)dx2 - (at)y11 * (at)dx1 * (at)dx2) / ((at)dy1 * (at)dx2 - (at)dy2 * (at)dx1);
+        //Unit exp_y = ((at)y11 * (at)dx1 * (at)dy2 - (at)y21 * (at)dx2 * (at)dy1 + (at)x21 * (at)dy1 * (at)dy2 - (at)x11 * (at)dy1 * (at)dy2) / ((at)dx1 * (at)dy2 - (at)dx2 * (at)dy1);
+        x_num = (x11 * dy1 * dx2 - x21 * dy2 * dx1 + y21 * dx1 * dx2 - y11 * dx1 * dx2); 
+        x_den = (dy1 * dx2 - dy2 * dx1);
+        y_num = (y11 * dx1 * dy2 - y21 * dx2 * dy1 + x21 * dy1 * dy2 - x11 * dy1 * dy2);
+        y_den = (dx1 * dy2 - dx2 * dy1);
+        x = x_num / x_den;
+        y = y_num / y_den;
+        //std::cout << "cross1 " << dy1 << " " << dx2 << " " << dy1 * dx2 << std::endl;
+        //std::cout << "cross2 " << dy2 << " " << dx1 << " " << dy2 * dx1 << std::endl;
+        //Unit exp_x = compute_x_intercept<at>(x11, x21, y11, y21, dy1, dy2, dx1, dx2);
+        //Unit exp_y = compute_x_intercept<at>(y11, y21, x11, x21, dx1, dx2, dy1, dy2);
+        Unit x_unit = convert_high_precision_type<Unit>(x);
+        Unit y_unit = convert_high_precision_type<Unit>(y);
+        //truncate downward if it went up due to negative number
+        if(x < (high_precision)x_unit) --x_unit;
+        if(y < (high_precision)y_unit) --y_unit;
+        //if(x != exp_x || y != exp_y)
+        //  std::cout << exp_x << " " << exp_y << " " << x << " " << y << std::endl;
+        //Unit y1 = evalAtXforY(exp_x, he1.first, he1.second);
+        //Unit y2 = evalAtXforY(exp_x, he2.first, he2.second);
+        //std::cout << exp_x << " " << exp_y << " " << y1 << " " << y2 << std::endl;
+        Point result(x_unit, y_unit);
+        if(!contains(rect1, result, true)) return false;
+        if(!contains(rect2, result, true)) return false;
+        intersection = result;
+        return true;
+      }
+    };
+
     static inline bool compute_intersection(Point& intersection, const half_edge& he1, const half_edge& he2) {
       typedef typename high_precision_type<Unit>::type high_precision;
       typedef rectangle_data<Unit> Rectangle;
@@ -347,7 +469,7 @@ namespace boost { namespace polygon{
       if(is_vertical(he1)) {
         if(is_vertical(he2)) return false;
         high_precision y_high = evalAtXforY(he1.first.get(HORIZONTAL), he2.first, he2.second);
-        Unit y = (Unit)y_high;
+        Unit y = convert_high_precision_type<Unit>(y_high);
         if(y_high < (high_precision)y) --y;
         if(contains(rect1.get(VERTICAL), y, true)) {
           intersection = Point(he1.first.get(HORIZONTAL), y);
@@ -357,7 +479,7 @@ namespace boost { namespace polygon{
         }
       } else if(is_vertical(he2)) {
         high_precision y_high = evalAtXforY(he2.first.get(HORIZONTAL), he1.first, he1.second);
-        Unit y = (Unit)y_high;
+        Unit y = convert_high_precision_type<Unit>(y_high);
         if(y_high < (high_precision)y) --y;
         if(contains(rect2.get(VERTICAL), y, true)) {
           intersection = Point(he2.first.get(HORIZONTAL), y);
@@ -375,7 +497,7 @@ namespace boost { namespace polygon{
         (high_precision)(he2.first.get(HORIZONTAL));
       high_precision dx1 = (high_precision)(he1.second.get(HORIZONTAL)) - 
         (high_precision)(he1.first.get(HORIZONTAL));
-      if(equal_slope(dx1, dy1, dx2, dy2)) return false;
+      if(equal_slope_hp(dx1, dy1, dx2, dy2)) return false;
       //the line segments have different slopes
       //we can assume that the line segments are not vertical because such an intersection is handled elsewhere
       high_precision x11 = (high_precision)(he1.first.get(HORIZONTAL));
@@ -394,8 +516,8 @@ namespace boost { namespace polygon{
       //std::cout << "cross2 " << dy2 << " " << dx1 << " " << dy2 * dx1 << std::endl;
       //Unit exp_x = compute_x_intercept<at>(x11, x21, y11, y21, dy1, dy2, dx1, dx2);
       //Unit exp_y = compute_x_intercept<at>(y11, y21, x11, x21, dx1, dx2, dy1, dy2);
-      Unit x_unit = (Unit)x;
-      Unit y_unit = (Unit)y;
+      Unit x_unit = convert_high_precision_type<Unit>(x);
+      Unit y_unit = convert_high_precision_type<Unit>(y);
       //truncate downward if it went up due to negative number
       if(x < (high_precision)x_unit) --x_unit;
       if(y < (high_precision)y_unit) --y_unit;
@@ -1452,7 +1574,7 @@ namespace boost { namespace polygon{
               //we need to handle the hole now and not at the next input vertex
               active_tail_arbitrary* at = iter->second;
               high_precision precise_y = iter->first.evalAtX(x_);
-              Unit fracture_y = (Unit)(precise_y);
+              Unit fracture_y = convert_high_precision_type<Unit>(precise_y);
               if(precise_y < fracture_y) --fracture_y;
               Point point(x_, fracture_y);
               verticalTail->getOtherActiveTail()->pushPoint(point);
@@ -1993,7 +2115,7 @@ namespace boost { namespace polygon{
                                  iterator previter) {
       active_tail_arbitrary* iterTail = (*previter).second;
       Point prevPoint(polygon_arbitrary_formation<Unit>::x_, 
-                      (Unit)previter->first.evalAtX(polygon_arbitrary_formation<Unit>::x_));
+                      convert_high_precision_type<Unit>(previter->first.evalAtX(polygon_arbitrary_formation<Unit>::x_)));
       iterTail->pushPoint(prevPoint);
       std::pair<active_tail_arbitrary*, active_tail_arbitrary*> tailPair = 
         active_tail_arbitrary::createActiveTailsAsPair(prevPoint, true, 0, false);
@@ -2421,7 +2543,8 @@ namespace boost { namespace polygon{
             currentIter->pt.y() > (*iter).first.evalAtX(polygon_arbitrary_formation<Unit>::x_))) {
           //splice vertical pair into edge above
           active_tail_arbitrary* tailabove = (*iter).second;
-          Point point(polygon_arbitrary_formation<Unit>::x_, (Unit)(*iter).first.evalAtX(polygon_arbitrary_formation<Unit>::x_));
+          Point point(polygon_arbitrary_formation<Unit>::x_,
+                      convert_high_precision_type<Unit>((*iter).first.evalAtX(polygon_arbitrary_formation<Unit>::x_)));
           verticalPair.second->pushPoint(point);
           active_tail_arbitrary::joinChains(point, tailabove, verticalPair.first, true, output);
           (*iter).second = verticalPair.second;

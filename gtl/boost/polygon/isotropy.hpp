@@ -40,6 +40,8 @@
 typedef long long polygon_long_long_type;
 typedef unsigned long long polygon_ulong_long_type;
 #endif
+#include <boost/mpl/size_t.hpp>
+#include <boost/mpl/protect.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
@@ -141,6 +143,11 @@ namespace boost { namespace polygon{
   template <typename T>
   struct high_precision_type {
     typedef long double type;
+  };
+
+  template <typename T>
+  T convert_high_precision_type(const typename high_precision_type<T>::type& v) {
+    return T(v);
   };
 
   template <>

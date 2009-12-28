@@ -7,7 +7,9 @@
 */
 #ifndef BOOST_POLYGON_SCAN_ARBITRARY_HPP
 #define BOOST_POLYGON_SCAN_ARBITRARY_HPP
+#ifdef BOOST_POLYGON_DEBUG_FILE
 #include <fstream>
+#endif
 namespace boost { namespace polygon{
 
   template <typename Unit>
@@ -63,11 +65,85 @@ namespace boost { namespace polygon{
         return lp(pt, pt2) && lp(pt1, pt);
       return lp(pt, pt1) && lp(pt2, pt);
     }
-    
+
+    template <typename iT>
+    static inline void compute_histogram_in_y(iT begin, iT end, int size, std::vector<std::pair<Unit, std::size_t> >& histogram) {
+      std::vector<std::pair<Unit, int> > ends;
+      ends.reserve(size * 2);
+      for(iT itr = begin ; itr != end; ++itr) {
+        int count = (*itr).first.first.y() < (*itr).first.second.y() ? 1 : -1;
+        ends.push_back(std::make_pair((*itr).first.first.y(), count));
+        ends.push_back(std::make_pair((*itr).first.second.y(), -count));
+      }
+      std::sort(ends.begin(), ends.end());
+      histogram.reserve(ends.size());
+      histogram.push_back(std::make_pair(ends.front().first, 0));
+      for(typename std::vector<std::pair<Unit, int> >::iterator itr = ends.begin(); itr != ends.end(); ++itr) {
+        if((*itr).first != histogram.back().first) {
+          histogram.push_back(std::make_pair((*itr).first, histogram.back().second));
+        }
+        histogram.back().second += (*itr).second;
+      }
+    }
+
+    template <typename iT>
+    static inline void compute_y_cuts(std::vector<Unit>& y_cuts, iT begin, iT end, std::size_t size) {
+      if(begin == end) return;
+      if(size < 10) return;
+      std::size_t min_cut = size;
+      iT cut = begin;
+      std::size_t position = 0;
+      std::size_t cut_size = 0;
+      for(iT itr = begin; itr != end; ++itr, ++position) {
+        if(position < size / 3)
+          continue;
+        if(size - position < size / 3) break;
+        if((*itr).second < min_cut) {
+          cut = itr;
+          min_cut = (*cut).second;
+          cut_size = position;
+        }
+      }
+      if(cut_size == 0 || (*cut).second > size / 3) 
+        return;
+      compute_y_cuts(y_cuts, begin, cut, cut_size);
+      y_cuts.push_back((*cut).first);
+      compute_y_cuts(y_cuts, cut, end, size - cut_size);
+    }
+
+    template <typename iT>
+    static inline void validate_scan_divide_and_conquer(std::vector<std::set<Point> >& intersection_points,
+                                                        iT begin, iT end) {
+      std::vector<std::pair<Unit, std::size_t> > histogram;
+      compute_histogram_in_y(begin, end, std::distance(begin, end), histogram);
+      std::vector<Unit> y_cuts;
+      compute_y_cuts(y_cuts, histogram.begin(), histogram.end(), histogram.size());
+      std::map<Unit, std::vector<std::pair<half_edge, segment_id> > > bins;
+      bins[histogram.front().first] = std::vector<std::pair<half_edge, segment_id> >();
+      for(typename std::vector<Unit>::iterator itr = y_cuts.begin(); itr != y_cuts.end(); ++itr) {
+        bins[*itr] = std::vector<std::pair<half_edge, segment_id> >();
+      }
+      for(iT itr = begin; itr != end; ++itr) {
+        typename std::map<Unit, std::vector<std::pair<half_edge, segment_id> > >::iterator lb = 
+          bins.lower_bound(std::min((*itr).first.first.y(), (*itr).first.second.y()));
+        if(lb != bins.begin())
+          --lb;
+        typename std::map<Unit, std::vector<std::pair<half_edge, segment_id> > >::iterator ub = 
+          bins.upper_bound(std::max((*itr).first.first.y(), (*itr).first.second.y()));
+        for( ; lb != ub; ++lb) {
+          (*lb).second.push_back(*itr);
+        }
+      }
+      validate_scan(intersection_points, bins[histogram.front().first].begin(), bins[histogram.front().first].end());
+      for(typename std::vector<Unit>::iterator itr = y_cuts.begin(); itr != y_cuts.end(); ++itr) {
+        validate_scan(intersection_points, bins[*itr].begin(), bins[*itr].end());
+      }
+    }
+
     //quadratic algorithm to do same work as optimal scan for cross checking
     //assume sorted input
     template <typename iT>
-    static inline void validate_scan(std::map<segment_id, std::set<Point> >& intersection_points,
+    static inline void validate_scan(std::vector<std::set<Point> >& intersection_points,
                                      iT begin, iT end) {
       std::set<Point> pts;
       std::vector<std::pair<half_edge, segment_id> > data(begin, end);
@@ -76,6 +152,7 @@ namespace boost { namespace polygon{
           std::swap(data[i].first.first, data[i].first.second);
         }
       }
+      typename scanline_base<Unit>::compute_intersection_pack pack_;
       std::sort(data.begin(), data.end());
       //find all intersection points
       for(typename std::vector<std::pair<half_edge, segment_id> >::iterator outer = data.begin();
@@ -94,7 +171,7 @@ namespace boost { namespace polygon{
                         he1.first.get(HORIZONTAL)))
             break;
           Point intersection;
-          if(compute_intersection(intersection, he1, he2)) {
+          if(pack_.compute_intersection(intersection, he1, he2)) {
             //their intersection point
             pts.insert(intersection);
           } 
@@ -155,8 +232,9 @@ namespace boost { namespace polygon{
     template <typename iT>
     static inline void validate_scan(std::vector<std::pair<half_edge, int> >& output_segments,
                                      iT begin, iT end) {
-      std::map<segment_id, std::set<Point> > intersection_points;
-      validate_scan(intersection_points, begin, end);
+      std::vector<std::set<Point> > intersection_points(std::distance(begin, end));
+      validate_scan_divide_and_conquer(intersection_points, begin, end);
+      //validate_scan(intersection_points, begin, end);
       segment_intersections(output_segments, intersection_points, begin, end);
     }
 
@@ -223,7 +301,7 @@ namespace boost { namespace polygon{
 
     template <typename iT>
     static inline void segment_intersections(std::vector<std::pair<half_edge, int> >& output_segments,
-                                             std::map<segment_id, std::set<Point> >& intersection_points,
+                                             std::vector<std::set<Point> >& intersection_points,
                                              iT begin, iT end) {
       for(iT iter = begin; iter != end; ++iter) {
         //less_point lp;
@@ -527,14 +605,14 @@ namespace boost { namespace polygon{
         return false;
       }
       input.pop_back();
-      input.push_back(std::make_pair(half_edge(Point(1, 0), Point(11, 11)), 3));
+      input.push_back(std::make_pair(half_edge(Point(1, 0), Point(11, 11)), input.size()));
       edges.clear();
       validate_scan(edges, input.begin(), input.end());
       if(!verify_scan(result, edges.begin(), edges.end())) {
         stdcout << "s fail3 " << result.first << " " << result.second << "\n";
         return false;
       }
-      input.push_back(std::make_pair(half_edge(Point(1, 0), Point(10, 11)), 4));
+      input.push_back(std::make_pair(half_edge(Point(1, 0), Point(10, 11)), input.size()));
       edges.clear();
       validate_scan(edges, input.begin(), input.end());
       if(!verify_scan(result, edges.begin(), edges.end())) {
@@ -542,14 +620,14 @@ namespace boost { namespace polygon{
         return false;
       }
       input.pop_back();
-      input.push_back(std::make_pair(half_edge(Point(1, 2), Point(11, 11)), 5));
+      input.push_back(std::make_pair(half_edge(Point(1, 2), Point(11, 11)), input.size()));
       edges.clear();
       validate_scan(edges, input.begin(), input.end());
       if(!verify_scan(result, edges.begin(), edges.end())) {
         stdcout << "s fail5 " << result.first << " " << result.second << "\n";
         return false;
       }
-      input.push_back(std::make_pair(half_edge(Point(0, 5), Point(0, 11)), 6));
+      input.push_back(std::make_pair(half_edge(Point(0, 5), Point(0, 11)), input.size()));
       edges.clear();
       validate_scan(edges, input.begin(), input.end());
       if(!verify_scan(result, edges.begin(), edges.end())) {
@@ -776,23 +854,23 @@ namespace boost { namespace polygon{
         return false;
       }
       edges.pop_back();
-      edges.push_back(std::make_pair(half_edge(Point(1, 0), Point(11, 11)), 3));
+      edges.push_back(std::make_pair(half_edge(Point(1, 0), Point(11, 11)), edges.size()));
       if(!verify_scan(result, edges.begin(), edges.end())) {
         stdcout << "fail3\n";
         return false;
       }
-      edges.push_back(std::make_pair(half_edge(Point(1, 0), Point(10, 11)), 4));
+      edges.push_back(std::make_pair(half_edge(Point(1, 0), Point(10, 11)), edges.size()));
       if(verify_scan(result, edges.begin(), edges.end())) {
         stdcout << "fail4\n";
         return false;
       }
       edges.pop_back();
-      edges.push_back(std::make_pair(half_edge(Point(1, 2), Point(11, 11)), 5));
+      edges.push_back(std::make_pair(half_edge(Point(1, 2), Point(11, 11)), edges.size()));
       if(!verify_scan(result, edges.begin(), edges.end())) {
         stdcout << "fail5 " << result.first << " " << result.second << "\n";
         return false;
       }
-      edges.push_back(std::make_pair(half_edge(Point(0, 5), Point(0, 11)), 6));
+      edges.push_back(std::make_pair(half_edge(Point(0, 5), Point(0, 11)), edges.size()));
       if(verify_scan(result, edges.begin(), edges.end())) {
         stdcout << "fail6 " << result.first << " " << result.second << "\n";
         return false;
@@ -866,10 +944,11 @@ namespace boost { namespace polygon{
     Unit x_;
     Unit y_;
     int just_before_;
+    typename scanline_base<Unit>::evalAtXforYPack evalAtXforYPack_;
   public:
     inline scanline() : scan_data_(), removal_set_(), insertion_set_(), end_point_queue_(), 
                         x_((std::numeric_limits<Unit>::max)()), y_((std::numeric_limits<Unit>::max)()), just_before_(false) {
-      less_half_edge lessElm(&x_, &just_before_);
+      less_half_edge lessElm(&x_, &just_before_, &evalAtXforYPack_);
       scan_data_ = scanline_type(lessElm);
     }
     inline scanline(const scanline& that) : scan_data_(), removal_set_(), insertion_set_(), end_point_queue_(), 
@@ -921,11 +1000,11 @@ namespace boost { namespace polygon{
 #pragma warning( disable: 4127 )
 #endif
       while(true) {
-        if(begin == end || (!first_iteration && (high_precision)(((*begin).first.first.get(VERTICAL)) != y || 
+        if(begin == end || (!first_iteration && ((high_precision)((*begin).first.first.get(VERTICAL)) != y || 
                                                                  (*begin).first.first.get(HORIZONTAL) != x_))) {
           //lookup iterator range in scanline for elements coming in from the left
           //that end at this y
-          Point pt(x_, (Unit)y);
+          Point pt(x_, convert_high_precision_type<Unit>(y));
           //grab the properties coming in from below
           property_map properties_below;
           if(current_iter != scan_data_.end()) {
@@ -1384,25 +1463,28 @@ namespace boost { namespace polygon{
     typedef std::pair<half_edge, property_map> vertex_data;
 
     property_merge_data pmd;
+    typename scanline_base<Unit>::evalAtXforYPack evalAtXforYPack_;
 
     template<typename vertex_data_type>
     class less_vertex_data {
+      typename scanline_base<Unit>::evalAtXforYPack* pack_;
     public:
       less_vertex_data() {}
+      less_vertex_data(typename scanline_base<Unit>::evalAtXforYPack* pack) : pack_(pack) {}
       bool operator()(const vertex_data_type& lvalue, const vertex_data_type& rvalue) {
         less_point lp;
         if(lp(lvalue.first.first, rvalue.first.first)) return true;
         if(lp(rvalue.first.first, lvalue.first.first)) return false;
         Unit x = lvalue.first.first.get(HORIZONTAL);
         int just_before_ = 0;
-        less_half_edge lhe(&x, &just_before_);
+        less_half_edge lhe(&x, &just_before_, pack_);
         return lhe(lvalue.first, rvalue.first);
       }
     };
 
 
     inline void sort_property_merge_data() {
-      less_vertex_data<vertex_property> lvd;
+      less_vertex_data<vertex_property> lvd(&evalAtXforYPack_);
       std::sort(pmd.begin(), pmd.end(), lvd);
     }
   public:
@@ -2380,18 +2462,21 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
     typedef std::pair<half_edge, property_map> vertex_data;
 
     property_merge_data pmd;
+    typename scanline_base<Unit>::evalAtXforYPack evalAtXforYPack_;
 
     template<typename vertex_data_type>
     class less_vertex_data {
+      typename scanline_base<Unit>::evalAtXforYPack* pack_;
     public:
       less_vertex_data() {}
+      less_vertex_data(typename scanline_base<Unit>::evalAtXforYPack* pack) : pack_(pack) {}
       bool operator()(const vertex_data_type& lvalue, const vertex_data_type& rvalue) {
         less_point lp;
         if(lp(lvalue.first.first, rvalue.first.first)) return true;
         if(lp(rvalue.first.first, lvalue.first.first)) return false;
         Unit x = lvalue.first.first.get(HORIZONTAL);
         int just_before_ = 0;
-        less_half_edge lhe(&x, &just_before_);
+        less_half_edge lhe(&x, &just_before_, pack_);
         return lhe(lvalue.first, rvalue.first);
       }
     };
@@ -2450,7 +2535,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
     };
 
     inline void sort_property_merge_data() {
-      less_vertex_data<vertex_property> lvd;
+      less_vertex_data<vertex_property> lvd(&evalAtXforYPack_);
       std::sort(pmd.begin(), pmd.end(), lvd);
     }
   public:
@@ -2593,18 +2678,21 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
     typedef std::pair<half_edge, property_map> vertex_data;
 
     property_merge_data pmd;
+    typename scanline_base<Unit>::evalAtXforYPack evalAtXforYPack_;
 
     template<typename vertex_data_type>
     class less_vertex_data {
+      typename scanline_base<Unit>::evalAtXforYPack* pack_;
     public:
       less_vertex_data() {}
+      less_vertex_data(typename scanline_base<Unit>::evalAtXforYPack* pack) : pack_(pack) {}
       bool operator()(const vertex_data_type& lvalue, const vertex_data_type& rvalue) {
         less_point lp;
         if(lp(lvalue.first.first, rvalue.first.first)) return true;
         if(lp(rvalue.first.first, lvalue.first.first)) return false;
         Unit x = lvalue.first.first.get(HORIZONTAL);
         int just_before_ = 0;
-        less_half_edge lhe(&x, &just_before_);
+        less_half_edge lhe(&x, &just_before_, pack_);
         return lhe(lvalue.first, rvalue.first);
       }
     };
@@ -2669,7 +2757,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
     };
 
     inline void sort_property_merge_data() {
-      less_vertex_data<vertex_property> lvd;
+      less_vertex_data<vertex_property> lvd(&evalAtXforYPack_);
       std::sort(pmd.begin(), pmd.end(), lvd);
     }
   public:

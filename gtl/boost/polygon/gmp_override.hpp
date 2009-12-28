@@ -111,9 +111,16 @@ namespace boost { namespace polygon {
   
   template <>
   struct high_precision_type<int> {
-    typedef gmp_int type;
+    typedef mpq_class type;
   };
 
+  template <>
+  int convert_high_precision_type<int>(const mpq_class& v) {
+    mpz_class num = v.get_num();
+    mpz_class den = v.get_den();
+    num /= den;
+    return num.get_si(); 
+  };
 
 }
 }
