@@ -11,12 +11,10 @@
 #define BOOST_GRAPH_MCGREGOR_COMMON_SUBGRAPHS_HPP
 
 #include <algorithm>
-#include <map>
-#include <stack>
-#include <set>
 #include <vector>
+#include <stack>
 
-#include <boost/bind.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/graph_utility.hpp>
@@ -28,8 +26,8 @@ namespace boost {
 
   namespace detail {
 
-    // Traits associated with common subgraphs, used mainly to
-    // keep a consistent type for the correspondence maps.   
+    // Traits associated with common subgraphs, used mainly to keep a
+    // consistent type for the correspondence maps.
     template <typename GraphFirst,
               typename GraphSecond,
               typename VertexIndexMapFirst,
@@ -39,18 +37,18 @@ namespace boost {
       typedef typename graph_traits<GraphSecond>::vertex_descriptor vertex_second_type;
       
       typedef shared_array_property_map<vertex_second_type, VertexIndexMapFirst>
-      correspondence_map_first_to_second_type;
+        correspondence_map_first_to_second_type;
   
       typedef shared_array_property_map<vertex_first_type, VertexIndexMapSecond>
-      correspondence_map_second_to_first_type;
+        correspondence_map_second_to_first_type;
     };  
 
   } // namespace detail
 
   // ==========================================================================
 
-  // Binary function object that returns true if the values for
-  // vertex1 in property_map1 and vertex2 in property_map2 are equivalent.
+  // Binary function object that returns true if the values for item1
+  // in property_map1 and item2 in property_map2 are equivalent.
   template <typename PropertyMapFirst,
             typename PropertyMapSecond>
   struct property_map_equivalent {
@@ -60,10 +58,10 @@ namespace boost {
       m_property_map1(property_map1),
       m_property_map2(property_map2) { }
 
-    template <typename VertexFirst,
-              typename VertexSecond>
-    bool operator()(const VertexFirst vertex1, const VertexSecond vertex2) {
-      return (get(m_property_map1, vertex1) == get(m_property_map2, vertex2));
+    template <typename ItemFirst,
+              typename ItemSecond>
+    bool operator()(const ItemFirst item1, const ItemSecond item2) {
+      return (get(m_property_map1, item1) == get(m_property_map2, item2));
     }
   
   private:
@@ -85,13 +83,13 @@ namespace boost {
             (property_map1, property_map2));
   }
 
-  // Binary function object that always returns true.  Used when vertices
-  // or edges are always equivalent (i.e. have no labels).
+  // Binary function object that always returns true.  Used when
+  // vertices or edges are always equivalent (i.e. have no labels).
   struct always_equivalent {
   
     template <typename ItemFirst,
               typename ItemSecond>
-    bool operator()(const ItemFirst& item1, const ItemSecond& item2) {
+    bool operator()(const ItemFirst&, const ItemSecond&) {
       return (true);
     }
   };
@@ -100,10 +98,11 @@ namespace boost {
 
   namespace detail {
 
-    // Return true if new_vertex1 and new_vertex2 can extend the subgraph
-    // represented by correspondence_map_1_to_2 and correspondence_map_2_to_1.
-    // The vertices_equivalent and edges_equivalent predicates are used to
-    // test vertex and edge equivalency between the two graphs.
+    // Return true if new_vertex1 and new_vertex2 can extend the
+    // subgraph represented by correspondence_map_1_to_2 and
+    // correspondence_map_2_to_1.  The vertices_equivalent and
+    // edges_equivalent predicates are used to test vertex and edge
+    // equivalency between the two graphs.
     template <typename GraphFirst,
               typename GraphSecond,
               typename CorrespondenceMapFirstToSecond,
@@ -114,12 +113,13 @@ namespace boost {
     (const GraphFirst& graph1,
      const GraphSecond& graph2,
      CorrespondenceMapFirstToSecond correspondence_map_1_to_2,
-     CorrespondenceMapSecondToFirst correspondence_map_2_to_1,
+     CorrespondenceMapSecondToFirst /*correspondence_map_2_to_1*/,
      typename graph_traits<GraphFirst>::vertices_size_type subgraph_size,
      typename graph_traits<GraphFirst>::vertex_descriptor new_vertex1,
      typename graph_traits<GraphSecond>::vertex_descriptor new_vertex2,
      EdgeEquivalencePredicate edges_equivalent,
-     VertexEquivalencePredicate vertices_equivalent)
+     VertexEquivalencePredicate vertices_equivalent,
+     bool only_connected_subgraphs)
     {
       typedef typename graph_traits<GraphFirst>::vertex_descriptor VertexFirst;
       typedef typename graph_traits<GraphSecond>::vertex_descriptor VertexSecond;
@@ -149,8 +149,8 @@ namespace boost {
           continue;
         }
 
-        // NOTE: This will not work with parallel edges, since the first
-        // matching edge is always chosen.
+        // NOTE: This will not work with parallel edges, since the
+        // first matching edge is always chosen.
         EdgeFirst edge_to_new1, edge_from_new1;
         bool edge_to_new_exists1 = false, edge_from_new_exists1 = false;
         
@@ -239,7 +239,7 @@ namespace boost {
       } // BGL_FORALL_VERTICES_T
 
       // Make sure new vertices are connected to the existing subgraph
-      if (!has_one_edge) {
+      if (only_connected_subgraphs && !has_one_edge) {
         return (false);
       }
 
@@ -248,11 +248,12 @@ namespace boost {
 
     // Recursive method that does a depth-first search in the space of
     // potential subgraphs.  At each level, every new vertex pair from
-    // both graphs is tested to see if it can extend the current subgraph.
-    // If so, the subgraph is output to subgraph_callback in the form
-    // of two correspondence maps (one for each graph).
-    // Returning false from subgraph_callback will terminate the search.
-    // Function returns true if the entire search space was explored.
+    // both graphs is tested to see if it can extend the current
+    // subgraph.  If so, the subgraph is output to subgraph_callback
+    // in the form of two correspondence maps (one for each graph).
+    // Returning false from subgraph_callback will terminate the
+    // search.  Function returns true if the entire search space was
+    // explored.
     template <typename GraphFirst,
               typename GraphSecond,
               typename VertexIndexMapFirst,
@@ -273,6 +274,7 @@ namespace boost {
      VertexStackFirst& vertex_stack1,
      EdgeEquivalencePredicate edges_equivalent,
      VertexEquivalencePredicate vertices_equivalent,
+     bool only_connected_subgraphs,
      SubGraphInternalCallback subgraph_callback)
     {
       typedef typename graph_traits<GraphFirst>::vertex_descriptor VertexFirst;
@@ -314,7 +316,8 @@ namespace boost {
                                correspondence_map_1_to_2, correspondence_map_2_to_1,
                                (VertexSizeFirst)vertex_stack1.size(),
                                new_vertex1, new_vertex2,
-                               edges_equivalent, vertices_equivalent)) {
+                               edges_equivalent, vertices_equivalent,
+                               only_connected_subgraphs)) {
 
             // Keep track of old graph size for restoring later
             VertexSizeFirst old_graph_size = (VertexSizeFirst)vertex_stack1.size(),
@@ -344,7 +347,7 @@ namespace boost {
                correspondence_map_1_to_2, correspondence_map_2_to_1,
                vertex_stack1,
                edges_equivalent, vertices_equivalent,
-               subgraph_callback);
+               only_connected_subgraphs, subgraph_callback);
 
             if (!continue_iteration) {
               return (false);
@@ -365,7 +368,7 @@ namespace boost {
                   graph_traits<GraphFirst>::null_vertex());
                   
               vertex_stack1.pop();
-            }
+           }
 
           } // if can_extend_graph
 
@@ -382,8 +385,8 @@ namespace boost {
               typename GraphSecond,
               typename VertexIndexMapFirst,
               typename VertexIndexMapSecond,
-              typename VertexEquivalencePredicate,
               typename EdgeEquivalencePredicate,
+              typename VertexEquivalencePredicate,
               typename SubGraphInternalCallback>
     inline void mcgregor_common_subgraphs_internal_init
     (const GraphFirst& graph1,
@@ -392,6 +395,7 @@ namespace boost {
      const VertexIndexMapSecond vindex_map2,
      EdgeEquivalencePredicate edges_equivalent,
      VertexEquivalencePredicate vertices_equivalent,
+     bool only_connected_subgraphs,
      SubGraphInternalCallback subgraph_callback)
     {
       typedef mcgregor_common_subgraph_traits<GraphFirst,
@@ -425,6 +429,7 @@ namespace boost {
          correspondence_map_1_to_2, correspondence_map_2_to_1,
          vertex_stack1,
          edges_equivalent, vertices_equivalent,
+         only_connected_subgraphs,
          subgraph_callback);
     }
     
@@ -449,6 +454,7 @@ namespace boost {
    const VertexIndexMapSecond vindex_map2,
    EdgeEquivalencePredicate edges_equivalent,
    VertexEquivalencePredicate vertices_equivalent,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback)
   {
       
@@ -456,6 +462,7 @@ namespace boost {
       (graph1, graph2,
        vindex_map1, vindex_map2,
        edges_equivalent, vertices_equivalent,
+       only_connected_subgraphs,
        user_callback);
   }
   
@@ -466,6 +473,7 @@ namespace boost {
   void mcgregor_common_subgraphs
   (const GraphFirst& graph1,
    const GraphSecond& graph2,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback)
   {
       
@@ -473,7 +481,7 @@ namespace boost {
       (graph1, graph2,
        get(vertex_index, graph1), get(vertex_index, graph2),
        always_equivalent(), always_equivalent(),
-       user_callback);
+       only_connected_subgraphs, user_callback);
   }
 
   // Named parameter variant of mcgregor_common_subgraphs
@@ -486,6 +494,7 @@ namespace boost {
   void mcgregor_common_subgraphs
   (const GraphFirst& graph1,
    const GraphSecond& graph2,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback,
    const bgl_named_params<Param, Tag, Rest>& params)
   {
@@ -500,7 +509,7 @@ namespace boost {
                     always_equivalent()),
        choose_param(get_param(params, vertices_equivalent_t()),
                     always_equivalent()),
-       user_callback);
+       only_connected_subgraphs, user_callback);
   }
 
   // ==========================================================================
@@ -508,9 +517,9 @@ namespace boost {
   namespace detail {
 
     // Binary function object that intercepts subgraphs from
-    // mcgregor_common_subgraphs_internal and maintains a cache
-    // of unique subgraphs.  The user callback is invoked for
-    // each unique subgraph.
+    // mcgregor_common_subgraphs_internal and maintains a cache of
+    // unique subgraphs.  The user callback is invoked for each unique
+    // subgraph.
     template <typename GraphFirst,
               typename GraphSecond,
               typename VertexIndexMapFirst,
@@ -518,36 +527,43 @@ namespace boost {
               typename SubGraphCallback>
     struct unique_subgraph_interceptor {
 
+      typedef typename graph_traits<GraphFirst>::vertices_size_type
+        VertexSizeFirst;
+
       typedef mcgregor_common_subgraph_traits<GraphFirst, GraphSecond,
         VertexIndexMapFirst, VertexIndexMapSecond> SubGraphTraits;
         
       typedef typename SubGraphTraits::correspondence_map_first_to_second_type
-        CorrespondenceMapFirstToSecond;
+        CachedCorrespondenceMapFirstToSecond;
 
       typedef typename SubGraphTraits::correspondence_map_second_to_first_type
-        CorrespondenceMapSecondToFirst;
+        CachedCorrespondenceMapSecondToFirst;
 
-      typedef std::pair<std::size_t, std::pair<CorrespondenceMapFirstToSecond,
-                                               CorrespondenceMapSecondToFirst> > SubGraph;
+      typedef std::pair<VertexSizeFirst,
+        std::pair<CachedCorrespondenceMapFirstToSecond,
+                  CachedCorrespondenceMapSecondToFirst> > SubGraph;
                 
       typedef std::vector<SubGraph> SubGraphList;
 
       unique_subgraph_interceptor(const GraphFirst& graph1,
                                   const GraphSecond& graph2,
-                                  const VertexIndexMapFirst& vindex_map1,
-                                  const VertexIndexMapSecond& vindex_map2,
+                                  const VertexIndexMapFirst vindex_map1,
+                                  const VertexIndexMapSecond vindex_map2,
                                   SubGraphCallback user_callback) :                                  
         m_graph1(graph1), m_graph2(graph2),
         m_vindex_map1(vindex_map1), m_vindex_map2(vindex_map2),
+        m_subgraphs(make_shared<SubGraphList>()),
         m_user_callback(user_callback) { }
       
-      bool operator()(CorrespondenceMapFirstToSecond& correspondence_map_1_to_2,
-                      CorrespondenceMapSecondToFirst& correspondence_map_2_to_1,
-                      std::size_t subgraph_size) {
+      template <typename CorrespondenceMapFirstToSecond,
+                typename CorrespondenceMapSecondToFirst>
+      bool operator()(CorrespondenceMapFirstToSecond correspondence_map_1_to_2,
+                      CorrespondenceMapSecondToFirst correspondence_map_2_to_1,
+                      VertexSizeFirst subgraph_size) {
 
         for (typename SubGraphList::const_iterator
-               subgraph_iter = m_subgraphs.begin();
-             subgraph_iter != m_subgraphs.end();
+               subgraph_iter = m_subgraphs->begin();
+             subgraph_iter != m_subgraphs->end();
              ++subgraph_iter) {
 
           SubGraph subgraph_cached = *subgraph_iter;
@@ -557,11 +573,8 @@ namespace boost {
             continue;
           }
           
-          CorrespondenceMapFirstToSecond correspondence_map_1_to_2_cached =
-            subgraph_cached.second.first;
-          
           if (!are_property_maps_different(correspondence_map_1_to_2,
-                                           correspondence_map_1_to_2_cached,
+                                           subgraph_cached.second.first,
                                            m_graph1)) {
                                     
             // New subgraph is a duplicate
@@ -570,18 +583,25 @@ namespace boost {
         }
   
         // Subgraph is unique, so make a cached copy
-        SubGraph new_subgraph = make_pair(subgraph_size,
-          std::make_pair
-          (CorrespondenceMapFirstToSecond(num_vertices(m_graph1), m_vindex_map1),
-           CorrespondenceMapSecondToFirst(num_vertices(m_graph2), m_vindex_map2)));
-          
-        copy_vertex_property(correspondence_map_1_to_2,
-                             new_subgraph.second.first, m_graph1);
+        CachedCorrespondenceMapFirstToSecond
+          new_subgraph_1_to_2 = CachedCorrespondenceMapFirstToSecond
+          (num_vertices(m_graph1), m_vindex_map1);
 
-        copy_vertex_property(correspondence_map_2_to_1,
-                             new_subgraph.second.second, m_graph1);
-        
-        m_subgraphs.push_back(new_subgraph);
+        CachedCorrespondenceMapSecondToFirst
+          new_subgraph_2_to_1 = CorrespondenceMapSecondToFirst
+          (num_vertices(m_graph2), m_vindex_map2);
+
+        BGL_FORALL_VERTICES_T(vertex1, m_graph1, GraphFirst) {
+          put(new_subgraph_1_to_2, vertex1, get(correspondence_map_1_to_2, vertex1));
+        }
+
+        BGL_FORALL_VERTICES_T(vertex2, m_graph2, GraphFirst) {
+          put(new_subgraph_2_to_1, vertex2, get(correspondence_map_2_to_1, vertex2));
+        }
+
+        m_subgraphs->push_back(std::make_pair(subgraph_size,
+          std::make_pair(new_subgraph_1_to_2,
+                         new_subgraph_2_to_1)));
         
         return (m_user_callback(correspondence_map_1_to_2,
                                 correspondence_map_2_to_1,
@@ -593,7 +613,7 @@ namespace boost {
       const GraphFirst& m_graph2;
       const VertexIndexMapFirst m_vindex_map1;
       const VertexIndexMapSecond m_vindex_map2;
-      SubGraphList m_subgraphs;
+      shared_ptr<SubGraphList> m_subgraphs;
       SubGraphCallback m_user_callback;
     };
     
@@ -616,6 +636,7 @@ namespace boost {
    const VertexIndexMapSecond vindex_map2,
    EdgeEquivalencePredicate edges_equivalent,
    VertexEquivalencePredicate vertices_equivalent,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback)
   {
     detail::unique_subgraph_interceptor<GraphFirst, GraphSecond,
@@ -629,23 +650,25 @@ namespace boost {
       (graph1, graph2,
        vindex_map1, vindex_map2,
        edges_equivalent, vertices_equivalent,
-       unique_callback);
+       only_connected_subgraphs, unique_callback);
   }
 
-  // Variant of mcgregor_common_subgraphs_unique with all default parameters
+  // Variant of mcgregor_common_subgraphs_unique with all default
+  // parameters.
   template <typename GraphFirst,
             typename GraphSecond,
             typename SubGraphCallback>
   void mcgregor_common_subgraphs_unique
   (const GraphFirst& graph1,
    const GraphSecond& graph2,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback)
   {
     mcgregor_common_subgraphs_unique
       (graph1, graph2,
        get(vertex_index, graph1), get(vertex_index, graph2),
        always_equivalent(), always_equivalent(),
-       user_callback);
+       only_connected_subgraphs, user_callback);
   }
 
   // Named parameter variant of mcgregor_common_subgraphs_unique
@@ -658,6 +681,7 @@ namespace boost {
   void mcgregor_common_subgraphs_unique
   (const GraphFirst& graph1,
    const GraphSecond& graph2,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback,
    const bgl_named_params<Param, Tag, Rest>& params)
   {
@@ -671,7 +695,7 @@ namespace boost {
                     always_equivalent()),
        choose_param(get_param(params, vertices_equivalent_t()),
                     always_equivalent()),
-       user_callback);
+       only_connected_subgraphs, user_callback);
   }
 
   // ==========================================================================
@@ -679,8 +703,8 @@ namespace boost {
   namespace detail {
 
     // Binary function object that intercepts subgraphs from
-    // mcgregor_common_subgraphs_internal and maintains a cache
-    // of the largest subgraphs.
+    // mcgregor_common_subgraphs_internal and maintains a cache of the
+    // largest subgraphs.
     template <typename GraphFirst,
               typename GraphSecond,
               typename VertexIndexMapFirst,
@@ -688,63 +712,77 @@ namespace boost {
               typename SubGraphCallback>
     struct maximum_subgraph_interceptor {
 
+      typedef typename graph_traits<GraphFirst>::vertices_size_type
+        VertexSizeFirst;
+
       typedef mcgregor_common_subgraph_traits<GraphFirst, GraphSecond,
         VertexIndexMapFirst, VertexIndexMapSecond> SubGraphTraits;
         
       typedef typename SubGraphTraits::correspondence_map_first_to_second_type
-      CorrespondenceMapFirstToSecond;
+        CachedCorrespondenceMapFirstToSecond;
 
       typedef typename SubGraphTraits::correspondence_map_second_to_first_type
-      CorrespondenceMapSecondToFirst;
+        CachedCorrespondenceMapSecondToFirst;
 
-      typedef std::pair<std::size_t,
-                        std::pair<CorrespondenceMapFirstToSecond,
-                                  CorrespondenceMapSecondToFirst> > SubGraph;
-                
+      typedef std::pair<VertexSizeFirst,
+        std::pair<CachedCorrespondenceMapFirstToSecond,
+                  CachedCorrespondenceMapSecondToFirst> > SubGraph;
+
       typedef std::vector<SubGraph> SubGraphList;
 
       maximum_subgraph_interceptor(const GraphFirst& graph1,
                                    const GraphSecond& graph2,
                                    const VertexIndexMapFirst vindex_map1,
                                    const VertexIndexMapSecond vindex_map2,
-                                   SubGraphCallback user_callback) :                                  
+                                   SubGraphCallback user_callback) :
         m_graph1(graph1), m_graph2(graph2),
         m_vindex_map1(vindex_map1), m_vindex_map2(vindex_map2),
-        m_user_callback(user_callback),
-        m_largest_size_so_far(0) { }
-      
-      bool operator()(CorrespondenceMapFirstToSecond& correspondence_map_1_to_2,
-                      CorrespondenceMapSecondToFirst& correspondence_map_2_to_1,
-                      std::size_t subgraph_size) {
+        m_subgraphs(make_shared<SubGraphList>()),
+        m_largest_size_so_far(make_shared<VertexSizeFirst>(0)),
+        m_user_callback(user_callback) { }
 
-        if (subgraph_size > m_largest_size_so_far) {
-          m_subgraphs.clear();
-          m_largest_size_so_far = subgraph_size;
+      template <typename CorrespondenceMapFirstToSecond,
+                typename CorrespondenceMapSecondToFirst>
+      bool operator()(CorrespondenceMapFirstToSecond correspondence_map_1_to_2,
+                      CorrespondenceMapSecondToFirst correspondence_map_2_to_1,
+                      VertexSizeFirst subgraph_size) {
+
+        if (subgraph_size > *m_largest_size_so_far) {
+          m_subgraphs->clear();
+          *m_largest_size_so_far = subgraph_size;
         }
 
-        if (subgraph_size == m_largest_size_so_far) {
+        if (subgraph_size == *m_largest_size_so_far) {
         
           // Make a cached copy
-          SubGraph new_subgraph = make_pair(subgraph_size,
-            std::make_pair(CorrespondenceMapFirstToSecond(num_vertices(m_graph1), m_vindex_map1),
-                           CorrespondenceMapSecondToFirst(num_vertices(m_graph2), m_vindex_map2)));
-            
-          copy_vertex_property(correspondence_map_1_to_2,
-                               new_subgraph.second.first, m_graph1);
-  
-          copy_vertex_property(correspondence_map_2_to_1,
-                               new_subgraph.second.second, m_graph2);
-          
-          m_subgraphs.push_back(new_subgraph);
+          CachedCorrespondenceMapFirstToSecond
+            new_subgraph_1_to_2 = CachedCorrespondenceMapFirstToSecond
+            (num_vertices(m_graph1), m_vindex_map1);
+
+          CachedCorrespondenceMapSecondToFirst
+            new_subgraph_2_to_1 = CachedCorrespondenceMapSecondToFirst
+            (num_vertices(m_graph2), m_vindex_map2);
+
+          BGL_FORALL_VERTICES_T(vertex1, m_graph1, GraphFirst) {
+            put(new_subgraph_1_to_2, vertex1, get(correspondence_map_1_to_2, vertex1));
+          }
+
+          BGL_FORALL_VERTICES_T(vertex2, m_graph2, GraphFirst) {
+            put(new_subgraph_2_to_1, vertex2, get(correspondence_map_2_to_1, vertex2));
+          }
+
+          m_subgraphs->push_back(std::make_pair(subgraph_size,
+            std::make_pair(new_subgraph_1_to_2,
+                           new_subgraph_2_to_1)));
         }
 
         return (true);
       }
 
-      void output_cached_subgraphs() {
+      void output_subgraphs() {
         for (typename SubGraphList::const_iterator
-               subgraph_iter = m_subgraphs.begin();
-             subgraph_iter != m_subgraphs.end();
+               subgraph_iter = m_subgraphs->begin();
+             subgraph_iter != m_subgraphs->end();
              ++subgraph_iter) {
 
           SubGraph subgraph_cached = *subgraph_iter;
@@ -753,15 +791,15 @@ namespace boost {
                           subgraph_cached.first);
         }
       }
-    
+
     private:
       const GraphFirst& m_graph1;
       const GraphFirst& m_graph2;
       const VertexIndexMapFirst m_vindex_map1;
       const VertexIndexMapSecond m_vindex_map2;
-      SubGraphList m_subgraphs;
+      shared_ptr<SubGraphList> m_subgraphs;
+      shared_ptr<VertexSizeFirst> m_largest_size_so_far;
       SubGraphCallback m_user_callback;
-      typename graph_traits<GraphFirst>::vertices_size_type m_largest_size_so_far;
     };
     
   } // namespace detail
@@ -776,13 +814,14 @@ namespace boost {
             typename EdgeEquivalencePredicate,
             typename VertexEquivalencePredicate,
             typename SubGraphCallback>
-  void mcgregor_maximum_common_subgraphs
+  void mcgregor_common_subgraphs_maximum
   (const GraphFirst& graph1,
    const GraphSecond& graph2,
    const VertexIndexMapFirst vindex_map1,
    const VertexIndexMapSecond vindex_map2,
    EdgeEquivalencePredicate edges_equivalent,
    VertexEquivalencePredicate vertices_equivalent,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback)
   {
     detail::maximum_subgraph_interceptor<GraphFirst, GraphSecond,
@@ -794,42 +833,45 @@ namespace boost {
       (graph1, graph2,
        vindex_map1, vindex_map2,
        edges_equivalent, vertices_equivalent,
-       max_interceptor);
+       only_connected_subgraphs, max_interceptor);
 
     // Only output the largest subgraphs
-    max_interceptor.output_cached_subgraphs();
+    max_interceptor.output_subgraphs();
   }
 
-  // Variant of mcgregor_maximum_common_subgraphs with all default parameters
+  // Variant of mcgregor_common_subgraphs_maximum with all default
+  // parameters.
   template <typename GraphFirst,
             typename GraphSecond,
             typename SubGraphCallback>
-  void mcgregor_maximum_common_subgraphs
+  void mcgregor_common_subgraphs_maximum
   (const GraphFirst& graph1,
    const GraphSecond& graph2,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback)
   {
-    mcgregor_maximum_common_subgraphs
+    mcgregor_common_subgraphs_maximum
       (graph1, graph2,
        get(vertex_index, graph1), get(vertex_index, graph2),
        always_equivalent(), always_equivalent(),
-       user_callback);
+       only_connected_subgraphs, user_callback);
   }
 
-  // Named parameter variant of mcgregor_maximum_common_subgraphs
+  // Named parameter variant of mcgregor_common_subgraphs_maximum
   template <typename GraphFirst,
             typename GraphSecond,
             typename SubGraphCallback,
             typename Param,
             typename Tag,
             typename Rest>
-  void mcgregor_maximum_common_subgraphs
+  void mcgregor_common_subgraphs_maximum
   (const GraphFirst& graph1,
    const GraphSecond& graph2,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback,
    const bgl_named_params<Param, Tag, Rest>& params)
   {
-    mcgregor_maximum_common_subgraphs
+    mcgregor_common_subgraphs_maximum
       (graph1, graph2,
        choose_const_pmap(get_param(params, vertex_index1),
                          graph1, vertex_index),
@@ -839,7 +881,7 @@ namespace boost {
                     always_equivalent()),
        choose_param(get_param(params, vertices_equivalent_t()),
                     always_equivalent()),
-       user_callback);
+       only_connected_subgraphs, user_callback);
   }
 
   // ==========================================================================
@@ -847,8 +889,8 @@ namespace boost {
   namespace detail {
 
     // Binary function object that intercepts subgraphs from
-    // mcgregor_common_subgraphs_internal and maintains a cache
-    // of the largest, unique subgraphs.
+    // mcgregor_common_subgraphs_internal and maintains a cache of the
+    // largest, unique subgraphs.
     template <typename GraphFirst,
               typename GraphSecond,
               typename VertexIndexMapFirst,
@@ -856,19 +898,22 @@ namespace boost {
               typename SubGraphCallback>
     struct unique_maximum_subgraph_interceptor {
 
+      typedef typename graph_traits<GraphFirst>::vertices_size_type
+        VertexSizeFirst;
+
       typedef mcgregor_common_subgraph_traits<GraphFirst, GraphSecond,
         VertexIndexMapFirst, VertexIndexMapSecond> SubGraphTraits;
         
       typedef typename SubGraphTraits::correspondence_map_first_to_second_type
-      CorrespondenceMapFirstToSecond;
+        CachedCorrespondenceMapFirstToSecond;
 
       typedef typename SubGraphTraits::correspondence_map_second_to_first_type
-      CorrespondenceMapSecondToFirst;
+        CachedCorrespondenceMapSecondToFirst;
 
-      typedef std::pair<std::size_t,
-                        std::pair<CorrespondenceMapFirstToSecond,
-                                  CorrespondenceMapSecondToFirst> > SubGraph;
-                
+      typedef std::pair<VertexSizeFirst,
+        std::pair<CachedCorrespondenceMapFirstToSecond,
+                  CachedCorrespondenceMapSecondToFirst> > SubGraph;
+
       typedef std::vector<SubGraph> SubGraphList;
 
       unique_maximum_subgraph_interceptor(const GraphFirst& graph1,
@@ -878,33 +923,33 @@ namespace boost {
                                           SubGraphCallback user_callback) :                                  
         m_graph1(graph1), m_graph2(graph2),
         m_vindex_map1(vindex_map1), m_vindex_map2(vindex_map2),
-        m_user_callback(user_callback),
-        m_largest_size_so_far(0) { }
+        m_subgraphs(make_shared<SubGraphList>()),
+        m_largest_size_so_far(make_shared<VertexSizeFirst>(0)),
+        m_user_callback(user_callback) { }        
       
-      bool operator()(CorrespondenceMapFirstToSecond& correspondence_map_1_to_2,
-                      CorrespondenceMapSecondToFirst& correspondence_map_2_to_1,
-                      std::size_t subgraph_size) {
+      template <typename CorrespondenceMapFirstToSecond,
+                typename CorrespondenceMapSecondToFirst>
+      bool operator()(CorrespondenceMapFirstToSecond correspondence_map_1_to_2,
+                      CorrespondenceMapSecondToFirst correspondence_map_2_to_1,
+                      VertexSizeFirst subgraph_size) {
 
-        if (subgraph_size > m_largest_size_so_far) {
-          m_subgraphs.clear();
-          m_largest_size_so_far = subgraph_size;
+        if (subgraph_size > *m_largest_size_so_far) {
+          m_subgraphs->clear();
+          *m_largest_size_so_far = subgraph_size;
         }
 
-        if (subgraph_size == m_largest_size_so_far) {
+        if (subgraph_size == *m_largest_size_so_far) {
 
           // Check if subgraph is unique
           for (typename SubGraphList::const_iterator
-                 subgraph_iter = m_subgraphs.begin();
-               subgraph_iter != m_subgraphs.end();
+                 subgraph_iter = m_subgraphs->begin();
+               subgraph_iter != m_subgraphs->end();
                ++subgraph_iter) {
   
             SubGraph subgraph_cached = *subgraph_iter;
   
-            CorrespondenceMapFirstToSecond correspondence_map_1_to_2_cached =
-              subgraph_cached.second.first;
-            
             if (!are_property_maps_different(correspondence_map_1_to_2,
-                                             correspondence_map_1_to_2_cached,
+                                             subgraph_cached.second.first,
                                              m_graph1)) {
                                       
               // New subgraph is a duplicate
@@ -913,27 +958,34 @@ namespace boost {
           }
     
           // Subgraph is unique, so make a cached copy
-          SubGraph new_subgraph = std::make_pair(subgraph_size,
-            std::make_pair
-              (CorrespondenceMapFirstToSecond(num_vertices(m_graph1), m_vindex_map1),
-               CorrespondenceMapSecondToFirst(num_vertices(m_graph2), m_vindex_map2)));
-            
-          copy_vertex_property(correspondence_map_1_to_2,
-                               new_subgraph.second.first, m_graph1);
-  
-          copy_vertex_property(correspondence_map_2_to_1,
-                               new_subgraph.second.second, m_graph2);
-          
-          m_subgraphs.push_back(new_subgraph);
+          CachedCorrespondenceMapFirstToSecond
+            new_subgraph_1_to_2 = CachedCorrespondenceMapFirstToSecond
+            (num_vertices(m_graph1), m_vindex_map1);
+
+          CachedCorrespondenceMapSecondToFirst
+            new_subgraph_2_to_1 = CachedCorrespondenceMapSecondToFirst
+            (num_vertices(m_graph2), m_vindex_map2);
+
+          BGL_FORALL_VERTICES_T(vertex1, m_graph1, GraphFirst) {
+            put(new_subgraph_1_to_2, vertex1, get(correspondence_map_1_to_2, vertex1));
+          }
+
+          BGL_FORALL_VERTICES_T(vertex2, m_graph2, GraphFirst) {
+            put(new_subgraph_2_to_1, vertex2, get(correspondence_map_2_to_1, vertex2));
+          }
+
+          m_subgraphs->push_back(std::make_pair(subgraph_size,
+            std::make_pair(new_subgraph_1_to_2,
+                           new_subgraph_2_to_1)));
         }
     
         return (true);
       }
 
-      void output_cached_subgraphs() {
+      void output_subgraphs() {
         for (typename SubGraphList::const_iterator
-               subgraph_iter = m_subgraphs.begin();
-             subgraph_iter != m_subgraphs.end();
+               subgraph_iter = m_subgraphs->begin();
+             subgraph_iter != m_subgraphs->end();
              ++subgraph_iter) {
 
           SubGraph subgraph_cached = *subgraph_iter;
@@ -948,16 +1000,16 @@ namespace boost {
       const GraphFirst& m_graph2;
       const VertexIndexMapFirst m_vindex_map1;
       const VertexIndexMapSecond m_vindex_map2;
-      SubGraphList m_subgraphs;
+      shared_ptr<SubGraphList> m_subgraphs;
+      shared_ptr<VertexSizeFirst> m_largest_size_so_far;
       SubGraphCallback m_user_callback;
-      typename graph_traits<GraphFirst>::vertices_size_type m_largest_size_so_far;
     };
     
   } // namespace detail
 
-  // Enumerates the largest, unique common subgraphs found between graph1
-  // and graph2.  Note that the ENTIRE search space is explored before
-  // user_callback is actually invoked.
+  // Enumerates the largest, unique common subgraphs found between
+  // graph1 and graph2.  Note that the ENTIRE search space is explored
+  // before user_callback is actually invoked.
   template <typename GraphFirst,
             typename GraphSecond,
             typename VertexIndexMapFirst,
@@ -965,13 +1017,14 @@ namespace boost {
             typename EdgeEquivalencePredicate,
             typename VertexEquivalencePredicate,
             typename SubGraphCallback>
-  void mcgregor_maximum_common_subgraphs_unique
+  void mcgregor_common_subgraphs_maximum_unique
   (const GraphFirst& graph1,
    const GraphSecond& graph2,
    const VertexIndexMapFirst vindex_map1,
    const VertexIndexMapSecond vindex_map2,
    EdgeEquivalencePredicate edges_equivalent,
    VertexEquivalencePredicate vertices_equivalent,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback)
   {
     detail::unique_maximum_subgraph_interceptor<GraphFirst, GraphSecond,
@@ -983,43 +1036,46 @@ namespace boost {
       (graph1, graph2,
        vindex_map1, vindex_map2,
        edges_equivalent, vertices_equivalent,
-       unique_max_interceptor);
+       only_connected_subgraphs, unique_max_interceptor);
 
     // Only output the largest, unique subgraphs
-    unique_max_interceptor.output_cached_subgraphs();
+    unique_max_interceptor.output_subgraphs();
   }
 
-  // Variant of mcgregor_maximum_common_subgraphs_unique with all default parameters
+  // Variant of mcgregor_common_subgraphs_maximum_unique with all default parameters
   template <typename GraphFirst,
             typename GraphSecond,
             typename SubGraphCallback>
-  void mcgregor_maximum_common_subgraphs_unique
+  void mcgregor_common_subgraphs_maximum_unique
   (const GraphFirst& graph1,
    const GraphSecond& graph2,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback)
   {
 
-    mcgregor_maximum_common_subgraphs_unique
+    mcgregor_common_subgraphs_maximum_unique
       (graph1, graph2,
        get(vertex_index, graph1), get(vertex_index, graph2),
        always_equivalent(), always_equivalent(),
-       user_callback);
+       only_connected_subgraphs, user_callback);
   }
 
-  // Named parameter variant of mcgregor_maximum_common_subgraphs_unique
+  // Named parameter variant of
+  // mcgregor_common_subgraphs_maximum_unique
   template <typename GraphFirst,
             typename GraphSecond,
             typename SubGraphCallback,
             typename Param,
             typename Tag,
             typename Rest>
-  void mcgregor_maximum_common_subgraphs_unique
+  void mcgregor_common_subgraphs_maximum_unique
   (const GraphFirst& graph1,
    const GraphSecond& graph2,
+   bool only_connected_subgraphs,
    SubGraphCallback user_callback,
    const bgl_named_params<Param, Tag, Rest>& params)
   {
-    mcgregor_maximum_common_subgraphs_unique
+    mcgregor_common_subgraphs_maximum_unique
       (graph1, graph2,
        choose_const_pmap(get_param(params, vertex_index1),
                          graph1, vertex_index),
@@ -1029,45 +1085,33 @@ namespace boost {
                     always_equivalent()),
        choose_param(get_param(params, vertices_equivalent_t()),
                     always_equivalent()),
-       user_callback);
+       only_connected_subgraphs, user_callback);
   }
 
   // ==========================================================================
 
-  // Fills two membership maps (vertex -> bool) using the information present
-  // in correspondence_map_1_to_2 and correspondence_map_2_to_1.  Every vertex in a
-  // membership map will have a true value only if it is not associated with
-  // a null vertex in its respective correspondence map.
-  template <typename GraphFirst,
-            typename GraphSecond,
+  // Fills a membership map (vertex -> bool) using the information
+  // present in correspondence_map_1_to_2. Every vertex in a
+  // membership map will have a true value only if it is not
+  // associated with a null vertex in the correspondence map.
+  template <typename GraphSecond,
+            typename GraphFirst,
             typename CorrespondenceMapFirstToSecond,
-            typename CorrespondenceMapSecondToFirst,
-            typename MembershipMapFirst,
-            typename MembershipMapSecond>
-  void fill_membership_maps
+            typename MembershipMapFirst>
+  void fill_membership_map
   (const GraphFirst& graph1,
-   const GraphSecond& graph2,
    const CorrespondenceMapFirstToSecond correspondence_map_1_to_2,
-   const CorrespondenceMapSecondToFirst correspondence_map_2_to_1,
-   MembershipMapFirst membership_map1,
-   MembershipMapSecond membership_map2) {
-
-    typedef typename graph_traits<GraphSecond>::vertex_descriptor
-      VertexSecond;
+   MembershipMapFirst membership_map1) {
 
     BGL_FORALL_VERTICES_T(vertex1, graph1, GraphFirst) {
       put(membership_map1, vertex1,
           get(correspondence_map_1_to_2, vertex1) != graph_traits<GraphSecond>::null_vertex());
     }
 
-    BGL_FORALL_VERTICES_T(vertex2, graph2, GraphSecond) {
-      put(membership_map2, vertex2,
-          get(correspondence_map_2_to_1, vertex2) != graph_traits<GraphFirst>::null_vertex());
-    }
   }
 
-  // Traits associated with a membership map filtered graph.  Provided for
-  // convenience to access graph and vertex filter types.
+  // Traits associated with a membership map filtered graph.  Provided
+  // for convenience to access graph and vertex filter types.
   template <typename Graph,
             typename MembershipMap>
   struct membership_filtered_graph_traits {

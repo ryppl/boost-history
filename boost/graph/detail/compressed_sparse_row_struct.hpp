@@ -48,12 +48,12 @@
 
 namespace boost {
 
-// Forward declaration of CSR edge descriptor type, needed to pass to
-// indexed_edge_properties.
-template<typename Vertex, typename EdgeIndex>
-class csr_edge_descriptor;
-
 namespace detail {
+  // Forward declaration of CSR edge descriptor type, needed to pass to
+  // indexed_edge_properties.
+  template<typename Vertex, typename EdgeIndex>
+  class csr_edge_descriptor;
+
   /** Compressed sparse row graph internal structure.
    *
    * Vertex and EdgeIndex should be unsigned integral types and should
@@ -81,17 +81,9 @@ namespace detail {
 
     std::vector<EdgeIndex> m_rowstart;
     std::vector<Vertex> m_column;
-#ifdef BOOST_GRAPH_USE_OLD_CSR_INTERFACE
-    // This member is only needed to support add_edge(), which is not provided by
-    // the new interface
-    Vertex m_last_source; // Last source of added edge, plus one
-#endif // BOOST_GRAPH_USE_OLD_CSR_INTERFACE
 
     compressed_sparse_row_structure(Vertex numverts = 0)
       : m_rowstart(numverts + 1, EdgeIndex(0)), m_column()
-#ifdef BOOST_GRAPH_USE_OLD_CSR_INTERFACE
-        , m_last_source(numverts)
-#endif
       {}
     
     //  Rebuild graph from number of vertices and multi-pass unsorted list of
@@ -115,14 +107,14 @@ namespace detail {
 
       boost::graph::detail::count_starts
         (sources_begin, sources_end, m_rowstart.begin(), numlocalverts,
-         source_pred, make_property_map_function(global_to_local));
+         source_pred, boost::make_property_map_function(global_to_local));
 
       m_column.resize(m_rowstart.back());
 
       boost::graph::detail::histogram_sort
         (sources_begin, sources_end, m_rowstart.begin(), numlocalverts,
          targets_begin, m_column.begin(),
-         source_pred, make_property_map_function(global_to_local));
+         source_pred, boost::make_property_map_function(global_to_local));
     }
 
     //  Rebuild graph from number of vertices and multi-pass unsorted list of
@@ -148,7 +140,7 @@ namespace detail {
 
       boost::graph::detail::count_starts
         (sources_begin, sources_end, m_rowstart.begin(), numlocalverts,
-         source_pred, make_property_map_function(global_to_local));
+         source_pred, boost::make_property_map_function(global_to_local));
 
       m_column.resize(m_rowstart.back());
       inherited_edge_properties::resize(m_rowstart.back());
@@ -157,7 +149,7 @@ namespace detail {
         (sources_begin, sources_end, m_rowstart.begin(), numlocalverts,
          targets_begin, m_column.begin(),
          ep_iter, inherited_edge_properties::begin(),
-         source_pred, make_property_map_function(global_to_local));
+         source_pred, boost::make_property_map_function(global_to_local));
     }
 
     //  Assign from number of vertices and sorted list of edges
@@ -249,10 +241,10 @@ namespace detail {
       m_rowstart.resize(numverts + 1);
       boost::graph::detail::count_starts
         (sources.begin(), sources.end(), m_rowstart.begin(), numverts,
-         keep_all(), make_property_map_function(global_to_local));
+         keep_all(), boost::make_property_map_function(global_to_local));
       boost::graph::detail::histogram_sort_inplace
-        (sources.begin(), sources.end(), m_rowstart.begin(), numverts,
-         targets.begin(), make_property_map_function(global_to_local));
+        (sources.begin(), m_rowstart.begin(), numverts,
+         targets.begin(), boost::make_property_map_function(global_to_local));
       // Now targets is the correct vector (properly sorted by source) for
       // m_column
       m_column.swap(targets);
@@ -275,11 +267,11 @@ namespace detail {
       m_rowstart.resize(numverts + 1);
       boost::graph::detail::count_starts
         (sources.begin(), sources.end(), m_rowstart.begin(), numverts,
-         keep_all(), make_property_map_function(global_to_local));
+         keep_all(), boost::make_property_map_function(global_to_local));
       boost::graph::detail::histogram_sort_inplace
-        (sources.begin(), sources.end(), m_rowstart.begin(), numverts,
+        (sources.begin(), m_rowstart.begin(), numverts,
          targets.begin(), edge_props.begin(),
-         make_property_map_function(global_to_local));
+         boost::make_property_map_function(global_to_local));
       // Now targets is the correct vector (properly sorted by source) for
       // m_column, and edge_props for m_edge_properties
       m_column.swap(targets);
@@ -310,24 +302,12 @@ namespace detail {
       for (Vertex i = 0; i != numverts; ++i) {
         m_rowstart[i] = current_edge;
         g_vertex v = ordered_verts_of_g[i];
-#ifdef BOOST_GRAPH_USE_OLD_CSR_INTERFACE
-        // Out edges in a single vertex are only sorted for the old interface
-        EdgeIndex num_edges_before_this_vertex = current_edge;
-#endif // BOOST_GRAPH_USE_OLD_CSR_INTERFACE
         g_out_edge_iter ei, ei_end;
         for (tie(ei, ei_end) = out_edges(v, g); ei != ei_end; ++ei) {
           m_column[current_edge++] = get(vi, target(*ei, g));
         }
-#ifdef BOOST_GRAPH_USE_OLD_CSR_INTERFACE
-        // Out edges in a single vertex are only sorted for the old interface
-        std::sort(m_column.begin() + num_edges_before_this_vertex,
-                  m_column.begin() + current_edge);
-#endif // BOOST_GRAPH_USE_OLD_CSR_INTERFACE
       }
       m_rowstart[numverts] = current_edge;
-#ifdef BOOST_GRAPH_USE_OLD_CSR_INTERFACE
-      m_last_source = numverts;
-#endif // BOOST_GRAPH_USE_OLD_CSR_INTERFACE
     }
 
     // Add edges from a sorted (smallest sources first) range of pairs and edge
@@ -403,7 +383,247 @@ namespace detail {
 
   };
 
+  template<typename Vertex, typename EdgeIndex>
+  class csr_edge_descriptor
+  {
+   public:
+    Vertex src;
+    EdgeIndex idx;
+
+    csr_edge_descriptor(Vertex src, EdgeIndex idx): src(src), idx(idx) {}
+    csr_edge_descriptor(): src(0), idx(0) {}
+
+    bool operator==(const csr_edge_descriptor& e) const {return idx == e.idx;}
+    bool operator!=(const csr_edge_descriptor& e) const {return idx != e.idx;}
+    bool operator<(const csr_edge_descriptor& e) const {return idx < e.idx;}
+    bool operator>(const csr_edge_descriptor& e) const {return idx > e.idx;}
+    bool operator<=(const csr_edge_descriptor& e) const {return idx <= e.idx;}
+    bool operator>=(const csr_edge_descriptor& e) const {return idx >= e.idx;}
+
+    template<typename Archiver>
+    void serialize(Archiver& ar, const unsigned int /*version*/)
+    {
+      ar & src & idx;
+    }
+  };
+
+  // Common out edge and edge iterators
+  template<typename CSRGraph>
+  class csr_out_edge_iterator
+    : public iterator_facade<csr_out_edge_iterator<CSRGraph>,
+                             typename CSRGraph::edge_descriptor,
+                             std::random_access_iterator_tag,
+                             const typename CSRGraph::edge_descriptor&,
+                             typename int_t<CHAR_BIT * sizeof(typename CSRGraph::edges_size_type)>::fast>
+  {
+   public:
+    typedef typename CSRGraph::edges_size_type EdgeIndex;
+    typedef typename CSRGraph::edge_descriptor edge_descriptor;
+    typedef typename int_t<CHAR_BIT * sizeof(EdgeIndex)>::fast difference_type;
+
+    csr_out_edge_iterator() {}
+    // Implicit copy constructor OK
+    explicit csr_out_edge_iterator(edge_descriptor edge) : m_edge(edge) { }
+
+   public: // GCC 4.2.1 doesn't like the private-and-friend thing
+    // iterator_facade requirements
+    const edge_descriptor& dereference() const { return m_edge; }
+
+    bool equal(const csr_out_edge_iterator& other) const
+    { return m_edge == other.m_edge; }
+
+    void increment() { ++m_edge.idx; }
+    void decrement() { --m_edge.idx; }
+    void advance(difference_type n) { m_edge.idx += n; }
+
+    difference_type distance_to(const csr_out_edge_iterator& other) const
+    { return other.m_edge.idx - m_edge.idx; }
+
+    edge_descriptor m_edge;
+
+    friend class iterator_core_access;
+  };
+
+  template<typename CSRGraph>
+  class csr_edge_iterator
+    : public iterator_facade<csr_edge_iterator<CSRGraph>,
+                             typename CSRGraph::edge_descriptor,
+                             boost::forward_traversal_tag,
+                             typename CSRGraph::edge_descriptor>
+  {
+   private:
+    typedef typename CSRGraph::edge_descriptor edge_descriptor;
+    typedef typename CSRGraph::edges_size_type EdgeIndex;
+
+   public:
+    csr_edge_iterator() : rowstart_array(0), current_edge(), end_of_this_vertex(0), total_num_edges(0) {}
+
+    csr_edge_iterator(const CSRGraph& graph,
+                      edge_descriptor current_edge,
+                      EdgeIndex end_of_this_vertex)
+      : rowstart_array(&graph.m_forward.m_rowstart[0]),
+        current_edge(current_edge),
+        end_of_this_vertex(end_of_this_vertex),
+        total_num_edges(num_edges(graph)) {}
+
+   public: // See above
+    friend class boost::iterator_core_access;
+
+    edge_descriptor dereference() const {return current_edge;}
+
+    bool equal(const csr_edge_iterator& o) const {
+      return current_edge == o.current_edge;
+    }
+
+    void increment() {
+      ++current_edge.idx;
+      if (current_edge.idx == total_num_edges) return;
+      while (current_edge.idx == end_of_this_vertex) {
+        ++current_edge.src;
+        end_of_this_vertex = rowstart_array[current_edge.src + 1];
+      }
+    }
+
+    const EdgeIndex* rowstart_array;
+    edge_descriptor current_edge;
+    EdgeIndex end_of_this_vertex;
+    EdgeIndex total_num_edges;
+  };
+
+  // Only for bidirectional graphs
+  template<typename CSRGraph>
+  class csr_in_edge_iterator
+    : public iterator_facade<csr_in_edge_iterator<CSRGraph>,
+                             typename CSRGraph::edge_descriptor,
+                             boost::forward_traversal_tag,
+                             typename CSRGraph::edge_descriptor>
+  {
+   public:
+    typedef typename CSRGraph::edges_size_type EdgeIndex;
+    typedef typename CSRGraph::edge_descriptor edge_descriptor;
+
+    csr_in_edge_iterator() {}
+    // Implicit copy constructor OK
+    csr_in_edge_iterator(const CSRGraph& graph,
+                         EdgeIndex index_in_backward_graph)
+      : m_graph(graph), m_index_in_backward_graph(index_in_backward_graph) {}
+
+   public: // See above
+    // iterator_facade requirements
+    edge_descriptor dereference() const {
+      return edge_descriptor(
+               m_graph.m_backward.m_column[m_index_in_backward_graph],
+               m_graph.m_backward.m_edge_properties[m_index_in_backward_graph]);
+    }
+
+    bool equal(const csr_in_edge_iterator& other) const
+    { return m_index_in_backward_graph == other.m_index_in_backward_graph; }
+
+    void increment() { ++m_index_in_backward_graph; }
+    void decrement() { --m_index_in_backward_graph; }
+    void advance(std::ptrdiff_t n) { m_index_in_backward_graph += n; }
+
+    std::ptrdiff_t distance_to(const csr_in_edge_iterator& other) const
+    { return other.m_index_in_backward_graph - m_index_in_backward_graph; }
+
+    EdgeIndex m_index_in_backward_graph;
+    const CSRGraph& m_graph;
+
+    friend class iterator_core_access;
+  };
+
+  template <typename A, typename B>
+  struct transpose_pair {
+    typedef std::pair<B, A> result_type;
+    result_type operator()(const std::pair<A, B>& p) const {
+      return result_type(p.second, p.first);
+    }
+  };
+
+  template <typename Iter>
+  struct transpose_iterator_gen {
+    typedef typename std::iterator_traits<Iter>::value_type vt;
+    typedef typename vt::first_type first_type;
+    typedef typename vt::second_type second_type;
+    typedef transpose_pair<first_type, second_type> transpose;
+    typedef boost::transform_iterator<transpose, Iter> type;
+    static type make(Iter it) {
+      return type(it, transpose());
+    }
+  };
+
+  template <typename Iter>
+  typename transpose_iterator_gen<Iter>::type transpose_edges(Iter i) {
+    return transpose_iterator_gen<Iter>::make(i);
+  }
+
+  template<typename GraphT, typename VertexIndexMap>
+  class edge_to_index_pair
+  {
+    typedef typename boost::graph_traits<GraphT>::vertices_size_type
+      vertices_size_type;
+    typedef typename boost::graph_traits<GraphT>::edge_descriptor edge_descriptor;
+
+   public:
+    typedef std::pair<vertices_size_type, vertices_size_type> result_type;
+
+    edge_to_index_pair() : g(0), index() { }
+    edge_to_index_pair(const GraphT& g, const VertexIndexMap& index)
+      : g(&g), index(index)
+    { }
+
+    result_type operator()(edge_descriptor e) const
+    {
+      return result_type(get(index, source(e, *g)), get(index, target(e, *g)));
+    }
+
+   private:
+    const GraphT* g;
+    VertexIndexMap index;
+  };
+
+  template<typename GraphT, typename VertexIndexMap>
+  edge_to_index_pair<GraphT, VertexIndexMap>
+  make_edge_to_index_pair(const GraphT& g, const VertexIndexMap& index)
+  {
+    return edge_to_index_pair<GraphT, VertexIndexMap>(g, index);
+  }
+
+  template<typename GraphT>
+  edge_to_index_pair
+    <GraphT,
+     typename boost::property_map<GraphT,boost::vertex_index_t>::const_type>
+  make_edge_to_index_pair(const GraphT& g)
+  {
+    typedef typename boost::property_map<GraphT,
+                                         boost::vertex_index_t>::const_type
+      VertexIndexMap;
+    return edge_to_index_pair<GraphT, VertexIndexMap>(g,
+                                                     get(boost::vertex_index,
+                                                         g));
+  }
+
+  template<typename GraphT, typename VertexIndexMap, typename Iter>
+  boost::transform_iterator<edge_to_index_pair<GraphT, VertexIndexMap>, Iter>
+  make_edge_to_index_pair_iter(const GraphT& g, const VertexIndexMap& index,
+                               Iter it) {
+    return boost::transform_iterator<edge_to_index_pair<GraphT, VertexIndexMap>, Iter>(it, edge_to_index_pair<GraphT, VertexIndexMap>(g, index));
+  }
+
 } // namespace detail
+
+  template<typename Vertex, typename EdgeIndex>
+  struct hash<detail::csr_edge_descriptor<Vertex, EdgeIndex> >
+  {
+    std::size_t operator()
+                  (detail::csr_edge_descriptor<Vertex, EdgeIndex> const& x) const
+    {
+      std::size_t hash = hash_value(x.src);
+      hash_combine(hash, x.idx);
+      return hash;
+    }
+  };
+
 } // namespace boost
 
 #endif // BOOST_GRAPH_COMPRESSED_SPARSE_ROW_STRUCT_HPP
