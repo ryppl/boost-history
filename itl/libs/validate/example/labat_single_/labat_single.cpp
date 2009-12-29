@@ -23,6 +23,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/minor_set_laws.hpp>
 #include <boost/validate/laws/function_equality.hpp>
 #include <boost/validate/laws/atomic_equivalence.hpp>
+#include <boost/validate/laws/order.hpp>
 
 //#include <boost/validate/laws/novial_tree.hpp>
 #include <boost/validate/laws/inversion_laws.hpp>
@@ -46,14 +47,24 @@ using namespace boost::posix_time;
 void test_LawValidater()
 {
 
-    typedef UnaryAtomicEquivalence2
-    <
-        itl::interval_map<int,int>, 
-        //itl::list<int>,
-        std::pair<int,int>,
-        itl::std_find
-    > TestLawT;
+    //typedef UnaryAtomicEquivalence2
+    //<
+    //    itl::interval_map<int,int>, 
+    //    //itl::list<int>,
+    //    std::pair<int,int>,
+    //    itl::std_find
+    //> TestLawT;
 
+    //typedef InducedRelation
+    //<
+    //    itl::interval_map<int,int>, 
+    //    itl::map<int,int>, 
+    //    segmental::atomizer, 
+    //    element_equal
+    //>
+    //TestLawT;
+
+    typedef Antisymmetry<itl::map<int,int>, std::less_equal, std_equal> TestLawT;
 
     LawValidater<TestLawT, RandomGentor> test_law;
 

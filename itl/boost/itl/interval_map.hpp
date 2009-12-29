@@ -540,7 +540,7 @@ inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interv
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
     template<class Combiner>
 inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::subtract_main(/*CL const interval_type& inter_val,*/ const CodomainT& co_val, iterator& it_, iterator& last_)
+    ::subtract_main(const CodomainT& co_val, iterator& it_, iterator& last_)
 {
     while(it_ != last_)
     {

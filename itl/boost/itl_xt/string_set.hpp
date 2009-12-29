@@ -76,7 +76,6 @@ namespace boost{namespace itl
     // sets of strings ordered ignoring case
     // ---------------------------------------------------------------------------------
 
-    typedef string_set<String_ICLess> ICstring_set; //CL depreciated
     typedef string_set<String_ICLess> ICstring_setD;
     
 

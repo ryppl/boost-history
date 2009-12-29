@@ -236,6 +236,7 @@ namespace biterate
 #ifdef BOOST_MSVC 
 #pragma warning(push)
 #pragma warning(disable:4146) // unary minus operator applied to unsigned type, result still unsigned
+#pragma warning(disable:4706) // assignment within conditional expression
 #endif                        
 
 

@@ -10,7 +10,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 /** Example de_morgan.cpp \file de_morgan.cpp
 
-Example de_morgan.cpp demonstrates some test of 
+Example de_morgan.cpp demonstrates some tests of 
 <a href="http://en.wikipedia.org/wiki/De_Morgan%27s_laws">
 De Morgan's law</a>
 on interval_set.

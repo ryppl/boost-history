@@ -163,6 +163,11 @@ namespace boost{namespace itl
         }
 
 
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4996) //'std::equal': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+#endif                        // I do guarantee here that I am using the parameters correctly :)
+
         /** Function template <tt>lexicographical_equal</tt> implements 
             lexicographical equality. */
         template<class SetType>
@@ -173,6 +178,10 @@ namespace boost{namespace itl
             else return left.iterative_size() == right.iterative_size()
                      && std::equal(left.begin(), left.end(), right.begin()); 
         }
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 
 
         template<class SetType>

@@ -8,8 +8,17 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_SET_HPP_JOFA_070519
 #define BOOST_ITL_SET_HPP_JOFA_070519
 
-#include <string>
+#include <boost/itl/impl_config.hpp>
+
+#if defined(ITL_USE_BOOST_INTERPROCESS_IMPLEMENTATION)
+#include <boost/interprocess/containers/set.hpp>
+#elif defined(ITL_USE_BOOST_MOVE_IMPLEMENTATION)
+#include <boost/container/set.hpp>
+#else 
 #include <set>
+#endif
+
+#include <string>
 #include <boost/itl/detail/concept_check.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/type_traits/is_set.hpp>
@@ -29,6 +38,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/mpl/not.hpp> 
 #include <boost/type_traits/is_same.hpp>
 
+
 namespace boost{namespace itl
 {
 
@@ -39,11 +49,11 @@ template
     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
     ITL_ALLOC   Alloc   = std::allocator 
 >
-class set: private std::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> >
+class set: private ITL_IMPL_SPACE::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> >
 {
 public:
-    typedef typename itl::set<DomainT, Compare,       Alloc >       type;
-    typedef typename std::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> > base_type;
+    typedef typename itl::set<DomainT, Compare, Alloc> type;
+    typedef typename ITL_IMPL_SPACE::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> > base_type;
 
 public:
     typedef DomainT     domain_type;
@@ -81,16 +91,15 @@ public:
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
     }
 
-    explicit set(const domain_compare& comp): 
-    std::set<DomainT, domain_compare, Alloc<DomainT> >(comp){}
+    explicit set(const domain_compare& comp): base_type(comp){}
 
     template <class InputIterator>
-    set(InputIterator first, InputIterator past): 
-    std::set<InputIterator>(first,past){}
+    set(InputIterator first, InputIterator past)
+        : base_type(first,past){}
 
     template <class InputIterator>
-    set(InputIterator first, InputIterator past, const key_compare& comp): 
-    std::set<InputIterator>(first, past, comp){}
+    set(InputIterator first, InputIterator past, const key_compare& comp)
+        : base_type(first, past, comp){}
 
     set(const set& src): base_type::set(src)
     {
@@ -335,15 +344,26 @@ set<DomainT,Compare,Alloc>& set<DomainT,Compare,Alloc>
 //==============================================================================
 //= Equivalences and Orderings
 //==============================================================================
+
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4996) //'std::equal': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+#endif                        // I do guarantee here that I am using the parameters correctly :)
+
 /** Standard equality, which is lexicographical equality of the sets
     as sequences, that are given by their Compare order. */
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline bool operator == (const itl::set<DomainT,Compare,Alloc>& lhs,
                          const itl::set<DomainT,Compare,Alloc>& rhs)
 {
-    typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-    return operator==((const base_type&)lhs, (const base_type&)rhs);
+    return lhs.size() == rhs.size()
+        && equal(lhs.begin(), lhs.end(), rhs.begin());
 }
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
+
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline bool operator != (const itl::set<DomainT,Compare,Alloc>& lhs,
@@ -354,17 +374,15 @@ inline bool operator != (const itl::set<DomainT,Compare,Alloc>& lhs,
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline bool is_element_equal(const itl::set<DomainT,Compare,Alloc>& lhs,
                              const itl::set<DomainT,Compare,Alloc>& rhs)
-{
-    typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-    return operator==((const base_type&)lhs, (const base_type&)rhs);
-}
+{ return lhs == rhs; }
 
 /** Strict weak less ordering which is given by the Compare order */
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline bool operator < (const itl::set<DomainT,Compare,Alloc>& lhs,
                         const itl::set<DomainT,Compare,Alloc>& rhs)
 {
-    typedef std::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
+    typedef ITL_IMPL_SPACE
+        ::set<DomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
     return operator<((const base_type&)lhs, (const base_type&)rhs);
 }
 

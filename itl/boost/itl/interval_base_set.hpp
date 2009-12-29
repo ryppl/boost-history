@@ -99,7 +99,7 @@ public:
     typedef Alloc<DomainT> domain_allocator_type;
 
     /// Container type for the implementation 
-    typedef typename std::set<interval_type,key_compare,allocator_type> ImplSetT;
+    typedef typename ITL_IMPL_SPACE::set<interval_type,key_compare,allocator_type> ImplSetT;
 
     /// key type of the implementing container
     typedef typename ImplSetT::key_type   key_type;
@@ -736,7 +736,7 @@ inline bool operator < (const interval_base_set<SubType,DomainT,Compare,Interval
 {
     return std::lexicographical_compare(
         lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), 
-        Compare<Interval<DomainT,Compare> >()//NOTE DESIGN TTP: Why Compare is needs to be ttp
+        Compare<Interval<DomainT,Compare> >()//NOTE DESIGN TTP: Why Compare needs to be ttp
         );
 }
 

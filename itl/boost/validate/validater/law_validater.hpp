@@ -28,25 +28,42 @@ namespace boost{namespace itl
     typedef itl::map<std::string, int> ViolationCounterT;
     typedef itl::map<std::string, PolyLawViolations> ViolationMapT;
 
+    /** \brief An interface for a test machine.    */
     class LawValidaterI
     {
     public:
+        /// Virtual dtor
         virtual ~LawValidaterI(){}
+        /// Initialize the validater
         virtual void init()=0;
+
+        /** \brief Run tests on the law. 
+            
+            Generate law instantiations, test the law on 
+            them. Collect violations, if they occur. */
         virtual void run()=0;
+
+        /// Add statistics of the validater's run to \c ValidationCounterT
         virtual void addFrequencies(ValidationCounterT&)=0;
+        /// Add statistics and law violations to book keeper objects.
         virtual void addViolations(ViolationCounterT&, ViolationMapT&)=0;
     };
 
 
+    /** \brief A class template for test machines. 
+        
+        Class template \c LawValidater defines a testmachine
+        for a given law \c LawT and a generator template, that
+        produces a matching generator of input variables for the law.
+    */
     template <class LawT, template<typename>class GentorT>
     class LawValidater : public LawValidaterI
     {
     public:
-        typedef typename LawT::input_types    input_types;
-        typedef typename LawT::output_types   output_types;
-        typedef typename LawT::input_tuple    input_tuple;
-        typedef typename LawT::output_tuple   output_tuple;
+        typedef typename LawT::input_types    input_types;  // The input types of the law to test
+        typedef typename LawT::output_types   output_types; // The output types of the law to test
+        typedef typename LawT::input_tuple    input_tuple;  // The tuple type for input variables of the law
+        typedef typename LawT::output_tuple   output_tuple; // The tuple type for input variables of the law
         
         typedef typename Loki::TL::MapType<GentorT, input_types>::Result gentor_types;
         typedef typename Loki::tuple<gentor_types> input_gentor;

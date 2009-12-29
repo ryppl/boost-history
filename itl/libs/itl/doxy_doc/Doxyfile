@@ -85,6 +85,7 @@ INPUT                  = . \
             ../../../boost/itl_xt/product_history.hpp \
             ../../../boost/itl_xt/tuple_computer.hpp \
             ../../../boost/validate/laws/law.hpp \
+            ../../../boost/validate/validater/law_validater.hpp \
             ../../../libs/itl/example/boost_party_ \
             ../../../libs/itl/example/interval_ \
             ../../../libs/itl/example/interval_ \

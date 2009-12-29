@@ -140,8 +140,8 @@ public:
         allocator_type;
 
     /// Container type for the implementation 
-    typedef std::map<interval_type,codomain_type,
-                     key_compare,allocator_type> ImplMapT;
+    typedef ITL_IMPL_SPACE::map<interval_type,codomain_type,
+                                key_compare,allocator_type> ImplMapT;
 
     /// key type of the implementing container
     typedef typename ImplMapT::key_type   key_type;

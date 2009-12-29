@@ -51,6 +51,13 @@ namespace boost{namespace itl
 
     public:
 
+        size_t size()const 
+        { 
+            return 
+                value_size<SourceT>::apply(this->template getInputValue<operand_a>())+
+                value_size<SourceT>::apply(this->template getInputValue<operand_b>());
+        }
+
         bool holds()
         {
             // a rel b == f(a) rel f(b)
@@ -71,16 +78,28 @@ namespace boost{namespace itl
             return lhs == rhs;
         }
 
-        size_t size()const 
-        { 
-            return 
-                value_size<SourceT>::apply(this->template getInputValue<operand_a>())+
-                value_size<SourceT>::apply(this->template getInputValue<operand_b>());
-        }
-
         bool debug_holds()
         {
-            return holds();
+            // a rel b == f(a) rel f(b)
+            // --- left hand side ------------------------
+            // lhs := a rel b
+            SourceT a = this->template getInputValue<operand_a>();
+            SourceT b = this->template getInputValue<operand_b>();
+            std::cout << "  a  = " << a << std::endl;
+            std::cout << "  b  = " << b << std::endl;
+            bool lhs = RelationT<SourceT>()(a,b);
+            // --- right hand side -----------------------
+            TargetT f_a, f_b;
+            FunctionT<TargetT,SourceT>()(f_a, a);
+            FunctionT<TargetT,SourceT>()(f_b, b);
+            std::cout << "f(a) = " << f_a << std::endl;
+            std::cout << "f(b) = " << f_b << std::endl;
+            bool rhs = RelationT<TargetT>()(f_a, f_b);
+
+            this->template setOutputValue<lhs_result>(lhs);
+            this->template setOutputValue<rhs_result>(rhs);
+
+            return lhs == rhs;
         }
 
     }; //class InducedRelation

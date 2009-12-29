@@ -8,6 +8,16 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_MAP_HPP_JOFA_070519
 #define BOOST_ITL_MAP_HPP_JOFA_070519
 
+#include <boost/itl/impl_config.hpp>
+
+#if defined(ITL_USE_BOOST_INTERPROCESS_IMPLEMENTATION)
+#include <boost/interprocess/containers/map.hpp>
+#elif defined(ITL_USE_BOOST_MOVE_IMPLEMENTATION)
+#include <boost/container/map.hpp>
+#else 
+#include <map>
+#endif
+
 #include <string>
 #include <boost/type_traits/ice.hpp>
 #include <boost/itl/detail/notate.hpp>
@@ -20,7 +30,6 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/predicates.hpp>
 #include <boost/itl/set.hpp>
 #include <boost/itl/detail/map_algo.hpp>
-#include <map>
 
 
 namespace boost{namespace itl
@@ -81,15 +90,15 @@ template
     ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, CodomainT), 
     ITL_ALLOC   Alloc   = std::allocator 
 >
-class map: private std::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), 
-                            Alloc<std::pair<const DomainT, CodomainT> > >
+class map: private ITL_IMPL_SPACE::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), 
+                                       Alloc<std::pair<const DomainT, CodomainT> > >
 {
 public:
     typedef Alloc<typename std::pair<const DomainT, CodomainT> >  allocator_type;
 
     typedef typename itl::map<DomainT,CodomainT,Traits, Compare,Combine,Section,Alloc> type;
-    typedef typename std::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT),
-                              allocator_type>              base_type;
+    typedef typename ITL_IMPL_SPACE::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT),
+                                         allocator_type>   base_type;
     typedef typename itl::set<DomainT, Compare, Alloc >    set_type;
 
     typedef Traits traits;
@@ -139,10 +148,12 @@ public:
     map(const key_compare& comp): base_type(comp){}
 
     template <class InputIterator>
-    map(InputIterator first, InputIterator past): base_type(first,past){} 
+    map(InputIterator first, InputIterator past)
+        : base_type(first,past){} 
 
     template <class InputIterator>
-    map(InputIterator first, InputIterator past, const key_compare& comp): base_type(first,past,comp) 
+    map(InputIterator first, InputIterator past, const key_compare& comp)
+        : base_type(first,past,comp) 
     {}
 
     map(const map& src): base_type::map(src)
@@ -707,15 +718,25 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 //==============================================================================
 //= Equivalences and Orderings
 //==============================================================================
+
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4996) //'std::equal': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+#endif                        // I do guarantee here that I am using the parameters correctly :)
+
 /** Standard equality, which is lexicographical equality of the sets
     as sequences, that are given by their Compare order. */
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 inline bool operator == (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
                          const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
 {
-    typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-    return operator==((const base_type&)lhs, (const base_type&)rhs);
+    return lhs.size() == rhs.size()
+        && equal(lhs.begin(), lhs.end(), rhs.begin());
 }
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 inline bool operator != (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
@@ -725,10 +746,7 @@ inline bool operator != (const itl::map<DomainT,CodomainT,Traits,Compare,Combine
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 inline bool is_element_equal(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
                              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
-{
-    typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-    return operator==((const base_type&)lhs, (const base_type&)rhs);
-}
+{ return lhs == rhs; }
 
 /** Protonic equality is equality on all elements that do not carry a neutron as content. */
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
@@ -743,8 +761,10 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 inline bool operator < (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
     const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
 {
-    typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
-    return operator<((const base_type&)lhs, (const base_type&)rhs);
+    return std::lexicographical_compare(
+        lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), 
+        Compare<std::pair<DomainT,CodomainT> >()
+        );
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>

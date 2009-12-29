@@ -38,7 +38,6 @@ using namespace boost;
 using namespace unit_test;
 using namespace boost::itl;
 
-
 BOOST_AUTO_TEST_CASE(reverse_iter)
 {
     interval_map<int,int> map_a;
@@ -58,5 +57,11 @@ BOOST_AUTO_TEST_CASE(reverse_iter)
 
     const_cast<int&>(found->second) = 2;
     cout << map_a << endl;
+}
+
+
+BOOST_AUTO_TEST_CASE(casual)
+{
+    itl::set<int> ion_set;
 }
 
