@@ -118,7 +118,7 @@ private:
 	enum { NPOOL = NPOOL1 + NPOOL2 };
 
 public:
-	enum { MAX_BYTES = MAX_BYTES2 };
+	enum { MAX_BYTES = MAX_BYTES2 + 1 };
 
 private:
 	pool_type* m_pools[NPOOL];
@@ -152,33 +152,75 @@ public:
 		BOOST_MEMORY_ASSERT(has_pool(cb));
 		
 		if (cb - 1 < (size_type)MAX_BYTES1)
-		{
-			const size_type index = (cb - 1) >> ALIGN_BITS1;
-			pool_type* p = m_pools[index];
-			if (p == NULL)
-			{
-				const size_type cbElem = (index + 1) << ALIGN_BITS1;
-				m_pools[index] = p = BOOST_MEMORY_NEW(m_alloc, pool_type)(m_recycle, cbElem);
-			}
-			return *p;
-		}
+			return get_pool1(cb);
 		else
-		{
-			BOOST_MEMORY_ASSERT(cb - 1 < (size_type)MAX_BYTES2);
-			const size_type index = detail::log2(cb + (PADDING2 - 1)) + (NPOOL1 - (MIN_BITS2 - 1));
-			pool_type* p = m_pools[index];
-			if (p == NULL)
-			{
-				const size_type cbElem = (1 << (index - (NPOOL1 - MIN_BITS2))) - PADDING2;
-				m_pools[index] = p = BOOST_MEMORY_NEW(m_alloc, pool_type)(m_recycle, cbElem);
-			}
-			return *p;
-		}
+			return get_pool2(cb);
 	}
 	
 	bool BOOST_MEMORY_CALL has_pool(size_type cb) const
 	{
 		return cb - 1 < (size_type)MAX_BYTES2;
+	}
+
+private:
+	pool_type& BOOST_MEMORY_CALL get_pool2(size_type cb)
+	{
+		BOOST_MEMORY_ASSERT(!has_pool1(cb));
+		BOOST_MEMORY_ASSERT(has_pool(cb));
+
+		const size_type index = detail::log2(cb + (PADDING2 - 1)) + (NPOOL1 - (MIN_BITS2 - 1));
+		pool_type* p = m_pools[index];
+		if (p == NULL)
+		{
+			const size_type cbElem = (1 << (index - (NPOOL1 - MIN_BITS2))) - PADDING2;
+			m_pools[index] = p = BOOST_MEMORY_NEW(m_alloc, pool_type)(m_recycle, cbElem);
+		}
+		return *p;
+	}
+
+	pool_type& BOOST_MEMORY_CALL get_pool1(size_type cb)
+	{
+		BOOST_MEMORY_ASSERT(has_pool1(cb));
+
+		const size_type index = (cb - 1) >> ALIGN_BITS1;
+		pool_type* p = m_pools[index];
+		if (p == NULL)
+		{
+			const size_type cbElem = (index + 1) << ALIGN_BITS1;
+			m_pools[index] = p = BOOST_MEMORY_NEW(m_alloc, pool_type)(m_recycle, cbElem);
+		}
+		return *p;
+	}
+
+	bool BOOST_MEMORY_CALL has_pool1(size_type cb) const
+	{
+		return cb - 1 < (size_type)MAX_BYTES1;
+	}
+
+public:
+	//
+	// function allocate/deallocate
+	//
+	void* BOOST_MEMORY_CALL allocate(size_t cb)
+	{
+		typedef typename PolicyT::system_alloc_type sysalloc;
+		if (cb - 1 < (size_type)MAX_BYTES1)
+			return get_pool1(cb).allocate();
+		else if (cb - 1 < (size_type)MAX_BYTES2)
+			return get_pool2(cb).allocate();
+		else
+			return sysalloc::allocate(cb);
+	}
+
+	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
+	{
+		typedef typename PolicyT::system_alloc_type sysalloc;
+		if (cb - 1 < (size_type)MAX_BYTES1)
+			get_pool1(cb).deallocate(p);
+		else if (cb - 1 < (size_type)MAX_BYTES2)
+			get_pool2(cb).deallocate(p);
+		else
+			sysalloc::deallocate(p, cb);
 	}
 };
 
@@ -186,7 +228,6 @@ typedef pools_alloc<NS_BOOST_MEMORY_POLICY::stdlib> pools;
 typedef pools_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_pools;
 
 // -------------------------------------------------------------------------
-// $Log: $
 
 NS_BOOST_MEMORY_END
 
