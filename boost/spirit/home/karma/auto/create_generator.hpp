@@ -12,31 +12,35 @@
 
 #include <boost/spirit/home/karma/auto/meta_create.hpp>
 
-namespace boost { namespace spirit { namespace karma
+///////////////////////////////////////////////////////////////////////////////
+namespace boost { namespace spirit { namespace result_of
 {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
-    struct generator_creator
-    {
-        typedef spirit::meta_create<karma::domain, T> creator_type;
-        typedef typename proto::result_of::deep_copy<
-            typename creator_type::type
-        >::type type;
+    struct create_generator
+      : spirit::traits::meta_create<karma::domain, T> {};
+}}}
 
-        static type call()
-        {
-            return proto::deep_copy(creator_type::call());
-        }
-    };
-
-    ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+namespace boost { namespace spirit { namespace karma
+{
+    // Main API function for generator creation from data type
     template <typename T>
-    typename generator_creator<T>::type
+    typename result_of::create_generator<T>::type
     create_generator()
     {
-        return generator_creator<T>::call();
+        return spirit::traits::meta_create<karma::domain, T>::call();
     }
+}}}
 
+///////////////////////////////////////////////////////////////////////////////
+namespace boost { namespace spirit { namespace traits
+{
+    // Meta function returning true if create_generator does return a valid
+    // generator for the given type T.
+    template <typename T>
+    struct create_generator_exists
+      : meta_create_exists<karma::domain, T> {};
 }}}
 
 #endif

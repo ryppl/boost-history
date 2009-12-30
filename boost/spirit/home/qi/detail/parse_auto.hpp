@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <boost/spirit/home/qi/detail/parse.hpp>
+#include <boost/spirit/home/qi/parse.hpp>
 #include <boost/spirit/home/qi/auto/create_parser.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/not.hpp>
@@ -21,7 +21,7 @@ namespace boost { namespace spirit { namespace qi { namespace detail
 {
     ///////////////////////////////////////////////////////////////////////////
     template <typename Expr>
-    struct parse<Expr
+    struct parse_impl<Expr
       , typename enable_if<traits::meta_create_exists<qi::domain, Expr> >::type>
     {
         template <typename Iterator>
@@ -37,7 +37,7 @@ namespace boost { namespace spirit { namespace qi { namespace detail
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename Expr>
-    struct phrase_parse<Expr
+    struct phrase_parse_impl<Expr
       , typename enable_if<traits::meta_create_exists<qi::domain, Expr> >::type>
     {
         template <typename Iterator, typename Skipper>

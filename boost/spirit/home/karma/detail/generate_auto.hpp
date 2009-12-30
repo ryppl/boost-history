@@ -10,7 +10,7 @@
 #pragma once
 #endif
 
-#include <boost/spirit/home/karma/detail/generate.hpp>
+#include <boost/spirit/home/karma/generate.hpp>
 #include <boost/spirit/home/karma/auto/create_generator.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -18,7 +18,7 @@ namespace boost { namespace spirit { namespace karma { namespace detail
 {
     ///////////////////////////////////////////////////////////////////////////
     template <typename Expr>
-    struct generate<Expr
+    struct generate_impl<Expr
       , typename enable_if<traits::meta_create_exists<karma::domain, Expr> >::type>
     {
         template <typename OutputIterator>
@@ -32,7 +32,7 @@ namespace boost { namespace spirit { namespace karma { namespace detail
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename Expr>
-    struct generate_delimited<Expr
+    struct generate_delimited_impl<Expr
       , typename enable_if<traits::meta_create_exists<karma::domain, Expr> >::type>
     {
         template <typename OutputIterator, typename Delimiter>
