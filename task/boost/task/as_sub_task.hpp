@@ -10,7 +10,6 @@
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
 #include <boost/move/move.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 
 #include <boost/task/callable.hpp>
@@ -29,22 +28,20 @@ namespace tasks {
 struct as_sub_task
 {
 	template< typename R >
-	handle< R > operator()( BOOST_RV_REF( task< R >) t_)
+	handle< R > operator()( BOOST_RV_REF( task< R >) t)
 	{
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
-			spin::packaged_task< R > t( t_.task_.fn_);
-			shared_ptr< spin::shared_future< R > > f(
-				new spin::shared_future< R >(
-					t.get_future() ) );
+			spin::shared_future< R > f(
+				t.get_future() );
 			context ctx;
 			handle< R > h( f, ctx);
 			w->put( callable( t, ctx) );
 			return h;
 		}
 		else
-			return new_thread()( t_);
+			return new_thread()( t);
 	}
 };
 

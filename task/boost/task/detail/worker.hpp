@@ -141,13 +141,9 @@ private:
 				 try_steal_other_callable_( ca) ||
 				 try_take_global_callable_( ca) )
 			{
-			fprintf(stdout,"run_(): execute_( ca)\n");
 				execute_( ca);
 				scns_ = 0;
-			if ( 0 < sched_.ready() ){
-		fprintf(stdout,"run_(): return because %d fibers are ready\n", sched_.ready() );
-				return;
-			}
+				if ( 0 < sched_.ready() ) return;
 			}
 			else
 			{
@@ -174,10 +170,8 @@ private:
 				}
 				else
 				{
-					if ( 0 < sched_.ready() )
-						return;
-					else
-						this_thread::yield();
+					if ( 0 < sched_.ready() ) return;
+					this_thread::yield();
 				}
 			}
 		}
@@ -251,30 +245,17 @@ public:
 					this),
 				stack_size_);
 		while ( ! shutdown_() )
-		{
-			fprintf(stdout,"run(): call scheduler::run()\n");
 			sched_.run();	
-		}
 	}
 
 	void block()
 	{
-		if ( 0 == sched_.ready() )
-		{
-			sched_.make_fiber(
-				bind(
-					& worker_object::run_,
-					this),
-				stack_size_);
-			fprintf(stdout,"block(): new fiber added to scheduler\n");
-		}
-		else
-		{
-			fprintf(stdout,"block(): scheduler has == ready fibers%d\n", sched_.ready() );
-		}
-		fprintf(stdout,"block(): before this_fiber::yield()\n");
+		sched_.make_fiber(
+			bind(
+				& worker_object::run_,
+				this),
+			stack_size_);
 		this_fiber::yield();
-		fprintf(stdout,"block: after this_fiber::yield()\n");
 	}
 };
 

@@ -12,7 +12,7 @@
 
 #include <boost/task.hpp>
 
-typedef boost::tasks::static_pool< boost::tasks::unbounded_twolock_fifo >	pool_t;
+typedef boost::tasks::static_pool< boost::tasks::unbounded_fifo >	pool_t;
 typedef boost::tasks::spin::unbounded_channel< std::string >		fifo_t;
 
 inline

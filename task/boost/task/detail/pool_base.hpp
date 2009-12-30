@@ -29,6 +29,7 @@
 #include <boost/task/handle.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
+#include <boost/task/spin/future.hpp>
 #include <boost/task/stacksize.hpp>
 #include <boost/task/task.hpp>
 #include <boost/task/watermark.hpp>
@@ -283,9 +284,7 @@ public:
 		if ( deactivated_() )
 			throw task_rejected("pool is closed");
 
-		shared_ptr< shared_future< R > > f(
-			new shared_future< R >(
-				t.get_future() ) );
+		spin::shared_future< R > f( t.get_future() );
 		context ctx;
 		handle< R > h( f, ctx);
 		queue_.put( callable( boost::move( t), ctx) );
@@ -298,15 +297,13 @@ public:
 		if ( deactivated_() )
 			throw task_rejected("pool is closed");
 
-		shared_ptr< shared_future< R > > f(
-			new shared_future< R >(
-				t.get_future() ) );
+		spin::shared_future< R > f( t.get_future() );
 		context ctx;
 		handle< R > h( f, ctx);
 		queue_.put(
-				value_type(
-					callable( boost::move( t), ctx),
-					attr) );
+			value_type(
+				callable( boost::move( t), ctx),
+				attr) );
 		return h;
 	}
 };

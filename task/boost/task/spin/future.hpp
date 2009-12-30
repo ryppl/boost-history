@@ -119,6 +119,21 @@ struct future_object_base
             boost::rethrow_exception(exception);
         }
     }
+
+            bool timed_wait_until(boost::system_time const& target_time)
+            {
+                boost::unique_lock<mutex> lock(mtx);
+                do_callback(lock);
+                while(!done)
+                {
+                    bool const success=waiters.timed_wait(lock,target_time);
+                    if(!success && !done)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
     
     void mark_exceptional_finish_internal(boost::exception_ptr const& e)
     {
@@ -562,6 +577,21 @@ public:
 	    }
 	    future->wait(false);
 	}
+        
+        template<typename Duration>
+        bool timed_wait(Duration const& rel_time) const
+        {
+            return timed_wait_until(boost::get_system_time()+rel_time);
+        }
+        
+        bool timed_wait_until(boost::system_time const& abs_time) const
+        {
+            if(!future)
+            {
+                throw future_uninitialized();
+            }
+            return future->timed_wait_until(abs_time);
+        }
 };
 
 template <typename R>
@@ -673,6 +703,21 @@ public:
 	    }
 	    future->wait(false);
 	}
+        
+        template<typename Duration>
+        bool timed_wait(Duration const& rel_time) const
+        {
+            return timed_wait_until(boost::get_system_time()+rel_time);
+        }
+        
+        bool timed_wait_until(boost::system_time const& abs_time) const
+        {
+            if(!future)
+            {
+                throw future_uninitialized();
+            }
+            return future->timed_wait_until(abs_time);
+        }
 };
 
 template <typename R>

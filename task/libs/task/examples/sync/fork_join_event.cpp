@@ -18,7 +18,7 @@
 
 namespace tsk = boost::tasks;
 
-typedef tsk::static_pool< tsk::unbounded_twolock_fifo > pool_type;
+typedef tsk::static_pool< tsk::unbounded_fifo > pool_type;
 
 void sub_task( int i, int n, tsk::spin::count_down_event & ev)
 {

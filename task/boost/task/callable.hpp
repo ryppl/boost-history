@@ -14,8 +14,6 @@
 
 #include <boost/task/context.hpp>
 #include <boost/task/detail/config.hpp>
-#include <boost/task/spin/future.hpp>
-#include <boost/task/task.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -37,37 +35,16 @@ private:
 		virtual void reset( shared_ptr< thread > const&) = 0;
 	};
 
-	template< typename R >
-	class task_wrapper : public impl
+	template< typename T >
+	class wrapper : public impl
 	{
 	private:
-		task< R >	t_;
+		T			t_;
 		context		ctx_;
 
 	public:
-		task_wrapper(
-				BOOST_RV_REF( task< R >) t,
-				context const& ctx) :
-			t_( t), ctx_( ctx)
-		{}
-
-		void run()
-		{ t_(); }
-
-		void reset( shared_ptr< thread > const& thrd)
-		{ ctx_.reset( thrd); }
-	};
-
-	template< typename R >
-	class packaged_task_wrapper : public impl
-	{
-	private:
-		spin::packaged_task< R >	t_;
-		context						ctx_;
-
-	public:
-		packaged_task_wrapper(
-				BOOST_RV_REF( spin::packaged_task< R >) t,
+		wrapper(
+				BOOST_RV_REF( T) t,
 				context const& ctx) :
 			t_( t), ctx_( ctx)
 		{}
@@ -84,18 +61,11 @@ private:
 public:
 	callable();
 
-	template< typename R >
+	template< typename T >
 	callable(
-			BOOST_RV_REF( task< R >) t,
+			BOOST_RV_REF( T) t,
 			context const& ctx) :
-		impl_( new task_wrapper< R >( t, ctx) )
-	{}
-
-	template< typename R >
-	callable(
-			BOOST_RV_REF( spin::packaged_task< R >) t,
-			context const& ctx) :
-		impl_( new packaged_task_wrapper< R >( t, ctx) )
+		impl_( new wrapper< T >( t, ctx) )
 	{}
 
 	void operator()();

@@ -16,6 +16,7 @@
 #include <boost/utility/result_of.hpp>
 
 #include <boost/task/exceptions.hpp>
+#include <boost/task/spin/future.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -30,7 +31,7 @@ protected:
 	bool	done_;
 
 protected:
-	promise< R >	prom_;
+	spin::promise< R >	prom_;
 
 	virtual void do_run() = 0;
 
@@ -48,7 +49,7 @@ public:
 		done_ = true;
 	}
 
-	unique_future< R > get_future()
+	spin::unique_future< R > get_future()
 	{ return prom_.get_future(); }
 
 	template< typename Cb >
@@ -104,7 +105,7 @@ private:
 		{ this->prom_.set_exception( copy_exception( e) ); }
 		catch ( std::bad_exception const& e)
 		{ this->prom_.set_exception( copy_exception( e) ); }
-		catch(...)
+		catch (...)
 		{ this->prom_.set_exception( current_exception() ); }
 	}
 
@@ -165,7 +166,7 @@ private:
 		{ this->prom_.set_exception( copy_exception( e) ); }
 		catch ( std::bad_exception const& e)
 		{ this->prom_.set_exception( copy_exception( e) ); }
-		catch(...)
+		catch (...)
 		{ this->prom_.set_exception( current_exception() ); }
 	}
 
@@ -242,7 +243,7 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASKS_MAX_ARITY, BOOST_TASKS_CTOR, ~)
 		task_->run();
 	}
 
-	unique_future< R > get_future()
+	spin::unique_future< R > get_future()
 	{
 		if ( ! task_)
 			throw task_moved();

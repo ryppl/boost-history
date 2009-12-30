@@ -18,7 +18,7 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::tasks;
 
-typedef tsk::static_pool< tsk::unbounded_onelock_fifo > pool_type;
+typedef tsk::static_pool< tsk::unbounded_fifo > pool_type;
 
 int serial_fib( int n)
 {

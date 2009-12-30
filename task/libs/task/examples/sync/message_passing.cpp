@@ -18,7 +18,7 @@
 
 namespace tsk = boost::tasks;
 
-typedef tsk::static_pool< tsk::unbounded_twolock_fifo > pool_type;
+typedef tsk::static_pool< tsk::unbounded_fifo > pool_type;
 
 int serial_fib( int n)
 {

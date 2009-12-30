@@ -49,7 +49,7 @@ int main( int argc, char *argv[])
 	try
 	{
 		tsk::static_pool<
-			tsk::unbounded_onelock_smart_queue<
+			tsk::unbounded_smart_queue<
 					int,
 					std::less< int >
 			>

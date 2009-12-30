@@ -17,7 +17,7 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::tasks;
 
-typedef tsk::static_pool< tsk::unbounded_twolock_fifo > pool_type;
+typedef tsk::static_pool< tsk::unbounded_fifo > pool_type;
 
 inline
 int fibonacci_fn( int n)
