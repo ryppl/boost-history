@@ -7,6 +7,7 @@
 #ifndef BOOST_TASKS_TASK_H
 #define BOOST_TASKS_TASK_H
 
+#include <boost/atomic.hpp>
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
 #include <boost/preprocessor/repetition.hpp>
@@ -27,10 +28,16 @@ namespace detail {
 template< typename R >
 class task_base
 {
-protected:
-	bool	done_;
+private:
+	template< typename X >
+	friend void intrusive_ptr_add_ref( task_base< X > *);
+	template< typename X >
+	friend void intrusive_ptr_release( task_base< X > *);
+
+	atomic< unsigned int >	use_count_;
 
 protected:
+	bool				done_;
 	spin::promise< R >	prom_;
 
 	virtual void do_run() = 0;
@@ -56,6 +63,20 @@ public:
 	void set_wait_callback( Cb const& cb)
 	{ prom_.set_wait_callback( cb); }
 };
+
+template< typename R >
+void intrusive_ptr_add_ref( task_base< R > * p)
+{ p->use_count_.fetch_add( 1, memory_order_relaxed); }
+
+template< typename R >
+void intrusive_ptr_release( task_base< R > * p)
+{
+	if ( p->use_count_.fetch_sub( 1, memory_order_release) == 1)
+	{
+		atomic_thread_fence( memory_order_acquire);
+		delete p;
+	}
+}
 
 template< typename R, typename Fn >
 class task_wrapper : public task_base< R >
@@ -186,7 +207,7 @@ private:
 
 	BOOST_MOVABLE_BUT_NOT_COPYABLE( task);	
 
-	shared_ptr< detail::task_base< R > >	task_;
+	intrusive_ptr< detail::task_base< R > >	task_;
 
 public:
 	task() :

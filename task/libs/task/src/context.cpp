@@ -31,6 +31,7 @@ context::impl::interrupt_()
 }
 
 context::impl::impl() :
+	use_count_( 0),
 	requested_( false),
 	mtx_(),
 	thrd_()

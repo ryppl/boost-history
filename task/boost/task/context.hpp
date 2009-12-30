@@ -7,6 +7,8 @@
 #ifndef BOOST_TASKS_CONTEXT_H
 #define BOOST_TASKS_CONTEXT_H
 
+#include <boost/atomic.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
@@ -33,6 +35,7 @@ private:
 	class impl : private noncopyable
 	{
 	private:
+		atomic< unsigned int >	use_count_;
 		bool					requested_;
 		mutex					mtx_;
 		shared_ptr< thread >	thrd_;
@@ -49,9 +52,21 @@ private:
 		void interrupt();
 
 		bool interruption_requested();
+
+		inline friend void intrusive_ptr_add_ref( impl * p)
+		{ p->use_count_.fetch_add( 1, memory_order_relaxed); }
+		
+		inline friend void intrusive_ptr_release( impl * p)
+		{
+			if ( p->use_count_.fetch_sub( 1, memory_order_release) == 1)
+			{
+				atomic_thread_fence( memory_order_acquire);
+				delete p;
+			}
+		}
 	};
 
-	shared_ptr< impl >	impl_;
+	intrusive_ptr< impl >	impl_;
 
 public:
 	context();

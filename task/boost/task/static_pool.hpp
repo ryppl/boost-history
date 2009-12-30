@@ -12,6 +12,7 @@
 #include <boost/config.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/fiber/round_robin.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/move/move.hpp>
 
 #include <boost/task/detail/bind_processor.hpp>
@@ -52,7 +53,7 @@ private:
 	struct tag_bind_to_processors {};
 # endif
 	
-	shared_ptr< base_type >		pool_;
+	intrusive_ptr< base_type >		pool_;
 
 public:
 	static_pool() :

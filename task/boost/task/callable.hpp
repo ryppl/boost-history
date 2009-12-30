@@ -8,6 +8,7 @@
 #define BOOST_TASKS_CALLABLE_H
 
 #include <boost/config.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/move/move.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
@@ -30,9 +31,29 @@ class BOOST_TASKS_DECL callable
 private:
 	struct impl
 	{
+		atomic< unsigned int >	use_count_;
+
+		impl() :
+			use_count_( 0)
+		{}
+
 		virtual ~impl() {}
+
 		virtual void run() = 0;
+
 		virtual void reset( shared_ptr< thread > const&) = 0;
+
+		inline friend void intrusive_ptr_add_ref( impl * p)
+		{ p->use_count_.fetch_add( 1, memory_order_relaxed); }
+		
+		inline friend void intrusive_ptr_release( impl * p)
+		{
+			if ( p->use_count_.fetch_sub( 1, memory_order_release) == 1)
+			{
+				atomic_thread_fence( memory_order_acquire);
+				delete p;
+			}
+		}
 	};
 
 	template< typename T >
@@ -56,7 +77,7 @@ private:
 		{ ctx_.reset( thrd); }
 	};
 
-	shared_ptr< impl >	impl_;
+	intrusive_ptr< impl >	impl_;
 
 public:
 	callable();

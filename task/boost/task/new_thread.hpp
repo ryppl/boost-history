@@ -71,7 +71,8 @@ public:
 		handle< R > h( f, ctx1);
 		callable ca( t, ctx2);
 		shared_ptr< thread > thrd(
-			new thread( wrapper( ca) ),
+			//new thread( wrapper( ca) ),
+			new thread( ca),
 			detail::joiner() );
 		ctx1.reset( thrd);
 

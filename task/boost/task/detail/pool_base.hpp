@@ -62,6 +62,7 @@ private:
 		DEACTIVE	
 	};
 
+	atomic< unsigned int >	use_count_;
 	worker_group			wg_;
 	shared_mutex			mtx_wg_;
 	atomic< state >			state_;
@@ -142,6 +143,7 @@ public:
 			posix_time::time_duration const& asleep,
 			scanns const& max_scns,
 			stacksize const& stack_size) :
+		use_count_( 0),
 		wg_(),
 		mtx_wg_(),
 		state_( ACTIVE),
@@ -164,6 +166,7 @@ public:
 			posix_time::time_duration const& asleep,
 			scanns const& max_scns,
 			stacksize const& stack_size) :
+		use_count_( 0),
 		wg_(),
 		mtx_wg_(),
 		state_( ACTIVE),
@@ -184,6 +187,7 @@ public:
 			posix_time::time_duration const& asleep,
 			scanns const& max_scns,
 			stacksize const& stack_size) :
+		use_count_( 0),
 		wg_(),
 		mtx_wg_(),
 		state_( ACTIVE),
@@ -207,6 +211,7 @@ public:
 			posix_time::time_duration const& asleep,
 			scanns const& max_scns,
 			stacksize const& stack_size) :
+		use_count_( 0),
 		wg_(),
 		mtx_wg_(),
 		state_( ACTIVE),
@@ -305,6 +310,18 @@ public:
 				callable( boost::move( t), ctx),
 				attr) );
 		return h;
+	}
+
+	inline friend void intrusive_ptr_add_ref( pool_base * p)
+	{ p->use_count_.fetch_add( 1, memory_order_relaxed); }
+	
+	inline friend void intrusive_ptr_release( pool_base * p)
+	{
+		if ( p->use_count_.fetch_sub( 1, memory_order_release) == 1)
+		{
+			atomic_thread_fence( memory_order_acquire);
+			delete p;
+		}
 	}
 };
 
