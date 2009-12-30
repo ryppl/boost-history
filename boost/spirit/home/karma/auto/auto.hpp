@@ -1,10 +1,10 @@
-//  Copyright (c) 2001-2009 Hartmut Kaiser
+//  Copyright (c) 2001-2010 Hartmut Kaiser
 //
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#if !defined(BOOST_SPIRIT_KARMA_STREAM_MAY_01_2007_0310PM)
-#define BOOST_SPIRIT_KARMA_STREAM_MAY_01_2007_0310PM
+#if !defined(BOOST_SPIRIT_KARMA_AUTO_NOV_29_2009_0339PM)
+#define BOOST_SPIRIT_KARMA_AUTO_NOV_29_2009_0339PM
 
 #if defined(_MSC_VER)
 #pragma once
@@ -13,11 +13,14 @@
 #include <boost/spirit/home/support/common_terminals.hpp>
 #include <boost/spirit/home/support/info.hpp>
 #include <boost/spirit/home/support/container.hpp>
+#include <boost/spirit/home/support/assert_msg.hpp>
 #include <boost/spirit/home/support/detail/hold_any.hpp>
 #include <boost/spirit/home/karma/domain.hpp>
 #include <boost/spirit/home/karma/meta_compiler.hpp>
 #include <boost/spirit/home/karma/delimit_out.hpp>
+#include <boost/spirit/home/karma/generator.hpp>
 #include <boost/spirit/home/karma/auto/create_generator.hpp>
+#include <boost/mpl/bool.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit
@@ -38,7 +41,7 @@ namespace boost { namespace spirit { namespace karma
     ///////////////////////////////////////////////////////////////////////////
     template <typename Modifiers>
     struct auto_generator
-      : primitive_generator<auto_generator<Modifiers> >
+      : generator<auto_generator<Modifiers> >
     {
         typedef mpl::int_<generator_properties::all_properties> properties;
 
@@ -51,16 +54,6 @@ namespace boost { namespace spirit { namespace karma
         auto_generator(Modifiers const& modifiers)
           : modifiers_(modifiers) {}
 
-        template <
-            typename OutputIterator, typename Context, typename Delimiter
-          , typename Attribute, typename Expr>
-        bool generate_auto(OutputIterator& sink, Context& context
-          , Delimiter const& d, Attribute const& attr, Expr const& expr) const
-        {
-            return compile<karma::domain>(expr, modifiers_)
-              .generate(sink, context, d, attr);
-        }
-
         // auto_generator has an attached attribute 
         template <
             typename OutputIterator, typename Context, typename Delimiter
@@ -68,8 +61,8 @@ namespace boost { namespace spirit { namespace karma
         bool generate(OutputIterator& sink, Context& context
           , Delimiter const& d, Attribute const& attr) const
         {
-            return generate_auto(sink, context, d, attr
-              , create_generator<Attribute>());
+            return compile<karma::domain>(create_generator<Attribute>(), modifiers_)
+                      .generate(sink, context, d, attr);
         }
 
         // this auto_generator has no attribute attached, it needs to have been

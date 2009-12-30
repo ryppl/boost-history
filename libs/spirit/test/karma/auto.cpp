@@ -1,4 +1,4 @@
-//  Copyright (c) 2001-2009 Hartmut Kaiser
+//  Copyright (c) 2001-2010 Hartmut Kaiser
 //
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,36 +9,52 @@
 #include <boost/fusion/include/std_pair.hpp>
 
 #include <boost/spirit/include/karma_bool.hpp>
+#include <boost/spirit/include/karma_char.hpp>
 #include <boost/spirit/include/karma_numeric.hpp>
 #include <boost/spirit/include/karma_string.hpp>
 #include <boost/spirit/include/karma_nonterminal.hpp>
 #include <boost/spirit/include/karma_operator.hpp>
 #include <boost/spirit/include/karma_directive.hpp>
-
-#include <boost/spirit/home/karma/auto/create_generator.hpp>
-#include <boost/spirit/home/karma/auto/auto.hpp>
+#include <boost/spirit/include/karma_auto.hpp>
 
 #include "test.hpp"
 
 namespace karma = boost::spirit::karma;
+namespace traits = boost::spirit::traits;
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-std::string print(T const& t)
+template <typename Char, typename T>
+bool test_create_generator(Char const *expected, T const& t)
 {
-    std::string generated;
-    std::back_insert_iterator<std::string> sink(generated);
+    std::basic_string<Char> generated;
+    std::back_insert_iterator<std::basic_string<Char> > sink(generated);
 
-    if (!karma::generate(sink, karma::create_generator<T>(), t))
-        return "";
+    BOOST_TEST((traits::meta_create_exists<karma::domain, T>::value));
+    bool result = karma::generate(sink, karma::create_generator<T>(), t);
 
-    return generated;
+    spirit_test::print_if_failed("test_create_generator", result, generated, expected);
+    return result && generated == expected;
+}
+
+template <typename Char, typename T>
+bool test_create_generator_auto(Char const *expected, T const& t)
+{
+    std::basic_string<Char> generated;
+    std::back_insert_iterator<std::basic_string<Char> > sink(generated);
+
+    BOOST_TEST((traits::meta_create_exists<karma::domain, T>::value));
+    bool result = karma::generate(sink, t);
+
+    spirit_test::print_if_failed("test_create_generator (auto)", result, generated, expected);
+    return result && generated == expected;
 }
 
 template <typename Char, typename Attribute>
 bool test_rule(Char const *expected, Attribute const& attr)
 {
-    typedef spirit_test::output_iterator<Char>::type sink_type;
+    BOOST_TEST((traits::meta_create_exists<karma::domain, Attribute>::value));
+
+    typedef typename spirit_test::output_iterator<Char>::type sink_type;
     karma::rule<sink_type, Attribute()> r = 
         karma::create_generator<Attribute>();
     return spirit_test::test(expected, r, attr);
@@ -48,56 +64,109 @@ template <typename Char, typename Attribute, typename Delimiter>
 bool test_rule_delimited(Char const *expected, Attribute const& attr
   , Delimiter const& d)
 {
-    typedef spirit_test::output_iterator<Char>::type sink_type;
+    BOOST_TEST((traits::meta_create_exists<karma::domain, Attribute>::value));
+
+    typedef typename spirit_test::output_iterator<Char>::type sink_type;
     karma::rule<sink_type, Attribute(), Delimiter> r = 
         karma::create_generator<Attribute>();
     return spirit_test::test_delimited(expected, r, attr, d);
 }
 
+struct my_type {};
+
 ///////////////////////////////////////////////////////////////////////////////
 int main()
 {
     {
+        BOOST_TEST((!traits::meta_create_exists<karma::domain, my_type>::value));
+    }
+
+    {
         // test primitive types
-        BOOST_TEST("true" == print(true));
-        BOOST_TEST("1" == print(1));
-        BOOST_TEST("1.1" == print(1.1));
-        BOOST_TEST("test" == print("test"));
-        BOOST_TEST("a" == print('a'));
+        BOOST_TEST(test_create_generator("true", true));
+        BOOST_TEST(test_create_generator("1", 1));
+        BOOST_TEST(test_create_generator("1.1", 1.1));
+        BOOST_TEST(test_create_generator("test", std::string("test")));
+        BOOST_TEST(test_create_generator("a", 'a'));
+        BOOST_TEST(test_create_generator(L"a", L'a'));
 
         // test containers
         std::vector<int> v;
         v.push_back(0);
         v.push_back(1);
         v.push_back(2);
-        BOOST_TEST("012" == print(v));
+        BOOST_TEST(test_create_generator("012", v));
 
         std::list<int> l;
         l.push_back(0);
         l.push_back(1);
         l.push_back(2);
-        BOOST_TEST("012" == print(l));
+        BOOST_TEST(test_create_generator("012", l));
 
         // test optional
         boost::optional<int> o;
-        BOOST_TEST("" == print(o));
+        BOOST_TEST(test_create_generator("", o));
         o = 1;
-        BOOST_TEST("1" == print(o));
+        BOOST_TEST(test_create_generator("1", o));
 
         // test alternative
         boost::variant<int, double, float, std::string> vv;
         vv = 1;
-        BOOST_TEST("1" == print(vv));
+        BOOST_TEST(test_create_generator("1", vv));
         vv = 1.0;
-        BOOST_TEST("1.0" == print(vv));
+        BOOST_TEST(test_create_generator("1.0", vv));
         vv = 1.0f;
-        BOOST_TEST("1.0" == print(vv));
+        BOOST_TEST(test_create_generator("1.0", vv));
         vv = "some string";
-        BOOST_TEST("some string" == print(vv));
+        BOOST_TEST(test_create_generator("some string", vv));
 
         // test fusion sequence
         std::pair<int, double> p (1, 2.0);
-        BOOST_TEST("12.0" == print(p));
+        BOOST_TEST(test_create_generator("12.0", p));
+    }
+
+    {
+        // test primitive types
+//         BOOST_TEST(test_create_generator_auto("true", true));
+//         BOOST_TEST(test_create_generator_auto("1", 1));
+//         BOOST_TEST(test_create_generator_auto("1.1", 1.1));
+//         BOOST_TEST(test_create_generator_auto("test", std::string("test")));
+//         BOOST_TEST(test_create_generator_auto("a", 'a'));
+//         BOOST_TEST(test_create_generator_auto(L"a", L'a'));
+
+        // test containers
+        std::vector<int> v;
+        v.push_back(0);
+        v.push_back(1);
+        v.push_back(2);
+        BOOST_TEST(test_create_generator_auto("012", v));
+
+        std::list<int> l;
+        l.push_back(0);
+        l.push_back(1);
+        l.push_back(2);
+        BOOST_TEST(test_create_generator_auto("012", l));
+
+        // test optional
+        boost::optional<int> o;
+        BOOST_TEST(test_create_generator_auto("", o));
+        o = 1;
+        BOOST_TEST(test_create_generator_auto("1", o));
+
+        // test alternative
+        boost::variant<int, double, float, std::string> vv;
+        vv = 1;
+        BOOST_TEST(test_create_generator_auto("1", vv));
+        vv = 1.0;
+        BOOST_TEST(test_create_generator_auto("1.0", vv));
+        vv = 1.0f;
+        BOOST_TEST(test_create_generator_auto("1.0", vv));
+        vv = "some string";
+        BOOST_TEST(test_create_generator_auto("some string", vv));
+
+        // test fusion sequence
+        std::pair<int, double> p (1, 2.0);
+        BOOST_TEST(test_create_generator_auto("12.0", p));
     }
 
     {
@@ -159,8 +228,6 @@ int main()
     }
 
     {
-        using karma::auto_;
-        using karma::upper;
         using spirit_test::test;
         using spirit_test::test_delimited;
 

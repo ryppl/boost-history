@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2001-2009 Joel de Guzman
+    Copyright (c) 2001-2010 Joel de Guzman
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -13,6 +13,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Main program
 ///////////////////////////////////////////////////////////////////////////////
+
+#define BOOST_SPIRIT_AUTO(domain_, name, expr)                                  \
+    typedef BOOST_TYPEOF(expr) name##_expr_type;                                \
+    BOOST_SPIRIT_ASSERT_MATCH(                                                  \
+        boost::spirit::domain_::domain, name##_expr_type);                      \
+    BOOST_AUTO(name, boost::proto::deep_copy(expr));                            \
+    //
+
 int
 main()
 {
@@ -21,7 +29,7 @@ main()
     using boost::spirit::qi::parse;
     typedef std::string::const_iterator iterator_type;
     
-    BOOST_AUTO(comment, "/*" >> *(char_ - "*/") >> "*/");
+    BOOST_SPIRIT_AUTO(qi, comment, "/*" >> *(char_ - "*/") >> "*/");
 
     std::string str = "/*This is a comment*/";
     std::string::const_iterator iter = str.begin();

@@ -1,5 +1,5 @@
 // Copyright (c) 2009 Erik Bryan
-// Copyright (c) 2007-2009 Hartmut Kaiser
+// Copyright (c) 2007-2010 Hartmut Kaiser
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file licence_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -71,6 +71,11 @@ namespace client
 // specialize Spirit's container specific customization points for our adaptor
 namespace boost { namespace spirit { namespace traits
 {
+    template <typename T, std::size_t N>
+     struct is_container<client::detail::adapt_array<boost::array<T, N> > > 
+       : boost::mpl::true_
+     {};
+
     template <typename T, std::size_t N>
     struct container_value<client::detail::adapt_array<boost::array<T, N> > >
     {

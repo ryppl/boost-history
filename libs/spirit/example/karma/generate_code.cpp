@@ -1,4 +1,4 @@
-//   Copyright (c) 2001-2009 Hartmut Kaiser
+//   Copyright (c) 2001-2010 Hartmut Kaiser
 // 
 //   Distributed under the Boost Software License, Version 1.0. (See accompanying
 //   file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -37,9 +37,10 @@ namespace client
             using karma::_val;
             using karma::_r1;
 
-            start = array_def(phoenix::size(_val)) << " = " << initializer << eol;
+            start = array_def(phoenix::size(_val)) << " = " << initializer 
+                                                   << ';' << eol;
             array_def = "int " << lit(name) << "[" << uint_(_r1) << "]";
-            initializer = "{ " << -(int_ % ", ") << " };";
+            initializer = "{ " << -(int_ % ", ") << " }";
         }
 
         karma::rule<Iterator, void(unsigned)> array_def;
