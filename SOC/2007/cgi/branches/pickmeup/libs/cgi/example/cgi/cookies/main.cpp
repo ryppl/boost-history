@@ -101,9 +101,6 @@ int main()
   try {
     request_type req;
 
-    // Load up the request data
-    req.load(parse_all);
-
     response_type resp;
 
     // Check if we are resetting the user.

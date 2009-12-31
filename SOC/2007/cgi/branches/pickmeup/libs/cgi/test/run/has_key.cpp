@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE( std_map )
 
 BOOST_AUTO_TEST_CASE( map_test )
 {
-  typedef cgi::common::map map_type;
+  typedef boost::cgi::common::map map_type;
   map_type m;
   
   /// First check that upper case compares with lower case.
@@ -43,3 +43,4 @@ BOOST_AUTO_TEST_CASE( map_test )
   // Sanity check.
   BOOST_CHECK_EQUAL( has_key(m,"nonfoo"), false );
 }
+

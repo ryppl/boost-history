@@ -7,7 +7,7 @@
 
 BOOST_AUTO_TEST_CASE( map_test )
 {
-  cgi::common::map m;
+  boost::cgi::common::map m;
 
   /// First check that upper case compares with lower case.
   m["foo"] = "bar";

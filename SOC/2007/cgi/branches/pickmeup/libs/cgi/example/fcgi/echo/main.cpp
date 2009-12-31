@@ -23,6 +23,8 @@
 #include "boost/cgi/fcgi.hpp"
 
 //using namespace std;
+using std::cerr;
+using std::endl;
 using namespace boost::fcgi;
 
 // The styling information for the page, just to make things look nicer.

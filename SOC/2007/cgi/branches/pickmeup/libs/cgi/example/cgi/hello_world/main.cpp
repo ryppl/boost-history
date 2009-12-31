@@ -31,7 +31,9 @@ try {
   // the response text.
   resp<< "Hello there, universe."
       << cgi::cookie("test", "check")
+      << cgi::charset("ascii")
       ;
+  //resp.set(cgi::cookie("test", "check"));
 
   // Leave this function, after sending the response and closing the request.
   // Returns 0 on success.
