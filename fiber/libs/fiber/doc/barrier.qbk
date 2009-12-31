@@ -22,14 +22,14 @@ barrier, all the waiting fibers can proceed, and the barrier is reset.
     {
     public:
         template< typename Strategy >
-        barrier( scheduler< Strategy > & sched, uint32_t initial);
+        barrier( scheduler< Strategy > & sched, unsigned int initial);
 
         bool wait();
     };
 
 Instances of __barrier__ are not copyable or movable.
 
-[section:constructor `template< typename Strategy > barrier( scheduler< Strategy > & sched, uint32_t initial)`]
+[section:constructor `template< typename Strategy > barrier( scheduler< Strategy > & sched, unsigned int initial)`]
 [variablelist
 [[Effects:] [Construct a barrier for `initial` fibers.]]
 [[Throws:] [__invalid_argument__ if an error occurs.]]

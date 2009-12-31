@@ -9,12 +9,18 @@
 
 #include <cstddef>
 
+#include <boost/config.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/fiber/object/id.hpp>
+#include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/mutex.hpp>
+#include <boost/fiber/object/id.hpp>
 #include <boost/fiber/scheduler.hpp>
 #include <boost/fiber/strategy.hpp>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 # if defined(BOOST_MSVC)
 # pragma warning(push)
@@ -24,7 +30,7 @@
 namespace boost {
 namespace fibers {
 
-class manual_reset_event : private noncopyable
+class BOOST_FIBER_DECL manual_reset_event : private noncopyable
 {
 private:
 	enum state
@@ -65,5 +71,9 @@ public:
 # if defined(BOOST_MSVC)
 # pragma warning(pop)
 # endif
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_MANUAL_RESET_EVENT_H

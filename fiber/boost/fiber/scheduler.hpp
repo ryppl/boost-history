@@ -10,18 +10,20 @@
 #include <cstddef>
 #include <memory>
 
+#include <boost/config.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/move/move.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/fiber.hpp>
 #include <boost/fiber/round_robin.hpp>
 #include <boost/fiber/strategy.hpp>
 
-#include <boost/config/abi_prefix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 # if defined(BOOST_MSVC)
 # pragma warning(push)
@@ -38,7 +40,7 @@ class manual_reset_event;
 class mutex;
 
 template< typename Strategy = round_robin >
-class BOOST_FIBER_DECL scheduler : private noncopyable
+class scheduler : private noncopyable
 {
 private:
 	friend class auto_reset_event;
@@ -120,6 +122,8 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_MAKE_FIBER_FUNCTI
 # pragma warning(pop)
 # endif
 
-#include <boost/config/abi_suffix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_SCHEDULER_H

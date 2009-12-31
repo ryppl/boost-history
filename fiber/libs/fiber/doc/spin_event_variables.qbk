@@ -201,13 +201,13 @@ waiting fibers are blocked until the count reaches zero.
     class count_down_event : private boost::noncopyable
     {
     public:
-        explicit count_down_event( uint32_t initial);
+        explicit count_down_event( unsigned int initial);
 
         ~count_down_event();
 
-        uint32_t initial() const;
+        unsigned int initial() const;
 
-        uint32_t current() const;
+        unsigned int current() const;
 
         bool is_set() const;
 
@@ -216,7 +216,7 @@ waiting fibers are blocked until the count reaches zero.
         void wait();
     };
 
-[section:constructor `explicit count_down_event( uint32_t initial)`]
+[section:constructor `explicit count_down_event( unsigned int initial)`]
 [variablelist
 [[Effects:] [Constructs an object of class `count_down_event` with initial value.]]
 [[Throws:] [Nothing.]]
@@ -232,14 +232,14 @@ waiting fibers are blocked until the count reaches zero.
 ]
 [endsect]
 
-[section:initial `uint32_t initial()`]
+[section:initial `unsigned int initial()`]
 [variablelist
 [[Effects:] [Returns the initial value the event variable was initialized with.]]
 [[Throws:] [Nothing.]]
 ]
 [endsect]
 
-[section:current `uint32_t current()`]
+[section:current `unsigned int current()`]
 [variablelist
 [[Effects:] [Returns the value the variable currently holds.]]
 [[Throws:] [Nothing.]]

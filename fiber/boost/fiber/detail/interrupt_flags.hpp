@@ -7,7 +7,11 @@
 #ifndef BOOST_FIBERS_DETAIL_INTERRUPT_FLAGS_H
 #define BOOST_FIBERS_DETAIL_INTERRUPT_FLAGS_H
 
-#include <boost/config/abi_prefix.hpp>
+#include <boost/config.hpp>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace boost {
 namespace fibers {
@@ -24,6 +28,8 @@ typedef char interrupt_t;
 
 }}}
 
-#include <boost/config/abi_suffix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_DETAIL_INTERRUPT_FLAGS_H

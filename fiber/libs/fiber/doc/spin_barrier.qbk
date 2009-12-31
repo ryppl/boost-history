@@ -22,14 +22,14 @@ or code not running in a fiber.]
     class barrier
     {
     public:
-        barrier( uint32_t initial);
+        barrier( unsigned int initial);
 
         bool wait();
     };
 
 Instances of __spin_barrier__ are not copyable or movable.
 
-[section:constructor `barrier( uint32_t initial)`]
+[section:constructor `barrier( unsigned int initial)`]
 [variablelist
 [[Effects:] [Construct a barrier for `initial` fibers.]]
 [[Throws:] [__invalid_argument__ if an error occurs.]]

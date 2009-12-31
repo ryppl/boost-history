@@ -13,19 +13,25 @@
 
 #include <boost/assert.hpp>
 #include <boost/atomic.hpp>
+#include <boost/config.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/spin/mutex.hpp>
 #include <boost/fiber/utility.hpp>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace boost {
 namespace fibers {
 namespace spin {
 
-class condition : private noncopyable
+class BOOST_FIBER_DECL condition : private noncopyable
 {
 private:
 	enum command
@@ -130,5 +136,9 @@ public:
 };
 
 }}}
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_SPIN_CONDITION_H

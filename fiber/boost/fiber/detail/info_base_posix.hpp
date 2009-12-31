@@ -16,7 +16,7 @@ extern "C" {
 #include <cstddef>
 #include <stack>
 
-#include <boost/cstdint.hpp>
+#include <boost/config.hpp>
 #include <boost/function.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/shared_array.hpp>
@@ -25,7 +25,9 @@ extern "C" {
 #include <boost/fiber/detail/interrupt_flags.hpp>
 #include <boost/fiber/detail/state_flags.hpp>
 
-#include <boost/config/abi_prefix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace boost {
 namespace fibers {
@@ -40,7 +42,7 @@ struct BOOST_FIBER_DECL info_base
 	typedef function< void() >					callable_t;
 	typedef std::stack< callable_t >			callable_stack_t;
 
-	uint32_t				use_count;
+	unsigned int			use_count;
 	std::size_t				stack_size;
 	int						priority;
 	::ucontext_t			uctx;
@@ -67,6 +69,8 @@ struct BOOST_FIBER_DECL info_base
 
 }}}
 
-#include <boost/config/abi_suffix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_DETAIL_INFO_POSIX_H

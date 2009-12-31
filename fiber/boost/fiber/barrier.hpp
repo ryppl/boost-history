@@ -10,16 +10,22 @@
 #include <cstddef>
 #include <stdexcept>
 
+#include <boost/config.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/fiber/condition.hpp>
+#include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/mutex.hpp>
 #include <boost/fiber/scheduler.hpp>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace boost {
 namespace fibers {
 
-class barrier : private noncopyable
+class BOOST_FIBER_DECL barrier : private noncopyable
 {
 private:
 	std::size_t		initial_;
@@ -42,5 +48,9 @@ public:
 };
 
 }}
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_BARRIER_H

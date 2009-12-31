@@ -11,6 +11,7 @@
 #include <stdexcept>
 
 #include <boost/atomic.hpp>
+#include <boost/config.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility.hpp>
@@ -19,7 +20,9 @@
 #include <boost/fiber/spin/condition.hpp>
 #include <boost/fiber/spin/mutex.hpp>
 
-#include <boost/config/abi_prefix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace boost {
 namespace fibers {
@@ -168,6 +171,9 @@ private:
 		std::size_t lower_bound() const
 		{ return lwm_; }
 
+		bool active() const
+		{ return active_(); }
+
 		void deactivate()
 		{ deactivate_(); }
 
@@ -289,6 +295,9 @@ public:
 	
 	std::size_t lower_bound() const
 	{ return impl_->lower_bound(); }
+
+	bool active() const
+	{ return impl_->active(); }
 	
 	void deactivate()
 	{ impl_->deactivate(); }
@@ -308,6 +317,8 @@ public:
 
 }}}
 
-#include <boost/config/abi_suffix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_SPIN_BOUNDED_CHANNEL_H

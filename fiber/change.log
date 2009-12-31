@@ -1,3 +1,9 @@
+0.3.6:
+------
+- bound/unbounded-channel function bool active() const added
+- BOOST_FIBER_DECL added
+- BOOST_ABI_PREFIX/BOOST_ABI_SUFFIX added
+
 0.3.5:
 ------
 - boudned/unbounded-fifo renamed to bounded/unbounded-channel

@@ -20,7 +20,9 @@
 #include <boost/fiber/spin/condition.hpp>
 #include <boost/fiber/spin/mutex.hpp>
 
-#include <boost/config/abi_prefix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace boost {
 namespace fibers {
@@ -111,6 +113,9 @@ private:
 			use_count_( 0)
 		{}
 
+		bool active() const
+		{ return active_(); }
+
 		void deactivate()
 		{ deactivate_(); }
 
@@ -189,6 +194,9 @@ public:
 		impl_( new impl() )
 	{}
 
+	bool active() const
+	{ return impl_->active(); }
+
 	void deactivate()
 	{ impl_->deactivate(); }
 
@@ -207,6 +215,8 @@ public:
 
 }}}
 
-#include <boost/config/abi_suffix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_SPIN_UNBOUNDED_CHANNEL_H

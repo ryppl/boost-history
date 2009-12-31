@@ -27,6 +27,10 @@
 #include <boost/fiber/spin/condition.hpp>
 #include <boost/fiber/spin/mutex.hpp>
 
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
+
 namespace boost {
 namespace fibers {
 
@@ -1077,5 +1081,9 @@ public:
 };
 
 }}}
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_SPIN_FUTURE_H

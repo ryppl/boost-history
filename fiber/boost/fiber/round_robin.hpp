@@ -12,6 +12,7 @@
 #include <map>
 #include <queue>
 
+#include <boost/config.hpp>
 #include <boost/function.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility.hpp>
@@ -21,7 +22,9 @@
 #include <boost/fiber/fiber.hpp>
 #include <boost/fiber/strategy.hpp>
 
-#include <boost/config/abi_prefix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 # if defined(BOOST_MSVC)
 # pragma warning(push)
@@ -128,6 +131,8 @@ public:
 # pragma warning(pop)
 # endif
 
-#include <boost/config/abi_suffix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_ROUND_ROBIN_H

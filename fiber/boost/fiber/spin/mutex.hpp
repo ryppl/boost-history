@@ -10,16 +10,22 @@
 #define BOOST_FIBERS_SPIN_MUTEX_H
 
 #include <boost/atomic.hpp>
+#include <boost/config.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/fiber.hpp>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace boost {
 namespace fibers {
 namespace spin {
 
-class mutex : private noncopyable
+class BOOST_FIBER_DECL mutex : private noncopyable
 {
 private:
 	enum state
@@ -45,5 +51,9 @@ public:
 typedef mutex try_mutex;
 
 }}}
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_SPIN_MUTEX_H

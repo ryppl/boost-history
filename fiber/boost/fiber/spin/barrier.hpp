@@ -9,16 +9,22 @@
 
 #include <cstddef>
 
+#include <boost/config.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/spin/condition.hpp>
 #include <boost/fiber/spin/mutex.hpp>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace boost {
 namespace fibers {
 namespace spin {
 
-class barrier : private noncopyable
+class BOOST_FIBER_DECL barrier : private noncopyable
 {
 private:
 	std::size_t		initial_;
@@ -34,5 +40,9 @@ public:
 };
 
 }}}
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_SPIN_BARRIER_H

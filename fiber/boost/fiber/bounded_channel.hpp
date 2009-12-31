@@ -11,6 +11,7 @@
 #include <stdexcept>
 
 #include <boost/intrusive_ptr.hpp>
+#include <boost/config.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility.hpp>
 
@@ -18,7 +19,9 @@
 #include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/mutex.hpp>
 
-#include <boost/config/abi_prefix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace boost {
 namespace fibers {
@@ -304,6 +307,8 @@ public:
 
 }}
 
-#include <boost/config/abi_suffix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_BOUNDED_CHANNEL_H

@@ -29,7 +29,7 @@ void wait_fn( boost::fibers::spin::count_down_event & ev)
 
 void test_case_1()
 {
-	boost::uint32_t n = 3;
+	unsigned int n = 3;
 	boost::fibers::spin::count_down_event ev( n);
 
 	BOOST_CHECK_EQUAL( ev.initial(), n);
@@ -37,25 +37,25 @@ void test_case_1()
 
 	ev.set();
 	BOOST_CHECK_EQUAL( ev.initial(), n);
-	BOOST_CHECK_EQUAL( ev.current(), static_cast< boost::uint32_t >( 2) );
+	BOOST_CHECK_EQUAL( ev.current(), 2);
 
 	ev.set();
 	BOOST_CHECK_EQUAL( ev.initial(), n);
-	BOOST_CHECK_EQUAL( ev.current(), static_cast< boost::uint32_t >( 1) );
+	BOOST_CHECK_EQUAL( ev.current(), 1);
 
 	ev.set();
 	BOOST_CHECK_EQUAL( ev.initial(), n);
-	BOOST_CHECK_EQUAL( ev.current(), static_cast< boost::uint32_t >( 0) );
+	BOOST_CHECK_EQUAL( ev.current(), 0);
 
 	ev.set();
 	BOOST_CHECK_EQUAL( ev.initial(), n);
-	BOOST_CHECK_EQUAL( ev.current(), static_cast< boost::uint32_t >( 0) );
+	BOOST_CHECK_EQUAL( ev.current(), 0);
 }
 
 void test_case_2()
 {
 	value = 0;
-	boost::uint32_t n = 3;
+	unsigned int n = 3;
 	boost::fibers::spin::count_down_event ev( n);
 	boost::fibers::scheduler<> sched;
 
@@ -67,7 +67,7 @@ void test_case_2()
 		boost::ref( ev),
 		boost::fiber::default_stacksize);
 
-	for ( boost::uint32_t i = 0; i < n - 1; ++i)
+	for ( unsigned int i = 0; i < n - 1; ++i)
 	{
 		ev.set();
 		BOOST_CHECK( sched.run() );
@@ -76,7 +76,7 @@ void test_case_2()
 	ev.set();
 	BOOST_CHECK( sched.run() );
 	BOOST_CHECK_EQUAL( ev.initial(), n);
-	BOOST_CHECK_EQUAL( ev.current(), static_cast< boost::uint32_t >( 0) );
+	BOOST_CHECK_EQUAL( ev.current(), 0);
 	BOOST_CHECK_EQUAL( 1, value);
 }
 

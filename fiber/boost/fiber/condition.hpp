@@ -12,14 +12,20 @@
 #include <cstddef>
 
 #include <boost/assert.hpp>
+#include <boost/config.hpp>
 #include <boost/utility.hpp>
 #include <boost/thread/locks.hpp>
 
+#include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/exceptions.hpp>
 #include <boost/fiber/mutex.hpp>
 #include <boost/fiber/object/id.hpp>
 #include <boost/fiber/scheduler.hpp>
 #include <boost/fiber/strategy.hpp>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 # if defined(BOOST_MSVC)
 # pragma warning(push)
@@ -29,7 +35,7 @@
 namespace boost {
 namespace fibers {
 
-class condition : private noncopyable
+class BOOST_FIBER_DECL condition : private noncopyable
 {
 private:
 	enum command
@@ -139,5 +145,9 @@ public:
 # if defined(BOOST_MSVC)
 # pragma warning(pop)
 # endif
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_CONDITION_H

@@ -9,6 +9,12 @@
 
 #include <iostream>
 
+#include <boost/config.hpp>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
+
 namespace boost {
 namespace fibers {
 namespace object {
@@ -54,5 +60,9 @@ public:
 };
 
 }}}
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_DETAIL_ID_H

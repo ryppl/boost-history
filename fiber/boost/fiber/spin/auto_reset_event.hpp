@@ -8,13 +8,20 @@
 #define BOOST_FIBERS_SPIN_AUTO_RESET_EVENT_H
 
 #include <boost/atomic.hpp>
+#include <boost/config.hpp>
 #include <boost/utility.hpp>
+
+#include <boost/fiber/detail/config.hpp>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace boost {
 namespace fibers {
 namespace spin {
 
-class auto_reset_event : private noncopyable
+class BOOST_FIBER_DECL auto_reset_event : private noncopyable
 {
 private:
 	enum state
@@ -36,5 +43,9 @@ public:
 };
 
 }}}
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_SPIN_AUTO_RESET_EVENT_H

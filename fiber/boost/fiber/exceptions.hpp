@@ -10,9 +10,13 @@
 #include <stdexcept>
 #include <string>
 
+#include <boost/config.hpp>
+
 #include <boost/fiber/detail/config.hpp>
 
-#include <boost/config/abi_prefix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace boost {
 namespace fibers {
@@ -116,6 +120,8 @@ public:
 
 }}
 
-#include <boost/config/abi_suffix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_EXCEPTIONS_H

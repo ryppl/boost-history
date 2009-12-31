@@ -21,7 +21,9 @@
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/detail/info.hpp>
 
-#include <boost/config/abi_prefix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 # if defined(BOOST_MSVC)
 # pragma warning(push)
@@ -145,7 +147,7 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_FIBER_MAX_ARITY, BOOST_FIBER_FIBER_CTOR, ~)
 	void join();
 };
 
-class fiber::id
+class BOOST_FIBER_DECL fiber::id
 {
 private:
 	friend class fiber;
@@ -220,6 +222,8 @@ void swap( fiber & l, fiber & r)
 # pragma warning(pop)
 # endif
 
-#include <boost/config/abi_suffix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_FIBER_H

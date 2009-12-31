@@ -10,6 +10,7 @@
 #include <cstddef>
 
 #include <boost/atomic.hpp>
+#include <boost/config.hpp>
 #include <boost/function.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/move/move.hpp>
@@ -19,7 +20,9 @@
 #include <boost/fiber/object/id.hpp>
 #include <boost/fiber/fiber.hpp>
 
-#include <boost/config/abi_prefix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 # if defined(BOOST_MSVC)
 # pragma warning(push)
@@ -218,6 +221,8 @@ public:
 # pragma warning(pop)
 # endif
 
-#include <boost/config/abi_suffix.hpp>
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif // BOOST_FIBERS_STRATEGY_H
