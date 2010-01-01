@@ -17,6 +17,11 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
+# if defined(BOOST_MSVC)
+# pragma warning(push)
+# pragma warning(disable:4355 4251 4275)
+# endif
+
 namespace boost {
 namespace fibers {
 namespace spin {
@@ -43,6 +48,10 @@ public:
 };
 
 }}}
+
+# if defined(BOOST_MSVC)
+# pragma warning(pop)
+# endif
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

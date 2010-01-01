@@ -25,7 +25,7 @@ namespace this_fiber {
 
 class restore_interruption;
 
-class BOOST_FIBER_DECL disable_interruption : private noncopyable
+class disable_interruption : private noncopyable
 {
 private:
 	friend class restore_interruption;
@@ -52,7 +52,7 @@ public:
 	}
 };
 
-class BOOST_FIBER_DECL restore_interruption : private noncopyable
+class restore_interruption : private noncopyable
 {
 private:
 	disable_interruption	&	disabler_;
