@@ -1,0 +1,457 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Filesystem Tutorial</title>
+<style type="text/css">
+  body    { font-family: sans-serif; margin: 1em; }
+  p, td, li, blockquote { font-size: 10pt; }
+  pre     { font-size: 9pt; }
+</style>
+</head>
+
+<body>
+
+<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="742">
+  <tr>
+    <td width="277">
+<a href="../../../index.htm">
+<img src="../../../boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86" border="0"></a></td>
+    <td width="442" align="middle">
+    <font size="7">Filesystem Tutorial</font>
+    </td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="100%">
+  <tr>
+    <td><a href="../../../index.htm">Boost Home</a>&nbsp;&nbsp;&nbsp;
+    <a href="index.htm">Library Home</a>&nbsp; &nbsp; 
+    <a href="reference.html">
+    Reference</a>&nbsp;&nbsp; 
+    <a href="faq.htm">FAQ</a></td>
+  </tr>
+</table>
+
+<h3>Preliminaries</h3>
+
+<p>Install the Boost distribution if you haven't already done so. Since 
+Boost.Filesystem is a compiled library, you will need to do a library build if 
+this hasn't been done already.</p>
+
+<h2>Basics</h2>
+
+<p>Let's look at the <code>rename</code> function to get an idea of some of the 
+differences in approach taken by Boost.Filesystem compared to legacy C language 
+interfaces.</p>
+
+<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <tr>
+    <td style="font-size: 10pt">
+    <b>C++ Standard library <code>rename</code> function from &lt;cstdio&gt;</b><blockquote style="font-size: 10pt">
+      <pre>int rename(const char *old, const char *new);</pre>
+    </blockquote>
+    <p><b>Boost Filesystem library <code>rename</code> function from 
+    &lt;filesystem.hpp&gt;</b></p>
+    <blockquote style="font-size: 10pt">
+      <pre>void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p);
+void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p, system::error_code&amp; ec);</pre>
+    </blockquote>
+    </td>
+  </tr>
+</table>
+
+<h3>Class path</h3>
+
+<p>Rather than trafficking in <code>const char*</code>'s, Boost.Filesystem 
+operational functions traffics in objects of <a href="reference.html#Path">class path</a>, 
+which are a lot more flexible. For example, class path has a converting constructor 
+template:</p>
+
+<blockquote>
+  <pre>template &lt;class Source&gt;
+  path(Source const&amp; source);</pre>
+</blockquote>
+<p>and this allows <code>const path&amp;</code> arguments to be called with a 
+variety of object types, such as:</p>
+<ul>
+  <li style="font-size: 10pt">An iterator, such as a pointer, for a null terminated byte-string. 
+  Value type can be <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li>A container with a value type of <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li>A C-array with a value type of <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li>A <code>boost::filesystem::directory_entry</code>.</li>
+</ul>
+<p>In addition to handling a variety of types, class path function templates 
+also handle conversion between the argument's encoding and the internal encoding 
+required for communication with the operating system. Thus it's no problem to 
+pass a wide character string to a Boost.Filesystem operational function even if 
+the underlying operating system uses narrow characters, and visa versa. </p>
+<p>Say we have a file named <code><font size="4">valentine</font></code> we'd 
+like to rename <code><font size="4">&#9829;valentine</font></code>. Here's the code:</p>
+<blockquote>
+  <pre>boost::filesystem::rename(&quot;valentine&quot;, L&quot;\u2665valentine&quot;);</pre>
+</blockquote>
+
+  <p>Class <code>path</code> will take care of whatever character type or 
+  encoding conversions are required by the particular operating system. It also 
+  provides path syntax that is portable across operating systems, element 
+  iterators, and observer, composition, decomposition, and query functions to 
+  manipulate the elements of a path. <span style="background-color: #FFFF00">
+  More on class </span><code><span style="background-color: #FFFF00">path</span></code><span style="background-color: #FFFF00"> 
+  later in this tutorial.</span></p>
+
+  <h3>Error reporting</h3>
+
+  <p>Legacy C interfaces like the original <code>rename</code> function report 
+  errors via an error code, typically obtained via <code>errno</code>. The 
+  preferred C++ practice is to throw an exception to report an error, and that's 
+  how the first of the two Boost.Filesystem <code>rename</code> functions 
+  reports errors. A <code>filesystem_error</code> exception will be thrown on an 
+  operational error. It's derived from <code>std::runtime_error</code> and has a 
+  member function to obtain the <code>error_code</code> reported by the source 
+  of the error. It also has member functions to obtain the path[s] that caused 
+  the error.</p>
+
+  <p>That was the entire error reporting story for the earliest versions of 
+  Boost.Filesystem, and indeed throwing exceptions on errors worked very well in 
+  many applications. But some user reports trickled in of code that became so 
+  littered by try and catch blocks as to be unreadable and unmaintainable. In 
+  some applications I/O errors aren't exceptional, and that's why most 
+  Boost.Filesystem operational functions come in two flavors.</p>
+
+  <p>Functions without a <code>system::error_code&amp;</code> 
+argument throw exceptions to report operational errors. These functions should 
+  be your default choice, unless you really do need to deal with errors via hand 
+  coded error tests.</p>
+
+  <p>Functions with a <code>system::error_code&amp;</code> 
+argument report operational error status by setting the <code>ec</code> argument, and 
+do not throw exceptions when I/O errors occur. 
+  <span style="background-color: #FFFF00">More on that later in the tutorial.</span></p>
+
+<h2>File size - tut1.cpp</h2>
+
+<p>Let's develop a little command line program to list information about 
+files and directories - essentially a much simplified version of the POSIX <code>ls</code> or Windows <code>dir</code> 
+commands. We'll start with the simplest possible version and progress to more 
+complex functionality. Source code for each version is available, and you are 
+encouraged to compile, test, and experiment with it.</p>
+
+<p>To conserve space, we won't show all the boilerplate code here, but the 
+source code does include it. </p>
+
+<p>Let's get started.</p>
+
+<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <tr>
+    <td style="font-size: 10pt">
+    <pre><a href="../tutorial/tut1.cpp">tut1.cpp</a></pre>
+    <blockquote>
+      <pre>int main(int argc, char* argv[])
+{
+
+  std::cout &lt;&lt; argv[1] &lt;&lt; &quot;: &quot; &lt;&lt; file_size(argv[1]) &lt;&lt; '\n';
+
+  return 0;
+}</pre>
+    </blockquote>
+    </td>
+  </tr>
+</table>
+
+<p>The Boost.Filesystem <code>file_size</code> function returns an <code>uintmax_t</code> 
+containing the size of the file named in the argument.</p>
+
+<p>Build tut1.cpp and give it a try.&nbsp; Use whatever build environment you 
+are most comfortable with.</p>
+<p>Here's a test on Windows, in the 
+directory containing the build output. It contains a directory named test with a 
+file named valentine:</p>
+<blockquote>
+  <pre>C:\v3d&gt;dir test\valentine          
+...
+12/30/2009 10:06 AM 23 valentine
+...
+
+C:\v3d&gt;tut1 test\valentine
+test\valentine: 23
+
+C:\v3d&gt;tut1 test/valentine
+test/valentine: 23
+
+C:\v3d&gt;tut1 test</pre>
+</blockquote>
+  <p><img border="0" src="tut1_crash.jpg" width="474" height="302"><br>
+  <br>
+  Oops! <code>file_size</code> only works on files, not directories, so an 
+  exception was thrown.</p>
+<blockquote>
+  <pre>C:\v3d&gt;tut1 foo</pre>
+</blockquote>
+  <p><img border="0" src="tut1_crash.jpg" width="474" height="302"><br>
+  <br>
+  There's no file named <code>foo</code> in the current directory, so again an 
+exception was thrown.</p>
+  <p>We'll deal with those conditions in tut2.cpp.</p>
+
+<h2>tut2.cpp - Using status queries to determine file existence and type</h2>
+
+<p>Boost.filesystem includes status query functions such as <code>exists</code>,
+<code>is_directory</code>, and <code>is_regular_file</code>. These all return
+<code>bool</code>'s, and will return <code>true</code> if the condition 
+described by their name is met. They return <code>false</code> when any element 
+of the path argument can't be found.</p>
+
+<p>tut2.cpp uses several of the status query functions to cope with non-existent 
+files and with different file types. </p>
+
+<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <tr>
+    <td style="font-size: 10pt">
+    <pre><a href="../tutorial/tut2.cpp">tut2.cpp</a></pre>
+    <blockquote style="font-size: 10pt">
+      <pre>int main(int argc, char* argv[])
+{
+  <a href="reference.html#class-path">path</a> p (argv[1]);   // p reads clearer than argv[1] in the following code
+
+  cout &lt;&lt; p &lt;&lt; &quot;: &quot;;  // utilize the <a href="reference.html#path-inserter-extractor">path narrow stream inserter</a>
+
+  if ( <a href="reference.html#exists-path">exists</a>(p) )    // does p actually exist?
+  {
+    if ( <a href="reference.html#is_regular_file-path">is_regular_file</a>(p) )        // is p a regular file?   
+      cout &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
+
+    else if ( <a href="reference.html#is_directory-path">is_directory</a>(p) )      // is p a directory?
+      cout &lt;&lt; &quot;is a directory\n&quot;;
+
+    else
+      cout &lt;&lt; &quot;exists, but is neither a regular file nor a directory\n&quot;;
+  }
+  else
+    cout &lt;&lt; &quot;does not exist\n&quot;;
+
+  return 0;
+}</pre>
+    </blockquote>
+    </td>
+  </tr>
+</table>
+
+<p>This works fine - give it a try yourself. However, the output is less than 
+satisfactory a directory because we'd typically like to see its contents. Move 
+on to tut3.cpp to see how to iterate over directories.</p>
+
+<h2>tut3.cpp - Directory iteration</h2>
+
+<p>Boost.Filesystem's <code><a href="reference.html#directory_iterator">
+directory_iterator</a></code> class is just what we need here. Constructed from 
+a path, it iterates over the contents of the directory. The value type is
+<a href="reference.html#directory_entry"><code>directory_entry</code></a>, which 
+can be used for function arguments requiring a <code>path</code>.</p>
+
+<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <tr>
+    <td style="font-size: 10pt">
+    <pre><a href="../tutorial/tut3.cpp">tut3.cpp</a></pre>
+    <blockquote>
+      <pre>int main(int argc, char* argv[])
+{
+  <a href="reference.html#class-path">path</a> p (argv[1]);   // p reads clearer than argv[1] in the following code
+
+  cout &lt;&lt; p &lt;&lt; &quot;: &quot;;  // utilize the <a href="reference.html#path-inserter-extractor">path narrow stream inserter</a>
+
+  if ( <a href="reference.html#exists-path">exists</a>(p) )    // does p actually exist?
+  {
+    if ( <a href="reference.html#is_regular_file-path">is_regular_file</a>(p) )        // is p a regular file?   
+      cout &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
+
+    else if ( <a href="reference.html#is_directory-path">is_directory</a>(p) )      // is p a directory?
+    {
+      cout &lt;&lt; &quot;is a directory containing:\n&quot;;
+
+      for ( <a href="reference.html#directory_iterator-ctor-path">directory_iterator</a> it (p);   // initialize it to the first element
+            it != <a href="reference.html#directory_iterator-default-ctor">directory_iterator()</a>;  // test for the past-the-end element
+            ++it )                       // increment
+      {
+        cout &lt;&lt; &quot; &quot; &lt;&lt; *it &lt;&lt; '\n';      // *it returns a <a href="reference.html#directory_entry">directory_entry</a>,
+                                         // which is converted to a path by the
+                                         // stream inserter.
+                                         // it-&gt;path() would be wordier, but would
+                                         // eliminate an unnecessary path temporary
+      }
+    }
+
+    else
+      cout &lt;&lt; &quot;exists, but is neither a regular file nor a directory\n&quot;;
+  }
+  else
+    cout &lt;&lt; &quot;does not exist\n&quot;;
+
+  return 0;
+}</pre>
+    </blockquote>
+    </td>
+  </tr>
+</table>
+
+<p>Give tut3 a try, passing it a path to a directory as a command line argument. 
+Here is a run on a Boost Subversion trunk checkout:</p>
+
+<blockquote>
+  <pre>C:\v3d&gt;tut3 c:\boost\trunk
+c:\boost\trunk: is a directory containing:
+   c:\boost\trunk\.svn
+   c:\boost\trunk\boost
+   c:\boost\trunk\boost-build.jam
+   c:\boost\trunk\boost.css
+   c:\boost\trunk\boost.png
+   c:\boost\trunk\bootstrap.bat
+   c:\boost\trunk\bootstrap.sh
+   c:\boost\trunk\CMakeLists.txt
+   c:\boost\trunk\doc
+   c:\boost\trunk\index.htm
+   c:\boost\trunk\index.html
+   c:\boost\trunk\INSTALL
+   c:\boost\trunk\Jamroot
+   c:\boost\trunk\libs
+   c:\boost\trunk\LICENSE_1_0.txt
+   c:\boost\trunk\more
+   c:\boost\trunk\people
+   c:\boost\trunk\rst.css
+   c:\boost\trunk\status
+   c:\boost\trunk\tools
+   c:\boost\trunk\wiki</pre>
+</blockquote>
+<p>It would be nice to output just the filename, without the parent path. Class 
+<code>path</code> has functions to do just that, and a whole lot more. Let's 
+take a side trip to learn more about class <code>path</code> observer, composition, decomposition and query 
+functions.</p>
+<h2>path_info.cpp - Path observer, composition, decomposition and query</h2>
+
+<p>&nbsp;</p>
+
+<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <tr>
+    <td style="font-size: 10pt">
+    <pre><a href="../example/path_info.cpp">path_info.cpp</a></pre>
+    <blockquote style="font-size: 10pt">
+      <div dir="ltr">
+      <pre>const char * say_what(bool b) { return b ? &quot;true&quot; : &quot;false&quot;; }
+
+int main(int argc, char* argv[])
+{
+  if (argc &lt; 2)
+  {
+    std::cout &lt;&lt; &quot;Usage: path_info path-portion...\n&quot;;
+    return 1;
+  }
+
+  fs::path p;
+
+  for (; argc &gt; 1; --argc, ++argv)
+    p /= argv[1];
+
+  std::cout &lt;&lt; &quot;\npath \&quot;&quot; &lt;&lt; p &lt;&lt; &quot;\&quot;\n&quot;;
+
+  std::cout &lt;&lt; &quot;\nelements:\n&quot;;
+  for (fs::path::iterator it = p.begin(); it != p.end(); ++it)
+  std::cout &lt;&lt; &quot; &quot; &lt;&lt; *it &lt;&lt; '\n';
+
+  std::cout &lt;&lt; &quot;\nobservers, native format:\n&quot;;
+  STD_OUT &lt;&lt; &quot; native()---------: &quot; &lt;&lt; p.native() &lt;&lt; '\n';
+  STD_OUT &lt;&lt; &quot; c_str()----------: &quot; &lt;&lt; p.c_str() &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; native_string()--: &quot; &lt;&lt; p.native_string() &lt;&lt; std::endl;
+  std::wcout &lt;&lt; &quot; native_wstring()-: &quot; &lt;&lt; p.native_wstring() &lt;&lt; std::endl;
+
+  std::cout &lt;&lt; &quot;\nobservers, portable format:\n&quot;;
+  std::cout &lt;&lt; &quot; string()---------: &quot; &lt;&lt; p.string() &lt;&lt; std::endl;
+  std::wcout &lt;&lt; &quot; wstring()--------: &quot; &lt;&lt; p.wstring() &lt;&lt; std::endl;
+
+  std::cout &lt;&lt; &quot;\ndecomposition:\n&quot;;
+  std::cout &lt;&lt; &quot; root_name()------: &quot; &lt;&lt; p.root_name() &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; root_directory()-: &quot; &lt;&lt; p.root_directory() &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; root_path()------: &quot; &lt;&lt; p.root_path() &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; relative_path()--: &quot; &lt;&lt; p.relative_path() &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; parent_path()----: &quot; &lt;&lt; p.parent_path() &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; filename()-------: &quot; &lt;&lt; p.filename() &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; stem()-----------: &quot; &lt;&lt; p.stem() &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; extension()------: &quot; &lt;&lt; p.extension() &lt;&lt; '\n';
+
+  std::cout &lt;&lt; &quot;\nquery:\n&quot;;
+  std::cout &lt;&lt; &quot; empty()--------------: &quot; &lt;&lt; say_what(p.empty()) &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; is_complete()--------: &quot; &lt;&lt; say_what(p.is_complete()) &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; has_root_name()------: &quot; &lt;&lt; say_what(p.has_root_name()) &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; has_root_directory()-: &quot; &lt;&lt; say_what(p.has_root_directory()) &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; has_root_path()------: &quot; &lt;&lt; say_what(p.has_root_path()) &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; has_relative_path()--: &quot; &lt;&lt; say_what(p.has_relative_path()) &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; has_parent_path()----: &quot; &lt;&lt; say_what(p.has_parent_path()) &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; has_filename()-------: &quot; &lt;&lt; say_what(p.has_filename()) &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; has_stem()-----------: &quot; &lt;&lt; say_what(p.has_stem()) &lt;&lt; '\n';
+  std::cout &lt;&lt; &quot; has_extension()------: &quot; &lt;&lt; say_what(p.has_extension()) &lt;&lt; '\n';
+
+  return 0;
+}
+</pre>
+      </div>
+    </blockquote>
+    </td>
+  </tr>
+</table>
+
+<h3>Directory iteration tweak - tut4.cpp</h3>
+
+<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <tr>
+    <td style="font-size: 10pt">
+    <pre><a href="../tutorial/tut4.cpp">tut4.cpp</a></pre>
+    <blockquote>
+      <pre>int main(int argc, char* argv[])
+{
+  path p (argv[1]);
+
+  cout &lt;&lt; p &lt;&lt; &quot;: &quot;;
+  if ( exists(p) )
+  {
+    if ( is_regular_file(p) )
+      cout &lt;&lt; file_size(p) &lt;&lt; '\n';
+    else if ( is_directory(p) )
+    {
+      cout &lt;&lt; &quot;is a directory containing:\n&quot;;
+      for ( directory_iterator it (p); it != directory_iterator (); ++it )
+      {
+        <span style="background-color: #88FFA3">std::cout &lt;&lt; &quot; &quot; &lt;&lt; it-&gt;</span><span style="background-color: #88FFA3">path().filename</span><span style="background-color: #88FFA3">() &lt;&lt; '\n';</span>
+      }
+    }
+    else
+      std::cout &lt;&lt; &quot;exists, but is neither a regular file nor a directory\n&quot;;<span style="background-color: #88FFA3">
+</span>  }
+  else
+    std::cout &lt;&lt; &quot;does not exist\n&quot;;
+
+  return 0;
+}</pre>
+    </blockquote>
+    </td>
+  </tr>
+</table>
+
+<h3>Error handling - tut5.cpp</h3>
+
+<p>&nbsp;</p>
+
+<hr>
+<p>© Copyright Beman Dawes 2009</p>
+<p>Distributed under the Boost Software License, Version 1.0. See
+<a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
+<p>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->02 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32136" --></p>
+
+</body>
+
+</html>
