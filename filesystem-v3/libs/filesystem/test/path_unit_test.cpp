@@ -491,7 +491,7 @@ namespace
     std::cout << "testing queries..." << std::endl;
 
     path p1("");
-    path p2("//netname/foo");
+    path p2("//netname/foo.doo");
 
     CHECK(p1.empty());
     CHECK(!p1.has_root_path());
@@ -500,6 +500,8 @@ namespace
     CHECK(!p1.has_relative_path());
     CHECK(!p1.has_parent_path());
     CHECK(!p1.has_filename());
+    CHECK(!p1.has_stem());
+    CHECK(!p1.has_extension());
     CHECK(!p1.is_complete());
 
     CHECK(!p2.empty());
@@ -509,6 +511,8 @@ namespace
     CHECK(p2.has_relative_path());
     CHECK(p2.has_parent_path());
     CHECK(p2.has_filename());
+    CHECK(p2.has_stem());
+    CHECK(p2.has_extension());
     CHECK(p2.is_complete());
 
   }

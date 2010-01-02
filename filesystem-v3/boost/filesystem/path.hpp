@@ -83,10 +83,6 @@ namespace boost
 {
 namespace filesystem
 {
-# ifdef BOOST_FILESYSTEM_PATH_CTOR_COUNT
-  extern long path_constructor_count;
-# endif
-
   //------------------------------------------------------------------------------------//
   //                                                                                    //
   //                                    class path                                      //
@@ -224,12 +220,9 @@ namespace filesystem
     }
 
     template <class Source>
-    path(Source const & pathable)
+    path(Source const& source)
     {
-#   ifdef BOOST_FILESYSTEM_PATH_CTOR_COUNT
-      ++path_constructor_count;
-#   endif
-      path_traits::dispatch(pathable, m_path, codecvt());
+      path_traits::dispatch(source, m_path, codecvt());
     }
 
     //  -----  assignments  -----
@@ -251,7 +244,7 @@ namespace filesystem
     }
 
     template <class Source>
-    path& operator=(Source const & source)
+    path& operator=(Source const& source)
     {
       m_path.clear();
       path_traits::dispatch(source, m_path, codecvt());
@@ -269,7 +262,7 @@ namespace filesystem
     path& append(ContiguousIterator begin, ContiguousIterator end);
 
     template <class Source>
-    path& operator/=(Source const & source);
+    path& operator/=(Source const& source);
 
     //  -----  modifiers  -----
 
@@ -323,13 +316,13 @@ namespace filesystem
 
 #   ifdef BOOST_WINDOWS_API
 
-    const std::string     native_string() const;
-    const std::wstring &  native_wstring() const { return m_path; }
+    const std::string    native_string() const;
+    const std::wstring&  native_wstring() const { return m_path; }
 
 #   else   // BOOST_POSIX_API
 
-    const std::string &  native_string() const   { return m_path; }
-    const std::wstring   native_wstring() const
+    const std::string&  native_string() const   { return m_path; }
+    const std::wstring  native_wstring() const
     { 
       std::wstring tmp;
       if (!m_path.empty())
@@ -344,13 +337,13 @@ namespace filesystem
 
 #   ifdef BOOST_WINDOWS_API
 
-    const std::string    string() const; 
-    const std::wstring   wstring() const;
+    const std::string   string() const; 
+    const std::wstring  wstring() const;
 
 #   else // BOOST_POSIX_API
 
-    const std::string &  string() const  { return m_path; }
-    const std::wstring   wstring() const { return native_wstring(); }
+    const std::string&  string() const  { return m_path; }
+    const std::wstring  wstring() const { return native_wstring(); }
 
 #   endif
 
@@ -375,6 +368,8 @@ namespace filesystem
     bool has_relative_path() const   { return !relative_path().empty(); }
     bool has_parent_path() const     { return !parent_path().empty(); }
     bool has_filename() const        { return !m_path.empty(); }
+    bool has_stem() const            { return !stem().empty(); }
+    bool has_extension() const       { return !extension().empty(); }
     bool is_complete() const
     {
 #   ifdef BOOST_WINDOWS_PATH
@@ -411,12 +406,12 @@ namespace filesystem
 
 # if !defined(BOOST_FILESYSTEM_NO_DEPRECATED)
     //  recently deprecated functions supplied by default
-    path&   normalize()              { return m_normalize(); }
-    path&   remove_leaf()            { return remove_filename(); }
-    path    leaf() const             { return filename(); }
-    path    branch_path() const      { return parent_path(); }
-    bool    has_leaf() const         { return !m_path.empty(); }
-    bool    has_branch_path() const  { return !parent_path().empty(); }
+    path&  normalize()              { return m_normalize(); }
+    path&  remove_leaf()            { return remove_filename(); }
+    path   leaf() const             { return filename(); }
+    path   branch_path() const      { return parent_path(); }
+    bool   has_leaf() const         { return !m_path.empty(); }
+    bool   has_branch_path() const  { return !parent_path().empty(); }
 # endif
 
 # if defined(BOOST_FILESYSTEM_DEPRECATED)
@@ -610,19 +605,19 @@ namespace filesystem
 
   //  inserters and extractors
 
-  inline std::ostream & operator<<(std::ostream & os, const path& p)
+  inline std::ostream& operator<<(std::ostream & os, const path& p)
   {
     os << p.native_string();
     return os;
   }
   
-  inline std::wostream & operator<<(std::wostream & os, const path& p)
+  inline std::wostream& operator<<(std::wostream & os, const path& p)
   {
     os << p.native_wstring();
     return os;
   }
   
-  inline std::istream & operator>>(std::istream & is, path& p)
+  inline std::istream& operator>>(std::istream & is, path& p)
   {
     std::string str;
     is >> str;
@@ -630,7 +625,7 @@ namespace filesystem
     return is;
   }
   
-  inline std::wistream & operator>>(std::wistream & is, path& p)
+  inline std::wistream& operator>>(std::wistream & is, path& p)
   {
     std::wstring str;
     is >> str;

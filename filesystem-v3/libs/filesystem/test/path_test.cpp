@@ -33,10 +33,6 @@ using boost::filesystem::path;
 #define PATH_CHECK(a, b) check(a, b, __FILE__, __LINE__)
 #define CHECK_EQUAL(a,b) check_equal(a, b, __FILE__, __LINE__)
 
-# ifdef BOOST_FILESYSTEM_PATH_CTOR_COUNT
-namespace boost { namespace filesystem { long path_constructor_count = 0L; }}
-# endif
-
 namespace
 {
   std::string platform(BOOST_PLATFORM);
@@ -1607,10 +1603,6 @@ int main(int, char*[])
   ss >> round_trip;
   BOOST_TEST(round_trip.string() == "foo/bar");
   std::cout << round_trip.string() << "..." << round_trip << " complete\n";
-# endif
-
-# ifdef BOOST_FILESYSTEM_PATH_CTOR_COUNT
-  std::cout << fs::path_constructor_count << " calls to single argument path constructor\n";
 # endif
 
   return ::boost::report_errors();

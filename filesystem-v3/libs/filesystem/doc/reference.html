@@ -47,8 +47,7 @@
     <a href="#Header-filesystem-synopsis">
     Header &lt;filesystem&gt; synopsis</a><br>
     <a href="#Error-reporting">Error reporting</a><br>
-    <a href="#Class-template-path">
-    Class path</a><br>
+    <a href="#class-path">Class path</a><br>
     &nbsp;&nbsp;&nbsp;
 <a href="#Pathname-formats">Pathname formats</a><br>
     &nbsp;&nbsp;&nbsp;
@@ -63,7 +62,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-iterators">path iterators</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-deprecated-functions">path deprecated functions</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-non-member-functions">path non-member functions</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-inserter-extractor">path inserter and extractor</a><span style="background-color: #FFFFFF"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-inserter-extractor">path inserters and extractor</a>s<span style="background-color: #FFFFFF"><br>
 </span> &nbsp;<a href="#Class-filesystem_error">Class filesystem_error</a><br>
 &nbsp;&nbsp;&nbsp; <a href="#filesystem_error-members">filesystem_error 
     constructors</a><br>
@@ -167,15 +166,15 @@ is unreasonable for a program to detect them prior to calling the function. <i>
 <h3><a name="Definitions">Definitions</a></h3>
 <p>The following definitions  apply throughout this reference documentation:</p>
 <p><i><a name="File">File</a>: </i>An object that can be written to, or read from, or both. A file 
-has certain attributes, including type. File types include regular file, 
-symbolic link, and directory. Other types of files may be supported by the 
+has certain attributes, including type. Common types of files include regular files 
+and directories. Other types of files, such as symbolic links, may be supported by the 
 implementation.</p>
 <p><i><a name="File-system">File system</a>:</i> A collection of files and certain of their attributes.</p>
 <p><i><a name="Filename">Filename</a>:</i> The name of a file. The format is as 
 specified by the <i>POSIX
 <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_169">
 Filename</a></i> base definition.</p>
-<p><i><a name="Path">Path</a>:</i> A sequence of elements which identify 
+<p><i><a name="Path">Path</a>:</i> A sequence of elements that identify 
 a location within a filesystem. The elements are the <i>root-name</i>, <i>
 root-directory</i>, and each successive <i>filename</i>. See
 <a href="#Pathname-grammar">Pathname grammar</a>.</p>
@@ -286,9 +285,9 @@ the same object within a file system.</p>
       void         <a href="#current_path">current_path</a>(const path&amp; p);
       void         <a href="#current_path">current_path</a>(const path&amp; p, system::error_code&amp; ec);
 
-      bool         <a href="#exists2">exists</a>(file_status s);
-      bool         <a href="#exists2">exists</a>(const path&amp; p);
-      bool         <a href="#exists2">exists</a>(const path&amp; p, system::error_code&amp; ec);
+      bool         <a href="#exists-path">exists</a>(file_status s);
+      bool         <a href="#exists-path">exists</a>(const path&amp; p);
+      bool         <a href="#exists-path">exists</a>(const path&amp; p, system::error_code&amp; ec);
 
       bool         <a href="#equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2);
       bool         <a href="#equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2, system::error_code&amp; ec);
@@ -400,7 +399,7 @@ report errors as follows, unless otherwise specified:</p>
   throwing an exception as described in the C++ standard, 
   17.6.4.10 [res.on.exception.handling].</li>
 </ul>
-<h3><a name="Class-template-path">Class <code>path</code></a></h3>
+<h3><a name="class-path">Class <code>path</code></a></h3>
 <p>An object of class <code>path</code> represents a <a href="#Path">path</a>, 
 and contains a <a href="#Pathname">pathname</a> in the
 <a href="#Native-pathname-format">native format</a>. Such an object is concerned only with the lexical and syntactic aspects 
@@ -428,7 +427,7 @@ system. </p>
         path();
         path(const path&amp; p);
 
-        template &lt;class ContiguousIterator&gt;
+        template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
           path(ContiguousIterator begin, ContiguousIterator end);
 
         template &lt;class Source&gt;
@@ -439,7 +438,7 @@ system. </p>
         // <a href="#path-assignments">assignments</a>
         path&amp; operator=(const path&amp; p);
 
-        template &lt;class ContiguousIterator&gt;
+        template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
           path&amp; assign(ContiguousIterator begin, ContiguousIterator end);
 
         template &lt;class Source&gt;
@@ -448,7 +447,7 @@ system. </p>
         // <a href="#path-appends">appends</a>
         path&amp; operator/=(const path&amp; p);
 
-        template &lt;class ContiguousIterator&gt;
+        template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
           path&amp; append(ContiguousIterator begin, ContiguousIterator end);
 
         template &lt;class Source&gt;
@@ -462,14 +461,18 @@ system. </p>
         path&amp; localize();  // POSIX: no effect. Windows: convert slashes to backslashes
 
         // <a href="#path-observers">observers</a>
-        const string_type&amp;  native() const;          // native format, encoding
-        const value_type*   c_str() const;           // native().c_str()
+        const string_type&amp;  native() const;           // native format, encoding
+        const value_type*   c_str() const;            // native().c_str()
 
-        <i><b>const-string</b></i>        native_string() const;   // native format, uses codecvt() for encoding
-        <i><b>const-wstring</b></i>       native_wstring() const;  // native format, uses codecvt() for encoding
+        const string        native_string() const;    // native format, uses codecvt() for encoding
+        const wstring       native_wstring() const;   // ditto
+        const u16string     native_u16string() const; // ditto
+        const u32string     native_u32string() const; // ditto
 
-        <b><i>const-string</i></b>        string() const;          // portable format, uses codecvt() for encoding
-        <b><i>const-wstring</i></b>       wstring() const;         // portable format, uses codecvt() for encoding
+        const string        string() const;           // portable format, uses codecvt() for encoding
+        const wstring       wstring() const;          // ditto
+        const u16string     u16string() const;        // ditto
+        const u32string     u32string() const;        // ditto
 
         // <a href="#path-decomposition">decomposition</a>
         path  root_name() const;
@@ -489,6 +492,8 @@ system. </p>
         bool has_relative_path() const;
         bool has_parent_path() const;
         bool has_filename() const;
+        bool has_stem() const;
+        bool has_extension() const;
         bool is_complete() const;
 
         // <a href="#path-iterators">iterators</a>
@@ -508,26 +513,32 @@ system. </p>
 <p><code><a name="value_type">value_type</a></code> is an implementation-defined typedef for the 
 character type used by the implementation to represent pathnames.</p>
 <blockquote>
-<p><i>[Note:</i></p>
-<b>POSIX-like implementations, including
-  <a href="http://www.cygwin.com/">Cygwin</a>:</b> <code>path::value_type</code> 
-is <code>char</code> .<p><b>Windows-like implementations:</b> <code>path::value_type</code> is <code>
-wchar_t</code>.</p>
-<p>&nbsp;<i>--end note]</i></p>
+<p><i>[Note:</i> For POSIX-like implementations, including<b> </b>Unix's, Linux, 
+and
+  <a href="http://www.cygwin.com/">Cygwin</a>, <code>path::value_type</code> 
+is <code>char</code> .</p>
+<p>For Windows-like implementations, including Windows and
+<a href="http://www.mingw.org/">MinGW</a>, <code>path::value_type</code> is <code>
+wchar_t</code>.&nbsp;<i>--end note]</i></p>
 </blockquote>
-<p>For member functions described as returning &quot;<code>const path</code>&quot;, implementations are permitted to return 
-&quot;<code>const path&amp;</code>&quot;.</p>
+<p>For member functions described as returning <code>const string</code>, <code>
+const wstring</code>, <code>const u16string</code>, or <code>const u32string</code>, 
+implementations are permitted to return <code>const string&amp;</code>, <code>const 
+wstring&amp;</code>, <code>const u16string&amp;</code>, or <code>const u32string&amp;</code>, 
+respectively.</p>
 <blockquote>
-<p>[<i>Note:</i> This allows implementations to avoid unnecessary copies. 
+<p>[<i>Note:</i> This allows implementations to avoid unnecessary copies when no 
+conversion is required. 
 Return-by-value is specified as
 <code>const</code> to ensure programs won't break if moved to a return-by-reference 
 implementation. <i>-- 
 end note</i>]</p>
 </blockquote>
-<p><code>ContiguousIterator</code> shall be a standard library <code>RandomIterator</code> 
+<p><code><a name="ContiguousIterator">ContiguousIterator</a></code> is required be a standard library <code>RandomIterator</code> 
+compliant iterator 
 pointing to contiguous storage. The iterator's value_type is required to be <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
-<p><code>Source</code> shall be one of:</p>
+<p><code>Source</code> is required to be one of:</p>
 <ul>
   <li>A container. The value type is required to be <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
@@ -536,7 +547,7 @@ pointing to contiguous storage. The iterator's value_type is required to be <cod
   char32_t</code>.</li>
   <li>A C-array. The value type is required to be <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li>A boost::filesystem::directory_entry.</li>
+  <li>A <code>boost::filesystem::directory_entry</code>.</li>
 </ul>
 <h4><a name="Pathname-formats">Pathname formats</a></h4>
 <p>Strings representing paths may be in two possible formats: </p>
@@ -729,7 +740,7 @@ there be normative encouragement?</i></span></p>
 <blockquote>
   <p><i>Postconditions:</i> <code>empty()</code>.</p>
   </blockquote>
-<pre>template &lt;class ContiguousIterator&gt;
+<pre>template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
   path(ContiguousIterator begin, ContiguousIterator end);</pre>
 <pre>template &lt;class Source&gt;
   path(Source const&amp; source);</pre>
@@ -743,7 +754,7 @@ there be normative encouragement?</i></span></p>
 </blockquote>
 <h4> <code><font size="4">class </font></code> <a name="path-assignments"> <code>
 <font size="4">path</font></code> assignments</a></h4>
-<pre>template &lt;class ContiguousIterator&gt;
+<pre>template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
   path&amp; assign(ContiguousIterator begin, ContiguousIterator end);</pre>
 <pre>template &lt;class Source&gt;
   path&amp; operator=(Source const&amp; source);</pre>
@@ -762,12 +773,12 @@ appends</a></h4>
   effect of appending a native directory separator when needed. The native 
   directory separator is implementation-defined.</p>
 <blockquote>
-    <p align="left">[<i>Note:</i></p>
-    <p align="left"><b>POSIX-like<i> </i>implementations, including Cygwin:</b> 
-    The native directory separator is a forward slash.</p>
-    <p align="left"><b>Windows-like implementations:</b> The native directory 
-    separator is a backslash.</p>
-    <p align="left"> <i>--end note</i>]</p>
+    <p align="left">[<i>Note: </i>For POSIX-like implementations, including<b> </b>
+    Unix's, Linux, and
+  <a href="http://www.cygwin.com/">Cygwin</a>, the native directory separator is a forward slash.</p>
+    <p align="left">For Windows-like implementations, including Windows and
+    <a href="http://www.mingw.org/">MinGW</a>, the native directory 
+    separator is a backslash.<i>--end note</i>]</p>
       </blockquote>
 <pre>path&amp; operator/=(const path&amp; p);</pre>
 <blockquote>
@@ -784,7 +795,7 @@ appends</a></h4>
   </blockquote>
   <p><i>Returns: </i><code>*this</code></p>
 </blockquote>
-<pre>template &lt;class ContiguousIterator&gt;
+<pre>template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
   path&amp; append(ContiguousIterator begin, ContiguousIterator end);</pre>
 <pre>template &lt;class Source&gt;
   path&amp; operator/=(Source const &amp; source);</pre>
@@ -1018,13 +1029,21 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
 <blockquote>
   <p><i>Returns:</i> <code>!relative_path().empty()</code></p>
 </blockquote>
+<pre>bool has_parent_path() const;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>!parent_path().empty()</code></p>
+</blockquote>
 <pre>bool has_filename() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>!filename().empty()</code></p>
 </blockquote>
-<pre>bool has_parent_path() const;</pre>
+<pre>bool has_stem() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>!parent_path().empty()</code></p>
+  <p><i>Returns:</i> <code>!</code><code>stem().empty()</code></p>
+</blockquote>
+<pre>bool has_extension() const;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>!extension().empty()</code></p>
 </blockquote>
 <h4> <code><font size="4">class </font></code> <a name="path-iterators"> <code>
 <font size="4">path</font></code> iterators</a></h4>
@@ -1091,203 +1110,215 @@ void swap( path&lt;String, Traits&gt; &amp; lhs, path&lt;String, Traits&gt; &amp
   rhs )</span></code></p>
 </blockquote>
   <h4><span style="background-color: #FFFFFF">path non-member operators</span></h4>
-  <p><span style="background-color: #FFFFFF">There are seven path non-member operators (/,
-  </span> <code><span style="background-color: #FFFFFF">==</span></code><span style="background-color: #FFFFFF">,
+  <p><span style="background-color: #FF0000">There are seven path non-member operators (/,
+  </span> <code><span style="background-color: #FF0000">==</span></code><span style="background-color: #FF0000">,
   </span> <code>
-  <span style="background-color: #FFFFFF">!=</span></code><span style="background-color: #FFFFFF">,
-  </span> <code><span style="background-color: #FFFFFF">&lt;</span></code><span style="background-color: #FFFFFF">,
-  </span> <code><span style="background-color: #FFFFFF">&gt;</span></code><span style="background-color: #FFFFFF">,
-  </span> <code><span style="background-color: #FFFFFF">&lt;=</span></code><span style="background-color: #FFFFFF">,
-  </span> <code><span style="background-color: #FFFFFF">&gt;=</span></code><span style="background-color: #FFFFFF">), 
+  <span style="background-color: #FF0000">!=</span></code><span style="background-color: #FF0000">,
+  </span> <code><span style="background-color: #FF0000">&lt;</span></code><span style="background-color: #FF0000">,
+  </span> <code><span style="background-color: #FF0000">&gt;</span></code><span style="background-color: #FF0000">,
+  </span> <code><span style="background-color: #FF0000">&lt;=</span></code><span style="background-color: #FF0000">,
+  </span> <code><span style="background-color: #FF0000">&gt;=</span></code><span style="background-color: #FF0000">), 
   each with five overloads. For brevity, the specifications are given in tabular 
   form. Each of the resulting thirty-five signatures is a template, with 
-  template parameter list template</span><code><span style="background-color: #FFFFFF">&lt;class 
-  String, class Traits&gt;</span></code><span style="background-color: #FFFFFF">. 
+  template parameter list template</span><code><span style="background-color: #FF0000">&lt;class 
+  String, class Traits&gt;</span></code><span style="background-color: #FF0000">. 
   The format of such arguments is described in </span> <a href="#Pathname-formats">
-  <span style="background-color: #FFFFFF">Pathname formats</span></a><span style="background-color: #FFFFFF">.</span></p>
-    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
+  <span style="background-color: #FF0000">Pathname formats</span></a><span style="background-color: #FF0000">.</span></p>
+    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="150">
       <tr>
-        <td width="100%">
-        <p align="center"><i><b><span style="background-color: #FFFFFF">Argument type overloads</span></b></i></td>
+        <td width="100%" height="16">
+        <p align="center"><i><b><span style="background-color: #FF0000">Argument type overloads</span></b></i></td>
       </tr>
       <tr>
-        <td width="100%"><span style="background-color: #FFFFFF"><code>
-        path&lt;String, Traits&gt;&amp; a, path&lt;String, Traits&gt;&amp; 
-        b</code></span></td>
+        <td width="100%" height="16"><code>
+        <span style="background-color: #FF0000">path&lt;String, Traits&gt;&amp; a, path&lt;String, Traits&gt;&amp; 
+        b</span></code></td>
       </tr>
       <tr>
-        <td width="100%"><span style="background-color: #FFFFFF"><code>const 
+        <td width="100%" height="16"><code>
+        <span style="background-color: #FF0000">const 
         typename path&lt;String, Traits&gt;::string_type&amp; a, 
-        path&lt;String, Traits&gt;&amp; b</code></span></td>
+        path&lt;String, Traits&gt;&amp; b</span></code></td>
       </tr>
       <tr>
-        <td width="100%"><span style="background-color: #FFFFFF"><code>const 
+        <td width="100%" height="16"><code>
+        <span style="background-color: #FF0000">const 
         typename path&lt;String, Traits&gt;::string_type::value_type* a, 
-        path&lt;String, Traits&gt;&amp; b</code></span></td>
+        path&lt;String, Traits&gt;&amp; b</span></code></td>
       </tr>
       <tr>
-        <td width="100%"><span style="background-color: #FFFFFF"><code>const 
+        <td width="100%" height="5"><code>
+        <span style="background-color: #FF0000">const 
         path&lt;String, Traits&gt;&amp; a, typename path&lt;String, Traits&gt;::string_type&amp; 
-        b</code></span></td>
+        b</span></code></td>
       </tr>
       <tr>
-        <td width="100%"><span style="background-color: #FFFFFF"><code>const 
+        <td width="100%" height="16"><code>
+        <span style="background-color: #FF0000">const 
         path&lt;String, Traits&gt;&amp; a, typename 
-        path&lt;String, Traits&gt;::string_type::value_type* b</code></span></td>
+        path&lt;String, Traits&gt;::string_type::value_type* b</span></code></td>
       </tr>
     </table>
-  <p><span style="background-color: #FFFFFF">In the </span><b><i>
-  <span style="background-color: #FFFFFF">path non-member operators </span>
-  </i></b><span style="background-color: #FFFFFF">table, </span><code>
-  <span style="background-color: #FFFFFF">a</span></code><span style="background-color: #FFFFFF"> 
-  and </span><code><span style="background-color: #FFFFFF">b</span></code><span style="background-color: #FFFFFF"> 
+  <p><span style="background-color: #FF0000">In the </span><b><i>
+  <span style="background-color: #FF0000">path non-member operators </span>
+  </i></b><span style="background-color: #FF0000">table, </span><code>
+  <span style="background-color: #FF0000">a</span></code><span style="background-color: #FF0000"> 
+  and </span><code><span style="background-color: #FF0000">b</span></code><span style="background-color: #FF0000"> 
   are of the types given in the </span><i><b>
-  <span style="background-color: #FFFFFF">Argument type overloads</span></b></i><span style="background-color: #FFFFFF"> 
-  table. If </span><code><span style="background-color: #FFFFFF">a</span></code><span style="background-color: #FFFFFF"> 
-  or </span><code><span style="background-color: #FFFFFF">b</span></code><span style="background-color: #FFFFFF"> 
-  is of type </span><code><span style="background-color: #FFFFFF">const 
-  path&lt;String, Traits&gt;&amp;</span></code><span style="background-color: #FFFFFF">, 
-  then </span><i><b><span style="background-color: #FFFFFF">a</span></b></i><code><i><b><span style="background-color: #FFFFFF">'</span></b></i></code><span style="background-color: #FFFFFF"> 
-  or </span><i><b><span style="background-color: #FFFFFF">b'</span></b></i><span style="background-color: #FFFFFF"> 
-  respectively is </span><code><span style="background-color: #FFFFFF">a</span></code><span style="background-color: #FFFFFF"> 
-  or </span><code><span style="background-color: #FFFFFF">b</span></code><span style="background-color: #FFFFFF"> 
-  respectively. Otherwise </span><i><b><span style="background-color: #FFFFFF">a</span></b></i><code><i><b><span style="background-color: #FFFFFF">'</span></b></i></code><span style="background-color: #FFFFFF"> 
-  or </span><i><b><span style="background-color: #FFFFFF">b'</span></b></i><span style="background-color: #FFFFFF"> 
+  <span style="background-color: #FF0000">Argument type overloads</span></b></i><span style="background-color: #FF0000"> 
+  table. If </span><code><span style="background-color: #FF0000">a</span></code><span style="background-color: #FF0000"> 
+  or </span><code><span style="background-color: #FF0000">b</span></code><span style="background-color: #FF0000"> 
+  is of type </span><code><span style="background-color: #FF0000">const 
+  path&lt;String, Traits&gt;&amp;</span></code><span style="background-color: #FF0000">, 
+  then </span><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i></code><span style="background-color: #FF0000"> 
+  or </span><i><b><span style="background-color: #FF0000">b'</span></b></i><span style="background-color: #FF0000"> 
+  respectively is </span><code><span style="background-color: #FF0000">a</span></code><span style="background-color: #FF0000"> 
+  or </span><code><span style="background-color: #FF0000">b</span></code><span style="background-color: #FF0000"> 
+  respectively. Otherwise </span><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i></code><span style="background-color: #FF0000"> 
+  or </span><i><b><span style="background-color: #FF0000">b'</span></b></i><span style="background-color: #FF0000"> 
   respectively represent named or unnamed temporary </span><code>
-  <span style="background-color: #FFFFFF">path&lt;String, Traits&gt;</span></code><span style="background-color: #FFFFFF"> 
-  objects constructed from </span><code><span style="background-color: #FFFFFF">
-  a</span></code><span style="background-color: #FFFFFF"> or </span><code>
-  <span style="background-color: #FFFFFF">b</span></code><span style="background-color: #FFFFFF"> 
+  <span style="background-color: #FF0000">path&lt;String, Traits&gt;</span></code><span style="background-color: #FF0000"> 
+  objects constructed from </span><code><span style="background-color: #FF0000">
+  a</span></code><span style="background-color: #FF0000"> or </span><code>
+  <span style="background-color: #FF0000">b</span></code><span style="background-color: #FF0000"> 
   respectively.</span></p>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="280">
   <tr>
     <td width="100%" colspan="3" align="center" height="19"><b><i>
-    <span style="background-color: #FFFFFF">path non-member operators</span></i></b></td>
+    <span style="background-color: #FF0000">path non-member operators</span></i></b></td>
   </tr>
   <tr>
     <td width="20%" align="center" height="19"><i><b>
-    <span style="background-color: #FFFFFF">Expression</span></b></i></td>
+    <span style="background-color: #FF0000">Expression</span></b></i></td>
     <td width="25%" align="center" height="19"><i><b>
-    <span style="background-color: #FFFFFF">Return type</span></b></i></td>
+    <span style="background-color: #FF0000">Return type</span></b></i></td>
     <td width="55%" align="center" height="19"><i><b>
-    <span style="background-color: #FFFFFF">Semantics</span></b></i></td>
+    <span style="background-color: #FF0000">Semantics</span></b></i></td>
   </tr>
   <tr>
     <td width="20%" align="center" height="30" valign="top"><code>
-    <span style="background-color: #FFFFFF">a / b</span></code></td>
+    <span style="background-color: #FF0000">a / b</span></code></td>
     <td width="25%" align="center" height="30" valign="top"><code>
-    <span style="background-color: #FFFFFF">path&lt;String, Traits&gt;</span></code></td>
-    <td width="55%" height="30"><code><span style="background-color: #FFFFFF">
+    <span style="background-color: #FF0000">path&lt;String, Traits&gt;</span></code></td>
+    <td width="55%" height="30"><code><span style="background-color: #FF0000">
     path&lt;String, Traits&gt; tmp(a);<br>
-    return tmp /= </span></code><i><b><span style="background-color: #FFFFFF">b'</span></b></i><code><span style="background-color: #FFFFFF">;</span></code></td>
+    return tmp /= </span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">;</span></code></td>
   </tr>
   <tr>
     <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">a &lt; b</span></code></td>
+    <span style="background-color: #FF0000">a &lt; b</span></code></td>
     <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FFFFFF">
-    return lexicographical_compare(</span></code><span style="background-color: #FFFFFF"><i><b>a</b></i></span><code><span style="background-color: #FFFFFF"><i><b>'</b></i>.begin(), </span></code><i><b>
-    <span style="background-color: #FFFFFF">a</span></b></i><code><span style="background-color: #FFFFFF"><i><b>'</b></i>.end(), </span></code><i><b>
-    <span style="background-color: #FFFFFF">b'</span></b></i><code><span style="background-color: #FFFFFF">.begin(), </span></code><i><b>
-    <span style="background-color: #FFFFFF">b'</span></b></i><code><span style="background-color: #FFFFFF">.end());</span></code></td>
+    <span style="background-color: #FF0000">bool</span></code></td>
+    <td width="55%" height="19"><code><span style="background-color: #FF0000">
+    return lexicographical_compare(</span></code><span style="background-color: #FF0000"><i><b>a</b></i></span><code><span style="background-color: #FF0000"><i><b>'</b></i>.begin</span><span style="background-color: #FF0000">(), </span></code><i><b>
+    <span style="background-color: #FF0000">a</span></b></i><code><span style="background-color: #FF0000"><i><b>'</b></i>.end</span><span style="background-color: #FF0000">(), </span></code><i><b>
+    <span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">.begin</span><span style="background-color: #FF0000">(), </span></code><i><b>
+    <span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">.end</span><span style="background-color: #FF0000">());</span></code></td>
   </tr>
   <tr>
     <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">a == b</span></code></td>
+    <span style="background-color: #FF0000">a == b</span></code></td>
     <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FFFFFF">
-    return !(</span></code><i><b><span style="background-color: #FFFFFF">a</span></b></i><code><i><b><span style="background-color: #FFFFFF">'</span></b></i><span style="background-color: #FFFFFF"> 
-    &lt; </span></code><i><b><span style="background-color: #FFFFFF">b'</span></b></i><code><span style="background-color: #FFFFFF">) 
-    &amp;&amp; !(</span></code><i><b><span style="background-color: #FFFFFF">b'</span></b></i><code><span style="background-color: #FFFFFF"> 
-    &lt; </span></code><i><b><span style="background-color: #FFFFFF">a</span></b></i><code><i><b><span style="background-color: #FFFFFF">'</span></b></i><span style="background-color: #FFFFFF">);</span></code></td>
+    <span style="background-color: #FF0000">bool</span></code></td>
+    <td width="55%" height="19"><code><span style="background-color: #FF0000">
+    return !(</span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000"> 
+    &lt; </span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">) 
+    &amp;&amp; !(</span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000"> 
+    &lt; </span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000">);</span></code></td>
   </tr>
   <tr>
     <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">a != b</span></code></td>
+    <span style="background-color: #FF0000">a != b</span></code></td>
     <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FFFFFF">
-    return !(</span></code><i><b><span style="background-color: #FFFFFF">a</span></b></i><code><i><b><span style="background-color: #FFFFFF">'</span></b></i><span style="background-color: #FFFFFF"> 
-    == </span></code><i><b><span style="background-color: #FFFFFF">b'</span></b></i><code><span style="background-color: #FFFFFF">);</span></code></td>
+    <span style="background-color: #FF0000">bool</span></code></td>
+    <td width="55%" height="19"><code><span style="background-color: #FF0000">
+    return !(</span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000"> 
+    == </span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">);</span></code></td>
   </tr>
   <tr>
     <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">a &gt; b</span></code></td>
+    <span style="background-color: #FF0000">a &gt; b</span></code></td>
     <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FFFFFF">
-    return </span></code><i><b><span style="background-color: #FFFFFF">b'</span></b></i><code><span style="background-color: #FFFFFF"> 
-    &lt; </span></code><i><b><span style="background-color: #FFFFFF">a</span></b></i><code><i><b><span style="background-color: #FFFFFF">'</span></b></i><span style="background-color: #FFFFFF">;</span></code></td>
+    <span style="background-color: #FF0000">bool</span></code></td>
+    <td width="55%" height="19"><code><span style="background-color: #FF0000">
+    return </span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000"> 
+    &lt; </span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000">;</span></code></td>
   </tr>
   <tr>
     <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">a &lt;= b</span></code></td>
+    <span style="background-color: #FF0000">a &lt;= b</span></code></td>
     <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FFFFFF">
-    return !(</span></code><i><b><span style="background-color: #FFFFFF">b'</span></b></i><code><span style="background-color: #FFFFFF"> 
-    &lt; </span></code><i><b><span style="background-color: #FFFFFF">a</span></b></i><code><i><b><span style="background-color: #FFFFFF">'</span></b></i><span style="background-color: #FFFFFF">);</span></code></td>
+    <span style="background-color: #FF0000">bool</span></code></td>
+    <td width="55%" height="19"><code><span style="background-color: #FF0000">
+    return !(</span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000"> 
+    &lt; </span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000">);</span></code></td>
   </tr>
   <tr>
     <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">a &gt;= b</span></code></td>
+    <span style="background-color: #FF0000">a &gt;= b</span></code></td>
     <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FFFFFF">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FFFFFF">
-    return !(</span></code><i><b><span style="background-color: #FFFFFF">a</span></b></i><code><i><b><span style="background-color: #FFFFFF">'</span></b></i><span style="background-color: #FFFFFF"> 
-    &lt; </span></code><i><b><span style="background-color: #FFFFFF">b'</span></b></i><code><span style="background-color: #FFFFFF">);</span></code></td>
+    <span style="background-color: #FF0000">bool</span></code></td>
+    <td width="55%" height="19"><code><span style="background-color: #FF0000">
+    return !(</span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000"> 
+    &lt; </span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">);</span></code></td>
   </tr>
 </table>
   <blockquote>
-  <p><span style="background-color: #FFFFFF">[</span><i><span style="background-color: #FFFFFF">Note:</span></i><span style="background-color: #FFFFFF">
-  </span> <a name="Path-equality"><span style="background-color: #FFFFFF">Path equality</span></a><span style="background-color: #FFFFFF"> and path 
+  <p><span style="background-color: #FF0000">[</span><i><span style="background-color: #FF0000">Note:</span></i><span style="background-color: #FF0000">
+  </span> <a name="Path-equality"><span style="background-color: #FF0000">Path equality</span></a><span style="background-color: #FF0000"> and path 
   equivalence have different semantics.</span></p>
-  <p><span style="background-color: #FFFFFF">Equality is determined by </span> <i>
-  <span style="background-color: #FFFFFF">path</span></i><span style="background-color: #FFFFFF">'s 
+  <p><span style="background-color: #FF0000">Equality is determined by </span> <i>
+  <span style="background-color: #FF0000">path</span></i><span style="background-color: #FF0000">'s 
   non-member </span> <code><a href="#operator-eq">
-  <span style="background-color: #FFFFFF">operator==</span></a></code><span style="background-color: #FFFFFF">, which considers the two path's lexical representations 
+  <span style="background-color: #FF0000">operator==</span></a></code><span style="background-color: #FF0000">, which considers the two path's lexical representations 
   only. Paths &quot;abc&quot; and &quot;ABC&quot; are never equal.</span></p>
-  <p><span style="background-color: #FFFFFF">Equivalence is determined by the
-  </span> <a href="#equivalent"><span style="background-color: #FFFFFF">equivalent()</span></a><span style="background-color: #FFFFFF"> 
+  <p><span style="background-color: #FF0000">Equivalence is determined by the
+  </span> <a href="#equivalent"><span style="background-color: #FF0000">equivalent()</span></a><span style="background-color: #FF0000"> 
   non-member function, which determines if two paths </span>
-  <a href="#pathname-resolution"><span style="background-color: #FFFFFF">resolve</span></a><span style="background-color: #FFFFFF"> to the same file system entity. 
+  <a href="#pathname-resolution"><span style="background-color: #FF0000">resolve</span></a><span style="background-color: #FF0000"> to the same file system entity. 
   Paths &quot;abc&quot; 
   and &quot;ABC&quot; may or may not resolve to the same file, depending on the file 
   system.</span></p>
-  <p><span style="background-color: #FFFFFF">Programmers wishing to determine if two paths are &quot;the same&quot; must decide if 
+  <p><span style="background-color: #FF0000">Programmers wishing to determine if two paths are &quot;the same&quot; must decide if 
   &quot;the same&quot; means &quot;the same representation&quot; or &quot;resolve to the same actual 
   file&quot;, and choose the appropriate function accordingly. </span> <i>
-  <span style="background-color: #FFFFFF">-- end note</span></i><span style="background-color: #FFFFFF">]</span></p>
+  <span style="background-color: #FF0000">-- end note</span></i><span style="background-color: #FF0000">]</span></p>
 </blockquote>
   <h4><a name="path-inserter-extractor"> <code>
-  <span style="background-color: #FFFFFF">path</span></code><span style="background-color: #FFFFFF"> inserter 
-  and extractor</span></a></h4>
-<pre><span style="background-color: #FFFFFF">template&lt;class Path&gt;
-  basic_istream&lt;typename Path::string_type::value_type, typename Path::string_type::traits_type&gt;&amp;
-    operator&gt;&gt;(basic_istream&lt; typename Path::string_type::value_type, typename Path::string_type::traits_type&gt;&amp; is,
-               path ph );</span></pre>
-<blockquote>
-  <p><i><span style="background-color: #FFFFFF">Effects:&nbsp; </span></i>
-      <code><span style="background-color: #FFFFFF">typename Path::string_type str;<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      is &gt;&gt; str;<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      ph = str;</span></code></p>
-  <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
-  </span> <code><span style="background-color: #FFFFFF">is</span></code></p>
-</blockquote>
-<pre><span style="background-color: #FFFFFF">template&lt;class Path&gt;
-  basic_ostream&lt;typename Path::string_type::value_type, typename Path::string_type::traits_type&gt;&amp;
-    operator&lt;&lt;(basic_ostream&lt; typename Path::string_type::value_type, typename Path::string_type::traits_type&gt;&amp; os,
-               const path&amp; ph );</span></pre>
+  <span style="background-color: #FFFFFF">path</span></code><span style="background-color: #FFFFFF"> inserters 
+  and extractor</span></a><span style="background-color: #FFFFFF">s</span></h4>
+<pre>std::ostream&amp; operator&lt;&lt;(std::ostream &amp; os, const path&amp; p);</pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF">&nbsp;
-  </span> <code><span style="background-color: #FFFFFF">os &lt;&lt; ph.string()</span></code></p>
+  <code>os &lt;&lt; p.native_string();</code></span></p>
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
   </span> <code><span style="background-color: #FFFFFF">os</span></code></p>
 </blockquote>
+<pre>std::wostream&amp; operator&lt;&lt;(std::wostream &amp; os, const path&amp; p);</pre>
+<blockquote style="font-size: 10pt">
+  <p style="font-size: 10pt"><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF">&nbsp;
+  <code>os &lt;&lt; p.native_wstring();</code></span></p>
+  <p style="font-size: 10pt"><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
+  </span><code><span style="background-color: #FFFFFF">os</span></code></p>
+</blockquote>
+<pre>std::istream&amp; operator&gt;&gt;(std::istream &amp; is, path&amp; p);</pre>
+<blockquote>
+  <p><span style="background-color: #FFFFFF"><i>Effects: </i>
+      <code>&nbsp; std::string str;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; is &gt;&gt; str;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p = str;</code></span></p>
+  <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
+  </span> <code><span style="background-color: #FFFFFF">is</span></code></p>
+  </blockquote>
+<pre>std::wistream&amp; operator&gt;&gt;(std::wistream &amp; is, path&amp; p);</pre>
+<blockquote>
+  <p><span style="background-color: #FFFFFF"><i>Effects: </i>
+      <code>&nbsp; std::wstring str;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; is &gt;&gt; str;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p = str;</code></span></p>
+  <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
+  </span> <code><span style="background-color: #FFFFFF">is</span></code></p>
+  </blockquote>
 <h3><a name="Class-filesystem_error">Class <code>filesystem_error</code></a></h3>
 <pre>  namespace boost
   {
@@ -1687,7 +1718,7 @@ result in an iterator whose value is the removed or added directory entry. See
 </blockquote>
 <h4><a name="directory_iterator-members"><code>directory_iterator</code> members</a></h4>
 
-<p><code>directory_iterator();</code></p>
+<p><code><a name="directory_iterator-default-ctor">directory_iterator</a>();</code></p>
 
 <blockquote>
 
@@ -1697,7 +1728,7 @@ result in an iterator whose value is the removed or added directory entry. See
 
 </blockquote>
 
-<pre><code>explicit directory_iterator(</code>const path&amp; p<code>);
+<pre><code>explicit <a name="directory_iterator-ctor-path">directory_iterator</a>(</code>const path&amp; p<code>);
 directory_iterator(</code>const path&amp; p, system::error_code&amp; ec<code>);</code></pre>
 <blockquote>
 
@@ -2092,13 +2123,13 @@ void current_path(const path&amp; p, system::error_code&amp; ec);</pre>
 <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
 Error reporting</a>.</p>
 </blockquote>
-<pre><span style="background-color: #FFFFFF">bool <a name="exists">exists</a>(file_status s);</span></pre>
+<pre><span style="background-color: #FFFFFF">bool <a name="exists-file_status">exists</a>(file_status s);</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
   <code>status_known(s) &amp;&amp; s.type() != file_not_found</code></span></p>
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
-<pre>bool <a name="exists2">exists</a>(const path&amp; p);
+<pre>bool <a name="exists-path">exists</a>(const path&amp; p);
 bool <a name="exists2">exists</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Returns:</i> <code>exists(status(p))</code> or <code>exists(status(p, ec))</code>, 
@@ -3308,7 +3339,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 December 2009<!--webbot bot="Timestamp" endspan i-checksum="39738" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->02 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32136" --></p>
 
 </body>
 

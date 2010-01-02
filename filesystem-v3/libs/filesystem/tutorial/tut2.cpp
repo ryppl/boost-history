@@ -9,28 +9,34 @@
 
 #include <iostream>
 #include <boost/filesystem.hpp>
-namespace fs = boost::filesystem;
+using namespace std;
+using namespace boost::filesystem;
 
 int main(int argc, char* argv[])
 {
   if (argc < 2)
   {
-    std::cout << "Usage: tut2 path\n";
+    cout << "Usage: tut2 path\n";
     return 1;
   }
 
-  std::cout << argv[1] << ": ";
-  if ( fs::exists(argv[1]) )
+  path p (argv[1]);   // p reads clearer than argv[1] in the following code
+
+  cout << p << ": ";  // utilize the path narrow stream inserter
+
+  if ( exists(p) )    // does p actually exist?
   {
-    if ( fs::is_regular_file(argv[1]) )
-      std::cout << fs::file_size(argv[1]) << '\n';
-    else if ( fs::is_directory(argv[1]) )
-      std::cout << "is a directory\n";
+    if ( is_regular_file(p) )        // is p a regular file?
+      cout << file_size(p) << '\n';
+
+    else if ( is_directory(p) )      // is p a directory?
+      cout << "is a directory\n";
+
     else
-      std::cout << "exists, but is neither a regular file nor a directory\n";
+      cout << "exists, but is neither a regular file nor a directory\n";
   }
   else
-    std::cout << "does not exist\n";
+    cout << "does not exist\n";
 
   return 0;
 }

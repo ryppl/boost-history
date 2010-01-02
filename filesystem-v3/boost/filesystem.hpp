@@ -13,6 +13,7 @@
 #ifndef BOOST_FILESYSTEM_FILESYSTEM_HPP
 #define BOOST_FILESYSTEM_FILESYSTEM_HPP
 
+#include <boost/filesystem/config.hpp>
 #include <boost/filesystem/operations.hpp>   // includes path.hpp
 #include <boost/filesystem/convenience.hpp>
 

@@ -38,8 +38,7 @@
 # if defined( BOOST_WINDOWS_API ) && defined( BOOST_POSIX_API )
 #   error both BOOST_WINDOWS_API and BOOST_POSIX_API are defined
 # elif !defined( BOOST_WINDOWS_API ) && !defined( BOOST_POSIX_API )
-#   if defined(_WIN32)||defined(__WIN32__)||defined(WIN32) // true for all Windows
-                                                           // compilers, including MingW
+#   if defined(_WIN32) // true for all modern Windows compilers, including MinGW
 #     define BOOST_WINDOWS_API 
 #   else
 #     define BOOST_POSIX_API 
@@ -58,6 +57,10 @@
 # if !defined(BOOST_POSIX_PATH) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) \
   || defined(__CYGWIN__))
 #   define BOOST_WINDOWS_PATH
+# endif
+
+# if !defined(BOOST_POSIX_PATH) && !defined(BOOST_WINDOWS_PATH)
+#   define BOOST_POSIX_PATH
 # endif
 
 //  enable dynamic linking on Windows  -------------------------------------------------//

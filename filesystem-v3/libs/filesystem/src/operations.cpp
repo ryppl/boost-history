@@ -381,6 +381,11 @@ namespace
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
+  bool not_found_error(int errval)
+  {
+    return errno == ENOENT || errno == ENOTDIR;
+  }
+
   bool // true if ok
   copy_file_api(const std::string& from_p,
     const std::string& to_p, bool fail_if_exists)
@@ -442,6 +447,16 @@ namespace
 //                            Windows-specific helpers                                  //
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
+
+  bool not_found_error(int errval)
+  {
+    return errval == ERROR_FILE_NOT_FOUND
+      || errval == ERROR_PATH_NOT_FOUND
+      || errval == ERROR_INVALID_NAME  // "tools/jam/src/:sys:stat.h", "//foo"
+      || errval == ERROR_INVALID_PARAMETER  // ":sys:stat.h"
+      || errval == ERROR_BAD_PATHNAME  // "//nosuch" on Win64
+      || errval == ERROR_BAD_NETPATH;  // "//nosuch" on Win32
+  }
 
   // these constants come from inspecting some Microsoft sample code
   std::time_t to_time_t(const FILETIME & ft)
@@ -1247,12 +1262,7 @@ namespace detail
     if (ec != 0)                             // always report errval, even though some
       ec->assign(errval, system_category);   // errval values are not status_errors
 
-    if ((errval == ERROR_FILE_NOT_FOUND)
-      || (errval == ERROR_PATH_NOT_FOUND)
-      || (errval == ERROR_INVALID_NAME)// "tools/jam/src/:sys:stat.h", "//foo"
-      || (errval == ERROR_INVALID_PARAMETER)// ":sys:stat.h"
-      || (errval == ERROR_BAD_PATHNAME)// "//nosuch" on Win64
-      || (errval == ERROR_BAD_NETPATH))// "//nosuch" on Win32
+    if (not_found_error(errval))
     {
       return file_status(file_not_found);
     }
@@ -1279,7 +1289,7 @@ namespace detail
       if (ec != 0)                            // always report errno, even though some
         ec->assign(errno, system_category);   // errno values are not status_errors
 
-      if (errno == ENOENT || errno == ENOTDIR)
+      if (not_found_error(errno))
       {
         return fs::file_status(fs::file_not_found);
       }
@@ -1657,7 +1667,7 @@ namespace
   }
 #endif
 
-  const error_code not_found_error (
+  const error_code not_found_error_code (
 #     ifdef BOOST_WINDOWS_API
         ERROR_PATH_NOT_FOUND
 #     else
@@ -1707,7 +1717,7 @@ namespace detail
   void directory_iterator_construct(directory_iterator& it,
     const path& p, system::error_code* ec)    
   {
-    if (error(p.empty(), not_found_error, p, ec,
+    if (error(p.empty(), not_found_error_code, p, ec,
        "boost::filesystem::directory_iterator::construct"))return;
 
     path::string_type filename;
