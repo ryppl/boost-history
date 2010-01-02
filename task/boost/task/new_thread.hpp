@@ -12,12 +12,14 @@
 #include <boost/move/move.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
+#include <boost/thread/future.hpp>
 
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/spin/future.hpp>
 #include <boost/task/task.hpp>
+#include <boost/task/utility.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -43,40 +45,41 @@ struct joiner
 
 }
 
-class new_thread
+struct new_thread
 {
-private:
-	struct wrapper
-	{
-		callable	ca;
-		
-		wrapper( callable const& ca_) :
-			ca( ca_)
-		{}
-		
-		void operator()()
-		{
-			ca();
-			ca.clear();
-		}
-	};
-
-public:
 	template< typename R >
 	handle< R > operator()( BOOST_RV_REF( task< R >) t)
 	{
-		spin::shared_future< R > f(
-			t.get_future() );
-		context ctx1, ctx2;
-		handle< R > h( f, ctx1);
-		callable ca( t, ctx2);
-		shared_ptr< thread > thrd(
-			//new thread( wrapper( ca) ),
-			new thread( ca),
-			detail::joiner() );
-		ctx1.reset( thrd);
-
-		return h;
+		if ( this_task::runs_in_pool() )
+		{
+			spin::promise< R > prom;
+			spin::shared_future< R > f( prom.get_future() );
+			t.set_promise( boost::move( prom) );
+			context ctx1, ctx2;
+			handle< R > h( f, ctx1);
+			callable ca( t, ctx2);
+			shared_ptr< thread > thrd(
+				new thread( ca),
+				detail::joiner() );
+			ctx1.reset( thrd);
+			return h;
+		}
+		else
+		{
+			promise< R > prom;
+			shared_future< R > f( prom.get_future() );
+			// TODO: if boost.thread uses boost.move
+			// use boost::move()
+			t.set_promise( prom);
+			context ctx1, ctx2;
+			handle< R > h( f, ctx1);
+			callable ca( t, ctx2);
+			shared_ptr< thread > thrd(
+				new thread( ca),
+				detail::joiner() );
+			ctx1.reset( thrd);
+			return h;
+		}
 	}
 };
 

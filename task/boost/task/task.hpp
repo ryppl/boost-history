@@ -10,9 +10,12 @@
 #include <boost/atomic.hpp>
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
-#include <boost/preprocessor/repetition.hpp>
+#include <boost/exception_ptr.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/move/move.hpp>
+#include <boost/preprocessor/repetition.hpp>
 #include <boost/thread/future.hpp>
+#include <boost/thread/detail/move.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/result_of.hpp>
 
@@ -26,6 +29,161 @@ namespace tasks {
 namespace detail {
 
 template< typename R >
+struct promise_adaptor
+{
+	template< typename X >
+	friend void intrusive_ptr_add_ref( promise_adaptor< X > *);
+	template< typename X >
+	friend void intrusive_ptr_release( promise_adaptor< X > *);
+
+	typedef intrusive_ptr< promise_adaptor >	ptr;
+
+	atomic< unsigned int >	use_count;
+
+	virtual ~promise_adaptor() {}
+
+	virtual void set_value( typename tasks::detail::future_traits< R >::source_reference_type) = 0;
+
+	virtual void set_value( typename tasks::detail::future_traits< R >::rvalue_source_type) = 0;
+
+	virtual void set_exception( exception_ptr) = 0;
+};
+
+template<>
+struct promise_adaptor< void >
+{
+	template< typename X >
+	friend void intrusive_ptr_add_ref( promise_adaptor< X > *);
+	template< typename X >
+	friend void intrusive_ptr_release( promise_adaptor< X > *);
+
+	typedef intrusive_ptr< promise_adaptor >	ptr;
+
+	atomic< unsigned int >	use_count;
+
+	virtual ~promise_adaptor() {}
+
+	virtual void set_value() = 0;
+
+	virtual void set_exception( exception_ptr) = 0;
+};
+
+template< typename R >
+void intrusive_ptr_add_ref( promise_adaptor< R > * p)
+{ p->use_count.fetch_add( 1, memory_order_relaxed); }
+
+template< typename R >
+void intrusive_ptr_release( promise_adaptor< R > * p)
+{
+	if ( p->use_count.fetch_sub( 1, memory_order_release) == 1)
+	{
+		atomic_thread_fence( memory_order_acquire);
+		delete p;
+	}
+}
+
+template< typename R, template< typename > class Promise >
+class promise_wrapper;
+
+template< typename R >
+class promise_wrapper< R, promise > : public promise_adaptor< R >
+{
+private:
+	promise< R >	prom_;
+
+public:	
+#ifdef BOOST_HAS_RVALUE_REFS
+	promise_wrapper( promise< R > && prom) :
+		prom_( prom)
+	{}
+#else
+	promise_wrapper( boost::detail::thread_move_t< promise< R > > prom) :
+		prom_( prom)
+	{}
+#endif
+
+	void set_value( typename tasks::detail::future_traits< R >::source_reference_type r)
+	{ prom_.set_value( r); };
+
+	void set_value( typename tasks::detail::future_traits< R >::rvalue_source_type r)
+	{ prom_.set_value( r); };
+
+	void set_exception( exception_ptr p)
+	{ prom_.set_exception( p); }
+};
+
+template<>
+class promise_wrapper< void, promise > : public promise_adaptor< void >
+{
+private:
+	promise< void >	prom_;
+
+public:	
+#ifdef BOOST_HAS_RVALUE_REFS
+	promise_wrapper( promise< void > && prom) :
+		prom_( prom)
+	{}
+#else
+	promise_wrapper( boost::detail::thread_move_t< promise< void > > prom) :
+		prom_( prom)
+	{}
+#endif
+
+	void set_value()
+	{ prom_.set_value(); };
+
+	void set_exception( exception_ptr p)
+	{ prom_.set_exception( p); }
+};
+
+template< typename R >
+class promise_wrapper< R, spin::promise > : public promise_adaptor< R >
+{
+private:
+	spin::promise< R >	prom_;
+
+public:	
+	promise_wrapper() :
+		prom_()
+	{}
+
+	promise_wrapper( BOOST_RV_REF( spin::promise< R >) prom) :
+		prom_( prom)
+	{}
+
+	void set_value( typename tasks::detail::future_traits< R >::source_reference_type r)
+	{ prom_.set_value( r); };
+
+	void set_value( typename tasks::detail::future_traits< R >::rvalue_source_type r)
+	{ prom_.set_value( r); };
+
+	void set_exception( exception_ptr p)
+	{ prom_.set_exception( p); }
+};
+
+template<>
+class promise_wrapper< void, spin::promise > : public promise_adaptor< void >
+{
+private:
+	spin::promise< void >	prom_;
+
+public:
+	promise_wrapper() :
+		prom_()
+	{}
+
+	promise_wrapper( BOOST_RV_REF( spin::promise< void >) prom) :
+		prom_( prom)
+	{}
+
+	void set_value()
+	{ prom_.set_value(); };
+
+	void set_exception( exception_ptr p)
+	{ prom_.set_exception( p); }
+};
+
+template< typename R >
 class task_base
 {
 private:
@@ -37,14 +195,15 @@ private:
 	atomic< unsigned int >	use_count_;
 
 protected:
-	bool				done_;
-	spin::promise< R >	prom_;
+	bool								done_;
+	typename promise_adaptor< R >::ptr	prom_;
 
 	virtual void do_run() = 0;
 
 public:
 	task_base() :
-		done_( false), prom_()
+		done_( false),
+		prom_( new promise_wrapper< R, spin::promise >() )
 	{}
 
 	virtual ~task_base() {}
@@ -56,12 +215,8 @@ public:
 		done_ = true;
 	}
 
-	spin::unique_future< R > get_future()
-	{ return prom_.get_future(); }
-
-	template< typename Cb >
-	void set_wait_callback( Cb const& cb)
-	{ prom_.set_wait_callback( cb); }
+	void set_promise( typename promise_adaptor< R >::ptr prom)
+	{ prom_ = prom; }
 };
 
 template< typename R >
@@ -89,45 +244,45 @@ private:
 	void do_run()
 	{
 		try
-		{ this->prom_.set_value( fn_() ); }
+		{ this->prom_->set_value( fn_() ); }
 		catch ( promise_already_satisfied const&)
 		{ throw task_already_executed(); }
 		catch ( thread_interrupted const&)
-		{ this->prom_.set_exception( copy_exception( task_interrupted() ) ); }
+		{ this->prom_->set_exception( copy_exception( task_interrupted() ) ); }
 		catch ( task_interrupted const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( boost::exception const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::ios_base::failure const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::domain_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::invalid_argument const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::length_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::out_of_range const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::logic_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::overflow_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::range_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::underflow_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::runtime_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::bad_alloc const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::bad_cast const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::bad_typeid const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::bad_exception const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch (...)
-		{ this->prom_.set_exception( current_exception() ); }
+		{ this->prom_->set_exception( current_exception() ); }
 	}
 
 public:
@@ -149,46 +304,46 @@ private:
 		try
 		{
 			fn_();
-			this->prom_.set_value();
+			this->prom_->set_value();
 		}
 		catch ( promise_already_satisfied const&)
 		{ throw task_already_executed(); }
 		catch ( thread_interrupted const&)
-		{ this->prom_.set_exception( copy_exception( task_interrupted() ) ); }
+		{ this->prom_->set_exception( copy_exception( task_interrupted() ) ); }
 		catch ( task_interrupted const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( boost::exception const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::ios_base::failure const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::domain_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::invalid_argument const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::length_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::out_of_range const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::logic_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::overflow_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::range_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::underflow_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::runtime_error const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::bad_alloc const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::bad_cast const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::bad_typeid const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch ( std::bad_exception const& e)
-		{ this->prom_.set_exception( copy_exception( e) ); }
+		{ this->prom_->set_exception( copy_exception( e) ); }
 		catch (...)
-		{ this->prom_.set_exception( current_exception() ); }
+		{ this->prom_->set_exception( current_exception() ); }
 	}
 
 public:
@@ -243,8 +398,8 @@ public:
 # define BOOST_ENUM_TASK_ARGS(n) BOOST_PP_ENUM(n, BOOST_TASKS_ARG, ~)
 
 # define BOOST_TASKS_CTOR(z, n, unused)	\
-template<								\
-	typename Fn,						\
+template<> \
+	typename Fn, \
 	BOOST_PP_ENUM_PARAMS(n, typename A)	\
 >										\
 explicit task( Fn fn, BOOST_ENUM_TASK_ARGS(n))	\
@@ -259,24 +414,33 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASKS_MAX_ARITY, BOOST_TASKS_CTOR, ~)
 
 	void operator()()
 	{
-		if ( ! task_)
-			throw task_moved();
+		if ( ! task_) throw task_moved();
 		task_->run();
 	}
 
-	spin::unique_future< R > get_future()
+// TODO: if boost.thread uses boost.move
+// re-work set_promise
+#ifdef BOOST_HAS_RVALUE_REFS
+	void set_promise( promise< R > && prom)
 	{
-		if ( ! task_)
-			throw task_moved();
-		return task_->get_future();	
+		if ( ! task_) throw task_moved();
+		task_->set_promise(
+			new detail::promise_wrapper< R, promise >( prom) );	
 	}
-
-	template< typename Cb >
-	void set_wait_callback( Cb const& cb)
+#else
+	void set_promise( boost::detail::thread_move_t< promise< R > > prom)
 	{
-		if ( ! task_)
-			throw task_moved();
-		task_->set_wait_callback( cb);
+		if ( ! task_) throw task_moved();
+		task_->set_promise(
+			new detail::promise_wrapper< R, promise >( prom) );	
+	}
+#endif
+
+	void set_promise( BOOST_RV_REF( spin::promise< R >) prom)
+	{
+		if ( ! task_) throw task_moved();
+		task_->set_promise(
+			new detail::promise_wrapper< R, spin::promise >( prom) );	
 	}
 
 	typedef typename shared_ptr< detail::task_base< R > >::unspecified_bool_type	unspecified_bool_type;

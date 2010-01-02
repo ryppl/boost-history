@@ -17,22 +17,23 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/detail/move.hpp>
-
-#include <boost/task/detail/bind_processor.hpp>
-#include <boost/task/detail/worker.hpp>
-#include <boost/task/detail/worker_group.hpp>
+#include <boost/thread/future.hpp>
 
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
+#include <boost/task/detail/bind_processor.hpp>
+#include <boost/task/detail/worker_group.hpp>
+#include <boost/task/detail/worker.hpp>
 #include <boost/task/exceptions.hpp>
-#include <boost/thread/future.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
 #include <boost/task/spin/future.hpp>
 #include <boost/task/stacksize.hpp>
 #include <boost/task/task.hpp>
+#include <boost/task/utility.hpp>
 #include <boost/task/watermark.hpp>
+#include <boost/thread/future.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -289,11 +290,28 @@ public:
 		if ( deactivated_() )
 			throw task_rejected("pool is closed");
 
-		spin::shared_future< R > f( t.get_future() );
-		context ctx;
-		handle< R > h( f, ctx);
-		queue_.put( callable( boost::move( t), ctx) );
-		return h;
+		if ( this_task::runs_in_pool() )
+		{
+			spin::promise< R > prom;
+			spin::shared_future< R > f( prom.get_future() );
+			t.set_promise( boost::move( prom) );
+			context ctx;
+			handle< R > h( f, ctx);
+			queue_.put( callable( boost::move( t), ctx) );
+			return h;
+		}
+		else
+		{
+			promise< R > prom;
+			shared_future< R > f( prom.get_future() );
+			// TODO: if boost.thread uses boost.move
+			// use boost::move()
+			t.set_promise( prom);
+			context ctx;
+			handle< R > h( f, ctx);
+			queue_.put( callable( boost::move( t), ctx) );
+			return h;
+		}
 	}
 
 	template< typename R, typename Attr >
@@ -302,14 +320,34 @@ public:
 		if ( deactivated_() )
 			throw task_rejected("pool is closed");
 
-		spin::shared_future< R > f( t.get_future() );
-		context ctx;
-		handle< R > h( f, ctx);
-		queue_.put(
-			value_type(
-				callable( boost::move( t), ctx),
-				attr) );
-		return h;
+		if ( this_task::runs_in_pool() )
+		{
+			spin::promise< R > prom;
+			spin::shared_future< R > f( prom.get_future() );
+			t.set_promise( boost::move( prom) );
+			context ctx;
+			handle< R > h( f, ctx);
+			queue_.put(
+				value_type(
+					callable( boost::move( t), ctx),
+					attr) );
+			return h;
+		}
+		else
+		{
+			promise< R > prom;
+			shared_future< R > f( prom.get_future() );
+			// TODO: if boost.thread uses boost.move
+			// use boost::move()
+			t.set_promise( prom);
+			context ctx;
+			handle< R > h( f, ctx);
+			queue_.put(
+				value_type(
+					callable( boost::move( t), ctx),
+					attr) );
+			return h;
+		}
 	}
 
 	inline friend void intrusive_ptr_add_ref( pool_base * p)

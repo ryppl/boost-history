@@ -10,7 +10,7 @@
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
 #include <boost/move/move.hpp>
-#include <boost/weak_ptr.hpp>
+#include <boost/thread/future.hpp>
 
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
@@ -33,8 +33,9 @@ struct as_sub_task
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
-			spin::shared_future< R > f(
-				t.get_future() );
+			spin::promise< R > prom;
+			spin::shared_future< R > f( prom.get_future() );
+			t.set_promise( boost::move( prom) );
 			context ctx;
 			handle< R > h( f, ctx);
 			w->put( callable( t, ctx) );

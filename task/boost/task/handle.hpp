@@ -14,8 +14,8 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/task/context.hpp>
-#include <boost/task/exceptions.hpp>
 #include <boost/task/spin/future.hpp>
+#include <boost/task/exceptions.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -48,100 +48,169 @@ private:
 	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 	friend unsigned int waitfor_any( handle< T1 > &, handle< T2 > &, handle< T3 > &, handle< T4 > &, handle< T5 > &);
 
-	spin::shared_future< R >	fut_;
-	context						ctx_;
+	struct impl
+	{
+		virtual ~impl() {}
+
+		virtual void interrupt() = 0;
+
+		virtual void interrupt_and_wait() = 0;
+
+		virtual bool interrupt_and_wait_until( system_time const& abs_time) = 0;
+
+		virtual bool interruption_requested() = 0;
+
+		virtual R get() = 0;
+
+		virtual bool is_ready() const = 0;
+
+		virtual bool has_value() const = 0;
+
+		virtual bool has_exception() const = 0;
+
+		virtual void wait() const = 0;
+
+		virtual bool wait_until( system_time const& abs_time) const = 0;
+	};
+
+	template< typename F >
+	class wrapper : public impl
+	{
+	private:
+		F			fut_;
+		context		ctx_;
+
+	public:
+		wrapper() :
+			fut_(),
+			ctx_()
+		{}
+
+		wrapper(
+				F const& fut,
+				context const& ctx) :
+			fut_( fut),
+			ctx_( ctx)
+		{}
+
+		void interrupt()
+		{ ctx_.interrupt(); }
+
+		void interrupt_and_wait()
+		{
+			interrupt();
+			wait();
+		}
+
+		bool interrupt_and_wait_until( system_time const& abs_time)
+		{
+			interrupt();
+			return wait_until( abs_time);
+		}
+
+		bool interruption_requested()
+		{ return ctx_.interruption_requested(); }
+
+		R get()
+		{
+			try
+			{ return fut_.get(); }
+			catch ( future_uninitialized const&)
+			{ throw task_uninitialized(); }
+			catch ( broken_promise const&)
+			{ throw broken_task(); }
+			catch ( promise_already_satisfied const&)
+			{ throw task_already_executed(); }
+		}
+
+		bool is_ready() const
+		{ return fut_.is_ready(); }
+
+		bool has_value() const
+		{ return fut_.has_value(); }
+
+		bool has_exception() const
+		{ return fut_.has_exception(); }
+
+		void wait() const
+		{
+			try
+			{ fut_.wait(); }
+			catch ( future_uninitialized const&)
+			{ throw task_uninitialized(); }
+			catch ( broken_promise const&)
+			{ throw broken_task(); }
+			catch ( thread_interrupted const&)
+			{ throw task_interrupted(); }
+		}
+
+		bool wait_until( system_time const& abs_time) const
+		{
+			try
+			{ return fut_.timed_wait_until( abs_time); }
+			catch ( future_uninitialized const&)
+			{ throw task_uninitialized(); }
+			catch ( broken_promise const&)
+			{ throw broken_task(); }
+			catch ( thread_interrupted const&)
+			{ throw task_interrupted(); }
+		}
+	};
+
+	shared_ptr< impl >	impl_;
 
 public:
 	handle() :
-		fut_(), ctx_()
+		impl_( new wrapper< spin::shared_future< R > >() )
 	{}
 
+	template< typename F >
 	handle(
-			spin::shared_future< R > const& fut,
+			F const& fut,
 			context const& ctx) :
-		fut_( fut),
-		ctx_( ctx)
+		impl_( new wrapper< F >( fut, ctx) )
 	{}
 
 	void interrupt()
-	{ ctx_.interrupt(); }
+	{ impl_->interrupt(); }
 
 	void interrupt_and_wait()
-	{
-		interrupt();
-		wait();
-	}
+	{ impl_->interrupt_and_wait(); }
 
 	bool interrupt_and_wait_until( system_time const& abs_time)
-	{
-		interrupt();
-		return wait_until( abs_time);
-	}
+	{ return impl_->interrupt_and_wait_until( abs_time); }
 
 	template< typename TimeDuration >
 	bool interrupt_and_wait_for( TimeDuration const& rel_time)
-	{
-		interrupt();
-		return wait_for( rel_time);
-	}
+	{ return interrupt_and_wait_until( get_system_time() + rel_time); }
 
 	bool interruption_requested()
-	{ return ctx_.interruption_requested(); }
+	{ return impl_->interruption_requested(); }
 
 	R get()
-	{
-		try
-		{ return fut_.get(); }
-		catch ( future_uninitialized const&)
-		{ throw task_uninitialized(); }
-		catch ( broken_promise const&)
-		{ throw broken_task(); }
-		catch ( promise_already_satisfied const&)
-		{ throw task_already_executed(); }
-	}
+	{ return impl_->get(); }
 
 	bool is_ready() const
-	{ return fut_.is_ready(); }
+	{ return impl_->is_ready(); }
 
 	bool has_value() const
-	{ return fut_.has_value(); }
+	{ return impl_->has_value(); }
 
 	bool has_exception() const
-	{ return fut_.has_exception(); }
+	{ return impl_->has_exception(); }
 
 	void wait() const
-	{
-		try
-		{ fut_.wait(); }
-		catch ( future_uninitialized const&)
-		{ throw task_uninitialized(); }
-		catch ( broken_promise const&)
-		{ throw broken_task(); }
-		catch ( thread_interrupted const&)
-		{ throw task_interrupted(); }
-	}
+	{ impl_->wait(); }
 
 	bool wait_until( system_time const& abs_time) const
-	{
-		try
-		{ return fut_.timed_wait_until( abs_time); }
-		catch ( future_uninitialized const&)
-		{ throw task_uninitialized(); }
-		catch ( broken_promise const&)
-		{ throw broken_task(); }
-		catch ( thread_interrupted const&)
-		{ throw task_interrupted(); }
-	}
+	{ return impl_->wait_until( abs_time); }
 
 	template< typename TimeDuration >
 	bool wait_for( TimeDuration const& rel_time) const
 	{ return wait_until( get_system_time() + rel_time); }
 
 	void swap( handle< R > & other)
-	{
-		fut_.swap( other.fut_);
- 		ctx_.swap( other.ctx_);
-	}
+	{ impl_.swap( other.impl_); }
 };
 
 template< typename T >
@@ -170,7 +239,7 @@ template< typename T1, typename T2 >
 void waitfor_all( handle< T1 > & t1, handle< T2 > & t2)
 {
 	try
-	{ spin::wait_for_all( t1.fut_, t2.fut_); }
+	{ wait_for_all( * t1.impl_->fut_, * t2.impl_->fut_); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -179,7 +248,7 @@ template< typename T1, typename T2, typename T3 >
 void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3)
 {
 	try
-	{ spin::wait_for_all( t1.fut_, t2.fut_, t3.fut_); }
+	{ wait_for_all( * t1.impl_->fut_, * t2.impl_->fut_, * t3.impl_->fut_); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -188,7 +257,7 @@ template< typename T1, typename T2, typename T3, typename T4 >
 void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4)
 {
 	try
-	{ spin::wait_for_all( t1.fut_, t2.fut_, t3.fut_, t4.fut_); }
+	{ wait_for_all( * t1.impl_->fut_, * t2.impl_->fut_, * t3.impl_->fut_, * t4.impl_->fut_); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -197,7 +266,7 @@ template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5)
 {
 	try
-	{ spin::wait_for_all( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); }
+	{ wait_for_all( * t1.impl_->fut_, * t2.impl_->fut_, * t3.impl_->fut_, * t4.impl_->fut_, * t5.impl_->fut_); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -209,7 +278,7 @@ typename disable_if< is_handle_type< Iterator >, Iterator >::type waitfor_any( I
 	{
 		boost::detail::future_waiter waiter;
 		for ( Iterator i = begin; i != end; ++i)
-			waiter.add( * ( i->fut_) );
+			waiter.add( * ( i.impl_->fut_) );
 		return next( begin, waiter.wait() );
 	}
 	catch ( thread_interrupted const&)
@@ -220,7 +289,7 @@ template< typename H1, typename H2 >
 typename enable_if< is_handle_type< H1 >, unsigned >::type waitfor_any( H1 & h1, H2 & h2)
 {
 	try
-	{ return spin::wait_for_any( h1.fut_, h2.fut_ ); }
+	{ return wait_for_any( * h1.impl_->fut_, * h2.impl_->fut_ ); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -229,7 +298,7 @@ template< typename T1, typename T2, typename T3 >
 unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3)
 {
 	try
-	{ return spin::wait_for_any( t1.fut_, t2.fut_, t3.fut_ ); }
+	{ return wait_for_any( * t1.impl_->fut_, * t2.impl_->fut_, * t3.impl_->fut_ ); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -238,7 +307,7 @@ template< typename T1, typename T2, typename T3, typename T4 >
 unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4)
 {
 	try
-	{ return spin::wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_ ); }
+	{ return wait_for_any( * t1.impl_->fut_, * t2.impl_->fut_, * t3.impl_->fut_, * t4.impl_->fut_ ); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
@@ -247,7 +316,7 @@ template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5)
 {
 	try
-	{ return spin::wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_ ); }
+	{ return wait_for_any( * t1.impl_->fut_, * t2.impl_->fut_, * t3.impl_->fut_, * t4.impl_->fut_, * t5.impl_->fut_ ); }
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }

@@ -171,10 +171,10 @@ private:
 template<typename T>
 struct future_object: future_object_base
 {
-    typedef typename fibers::detail::future_traits<T>::storage_type storage_type;
-    typedef typename fibers::detail::future_traits<T>::source_reference_type source_reference_type;
-    typedef typename fibers::detail::future_traits<T>::rvalue_source_type rvalue_source_type;
-    typedef typename fibers::detail::future_traits<T>::move_dest_type move_dest_type;
+    typedef typename tasks::detail::future_traits<T>::storage_type storage_type;
+    typedef typename tasks::detail::future_traits<T>::source_reference_type source_reference_type;
+    typedef typename tasks::detail::future_traits<T>::rvalue_source_type rvalue_source_type;
+    typedef typename tasks::detail::future_traits<T>::move_dest_type move_dest_type;
     
     storage_type result;
 
@@ -184,12 +184,12 @@ struct future_object: future_object_base
 
     void mark_finished_with_result_internal(source_reference_type result_)
 		{
-			fibers::detail::future_traits<T>::init(result,result_);
+			tasks::detail::future_traits<T>::init(result,result_);
         mark_finished_internal();
     }
     void mark_finished_with_result_internal(rvalue_source_type result_)
     {
-        fibers::detail::future_traits<T>::init(result,static_cast<rvalue_source_type>(result_));
+        tasks::detail::future_traits<T>::init(result,static_cast<rvalue_source_type>(result_));
         mark_finished_internal();
     }
 
@@ -499,7 +499,7 @@ class unique_future
     friend class packaged_task<R>;
     friend class detail::future_waiter;
 
-    typedef typename fibers::detail::future_traits<R>::move_dest_type move_dest_type;
+    typedef typename tasks::detail::future_traits<R>::move_dest_type move_dest_type;
 
     unique_future(future_ptr future_):
         future(future_)
@@ -790,7 +790,7 @@ public:
 	    return unique_future<R>(future);
 	}
 	
-	void set_value(typename fibers::detail::future_traits<R>::source_reference_type r)
+	void set_value(typename tasks::detail::future_traits<R>::source_reference_type r)
 	{
 	    lazy_init();
 	    boost::lock_guard<mutex> lock(future->mtx);
@@ -802,7 +802,7 @@ public:
 	}
 	
 //         void set_value(R && r);
-	void set_value(typename fibers::detail::future_traits<R>::rvalue_source_type r)
+	void set_value(typename tasks::detail::future_traits<R>::rvalue_source_type r)
 	{
 	    lazy_init();
 	    boost::lock_guard<mutex> lock(future->mtx);
@@ -810,7 +810,7 @@ public:
 	    {
 	        throw promise_already_satisfied();
 	    }
-	    future->mark_finished_with_result_internal(static_cast<typename fibers::detail::future_traits<R>::rvalue_source_type>(r));
+	    future->mark_finished_with_result_internal(static_cast<typename tasks::detail::future_traits<R>::rvalue_source_type>(r));
 	}
 	
 	void set_exception(boost::exception_ptr p)
