@@ -398,7 +398,7 @@ public:
 # define BOOST_ENUM_TASK_ARGS(n) BOOST_PP_ENUM(n, BOOST_TASKS_ARG, ~)
 
 # define BOOST_TASKS_CTOR(z, n, unused)	\
-template<> \
+template< \
 	typename Fn, \
 	BOOST_PP_ENUM_PARAMS(n, typename A)	\
 >										\
