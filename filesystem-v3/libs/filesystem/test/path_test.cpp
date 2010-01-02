@@ -686,7 +686,7 @@ namespace
     BOOST_TEST(!p.has_relative_path());
     BOOST_TEST(!p.has_filename());
     BOOST_TEST(!p.has_parent_path());
-    BOOST_TEST(!p.is_complete());
+    BOOST_TEST(!p.is_absolute());
 
     p = q = "/";
     BOOST_TEST(p.relative_path().string() == "");
@@ -703,9 +703,9 @@ namespace
     BOOST_TEST(p.has_filename());
     BOOST_TEST(!p.has_parent_path());
     if (platform == "POSIX")
-      BOOST_TEST(p.is_complete());
+      BOOST_TEST(p.is_absolute());
     else
-      BOOST_TEST(!p.is_complete());
+      BOOST_TEST(!p.is_absolute());
 
     p = q = "//";
     CHECK_EQUAL(p.relative_path().string(), "");
@@ -721,7 +721,7 @@ namespace
     BOOST_TEST(!p.has_relative_path());
     BOOST_TEST(p.has_filename());
     BOOST_TEST(!p.has_parent_path());
-    BOOST_TEST(!p.is_complete());
+    BOOST_TEST(!p.is_absolute());
 
 
     p = q = "///";
@@ -739,9 +739,9 @@ namespace
     BOOST_TEST(p.has_filename());
     BOOST_TEST(!p.has_parent_path());
     if (platform == "POSIX")
-      BOOST_TEST(p.is_complete());
+      BOOST_TEST(p.is_absolute());
     else
-      BOOST_TEST(!p.is_complete());
+      BOOST_TEST(!p.is_absolute());
 
     p = q = ".";
     BOOST_TEST(p.relative_path().string() == ".");
@@ -757,7 +757,7 @@ namespace
     BOOST_TEST(p.has_relative_path());
     BOOST_TEST(p.has_filename());
     BOOST_TEST(!p.has_parent_path());
-    BOOST_TEST(!p.is_complete());
+    BOOST_TEST(!p.is_absolute());
 
     p = q = "..";
     BOOST_TEST(p.relative_path().string() == "..");
@@ -773,7 +773,7 @@ namespace
     BOOST_TEST(p.has_relative_path());
     BOOST_TEST(p.has_filename());
     BOOST_TEST(!p.has_parent_path());
-    BOOST_TEST(!p.is_complete());
+    BOOST_TEST(!p.is_absolute());
 
     p = q = "foo";
     BOOST_TEST(p.relative_path().string() == "foo");
@@ -789,7 +789,7 @@ namespace
     BOOST_TEST(p.has_relative_path());
     BOOST_TEST(p.has_filename());
     BOOST_TEST(!p.has_parent_path());
-    BOOST_TEST(!p.is_complete());
+    BOOST_TEST(!p.is_absolute());
 
     p = q = "/foo";
     CHECK_EQUAL(p.relative_path().string(), "foo");
@@ -806,9 +806,9 @@ namespace
     BOOST_TEST(p.has_filename());
     BOOST_TEST(p.has_parent_path());
     if (platform == "POSIX")
-      BOOST_TEST(p.is_complete());
+      BOOST_TEST(p.is_absolute());
     else
-      BOOST_TEST(!p.is_complete());
+      BOOST_TEST(!p.is_absolute());
 
     p = q = "/foo/";
     CHECK_EQUAL(p.relative_path().string(), "foo/");
@@ -825,9 +825,9 @@ namespace
     BOOST_TEST(p.has_filename());
     BOOST_TEST(p.has_parent_path());
     if (platform == "POSIX")
-      BOOST_TEST(p.is_complete());
+      BOOST_TEST(p.is_absolute());
     else
-      BOOST_TEST(!p.is_complete());
+      BOOST_TEST(!p.is_absolute());
 
     p = q = "///foo";
     CHECK_EQUAL(p.relative_path().string(), "foo");
@@ -844,9 +844,9 @@ namespace
     BOOST_TEST(p.has_filename());
     BOOST_TEST(p.has_parent_path());
     if (platform == "POSIX")
-      BOOST_TEST(p.is_complete());
+      BOOST_TEST(p.is_absolute());
     else
-      BOOST_TEST(!p.is_complete());
+      BOOST_TEST(!p.is_absolute());
 
     p = q = "foo/bar";
     BOOST_TEST(p.relative_path().string() == "foo/bar");
@@ -862,7 +862,7 @@ namespace
     BOOST_TEST(p.has_relative_path());
     BOOST_TEST(p.has_filename());
     BOOST_TEST(p.has_parent_path());
-    BOOST_TEST(!p.is_complete());
+    BOOST_TEST(!p.is_absolute());
 
     p = q = "../foo";
     BOOST_TEST(p.relative_path().string() == "../foo");
@@ -878,7 +878,7 @@ namespace
     BOOST_TEST(p.has_relative_path());
     BOOST_TEST(p.has_filename());
     BOOST_TEST(p.has_parent_path());
-    BOOST_TEST(!p.is_complete());
+    BOOST_TEST(!p.is_absolute());
 
     p = q = "..///foo";
     CHECK_EQUAL(p.relative_path().string(), "..///foo");
@@ -894,7 +894,7 @@ namespace
     BOOST_TEST(p.has_relative_path());
     BOOST_TEST(p.has_filename());
     BOOST_TEST(p.has_parent_path());
-    BOOST_TEST(!p.is_complete());
+    BOOST_TEST(!p.is_absolute());
 
     p = q = "/foo/bar";
     BOOST_TEST(p.relative_path().string() == "foo/bar");
@@ -911,9 +911,9 @@ namespace
     BOOST_TEST(p.has_filename());
     BOOST_TEST(p.has_parent_path());
     if (platform == "POSIX")
-      BOOST_TEST(p.is_complete());
+      BOOST_TEST(p.is_absolute());
     else
-      BOOST_TEST(!p.is_complete());
+      BOOST_TEST(!p.is_absolute());
 
     // Both POSIX and Windows allow two leading slashs
     // (POSIX meaning is implementation defined)
@@ -936,7 +936,7 @@ namespace
     BOOST_TEST(!p.has_relative_path());
     BOOST_TEST(p.has_filename());
     BOOST_TEST(!p.has_parent_path());
-    BOOST_TEST(!p.is_complete());
+    BOOST_TEST(!p.is_absolute());
 
     p = q = path("//net/");
     BOOST_TEST(p.relative_path().string() == "");
@@ -952,7 +952,7 @@ namespace
     BOOST_TEST(!p.has_relative_path());
     BOOST_TEST(p.has_filename());
     BOOST_TEST(p.has_parent_path());
-    BOOST_TEST(p.is_complete());
+    BOOST_TEST(p.is_absolute());
 
     p = q = path("//net/foo");
     BOOST_TEST(p.relative_path().string() == "foo");
@@ -968,7 +968,7 @@ namespace
     BOOST_TEST(p.has_relative_path());
     BOOST_TEST(p.has_filename());
     BOOST_TEST(p.has_parent_path());
-    BOOST_TEST(p.is_complete());
+    BOOST_TEST(p.is_absolute());
 
     p = q = path("//net///foo");
     CHECK_EQUAL(p.relative_path().string(), "foo");
@@ -984,7 +984,7 @@ namespace
     BOOST_TEST(p.has_relative_path());
     BOOST_TEST(p.has_filename());
     BOOST_TEST(p.has_parent_path());
-    BOOST_TEST(p.is_complete());
+    BOOST_TEST(p.is_absolute());
 
     if (platform == "Windows")
     {
@@ -1003,7 +1003,7 @@ namespace
       BOOST_TEST(!p.has_relative_path());
       BOOST_TEST(p.has_filename());
       BOOST_TEST(!p.has_parent_path());
-      BOOST_TEST(!p.is_complete());
+      BOOST_TEST(!p.is_absolute());
 
       p = q = path("c:foo");
       BOOST_TEST(p.relative_path().string() == "foo");
@@ -1019,7 +1019,7 @@ namespace
       BOOST_TEST(p.has_relative_path());
       BOOST_TEST(p.has_filename());
       BOOST_TEST(p.has_parent_path());
-      BOOST_TEST(!p.is_complete());
+      BOOST_TEST(!p.is_absolute());
    
       p = q = path("c:/");
       BOOST_TEST(p.relative_path().string() == "");
@@ -1035,7 +1035,7 @@ namespace
       BOOST_TEST(!p.has_relative_path());
       BOOST_TEST(p.has_filename());
       BOOST_TEST(p.has_parent_path());
-      BOOST_TEST(p.is_complete());
+      BOOST_TEST(p.is_absolute());
 
       p = q = path("c:..");
       BOOST_TEST(p.relative_path().string() == "..");
@@ -1051,7 +1051,7 @@ namespace
       BOOST_TEST(p.has_relative_path());
       BOOST_TEST(p.has_filename());
       BOOST_TEST(p.has_parent_path());
-      BOOST_TEST(!p.is_complete());
+      BOOST_TEST(!p.is_absolute());
 
       p = q = path("c:/foo");
       CHECK_EQUAL(p.relative_path().string(), "foo");
@@ -1067,7 +1067,7 @@ namespace
       BOOST_TEST(p.has_relative_path());
       BOOST_TEST(p.has_filename());
       BOOST_TEST(p.has_parent_path());
-      BOOST_TEST(p.is_complete());
+      BOOST_TEST(p.is_absolute());
 
       p = q = path("c://foo");
       CHECK_EQUAL(p.relative_path().string(), "foo");
@@ -1083,7 +1083,7 @@ namespace
       BOOST_TEST(p.has_relative_path());
       BOOST_TEST(p.has_filename());
       BOOST_TEST(p.has_parent_path());
-      BOOST_TEST(p.is_complete());
+      BOOST_TEST(p.is_absolute());
 
       p = q = path("c:\\foo\\bar");
       CHECK_EQUAL(p.relative_path().string(), "foo\\bar");
@@ -1099,7 +1099,7 @@ namespace
       BOOST_TEST(p.has_relative_path());
       BOOST_TEST(p.has_filename());
       BOOST_TEST(p.has_parent_path());
-      BOOST_TEST(p.is_complete());
+      BOOST_TEST(p.is_absolute());
 
       p = q = path("prn:");
       BOOST_TEST(p.relative_path().string() == "");
@@ -1115,7 +1115,7 @@ namespace
       BOOST_TEST(!p.has_relative_path());
       BOOST_TEST(p.has_filename());
       BOOST_TEST(!p.has_parent_path());
-      BOOST_TEST(!p.is_complete());
+      BOOST_TEST(!p.is_absolute());
 
       p = q = path("\\\\net\\\\\\foo");
       CHECK_EQUAL(p.relative_path().string(), "foo");
@@ -1131,7 +1131,7 @@ namespace
       BOOST_TEST(p.has_relative_path());
       BOOST_TEST(p.has_filename());
       BOOST_TEST(p.has_parent_path());
-      BOOST_TEST(p.is_complete());
+      BOOST_TEST(p.is_absolute());
     } // Windows
 
     else

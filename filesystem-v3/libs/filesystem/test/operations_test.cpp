@@ -1101,8 +1101,8 @@ namespace
     std::cout << "  initial_path().string() is\n  \""
               << fs::initial_path().string()
               << "\"\n\n";
-    BOOST_TEST(fs::initial_path().is_complete());
-    BOOST_TEST(fs::current_path().is_complete());
+    BOOST_TEST(fs::initial_path().is_absolute());
+    BOOST_TEST(fs::current_path().is_absolute());
     BOOST_TEST(fs::initial_path().string()
       == fs::current_path().string());
 

@@ -502,7 +502,8 @@ namespace
     CHECK(!p1.has_filename());
     CHECK(!p1.has_stem());
     CHECK(!p1.has_extension());
-    CHECK(!p1.is_complete());
+    CHECK(!p1.is_absolute());
+    CHECK(p1.is_relative());
 
     CHECK(!p2.empty());
     CHECK(p2.has_root_path());
@@ -513,7 +514,8 @@ namespace
     CHECK(p2.has_filename());
     CHECK(p2.has_stem());
     CHECK(p2.has_extension());
-    CHECK(p2.is_complete());
+    CHECK(p2.is_absolute());
+    CHECK(!p2.is_relative());
 
   }
 

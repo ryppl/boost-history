@@ -156,9 +156,9 @@ namespace
     p.directory_string();
   }
 
-  //  remove_leaf_test -----------------------------------------------------------------//
+  //  path_rename_test -----------------------------------------------------------------//
 
-  void remove_leaf_test()
+  void path_rename_test()
   {
     fs::path p("foo/bar/blah");
 
@@ -167,6 +167,7 @@ namespace
     BOOST_TEST_EQ(p.branch_path(), "foo/bar");
     BOOST_TEST(p.has_leaf());
     BOOST_TEST(p.has_branch_path());
+    BOOST_TEST(!p.is_complete());
 
     if (platform == "Windows")
     {
@@ -204,7 +205,7 @@ int main(int /*argc*/, char* /*argv*/[])
   BOOST_TEST(!fs::is_regular(ng));  // verify deprecated name still works
   BOOST_TEST(!fs::symbolic_link_exists("nosuchfileordirectory"));
 
-  remove_leaf_test();
+  path_rename_test();
   normalize_test();
  
 // extension() tests ---------------------------------------------------------//
