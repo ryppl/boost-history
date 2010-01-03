@@ -602,7 +602,7 @@ public:
 	shared_future( BOOST_RV_REF( shared_future) other):
 	    future(other.future)
 	{
-	    other->future.reset();
+	    other.future.reset();
 	}
 
 	shared_future( BOOST_RV_REF( unique_future<R>) other):
