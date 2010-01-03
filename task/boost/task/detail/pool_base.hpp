@@ -33,7 +33,6 @@
 #include <boost/task/task.hpp>
 #include <boost/task/utility.hpp>
 #include <boost/task/watermark.hpp>
-#include <boost/thread/future.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 

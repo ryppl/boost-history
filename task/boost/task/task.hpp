@@ -14,8 +14,7 @@
 #include <boost/intrusive_ptr.hpp>
 #include <boost/move/move.hpp>
 #include <boost/preprocessor/repetition.hpp>
-#include <boost/thread/future.hpp>
-#include <boost/thread/detail/move.hpp>
+#include <boost/thread.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/result_of.hpp>
 

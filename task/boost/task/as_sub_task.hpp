@@ -10,7 +10,6 @@
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
 #include <boost/move/move.hpp>
-#include <boost/thread/future.hpp>
 
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
