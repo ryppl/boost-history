@@ -359,7 +359,7 @@ template< typename R >
 class task
 {
 private:
-	template< typename T >
+	template< typename T, typename P >
 	friend class detail::callable_object;
 
 	BOOST_MOVABLE_BUT_NOT_COPYABLE( task);	

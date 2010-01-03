@@ -21,7 +21,7 @@ void ping(
 		fifo_t & send_buf,
 		boost::tasks::spin::barrier & b)
 {
-	sleep( 1);
+	boost::this_thread::sleep( boost::posix_time::seconds( 1) );
 	b.wait();
 
 	std::stringstream tss;
