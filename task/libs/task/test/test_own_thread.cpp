@@ -257,7 +257,7 @@ void test_case_17()
 	BOOST_CHECK_EQUAL( vec[4].get(), 3);
 	BOOST_CHECK_EQUAL( vec[5].get(), 5);
 }
-
+/*
 // check waitfor_any()
 void test_case_18()
 {
@@ -271,7 +271,7 @@ void test_case_18()
 	BOOST_CHECK( h1.is_ready() );
 	BOOST_CHECK( h2.is_ready() );
 }
-
+*/
 // check interrupt + wait
 void test_case_19()
 {
@@ -305,7 +305,7 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_TEST_CASE( & test_case_15) );
 	test->add( BOOST_TEST_CASE( & test_case_16) );
 	test->add( BOOST_TEST_CASE( & test_case_17) );
-	test->add( BOOST_TEST_CASE( & test_case_18) );
+//	test->add( BOOST_TEST_CASE( & test_case_18) );
 	test->add( BOOST_TEST_CASE( & test_case_19) );
 
 	return test;

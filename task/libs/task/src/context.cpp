@@ -10,9 +10,10 @@
 
 namespace boost {
 namespace tasks {
+namespace detail {
 
 void
-context::impl::reset_( shared_ptr< thread > const& thrd)
+context_base::reset_( shared_ptr< thread > const& thrd)
 {
 	thrd_ = thrd;
 	BOOST_ASSERT( thrd_);
@@ -21,7 +22,7 @@ context::impl::reset_( shared_ptr< thread > const& thrd)
 }
 
 void
-context::impl::interrupt_()
+context_base::interrupt_()
 {
 	if ( ! requested_)
 	{
@@ -30,7 +31,7 @@ context::impl::interrupt_()
 	}
 }
 
-context::impl::impl() :
+context_base::context_base() :
 	use_count_( 0),
 	requested_( false),
 	mtx_(),
@@ -38,44 +39,46 @@ context::impl::impl() :
 {}
 
 void
-context::impl::reset( shared_ptr< thread > const& thrd)
+context_base::reset( shared_ptr< thread > const& thrd)
 {
 	lock_guard< mutex > lk( mtx_);
 	reset_( thrd);
 }
 
 void
-context::impl::interrupt()
+context_base::interrupt()
 {
 	lock_guard< mutex > lk( mtx_);
 	interrupt_();
 }
 
 bool
-context::impl::interruption_requested()
+context_base::interruption_requested()
 {
 	lock_guard< mutex > lk( mtx_);
 	return requested_;
 }
 
+}
+
 context::context() :
-	impl_( new impl() )
+	base_( new detail::context_base() )
 {}
 
 void
 context::reset( shared_ptr< thread > const& thrd)
-{ impl_->reset( thrd); }
+{ base_->reset( thrd); }
 
 void
 context::interrupt()
-{ impl_->interrupt(); }
+{ base_->interrupt(); }
 
 bool
 context::interruption_requested()
-{ return impl_->interruption_requested(); }
+{ return base_->interruption_requested(); }
 
 void
 context::swap( context & other)
-{ impl_.swap( other.impl_); }
+{ base_.swap( other.base_); }
 
 }}

@@ -167,34 +167,6 @@ template< typename R >
 class handle
 {
 private:
-	template< typename T1, typename T2 >
-	friend void waitfor_all( handle< T1 > &, handle< T2 > &);
-	template< typename T1, typename T2, typename T3 >
-	friend void waitfor_all( handle< T1 > &, handle< T2 > &, handle< T3 > &);
-	template< typename T1, typename T2, typename T3, typename T4 >
-	friend void waitfor_all(
-		handle< T1 > &, handle< T2 > &, handle< T3 > &, handle< T4 > &);
-	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
-	friend void waitfor_all(
-		handle< T1 > &, handle< T2 > &, handle< T3 > &, handle< T4 > &,
-	   	handle< T5 > &);
-	template< typename Iterator >
-	friend typename disable_if< is_handle_type< Iterator >, Iterator >::type
-		waitfor_any( Iterator begin, Iterator end);
-	template< typename H1, typename H2 >
-	friend typename enable_if< is_handle_type< H1 >, unsigned >::type
-		waitfor_any( H1 &, H2 &);
-	template< typename T1, typename T2, typename T3 >
-	friend unsigned int waitfor_any(
-		handle< T1 > &, handle< T2 > &, handle< T3 > &);
-	template< typename T1, typename T2, typename T3, typename T4 >
-	friend unsigned int waitfor_any(
-		handle< T1 > &, handle< T2 > &, handle< T3 > &, handle< T4 > &);
-	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
-	friend unsigned int waitfor_any(
-		handle< T1 > &, handle< T2 > &, handle< T3 > &, handle< T4 > &,
-		handle< T5 > &);
-
 	intrusive_ptr< detail::handle_base< R > >	base_;
 
 public:
@@ -265,125 +237,45 @@ template< typename Iterator >
 typename disable_if< is_handle_type< Iterator >, void >::type waitfor_all(
 	Iterator begin, Iterator end)
 {
-	try
-	{
-		for ( Iterator i = begin; i != end; ++i)
-			i->wait();
-	}
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
+	for ( Iterator i = begin; i != end; ++i)
+		i->wait();
 }
 
-template< typename T1, typename T2 >
-void waitfor_all( handle< T1 > & t1, handle< T2 > & t2)
+template< typename R1, typename R2 >
+void waitfor_all( handle< R1 > & h1, handle< R2 > & h2)
 {
-	try
-	{ wait_for_all( * t1.base_->fut_, * t2.base_->fut_); }
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
+	h1.wait();
+	h2.wait();
 }
 
-template< typename T1, typename T2, typename T3 >
-void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3)
+template< typename R1, typename R2, typename R3 >
+void waitfor_all( handle< R1 > & h1, handle< R2 > & h2, handle< R3 > & h3)
 {
-	try
-	{ wait_for_all( * t1.base_->fut_, * t2.base_->fut_, * t3.base_->fut_); }
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
+	h1.wait();
+	h2.wait();
+	h3.wait();
 }
 
-template< typename T1, typename T2, typename T3, typename T4 >
+template< typename R1, typename R2, typename R3, typename R4 >
 void waitfor_all(
-	handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4)
+	handle< R1 > & h1, handle< R2 > & h2, handle< R3 > & h3, handle< R4 > & h4)
 {
-	try
-	{
-		wait_for_all( * t1.base_->fut_, * t2.base_->fut_, * t3.base_->fut_,
-					  * t4.base_->fut_);
-	}
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
+	h1.wait();
+	h2.wait();
+	h3.wait();
+	h4.wait();
 }
 
-template< typename T1, typename T2, typename T3, typename T4, typename T5 >
+template< typename R1, typename R2, typename R3, typename R4, typename R5 >
 void waitfor_all(
-	handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4,
-	handle< T5 > & t5)
+	handle< R1 > & h1, handle< R2 > & h2, handle< R3 > & h3, handle< R4 > & h4,
+	handle< R5 > & h5)
 {
-	try
-	{
-		wait_for_all( * t1.base_->fut_, * t2.base_->fut_, * t3.base_->fut_,
-					  * t4.base_->fut_, * t5.base_->fut_);
-	}
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
-}
-
-template< typename Iterator >
-typename disable_if< is_handle_type< Iterator >, Iterator >::type waitfor_any(
-	Iterator begin, Iterator end)
-{
-	try
-	{
-		boost::detail::future_waiter waiter;
-		for ( Iterator i = begin; i != end; ++i)
-			waiter.add( * ( i.base_->fut_) );
-		return next( begin, waiter.wait() );
-	}
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
-}
-
-template< typename H1, typename H2 >
-typename enable_if< is_handle_type< H1 >, unsigned >::type waitfor_any(
-	H1 & h1, H2 & h2)
-{
-	try
-	{ return wait_for_any( * h1.base_->fut_, * h2.base_->fut_ ); }
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
-}
-
-template< typename T1, typename T2, typename T3 >
-unsigned int waitfor_any(
-	handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3)
-{
-	try
-	{
-		return wait_for_any(
-			* t1.base_->fut_, * t2.base_->fut_, * t3.base_->fut_ );
-	}
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
-}
-
-template< typename T1, typename T2, typename T3, typename T4 >
-unsigned int waitfor_any(
-	handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4)
-{
-	try
-	{
-		return wait_for_any(
-			* t1.base_->fut_, * t2.base_->fut_, * t3.base_->fut_,
-			* t4.base_->fut_ );
-	}
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
-}
-
-template< typename T1, typename T2, typename T3, typename T4, typename T5 >
-unsigned int waitfor_any(
-	handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4,
-	handle< T5 > & t5)
-{
-	try
-	{
-		return wait_for_any(
-			* t1.base_->fut_, * t2.base_->fut_, * t3.base_->fut_,
-			* t4.base_->fut_, * t5.base_->fut_ );
-	}
-	catch ( thread_interrupted const&)
-	{ throw task_interrupted(); }
+	h1.wait();
+	h2.wait();
+	h3.wait();
+	h4.wait();
+	h5.wait();
 }
 
 }}

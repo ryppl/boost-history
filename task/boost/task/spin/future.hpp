@@ -966,7 +966,6 @@ struct task_base:
         }
     }
     
-    
     virtual void do_run()=0;
 };
 

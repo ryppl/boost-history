@@ -35,10 +35,9 @@ struct as_sub_task
 		{
 			spin::promise< R > prom;
 			spin::shared_future< R > f( prom.get_future() );
-			t.set_promise( boost::move( prom) );
 			context ctx;
 			handle< R > h( f, ctx);
-			w->put( callable( t, ctx) );
+			w->put( callable( t, boost::move( prom), ctx) );
 			return h;
 		}
 		else

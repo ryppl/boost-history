@@ -42,9 +42,11 @@ struct promise_adaptor
 
 	virtual ~promise_adaptor() {}
 
-	virtual void set_value( typename tasks::detail::future_traits< R >::source_reference_type) = 0;
+	virtual void set_value(
+		typename tasks::detail::future_traits< R >::source_reference_type) = 0;
 
-	virtual void set_value( typename tasks::detail::future_traits< R >::rvalue_source_type) = 0;
+	virtual void set_value(
+		typename tasks::detail::future_traits< R >::rvalue_source_type) = 0;
 
 	virtual void set_exception( exception_ptr) = 0;
 };
@@ -102,10 +104,12 @@ public:
 	{}
 #endif
 
-	void set_value( typename tasks::detail::future_traits< R >::source_reference_type r)
+	void set_value(
+		typename tasks::detail::future_traits< R >::source_reference_type r)
 	{ prom_.set_value( r); };
 
-	void set_value( typename tasks::detail::future_traits< R >::rvalue_source_type r)
+	void set_value(
+		typename tasks::detail::future_traits< R >::rvalue_source_type r)
 	{ prom_.set_value( r); };
 
 	void set_exception( exception_ptr p)
@@ -151,10 +155,12 @@ public:
 		prom_( prom)
 	{}
 
-	void set_value( typename tasks::detail::future_traits< R >::source_reference_type r)
+	void set_value(
+		typename tasks::detail::future_traits< R >::source_reference_type r)
 	{ prom_.set_value( r); };
 
-	void set_value( typename tasks::detail::future_traits< R >::rvalue_source_type r)
+	void set_value(
+		typename tasks::detail::future_traits< R >::rvalue_source_type r)
 	{ prom_.set_value( r); };
 
 	void set_exception( exception_ptr p)
@@ -237,8 +243,6 @@ template< typename R, typename Fn >
 class task_wrapper : public task_base< R >
 {
 private:
-	friend struct as_sub_task;
-
 	Fn		fn_;
 
 	void do_run()
@@ -295,8 +299,6 @@ template< typename Fn >
 class task_wrapper< void, Fn > : public task_base< void >
 {
 private:
-	friend struct as_sub_task;
-
 	Fn		fn_;
 
 	void do_run()
@@ -358,11 +360,37 @@ template< typename R >
 class task
 {
 private:
-	friend struct as_sub_task;
+	template< typename T >
+	friend class detail::callable_object;
 
 	BOOST_MOVABLE_BUT_NOT_COPYABLE( task);	
 
 	intrusive_ptr< detail::task_base< R > >	task_;
+
+// TODO: if boost.thread uses boost.move
+// re-work set_promise
+#ifdef BOOST_HAS_RVALUE_REFS
+	void set_promise( promise< R > && prom)
+	{
+		if ( ! task_) throw task_moved();
+		task_->set_promise(
+			new detail::promise_wrapper< R, promise >( prom) );	
+	}
+#else
+	void set_promise( boost::detail::thread_move_t< promise< R > > prom)
+	{
+		if ( ! task_) throw task_moved();
+		task_->set_promise(
+			new detail::promise_wrapper< R, promise >( prom) );	
+	}
+#endif
+
+	void set_promise( BOOST_RV_REF( spin::promise< R >) prom)
+	{
+		if ( ! task_) throw task_moved();
+		task_->set_promise(
+			new detail::promise_wrapper< R, spin::promise >( prom) );	
+	}
 
 public:
 	task() :
@@ -418,32 +446,8 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASKS_MAX_ARITY, BOOST_TASKS_CTOR, ~)
 		task_->run();
 	}
 
-// TODO: if boost.thread uses boost.move
-// re-work set_promise
-#ifdef BOOST_HAS_RVALUE_REFS
-	void set_promise( promise< R > && prom)
-	{
-		if ( ! task_) throw task_moved();
-		task_->set_promise(
-			new detail::promise_wrapper< R, promise >( prom) );	
-	}
-#else
-	void set_promise( boost::detail::thread_move_t< promise< R > > prom)
-	{
-		if ( ! task_) throw task_moved();
-		task_->set_promise(
-			new detail::promise_wrapper< R, promise >( prom) );	
-	}
-#endif
-
-	void set_promise( BOOST_RV_REF( spin::promise< R >) prom)
-	{
-		if ( ! task_) throw task_moved();
-		task_->set_promise(
-			new detail::promise_wrapper< R, spin::promise >( prom) );	
-	}
-
-	typedef typename shared_ptr< detail::task_base< R > >::unspecified_bool_type	unspecified_bool_type;
+	typedef typename shared_ptr< detail::task_base< R > >::unspecified_bool_type
+		unspecified_bool_type;
 
 	operator unspecified_bool_type() const // throw()
 	{ return task_; }
@@ -466,9 +470,13 @@ template<												\
 >														\
 task< typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type >		\
 make_task( Fn fn, BOOST_ENUM_TASK_ARGS(n))				\
-{ return task< typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type >( fn, BOOST_PP_ENUM_PARAMS(n, a)); }
+{ \
+	return task< \
+		typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type >( \
+			fn, BOOST_PP_ENUM_PARAMS(n, a)); \
+}
 
-BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASKS_MAX_ARITY, BOOST_TASKS_MAKE_TASK_FUNCTION, ~)
+BOOST_PP_REPEAT_FROM_TO(1,BOOST_TASKS_MAX_ARITY,BOOST_TASKS_MAKE_TASK_FUNCTION, ~)
 
 # undef BOOST_TASKS_MAKE_TASK_FUNCTION
 # undef BOOST_ENUM_TASK_ARGS

@@ -25,68 +25,107 @@
 
 namespace boost {
 namespace tasks {
+namespace detail {
+
+struct BOOST_TASKS_DECL callable_base
+{
+	atomic< unsigned int >	use_count;
+
+	callable_base() :
+		use_count( 0)
+	{}
+
+	virtual ~callable_base() {}
+
+	virtual void run() = 0;
+
+	virtual void reset( shared_ptr< thread > const&) = 0;
+
+	inline friend void intrusive_ptr_add_ref( callable_base * p)
+	{ p->use_count.fetch_add( 1, memory_order_relaxed); }
+	
+	inline friend void intrusive_ptr_release( callable_base * p)
+	{
+		if ( p->use_count.fetch_sub( 1, memory_order_release) == 1)
+		{
+			atomic_thread_fence( memory_order_acquire);
+			delete p;
+		}
+	}
+};
+
+template< typename Task, typename Promise >
+class callable_object : public callable_base
+{
+private:
+	Task		t_;
+	context		ctx_;
+
+public:
+#ifdef BOOST_HAS_RVALUE_REFS
+	callable_object(
+			Task && t,
+			Promise && prom,
+			context const& ctx) :
+		t_( t), ctx_( ctx)
+	{ t_.set_promise( prom); }
+#else
+	callable_object(
+			BOOST_RV_REF( Task) t,
+			boost::detail::thread_move_t< Promise > prom,
+			context const& ctx) :
+		t_( t), ctx_( ctx)
+	{ t_.set_promise( prom); }
+#endif
+
+	callable_object(
+			BOOST_RV_REF( Task) t,
+			BOOST_RV_REF( Promise) prom,
+			context const& ctx) :
+		t_( t), ctx_( ctx)
+	{ t_.set_promise( prom); }
+
+	void run()
+	{ t_(); }
+
+	void reset( shared_ptr< thread > const& thrd)
+	{ ctx_.reset( thrd); }
+};
+
+}
 
 class BOOST_TASKS_DECL callable
 {
 private:
-	struct impl
-	{
-		atomic< unsigned int >	use_count_;
-
-		impl() :
-			use_count_( 0)
-		{}
-
-		virtual ~impl() {}
-
-		virtual void run() = 0;
-
-		virtual void reset( shared_ptr< thread > const&) = 0;
-
-		inline friend void intrusive_ptr_add_ref( impl * p)
-		{ p->use_count_.fetch_add( 1, memory_order_relaxed); }
-		
-		inline friend void intrusive_ptr_release( impl * p)
-		{
-			if ( p->use_count_.fetch_sub( 1, memory_order_release) == 1)
-			{
-				atomic_thread_fence( memory_order_acquire);
-				delete p;
-			}
-		}
-	};
-
-	template< typename T >
-	class wrapper : public impl
-	{
-	private:
-		T			t_;
-		context		ctx_;
-
-	public:
-		wrapper(
-				BOOST_RV_REF( T) t,
-				context const& ctx) :
-			t_( t), ctx_( ctx)
-		{}
-
-		void run()
-		{ t_(); }
-
-		void reset( shared_ptr< thread > const& thrd)
-		{ ctx_.reset( thrd); }
-	};
-
-	intrusive_ptr< impl >	impl_;
+	intrusive_ptr< detail::callable_base >	base_;
 
 public:
 	callable();
 
-	template< typename T >
+#ifdef BOOST_HAS_RVALUE_REFS
+	template< typename Task, typename Promise >
 	callable(
-			BOOST_RV_REF( T) t,
+			Task && t,
+			Promise && prom,
 			context const& ctx) :
-		impl_( new wrapper< T >( t, ctx) )
+		base_( new detail::callable_object< Task, Promise >( t, prom, ctx) )
+	{}
+#else
+	template< typename Task, typename Promise >
+	callable(
+			BOOST_RV_REF( Task) t,
+			boost::detail::thread_move_t< Promise > prom,
+			context const& ctx) :
+		base_( new detail::callable_object< Task, Promise >( t, prom, ctx) )
+	{}
+#endif
+
+	template< typename Task, typename Promise >
+	callable(
+			BOOST_RV_REF( Task) t,
+			BOOST_RV_REF( Promise) prom,
+			context const& ctx) :
+		base_( new detail::callable_object< Task, Promise >( t, prom, ctx) )
 	{}
 
 	void operator()();

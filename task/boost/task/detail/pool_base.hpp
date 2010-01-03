@@ -285,7 +285,7 @@ public:
 	{ queue_.lower_bound( lwm); }
 
 	template< typename R >
-	handle< R > submit( task< R > t)
+	handle< R > submit( BOOST_RV_REF( task< R >) t)
 	{
 		if ( deactivated_() )
 			throw task_rejected("pool is closed");
@@ -294,28 +294,33 @@ public:
 		{
 			spin::promise< R > prom;
 			spin::shared_future< R > f( prom.get_future() );
-			t.set_promise( boost::move( prom) );
 			context ctx;
 			handle< R > h( f, ctx);
-			queue_.put( callable( boost::move( t), ctx) );
+			queue_.put( callable( t, boost::move( prom), ctx) );
 			return h;
 		}
 		else
 		{
 			promise< R > prom;
 			shared_future< R > f( prom.get_future() );
-			// TODO: if boost.thread uses boost.move
-			// use boost::move()
-			t.set_promise( prom);
 			context ctx;
 			handle< R > h( f, ctx);
-			queue_.put( callable( boost::move( t), ctx) );
+			queue_.put(
+					callable(
+							t,
+// TODO: workaround because thread_move_t will be abigous for move
+#ifdef BOOST_HAS_RVALUE_REFS
+							boost::move( prom),
+#else
+							boost::detail::thread_move_t< promise< R > >( prom),
+#endif
+							ctx) );
 			return h;
 		}
 	}
 
 	template< typename R, typename Attr >
-	handle< R > submit( task< R > t, Attr const& attr)
+	handle< R > submit( BOOST_RV_REF( task< R >) t, Attr const& attr)
 	{
 		if ( deactivated_() )
 			throw task_rejected("pool is closed");
@@ -324,12 +329,11 @@ public:
 		{
 			spin::promise< R > prom;
 			spin::shared_future< R > f( prom.get_future() );
-			t.set_promise( boost::move( prom) );
 			context ctx;
 			handle< R > h( f, ctx);
 			queue_.put(
 				value_type(
-					callable( boost::move( t), ctx),
+					callable( t, boost::move( prom), ctx),
 					attr) );
 			return h;
 		}
@@ -339,12 +343,19 @@ public:
 			shared_future< R > f( prom.get_future() );
 			// TODO: if boost.thread uses boost.move
 			// use boost::move()
-			t.set_promise( prom);
 			context ctx;
 			handle< R > h( f, ctx);
 			queue_.put(
 				value_type(
-					callable( boost::move( t), ctx),
+					callable(
+							t,
+// TODO: workaround because thread_move_t will be abigous for move
+#ifdef BOOST_HAS_RVALUE_REFS
+							boost::move( prom),
+#else
+							boost::detail::thread_move_t< promise< R > >( prom),
+#endif
+							ctx),
 					attr) );
 			return h;
 		}

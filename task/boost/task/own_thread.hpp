@@ -32,10 +32,9 @@ struct own_thread
 		{
 			spin::promise< R > prom;
 			spin::shared_future< R > f( prom.get_future() );
-			t.set_promise( boost::move( prom) );
 			context ctx;
 			handle< R > h( f, ctx);
-			callable ca( t, ctx);
+			callable ca( t, boost::move( prom), ctx);
 			ca();
 			return h;
 		}
@@ -43,12 +42,17 @@ struct own_thread
 		{
 			promise< R > prom;
 			shared_future< R > f( prom.get_future() );
-			// TODO: if boost.thread uses boost.move
-			// use boost::move()
-			t.set_promise( prom);
 			context ctx;
 			handle< R > h( f, ctx);
-			callable ca( t, ctx);
+			callable ca(
+					t,
+// TODO: workaround because thread_move_t will be abigous for move
+#ifdef BOOST_HAS_RVALUE_REFS
+					boost::move( prom),
+#else
+					boost::detail::thread_move_t< promise< R > >( prom),
+#endif
+					ctx);
 			ca();
 			return h;
 		}

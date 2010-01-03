@@ -10,27 +10,27 @@ namespace boost {
 namespace tasks {
 
 callable::callable() :
-	impl_()
+	base_()
 {}
 
 void
 callable::operator()()
-{ impl_->run(); }
+{ base_->run(); }
 
 bool
 callable::empty() const
-{ return ! impl_; }
+{ return ! base_; }
 
 void
 callable::clear()
-{ impl_.reset(); }
+{ base_.reset(); }
 
 void
 callable::reset( shared_ptr< thread > const& thrd)
-{ impl_->reset( thrd); }
+{ base_->reset( thrd); }
 
 void
 callable::swap( callable & other)
-{ impl_.swap( other.impl_); }
+{ base_.swap( other.base_); }
 
 }}

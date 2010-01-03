@@ -28,45 +28,48 @@
 
 namespace boost {
 namespace tasks {
+namespace detail {
+
+class BOOST_TASKS_DECL context_base : private noncopyable
+{
+private:
+	atomic< unsigned int >	use_count_;
+	bool					requested_;
+	mutex					mtx_;
+	shared_ptr< thread >	thrd_;
+
+	void reset_( shared_ptr< thread > const& thrd);
+
+	void interrupt_();
+
+public:
+	context_base();
+
+	void reset( shared_ptr< thread > const& thrd);
+
+	void interrupt();
+
+	bool interruption_requested();
+
+	inline friend void intrusive_ptr_add_ref( context_base * p)
+	{ p->use_count_.fetch_add( 1, memory_order_relaxed); }
+	
+	inline friend void intrusive_ptr_release( context_base * p)
+	{
+		if ( p->use_count_.fetch_sub( 1, memory_order_release) == 1)
+		{
+			atomic_thread_fence( memory_order_acquire);
+			delete p;
+		}
+	}
+};
+
+}
 
 class BOOST_TASKS_DECL context
 {
 private:
-	class impl : private noncopyable
-	{
-	private:
-		atomic< unsigned int >	use_count_;
-		bool					requested_;
-		mutex					mtx_;
-		shared_ptr< thread >	thrd_;
-
-		void reset_( shared_ptr< thread > const& thrd);
-
-		void interrupt_();
-
-	public:
-		impl();
-
-		void reset( shared_ptr< thread > const& thrd);
-
-		void interrupt();
-
-		bool interruption_requested();
-
-		inline friend void intrusive_ptr_add_ref( impl * p)
-		{ p->use_count_.fetch_add( 1, memory_order_relaxed); }
-		
-		inline friend void intrusive_ptr_release( impl * p)
-		{
-			if ( p->use_count_.fetch_sub( 1, memory_order_release) == 1)
-			{
-				atomic_thread_fence( memory_order_acquire);
-				delete p;
-			}
-		}
-	};
-
-	intrusive_ptr< impl >	impl_;
+	intrusive_ptr< detail::context_base >	base_;
 
 public:
 	context();
