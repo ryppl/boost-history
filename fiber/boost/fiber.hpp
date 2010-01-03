@@ -27,6 +27,7 @@
 #include <boost/fiber/spin/manual_reset_event.hpp>
 #include <boost/fiber/spin/mutex.hpp>
 #include <boost/fiber/spin/unbounded_channel.hpp>
+#include <boost/fiber/strategy.hpp>
 #include <boost/fiber/unbounded_channel.hpp>
 #include <boost/fiber/utility.hpp>
 

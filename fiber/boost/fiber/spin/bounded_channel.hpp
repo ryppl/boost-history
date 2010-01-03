@@ -279,38 +279,38 @@ public:
 			std::size_t lwm) :
 		impl_( new impl( hwm, lwm) )
 	{}
-	
+
 	bounded_channel( std::size_t wm) :
 		impl_( new impl( wm) )
 	{}
-	
+
 	void upper_bound( std::size_t hwm)
 	{ impl_->upper_bound( hwm); }
-	
+
 	std::size_t upper_bound() const
 	{ return impl_->upper_bound(); }
-	
+
 	void lower_bound( std::size_t lwm)
 	{ impl_->lower_bound( lwm); }
-	
+
 	std::size_t lower_bound() const
 	{ return impl_->lower_bound(); }
 
 	bool active() const
 	{ return impl_->active(); }
-	
+
 	void deactivate()
 	{ impl_->deactivate(); }
-	
+
 	bool empty() const
 	{ return impl_->empty(); }
-	
+
 	void put( T const& t)
 	{ impl_->put( t); }
-	
+
 	bool take( value_type & va)
 	{ return impl_->take( va);}
-	
+
 	bool try_take( value_type & va)
 	{ return impl_->try_take( va); }
 };

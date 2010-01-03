@@ -66,7 +66,7 @@ struct future_object_base
         do_callback(lock);
         return external_waiters.insert(external_waiters.end(),&cv);
     }
-    
+
     void remove_external_waiter(waiter_list::iterator it)
     {
         boost::lock_guard<mutex> lock(mtx);
@@ -87,7 +87,7 @@ struct future_object_base
     struct relocker
     {
         boost::unique_lock<mutex>& lock;
-        
+
         relocker(boost::unique_lock<mutex>& lock_):
             lock(lock_)
         {
@@ -108,7 +108,6 @@ struct future_object_base
             local_callback();
         }
     }
-    
 
     void wait(bool rethrow=true)
     {
@@ -123,7 +122,7 @@ struct future_object_base
             boost::rethrow_exception(exception);
         }
     }
-    
+
     void mark_exceptional_finish_internal(boost::exception_ptr const& e)
     {
         exception=e;
@@ -151,7 +150,7 @@ struct future_object_base
     {
         callback=boost::bind(f,boost::ref(*u));
     }
-    
+
 private:
     future_object_base(future_object_base const&);
     future_object_base& operator=(future_object_base const&);
@@ -164,7 +163,7 @@ struct future_object: future_object_base
     typedef typename fibers::detail::future_traits<T>::source_reference_type source_reference_type;
     typedef typename fibers::detail::future_traits<T>::rvalue_source_type rvalue_source_type;
     typedef typename fibers::detail::future_traits<T>::move_dest_type move_dest_type;
-    
+
     storage_type result;
 
     future_object():
@@ -238,7 +237,7 @@ struct future_object<void>: future_object_base
     {
         wait();
     }
-    
+
     future_state::state get_state()
     {
         boost::lock_guard<mutex> guard(mtx);
@@ -272,12 +271,12 @@ class future_waiter
         {}
 
     };
-    
+
     struct all_futures_lock
     {
         unsigned count;
         boost::scoped_array<boost::unique_lock<mutex> > locks;
-        
+
         all_futures_lock(std::vector<registered_waiter>& futures):
             count(futures.size()),locks(new boost::unique_lock<mutex>[count])
         {
@@ -286,12 +285,12 @@ class future_waiter
                 locks[i]=boost::unique_lock<mutex>(futures[i].future->mtx);
             }
         }
-        
+
         void lock()
         {
             boost::lock(locks.get(),locks.get()+count);
         }
-        
+
         void unlock()
         {
             for(unsigned i=0;i<count;++i)
@@ -300,16 +299,16 @@ class future_waiter
             }
         }
     };
-    
+
     condition cv;
     std::vector<registered_waiter> futures;
     unsigned future_count;
-    
+
 public:
     future_waiter():
         future_count(0)
     {}
-    
+
     template<typename F>
     void add(F& f)
     {
@@ -335,7 +334,7 @@ public:
             cv.wait(lk);
         }
     }
-    
+
     ~future_waiter()
     {
         for(unsigned i=0;i<futures.size();++i)
@@ -343,7 +342,7 @@ public:
             futures[i].future->remove_external_waiter(futures[i].wait_iterator);
         }
     }
-    
+
 };
 
 }
@@ -480,7 +479,7 @@ class unique_future
     typedef boost::shared_ptr<detail::future_object<R> > future_ptr;
 
 	BOOST_MOVABLE_BUT_NOT_COPYABLE( unique_future);
-    
+
     future_ptr future;
 
     friend class shared_future<R>;
@@ -499,28 +498,24 @@ public:
 
     unique_future()
     {}
-   
+
     ~unique_future()
     {}
 
 	unique_future( BOOST_RV_REF( unique_future) other):
-	    future(other.future)
-	{
-	    other.future.reset();
-	}
-	
+		future(other.future)
+	{ other.future.reset(); }
+
 	unique_future& operator=( BOOST_RV_REF( unique_future) other)
 	{
-	    future=other.future;
-	    other.future.reset();
-	    return *this;
+		future=other.future;
+		other.future.reset();
+		return *this;
 	}
-	
+
 	void swap(unique_future& other)
-	{
-	    future.swap(other.future);
-	}
-	
+	{ future.swap(other.future); }
+
 	// retrieving the value
 	move_dest_type get()
 	{
@@ -531,7 +526,7 @@ public:
 	
 	    return future->get();
 	}
-	
+
 	// functions to check state, and wait for ready
 	state get_state() const
 	{
@@ -541,23 +536,23 @@ public:
 	    }
 	    return future->get_state();
 	}
-	
-	
+
+
 	bool is_ready() const
 	{
 	    return get_state()==future_state::ready;
 	}
-	
+
 	bool has_exception() const
 	{
 	    return future && future->has_exception();
 	}
-	
+
 	bool has_value() const
 	{
 	    return future && future->has_value();
 	}
-	
+
 	void wait() const
 	{
 	    if(!future)
@@ -574,30 +569,30 @@ class shared_future
     typedef boost::shared_ptr<detail::future_object<R> > future_ptr;
 
 	BOOST_COPYABLE_AND_MOVABLE( shared_future);
-    
+   
     future_ptr future;
 
 	friend class detail::future_waiter;
 	friend class promise<R>;
 	friend class packaged_task<R>;
-	
+
 	shared_future(future_ptr future_):
 	    future(future_)
 	{}
-	
+
 public:
 	shared_future(shared_future const& other):
 	    future(other.future)
 	{}
-	
+
 	typedef future_state::state state;
-	
+
 	shared_future()
 	{}
-	
+
 	~shared_future()
 	{}
-	
+
 	shared_future& operator=( BOOST_COPY_ASSIGN_REF( shared_future) other)
 	{
 	    future=other.future;
@@ -609,11 +604,13 @@ public:
 	{
 	    other->future.reset();
 	}
+
 	shared_future( BOOST_RV_REF( unique_future<R>) other):
 	    future(other.future)
 	{
 	    other.future.reset();
 	}
+
 	shared_future& operator=(BOOST_RV_REF( shared_future) other)
 	{
 	    future.swap(other.future);
@@ -626,12 +623,12 @@ public:
 	    other.future.reset();
 	    return *this;
 	}
-	
+
 	void swap(shared_future& other)
 	{
 	    future.swap(other.future);
 	}
-	
+
 	// retrieving the value
 	R get()
 	{
@@ -642,7 +639,7 @@ public:
 	
 	    return future->get();
 	}
-	
+
 	// functions to check state, and wait for ready
 	state get_state() const
 	{
@@ -652,23 +649,22 @@ public:
 	    }
 	    return future->get_state();
 	}
-	
-	
+
 	bool is_ready() const
 	{
 	    return get_state()==future_state::ready;
 	}
-	
+
 	bool has_exception() const
 	{
 	    return future && future->has_exception();
 	}
-	
+
 	bool has_value() const
 	{
 	    return future && future->has_value();
 	}
-	
+
 	void wait() const
 	{
 	    if(!future)
@@ -685,10 +681,10 @@ class promise
     typedef boost::shared_ptr<detail::future_object<R> > future_ptr;
 
 	BOOST_MOVABLE_BUT_NOT_COPYABLE( promise);
-    
+
     future_ptr future;
     bool future_obtained;
-    
+
     void lazy_init()
     {
         if(!future)
@@ -697,14 +693,14 @@ class promise
             future.reset(new detail::future_object<R>);
         }
     }
-    
+
 public:
 //         template <class Allocator> explicit promise(Allocator a);
 
 	promise():
 	    future(),future_obtained(false)
 	{}
-	
+
 	~promise()
 	{
 	    if(future)
@@ -717,7 +713,7 @@ public:
 	        }
 	    }
 	}
-	
+
 	promise( BOOST_RV_REF( promise) rhs):
 	    future(rhs.future),future_obtained(rhs.future_obtained)
 	{
@@ -730,13 +726,13 @@ public:
 	    rhs.future.reset();
 	    return *this;
 	}
-        
+
 	void swap(promise& other)
 	{
 	    future.swap(other.future);
 	    std::swap(future_obtained,other.future_obtained);
 	}
-	
+
 	// Result retrieval
 	unique_future<R> get_future()
 	{
@@ -748,7 +744,7 @@ public:
 	    future_obtained=true;
 	    return unique_future<R>(future);
 	}
-	
+
 	void set_value(typename fibers::detail::future_traits<R>::source_reference_type r)
 	{
 	    lazy_init();
@@ -759,7 +755,7 @@ public:
 	    }
 	    future->mark_finished_with_result_internal(r);
 	}
-	
+
 //         void set_value(R && r);
 	void set_value(typename fibers::detail::future_traits<R>::rvalue_source_type r)
 	{
@@ -771,7 +767,7 @@ public:
 	    }
 	    future->mark_finished_with_result_internal(static_cast<typename fibers::detail::future_traits<R>::rvalue_source_type>(r));
 	}
-	
+
 	void set_exception(boost::exception_ptr p)
 	{
 	    lazy_init();
@@ -782,7 +778,7 @@ public:
 	    }
 	    future->mark_exceptional_finish_internal(p);
 	}
-	
+
 	template<typename F>
 	void set_wait_callback(F f)
 	{
@@ -798,10 +794,10 @@ class promise<void>
     typedef boost::shared_ptr<detail::future_object<void> > future_ptr;
 
 	BOOST_MOVABLE_BUT_NOT_COPYABLE( promise);
-    
+
     future_ptr future;
     bool future_obtained;
-    
+
     void lazy_init()
     {
         if(!future)
@@ -814,7 +810,7 @@ public:
 	promise():
 	    future(),future_obtained(false)
 	{}
-	
+
 	~promise()
 	{
 	    if(future)
@@ -827,7 +823,7 @@ public:
 	        }
 	    }
 	}
-	
+
 	promise( BOOST_RV_REF( promise) rhs):
 	    future(rhs.future),future_obtained(rhs.future_obtained)
 	{
@@ -840,18 +836,18 @@ public:
 	    rhs.future.reset();
 	    return *this;
 	}
-	
+
 	void swap(promise& other)
 	{
 	    future.swap(other.future);
 	    std::swap(future_obtained,other.future_obtained);
 	}
-	
+
 	// Result retrieval
 	unique_future<void> get_future()
 	{
 	    lazy_init();
-	    
+
 	    if(future_obtained)
 	    {
 	        throw future_already_retrieved();
@@ -859,7 +855,7 @@ public:
 	    future_obtained=true;
 	    return unique_future<void>(future);
 	}
-	
+
 	void set_value()
 	{
 	    lazy_init();
@@ -870,7 +866,7 @@ public:
 	    }
 	    future->mark_finished_with_result_internal();
 	}
-	
+
 	void set_exception(boost::exception_ptr p)
 	{
 	    lazy_init();
@@ -881,7 +877,7 @@ public:
 	    }
 	    future->mark_exceptional_finish_internal(p);
 	}
-	
+
 	template<typename F>
 	void set_wait_callback(F f)
 	{
@@ -924,11 +920,9 @@ struct task_base:
             this->mark_exceptional_finish_internal(boost::copy_exception(broken_promise()));
         }
     }
-    
-    
+
     virtual void do_run()=0;
 };
-
 
 template<typename R,typename F>
 struct task_object:
@@ -941,7 +935,7 @@ struct task_object:
     task_object( BOOST_RV_REF( F) f_):
         f(f_)
     {}
-    
+
     void do_run()
     {
         try
@@ -966,7 +960,7 @@ struct task_object<void,F>:
     task_object( BOOST_RV_REF( F) f_):
         f(f_)
     {}
-    
+
     void do_run()
     {
         try
@@ -991,12 +985,12 @@ class packaged_task
 
     boost::shared_ptr<detail::task_base<R> > task;
     bool future_obtained;
-    
+
 public:
     packaged_task():
         future_obtained(false)
     {}
-    
+
     // construction and destruction
     template <class F>
     explicit packaged_task(F const& f):
@@ -1005,7 +999,7 @@ public:
     explicit packaged_task(R(*f)()):
         task(new detail::task_object<R,R(*)()>(f)),future_obtained(false)
     {}
-    
+
     template <class F>
     explicit packaged_task( BOOST_RV_REF( F) f):
         task(new detail::task_object<R,F>(f)),future_obtained(false)
@@ -1015,7 +1009,6 @@ public:
 //         explicit packaged_task(F const& f, Allocator a);
 //         template <class F, class Allocator>
 //         explicit packaged_task(F&& f, Allocator a);
-
 
 	~packaged_task()
 	{
@@ -1037,13 +1030,13 @@ public:
 	    swap(temp);
 	    return *this;
 	}
-	
+
 	void swap(packaged_task& other)
 	{
 	    task.swap(other.task);
 	    std::swap(future_obtained,other.future_obtained);
 	}
-	
+
 	// result retrieval
 	unique_future<R> get_future()
 	{
@@ -1061,8 +1054,7 @@ public:
 	        throw future_already_retrieved();
 	    }
 	}
-	
-	
+
 	// execution
 	void operator()()
 	{
@@ -1072,7 +1064,7 @@ public:
 	    }
 	    task->run();
 	}
-	
+
 	template<typename F>
 	void set_wait_callback(F f)
 	{

@@ -24,7 +24,7 @@ namespace fibers {
 class fiber_error : public std::runtime_error
 {
 public:
-    fiber_error( std::string const& msg) :
+	fiber_error( std::string const& msg) :
 		std::runtime_error( msg)
 	{}
 };
@@ -64,56 +64,56 @@ public:
 	{}
 };
 
-class future_uninitialized:
-    public std::logic_error
+class future_uninitialized :
+	public std::logic_error
 {
 public:
-    future_uninitialized():
+    future_uninitialized() :
         std::logic_error("Future Uninitialized")
     {}
 };
 
-class broken_promise:
+class broken_promise :
     public std::logic_error
 {
 public:
-    broken_promise():
+    broken_promise() :
         std::logic_error("Broken promise")
     {}
 };
 
-class future_already_retrieved:
+class future_already_retrieved :
     public std::logic_error
 {
 public:
-    future_already_retrieved():
+    future_already_retrieved() :
         std::logic_error("Future already retrieved")
     {}
 };
 
-class promise_already_satisfied:
+class promise_already_satisfied :
     public std::logic_error
 {
 public:
-    promise_already_satisfied():
+    promise_already_satisfied() :
         std::logic_error("Promise already satisfied")
     {}
 };
 
-class task_already_started:
+class task_already_started :
     public std::logic_error
 {
 public:
-    task_already_started():
+    task_already_started() :
         std::logic_error("Task already started")
     {}
 };
 
-class task_moved:
+class task_moved :
     public std::logic_error
 {
 public:
-    task_moved():
+    task_moved() :
         std::logic_error("Task moved")
     {}
 };

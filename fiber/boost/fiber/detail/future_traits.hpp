@@ -52,7 +52,7 @@ struct future_traits
 	static void cleanup(storage_type& storage)
 	{ storage.reset(); }
 };
-        
+
 template<typename T>
 struct future_traits<T&>
 {

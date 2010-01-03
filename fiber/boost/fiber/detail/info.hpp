@@ -35,7 +35,7 @@ public:
 	info_default() :
 		info_base()
 	{}
-	
+
 	void run()
 	{ BOOST_ASSERT( ! "run() of master-fiber should never be executed"); }
 };
@@ -78,7 +78,7 @@ public:
 		info_base( stack_size),
 		fn_( fn)
 	{}
-	
+
 	void run()
 	{ fn_(); }
 };
@@ -97,7 +97,7 @@ public:
 		info_base( stack_size),
 		fn_( fn)
 	{}
-	
+
 	void run()
 	{ fn_(); }
 };

@@ -35,16 +35,16 @@ public:
 
 	bool operator!=( id const& other) const
 	{ return vp_ != other.vp_; }
-	
+
 	bool operator<( id const& other) const
 	{ return vp_ < other.vp_; }
-	
+
 	bool operator>( id const& other) const
 	{ return other.vp_ < vp_; }
-	
+
 	bool operator<=( id const& other) const
 	{ return !( other.vp_ < vp_); }
-	
+
 	bool operator>=( id const& other) const
 	{ return ! ( vp_ < other.vp_); }
 
