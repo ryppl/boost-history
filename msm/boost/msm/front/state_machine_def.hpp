@@ -111,6 +111,69 @@ struct state_machine_def :  public state_base<BaseState>
             return (fsm.*guard)(evt);
         }
     };
+    // internal transitions
+	template<
+		typename T1
+		, class Event
+		, void (Derived::*action)(Event const&)
+	>
+	struct a_irow
+	{
+        typedef a_irow_tag row_type_tag;
+		typedef T1 Source;
+		typedef T1 Target;
+		typedef Event Evt;
+        template <class FSM,class SourceState,class TargetState>
+        static void action_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        {
+            // in this front-end, we don't need to know source and target states
+            (fsm.*action)(evt);
+        }
+	};
+
+	template<
+		typename T1
+		, class Event
+		, void (Derived::*action)(Event const&)
+		, bool (Derived::*guard)(Event const&) 
+	>
+	struct irow
+	{
+        typedef irow_tag row_type_tag;
+		typedef T1 Source;
+		typedef T1 Target;
+		typedef Event Evt;
+        template <class FSM,class SourceState,class TargetState>
+        static void action_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        {
+            // in this front-end, we don't need to know source and target states
+            (fsm.*action)(evt);
+        }
+        template <class FSM,class SourceState,class TargetState>
+        static bool guard_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        {
+            // in this front-end, we don't need to know source and target states
+            return (fsm.*guard)(evt);
+        }
+	};
+	template<
+		typename T1
+		, class Event
+		, bool (Derived::*guard)(Event const&) 
+	>
+	struct g_irow
+	{
+        typedef g_irow_tag row_type_tag;
+		typedef T1 Source;
+		typedef T1 Target;
+		typedef Event Evt;
+        template <class FSM,class SourceState,class TargetState>
+        static bool guard_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        {
+            // in this front-end, we don't need to know source and target states
+            return (fsm.*guard)(evt);
+        }
+    };
 protected:
     // Default no-transition handler. Can be replaced in the Derived SM class.
     template <class FSM,class Event>

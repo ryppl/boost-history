@@ -93,6 +93,64 @@ namespace boost { namespace msm { namespace front
             return Guard()(evt,fsm,src,tgt);
         }
     };
+    // internal transitions
+    template<class SOURCE,class EVENT,class ACTION>
+    struct Row<SOURCE,EVENT,none,ACTION,none>
+    {
+        typedef SOURCE  Source;
+        typedef EVENT   Evt;
+        typedef Source  Target;
+        typedef ACTION  Action;
+        typedef none    Guard;
+        // no guard
+        typedef a_irow_tag row_type_tag;
+        template <class EVT,class FSM,class SourceState,class TargetState>
+        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        {
+            // create functor, call it
+            Action()(evt,fsm,src,tgt);
+        }
+    };
+    template<class SOURCE,class EVENT,class GUARD>
+    struct Row<SOURCE,EVENT,none,none,GUARD>
+    {
+        typedef SOURCE  Source;
+        typedef EVENT   Evt;
+        typedef Source  Target;
+        typedef none    Action;
+        typedef GUARD   Guard;
+        // no action
+        typedef g_irow_tag row_type_tag;
+        template <class EVT,class FSM,class SourceState,class TargetState>
+        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        {
+            // create functor, call it
+            return Guard()(evt,fsm,src,tgt);
+        }
+    };
+    template<class SOURCE,class EVENT,class ACTION,class GUARD>
+    struct Row<SOURCE,EVENT,none,ACTION,GUARD>
+    {
+        typedef SOURCE  Source;
+        typedef EVENT   Evt;
+        typedef Source  Target;
+        typedef ACTION  Action;
+        typedef GUARD   Guard;
+        // action + guard
+        typedef irow_tag row_type_tag;
+        template <class EVT,class FSM,class SourceState,class TargetState>
+        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        {
+            // create functor, call it
+            Action()(evt,fsm,src,tgt);
+        }
+        template <class EVT,class FSM,class SourceState,class TargetState>
+        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        {
+            // create functor, call it
+            return Guard()(evt,fsm,src,tgt);
+        }
+    };
     template<class TGT>
     struct get_row_target
     {
