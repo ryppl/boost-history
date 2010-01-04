@@ -537,6 +537,111 @@ private:
             return HANDLED_TRUE;
         }
     };
+    // "i" rows are rows for internal transitions
+    template<
+        typename ROW
+    >
+    struct irow_
+    {
+        typedef typename ROW::Source T1;
+        typedef typename ROW::Target T2;
+        typedef typename ROW::Evt Event;
+        typedef T1 current_state_type;
+        typedef T2 next_state_type;
+
+        // if a guard condition is here, call it to check that the event is accepted
+        static bool check_guard(library_sm& fsm,Event const& evt)
+        {
+            if ( ROW::guard_call(fsm,evt,
+                                 ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
+                                 ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list)) )
+                return true;
+            return false;
+        }
+        // Take the transition action and return the next state.
+        static HandledEnum execute(library_sm& fsm, int , int state, Event const& evt)
+        {
+
+            BOOST_STATIC_CONSTANT(int, current_state = (get_state_id<stt,current_state_type>::type::value));
+            BOOST_STATIC_CONSTANT(int, next_state = (get_state_id<stt,next_state_type>::type::value));
+            BOOST_ASSERT(state == (current_state));
+            if (!check_guard(fsm,evt))
+            {
+                // guard rejected the event, we stay in the current one
+                return HANDLED_GUARD_REJECT;
+            }
+
+            // call the action method
+            ROW::action_call(fsm,evt,
+                             ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
+                             ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list) );
+            return HANDLED_TRUE;
+        }
+    };
+
+    // row having only a guard condition
+    template<
+        typename ROW
+    >
+    struct g_irow_
+    {
+        typedef typename ROW::Source T1;
+        typedef typename ROW::Target T2;
+        typedef typename ROW::Evt Event;
+        typedef T1 current_state_type;
+        typedef T2 next_state_type;
+
+        // if a guard condition is defined, call it to check that the event is accepted
+        static bool check_guard(library_sm& fsm,Event const& evt)
+        {
+            if ( ROW::guard_call(fsm,evt,
+                                 ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
+                                 ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list)) )
+                return true;
+            return false;
+        }
+        // Take the transition action and return the next state.
+        static HandledEnum execute(library_sm& fsm, int , int state, Event const& evt)
+        {
+            BOOST_STATIC_CONSTANT(int, current_state = (get_state_id<stt,current_state_type>::type::value));
+            BOOST_STATIC_CONSTANT(int, next_state = (get_state_id<stt,next_state_type>::type::value));
+            BOOST_ASSERT(state == (current_state));
+            if (!check_guard(fsm,evt))
+            {
+                // guard rejected the event, we stay in the current one
+                return HANDLED_GUARD_REJECT;
+            }
+            return HANDLED_TRUE;
+        }
+    };
+
+    // row having only an action method
+    template<
+        typename ROW
+    >
+    struct a_irow_ 
+    {
+        typedef typename ROW::Source T1;
+        typedef typename ROW::Target T2;
+        typedef typename ROW::Evt Event;
+        typedef T1 current_state_type;
+        typedef T2 next_state_type;
+
+        // Take the transition action and return the next state.
+        static HandledEnum execute(library_sm& fsm, int region_index, int state, Event const& evt)
+        {
+            BOOST_STATIC_CONSTANT(int, current_state = (get_state_id<stt,current_state_type>::type::value));
+            BOOST_STATIC_CONSTANT(int, next_state = (get_state_id<stt,next_state_type>::type::value));
+            BOOST_ASSERT(state == (current_state));
+
+            // call the action method
+            ROW::action_call(fsm,evt,
+                            ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
+                            ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list) );
+
+            return HANDLED_TRUE;
+        }
+    };
 
     // Template used to form forwarding rows in the transition table for every row of a composite SM
     template<
@@ -564,29 +669,45 @@ private:
         typedef frow<Composite,Event> type;
     };
 
-    template <class Tag, class Transition,int Dummy=0>
+    template <class Tag, class Transition>
     struct create_backend_stt
     {
     };
-    template <class Transition,int Dummy>
-    struct create_backend_stt<g_row_tag,Transition,Dummy>
+    template <class Transition>
+    struct create_backend_stt<g_row_tag,Transition>
     {
         typedef g_row_<Transition> type;
     };
-	template <class Transition,int Dummy>
-    struct create_backend_stt<a_row_tag,Transition,Dummy>
+	template <class Transition>
+    struct create_backend_stt<a_row_tag,Transition>
     {
         typedef a_row_<Transition> type;
     };
-	template <class Transition,int Dummy>
-    struct create_backend_stt<_row_tag,Transition,Dummy>
+	template <class Transition>
+    struct create_backend_stt<_row_tag,Transition>
     {
         typedef _row_<Transition> type;
     };
-	template <class Transition,int Dummy>
-	struct create_backend_stt<row_tag,Transition,Dummy>
+	template <class Transition>
+	struct create_backend_stt<row_tag,Transition>
 	{
 		typedef row_<Transition> type;
+	};
+    // internal transitions
+    template <class Transition>
+    struct create_backend_stt<g_irow_tag,Transition>
+    {
+        typedef g_irow_<Transition> type;
+    };
+	template <class Transition>
+    struct create_backend_stt<a_irow_tag,Transition>
+    {
+        typedef a_irow_<Transition> type;
+    };
+	template <class Transition>
+	struct create_backend_stt<irow_tag,Transition>
+	{
+		typedef irow_<Transition> type;
 	};
     template <class Transition>
     struct make_row_tag
@@ -1570,6 +1691,8 @@ BOOST_PP_REPEAT(BOOST_PP_ADD(BOOST_MSM_VISITOR_ARG_SIZE,1), MSM_VISITOR_ARGS_EXE
              //forward the event for handling by sub state machines
              ::boost::mpl::for_each<state_list, ::boost::msm::wrap< ::boost::mpl::placeholders::_1> >
                  (entry_exit_helper<Event,true>(self_->m_states[region_id::value],incomingEvent,self_));
+             region_start_helper
+                 < ::boost::mpl::int_<region_id::value+1> >::template do_start(self_,incomingEvent);
          }
      };
      template <int Dummy>
@@ -1671,6 +1794,7 @@ BOOST_PP_REPEAT(BOOST_PP_ADD(BOOST_MSM_VISITOR_ARG_SIZE,1), MSM_VISITOR_ARGS_EXE
              void operator()( ::boost::msm::wrap<StateType> const& )
              {
                  int state_id = get_state_id<stt,StateType>::value;
+                 int index = StateType::zone_index;
                  BOOST_STATIC_ASSERT(StateType::zone_index >= 0);
                  BOOST_STATIC_ASSERT(StateType::zone_index <= nr_regions::value);
                  helper_self->m_states[StateType::zone_index] = state_id;
@@ -1690,12 +1814,16 @@ BOOST_PP_REPEAT(BOOST_PP_ADD(BOOST_MSM_VISITOR_ARG_SIZE,1), MSM_VISITOR_ARGS_EXE
          {
              self_->m_states[region_id::value] = 
                  self_->m_history.history_entry(incomingEvent)[region_id::value];
+             region_entry_exit_helper
+                 < ::boost::mpl::int_<region_id::value+1> >::template do_entry(self_,incomingEvent);
          }
          template<class Event>
          static void do_exit(library_sm* self_,Event const& incomingEvent)
          {
              ::boost::mpl::for_each<state_list, ::boost::msm::wrap< ::boost::mpl::placeholders::_1> >
                  (entry_exit_helper<Event,false>(self_->m_states[region_id::value],incomingEvent,self_));
+             region_entry_exit_helper
+                 < ::boost::mpl::int_<region_id::value+1> >::template do_exit(self_,incomingEvent);
          }
      };
      template <int Dummy>
