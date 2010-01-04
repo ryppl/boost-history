@@ -23,40 +23,25 @@ namespace proto = boost::proto;
 
 namespace boost { namespace msm { namespace front { namespace euml
 {
-template <class Left,class Right>
-struct fusion_left_right 
+
+template <class SOURCE,class EVENT,class TARGET,class ACTION=none,class GUARD=none>
+struct TempRow
 {
-    typedef Row<typename Left::Source,typename Left::Evt,typename Right::Target
-               ,typename Right::Action,typename Right::Guard> type;
+    typedef SOURCE  Source;
+    typedef EVENT   Evt;
+    typedef TARGET  Target;
+    typedef ACTION  Action;
+    typedef GUARD   Guard;
 };
-template <class TargetGuard,class ActionClass>
-struct fusion_target_action_guard 
+
+template <class TEMP_ROW>
+struct convert_to_row
 {
-    typedef Row<none,none,typename TargetGuard::Target,typename ActionClass::Action,typename TargetGuard::Guard> type;
+    typedef Row<typename TEMP_ROW::Source,typename TEMP_ROW::Evt,typename TEMP_ROW::Target,
+                typename TEMP_ROW::Action,typename TEMP_ROW::Guard> type;
 };
 
 // row grammar
-struct BuildSourcePlusEvent
-    : proto::or_<
-            proto::when<
-                proto::plus<proto::terminal<state_tag>,proto::terminal<event_tag> >,
-                Row<proto::_left,proto::_right,none>()
-            >,
-            proto::when<
-                proto::terminal<state_tag>,
-                Row<proto::_,none,none>()
-            >
-        >
-{};
-struct BuildActionPlusGuard
-    : proto::when<
-            proto::subscript<BuildActionSequence,BuildGuards >,
-            Row<none,none,none,
-			BuildActionSequence(proto::_left),
-			BuildGuards(proto::_right)>()
-        >
-{};
-
 struct BuildNextStates
    : proto::or_<
         proto::when<
@@ -78,45 +63,127 @@ struct BuildNextStates
    >
 {};
 
-struct BuildTargetPlusGuard
+template <class EventGuard,class ActionClass>
+struct fusion_event_action_guard 
+{
+    typedef TempRow<none,typename EventGuard::Evt,none,typename ActionClass::Action,typename EventGuard::Guard> type;
+};
+
+template <class SourceGuard,class ActionClass>
+struct fusion_source_action_guard 
+{
+    typedef TempRow<typename SourceGuard::Source,none,none,typename ActionClass::Action,typename SourceGuard::Guard> type;
+};
+
+template <class SourceClass,class EventClass>
+struct fusion_source_event_action_guard 
+{
+    typedef TempRow<typename SourceClass::Source,typename EventClass::Evt,
+                    none,typename EventClass::Action,typename EventClass::Guard> type;
+};
+template <class Left,class Right>
+struct fusion_left_right 
+{
+    typedef TempRow<typename Right::Source,typename Right::Evt,typename Left::Target
+                   ,typename Right::Action,typename Right::Guard> type;
+};
+struct BuildEventPlusGuard
     : proto::when<
-            proto::subscript<BuildNextStates,BuildGuards >,
-            Row<none,none,BuildNextStates(proto::_left),none,BuildGuards(proto::_right)>()
+            proto::subscript<proto::terminal<event_tag>,BuildGuards >,
+            TempRow<none,proto::_left,none,none,BuildGuards(proto::_right)>()
         >
 {};
 
+struct BuildSourcePlusGuard
+    : proto::when<
+            proto::subscript<proto::terminal<state_tag>,BuildGuards >,
+            TempRow<proto::_left,none,none,none,BuildGuards(proto::_right)>()
+        >
+{};
 
-struct BuildRight
+struct BuildEvent
     : proto::or_<
-        // after == if just state without guard/action
+        // just event without guard/action
          proto::when<
-                BuildNextStates,
-                Row<none,none,BuildNextStates(proto::_),none>() >
-        // == target / action
+                proto::terminal<event_tag>,
+                TempRow<none,proto::_,none>() >
+        // event / action
        , proto::when<
-                proto::divides<BuildNextStates,BuildActionSequence >,
-                Row<none,none,BuildNextStates(proto::_left),
-					BuildActionSequence(proto::_right) >() >
-        // == target [ guard ]
+                proto::divides<proto::terminal<event_tag>,BuildActionSequence >,
+                TempRow<none,proto::_left,none,
+					    BuildActionSequence(proto::_right) >() >
+        // event [ guard ]
        , proto::when<
-                proto::subscript<BuildNextStates,BuildGuards >,
-                Row<none,none,BuildNextStates(proto::_left),none,BuildGuards(proto::_right)>() >
-        // == target [ guard ] / action 
+                proto::subscript<proto::terminal<event_tag>,BuildGuards >,
+                TempRow<none,proto::_left,none,none,BuildGuards(proto::_right)>() >
+        // event [ guard ] / action 
        , proto::when<
-                proto::divides<BuildTargetPlusGuard,
+                proto::divides<BuildEventPlusGuard,
                                BuildActionSequence >,
-                fusion_target_action_guard<BuildTargetPlusGuard(proto::_left),
-                                           Row<none,none,none,BuildActionSequence(proto::_right)>()
+                fusion_event_action_guard<BuildEventPlusGuard(proto::_left),
+                                          TempRow<none,none,none,BuildActionSequence(proto::_right)>()
+                                           >() 
+                >
+        >
+{};
+struct BuildSource
+    : proto::or_<
+        // after == if just state without event or guard/action
+         proto::when<
+                proto::terminal<state_tag>,
+                TempRow<proto::_,none,none>() >
+        // == source / action
+       , proto::when<
+                proto::divides<proto::terminal<state_tag>,BuildActionSequence >,
+                TempRow<proto::_left,none,none,
+					    BuildActionSequence(proto::_right) >() >
+        // == source [ guard ]
+       , proto::when<
+                proto::subscript<proto::terminal<state_tag>,BuildGuards >,
+                TempRow<proto::_left,none,none,none,BuildGuards(proto::_right)>() >
+        // == source [ guard ] / action 
+       , proto::when<
+                proto::divides<BuildSourcePlusGuard,
+                               BuildActionSequence >,
+                fusion_source_action_guard<BuildSourcePlusGuard(proto::_left),
+                                           TempRow<none,none,none,BuildActionSequence(proto::_right)>()
                                            >() 
                 >
         >
 {};
 
+struct BuildRight
+    : proto::or_<
+         proto::when<
+                proto::plus<BuildSource,BuildEvent >,
+                fusion_source_event_action_guard<BuildSource(proto::_left),BuildEvent(proto::_right)>()
+         >,
+         proto::when<
+                BuildSource,
+                BuildSource
+         >
+    >
+{};
+
 struct BuildRow
-    : proto::or_<     
+    : proto::or_<
+        // grammar 1
         proto::when<
-            proto::equal_to<BuildSourcePlusEvent,BuildRight >,
-            fusion_left_right<BuildSourcePlusEvent(proto::_left),BuildRight(proto::_right)>()
+            proto::equal_to<BuildNextStates,BuildRight >,
+            convert_to_row<
+                fusion_left_right<TempRow<none,none,BuildNextStates(proto::_left)>,BuildRight(proto::_right)> >()
+        >,
+        // internal events
+        proto::when<
+            BuildRight,
+            convert_to_row<
+                fusion_left_right<TempRow<none,none,none>,BuildRight(proto::_)> >()
+        >,
+        // grammar 2
+        proto::when<
+            proto::equal_to<BuildRight,BuildNextStates>,
+            convert_to_row<
+                fusion_left_right<TempRow<none,none,BuildNextStates(proto::_right)>,BuildRight(proto::_left)> >()
         >
     >
 {};
