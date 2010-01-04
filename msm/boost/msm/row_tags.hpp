@@ -20,6 +20,10 @@ struct a_row_tag {};
 struct g_row_tag {};
 struct _row_tag {};
 struct row_tag {};
+// tags for internal transitions
+struct a_irow_tag {};
+struct g_irow_tag {};
+struct irow_tag {};
 
 // flags used internally to handle terminate / interrupt states
 struct TerminateFlag 
