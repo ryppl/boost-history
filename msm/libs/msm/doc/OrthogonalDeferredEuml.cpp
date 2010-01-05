@@ -86,12 +86,12 @@ namespace  // Concrete FSM implementation
 
 
     // Playing has a transition table 
-    typedef BOOST_TYPEOF(build_stt(
+    typedef BOOST_TYPEOF(build_stt((
         //  +------------------------------------------------------------------------------+
-        (   Song1() + next_song()      == Song2()  / start_next_song(),
-            Song2() + previous_song()  == Song1()  / start_prev_song(),
-            Song2() + next_song()      == Song3()  / start_next_song(),
-            Song3() + previous_song()  == Song2()  / start_prev_song()
+        Song2()  == Song1() + next_song()       / start_next_song(),
+        Song1()  == Song2() + previous_song()   / start_prev_song(),
+        Song3()  == Song2() + next_song()       / start_next_song(),
+        Song2()  == Song3() + previous_song()   / start_prev_song()
         //  +------------------------------------------------------------------------------+
         ) ) ) playing_transition_table;
 
@@ -117,27 +117,24 @@ namespace  // Concrete FSM implementation
     typedef msm::back::state_machine<Playing_> Playing;
 
     // replaces the old transition table
-    typedef BOOST_TYPEOF(build_stt
-        ((Stopped()  + play()        == Playing()  / start_playback() ,
-          Stopped()  + open_close()  == Open()     / open_drawer(),
-          Stopped()  + stop()        == Stopped(),
+    typedef BOOST_TYPEOF(build_stt((
+          Playing()   == Stopped()  + play()        / start_playback() ,
+          Playing()   == Paused()   + end_pause()   / resume_playback(),
           //  +------------------------------------------------------------------------------+
-          Open()     + open_close()  == Empty()    / close_drawer(),
+          Empty()     == Open()     + open_close()  / close_drawer(),
           //  +------------------------------------------------------------------------------+
-          Empty()    + open_close()  == Open()     / open_drawer(),
-          Empty()    + cd_detected() == Stopped()  [good_disk_format()&&(Event_<1>()==Int_<DISK_CD>())] 
-                                                  / store_cd_info(),
-         //  +------------------------------------------------------------------------------+
-          Playing()  + stop()        == Stopped()  / stop_playback(),
-          Playing()  + pause()       == Paused()   / pause_playback(),
-          Playing()  + open_close()  == Open()     / stop_and_open(),
+          Open()      == Empty()    + open_close()  / open_drawer(),
+          Open()      == Paused()   + open_close()  / stop_and_open(),
+          Open()      == Stopped()  + open_close()  / open_drawer(),
+          Open()      == Playing()  + open_close()  / stop_and_open(),
           //  +------------------------------------------------------------------------------+
-          Paused()   + end_pause()   == Playing()  / resume_playback(),
-          Paused()   + stop()        == Stopped()  / stop_playback(),
-          Paused()   + open_close()  == Open()     / stop_and_open(),
+          Paused()    == Playing()  + pause()       / pause_playback(),
           //  +------------------------------------------------------------------------------+
-          AllOk()    + error_found() == ErrorMode()/ report_error(),
-          ErrorMode()+ end_error()   == AllOk()    / report_end_error()
+          Stopped()   == Playing()  + stop()        / stop_playback(),
+          Stopped()   == Paused()   + stop()        / stop_playback(),
+          Stopped()   == Empty()    + cd_detected() [good_disk_format()&&(Event_<1>()==Int_<DISK_CD>())] 
+                                                    / (store_cd_info(),process_(play())),
+          Stopped()   == Stopped()  + stop()                            
           //  +------------------------------------------------------------------------------+
                     ) ) ) transition_table;
 
@@ -161,7 +158,7 @@ namespace  // Concrete FSM implementation
     //
     // Testing utilities.
     //
-    static char const* const state_names[] = { "Stopped", "Open", "Empty", "Playing", "Paused","AllOk","ErrorMode" };
+    static char const* const state_names[] = { "Stopped", "Paused", "Open", "Empty", "Playing" };
     void pstate(player const& p)
     {
         // we have now several active states, which we show

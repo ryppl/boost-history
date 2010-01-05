@@ -21,10 +21,12 @@ namespace  // Concrete FSM implementation
     struct open_close : euml_event<open_close>{};
     struct next_song : euml_event<next_song>{};
     struct previous_song : euml_event<previous_song>{};
+    struct region2_evt : euml_event<region2_evt>{};
 
     // A "complicated" event type that carries some data.
     typedef BOOST_TYPEOF(build_attributes(attributes_ << std::string() << DiskTypeEnum() )) cd_detected_attributes;
-    struct cd_detected : euml_event<cd_detected>, cd_detected_attributes
+    struct cd_detected : euml_event<cd_detected>,cd_detected_attributes
+
     {
         cd_detected(){}
         cd_detected(std::string name, DiskTypeEnum diskType)
@@ -37,6 +39,8 @@ namespace  // Concrete FSM implementation
     // Concrete FSM implementation 
 
     // The list of FSM states
+    // state not defining any entry or exit
+    typedef BOOST_TYPEOF(build_state( )) Paused;
 
     typedef BOOST_TYPEOF(build_state(Empty_Entry(),Empty_Exit())) Empty;
 
@@ -44,8 +48,7 @@ namespace  // Concrete FSM implementation
 
     typedef BOOST_TYPEOF(build_state( Stopped_Entry(),Stopped_Exit() )) Stopped;
 
-    // state not defining any entry or exit
-    typedef BOOST_TYPEOF(build_state( )) Paused;
+
 
     // Playing is now a state machine itself.
 
@@ -56,14 +59,18 @@ namespace  // Concrete FSM implementation
 
     typedef BOOST_TYPEOF(build_state( Song3_Entry(),Song3_Exit() )) Song3;
 
+    typedef BOOST_TYPEOF(build_state( Region2State1_Entry(),Region2State1_Exit() )) Region2State1;
+
+    typedef BOOST_TYPEOF(build_state( Region2State2_Entry(),Region2State2_Exit() )) Region2State2;
 
     // Playing has a transition table 
-    typedef BOOST_TYPEOF(build_stt(
+    typedef BOOST_TYPEOF(build_stt((
         //  +------------------------------------------------------------------------------+
-        (   Song1() + next_song()      == Song2()  / start_next_song(),
-            Song2() + previous_song()  == Song1()  / start_prev_song(),
-            Song2() + next_song()      == Song3()  / start_next_song(),
-            Song3() + previous_song()  == Song2()  / start_prev_song()
+            Song2()         == Song1()          + next_song()       / start_next_song(),
+            Song1()         == Song2()          + previous_song()   / start_prev_song(),
+            Song3()         == Song2()          + next_song()       / start_next_song(),
+            Song2()         == Song3()          + previous_song()   / start_prev_song(),
+            Region2State2() == Region2State1()  + region2_evt()
         //  +------------------------------------------------------------------------------+
         ) ) ) playing_transition_table;
 
@@ -76,7 +83,7 @@ namespace  // Concrete FSM implementation
 #else
     // but this definition is ok
     struct Playing_ : public BOOST_TYPEOF(build_sm(  playing_transition_table(), //STT
-                                                     init_ << Song1() // Init State
+                                                     init_ << Song1() << Region2State1() // Init State
                                                    )) 
     {
     };
@@ -85,36 +92,36 @@ namespace  // Concrete FSM implementation
     typedef msm::back::state_machine<Playing_> Playing;
 
     // replaces the old transition table
-    typedef BOOST_TYPEOF(build_stt
-        ((Stopped() + play()        == Playing()  / start_playback() ,
-          Stopped() + open_close()  == Open()     / open_drawer(),
-          Stopped() + stop()        == Stopped(),
-          //  +------------------------------------------------------------------------------+
-          Open()    + open_close()  == Empty()    / close_drawer(),
-          //  +------------------------------------------------------------------------------+
-          Empty()   + open_close()  == Open()     / open_drawer(),
-          Empty()   + cd_detected() == Stopped()  [good_disk_format()&&(Event_<1>()==Int_<DISK_CD>())] 
-                                                  / (store_cd_info(),process_(play())),
-         //  +------------------------------------------------------------------------------+
-          Playing() + stop()        == Stopped()  / stop_playback(),
-          Playing() + pause()       == Paused()   / pause_playback(),
-          Playing() + open_close()  == Open()     / stop_and_open(),
-          //  +------------------------------------------------------------------------------+
-          Paused()  + end_pause()   == Playing()  / resume_playback(),
-          Paused()  + stop()        == Stopped()  / stop_playback(),
-          Paused()  + open_close()  == Open()     / stop_and_open()
-          //  +------------------------------------------------------------------------------+
-                    ) ) ) transition_table;
+    typedef BOOST_TYPEOF(build_stt((
+        Playing()   == Stopped()  + play()        / start_playback() ,
+        Playing()   == Paused()   + end_pause()   / resume_playback(),
+        //  +------------------------------------------------------------------------------+
+        Empty()     == Open()     + open_close()  / close_drawer(),
+        //  +------------------------------------------------------------------------------+
+        Open()      == Empty()    + open_close()  / open_drawer(),
+        Open()      == Paused()   + open_close()  / stop_and_open(),
+        Open()      == Stopped()  + open_close()  / open_drawer(),
+        Open()      == Playing()  + open_close()  / stop_and_open(),
+        //  +------------------------------------------------------------------------------+
+        Paused()    == Playing()  + pause()       / pause_playback(),
+        //  +------------------------------------------------------------------------------+
+        Stopped()   == Playing()  + stop()        / stop_playback(),
+        Stopped()   == Paused()   + stop()        / stop_playback(),
+        Stopped()   == Empty()    + cd_detected() [good_disk_format()&&(Event_<1>()==Int_<DISK_CD>())] 
+                        / (store_cd_info(),process_(play())),
+        Stopped()   == Stopped()  + stop()                            
+        //  +------------------------------------------------------------------------------+
+        ) ) ) transition_table;
 
     // create a state machine "on the fly"
     typedef BOOST_TYPEOF(build_sm(  transition_table(), //STT
-                                    init_ << Empty(), // Init State
-                                    NoAction(), // Entry
-                                    NoAction(), // Exit
-                                    attributes_ << no_attributes_, // Attributes
-                                    configure_<< no_configure_, // Flags, Deferred events, configuration
-                                    Log_No_Transition() // no_transition handler
-                                    )) player_;
+        init_ << Empty(), // Init State
+        NoAction(), // Entry
+        NoAction(), // Exit
+        attributes_ << no_attributes_, // Attributes
+        configure_<< no_configure_, // Flags, Deferred events, configuration
+        Log_No_Transition() // no_transition handler
+        )) player_;
     // or simply, if no no_transition handler needed:
     //typedef BOOST_TYPEOF(build_sm(  transition_table(), //STT
     //                                Empty(), // Init State
@@ -126,7 +133,7 @@ namespace  // Concrete FSM implementation
     //
     // Testing utilities.
     //
-    static char const* const state_names[] = { "Stopped", "Open", "Empty", "Playing", "Paused" };
+    static char const* const state_names[] = { "Stopped", "Paused", "Open", "Empty", "Playing" };
     void pstate(player const& p)
     {
         std::cout << " -> " << state_names[p.current_state()[0]] << std::endl;
@@ -134,7 +141,7 @@ namespace  // Concrete FSM implementation
 
     void test()
     {        
-		player p;
+        player p;
         // needed to start the highest-level SM. This will call on_entry and mark the start of the SM
         p.start(); 
         // go to Open, call on_exit on Empty, then action, then on_entry on Open
@@ -146,7 +153,7 @@ namespace  // Concrete FSM implementation
         p.process_event(
             cd_detected("louie, louie",DISK_CD)); pstate(p);
         // no need to call play() as the previous event does it in its action method
-		//p.process_event(play());
+        //p.process_event(play());
 
         // make transition happen inside it. Player has no idea about this event but it's ok.
         p.process_event(next_song());pstate(p); //2nd song active
@@ -155,15 +162,15 @@ namespace  // Concrete FSM implementation
 
         // at this point, Play is active      
         p.process_event(pause()); pstate(p);
+
         // go back to Playing
         p.process_event(end_pause());  pstate(p);
         p.process_event(pause()); pstate(p);
         p.process_event(stop());  pstate(p);
+
         // event leading to the same state
         // no action method called as none is defined in the transition table
         p.process_event(stop());  pstate(p);
-        // test call to no_transition
-        p.process_event(pause()); pstate(p);
     }
 }
 

@@ -86,11 +86,11 @@ namespace  // Concrete FSM implementation
 
 
     // replaces the old transition table
-    typedef BOOST_TYPEOF(build_stt
-        ((Foreach()     + OneSong()     == StringFind() ,
-          StringFind()  + Found()       == Insert()  ,
-          StringFind()  + NotFound()    == Foreach() ,
-          Insert()      + Done()        == Foreach()
+    typedef BOOST_TYPEOF(build_stt((
+          StringFind()  == Foreach()     + OneSong() ,
+          Insert()      == StringFind()  + Found()  ,
+          Foreach()     == StringFind()  + NotFound() ,
+          Foreach()     ==  Insert()     + Done()
           //  +------------------------------------------------------------------------------+
                     ) ) ) transition_table;
     struct Log_No_Transition : euml_action<Log_No_Transition>

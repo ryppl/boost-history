@@ -54,23 +54,24 @@ namespace  // Concrete FSM implementation
 
     // replaces the old transition table
     typedef BOOST_TYPEOF(build_stt((
-          Playing()   == Stopped()  + play()        / start_playback() ,
-          Playing()   == Paused()   + end_pause()   / resume_playback(),
+          Stopped() + play()        / start_playback()  == Playing()                        ,
+          Stopped() + open_close()  / open_drawer()     == Open()                           ,
+          Stopped() + stop()                            == Stopped(),
           //  +------------------------------------------------------------------------------+
-          Empty()     == Open()     + open_close()  / close_drawer(),
+          Open()    + open_close()  / close_drawer()    == Empty()                          ,
           //  +------------------------------------------------------------------------------+
-          Open()      == Empty()    + open_close()  / open_drawer(),
-          Open()      == Paused()   + open_close()  / stop_and_open(),
-          Open()      == Stopped()  + open_close()  / open_drawer(),
-          Open()      == Playing()  + open_close()  / stop_and_open(),
+          Empty()   + open_close()  / open_drawer()     == Open()                           ,
+          Empty()   + cd_detected()
+            [good_disk_format()&&(Event_<1>()==Int_<DISK_CD>())]
+            / (store_cd_info(),process_(play()))        == Stopped()                        ,
+         //  +------------------------------------------------------------------------------+
+          Playing() + stop()        / stop_playback()   == Stopped()                        ,
+          Playing() + pause()       / pause_playback()  == Paused()                         ,
+          Playing() + open_close()  / stop_and_open()   == Open()                           ,
           //  +------------------------------------------------------------------------------+
-          Paused()    == Playing()  + pause()       / pause_playback(),
-          //  +------------------------------------------------------------------------------+
-          Stopped()   == Playing()  + stop()        / stop_playback(),
-          Stopped()   == Paused()   + stop()        / stop_playback(),
-          Stopped()   == Empty()    + cd_detected() [good_disk_format()&&(Event_<1>()==Int_<DISK_CD>())] 
-                                                    / (store_cd_info(),process_(play())),
-          Stopped()   == Stopped()  + stop()                            
+          Paused()  + end_pause()   / resume_playback() == Playing()                        ,
+          Paused()  + stop()        / stop_playback()   == Stopped()                        ,
+          Paused()  + open_close()  / stop_and_open()   == Open()     
           //  +------------------------------------------------------------------------------+
                     ) ) ) transition_table;
 
@@ -104,13 +105,14 @@ namespace  // Concrete FSM implementation
     {
     };
 #endif
+
     // choice of back-end
     typedef msm::back::state_machine<player_> player;
 
     //
     // Testing utilities.
     //
-    static char const* const state_names[] = { "Stopped", "Paused", "Open", "Empty", "Playing" };
+    static char const* const state_names[] = { "Stopped", "Open", "Empty", "Playing", "Paused" };
     void pstate(player const& p)
     {
         std::cout << " -> " << state_names[p.current_state()[0]] << std::endl;
@@ -151,3 +153,4 @@ int main()
     test();
     return 0;
 }
+
