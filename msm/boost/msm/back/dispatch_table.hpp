@@ -18,6 +18,7 @@
 #include <boost/mpl/filter_view.hpp>
 #include <boost/mpl/pop_front.hpp>
 #include <boost/mpl/for_each.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 
 #include <boost/msm/back/metafunctions.hpp>
 #include <boost/msm/back/common_types.hpp>
@@ -108,7 +109,24 @@ struct dispatch_table
         init_cell(dispatch_table* self_)
           : self(self_)
         {}
-        
+        // version for transition event not base of our event
+        template <class Transition>
+        void init_event_base_case(Transition const&, ::boost::mpl::true_ const &) const
+        {
+            typedef typename create_stt<Fsm>::type stt; 
+            BOOST_STATIC_CONSTANT(int, state_id = 
+                (get_state_id<stt,typename Transition::current_state_type>::value));
+            self->entries[state_id] = reinterpret_cast<cell>(&Transition::execute);
+        }
+        // version for transition event base of our event
+        template <class Transition>
+        void init_event_base_case(Transition const&, ::boost::mpl::false_ const &) const
+        {
+            typedef typename create_stt<Fsm>::type stt; 
+            BOOST_STATIC_CONSTANT(int, state_id = 
+                (get_state_id<stt,typename Transition::current_state_type>::value));
+            self->entries[state_id] = &Transition::execute;
+        }
         // Cell initializer function object, used with mpl::for_each
         template <class Transition>
         typename ::boost::enable_if<typename has_not_real_row_tag<Transition>::type,void >::type
@@ -118,12 +136,11 @@ struct dispatch_table
         }
         template <class Transition>
         typename ::boost::disable_if<typename has_not_real_row_tag<Transition>::type,void >::type
-        operator()(Transition const&,boost::msm::back::dummy<1> = 0) const
+        operator()(Transition const& tr,boost::msm::back::dummy<1> = 0) const
         {
-            typedef typename create_stt<Fsm>::type stt; 
-            BOOST_STATIC_CONSTANT(int, state_id = 
-                (get_state_id<stt,typename Transition::current_state_type>::value));
-            self->entries[state_id] = &Transition::execute;
+            //only if the transition event is a base of our event is the reinterpret_case safe
+            init_event_base_case(tr,
+                ::boost::mpl::bool_< ::boost::is_base_of<typename Transition::Event,Event>::type::value>() );
         }
     
         dispatch_table* self;
@@ -149,7 +166,7 @@ struct dispatch_table
 	    }
         template <class State>
         typename ::boost::disable_if<typename has_state_delayed_event<State,Event>::type,void >::type
-        operator()(boost::msm::wrap<State> const&,boost::msm::back::dummy<0> = 0)
+        operator()(boost::msm::wrap<State> const&,boost::msm::back::dummy<1> = 0)
         {
             typedef typename create_stt<Fsm>::type stt; 
             BOOST_STATIC_CONSTANT(int, state_id = (get_state_id<stt,State>::value));
@@ -171,7 +188,7 @@ struct dispatch_table
 		    : self(self_),tofill_entries(tofill_entries_)
 	    {}
 
-        // this event is an automatic one (not a real one, just one for use in event-less transitions)
+        // this event is a compound one (not a real one, just one for use in event-less transitions)
         // Note this event cannot be used as deferred!
 	    template <class State>
         void operator()(boost::msm::wrap<State> const&)
@@ -201,7 +218,7 @@ struct dispatch_table
         typedef typename ::boost::mpl::reverse_fold<
                         // filter on event
                         ::boost::mpl::filter_view
-                            <Stt, ::boost::is_same<transition_event< ::boost::mpl::placeholders::_>, Event> >,
+                            <Stt, ::boost::is_base_of<transition_event< ::boost::mpl::placeholders::_>, Event> >,
                         // build a map
                         ::boost::mpl::map<>,
                         ::boost::mpl::if_<
