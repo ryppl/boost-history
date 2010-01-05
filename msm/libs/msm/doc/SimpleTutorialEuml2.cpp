@@ -41,6 +41,9 @@ namespace  // Concrete FSM implementation
 
     // The list of FSM states
 
+    // state not needing any entry or exit
+    typedef BOOST_TYPEOF(build_state( )) Paused;
+
     typedef BOOST_TYPEOF(build_state(Empty_Entry(),Empty_Exit())) Empty;
 
     typedef BOOST_TYPEOF(build_state( Open_Entry(),Open_Exit() )) Open;
@@ -49,8 +52,6 @@ namespace  // Concrete FSM implementation
 
     typedef BOOST_TYPEOF(build_state( (Playing_Entry()),(Playing_Exit()) )) Playing;
     
-    // state not needing any entry or exit
-    typedef BOOST_TYPEOF(build_state( )) Paused;
 
     // replaces the old transition table
     typedef BOOST_TYPEOF(build_stt((
