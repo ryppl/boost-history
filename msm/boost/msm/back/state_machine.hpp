@@ -285,7 +285,7 @@ private:
         //typedef typename ROW::Source T1;
         typedef typename make_entry<typename ROW::Source,library_sm>::type T1;
         typedef typename make_exit<typename ROW::Target,library_sm>::type T2;
-        typedef typename ROW::Evt Event;
+        typedef typename ROW::Evt transition_event;
         // if the source has no automatic creation (i.e. is an exit pseudo state), then
         // current_state_type becomes the result of get_owner
         // meaning the containing SM from which the exit occurs
@@ -307,7 +307,7 @@ private:
         >::type next_state_type;
 
         // if a guard condition is here, call it to check that the event is accepted
-        static bool check_guard(library_sm& fsm,Event const& evt)
+        static bool check_guard(library_sm& fsm,transition_event const& evt)
         {
             if ( ROW::guard_call(fsm,evt,
                                  ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
@@ -316,7 +316,7 @@ private:
             return false;
         }
         // Take the transition action and return the next state.
-        static HandledEnum execute(library_sm& fsm, int region_index, int state, Event const& evt)
+        static HandledEnum execute(library_sm& fsm, int region_index, int state, transition_event const& evt)
         {
 
             BOOST_STATIC_CONSTANT(int, current_state = (get_state_id<stt,current_state_type>::type::value));
@@ -360,7 +360,7 @@ private:
         //typedef typename ROW::Source T1;
         typedef typename make_entry<typename ROW::Source,library_sm>::type T1;
         typedef typename make_exit<typename ROW::Target,library_sm>::type T2;
-        typedef typename ROW::Evt Event;
+        typedef typename ROW::Evt transition_event;
         // if the source has no automatic creation (i.e. is an exit pseudo state), then
         // current_state_type becomes the result of get_owner
         // meaning the containing SM from which the exit occurs
@@ -382,7 +382,7 @@ private:
         >::type next_state_type;
 
         // if a guard condition is defined, call it to check that the event is accepted
-        static bool check_guard(library_sm& fsm,Event const& evt)
+        static bool check_guard(library_sm& fsm,transition_event const& evt)
         {
             if ( ROW::guard_call(fsm,evt,
                                  ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
@@ -391,7 +391,7 @@ private:
             return false;
         }
         // Take the transition action and return the next state.
-        static HandledEnum execute(library_sm& fsm, int region_index, int state, Event const& evt)
+        static HandledEnum execute(library_sm& fsm, int region_index, int state, transition_event const& evt)
         {
             BOOST_STATIC_CONSTANT(int, current_state = (get_state_id<stt,current_state_type>::type::value));
             BOOST_STATIC_CONSTANT(int, next_state = (get_state_id<stt,next_state_type>::type::value));
@@ -429,7 +429,7 @@ private:
         //typedef typename ROW::Source T1;
         typedef typename make_entry<typename ROW::Source,library_sm>::type T1;
         typedef typename make_exit<typename ROW::Target,library_sm>::type T2;
-        typedef typename ROW::Evt Event;
+        typedef typename ROW::Evt transition_event;
         // if the source has no automatic creation (i.e. is an exit pseudo state), then
         // current_state_type becomes the result of get_owner
         // meaning the containing SM from which the exit occurs
@@ -451,7 +451,7 @@ private:
         >::type next_state_type;
 
         // Take the transition action and return the next state.
-        static HandledEnum execute(library_sm& fsm, int region_index, int state, Event const& evt)
+        static HandledEnum execute(library_sm& fsm, int region_index, int state, transition_event const& evt)
         {
             BOOST_STATIC_CONSTANT(int, current_state = (get_state_id<stt,current_state_type>::type::value));
             BOOST_STATIC_CONSTANT(int, next_state = (get_state_id<stt,next_state_type>::type::value));
@@ -491,7 +491,7 @@ private:
         //typedef typename ROW::Source T1;
         typedef typename make_entry<typename ROW::Source,library_sm>::type T1;
         typedef typename make_exit<typename ROW::Target,library_sm>::type T2;
-        typedef typename ROW::Evt Event;
+        typedef typename ROW::Evt transition_event;
         // if the source has no automatic creation (i.e. is an exit pseudo state), then
         // current_state_type becomes the result of get_owner
         // meaning the containing SM from which the exit occurs
@@ -513,7 +513,7 @@ private:
         >::type next_state_type;
 
         // Take the transition action and return the next state.
-        static HandledEnum execute(library_sm& fsm, int region_index, int state, Event const& evt)
+        static HandledEnum execute(library_sm& fsm, int region_index, int state, transition_event const& evt)
         {
             BOOST_STATIC_CONSTANT(int, current_state = (get_state_id<stt,current_state_type>::type::value));
             BOOST_STATIC_CONSTANT(int, next_state = (get_state_id<stt,next_state_type>::type::value));
@@ -545,12 +545,12 @@ private:
     {
         typedef typename ROW::Source T1;
         typedef typename ROW::Target T2;
-        typedef typename ROW::Evt Event;
+        typedef typename ROW::Evt transition_event;
         typedef T1 current_state_type;
         typedef T2 next_state_type;
 
         // if a guard condition is here, call it to check that the event is accepted
-        static bool check_guard(library_sm& fsm,Event const& evt)
+        static bool check_guard(library_sm& fsm,transition_event const& evt)
         {
             if ( ROW::guard_call(fsm,evt,
                                  ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
@@ -559,7 +559,7 @@ private:
             return false;
         }
         // Take the transition action and return the next state.
-        static HandledEnum execute(library_sm& fsm, int , int state, Event const& evt)
+        static HandledEnum execute(library_sm& fsm, int , int state, transition_event const& evt)
         {
 
             BOOST_STATIC_CONSTANT(int, current_state = (get_state_id<stt,current_state_type>::type::value));
@@ -587,12 +587,12 @@ private:
     {
         typedef typename ROW::Source T1;
         typedef typename ROW::Target T2;
-        typedef typename ROW::Evt Event;
+        typedef typename ROW::Evt transition_event;
         typedef T1 current_state_type;
         typedef T2 next_state_type;
 
         // if a guard condition is defined, call it to check that the event is accepted
-        static bool check_guard(library_sm& fsm,Event const& evt)
+        static bool check_guard(library_sm& fsm,transition_event const& evt)
         {
             if ( ROW::guard_call(fsm,evt,
                                  ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
@@ -601,7 +601,7 @@ private:
             return false;
         }
         // Take the transition action and return the next state.
-        static HandledEnum execute(library_sm& fsm, int , int state, Event const& evt)
+        static HandledEnum execute(library_sm& fsm, int , int state, transition_event const& evt)
         {
             BOOST_STATIC_CONSTANT(int, current_state = (get_state_id<stt,current_state_type>::type::value));
             BOOST_STATIC_CONSTANT(int, next_state = (get_state_id<stt,next_state_type>::type::value));
@@ -623,12 +623,12 @@ private:
     {
         typedef typename ROW::Source T1;
         typedef typename ROW::Target T2;
-        typedef typename ROW::Evt Event;
+        typedef typename ROW::Evt transition_event;
         typedef T1 current_state_type;
         typedef T2 next_state_type;
 
         // Take the transition action and return the next state.
-        static HandledEnum execute(library_sm& fsm, int region_index, int state, Event const& evt)
+        static HandledEnum execute(library_sm& fsm, int region_index, int state, transition_event const& evt)
         {
             BOOST_STATIC_CONSTANT(int, current_state = (get_state_id<stt,current_state_type>::type::value));
             BOOST_STATIC_CONSTANT(int, next_state = (get_state_id<stt,next_state_type>::type::value));
@@ -652,10 +652,10 @@ private:
     {
         typedef T1                  current_state_type;
         typedef T1                  next_state_type;
-        typedef Evt                 Event;
+        typedef Evt                 transition_event;
 
         // Take the transition action and return the next state.
-        static HandledEnum execute(library_sm& fsm, int region_index, int , Event const& evt)
+        static HandledEnum execute(library_sm& fsm, int region_index, int , transition_event const& evt)
         {
              execute_return res = 
                 (::boost::fusion::at_key<current_state_type>(fsm.m_substate_list)).process_event(evt); 

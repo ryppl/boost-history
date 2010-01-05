@@ -43,7 +43,7 @@ struct dispatch_table
     struct chain_row
     {
         typedef State	current_state_type;
-        typedef AnEvent event;
+        typedef AnEvent transition_event;
 
         // helper for building a disable/enable_if-controlled execute function
         struct execute_helper
@@ -140,7 +140,8 @@ struct dispatch_table
         {
             //only if the transition event is a base of our event is the reinterpret_case safe
             init_event_base_case(tr,
-                ::boost::mpl::bool_< ::boost::is_base_of<typename Transition::Event,Event>::type::value>() );
+                ::boost::mpl::bool_< 
+                    ::boost::is_base_of<typename Transition::transition_event,Event>::type::value>() );
         }
     
         dispatch_table* self;

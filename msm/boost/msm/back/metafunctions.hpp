@@ -199,7 +199,7 @@ struct have_same_source
 template <class Transition>
 struct transition_event
 {
-    typedef typename Transition::Event type;
+    typedef typename Transition::transition_event type;
 };
 
 // returns true for composite states
@@ -294,7 +294,7 @@ struct not_a_row
     };
     typedef T1                  current_state_type;
     typedef T1                  next_state_type;
-    typedef dummy_event         Event;
+    typedef dummy_event         transition_event;
 };
 
 // metafunctions used to find out if a state is entry, exit or something else
