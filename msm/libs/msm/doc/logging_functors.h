@@ -154,6 +154,38 @@ struct Song3_Exit : euml_action<Song3_Exit>
     }
 };
 
+struct Region2State1_Entry : euml_action<Region2State1_Entry>
+{
+    template <class Event,class FSM,class STATE>
+    void operator()(Event const&,FSM&,STATE& )
+    {
+        std::cout << "starting: Region2State1" << std::endl;
+    }
+};
+struct Region2State1_Exit : euml_action<Region2State1_Exit>
+{
+    template <class Event,class FSM,class STATE>
+    void operator()(Event const&,FSM&,STATE& )
+    {
+        std::cout << "finishing: Region2State1" << std::endl;
+    }
+};
+struct Region2State2_Entry : euml_action<Region2State2_Entry>
+{
+    template <class Event,class FSM,class STATE>
+    void operator()(Event const&,FSM&,STATE& )
+    {
+        std::cout << "starting: Region2State2" << std::endl;
+    }
+};
+struct Region2State2_Exit : euml_action<Region2State2_Exit>
+{
+    template <class Event,class FSM,class STATE>
+    void operator()(Event const&,FSM&,STATE& )
+    {
+        std::cout << "finishing: Region2State2" << std::endl;
+    }
+};
 // transition actions for Playing
 struct start_next_song : euml_action<start_next_song>
 {
@@ -266,6 +298,30 @@ struct report_end_error : euml_action<report_end_error>
         cout << "player::report_end_error" << endl;
     }
 };
+struct internal_action1 : euml_action<internal_action1>
+{
+    template <class FSM,class EVT,class SourceState,class TargetState>
+    void operator()(EVT const&, FSM& ,SourceState& ,TargetState& )
+    {
+        cout << "Open::internal action1" << endl;
+    }
+};
+struct internal_action2 : euml_action<internal_action2>
+{
+    template <class FSM,class EVT,class SourceState,class TargetState>
+    void operator()(EVT const&, FSM& ,SourceState& ,TargetState& )
+    {
+        cout << "Open::internal action2" << endl;
+    }
+};
+struct internal_action : euml_action<internal_action2>
+{
+    template <class FSM,class EVT,class SourceState,class TargetState>
+    void operator()(EVT const&, FSM& ,SourceState& ,TargetState& )
+    {
+        cout << "Open::internal action" << endl;
+    }
+};
 enum DiskTypeEnum
     {
         DISK_CD=0,
@@ -300,4 +356,22 @@ struct Log_No_Transition : euml_action<Log_No_Transition>
     }
 };
 
+struct internal_guard1 : euml_action<internal_guard1>
+{
+    template <class FSM,class EVT,class SourceState,class TargetState>
+    bool operator()(EVT const&, FSM& ,SourceState& ,TargetState& )
+    {
+        cout << "Open::internal guard1" << endl;
+        return false;
+    }
+};
+struct internal_guard2 : euml_action<internal_guard2>
+{
+    template <class FSM,class EVT,class SourceState,class TargetState>
+    bool operator()(EVT const&, FSM& ,SourceState& ,TargetState& )
+    {
+        cout << "Open::internal guard2" << endl;
+        return false;
+    }
+};
 #endif // LOGGING_FUNCTORS
