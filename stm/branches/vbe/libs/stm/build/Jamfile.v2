@@ -41,16 +41,12 @@ project boost/STM
     : source-location ../src
     : requirements 
         <threading>multi
-#       <target-os>cygwin
-       #<interthreadapi>pthread
-#        <variant>debug
-#       <define>BOOST_THREAD_HAS_THREAD_ATTR
-    
-      <include>../../..
+#       <define>BOOST_THREAD_HAS_THREAD_ATTR   
+      #<include>../../..
       #<include>$BOOST_ROOT
-      <include>/boost_1_39_0
-      <link>static:<define>BOOST_INTERTHREADS_BUILD_LIB=1
-      <link>shared:<define>BOOST_INTERTHREADS_BUILD_DLL=1 
+      #<include>/boost_1_39_0
+      <link>static:<define>BOOST_STM_BUILD_LIB=1
+      <link>shared:<define>BOOST_STM_BUILD_DLL=1 
 #      <link>shared:<library>/boost/thread//boost_thread/<link>shared
 #      -<tag>@$(BOOST_JAMROOT_MODULE)%$(BOOST_JAMROOT_MODULE).tag
 #      <tag>@$(__name__).tag

@@ -73,12 +73,14 @@ bool test_equal() {
 
 bool test_assign() {
     //thread_initializer thi;
-    BOOST_STM_ATOMIC(_) {
+    for(int i=0; i<2;++i)
+    BOOST_STM_ATOMIC_IN_LOOP(_) {
         counter=1;
         counter2=counter;
-        BOOST_STM_CONTINUE;
+        BOOST_STM_CONTINUE(_);
         counter2=3;
     } BOOST_STM_END_ATOMIC
+    
     BOOST_STM_ATOMIC(_) {
         //assert((counter==1) && (counter2==1) && (counter==counter2));
         BOOST_STM_TX_RETURN(_, (counter==1) && (counter2==1) && (counter==counter2)) ;
@@ -88,11 +90,12 @@ bool test_assign() {
 
 bool test_less() {
     //thread_initializer thi;
-    BOOST_STM_ATOMIC(_) {
+    for(;;)
+    BOOST_STM_ATOMIC_IN_LOOP(_) {
         counter=1;
         counter2=2;
-        BOOST_STM_BREAK;
-        counter2=3;
+        BOOST_STM_BREAK(_);
+        counter2=0;
     } BOOST_STM_END_ATOMIC
     BOOST_STM_ATOMIC(_) {
         //assert(counter<counter2);

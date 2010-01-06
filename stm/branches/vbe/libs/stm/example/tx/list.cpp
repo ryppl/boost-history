@@ -274,9 +274,6 @@ int test_all() {
     fails= fails || !check_lookup(1);
     fails= fails || check_lookup(2);
     fails= fails || !check_size(2);
-    #if 0
-    SLEEP(2);
-    #endif
     return fails;
 }
 

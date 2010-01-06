@@ -40,11 +40,9 @@ void decr() {
 }
 bool check(int val) {
     //thread_initializer thi;
-    bool res;
     BOOST_STM_ATOMIC(_) {
-        res =(*counter==val);
+        BOOST_STM_TX_RETURN(_, *counter==val);
     } BOOST_STM_END_ATOMIC
-    return res;
 }
 
 bool assign() {
@@ -55,7 +53,7 @@ bool assign() {
     } BOOST_STM_END_ATOMIC
     bool res;
     BOOST_STM_ATOMIC(_) {
-        res =(*counter==1) && (*counter2==1) && (counter==counter2) ;
+        BOOST_STM_TX_RETURN(_, (*counter==1) && (*counter2==1) && (counter==counter2)) ;
     } BOOST_STM_END_ATOMIC
     return res;
 }
@@ -65,11 +63,9 @@ bool test_const(stm::tx_obj<int> const& c) {
     BOOST_STM_ATOMIC(_) {
         counter2=c;
     } BOOST_STM_END_ATOMIC
-    bool res;
     BOOST_STM_ATOMIC(_) {
-        res =(c==counter2) ;
+        BOOST_STM_TX_RETURN(_, c==counter2) ;
     } BOOST_STM_END_ATOMIC
-    return res;
 }
 
 int test_counter() {
