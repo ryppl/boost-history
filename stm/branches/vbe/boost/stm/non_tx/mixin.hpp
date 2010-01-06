@@ -32,7 +32,7 @@ namespace boost { namespace stm { namespace non_tx {
 template <typename Final, typename T>
 class mixin {
 protected:
-    T val_;
+    T& val_;
 public:
     //-----------------------------------------------------------------------------
     mixin() : val_() {}
