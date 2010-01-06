@@ -53,8 +53,8 @@ __forceinline unsigned int log2(unsigned int val)
 {
 	BOOST_MEMORY_ASSERT(val != 0);
 	unsigned int result;
-	__asm__("bsr %0, %%eax"::"m"(val));
-	__asm__("movl %%eax, %0":"=m"(result)::"eax");
+	__asm__("bsr %0, %%eax"::"m"(val):"eax");
+	__asm__("movl %%eax, %0":"=m"(result));
 	return result;
 }
 
