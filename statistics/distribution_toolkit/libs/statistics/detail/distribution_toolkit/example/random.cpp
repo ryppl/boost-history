@@ -7,16 +7,13 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/random/mersenne_twister.hpp>
-
 #include <boost/statistics/detail/distribution_toolkit/distributions/chi_squared/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/exponential/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/gamma/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/students_t/include.hpp>
-
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/include.hpp>
 #include <boost/statistics/detail/distribution_common/distributions/reference/include.hpp>
-
 #include <boost/statistics/detail/distribution_toolkit/test/random.hpp>
 #include <libs/statistics/detail/distribution_toolkit/example/random.h>
 

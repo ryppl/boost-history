@@ -109,7 +109,7 @@ void example_distribution_function(std::ostream& out){
 
         }
         {   // inverse_pdf
-            typedef dist::toolkit::inverse_pdf<stud_>             	inv_dist_;
+            typedef dist::toolkit::inverse_pdf<stud_> inv_dist_;
             inv_dist_ inv_dist(stud);
             BOOST_ASSERT(
                 float_::equal(
@@ -117,12 +117,10 @@ void example_distribution_function(std::ostream& out){
                     log_unnormalized_pdf(inv_dist,x)
                 )
             );
-
         }
         {   // ratio_pdf + fun_wrap
             typedef dist::toolkit::meta_ratio_pdf<stud_,ls_stud_>  	mf_;
-            typedef mf_::type                                   	ratio_dist_;
-
+            typedef mf_::type ratio_dist_;
             ratio_dist_ ratio_dist = mf_::call(stud,ls_stud);
             BOOST_ASSERT(
                 float_::equal(
@@ -134,5 +132,4 @@ void example_distribution_function(std::ostream& out){
             );
         }
     out << "<-" << std::endl;
-
 }

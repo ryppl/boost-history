@@ -78,7 +78,7 @@ runtime error under MSVC and mingw.
 
 Dec 4 2009 : 
 	/math_fwd removed. Instead, any extension to boost::math stays in this 
-    namespace. Rationale : allows Koenig Lookup.
+    namespace to permit Koenig Lookup.
     /fun_wrap removed. Instead, functor for pdf, cdf etc are in 
     distribution_common
 

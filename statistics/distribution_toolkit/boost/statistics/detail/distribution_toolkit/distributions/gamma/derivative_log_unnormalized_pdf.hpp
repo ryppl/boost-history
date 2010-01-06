@@ -39,7 +39,7 @@ inline T derivative_log_unnormalized_pdf(
 
    if(x == 0)
    {
-      // TODO see log_unnormalized_pdf
+      // TODO check. Also see log_unnormalized_pdf
       return std::numeric_limits<T>::infinity();
    }
    static T one_ = static_cast<T>(1);

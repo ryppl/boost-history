@@ -13,3 +13,4 @@
 void example_random(std::ostream&);
 
 #endif
+

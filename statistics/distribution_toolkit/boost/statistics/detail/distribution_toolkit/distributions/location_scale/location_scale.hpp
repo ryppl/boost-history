@@ -63,7 +63,7 @@ namespace toolkit{
             value_type sigma,
             const Z& z
         ):mu_(mu),sigma_(sigma),z_(z){
-        	static const char* str 
+        	static const str_ str 
             	= (fun + "<%1%>::location_scale_distribution").c_str();
             
             // TODO at present %1% is replaced by value_type. Write a function
@@ -72,9 +72,9 @@ namespace toolkit{
             
         	value_type result;
        	 	boost::math::detail::check_location(
-            	str, mu, &result, policy_type());
+            	str.c_str(), mu, &result, policy_type());
        	 	boost::math::detail::check_scale(
-            	str, sigma, &result, policy_type());
+            	str.c_str(), sigma, &result, policy_type());
     	}        
 
         location_scale_distribution(const location_scale_distribution& that)

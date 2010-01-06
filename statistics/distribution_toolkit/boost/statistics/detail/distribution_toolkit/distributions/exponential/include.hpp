@@ -10,7 +10,6 @@
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_EXPONENTIAL_INCLUDE_HPP_ER_2009
 
 #include <boost/math/distributions/exponential.hpp>
-
 #include <boost/statistics/detail/distribution_toolkit/distributions/exponential/description.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/exponential/derivative_log_unnormalized_pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/exponential/is_math_distribution.hpp>

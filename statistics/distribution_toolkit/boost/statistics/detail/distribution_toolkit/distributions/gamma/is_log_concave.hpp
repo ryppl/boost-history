@@ -26,5 +26,3 @@ inline bool is_log_concave(
 }// boost
 
 #endif
-
-
