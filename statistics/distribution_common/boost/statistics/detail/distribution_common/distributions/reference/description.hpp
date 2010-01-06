@@ -34,4 +34,3 @@ namespace distribution{
 }// boost
 
 #endif
-

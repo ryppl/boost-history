@@ -26,5 +26,4 @@ namespace meta{
 }// statistics
 }// boost
 
-
 #endif

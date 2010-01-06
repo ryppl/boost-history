@@ -22,7 +22,7 @@ namespace meta{
     template<typename D,typename B = mpl::empty_base>
     struct inherit_policy : B{
         BOOST_MPL_ASSERT((
-            mpl::not_<
+            boost::mpl::not_<
                 is_reference<D>
             >
         ));
