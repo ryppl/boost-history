@@ -34,6 +34,7 @@
   tests for those cases, all decompositions. See test_decompositions() in 
   path_unit_test.cpp.</li>
   <li style="font-size: 10pt">Add docs for scoped_path_locale.</li>
+  <li style="font-size: 10pt">Regenerate path decomposition table.</li>
 </ul>
 
 <h2>Code</h2>
@@ -51,7 +52,8 @@
   Features.</li>
   <li>Add test case: relational operators on paths differing only in trailing 
   separator. Rationale?</li>
-  <li>Provide the name check functions for more character types? Templatize?</li>
+  <li>Provide the name check functions for more character types? Templatize? 
+  take a path argument?</li>
   <li style="font-size: 10pt">Add test for scoped_path_locale.</li>
   <li style="font-size: 10pt">Add codepage 936/950/etc test cases.</li>
   <li style="font-size: 10pt">Are generic versions of string(), native_string() 
@@ -67,12 +69,24 @@
   <li style="font-size: 10pt">Should path iteration to a separator result in:<br>
   -- the actual separator used<br>
   -- the preferred separator<br>
-  -- the generic separator &lt;-- makes it easier to write portable code</li>
+  -- the generic separator &lt;-- makes it easier to write portable code<br>
+  -- a dot</li>
 </ul>
 <h3>Operations</h3>
 <ul>
   <li>Would complete(), system_complete() be clearer if renamed absolute(), 
   absolute_system() (or absolute_native())?</li>
+  <li>Review all operations.cpp code for race conditions similar to #2925. Fix 
+  or document.</li>
+  <li>Enable all BOOST_FILESYSTEM_NO_DEPRECATED code.</li>
+  <li>rename and remove really need to be renamed. If users says &quot;using 
+  namespace boost::filesystem&quot;<br>
+  and some header included stdio, there is just too much chance of silent error.</li>
+  <li>create_directories error handling needs work.</li>
+  <li>Fold convenience.hpp into operations.hpp</li>
+  <li>Two argument recursive_directory_iterator ctor isn't recognizing throws(). 
+  Would it be better to fold into a single two argument ctor with default?</li>
+  <li>Add the push_directory class from tools/release/required_files.cpp</li>
 </ul>
 
 </body>

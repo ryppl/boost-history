@@ -11,22 +11,6 @@
 //  Library home page: http://www.boost.org/libs/filesystem
 
 //--------------------------------------------------------------------------------------//
-/*
-*                                TODO List
-*
-*  Review all operations.cpp code for race conditions similar to #2925. Fix or document.
-*  Enable all BOOST_FILESYSTEM_NO_DEPRECATED code.
-*  rename and remove really need to be renamed. If users says "using namespace boost::filesystem"
-   and some header included stdio, there is just too much chance of silent error.
-*  create_directories error handling.
-*  Review any commented out code, both in operations.hpp and operations.cpp
-*  Fold convenience.hpp into operations.hpp
-*  Two argument recursive_directory_iterator ctor isn't recognizing throws().
-   would it be better to fold into a single two argument ctor with default?
-*  Add the push_directory class from tools/release/required_files.cpp
-
-*/
-//--------------------------------------------------------------------------------------// 
 
 #ifndef BOOST_FILESYSTEM_OPERATIONS_HPP
 #define BOOST_FILESYSTEM_OPERATIONS_HPP
@@ -505,26 +489,6 @@ public:
   file_status   status(system::error_code& ec) const         {return m_get_status(&ec);}
   file_status   symlink_status() const                       {return m_get_symlink_status();}
   file_status   symlink_status(system::error_code& ec) const {return m_get_symlink_status(&ec);}
-
-  //// conversion simplifies the most common use of directory_entry
-  // Removed; poor design and too likely to conflict with path v3 constructor templates
-  //operator const boost::filesystem::path&() const { return m_path; }
-
-//#   ifndef BOOST_FILESYSTEM_NO_DEPRECATED
-//      // deprecated functions preserve common use cases in legacy code
-//      typename Path::string_type filename() const
-//      {
-//        return path().filename();
-//      }
-//      typename Path::string_type leaf() const
-//      {
-//        return path().filename();
-//      }
-//      typename Path::string_type string() const
-//      {
-//        return path().string();
-//      }
-//#   endif
 
 private:
   boost::filesystem::path   m_path;

@@ -71,6 +71,7 @@ namespace
   const wchar_t colon = L':';
   const wchar_t dot = L'.';
   const fs::path dot_path(L".");
+  const fs::path dot_dot_path(L"..");
 
 # else
 
@@ -82,6 +83,7 @@ namespace
   const char colon = ':';
   const char dot = '.';
   const fs::path dot_path(".");
+  const fs::path dot_dot_path("..");
 
 # endif
 
@@ -315,6 +317,7 @@ namespace filesystem
   path path::stem() const
   {
     path name(filename());
+    if (name == dot_path || name == dot_dot_path) return name;
     size_type pos(name.m_path.rfind(dot));
     return pos == string_type::npos
       ? name
@@ -324,6 +327,7 @@ namespace filesystem
   path path::extension() const
   {
     path name(filename());
+    if (name == dot_path || name == dot_dot_path) return path();
     size_type pos(name.m_path.rfind(dot));
     return pos == string_type::npos
       ? path()

@@ -1178,7 +1178,8 @@ namespace detail
   {
     error_code tmp_ec;
     file_status sym_status = symlink_status(p, tmp_ec);
-    if (error(sym_status.type() == status_error, tmp_ec, p, ec, "boost::filesystem::remove"))
+    if (error(sym_status.type() == status_error, tmp_ec, p, ec,
+        "boost::filesystem::remove"))
       return false;
 
     return remove_file_or_directory(p, sym_status, ec);
@@ -1189,7 +1190,8 @@ namespace detail
   {
     error_code tmp_ec;
     file_status sym_status = symlink_status(p, tmp_ec);
-    if (error(sym_status.type() == status_error, tmp_ec, p, ec, "boost::filesystem::remove_all"))
+    if (error(sym_status.type() == status_error, tmp_ec, p, ec,
+      "boost::filesystem::remove_all"))
       return 0;
 
     return exists(sym_status) // exists() throws nothing
@@ -1546,16 +1548,6 @@ namespace
       +  path_size + 1); // + 1 for "/0"
     return ok;
   }  
-
-  //error_code dir_itr_close(void *& handle, void*& buffer)
-  //{
-  //  std::free(buffer);
-  //  buffer = 0;
-  //  if (handle == 0)return ok;
-  //  DIR * h(static_cast<DIR*>(handle));
-  //  handle = 0;
-  //  return error_code(::closedir(h)== 0 ? 0 : errno, system_category);
-  //}
 
   // warning: the only dirent member updated is d_name
   inline int readdir_r_simulator(DIR * dirp, struct dirent * entry,
