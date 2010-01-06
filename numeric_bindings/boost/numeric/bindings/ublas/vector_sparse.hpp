@@ -6,11 +6,12 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOOST_NUMERIC_BINDINGS_UBLAS_COMPRESSED_VECTOR_HPP
-#define BOOST_NUMERIC_BINDINGS_UBLAS_COMPRESSED_VECTOR_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_UBLAS_VECTOR_SPARSE_HPP
+#define BOOST_NUMERIC_BINDINGS_UBLAS_VECTOR_SPARSE_HPP
 
 #include <boost/numeric/bindings/begin.hpp>
 #include <boost/numeric/bindings/detail/adaptor.hpp>
+#include <boost/numeric/bindings/ublas/vector_expression.hpp>
 #include <boost/numeric/ublas/vector_sparse.hpp>
 
 namespace boost {
