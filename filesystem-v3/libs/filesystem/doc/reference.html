@@ -165,32 +165,54 @@ is unreasonable for a program to detect them prior to calling the function. <i>
 </blockquote>
 <h3><a name="Definitions">Definitions</a></h3>
 <p>The following definitions  apply throughout this reference documentation:</p>
-<p><i><a name="File">File</a>: </i>An object that can be written to, or read from, or both. A file 
+<p><i><b><a name="File">File</a>:</b> </i>An object that can be written to, or read from, or both. A file 
 has certain attributes, including type. Common types of files include regular files 
 and directories. Other types of files, such as symbolic links, may be supported by the 
 implementation.</p>
-<p><i><a name="File-system">File system</a>:</i> A collection of files and certain of their attributes.</p>
-<p><i><a name="Filename">Filename</a>:</i> The name of a file. The format is as 
-specified by the <i>POSIX
-<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_169">
-Filename</a></i> base definition.</p>
-<p><i><a name="Path">Path</a>:</i> A sequence of elements that identify 
-a location within a filesystem. The elements are the <i>root-name</i>, <i>
-root-directory</i>, and each successive <i>filename</i>. See
+<p><b><i><a name="File-system">File system</a>:</i></b> A collection of files and certain of their attributes.</p>
+<p><b><i><a name="Filename">Filename</a>:</i></b> The name of a file. Slash and 0 
+characters are not permitted in filenames. Implementations may define additional 
+characters or specific names that are not permitted. Filenames <code>.</code>&nbsp; 
+and <code>..</code>&nbsp; have special meaning. Implementations may define 
+additional filenames that have special meaning.</p>
+<blockquote>
+  <p><i>[Note:</i> Most implementations prohibit the ANSI control characters 
+  (0x00-0x31) in filenames.</p>
+  <p>Windows implementations prohibit the characters 0x00-0x31, <code>&quot;</code>,<code> 
+  *</code>,<code>&nbsp;:</code>,<code> &lt;</code>,<code> &gt;</code>,<code>&nbsp;?</code>,<code> 
+  \</code>,<code> /</code>, and<code> |</code>&nbsp;<i>--end note]</i></p>
+</blockquote>
+<p><b><i><a name="Path">Path</a>:</i></b> A sequence of elements that identify 
+a location within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
+root-directory<sub>opt</sub></i>, and an optional sequence of <i>filenames</i>. See
 <a href="#Pathname-grammar">Pathname grammar</a>.</p>
-<p><i><a name="Pathname">Pathname</a>: </i>A character string that represents a 
+<p><b><i><a name="Absolute-path">Absolute path</a>:</i></b> A path that uniquely 
+identifies a file. The format is implementation defined. </p>
+<blockquote>
+  <p><i>[Note:</i> For POSIX-like implementations, including<b> </b>Unix 
+  variants, Linux, and <a href="http://www.cygwin.com/">Cygwin</a>, only paths 
+  that begin with a slash are absolute paths.</p>
+  <p>For Windows-like implementations, including Windows and
+  <a href="http://www.mingw.org/">MinGW</a>, only paths that begin with a drive 
+  specifier followed by a slash, or begin with two slashes, are absolute paths.&nbsp;<i>--end 
+  note]</i></p>
+</blockquote>
+<p><b><a name="Relative-path">Relative path</a>:</b> A path that only uniquely 
+identifies a file when considered relative to some other path. [<i>Note:</i> 
+Paths &quot;.&quot; and &quot;..&quot; are considered to be relative paths. <i>--end note</i>]</p>
+<p><i><b><a name="Pathname">Pathname</a>:</b> </i>A character string that represents a 
 path.</p>
-<p><i><a name="Link">Link</a>: </i>A directory entry object that associates a 
+<p><i><b><a name="Link">Link</a>:</b> </i>A directory entry object that associates a 
 filename with a file. On some file systems, several directory entries can 
 associate names with the same file.</p>
-<p><i><a name="Hard-link">Hard link</a>:</i> A link to an existing file. Some 
+<p><b><i><a name="Hard-link">Hard link</a>:</i></b> A link to an existing file. Some 
 file systems support multiple hard links to a file. If the last hard link to a 
 file is removed, the file itself is removed.</p>
 <blockquote>
 <p>[<i>Note:</i> A hard link can be thought of as a shared-ownership smart 
 pointer to a file.<i> -- end note</i>]<i> </i></p>
 </blockquote>
-<p><i><a name="Symbolic-link">Symbolic link</a>: </i>A type of file with the 
+<p><i><a name="Symbolic-link">S<b>ymbolic link</b></a><b>:</b> </i>A type of file with the 
 property that when the file is encountered during pathname resolution, a string 
 stored by the file is used to modify the pathname resolution.</p>
 <blockquote>
@@ -198,10 +220,10 @@ stored by the file is used to modify the pathname resolution.</p>
 If the file pointed to does not exist, the symbolic link is said to be a 
 &quot;dangling&quot; symbolic link.<i> -- end note</i>]<i> </i></p>
 </blockquote>
-<p><i><a name="Slash">Slash</a>:</i> The character <tt>'/'</tt>, also known as 
+<p><b><i><a name="Slash">Slash</a>:</i></b> The character <tt>'/'</tt>, also known as 
 solidus.</p>
-<p><i><a name="Dot">Dot</a>:</i> The character '.', also known as period.</p>
-<p><i><a name="Race-condition">Race condition</a>:</i> The condition that occurs 
+<p><b><i><a name="Dot">Dot</a>:</i></b> The character '.', also known as period.</p>
+<p><b><i><a name="Race-condition">Race condition</a>:</i></b> The condition that occurs 
 when multiple threads, processes, or computers interleave access and 
 modification of 
 the same object within a file system.</p>
@@ -401,8 +423,9 @@ report errors as follows, unless otherwise specified:</p>
 </ul>
 <h3><a name="class-path">Class <code>path</code></a></h3>
 <p>An object of class <code>path</code> represents a <a href="#Path">path</a>, 
-and contains a <a href="#Pathname">pathname</a> in the
-<a href="#Native-pathname-format">native format</a>. Such an object is concerned only with the lexical and syntactic aspects 
+and contains a <a href="#Pathname">pathname</a> in th<span style="background-color: #FF0000">e
+</span>
+<a href="#Native-pathname-format"><span style="background-color: #FF0000">native format</span></a><span style="background-color: #FF0000">.</span> Such an object is concerned only with the lexical and syntactic aspects 
 of a path. The path does not have to actually exist in the operating system's file 
 systems, and may contain pathnames which are not even valid for the current operating 
 system. </p>
@@ -771,24 +794,26 @@ there be normative encouragement?</i></span></p>
 <h4> <code><font size="4">class <a name="path-appends">path</a></font></code><a name="path-appends"> 
 appends</a></h4>
   <p>The append operations use <code>operator/=</code> to denote their semantic 
-  effect of appending a native directory separator when needed. The native 
+  effect of appending the platform's preferred directory separator when needed. The&nbsp; 
+  preferred 
   directory separator is implementation-defined.</p>
 <blockquote>
     <p align="left">[<i>Note: </i>For POSIX-like implementations, including<b> </b>
-    Unix's, Linux, and
-  <a href="http://www.cygwin.com/">Cygwin</a>, the native directory separator is a forward slash.</p>
+    Unix variants, Linux, and
+  <a href="http://www.cygwin.com/">Cygwin</a>, the preferred directory separator is a 
+    single forward slash.</p>
     <p align="left">For Windows-like implementations, including Windows and
-    <a href="http://www.mingw.org/">MinGW</a>, the native directory 
-    separator is a backslash.<i>--end note</i>]</p>
+    <a href="http://www.mingw.org/">MinGW</a>, the preferred directory 
+    separator is a single backslash.<i>--end note</i>]</p>
       </blockquote>
 <pre>path&amp; operator/=(const path&amp; p);</pre>
 <blockquote>
   <p><i>Effects:</i></p>
   <blockquote>
-    Appends a native directory separator to the contained pathname, unless:<ul>
+    Appends the preferred directory separator to the contained pathname, unless:<ul>
     <li>an added separator 
     would be redundant, or</li>
-    <li>would change an incomplete path to a complete path, or</li>
+    <li>would change an relative path to an absolute path, or</li>
     <li><code>p.empty()</code>, or</li>
     <li><code>*p.native().cbegin()</code> is a directory separator.</li>
   </ul>
@@ -807,7 +832,7 @@ appends</a></h4>
     <ul>
     <li>an added separator 
     would be redundant, or</li>
-    <li>would change an incomplete path to a complete path, or</li>
+    <li>would change an relative path to an absoute path, or</li>
     <li><code>p.empty()</code>, or</li>
     <li><code>*p.native().cbegin()</code> is a separator.</li>
   </ul>
@@ -1948,7 +1973,7 @@ an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end not
 <h4><a name="Function-specifications">Operational function specifications</a></h4>
 <pre>path <a name="complete">complete</a>(const path&amp; p, const path&amp; base, system::error_code&amp; ec);</pre>
 <blockquote>
-  <p><i>Effects:</i> Composes a complete path from <code>p</code> and <code>base</code>, 
+  <p><i>Effects:</i> Composes an absolute path from <code>p</code> and <code>base</code>, 
   using the following rules:</p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
     <tr>
@@ -2115,7 +2140,7 @@ path <a name="current_path">current_path</a>(system::error_code&amp; ec);</pre>
   system library functions, or by another thread. For a safer alternative, 
   see <code><a href="#initial_path">initial_path()</a></code>. The <code>
   current_path()</code> name was chosen to emphasize that the return is a 
-  complete path, not just a single directory name. <i>-- end note</i>]</p>
+  path, not just a single directory name. <i>-- end note</i>]</p>
 </blockquote>
 <pre>void current_path(const path&amp; p);
 void current_path(const path&amp; p, system::error_code&amp; ec);</pre>
@@ -2548,7 +2573,7 @@ directory_iterator(p)</code>would succeed.
 </blockquote>
 <blockquote>
       <blockquote>
-      <p>[<i>Note:</i> Pathname resolution is complete if <code>p</code> names a symbolic link. <i>-- 
+      <p>[<i>Note:</i> Pathname resolution terminates if <code>p</code> names a symbolic link. <i>-- 
     end note</i>]</p>
       </blockquote>
       <p><i>Returns:</i> Same as <a href="#status">status()</a>, above,<span style="background-color: #FFFF00"> 
@@ -2559,15 +2584,12 @@ nothing.</p>
 <pre>path <a name="system_complete">system_complete</a>(const path&amp; p);
 path <a name="system_complete">system_complete</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
-  <p><i>Effects:</i> Composes a complete path from <code>p</code>, using the 
+  <p><i>Effects:</i> Composes an absolute path from <code>p</code>, using the 
   same rules used by the operating system to resolve a path passed as the 
   filename argument to standard library open functions.</p>
   <p><i>Returns:</i> The composed path.</p>
   <p><i>Postconditions:</i> For the returned path, <code>rp,</code> <code>
   rp.is_absolute()</code> is true.</p>
-  <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
-  Error reporting</a>.</p>
   <p>[<i>Note:</i> For <i>POSIX</i>, <code>system_complete(p)</code> has the same semantics as
   <code>complete(p, current_path())</code>.</p>
   <p><a name="windows_effects">For <i>Windows</i></a>, <code>system_complete(p)</code> has the 
@@ -2582,6 +2604,30 @@ path <a name="system_complete">system_complete</a>(const path&amp; p, system::er
   error-prone.</p>
   <p>See <a href="#complete_note">
   <i>complete()</i> note</a> for usage suggestions. <i>-- end note</i>]</p>
+</blockquote>
+<pre>path <a name="unique_path">unique_path</a>(const path&amp; model=&quot;%%%%-%%%%-%%%%-%%%%&quot;);
+path unique_path(const path&amp; model, system::error_code&amp; ec);</pre>
+<blockquote>
+  <p>The <code>unique_path</code> function generates a path name suitable for 
+  creating temporary files, including directories. The name is based 
+  on a model that uses the percent sign character to specify replacement by a 
+  random hexadecimal digit. [<i>Note:</i> The more bits of randomness in the 
+  generated path name, the less likelihood of prior existence or being guessed. 
+  Each replacement hexadecimal digit in the model adds four bits of randomness. 
+  The default model thus provides 64 bits of randomness. This is sufficient for 
+  most applications. <i>--end note</i>]</p>
+  <p><i>Returns:</i> A path identical to <code>model</code>, except that each 
+  occurrence of a percent sign character is replaced by a random hexadecimal 
+  digit character in the range 0-9, a-f.</p>
+  <p><i>Throws:</i> As specified in
+  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  Error reporting</a>.</p>
+  <p><i>Remarks:</i> Implementations are encouraged to obtain the required 
+  randomness via a
+  <a href="http://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator">
+  cryptographically secure pseudo-random number generator</a>, such as one 
+  provided by the operating system. [<i>Note</i>: Such generators may block 
+  until sufficient entropy develops. <i>--end note</i>]</p>
 </blockquote>
 <h4><a name="Convenience-functions">Convenience functions</a></h4>
 <table border="1" cellpadding="5" cellspacing="1" style="border-collapse: collapse" bordercolor="#111111">
@@ -3347,7 +3393,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->02 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32136" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->06 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32144" --></p>
 
 </body>
 

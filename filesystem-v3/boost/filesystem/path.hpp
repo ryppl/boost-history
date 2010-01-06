@@ -12,47 +12,6 @@
 //  basename(), extension(), and change_extension() from the original
 //  filesystem/convenience.hpp header by Vladimir Prus.
 
-//--------------------------------------------------------------------------------------//
-/*
-                              TO DO
-
-   * Document breaking changes, provide workarounds where possible.
-   * Windows, POSIX, conversions for char16_t, char32_t for supporting compilers.
-   * Move semantics and other C++0x features.
-   * Add Alternate Data Stream test cases. See http://en.wikipedia.org/wiki/NTFS Features.
-   * test case: relational on paths differing only in trailing separator. rationale?
-   * Behavior of root_path() has been changed. Change needs to be propagated to trunk.
-     reference.html#Path-decomposition-table needs rows for //, //netname, //netname/foo
-     Make sure current trunk has passing tests for those cases, all decompositions.
-     See test_decompositions() in path_unit_test.cpp
-   * Document leading //: no longer treated specially.
-   * Document behavior of path::replace_extension has change WRT argument w/o a dot.
-   * Provide the name check functions for more character types? Templatize?
-   * Use BOOST_DELETED, BOOST_DEFAULTED, where appropriate.
-   * Add test for scoped_path_locale.
-   * Add codepage 936/950/etc test cases.
-     
-                         Design Questions
-
-
-   * Is it OK for single-element decomposition functions to return paths? Yes;
-     keep the interface simple and usable in generic code at the expense of some
-     notational convenience.
-   * Are generic versions of string(), native_string() needed? IE:
-        template< class T >
-        T string(const error_code ec = throws());
-     TODO: Yes; all member functions need to be usable in generic code.
-   * Assuming generic versions of string(), native_string(), are the w flavors needed?
-     No. KISS. basic_string<char> is special because it is the predominent
-     use case. w (and other) flavors can be added later.
-   * Should UDT's be supported? Yes. Easy to do and pretty harmless.
-   * Should path iteration to a separator result in:
-       -- the actual separator used
-       -- the preferred separator
-       -- the generic separator <-- makes it easier to write portable code
-                                                                                        */
-//--------------------------------------------------------------------------------------// 
-
 #ifndef BOOST_FILESYSTEM_PATH_HPP
 #define BOOST_FILESYSTEM_PATH_HPP
 
@@ -90,28 +49,7 @@ namespace filesystem
   //------------------------------------------------------------------------------------//
 
 /*
-   FAQ
-
-   Why are there no error_code & arguments?
-   ----------------------------------------
-
-   error_code & arguments add considerably to the surface area of the interface, yet
-   appear to be of limited usefulness. They have not been requested by users; the need
-   for filesystem error reporting via error_code seems limited to operational failures
-   rather than path failures.
-
-   error_code & arguments double the number of signatures, since for efficiency the
-   use of a default throws() argument is not desirable.
-
-   Errors in path conversions only occur if the source and target value types differ AND
-   the target encoding can't represent a character present in the source. The only
-   commonplace case is when directory iteration on Windows encounters a file name that
-   can't be represented in a char encoding.
-
-   Workarounds (such as pre-scanning for characters that can't be encoded) appear
-   resonable.
-
-   Why are there no const codecvt_type & arguments?
+   Why are there no const codecvt_type& arguments?
    ------------------------------------------------
 
    To hold down the size of the class path interface. Per function codecvt facets
@@ -370,7 +308,7 @@ namespace filesystem
     bool has_filename() const        { return !m_path.empty(); }
     bool has_stem() const            { return !stem().empty(); }
     bool has_extension() const       { return !extension().empty(); }
-    bool is_complete() const
+    bool is_absolute() const
     {
 #   ifdef BOOST_WINDOWS_PATH
       return has_root_name() && has_root_directory();
@@ -378,6 +316,7 @@ namespace filesystem
       return has_root_directory();
 #   endif
     }
+    bool is_relative() const         { return !is_absolute(); } 
 
     //  -----  imbue  -----
 
@@ -412,6 +351,7 @@ namespace filesystem
     path   branch_path() const      { return parent_path(); }
     bool   has_leaf() const         { return !m_path.empty(); }
     bool   has_branch_path() const  { return !parent_path().empty(); }
+    bool   is_complete() const      { return is_absolute(); }
 # endif
 
 # if defined(BOOST_FILESYSTEM_DEPRECATED)

@@ -778,6 +778,20 @@ namespace
 
 int main(int, char*[])
 {
+// document state of critical macros
+#ifdef BOOST_POSIX_API
+  cout << "BOOST_POSIX_API\n";
+#endif
+#ifdef BOOST_WINDOWS_API
+  cout << "BOOST_WINDOWS_API\n";
+#endif
+#ifdef BOOST_POSIX_PATH
+  cout << "BOOST_PATH_API\n";
+#endif
+#ifdef BOOST_WINDOWS_PATH
+  cout << "BOOST_WINDOWS_PATH\n";
+#endif
+
   test_overloads();
   test_constructors();
   test_assignments();

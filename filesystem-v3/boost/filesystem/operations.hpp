@@ -202,6 +202,8 @@ namespace boost
     space_info space(const path& p, system::error_code* ec=0); 
     BOOST_FILESYSTEM_DECL
     path system_complete(const path& p, system::error_code* ec=0);
+    BOOST_FILESYSTEM_DECL
+    path unique_path(const path& p, system::error_code* ec=0);
   }  // namespace detail
 
 //--------------------------------------------------------------------------------------//
@@ -450,6 +452,12 @@ namespace boost
   inline
   path system_complete(const path& p, system::error_code& ec)
                                        {return detail::system_complete(p, &ec);}
+  inline
+  path unique_path(const path& p="%%%%-%%%%-%%%%-%%%%")
+                                       { return detail::unique_path(p); }
+  inline
+  path unique_path(const path& p, system::error_code& ec)
+                                       { return detail::unique_path(p, &ec); }
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //

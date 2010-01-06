@@ -195,6 +195,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\unique_path.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\utf8_codecvt_facet.cpp"
 				>
 			</File>

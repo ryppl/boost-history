@@ -31,8 +31,22 @@
   </tr>
 </table>
 
-<h1>
+<h1 dir="ltr">
 Frequently Asked Questions</h1>
+<h2>General questions</h2>
+<p><b>Why not support a  concept of specific kinds of file systems, such as posix_file_system or windows_file_system.</b></p>
+<p>Portability is one of the most important requirements for the 
+library.&nbsp;Gaining some advantage by using features specific to particular 
+operating systems is not a requirement. There doesn't appear to be much need for 
+the ability to manipulate, say, a classic Mac OS path while running on an 
+OpenVMS machine.</p>
+<p>Furthermore, concepts like &quot;file system&quot; 
+are very slippery. What happens when a NTFS or FAT file system is mounted 
+in directory on a machine running a POSIX-like operating system, for example? 
+Some of the POSIX API's may return very un-POSIX like results.</p>
+
+<h2 dir="ltr">
+Class <code><font size="6">path</font></code> questions </h2>
 <p><b>Why base the generic-path string format on POSIX?</b></p>
 <p><a href="design.htm#POSIX-01">[POSIX-01]</a> is an ISO Standard. It is the basis for the most familiar path-string formats, 
 not just for POSIX systems but also for the native Windows format and the 
@@ -52,22 +66,15 @@ operations&quot; requirement of the Filesystem Library, full URI's appear to be 
 Several early versions did require users to identify each path as a file or 
 directory path, and this seemed to increase errors and decrease code 
 readability. There was no apparent upside benefit.</p>
-<p><b>Why are fully specified paths called <i>complete</i> rather than <i>
-<a name="absolute">absolute</a></i>?</b></p>
-<p>To avoid long-held assumptions (what do you mean, <i>&quot;/foo&quot;</i> isn't 
-absolute on some systems?) by programmers used to single-rooted filesystems. 
-Using an unfamiliar name for the concept and related functions causes 
-programmers to read the specs rather than just assuming the meaning is known.</p>
-<p><b>Why not support a  concept of specific kinds of file systems, such as posix_file_system or windows_file_system.</b></p>
-<p>Portability is one of the most important requirements for the 
-library.&nbsp;Gaining some advantage by using features specific to particular 
-operating systems is not a requirement. There doesn't appear to be much need for 
-the ability to manipulate, say, a classic Mac OS path while running on an 
-OpenVMS machine.</p>
-<p>Furthermore, concepts like &quot;file system&quot; 
-are very slippery. What happens when a NTFS or FAT file system is mounted 
-in directory on a machine running a POSIX-like operating system, for example? 
-Some of the POSIX API's may return very un-POSIX like results.</p>
+<p><b>Why do path decomposition functions yielding a single element return a 
+path rather than a string?</b></p>
+<p>Interface simplicity. If they returned strings, flavors would be needed for
+<code>string</code>, <code>wstring</code>, <code>u16string</code>, <code>
+u32string</code>, and generic strings.</p>
+<p><b>Why don't path member functions have overloads with error_code&amp; arguments?</b></p>
+<p>They have not been requested by users; the need for error reporting via 
+error_code seems limited to operations failures rather than path failures.</p>
+<h2>Operations function questions</h2>
 <p><b>Why not supply a 'handle' type, and let the file and directory operations 
 traffic in it?</b></p>
 <p>It isn't clear there is any feasible way to meet the &quot;portable script-style 
@@ -78,7 +85,7 @@ trafficking in paths isn't always natural.&nbsp;&nbsp;&nbsp; </p>
 style may be strongest for directory iterator value type.&nbsp; (See Jesse Jones' Jan 28, 
 2002, Boost postings). However, as class path has evolved, it seems sufficient 
 even as the directory iterator value type.</p>
-<p><b>Why are the operations.hpp non-member functions so low-level?</b></p>
+<p><b>Why are the operations functions so low-level?</b></p>
 <p>To provide a toolkit from which higher-level functionality can be created.</p>
 <p>An 
 extended attempt to add convenience functions on top of, or as a replacement 
@@ -143,7 +150,7 @@ functions, while operations performed by the operating system are provided as
 free functions.</p>
 <hr>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->18 March, 2008<!--webbot bot="Timestamp" endspan i-checksum="29005" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->03 January, 2010<!--webbot bot="Timestamp" endspan i-checksum="38250" --></p>
 <p>© Copyright Beman Dawes, 2002</p>
 <p> Use, modification, and distribution are subject to the Boost Software 
 License, Version 1.0. See <a href="http://www.boost.org/LICENSE_1_0.txt">

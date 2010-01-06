@@ -150,6 +150,20 @@ namespace
 
 int main(int, char* argv[])
 {
+// document state of critical macros
+#ifdef BOOST_POSIX_API
+  cout << "BOOST_POSIX_API\n";
+#endif
+#ifdef BOOST_WINDOWS_API
+  cout << "BOOST_WINDOWS_API\n";
+#endif
+#ifdef BOOST_POSIX_PATH
+  cout << "BOOST_PATH_API\n";
+#endif
+#ifdef BOOST_WINDOWS_PATH
+  cout << "BOOST_WINDOWS_PATH\n";
+#endif
+  
   this_file = argv[0];
 
   cout << current_path().string() << std::endl;
@@ -181,6 +195,9 @@ int main(int, char* argv[])
   directory_iterator_test();
   operations_test();
   directory_entry_overload_test();
+
+  std::cout << unique_path() << std::endl;
+  std::cout << unique_path("foo-%%%%%-%%%%%-bar") << std::endl;
   
   return ::boost::report_errors();
 }

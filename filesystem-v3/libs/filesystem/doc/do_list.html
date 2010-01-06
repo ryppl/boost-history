@@ -6,13 +6,73 @@
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <title>Do List</title>
+<style type="text/css">
+  body    { font-family: sans-serif; margin: 1em; }
+  p, td, li, blockquote { font-size: 10pt; }
+  pre     { font-size: 9pt; }
+</style>
 </head>
 
 <body>
 
-<h1>Boost.Filesystem Do List</h1>
+<h1>Boost Filesystem Do List</h1>
+
+<h2>Docs</h2>
 <ul>
-  <li>Rename path::is_complete() -&gt; is_absolute().</li>
+  <li><font size="4">Finish Rev 0 of tutorial</font></li>
+  <li>Fix broken links.</li>
+  <li>Review FAQ.</li>
+  <li>Should minimal.css be changed to used relative font sizes? See
+  <a href="http://www.w3schools.com/CSS/pr_font_font-size.asp/">http://www.w3schools.com/CSS/pr_font_font-size.asp\</a></li>
+  <li>Document behavior of path::replace_extension has change WRT argument w/o a 
+  dot.</li>
+  <li style="font-size: 10pt">Document leading //: no longer treated specially. 
+  But is that really correct?</li>
+  <li style="font-size: 10pt">Behavior of root_path() has been changed. Change 
+  needs to be propagated to trunk? reference.html#Path-decomposition-table needs 
+  rows for //, //netname, //netname/foo Make sure current trunk has passing 
+  tests for those cases, all decompositions. See test_decompositions() in 
+  path_unit_test.cpp.</li>
+  <li style="font-size: 10pt">Add docs for scoped_path_locale.</li>
+</ul>
+
+<h2>Code</h2>
+<h3>All</h3>
+<ul>
+  <li style="font-size: 10pt">Move semantics.</li>
+  <li style="font-size: 10pt">Use BOOST_DELETED, BOOST_DEFAULTED, where 
+  appropriate.</li>
+  <li style="font-size: 10pt">Other C++0x features.</li>
+</ul>
+<h3>Class path</h3>
+<ul>
+  <li>Windows, POSIX, conversions for char16_t, char32_t for C++0x compilers.</li>
+  <li>Add Windows Alternate Data Stream test cases. See http://en.wikipedia.org/wiki/NTFS 
+  Features.</li>
+  <li>Add test case: relational operators on paths differing only in trailing 
+  separator. Rationale?</li>
+  <li>Provide the name check functions for more character types? Templatize?</li>
+  <li style="font-size: 10pt">Add test for scoped_path_locale.</li>
+  <li style="font-size: 10pt">Add codepage 936/950/etc test cases.</li>
+  <li style="font-size: 10pt">Are generic versions of string(), native_string() 
+  needed? IE:<br>
+  template&lt; class T &gt;<br>
+  T string(const error_code ec = throws());<br>
+  TODO: Maybe; all member functions need to be usable in generic code.</li>
+  <li style="font-size: 10pt">Assuming generic versions of string(), 
+  native_string(), are the w flavors needed? No. KISS. basic_string&lt;char&gt; is 
+  special because it is the predominant use case. w (and other) flavors can be 
+  added later.</li>
+  <li style="font-size: 10pt">Should UDT's be supported?</li>
+  <li style="font-size: 10pt">Should path iteration to a separator result in:<br>
+  -- the actual separator used<br>
+  -- the preferred separator<br>
+  -- the generic separator &lt;-- makes it easier to write portable code</li>
+</ul>
+<h3>Operations</h3>
+<ul>
+  <li>Would complete(), system_complete() be clearer if renamed absolute(), 
+  absolute_system() (or absolute_native())?</li>
 </ul>
 
 </body>

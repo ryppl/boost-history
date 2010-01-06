@@ -1172,6 +1172,20 @@ namespace
 
 int main(int argc, char* argv[])
 {
+// document state of critical macros
+#ifdef BOOST_POSIX_API
+  std::cout << "BOOST_POSIX_API\n";
+#endif
+#ifdef BOOST_WINDOWS_API
+  std::cout << "BOOST_WINDOWS_API\n";
+#endif
+#ifdef BOOST_POSIX_PATH
+  std::cout << "BOOST_PATH_API\n";
+#endif
+#ifdef BOOST_WINDOWS_PATH
+  std::cout << "BOOST_WINDOWS_PATH\n";
+#endif
+
   if (argc > 1 && *argv[1]=='-' && *(argv[1]+1)=='t') report_throws = true;
   if (argc > 1 && *argv[1]=='-' && *(argv[1]+1)=='x') cleanup = false;
 
