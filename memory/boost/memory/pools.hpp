@@ -43,52 +43,20 @@ __forceinline unsigned int log2(unsigned int val) {
 	};
 }
 
-#define BOOST_MEMORY_LOG2(val) NS_BOOST_MEMORY::detail::log2(val)
-
 #if _MSC_VER > 1200
 #pragma warning(pop)
 #endif
 
 #elif defined(__GNUG__) || defined(__GNUC__) // g++/gcc
 
-#if (1)
-
 __forceinline unsigned int log2(unsigned int val)
 {
 	BOOST_MEMORY_ASSERT(val != 0);
 	unsigned int result;
 	__asm__("bsr %0, %%eax"::"m"(val));
-	__asm__("movl %%eax, %0":"=m"(result));
-#if (0)
-	unsigned int base = (1 << result);
-	if (val < base || val >= (base << 1))
-	{
-		printf("WARN: log2 algorithm failed!\n");
-	}
-#endif
+	__asm__("movl %%eax, %0":"=m"(result)::"eax");
 	return result;
 }
-
-#define BOOST_MEMORY_LOG2(val) NS_BOOST_MEMORY::detail::log2(val)
-
-#else
-
-#define BOOST_MEMORY_LOG2(val) \
-({ \
-	unsigned int const boost_memory_val_ = (val); \
-	unsigned int boost_memory_result_; \
-	BOOST_MEMORY_ASSERT(boost_memory_val_ != 0); \
-	__asm__("bsr %0, %%eax"::"m"(boost_memory_val_)); \
-	__asm__("movl %%eax, %0":"=m"(boost_memory_result_)); \
-	unsigned int base = (1 << boost_memory_result_); \
-	if (boost_memory_val_ < base || boost_memory_val_ >= (base << 1)) \
-	{ \
-		printf("WARN: log2 algorithm failed!\n"); \
-	} \
-	boost_memory_result_; \
-})
-
-#endif
 
 #else
 
@@ -109,7 +77,6 @@ __forceinline unsigned int log2(unsigned int val)
 	}
 }
 
-#define BOOST_MEMORY_LOG2(val) NS_BOOST_MEMORY::detail::log2(val)
 #pragma message("Warning: unknown compiler and use a slow log2 algorithm!"
 
 #endif
@@ -201,7 +168,7 @@ private:
 		BOOST_MEMORY_ASSERT(!has_pool1(cb));
 		BOOST_MEMORY_ASSERT(has_pool(cb));
 
-		const size_type index = BOOST_MEMORY_LOG2(cb + (PADDING2 - 1)) + (NPOOL1 - (MIN_BITS2 - 1));
+		const size_type index = detail::log2(cb + (PADDING2 - 1)) + (NPOOL1 - (MIN_BITS2 - 1));
 		pool_type* p = m_pools[index];
 		if (p == NULL)
 		{
