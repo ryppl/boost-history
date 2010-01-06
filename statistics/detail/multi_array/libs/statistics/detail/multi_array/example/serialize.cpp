@@ -142,7 +142,7 @@ void example_multi_array_serialize(std::ostream& os)
     		ia_ ia(ifs);
     		array_map_ a;
         	ia >> a;
-			for(unsigned i = 0; i<n0; i++)
+			for(unsigned i = 0; i<n0; i++)								
     		{
     			for(unsigned j = 0; j<n1; j++)
         		{

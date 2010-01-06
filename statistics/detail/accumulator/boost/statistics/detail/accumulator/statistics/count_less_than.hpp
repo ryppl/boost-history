@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// accumulator::statistics::count_less_than.hpp                              //                                    //
+// accumulator::statistics::count_less_than.hpp                              //
 //                                                                           //
 //  Copyright 2008 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -7,7 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_COUNT_LESS_THAN_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_COUNT_LESS_THAN_HPP_ER_2009
-
+#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/accumulators/framework/extractor.hpp>
 #include <boost/accumulators/framework/accumulator_base.hpp>
 #include <boost/accumulators/framework/parameters/sample.hpp>
@@ -67,7 +68,7 @@ namespace tag
     struct count_less_than
       : boost::accumulators::depends_on<>
     {
-      typedef impl::count_less_than<mpl::_1> impl;
+      typedef impl::count_less_than<boost::mpl::_1> impl;
 
     };
 }
@@ -78,7 +79,8 @@ namespace extract
 {
 
   template<typename AccumulatorSet>
-  typename mpl::apply<AccumulatorSet,tag::count_less_than>::type::result_type
+  typename 
+  	boost::mpl::apply<AccumulatorSet,tag::count_less_than>::type::result_type
   count_less_than(AccumulatorSet const& acc){
     typedef tag::count_less_than the_tag;
     return boost::accumulators::extract_result<the_tag>(acc);

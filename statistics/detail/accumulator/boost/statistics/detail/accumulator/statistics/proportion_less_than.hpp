@@ -7,6 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_PROPORTION_LESS_THAN_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_PROPORTION_LESS_THAN_HPP_ER_2009
+#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/parameter/binding.hpp>
 #include <boost/accumulators/framework/extractor.hpp>
 #include <boost/accumulators/framework/accumulator_base.hpp>
@@ -68,7 +70,7 @@ namespace tag
         tag::count_less_than
     >
     {
-      typedef impl::proportion_less_than<mpl::_1> impl;
+      typedef impl::proportion_less_than<boost::mpl::_1> impl;
     };
 }
 
