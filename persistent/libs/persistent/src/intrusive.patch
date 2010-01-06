@@ -1,0 +1,280 @@
+diff -rupN intrusive-orig/detail/list_node.hpp intrusive/detail/list_node.hpp
+--- intrusive-orig/detail/list_node.hpp	2009-11-29 10:27:10.000000000 +0100
++++ intrusive/detail/list_node.hpp	2009-11-30 10:29:20.000000000 +0100
+@@ -64,11 +64,9 @@ class list_iterator
+    :  public std::iterator
+          < std::bidirectional_iterator_tag
+          , typename Container::value_type
+-         , typename std::iterator_traits<typename Container::value_type*>::difference_type
+-         , typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type *
+-         , typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type &
++         , typename Container::difference_type
++         , typename detail::if_c<IsConst,typename Container::const_pointer,typename Container::pointer>::type
++         , typename detail::if_c<IsConst,typename Container::const_reference,typename Container::reference>::type
+          >
+ {
+    protected:
+@@ -83,11 +81,9 @@ class list_iterator
+ 
+    public:
+    typedef typename Container::value_type    value_type;
+-   typedef  typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type *pointer;
+-   typedef typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type &reference;
+-
++   typedef typename detail::if_c<IsConst,typename Container::const_pointer,typename Container::pointer>::type pointer;
++   typedef typename detail::if_c<IsConst,typename Container::const_reference,typename Container::reference>::type reference;
++   
+    list_iterator()
+       : members_ (node_ptr(0), 0)
+    {}
+diff -rupN intrusive-orig/detail/slist_node.hpp intrusive/detail/slist_node.hpp
+--- intrusive-orig/detail/slist_node.hpp	2009-11-29 10:27:10.000000000 +0100
++++ intrusive/detail/slist_node.hpp	2009-12-04 04:39:48.000000000 +0100
+@@ -57,10 +57,8 @@ class slist_iterator
+          < std::forward_iterator_tag
+          , typename Container::value_type
+          , typename std::iterator_traits<typename Container::value_type*>::difference_type
+-         , typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type *
+-         , typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type &
++         , typename detail::if_c<IsConst,typename Container::const_pointer,typename Container::pointer>::type
++         , typename detail::if_c<IsConst,typename Container::const_reference,typename Container::reference>::type
+          >
+ {
+    protected:
+@@ -75,10 +73,8 @@ class slist_iterator
+ 
+    public:
+    typedef typename Container::value_type    value_type;
+-   typedef  typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type *pointer;
+-   typedef typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type &reference;
++   typedef typename detail::if_c<IsConst,typename Container::const_pointer,typename Container::pointer>::type pointer;
++   typedef typename detail::if_c<IsConst,typename Container::const_reference,typename Container::reference>::type reference;
+ 
+    slist_iterator()
+       : members_ (node_ptr(0), 0)
+diff -rupN intrusive-orig/detail/tree_algorithms.hpp intrusive/detail/tree_algorithms.hpp
+--- intrusive-orig/detail/tree_algorithms.hpp	2009-11-29 10:27:10.000000000 +0100
++++ intrusive/detail/tree_algorithms.hpp	2009-12-04 08:59:18.000000000 +0100
+@@ -18,6 +18,7 @@
+ #include <boost/intrusive/intrusive_fwd.hpp>
+ #include <cstddef>
+ #include <boost/intrusive/detail/utilities.hpp>
++#include <boost/pointer_cast.hpp>
+ 
+ namespace boost {
+ namespace intrusive {
+@@ -140,7 +141,7 @@ class tree_algorithms
+ 
+    static node_ptr uncast(const_node_ptr ptr)
+    {
+-      return node_ptr(const_cast<node*>(::boost::intrusive::detail::get_pointer(ptr)));
++      return node_ptr(boost::const_pointer_cast<node>(ptr));
+    }
+    /// @endcond
+ 
+diff -rupN intrusive-orig/detail/tree_node.hpp intrusive/detail/tree_node.hpp
+--- intrusive-orig/detail/tree_node.hpp	2009-11-29 10:27:10.000000000 +0100
++++ intrusive/detail/tree_node.hpp	2009-11-30 17:09:58.000000000 +0100
+@@ -73,11 +73,9 @@ class tree_iterator
+    :  public std::iterator
+          < std::bidirectional_iterator_tag
+          , typename Container::value_type
+-         , typename std::iterator_traits<typename Container::value_type*>::difference_type
+-         , typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type *
+-         , typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type &
++         , typename Container::difference_type
++         , typename detail::if_c<IsConst,typename Container::const_pointer,typename Container::pointer>::type
++         , typename detail::if_c<IsConst,typename Container::const_reference,typename Container::reference>::type
+          >
+ {
+    protected:
+@@ -93,10 +91,8 @@ class tree_iterator
+ 
+    public:
+    typedef typename Container::value_type    value_type;
+-   typedef  typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type *pointer;
+-   typedef typename detail::add_const_if_c
+-                     <typename Container::value_type, IsConst>::type &reference;
++   typedef typename detail::if_c<IsConst,typename Container::const_pointer,typename Container::pointer>::type pointer;
++   typedef typename detail::if_c<IsConst,typename Container::const_reference,typename Container::reference>::type reference;
+ 
+    tree_iterator()
+       : members_ (0, 0)
+diff -rupN intrusive-orig/list.hpp intrusive/list.hpp
+--- intrusive-orig/list.hpp	2009-11-29 10:27:10.000000000 +0100
++++ intrusive/list.hpp	2009-12-05 08:25:49.000000000 +0100
+@@ -30,6 +30,7 @@
+ #include <algorithm>
+ #include <functional>
+ #include <cstddef>
++#include <boost/pointer_cast.hpp>
+ 
+ namespace boost {
+ namespace intrusive {
+@@ -129,10 +130,8 @@ class list_impl
+    //Const cast emulation for smart pointers
+    static node_ptr uncast(const_node_ptr ptr)
+    {
+-      //return node_ptr(detail::get_pointer(ptr)));
+-      return const_cast<node*>(detail::get_pointer(ptr));
++      return boost::const_pointer_cast<node>(ptr);
+    }
+-
+    node_ptr get_root_node()
+    {  return node_ptr(&data_.root_plus_size_.root_);  }
+ 
+@@ -172,6 +171,14 @@ class list_impl
+    real_value_traits &get_real_value_traits(detail::bool_<true>)
+    {  return data_.get_value_traits(*this);  }
+ 
++   protected:
++   node &prot_root_node()
++   {  return data_.root_plus_size_.root_; }
++   node const &prot_root_node() const
++   {  return data_.root_plus_size_.root_; }
++   void prot_set_size(size_type s)
++   {  data_.root_plus_size_.set_size(s);  }
++
+    /// @endcond
+ 
+    public:
+diff -rupN intrusive-orig/rbtree.hpp intrusive/rbtree.hpp
+--- intrusive-orig/rbtree.hpp	2009-11-29 10:27:10.000000000 +0100
++++ intrusive/rbtree.hpp	2009-12-05 09:02:42.000000000 +0100
+@@ -110,10 +110,8 @@ class rbtree_impl
+    typedef std::reverse_iterator<const_iterator>                     const_reverse_iterator;
+    typedef typename real_value_traits::node_traits                   node_traits;
+    typedef typename node_traits::node                                node;
+-   typedef typename boost::pointer_to_other
+-      <pointer, node>::type                                          node_ptr;
+-   typedef typename boost::pointer_to_other
+-      <node_ptr, const node>::type                                   const_node_ptr;
++   typedef typename node_traits::node_ptr                            node_ptr;
++   typedef typename node_traits::const_node_ptr                      const_node_ptr;
+    typedef rbtree_algorithms<node_traits>                            node_algorithms;
+ 
+    static const bool constant_time_size = Config::constant_time_size;
+@@ -152,7 +150,7 @@ class rbtree_impl
+       {}
+       node_plus_pred_t node_plus_pred_;
+    } data_;
+-  
++
+    const value_compare &priv_comp() const
+    {  return data_.node_plus_pred_.get();  }
+ 
+@@ -167,7 +165,7 @@ class rbtree_impl
+ 
+    static node_ptr uncast(const_node_ptr ptr)
+    {
+-      return node_ptr(const_cast<node*>(detail::get_pointer(ptr)));
++      return node_ptr(boost::const_pointer_cast<node>(ptr));
+    }
+ 
+    size_traits &priv_size_traits()
+@@ -188,9 +186,17 @@ class rbtree_impl
+    real_value_traits &get_real_value_traits(detail::bool_<true>)
+    {  return data_.get_value_traits(*this);  }
+ 
++   public:
++   value_compare &prot_comp()
++   {  return priv_comp(); }
++   const node &prot_header_node() const
++   {  return priv_header(); }
++   node &prot_header_node()
++   {  return priv_header(); }
++   void prot_set_size(size_type s)
++   {  this->priv_size_traits().set_size(s);  }
+    /// @endcond
+ 
+-   public:
+ 
+    const real_value_traits &get_real_value_traits() const
+    {  return this->get_real_value_traits(detail::bool_<external_value_traits>());  }
+diff -rupN intrusive-orig/set.hpp intrusive/set.hpp
+--- intrusive-orig/set.hpp	2009-11-29 10:27:10.000000000 +0100
++++ intrusive/set.hpp	2009-12-05 09:05:44.000000000 +0100
+@@ -78,6 +78,12 @@ class set_impl
+    /// @cond
+    private:
+    tree_type tree_;
++   
++   protected:
++   node &prot_header_node(){ return tree_.prot_header_node(); }
++   node const &prot_header_node() const{ return tree_.prot_header_node(); }
++   void prot_set_size(size_type s){ tree_.prot_set_size(s); }
++   value_compare &prot_comp(){ return tree_.prot_comp(); }
+    /// @endcond
+ 
+    public:
+@@ -1268,6 +1274,12 @@ class multiset_impl
+    /// @cond
+    private:
+    tree_type tree_;
++
++   protected:
++   node &prot_header_node(){ return tree_.prot_header_node(); }
++   node const &prot_header_node() const{ return tree_.prot_header_node(); }
++   void prot_set_size(size_type s){ tree_.prot_set_size(s); }
++   value_compare &prot_comp(){ return tree_.prot_comp(); }
+    /// @endcond
+ 
+    public:
+diff -rupN intrusive-orig/slist.hpp intrusive/slist.hpp
+--- intrusive-orig/slist.hpp	2009-11-29 10:27:10.000000000 +0100
++++ intrusive/slist.hpp	2009-12-05 08:26:59.000000000 +0100
+@@ -26,6 +26,7 @@
+ #include <boost/intrusive/link_mode.hpp>
+ #include <boost/intrusive/options.hpp>
+ #include <boost/intrusive/detail/utilities.hpp>
++#include <boost/pointer_cast.hpp>
+ #include <iterator>
+ #include <functional>
+ #include <algorithm>
+@@ -129,10 +130,8 @@ class slist_impl
+    typedef slist_iterator<slist_impl, true>                          const_iterator;
+    typedef typename real_value_traits::node_traits                   node_traits;
+    typedef typename node_traits::node                                node;
+-   typedef typename boost::pointer_to_other
+-      <pointer, node>::type                                          node_ptr;
+-   typedef typename boost::pointer_to_other
+-      <pointer, const node>::type                                    const_node_ptr;
++   typedef typename node_traits::node_ptr                            node_ptr;
++   typedef typename node_traits::const_node_ptr                      const_node_ptr;
+    typedef typename detail::if_c
+       < Config::linear
+       , linear_slist_algorithms<node_traits>
+@@ -206,7 +205,7 @@ class slist_impl
+    {  data_.root_plus_size_.last_ = n;  }
+ 
+    static node_ptr uncast(const_node_ptr ptr)
+-   {  return node_ptr(const_cast<node*>(detail::get_pointer(ptr)));  }
++   {  return boost::const_pointer_cast<node>(ptr); }
+ 
+    void set_default_constructed_state()
+    {
+@@ -251,6 +250,13 @@ class slist_impl
+    real_value_traits &get_real_value_traits(detail::bool_<true>)
+    {  return data_.get_value_traits(*this);  }
+ 
++   protected:
++   node &prot_root_node()
++   {  return data_.root_plus_size_.root_; }
++   node const &prot_root_node() const
++   {  return data_.root_plus_size_.root_; }
++   void prot_set_size(size_type s)
++   {  data_.root_plus_size_.set_size(s);  }
+    /// @endcond
+ 
+    public:
