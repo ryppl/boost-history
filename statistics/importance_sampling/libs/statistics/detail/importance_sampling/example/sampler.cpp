@@ -76,8 +76,8 @@ void example_sampler(std::ostream& os){
     typedef boost::accumulators::accumulator_set<val_,stats_> acc_;
     typedef std::size_t                                 size_;
 
-    typedef boost::mpl::int_<0>                     	k0_;
-    typedef boost::mpl::int_<1>                         k1_;
+    typedef boost::mpl::int_<0> k0_;
+    typedef boost::mpl::int_<1> k1_;
 	typedef boost::fusion::result_of::make_map<k0_,k1_,val_,val_>::type data_;
 	
     typedef np::kolmogorov_smirnov::statistic<val_,k0_,k1_> ks_stat_;
