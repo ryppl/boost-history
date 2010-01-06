@@ -59,7 +59,7 @@ __forceinline unsigned int log2(unsigned int val)
 	unsigned int result;
 	__asm__("bsr %0, %%eax"::"m"(val));
 	__asm__("movl %%eax, %0":"=m"(result));
-#if (1)
+#if (0)
 	unsigned int base = (1 << result);
 	if (val < base || val >= (base << 1))
 	{
