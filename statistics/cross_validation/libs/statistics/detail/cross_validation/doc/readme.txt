@@ -26,7 +26,7 @@ element of the current test sample.
 [ Compiler ]
 
 Mac OS Leopard 10.6         gcc version 4.0.1
-                            Intel C++ compiler 11.1
+
 
 [ Dependencies ]
 
