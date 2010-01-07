@@ -20,6 +20,9 @@ using namespace boost::itl;
 
 BOOST_AUTO_TEST_CASE(test_validate_itl_bit_collector)
 {
+#ifdef _DEBUG
+    cout << "Run validate/tests in release mode only.\n";
+#else
     bit_collector_driver validater;
     GentorProfileSgl::it()->set_std_profile(12,1);
     //GentorProfileSgl::it()->report_profile();
@@ -27,5 +30,6 @@ BOOST_AUTO_TEST_CASE(test_validate_itl_bit_collector)
     validater.set_information_level(inform::never);
 
     BOOST_CHECK_EQUAL(validater.validate(), true);
+#endif
 }
 

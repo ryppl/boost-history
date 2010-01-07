@@ -8,6 +8,18 @@ import feature ;
 
 project
     : requirements
+      <toolset>msvc:<warnings>all # == /W4
+      <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+      <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+      <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
+      <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+
+      #-------------------------------------------------------------------------
+      # LaBatea generates large obj files for some test programs e.g. 
+      # test_map_order: For that we need flag /bigobj
+      #-------------------------------------------------------------------------
+      <toolset>msvc:<cxxflags>/bigobj # Via metaprogramming LaBatea generates bigobjs.
+
       <library>/boost/test//boost_unit_test_framework
       <library>/boost/date_time//boost_date_time
       <link>static
@@ -45,10 +57,10 @@ test-suite "itl"
       [ run test_set_order_/test_set_order.cpp ../src/gentor/gentorprofile.cpp ]
       
       # msvc9 compilation time:  
-      # [ run test_map_order_/test_map_order.cpp ../src/gentor/gentorprofile.cpp ]
+      [ run test_map_order_/test_map_order.cpp ../src/gentor/gentorprofile.cpp ]
             
       # msvc9 compilation time:  
-      # [ run test_itl_morphic_/test_itl_morphic.cpp ../src/gentor/gentorprofile.cpp ]
+      [ run test_itl_morphic_/test_itl_morphic.cpp ../src/gentor/gentorprofile.cpp ]
       
       # msvc9 compilation time: 2:36  
       # [ run test_signed_quantifier_/test_signed_quantifier.cpp ../src/gentor/gentorprofile.cpp ]

@@ -20,6 +20,9 @@ using namespace boost::itl;
 
 BOOST_AUTO_TEST_CASE(test_validate_itl_sorted_associative_set_back)
 {
+#ifdef _DEBUG
+    cout << "Run validate/tests in release mode only.\n";
+#else
     sorted_associative_set_back_driver validater;
     GentorProfileSgl::it()->set_std_profile(20,1);
     //GentorProfileSgl::it()->report_profile();
@@ -27,5 +30,6 @@ BOOST_AUTO_TEST_CASE(test_validate_itl_sorted_associative_set_back)
     validater.set_information_level(inform::never);
 
     BOOST_CHECK_EQUAL(validater.validate(), true);
+#endif
 }
 
