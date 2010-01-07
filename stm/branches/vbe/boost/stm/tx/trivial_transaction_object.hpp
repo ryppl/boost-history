@@ -11,15 +11,14 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_STM_TX_DEEP_TRANSACTION_OBJECT__HPP
-#define BOOST_STM_TX_DEEP_TRANSACTION_OBJECT__HPP
-
+#ifndef BOOST_STM_TX_TRIVIAL_TRANSACTION_OBJECT__HPP
+#define BOOST_STM_TX_TRIVIAL_TRANSACTION_OBJECT__HPP
 
 //-----------------------------------------------------------------------------
+//#include <stdarg.h>
 #include <pthread.h>
 //-----------------------------------------------------------------------------
 #include <list>
-#include <new>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
@@ -27,10 +26,22 @@
 #include <boost/stm/cache_fct.hpp>
 #include <boost/stm/datatypes.hpp>
 #include <boost/stm/memory_managers/memory_manager.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/type_traits/has_trivial_copy.hpp>
+#include <boost/type_traits/has_trivial_assign.hpp>
+
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
+
+template <class T>
+struct has_trivial_copy_semantics :
+   boost::mpl::and_<
+        boost::has_trivial_copy_constructor<T>,
+        boost::has_trivial_assign<T> 
+  >
+ {};
 
 //-----------------------------------------------------------------------------
 // forward declarations
@@ -40,21 +51,22 @@ class transaction;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-// transaction object mixin
+// transaction object mixin making a trivial memcpy copy
 // Provides the definition of the virtual functions
-//      make_cache: use copy constructor
-//      copy_state: use assignement
+//      make_cache: use memcpy on cache_allocated
+//      copy_state: use memcpy 
 //      move_state and
-//      delete_cache: use delete
+//      delete_cache: use cache_allocated
 // Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
 
 // The parameter Base=base_transaction_object allows to mic transaction_object and polymorphism
-// class B : deep_transaction_object<B> {}
-// class D : deep_transaction_object<D, B> {}
+// class B : transaction_object<B> {}
+// class D : transaction_object<D, B> {}
 // the single issue is the forward constructors from transaction_object<D, B> to B
 //-----------------------------------------------------------------------------
+
 template <class Final, typename Base=base_transaction_object>
-class deep_transaction_object : public
+class trivial_transaction_object : public
 #ifdef USE_STM_MEMORY_MANAGER
     memory_manager<Final, Base>
 #else
@@ -69,35 +81,21 @@ class deep_transaction_object : public
 public:
 
     //--------------------------------------------------------------------------
-#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
     virtual base_transaction_object* make_cache(transaction* t) const {
         Final* p = cache_allocate<Final>(t);
-        ::new (p) Final(*static_cast<Final const*>(this));
+        boost::stm::cache_copy(static_cast<Final const*>(this), p);
         return p;
     }
-#else
-    virtual base_transaction_object* make_cache(transaction*) const {
-        Final* tmp = new Final(*static_cast<Final const*>(this));
-        return tmp;
-    }
-#endif
 
    //--------------------------------------------------------------------------
-#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
     virtual void delete_cache() {
-        static_cast<Final*>(this)->~Final();
         boost::stm::cache_deallocate(this);
     }
-#else
-    virtual void delete_cache() {
-        delete this;
-    }
-#endif
 
    //--------------------------------------------------------------------------
    virtual void copy_state(base_transaction_object const * const rhs)
    {
-       *static_cast<Final *>(this) = *static_cast<Final const * const>(rhs);
+        boost::stm::cache_copy(static_cast<Final const * const>(rhs), static_cast<Final *>(this));
    }
 
 #if BUILD_MOVE_SEMANTICS
@@ -111,10 +109,7 @@ public:
 };
 
 
-
 }}
-
-//-----------------------------------------------------------------------------
-#endif // BOOST_STM_TX_DEEP_TRANSACTION_OBJECT__HPP
+#endif // BOOST_STM_TX_TRIVIAL_TRANSACTION_OBJECT__HPP
 
 

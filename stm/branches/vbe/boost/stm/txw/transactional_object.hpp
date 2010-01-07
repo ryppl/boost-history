@@ -29,7 +29,7 @@ namespace boost { namespace stm {
 //      forward constructors to the wrapped type
 //      copy_state: relaying on the cache_copy<T> generic function
 //      move_state and
-//      cache_deallocate: relaying on the cache_copy<T> generic function
+//      delete_cache: relaying on the cache_copy<T> generic function
 // Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
 //
 // If a class D inherits from B we have that transactional_object<D> dont inherits from transactional_object<B>, but
@@ -87,7 +87,7 @@ public:
     }
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    virtual base_transaction_object* clone(transaction* t) const {
+    virtual base_transaction_object* make_cache(transaction* t) const {
         transactional_object<T>* p = cache_allocate<transactional_object<T> >(t);
         if (p==0) {
             throw std::bad_alloc();
@@ -96,19 +96,18 @@ public:
         return p;
     }
 #else
-    virtual base_transaction_object* clone(transaction*) const {
-        //return cache_clone(*this);
+    virtual base_transaction_object* make_cache(transaction*) const {
         return new transactional_object<T>(*this);
     }
 #endif
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    virtual void cache_deallocate() {
+    virtual void delete_cache() {
         static_cast<transactional_object<T>*>(this)->~transactional_object<T>();
         boost::stm::cache_deallocate(this);
     }
 #else
-    virtual void cache_deallocate() {
+    virtual void delete_cache() {
         delete this;
     }
 #endif
@@ -208,7 +207,7 @@ struct cache_deallocate<transactional_object<std::vector<T> > > {
 #else //!BOOST_STM_NO_PARTIAL_SPECIALIZATION
 
 template <class T>
-inline void cache_deallocate(transactional_object<std::vector<T> >* ptr) {
+inline void delete_cache(transactional_object<std::vector<T> >* ptr) {
     delete ptr;
 }
 

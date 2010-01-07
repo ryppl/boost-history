@@ -16,8 +16,10 @@
 
 #include <boost/stm/detail/config.hpp>
 
-#include <boost/stm/tx/shallow_transaction_object.hpp>
-#include <boost/stm/tx/deep_transaction_object.hpp>
+#include <boost/stm/transaction_object.hpp>
+//#include <boost/stm/tx/deep_transaction_object.hpp>
+//#include <boost/stm/tx/trivial_transaction_object.hpp>
+//#include <boost/stm/tx/shallow_transaction_object.hpp>
 #include <boost/stm/tx_ptr.hpp>
 #include <boost/stm/tx/mixin.hpp>
 #include <boost/stm/tx/object.hpp>

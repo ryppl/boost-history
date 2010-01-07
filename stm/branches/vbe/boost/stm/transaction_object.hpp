@@ -15,7 +15,6 @@
 #define BOOST_STM_TRANSACTION_OBJECT__HPP
 
 //-----------------------------------------------------------------------------
-//#include <stdarg.h>
 #include <pthread.h>
 //-----------------------------------------------------------------------------
 #include <list>
@@ -27,25 +26,55 @@
 #include <boost/stm/cache_fct.hpp>
 #include <boost/stm/datatypes.hpp>
 #include <boost/stm/memory_managers/memory_manager.hpp>
+#include <boost/stm/tx/deep_transaction_object.hpp>
+#include <boost/stm/tx/trivial_transaction_object.hpp>
+#include <boost/stm/tx/shallow_transaction_object.hpp>
+
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
 
-//-----------------------------------------------------------------------------
-// forward declarations
-//-----------------------------------------------------------------------------
-class transaction;
+namespace detail {
+template <class Final, class Base,
+   bool hasShallowCopySemantics,
+   bool hasTrivialCopySemantics>
+class transaction_object_aux;
 
+template <class F, class B>
+class transaction_object_aux<F, B, true, true>:
+    public trivial_transaction_object<F, B> {};
+template <class F, class B>
+class transaction_object_aux<F, B, true, false>:
+    public shallow_transaction_object<F, B> {};
+template <class F, class B>
+class transaction_object_aux<F, B, false, true>:
+    public trivial_transaction_object<F, B> {};
+template <class F, typename B>
+class transaction_object_aux<F, B, false, false>:
+    public deep_transaction_object<F, B> {};
+}
+#if 1
+
+template <
+    class Final,
+    class Base=base_transaction_object
+>
+class transaction_object : public detail::transaction_object_aux<Final, Base,
+    has_shallow_copy_semantics<Final>::value,
+    has_trivial_copy_semantics<Final>::value
+    >
+{};
+    #else
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // transaction object mixin
 // Provides the definition of the virtual functions
-//      clone: use copy constructor
+//      make_cache: use copy constructor
 //      copy_state: use assignement
 //      move_state and
-//      cache_deallocate: use delete
+//      delete_cache: use delete
 // Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
 
 // The parameter Base=base_transaction_object allows to mic transaction_object and polymorphism
@@ -53,47 +82,47 @@ class transaction;
 // class D : transaction_object<D, B> {}
 // the single issue is the forward constructors from transaction_object<D, B> to B
 //-----------------------------------------------------------------------------
-template <class Derived, typename Base=base_transaction_object>
+template <class Final, typename Base=base_transaction_object>
 class transaction_object : public
 #ifdef USE_STM_MEMORY_MANAGER
-    memory_manager<Derived, Base>
+    memory_manager<Final, Base>
 #else
     Base
 #endif
 {
 #ifdef USE_STM_MEMORY_MANAGER
-    typedef memory_manager<Derived, Base> base_type;
+    typedef memory_manager<Final, Base> base_type;
 #else
     typedef Base base_type;
 #endif
 public:
-    typedef transaction_object<Derived, Base> this_type;
+    typedef transaction_object<Final, Base> this_type;
 
     //--------------------------------------------------------------------------
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    virtual base_transaction_object* clone(transaction* t) const {
-        Derived* p = cache_allocate<Derived>(t);
+    virtual base_transaction_object* make_cache(transaction* t) const {
+        Final* p = cache_allocate<Final>(t);
         if (p==0) {
             throw std::bad_alloc();
         }
-        ::new (p) Derived(*static_cast<Derived const*>(this));
+        ::new (p) Final(*static_cast<Final const*>(this));
         return p;
     }
 #else
-    virtual base_transaction_object* clone(transaction*) const {
-        Derived* tmp = new Derived(*static_cast<Derived const*>(this));
+    virtual base_transaction_object* make_cache(transaction*) const {
+        Final* tmp = new Final(*static_cast<Final const*>(this));
         return tmp;
     }
 #endif
 
    //--------------------------------------------------------------------------
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    virtual void cache_deallocate() {
-        static_cast<Derived*>(this)->~Derived();
+    virtual void delete_cache() {
+        static_cast<Final*>(this)->~Final();
         boost::stm::cache_deallocate(this);
     }
 #else
-    virtual void cache_deallocate() {
+    virtual void delete_cache() {
         delete this;
     }
 #endif
@@ -101,19 +130,19 @@ public:
    //--------------------------------------------------------------------------
    virtual void copy_state(base_transaction_object const * const rhs)
    {
-       *static_cast<Derived *>(this) = *static_cast<Derived const * const>(rhs);
+       *static_cast<Final *>(this) = *static_cast<Final const * const>(rhs);
    }
 
 #if BUILD_MOVE_SEMANTICS
    virtual void move_state(base_transaction_object * rhs)
    {
-      static_cast<Derived &>(*this) = draco_move
-         (*(static_cast<Derived*>(rhs)));
+      static_cast<Final &>(*this) = draco_move
+         (*(static_cast<Final*>(rhs)));
    }
 #endif
 
 };
-
+#endif
 template <typename T> class native_trans :
 public transaction_object< native_trans<T> >
 {

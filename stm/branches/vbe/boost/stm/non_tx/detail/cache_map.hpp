@@ -76,7 +76,7 @@ public:
     }
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    virtual base_transaction_object* clone(transaction* t) const {
+    virtual base_transaction_object* make_cache(transaction* t) const {
         cache<T>* p = cache_allocate<cache<T> >(t);
         if (p==0) {
             throw std::bad_alloc();
@@ -84,7 +84,7 @@ public:
         ::new (p) cache<T>(*static_cast<cache<T> const*>(this));
         return p;
 #else
-    virtual base_transaction_object* clone(transaction*) const {
+    virtual base_transaction_object* make_cache(transaction*) const {
         cache* p = new cache<T>(*this);
 #endif
         if (p->value_!=0) {
@@ -94,14 +94,14 @@ public:
     }
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    virtual void cache_deallocate() {
+    virtual void delete_cache() {
         delete ptr_;
         ptr_=0;
         this->~cache<T>();
         boost::stm::cache_deallocate(this);
     }
 #else
-    virtual void cache_deallocate() {
+    virtual void delete_cache() {
         delete ptr_;
         ptr_=0;
         delete this;

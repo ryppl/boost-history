@@ -31,6 +31,13 @@
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
 
+struct shallow_t {};
+const shallow_t shallow = {};
+
+ template <class T>
+ struct has_shallow_copy_semantics : boost::mpl::false_
+ {};
+     
 //-----------------------------------------------------------------------------
 // forward declarations
 //-----------------------------------------------------------------------------
@@ -41,10 +48,10 @@ class transaction;
 //-----------------------------------------------------------------------------
 // transaction object mixin making shallow copy
 // Provides the definition of the virtual functions
-//      clone: use copy constructor
-//      copy_state: use assignement
+//      make_cache: use shallow copy constructor on cache_allocated area
+//      copy_state: use shallow assignement
 //      move_state and
-//      cache_deallocate: use delete
+//      delete_cache: use cache_deallocate
 // Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
 
 // The parameter Base=base_transaction_object allows to mic transaction_object and polymorphism
@@ -53,43 +60,43 @@ class transaction;
 // the single issue is the forward constructors from transaction_object<D, B> to B
 //-----------------------------------------------------------------------------
 
-template <class Derived, typename Base=base_transaction_object>
+template <class Final, typename Base=base_transaction_object>
 class shallow_transaction_object : public
 #ifdef USE_STM_MEMORY_MANAGER
-    memory_manager<Derived, Base>
+    memory_manager<Final, Base>
 #else
     Base
 #endif
 {
 #ifdef USE_STM_MEMORY_MANAGER
-    typedef memory_manager<Derived, Base> base_type;
+    typedef memory_manager<Final, Base> base_type;
 #else
     typedef Base base_type;
 #endif
 public:
 
     //--------------------------------------------------------------------------
-    virtual base_transaction_object* clone(transaction* t) const {
-        Derived* tmp = cache_clone(t, *static_cast<Derived const*>(this));
-        return tmp;
+    virtual base_transaction_object* make_cache(transaction* t) const {
+        Final* p = cache_allocate<Final>(t);
+        return new(p) Final(this, shallow);
     }
 
    //--------------------------------------------------------------------------
-    virtual void cache_deallocate() {
+    virtual void delete_cache() {
         boost::stm::cache_deallocate(this);
     }
 
    //--------------------------------------------------------------------------
    virtual void copy_state(base_transaction_object const * const rhs)
    {
-        boost::stm::cache_copy(static_cast<Derived const * const>(rhs), static_cast<Derived *>(this));
+        boost::stm::cache_copy(static_cast<Final const * const>(rhs), static_cast<Final *>(this));
    }
 
 #if BUILD_MOVE_SEMANTICS
    virtual void move_state(base_transaction_object * rhs)
    {
-      static_cast<Derived &>(*this) = draco_move
-         (*(static_cast<Derived*>(rhs)));
+      static_cast<Final &>(*this) = draco_move
+         (*(static_cast<Final*>(rhs)));
    }
 #endif
 

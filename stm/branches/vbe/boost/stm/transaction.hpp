@@ -982,7 +982,7 @@ private:
       }
 
       in.transaction_thread(threadId_);
-      writeList().insert(tx_pair((base_transaction_object*)&in, in.clone(this)));
+      writeList().insert(tx_pair((base_transaction_object*)&in, in.make_cache(this)));
 #if USE_BLOOM_FILTER
       bloom().insert((std::size_t)&in);
 #endif
@@ -1203,7 +1203,7 @@ private:
          wbloom().set_bv2(bloom().h2());
          //sm_wbv().set_bit((size_t)&in % sm_wbv().size());
 #endif
-         base_transaction_object* returnValue = in.clone(this);
+         base_transaction_object* returnValue = in.make_cache(this);
          returnValue->transaction_thread(threadId_);
          writeList().insert(tx_pair((base_transaction_object*)&in, returnValue));
          return *static_cast<T*>(returnValue);
@@ -2196,7 +2196,7 @@ inline void cache_deallocate(T* ptr) {
 
 inline void cache_release(base_transaction_object* ptr) {
     if (ptr==0) return ;
-    ptr->cache_deallocate();
+    ptr->delete_cache();
 }
 
 #ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
