@@ -14,10 +14,10 @@ erwann.rogard@gmail.com
 [ Overview ]
 
 These are C++ classes that extend boost/math/distributions and also bridges it
-with boost/random. functions that have as argument classes in namespace
+with boost/random. functions that take as argument classes in namespace
 boost/math are in the same namespace. functions and classes that do not 
-already exist in boost/math are in namespace 
-boost/statistics/detail/distribution_toolkit.
+already exist in boost/math are in namespace boost/statistics/detail/
+distribution/toolkit.
 
 [ Related links ]
 
@@ -36,17 +36,12 @@ Mac OS X 10.6        gcc 4.2                                    boost_1_41_0
 /sandbox/statistics/detail/fusion/ 
 /sandbox/statistics/distribution_common/ 
 /sandbox/statistics/random/
-/sandbox/statistics/distribution_toolkit/ 
 /usr/local/boost_1_41_0/
 
 [ Bugs ]
-
-In example/distribution_function testing error handling outputs a boost format
-runtime error under MSVC and mingw.
-
+	
 [ Directories ]
 
-/concept
 /distributions
     
     Provides extended functionality for distributions in boost::math or adds
@@ -61,7 +56,6 @@ runtime error under MSVC and mingw.
 
     make_random(dist) returns a model of RandomDistribution 
 
-/iterator
 /map_pdf
 
      e.g. pdf(make_inverse_pdf(dist),x)
@@ -75,6 +69,9 @@ runtime error under MSVC and mingw.
 /test    
         
 [ History ]
+
+Jan 6 2010 :  Fixed this bug : example/distribution_function outputs a boost 
+format runtime error under MSVC and mingw.
 
 Dec 4 2009 : 
 	/math_fwd removed. Instead, any extension to boost::math stays in this 
