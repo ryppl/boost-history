@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="vc9_test_sorted_associative_set_back"
-	ProjectGUID="{45113635-6B51-4AC7-BA0B-7908B37A6DE2}"
-	RootNamespace="vc9_test_sorted_associative_set_back"
+	Name="vc9_test_sorted_assoc_bitset_back"
+	ProjectGUID="{BF42574F-66E2-42DD-90D9-3A8FCE6F4790}"
+	RootNamespace="vc9_test_sorted_assoc_bitset_back"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -186,7 +186,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\test_sorted_associative_set_back_\test_sorted_associative_set_back.cpp"
+				RelativePath="..\test_sorted_assoc_bitset_back_\test_sorted_assoc_bitset_back.cpp"
 				>
 			</File>
 		</Filter>

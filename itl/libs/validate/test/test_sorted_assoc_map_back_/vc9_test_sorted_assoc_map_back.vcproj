@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="vc9_labat_sorted_associative_map_back"
-	ProjectGUID="{BF42574F-66E2-42DD-90D9-3A8FCE6F4772}"
-	RootNamespace="vc9_labat_sorted_associative_map_back"
+	Name="vc9_test_sorted_assoc_map_back"
+	ProjectGUID="{BF42574F-66E2-42DD-90D9-3A8FCE6F4792}"
+	RootNamespace="vc9_test_sorted_assoc_map_back"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -124,7 +124,7 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
@@ -186,7 +186,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\labat_sorted_associative_map_back_\labat_sorted_associative_map_back.cpp"
+				RelativePath="..\test_sorted_assoc_map_back_\test_sorted_assoc_map_back.cpp"
 				>
 			</File>
 		</Filter>

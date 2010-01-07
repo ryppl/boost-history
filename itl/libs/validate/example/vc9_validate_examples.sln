@@ -11,17 +11,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_bit_collector", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_single", "labat_single_\vc9_labat_single.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F471C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_associative_map", "labat_sorted_associative_map_\vc9_labat_sorted_associative_map.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4762}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_assoc_map", "labat_sorted_assoc_map_\vc9_labat_sorted_assoc_map.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4762}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_associative_set", "labat_sorted_associative_set_\vc9_labat_sorted_associative_set.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4763}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_assoc_set", "labat_sorted_assoc_set_\vc9_labat_sorted_assoc_set.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4763}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_associative_bitset", "labat_sorted_associative_bitset_\vc9_labat_sorted_associative_bitset.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4764}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_assoc_bitset", "labat_sorted_assoc_bitset_\vc9_labat_sorted_assoc_bitset.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4764}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_associative_bitset_back", "labat_sorted_associative_bitset_back_\vc9_labat_sorted_associative_bitset_back.vcproj", "{AFBDE020-1287-4EE8-A2DB-43F6157FD660}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_assoc_bitset_back", "labat_sorted_assoc_bitset_back_\vc9_labat_sorted_assoc_bitset_back.vcproj", "{AFBDE020-1287-4EE8-A2DB-43F6157FD660}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_associative_set_back", "labat_sorted_associative_set_back_\vc9_labat_sorted_associative_set_back.vcproj", "{AFBDE020-1287-4EE8-A2DB-43F6157FD670}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_assoc_set_back", "labat_sorted_assoc_set_back_\vc9_labat_sorted_assoc_set_back.vcproj", "{AFBDE020-1287-4EE8-A2DB-43F6157FD670}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_associative_map_back", "labat_sorted_associative_map_back_\vc9_labat_sorted_associative_map_back.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4772}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_sorted_assoc_map_back", "labat_sorted_assoc_map_back_\vc9_labat_sorted_assoc_map_back.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4772}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_itl_morphic", "labat_itl_morphic_\vc9_labat_itl_morphic.vcproj", "{612A0CA2-9206-4D24-8C34-D1E48D5FEC6E}"
 EndProject

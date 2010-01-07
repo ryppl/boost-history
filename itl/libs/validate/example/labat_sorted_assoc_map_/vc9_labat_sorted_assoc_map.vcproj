@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="vc9_labat_sorted_associative_set"
-	ProjectGUID="{BF42574F-66E2-42DD-90D9-3A8FCE6F4763}"
-	RootNamespace="vc9_labat_sorted_associative_set"
+	Name="vc9_labat_sorted_assoc_map"
+	ProjectGUID="{BF42574F-66E2-42DD-90D9-3A8FCE6F4762}"
+	RootNamespace="vc9_labat_sorted_assoc_map"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -186,7 +186,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\labat_sorted_associative_set_\labat_sorted_associative_set.cpp"
+				RelativePath="..\labat_sorted_assoc_map_\labat_sorted_assoc_map.cpp"
 				>
 			</File>
 		</Filter>
@@ -195,6 +195,42 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\..\..\boost\validate\law.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\validate\lawvalidater.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\validate\lawviolations.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\validate\laws\monoid.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\validate\laws\order.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\validate\laws\pushouts.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\validate\laws\set_laws.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\validate\sorted_associative_map_validater.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\validate\typevalidater.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Ressourcendateien"

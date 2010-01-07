@@ -54,21 +54,21 @@ test-suite "itl"
       # [ run test_signed_quantifier_/test_signed_quantifier.cpp ../src/gentor/gentorprofile.cpp ]
       
       # msvc9 compilation time:  
-      [ run test_sorted_associative_set_/test_sorted_associative_set.cpp ../src/gentor/gentorprofile.cpp ]
+      [ run test_sorted_assoc_set_/test_sorted_assoc_set.cpp ../src/gentor/gentorprofile.cpp ]
       
       # msvc9 compilation time:  
-      [ run test_sorted_associative_set_back_/test_sorted_associative_set_back.cpp ../src/gentor/gentorprofile.cpp ]
+      [ run test_sorted_assoc_set_back_/test_sorted_assoc_set_back.cpp ../src/gentor/gentorprofile.cpp ]
       
       # msvc9 compilation time:  
-      [ run test_sorted_associative_bitset_/test_sorted_associative_bitset.cpp ../src/gentor/gentorprofile.cpp ]
+      [ run test_sorted_assoc_bitset_/test_sorted_assoc_bitset.cpp ../src/gentor/gentorprofile.cpp ]
       
       # msvc9 compilation time:  
-      [ run test_sorted_associative_bitset_back_/test_sorted_associative_bitset_back.cpp ../src/gentor/gentorprofile.cpp ]
+      [ run test_sorted_assoc_bitset_back_/test_sorted_assoc_bitset_back.cpp ../src/gentor/gentorprofile.cpp ]
       
       # msvc9 compilation time:  
-      [ run test_sorted_associative_map_/test_sorted_associative_map.cpp ../src/gentor/gentorprofile.cpp ]
+      [ run test_sorted_assoc_map_/test_sorted_assoc_map.cpp ../src/gentor/gentorprofile.cpp ]
       
       # msvc9 compilation time:  
-      [ run test_sorted_associative_map_back_/test_sorted_associative_map_back.cpp ../src/gentor/gentorprofile.cpp ]
+      [ run test_sorted_assoc_map_back_/test_sorted_assoc_map_back.cpp ../src/gentor/gentorprofile.cpp ]
       
     ;

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="vc9_labat_sorted_associative_bitset_back"
+	Name="vc9_labat_sorted_assoc_bitset_back"
 	ProjectGUID="{AFBDE020-1287-4EE8-A2DB-43F6157FD660}"
-	RootNamespace="vc9_labat_sorted_associative_bitset_back"
+	RootNamespace="vc9_labat_sorted_assoc_bitset_back"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -186,7 +186,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\labat_sorted_associative_bitset_back.cpp"
+				RelativePath=".\labat_sorted_assoc_bitset_back.cpp"
 				>
 			</File>
 		</Filter>
