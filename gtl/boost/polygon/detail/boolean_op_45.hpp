@@ -806,7 +806,7 @@ namespace boost { namespace polygon{
         LongUnit delta = y1;
         delta -= y2;
         Unit UnitMax = (std::numeric_limits<Unit>::max)();
-        if(delta & 1) {
+        if((delta & 1) == 1) {
           //delta is odd, division by 2 will result in integer trunctaion
           if(delta == 1) {
             //the cross point is not on the integer grid and cannot be represented

@@ -1453,6 +1453,8 @@ namespace boost { namespace polygon{
   template <typename cT, typename iT> 
   void get_error_rects_shell(cT& posE, cT& negE, iT beginr, iT endr) {
     typedef typename iT::value_type Point;
+    typedef typename point_traits<Point>::coordinate_type Unit;
+    typedef typename coordinate_traits<Unit>::area_type area_type;
     Point pt1, pt2, pt3;
     bool i1 = true;
     bool i2 = true;
@@ -1497,7 +1499,7 @@ namespace boost { namespace polygon{
       if(local_abs(x(pt2)) % 2) { //y % 2 should also be odd
         //is corner concave or convex?
         Point pts[] = {pt1, pt2, pt3};
-        double ar = point_sequence_area<Point*, double>(pts, pts+3);
+        area_type ar = point_sequence_area<Point*, area_type>(pts, pts+3);
         direction_1d dir = ar < 0 ? COUNTERCLOCKWISE : CLOCKWISE;
         //std::cout << pt1 << " " << pt2 << " " << pt3 << " " << ar << std::endl;
         if(dir == CLOCKWISE) {

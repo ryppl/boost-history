@@ -136,15 +136,19 @@ namespace boost { namespace polygon{
       }
       validate_scan(intersection_points, bins[histogram.front().first].begin(), bins[histogram.front().first].end());
       for(typename std::vector<Unit>::iterator itr = y_cuts.begin(); itr != y_cuts.end(); ++itr) {
-        validate_scan(intersection_points, bins[*itr].begin(), bins[*itr].end());
+        validate_scan(intersection_points, bins[*itr].begin(), bins[*itr].end(), *itr);
       }
     }
 
-    //quadratic algorithm to do same work as optimal scan for cross checking
-    //assume sorted input
     template <typename iT>
     static inline void validate_scan(std::vector<std::set<Point> >& intersection_points,
                                      iT begin, iT end) {
+      validate_scan(intersection_points, begin, end, (std::numeric_limits<Unit>::min)());
+    }
+    //quadratic algorithm to do same work as optimal scan for cross checking
+    template <typename iT>
+    static inline void validate_scan(std::vector<std::set<Point> >& intersection_points,
+                                     iT begin, iT end, Unit min_y) {
       std::set<Point> pts;
       std::vector<std::pair<half_edge, segment_id> > data(begin, end);
       for(std::size_t i = 0; i < data.size(); ++i) {
@@ -161,20 +165,24 @@ namespace boost { namespace polygon{
         //its own end points
         pts.insert(he1.first);
         pts.insert(he1.second);
+        bool have_first_y = he1.first.y() >= min_y && he1.second.y() >= min_y;
         for(typename std::vector<std::pair<half_edge, segment_id> >::iterator inner = outer;
             inner != data.end(); ++inner) {
           const half_edge& he2 = (*inner).first;
-          if(he1 == he2) continue;
-          if((std::min)(he2. first.get(HORIZONTAL),
-                        he2.second.get(HORIZONTAL)) > 
-             (std::max)(he1.second.get(HORIZONTAL),
-                        he1.first.get(HORIZONTAL)))
-            break;
-          Point intersection;
-          if(pack_.compute_intersection(intersection, he1, he2)) {
-            //their intersection point
-            pts.insert(intersection);
-          } 
+          if(have_first_y || he2.first.y() >= min_y && he2.second.y() >= min_y) {
+            //at least one segment has a low y value within the range
+            if(he1 == he2) continue;
+            if(he2.first.get(HORIZONTAL) >= 
+               he1.second.get(HORIZONTAL))
+              break;
+            if(he1.first == he2.first || he1.second == he2.second)
+              break;
+            Point intersection;
+            if(pack_.compute_intersection(intersection, he1, he2)) {
+              //their intersection point
+              pts.insert(intersection);
+            } 
+          }
         }
       }
       //find all segments that interact with intersection points
@@ -993,23 +1001,24 @@ namespace boost { namespace polygon{
       //current_iter should increase monotonically toward end as we process scanline stop
       iterator current_iter = scan_data_.begin();
       just_before_ = true;
-      high_precision y = (high_precision)((std::numeric_limits<Unit>::min)());
+      Unit y = (std::numeric_limits<Unit>::min)();
       bool first_iteration = true;
       //we want to return from inside the loop when we hit end or new x
 #ifdef BOOST_POLYGON_MSVC      
 #pragma warning( disable: 4127 )
 #endif
       while(true) {
-        if(begin == end || (!first_iteration && ((high_precision)((*begin).first.first.get(VERTICAL)) != y || 
-                                                                 (*begin).first.first.get(HORIZONTAL) != x_))) {
+        if(begin == end || (!first_iteration && ((*begin).first.first.get(VERTICAL) != y || 
+                                                 (*begin).first.first.get(HORIZONTAL) != x_))) {
           //lookup iterator range in scanline for elements coming in from the left
           //that end at this y
-          Point pt(x_, convert_high_precision_type<Unit>(y));
+          Point pt(x_, y);
           //grab the properties coming in from below
           property_map properties_below;
           if(current_iter != scan_data_.end()) {
             //make sure we are looking at element in scanline just below y
-            if(evalAtXforY(x_, (*current_iter).first.first, (*current_iter).first.second) != y) {
+            //if(evalAtXforY(x_, (*current_iter).first.first, (*current_iter).first.second) != y) {
+            if(on_above_or_below(Point(x_, y), (*current_iter).first) != 0) {
               Point e2(pt);
               if(e2.get(VERTICAL) != (std::numeric_limits<Unit>::max)())
                 e2.set(VERTICAL, e2.get(VERTICAL) + 1);
@@ -1020,11 +1029,13 @@ namespace boost { namespace polygon{
             }
             if(current_iter != scan_data_.end()) {
               //get the bottom iterator for elements at this point
-              while(evalAtXforY(x_, (*current_iter).first.first, (*current_iter).first.second) >= y && 
+              //while(evalAtXforY(x_, (*current_iter).first.first, (*current_iter).first.second) >= (high_precision)y && 
+              while(on_above_or_below(Point(x_, y), (*current_iter).first) != 1 &&
                     current_iter != scan_data_.begin()) {
                 --current_iter;
               }
-              if(evalAtXforY(x_, (*current_iter).first.first, (*current_iter).first.second) >= y) {
+              //if(evalAtXforY(x_, (*current_iter).first.first, (*current_iter).first.second) >= (high_precision)y) {
+              if(on_above_or_below(Point(x_, y), (*current_iter).first) != 1) {
                 properties_below.clear();
               } else {
                 properties_below = (*current_iter).second;
@@ -1035,6 +1046,7 @@ namespace boost { namespace polygon{
           }
           std::vector<iterator> edges_from_left;
           while(current_iter != scan_data_.end() &&
+                //can only be true if y is integer
                 evalAtXforY(x_, (*current_iter).first.first, (*current_iter).first.second) == y) {
             //removal_set_.push_back(current_iter);
             ++current_iter;
@@ -1063,7 +1075,7 @@ namespace boost { namespace polygon{
             if(vertical_properties_above.empty()) {
               return begin;
             } else {
-              y = (high_precision)(vertical_edge_above.second.get(VERTICAL));
+              y = vertical_edge_above.second.get(VERTICAL);
               vertical_properties_below.clear();
               vertical_properties_above.swap(vertical_properties_below);
               vertical_edge_below = vertical_edge_above;
@@ -1079,11 +1091,11 @@ namespace boost { namespace polygon{
         if(begin != end) {
           const vertex_property& vp = *begin;
           const half_edge& he = vp.first;
-          y = (high_precision)(he.first.get(VERTICAL));
+          y = he.first.get(VERTICAL);
           first_iteration = false;
           if(! vertical_properties_below.empty() &&
              vertical_edge_below.second.get(VERTICAL) < y) {
-            y = (high_precision)(vertical_edge_below.second.get(VERTICAL));
+            y = vertical_edge_below.second.get(VERTICAL);
             continue;
           }
           if(is_vertical(he)) {

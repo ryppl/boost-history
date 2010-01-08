@@ -163,7 +163,7 @@ namespace boost { namespace polygon{
   euclidean_distance(const point_type_1& point1, const point_type_2& point2, orientation_2d orient) {
     typename coordinate_traits<typename point_traits<point_type_1>::coordinate_type>::coordinate_difference return_value =
       get(point1, orient) - get(point2, orient);
-    return return_value < 0 ? -return_value : return_value;
+    return return_value < 0 ? (typename coordinate_traits<typename point_traits<point_type_1>::coordinate_type>::coordinate_difference)-return_value : return_value;
   }
   
   struct y_i_ed2 : gtl_yes {};
@@ -231,8 +231,8 @@ namespace boost { namespace polygon{
   ) {
     typedef typename point_traits<point_type>::coordinate_type Unit;
     typedef typename coordinate_traits<Unit>::coordinate_distance dt;
-    x(point, scaling_policy<Unit>::round((dt)(x(point)) / (dt)factor)); 
-    y(point, scaling_policy<Unit>::round((dt)(y(point)) / (dt)factor)); 
+    x(point, scaling_policy<Unit>::round((dt)((dt)(x(point)) / (dt)factor))); 
+    y(point, scaling_policy<Unit>::round((dt)((dt)(y(point)) / (dt)factor))); 
     return point;
   }
 

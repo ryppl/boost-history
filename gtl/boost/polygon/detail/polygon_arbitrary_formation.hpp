@@ -127,7 +127,6 @@ namespace boost { namespace polygon{
     }
 
     //return -1 below, 0 on and 1 above line
-    //assumes point is on x interval of segment
     static inline int on_above_or_below(Point pt, const half_edge& he) {
       if(pt == he.first || pt == he.second) return 0;
       if(equal_slope(pt.get(HORIZONTAL), pt.get(VERTICAL), he.first, he.second)) return 0;
@@ -182,6 +181,8 @@ namespace boost { namespace polygon{
       //y = (xIn - pt.x)*(other_pt.y-pt.y)/(other_pt.x-pt.x) + pt.y
       //assert pt.x != other_pt.x
       typedef typename high_precision_type<Unit>::type high_precision;
+      if(pt.y() == other_pt.y())
+        return (high_precision)pt.y();
       evalAtXforYxIn = (high_precision)xIn;
       evalAtXforYx1 = pt.get(HORIZONTAL);
       evalAtXforYy1 = pt.get(VERTICAL);
@@ -206,6 +207,10 @@ namespace boost { namespace polygon{
         //y = (xIn - pt.x)*(other_pt.y-pt.y)/(other_pt.x-pt.x) + pt.y
         //assert pt.x != other_pt.x
         typedef typename high_precision_type<Unit>::type high_precision;
+        if(pt.y() == other_pt.y()) {
+          evalAtXforYret = (high_precision)pt.y();
+          return evalAtXforYret;
+        }
         evalAtXforYxIn = (high_precision)xIn;
         evalAtXforYx1 = pt.get(HORIZONTAL);
         evalAtXforYy1 = pt.get(VERTICAL);
@@ -255,6 +260,55 @@ namespace boost { namespace polygon{
           return true;
         if(std::min(elm1.first.y(), elm1.second.y()) > std::max(elm2.first.y(), elm2.second.y()))
           return false;
+
+        //check if either x of elem1 is equal to x_
+        Unit localx = *x_;
+        Unit elm1y = 0;
+        bool elm1_at_x = false;
+        if(localx == elm1.first.get(HORIZONTAL)) {
+          elm1_at_x = true;
+          elm1y = elm1.first.get(VERTICAL);
+        } else if(localx == elm1.second.get(HORIZONTAL)) {
+          elm1_at_x = true;
+          elm1y = elm1.second.get(VERTICAL);
+        }
+        Unit elm2y = 0;
+        bool elm2_at_x = false;
+        if(localx == elm2.first.get(HORIZONTAL)) {
+          elm2_at_x = true;
+          elm2y = elm2.first.get(VERTICAL);
+        } else if(localx == elm2.second.get(HORIZONTAL)) {
+          elm2_at_x = true;
+          elm2y = elm1.second.get(VERTICAL);
+        }
+        bool retval = false;
+        if(!(elm1_at_x && elm2_at_x)) {
+          //at least one of the segments doesn't have an end point a the current x
+          //-1 below, 1 above
+          int pt1_oab = on_above_or_below(elm1.first, half_edge(elm2.first, elm2.second));
+          int pt2_oab = on_above_or_below(elm1.second, half_edge(elm2.first, elm2.second));
+          if(pt1_oab == pt2_oab) {
+            if(pt1_oab == -1)
+              retval = true; //pt1 is below elm2 so elm1 is below elm2
+          } else {
+            //the segments can't cross so elm2 is on whatever side of elm1 that one of its ends is
+            int pt3_oab = on_above_or_below(elm2.first, half_edge(elm1.first, elm1.second));
+            if(pt3_oab == 1)
+              retval = true; //elm1's point is above elm1
+          }
+        } else {
+          if(elm1y < elm2y) {
+            retval = true;
+          } else if(elm1y == elm2y) {
+            retval = less_slope(elm1.second.get(HORIZONTAL) - elm1.first.get(HORIZONTAL),
+                                     elm1.second.get(VERTICAL) - elm1.first.get(VERTICAL),
+                                     elm2.second.get(HORIZONTAL) - elm2.first.get(HORIZONTAL),
+                                     elm2.second.get(VERTICAL) - elm2.first.get(VERTICAL));
+            retval = ((*justBefore_) != 0) ^ retval;
+          }
+        }
+        return retval;
+
         typedef typename high_precision_type<Unit>::type high_precision;
         high_precision y1 = pack_->evalAtXforY(*x_, elm1.first, elm1.second);
         high_precision y2 = pack_->evalAtXforY(*x_, elm2.first, elm2.second);
@@ -644,18 +698,131 @@ namespace boost { namespace polygon{
       inline less_vertex_half_edge(Unit *x, int *justBefore) : x_(x), justBefore_(justBefore) {}
       inline less_vertex_half_edge(const less_vertex_half_edge& that) : x_(that.x_), justBefore_(that.justBefore_) {}
       inline less_vertex_half_edge& operator=(const less_vertex_half_edge& that) { x_ = that.x_; justBefore_ = that.justBefore_; return *this; }
+      inline bool check(const vertex_half_edge& elm1, const vertex_half_edge& elm2) const {
+        Unit localx = *x_;
+        Unit elm1y = 0;
+        bool elm1_at_x = false;
+        if(localx == elm1.pt.get(HORIZONTAL)) {
+          elm1_at_x = true;
+          elm1y = elm1.pt.get(VERTICAL);
+        } else if(localx == elm1.other_pt.get(HORIZONTAL)) {
+          elm1_at_x = true;
+          elm1y = elm1.other_pt.get(VERTICAL);
+        }
+        Unit elm2y = 0;
+        bool elm2_at_x = false;
+        if(localx == elm2.pt.get(HORIZONTAL)) {
+          elm2_at_x = true;
+          elm2y = elm2.pt.get(VERTICAL);
+        } else if(localx == elm2.other_pt.get(HORIZONTAL)) {
+          elm2_at_x = true;
+          elm2y = elm1.other_pt.get(VERTICAL);
+        }
+        bool retval = false;
+        if(!(elm1_at_x && elm2_at_x)) {
+          //at least one of the segments doesn't have an end point a the current x
+          //-1 below, 1 above
+          int pt1_oab = on_above_or_below(elm1.pt, half_edge(elm2.pt, elm2.other_pt));
+          int pt2_oab = on_above_or_below(elm1.other_pt, half_edge(elm2.pt, elm2.other_pt));
+          if(pt1_oab == pt2_oab) {
+            if(pt1_oab == -1)
+              retval = true; //pt1 is below elm2 so elm1 is below elm2
+          } else {
+            //the segments can't cross so elm2 is on whatever side of elm1 that one of its ends is
+            int pt3_oab = on_above_or_below(elm2.pt, half_edge(elm1.pt, elm1.other_pt));
+            if(pt2_oab == 1)
+              retval = true; //elm1's point is above elm1
+          }
+        } else {
+          if(elm1y < elm2y) {
+            retval = true;
+          } else if(elm1y == elm2y) {
+            retval = less_slope(elm1.other_pt.get(HORIZONTAL) - elm1.pt.get(HORIZONTAL),
+                                     elm1.other_pt.get(VERTICAL) - elm1.pt.get(VERTICAL),
+                                     elm2.other_pt.get(HORIZONTAL) - elm2.pt.get(HORIZONTAL),
+                                     elm2.other_pt.get(VERTICAL) - elm2.pt.get(VERTICAL));
+            retval = ((*justBefore_) != 0) ^ retval;
+          }
+        }
+        return retval;
+      }
       inline bool operator () (const vertex_half_edge& elm1, const vertex_half_edge& elm2) const {
+        if(std::max(elm1.pt.y(), elm1.other_pt.y()) < std::min(elm2.pt.y(), elm2.other_pt.y()))
+          return true;
+        if(std::min(elm1.pt.y(), elm1.other_pt.y()) > std::max(elm2.pt.y(), elm2.other_pt.y()))
+          return false;
+        //check if either x of elem1 is equal to x_
+        Unit localx = *x_;
+        Unit elm1y = 0;
+        bool elm1_at_x = false;
+        if(localx == elm1.pt.get(HORIZONTAL)) {
+          elm1_at_x = true;
+          elm1y = elm1.pt.get(VERTICAL);
+        } else if(localx == elm1.other_pt.get(HORIZONTAL)) {
+          elm1_at_x = true;
+          elm1y = elm1.other_pt.get(VERTICAL);
+        }
+        Unit elm2y = 0;
+        bool elm2_at_x = false;
+        if(localx == elm2.pt.get(HORIZONTAL)) {
+          elm2_at_x = true;
+          elm2y = elm2.pt.get(VERTICAL);
+        } else if(localx == elm2.other_pt.get(HORIZONTAL)) {
+          elm2_at_x = true;
+          elm2y = elm1.other_pt.get(VERTICAL);
+        }
+        bool retval = false;
+        if(!(elm1_at_x && elm2_at_x)) {
+          //at least one of the segments doesn't have an end point a the current x
+          //-1 below, 1 above
+          int pt1_oab = on_above_or_below(elm1.pt, half_edge(elm2.pt, elm2.other_pt));
+          int pt2_oab = on_above_or_below(elm1.other_pt, half_edge(elm2.pt, elm2.other_pt));
+          if(pt1_oab == pt2_oab) {
+            if(pt1_oab == -1)
+              retval = true; //pt1 is below elm2 so elm1 is below elm2
+          } else {
+            //the segments can't cross so elm2 is on whatever side of elm1 that one of its ends is
+            int pt3_oab = on_above_or_below(elm2.pt, half_edge(elm1.pt, elm1.other_pt));
+            if(pt3_oab == 1)
+              retval = true; //elm1's point is above elm1
+          }
+        } else {
+          if(elm1y < elm2y) {
+            retval = true;
+          } else if(elm1y == elm2y) {
+            retval = less_slope(elm1.other_pt.get(HORIZONTAL) - elm1.pt.get(HORIZONTAL),
+                                     elm1.other_pt.get(VERTICAL) - elm1.pt.get(VERTICAL),
+                                     elm2.other_pt.get(HORIZONTAL) - elm2.pt.get(HORIZONTAL),
+                                     elm2.other_pt.get(VERTICAL) - elm2.pt.get(VERTICAL));
+            retval = ((*justBefore_) != 0) ^ retval;
+          }
+        }
+        return retval;
         typedef typename high_precision_type<Unit>::type high_precision;
         high_precision y1 = elm1.evalAtX(*x_);
         high_precision y2 = elm2.evalAtX(*x_);
-        if(y1 < y2) return true;
+        if(y1 < y2) {
+          if(retval != true) {
+            check(elm1, elm2);
+            std::cout << "retval != true!\n";
+          }
+          return true;
+        }
         if(y1 == y2) {
           //if justBefore is true we invert the result of the comparison of slopes
           bool result = less_slope(elm1.other_pt.get(HORIZONTAL) - elm1.pt.get(HORIZONTAL),
                                    elm1.other_pt.get(VERTICAL) - elm1.pt.get(VERTICAL),
                                    elm2.other_pt.get(HORIZONTAL) - elm2.pt.get(HORIZONTAL),
                                    elm2.other_pt.get(VERTICAL) - elm2.pt.get(VERTICAL));
-          return ((*justBefore_) != 0) ^ result;
+          result = ((*justBefore_) != 0) ^ result;
+          if(retval != result) {
+            std::cout << "retval != result!\n";
+          }
+          return result;
+        }
+        if(retval != false) {
+          check(elm1, elm2);
+          std::cout << "retval != false!\n";
         }
         return false;
       }
@@ -1499,7 +1666,9 @@ namespace boost { namespace polygon{
         //if(iter != scanData_.end())
         //  std::cout << "first iter y is " << iter->first.evalAtX(x_) << std::endl;
         while(iter != scanData_.end() &&
-              iter->first.evalAtX(x_) == (high_precision)currentY) {
+              ((iter->first.pt.x() == x_ && iter->first.pt.y() == currentY) ||
+               (iter->first.other_pt.x() == x_ && iter->first.other_pt.y() == currentY))) {
+                //iter->first.evalAtX(x_) == (high_precision)currentY) {
           //std::cout << "loop2\n";
           elementIters.push_back(iter);
           counts_from_scanline.push_back(std::pair<std::pair<std::pair<Point, Point>, int>, active_tail_arbitrary*>
@@ -1567,7 +1736,9 @@ namespace boost { namespace polygon{
           //std::cout << "checking whether ot handle hole\n";
           if(currentIter == inputEnd || 
              currentIter->pt.get(HORIZONTAL) != x_ ||
-             (high_precision)(currentIter->pt.get(VERTICAL)) >= iter->first.evalAtX(x_)) {
+             on_above_or_below(currentIter->pt, half_edge(iter->first.pt, iter->first.other_pt)) == 1) {
+            //(high_precision)(currentIter->pt.get(VERTICAL)) >= iter->first.evalAtX(x_)) {
+
             //std::cout << "handle hole here\n";
             if(fractureHoles_) {
               //std::cout << "fracture hole here\n";
@@ -2480,7 +2651,9 @@ namespace boost { namespace polygon{
              previter != polygon_arbitrary_formation<Unit>::scanData_.begin())
            --previter;
         while(iter != polygon_arbitrary_formation<Unit>::scanData_.end() &&
-              iter->first.evalAtX(polygon_arbitrary_formation<Unit>::x_) == (high_precision)currentY) {
+              ((iter->first.pt.x() == polygon_arbitrary_formation<Unit>::x_ && iter->first.pt.y() == currentY) ||
+               (iter->first.other_pt.x() == polygon_arbitrary_formation<Unit>::x_ && iter->first.other_pt.y() == currentY))) {
+               //iter->first.evalAtX(polygon_arbitrary_formation<Unit>::x_) == (high_precision)currentY) {
           //std::cout << "loop2\n";
           elementIters.push_back(iter);
           counts_from_scanline.push_back(std::pair<std::pair<std::pair<Point, Point>, int>, active_tail_arbitrary*>

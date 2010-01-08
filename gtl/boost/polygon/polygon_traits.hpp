@@ -708,7 +708,7 @@ namespace boost { namespace polygon{
   }
 
   template <typename Unit>
-  Unit local_abs(Unit value) { return value < 0 ? -value : value; }
+  Unit local_abs(Unit value) { return value < 0 ? (Unit)-value : value; }
 
   template <typename Unit>
   void snap_point_vector_to_45(std::vector<point_data<Unit> >& pts) {
