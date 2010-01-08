@@ -10,6 +10,8 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #define BOOST_ITL_XT_BITS_HPP_JOFA_091023
 
 #include <limits>
+#include <boost/static_assert.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/operators.hpp>
 #include <boost/itl_xt/meta_log.hpp>
 #include <boost/itl/type_traits/type_to_string.hpp>
@@ -30,6 +32,7 @@ namespace bitcount
     template<typename WordT, bit_range_type Digits>
     struct count
     {
+	    BOOST_STATIC_ASSERT((std::numeric_limits<WordT>::digits == Digits));
         typedef WordT                   word_type;
         typedef count<word_type,Digits> type;
 
@@ -102,16 +105,25 @@ private:
     word_type _bits;
 };
 
+
 typedef unsigned int       nat; 
+
+#ifdef _MSC_VER
 typedef unsigned char      nat8;
 typedef unsigned short     nat16;
 typedef unsigned long      nat32; 
 typedef unsigned long long nat64; 
+#else
+typedef boost::uint8_t     nat8;
+typedef boost::uint16_t    nat16;
+typedef boost::uint32_t    nat32; 
+typedef boost::uint64_t    nat64; 
+#endif
 
-typedef bits<nat8>  bits8;
-typedef bits<nat16> bits16;
-typedef bits<nat32> bits32;
-typedef bits<nat64> bits64;
+typedef bits<nat8>         bits8;
+typedef bits<nat16>        bits16;
+typedef bits<nat32>        bits32;
+typedef bits<nat64>        bits64;
 
 template<class NaturalT>
 int inclusion_compare(itl::bits<NaturalT> left, itl::bits<NaturalT> right)
@@ -155,20 +167,22 @@ static unsigned char table[] =
 };
 
 
-template<>
-struct count<nat8, 8>
+template<typename Nat8>
+struct count<Nat8, 8>
 {
-    typedef nat8               word_type;
+    typedef Nat8               word_type;
     typedef count<word_type,8> type;
+    BOOST_STATIC_ASSERT((std::numeric_limits<word_type>::digits == 8));
 
     static bit_range_type apply(word_type value){ return table[value];}
 };
 
-template<>
-struct count<nat16, 16>
+template<typename Nat16>
+struct count<Nat16, 16>
 {
-    typedef nat16               word_type;
+    typedef Nat16               word_type;
     typedef count<word_type,16> type;
+    BOOST_STATIC_ASSERT((std::numeric_limits<word_type>::digits ==16));
 
     static bit_range_type apply(word_type value)
     { 
@@ -177,11 +191,12 @@ struct count<nat16, 16>
     }
 };
 
-template<>
-struct count<nat32, 32>
+template<typename Nat32>
+struct count<Nat32, 32>
 {
-    typedef nat32               word_type;
+    typedef Nat32               word_type;
     typedef count<word_type,32> type;
+    BOOST_STATIC_ASSERT((std::numeric_limits<word_type>::digits == 32));
 
     static bit_range_type apply(word_type value)
     { 
@@ -193,11 +208,12 @@ struct count<nat32, 32>
 
 };
 
-template<>
-struct count<nat64, 64>
+template<typename Nat64>
+struct count<Nat64, 64>
 {
-    typedef nat64               word_type;
+    typedef Nat64               word_type;
     typedef count<word_type,64> type;
+    BOOST_STATIC_ASSERT((std::numeric_limits<word_type>::digits == 64));
 
     static bit_range_type apply(word_type value)    
     { 
