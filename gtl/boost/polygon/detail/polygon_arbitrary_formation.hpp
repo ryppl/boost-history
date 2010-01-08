@@ -730,7 +730,7 @@ namespace boost { namespace polygon{
           } else {
             //the segments can't cross so elm2 is on whatever side of elm1 that one of its ends is
             int pt3_oab = on_above_or_below(elm2.pt, half_edge(elm1.pt, elm1.other_pt));
-            if(pt2_oab == 1)
+            if(pt3_oab == 1)
               retval = true; //elm1's point is above elm1
           }
         } else {
@@ -798,33 +798,6 @@ namespace boost { namespace polygon{
           }
         }
         return retval;
-        typedef typename high_precision_type<Unit>::type high_precision;
-        high_precision y1 = elm1.evalAtX(*x_);
-        high_precision y2 = elm2.evalAtX(*x_);
-        if(y1 < y2) {
-          if(retval != true) {
-            check(elm1, elm2);
-            std::cout << "retval != true!\n";
-          }
-          return true;
-        }
-        if(y1 == y2) {
-          //if justBefore is true we invert the result of the comparison of slopes
-          bool result = less_slope(elm1.other_pt.get(HORIZONTAL) - elm1.pt.get(HORIZONTAL),
-                                   elm1.other_pt.get(VERTICAL) - elm1.pt.get(VERTICAL),
-                                   elm2.other_pt.get(HORIZONTAL) - elm2.pt.get(HORIZONTAL),
-                                   elm2.other_pt.get(VERTICAL) - elm2.pt.get(VERTICAL));
-          result = ((*justBefore_) != 0) ^ result;
-          if(retval != result) {
-            std::cout << "retval != result!\n";
-          }
-          return result;
-        }
-        if(retval != false) {
-          check(elm1, elm2);
-          std::cout << "retval != false!\n";
-        }
-        return false;
       }
     };
 

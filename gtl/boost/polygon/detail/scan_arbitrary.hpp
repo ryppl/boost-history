@@ -169,14 +169,16 @@ namespace boost { namespace polygon{
         for(typename std::vector<std::pair<half_edge, segment_id> >::iterator inner = outer;
             inner != data.end(); ++inner) {
           const half_edge& he2 = (*inner).first;
-          if(have_first_y || he2.first.y() >= min_y && he2.second.y() >= min_y) {
+          if(have_first_y || (he2.first.y() >= min_y && he2.second.y() >= min_y)) {
             //at least one segment has a low y value within the range
             if(he1 == he2) continue;
-            if(he2.first.get(HORIZONTAL) >= 
-               he1.second.get(HORIZONTAL))
+            if((std::min)(he2. first.get(HORIZONTAL),
+                          he2.second.get(HORIZONTAL)) >= 
+               (std::max)(he1.second.get(HORIZONTAL),
+                          he1.first.get(HORIZONTAL)))
               break;
             if(he1.first == he2.first || he1.second == he2.second)
-              break;
+              continue;
             Point intersection;
             if(pack_.compute_intersection(intersection, he1, he2)) {
               //their intersection point
