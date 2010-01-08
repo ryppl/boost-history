@@ -8,79 +8,79 @@ import feature ;
 
 project
     : requirements
-      <toolset>msvc:<warnings>all # == /W4
-      <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
-      <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
-      <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
-      <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+    <toolset>msvc:<warnings>all # == /W4
+    <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+    <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+    <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
+    <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
 
-      #-------------------------------------------------------------------------
-      # LaBatea generates large obj files for some test programs e.g. 
-      # test_map_order: For that we need flag /bigobj
-      #-------------------------------------------------------------------------
-      <toolset>msvc:<cxxflags>/bigobj # Via metaprogramming LaBatea generates bigobjs.
+    #-------------------------------------------------------------------------
+    # LaBatea generates large obj files for some test programs e.g. 
+    # test_map_order: For that we need flag /bigobj
+    #-------------------------------------------------------------------------
+    <toolset>msvc:<cxxflags>/bigobj # Via metaprogramming LaBatea generates bigobjs.
 
-      <library>/boost/test//boost_unit_test_framework
-      <library>/boost/date_time//boost_date_time
-      <link>static
-      <include>../../..
-      <include>$(BOOST_ROOT)
+    <library>/boost/test//boost_unit_test_framework
+    <library>/boost/date_time//boost_date_time
+    <link>static
+    <include>../../..
+    <include>$(BOOST_ROOT)
     ;
 
-test-suite "itl"
+test-suite "validate_itl"
     : 
-      # msvc9 compilation time: 0:38  
-      [ run test_val_relations_/test_val_relations.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time: 1:01  
-      [ run test_set_copy_conformity_/test_set_copy_conformity.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time: 1:03  
-      [ run test_map_copy_conformity_/test_map_copy_conformity.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time: 1:05  
-      [ run test_interval_bitset_/test_interval_bitset.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time: 1:28  
-      [ run test_itl_set_/test_itl_set.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time: 1:35  
-      [ run test_collector_/test_collector.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time:   
-      [ run test_bit_collector_/test_bit_collector.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time: 1:42  
-      [ run test_unsigned_quantifier_/test_unsigned_quantifier.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time:  
-      [ run test_set_order_/test_set_order.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time:  
-      [ run test_map_order_/test_map_order.cpp ../src/gentor/gentorprofile.cpp ]
-            
-      # msvc9 compilation time:  
-      [ run test_itl_morphic_/test_itl_morphic.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time: 2:36  
-      # [ run test_signed_quantifier_/test_signed_quantifier.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time:  
-      [ run test_sorted_assoc_set_/test_sorted_assoc_set.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time:  
-      [ run test_sorted_assoc_set_back_/test_sorted_assoc_set_back.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time:  
-      [ run test_sorted_assoc_bitset_/test_sorted_assoc_bitset.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time:  
-      [ run test_sorted_assoc_bitset_back_/test_sorted_assoc_bitset_back.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time:  
-      [ run test_sorted_assoc_map_/test_sorted_assoc_map.cpp ../src/gentor/gentorprofile.cpp ]
-      
-      # msvc9 compilation time:  
-      [ run test_sorted_assoc_map_back_/test_sorted_assoc_map_back.cpp ../src/gentor/gentorprofile.cpp ]
-      
+    # 1.18 msvc9 compilation time: 0:38  
+    [ run test_val_relations_/test_val_relations.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 2.9 msvc9 compilation time: 1:01  
+    [ run test_set_copy_conformity_/test_set_copy_conformity.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 3.6 msvc9 compilation time: 1:03  
+    [ run test_map_copy_conformity_/test_map_copy_conformity.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 4.3 msvc9 compilation time: 1:05  
+    [ run test_interval_bitset_/test_interval_bitset.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 5.5 msvc9 compilation time: 1:28  
+    [ run test_itl_set_/test_itl_set.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 6.2 msvc9 compilation time: 1:35  
+    [ run test_collector_/test_collector.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 7.1 msvc9 compilation time:   
+    [ run test_bit_collector_/test_bit_collector.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 8.17 msvc9 compilation time: 1:42  
+    [ run test_unsigned_quantifier_/test_unsigned_quantifier.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 9.9 msvc9 compilation time:  
+    [ run test_set_order_/test_set_order.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 10.7 msvc9 compilation time:  
+    [ run test_map_order_/test_map_order.cpp ../src/gentor/gentorprofile.cpp ]
+        
+    # 11.4 msvc9 compilation time:  
+    [ run test_itl_morphic_/test_itl_morphic.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 12.10 msvc9 compilation time: 2:36  
+    # [ run test_signed_quantifier_/test_signed_quantifier.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 13.15 msvc9 compilation time:  
+    [ run test_sorted_assoc_set_/test_sorted_assoc_set.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 14.16 msvc9 compilation time:  
+    [ run test_sorted_assoc_set_back_/test_sorted_assoc_set_back.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 15.11 msvc9 compilation time:  
+    [ run test_sorted_assoc_bitset_/test_sorted_assoc_bitset.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 16.12 msvc9 compilation time:  
+    [ run test_sorted_assoc_bitset_back_/test_sorted_assoc_bitset_back.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 17.13 msvc9 compilation time:  
+    [ run test_sorted_assoc_map_/test_sorted_assoc_map.cpp ../src/gentor/gentorprofile.cpp ]
+    
+    # 18.14 msvc9 compilation time:  
+    [ run test_sorted_assoc_map_back_/test_sorted_assoc_map_back.cpp ../src/gentor/gentorprofile.cpp ]
+    
     ;
