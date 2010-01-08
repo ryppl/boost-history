@@ -32,7 +32,7 @@ namespace bitcount
     template<typename WordT, bit_range_type Digits>
     struct count
     {
-	    BOOST_STATIC_ASSERT((std::numeric_limits<WordT>::digits == Digits));
+        BOOST_STATIC_ASSERT((std::numeric_limits<WordT>::digits == Digits));
         typedef WordT                   word_type;
         typedef count<word_type,Digits> type;
 
