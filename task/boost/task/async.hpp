@@ -7,11 +7,20 @@
 #ifndef BOOST_TASKS_ASYNC_H
 #define BOOST_TASKS_ASYNC_H
 
+#include <cstddef>
+
 #include <boost/config.hpp>
 #include <boost/move/move.hpp>
+#include <boost/fiber.hpp>
+#include <boost/thread/future.hpp>
 
 #include <boost/task/as_sub_task.hpp>
+#include <boost/task/callable.hpp>
+#include <boost/task/context.hpp>
 #include <boost/task/handle.hpp>
+#include <boost/task/new_thread.hpp>
+#include <boost/task/own_thread.hpp>
+#include <boost/task/spin/future.hpp>
 #include <boost/task/static_pool.hpp>
 #include <boost/task/task.hpp>
 
@@ -22,23 +31,39 @@ namespace tasks {
 
 template< typename R >
 handle< R > async( task< R > t)
-{ return as_sub_task()( boost::move( t) ); }
+{ return async( boost::move( t) ); }
 
 template< typename R >
 handle< R > async( BOOST_RV_REF( task< R >) t)
 { return as_sub_task()( t); }
 
-template< typename R, typename EP >
-handle< R > async( task< R > t, EP ep)
-{ return ep( boost::move( t) ); }
+template< typename R >
+handle< R > async( task< R > t, as_sub_task ast)
+{ return async( boost::move( t), ast); }
 
-template< typename R, typename EP >
-handle< R > async( BOOST_RV_REF( task< R >) t, EP ep)
-{ return ep( t); }
+template< typename R >
+handle< R > async( BOOST_RV_REF( task< R >) t, as_sub_task ast)
+{ return ast( t); }
+
+template< typename R >
+handle< R > async( task< R > t, own_thread ot)
+{ return async( boost::move( t) ); }
+
+template< typename R >
+handle< R > async( BOOST_RV_REF( task< R >) t, own_thread ot)
+{ return ot( t); }
+
+template< typename R >
+handle< R > async( task< R > t, new_thread nt)
+{ return async( boost::move( t), nt); }
+
+template< typename R >
+handle< R > async( BOOST_RV_REF( task< R >) t, new_thread nt)
+{ return nt( t); }
 
 template< typename R, typename Queue, typename UMS >
 handle< R > async( task< R > t, static_pool< Queue, UMS > & pool)
-{ return pool.submit( boost::move( t) ); }
+{ return async( boost::move(t), pool); }
 
 template< typename R, typename Queue, typename UMS >
 handle< R > async( BOOST_RV_REF( task< R >) t, static_pool< Queue, UMS > & pool)
@@ -46,11 +71,55 @@ handle< R > async( BOOST_RV_REF( task< R >) t, static_pool< Queue, UMS > & pool)
 
 template< typename R, typename Attr, typename Queue, typename UMS >
 handle< R > async( task< R > t, Attr attr, static_pool< Queue, UMS > & pool)
-{ return pool.submit( boost::move( t), attr); }
+{ return async( boost::move(t), attr, pool); }
 
 template< typename R, typename Attr, typename Queue, typename UMS >
 handle< R > async( BOOST_RV_REF( task< R >) t, Attr attr, static_pool< Queue, UMS > & pool)
 { return pool.submit( t, attr); }
+
+template< typename R, typename Strategy >
+handle< R > async(
+		task< R > t,
+		fibers::scheduler< Strategy > & sched,
+		std::size_t stacksize = fiber::default_stacksize)
+{ return async( boost::move( t), sched, stacksize); }
+
+template< typename R, typename Strategy >
+handle< R > async(
+		BOOST_RV_REF( task< R >) t,
+		fibers::scheduler< Strategy > & sched,
+		std::size_t stacksize = fiber::default_stacksize)
+{
+		if ( this_task::runs_in_pool() )
+		{
+			spin::promise< R > prom;
+			spin::shared_future< R > f( prom.get_future() );
+			context ctx;
+			handle< R > h( f, ctx);
+			fiber fib( callable( t, boost::move( prom), ctx), stacksize);
+			sched.submit_fiber( boost::move( fib) );
+			return h;
+		}
+		else
+		{
+			promise< R > prom;
+			shared_future< R > f( prom.get_future() );
+			context ctx;
+			handle< R > h( f, ctx);
+			fiber fib(
+					callable(
+							t,
+// TODO: workaround because thread_move_t will be abigous for move
+#ifdef BOOST_HAS_RVALUE_REFS
+							boost::move( prom),
+#else
+							boost::detail::thread_move_t< promise< R > >( prom),
+#endif
+							ctx), stacksize);
+			sched.submit_fiber( boost::move( fib) );
+			return h;
+		}
+}
 
 }}
 

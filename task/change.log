@@ -4,6 +4,7 @@
 - worker-threads of thread-pools used fibers for yielding tasks
 - documentation re-work
 - sync. prmitives (using spin-wait) added for inter-task communication
+- async() with fiber-scheduler
 
 
 * boost.task-0.3.0:
