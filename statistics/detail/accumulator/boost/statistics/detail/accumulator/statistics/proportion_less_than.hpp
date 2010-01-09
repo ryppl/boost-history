@@ -70,7 +70,8 @@ namespace tag
         tag::count_less_than
     >
     {
-      typedef impl::proportion_less_than<boost::mpl::_1> impl;
+      typedef statistics::detail::accumulator::
+      	impl::proportion_less_than<boost::mpl::_1> impl;
     };
 }
 

@@ -68,7 +68,8 @@ namespace tag
     struct count_less_than
       : boost::accumulators::depends_on<>
     {
-      typedef impl::count_less_than<boost::mpl::_1> impl;
+      typedef statistics::detail::accumulator::
+      	impl::count_less_than<boost::mpl::_1> impl;
 
     };
 }
