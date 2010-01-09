@@ -38,7 +38,7 @@ project boost/chrono
         #<define>BOOST_RATIO_USES_ARRAY_ASSERT
         #<define>BOOST_CHRONO_USES_ARRAY_ASSERT
         <link>shared:<define>BOOST_CHRONO_DYN_LINK=1
-        #<link>static:<define>BOOST_CHRONO_STATIC_LINK=1
+        <link>static:<define>BOOST_CHRONO_STATIC_LINK=1
     ;
 
 SOURCES = chrono process_clock run_timer run_timer_static cpu_clocks ;

@@ -27,7 +27,7 @@
 <a name="boost_chrono.appendices.history"></a><a href="history.html" title=" Appendix A: History"> Appendix A: History</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_3_0__december_20__2009____new_stopwatch_feature___bug_fixes_"><span class="bold"><strong>Version 0.3.0, December 20, 2009</strong></span> <span class="emphasis"><em>New stopwatch
+<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_3_0__january_9__2010____new_stopwatch_feature___bug_fixes_"><span class="bold"><strong>Version 0.3.0, January 9, 2010</strong></span> <span class="emphasis"><em>New stopwatch
         feature + Bug fixes</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_2_1__december_13__2009____bug_fixes_"><span class="bold"><strong>Version 0.2.1, December 13, 2009</strong></span> <span class="emphasis"><em>Bug fixes</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_2_0__december_8__2009______features___bug_fixes___updated_documentation_"><span class="bold"><strong>Version 0.2.0, December 8, 2009</strong></span> <span class="emphasis"><em>+ Features
@@ -37,8 +37,8 @@
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.appendices.history.__version_0_3_0__december_20__2009____new_stopwatch_feature___bug_fixes_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_3_0__december_20__2009____new_stopwatch_feature___bug_fixes_" title="Version 0.3.0, December 20, 2009 New stopwatch
-        feature + Bug fixes"><span class="bold"><strong>Version 0.3.0, December 20, 2009</strong></span> <span class="emphasis"><em>New stopwatch
+<a name="boost_chrono.appendices.history.__version_0_3_0__january_9__2010____new_stopwatch_feature___bug_fixes_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_3_0__january_9__2010____new_stopwatch_feature___bug_fixes_" title="Version 0.3.0, January 9, 2010 New stopwatch
+        feature + Bug fixes"><span class="bold"><strong>Version 0.3.0, January 9, 2010</strong></span> <span class="emphasis"><em>New stopwatch
         feature + Bug fixes</em></span></a>
 </h4></div></div></div>
 <p>
@@ -46,38 +46,49 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            independent cpu clocks for real, user, system process CPU time.
+            Added independent cpu clocks for real, user, system process CPU time.
           </li>
 <li>
-            new Stopwatch concept measuring elapsed time between different points
-            in time associated to the operations start, stop, suspend and resume.
+            Added new Stopwatch concept measuring elapsed time between different
+            points in time associated to the operations start, stop, suspend and
+            resume.
           </li>
 <li>
-            stopwatch is a model Stopwatch measuring the elapsed time between the
-            start and the stop operations.
+            Added stopwatch is a model Stopwatch measuring the elapsed time between
+            the start and the stop operations.
           </li>
 <li>
-            stopwatch_accumulator is a model Stopwatch allowing to accumulate several
-            time samples and give the average, ...
+            Added stopwatch_accumulator is a model Stopwatch allowing to accumulate
+            several time samples and give the average, ...
           </li>
 <li>
-            scoped helper classes allowing to pairwise start/stop operations, suspend/resume
-            and resume/suspend a Stopwatch.
+            Added scoped helper classes allowing to pairwise start/stop operations,
+            suspend/resume and resume/suspend a Stopwatch.
           </li>
 <li>
-            new Stopwatch Formatter concept
+            Added new Stopwatch Formatter concept
           </li>
 <li>
-            stopwatch_reporter is a generic class reporting elapsed time for the
-            Stopwatch concept.
+            stopwatch_reporter is a convenient generic class reporting elapsed time
+            for the Stopwatch concept.
           </li>
 <li>
-            process_times.hpp has been deprecated, see process_clocks.hpp, process_stopwhatches.hpp
-            and process_stopwhatches_reporter.hpp.
-          </li>
+            To be coherent with the preceding additions,
+            <div class="itemizedlist"><ul type="circle">
 <li>
-            timer.hpp has been deprecated, see stopwatch.
-          </li>
+                process_times.hpp has been renamed, see process_clocks.hpp, process_stopwhatches.hpp
+                and process_stopwhatches_reporter.hpp. The file process_times.hpp
+                and its associated types, process_times, process_clock, process_timer
+                and run_timer are preserved for backward compatibility but it is
+                now deprecated, until inclusion of the library in Boost.
+              </li>
+<li>
+                timer.hpp has been nenamed, see stopwatch.hpp. The file timer.hpp
+                and is associated timer class are preserved for backward compatibility
+                but it is now deprecated, until inclusion of the library in Boost.
+              </li>
+</ul></div>
+</li>
 </ul></div>
 <p>
           <span class="bold"><strong>Bug Fixes</strong></span>
@@ -303,7 +314,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 -2010 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

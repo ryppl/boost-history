@@ -445,21 +445,21 @@
           <code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a></span></dt>
 </dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
+  <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
 
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">=</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;</span> <span class="special">&gt;</span>  <span class="keyword">class</span> <span class="identifier">duration</span><span class="special">;</span>
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">time_point</span><span class="special">;</span>
 
-<span class="special">}</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period2</span><span class="special">&gt;</span>
-    <span class="keyword">struct</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;,</span>
+  <span class="special">}</span>
+  <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period2</span><span class="special">&gt;</span>
+  <span class="keyword">struct</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;,</span>
                      <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;</span> <span class="special">&gt;;</span>
 
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
-    <span class="keyword">struct</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;,</span>
+  <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
+  <span class="keyword">struct</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;,</span>
                      <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="special">&gt;;</span>
 
-<span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
+  <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
 
     <span class="comment">// customization traits
 </span>    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">treat_as_floating_point</span><span class="special">;</span>
@@ -567,7 +567,7 @@
     <span class="keyword">class</span> <span class="identifier">monotonic_clock</span><span class="special">;</span>
     <span class="keyword">class</span> <span class="identifier">high_resolution_clock</span><span class="special">;</span>
 
-<span class="special">}</span>
+  <span class="special">}</span>
 <span class="special">}</span>
 </pre>
 <div class="section" lang="en">
@@ -591,7 +591,7 @@
             and both of these calls happen before <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">::</span><span class="identifier">max</span><span class="special">()</span></code>.
           </p>
 <div class="table">
-<a name="id4830558"></a><p class="title"><b>Table 1. Clock Requirements</b></p>
+<a name="id4831338"></a><p class="title"><b>Table 1. Clock Requirements</b></p>
 <table class="table" summary="Clock Requirements">
 <colgroup>
 <col>
@@ -2169,7 +2169,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 -2010 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

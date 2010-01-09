@@ -1,7 +1,7 @@
 [/
  / Copyright (c) 2008 Howard Hinnant
  / Copyright (c) 2006, 2008 Beman Dawes
- / Copyright (c) 2009 Vicente J. Botet Escriba
+ / Copyright (c) 2009-20010 Vicente J. Botet Escriba
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -14,7 +14,7 @@
     [authors [Botet Escriba, Vicente J.]]
     [copyright 2008 Howard Hinnant]
     [copyright 2006, 2008 Beman Dawes]
-    [copyright 2009 Vicente J. Botet Escriba]
+    [copyright 2009-2010 Vicente J. Botet Escriba]
     [purpose Time utilities]
     [license
         Distributed under the Boost Software License, Version 1.0.
@@ -314,7 +314,7 @@ A clock is a concept which bundles 3 things:
 # A concrete `time_point` type.
 # A function called now() which returns the concrete `time_point`.
 
-__Boost_Chrono__ proposes 3 concrete clocks:
+__Boost_Chrono__ provides 3 concrete clocks:
 
 # system_clock
 # monotonic_clock
@@ -328,8 +328,8 @@ Given a clock named Clock, it will have:
     public:
         typedef an arithmetic-like type            rep;
         typedef an instantiation of ratio          period;
-        typedef std::chrono::duration<rep, period> duration;
-        typedef std::chrono::time_point<Clock>     time_point;
+        typedef boost::chrono::duration<rep, period> duration;
+        typedef boost::chrono::time_point<Clock>     time_point;
         static const bool is_monotonic =           true or false;
 
         static time_point now();
@@ -403,18 +403,18 @@ The above code will delay as close as possible to half a microsecond, no matter 
 
 [section Stopwatches]
 
-Knowing how long a program, a function or a specific block takes to execute is useful in both test and production environments. __Boost_Chrono__ introduces the Stopwatch concept which captures the mechanism to measure the elapsed time. `stopwatch<>` is the basic model of Stopwatch
+Knowing how long a program, a function or a specific block takes to execute is useful in both test and production environments. 
+__Boost_Chrono__ introduces the Stopwatch concept which captures the mechanism to measure the elapsed time. 
+A Stopwatch allows to start, stop, suspend and resume the measure of the eleapsed time. 
+`stopwatch<>` is the basic model of Stopwatch
 
-It is also interesting to have an statisitical view of these times. `stopwatch_accumulator<>` associates an accumulator with a stopwatch, so we are able to retrieve any statistical feature Boost.Accumulator provides. the Aprovides stopwatches utilities useful when the automatic reporting of `stopwatch_reporter` isn't desired.
-
-The highest level use case of measuring the elapsed time is to report these times on the display. `stopwatch_reporter<>` provides a run time reporting package that can be invoked in a single line of code to report the usage of a Clock.
-
+At the user level, the main use case of measuring the elapsed time is to report these measures on the display. 
+`stopwatch_reporter<>` provides a run time reporting package that can be invoked in a single line of code to report the usage of a Clock.
 For example
 
     using namespace boost::chrono;
     int f1(long j) {
-        static stopwatch_accumulator<>::reporter sw;
-        stopwatch_accumulator<>::reporter::scoped_run _(sw);
+        stopwatch_reporter<stopwatch<> > _;
 
         for ( long i = 0; i < j; ++i )
             std::sqrt( 123.456L );  // burn some time
@@ -430,11 +430,43 @@ For example
 
 Will produce the following output
 
-    Count=3 times Sum=0.034s Min=0.006s Max=0.017s Mean=0.011s
+The preceding stopwatch manage only with a measure. It is also interesting to have an statisitical view of these times, for example the sum, min, max and mean. `stopwatch_accumulator<>` associates an accumulator with a stopwatch, so we are able to retrieve any statistical feature Boost.Accumulator provides.
 
-It is also helpful if such timing information is broken down into real (wall clock) time, CPU time spent by the user, and CPU time spent by the operating system servicing user requests. `process_real_CPU_clock`, `process_user_CPU_clock`, `process_system_CPU_clock` and `process_clocks` provides a thin wrappers around the operating system's process timer API. The first three captre the a specific time unitarily, the last captures the three times at once. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
 
-As `process_clocks` do not conform to the Stopwatch concept, __Boost_Chrono__ provides the equivalent of `stopwatch<process_clocks>` and  `stopwatch_reporter<process_clocks>` with the classes `process_stopwatches` and  `process_stopwatches_reporter`
+For example
+
+    using namespace boost::chrono;
+    int f1(long j) {
+        static stopwatch_reporter<stopwatch_accumulator<> > sw;
+        stopwatch_reporter<stopwatch_accumulator<> >::scoped_run _(sw);
+
+        for ( long i = 0; i < j; ++i )
+            std::sqrt( 123.456L );  // burn some time
+
+        return 0;
+    }    
+    int main()  {
+        f1(100000);
+        f1(200000);
+        f1(300000);
+        return 0;
+    }
+
+Will produce the following output
+
+    3 times, sum 0.034s, min 0.006s, max 0.017s, mean 0.011s
+
+It is also helpful if such timing information is broken down into real (wall clock) time, CPU time spent by the user, and CPU time spent by the operating system servicing user requests. 
+
+__Boost_Chrono__ provides 3 concrete process clocks:
+
+# `process_real_CPU_clock`, 
+# `process_user_CPU_clock`, 
+# `process_system_CPU_clock` 
+
+providing a thin wrappers around the operating system's process timer API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
+
+These clocks capture the specific time unitarily. __Boost_Chrono__ provides also a pseudo-clock `process_clocks` that captures the three times at once. As `process_clocks` do not conform to the Stopwatch concept, As `stopwatch<process_clocks>` and  `stopwatch_reporter<stopwatch<process_clocks> >` do not works, __Boost_Chrono__ provides the equivalent classes `process_stopwatches` and  `process_stopwatches_reporter`
 
     using namespace boost::chrono;
     int main()
@@ -448,8 +480,6 @@ Will produce the following output
     real 0.034s, cpu 0.031s (93.0%), user 0.031s, system 0.000s
 
 [endsect]
-
-
 [endsect]
 
 [section Caveat emptor]
@@ -507,6 +537,9 @@ In particular, __Boost_Chrono__ depends on:
 
 [variablelist
 [
+    [[@http://www.boost.org/libs/accumulator [*Boost.Accumulator]]] [for accumulator_set, and statistics features]
+]
+[
     [[@http://www.boost.org/libs/config [*Boost.Config]]] [for configuration purposes, ...]
 ]
 [
@@ -555,8 +588,14 @@ The implementation will eventually work with most C++03 conforming compilers. In
 
 On Windows with
 
-* VC++ 9.0 SP1
+* VC++ 10.0
+* VC++ 9.0
 [/* Intel 11.0]
+
+[/On MacOS with
+
+* GCC 4.2.4
+]
 
 [/On Ubuntu Linux with
 
@@ -578,7 +617,7 @@ On MinGW with
 
 * GCC 4.4.0
 
-[note Please let me know how this works on other platforms.]
+[note Please let us know how this works on other platforms.]
 
 [note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
 
@@ -623,6 +662,31 @@ In other words, the program took 0.832 real-time (i.e. wall clock) seconds to ex
 [endsect]
 
 [section Tutorial]
+
+[section Tutorial]
+
+[endsect]
+
+[section thread clock]
+
+    class thread_clock {
+    public:
+        typedef boost::intmax_t                    rep;
+        typedef boost::chrono::nanoseconds              period;
+        typedef boost::chrono::duration<rep, period>     duration;
+        typedef boost::chrono::time_point<Clock>         time_point;
+        static const bool is_monotonic =               true;
+
+        static time_point now() {
+        // get the current thread
+        // get the clock_id associated to the current thread
+        // get the clock_t associated to the thread clock
+        // transform to nanoseconds
+      }
+    };
+
+
+[endsect]
 
 [endsect]
 
@@ -915,21 +979,21 @@ Four of the typedefs in the recomendation which can be conditionally supported a
 [/=============================================]
 
     namespace boost {
-    namespace chrono {
+      namespace chrono {
 
         template <class Rep, class Period = ratio<1> >  class duration;
         template <class Clock, class Duration = typename Clock::duration> class time_point;
 
-    }
-        template <class Rep1, class Period1, class Rep2, class Period2>
-        struct common_type<chrono::duration<Rep1, Period1>,
+      }
+      template <class Rep1, class Period1, class Rep2, class Period2>
+      struct common_type<chrono::duration<Rep1, Period1>,
                          chrono::duration<Rep2, Period2> >;
 
-        template <class Clock, class Duration1, class Duration2>
-        struct common_type<chrono::time_point<Clock, Duration1>,
+      template <class Clock, class Duration1, class Duration2>
+      struct common_type<chrono::time_point<Clock, Duration1>,
                          chrono::time_point<Clock, Duration2> >;
 
-    namespace chrono {
+      namespace chrono {
 
         // customization traits
         template <class Rep> struct treat_as_floating_point;
@@ -1037,7 +1101,7 @@ Four of the typedefs in the recomendation which can be conditionally supported a
         class monotonic_clock;
         class high_resolution_clock;
 
-    }
+      }
     }
 
 [section `Clock` Requirements]
@@ -1955,12 +2019,68 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
     [[`S::duration`]        [`S::clock::duration`]  [The `duration` type of the `clock`.]]
     [[`S::time_point`]        [`S::clock::time_point`]  [The `time_point` type of the `clock`.]]
     [[`s.start()`]        [`S::time_point`]  [starts a Stopwatch.]]
-    [[`s.restart()`]        [`std::paire<S::duration,S::time_point>`]  [restarts a Stopwatch.]]
+    [[`s.restart()`]        [`std::pair<S::duration,S::time_point>`]  [restarts a Stopwatch.]]
     [[`s.stop()`]        [`S::duration`]  [stops a Stopwatch.]]
     [[`s.resume()`]        [`S::time_point`]  [starts a Stopwatch.]]
     [[`s.suspend()`]        [`S::duration`]  [stops a Stopwatch.]]
     [[`s.elapsed()`]        [`S::duration`]  [the elapsed time while the Stopwatch was running.]]
 ]
+
+
+[section:stopwatch_start Member function`start()`]
+
+    time_point start( system::error_code & ec = system::throws );
+
+[*Effect:] Starts running the stopwatch.
+
+[*Returns:] the starting time point.
+
+[*Throw:] Any exception the Clock::now function can throw.
+
+[endsect]
+[section:stopwatch_stop Member function`stop()`]
+
+    duration stop( system::error_code & ec = system::throws );
+
+[*Effect:] Stops running the stopwatch. 
+
+[*Returns:] The cummulated elapsed time.
+
+[*Throw:] Any exception the Clock::now function can throw.
+
+[endsect]
+[section:stopwatch_suspend Member function`suspend()`]
+
+    duration suspend( system::error_code & ec = system::throws );
+
+[*Effect:] Suspends the stopwatch. 
+
+[*Throw:] Any exception the Clock::now function can throw.
+
+[endsect]
+[section:stopwatch_resume Member function`resume()`]
+
+    time_point resume( system::error_code & ec = system::throws );
+
+[*Effect:] Resumes the stopwatch. 
+
+[*Returns:] the starting time point.
+
+[*Throw:] Any exception the Clock::now function can throw.
+
+[endsect]
+
+[section:stopwatch_restart Member function`restart()`]
+
+    time_point restart( system::error_code & ec = system::throws );
+
+[*Effect:] Stop/Start the stopwatch.
+
+[*Returns:] the starting time point.
+
+[*Throw:] Any exception the Clock::now function can throw.
+
+[endsect]
 
 [endsect]
 [/==================================================]
@@ -2020,6 +2140,18 @@ accuracy of timing information provided the Clock, and this coudl varies a great
             typedef stopwatch_reporter<stopwatch<Clock> > reporter;        
 
         };
+
+[section:stopwatch_elapsed Member function`elapsed()`]
+
+            duration elapsed(system::error_code & ec = system::throws) const;
+
+[*Returns:] the elapsed time from the last call to start.
+
+[*Throw:] Nothing.
+
+[*Note:] the system::error_code & parameter is here to conform to the Stopwatch concept.
+
+[endsect]
 
 [endsect]
 
@@ -2165,8 +2297,6 @@ A `stopwatch_accumulator<>` is a model of a Stopwatch that allows to accumulate 
 [*Returns:] the cumulated elapsed time.
 
 [*Throw:] Nothing.
-
-[*Note:] the system::error_code & parameter is here to conform to the Timer concept.
 
 [endsect]
 
@@ -2328,9 +2458,25 @@ Knowing how long a program takes to execute is useful in both test and productio
             explicit process_stopwatches( system::error_code & ec = system::throws );
 
             ~process_stopwatches();
-            void  start( system::error_code & ec = system::throws );
+            time_point start( system::error_code & ec = system::throws );
+            duration stop( system::error_code & ec = system::throws );
+            duration suspend( system::error_code & ec = system::throws );
+            time_point resume( system::error_code & ec = system::throws );
             void  elapsed( process_clocks::durations & times, system::error_code & ec = system::throws );
         };
+
+[section:stopwatch_accumulator_elapsed Member function`elapsed()`]
+
+            void  elapsed( process_clocks::durations & times, system::error_code & ec = system::throws );
+
+[*Effect:] set in times the elapsed times.
+
+[*Throw:] Nothing.
+
+[*Note:] the system::error_code & parameter is here to conform to the Stopwatch concept.
+
+[endsect]
+
 
 [endsect]
 [endsect]
@@ -2825,9 +2971,9 @@ All the units are given using the suffix "s" following the System International 
 [section SI-units]
 [/===============]
 
-Type-safe "physics" code interoperating with std::chrono::duration types and taking advantage of the std::ratio infrastructure and design philosophy.
+Type-safe "physics" code interoperating with boost::chrono::duration types and taking advantage of the boost::ratio infrastructure and design philosophy.
 
-length - mimics std::chrono::duration except restricts representation to double.
+length - mimics boost::chrono::duration except restricts representation to double.
 Uses boost::ratio facilities for length units conversions.
 
     template <class Ratio>
@@ -2992,7 +3138,7 @@ Example type-safe physics function
 
 
 Exercise example type-safe physics function and show interoperation
-of custom time durations (User1::seconds) and standard time durations (std::hours).
+of custom time durations (User1::seconds) and standard time durations (boost::hours).
 Though input can be arbitrary (but type-safe) units, output is always in SI-units
 (a limitation of the simplified Units lib demoed here).
 
@@ -3821,18 +3967,19 @@ Here is the output for this program for several sets of command line arguments:
 [section:history Appendix A: History]
 [/==================================]
 
-[section [*Version 0.3.0, December 20, 2009] ['New stopwatch feature + Bug fixes]]
+[section [*Version 0.3.0, January 9, 2010] ['New stopwatch feature + Bug fixes]]
 [*Features:] 
 
-* independent cpu clocks for real, user, system process CPU time.
-* new Stopwatch concept measuring elapsed time between different points in time associated to the operations start, stop, suspend and resume.
-* stopwatch is a model Stopwatch measuring the elapsed time between the start and the stop operations.
-* stopwatch_accumulator is a model Stopwatch allowing to accumulate several time samples and give the average, ...
-* scoped helper classes allowing to pairwise start/stop operations, suspend/resume and resume/suspend a Stopwatch.
-* new Stopwatch Formatter concept
-* stopwatch_reporter is a generic class reporting elapsed time for the Stopwatch concept. 
-* process_times.hpp has been deprecated, see process_clocks.hpp, process_stopwhatches.hpp and process_stopwhatches_reporter.hpp.
-* timer.hpp has been deprecated, see stopwatch.
+* Added independent cpu clocks for real, user, system process CPU time.
+* Added new Stopwatch concept measuring elapsed time between different points in time associated to the operations start, stop, suspend and resume.
+* Added stopwatch is a model Stopwatch measuring the elapsed time between the start and the stop operations.
+* Added stopwatch_accumulator is a model Stopwatch allowing to accumulate several time samples and give the average, ...
+* Added scoped helper classes allowing to pairwise start/stop operations, suspend/resume and resume/suspend a Stopwatch.
+* Added new Stopwatch Formatter concept
+* stopwatch_reporter is a convenient generic class reporting elapsed time for the Stopwatch concept. 
+* To be coherent with the preceding additions, 
+    * process_times.hpp has been renamed, see process_clocks.hpp, process_stopwhatches.hpp and process_stopwhatches_reporter.hpp. The file process_times.hpp and its associated types, process_times, process_clock, process_timer and run_timer are preserved for backward compatibility but it is now deprecated, until inclusion of the library in Boost.
+    * timer.hpp has been nenamed, see stopwatch.hpp. The file timer.hpp and is associated timer class are preserved for backward compatibility but it is now deprecated, until inclusion of the library in Boost.
 
 [*Bug Fixes]
 
@@ -3947,19 +4094,19 @@ This operator is convenient for computing where in a time frame a given duration
 
     class ClockTime
     {
-        typedef std::chrono::hours hours;
-        typedef std::chrono::minutes minutes;
-        typedef std::chrono::seconds seconds;
+        typedef boost::chrono::hours hours;
+        typedef boost::chrono::minutes minutes;
+        typedef boost::chrono::seconds seconds;
     public:
         hours hours_;
         minutes minutes_;
         seconds seconds_;
 
         template <class Rep, class Period>
-          explicit ClockTime(const std::chrono::duration<Rep, Period>& d)
-            : hours_  (std::chrono::duration_cast<hours>  (d)),
-              minutes_(std::chrono::duration_cast<minutes>(d % hours(1))),
-              seconds_(std::chrono::duration_cast<seconds>(d % minutes(1)))
+          explicit ClockTime(const boost::chrono::duration<Rep, Period>& d)
+            : hours_  (boost::chrono::duration_cast<hours>  (d)),
+              minutes_(boost::chrono::duration_cast<minutes>(d % hours(1))),
+              seconds_(boost::chrono::duration_cast<seconds>(d % minutes(1)))
               {}
     };
 
@@ -3976,10 +4123,9 @@ This simple example
 fails to compile in (1). Other example
 
     ratio<1,3> r1;
-    ratio<2,3> r2;
-    r1 = r2-r1; // (2)
+    ratio_substract<ratio<2,3>,ratio<1,3> > r2=r1;  // (2)
 
-The type of this expression (r2-r1) could be ratio<3,9> so the compilation could fail in (2). It could also be ratio<1,3> and the compilation succeeds.
+The type of ratio_substract<ratio<2,3>,ratio<1,3> > could be ratio<3,9> so the compilation could fail in (2). It could also be ratio<1,3> and the compilation succeeds.
 
 [heading Why ratio needs the nested normalizer typedef type]
 
@@ -4031,6 +4177,12 @@ In order to test you need to do.
     bjam libs/chrono/test
 
 
+[section `common_type`]
+[table
+    [[Name]             [kind]          [Description]          [Result] [Ticket]]
+]
+[endsect]
+
 [section `ratio`]
 [table
     [[Name]             [kind]          [Description]          [Result] [Ticket]]
@@ -4069,27 +4221,25 @@ In order to test you need to do.
 * Fully implement error handling, with test cases.
 * Consider issues raised by Michael Marcin:
 
-'''
-    > In the past I've seen QueryPerformanceCounter give incorrect results,
-    > especially with SpeedStep processors on laptops. This was many years ago and
-    > might have been fixed by service packs and drivers.
-    >
-    > Typically you check the results of QPC against GetTickCount to see if the
-    > results are reasonable.
-    > http://support.microsoft.com/kb/274323
-    >
-    > I've also heard of problems with QueryPerformanceCounter in multi-processor
-    > systems.
-    >
-    > I know some people SetThreadAffinityMask to 1 for the current thread call
-    > their QueryPerformance* functions then restore SetThreadAffinityMask. This
-    > seems horrible to me because it forces your program to jump to another
-    > physical processor if it isn't already on cpu0 but they claim it worked well
-    > in practice because they called the timing functions infrequently.
-    >
-    > In the past I have chosen to use timeGetTime with timeBeginPeriod(1) for
-    > high resolution timers to avoid these issues.
-'''
+    In the past I`ve seen QueryPerformanceCounter give incorrect results,
+    especially with SpeedStep processors on laptops. This was many years ago and
+    might have been fixed by service packs and drivers.
+
+    Typically you check the results of QPC against GetTickCount to see if the
+    results are reasonable.
+    http://support.microsoft.com/kb/274323
+
+    I've also heard of problems with QueryPerformanceCounter in multi-processor
+    systems.
+
+    I know some people SetThreadAffinityMask to 1 for the current thread call
+    their QueryPerformance* functions then restore SetThreadAffinityMask. This
+    seems horrible to me because it forces your program to jump to another
+    physical processor if it isn`t already on cpu0 but they claim it worked well
+    in practice because they called the timing functions infrequently.
+
+    In the past I have chosen to use timeGetTime with timeBeginPeriod(1) for
+    high resolution timers to avoid these issues.
 
 [heading For later releases]
 

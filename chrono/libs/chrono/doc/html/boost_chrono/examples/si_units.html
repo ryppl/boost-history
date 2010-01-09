@@ -28,11 +28,12 @@
 <a name="boost_chrono.examples.si_units"></a><a href="si_units.html" title="SI-units">SI-units</a>
 </h3></div></div></div>
 <p>
-        Type-safe "physics" code interoperating with std::chrono::duration
-        types and taking advantage of the std::ratio infrastructure and design philosophy.
+        Type-safe "physics" code interoperating with boost::chrono::duration
+        types and taking advantage of the boost::ratio infrastructure and design
+        philosophy.
       </p>
 <p>
-        length - mimics std::chrono::duration except restricts representation to
+        length - mimics boost::chrono::duration except restricts representation to
         double. Uses boost::ratio facilities for length units conversions.
       </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Ratio</span><span class="special">&gt;</span>
@@ -206,7 +207,7 @@
 </pre>
 <p>
         Exercise example type-safe physics function and show interoperation of custom
-        time durations (User1::seconds) and standard time durations (std::hours).
+        time durations (User1::seconds) and standard time durations (boost::hours).
         Though input can be arbitrary (but type-safe) units, output is always in
         SI-units (a limitation of the simplified Units lib demoed here).
       </p>
@@ -260,7 +261,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 -2010 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
