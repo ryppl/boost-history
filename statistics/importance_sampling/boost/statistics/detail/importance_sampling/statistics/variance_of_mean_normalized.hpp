@@ -67,7 +67,8 @@ namespace tag
         boost::accumulators::tag::variance
     >
     {
-      typedef impl::variance_of_mean_normalized<boost::mpl::_1> impl;
+      typedef statistics::detail::accumulator::
+      	impl::variance_of_mean_normalized<boost::mpl::_1> impl;
 
     };
 }

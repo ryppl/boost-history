@@ -32,6 +32,7 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 [ Dependencies ]
 
 /usr/local/boost_1_40_0/ 
+/Users/erwann/sandbox/statistics/detail/accumulator/
 /Users/erwann/sandbox/statistics/detail/fusion/ 
 /Users/erwann/sandbox/statistics/non_parametric/ 
 /Users/erwann/sandbox/statistics/random/ 
