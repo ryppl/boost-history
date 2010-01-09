@@ -52,7 +52,7 @@ count_down_event::wait()
 	{
 		this_thread::interruption_point();
 		if ( this_task::runs_in_pool() )
-			this_task::block();
+			this_task::yield();
 		else
 			this_thread::yield();
 		this_thread::interruption_point();
@@ -60,7 +60,7 @@ count_down_event::wait()
 }
 
 bool
-count_down_event::wait( system_time const& abs_time)
+count_down_event::timed_wait( system_time const& abs_time)
 {
 	if ( get_system_time() >= abs_time) return false;
 
@@ -68,7 +68,7 @@ count_down_event::wait( system_time const& abs_time)
 	{
 		this_thread::interruption_point();
 		if ( this_task::runs_in_pool() )
-			this_task::block();
+			this_task::yield();
 		else
 			this_thread::yield();
 		this_thread::interruption_point();

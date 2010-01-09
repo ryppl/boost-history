@@ -41,8 +41,8 @@ worker::run()
 }
 
 void
-worker::block()
-{ impl_->block(); }
+worker::yield()
+{ impl_->yield(); }
 
 worker *
 worker::tss_get()

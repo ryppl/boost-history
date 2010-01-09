@@ -54,7 +54,7 @@ mutex::timed_lock( system_time const& abs_time)
 
 		this_thread::interruption_point();
 		if ( this_task::runs_in_pool() )
-			this_task::block();
+			this_task::yield();
 		else
 			this_thread::yield();	
 		this_thread::interruption_point();
