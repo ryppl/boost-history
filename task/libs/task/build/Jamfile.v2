@@ -38,7 +38,7 @@ alias task_sources
     : ## win32 sources ##
 	callable.cpp
 	context.cpp
-	guard.cpp
+	detail/guard.cpp
 	poolsize.cpp
 	scanns.cpp
 	spin/auto_reset_event.cpp
@@ -49,9 +49,9 @@ alias task_sources
 	spin/mutex.cpp
 	stacksize.cpp
 	watermark.cpp
-	worker.cpp
-	worker_group.cpp
-	wsq.cpp
+	detail/worker.cpp
+	detail/worker_group.cpp
+	detail/wsq.cpp
     : ## requirements ##
       <taskapi>win32
     ;
@@ -60,7 +60,7 @@ alias task_sources
     : ## posix sources ##
 	callable.cpp
 	context.cpp
-	guard.cpp
+	detail/guard.cpp
 	poolsize.cpp
 	scanns.cpp
 	spin/auto_reset_event.cpp
@@ -71,9 +71,9 @@ alias task_sources
 	spin/mutex.cpp
 	stacksize.cpp
 	watermark.cpp
-	worker.cpp
-	worker_group.cpp
-	wsq.cpp
+	detail/worker.cpp
+	detail/worker_group.cpp
+	detail/wsq.cpp
     : ## requirements ##
       <taskapi>posix
     ;
