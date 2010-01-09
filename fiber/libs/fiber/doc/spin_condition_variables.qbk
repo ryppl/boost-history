@@ -14,7 +14,7 @@ woken from the wait, then it checks to see if the appropriate condition is now t
 condition is not true, then the fiber then calls `wait` again to resume waiting. In the simplest case, this
 condition is just a boolean variable:
 
-    boost::fibers::condition cond;
+    boost::fibers::spin::condition cond;
     boost::fibers::spin::mutex mtx;
     bool data_ready;
 

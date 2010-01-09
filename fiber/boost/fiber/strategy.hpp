@@ -88,7 +88,7 @@ private:
 	friend class manual_reset_event;
 	friend class mutex;
 
-	typedef function< void() >						callable_t;
+	typedef function< void() >						callable_type;
 
 	static bool runs_as_fiber_();
 
@@ -98,7 +98,7 @@ private:
 
 	static bool interruption_requested_();
 
-	static detail::interrupt_t & interrupt_flags_();
+	static detail::interrupt_type & interrupt_flags_();
 
 	static bool interruption_enabled_();
 
@@ -106,7 +106,7 @@ private:
 
 	static void priority_( int);
 
-	static void at_fiber_exit_( callable_t);
+	static void at_fiber_exit_( callable_type);
 
 	static void yield_();
 

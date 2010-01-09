@@ -193,8 +193,8 @@ The comparison operators on __fiber_id__ yield a total order for every non-equal
 		template< typename Fn >
 		explicit fiber( Fn fn, std::size_t stack_size);
 
-		template< typename Fn, typename A1, typename A2,..., typename A10 >
-		fiber( Fn fn, A1 a1, A2 a2,..., A10 a10, std::size_t stack_size);
+		template< typename Fn, typename A1, typename A2,... >
+		fiber( Fn fn, A1 a1, A2 a2,..., std::size_t stack_size);
 
 		template< typename Fn >
 		explicit fiber( Fn && fn, std::size_t stack_size);
@@ -254,7 +254,7 @@ newly-created fiber. Second version sets the stack-size of the fiber.]]
 ]
 [endsect]
 
-[section:multiple_argument_constructor `template< typename Fn, typename A1, typename A2,..., typename A10 > fiber( Fn fn, A1 a1, A2 a2,..., A10 a10, std::size_t stack_size)`]
+[section:multiple_argument_constructor `template< typename Fn, typename A1, typename A2,... > fiber( Fn fn, A1 a1, A2 a2,..., std::size_t stack_size)`]
 [variablelist
 [[Preconditions:] [`Fn` and each `A`n must by copyable or movable.]]
 [[Effects:] [As if `fiber( boost::bind( fn, a1, a2,...) )`. Consequently, `fn` and each `a`n
@@ -381,8 +381,8 @@ returns the same value as `this->get_id()` prior to the call.]]
     template< typename Fn >
     fiber make_fiber( Fn fn, std::size_t stack_size);
     
-    template< typename Fn, typename A1, typename A2,..., typename A10 >
-    fiber make_fiber( Fn fn, A1 a1, A2 a2,..., A10 a10, std::size_t stack_size);
+    template< typename Fn, typename A1, typename A2,... >
+    fiber make_fiber( Fn fn, A1 a1, A2 a2,..., std::size_t stack_size);
 
 [variablelist
 [[Effects:] [Creates a fiber.]]

@@ -24,7 +24,7 @@ enum interrupt_t_
 	INTERRUPTION_BLOCKED	= 1 << 2
 };
 
-typedef char interrupt_t;
+typedef char interrupt_type;
 
 }}}
 

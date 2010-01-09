@@ -33,7 +33,7 @@ void trampoline( detail::info_base * self)
 	catch (...) {}
 	while ( ! self->at_exit.empty() )
 	{
-		detail::info_base::callable_t ca;
+		detail::info_base::callable_type ca;
 		self->at_exit.top().swap( ca);
 		self->at_exit.pop();
 		ca();

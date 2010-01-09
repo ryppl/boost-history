@@ -43,7 +43,7 @@ strategy::interruption_requested_()
 	return active->interruption_requested();
 }
 
-detail::interrupt_t &
+detail::interrupt_type &
 strategy::interrupt_flags_()
 {
 	fiber * active( active_fiber.get() );
@@ -76,7 +76,7 @@ strategy::priority_( int prio)
 }
 
 void
-strategy::at_fiber_exit_( callable_t ca)
+strategy::at_fiber_exit_( callable_type ca)
 {
 	fiber * active( active_fiber.get() );
 	if ( ! active) throw fiber_error("not a fiber");

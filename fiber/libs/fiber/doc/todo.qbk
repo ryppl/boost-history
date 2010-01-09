@@ -11,7 +11,7 @@
 
 * replace system calls related to fiber switching (like swapcontext()) by assembler
 
-* replace thread_specific_ptr by an specialiced implementation for fiber (interusive_ptr)
+* replace thread_specific_ptr by an specialiced implementation for class fiber
 
 * provide an scheduler which deals with priorities
 

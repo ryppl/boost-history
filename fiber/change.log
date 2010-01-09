@@ -1,3 +1,7 @@
+0.3.8:
+------
+- code formating
+
 0.3.7:
 ------
 - warnings (4251, 4275) supressed for msvc 

@@ -28,7 +28,7 @@ enum state_t_
 	STATE_TERMINATED		= 1 << 6
 };
 
-typedef char state_t;
+typedef char state_type;
 
 #define IS_ALIVE_BIT_MASK 0x3C
 

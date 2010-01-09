@@ -43,16 +43,16 @@ namespace detail {
 struct BOOST_FIBER_DECL info_base
 {
 	typedef intrusive_ptr< info_base >	ptr;	
-	typedef function< void() >			callable_t;
-	typedef std::stack< callable_t >	callable_stack_t;
+	typedef function< void() >			callable_type;
+	typedef std::stack< callable_type >	callable_stack_type;
 
 	unsigned int		use_count;
 	std::size_t			stack_size;
 	int					priority;
 	LPVOID				uctx;
-	state_t				state;
-	interrupt_t			interrupt;
-	callable_stack_t	at_exit;
+	state_type			state;
+	interrupt_type		interrupt;
+	callable_stack_type	at_exit;
 	strategy			*	st;
 
 	info_base();

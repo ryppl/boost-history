@@ -44,9 +44,7 @@ private:
 	friend class manual_reset_event;
 	friend class mutex;
 
-	typedef intrusive_ptr< strategy >	strategy_t;
-
-	strategy_t	strategy_;
+	intrusive_ptr< strategy >	strategy_;
 
 public:
 	scheduler() :

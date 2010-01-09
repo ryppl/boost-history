@@ -1,15 +1,15 @@
 [/
-  (C) Copyright 2007-8 Anthony Williams.
-  Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or copy at
-  http://www.boost.org/LICENSE_1_0.txt).
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
 ]
 
 [article Fiber
     [quickbook 1.4]
     [authors [Kowalke, Oliver]]
     [copyright 2009 Oliver Kowalke]
-    [purpose C++ Library for launching fibers and synchronizing data between them]
+    [purpose C++ Library for launching fibers (micro-threads) and synchronizing data between them]
     [category text]
     [license
         Distributed under the Boost Software License, Version 1.0.
@@ -19,9 +19,9 @@
 ]
 
 
-[def __boost_atomic__ [@http://www.chaoticmind.net/~hcb/projects/boost.atomic/doc/index.html [*Boost.Atomic]]]
+[def __boost_atomic__ [@http://www.chaoticmind.net/~hcb/projects/boost.atomic [*Boost.Atomic]]]
 [def __boost_fiber__ [*Boost.Fiber]]
-[def __boost_move__ [@http://svn.boost.org/svn/boost/sandbox/move/libs/move/doc/html/index.html [*Boost.Move]]]
+[def __boost_move__ [@http://svn.boost.org/svn/boost/sandbox/move [*Boost.Move]]]
 [def __boost_thread__ [@http://www.boost.org/libs/thread [*Boost.Thread]]]
 
 [template barrier_link[link_text] [link fiber.synchronization.barriers [link_text]]]
