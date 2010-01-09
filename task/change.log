@@ -1,3 +1,11 @@
+* boost.task-0.4.0:
+-------------------
+- boost.atomic, boost.fiber and boost.move integrated
+- worker-threads of thread-pools used fibers for yielding tasks
+- documentation re-work
+- sync. prmitives (using spin-wait) added for inter-task communication
+
+
 * boost.task-0.3.0:
 -------------------
 - worker creates fiber
