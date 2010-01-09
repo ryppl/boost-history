@@ -1,0 +1,86 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
+// Distributed under the Boost
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
+// copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/stm for documentation.
+//
+//////////////////////////////////////////////////////////////////////////////
+
+#include <boost/stm.hpp>
+//#include <boost/foreach.hpp>
+//#include <boost/thread.hpp>
+//#include <boost/shared_ptr.hpp>
+//#include <vector>
+//#include <list>
+//#include <stdlib.h>
+
+//#define foreach BOOST_FOREACH
+
+using namespace std;
+using namespace boost;
+using namespace boost::stm;
+
+class Singleton;
+namespace boost { namespace stm {
+    // shallow trait
+    template <>
+    struct has_shallow_copy_semantics<Singleton> : boost::mpl::true_
+    {};  
+}}
+
+class Singleton 
+    : public transaction_object<Singleton> 
+{
+    Singleton():f(0) {}
+    Singleton(Singleton const&); // =deleted
+    Singleton& operator=(
+    Singleton const&); // =deleted
+public:
+    // shallow copy 
+    Singleton(Singleton const& rhs, stm::shallow_t) 
+    : f(rhs.f)
+    {}
+    // shallow assignment
+    Singleton& shallow_assign(Singleton const& rhs)
+    {
+        if (this!=&rhs) {
+            f=rhs.f;
+        }
+        return *this;
+    }
+    static  Singleton* instance() {
+        static  Singleton instance_;
+    
+        return &instance_;
+    }
+    int f;
+};
+
+  
+bool test() {
+    BOOST_STM_ATOMIC(_) {
+        _.write_ptr(Singleton::instance());
+        Singleton::instance()->f=1;
+    } BOOST_STM_END_ATOMIC
+    BOOST_STM_ATOMIC(_) {
+        BOOST_STM_TX_RETURN(_, Singleton::instance()->f==1) ;
+    } BOOST_STM_END_ATOMIC
+    return false;    
+}  
+
+int main() {
+    transaction::enable_dynamic_priority_assignment();
+    transaction::do_deferred_updating();
+    transaction::initialize();
+    thread_initializer thi;
+
+    int res=0;
+    res+=test();
+    return res;
+
+}
