@@ -25,11 +25,19 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 
 [ Dependencies ]
 
-boost_1_39_0
+boost_1_40_0
+/sandbox/statistics/non_parametric
 /sandbox/statistics/distribution_common
 /sandbox/statistics/distribution_toolkit
+/sandbox/statistics/distribution_random
 
 [ History ]
+
+Jan 8 	2010 : in proposal_sampler, found and fixed bug
+		//T t = max_element(
+        //    begin(datas_),back_iter,
+        //    bind<const T&>( &tang_t::t, _1 ) // not a comparison predicate
+        //)->t();
 
 Dec 4	2009 : misc changes due to updated dependencies
 Sept    2009 : standard_distribution.hpp modified due to changes described in
@@ -37,7 +45,7 @@ Sept    2009 : standard_distribution.hpp modified due to changes described in
 July    2009 : Previous package superseded by adaptive_rejection_sampling
 March   2009 : Conditionally_specified_distribution/adaptive_rejection_sampling 
 
-[Artiles]
+[Articles]
 
 @article{citeulike:3015268,
 	abstract = {We propose a method for rejection sampling from any

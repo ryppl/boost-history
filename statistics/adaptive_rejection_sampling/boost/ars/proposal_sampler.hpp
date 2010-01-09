@@ -18,18 +18,21 @@
 #include <iterator>
 #include <numeric>
 #include <limits>
-#include <boost/lambda/lambda.hpp> //what for?
+
 #include <boost/static_assert.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+
+#include <boost/bind.hpp>
+//#include <boost/lambda/lambda.hpp> //what for?
 #include <boost/random.hpp>
 #include <boost/range.hpp>
-#include <boost/bind.hpp>
+#include <boost/iterator/transform_iterator.hpp>
 #include <boost/function.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/variant.hpp>
+//#include <boost/variant.hpp> // what for?
 #include <boost/format.hpp>
+
 //#include <boost/numeric/conversion/converter.hpp>
 //#include <boost/math/tools/precision.hpp>
 #include <boost/math/special_functions/fpclassify.hpp>
@@ -401,10 +404,22 @@ void proposal_sampler<T,Cont,Alloc>::initialize(const R& initial_datas){
 
     iter_t back_iter = prior(end(datas_));
     {
-        T t = max_element(
-            begin(datas_),back_iter,
-            bind<const T&>( &tang_t::t, _1 )
-        )->t();
+
+    	// Bug prior to 01/08/2010 :
+		//T t = max_element(
+        //    begin(datas_),back_iter,
+        //    bind<const T&>( &tang_t::t, _1 )
+        //)->t();
+
+    	typedef const T& cref_;
+		typedef cref_(tang_t::*fp)() const; 
+		typedef boost::function<cref_(const data_t&)> fun_;
+        fun_ fun =  &tang_t::t;
+
+        T t = *std::max_element(
+            boost::make_transform_iterator(boost::begin(datas_),fun),
+            boost::make_transform_iterator(back_iter,fun)
+        );
         max_tangent_ = (max_tangent()<t)? t : max_tangent();
     }
     const point_t& back_p = static_cast<const point_t&>(*back_iter);
