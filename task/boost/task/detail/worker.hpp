@@ -53,7 +53,7 @@ struct worker_base
 
 	virtual void run() = 0;
 
-	virtual void block() = 0;
+	virtual void yield() = 0;
 };
 
 template<
@@ -248,7 +248,7 @@ public:
 			sched_.run();	
 	}
 
-	void block()
+	void yield()
 	{
 		sched_.make_fiber(
 			bind(
@@ -297,7 +297,7 @@ public:
 
 	void run();
 
-	void block();
+	void yield();
 
 	static worker * tss_get();
 };

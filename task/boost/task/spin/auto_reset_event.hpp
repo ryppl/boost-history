@@ -35,11 +35,11 @@ public:
 
 	bool try_wait();
 
-	bool wait( system_time const&);
+	bool timed_wait( system_time const&);
 
 	template< typename TimeDuration >
-	bool wait( TimeDuration const& rel_time)
-	{ return wait( get_system_time() + rel_time); }
+	bool timed_wait( TimeDuration const& rel_time)
+	{ return timed_wait( get_system_time() + rel_time); }
 };
 
 }}}

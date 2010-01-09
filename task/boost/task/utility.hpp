@@ -18,11 +18,11 @@ namespace boost {
 namespace this_task {
 
 inline
-void block()
+void yield()
 {
 	tasks::detail::worker * w( tasks::detail::worker::tss_get() );
 	BOOST_ASSERT( w);
-	w->block();
+	w->yield();
 }
 
 inline
