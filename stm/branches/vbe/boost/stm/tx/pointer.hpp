@@ -46,6 +46,11 @@ public:
             //std::cerr << __LINE__ << " pointer" << std::endl;        
     }
     
+    template<class U, class V, class B>
+    pointer(mixin<U, V*, B> const& rhs) : base_type(rhs.value()) {
+            //std::cerr << __LINE__ << " pointer" << std::endl;        
+    }
+
     pointer(T* v) : base_type(v) {
             //std::cerr << __LINE__ << " pointer" << std::endl;        
     }
@@ -54,6 +59,11 @@ public:
             //std::cerr << __LINE__ << " pointer" << std::endl;        
     }
 
+    template<class U, class V, class B>
+    pointer& operator=(mixin<U, V*, B> const& rhs) {
+        this->val_=rhs.value();
+    };
+    
     T* operator->() const {
         return this->value();
     }
@@ -69,6 +79,11 @@ public:
     }
 
 };
+
+template <typename T>
+pointer<T> address_of(object<T>& obj) {
+    return pointer<T>(obj.address_of());
+}
 
 template <typename C, typename R>
 class pointer_to_member : public mixin< pointer_to_member<C,R>, R C::*>

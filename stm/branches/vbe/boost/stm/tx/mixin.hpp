@@ -77,6 +77,9 @@ public:
         return val_;
     }
 
+    T* address_of() {
+        return &val_;
+    }
     //-----------------------------------------------------------------------------
     T value() const {
         transaction* tx=current_transaction();

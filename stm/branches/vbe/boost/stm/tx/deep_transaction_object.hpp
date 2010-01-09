@@ -43,7 +43,7 @@ class transaction;
 // transaction object mixin
 // Provides the definition of the virtual functions
 //      make_cache: use copy constructor
-//      copy_state: use assignement
+//      copy_cache: use assignement
 //      move_state and
 //      delete_cache: use delete
 // Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
@@ -70,13 +70,27 @@ public:
 
     //--------------------------------------------------------------------------
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    virtual base_transaction_object* make_cache(transaction* t) const {
+    static  Final* make_cache(Final const& rhs, transaction& t) {
         Final* p = cache_allocate<Final>(t);
-        ::new (p) Final(*static_cast<Final const*>(this));
+        ::new (p) Final(*static_cast<Final const*>(&rhs));
         return p;
+    };
+    virtual base_transaction_object* make_cache(transaction& t) const {
+        Final const& f=*static_cast<Final const*>(this);
+        return make_cache(f, t);
+        //~ return make_cache(*static_cast<Final const*>(this), t);
+        //~ Final* p = cache_allocate<Final>(t);
+        //~ ::new (p) Final(*static_cast<Final const*>(this));
+        //~ return p;
     }
 #else
-    virtual base_transaction_object* make_cache(transaction*) const {
+    static Final* make_cache(Final const& rhs, transaction& ) {
+        Final* tmp = new Final(*static_cast<Final const*>(&rhs));
+        return tmp;
+    };
+    virtual base_transaction_object* make_cache(transaction& t) const {
+        //~ Final const& f=*static_cast<Final const*>(this);
+        //~ return make_cache(f, t);
         Final* tmp = new Final(*static_cast<Final const*>(this));
         return tmp;
     }
@@ -95,9 +109,9 @@ public:
 #endif
 
    //--------------------------------------------------------------------------
-   virtual void copy_state(base_transaction_object const * const rhs)
+   virtual void copy_cache(base_transaction_object const & rhs)
    {
-       *static_cast<Final *>(this) = *static_cast<Final const * const>(rhs);
+       *static_cast<Final *>(this) = *static_cast<Final const *>(&rhs);
    }
 
 #if BUILD_MOVE_SEMANTICS

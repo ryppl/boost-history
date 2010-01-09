@@ -1787,7 +1787,7 @@ inline void transaction::directAbortWriteList()
       // i->second == 0 will happen when a transaction has added a piece of
       // memory to its writeList_ that it is deleting (not writing to).
       // Thus, when seeing 0 as the second value, it signifies that this
-      // memory is being destroyed, not updated. Do not perform copy_state()
+      // memory is being destroyed, not updated. Do not perform copy_cache()
       // on it.
       //
       // However, deleted memory MUST reset its invalid_thread_id()
@@ -1797,7 +1797,7 @@ inline void transaction::directAbortWriteList()
       if (0 == i->second) continue;
 
       if (using_move_semantics()) i->first->move_state(i->second);
-      else i->first->copy_state(i->second);
+      else i->first->copy_cache(*i->second);
       i->first->transaction_thread(invalid_thread_id());
 
       cache_release(i->second);
@@ -1978,7 +1978,7 @@ inline void transaction::deferredCommitWriteState()
       }
 
       if (using_move_semantics()) i->first->move_state(i->second);
-      else i->first->copy_state(i->second);
+      else i->first->copy_cache(*i->second);
 
       i->first->transaction_thread(invalid_thread_id());
       i->first->new_memory(0);

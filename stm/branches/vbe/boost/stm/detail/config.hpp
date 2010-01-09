@@ -104,7 +104,7 @@
 //// BOOST_STM_CACHE_USE_CLASS_MEMORY_MANAGER: uses the class specific memory manager
 //// BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER: uses the monotonic storage memory manager
 
-//#define BOOST_STM_CACHE_USE_MALLOC  1
+#define BOOST_STM_CACHE_USE_MALLOC  1
 #if defined(BOOST_STM_USE_GLOBAL_MEMORY_MANAGER)
 //#define BOOST_STM_CACHE_USE_MEMORY_MANAGER 1
 #endif

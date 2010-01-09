@@ -38,6 +38,36 @@ namespace boost { namespace stm {
 //-----------------------------------------------------------------------------
 class transaction;
 
+//~ template <typename T>
+//~ T* make_cache(T const& rhs, transaction& t) {
+    //~ return new T(rhs);
+//~ };
+
+struct static_poly {};
+struct dyn_poly {};
+
+namespace detail {
+    template <typename Poly>
+    struct make_cache_aux;
+
+    template <>
+    struct make_cache_aux<static_poly> {
+        template <typename T>
+        static T* apply(T & rhs, transaction& t) {
+            //return T::make_cache(rhs, &t);
+            return static_cast<T*>(rhs.make_cache(t));
+        }
+    };
+
+    template <>
+    struct make_cache_aux<dyn_poly> {
+        template <typename T>
+        static T* apply(T & rhs, transaction& t) {
+            return static_cast<T*>(rhs.make_cache(t));
+        };
+    };
+}
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // this is the base class of all the transactional objects.
@@ -46,10 +76,10 @@ class transaction;
 //      version: the version when performing validation
 //      newMemory_: states whether this object is a new object
 // transactional objets must specialize the pure virtual functions
-//      copy_state(base_transaction_object const * const rhs)
+//      copy_cache(base_transaction_object const & rhs)
 //      move_state(base_transaction_object * rhs) if BUILD_MOVE_SEMANTICS
 //      delete_cache()
-// copy_state is used to copy the backup/working copy to the shared transactional object when the roolback/commit is done direct/defered policy is used
+// copy_cache is used to copy the backup/working copy to the shared transactional object when the roolback/commit is done direct/defered policy is used
 // move_state is used to move the backup/working copy to the shared transactional object when the roolback/commit is done direct/defered policy is used
 // delete_cache is used to release the backup/working copy when the transaction ends if direct/defered policy is used
 // when USE_STM_MEMORY_MANAGER is defined this class provides two functions (retrieve_mem and return_mem) and  to manage a pool of memory
@@ -83,8 +113,8 @@ public:
     {}
 #endif
 
-    virtual base_transaction_object* make_cache(transaction* t) const = 0;
-    virtual void copy_state(base_transaction_object const * const rhs) = 0;
+    virtual base_transaction_object* make_cache(transaction& t) const = 0;
+    virtual void copy_cache(base_transaction_object const & rhs) = 0;
 #if BUILD_MOVE_SEMANTICS
     virtual void move_state(base_transaction_object * rhs) = 0;
 #else
@@ -107,7 +137,7 @@ public:
     std::list<base_transaction_object*>& binds() {return embeddeds_;}
     void bind(base_transaction_object* bto) {embeddeds_.push_back(bto);}
 #endif
-  
+
 private:
 
     //--------------------------------------------------------------------------
@@ -130,6 +160,7 @@ private:
     std::list<base_transaction_object*> embeddeds_;
 #endif
 };
+
 
 } // namespace core
 }

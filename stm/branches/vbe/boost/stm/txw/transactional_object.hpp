@@ -27,9 +27,9 @@ namespace boost { namespace stm {
 // A transactional_object<T> is a base_transaction_object wrapping an instance of type T
 // Provides the definition of the virtual functions
 //      forward constructors to the wrapped type
-//      copy_state: relaying on the cache_copy<T> generic function
+//      copy_cache: relaying on the assignement operator generic function
 //      move_state and
-//      delete_cache: relaying on the cache_copy<T> generic function
+//      delete_cache: relaying on the cache_deallocate<T> generic function
 // Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
 //
 // If a class D inherits from B we have that transactional_object<D> dont inherits from transactional_object<B>, but
@@ -85,18 +85,26 @@ public:
         value = r.value;
         return *this;
     }
+    
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    virtual base_transaction_object* make_cache(transaction* t) const {
+    static transactional_object<T>* make_cache(transactional_object<T> const& rhs, transaction& t) {
         transactional_object<T>* p = cache_allocate<transactional_object<T> >(t);
-        if (p==0) {
-            throw std::bad_alloc();
-        }
+        std::memcpy(p, static_cast<transactional_object<T> const*>(&rhs), sizeof(transactional_object<T>));
+        return p;
+    };
+    virtual base_transaction_object* make_cache(transaction& t) const {
+        transactional_object<T>* p = cache_allocate<transactional_object<T> >(t);
         ::new (p) transactional_object<T>(*static_cast<transactional_object<T> const*>(this));
         return p;
+        //~ return make_cache(*this, t);
     }
 #else
-    virtual base_transaction_object* make_cache(transaction*) const {
+    static transactional_object<T>* make_cache(transactional_object<T> const& rhs, transaction&) {
+        return new transactional_object<T>(rhs);
+    };
+    virtual base_transaction_object* make_cache(transaction& t) const {
+        //~ return make_cache(*this, t);
         return new transactional_object<T>(*this);
     }
 #endif
@@ -112,9 +120,8 @@ public:
     }
 #endif
 
-    virtual void copy_state(base_transaction_object const * const rhs) {
-        //cache_copy(static_cast<transactional_object<T> const * const>(rhs), this);
-        *this=*static_cast<transactional_object<T> const * const>(rhs);
+    virtual void copy_cache(base_transaction_object const & rhs) {
+        *this=*static_cast<transactional_object<T> const *>(&rhs);
     }
 
 };
@@ -144,75 +151,6 @@ static transactional_object<T>* tx_dynamic_cast(transactional_object<U>* ptr) {
     if (p==0) return 0;
     return tx_up_cast(p);
 }
-
-
-
-#ifdef BOOST_STM_USE_MEMCOPY
-#ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
-namespace partial_specialization_workaround {
-
-template <class T, class A>
-struct cache_clone<transactional_object<std::vector<T,A> > > {
-    static inline transactional_object<std::vector<T,A> >* apply(const transactional_object<std::vector<T,A> >& val) {
-        return new transactional_object<std::vector<T,A> >(val);
-    }
-};
-} // partial_specialization_workaround
-
-#else //BOOST_STM_NO_PARTIAL_SPECIALIZATION
-
-template <class T>
-inline transactional_object<std::vector<T> >* cache_clone(const transactional_object<std::vector<T> >& val) {
-    return new transactional_object<std::vector<T> >(val);
-}
-
-#endif // BOOST_STM_NO_PARTIAL_SPECIALIZATION
-#endif
-
-
-
-#ifdef BOOST_STM_USE_MEMCOPY
-#ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
-namespace partial_specialization_workaround {
-
-template <class T>
-struct cache_copy<transactional_object<std::vector<T> > > {
-    static inline void apply(const transactional_object<std::vector<T> >* const ori, transactional_object<std::vector<T> >* target) {
-        *target=*ori;
-    }
-};
-
-} // partial_specialization_workaround
-#else
-template <class T> void cache_copy(const transactional_object<std::vector<T> >* const ori, transactional_object<std::vector<T> >* target) {
-    *target=*ori;
-}
-#endif
-#endif
-
-
-#ifdef BOOST_STM_USE_MEMCOPY
-#ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
-namespace partial_specialization_workaround {
-
-template <class T>
-struct cache_deallocate<transactional_object<std::vector<T> > > {
-    static void apply(transactional_object<std::vector<T> >* ptr) {
-        delete ptr;
-    }
-};
-
-}
-
-#else //!BOOST_STM_NO_PARTIAL_SPECIALIZATION
-
-template <class T>
-inline void delete_cache(transactional_object<std::vector<T> >* ptr) {
-    delete ptr;
-}
-
-#endif //BOOST_STM_NO_PARTIAL_SPECIALIZATION
-#endif // BOOST_STM_USE_MEMCOPY
 
 
 } // namespace core

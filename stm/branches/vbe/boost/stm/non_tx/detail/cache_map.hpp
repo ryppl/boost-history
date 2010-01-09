@@ -76,22 +76,34 @@ public:
     }
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    virtual base_transaction_object* make_cache(transaction* t) const {
+    static cache<T>* make_cache(cache<T> const& rhs, transaction& t) {
         cache<T>* p = cache_allocate<cache<T> >(t);
-        if (p==0) {
-            throw std::bad_alloc();
+        ::new (p) cache<T>(*static_cast<cache<T> const*>(&rhs));
+        return p;
+
+        if (p->value_!=0) {
+            p->ptr_ = new T(*(rhs.value_));
         }
+        return p;
+    };
+    virtual base_transaction_object* make_cache(transaction& t) const {
+        cache<T>* p = cache_allocate<cache<T> >(t);
         ::new (p) cache<T>(*static_cast<cache<T> const*>(this));
         return p;
+        //~ return make_cache(*this, t);
+        
+    }
 #else
-    virtual base_transaction_object* make_cache(transaction*) const {
+    static cache<T>* make_cache(cache<T> const& rhs, transaction& ) {
+        cache* p = new cache<T>(rhs);
+        return p;
+    };
+    virtual base_transaction_object* make_cache(transaction& t) const {
+        //~ return make_cache(*this, t);
         cache* p = new cache<T>(*this);
-#endif
-        if (p->value_!=0) {
-            p->ptr_ = new T(*value_);
-        }
         return p;
     }
+#endif
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
     virtual void delete_cache() {
@@ -108,9 +120,9 @@ public:
     }
 #endif
 
-    virtual void copy_state(base_transaction_object const * const rhs) {
+    virtual void copy_cache(base_transaction_object const &rhs) {
         if (value_==0) return;
-        *value_= *(static_cast<cache<T> const * const>(rhs)->ptr_);
+        *value_= *(static_cast<cache<T> const * const>(&rhs)->ptr_);
         delete ptr_;
         ptr_=0;
     }

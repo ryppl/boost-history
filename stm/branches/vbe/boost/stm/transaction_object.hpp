@@ -72,7 +72,7 @@ class transaction_object : public detail::transaction_object_aux<Final, Base,
 // transaction object mixin
 // Provides the definition of the virtual functions
 //      make_cache: use copy constructor
-//      copy_state: use assignement
+//      copy_cache: use assignement
 //      move_state and
 //      delete_cache: use delete
 // Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
@@ -128,9 +128,9 @@ public:
 #endif
 
    //--------------------------------------------------------------------------
-   virtual void copy_state(base_transaction_object const * const rhs)
+   virtual void copy_cache(base_transaction_object const & rhs)
    {
-       *static_cast<Final *>(this) = *static_cast<Final const * const>(rhs);
+       *static_cast<Final *>(this) = *static_cast<Final const *>(&rhs);
    }
 
 #if BUILD_MOVE_SEMANTICS

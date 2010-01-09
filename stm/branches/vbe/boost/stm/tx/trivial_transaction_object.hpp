@@ -54,7 +54,7 @@ class transaction;
 // transaction object mixin making a trivial memcpy copy
 // Provides the definition of the virtual functions
 //      make_cache: use memcpy on cache_allocated
-//      copy_state: use memcpy 
+//      copy_cache: use memcpy 
 //      move_state and
 //      delete_cache: use cache_allocated
 // Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
@@ -78,12 +78,20 @@ class trivial_transaction_object : public
 #else
     typedef Base base_type;
 #endif
+    Final* final() { return static_cast<Final*>(this); }
+    const Final* final() const { return static_cast<Final const*>(this); }
 public:
+    static Final* make_cache(Final const& rhs, transaction& t) {
+        Final* p = cache_allocate<Final>(t);
+        std::memcpy(p, static_cast<Final const*>(&rhs), sizeof(Final));
+        return p;
+    };
 
     //--------------------------------------------------------------------------
-    virtual base_transaction_object* make_cache(transaction* t) const {
+    virtual base_transaction_object* make_cache(transaction& t) const {
+        //~ return make_cache(*final(), t);
         Final* p = cache_allocate<Final>(t);
-        boost::stm::cache_copy(static_cast<Final const*>(this), p);
+        std::memcpy(p, final(), sizeof(Final));
         return p;
     }
 
@@ -93,16 +101,15 @@ public:
     }
 
    //--------------------------------------------------------------------------
-   virtual void copy_state(base_transaction_object const * const rhs)
+   virtual void copy_cache(base_transaction_object const &rhs)
    {
-        boost::stm::cache_copy(static_cast<Final const * const>(rhs), static_cast<Final *>(this));
+        std::memcpy(final(), static_cast<Final const *>(&rhs), sizeof(Final));
    }
 
 #if BUILD_MOVE_SEMANTICS
    virtual void move_state(base_transaction_object * rhs)
    {
-      static_cast<Final &>(*this) = draco_move
-         (*(static_cast<Final*>(rhs)));
+      *final() = draco_move(*(static_cast<Final*>(rhs)));
    }
 #endif
 

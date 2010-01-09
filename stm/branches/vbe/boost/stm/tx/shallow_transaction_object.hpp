@@ -26,6 +26,7 @@
 #include <boost/stm/cache_fct.hpp>
 #include <boost/stm/datatypes.hpp>
 #include <boost/stm/memory_managers/memory_manager.hpp>
+#include <boost/mpl/bool.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
@@ -38,10 +39,6 @@ const shallow_t shallow = {};
  struct has_shallow_copy_semantics : boost::mpl::false_
  {};
      
-//-----------------------------------------------------------------------------
-// forward declarations
-//-----------------------------------------------------------------------------
-class transaction;
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -49,7 +46,7 @@ class transaction;
 // transaction object mixin making shallow copy
 // Provides the definition of the virtual functions
 //      make_cache: use shallow copy constructor on cache_allocated area
-//      copy_state: use shallow assignement
+//      copy_cache: use shallow assignement
 //      move_state and
 //      delete_cache: use cache_deallocate
 // Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
@@ -73,12 +70,21 @@ class shallow_transaction_object : public
 #else
     typedef Base base_type;
 #endif
+    Final& final() { return *static_cast<Final*>(this); }
+    const Final& final() const { return *static_cast<Final const*>(this); }
 public:
 
-    //--------------------------------------------------------------------------
-    virtual base_transaction_object* make_cache(transaction* t) const {
+    static Final* make_cache(Final const& rhs, transaction& t) {
         Final* p = cache_allocate<Final>(t);
-        return new(p) Final(this, shallow);
+        return ::new(p) Final(rhs, shallow);
+    };
+
+
+    //--------------------------------------------------------------------------
+    virtual base_transaction_object* make_cache(transaction& t) const {
+        return make_cache(final(), t);
+        //~ Final* p = cache_allocate<Final>(t);
+        //~ return ::new(p) Final(final(), shallow);
     }
 
    //--------------------------------------------------------------------------
@@ -87,73 +93,20 @@ public:
     }
 
    //--------------------------------------------------------------------------
-   virtual void copy_state(base_transaction_object const * const rhs)
+   virtual void copy_cache(base_transaction_object const &rhs)
    {
-        boost::stm::cache_copy(static_cast<Final const * const>(rhs), static_cast<Final *>(this));
+        final().shallow_assign(*static_cast<Final const *>(&rhs));
    }
 
 #if BUILD_MOVE_SEMANTICS
    virtual void move_state(base_transaction_object * rhs)
    {
-      static_cast<Final &>(*this) = draco_move
-         (*(static_cast<Final*>(rhs)));
+      final() = draco_move(*(static_cast<Final*>(rhs)));
    }
 #endif
 
 };
 
-template <typename T> class shallow_native_trans :
-public shallow_transaction_object< shallow_native_trans<T> >
-{
-public:
-
-   shallow_native_trans() : value_(T()) {}
-   shallow_native_trans(T const &rhs) : value_(rhs) {}
-   shallow_native_trans(shallow_native_trans const &rhs) : value_(rhs.value_) {}
-   ~shallow_native_trans() {}
-
-   shallow_native_trans& operator=(T const &rhs) { value_ = rhs; return *this; }
-
-   shallow_native_trans& operator--() { --value_; return *this; }
-   shallow_native_trans operator--(int) { shallow_native_trans n = *this; --value_; return n; }
-
-   shallow_native_trans& operator++() { ++value_; return *this; }
-   shallow_native_trans operator++(int) { shallow_native_trans n = *this; ++value_; return n; }
-
-   shallow_native_trans& operator+=(T const &rhs)
-   {
-      value_ += rhs;
-      return *this;
-   }
-
-   shallow_native_trans operator+(shallow_native_trans const &rhs)
-   {
-      shallow_native_trans ret = *this;
-      ret.value_ += rhs.value_;
-      return ret;
-   }
-
-   //template <>
-   operator T() const
-   {
-      return this->value_;
-   }
-
-#if BUILD_MOVE_SEMANTICS
-   //--------------------------------------------------
-   // move semantics
-   //--------------------------------------------------
-   shallow_native_trans(shallow_native_trans &&rhs) { value_ = rhs.value_;}
-   shallow_native_trans& operator=(shallow_native_trans &&rhs)
-   { value_ = rhs.value_; return *this; }
-#endif
-
-   T& value() { return value_; }
-   T const & value() const { return value_; }
-
-private:
-   T value_;
-};
 
 }}
 #endif // BOOST_STM_SHALLOW_TRANSACTION_OBJECT__HPP
