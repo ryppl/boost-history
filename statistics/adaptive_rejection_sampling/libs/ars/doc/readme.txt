@@ -21,7 +21,8 @@ their known cdf to produce kolmogorov-smirnov statistics.
 
 [ Compiler ]
 
-gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
+Win7-32 V6.1.7100    Dev-C++ 5.0 beta 9.2 with Mingw/GCC 3.4.2 	boost_1_41_0
+Mac OS X 10.6        gcc 4.2                                    boost_1_41_0
 
 [ Dependencies ]
 
