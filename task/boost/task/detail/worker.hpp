@@ -87,7 +87,8 @@ private:
 	Pool						&	pool_;
 	thread_t						thrd_;
 	fibers::scheduler<
-		typename Pool::ums_type >	sched_;
+		typename Pool::ums_type > *	sched_;// TODO: make not as pointer if WIN32 Fiber API is replaced by assembler
+
 	wsq								wsq_;
 	bool							shtdwn_;
 	posix_time::time_duration		asleep_;
@@ -143,7 +144,7 @@ private:
 			{
 				execute_( ca);
 				scns_ = 0;
-				if ( 0 < sched_.ready() ) return;
+				if ( 0 < sched_->ready() ) return;
 			}
 			else
 			{
@@ -156,10 +157,10 @@ private:
 						if ( take_global_callable_( ca, asleep_) )
 						{
 							execute_( ca);
-							if ( 0 < sched_.ready() ) return;
+							if ( 0 < sched_->ready() ) return;
 						}
 					}
-					else if ( 0 == sched_.ready() )
+					else if ( 0 == sched_->ready() )
 					{
 						try
 						{ this_thread::sleep( asleep_); }
@@ -170,7 +171,7 @@ private:
 				}
 				else
 				{
-					if ( 0 < sched_.ready() ) return;
+					if ( 0 < sched_->ready() ) return;
 					this_thread::yield();
 				}
 			}
@@ -179,7 +180,7 @@ private:
 
 	bool shutdown_()
 	{
-		if ( shutdown__() && pool_.queue_.empty() && 0 == sched_.ready() )
+		if ( shutdown__() && pool_.queue_.empty() && 0 == sched_->ready() )
 			return true;
 		else if ( shutdown_now__() )
 			return true;
@@ -216,6 +217,9 @@ public:
 		rnd_idx_( psize)
 	{ BOOST_ASSERT( ! fn.empty() ); }
 
+	~worker_object()
+	{ delete sched_; }
+
 	const thread::id get_id() const
 	{ return thrd_->get_id(); }
 
@@ -237,20 +241,23 @@ public:
 
 	void run()
 	{
+// TODO: remove if WIN32 Fiber API is replaced by assembler
+		sched_ = new fibers::scheduler< typename Pool::ums_type >();
+
 		BOOST_ASSERT( get_id() == this_thread::get_id() );
 
-		sched_.make_fiber(
+		sched_->make_fiber(
 				bind(
 					& worker_object::run_,
 					this),
 				stack_size_);
 		while ( ! shutdown_() )
-			sched_.run();	
+			sched_->run();	
 	}
 
 	void yield()
 	{
-		sched_.make_fiber(
+		sched_->make_fiber(
 			bind(
 				& worker_object::run_,
 				this),
