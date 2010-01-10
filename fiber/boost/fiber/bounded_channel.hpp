@@ -251,10 +251,10 @@ public:
 	}
 
 	friend void intrusive_ptr_add_ref( bounded_channel_base * p)
-	{ ++( p->use_count_s); }
+	{ ++( p->use_count_); }
 
 	friend void intrusive_ptr_release( bounded_channel_base * p)
-	{ if ( --( & p->use_count_) == 1) delete p; }
+	{ if ( --( p->use_count_) == 1) delete p; }
 };
 
 }
