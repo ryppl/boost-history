@@ -24,7 +24,7 @@ int main( int argc, char* argv[] )
 
   std::cout << "sizeof(intmax_t) is " << sizeof(boost::intmax_t) << '\n';
 
-  fs::path p( argv[1], fs::native );
+  fs::path p( argv[1] );
 
   if ( !fs::exists( p ) )
   {

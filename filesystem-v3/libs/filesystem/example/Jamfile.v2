@@ -3,14 +3,21 @@
 # (C) Copyright Vladimir Prus 2003
 
 # Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE_1_0.txt or www.boost.org/LICENSE_1_0.txt)
+# See www.boost.org/LICENSE_1_0.txt
 
-# See library home page at http://www.boost.org/libs/filesystem
+# Library home page: http://www.boost.org/libs/filesystem
 
 project
-    : requirements <library>../build//boost_filesystem
-      <hardcode-dll-paths>true
+    : requirements
+      <library>/boost/filesystem//boost_filesystem
+      <library>/boost/system//boost_system
+      <toolset>msvc:<asynch-exceptions>on
+      <link>static
     ;
     
-exe file_size : file_size.cpp ;
-exe simple_ls : simple_ls.cpp ;    
+exe tut0 : tut0.cpp ;
+exe tut1 : tut1.cpp ;
+exe tut2 : tut2.cpp ;
+exe tut3 : tut3.cpp ;
+exe tut4 : tut4.cpp ;
+exe path_info : path_info.cpp ;    

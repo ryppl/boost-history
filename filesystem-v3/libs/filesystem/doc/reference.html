@@ -371,6 +371,9 @@ the same object within a file system.</p>
       path         <a href="#system_complete">system_complete</a>(const path&amp; p);
       path         <a href="#system_complete">system_complete</a>(const path&amp; p, system::error_code&amp; ec);
 
+      path         <a href="#unique_path">unique_path</a>(const path&amp; model=&quot;%%%%-%%%%-%%%%-%%%%&quot;);
+      path         <a href="#unique_path">unique_path</a>(const path&amp; model, system::error_code&amp; ec);
+
     } // namespace filesystem
   } // namespace boost</pre>
 <h4><a name="Error-reporting">Error reporting</a></h4>
@@ -424,18 +427,9 @@ report errors as follows, unless otherwise specified:</p>
 </ul>
 <h3><a name="class-path">Class <code>path</code></a></h3>
 <p>An object of class <code>path</code> represents a <a href="#Path">path</a>, 
-and contains a <a href="#Pathname">pathname</a> in th<span style="background-color: #FF0000">e
-</span>
-<a href="#Native-pathname-format"><span style="background-color: #FF0000">native format</span></a><span style="background-color: #FF0000">.</span> Such an object is concerned only with the lexical and syntactic aspects 
-of a path. The path does not have to actually exist in the operating system's file 
-systems, and may contain pathnames which are not even valid for the current operating 
+and contains a <a href="#Pathname">pathname</a> Such an object is concerned only with the lexical and syntactic aspects 
+of a path. The path may not actually exist in external storage, and may contain pathnames which are not even valid for the current operating 
 system. </p>
-<blockquote>
-  <p>[<i>Note: </i>If the library's operational functions trafficked only in C++<i> </i>or 
-  C-style strings rather than <code>path</code> objects, it would provide only the illusion of portability since 
-  while the syntax of function calls would be portable, the semantics of the 
-  strings they operate on would not be portable. <i>-- end note</i>]</p>
-</blockquote>
 <pre>  namespace boost
   {
     namespace filesystem
@@ -484,7 +478,7 @@ system. </p>
         path&amp; replace_extension(const path&amp; new_extension = path());
         path&amp; localize();  // POSIX: no effect. Windows: convert slashes to backslashes
 
-        // <a href="#path-observers">observers</a>
+        // native format <a href="#path-observers">observers</a>
         const string_type&amp;  native() const;           // native format, encoding
         const value_type*   c_str() const;            // native().c_str()
 
@@ -493,7 +487,8 @@ system. </p>
         const u16string     native_u16string() const; // ditto
         const u32string     native_u32string() const; // ditto
 
-        const string        string() const;           // portable format, uses codecvt() for encoding
+        // generic format observers
+        const string        string() const;           // generic format, uses codecvt() for encoding
         const wstring       wstring() const;          // ditto
         const u16string     u16string() const;        // ditto
         const u32string     u32string() const;        // ditto
@@ -575,25 +570,25 @@ pointing to contiguous storage. The iterator's value_type is required to be <cod
   <li>A <code>boost::filesystem::directory_entry</code>.</li>
 </ul>
 <h4><a name="Pathname-formats">Pathname formats</a></h4>
-<p>Strings representing paths may be in two possible formats: </p>
+<p>Pathnames are in two possible formats: </p>
 <ul>
-  <li><i><b><a name="Portable-pathname-format">Portable pathname format</a>:</b></i> As described in <a href="#Pathname-grammar">
+  <li><a name="Portable-pathname-format"><b><i>Generic</i></b></a><i><b><a name="Portable-pathname-format"> pathname format</a>:</b></i> As described in <a href="#Pathname-grammar">
   Pathname grammar</a> and by the <i>POSIX</i> <i><a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_169">Filename</a>,
 <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_266">
 Pathname</a> </i>and<i>
 <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap04.html#tag_04_11">
 Pathname Resolution</a></i> definitions.<blockquote>
 <p>[<i>Note:</i> <span style="background-color: #FFFFFF">The <i>POSIX</i> format 
-is the basis for the portable format because it is already part of an ISO standard, is 
+is the basis for the generic format because it is already part of an ISO standard, is 
 the basis for the ubiquitous <i>URL</i> format, and is the native pathname format 
 (or a 
 subset thereof) for the <i>UNIX</i>-like and <i>Windows</i>-like 
 pathnames familiar to most programmers. </span></p>
-<p>Use of the portable format does not alone guarantee 
+<p>Use of the generic format does not  guarantee 
 portability;  filenames must also be portable.<span style="background-color: #FFFFFF"> 
 See <a href="#Input-conversion">Filename conversions</a>. Each operating system 
  
-follows its own rules. Use of the portable format 
+follows its own rules. Use of the generic format 
 does not change those rules. </span> <i>-- end note</i>]</p>
   </blockquote>
   
@@ -602,9 +597,8 @@ does not change those rules. </span> <i>-- end note</i>]</p>
   
   <b><i><a name="Native-pathname-format">Native pathname format</a>:</i></b> As defined by the operating system.<blockquote>
     <p>[<i>Note:</i> <span style="background-color: #FFFFFF">Working with 
-    user-provided paths in the native format is a common need.</span></p>
-    <p><span style="background-color: #FFFFFF">Programs using hard-coding native 
-    formats may not be  portable.&nbsp; --</span><i><span style="background-color: #FFFFFF"> end note</span></i><span style="background-color: #FFFFFF">]</span></p>
+    user-provided native format paths is a common need. Hard-coded native 
+    format paths, however, may not be  portable.&nbsp; --</span><i><span style="background-color: #FFFFFF"> end note</span></i><span style="background-color: #FFFFFF">]</span></p>
   </blockquote>
   </li>
 </ul>
@@ -612,14 +606,13 @@ does not change those rules. </span> <i>-- end note</i>]</p>
   <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
     <tr>
       <td bgcolor="#D7EEFF">
-    <p align="left">[<i>Note:</i></p>
-    <p align="left"><b>POSIX-like<i> </i>implementations, including Cygwin:</b> 
-    The portable format and the native format are the same, and the encoding 
+    <p align="left">[<i>Note:</i><b> POSIX-like<i> </i>implementations, including Cygwin:</b> 
+    The native format is the same as the generic format. The pathname encoding 
     follows the conventions of the specific operating system</p>
-    <p align="left"><b>Windows-like implementations:</b> The native format is 
+    <p align="left"><b>Windows-like implementations, including MinGW:</b> The native format is 
     the Windows pathname format, and the encoding is UTF-16 (UCS-2 for older 
-    versions). The native directory separator is a backslash, but a slash is 
-    also acceptable. Since the portable format is a subset of the native format, 
+    versions). The preferred native directory separator character is the backslash, but slash is 
+    also acceptable. Since the generic format is a subset of the native format, 
     no reformatting is required and directory separators are preserved. For 
     example, on Windows:</p>
       <blockquote>
@@ -634,7 +627,7 @@ does not change those rules. </span> <i>-- end note</i>]</p>
   </table>
 </div>
 <p><span style="background-color: #FFFF00">All <code>path</code> string or sequence arguments that describe a 
-path shall accept the portable pathname format, and shall accept the native 
+path shall accept the generic pathname format, and shall accept the native 
 format if explicitly identified by a native format escape sequence prefix of
 <code>slash slash colon</code>.</span></p>
 <blockquote>
@@ -656,13 +649,13 @@ implicitly recognized.</span></p>
 <p><i><span style="background-color: #FFFF00">-- OpenVMS:</span></i><span style="background-color: #FFFF00">
 </span> <code><span style="background-color: #FFFF00">&quot;SYS1::DISK1:[JANE.TYLER.HARRY]</span></code><span style="background-color: #FFFF00">&quot; is treated 
 as a native pathname with a system name, drive name,&nbsp;and three directory 
-filenames, rather than a portable pathname with one filename.</span></p>
+filenames, rather than a generic pathname with one filename.</span></p>
 <p><i><span style="background-color: #FFFF00">-- Windows: </span> </i><code>
 <span style="background-color: #FFFF00">&quot;c:\\jane\\tyler\\harry&quot;</span></code><span style="background-color: #FFFF00"> is treated as a 
 native pathname with a drive letter, root-directory, and three filenames, rather 
-than a portable pathname with one filename.</span></p>
+than a generic pathname with one filename.</span></p>
 <p><i><span style="background-color: #FFFF00">-- Counter-example 1:</span></i><span style="background-color: #FFFF00"> An operating system that allows slashes in 
-filenames and uses dot as a directory separator. Distinguishing between portable 
+filenames and uses dot as a directory separator. Distinguishing between generic 
 and native format argument strings or sequences is not possible as there is no 
 other distinguishing syntax. The implementation does not accept native format 
 pathnames unless the </span> <code><span style="background-color: #FFFF00">native</span></code><span style="background-color: #FFFF00"> argument is present.</span></p>
@@ -678,17 +671,17 @@ like a duck, walks like a duck, and quacks like a duck, it must be a duck&quot;)
 eliminates format confusion as a source of programmer error and support 
 requests. </span> <i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
 </blockquote>
-<p><span style="background-color: #FFFF00">If both the portable and native formats are accepted, implementations shall 
+<p><span style="background-color: #FFFF00">If both the generic and native formats are accepted, implementations shall 
 document what characters or character sequences are used to distinguish between 
-portable and native formats.</span></p>
+two formats.</span></p>
 <blockquote>
 <p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00">
 </span> <i><span style="background-color: #FFFF00">Windows</span></i><span style="background-color: #FFFF00"> implementations are encouraged to define colons 
-and backslashes as the characters which distinguish native from portable 
+and backslashes as the characters which distinguish native from generic 
 formats. </span> <i><span style="background-color: #FFFF00">--end note</span></i><span style="background-color: #FFFF00">]</span></p>
 </blockquote>
 <h4><a name="Pathname-grammar">Pathname grammar</a></h4>
-<p>The grammar for the portable pathname format is as follows:</p>
+<p>The grammar for the generic pathname format is as follows:</p>
 <blockquote>
 <p><i>pathname:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root-name<sub>opt</sub> 
@@ -728,15 +721,26 @@ POSIX</i> is unintentional. This technical report defers to <i>POSIX</i>.</p>
 <blockquote>
 <p><span style="background-color: #E0E0E0"><i>The form of the above wording was taken 
 from POSIX, which uses it in several places to defer to the C standard.</i></span></p>
-<p>[<i>Note: Windows</i> implementations are encouraged to define <i>slash slash 
-name</i> as a permissible <i>root-name</i>. <i>POSIX</i> permits, but does not 
-require, implementations to do the same. <i>Windows</i> implementations are 
-encouraged to define an additional <i>root-directory</i> element <i>
-root_directory name.</i> It is applicable only to the <i>slash slash name</i> 
-form of <i>root-name.</i></p>
-<p> <i>Windows</i> implementations are encouraged to recognize a <i>name</i> 
-followed by a colon as a native format <i>root-name</i>, 
-and a backslash as a format element equivalent to <i>slash</i>. <i>-- end note</i>]</p>
+<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note: Windows</span></i><span style="background-color: #FFFF00"> implementations are encouraged to define
+</span> <i><span style="background-color: #FFFF00">slash slash 
+name</span></i><span style="background-color: #FFFF00"> as a permissible </span> <i>
+<span style="background-color: #FFFF00">root-name</span></i><span style="background-color: #FFFF00">.
+</span> <i><span style="background-color: #FFFF00">POSIX</span></i><span style="background-color: #FFFF00"> permits, but does not 
+require, implementations to do the same. </span> <i>
+<span style="background-color: #FFFF00">Windows</span></i><span style="background-color: #FFFF00"> implementations are 
+encouraged to define an additional </span> <i>
+<span style="background-color: #FFFF00">root-directory</span></i><span style="background-color: #FFFF00"> element
+</span> <i>
+<span style="background-color: #FFFF00">root_directory name.</span></i><span style="background-color: #FFFF00"> It is applicable only to the
+</span> <i><span style="background-color: #FFFF00">slash slash name</span></i><span style="background-color: #FFFF00"> 
+form of </span> <i><span style="background-color: #FFFF00">root-name.</span></i></p>
+<p> <i><span style="background-color: #FFFF00">Windows</span></i><span style="background-color: #FFFF00"> implementations are encouraged to recognize a
+</span> <i><span style="background-color: #FFFF00">name</span></i><span style="background-color: #FFFF00"> 
+followed by a colon as a native format </span> <i>
+<span style="background-color: #FFFF00">root-name</span></i><span style="background-color: #FFFF00">, 
+and a backslash as a format element equivalent to </span> <i>
+<span style="background-color: #FFFF00">slash</span></i><span style="background-color: #FFFF00">.
+</span> <i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
 </blockquote>
 <h4><a name="Input-conversion">Input conversion</a></h4>
 <p><span style="background-color: #FFFF00">To be supplied. Explain when, how 
@@ -884,8 +888,8 @@ appends</a></h4>
   backslashes. On POSIX, there is no effect. <i>-- end note</i>]</p>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
-<h4> <code><font size="4">class </font></code> <a name="path-observers"> <code>
-<font size="4">path</font></code> observers</a></h4>
+<h4> <a name="path-observers"> <code>
+<font size="4"><span style="background-color: #FFFF00">path native format</span></font></code><span style="background-color: #FFFF00"> observers</span></a></h4>
 <p><span style="background-color: #FFFF00"><i>Move elsewhere.</i> </span></p>
 <p><span style="background-color: #FFFF00">Some operating systems, including
 </span> <i><span style="background-color: #FFFF00">POSIX</span></i><span style="background-color: #FFFF00"> and
@@ -958,7 +962,7 @@ implementation will simply return <code>native()</code>. <i>-- end note]</i></p>
 <p><b><i><code>const-string</code></i></b> is permitted to be <code>const 
 std::string</code> or <code>const std::string&amp;</code>.</p>
 <p><i>Returns:</i> The contained pathname, in the
-<a href="#Portable-pathname-format">portable pathname format</a>.</p>
+<a href="#Portable-pathname-format">generic pathname format</a>.</p>
 <p><i>Remarks:</i> If
 <code>value_type</code> is not <code>char</code>, the encoding is converted by
 <code>codecvt()</code>.</p>
@@ -968,7 +972,7 @@ std::string</code> or <code>const std::string&amp;</code>.</p>
 <p><b><i><code>const-wstring</code></i></b> is permitted to be <code>const 
 std::wstring</code> or <code>const std::wstring&amp;</code>.</p>
 <p><i>Returns:</i> The contained pathname, in the
-<a href="#Portable-pathname-format">portable pathname format</a>.</p>
+<a href="#Portable-pathname-format">generic pathname format</a>.</p>
 <p><i>Remarks:</i> If
 <code>value_type</code> is not <code>wchar_t</code>, the encoding is converted by
 <code>codecvt()</code>.</p>
@@ -1537,8 +1541,8 @@ non-cached results may differ in the presence of race conditions. <i>-- end note
 <p><span style="background-color: #E0E0E0"><i>Actual cold-boot timing of iteration over 
 a directory with 15,047 entries was six seconds for non-cached status queries 
 versus one second for cached status queries. Windows XP, 3.0 GHz processor, with 
-a moderately fast hard-drive. Similar speedup expected on Linux and BSD-derived 
-Unix variants that provide status during directory iteration.</i></span></p>
+a moderately fast hard-drive. Similar speedups are expected on Linux and BSD-derived 
+systems that provide status as a by-product of directory iteration.</i></span></p>
 </blockquote>
 <h4> <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a></h4>
 <pre>directory_entry();</pre>
@@ -3397,7 +3401,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->06 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32144" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->07 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32146" --></p>
 
 </body>
 

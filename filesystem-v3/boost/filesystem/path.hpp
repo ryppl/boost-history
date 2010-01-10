@@ -209,13 +209,13 @@ namespace filesystem
     path&  remove_filename();
     path&  replace_extension(const path& new_extension = path());
 
-#   ifdef BOOST_WINDOWS_API
-
-    path& localize();  // change slash to backslash
-
-#   else // BOOST_POSIX_API
+#   ifdef BOOST_POSIX_API
 
     path& localize() { return *this; }  // POSIX m_path already localized
+
+#   else // BOOST_WINDOWS_API
+
+    path& localize();  // change slashes to backslashes
 
 #   endif
 
@@ -228,15 +228,15 @@ namespace filesystem
 
     //  Implementations are permitted to return const values or const references.
 
-    //  The string or path returned by an observer will be described as being formatted
-    //  as "native" or "portable".
+    //  The string or path returned by an observer are specified as being formatted
+    //  as "native" or "generic".
     //
     //  For POSIX, these are all the same format; slashes and backslashes are as input and
     //  are not modified.
     //
     //  For Windows,   native:    as input; slashes and backslashes are not modified;
     //                            this is the format of the internally stored string.
-    //                 portable:  backslashes are converted to slashes
+    //                 generic:   backslashes are converted to slashes
 
 //    template< class T >  
 //    T string(system::error_code & ec = boost::throws()) const  // internal (i.e. original) format
@@ -271,7 +271,7 @@ namespace filesystem
 
 #   endif
 
-    //  -----  portable format observers  -----
+    //  -----  generic format observers  -----
 
 #   ifdef BOOST_WINDOWS_API
 

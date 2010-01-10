@@ -135,7 +135,7 @@ argument report operational error status by setting the <code>ec</code> argument
 do not throw exceptions when I/O errors occur. 
   <span style="background-color: #FFFF00">More on that later in the tutorial.</span></p>
 
-<h2>File size - tut1.cpp</h2>
+<h2><a href="../example/tut1.cpp">tut1.cpp</a> - Reporting the size of a file</h2>
 
 <p>Let's develop a little command line program to list information about 
 files and directories - essentially a much simplified version of the POSIX <code>ls</code> or Windows <code>dir</code> 
@@ -151,7 +151,7 @@ source code does include it. </p>
 <table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
   <tr>
     <td style="font-size: 10pt">
-    <pre><a href="../tutorial/tut1.cpp">tut1.cpp</a></pre>
+    <pre><a href="../example/tut1.cpp">tut1.cpp</a></pre>
     <blockquote>
       <pre>int main(int argc, char* argv[])
 {
@@ -198,9 +198,9 @@ C:\v3d&gt;tut1 test</pre>
   <br>
   There's no file named <code>foo</code> in the current directory, so again an 
 exception was thrown.</p>
-  <p>We'll deal with those conditions in tut2.cpp.</p>
+  <p>We'll deal with those conditions in <code>tut2.cpp</code>.</p>
 
-<h2>tut2.cpp - Using status queries to determine file existence and type</h2>
+<h2><a href="../example/tut2.cpp">tut2.cpp</a> - Using status queries to determine file existence and type</h2>
 
 <p>Boost.filesystem includes status query functions such as <code>exists</code>,
 <code>is_directory</code>, and <code>is_regular_file</code>. These all return
@@ -214,7 +214,7 @@ files and with different file types. </p>
 <table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
   <tr>
     <td style="font-size: 10pt">
-    <pre><a href="../tutorial/tut2.cpp">tut2.cpp</a></pre>
+    <pre><a href="../example/tut2.cpp">tut2.cpp</a></pre>
     <blockquote style="font-size: 10pt">
       <pre>int main(int argc, char* argv[])
 {
@@ -245,20 +245,27 @@ files and with different file types. </p>
 
 <p>This works fine - give it a try yourself. However, the output is less than 
 satisfactory a directory because we'd typically like to see its contents. Move 
-on to tut3.cpp to see how to iterate over directories.</p>
+on to <code>tut3.cpp</code> to see how to iterate over directories.</p>
 
-<h2>tut3.cpp - Directory iteration</h2>
+<h2><a href="../example/tut3.cpp">tut3.cpp</a> - Directory iteration</h2>
 
 <p>Boost.Filesystem's <code><a href="reference.html#directory_iterator">
-directory_iterator</a></code> class is just what we need here. Constructed from 
-a path, it iterates over the contents of the directory. The value type is
-<a href="reference.html#directory_entry"><code>directory_entry</code></a>, which 
-can be used for function arguments requiring a <code>path</code>.</p>
+directory_iterator</a></code> class is just what we need here. It follows the 
+general pattern of the standard library's <code>istream_iterator</code>. Constructed from 
+a path, it iterates over the contents of the directory. A default constructed <code>directory_iterator</code> 
+acts as the end iterator.</p>
+
+<p>The value type of <code>directory_iterator</code> is <code>
+<a href="reference.html#directory_entry">directory_entry</a></code>. A <code>
+directory_entry</code> contains a <code>path</code> and symlink/non-symlink 
+resolving <code><a href="reference.html#file_status">file_status</a></code> 
+caches, and 
+can be passed to <code>path</code> arguments in function calls.</p>
 
 <table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
   <tr>
     <td style="font-size: 10pt">
-    <pre><a href="../tutorial/tut3.cpp">tut3.cpp</a></pre>
+    <pre><a href="../example/tut3.cpp">tut3.cpp</a></pre>
     <blockquote>
       <pre>int main(int argc, char* argv[])
 {
@@ -300,13 +307,47 @@ can be used for function arguments requiring a <code>path</code>.</p>
   </tr>
 </table>
 
-<p>Give tut3 a try, passing it a path to a directory as a command line argument. 
-Here is a run on a Boost Subversion trunk checkout:</p>
+<p>Give <code>tut3</code> a try, passing it a path to a directory as a command line argument. 
+Here is a run on a checkout of the Boost Subversion trunk:</p>
 
-<blockquote>
-  <pre>C:\v3d&gt;tut3 c:\boost\trunk
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt">
+      <pre>$ ./tut3 ~/boost/trunk
+/home/beman/boost/trunk: is a directory containing:
+/home/beman/boost/trunk/tools
+/home/beman/boost/trunk/boost-build.jam
+/home/beman/boost/trunk/dist
+/home/beman/boost/trunk/doc
+/home/beman/boost/trunk/bootstrap.sh
+/home/beman/boost/trunk/index.html
+/home/beman/boost/trunk/bin.v2
+/home/beman/boost/trunk/bootstrap.bat
+/home/beman/boost/trunk/boost.css
+/home/beman/boost/trunk/INSTALL
+/home/beman/boost/trunk/rst.css
+/home/beman/boost/trunk/boost
+/home/beman/boost/trunk/people
+/home/beman/boost/trunk/wiki
+/home/beman/boost/trunk/boost.png
+/home/beman/boost/trunk/LICENSE_1_0.txt
+/home/beman/boost/trunk/more
+/home/beman/boost/trunk/Jamroot
+/home/beman/boost/trunk/.svn
+/home/beman/boost/trunk/libs
+/home/beman/boost/trunk/index.htm
+/home/beman/boost/trunk/status
+/home/beman/boost/trunk/CMakeLists.txt</pre>
+      </td>
+      <td style="font-size: 10pt">
+      <pre>&gt;tut3 c:\boost\trunk
 c:\boost\trunk: is a directory containing:
    c:\boost\trunk\.svn
+   c:\boost\trunk\bin.v2
    c:\boost\trunk\boost
    c:\boost\trunk\boost-build.jam
    c:\boost\trunk\boost.css
@@ -314,6 +355,7 @@ c:\boost\trunk: is a directory containing:
    c:\boost\trunk\bootstrap.bat
    c:\boost\trunk\bootstrap.sh
    c:\boost\trunk\CMakeLists.txt
+   c:\boost\trunk\dist
    c:\boost\trunk\doc
    c:\boost\trunk\index.htm
    c:\boost\trunk\index.html
@@ -327,82 +369,344 @@ c:\boost\trunk: is a directory containing:
    c:\boost\trunk\status
    c:\boost\trunk\tools
    c:\boost\trunk\wiki</pre>
-</blockquote>
-<p>It would be nice to output just the filename, without the parent path. Class 
-<code>path</code> has functions to do just that, and a whole lot more. Let's 
-take a side trip to learn more about class <code>path</code> observer, composition, decomposition and query 
-functions.</p>
-<h2>path_info.cpp - Path observer, composition, decomposition and query</h2>
+      </td>
+    </tr>
+  </table>
 
-<p>&nbsp;</p>
+<h2><a href="../example/tut4.cpp">tut4.cpp</a> - Using a patch decomposition 
+function</h2>
+
+<p>It might be clearer to output just the filename, without the parent path. Class 
+<code>path</code> has a decomposition function to extract the filename, so 
+that's easy to try. Just change</p>
+<blockquote>
+  <pre>cout &lt;&lt; &quot; &quot; &lt;&lt; *it &lt;&lt; '\n';</pre>
+</blockquote>
+<p>to</p>
+<blockquote>
+  <pre>cout &lt;&lt; &quot; &quot; &lt;&lt; it-&gt;path().filename() &lt;&lt; '\n'; </pre>
+</blockquote>
+<p>Here is the output from <code><a href="../example/tut4.cpp">tut4.cpp</a></code>, which makes that change:</p>
+
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt">
+      <pre>$ ./tut4 ~/boost/trunk
+/home/beman/boost/trunk: is a directory containing:
+   tools
+   boost-build.jam
+   dist
+   doc
+   bootstrap.sh
+   index.html
+   bin.v2
+   bootstrap.bat
+   boost.css
+   INSTALL
+   rst.css
+   boost
+   people
+   wiki
+   boost.png
+   LICENSE_1_0.txt
+   more
+   Jamroot
+   .svn
+   libs
+   index.htm
+   status
+   CMakeLists.txt</pre>
+      </td>
+      <td style="font-size: 10pt">
+      <pre>C:\v3d&gt;tut4 c:\boost\trunk
+c:\boost\trunk: is a directory containing:
+   .svn
+   bin.v2
+   boost
+   boost-build.jam
+   boost.css
+   boost.png
+   bootstrap.bat
+   bootstrap.sh
+   CMakeLists.txt
+   dist
+   doc
+   index.htm
+   index.html
+   INSTALL
+   Jamroot
+   libs
+   LICENSE_1_0.txt
+   more
+   people
+   rst.css
+   status
+   tools
+   wiki</pre>
+      </td>
+    </tr>
+  </table>
+
+<h2><a href="../example/path_info.cpp">path_info.cpp</a> - Path iterators, observers, composition, decomposition and query</h2>
+
+<p>The <code>path_info</code> program is handy for learning how class <code>path</code> 
+iterators, 
+observers, composition, decomposition, and query functions work on your system. 
+If it hasn't already already been built on your system, please build it now. Run 
+the examples below on your system, and try some different path arguments as we 
+go along.</p>
+
+<p> <code>path_info</code> produces several dozen output lines every time it's 
+invoked. We will only show the output lines we are interested in at the moment.</p>
+
+<p>First we'll look at iteration over the elements of a path, and then use 
+iteration to illustrate the difference between generic and native format paths.</p>
+
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt">
+      <pre>$ ./path_info /foo/bar/baa.txt
+...
+elements:
+  /
+  foo
+  bar
+  baa.txt</pre>
+      </td>
+      <td style="font-size: 10pt">
+      <pre>&gt;path_info /foo/bar/baa.txt
+...
+elements:
+  /
+  foo
+  bar
+  baa.txt</pre>
+      </td>
+    </tr>
+  </table>
+
+<p>Thus on both POSIX and Windows based systems the path <code>&quot;/foo/bar/baa.txt&quot;</code> 
+is seen as having four elements.</p>
+
+<p>Here is the code that produced the above listing:</p>
 
 <table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
   <tr>
     <td style="font-size: 10pt">
-    <pre><a href="../example/path_info.cpp">path_info.cpp</a></pre>
     <blockquote style="font-size: 10pt">
-      <div dir="ltr">
-      <pre>const char * say_what(bool b) { return b ? &quot;true&quot; : &quot;false&quot;; }
+    <pre>cout &lt;&lt; &quot;\nelements:\n&quot;;
 
-int main(int argc, char* argv[])
-{
-  if (argc &lt; 2)
-  {
-    std::cout &lt;&lt; &quot;Usage: path_info path-portion...\n&quot;;
-    return 1;
-  }
-
-  fs::path p;
-
-  for (; argc &gt; 1; --argc, ++argv)
-    p /= argv[1];
-
-  std::cout &lt;&lt; &quot;\npath \&quot;&quot; &lt;&lt; p &lt;&lt; &quot;\&quot;\n&quot;;
-
-  std::cout &lt;&lt; &quot;\nelements:\n&quot;;
-  for (fs::path::iterator it = p.begin(); it != p.end(); ++it)
-  std::cout &lt;&lt; &quot; &quot; &lt;&lt; *it &lt;&lt; '\n';
-
-  std::cout &lt;&lt; &quot;\nobservers, native format:\n&quot;;
-  STD_OUT &lt;&lt; &quot; native()---------: &quot; &lt;&lt; p.native() &lt;&lt; '\n';
-  STD_OUT &lt;&lt; &quot; c_str()----------: &quot; &lt;&lt; p.c_str() &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; native_string()--: &quot; &lt;&lt; p.native_string() &lt;&lt; std::endl;
-  std::wcout &lt;&lt; &quot; native_wstring()-: &quot; &lt;&lt; p.native_wstring() &lt;&lt; std::endl;
-
-  std::cout &lt;&lt; &quot;\nobservers, portable format:\n&quot;;
-  std::cout &lt;&lt; &quot; string()---------: &quot; &lt;&lt; p.string() &lt;&lt; std::endl;
-  std::wcout &lt;&lt; &quot; wstring()--------: &quot; &lt;&lt; p.wstring() &lt;&lt; std::endl;
-
-  std::cout &lt;&lt; &quot;\ndecomposition:\n&quot;;
-  std::cout &lt;&lt; &quot; root_name()------: &quot; &lt;&lt; p.root_name() &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; root_directory()-: &quot; &lt;&lt; p.root_directory() &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; root_path()------: &quot; &lt;&lt; p.root_path() &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; relative_path()--: &quot; &lt;&lt; p.relative_path() &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; parent_path()----: &quot; &lt;&lt; p.parent_path() &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; filename()-------: &quot; &lt;&lt; p.filename() &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; stem()-----------: &quot; &lt;&lt; p.stem() &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; extension()------: &quot; &lt;&lt; p.extension() &lt;&lt; '\n';
-
-  std::cout &lt;&lt; &quot;\nquery:\n&quot;;
-  std::cout &lt;&lt; &quot; empty()--------------: &quot; &lt;&lt; say_what(p.empty()) &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; is_complete()--------: &quot; &lt;&lt; say_what(p.is_complete()) &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; has_root_name()------: &quot; &lt;&lt; say_what(p.has_root_name()) &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; has_root_directory()-: &quot; &lt;&lt; say_what(p.has_root_directory()) &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; has_root_path()------: &quot; &lt;&lt; say_what(p.has_root_path()) &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; has_relative_path()--: &quot; &lt;&lt; say_what(p.has_relative_path()) &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; has_parent_path()----: &quot; &lt;&lt; say_what(p.has_parent_path()) &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; has_filename()-------: &quot; &lt;&lt; say_what(p.has_filename()) &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; has_stem()-----------: &quot; &lt;&lt; say_what(p.has_stem()) &lt;&lt; '\n';
-  std::cout &lt;&lt; &quot; has_extension()------: &quot; &lt;&lt; say_what(p.has_extension()) &lt;&lt; '\n';
-
-  return 0;
-}
-</pre>
-      </div>
+for (path::iterator it = p.begin(); it != p.end(); ++it)
+  cout &lt;&lt; &quot; &quot; &lt;&lt; *it &lt;&lt; '\n';</pre>
     </blockquote>
     </td>
   </tr>
 </table>
+<p><code>path::iterator::value_type</code> is <code>path::string_type</code>, 
+and iteration treats <code>path</code> as a container of filenames.</p>
+
+<p dir="ltr">Let's look at some at the output from the a slightly different 
+example:</p>
+
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt">
+      <pre>$ ./path_info /foo/bar/baa.txt
+
+composed path:
+  cout &lt;&lt; -------------: /foo/bar/baa.txt
+  localize()-----------: /foo/bar/baa.txt
+...
+observers, native format:
+  native()---------: /foo/bar/baa.txt
+  c_str()----------: /foo/bar/baa.txt
+  native_string()--: /foo/bar/baa.txt
+  native_wstring()-: /foo/bar/baa.txt
+
+observers, generic format:
+  string()---------: /foo/bar/baa.txt
+  wstring()--------: /foo/bar/baa.txt</pre>
+      </td>
+      <td style="font-size: 10pt">
+      <pre>&gt;path_info /foo/bar\baa.txt
+
+composed path:
+  cout &lt;&lt; -------------: /foo/bar/baa.txt
+  localize()-----------: \foo\bar\baa.txt
+...
+observers, native format:
+  native()---------: /foo/bar\baa.txt
+  c_str()----------: /foo/bar\baa.txt
+  native_string()--: /foo/bar\baa.txt
+  native_wstring()-: /foo/bar\baa.txt
+
+observers, generic format:
+  string()---------: /foo/bar/baa.txt
+  wstring()--------: /foo/bar/baa.txt</pre>
+      </td>
+    </tr>
+  </table>
+
+<p dir="ltr"><b>Class <code>path</code> deals with two different pathname 
+formats - a generic format and a native format.</b> In the case of POSIX-like 
+operating systems, these formats are the same. But for users of Windows and 
+other non-POSIX operating systems, the distinction is important. Even 
+programmers writing for POSIX-like systems need to understand the distinction if 
+they want their code to be portable to non-POSIX systems.</p>
+
+<p dir="ltr">The <b>generic format</b> is the format used by POSIX-like 
+operating systems such as the Unixes, Linux, and Mac OS X. The directory 
+separator character is a slash.</p>
+
+<p dir="ltr">The <b>native format</b> is the format as defined by the particular 
+operating system. For Windows, either the slash or the backslash can be used as 
+the directory separator character. If a drive specified or a backslash appears 
+in a pathname on a Windows system, it is always treated as the native format.</p>
+
+<p dir="ltr">Native format observers should be used when interacting with the 
+operating system or with users; that's what they expect.</p>
+
+<p dir="ltr">Generic format observers should be used when the results need to be 
+portable and uniform regardless of the operating system.</p>
+
+<p dir="ltr"><code>path</code> objects always hold pathnames in the native 
+format, but otherwise leave them unchanged from their source. The
+<a href="reference.html#localize">localize()</a> function will convert to the 
+preferred form, if the native format has several forms. Thus on Windows, it will 
+convert slashes to backslashes.</p>
+
+<p dir="ltr">Let's move on to decomposition and query functions:</p>
+
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt">
+      <pre>$ ./path_info /foo/bar/baa.txt
+...
+decomposition:
+  root_name()------:
+  root_directory()-: /
+  root_path()------: /
+  relative_path()--: foo/bar/baa.txt
+  parent_path()----: /foo/bar
+  filename()-------: baa.txt
+  stem()-----------: baa
+  extension()------: .txt
+
+query:
+  empty()--------------: false
+  <span style="background-color: #FFFF00">is_absolute</span><span style="background-color: #FFFF00">()--------: true</span>
+  has_root_name()------: false
+  has_root_directory()-: true
+  has_root_path()------: true
+  has_relative_path()--: true
+  has_parent_path()----: true
+  has_filename()-------: true
+  has_stem()-----------: true
+  has_extension()------: true</pre>
+      </td>
+      <td style="font-size: 10pt">
+      <pre>&gt;path_info /foo/bar/baa.txt
+...
+decomposition:
+  root_name()------:
+  root_directory()-: /
+  root_path()------: /
+  relative_path()--: foo/bar/baa.txt
+  parent_path()----: /foo/bar
+  filename()-------: baa.txt
+  stem()-----------: baa
+  extension()------: .txt
+
+query:
+  empty()--------------: false
+  <span style="background-color: #FFFF00">is_absolute</span><span style="background-color: #FFFF00">()--------: false</span>
+  has_root_name()------: false
+  has_root_directory()-: true
+  has_root_path()------: true
+  has_relative_path()--: true
+  has_parent_path()----: true
+  has_filename()-------: true
+  has_stem()-----------: true
+  has_extension()------: true</pre>
+      </td>
+    </tr>
+  </table>
+
+<p dir="ltr">These are pretty self-evident, but do note the difference in the 
+result of <code>is_absolute()</code> between Linux and Windows. Because there is 
+no root name (i.e. drive specifier or network name), a lone slash (or backslash) 
+is a relative path on Windows. </p>
+
+<p dir="ltr">On to composition!</p>
+
+<p>Class <code>path</code> uses <code>/</code> and <code>/=</code> operators to 
+append elements. That's a reminder 
+that these operations append the operating system's preferred directory 
+separator if needed. The preferred 
+directory separator is a slash on POSIX-like systems, and a backslash on 
+Windows-like systems.</p>
+
+<p><a href="../example/path_info.cpp"><code>path_info.cpp</code></a> 
+composes a path by appending each of the command line elements to an initially 
+empty path:</p>
+
+<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <tr>
+    <td style="font-size: 10pt">
+    <blockquote>
+    <pre>path p;  // compose a path from the command line arguments
+
+for (; argc &gt; 1; --argc, ++argv)
+  p /= argv[1];
+
+cout &lt;&lt; &quot;\ncomposed path:\n&quot;;
+cout &lt;&lt; &quot; cout &lt;&lt; -------------: &quot; &lt;&lt; p &lt;&lt; &quot;\n&quot;;
+cout &lt;&lt; &quot; localize()-----------: &quot; &lt;&lt; p.localize() &lt;&lt; &quot;\n&quot;;</pre>
+    </blockquote>
+    </td>
+  </tr>
+</table>
+
+<p>Let's give this code a try: </p>
+
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt">
+      <pre>$ ./path_info / foo/bar baz.txt
+
+composed path:
+  cout &lt;&lt; -------------: /foo/bar/baa.txt
+  localize()-----------: /foo/bar/baa.txt</pre>
+      </td>
+      <td style="font-size: 10pt">
+      <pre>&gt;path_info / foo/bar baa.txt
+
+composed path:
+  cout &lt;&lt; -------------: /foo/bar\baa.txt
+  localize()-----------: \foo\bar\baa.txt</pre>
+      </td>
+    </tr>
+  </table>
 
 <h3>Directory iteration tweak - tut4.cpp</h3>
 
@@ -425,14 +729,14 @@ int main(int argc, char* argv[])
       cout &lt;&lt; &quot;is a directory containing:\n&quot;;
       for ( directory_iterator it (p); it != directory_iterator (); ++it )
       {
-        <span style="background-color: #88FFA3">std::cout &lt;&lt; &quot; &quot; &lt;&lt; it-&gt;</span><span style="background-color: #88FFA3">path().filename</span><span style="background-color: #88FFA3">() &lt;&lt; '\n';</span>
+        <span style="background-color: #88FFA3">cout &lt;&lt; &quot; &quot; &lt;&lt; it-&gt;</span><span style="background-color: #88FFA3">path().filename</span><span style="background-color: #88FFA3">() &lt;&lt; '\n';</span>
       }
     }
     else
-      std::cout &lt;&lt; &quot;exists, but is neither a regular file nor a directory\n&quot;;<span style="background-color: #88FFA3">
+      cout &lt;&lt; &quot;exists, but is neither a regular file nor a directory\n&quot;;<span style="background-color: #88FFA3">
 </span>  }
   else
-    std::cout &lt;&lt; &quot;does not exist\n&quot;;
+    cout &lt;&lt; &quot;does not exist\n&quot;;
 
   return 0;
 }</pre>
@@ -443,14 +747,12 @@ int main(int argc, char* argv[])
 
 <h3>Error handling - tut5.cpp</h3>
 
-<p>&nbsp;</p>
-
 <hr>
-<p>Â© Copyright Beman Dawes 2009</p>
+<p>© Copyright Beman Dawes 2009</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->02 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32136" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->09 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32150" --></p>
 
 </body>
 

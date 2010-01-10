@@ -216,7 +216,7 @@ int main(int /*argc*/, char* /*argv*/[])
   BOOST_TEST(fs::extension("a.b.c") == ".c");
   BOOST_TEST(fs::extension("a.b.c.") == ".");
   BOOST_TEST(fs::extension("") == "");
-  BOOST_TEST(fs::extension("a/") == ".");
+  BOOST_TEST(fs::extension("a/") == "");
   
 // basename() tests ----------------------------------------------------------//
 

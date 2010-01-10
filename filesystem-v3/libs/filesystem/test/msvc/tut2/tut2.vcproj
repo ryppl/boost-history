@@ -167,7 +167,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\tutorial\tut2.cpp"
+				RelativePath="..\..\..\example\tut2.cpp"
 				>
 			</File>
 		</Filter>
