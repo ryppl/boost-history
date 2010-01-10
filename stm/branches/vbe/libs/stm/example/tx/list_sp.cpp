@@ -86,8 +86,8 @@ public:
                 curr = curr->next_;
             }
             if (curr==0 || (curr->value_ > val)) {
-                make_write_ptr(prev)->next_=BOOST_STM_TX_NEW_PTR(_,list_node<T>(val, curr.get()));
-                ++(make_write_ptr(_, this)->size_);
+                make_write_ptr<static_poly>(prev)->next_=BOOST_STM_TX_NEW_PTR(_,list_node<T>(val, curr.get()));
+                ++(make_write_ptr<static_poly>(_, this)->size_);
             }
         } BOOST_STM_END_ATOMIC
         catch (...) {
@@ -118,11 +118,11 @@ public:
             while (curr) {
                 // if we find the node, disconnect it and end the search
                 if (curr->value_ == val) {
-                    make_write_ptr(prev)->next_=curr->next_;
+                    make_write_ptr<static_poly>(prev)->next_=curr->next_;
                     // delete curr...
                     BOOST_STM_TX_DELETE_PTR(_,curr);
                     //--size_;
-                    --(make_write_ptr(_, this)->size_);
+                    --(make_write_ptr<static_poly>(_, this)->size_);
                     //write_ptr<list<T> > that(_, this);
                     //++(that->size_);
                     break;
