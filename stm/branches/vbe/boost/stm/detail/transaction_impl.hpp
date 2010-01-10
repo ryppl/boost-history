@@ -48,9 +48,11 @@ inline bool transaction::isolatedTxInFlight()
       i != transactionsInFlight_.end(); ++i)
    {
       // if this is our threadId, skip it
-      if (((transaction*)*i)->threadId_ == this->threadId_) continue;
+      //if (((transaction*)*i)->threadId_ == this->threadId_) continue;
+      if ((*i)->threadId_ == this->threadId_) continue;
 
-      if (((transaction*)*i)->isolated()) return true;
+      //if (((transaction*)*i)->isolated()) return true;
+      if ((*i)->isolated()) return true;
    }
 
    return false;

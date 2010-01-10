@@ -179,6 +179,9 @@ T commit_and_return(transaction&t, T expression) {
 #define BOOST_STM_TX_RETURN(TX, EXPRESSION) \
     return boost::stm::detail::commit_and_return(TX, EXPRESSION)
 
+#define BOOST_STM_TX_RETURN_NOTHING(TX) \
+    if (!TX.commit());else return
+
 //---------------------------------------------------------------------------
 // return the expression EXPRESSION from inside a transaction TX
 //---------------------------------------------------------------------------
@@ -311,7 +314,7 @@ T commit_and_return(transaction&t, T expression) {
 //---------------------------------------------------------------------------
 
 #define BOOST_STM_TX_DELETE_PTR(TX, PTR) \
-    (TX).delete_ptr(PTR)
+    boost::stm::delete_ptr(TX, PTR)
 
 //---------------------------------------------------------------------------
 // deletes the allocated object on transaction TX

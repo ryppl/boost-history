@@ -72,7 +72,7 @@ public:
                 throw aborted_transaction_exception("aborting transaction");
             }
 
-            return tx->write(*this).val_;
+            return tx->write(*static_cast<Final*>(this)).val_;
         }
         return val_;
     }
@@ -88,7 +88,7 @@ public:
                 tx->lock_and_abort();
                 throw aborted_transaction_exception("aborting transaction");
             }
-            return tx->read(*this).val_;
+            return tx->read(*static_cast<Final const*>(this)).val_;
         }
         return val_;
     }

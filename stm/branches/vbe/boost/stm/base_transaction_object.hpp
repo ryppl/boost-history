@@ -54,8 +54,9 @@ namespace detail {
     struct make_cache_aux<static_poly> {
         template <typename T>
         static T* apply(T & rhs, transaction& t) {
-            //return T::make_cache(rhs, &t);
-            return static_cast<T*>(rhs.make_cache(t));
+            //return T::make_cache(static_cast<T const&>(rhs), t);
+            return T::make_cache(rhs, t);
+            //return static_cast<T*>(rhs.make_cache(t));
         }
     };
 
