@@ -1049,7 +1049,8 @@ namespace boost { namespace polygon{
           std::vector<iterator> edges_from_left;
           while(current_iter != scan_data_.end() &&
                 //can only be true if y is integer
-                evalAtXforY(x_, (*current_iter).first.first, (*current_iter).first.second) == y) {
+                //evalAtXforY(x_, (*current_iter).first.first, (*current_iter).first.second) == y) {
+                on_above_or_below(Point(x_, y), (*current_iter).first) == 0) {
             //removal_set_.push_back(current_iter);
             ++current_iter;
           }

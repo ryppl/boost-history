@@ -173,6 +173,30 @@ namespace boost { namespace polygon{
       return false;
     }
 
+    static inline Unit evalAtXforYlazy(Unit xIn, Point pt, Point other_pt) { 
+      long double
+        evalAtXforYret, evalAtXforYxIn, evalAtXforYx1, evalAtXforYy1, evalAtXforYdx1, evalAtXforYdx, 
+        evalAtXforYdy, evalAtXforYx2, evalAtXforYy2, evalAtXforY0;
+      //y = (x - x1)dy/dx + y1
+      //y = (xIn - pt.x)*(other_pt.y-pt.y)/(other_pt.x-pt.x) + pt.y
+      //assert pt.x != other_pt.x
+      if(pt.y() == other_pt.y())
+        return pt.y();
+      evalAtXforYxIn = xIn;
+      evalAtXforYx1 = pt.get(HORIZONTAL);
+      evalAtXforYy1 = pt.get(VERTICAL);
+      evalAtXforYdx1 = evalAtXforYxIn - evalAtXforYx1;
+      evalAtXforY0 = 0;
+      if(evalAtXforYdx1 == evalAtXforY0) return (Unit)evalAtXforYy1;
+      evalAtXforYx2 = other_pt.get(HORIZONTAL);
+      evalAtXforYy2 = other_pt.get(VERTICAL);
+      
+      evalAtXforYdx = evalAtXforYx2 - evalAtXforYx1;
+      evalAtXforYdy = evalAtXforYy2 - evalAtXforYy1;
+      evalAtXforYret = ((evalAtXforYdx1) * evalAtXforYdy / evalAtXforYdx + evalAtXforYy1);
+      return (Unit)evalAtXforYret;
+    }
+
     static inline typename high_precision_type<Unit>::type evalAtXforY(Unit xIn, Point pt, Point other_pt) { 
       typename high_precision_type<Unit>::type
         evalAtXforYret, evalAtXforYxIn, evalAtXforYx1, evalAtXforYy1, evalAtXforYdx1, evalAtXforYdx, 
@@ -439,7 +463,86 @@ namespace boost { namespace polygon{
     struct compute_intersection_pack {
       typedef typename high_precision_type<Unit>::type high_precision;
       high_precision y_high, dx1, dy1, dx2, dy2, x11, x21, y11, y21, x_num, y_num, x_den, y_den, x, y;
+      static inline bool compute_lazy_intersection(Point& intersection, const half_edge& he1, const half_edge& he2) {
+        long double y_high, dx1, dy1, dx2, dy2, x11, x21, y11, y21, x_num, y_num, x_den, y_den, x, y;
+        typedef rectangle_data<Unit> Rectangle;
+        Rectangle rect1, rect2;
+        set_points(rect1, he1.first, he1.second);
+        set_points(rect2, he2.first, he2.second);
+        if(!::boost::polygon::intersects(rect1, rect2, true)) return false;
+        if(is_vertical(he1)) {
+          if(is_vertical(he2)) return false;
+          y_high = evalAtXforYlazy(he1.first.get(HORIZONTAL), he2.first, he2.second);
+          Unit y = (Unit)y_high;
+          if(y_high < y) --y;
+          if(contains(rect1.get(VERTICAL), y, true)) {
+            intersection = Point(he1.first.get(HORIZONTAL), y);
+            return true;
+          } else {
+            return false;
+          }
+        } else if(is_vertical(he2)) {
+          y_high = evalAtXforYlazy(he2.first.get(HORIZONTAL), he1.first, he1.second);
+          Unit y = (Unit)y_high;
+          if(y_high < y) --y;
+          if(contains(rect2.get(VERTICAL), y, true)) {
+            intersection = Point(he2.first.get(HORIZONTAL), y);
+            return true;
+          } else {
+            return false;
+          }
+        }
+        //the bounding boxes of the two line segments intersect, so we check closer to find the intersection point
+        dy2 = (he2.second.get(VERTICAL)) - 
+          (he2.first.get(VERTICAL));
+        dy1 = (he1.second.get(VERTICAL)) - 
+          (he1.first.get(VERTICAL));
+        dx2 = (he2.second.get(HORIZONTAL)) - 
+          (he2.first.get(HORIZONTAL));
+        dx1 = (he1.second.get(HORIZONTAL)) - 
+          (he1.first.get(HORIZONTAL));
+        if(equal_slope_hp(dx1, dy1, dx2, dy2)) return false;
+        //the line segments have different slopes
+        //we can assume that the line segments are not vertical because such an intersection is handled elsewhere
+        x11 = (he1.first.get(HORIZONTAL));
+        x21 = (he2.first.get(HORIZONTAL));
+        y11 = (he1.first.get(VERTICAL));
+        y21 = (he2.first.get(VERTICAL));
+        //Unit exp_x = ((at)x11 * (at)dy1 * (at)dx2 - (at)x21 * (at)dy2 * (at)dx1 + (at)y21 * (at)dx1 * (at)dx2 - (at)y11 * (at)dx1 * (at)dx2) / ((at)dy1 * (at)dx2 - (at)dy2 * (at)dx1);
+        //Unit exp_y = ((at)y11 * (at)dx1 * (at)dy2 - (at)y21 * (at)dx2 * (at)dy1 + (at)x21 * (at)dy1 * (at)dy2 - (at)x11 * (at)dy1 * (at)dy2) / ((at)dx1 * (at)dy2 - (at)dx2 * (at)dy1);
+        x_num = (x11 * dy1 * dx2 - x21 * dy2 * dx1 + y21 * dx1 * dx2 - y11 * dx1 * dx2); 
+        x_den = (dy1 * dx2 - dy2 * dx1);
+        y_num = (y11 * dx1 * dy2 - y21 * dx2 * dy1 + x21 * dy1 * dy2 - x11 * dy1 * dy2);
+        y_den = (dx1 * dy2 - dx2 * dy1);
+        x = x_num / x_den;
+        y = y_num / y_den;
+        //std::cout << "cross1 " << dy1 << " " << dx2 << " " << dy1 * dx2 << std::endl;
+        //std::cout << "cross2 " << dy2 << " " << dx1 << " " << dy2 * dx1 << std::endl;
+        //Unit exp_x = compute_x_intercept<at>(x11, x21, y11, y21, dy1, dy2, dx1, dx2);
+        //Unit exp_y = compute_x_intercept<at>(y11, y21, x11, x21, dx1, dx2, dy1, dy2);
+        Unit x_unit = (Unit)(x);
+        Unit y_unit = (Unit)(y);
+        //truncate downward if it went up due to negative number
+        if(x < x_unit) --x_unit;
+        if(y < y_unit) --y_unit;
+        //if(x != exp_x || y != exp_y)
+        //  std::cout << exp_x << " " << exp_y << " " << x << " " << y << std::endl;
+        //Unit y1 = evalAtXforY(exp_x, he1.first, he1.second);
+        //Unit y2 = evalAtXforY(exp_x, he2.first, he2.second);
+        //std::cout << exp_x << " " << exp_y << " " << y1 << " " << y2 << std::endl;
+        Point result(x_unit, y_unit);
+        if(!contains(rect1, result, true)) return false;
+        if(!contains(rect2, result, true)) return false;
+        intersection = result;
+        return true;
+      }
       inline bool compute_intersection(Point& intersection, const half_edge& he1, const half_edge& he2) {
+        if(!intersects(he1, he2))
+           return false;
+        compute_lazy_intersection(intersection, he1, he2); 
+        if(intersects_grid(intersection, he1) &&
+           intersects_grid(intersection, he2))
+          return true;
         typedef rectangle_data<Unit> Rectangle;
         Rectangle rect1, rect2;
         set_points(rect1, he1.first, he1.second);

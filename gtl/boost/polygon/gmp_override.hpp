@@ -26,6 +26,7 @@ namespace boost { namespace polygon {
       return (*this);
     }
     inline operator int() const { 
+      std::cout << "cast\n";
       mpz_class num = v_.get_num();
       mpz_class den = v_.get_den();
       num /= den;
