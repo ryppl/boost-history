@@ -85,7 +85,7 @@ public:
         value = r.value;
         return *this;
     }
-    
+
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
     static transactional_object<T>* make_cache(transactional_object<T> const& rhs, transaction& t) {

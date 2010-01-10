@@ -39,31 +39,31 @@ public:
     typedef T value_type;
     //-----------------------------------------------------------------------------
     mixin() : val_() {
-            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;        
+            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;
     }
 
     mixin(mixin const& r) : val_(r.value()) {
-            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;        
+            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;
     }
     template<typename F, typename U>
     mixin(mixin<F,U> const& r) : val_(r.value()) {
-            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;        
+            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;
     }
 
     mixin(T v) : val_(v) {
-            //std::cerr << __LINE__ << " mixin val_=" << v << std::endl;        
+            //std::cerr << __LINE__ << " mixin val_=" << v << std::endl;
     }
     // contructor from a convertible to T
     template <typename U>
     mixin(U v) : val_(v) {
-            //std::cerr << __LINE__ << " mixin val_=" << v << std::endl;        
+            //std::cerr << __LINE__ << " mixin val_=" << v << std::endl;
     }
-    
+
     operator T() const { return value(); }
     operator T&() { return ref(); }
 
     //-----------------------------------------------------------------------------
-    // accessors        
+    // accessors
     T& ref() {
         transaction* tx=current_transaction();
         if (tx!=0) {

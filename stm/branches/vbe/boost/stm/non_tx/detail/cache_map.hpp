@@ -91,7 +91,7 @@ public:
         ::new (p) cache<T>(*static_cast<cache<T> const*>(this));
         return p;
         //~ return make_cache(*this, t);
-        
+
     }
 #else
     static cache<T>* make_cache(cache<T> const& rhs, transaction& ) {

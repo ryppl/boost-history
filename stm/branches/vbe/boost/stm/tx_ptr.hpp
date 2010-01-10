@@ -22,13 +22,13 @@
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
 
-template <typename T>
+template <typename T, typename Poly=static_poly>
 class write_ptr;
 
-template <typename T>
+template <typename T, typename Poly=static_poly>
 class read_ptr
 {
-    typedef read_ptr<T> this_type;
+    typedef read_ptr<T, Poly> this_type;
 public:
 
    inline read_ptr(transaction &t, T const &tx_obj) :
@@ -39,17 +39,17 @@ public:
       t_(t), tx_ptr_(const_cast<T*>(t_.read_ptr(tx_ptr))), written_(false)
    {}
 
-    inline read_ptr<T> & operator=(read_ptr<T> const& rhs) { // never throws
+    inline read_ptr<T,Poly> & operator=(read_ptr<T,Poly> const& rhs) { // never throws
         if (this!=&rhs) {
             tx_ptr_=rhs.tx_ptr_;
         }
         return *this;
     }
-    inline read_ptr<T> & operator=(T const * ptr) { // never throws
+    inline read_ptr<T,Poly> & operator=(T const * ptr) { // never throws
         tx_ptr_=const_cast<T*>(ptr);
         return *this;
     }
-       
+
    T* get() const
    {
       if (t_.forced_to_abort())
@@ -99,7 +99,7 @@ public:
       }
       else
       {
-         tx_ptr_ = &t_.write(*tx_ptr_);
+         tx_ptr_ = t_.write_ptr_poly<Poly>(tx_ptr_);
          written_ = true;
       }
 
@@ -111,35 +111,35 @@ public:
     inline operator unspecified_bool_type() const {
         return tx_ptr_ == 0? 0: &this_type::tx_ptr_;
     }
-   
+
 private:
 
    mutable transaction &t_;
    mutable T *tx_ptr_;
    mutable bool written_;
-    template <typename X> friend  class write_ptr;
+    template <typename X, typename P> friend  class write_ptr;
 };
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-template <typename T>
+template <typename T, typename Poly>
 class write_ptr
 {
 public:
 
    inline write_ptr(transaction &t, T & tx_obj) :
-      t_(t), tx_obj_(t_.write(tx_obj))
+      t_(t), tx_obj_(t_.write_poly<Poly>(tx_obj))
    {}
 
    inline write_ptr(transaction &t, T* ptr) :
-      t_(t), tx_obj_(*t_.write_ptr(ptr))
+      t_(t), tx_obj_(*t_.write_ptr_poly<Poly>(ptr))
    {}
 
    inline write_ptr(transaction &t, read_ptr<T> & tx_obj) :
-      t_(t), tx_obj_(*t_.write_ptr(tx_obj.tx_ptr_))
+      t_(t), tx_obj_(*t_.write_ptr_poly<Poly>(tx_obj.tx_ptr_))
    {}
 
-   inline write_ptr(read_ptr<T> & ptr) :
+   inline write_ptr(read_ptr<T,Poly> & ptr) :
       t_(ptr.trans()), tx_obj_(*ptr.write_ptr())
    {}
 
@@ -147,12 +147,12 @@ public:
         tx_obj_=*t_.write_ptr(ptr);
         return *this;
     }
-    write_ptr& operator=(read_ptr<T> & tx_obj) {
-        tx_obj_=*t_.write_ptr(tx_obj.tx_ptr_);
+    write_ptr& operator=(read_ptr<T,Poly> & tx_obj) {
+        tx_obj_=*t_.write_ptr_poly<Poly>(tx_obj.tx_ptr_);
         return *this;
     }
     T* get() const
-    {   
+    {
       if (t_.forced_to_abort())
       {
          t_.lock_and_abort();
@@ -168,27 +168,27 @@ private:
    mutable T &tx_obj_;
 };
 
-template <typename T>
-inline write_ptr<T> make_write_ptr(transaction& tx, T const* ptr) {
-    return write_ptr<T>(tx, ptr);
+template <typename Poly, typename T>
+inline write_ptr<T, Poly> make_write_ptr(transaction& tx, T const* ptr) {
+    return write_ptr<T, Poly>(tx, ptr);
 }
 
-template <typename T>
-inline write_ptr<T> make_write_ptr(transaction& tx, T* ptr) {
-    return write_ptr<T>(tx, ptr);
+template <typename Poly, typename T>
+inline write_ptr<T,Poly> make_write_ptr(transaction& tx, T* ptr) {
+    return write_ptr<T, Poly>(tx, ptr);
 }
 
-template <typename T>
-inline write_ptr<T> make_write_ptr(read_ptr<T>& ptr) {
-    return write_ptr<T>(ptr);
+template <typename Poly, typename T>
+inline write_ptr<T, Poly> make_write_ptr(read_ptr<T, Poly>& ptr) {
+    return write_ptr<T, Poly>(ptr);
 }
 
-template <typename T>
-void delete_ptr(transaction& tx, read_ptr<T>& ptr) {
+template <typename T, typename Poly>
+void delete_ptr(transaction& tx, read_ptr<T, Poly>& ptr) {
     delete_ptr(tx, ptr.get());
 }
-template <typename T>
-void delete_ptr(transaction& tx, write_ptr<T>& ptr) {
+template <typename T, typename Poly>
+void delete_ptr(transaction& tx, write_ptr<T, Poly>& ptr) {
     delete_ptr(tx, ptr.get());
 }
 }}

@@ -86,7 +86,7 @@
 
 #if (defined(BOOST_STM_USE_DEFAULT_MEMORY_MANAGER) && defined(BOOST_STM_USE_GLOBAL_MEMORY_MANAGER)) || \
     (defined(BOOST_STM_USE_GLOBAL_MEMORY_MANAGER) && defined(BOOST_STM_USE_CLASS_MEMORY_MANAGER)) || \
-    (defined(BOOST_STM_USE_CLASS_MEMORY_MANAGER) && defined(BOOST_STM_USE_DEFAULT_MEMORY_MANAGER)) 
+    (defined(BOOST_STM_USE_CLASS_MEMORY_MANAGER) && defined(BOOST_STM_USE_DEFAULT_MEMORY_MANAGER))
 #error only one of BOOST_STM_USE_DEFAULT_MEMORY_MANAGER, BOOST_STM_USE_GLOBAL_MEMORY_MANAGER or BOOST_STM_USE_CLASS_MEMORY_MANAGER can be defined
 #endif
 
@@ -123,7 +123,7 @@
 // define USE_BLOOM_FILTER if you want STM uses Bloom filters for read set
 #define USE_BLOOM_FILTER 1
 ///////////////////////////////////////////////////////////////////////////////
-// define PERFORMING_WRITE_BLOOM if you want STM uses Bloom filters for write set 
+// define PERFORMING_WRITE_BLOOM if you want STM uses Bloom filters for write set
 #define PERFORMING_WRITE_BLOOM 1
 
 #ifdef USE_BLOOM_FILTER
@@ -133,16 +133,16 @@
 ///////////////////////////////////////////////////////////////////////////////
 // OPTIMIZATIONS: MAPS AND SETS
 ///////////////////////////////////////////////////////////////////////////////
-// define MAP_WRITE_CONTAINER if you want STM uses flat map for write map 
+// define MAP_WRITE_CONTAINER if you want STM uses flat map for write map
 #define MAP_WRITE_CONTAINER 1
 ///////////////////////////////////////////////////////////////////////////////
-// define MAP_NEW_CONTAINER if you want STM uses flat map for new set 
+// define MAP_NEW_CONTAINER if you want STM uses flat map for new set
 //#define MAP_NEW_CONTAINER 1
 ///////////////////////////////////////////////////////////////////////////////
-// define MAP_THREAD_MUTEX_CONTAINER if you want STM uses flat map for thread mutex set 
+// define MAP_THREAD_MUTEX_CONTAINER if you want STM uses flat map for thread mutex set
 //#define MAP_THREAD_MUTEX_CONTAINER 1
 ///////////////////////////////////////////////////////////////////////////////
-// define MAP_THREAD_BOOL_CONTAINER if you want STM uses flat map for thread bool set 
+// define MAP_THREAD_BOOL_CONTAINER if you want STM uses flat map for thread bool set
 #define MAP_THREAD_BOOL_CONTAINER 1
 
 ///////////////////////////////////////////////////////////////////////////////

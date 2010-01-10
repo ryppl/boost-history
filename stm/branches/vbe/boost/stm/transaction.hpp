@@ -311,12 +311,12 @@ public:
    // Lock Aware Transactional Memory support methods
    //--------------------------------------------------------------------------
 
-   
-   template <typename M> 
+
+   template <typename M>
    static void lock(M& m, latm::mutex_type& lock);
-   template <typename M> 
+   template <typename M>
    static bool try_lock(M& m, latm::mutex_type& lock);
-   template <typename M> 
+   template <typename M>
    static void unlock(M& m, latm::mutex_type& lock);
 
    //--------------------------------------------------------------------------
@@ -521,28 +521,34 @@ public:
    template <typename T> T* write_ptr(T* in)
    {
       if (0 == in) return 0;
-      return &write_poly<T,static_poly>(*in);
+      return &write_poly<static_poly>(*in);
    }
-   template <typename T> T& w(T& in) { return write_poly<T,static_poly>(in); }
+   template <typename T> T& w(T& in) { return write_poly<static_poly>(in); }
    template <typename T>
    inline T& write(T& in)
    {
-      return write_poly<T,static_poly>(in);
+      return write_poly<static_poly>(in);
    }
 
    template <typename T> T* write_ptr_dyn(T* in)
    {
       if (0 == in) return 0;
-      return &write_poly<T,dyn_poly>(*in);
+      return &write_poly<dyn_poly>(*in);
    }
    template <typename T>
    inline T& write_dyn(T& in)
    {
-      return write_poly<T,dyn_poly>(in);
+      return write_poly<dyn_poly>(in);
    }
-   
+
    //--------------------------------------------------------------------------
-   template <typename T, typename Poly>
+   template <typename Poly, typename T> 
+   T* write_ptr_poly(T* in)
+   {
+      if (0 == in) return 0;
+      return &write_poly<Poly>(*in);       
+   }
+   template <typename Poly, typename T>
    inline T& write_poly(T& in)
    {
       if (direct_updating())
@@ -1070,7 +1076,7 @@ private:
          deletedMemoryList().push_back(detail::make_non_tx(in));
       }
    }
-   
+
    //--------------------------------------------------------------------------
    template <typename T>
    void direct_delete_tx_array(T *in, std::size_t size)
@@ -1518,49 +1524,49 @@ private:
    //--------------------------------------------------------------------------
    // deferred updating locking methods
    //--------------------------------------------------------------------------
-   template <typename M> 
+   template <typename M>
    static void def_full_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static bool def_full_try_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static void def_full_unlock(M& m, latm::mutex_type& mutex);
 
-   template <typename M> 
+   template <typename M>
    static void def_tm_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static bool def_tm_try_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static void def_tm_unlock(M& m, latm::mutex_type& mutex);
 
-   template <typename M> 
+   template <typename M>
    static void def_tx_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static bool def_tx_try_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static void def_tx_unlock(M& m, latm::mutex_type& mutex);
 
    //--------------------------------------------------------------------------
    // direct updating locking methods
    //--------------------------------------------------------------------------
-   template <typename M> 
+   template <typename M>
    static void dir_full_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static bool dir_full_try_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static void dir_full_unlock(M& m, latm::mutex_type& mutex);
 
-   template <typename M> 
+   template <typename M>
    static void dir_tm_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static bool dir_tm_try_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static void dir_tm_unlock(M& m, latm::mutex_type& mutex);
 
-   template <typename M> 
+   template <typename M>
    static void dir_tx_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static bool dir_tx_try_lock(M& m, latm::mutex_type& mutex);
-   template <typename M> 
+   template <typename M>
    static void dir_tx_unlock(M& m, latm::mutex_type& mutex);
 
    //--------------------------------------------------------------------------
@@ -2138,11 +2144,11 @@ public:
 
 inline transaction* current_transaction() {return transaction::current_transaction();}
 
-template <typename M> 
+template <typename M>
 inline void lock(M& m, latm::mutex_type& lock) {transaction::lock(m, lock);}
 template <typename M>
 inline  bool try_lock(M& m, latm::mutex_type& lock) {return transaction::try_lock(m, lock);}
-template <typename M> 
+template <typename M>
 inline void unlock(M& m, latm::mutex_type& lock) {transaction::unlock(m, lock);}
 
 
@@ -2184,7 +2190,7 @@ inline void cache_deallocate(T* ptr) {
     #endif
         }
 }
-#endif 
+#endif
 
 inline void cache_release(base_transaction_object* ptr) {
     if (ptr==0) return ;

@@ -34,22 +34,22 @@ public:
     typedef mixin< object<T>, T > base_type;
     //-----------------------------------------------------------------------------
     object() : base_type() {
-            //std::cerr << __LINE__ << " object" << std::endl;        
+            //std::cerr << __LINE__ << " object" << std::endl;
     }
     template<typename U>
     object(object<U> const& r) : base_type(r) {
-            //std::cerr << __LINE__ << " object" << std::endl;        
+            //std::cerr << __LINE__ << " object" << std::endl;
     }
     object(object const& r) : base_type(r) {
-            //std::cerr << __LINE__ << " object" << std::endl;        
+            //std::cerr << __LINE__ << " object" << std::endl;
     }
     // contructor from a convertible to T
     template <typename U>
     object(U v) : base_type(v) {
-            //std::cerr << __LINE__ << " object" << std::endl;        
+            //std::cerr << __LINE__ << " object" << std::endl;
     }
     object(T v) : base_type(v) {
-            //std::cerr << __LINE__ << " object" << std::endl;        
+            //std::cerr << __LINE__ << " object" << std::endl;
     }
 };
 

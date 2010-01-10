@@ -39,7 +39,7 @@ template <class T>
 struct has_trivial_copy_semantics :
    boost::mpl::and_<
         boost::has_trivial_copy_constructor<T>,
-        boost::has_trivial_assign<T> 
+        boost::has_trivial_assign<T>
   >
  {};
 
@@ -54,7 +54,7 @@ class transaction;
 // transaction object mixin making a trivial memcpy copy
 // Provides the definition of the virtual functions
 //      make_cache: use memcpy on cache_allocated
-//      copy_cache: use memcpy 
+//      copy_cache: use memcpy
 //      move_state and
 //      delete_cache: use cache_allocated
 // Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
