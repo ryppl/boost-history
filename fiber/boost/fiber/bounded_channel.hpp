@@ -48,10 +48,10 @@ private:
 			next()
 		{}
 
-		inline friend void intrusive_ptr_add_ref( node * p)
+		friend void intrusive_ptr_add_ref( node * p)
 		{ ++p->use_count; }
 		
-		inline friend void intrusive_ptr_release( node * p)
+		friend void intrusive_ptr_release( node * p)
 		{ if ( --p->use_count == 0) delete p; }
 	};
 

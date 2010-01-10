@@ -31,12 +31,17 @@ header:
 
     #include <boost/fiber.hpp>
 
-which includes all the other headers in turn. The classes and functions reside in namespaces
-`boost::fibers` and `boost::this_fiber`.
+which includes all the other headers in turn.
 
-[note __boost_fiber__ requires [*Boost Library 1.41.0] .]
+Used namespaces are:
+
+    namespace boost::fibers
+    namespace boost::this_fiber
+
 
 [warning This library is ['not] an official Boost library]
+
+[note __boost_fiber__ requires [*Boost Library 1.41.0] .]
 
 __boost_fiber__ depends uppon __boost_atomic__, __boost_move__ and uses some code from __boost_thread__
 (especially a specialisation of future).
