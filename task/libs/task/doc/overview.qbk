@@ -114,6 +114,8 @@ Used namespaces are:
 
 [note Please note that __boost_task__ is not optimized yet.]
 
+[note __boost_fiber__ requires [*Boost Library 1.41.0] .]
+
 __boost_task__ depends uppon __boost_atomic__, __boost_move__ and __boost_fiber__.
 
 
