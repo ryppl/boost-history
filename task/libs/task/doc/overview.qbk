@@ -124,7 +124,7 @@ __boost_task__ depends uppon __boost_atomic__, __boost_move__ and __boost_fiber_
 __boost_task__ has been tested on the following platforms and compilers:
 
 *  Debian GNU/Linux 2.6.31.6 (x86_64), GCC 4.3.4
-*  Ubuntu GNU/Linux 2.6.28.11 (x86), GCC 4.3.3
+*  Ubuntu GNU/Linux 2.6.28.11 (x86), ICC 11.1
 *  FreeBSD 8.0 (x86), GCC 4.2.1
 *  OpenSolaris 2009.06 (x86_64), GCC 4.3.2
 *  Windows XP Professional (x86), MSVC 9.0
