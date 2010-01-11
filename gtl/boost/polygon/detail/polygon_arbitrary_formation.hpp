@@ -303,7 +303,7 @@ namespace boost { namespace polygon{
           elm2y = elm2.first.get(VERTICAL);
         } else if(localx == elm2.second.get(HORIZONTAL)) {
           elm2_at_x = true;
-          elm2y = elm1.second.get(VERTICAL);
+          elm2y = elm2.second.get(VERTICAL);
         }
         bool retval = false;
         if(!(elm1_at_x && elm2_at_x)) {
@@ -324,6 +324,8 @@ namespace boost { namespace polygon{
           if(elm1y < elm2y) {
             retval = true;
           } else if(elm1y == elm2y) {
+            if(elm1 == elm2)
+              return false;
             retval = less_slope(elm1.second.get(HORIZONTAL) - elm1.first.get(HORIZONTAL),
                                      elm1.second.get(VERTICAL) - elm1.first.get(VERTICAL),
                                      elm2.second.get(HORIZONTAL) - elm2.first.get(HORIZONTAL),
@@ -332,20 +334,6 @@ namespace boost { namespace polygon{
           }
         }
         return retval;
-
-        typedef typename high_precision_type<Unit>::type high_precision;
-        high_precision y1 = pack_->evalAtXforY(*x_, elm1.first, elm1.second);
-        high_precision y2 = pack_->evalAtXforY(*x_, elm2.first, elm2.second);
-        if(y1 < y2) return true;
-        if(y1 == y2) {
-          //if justBefore is true we invert the result of the comparison of slopes
-          bool result = less_slope(elm1.second.get(HORIZONTAL) - elm1.first.get(HORIZONTAL),
-                                   elm1.second.get(VERTICAL) - elm1.first.get(VERTICAL),
-                                   elm2.second.get(HORIZONTAL) - elm2.first.get(HORIZONTAL),
-                                   elm2.second.get(VERTICAL) - elm2.first.get(VERTICAL));
-          return ((*justBefore_) != 0) ^ result;
-        }
-        return false;
       }
     };
 
@@ -801,54 +789,6 @@ namespace boost { namespace polygon{
       inline less_vertex_half_edge(Unit *x, int *justBefore) : x_(x), justBefore_(justBefore) {}
       inline less_vertex_half_edge(const less_vertex_half_edge& that) : x_(that.x_), justBefore_(that.justBefore_) {}
       inline less_vertex_half_edge& operator=(const less_vertex_half_edge& that) { x_ = that.x_; justBefore_ = that.justBefore_; return *this; }
-      inline bool check(const vertex_half_edge& elm1, const vertex_half_edge& elm2) const {
-        Unit localx = *x_;
-        Unit elm1y = 0;
-        bool elm1_at_x = false;
-        if(localx == elm1.pt.get(HORIZONTAL)) {
-          elm1_at_x = true;
-          elm1y = elm1.pt.get(VERTICAL);
-        } else if(localx == elm1.other_pt.get(HORIZONTAL)) {
-          elm1_at_x = true;
-          elm1y = elm1.other_pt.get(VERTICAL);
-        }
-        Unit elm2y = 0;
-        bool elm2_at_x = false;
-        if(localx == elm2.pt.get(HORIZONTAL)) {
-          elm2_at_x = true;
-          elm2y = elm2.pt.get(VERTICAL);
-        } else if(localx == elm2.other_pt.get(HORIZONTAL)) {
-          elm2_at_x = true;
-          elm2y = elm1.other_pt.get(VERTICAL);
-        }
-        bool retval = false;
-        if(!(elm1_at_x && elm2_at_x)) {
-          //at least one of the segments doesn't have an end point a the current x
-          //-1 below, 1 above
-          int pt1_oab = on_above_or_below(elm1.pt, half_edge(elm2.pt, elm2.other_pt));
-          int pt2_oab = on_above_or_below(elm1.other_pt, half_edge(elm2.pt, elm2.other_pt));
-          if(pt1_oab == pt2_oab) {
-            if(pt1_oab == -1)
-              retval = true; //pt1 is below elm2 so elm1 is below elm2
-          } else {
-            //the segments can't cross so elm2 is on whatever side of elm1 that one of its ends is
-            int pt3_oab = on_above_or_below(elm2.pt, half_edge(elm1.pt, elm1.other_pt));
-            if(pt3_oab == 1)
-              retval = true; //elm1's point is above elm1
-          }
-        } else {
-          if(elm1y < elm2y) {
-            retval = true;
-          } else if(elm1y == elm2y) {
-            retval = less_slope(elm1.other_pt.get(HORIZONTAL) - elm1.pt.get(HORIZONTAL),
-                                     elm1.other_pt.get(VERTICAL) - elm1.pt.get(VERTICAL),
-                                     elm2.other_pt.get(HORIZONTAL) - elm2.pt.get(HORIZONTAL),
-                                     elm2.other_pt.get(VERTICAL) - elm2.pt.get(VERTICAL));
-            retval = ((*justBefore_) != 0) ^ retval;
-          }
-        }
-        return retval;
-      }
       inline bool operator () (const vertex_half_edge& elm1, const vertex_half_edge& elm2) const {
         if(std::max(elm1.pt.y(), elm1.other_pt.y()) < std::min(elm2.pt.y(), elm2.other_pt.y()))
           return true;
@@ -872,7 +812,7 @@ namespace boost { namespace polygon{
           elm2y = elm2.pt.get(VERTICAL);
         } else if(localx == elm2.other_pt.get(HORIZONTAL)) {
           elm2_at_x = true;
-          elm2y = elm1.other_pt.get(VERTICAL);
+          elm2y = elm2.other_pt.get(VERTICAL);
         }
         bool retval = false;
         if(!(elm1_at_x && elm2_at_x)) {
@@ -893,6 +833,8 @@ namespace boost { namespace polygon{
           if(elm1y < elm2y) {
             retval = true;
           } else if(elm1y == elm2y) {
+            if(elm1.pt == elm2.pt && elm1.other_pt == elm2.other_pt)
+              return false;
             retval = less_slope(elm1.other_pt.get(HORIZONTAL) - elm1.pt.get(HORIZONTAL),
                                      elm1.other_pt.get(VERTICAL) - elm1.pt.get(VERTICAL),
                                      elm2.other_pt.get(HORIZONTAL) - elm2.pt.get(HORIZONTAL),
