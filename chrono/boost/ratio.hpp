@@ -168,8 +168,8 @@ namespace detail
         (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
       #else
-      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
-      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      static const boost::intmax_t min = boost::integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
       #endif
 
       BOOST_RATIO_STATIC_ASSERT(X <= max - Y , BOOST_RATIO_OVERFLOW_IN_LL_ADD, ());
@@ -192,8 +192,8 @@ namespace detail
         (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
       #else
-      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
-      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      static const boost::intmax_t min = boost::integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
       #endif
 
       BOOST_RATIO_STATIC_ASSERT(min - Y <= X, BOOST_RATIO_OVERFLOW_IN_LL_ADD, ());
@@ -212,8 +212,8 @@ namespace detail
         (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
       #else
-      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
-      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      static const boost::intmax_t min = boost::integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
       #endif
 
       BOOST_RATIO_STATIC_ASSERT(min + Y <= X, BOOST_RATIO_OVERFLOW_IN_LL_SUB, ());
@@ -236,8 +236,8 @@ namespace detail
         (BOOST_INTMAX_C(1) << (sizeof(boost::intmax_t) * CHAR_BIT - 1)) + 1;
       static const boost::intmax_t max = -min;
       #else
-      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
-      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      static const boost::intmax_t min = boost::integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
       #endif
 
       BOOST_RATIO_STATIC_ASSERT(X <= max + Y, BOOST_RATIO_OVERFLOW_IN_LL_SUB, ());
@@ -254,8 +254,8 @@ namespace detail
       static const boost::intmax_t min = nan + 1;
       static const boost::intmax_t max = -min;
       #else
-      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
-      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      static const boost::intmax_t min = boost::integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
       #endif
 
       static const boost::intmax_t a_x = static_abs<X>::value;
@@ -298,8 +298,8 @@ namespace detail
       static const boost::intmax_t min = nan + 1;
       static const boost::intmax_t max = -min;
       #else
-      static const boost::intmax_t min = integer_traits<boost::intmax_t>::const_min;
-      static const boost::intmax_t max = integer_traits<boost::intmax_t>::const_max;
+      static const boost::intmax_t min = boost::integer_traits<boost::intmax_t>::const_min;
+      static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
       #endif
 
       BOOST_RATIO_STATIC_ASSERT(X != nan, BOOST_RATIO_OVERFLOW_IN_LL_DIV, ());
