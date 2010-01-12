@@ -1754,7 +1754,7 @@ namespace boost { namespace polygon{
           //std::cout << "checking whether ot handle hole\n";
           if(currentIter == inputEnd || 
              currentIter->pt.get(HORIZONTAL) != x_ ||
-             on_above_or_below(currentIter->pt, half_edge(iter->first.pt, iter->first.other_pt)) == 1) {
+             on_above_or_below(currentIter->pt, half_edge(iter->first.pt, iter->first.other_pt)) != -1) {
             //(high_precision)(currentIter->pt.get(VERTICAL)) >= iter->first.evalAtX(x_)) {
 
             //std::cout << "handle hole here\n";
