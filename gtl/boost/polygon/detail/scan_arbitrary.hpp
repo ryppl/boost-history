@@ -165,6 +165,10 @@ namespace boost { namespace polygon{
         //its own end points
         pts.insert(he1.first);
         pts.insert(he1.second);
+        std::set<Point>& segmentpts = intersection_points[(*outer).second];
+        for(typename std::set<Point>::iterator itr = segmentpts.begin(); itr != segmentpts.end(); ++itr) {
+          pts.insert(*itr);
+        }
         bool have_first_y = he1.first.y() >= min_y && he1.second.y() >= min_y;
         for(typename std::vector<std::pair<half_edge, segment_id> >::iterator inner = outer;
             inner != data.end(); ++inner) {
@@ -246,6 +250,19 @@ namespace boost { namespace polygon{
       validate_scan_divide_and_conquer(intersection_points, begin, end);
       //validate_scan(intersection_points, begin, end);
       segment_intersections(output_segments, intersection_points, begin, end);
+//       std::pair<segment_id, segment_id> offenders;
+//       if(!verify_scan(offenders, output_segments.begin(), output_segments.end())) {
+//         std::cout << "break here!\n";
+//         for(typename std::set<Point>::iterator itr = intersection_points[offenders.first].begin();
+//             itr != intersection_points[offenders.first].end(); ++itr) {
+//           std::cout << (*itr).x() << " " << (*itr).y() << " ";
+//         } std::cout << std::endl;
+//         for(typename std::set<Point>::iterator itr = intersection_points[offenders.second].begin();
+//             itr != intersection_points[offenders.second].end(); ++itr) {
+//           std::cout << (*itr).x() << " " << (*itr).y() << " ";
+//         } std::cout << std::endl;
+//         exit(1);
+//       }
     }
 
     //quadratic algorithm to find intersections
@@ -277,6 +294,7 @@ namespace boost { namespace polygon{
           if(scanline_base<Unit>::intersects(he1, he2)) {
             offenders.first = id1;
             offenders.second = id2;
+            //std::cout << he1.first.x() << " " << he1.first.y() << " " << he1.second.x() << " " << he1.second.y() << " " << he2.first.x() << " " << he2.first.y() << " " << he2.second.x() << " " << he2.second.y() << std::endl;
             return false;
           }
         }
