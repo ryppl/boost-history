@@ -14,7 +14,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
     Much of the library code deals with intervals which are implemented
     as class interval. This program gives a very short samlpe of different 
-	interval instances.
+    interval instances.
 
     \include interval_/interval.cpp
 */
