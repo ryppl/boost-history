@@ -26,10 +26,6 @@ namespace range{
 
 namespace result_of{
 
-	// TODO :
-    // case size(seq) = 1 ?
-    // Why Most1!= Most
-
 	template<typename Seq>
     struct nest_chain : range::impl::nest_chain<
     	typename boost::remove_const<
@@ -44,26 +40,11 @@ namespace result_of{
         >::type
     >{};
 
-
-	// Alternatively?
-    //	template<typename Seq>
-	//	struct nest_chain{
-    //    	typedef typename statistics::detail::mpl::most<Seq>::type most_;
-    //     	typedef typename boost::mpl::back<Seq>::type back_;
-    //     
-    //       typedef typename boost::mpl::reverse_fold<
-    //        	most_,
-    //            back_,
-    //        	statistics::detail::range::result_of
-    //            	::chain<boost::mpl::_2,boost::mpl::_1>
-    //        >::type
-    //    >{};
-
-
 }
 
 	// Possible Usage:
     // nest_chain(fusion::make_vector(vec1,vec2,vec3,...)); 	
+	// TODO case size(seq) = 1 ?
     template<typename Seq>
     typename range::result_of::nest_chain<Seq>::type
     nest_chain(const Seq& seq){
