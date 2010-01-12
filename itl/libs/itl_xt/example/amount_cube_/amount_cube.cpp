@@ -22,6 +22,7 @@ using namespace std;
 using namespace boost::itl;
 
 /** Example amount_cube.cpp \file amount_cube.cpp
+    \brief Demonstrates computations of aggregates using maps of tuples or <i>cubes</i>
 
     The template class TupelComputerT is a general class for computing aggregations
     on values that are associated to elements of a cartesian product. Stated more 

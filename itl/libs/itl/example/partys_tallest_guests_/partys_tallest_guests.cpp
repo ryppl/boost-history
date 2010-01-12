@@ -10,6 +10,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +-----------------------------------------------------------------------------*/
 
 /** Example partys_tallest_guests.cpp \file partys_tallest_guests.cpp
+    \brief Using <i>aggregate on overlap</i> the heights of the party's tallest 
+           guests are computed. 
 
     In partys_tallest_guests.cpp we use a different instantiation of
     interval map templates to compute maxima of guest heights.

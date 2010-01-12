@@ -14,6 +14,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include "../toytime.h"
 
 /** Example history.cpp \file history.cpp
+\brief Shows how different attributes that change in time are merged into a
+       single history object.
 
 History demonstrates further possibilities of an interval map
 (interval_map or split_interval_map). For a more basic example see party.cpp.

@@ -7,6 +7,19 @@ Copyright (c) 2009-2009: Joachim Faulhaber
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 /** Example large_bitset.cpp \file large_bitset.cpp
+    \brief Shows a bitset class that combines interval and bitset compression
+           in order to represent very large bitsets efficiently.
+
+    Example large_bitset.cpp demonstrates the usage of a large_bitset class
+    template that is implemented as an interval_map of bitsets. The idea is
+    to combine interval compression and bitset compression. Large uninterrupted
+    runs of bits are represented by intervals (interval compression). Local
+    nests of varying bitsequences are represented by associated bitests
+    (bitset compression).
+
+    Find a commented sample implementation in the boost book documentation 
+    <a href="http://www.herold-faulhaber.de/boost_itl/doc/libs/itl/doc/html/boost_itl/projects.html#boost_itl.projects.large_bitset">
+    here</a>.
 
     \include large_bitset_/large_bitset.cpp
 */

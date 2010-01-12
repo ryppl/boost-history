@@ -22,7 +22,7 @@
 	               Closed and open interval borders]]
 	[[basic]   [[link boost_itl.examples.interval_container Interval container]]
 		[__itv_set__,\n__sep_itv_set__,\n__spl_itv_set__,\n__spl_itv_map__,\n__itv_map__]
-	                               [basic characteristics of interval container]]
+	                               [Basic characteristics of interval containers]]
 	[[basic]   [[link boost_itl.examples.overlap_counter Overlap counter]]
 	    [__itv_map__][The most simple application of an interval map: 
 	                  Counting the overlaps of added intervals.]]
@@ -31,12 +31,12 @@
 	[[basic]   [[link boost_itl.examples.std_transform Std transform]]
 	    [__itv_map__,\n__sep_itv_set__][Fill interval containers from user defined objects using `std::transform`.]]
 	[[advanced][[link boost_itl.examples.partys_height_average Party's height average]]
-	    [__itv_map__][Using /aggregate on overlap/ the average of party guests is computed.  
+	    [__itv_map__][Using /aggregate on overlap/ a history of height averages of party guests is computed.  
 	                  Associated values are user defined class objects, that implement
 	                  an appropriate `operator +=` for the aggregation.]]
 	[[advanced][[link boost_itl.examples.partys_tallest_guests Party's tallest guests]]
 	    [__itv_map__,\n__spl_itv_map__]
-	                 [Using /aggregate on overlap/ the height of the party's tallest guests is computed.  
+	                 [Using /aggregate on overlap/ the heights of the party's tallest guests are computed.  
 	                  Associated values are aggregated via a maximum functor, that can 
 	                  be chosen as template parameter of an interval_map class template.]]
 	[[advanced][[link boost_itl.examples.month_and_week_grid Time grids for months and weeks]]

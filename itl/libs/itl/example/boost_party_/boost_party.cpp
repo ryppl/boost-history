@@ -9,7 +9,9 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 
-/** Example boost_party.cpp \file boost_party.cpp
+/** Example boost_party.cpp \file boost_party.cpp 
+    \brief Generates an attendance history of a party by inserting into an interval_map. 
+           Demonstrating <i>aggregate on overlap</i>.
 
     boost_party.cpp demonstrates the possibilities of an interval map 
     (interval_map or split_interval_map). Boost::posix_time::ptime is used as time

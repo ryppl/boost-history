@@ -9,6 +9,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 /** Example month_and_week_grid.cpp \file month_and_week_grid.cpp
+    \brief Creating and combining time grids.
 
     A split_interval_set preserves all interval borders on insertion
     and intersection operations. So given a split_interval_set ...

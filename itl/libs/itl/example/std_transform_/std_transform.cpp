@@ -9,6 +9,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 /** Example std_transform.cpp \file std_transform.cpp
+    \brief Fill interval containers from user defined objects using std::transform. 
 
     Example std_transform shows how algorithm std::transform can be used to
     fill interval containers from std::containers of objects of a user

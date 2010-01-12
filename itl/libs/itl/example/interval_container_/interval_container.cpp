@@ -10,11 +10,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +-----------------------------------------------------------------------------*/
 /** Example interval_container.cpp \file interval_container.cpp
 
-    Sample file interval_container.cpp demontrates basic characteristics of 
-    interval container objects.
-
-    Simple interactive shells for the manipulation of interval containers can be found
-    in the 'tests.sln' project.
+    \brief Demonstrates basic characteristics of interval container objects.
 
     \include interval_container_/interval_container.cpp
 */

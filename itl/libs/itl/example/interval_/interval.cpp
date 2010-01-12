@@ -9,11 +9,12 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 /** Example interval.cpp \file interval.cpp
+    \brief Intervals for integral and continuous instance types. 
+           Closed and open interval borders.
 
     Much of the library code deals with intervals which are implemented
-    as class interval.
-
-    This program gives a very short samlpe of different interval instances.
+    as class interval. This program gives a very short samlpe of different 
+	interval instances.
 
     \include interval_/interval.cpp
 */

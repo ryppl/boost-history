@@ -15,7 +15,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 using namespace std;
 using namespace boost::itl;
 
-/** Example party.cpp \file Party.cpp
+/** 
 
     Party.cpp demonstrates the possibilities of an interval map (interval_map or
     split_interval_map). An interval_map maps intervals to a given content. In
@@ -50,7 +50,6 @@ using namespace boost::itl;
     The accumulative behavior accumulates associated values on every overlap of
     an insertion for the associated values.
 
-    \include party_/party.cpp
 */
 
 // Type itl::set<string> collects the names of party guests. Therefore it needs to

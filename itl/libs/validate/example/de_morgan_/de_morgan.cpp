@@ -9,11 +9,11 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 +-----------------------------------------------------------------------------*/
 
 /** Example de_morgan.cpp \file de_morgan.cpp
+\brief Demonstrates law based testing for De Morgan's law on interval_sets.
 
 Example de_morgan.cpp demonstrates some tests of 
 <a href="http://en.wikipedia.org/wiki/De_Morgan%27s_laws">
-De Morgan's law</a>
-on interval_set.
+De Morgan's law</a> on interval_set.
 This law is selected, because we can show some interesting semantical 
 distinctions that reveal themselves in different instantiations of the law.
 

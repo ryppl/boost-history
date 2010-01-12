@@ -9,6 +9,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 /** Example man_power.cpp \file man_power.cpp
+    \brief Using set style operators to compute with interval sets and maps.
 
     Interval sets and maps can be filled and manipulated using
     set style operation like union (+=), difference (-=) and intersection

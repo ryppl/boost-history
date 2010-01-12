@@ -9,6 +9,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 /** Example std_copy.cpp \file std_copy.cpp
+    \brief Fill interval containers using std::copy. 
 
     Example std_copy shows how algorithm std::copy can be used to
     fill interval containers from other std::containers and how copying

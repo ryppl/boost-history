@@ -10,11 +10,13 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +-----------------------------------------------------------------------------*/
 
 /** Example partys_height_average.cpp \file partys_height_average.cpp
+    \brief Using <i>aggregate on overlap</i> a history of height averages of 
+           party guests is computed.
 
     In partys_height_average.cpp we compute yet another aggregation:
-    The average height of guests. This is done by defining a class
-    counted_sum that sums up heights and counts the number of guests
-    via an operator +=.
+    The average height of guests as it changes over time. This is done by 
+    defining a class counted_sum that sums up heights and counts the number 
+    of guests via an operator +=.
     
     Based on the operator += we can aggregate counted sums on addition
     of interval value pairs into an interval_map.

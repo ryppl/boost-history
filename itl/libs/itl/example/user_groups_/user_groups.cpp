@@ -9,9 +9,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 /** Example user_groups.cpp \file user_groups.cpp
-
-    Example user_groups.cpp shows the availability of set operations
-    on interval maps. 
+    \brief Shows the availability of set operations on interval maps. 
 
     In the example there is a user group 'med_users' of a hosptial staff
     that has the authorisation to handle medical data of patients.

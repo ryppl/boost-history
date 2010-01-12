@@ -10,6 +10,9 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +-----------------------------------------------------------------------------*/
 /** Example overlap_counter.cpp \file overlap_counter.cpp
 
+    \brief The most simple application of an interval map: 
+           Counting the overlaps of added intervals.
+
     The most basic application of an interval_map is a counter counting
     the number of overlaps of intervals inserted into it.
 
