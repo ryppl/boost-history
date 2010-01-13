@@ -1535,6 +1535,7 @@ namespace boost { namespace polygon{
     //or std::map<std::vector<property_type>, polygon_set_type>
     template <typename result_type>
     void merge(result_type& result) {
+      if(pmd.empty()) return;
       //intersect data
       property_merge_data tmp_pmd;
       line_intersection<Unit>::validate_scan(tmp_pmd, pmd.begin(), pmd.end());
