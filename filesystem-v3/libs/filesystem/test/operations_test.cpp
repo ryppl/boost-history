@@ -57,7 +57,7 @@ namespace
 
   void create_file(const fs::path & ph, const std::string & contents)
   {
-    std::ofstream f(ph.string().c_str());
+    std::ofstream f(ph.c_str());
     if (!f)
       throw fs::filesystem_error("operations_test create_file",
       ph, error_code(errno, system_category));
@@ -66,7 +66,7 @@ namespace
 
   void verify_file(const fs::path & ph, const std::string & expected)
   {
-    std::ifstream f(ph.string().c_str());
+    std::ifstream f(ph.c_str());
     if (!f)
       throw fs::filesystem_error("operations_test verify_file",
         ph, error_code(errno, system_category));
@@ -685,7 +685,7 @@ namespace
     catch (const fs::filesystem_error & x)
     {
       std::cout << x.what() << "\n\n"
-         "***** Creating directory " << dir.string() << " failed.          *****\n"
+         "***** Creating directory " << dir << " failed.   *****\n"
          "***** This is a serious error that will prevent further tests    *****\n"
          "***** from returning useful results. Further testing is aborted. *****\n\n";
       std::exit(1);
@@ -694,7 +694,7 @@ namespace
     catch (...)
     {
       std::cout << "\n\n"
-         "***** Creating directory " << dir.string() << " failed.          *****\n"
+         "***** Creating directory " << dir << " failed.   *****\n"
          "***** This is a serious error that will prevent further tests    *****\n"
          "***** from returning useful results. Further testing is aborted. *****\n\n";
       std::exit(1);
@@ -733,7 +733,7 @@ namespace
     BOOST_TEST(fs::current_path() != dir);
 
     // make sure the overloads work
-    fs::current_path(dir.string().c_str());
+    fs::current_path(dir.c_str());
     BOOST_TEST(fs::current_path() == dir);
     BOOST_TEST(fs::current_path() != original_dir);
     fs::current_path(original_dir.string());
@@ -1071,11 +1071,11 @@ namespace
         == fs::initial_path());
       BOOST_TEST(fs::system_complete(fs::path(fs::initial_path().root_name().string()
         + "foo")).string() == fs::initial_path() / "foo");
-      BOOST_TEST(fs::system_complete(fs::path("c:/")).string()
+      BOOST_TEST(fs::system_complete(fs::path("c:/")).generic_string()
         == "c:/");
-      BOOST_TEST(fs::system_complete(fs::path("c:/foo")).string()
+      BOOST_TEST(fs::system_complete(fs::path("c:/foo")).generic_string()
         ==  "c:/foo");
-      BOOST_TEST(fs::system_complete(fs::path("//share")).string()
+      BOOST_TEST(fs::system_complete(fs::path("//share")).generic_string()
         ==  "//share");
     } // Windows
 

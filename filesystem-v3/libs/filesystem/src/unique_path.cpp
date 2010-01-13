@@ -106,7 +106,7 @@ namespace boost { namespace filesystem { namespace detail {
 BOOST_FILESYSTEM_DECL
 path unique_path(const path& model, system::error_code* ec)
 {
-  std::wstring s (model.native_wstring());  // std::string ng for MBCS encoded POSIX
+  std::wstring s (model.wstring());  // std::string ng for MBCS encoded POSIX
   const wchar_t hex[] = L"0123456789abcdef";
   const int n_ran = 16;
   const int max_nibbles = 2 * n_ran;   // 4-bits per nibble

@@ -61,8 +61,8 @@ namespace
     ++::boost::detail::test_errors();
 
     std::cout << file;
-    std::wcout << L'(' << line << L"): source.native_wstring(): \""
-               << source.native_wstring()
+    std::wcout << L'(' << line << L"): source.wstring(): \""
+               << source.wstring()
                << L"\" != expected: \"" << expected
                << L"\"\n" ;
   }
@@ -257,10 +257,10 @@ namespace
     path p0("abc");
 
     CHECK(p0.native().size() == 3);
-    CHECK(p0.native_string() == "abc");
-    CHECK(p0.native_string().size() == 3);
-    CHECK(p0.native_wstring() == L"abc");
-    CHECK(p0.native_wstring().size() == 3);
+    CHECK(p0.string() == "abc");
+    CHECK(p0.string().size() == 3);
+    CHECK(p0.wstring() == L"abc");
+    CHECK(p0.wstring().size() == 3);
 
 # ifdef BOOST_WINDOWS_PATH
 
@@ -268,14 +268,15 @@ namespace
 
     CHECK(std::wstring(p.c_str()) == L"abc\\def/ghi");
 
-    CHECK(p.native_string() == "abc\\def/ghi");
-    CHECK(p.native_wstring() == L"abc\\def/ghi");
+    CHECK(p.string() == "abc\\def/ghi");
+    CHECK(p.wstring() == L"abc\\def/ghi");
 
-    CHECK(p.string() == "abc/def/ghi");
-    CHECK(p.wstring() == L"abc/def/ghi");
+    CHECK(p.generic_string() == "abc/def/ghi");
+    CHECK(p.generic_wstring() == L"abc/def/ghi");
 
-    //CHECK(p.preferred().string() == "abc\\def\\ghi");
-    //CHECK(p.preferred().wstring() == L"abc\\def\\ghi");
+    CHECK(p.generic_string<string>() == "abc/def/ghi");
+    CHECK(p.generic_string<wstring>() == L"abc/def/ghi");
+    CHECK(p.generic_string<path::string_type>() == L"abc/def/ghi");
 
 # else  // BOOST_POSIX_PATH
 
@@ -283,14 +284,15 @@ namespace
 
     CHECK(string(p.c_str()) == "abc\\def/ghi");
 
-    CHECK(p.native_string() == "abc\\def/ghi");
-    CHECK(p.native_wstring() == L"abc\\def/ghi");
-
     CHECK(p.string() == "abc\\def/ghi");
     CHECK(p.wstring() == L"abc\\def/ghi");
 
-    //CHECK(p.preferred().string() == "abc\\def/ghi");
-    //CHECK(p.preferred().wstring() == L"abc\\def/ghi");
+    CHECK(p.generic_string() == "abc\\def/ghi");
+    CHECK(p.generic_wstring() == L"abc\\def/ghi");
+
+    CHECK(p.generic_string<string>() == "abc\\def/ghi");
+    CHECK(p.generic_string<wstring>() == L"abc\\def/ghi");
+    CHECK(p.generic_string<path::string_type>() == "abc\\def/ghi");
 
 # endif 
   }

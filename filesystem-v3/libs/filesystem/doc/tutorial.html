@@ -530,14 +530,14 @@ composed path:
   localize()-----------: /foo/bar/baa.txt
 ...
 observers, native format:
-  native()---------: /foo/bar/baa.txt
-  c_str()----------: /foo/bar/baa.txt
-  native_string()--: /foo/bar/baa.txt
-  native_wstring()-: /foo/bar/baa.txt
+  native()-------------: /foo/bar/baa.txt
+  c_str()--------------: /foo/bar/baa.txt
+  string()-------------: /foo/bar/baa.txt
+  wstring()------------: /foo/bar/baa.txt
 
 observers, generic format:
-  string()---------: /foo/bar/baa.txt
-  wstring()--------: /foo/bar/baa.txt</pre>
+  generic_string()-----: /foo/bar/baa.txt
+  generic_wstring()----: /foo/bar/baa.txt</pre>
       </td>
       <td style="font-size: 10pt">
       <pre>&gt;path_info /foo/bar\baa.txt
@@ -547,14 +547,14 @@ composed path:
   localize()-----------: \foo\bar\baa.txt
 ...
 observers, native format:
-  native()---------: /foo/bar\baa.txt
-  c_str()----------: /foo/bar\baa.txt
-  native_string()--: /foo/bar\baa.txt
-  native_wstring()-: /foo/bar\baa.txt
+  native()-------------: /foo/bar\baa.txt
+  c_str()--------------: /foo/bar\baa.txt
+  string()-------------: /foo/bar\baa.txt
+  wstring()------------: /foo/bar\baa.txt
 
 observers, generic format:
-  string()---------: /foo/bar/baa.txt
-  wstring()--------: /foo/bar/baa.txt</pre>
+  generic_string()-----: /foo/bar/baa.txt
+  generic_wstring()----: /foo/bar/baa.txt</pre>
       </td>
     </tr>
   </table>
@@ -599,14 +599,14 @@ convert slashes to backslashes.</p>
       <pre>$ ./path_info /foo/bar/baa.txt
 ...
 decomposition:
-  root_name()------:
-  root_directory()-: /
-  root_path()------: /
-  relative_path()--: foo/bar/baa.txt
-  parent_path()----: /foo/bar
-  filename()-------: baa.txt
-  stem()-----------: baa
-  extension()------: .txt
+  root_name()----------:
+  root_directory()-----: /
+  root_path()----------: /
+  relative_path()------: foo/bar/baa.txt
+  parent_path()--------: /foo/bar
+  filename()-----------: baa.txt
+  stem()---------------: baa
+  extension()----------: .txt
 
 query:
   empty()--------------: false
@@ -624,14 +624,14 @@ query:
       <pre>&gt;path_info /foo/bar/baa.txt
 ...
 decomposition:
-  root_name()------:
-  root_directory()-: /
-  root_path()------: /
-  relative_path()--: foo/bar/baa.txt
-  parent_path()----: /foo/bar
-  filename()-------: baa.txt
-  stem()-----------: baa
-  extension()------: .txt
+  root_name()----------:
+  root_directory()-----: /
+  root_path()----------: /
+  relative_path()------: foo/bar/baa.txt
+  parent_path()--------: /foo/bar
+  filename()-----------: baa.txt
+  stem()---------------: baa
+  extension()----------: .txt
 
 query:
   empty()--------------: false
@@ -752,7 +752,7 @@ composed path:
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->09 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32150" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->12 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32137" --></p>
 
 </body>
 

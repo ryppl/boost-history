@@ -40,7 +40,7 @@ namespace
   void check(const fs::path & source,
               const std::string & expected, const char* file, int line)
   {
-    if (source.native_string() == expected)
+    if (source.string() == expected)
       return;
 
     std::cout << file
@@ -92,8 +92,8 @@ namespace
       //BOOST_TEST(std::strcmp(ex.what(),
       //  "string-1: Unknown error: \"p1\", \"p2\"") == 0);
       BOOST_TEST(ex.code() == ec);
-      BOOST_TEST(ex.path1().string() == "p1");
-      BOOST_TEST(ex.path2().string() == "p2");
+      BOOST_TEST(ex.path1() == "p1");
+      BOOST_TEST(ex.path2() == "p2");
     }
   }
 
@@ -398,11 +398,11 @@ namespace
     PATH_CHECK(path("") / "..", "..");
     if (platform == "Windows")
     {
-      BOOST_TEST((b / a).native_string() == "b\\a");
-      BOOST_TEST((bs / a).native_string() == "b\\a");
-      BOOST_TEST((bcs / a).native_string() == "b\\a");
-      BOOST_TEST((b / as).native_string() == "b\\a");
-      BOOST_TEST((b / acs).native_string() == "b\\a");
+      BOOST_TEST((b / a).string() == "b\\a");
+      BOOST_TEST((bs / a).string() == "b\\a");
+      BOOST_TEST((bcs / a).string() == "b\\a");
+      BOOST_TEST((b / as).string() == "b\\a");
+      BOOST_TEST((b / acs).string() == "b\\a");
       PATH_CHECK(path("a") / "b", "a\\b");
       PATH_CHECK(path("..") / "", "..");
       PATH_CHECK(path("foo") / path("bar"), "foo\\bar"); // path arg
@@ -443,7 +443,7 @@ namespace
       PATH_CHECK(path(".") / ".." / ".", ".\\..\\.");
       PATH_CHECK(path("..") / "." / ".", "..\\.\\.");
     }
-    else
+    else  // POSIX
     {
       BOOST_TEST((b / a).string() == "b/a");
       BOOST_TEST((bs / a).string() == "b/a");
@@ -596,7 +596,7 @@ namespace
       path p10 ("c:\\file");
       path p11 ("c:/file");
       // check each overload
-      BOOST_TEST(p10.string() == p11.string());
+      BOOST_TEST(p10.generic_string() == p11.generic_string());
       BOOST_TEST(p10 == p11);
       BOOST_TEST(p10 == p11.string());
       BOOST_TEST(p10 == p11.string().c_str());
@@ -611,7 +611,7 @@ namespace
       BOOST_TEST(L"c:\\file" == p11);
       BOOST_TEST(L"c:/file" == p11);
 
-      BOOST_TEST(!(p10.string() != p11.string()));
+      BOOST_TEST(!(p10.generic_string() != p11.generic_string()));
       BOOST_TEST(!(p10 != p11));
       BOOST_TEST(!(p10 != p11.string()));
       BOOST_TEST(!(p10 != p11.string().c_str()));
@@ -641,7 +641,7 @@ namespace
       BOOST_TEST(!(L"c:\\file" < p11));
       BOOST_TEST(!(L"c:/file" < p11));
 
-      BOOST_TEST(!(p10.string() > p11.string()));
+      BOOST_TEST(!(p10.generic_string() > p11.generic_string()));
       BOOST_TEST(!(p10 > p11));
       BOOST_TEST(!(p10 > p11.string()));
       BOOST_TEST(!(p10 > p11.string().c_str()));

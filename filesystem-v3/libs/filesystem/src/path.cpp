@@ -134,51 +134,51 @@ namespace filesystem
   {
     if (p.empty())
       return *this;
-    if (!is_separator(*p.m_path.begin()))
+    if (!is_separator(*p.m_pathname.begin()))
       m_append_separator_if_needed();
-    m_path += p.m_path;
+    m_pathname += p.m_pathname;
     return *this;
   }
 
 # ifdef BOOST_WINDOWS_PATH
 
-  const std::string  path::native_string() const
+  const std::string  path::string() const
   { 
     std::string tmp;
-    if (!m_path.empty())
-      path_traits::convert(&*m_path.begin(), &*m_path.begin()+m_path.size(),
+    if (!m_pathname.empty())
+      path_traits::convert(&*m_pathname.begin(), &*m_pathname.begin()+m_pathname.size(),
         tmp, codecvt());
     return tmp;
   }
 
   void path::m_portable()
   {
-    for (string_type::iterator it = m_path.begin();
-          it != m_path.end(); ++it)
+    for (string_type::iterator it = m_pathname.begin();
+          it != m_pathname.end(); ++it)
     {
       if (*it == L'\\')
         *it = L'/';
     }
   }
 
-  const std::string path::string() const
+  const std::string path::generic_string() const
   { 
     path tmp(*this);
     tmp.m_portable();
-    return tmp.native_string();
+    return tmp.string();
   }
 
-  const std::wstring path::wstring() const
+  const std::wstring path::generic_wstring() const
   { 
     path tmp(*this);
     tmp.m_portable();
-    return tmp.native_wstring();
+    return tmp.wstring();
   }
 
   path & path::localize()
   {
-    for (string_type::iterator it = m_path.begin();
-          it != m_path.end(); ++it)
+    for (string_type::iterator it = m_pathname.begin();
+          it != m_pathname.end(); ++it)
     {
       if (*it == L'/')
         *it = L'\\';
@@ -192,14 +192,14 @@ namespace filesystem
 
   path::string_type::size_type path::m_append_separator_if_needed()
   {
-    if (!m_path.empty() &&
+    if (!m_pathname.empty() &&
 #   ifdef BOOST_WINDOWS_PATH
-      *(m_path.end()-1) != colon && 
+      *(m_pathname.end()-1) != colon && 
 #   endif
-      !is_separator(*(m_path.end()-1)))
+      !is_separator(*(m_pathname.end()-1)))
     {
-      string_type::size_type tmp(m_path.size());
-      m_path += preferred_separator;
+      string_type::size_type tmp(m_pathname.size());
+      m_pathname += preferred_separator;
       return tmp;
     }
     return 0;
@@ -210,12 +210,12 @@ namespace filesystem
   void path::m_erase_redundant_separator(string_type::size_type sep_pos)
   {
     if (sep_pos                         // a separator was added
-      && sep_pos < m_path.size()         // and something was appended
-      && (m_path[sep_pos+1] == separator // and it was also separator
+      && sep_pos < m_pathname.size()         // and something was appended
+      && (m_pathname[sep_pos+1] == separator // and it was also separator
 #   ifdef BOOST_WINDOWS_PATH
-       || m_path[sep_pos+1] == preferred_separator  // or preferred_separator
+       || m_pathname[sep_pos+1] == preferred_separator  // or preferred_separator
 #   endif
-)) { m_path.erase(sep_pos, 1); } // erase the added separator
+)) { m_pathname.erase(sep_pos, 1); } // erase the added separator
   }
 
   //  decomposition  -------------------------------------------------------------------//
@@ -223,7 +223,7 @@ namespace filesystem
   path  path::root_path() const
   { 
     path temp(root_name());
-    if (!root_directory().empty()) temp.m_path += root_directory().c_str();
+    if (!root_directory().empty()) temp.m_pathname += root_directory().c_str();
     return temp;
   } 
 
@@ -231,14 +231,14 @@ namespace filesystem
   {
     iterator itr(begin());
 
-    return (itr.m_pos != m_path.size()
+    return (itr.m_pos != m_pathname.size()
       && (
-          (itr.m_element.m_path.size() > 1
-            && is_separator(itr.m_element.m_path[0])
-            && is_separator(itr.m_element.m_path[1])
+          (itr.m_element.m_pathname.size() > 1
+            && is_separator(itr.m_element.m_pathname[0])
+            && is_separator(itr.m_element.m_pathname[1])
    )
 #       ifdef BOOST_WINDOWS_PATH
-        || itr.m_element.m_path[itr.m_element.m_path.size()-1] == colon
+        || itr.m_element.m_pathname[itr.m_element.m_pathname.size()-1] == colon
 #       endif
   ))
       ? itr.m_element
@@ -247,40 +247,40 @@ namespace filesystem
 
   path path::root_directory() const
   {
-    size_type pos(root_directory_start(m_path, m_path.size()));
+    size_type pos(root_directory_start(m_pathname, m_pathname.size()));
 
     return pos == string_type::npos
       ? path()
-      : path(m_path.c_str() + pos, m_path.c_str() + pos + 1);
+      : path(m_pathname.c_str() + pos, m_pathname.c_str() + pos + 1);
   }
 
   path path::relative_path() const
   {
     iterator itr(begin());
 
-    for (; itr.m_pos != m_path.size()
-      && (is_separator(itr.m_element.m_path[0])
+    for (; itr.m_pos != m_pathname.size()
+      && (is_separator(itr.m_element.m_pathname[0])
 #       ifdef BOOST_WINDOWS_PATH
-      || itr.m_element.m_path[itr.m_element.m_path.size()-1] == colon
+      || itr.m_element.m_pathname[itr.m_element.m_pathname.size()-1] == colon
 #       endif
     ); ++itr) {}
 
-    return path(m_path.c_str() + itr.m_pos);
+    return path(m_pathname.c_str() + itr.m_pos);
   }
 
   string_type::size_type path::m_parent_path_end() const
   {
-    size_type end_pos(filename_pos(m_path, m_path.size()));
+    size_type end_pos(filename_pos(m_pathname, m_pathname.size()));
 
-    bool filename_was_separator(m_path.size()
-      && is_separator(m_path[end_pos]));
+    bool filename_was_separator(m_pathname.size()
+      && is_separator(m_pathname[end_pos]));
 
     // skip separators unless root directory
-    size_type root_dir_pos(root_directory_start(m_path, end_pos));
+    size_type root_dir_pos(root_directory_start(m_pathname, end_pos));
     for (; 
       end_pos > 0
       && (end_pos-1) != root_dir_pos
-      && is_separator(m_path[end_pos-1])
+      && is_separator(m_pathname[end_pos-1])
       ;
       --end_pos) {}
 
@@ -294,57 +294,57 @@ namespace filesystem
    size_type end_pos(m_parent_path_end());
    return end_pos == string_type::npos
      ? path()
-     : path(m_path.c_str(), m_path.c_str() + end_pos);
+     : path(m_pathname.c_str(), m_pathname.c_str() + end_pos);
   }
 
   path& path::remove_filename()
   {
-    m_path.erase(m_parent_path_end());
+    m_pathname.erase(m_parent_path_end());
     return *this;
   }
 
   path path::filename() const
   {
-    size_type pos(filename_pos(m_path, m_path.size()));
-    return (m_path.size()
+    size_type pos(filename_pos(m_pathname, m_pathname.size()));
+    return (m_pathname.size()
               && pos
-              && is_separator(m_path[pos])
-              && is_non_root_separator(m_path, pos))
+              && is_separator(m_pathname[pos])
+              && is_non_root_separator(m_pathname, pos))
       ? dot_path
-      : path(m_path.c_str() + pos);
+      : path(m_pathname.c_str() + pos);
   }
 
   path path::stem() const
   {
     path name(filename());
     if (name == dot_path || name == dot_dot_path) return name;
-    size_type pos(name.m_path.rfind(dot));
+    size_type pos(name.m_pathname.rfind(dot));
     return pos == string_type::npos
       ? name
-      : path(name.m_path.c_str(), name.m_path.c_str() + pos);
+      : path(name.m_pathname.c_str(), name.m_pathname.c_str() + pos);
   }
 
   path path::extension() const
   {
     path name(filename());
     if (name == dot_path || name == dot_dot_path) return path();
-    size_type pos(name.m_path.rfind(dot));
+    size_type pos(name.m_pathname.rfind(dot));
     return pos == string_type::npos
       ? path()
-      : path(name.m_path.c_str() + pos);
+      : path(name.m_pathname.c_str() + pos);
   }
 
   path & path::replace_extension(const path & source)
   {
     // erase existing extension if any
-    size_type pos(m_path.rfind(dot));
+    size_type pos(m_pathname.rfind(dot));
     if (pos != string_type::npos)
-      m_path.erase(pos);
+      m_pathname.erase(pos);
 
     // append source extension if any
-    pos = source.m_path.rfind(dot);
+    pos = source.m_pathname.rfind(dot);
     if (pos != string_type::npos)
-      m_path += source.c_str() + pos;
+      m_pathname += source.c_str() + pos;
 
     return *this;
   }
@@ -354,7 +354,7 @@ namespace filesystem
 
   path& path::m_normalize()
   {
-    if (m_path.empty()) return *this;
+    if (m_pathname.empty()) return *this;
       
     path temp;
     iterator start(begin());
@@ -391,15 +391,15 @@ namespace filesystem
         {
           temp.remove_filename();
           // if not root directory, must also remove "/" if any
-          if (temp.m_path.size() > 0
-            && temp.m_path[temp.m_path.size()-1]
+          if (temp.m_pathname.size() > 0
+            && temp.m_pathname[temp.m_pathname.size()-1]
               == separator)
           {
             string_type::size_type rds(
-              root_directory_start(temp.m_path, temp.m_path.size()));
+              root_directory_start(temp.m_pathname, temp.m_pathname.size()));
             if (rds == string_type::npos
-              || rds != temp.m_path.size()-1) 
-              { temp.m_path.erase(temp.m_path.size()-1); }
+              || rds != temp.m_pathname.size()-1) 
+              { temp.m_pathname.erase(temp.m_pathname.size()-1); }
           }
 
           iterator next(itr);
@@ -413,7 +413,7 @@ namespace filesystem
     };
 
     if (temp.empty()) temp /= dot_path;
-    m_path = temp.m_path;
+    m_pathname = temp.m_pathname;
     return *this;
   }
 
@@ -597,10 +597,10 @@ namespace filesystem
     iterator itr;
     itr.m_path_ptr = this;
     size_type element_size;
-    first_element(m_path, itr.m_pos, element_size);
-    itr.m_element = m_path.substr(itr.m_pos, element_size);
-    if (itr.m_element.m_path == preferred_separator_string)
-      itr.m_element.m_path = separator_string;  // needed for Windows, harmless on POSIX
+    first_element(m_pathname, itr.m_pos, element_size);
+    itr.m_element = m_pathname.substr(itr.m_pos, element_size);
+    if (itr.m_element.m_pathname == preferred_separator_string)
+      itr.m_element.m_pathname = separator_string;  // needed for Windows, harmless on POSIX
     return itr;
   }
 
@@ -608,53 +608,53 @@ namespace filesystem
   {
     iterator itr;
     itr.m_path_ptr = this;
-    itr.m_pos = m_path.size();
+    itr.m_pos = m_pathname.size();
     return itr;
   }
 
   void path::m_path_iterator_increment(path::iterator & it)
   {
-    BOOST_ASSERT(it.m_pos < it.m_path_ptr->m_path.size() && "path::basic_iterator increment past end()");
+    BOOST_ASSERT(it.m_pos < it.m_path_ptr->m_pathname.size() && "path::basic_iterator increment past end()");
 
     // increment to position past current element
-    it.m_pos += it.m_element.m_path.size();
+    it.m_pos += it.m_element.m_pathname.size();
 
     // if end reached, create end basic_iterator
-    if (it.m_pos == it.m_path_ptr->m_path.size())
+    if (it.m_pos == it.m_path_ptr->m_pathname.size())
     {
       it.m_element.clear(); 
       return;
     }
 
     // both POSIX and Windows treat paths that begin with exactly two separators specially
-    bool was_net(it.m_element.m_path.size() > 2
-      && is_separator(it.m_element.m_path[0])
-      && is_separator(it.m_element.m_path[1])
-      && !is_separator(it.m_element.m_path[2]));
+    bool was_net(it.m_element.m_pathname.size() > 2
+      && is_separator(it.m_element.m_pathname[0])
+      && is_separator(it.m_element.m_pathname[1])
+      && !is_separator(it.m_element.m_pathname[2]));
 
     // process separator (Windows drive spec is only case not a separator)
-    if (is_separator(it.m_path_ptr->m_path[it.m_pos]))
+    if (is_separator(it.m_path_ptr->m_pathname[it.m_pos]))
     {
       // detect root directory
       if (was_net
 #       ifdef BOOST_WINDOWS_PATH
         // case "c:/"
-        || it.m_element.m_path[it.m_element.m_path.size()-1] == colon
+        || it.m_element.m_pathname[it.m_element.m_pathname.size()-1] == colon
 #       endif
          )
       {
-        it.m_element.m_path = separator;
+        it.m_element.m_pathname = separator;
         return;
       }
 
       // bypass separators
-      while (it.m_pos != it.m_path_ptr->m_path.size()
-        && is_separator(it.m_path_ptr->m_path[it.m_pos]))
+      while (it.m_pos != it.m_path_ptr->m_pathname.size()
+        && is_separator(it.m_path_ptr->m_pathname[it.m_pos]))
         { ++it.m_pos; }
 
       // detect trailing separator, and treat it as ".", per POSIX spec
-      if (it.m_pos == it.m_path_ptr->m_path.size()
-        && is_non_root_separator(it.m_path_ptr->m_path, it.m_pos-1)) 
+      if (it.m_pos == it.m_path_ptr->m_pathname.size()
+        && is_non_root_separator(it.m_path_ptr->m_pathname, it.m_pos-1)) 
       {
         --it.m_pos;
         it.m_element = dot_path;
@@ -663,9 +663,9 @@ namespace filesystem
     }
 
     // get next element
-    size_type end_pos(it.m_path_ptr->m_path.find_first_of(separators, it.m_pos));
-    if (end_pos == string_type::npos) end_pos = it.m_path_ptr->m_path.size();
-    it.m_element = it.m_path_ptr->m_path.substr(it.m_pos, end_pos - it.m_pos);
+    size_type end_pos(it.m_path_ptr->m_pathname.find_first_of(separators, it.m_pos));
+    if (end_pos == string_type::npos) end_pos = it.m_path_ptr->m_pathname.size();
+    it.m_element = it.m_path_ptr->m_pathname.substr(it.m_pos, end_pos - it.m_pos);
   }
 
   void path::m_path_iterator_decrement(path::iterator & it)
@@ -675,10 +675,10 @@ namespace filesystem
     size_type end_pos(it.m_pos);
 
     // if at end and there was a trailing non-root '/', return "."
-    if (it.m_pos == it.m_path_ptr->m_path.size()
-      && it.m_path_ptr->m_path.size() > 1
-      && is_separator(it.m_path_ptr->m_path[it.m_pos-1])
-      && is_non_root_separator(it.m_path_ptr->m_path, it.m_pos-1) 
+    if (it.m_pos == it.m_path_ptr->m_pathname.size()
+      && it.m_path_ptr->m_pathname.size() > 1
+      && is_separator(it.m_path_ptr->m_pathname[it.m_pos-1])
+      && is_non_root_separator(it.m_path_ptr->m_pathname, it.m_pos-1) 
        )
     {
       --it.m_pos;
@@ -686,32 +686,21 @@ namespace filesystem
       return;
     }
 
-    size_type root_dir_pos(root_directory_start(it.m_path_ptr->m_path, end_pos));
+    size_type root_dir_pos(root_directory_start(it.m_path_ptr->m_pathname, end_pos));
 
     // skip separators unless root directory
     for (
       ; 
       end_pos > 0
       && (end_pos-1) != root_dir_pos
-      && is_separator(it.m_path_ptr->m_path[end_pos-1])
+      && is_separator(it.m_path_ptr->m_pathname[end_pos-1])
       ;
       --end_pos) {}
 
-    it.m_pos = filename_pos(it.m_path_ptr->m_path, end_pos);
-    it.m_element = it.m_path_ptr->m_path.substr(it.m_pos, end_pos - it.m_pos);
-    if (it.m_element.m_path == preferred_separator_string)
-      it.m_element.m_path = separator_string;  // needed for Windows, harmless on POSIX
-  }
-
-  bool path::m_path_lex_compare(iterator first1, iterator last1,
-    iterator first2, iterator last2)
-  {
-    for (; first1 != last1 && first2 != last2 ; ++first1, ++first2)
-    {
-      if (first1->m_path < first2->m_path) return true;
-      if (first2->m_path < first1->m_path) return false;
-    }
-    return first1 == last1 && first2 != last2;
+    it.m_pos = filename_pos(it.m_path_ptr->m_pathname, end_pos);
+    it.m_element = it.m_path_ptr->m_pathname.substr(it.m_pos, end_pos - it.m_pos);
+    if (it.m_element.m_pathname == preferred_separator_string)
+      it.m_element.m_pathname = separator_string;  // needed for Windows, harmless on POSIX
   }
 
 }  // namespace filesystem

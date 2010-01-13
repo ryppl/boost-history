@@ -28,11 +28,11 @@ namespace
   void check(const fs::path & source,
               const std::string & expected, int line)
   {
-    if (source.string()== expected) return;
+    if (source.generic_string()== expected) return;
 
     ++::boost::detail::test_errors();
 
-    std::cout << '(' << line << ") source.native_string(): \"" << source.native_string()
+    std::cout << '(' << line << ") source.string(): \"" << source.string()
               << "\" != expected: \"" << expected
               << "\"" << std::endl;
   }

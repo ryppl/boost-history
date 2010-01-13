@@ -19,7 +19,8 @@
 <img src="../../../boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86" border="0"></a></td>
     <td width="633" align="middle">
     <font size="7">Filesystem Library<br>
-    Version 3<br>
+    </font>
+    <font size="6">Version 3</font><font size="7"><br>
 &nbsp;</font></td>
   </tr>
 </table>
@@ -126,7 +127,123 @@
 </table>
 
 <h2><a name="Introduction">Introduction</a></h2>
-<p>Some behavior is specified by reference to ISO/IEC 9945:2003, <i>
+
+<p>This reference documentation describes components that C++ programs may use 
+to perform operations involving file systems, including paths, regular files, 
+and directories.</p>
+<h2><a name="Definitions">Definitions</a></h2>
+<p>The following definitions  shall apply throughout this reference documentation:</p>
+<p><i><b><a name="File">File</a>:</b> </i>An object that can be written to, or read from, or both. A file 
+has certain attributes, including type. Common types of files include regular files 
+and directories. Other types of files, such as symbolic links, may be supported by the 
+implementation.</p>
+<p><b><i><a name="File-system">File system</a>:</i></b> A collection of files and certain of their attributes.</p>
+<p><b><i><a name="Filename">Filename</a>:</i></b> The name of a file. Slash and 0 
+characters are not permitted. Implementations may define additional 
+characters or specific names that are not permitted. Filenames <code>.</code>&nbsp; 
+and <code>..</code>&nbsp; have special meaning. Implementations may define 
+additional filenames that have special meaning.</p>
+<blockquote>
+  <p><i>[Note:</i> Most operating systems prohibit the ANSI control characters 
+  (0x00-0x31) in filenames.</p>
+  <p>Windows prohibits the characters 0x00-0x31, <code>&quot;</code>,<code> 
+  *</code>,<code>&nbsp;:</code>,<code> &lt;</code>,<code> &gt;</code>,<code>&nbsp;?</code>,<code> 
+  \</code>,<code> /</code>, and<code> |</code>&nbsp;<i>--end note]</i></p>
+</blockquote>
+<p><b><i><a name="Path">Path</a>:</i></b> A sequence of elements that identify 
+a location within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
+root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
+A pathname is the concrete representation of a path. <i>--end note</i>]</p>
+<p><b><i><a name="Absolute-path">Absolute path</a>:</i></b> A path that uniquely 
+identifies a file. The format is implementation defined. </p>
+<blockquote>
+  <p><i>[Note:</i> For POSIX-like implementations, including<b> </b>Unix 
+  variants, Linux, and <a href="http://www.cygwin.com/">Cygwin</a>, only paths 
+  that begin with a slash are absolute paths.</p>
+  <p>For Windows-like implementations, including Windows and
+  <a href="http://www.mingw.org/">MinGW</a>, only paths that begin with a drive 
+  specifier followed by a slash, or begin with two slashes, are absolute paths.&nbsp;<i>--end 
+  note]</i></p>
+</blockquote>
+<p><b><a name="Relative-path">Relative path</a>:</b> A path that uniquely 
+identifies a file only when considered relative to some other path. [<i>Note:</i> 
+Paths &quot;.&quot; and &quot;..&quot; are considered to be relative paths. <i>--end note</i>]</p>
+<p><i><b><a name="Pathname">Pathname</a>:</b> </i>A character string that represents a 
+path. Pathnames are formatted according to the generic pathname format or the 
+native pathname format.</p>
+<p><b><i><a name="generic-pathname-format">Generic pathname format:</a></i></b></p>
+<blockquote>
+<p><i>pathname:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root-name<sub>opt</sub> 
+root-directory<sub>opt</sub> relative-path<sub>opt</sub></i></p>
+<p><i>root-name:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+implementation-defined</i></p>
+<blockquote>
+  <blockquote>
+<p>[<i>Note:</i> Most POSIX and Windows based operating system define a name 
+beginning with two slashes (or backslashes, for Windows) as a root-name 
+identifying network locations. Windows defines a single letter followed by a
+<code>&quot;:&quot;</code> as a root-name identifying a disc drive. <i>--end note</i>]</p>
+  </blockquote>
+</blockquote>
+<p><i>root-directory:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+directory-separator</i></p>
+<p><i>relative-path:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+filename<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
+directory-separator<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
+directory-separator filename</i></p>
+<p><i>filename:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>&quot;.&quot;</code><i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>
+&quot;..&quot;</code></p>
+<p><i>directory-separator:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>&quot;/&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;/&quot;</code> directory-separator</i></p>
+<p>Multiple successive <i>directory-separator</i> characters are considered to 
+be the same as one <i>directory-separator</i> character. The <i>filename</i>
+<code>&quot;.&quot;</code> is considered to be a reference to the current directory. The
+<i>filename</i> <code>&quot;..&quot;</code> is considered to be a reference to the current 
+directory. Specific <i>filenames</i> may have special meaning for a particular 
+operating system.</p>
+</blockquote>
+<p><b><i><a name="native-pathname-format">Native pathname format:</a></i></b>&nbsp; 
+An implementation defined format. [<i>Note:</i> For POSIX-like operating 
+systems, the native format is the same as the generic format. For Windows, the 
+native format is the same as the generic format, except that directory-separator 
+characters can be either slashes or backslashes. <i>--end note</i>]</p>
+<p><i><b><a name="Link">Link</a>:</b> </i>A directory entry object that associates a 
+filename with a file. On some file systems, several directory entries can 
+associate names with the same file.</p>
+<p><b><i><a name="Hard-link">Hard link</a>:</i></b> A link to an existing file. Some 
+file systems support multiple hard links to a file. If the last hard link to a 
+file is removed, the file itself is removed.</p>
+<blockquote>
+<p>[<i>Note:</i> A hard link can be thought of as a shared-ownership smart 
+pointer to a file.<i> -- end note</i>]<i> </i></p>
+</blockquote>
+<p><i><a name="Symbolic-link">S<b>ymbolic link</b></a><b>:</b> </i>A type of file with the 
+property that when the file is encountered during pathname resolution, a string 
+stored by the file is used to modify the pathname resolution.</p>
+<blockquote>
+<p>[<i>Note:</i> A symbolic link can be thought of as a raw pointer to a file. 
+If the file pointed to does not exist, the symbolic link is said to be a 
+&quot;dangling&quot; symbolic link.<i> -- end note</i>]<i> </i></p>
+</blockquote>
+<p><b><i><a name="Race-condition">Race condition</a>:</i></b> The condition that occurs 
+when multiple threads, processes, or computers interleave access and 
+modification of 
+the same object within a file system.</p>
+<p><b><i><a name="Dot">Dot</a>, Dot Dot:</i></b> Synonyms for the filenames <code>&quot;.&quot;</code> 
+and <code>&quot;..&quot;</code>, respectively. The dot filename names the current 
+directory. The dot dot filename names the parent directory.</p>
+<h2><a name="Conformance">Conformance</a></h2>
+<p>Behavior is sometimes specified by reference to ISO/IEC 9945:2003, <i>
 <a href="http://www.unix.org/single_unix_specification/">POSIX</a></i>. How such behavior is actually implemented is unspecified.</p>
 <blockquote>
 <p>[<i>Note:</i> This constitutes an &quot;as if&quot; rule for implementation of 
@@ -154,7 +271,7 @@ or intended.</p>
 reference 
 may not be achieved in 
 the presence of <a href="#Race-condition">race conditions</a>. No diagnostic is required.</p>
-<p>If the possibility of race conditions makes it unreliable for a program to 
+<p>If the possibility of race conditions would make it unreliable for a program to 
 test for a precondition before calling a function described in this clause, <i>
 Requires</i> is not specified for the condition. Instead, the condition is 
 specified as a <i>Throws</i> condition.</p>
@@ -163,72 +280,7 @@ specified as a <i>Throws</i> condition.</p>
 is unreasonable for a program to detect them prior to calling the function. <i>
 -- end note</i>]</p>
 </blockquote>
-<h3><a name="Definitions">Definitions</a></h3>
-<p>The following definitions  apply throughout this reference documentation:</p>
-<p><i><b><a name="File">File</a>:</b> </i>An object that can be written to, or read from, or both. A file 
-has certain attributes, including type. Common types of files include regular files 
-and directories. Other types of files, such as symbolic links, may be supported by the 
-implementation.</p>
-<p><b><i><a name="File-system">File system</a>:</i></b> A collection of files and certain of their attributes.</p>
-<p><b><i><a name="Filename">Filename</a>:</i></b> The name of a file. Slash and 0 
-characters are not permitted in filenames. Implementations may define additional 
-characters or specific names that are not permitted. Filenames <code>.</code>&nbsp; 
-and <code>..</code>&nbsp; have special meaning. Implementations may define 
-additional filenames that have special meaning.</p>
-<blockquote>
-  <p><i>[Note:</i> Most implementations prohibit the ANSI control characters 
-  (0x00-0x31) in filenames.</p>
-  <p>Windows implementations prohibit the characters 0x00-0x31, <code>&quot;</code>,<code> 
-  *</code>,<code>&nbsp;:</code>,<code> &lt;</code>,<code> &gt;</code>,<code>&nbsp;?</code>,<code> 
-  \</code>,<code> /</code>, and<code> |</code>&nbsp;<i>--end note]</i></p>
-</blockquote>
-<p><b><i><a name="Path">Path</a>:</i></b> A sequence of elements that identify 
-a location within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
-root-directory<sub>opt</sub></i>, and an optional sequence of <i>filenames</i>. See
-<a href="#Pathname-grammar">Pathname grammar</a>.</p>
-<p><b><i><a name="Absolute-path">Absolute path</a>:</i></b> A path that uniquely 
-identifies a file. The format is implementation defined. </p>
-<blockquote>
-  <p><i>[Note:</i> For POSIX-like implementations, including<b> </b>Unix 
-  variants, Linux, and <a href="http://www.cygwin.com/">Cygwin</a>, only paths 
-  that begin with a slash are absolute paths.</p>
-  <p>For Windows-like implementations, including Windows and
-  <a href="http://www.mingw.org/">MinGW</a>, only paths that begin with a drive 
-  specifier followed by a slash, or begin with two slashes, are absolute paths.&nbsp;<i>--end 
-  note]</i></p>
-</blockquote>
-<p><b><a name="Relative-path">Relative path</a>:</b> A path that only uniquely 
-identifies a file when considered relative to some other path. [<i>Note:</i> 
-Paths &quot;.&quot; and &quot;..&quot; are considered to be relative paths. <i>--end note</i>]</p>
-<p><i><b><a name="Pathname">Pathname</a>:</b> </i>A character string that represents a 
-path.</p>
-<p><i><b><a name="Link">Link</a>:</b> </i>A directory entry object that associates a 
-filename with a file. On some file systems, several directory entries can 
-associate names with the same file.</p>
-<p><b><i><a name="Hard-link">Hard link</a>:</i></b> A link to an existing file. Some 
-file systems support multiple hard links to a file. If the last hard link to a 
-file is removed, the file itself is removed.</p>
-<blockquote>
-<p>[<i>Note:</i> A hard link can be thought of as a shared-ownership smart 
-pointer to a file.<i> -- end note</i>]<i> </i></p>
-</blockquote>
-<p><i><a name="Symbolic-link">S<b>ymbolic link</b></a><b>:</b> </i>A type of file with the 
-property that when the file is encountered during pathname resolution, a string 
-stored by the file is used to modify the pathname resolution.</p>
-<blockquote>
-<p>[<i>Note:</i> A symbolic link can be thought of as a raw pointer to a file. 
-If the file pointed to does not exist, the symbolic link is said to be a 
-&quot;dangling&quot; symbolic link.<i> -- end note</i>]<i> </i></p>
-</blockquote>
-<p><b><i><a name="Slash">Slash</a>:</i></b> The character <tt><code>'/'</code></tt>, also known as 
-<i>solidus</i>.</p>
-<p><b><i><a name="Dot">Dot</a>:</i></b> The character <code>'.'</code>, also known as 
-<i>period</i>.</p>
-<p><b><i><a name="Race-condition">Race condition</a>:</i></b> The condition that occurs 
-when multiple threads, processes, or computers interleave access and 
-modification of 
-the same object within a file system.</p>
-<h3><a name="Header-filesystem-synopsis">Header <code>&lt;boost/filesystem&gt;</code> synopsis</a></h3>
+<h2><a name="Header-filesystem-synopsis">Header <code>&lt;boost/filesystem&gt;</code> synopsis</a></h2>
 <pre>  namespace boost
   {
     namespace filesystem
@@ -236,6 +288,8 @@ the same object within a file system.</p>
       class <a href="#Class-template-path">path</a>;
 
       void swap(path&amp; lhs, path&amp; rhs);
+      bool lexicographical_compare(path::iterator first1, path::iterator last1,
+                                   path::iterator first2, path::iterator last2);
 
       bool operator==(const path&amp; lhs, const path&amp; rhs);
       bool operator!=(const path&amp; lhs, const path&amp; rhs);
@@ -376,7 +430,7 @@ the same object within a file system.</p>
 
     } // namespace filesystem
   } // namespace boost</pre>
-<h4><a name="Error-reporting">Error reporting</a></h4>
+<h2><a name="Error-reporting">Error reporting</a></h2>
 <p>Filesystem library functions often provide two overloads, one that 
 throws an exception to report file system errors, and another that sets an
 <code>error_code</code>.</p>
@@ -425,7 +479,7 @@ report errors as follows, unless otherwise specified:</p>
   throwing an exception as described in the C++ standard, 
   17.6.4.10 [res.on.exception.handling].</li>
 </ul>
-<h3><a name="class-path">Class <code>path</code></a></h3>
+<h2><a name="class-path">Class <code>path</code></a></h2>
 <p>An object of class <code>path</code> represents a <a href="#Path">path</a>, 
 and contains a <a href="#Pathname">pathname</a> Such an object is concerned only with the lexical and syntactic aspects 
 of a path. The path may not actually exist in external storage, and may contain pathnames which are not even valid for the current operating 
@@ -479,19 +533,25 @@ system. </p>
         path&amp; localize();  // POSIX: no effect. Windows: convert slashes to backslashes
 
         // native format <a href="#path-observers">observers</a>
-        const string_type&amp;  native() const;           // native format, encoding
-        const value_type*   c_str() const;            // native().c_str()
+        const string_type&amp;  native() const;            // native format, encoding
+        const value_type*   c_str() const;             // native().c_str()
 
-        const string        native_string() const;    // native format, uses codecvt() for encoding
-        const wstring       native_wstring() const;   // ditto
-        const u16string     native_u16string() const; // ditto
-        const u32string     native_u32string() const; // ditto
+        template &lt;class String&gt;
+        String string() const;                         // native format, uses codecvt() for encoding
+
+        const string        string() const;            // native format, uses codecvt() for encoding
+        const wstring       wstring() const;           // ditto
+        const u16string     u16string() const;         // ditto
+        const u32string     u32string() const;         // ditto
 
         // generic format observers
-        const string        string() const;           // generic format, uses codecvt() for encoding
-        const wstring       wstring() const;          // ditto
-        const u16string     u16string() const;        // ditto
-        const u32string     u32string() const;        // ditto
+        template &lt;class String&gt;
+        String generic_string() const;
+
+        const string        generic_string() const;    // generic format, uses codecvt() for encoding
+        const wstring       generic_wstring() const;   // ditto
+        const u16string     generic_u16string() const; // ditto
+        const u32string     generic_u32string() const; // ditto
 
         // <a href="#path-decomposition">decomposition</a>
         path  root_name() const;
@@ -525,7 +585,10 @@ system. </p>
         
         // encoding conversion
         static std::locale imbue( const std::locale&amp; loc );
-        static const codecvt_type &amp; codecvt()
+        static const codecvt_type &amp; codecvt();
+
+      private:
+        string_type pathname;  // <b><i>exposition only</i></b>
       };
 
     } // namespace filesystem
@@ -533,7 +596,7 @@ system. </p>
 <p><code><a name="value_type">value_type</a></code> is an implementation-defined typedef for the 
 character type used by the implementation to represent pathnames.</p>
 <blockquote>
-<p><i>[Note:</i> For POSIX-like implementations, including<b> </b>Unix's, Linux, 
+<p><i>[Note:</i> For POSIX-like implementations, including<b> </b>Unixes, Linux, 
 and
   <a href="http://www.cygwin.com/">Cygwin</a>, <code>path::value_type</code> 
 is <code>char</code> .</p>
@@ -556,11 +619,11 @@ end note</i>]</p>
 </blockquote>
 <p><code><a name="ContiguousIterator">ContiguousIterator</a></code> is required be a standard library <code>RandomIterator</code> 
 compliant iterator 
-pointing to contiguous storage. The iterator's value_type is required to be <code>char</code>, <code>
+pointing to contiguous storage. The iterator's value type is required to be <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
 <p><code>Source</code> is required to be one of:</p>
 <ul>
-  <li>A container. The value type is required to be <code>char</code>, <code>
+  <li>A container with a value type of <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
   <li>An iterator for a null terminated byte-string. The value type is required 
   to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
@@ -569,202 +632,51 @@ pointing to contiguous storage. The iterator's value_type is required to be <cod
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
   <li>A <code>boost::filesystem::directory_entry</code>.</li>
 </ul>
-<h4><a name="Pathname-formats">Pathname formats</a></h4>
-<p>Pathnames are in two possible formats: </p>
-<ul>
-  <li><a name="Portable-pathname-format"><b><i>Generic</i></b></a><i><b><a name="Portable-pathname-format"> pathname format</a>:</b></i> As described in <a href="#Pathname-grammar">
-  Pathname grammar</a> and by the <i>POSIX</i> <i><a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_169">Filename</a>,
-<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_266">
-Pathname</a> </i>and<i>
-<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap04.html#tag_04_11">
-Pathname Resolution</a></i> definitions.<blockquote>
-<p>[<i>Note:</i> <span style="background-color: #FFFFFF">The <i>POSIX</i> format 
-is the basis for the generic format because it is already part of an ISO standard, is 
-the basis for the ubiquitous <i>URL</i> format, and is the native pathname format 
-(or a 
-subset thereof) for the <i>UNIX</i>-like and <i>Windows</i>-like 
-pathnames familiar to most programmers. </span></p>
-<p>Use of the generic format does not  guarantee 
-portability;  filenames must also be portable.<span style="background-color: #FFFFFF"> 
-See <a href="#Input-conversion">Filename conversions</a>. Each operating system 
- 
-follows its own rules. Use of the generic format 
-does not change those rules. </span> <i>-- end note</i>]</p>
-  </blockquote>
-  
-  </li>
-  <li>
-  
-  <b><i><a name="Native-pathname-format">Native pathname format</a>:</i></b> As defined by the operating system.<blockquote>
-    <p>[<i>Note:</i> <span style="background-color: #FFFFFF">Working with 
-    user-provided native format paths is a common need. Hard-coded native 
-    format paths, however, may not be  portable.&nbsp; --</span><i><span style="background-color: #FFFFFF"> end note</span></i><span style="background-color: #FFFFFF">]</span></p>
-  </blockquote>
-  </li>
-</ul>
-<div align="left">
-  <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
-    <tr>
-      <td bgcolor="#D7EEFF">
-    <p align="left">[<i>Note:</i><b> POSIX-like<i> </i>implementations, including Cygwin:</b> 
-    The native format is the same as the generic format. The pathname encoding 
-    follows the conventions of the specific operating system</p>
-    <p align="left"><b>Windows-like implementations, including MinGW:</b> The native format is 
-    the Windows pathname format, and the encoding is UTF-16 (UCS-2 for older 
-    versions). The preferred native directory separator character is the backslash, but slash is 
-    also acceptable. Since the generic format is a subset of the native format, 
-    no reformatting is required and directory separators are preserved. For 
-    example, on Windows:</p>
-      <blockquote>
-    <p align="left"><code>path p = &quot;foo\\bar/baz&quot;;<br>
-    assert( p.native() == L&quot;foo\\bar/baz&quot; );<br>
-    p = &quot;baz/bar/foo&quot;;<br>
-    assert( p.native() == L&quot;baz/bar/foo&quot; );</code></p>
-      </blockquote>
-    <p align="left"> <i>--end note</i>]</p>
-      </td>
-    </tr>
-  </table>
-</div>
-<p><span style="background-color: #FFFF00">All <code>path</code> string or sequence arguments that describe a 
-path shall accept the generic pathname format, and shall accept the native 
-format if explicitly identified by a native format escape sequence prefix of
-<code>slash slash colon</code>.</span></p>
-<blockquote>
-    <p><span style="background-color: #FFFF00">[<i>Note:</i> <code>slash 
-    slash colon</code> was chosen as the escape sequence because a leading <code>
-    slash slash</code>&nbsp; is already implementation-defined by POSIX, <code>
-    colon</code> is prohibited in a Windows filename, and on any system a single
-    <code>slash</code> can be used when a filename beginning with a <code>colon</code> 
-    is desired.&nbsp;These factors eliminate the chance of collision with a real 
-    filename. --</span><i><span style="background-color: #FFFF00"> end note</span></i><span style="background-color: #FFFF00">]</span></p>
-    </blockquote>
-<p><span style="background-color: #FFFF00">Implementations are encouraged to 
-implicitly recognize the native pathname format if it can be lexically 
-identified. An implementation shall document whether or 
-not the native pathname format is
-implicitly recognized.</span></p>
-<blockquote>
-<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Example:</span></i></p>
-<p><i><span style="background-color: #FFFF00">-- OpenVMS:</span></i><span style="background-color: #FFFF00">
-</span> <code><span style="background-color: #FFFF00">&quot;SYS1::DISK1:[JANE.TYLER.HARRY]</span></code><span style="background-color: #FFFF00">&quot; is treated 
-as a native pathname with a system name, drive name,&nbsp;and three directory 
-filenames, rather than a generic pathname with one filename.</span></p>
-<p><i><span style="background-color: #FFFF00">-- Windows: </span> </i><code>
-<span style="background-color: #FFFF00">&quot;c:\\jane\\tyler\\harry&quot;</span></code><span style="background-color: #FFFF00"> is treated as a 
-native pathname with a drive letter, root-directory, and three filenames, rather 
-than a generic pathname with one filename.</span></p>
-<p><i><span style="background-color: #FFFF00">-- Counter-example 1:</span></i><span style="background-color: #FFFF00"> An operating system that allows slashes in 
-filenames and uses dot as a directory separator. Distinguishing between generic 
-and native format argument strings or sequences is not possible as there is no 
-other distinguishing syntax. The implementation does not accept native format 
-pathnames unless the </span> <code><span style="background-color: #FFFF00">native</span></code><span style="background-color: #FFFF00"> argument is present.</span></p>
-<p><i><span style="background-color: #FFFF00">-- Counter-example 2:</span></i><span style="background-color: #FFFF00"> An operating system that allows slashes in 
-filenames and uses some unusual character as a directory separator. The 
-implementation does accept native format pathnames without the additional </span> <code>
-<span style="background-color: #FFFF00">native</span></code><span style="background-color: #FFFF00"> argument, which only has to be used for native format arguments 
-containing slashes in filenames.</span></p>
-<p><i><span style="background-color: #FFFF00">-- end example</span></i><span style="background-color: #FFFF00">]</span></p>
-<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00"> This
-</span> <i><a name="duck-rule"><span style="background-color: #FFFF00">duck-rule</span></a></i><span style="background-color: #FFFF00"> (&quot;if it looks 
-like a duck, walks like a duck, and quacks like a duck, it must be a duck&quot;) 
-eliminates format confusion as a source of programmer error and support 
-requests. </span> <i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
-</blockquote>
-<p><span style="background-color: #FFFF00">If both the generic and native formats are accepted, implementations shall 
-document what characters or character sequences are used to distinguish between 
-two formats.</span></p>
-<blockquote>
-<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00">
-</span> <i><span style="background-color: #FFFF00">Windows</span></i><span style="background-color: #FFFF00"> implementations are encouraged to define colons 
-and backslashes as the characters which distinguish native from generic 
-formats. </span> <i><span style="background-color: #FFFF00">--end note</span></i><span style="background-color: #FFFF00">]</span></p>
-</blockquote>
-<h4><a name="Pathname-grammar">Pathname grammar</a></h4>
-<p>The grammar for the generic pathname format is as follows:</p>
-<blockquote>
-<p><i>pathname:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root-name<sub>opt</sub> 
-root-directory<sub>opt</sub> relative-path<sub>opt</sub></i></p>
-<p><i>root-name:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-implementation-defined</i></p>
-<p><i>root-directory:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-directory-separator<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-root-directory directory-separator<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-implementation-defined</i></p>
-<p><i>relative-path:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-filename<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
-directory-separator<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
-directory-separator filename</i></p>
-<p><i>filename:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dot<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dot dot</i></p>
-<p><i>directory-separator:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>&quot;/&quot;</code></i></p>
-<p><i>dot:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>&quot;.&quot;</code></p>
-</blockquote>
-<p>The grammar is aligned with the <i>POSIX </i>&nbsp;<i><a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_169">Filename</a>,
-<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_266">
-Pathname</a> </i>and<i>
-<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap04.html#tag_04_11">
-Pathname Resolution</a></i> definitions. Any conflict between the grammar and <i>
-POSIX</i> is unintentional. This technical report defers to <i>POSIX</i>.</p>
-<blockquote>
-<p><span style="background-color: #E0E0E0"><i>The form of the above wording was taken 
-from POSIX, which uses it in several places to defer to the C standard.</i></span></p>
-<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note: Windows</span></i><span style="background-color: #FFFF00"> implementations are encouraged to define
-</span> <i><span style="background-color: #FFFF00">slash slash 
-name</span></i><span style="background-color: #FFFF00"> as a permissible </span> <i>
-<span style="background-color: #FFFF00">root-name</span></i><span style="background-color: #FFFF00">.
-</span> <i><span style="background-color: #FFFF00">POSIX</span></i><span style="background-color: #FFFF00"> permits, but does not 
-require, implementations to do the same. </span> <i>
-<span style="background-color: #FFFF00">Windows</span></i><span style="background-color: #FFFF00"> implementations are 
-encouraged to define an additional </span> <i>
-<span style="background-color: #FFFF00">root-directory</span></i><span style="background-color: #FFFF00"> element
-</span> <i>
-<span style="background-color: #FFFF00">root_directory name.</span></i><span style="background-color: #FFFF00"> It is applicable only to the
-</span> <i><span style="background-color: #FFFF00">slash slash name</span></i><span style="background-color: #FFFF00"> 
-form of </span> <i><span style="background-color: #FFFF00">root-name.</span></i></p>
-<p> <i><span style="background-color: #FFFF00">Windows</span></i><span style="background-color: #FFFF00"> implementations are encouraged to recognize a
-</span> <i><span style="background-color: #FFFF00">name</span></i><span style="background-color: #FFFF00"> 
-followed by a colon as a native format </span> <i>
-<span style="background-color: #FFFF00">root-name</span></i><span style="background-color: #FFFF00">, 
-and a backslash as a format element equivalent to </span> <i>
-<span style="background-color: #FFFF00">slash</span></i><span style="background-color: #FFFF00">.
-</span> <i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
-</blockquote>
-<h4><a name="Input-conversion">Input conversion</a></h4>
-<p><span style="background-color: #FFFF00">To be supplied. Explain when, how 
-codecvt applied.</span></p>
-<p><span style="background-color: #FFFF00">When converting filenames to the native operating system format, 
+<p>Iteration over <code><a name="ContiguousIterator">ContiguousIterator</a></code> 
+and <code>Source</code> arguments shall result in generic pathname format or 
+native pathname format strings.</p>
+<p>The specifications for certain <code>path</code> functions require that 
+arguments in the generic pathname format be converted to native pathname format 
+as they are stored in <code>pathname</code>. If the native format requires 
+regular file paths and directory paths to be formatted differently, the 
+implementation shall determine which format to use according to whether or not 
+the last element of the generic format string is a separator. [<i>Example:</i> 
+On <a href="http://en.wikipedia.org/wiki/OpenVMS">OpenVMS</a>, a path 
+constructed from <code>&quot;/cats/jane&quot;</code> would considered a regular file 
+path, and have a native format of <code>&quot;[CATS]JANE&quot;</code>, while a 
+path constructed from <code>&quot;/cats/jane/&quot;</code> would be considered a 
+directory path, and have a native format of <code>&quot;[CATS.JANE]&quot;</code>.
+<i>--end example</i>] [<i>Note</i>: POSIX and Windows use the same native format 
+for regular file and directory pathnames, so this paragraph does not apply to 
+them. <i>--end note</i>]</p>
+
+<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <tr>
+    <td style="font-size: 10pt">
+    Class <code>path</code> does not currently map invalid characters in 
+    filenames to valid characters. In the future we might add something like 
+    this:<blockquote>
+<p>When converting filenames to the native operating system format, 
 implementations are encouraged, but not required, to convert otherwise invalid 
 characters or character sequences to valid characters or character sequences. 
-Such conversions are implementation-defined.</span></p>
+Such conversions are implementation-defined.</p>
 <blockquote>
-<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00"> Filename conversion allows much wider portability of both 
-programs and filenames that would otherwise be possible.</span></p>
-<p><span style="background-color: #FFFF00">Implementations are encouraged to base conversion on existing standards or 
-practice. Examples include the Uniform Resource Locator escape syntax of a percent sign (</span><code><span style="background-color: #FFFF00">'%'</span></code><span style="background-color: #FFFF00">) 
-followed by two hex digits representing the character value. On </span>
-<i><span style="background-color: #FFFF00">OpenVMS</span></i><span style="background-color: #FFFF00">, which does not allow percent signs in filenames, a dollar sign (</span><code><span style="background-color: #FFFF00">'$'</span></code><span style="background-color: #FFFF00">) 
+<p>[<i>Note:</i> Filename conversion allows much wider portability of both 
+programs and filenames that would otherwise be possible.</p>
+<p>Implementations are encouraged to base conversion on existing standards or 
+practice. Examples include the Uniform Resource Locator escape syntax of a percent sign (<code>'%'</code>) 
+followed by two hex digits representing the character value. On
+<i>OpenVMS</i>, which does not allow percent signs in filenames, a dollar sign (<code>'$'</code>) 
 followed by two hex digits is the existing practice, as is converting lowercase 
-letters to uppercase.</span><i><span style="background-color: #FFFF00"> -- end note.</span></i><span style="background-color: #FFFF00">]</span></p>
-<p><span style="background-color: #E0E0E0"><i>The Boost implementation for 
-Windows currently does not map invalid characters. Pending feedback from the LWG, 
-Boost may settle on % hex hex as the preferred escape sequence. If so, should 
-there be normative encouragement?</i></span></p>
+letters to uppercase.<i> -- end note.</i>]</p>
 </blockquote>
-<h4> <code><font size="4">class </font></code> <a name="path-constructors"> <code>
-<font size="4">path</font></code> constructors</a></h4>
+    </blockquote>
+    </td>
+  </tr>
+</table>
+
+<h3> <a name="path-constructors"> <code>
+<font size="4">path</font></code> constructors</a></h3>
 <pre>path();</pre>
 <blockquote>
   <p><i>Postconditions:</i> <code>empty()</code>.</p>
@@ -775,31 +687,40 @@ there be normative encouragement?</i></span></p>
   path(Source const&amp; source);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code>, in the native format, as the contained pathname.</p>
+  or <code>source</code> in <code>pathname</code>. If the contents are in the 
+  generic format, they are converted to the native format. [<i>Note:</i> For 
+  POSIX and Windows based implementations, the generic format is already 
+  acceptable as a native format, so no generic to native conversion is 
+  performed. <i>--end note</i>]</p>
   <p>
   <i>Remarks:</i> If the value type of&nbsp; [<code>begin</code>,<code>end</code>) 
   or <code>source</code> is not <code>value_type</code>, the contents are 
   converted by <code>codecvt()</code>.</p>
 </blockquote>
-<h4> <code><font size="4">class </font></code> <a name="path-assignments"> <code>
-<font size="4">path</font></code> assignments</a></h4>
+<h3> <a name="path-assignments"> <code>
+<font size="4">path</font></code> assignments</a></h3>
 <pre>template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
   path&amp; assign(ContiguousIterator begin, ContiguousIterator end);</pre>
 <pre>template &lt;class Source&gt;
   path&amp; operator=(Source const&amp; source);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code>, in the native format, as the contained pathname.</p>
+  or <code>source</code> in <code>pathname</code>. If the contents are in the 
+  generic format, they are converted to the native format. [<i>Note:</i> For 
+  POSIX and Windows based implementations, the generic format is already 
+  acceptable as a native format, so no generic to native conversion is 
+  performed. <i>--end note</i>]</p>
+  <p>
+  <i>Returns: </i><code>*this</code></p>
   <p>
   <i>Remarks:</i> If the value type of&nbsp; [<code>begin</code>,<code>end</code>) 
   or <code>source</code> is not <code>value_type</code>, the contents are 
   converted by <code>codecvt()</code>.</p>
-  <p><i>Returns: </i><code>*this</code></p>
   </blockquote>
-<h4> <code><font size="4">class <a name="path-appends">path</a></font></code><a name="path-appends"> 
-appends</a></h4>
+<h3> <code><font size="4"> <a name="path-appends">path</a></font></code><a name="path-appends"> 
+appends</a></h3>
   <p>The append operations use <code>operator/=</code> to denote their semantic 
-  effect of appending the platform's preferred directory separator when needed. The&nbsp; 
+  effect of appending the platform's preferred directory separator when needed. The 
   preferred 
   directory separator is implementation-defined.</p>
 <blockquote>
@@ -822,7 +743,7 @@ appends</a></h4>
     <li><code>p.empty()</code>, or</li>
     <li><code>*p.native().cbegin()</code> is a directory separator.</li>
   </ul>
-    <p>Appends <code>p.native()</code> to the contained pathname.</p>
+    <p>Appends <code>p.native()</code> to <code>pathname</code>.</p>
   </blockquote>
   <p><i>Returns: </i><code>*this</code></p>
 </blockquote>
@@ -842,15 +763,20 @@ appends</a></h4>
     <li><code>*p.native().cbegin()</code> is a separator.</li>
   </ul>
     <p>Appends the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code>, in the native format, to the contained pathname.</p>
+  or <code>source</code> to <code>pathname</code>. If the contents are in the 
+    generic format, they are converted to the native format. [<i>Note:</i> For 
+    POSIX and Windows based implementations, the generic format is already 
+    acceptable as a native format, so no generic to native conversion is 
+    performed. <i>--end note</i>]</p>
   </blockquote>
   <p><i>Remarks:</i> If the value type of&nbsp; [<code>begin</code>,<code>end</code>) 
   or <code>source</code> is not <code>value_type</code>, the contents are 
   converted by <code>codecvt()</code>.</p>
   <p><i>Returns: </i><code>*this</code></p>
   </blockquote>
-<h4> <code><font size="4">class </font></code> <a name="path-modifiers"> <code>
-<font size="4">path</font></code> modifiers</a></h4>
+  
+<h3> <a name="path-modifiers"> <code>
+<font size="4">path</font></code> modifiers</a></h3>
 <pre>void clear();</pre>
 <blockquote>
 <p><i>Postcondition:</i> <code>this-&gt;empty()</code> is true.</p>
@@ -888,110 +814,89 @@ appends</a></h4>
   backslashes. On POSIX, there is no effect. <i>-- end note</i>]</p>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
-<h4> <a name="path-observers"> <code>
-<font size="4"><span style="background-color: #FFFF00">path native format</span></font></code><span style="background-color: #FFFF00"> observers</span></a></h4>
-<p><span style="background-color: #FFFF00"><i>Move elsewhere.</i> </span></p>
-<p><span style="background-color: #FFFF00">Some operating systems, including
-</span> <i><span style="background-color: #FFFF00">POSIX</span></i><span style="background-color: #FFFF00"> and
-</span> <i>
-<span style="background-color: #FFFF00">Windows</span></i><span style="background-color: #FFFF00">, use the same format for paths to directories and paths to regular 
-files.</span></p>
-<p><span style="background-color: #FFFF00">Other operating systems, such as 
-</span><span style="background-color: #FFFF00">OpenVMS</span><span style="background-color: #FFFF00">, used different formats for paths to 
-directories and paths to regular files. On such systems, implementations shall 
-determine the format according to whether or not the last element is a 
-separator.</span></p>
-<table border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
-  <tr>
-    <td colspan="2">
-    <p align="center"><b><span style="background-color: #FFFF00">OpenVMS</span></b></td>
-  </tr>
-  <tr>
-    <td><code><span style="background-color: #FFFF00">path p</span></code></td>
-    <td><code><span style="background-color: #FFFF00">p.native()</span></code></td>
-  </tr>
-  <tr>
-    <td><code><span style="background-color: #FFFF00">p = &quot;/cats/jane&quot;</span></code></td>
-    <td> <code><span style="background-color: #FFFF00">&quot;[CATS]JANE&quot;</span></code></td>
-  </tr>
-  <tr>
-    <td><code><span style="background-color: #FFFF00">p = &quot;/cats/jane/&quot;</span></code></td>
-    <td> <code><span style="background-color: #FFFF00">&quot;[CATS.JANE]&quot;</span></code></td>
-  </tr>
-</table>
+
+<h3><code><font size="4">path</font></code><font size="4"> <a name="path-native-format-observers">
+native format</a></font><a name="path-native-format-observers"> observers</a></h3>
+<p>The string returned by all native format observers is in the <a href="#Native-pathname-format">native pathname format</a>.</p>
 <pre>const string_type&amp;  native() const;</pre>
 <blockquote>
-<p><i>Returns:</i> The contained pathname. [<i>Note:</i> The contained pathname 
-is in the <a href="#Native-pathname-format">native pathname format</a>. <i>-- 
-end note</i>]</p>
+<p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Throws:</i> nothing.</p>
 </blockquote>
 <pre>const value_type* c_str() const;</pre>
 <blockquote>
-<p><i>Returns:</i> <code>native().c_str()</code>.</p>
+<p><i>Returns:</i> <code>pathname.c_str()</code>.</p>
 <p><i>Throws:</i> nothing.</p>
 </blockquote>
-<pre><i><b>const-string</b></i> native_string() const;</pre>
+<pre>template &lt;class String&gt;
+String string() const;</pre>
 <blockquote>
-<p><b><i><code>const-string</code></i></b> is permitted to be <code>const 
-std::string</code> or <code>const std::string&amp;</code>.</p>
-<p><i>Returns:</i> The contained pathname. [<i>Note:</i> The contained pathname 
-is in the <a href="#Native-pathname-format">native pathname format</a>. <i>-- 
-end note</i>]</p>
-<p><i>Remarks:</i> If
-<code>value_type</code> is not <code>char</code>, the encoding is converted by
-<code>codecvt()</code>.</p>
-<p><i>[Note:</i> For POSIX-like implementations, no conversion is required; the 
-implementation will simply return <code>native()</code>. <i>-- end note]</i></p>
-</blockquote>
-<pre><i><b>const-wstring</b></i> native_wstring() const; </pre>
-<blockquote>
-<p><b><i><code>const-wstring</code></i></b> is permitted to be <code>const 
-std::wstring</code> or <code>const std::wstring&amp;</code>.</p>
-<p><i>Returns:</i> The contained pathname. [<i>Note:</i> The contained pathname 
-is in the <a href="#Native-pathname-format">native pathname format</a>. <i>-- 
-end note</i>]</p>
-<p><i>Remarks:</i> If
-<code>value_type</code> is not <code>wchar_t</code>, the encoding is converted by
-<code>codecvt()</code>.</p>
-<p><i>[Note:</i> For Windows implementations, no conversion is required; the 
-implementation will simply return <code>native()</code>. <i>-- end note]</i></p>
-</blockquote>
-<pre><b><i>const-string</i></b> string() const;</pre>
-<blockquote>
-<p><b><i><code>const-string</code></i></b> is permitted to be <code>const 
-std::string</code> or <code>const std::string&amp;</code>.</p>
-<p><i>Returns:</i> The contained pathname, in the
-<a href="#Portable-pathname-format">generic pathname format</a>.</p>
-<p><i>Remarks:</i> If
-<code>value_type</code> is not <code>char</code>, the encoding is converted by
+  <p><i>Returns:</i> <code>pathname</code>.</p>
+<p><i>Remarks:</i> If <code>pathname</code> is of a different type than <code>
+String</code>, conversion is performed using
 <code>codecvt()</code>.</p>
 </blockquote>
-<pre><b><i>const-wstring</i></b> wstring() const;</pre>
+<pre>const string string() const;
+const wstring wstring() const;
+const u16string u16string() const;
+const u32wstring u32wstring() const; </pre>
 <blockquote>
-<p><b><i><code>const-wstring</code></i></b> is permitted to be <code>const 
-std::wstring</code> or <code>const std::wstring&amp;</code>.</p>
-<p><i>Returns:</i> The contained pathname, in the
-<a href="#Portable-pathname-format">generic pathname format</a>.</p>
-<p><i>Remarks:</i> If
-<code>value_type</code> is not <code>wchar_t</code>, the encoding is converted by
+<p><i>Returns:</i> <code>pathname</code>.</p>
+<p><i>Remarks:</i> If <code>pathname</code> is not of the same type as the 
+function's return type, conversion is performed using
+<code>codecvt()</code>. If <code>pathname</code> is of the same type as the 
+function's return type, the function is permitted to return by <code>const&amp;</code> 
+rather than <code>const</code> value. [<i>Note:</i> For POSIX, this occurs for
+<code>string()</code>, for Windows, <code>wstring()</code>. <i>--end note</i>]</p>
+</blockquote>
+
+<h3><code><font size="4">path</font></code><font size="4">
+<a name="path-generic-format-observers">generic format</a></font><a name="path-native-format-observers"> 
+observers</a></h3>
+<p>The string returned by all generic format observers is in the
+<a href="#generic-pathname-format">generic pathname format</a>.</p>
+<p>[<i>Note:</i> For POSIX, no conversion occurs, since the native format and 
+generic format are the same. For Windows, backslashes are converted to slashes
+<i>--end note</i>]</p>
+<pre>template &lt;class String&gt;
+String generic_string() const;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>pathname</code>.</p>
+<p><i>Remarks:</i> If <code>pathname</code> is of a different type than <code>
+String</code>, conversion is performed using
 <code>codecvt()</code>.</p>
 </blockquote>
-<h4> <a name="path-decomposition"> <code><font size="4">class path</font></code> 
-decomposition</a></h4>
+<pre>const string generic_string() const;
+const wstring generic_wstring() const;
+const u16string generic_u16string() const;
+const u32wstring generic_u32wstring() const; </pre>
+<blockquote>
+<p><i>Returns:</i> <code>pathname</code>.</p>
+<p><i>Remarks:</i> If <code>pathname</code> is not of the same type as the 
+function's return type, conversion is performed using
+<code>codecvt()</code>. If <code>pathname</code> is of the same type as the 
+function's return type, and the generic format is the same as the native format, 
+the function is permitted to return by <code>const&amp;</code> rather than <code>
+const</code> value. [<i>Note:</i> For POSIX, this occurs for <code>string()</code>. 
+It never occurs for Windows, because backslashes must be converted to slashes.
+<i>--end note</i>]</p>
+</blockquote>
+
+<h3> <a name="path-decomposition"> <code><font size="4">path</font></code> 
+decomposition</a></h3>
 <p><span style="background-color: #E0E0E0"><i>See the
 <a href="#Path-decomposition-table">Path decomposition table</a> for examples 
 for values returned by decomposition functions.</i></span></p>
 <pre>path root_name() const;</pre>
 <blockquote>
-<p><i>Returns:</i> <i>root-name,</i> if the stored path includes <i>
+<p><i>Returns:</i> <i>root-name,</i> if <code>pathname</code> includes <i>
 root-name</i>, otherwise <code>path()</code>. </p>
 </blockquote>
 <pre>path root_directory() const;</pre>
 <blockquote>
-<p><i>Returns:</i> <i>root-directory</i>, if the stored path includes <i>
+<p><i>Returns:</i> <i>root-directory</i>, if <code>pathname</code> includes <i>
 root-directory</i>, otherwise <code>path()</code>.</p>
-<p>If <i>root-directory</i> is composed <i>slash name</i>, <i>slash</i> is 
+<p>If <i>root-directory</i> is composed of <i>slash name</i>, <i>slash</i> is 
 excluded from the returned string.</p>
 </blockquote>
 <pre>path root_path() const;</pre>
@@ -1000,7 +905,8 @@ excluded from the returned string.</p>
 </blockquote>
 <pre>path relative_path() const;</pre>
 <blockquote>
-<p><i>Returns:</i> A <code>path</code> composed from the the stored path, if any, beginning 
+<p><i>Returns:</i> A <code>path</code> composed from <code>pathname</code>, if <code>
+!empty()</code>, beginning 
 with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</code>.</p>
 </blockquote>
 <pre>path filename() const;</pre>
@@ -1037,7 +943,7 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
   behavior for file systems which append additional elements to extensions, such 
   as alternate data streams or partitioned dataset names.</p>
 </blockquote>
-<h4> <a name="path-query"> <code><font size="4">class path</font></code> query</a></h4>
+<h3> <a name="path-query"> <code><font size="4">path</font></code> query</a></h3>
 <pre>bool empty() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>native().empty()</code>.</p>
@@ -1086,14 +992,14 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
 <blockquote>
   <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>!is_absolute()</code>.</span></p>
 </blockquote>
-<h4> <code><font size="4">class </font></code> <a name="path-iterators"> <code>
-<font size="4">path</font></code> iterators</a></h4>
+<h3> <a name="path-iterators"> <code>
+<font size="4">path</font></code> iterators</a></h3>
 <p> A <code>path::iterator</code> is a constant iterator satisfying all 
 the requirements of a bidirectional iterator (C++ Std, 24.1.4 Bidirectional 
-iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is
-<code>string_type</code>.</p>
+iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>
+path</code>.</p>
   <p>Calling any non-const member function of a <code>path</code> object 
-  invalidates all iterators referring to elements of the object.</p>
+  invalidates all iterators referring to elements of that object.</p>
 <p> The forward traversal order is as follows:</p>
 <ul>
   <li>The <i>root-name</i> element, if present.</li>
@@ -1112,11 +1018,11 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is
 <blockquote>
   <p><i>Returns:</i> The end iterator.</p>
 </blockquote>
-<h4> <code><font size="4">class <a name="path-deprecated-functions">path</a></font></code><a name="path-deprecated-functions"> 
-deprecated functions</a></h4>
-<p> <span style="background-color: #FFFF00">index.htm</span><span style="background-color: #FFFF00"> 
+<h3> <code><font size="4"> <a name="path-deprecated-functions">path</a></font></code><a name="path-deprecated-functions"> 
+deprecated functions</a></h3>
+<p> <i> <span style="background-color: #FFFF00">index.htm 
 also has a section (see macros) partially duplicating this material. Change to 
-reference this.</span></p>
+reference this.</span></i></p>
 <p> Several member functions from previous versions of <code>class path</code> 
 have been deprecated, either because they have been renamed or because the 
 functionality is no longer desirable or has become obsolete.</p>
@@ -1141,204 +1047,97 @@ const string_type  external_directory_string() const { return native(); }</pre>
 </blockquote>
 <p>Functions no longer available:</p>
 <p><span style="background-color: #FFFF00">TBS</span></p>
-<h4> <a name="path-non-member-functions">
-<span style="background-color: #FFFFFF">path non-member functions</span></a></h4>
-<pre><span style="background-color: #FFFFFF">template&lt;class String, class Traits&gt;
-void swap( path&lt;String, Traits&gt; &amp; lhs, path&lt;String, Traits&gt; &amp; rhs )</span></pre>
+<h3> <a name="path-non-member-functions"> <code><font size="4">path</font></code>
+<span style="background-color: #FFFFFF">non-member functions</span></a></h3>
+<pre><span style="background-color: #FFFFFF">void swap( path&amp; lhs, path&amp; rhs )</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Effects: </span></i><code>
-  <span style="background-color: #FFFFFF">lhs.swap( 
-  rhs )</span></code></p>
+  <span style="background-color: #FFFFFF">lhs.swap(rhs)</span></code>.</p>
 </blockquote>
-  <h4><span style="background-color: #FFFFFF">path non-member operators</span></h4>
-  <p><span style="background-color: #FF0000">There are seven path non-member operators (/,
-  </span> <code><span style="background-color: #FF0000">==</span></code><span style="background-color: #FF0000">,
-  </span> <code>
-  <span style="background-color: #FF0000">!=</span></code><span style="background-color: #FF0000">,
-  </span> <code><span style="background-color: #FF0000">&lt;</span></code><span style="background-color: #FF0000">,
-  </span> <code><span style="background-color: #FF0000">&gt;</span></code><span style="background-color: #FF0000">,
-  </span> <code><span style="background-color: #FF0000">&lt;=</span></code><span style="background-color: #FF0000">,
-  </span> <code><span style="background-color: #FF0000">&gt;=</span></code><span style="background-color: #FF0000">), 
-  each with five overloads. For brevity, the specifications are given in tabular 
-  form. Each of the resulting thirty-five signatures is a template, with 
-  template parameter list template</span><code><span style="background-color: #FF0000">&lt;class 
-  String, class Traits&gt;</span></code><span style="background-color: #FF0000">. 
-  The format of such arguments is described in </span> <a href="#Pathname-formats">
-  <span style="background-color: #FF0000">Pathname formats</span></a><span style="background-color: #FF0000">.</span></p>
-    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="150">
-      <tr>
-        <td width="100%" height="16">
-        <p align="center"><i><b><span style="background-color: #FF0000">Argument type overloads</span></b></i></td>
-      </tr>
-      <tr>
-        <td width="100%" height="16"><code>
-        <span style="background-color: #FF0000">path&lt;String, Traits&gt;&amp; a, path&lt;String, Traits&gt;&amp; 
-        b</span></code></td>
-      </tr>
-      <tr>
-        <td width="100%" height="16"><code>
-        <span style="background-color: #FF0000">const 
-        typename path&lt;String, Traits&gt;::string_type&amp; a, 
-        path&lt;String, Traits&gt;&amp; b</span></code></td>
-      </tr>
-      <tr>
-        <td width="100%" height="16"><code>
-        <span style="background-color: #FF0000">const 
-        typename path&lt;String, Traits&gt;::string_type::value_type* a, 
-        path&lt;String, Traits&gt;&amp; b</span></code></td>
-      </tr>
-      <tr>
-        <td width="100%" height="5"><code>
-        <span style="background-color: #FF0000">const 
-        path&lt;String, Traits&gt;&amp; a, typename path&lt;String, Traits&gt;::string_type&amp; 
-        b</span></code></td>
-      </tr>
-      <tr>
-        <td width="100%" height="16"><code>
-        <span style="background-color: #FF0000">const 
-        path&lt;String, Traits&gt;&amp; a, typename 
-        path&lt;String, Traits&gt;::string_type::value_type* b</span></code></td>
-      </tr>
-    </table>
-  <p><span style="background-color: #FF0000">In the </span><b><i>
-  <span style="background-color: #FF0000">path non-member operators </span>
-  </i></b><span style="background-color: #FF0000">table, </span><code>
-  <span style="background-color: #FF0000">a</span></code><span style="background-color: #FF0000"> 
-  and </span><code><span style="background-color: #FF0000">b</span></code><span style="background-color: #FF0000"> 
-  are of the types given in the </span><i><b>
-  <span style="background-color: #FF0000">Argument type overloads</span></b></i><span style="background-color: #FF0000"> 
-  table. If </span><code><span style="background-color: #FF0000">a</span></code><span style="background-color: #FF0000"> 
-  or </span><code><span style="background-color: #FF0000">b</span></code><span style="background-color: #FF0000"> 
-  is of type </span><code><span style="background-color: #FF0000">const 
-  path&lt;String, Traits&gt;&amp;</span></code><span style="background-color: #FF0000">, 
-  then </span><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i></code><span style="background-color: #FF0000"> 
-  or </span><i><b><span style="background-color: #FF0000">b'</span></b></i><span style="background-color: #FF0000"> 
-  respectively is </span><code><span style="background-color: #FF0000">a</span></code><span style="background-color: #FF0000"> 
-  or </span><code><span style="background-color: #FF0000">b</span></code><span style="background-color: #FF0000"> 
-  respectively. Otherwise </span><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i></code><span style="background-color: #FF0000"> 
-  or </span><i><b><span style="background-color: #FF0000">b'</span></b></i><span style="background-color: #FF0000"> 
-  respectively represent named or unnamed temporary </span><code>
-  <span style="background-color: #FF0000">path&lt;String, Traits&gt;</span></code><span style="background-color: #FF0000"> 
-  objects constructed from </span><code><span style="background-color: #FF0000">
-  a</span></code><span style="background-color: #FF0000"> or </span><code>
-  <span style="background-color: #FF0000">b</span></code><span style="background-color: #FF0000"> 
-  respectively.</span></p>
-<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="280">
-  <tr>
-    <td width="100%" colspan="3" align="center" height="19"><b><i>
-    <span style="background-color: #FF0000">path non-member operators</span></i></b></td>
-  </tr>
-  <tr>
-    <td width="20%" align="center" height="19"><i><b>
-    <span style="background-color: #FF0000">Expression</span></b></i></td>
-    <td width="25%" align="center" height="19"><i><b>
-    <span style="background-color: #FF0000">Return type</span></b></i></td>
-    <td width="55%" align="center" height="19"><i><b>
-    <span style="background-color: #FF0000">Semantics</span></b></i></td>
-  </tr>
-  <tr>
-    <td width="20%" align="center" height="30" valign="top"><code>
-    <span style="background-color: #FF0000">a / b</span></code></td>
-    <td width="25%" align="center" height="30" valign="top"><code>
-    <span style="background-color: #FF0000">path&lt;String, Traits&gt;</span></code></td>
-    <td width="55%" height="30"><code><span style="background-color: #FF0000">
-    path&lt;String, Traits&gt; tmp(a);<br>
-    return tmp /= </span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">;</span></code></td>
-  </tr>
-  <tr>
-    <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">a &lt; b</span></code></td>
-    <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FF0000">
-    return lexicographical_compare(</span></code><span style="background-color: #FF0000"><i><b>a</b></i></span><code><span style="background-color: #FF0000"><i><b>'</b></i>.begin</span><span style="background-color: #FF0000">(), </span></code><i><b>
-    <span style="background-color: #FF0000">a</span></b></i><code><span style="background-color: #FF0000"><i><b>'</b></i>.end</span><span style="background-color: #FF0000">(), </span></code><i><b>
-    <span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">.begin</span><span style="background-color: #FF0000">(), </span></code><i><b>
-    <span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">.end</span><span style="background-color: #FF0000">());</span></code></td>
-  </tr>
-  <tr>
-    <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">a == b</span></code></td>
-    <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FF0000">
-    return !(</span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000"> 
-    &lt; </span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">) 
-    &amp;&amp; !(</span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000"> 
-    &lt; </span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000">);</span></code></td>
-  </tr>
-  <tr>
-    <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">a != b</span></code></td>
-    <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FF0000">
-    return !(</span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000"> 
-    == </span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">);</span></code></td>
-  </tr>
-  <tr>
-    <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">a &gt; b</span></code></td>
-    <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FF0000">
-    return </span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000"> 
-    &lt; </span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000">;</span></code></td>
-  </tr>
-  <tr>
-    <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">a &lt;= b</span></code></td>
-    <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FF0000">
-    return !(</span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000"> 
-    &lt; </span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000">);</span></code></td>
-  </tr>
-  <tr>
-    <td width="20%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">a &gt;= b</span></code></td>
-    <td width="25%" align="center" height="19" valign="top"><code>
-    <span style="background-color: #FF0000">bool</span></code></td>
-    <td width="55%" height="19"><code><span style="background-color: #FF0000">
-    return !(</span></code><i><b><span style="background-color: #FF0000">a</span></b></i><code><i><b><span style="background-color: #FF0000">'</span></b></i><span style="background-color: #FF0000"> 
-    &lt; </span></code><i><b><span style="background-color: #FF0000">b'</span></b></i><code><span style="background-color: #FF0000">);</span></code></td>
-  </tr>
-</table>
-  <blockquote>
-  <p><span style="background-color: #FF0000">[</span><i><span style="background-color: #FF0000">Note:</span></i><span style="background-color: #FF0000">
-  </span> <a name="Path-equality"><span style="background-color: #FF0000">Path equality</span></a><span style="background-color: #FF0000"> and path 
-  equivalence have different semantics.</span></p>
-  <p><span style="background-color: #FF0000">Equality is determined by </span> <i>
-  <span style="background-color: #FF0000">path</span></i><span style="background-color: #FF0000">'s 
-  non-member </span> <code><a href="#operator-eq">
-  <span style="background-color: #FF0000">operator==</span></a></code><span style="background-color: #FF0000">, which considers the two path's lexical representations 
-  only. Paths &quot;abc&quot; and &quot;ABC&quot; are never equal.</span></p>
-  <p><span style="background-color: #FF0000">Equivalence is determined by the
-  </span> <a href="#equivalent"><span style="background-color: #FF0000">equivalent()</span></a><span style="background-color: #FF0000"> 
-  non-member function, which determines if two paths </span>
-  <a href="#pathname-resolution"><span style="background-color: #FF0000">resolve</span></a><span style="background-color: #FF0000"> to the same file system entity. 
-  Paths &quot;abc&quot; 
-  and &quot;ABC&quot; may or may not resolve to the same file, depending on the file 
-  system.</span></p>
-  <p><span style="background-color: #FF0000">Programmers wishing to determine if two paths are &quot;the same&quot; must decide if 
+  <pre>bool lexicographical_compare(path::iterator first1, path::iterator last1,
+                             path::iterator first2, path::iterator last2)</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>true</code> if the sequence of <code>native()</code> 
+  strings for the elements defined by the range <code>[first1,last1)</code> is 
+  lexicographically less than the sequence of <code>native()</code> strings for 
+  the elements defined by the range <code>[first2,last2)</code>. Returns <code>
+  false</code> otherwise.</p>
+  <p><i>Remarks:</i> If two sequences have the same number of elements and their 
+  corresponding elements are equivalent, then neither sequence is 
+  lexicographically less than the other. If one sequence is a prefix of the 
+  other, then the shorter sequence is lexicographically less than the longer 
+  sequence. Otherwise, the lexicographical comparison of the sequences yields 
+  the same result as the comparison of the first corresponding pair of elements 
+  that are not equivalent.</p>
+  <pre>  for ( ; first1 != last1 &amp;&amp; first2 != last2 ; ++first1, ++first2) {
+    if (first1-&gt;native() &lt; first2-&gt;native()) return true;
+    if (first2-&gt;native() &lt; first1-&gt;native()) return false;
+  }
+  return first1 == last1 &amp;&amp; first2 != last2;</pre>
+  <p>[<i>Note:</i> A <code>path</code> aware<code> lexicographical_compare</code> 
+  is provided to avoid infinite recursion in <code>std::lexicographical_compare</code> 
+  due to the <code>path</code> iterator's value type itself being <code>path</code>.
+  <i>--end note</i>]</p>
+</blockquote>
+<pre>bool operator&lt; (const path&amp; lhs, const path&amp; rhs);</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>return lexicographical_compare(lhs.begin(), lhs.end(), 
+  rhs.begin(), rhs.end())</code>.</p>
+</blockquote>
+<pre>bool operator&lt;=(const path&amp; lhs, const path&amp; rhs);</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>!(rhs &lt; lhs)</code>.</p>
+</blockquote>
+<pre>bool operator&gt; (const path&amp; lhs, const path&amp; rhs);</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>rhs &lt; lhs</code>.</p>
+</blockquote>
+<pre>bool operator&gt;=(const path&amp; lhs, const path&amp; rhs);</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>!(lhs &lt; rhs)</code>.</p>
+</blockquote>
+<pre>bool operator==(const path&amp; lhs, const path&amp; rhs);</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>!(lhs &lt; rhs) &amp;&amp; !(rhs &lt; lhs)</code>.</p>
+  <p>[<i>Note:</i> Actual implementations may use an equivalent, but more 
+  efficient, algorithm. <i>--end note</i>]</p>
+  <p>[<i>Note:</i> <a name="Path-equality">Path equality</a> and path 
+  equivalence have different semantics.</p>
+  <p>Equality is determined by the <code>path</code> 
+  non-member <code>operator==</code>, which considers the two path's lexical 
+  representations only. Thus <code>path(&quot;foo&quot;) == &quot;bar&quot;</code> is never 
+  <code>true</code>.</p>
+  <p>Equivalence is determined by the <a href="#equivalent"><code>equivalent()</code></a> 
+  non-member function, which determines if two paths
+  <a href="#pathname-resolution">resolve</a> to the same file system entity. 
+  Thus <code>equivalent(&quot;foo&quot;, &quot;bar&quot;)</code> will be <code>true</code> 
+  when both paths resolve to the same file.</p>
+  <p>Programmers wishing to determine if two paths are &quot;the same&quot; must decide if 
   &quot;the same&quot; means &quot;the same representation&quot; or &quot;resolve to the same actual 
-  file&quot;, and choose the appropriate function accordingly. </span> <i>
-  <span style="background-color: #FF0000">-- end note</span></i><span style="background-color: #FF0000">]</span></p>
+  file&quot;, and choose the appropriate function accordingly. <i>
+  -- end note</i>]</p>
 </blockquote>
-  <h4><a name="path-inserter-extractor"> <code>
-  <span style="background-color: #FFFFFF">path</span></code><span style="background-color: #FFFFFF"> inserters 
-  and extractor</span></a><span style="background-color: #FFFFFF">s</span></h4>
+<pre>bool operator!=(const path&amp; lhs, const path&amp; rhs);</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>!(lhs == rhs)</code>.</p>
+</blockquote>
+<pre>path operator/ (const path&amp; lhs, const path&amp; rhs);</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>path(lhs) /= rhs</code>.</p>
+</blockquote>
+<h3> <a name="path-non-member-operators"><code><font size="4">path</font></code></a><a name="path-inserter-extractor"><span style="background-color: #FFFFFF"> inserters 
+  and extractor</span></a><span style="background-color: #FFFFFF">s</span></h3>
 <pre>std::ostream&amp; operator&lt;&lt;(std::ostream &amp; os, const path&amp; p);</pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF">&nbsp;
-  <code>os &lt;&lt; p.native_string();</code></span></p>
+  <code>os &lt;&lt; p.string();</code></span></p>
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
   </span> <code><span style="background-color: #FFFFFF">os</span></code></p>
 </blockquote>
 <pre>std::wostream&amp; operator&lt;&lt;(std::wostream &amp; os, const path&amp; p);</pre>
 <blockquote style="font-size: 10pt">
   <p style="font-size: 10pt"><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF">&nbsp;
-  <code>os &lt;&lt; p.native_wstring();</code></span></p>
+  <code>os &lt;&lt; p.wstring();</code></span></p>
   <p style="font-size: 10pt"><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
   </span><code><span style="background-color: #FFFFFF">os</span></code></p>
 </blockquote>
@@ -3401,7 +3200,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->07 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32146" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->13 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32139" --></p>
 
 </body>
 

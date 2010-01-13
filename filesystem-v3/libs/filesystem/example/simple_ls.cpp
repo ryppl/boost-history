@@ -34,14 +34,13 @@ int main(int argc, char* argv[])
 
   if (!fs::exists(p))
   {
-    std::cout << "\nNot found: " << p.string() << std::endl;
+    std::cout << "\nNot found: " << p << std::endl;
     return 1;
   }
 
   if (fs::is_directory(p))
   {
-    std::cout << "\nIn directory: "
-              << p.string() << "\n\n";
+    std::cout << "\nIn directory: " << p << "\n\n";
     fs::directory_iterator end_iter;
     for (fs::directory_iterator dir_itr(p);
           dir_itr != end_iter;
@@ -79,7 +78,7 @@ int main(int argc, char* argv[])
   }
   else // must be a file
   {
-    std::cout << "\nFound: " << p.string() << "\n";    
+    std::cout << "\nFound: " << p << "\n";    
   }
   return 0;
 }

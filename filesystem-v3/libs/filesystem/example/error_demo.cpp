@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 
   //  get status - no error_code
 
-  cout << "\nstatus(\"" << p.native_string() << "\");\n";
+  cout << "\nstatus(\"" << p.string() << "\");\n";
   threw_exception = false;
 
   try { s = fs::status(p); }
@@ -131,14 +131,14 @@ int main(int argc, char* argv[])
 
   //  get status - with error_code
 
-  cout << "\nstatus(\"" << p.native_string() << "\", ec);\n";
+  cout << "\nstatus(\"" << p.string() << "\", ec);\n";
   s = fs::status(p, ec);
   report_status(s);
   report_error_code(ec);
 
   //  query existence - no error_code
 
-  cout << "\nexists(\"" << p.native_string() << "\");\n";
+  cout << "\nexists(\"" << p.string() << "\");\n";
   threw_exception = false;
 
   try { b = fs::exists(p); }
@@ -157,7 +157,7 @@ int main(int argc, char* argv[])
 
   //  directory_iterator - no error_code
 
-  cout << "\ndirectory_iterator(\"" << p.native_string() << "\");\n";
+  cout << "\ndirectory_iterator(\"" << p.string() << "\");\n";
   threw_exception = false;
 
   try { di = fs::directory_iterator(p); }
@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
 
   //  directory_iterator - with error_code
 
-  cout << "\ndirectory_iterator(\"" << p.native_string() << "\", ec);\n";
+  cout << "\ndirectory_iterator(\"" << p.string() << "\", ec);\n";
   di = fs::directory_iterator(p, ec);
   cout << (di == fs::directory_iterator() ? "  Equal" : "  Not equal")
        << " to the end iterator\n";

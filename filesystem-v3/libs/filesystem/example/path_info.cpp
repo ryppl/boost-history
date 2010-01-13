@@ -44,28 +44,28 @@ int main(int argc, char* argv[])
 
   cout  <<  "\nobservers, native format:" << endl;
 #ifdef BOOST_POSIX_API
-  cout  <<  "  native()---------: " << p.native() << endl;
-  cout  <<  "  c_str()----------: " << p.c_str() << endl;
+  cout  <<  "  native()-------------: " << p.native() << endl;
+  cout  <<  "  c_str()--------------: " << p.c_str() << endl;
 #else  // BOOST_WINDOWS_API
-  wcout << L"  native()---------: " << p.native() << endl;
-  wcout << L"  c_str()----------: " << p.c_str() << endl;
+  wcout << L"  native()-------------: " << p.native() << endl;
+  wcout << L"  c_str()--------------: " << p.c_str() << endl;
 #endif
-  cout  <<  "  native_string()--: " << p.native_string() << endl;
-  wcout << L"  native_wstring()-: " << p.native_wstring() << endl;
+  cout  <<  "  string()-------------: " << p.string() << endl;
+  wcout << L"  wstring()------------: " << p.wstring() << endl;
 
   cout  <<  "\nobservers, generic format:\n";
-  cout  <<  "  string()---------: " << p.string() << endl;
-  wcout << L"  wstring()--------: " << p.wstring() << endl;
+  cout  <<  "  generic_string()-----: " << p.generic_string() << endl;
+  wcout << L"  generic_wstring()----: " << p.generic_wstring() << endl;
 
   cout  <<  "\ndecomposition:\n";
-  cout  <<  "  root_name()------: " << p.root_name() << '\n';
-  cout  <<  "  root_directory()-: " << p.root_directory() << '\n';
-  cout  <<  "  root_path()------: " << p.root_path() << '\n';
-  cout  <<  "  relative_path()--: " << p.relative_path() << '\n';
-  cout  <<  "  parent_path()----: " << p.parent_path() << '\n';
-  cout  <<  "  filename()-------: " << p.filename() << '\n';
-  cout  <<  "  stem()-----------: " << p.stem() << '\n';
-  cout  <<  "  extension()------: " << p.extension() << '\n';
+  cout  <<  "  root_name()----------: " << p.root_name() << '\n';
+  cout  <<  "  root_directory()-----: " << p.root_directory() << '\n';
+  cout  <<  "  root_path()----------: " << p.root_path() << '\n';
+  cout  <<  "  relative_path()------: " << p.relative_path() << '\n';
+  cout  <<  "  parent_path()--------: " << p.parent_path() << '\n';
+  cout  <<  "  filename()-----------: " << p.filename() << '\n';
+  cout  <<  "  stem()---------------: " << p.stem() << '\n';
+  cout  <<  "  extension()----------: " << p.extension() << '\n';
 
   cout  <<  "\nquery:\n";
   cout  <<  "  empty()--------------: " << say_what(p.empty()) << '\n';

@@ -1460,7 +1460,7 @@ namespace detail
         m_status = m_symlink_status;
         if (ec != 0) ec->clear();
       }
-      else m_status = detail::status(m_path, ec);
+      else m_status = detail::status(m_pathname, ec);
     }
     else if (ec != 0) ec->clear();
     return m_status;
@@ -1470,7 +1470,7 @@ namespace detail
   directory_entry::m_get_symlink_status(system::error_code* ec) const
   {
     if (!status_known(m_symlink_status))
-      m_symlink_status = detail::symlink_status(m_path, ec);
+      m_symlink_status = detail::symlink_status(m_pathname, ec);
     else if (ec != 0) ec->clear();
     return m_symlink_status;
   }
