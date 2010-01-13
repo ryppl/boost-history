@@ -66,10 +66,6 @@
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_scoped_hpp.template_class__stopwatch_resumer___">Template
           Class <code class="computeroutput"><span class="identifier">stopwatch_resumer</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.process_stopwatches_hpp">
-        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">process_stopwatches</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
-<dd><dl><dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.process_stopwatches_hpp.class__process_stopwatches_">Class
-          <code class="computeroutput"><span class="identifier">process_stopwatches</span></code></a></span></dt></dl></dd>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -100,7 +96,7 @@
           is an instance of <code class="computeroutput"><span class="identifier">S</span></code>.
         </p>
 <div class="table">
-<a name="id4852460"></a><p class="title"><b>Table 2. Stopwatch Requirements</b></p>
+<a name="id4853554"></a><p class="title"><b>Table 2. Stopwatch Requirements</b></p>
 <table class="table" summary="Stopwatch Requirements">
 <colgroup>
 <col>
@@ -884,78 +880,6 @@
      <span class="special">}</span>
 <span class="special">}</span>
 </pre>
-</div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.reference.stopwatches.process_stopwatches_hpp"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.process_stopwatches_hpp" title="
-        Header &lt;boost/chrono/process_stopwatches.hpp&gt;">
-        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">process_stopwatches</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
-</h4></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.process_stopwatches_hpp.class__process_stopwatches_">Class
-          <code class="computeroutput"><span class="identifier">process_stopwatches</span></code></a></span></dt></dl></div>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
-
-    <span class="keyword">class</span> <span class="identifier">process_stopwatches</span><span class="special">;</span>
-
-<span class="special">}</span> <span class="special">}</span>
-</pre>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="boost_chrono.reference.stopwatches.process_stopwatches_hpp.class__process_stopwatches_"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.process_stopwatches_hpp.class__process_stopwatches_" title="Class
-          process_stopwatches">Class
-          <code class="computeroutput"><span class="identifier">process_stopwatches</span></code></a>
-</h5></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.process_stopwatches_hpp.class__process_stopwatches_.stopwatch_accumulator_elapsed">
-            Member function<code class="computeroutput"><span class="identifier">elapsed</span><span class="special">()</span></code></a></span></dt></dl></div>
-<p>
-            Knowing how long a program takes to execute is useful in both test and
-            production environments. It is also helpful if such timing information
-            is broken down into real (wall clock) time, CPU time spent by the user,
-            and CPU time spent by the operating system servicing user requests.
-          </p>
-<p>
-            <code class="computeroutput"><span class="identifier">process_stopwatches</span></code> is
-            the <code class="computeroutput"><span class="identifier">stopwatches</span><span class="special">&lt;&gt;</span></code>
-            equivalent associated to the pseudo-clock <code class="computeroutput"><span class="identifier">process_clocks</span></code>.
-            It behaves like <code class="computeroutput"><span class="identifier">stopwatches</span><span class="special">&lt;&gt;</span></code> but it uses the specific <code class="computeroutput"><span class="identifier">process_clocks</span><span class="special">:</span><span class="identifier">now</span><span class="special">()</span></code>
-            function.
-          </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">process_stopwatches</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">typedef</span> <span class="identifier">process_clocks</span>                          <span class="identifier">clock</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">process_clocks</span><span class="special">::</span><span class="identifier">duration</span>                <span class="identifier">duration</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">process_clocks</span><span class="special">::</span><span class="identifier">time_point</span>              <span class="identifier">time_point</span><span class="special">;</span>
-
-    <span class="keyword">explicit</span> <span class="identifier">process_stopwatches</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-
-    <span class="special">~</span><span class="identifier">process_stopwatches</span><span class="special">();</span>
-    <span class="identifier">time_point</span> <span class="identifier">start</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-    <span class="identifier">duration</span> <span class="identifier">stop</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-    <span class="identifier">duration</span> <span class="identifier">suspend</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-    <span class="identifier">time_point</span> <span class="identifier">resume</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-    <span class="keyword">void</span>  <span class="identifier">elapsed</span><span class="special">(</span> <span class="identifier">process_clocks</span><span class="special">::</span><span class="identifier">durations</span> <span class="special">&amp;</span> <span class="identifier">times</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-<span class="special">};</span>
-</pre>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h6 class="title">
-<a name="boost_chrono.reference.stopwatches.process_stopwatches_hpp.class__process_stopwatches_.stopwatch_accumulator_elapsed"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.process_stopwatches_hpp.class__process_stopwatches_.stopwatch_accumulator_elapsed" title="
-            Member functionelapsed()">
-            Member function<code class="computeroutput"><span class="identifier">elapsed</span><span class="special">()</span></code></a>
-</h6></div></div></div>
-<pre class="programlisting"><span class="keyword">void</span>  <span class="identifier">elapsed</span><span class="special">(</span> <span class="identifier">process_clocks</span><span class="special">::</span><span class="identifier">durations</span> <span class="special">&amp;</span> <span class="identifier">times</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-</pre>
-<p>
-              <span class="bold"><strong>Effect:</strong></span> set in times the elapsed times.
-            </p>
-<p>
-              <span class="bold"><strong>Throw:</strong></span> Nothing.
-            </p>
-<p>
-              <span class="bold"><strong>Note:</strong></span> the system::error_code &amp;
-              parameter is here to conform to the Stopwatch concept.
-            </p>
-</div>
 </div>
 </div>
 </div>

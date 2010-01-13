@@ -923,8 +923,7 @@ If R1::num == R2::num && R1::den == R2::den, ratio_equal derives from true_type,
         struct ratio_less
             : public boost::integral_constant<bool, [/see below] > {};
 
-If R1::num * R2::den < R2::num * R1::den, ratio_less derives from true_type, else derives from false_type. Implementations are permitted to use more complex algorithms to compute the above relationship to avoid overflow. If the implementation is not able to avoid overflow, a diagnostic is emitted.
-
+If R1::num * R2::den < R2::num * R1::den, ratio_less derives from true_type, else derives from false_type. 
 
     template <class R1, class R2>  struct ratio_not_equal
         : public boost::integral_constant<bool, !ratio_equal<R1, R2>::value> {};
@@ -1262,7 +1261,7 @@ A `duration` measures time between two points in time (`time_point`). A `duratio
 
     }}
 
-Rep must be an arithmetic type, or a class emulating an arithmetic type. If `duration` is instantiated with the type of `Rep` being a `duration`, a diagnostic is required.
+Rep must be an arithmetic type, or a class emulating an arithmetic type, compile diagnostic otherwise. If `duration` is instantiated with the type of `Rep` being a `duration`, compile diagnostic is issued.
 
 Period must be an instantiation of `ratio`, compile diagnostic otherwise.
 
@@ -1283,12 +1282,12 @@ The following members of `duration` do not throw an exception unless the indicat
     template <class Rep2>
     BOOST_CONSTEXPR explicit duration(const Rep2& r);
 
-[*Requires:] `Rep2` is implicitly convertible to `rep`, and
+[*Remarks:] `Rep2` is implicitly convertible to `rep`, and
 
 * `treat_as_floating_point<rep>::value` is `true`, or
 * `!treat_as_floating_point<rep>::value && !treat_as_floating_point<Rep2>::value` is `true`.
 
-A diagnostic is required if this requirement is not met. [*Note:] This requirement prevents construction of an integral-based `duration` with a floating point representation. Such a construction could easily lead to confusion about the value of the `duration`.
+If these constraints are not met, this constructor shall not participate in overload resolution. [*Note:] This requirement prevents construction of an integral-based `duration` with a floating point representation. Such a construction could easily lead to confusion about the value of the `duration`.
 
 [*Example:]
 
@@ -1305,11 +1304,7 @@ A diagnostic is required if this requirement is not met. [*Note:] This requireme
     template <class Rep2, class Period2>
     BOOST_CONSTEXPR duration(const duration<Rep2, Period2>& d);
 
-[*Requires:] `treat_as_floating_point<rep>::value`, or `ratio_divide<Period2, period>::type::den == 1`.
-
-    A diagnostic is required if this requirement is not met.
-
-[*note] This requirement prevents implicit truncation error when converting between integral-based `duration`s. Such a construction could easily lead to confusion about the value of the `duration`.
+[*Remarks:] `treat_as_floating_point<rep>::value`, or `ratio_divide<Period2, period>::type::den == 1`, else this constructor shall not participate in overload resolution. [*note] This requirement prevents implicit truncation error when converting between integral-based `duration`s. Such a construction could easily lead to confusion about the value of the `duration`.
 
 [*Example:]
 
@@ -1514,6 +1509,28 @@ A diagnostic is required if this requirement is not met. [*Note:] This requireme
 
 [endsect]
 
+
+[section:duration_operator_mod_1 Non-Member function `operator%(duration,Rep2)`]
+  template <class Rep1, class Period, class Rep2>
+  duration<typename common_type<Rep1, Rep2>::type, Period>
+  operator%(const duration<Rep1, Period>& d, const Rep2& s);
+
+[*Remarks] This function will not participate in overload resolution unless Rep2 shall be implicitly convertible to CR(Rep1, Rep2) and Rep2 shall not be an instantiation of duration.
+
+[*Returns:] duration<CR(Rep1,Rep2), Period>(d) %= s.
+[endsect]
+
+[section:duration_operator_mod_2 Non-Member function `operator%(duration,duration)`]
+
+  template <class Rep1, class Period1, class Rep2, class Period2>
+  typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
+  operator%(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+
+[*Remarks] This function will not participate in overload resolution unless 
+
+[*Returns:] CD(lhs) %= CD(rhs)
+
+[endsect]
 [endsect]
 
 [section duration comparaisons]
@@ -1889,7 +1906,7 @@ time_t to_time_t(const time_point& t);
 [section Process CPU related]
 
 [/==================================================================]
-[section:process_clocks_hpp Header `<boost/chrono/process_clocks.hpp>`]
+[section:process_cpu_clocks_hpp Header `<boost/chrono/process_cpu_clocks.hpp>`]
 [/==================================================================]
 
 Knowing how long a program takes to execute is useful in both test and production environments. It is also helpful if such timing information is broken down into real (wall clock) time, CPU time spent by the user, and CPU time spent by the operating system servicing user requests.
@@ -1899,7 +1916,7 @@ Knowing how long a program takes to execute is useful in both test and productio
         class process_real_cpu_clock;
         class process_user_cpu_clock;
         class process_system_cpu_clock;
-        class process_clocks;
+        class process_cpu_clock;
 
     } }
 
@@ -1962,34 +1979,58 @@ Knowing how long a program takes to execute is useful in both test and productio
 
 [endsect]
 
-[section Class `process_clocks`]
+[section Class `process_cpu_clock`]
 
-`process_clocks` can be considered as a `tuple<process_real_cpu_clock, process_user_cpu_clock, process_system_cpu_clock>`. Obviously it doesn't satisfy the Clock Requirements.
+`process_clocks` can be considered as a `tuple<process_real_cpu_clock, process_user_cpu_clock, process_system_cpu_clock>`. 
 
 `process_clocks` provides a thin wrapper around the operating system's process timer API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function. 
 
 The process relative real, user and system current time can be obtained at once by calling `process_clocks::now()`. 
 
 
-        class process_clocks {
-        public:
-            typedef nanoseconds                          duration;
-            typedef duration::rep                        rep;
-            typedef duration::period                     period;
-            typedef chrono::time_point<process_clocks>    time_point;
-            static const bool is_monotonic =             true;
+    class BOOST_CHRONO_DECL process_cpu_clock
+    {
+    public:
+        struct times ;
 
-            struct durations;
-            static void now( process_clocks::durations & times,
-                             system::error_code & ec = system::throws );
-        };
+        typedef duration<times,  nano>                duration;
+        typedef duration::rep                       rep;
+        typedef duration::period                    period;
+        typedef chrono::time_point<process_cpu_clock>  time_point;
+        static const bool is_monotonic =           true;
 
-[section Class `durations`]
+        static time_point now( system::error_code & ec = system::throws );
+    };
 
-        struct durations {
-            process_clocks::duration real;    // real (i.e wall clock) time
-            process_clocks::duration user;    // user cpu time
-            process_clocks::duration system;  // system cpu time
+    template <>
+    struct duration_values<process_cpu_clock::times>
+    {
+        static process_cpu_clock::times zero();
+        static process_cpu_clock::times max();
+        static process_cpu_clock::times min();
+    };
+
+[section Class `times`]
+
+        struct times : arithmetic<times>, less_than_comparable<times>
+        {
+            process_real_cpu_clock::rep   real;    // real (i.e wall clock) time
+            process_user_cpu_clock::rep   user;    // user cpu time
+            process_system_cpu_clock::rep system;  // system cpu time
+            
+            times();
+            times(
+                process_real_cpu_clock::rep r,
+                process_user_cpu_clock::rep   u,
+                process_system_cpu_clock::rep s);
+
+            bool operator==(times const& rhs);
+                    
+            times operator+=(times const& rhs);
+            times operator-=(times const& rhs);
+            times operator*=(times const& rhs);
+            times operator/=(times const& rhs);
+            bool operator<(times const & rhs) const;
         };
 
 [endsect]
@@ -2431,6 +2472,7 @@ Usage
 
 [endsect]
 
+[/
 [/==================================================================]
 [section:process_stopwatches_hpp Header `<boost/chrono/process_stopwatches.hpp>`]
 [/==================================================================]
@@ -2480,6 +2522,7 @@ Knowing how long a program takes to execute is useful in both test and productio
 
 [endsect]
 [endsect]
+]
 [endsect]
 [section Stopwatch Reporters]
 
@@ -2613,6 +2656,51 @@ Usage
 
 [endsect]
 
+[/==================================================]
+[section:digital_time_hpp Header `<boost/chrono/digital_time.hpp>`]
+[/==================================================]
+
+    namespace boost { namespace chrono {
+        class digital_time;
+    }}
+
+[section Class `digital_time`]
+
+    class digital_time {
+    public:
+        typedef boost::chrono::duration<boost::int_least32_t, ratio<24*3600> > days;
+        typedef boost::chrono::hours hours;
+        typedef boost::chrono::minutes minutes;
+        typedef boost::chrono::seconds seconds;
+        typedef boost::chrono::nanoseconds nanoseconds;
+
+        days days_;
+        hours hours_;
+        minutes minutes_;
+        seconds seconds_;
+        nanoseconds nanoseconds_;
+
+        template <class Rep, class Period>
+        static days get_days(const boost::chrono::duration<Rep, Period>& d);
+
+        template <class Rep, class Period>
+        static hours get_hours(const boost::chrono::duration<Rep, Period>& d);
+
+        template <class Rep, class Period>
+        static minutes get_minutes(const boost::chrono::duration<Rep, Period>& d);
+
+        template <class Rep, class Period>
+        static seconds get_seconds(const boost::chrono::duration<Rep, Period>& d);
+
+        template <class Rep, class Period>
+        static nanoseconds get_nanoseconds(const boost::chrono::duration<Rep, Period>& d);
+        
+        template <class Rep, class Period>
+            explicit digital_time(const boost::chrono::duration<Rep, Period>& d);
+    };
+
+[endsect]
+[endsect]
 
 [/==================================================]
 [section:stopwatch_formatter_hpp Header `<boost/chrono/stopwatch_formatter.hpp>`]
@@ -2685,6 +2773,7 @@ The time is given using the suffix "s" following the System International d'Unit
 
 [endsect]
 
+[
 [/==================================================================]
 [section:process_process_stopwatches_reporter_hpp Header `<boost/chrono/process_stopwatches_reporter.hpp>`]
 [/==================================================================]
@@ -2757,7 +2846,87 @@ All the units are given using the suffix "s" following the System International 
 [endsect]
 
 [endsect]
+]
 
+[/==================================================================]
+[section:time_formatter_hpp Header `<boost/chrono/time_formatter.hpp>`]
+[/==================================================================]
+
+
+    namespace boost { namespace chrono {
+
+        class time_formatter;
+
+    } }
+
+[section Class `time_formatter`]
+
+    class time_formatter {
+    public:
+        static std::ostream &  m_cout();
+        static const int m_default_places = 3;
+        static const char * default_format;
+        static int default_places() { return m_default_places; }
+
+        template <class Stopwatch > 
+        static void show_time( Stopwatch & stopwatch_
+            , const char * format, int places, std::ostream & os
+            , system::error_code & ec);
+    };  
+
+The default places is given by default_places and is 3.
+The default format is "\\nreal %rs, cpu %cs (%p%), user %us, system %ss\\n", where 
+
+* `%r` : real process clock
+* `%u` : user process clock
+* `%s` : system process clock
+* `%c` : user+system process clock
+* `%p` : percentage (user+system)/real process clock
+
+All the units are given using the suffix "s" following the System International d'Unites Std.
+
+[endsect]
+
+[endsect]
+
+[/==================================================================]
+[section:digital_time_formatter_hpp Header `<boost/chrono/digital_time_formatter.hpp>`]
+[/==================================================================]
+
+
+    namespace boost { namespace chrono {
+
+        class digital_time_formatter;
+
+    } }
+
+[section Class `time_formatter`]
+
+    class time_formatter {
+    public:
+        static std::ostream &  m_cout();
+        static const int m_default_places = 3;
+        static const char * default_format;
+        static int default_places() { return m_default_places; }
+
+        template <class Stopwatch > 
+        static void show_time( Stopwatch & stopwatch_
+            , const char * format, int places, std::ostream & os
+            , system::error_code & ec);
+    };  
+
+The default places is given by default_places and is 3.
+The default format is "\\n%d days(s) %h:%m:%s.%n\\n", where 
+
+* `%d` : days 
+* `%h` : hours
+* `%m` : minutes
+* `%s` : seconds
+* `%n` : nanoseconds
+
+[endsect]
+
+[endsect]
 
 [endsect]
 [section Deprecated Headers] 
@@ -2821,6 +2990,7 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 ]
 [endsect]
 [endsect]
+
 
 [/==================================================================]
 [section:process_times_hpp Deprecated Header `<boost/chrono/process_times.hpp>`]
@@ -3970,16 +4140,23 @@ Here is the output for this program for several sets of command line arguments:
 [section [*Version 0.3.0, January 9, 2010] ['New stopwatch feature + Bug fixes]]
 [*Features:] 
 
-* Added independent cpu clocks for real, user, system process CPU time.
-* Added new Stopwatch concept measuring elapsed time between different points in time associated to the operations start, stop, suspend and resume.
+* Added independent process cpu clocks for real, user, system process CPU time
+* Added global process cpu clock for real, user, system process CPU time
+* Added digital_time (looking for a better name)
+* Added new *Stopwatch* concept measuring elapsed time between different points in time associated to the operations start, stop, suspend and resume.
 * Added stopwatch is a model Stopwatch measuring the elapsed time between the start and the stop operations.
 * Added stopwatch_accumulator is a model Stopwatch allowing to accumulate several time samples and give the average, ...
 * Added scoped helper classes allowing to pairwise start/stop operations, suspend/resume and resume/suspend a Stopwatch.
-* Added new Stopwatch Formatter concept
+* Added new stopwatch *Formatter* concept
+    * Added stopwatch formatter "%ds"
+    * Added stopwatch accumulator formatter "%c times, sum=%ss, min=%ms, max=%Ms, mean=%as"
+    * Added time formatter "real %rs, cpu %cs (%p%), user %us, system %ss"
+    * Added digital_time formatter "%d days(s) %h:%m:%s.%n"
 * stopwatch_reporter is a convenient generic class reporting elapsed time for the Stopwatch concept. 
-* To be coherent with the preceding additions, 
-    * process_times.hpp has been renamed, see process_clocks.hpp, process_stopwhatches.hpp and process_stopwhatches_reporter.hpp. The file process_times.hpp and its associated types, process_times, process_clock, process_timer and run_timer are preserved for backward compatibility but it is now deprecated, until inclusion of the library in Boost.
-    * timer.hpp has been nenamed, see stopwatch.hpp. The file timer.hpp and is associated timer class are preserved for backward compatibility but it is now deprecated, until inclusion of the library in Boost.
+* The old classes process_times, process_clock, process_timer, timer and run_timer are deprecated as the preceding additions are more generic. However for backward compatibility they preserved until inclusion of the library in Boost. Next follows the equivalences:
+    * timer<> ~ stopwatch<>
+    * process_timer ~ stopwatch<process_cpu_clock>
+    * run_timer ~ stopwatch_reporter<stopwatch<process_cpu_clock>, time_formatter>
 
 [*Bug Fixes]
 
@@ -4221,7 +4398,7 @@ In order to test you need to do.
 * Fully implement error handling, with test cases.
 * Consider issues raised by Michael Marcin:
 
-    In the past I`ve seen QueryPerformanceCounter give incorrect results,
+    In the past I've seen QueryPerformanceCounter give incorrect results,
     especially with SpeedStep processors on laptops. This was many years ago and
     might have been fixed by service packs and drivers.
 
@@ -4235,7 +4412,7 @@ In order to test you need to do.
     I know some people SetThreadAffinityMask to 1 for the current thread call
     their QueryPerformance* functions then restore SetThreadAffinityMask. This
     seems horrible to me because it forces your program to jump to another
-    physical processor if it isn`t already on cpu0 but they claim it worked well
+    physical processor if it isn't already on cpu0 but they claim it worked well
     in practice because they called the timing functions infrequently.
 
     In the past I have chosen to use timeGetTime with timeBeginPeriod(1) for

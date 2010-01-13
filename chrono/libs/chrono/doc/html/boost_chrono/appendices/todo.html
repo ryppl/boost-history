@@ -27,7 +27,7 @@
 <a name="boost_chrono.appendices.todo"></a><a href="todo.html" title=" Appendix F: Future plans"> Appendix F: Future plans</a>
 </h3></div></div></div>
 <a name="boost_chrono.appendices.todo.tasks_to_do_before_review"></a><h4>
-<a name="id4902642"></a>
+<a name="id4905367"></a>
         <a href="todo.html#boost_chrono.appendices.todo.tasks_to_do_before_review">Tasks
         to do before review</a>
       </h4>
@@ -39,28 +39,28 @@
           Consider issues raised by Michael Marcin:
         </li>
 </ul></div>
-<pre class="programlisting"><span class="identifier">In</span> <span class="identifier">the</span> <span class="identifier">past</span> <span class="identifier">I</span><span class="error">`</span><span class="identifier">ve</span> <span class="identifier">seen</span> <span class="identifier">QueryPerformanceCounter</span> <span class="identifier">give</span> <span class="identifier">incorrect</span> <span class="identifier">results</span><span class="special">,</span>
-<span class="identifier">especially</span> <span class="identifier">with</span> <span class="identifier">SpeedStep</span> <span class="identifier">processors</span> <span class="identifier">on</span> <span class="identifier">laptops</span><span class="special">.</span> <span class="identifier">This</span> <span class="identifier">was</span> <span class="identifier">many</span> <span class="identifier">years</span> <span class="identifier">ago</span> <span class="keyword">and</span>
-<span class="identifier">might</span> <span class="identifier">have</span> <span class="identifier">been</span> <span class="identifier">fixed</span> <span class="identifier">by</span> <span class="identifier">service</span> <span class="identifier">packs</span> <span class="keyword">and</span> <span class="identifier">drivers</span><span class="special">.</span>
+<pre class="programlisting"><span class="identifier">In</span> <span class="identifier">the</span> <span class="identifier">past</span> <span class="identifier">I</span><span class="char">'ve seen QueryPerformanceCounter give incorrect results,
+especially with SpeedStep processors on laptops. This was many years ago and
+might have been fixed by service packs and drivers.
 
-<span class="identifier">Typically</span> <span class="identifier">you</span> <span class="identifier">check</span> <span class="identifier">the</span> <span class="identifier">results</span> <span class="identifier">of</span> <span class="identifier">QPC</span> <span class="identifier">against</span> <span class="identifier">GetTickCount</span> <span class="identifier">to</span> <span class="identifier">see</span> <span class="keyword">if</span> <span class="identifier">the</span>
-<span class="identifier">results</span> <span class="identifier">are</span> <span class="identifier">reasonable</span><span class="special">.</span>
-<span class="identifier">http</span><span class="special">://</span><span class="identifier">support</span><span class="special">.</span><span class="identifier">microsoft</span><span class="special">.</span><span class="identifier">com</span><span class="special">/</span><span class="identifier">kb</span><span class="special">/</span><span class="number">274323</span>
+Typically you check the results of QPC against GetTickCount to see if the
+results are reasonable.
+http://support.microsoft.com/kb/274323
 
-<span class="identifier">I</span><span class="error">'</span><span class="identifier">ve</span> <span class="identifier">also</span> <span class="identifier">heard</span> <span class="identifier">of</span> <span class="identifier">problems</span> <span class="identifier">with</span> <span class="identifier">QueryPerformanceCounter</span> <span class="identifier">in</span> <span class="identifier">multi</span><span class="special">-</span><span class="identifier">processor</span>
+I'</span><span class="identifier">ve</span> <span class="identifier">also</span> <span class="identifier">heard</span> <span class="identifier">of</span> <span class="identifier">problems</span> <span class="identifier">with</span> <span class="identifier">QueryPerformanceCounter</span> <span class="identifier">in</span> <span class="identifier">multi</span><span class="special">-</span><span class="identifier">processor</span>
 <span class="identifier">systems</span><span class="special">.</span>
 
 <span class="identifier">I</span> <span class="identifier">know</span> <span class="identifier">some</span> <span class="identifier">people</span> <span class="identifier">SetThreadAffinityMask</span> <span class="identifier">to</span> <span class="number">1</span> <span class="keyword">for</span> <span class="identifier">the</span> <span class="identifier">current</span> <span class="identifier">thread</span> <span class="identifier">call</span>
 <span class="identifier">their</span> <span class="identifier">QueryPerformance</span><span class="special">*</span> <span class="identifier">functions</span> <span class="identifier">then</span> <span class="identifier">restore</span> <span class="identifier">SetThreadAffinityMask</span><span class="special">.</span> <span class="identifier">This</span>
 <span class="identifier">seems</span> <span class="identifier">horrible</span> <span class="identifier">to</span> <span class="identifier">me</span> <span class="identifier">because</span> <span class="identifier">it</span> <span class="identifier">forces</span> <span class="identifier">your</span> <span class="identifier">program</span> <span class="identifier">to</span> <span class="identifier">jump</span> <span class="identifier">to</span> <span class="identifier">another</span>
-<span class="identifier">physical</span> <span class="identifier">processor</span> <span class="keyword">if</span> <span class="identifier">it</span> <span class="identifier">isn</span><span class="error">`</span><span class="identifier">t</span> <span class="identifier">already</span> <span class="identifier">on</span> <span class="identifier">cpu0</span> <span class="identifier">but</span> <span class="identifier">they</span> <span class="identifier">claim</span> <span class="identifier">it</span> <span class="identifier">worked</span> <span class="identifier">well</span>
+<span class="identifier">physical</span> <span class="identifier">processor</span> <span class="keyword">if</span> <span class="identifier">it</span> <span class="identifier">isn</span><span class="error">'</span><span class="identifier">t</span> <span class="identifier">already</span> <span class="identifier">on</span> <span class="identifier">cpu0</span> <span class="identifier">but</span> <span class="identifier">they</span> <span class="identifier">claim</span> <span class="identifier">it</span> <span class="identifier">worked</span> <span class="identifier">well</span>
 <span class="identifier">in</span> <span class="identifier">practice</span> <span class="identifier">because</span> <span class="identifier">they</span> <span class="identifier">called</span> <span class="identifier">the</span> <span class="identifier">timing</span> <span class="identifier">functions</span> <span class="identifier">infrequently</span><span class="special">.</span>
 
 <span class="identifier">In</span> <span class="identifier">the</span> <span class="identifier">past</span> <span class="identifier">I</span> <span class="identifier">have</span> <span class="identifier">chosen</span> <span class="identifier">to</span> <span class="identifier">use</span> <span class="identifier">timeGetTime</span> <span class="identifier">with</span> <span class="identifier">timeBeginPeriod</span><span class="special">(</span><span class="number">1</span><span class="special">)</span> <span class="keyword">for</span>
 <span class="identifier">high</span> <span class="identifier">resolution</span> <span class="identifier">timers</span> <span class="identifier">to</span> <span class="identifier">avoid</span> <span class="identifier">these</span> <span class="identifier">issues</span><span class="special">.</span>
 </pre>
 <a name="boost_chrono.appendices.todo.for_later_releases"></a><h4>
-<a name="id4903561"></a>
+<a name="id4905970"></a>
         <a href="todo.html#boost_chrono.appendices.todo.for_later_releases">For later
         releases</a>
       </h4>

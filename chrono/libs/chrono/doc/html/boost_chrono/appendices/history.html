@@ -46,12 +46,19 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Added independent cpu clocks for real, user, system process CPU time.
+            Added independent process cpu clocks for real, user, system process CPU
+            time
           </li>
 <li>
-            Added new Stopwatch concept measuring elapsed time between different
-            points in time associated to the operations start, stop, suspend and
-            resume.
+            Added global process cpu clock for real, user, system process CPU time
+          </li>
+<li>
+            Added digital_time (looking for a better name)
+          </li>
+<li>
+            Added new <span class="bold"><strong>Stopwatch</strong></span> concept measuring
+            elapsed time between different points in time associated to the operations
+            start, stop, suspend and resume.
           </li>
 <li>
             Added stopwatch is a model Stopwatch measuring the elapsed time between
@@ -66,26 +73,43 @@
             suspend/resume and resume/suspend a Stopwatch.
           </li>
 <li>
-            Added new Stopwatch Formatter concept
-          </li>
+            Added new stopwatch <span class="bold"><strong>Formatter</strong></span> concept
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                Added stopwatch formatter "%ds"
+              </li>
+<li>
+                Added stopwatch accumulator formatter "%c times, sum<code class="literal">%ss,
+                min</code>%ms, max<code class="literal">%Ms, mean</code>%as"
+              </li>
+<li>
+                Added time formatter "real %rs, cpu %cs (%p%), user %us, system
+                %ss"
+              </li>
+<li>
+                Added digital_time formatter "%d days(s) %h:%m:%s.%n"
+              </li>
+</ul></div>
+</li>
 <li>
             stopwatch_reporter is a convenient generic class reporting elapsed time
             for the Stopwatch concept.
           </li>
 <li>
-            To be coherent with the preceding additions,
+            The old classes process_times, process_clock, process_timer, timer and
+            run_timer are deprecated as the preceding additions are more generic.
+            However for backward compatibility they preserved until inclusion of
+            the library in Boost. Next follows the equivalences:
             <div class="itemizedlist"><ul type="circle">
 <li>
-                process_times.hpp has been renamed, see process_clocks.hpp, process_stopwhatches.hpp
-                and process_stopwhatches_reporter.hpp. The file process_times.hpp
-                and its associated types, process_times, process_clock, process_timer
-                and run_timer are preserved for backward compatibility but it is
-                now deprecated, until inclusion of the library in Boost.
+                timer&lt;&gt; ~ stopwatch&lt;&gt;
               </li>
 <li>
-                timer.hpp has been nenamed, see stopwatch.hpp. The file timer.hpp
-                and is associated timer class are preserved for backward compatibility
-                but it is now deprecated, until inclusion of the library in Boost.
+                process_timer ~ stopwatch&lt;process_cpu_clock&gt;
+              </li>
+<li>
+                run_timer ~ stopwatch_reporter&lt;stopwatch&lt;process_cpu_clock&gt;,
+                time_formatter&gt;
               </li>
 </ul></div>
 </li>

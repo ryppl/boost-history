@@ -25,11 +25,8 @@ int f1(long j)
   stopwatch_accumulator<process_real_cpu_clock>::reporter::scoped_run _(t);
   stopwatch<process_real_cpu_clock>::reporter x("\nF1 %dsec\n");
   
-#if 0    
   run_timer y;   
-#else    
-  stopwatch_reporter<stopwatch<process_cpu_clock>, time_formatter> y;
-#endif    
+  stopwatch_reporter<stopwatch<process_cpu_clock> > z;
   stopwatch_reporter<stopwatch<process_real_cpu_clock>, digital_time_formatter> hhmmss;
     
 

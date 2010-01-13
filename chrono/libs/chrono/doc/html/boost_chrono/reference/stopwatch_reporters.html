@@ -40,6 +40,10 @@
           Class <code class="computeroutput"><span class="identifier">stopwatch_reporter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.stopwatch_reporter_hpp._stopwatch_reporter__useful_typedefs"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code> useful typedefs</a></span></dt>
 </dl></dd>
+<dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.digital_time_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">digital_time</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.digital_time_hpp.class__digital_time_">Class
+          <code class="computeroutput"><span class="identifier">digital_time</span></code></a></span></dt></dl></dd>
 <dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.stopwatch_formatter_hpp">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">stopwatch_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
 <dd><dl><dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.stopwatch_formatter_hpp.class__stopwatch_formatter_">Class
@@ -52,6 +56,14 @@
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">process_stopwatches_reporter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
 <dd><dl><dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.process_process_stopwatches_reporter_hpp.class__process_stopwatches_reporter_">Class
           <code class="computeroutput"><span class="identifier">process_stopwatches_reporter</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.time_formatter_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">time_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.time_formatter_hpp.class__time_formatter_">Class
+          <code class="computeroutput"><span class="identifier">time_formatter</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.digital_time_formatter_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">digital_time_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.digital_time_formatter_hpp.class__time_formatter_">Class
+          <code class="computeroutput"><span class="identifier">time_formatter</span></code></a></span></dt></dl></dd>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -103,7 +115,7 @@
             <code class="computeroutput"><span class="identifier">os</span></code> is a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span></code>, ec is a system::error_code
           </p>
 <div class="table">
-<a name="id4862203"></a><p class="title"><b>Table 3. Stopwatch Requirements</b></p>
+<a name="id4862296"></a><p class="title"><b>Table 3. Stopwatch Requirements</b></p>
 <table class="table" summary="Stopwatch Requirements">
 <colgroup>
 <col>
@@ -315,6 +327,59 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.reference.stopwatch_reporters.digital_time_hpp"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.digital_time_hpp" title="
+        Header &lt;boost/chrono/digital_time.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">digital_time</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.digital_time_hpp.class__digital_time_">Class
+          <code class="computeroutput"><span class="identifier">digital_time</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">digital_time</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.stopwatch_reporters.digital_time_hpp.class__digital_time_"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.digital_time_hpp.class__digital_time_" title="Class
+          digital_time">Class
+          <code class="computeroutput"><span class="identifier">digital_time</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">digital_time</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">int_least32_t</span><span class="special">,</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">24</span><span class="special">*</span><span class="number">3600</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">days</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">hours</span> <span class="identifier">hours</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">minutes</span> <span class="identifier">minutes</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">seconds</span> <span class="identifier">seconds</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span> <span class="identifier">nanoseconds</span><span class="special">;</span>
+
+    <span class="identifier">days</span> <span class="identifier">days_</span><span class="special">;</span>
+    <span class="identifier">hours</span> <span class="identifier">hours_</span><span class="special">;</span>
+    <span class="identifier">minutes</span> <span class="identifier">minutes_</span><span class="special">;</span>
+    <span class="identifier">seconds</span> <span class="identifier">seconds_</span><span class="special">;</span>
+    <span class="identifier">nanoseconds</span> <span class="identifier">nanoseconds_</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">days</span> <span class="identifier">get_days</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">hours</span> <span class="identifier">get_hours</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">minutes</span> <span class="identifier">get_minutes</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">seconds</span> <span class="identifier">get_seconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">nanoseconds</span> <span class="identifier">get_nanoseconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
+    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+        <span class="keyword">explicit</span> <span class="identifier">digital_time</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
 <a name="boost_chrono.reference.stopwatch_reporters.stopwatch_formatter_hpp"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.stopwatch_formatter_hpp" title="
         Header &lt;boost/chrono/stopwatch_formatter.hpp&gt;">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">stopwatch_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
@@ -426,6 +491,9 @@
           </p>
 </div>
 </div>
+<p>
+        [
+      </p>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_chrono.reference.stopwatch_reporters.process_process_stopwatches_reporter_hpp"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.process_process_stopwatches_reporter_hpp" title="
@@ -531,6 +599,135 @@
     <span class="keyword">static</span> <span class="keyword">int</span> <span class="identifier">default_places</span><span class="special">();</span>
 <span class="special">};</span>
 </pre>
+</div>
+</div>
+<p>
+        ]
+      </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.reference.stopwatch_reporters.time_formatter_hpp"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.time_formatter_hpp" title="
+        Header &lt;boost/chrono/time_formatter.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">time_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.time_formatter_hpp.class__time_formatter_">Class
+          <code class="computeroutput"><span class="identifier">time_formatter</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
+
+    <span class="keyword">class</span> <span class="identifier">time_formatter</span><span class="special">;</span>
+
+<span class="special">}</span> <span class="special">}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.stopwatch_reporters.time_formatter_hpp.class__time_formatter_"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.time_formatter_hpp.class__time_formatter_" title="Class
+          time_formatter">Class
+          <code class="computeroutput"><span class="identifier">time_formatter</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">time_formatter</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span>  <span class="identifier">m_cout</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">m_default_places</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">default_format</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">int</span> <span class="identifier">default_places</span><span class="special">()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">m_default_places</span><span class="special">;</span> <span class="special">}</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span> <span class="special">&gt;</span> 
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">show_time</span><span class="special">(</span> <span class="identifier">Stopwatch</span> <span class="special">&amp;</span> <span class="identifier">stopwatch_</span>
+        <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">format</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span>
+        <span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span><span class="special">);</span>
+<span class="special">};</span>  
+</pre>
+<p>
+            The default places is given by default_places and is 3. The default format
+            is "\nreal %rs, cpu %cs (%p%), user %us, system %ss\n", where
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">r</span></code>
+              : real process clock
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">u</span></code>
+              : user process clock
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
+              : system process clock
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">c</span></code>
+              : user+system process clock
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">p</span></code>
+              : percentage (user+system)/real process clock
+            </li>
+</ul></div>
+<p>
+            All the units are given using the suffix "s" following the
+            System International d'Unites Std.
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.reference.stopwatch_reporters.digital_time_formatter_hpp"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.digital_time_formatter_hpp" title="
+        Header &lt;boost/chrono/digital_time_formatter.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">digital_time_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.digital_time_formatter_hpp.class__time_formatter_">Class
+          <code class="computeroutput"><span class="identifier">time_formatter</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
+
+    <span class="keyword">class</span> <span class="identifier">digital_time_formatter</span><span class="special">;</span>
+
+<span class="special">}</span> <span class="special">}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.stopwatch_reporters.digital_time_formatter_hpp.class__time_formatter_"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.digital_time_formatter_hpp.class__time_formatter_" title="Class
+          time_formatter">Class
+          <code class="computeroutput"><span class="identifier">time_formatter</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">time_formatter</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span>  <span class="identifier">m_cout</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">m_default_places</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">default_format</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">int</span> <span class="identifier">default_places</span><span class="special">()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">m_default_places</span><span class="special">;</span> <span class="special">}</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span> <span class="special">&gt;</span> 
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">show_time</span><span class="special">(</span> <span class="identifier">Stopwatch</span> <span class="special">&amp;</span> <span class="identifier">stopwatch_</span>
+        <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">format</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span>
+        <span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span><span class="special">);</span>
+<span class="special">};</span>  
+</pre>
+<p>
+            The default places is given by default_places and is 3. The default format
+            is "\n%d days(s) %h:%m:%s.%n\n", where
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">d</span></code>
+              : days
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">h</span></code>
+              : hours
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">m</span></code>
+              : minutes
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
+              : seconds
+            </li>
+<li>
+<code class="computeroutput"><span class="special">%</span><span class="identifier">n</span></code>
+              : nanoseconds
+            </li>
+</ul></div>
 </div>
 </div>
 </div>

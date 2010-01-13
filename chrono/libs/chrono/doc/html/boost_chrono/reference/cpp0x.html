@@ -362,10 +362,7 @@
 </pre>
 <p>
             If R1::num * R2::den &lt; R2::num * R1::den, ratio_less derives from
-            true_type, else derives from false_type. Implementations are permitted
-            to use more complex algorithms to compute the above relationship to avoid
-            overflow. If the implementation is not able to avoid overflow, a diagnostic
-            is emitted.
+            true_type, else derives from false_type.
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span>  <span class="keyword">struct</span> <span class="identifier">ratio_not_equal</span>
     <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integral_constant</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span> <span class="special">!</span><span class="identifier">ratio_equal</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">,</span> <span class="identifier">R2</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">&gt;</span> <span class="special">{};</span>
@@ -591,7 +588,7 @@
             and both of these calls happen before <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">::</span><span class="identifier">max</span><span class="special">()</span></code>.
           </p>
 <div class="table">
-<a name="id4831338"></a><p class="title"><b>Table 1. Clock Requirements</b></p>
+<a name="id4831330"></a><p class="title"><b>Table 1. Clock Requirements</b></p>
 <table class="table" summary="Clock Requirements">
 <colgroup>
 <col>
@@ -1020,11 +1017,11 @@
 <span class="special">}}</span>
 </pre>
 <p>
-            Rep must be an arithmetic type, or a class emulating an arithmetic type.
-            If <code class="computeroutput"><span class="identifier">duration</span></code> is instantiated
-            with the type of <code class="computeroutput"><span class="identifier">Rep</span></code>
-            being a <code class="computeroutput"><span class="identifier">duration</span></code>, a diagnostic
-            is required.
+            Rep must be an arithmetic type, or a class emulating an arithmetic type,
+            compile diagnostic otherwise. If <code class="computeroutput"><span class="identifier">duration</span></code>
+            is instantiated with the type of <code class="computeroutput"><span class="identifier">Rep</span></code>
+            being a <code class="computeroutput"><span class="identifier">duration</span></code>, compile
+            diagnostic is issued.
           </p>
 <p>
             Period must be an instantiation of <code class="computeroutput"><span class="identifier">ratio</span></code>,
@@ -1057,7 +1054,7 @@
 <span class="identifier">BOOST_CONSTEXPR</span> <span class="keyword">explicit</span> <span class="identifier">duration</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Rep2</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
 </pre>
 <p>
-              <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">Rep2</span></code>
+              <span class="bold"><strong>Remarks:</strong></span> <code class="computeroutput"><span class="identifier">Rep2</span></code>
               is implicitly convertible to <code class="computeroutput"><span class="identifier">rep</span></code>,
               and
             </p>
@@ -1072,10 +1069,11 @@
               </li>
 </ul></div>
 <p>
-              A diagnostic is required if this requirement is not met. <span class="bold"><strong>Note:</strong></span> This requirement prevents construction
-              of an integral-based <code class="computeroutput"><span class="identifier">duration</span></code>
-              with a floating point representation. Such a construction could easily
-              lead to confusion about the value of the <code class="computeroutput"><span class="identifier">duration</span></code>.
+              If these constraints are not met, this constructor shall not participate
+              in overload resolution. <span class="bold"><strong>Note:</strong></span> This
+              requirement prevents construction of an integral-based <code class="computeroutput"><span class="identifier">duration</span></code> with a floating point representation.
+              Such a construction could easily lead to confusion about the value
+              of the <code class="computeroutput"><span class="identifier">duration</span></code>.
             </p>
 <p>
               <span class="bold"><strong>Example:</strong></span>
@@ -1101,17 +1099,15 @@
 <span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">duration</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
 </pre>
 <p>
-              <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">treat_as_floating_point</span><span class="special">&lt;</span><span class="identifier">rep</span><span class="special">&gt;::</span><span class="identifier">value</span></code>,
+              <span class="bold"><strong>Remarks:</strong></span> <code class="computeroutput"><span class="identifier">treat_as_floating_point</span><span class="special">&lt;</span><span class="identifier">rep</span><span class="special">&gt;::</span><span class="identifier">value</span></code>,
               or <code class="computeroutput"><span class="identifier">ratio_divide</span><span class="special">&lt;</span><span class="identifier">Period2</span><span class="special">,</span>
               <span class="identifier">period</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">::</span><span class="identifier">den</span> <span class="special">==</span>
-              <span class="number">1</span></code>.
-            </p>
-<pre class="programlisting"><span class="identifier">A</span> <span class="identifier">diagnostic</span> <span class="identifier">is</span> <span class="identifier">required</span> <span class="keyword">if</span> <span class="keyword">this</span> <span class="identifier">requirement</span> <span class="identifier">is</span> <span class="keyword">not</span> <span class="identifier">met</span><span class="special">.</span>
-</pre>
-<p>
-              <span class="bold"><strong>note</strong></span> This requirement prevents implicit
-              truncation error when converting between integral-based <code class="computeroutput"><span class="identifier">duration</span></code>s. Such a construction could
-              easily lead to confusion about the value of the <code class="computeroutput"><span class="identifier">duration</span></code>.
+              <span class="number">1</span></code>, else this constructor shall
+              not participate in overload resolution. <span class="bold"><strong>note</strong></span>
+              This requirement prevents implicit truncation error when converting
+              between integral-based <code class="computeroutput"><span class="identifier">duration</span></code>s.
+              Such a construction could easily lead to confusion about the value
+              of the <code class="computeroutput"><span class="identifier">duration</span></code>.
             </p>
 <p>
               <span class="bold"><strong>Example:</strong></span>
@@ -1366,6 +1362,10 @@
             Non-Member function <code class="computeroutput"><span class="keyword">operator</span><span class="special">/(</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">Rep2</span><span class="special">)</span></code></a></span></dt>
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.duration_non_member_arithmetic.duration_operator_d_2">
             Non-Member function <code class="computeroutput"><span class="keyword">operator</span><span class="special">/(</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">duration</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.duration_non_member_arithmetic.duration_operator_mod_1">
+            Non-Member function <code class="computeroutput"><span class="keyword">operator</span><span class="special">%(</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">Rep2</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.duration_non_member_arithmetic.duration_operator_mod_2">
+            Non-Member function <code class="computeroutput"><span class="keyword">operator</span><span class="special">%(</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">duration</span><span class="special">)</span></code></a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h6 class="title">
@@ -1474,6 +1474,44 @@
               represent the <code class="computeroutput"><span class="identifier">common_type</span></code>
               of the two <code class="computeroutput"><span class="identifier">duration</span></code>
               arguments. Returns <code class="computeroutput"><span class="identifier">CD</span><span class="special">(</span><span class="identifier">lhs</span><span class="special">).</span><span class="identifier">count</span><span class="special">()</span> <span class="special">/</span> <span class="identifier">CD</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">).</span><span class="identifier">count</span><span class="special">()</span></code>.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="boost_chrono.reference.cpp0x.chrono_hpp.duration_non_member_arithmetic.duration_operator_mod_1"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.duration_non_member_arithmetic.duration_operator_mod_1" title="
+            Non-Member function operator%(duration,Rep2)">
+            Non-Member function <code class="computeroutput"><span class="keyword">operator</span><span class="special">%(</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">Rep2</span><span class="special">)</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">&gt;</span>
+<span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+<span class="keyword">operator</span><span class="special">%(</span><span class="keyword">const</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Rep2</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">);</span>
+</pre>
+<p>
+              <span class="bold"><strong>Remarks</strong></span> This function will not participate
+              in overload resolution unless Rep2 shall be implicitly convertible
+              to CR(Rep1, Rep2) and Rep2 shall not be an instantiation of duration.
+            </p>
+<p>
+              <span class="bold"><strong>Returns:</strong></span> duration&lt;CR(Rep1,Rep2),
+              Period&gt;(d) %= s.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="boost_chrono.reference.cpp0x.chrono_hpp.duration_non_member_arithmetic.duration_operator_mod_2"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.duration_non_member_arithmetic.duration_operator_mod_2" title="
+            Non-Member function operator%(duration,duration)">
+            Non-Member function <code class="computeroutput"><span class="keyword">operator</span><span class="special">%(</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">duration</span><span class="special">)</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period2</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;,</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="keyword">operator</span><span class="special">%(</span><span class="keyword">const</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+<p>
+              <span class="bold"><strong>Remarks</strong></span> This function will not participate
+              in overload resolution unless
+            </p>
+<p>
+              <span class="bold"><strong>Returns:</strong></span> CD(lhs) %= CD(rhs)
             </p>
 </div>
 </div>
