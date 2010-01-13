@@ -41,7 +41,7 @@ project boost/chrono
         <link>static:<define>BOOST_CHRONO_STATIC_LINK=1
     ;
 
-SOURCES = chrono process_clock run_timer run_timer_static cpu_clocks ;
+SOURCES = chrono process_clock run_timer run_timer_static process_cpu_clocks ;
 
 lib boost_chrono
     : $(SOURCES).cpp 

@@ -11,27 +11,21 @@
 #include <boost/chrono/process_times.hpp>
 #include <boost/chrono/stopwatch.hpp>
 #include <boost/chrono/stopwatch_accumulator.hpp>
-#include <boost/chrono/cpu_clocks.hpp>
+#include <boost/chrono/process_cpu_clocks.hpp>
+#include <boost/chrono/digital_time_formatter.hpp>
 #include <cmath>
 
-//#include <boost/accumulators/framework/accumulator_set.hpp>
-#include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics.hpp>
-#include <boost/accumulators/statistics/stats.hpp>
-#include <boost/accumulators/statistics/sum.hpp>
-#include <boost/accumulators/statistics/min.hpp>
-#include <boost/accumulators/statistics/max.hpp>
-#include <boost/accumulators/statistics/mean.hpp>
-#include <boost/accumulators/statistics/weighted_sum.hpp>
 
+using namespace boost::chrono;
 int f1(long j)
 {
-  static boost::chrono::stopwatch_accumulator<boost::chrono::process_real_cpu_clock>::reporter t(
+  static stopwatch_accumulator<process_real_cpu_clock>::reporter t(
     "\nf1 Count=%c times Sum=%ss Min=%ms Max=%Ms Mean=%as\n");
-  boost::chrono::stopwatch_accumulator<boost::chrono::process_real_cpu_clock>::reporter::scoped_run _(t);
-  boost::chrono::stopwatch<boost::chrono::process_real_cpu_clock>::reporter x("\nF1 %dsec\n");
-  boost::chrono::run_timer y;
-
+  stopwatch_accumulator<process_real_cpu_clock>::reporter::scoped_run _(t);
+  stopwatch<boost::chrono::process_real_cpu_clock>::reporter x("\nF1 %dsec\n");
+  run_timer y;   
+  stopwatch_reporter<stopwatch<process_real_cpu_clock>, digital_time_formatter> hhmmss;
+    
 
   for ( long i = 0; i < j; ++i )
     std::sqrt( 123.456L );  // burn some time
@@ -40,8 +34,8 @@ int f1(long j)
 }
 int main()
 {
-  boost::chrono::stopwatch<boost::chrono::process_real_cpu_clock>::reporter _("\nMain %dsec\n");
-  boost::chrono::run_timer z;
+  stopwatch<boost::chrono::process_real_cpu_clock>::reporter _("\nMain %dsec\n");
+  run_timer z;
 
 
   f1(100000);
