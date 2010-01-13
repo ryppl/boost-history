@@ -169,6 +169,38 @@ namespace chrono {
         : duration_divide_imp<duration<Rep1, Period>, Rep2>
     {
     };
+    
+///
+    template <class Duration, class Rep, bool = is_duration<Rep>::value>
+    struct duration_modulo_result
+    {
+    };
+
+    template <class Duration, class Rep2,
+        bool = (
+                    //boost::is_convertible<typename Duration::rep,
+                        //typename common_type<typename Duration::rep, Rep2>::type>::value
+                //&&  
+    boost::is_convertible<Rep2,
+                        typename common_type<typename Duration::rep, Rep2>::type>::value
+                )
+        >
+    struct duration_modulo_imp
+    {
+    };
+
+    template <class Rep1, class Period, class Rep2>
+    struct duration_modulo_imp<duration<Rep1, Period>, Rep2, true>
+    {
+        typedef duration<typename common_type<Rep1, Rep2>::type, Period> type;
+    };
+
+    template <class Rep1, class Period, class Rep2>
+    struct duration_modulo_result<duration<Rep1, Period>, Rep2, false>
+        : duration_modulo_imp<duration<Rep1, Period>, Rep2>
+    {
+    };
+    
   } // namespace detail
 } // namespace chrono
 
@@ -630,13 +662,10 @@ namespace chrono {
 
   // Duration /
 
-
-
   template <class Rep1, class Period, class Rep2>
   inline
   typename boost::disable_if <boost::chrono::detail::is_duration<Rep2>,
-    //duration<typename common_type<Rep1, Rep2>::type, Period>
-  typename boost::chrono::detail::duration_divide_result<duration<Rep1, Period>, Rep2>::type
+    typename boost::chrono::detail::duration_divide_result<duration<Rep1, Period>, Rep2>::type
   >::type
   operator/(const duration<Rep1, Period>& d, const Rep2& s)
   {
@@ -655,6 +684,30 @@ namespace chrono {
                                    duration<Rep2, Period2> >::type CD;
       return CD(lhs).count() / CD(rhs).count();
   }
+
+  // Duration %
+
+  template <class Rep1, class Period, class Rep2>
+  typename boost::disable_if <boost::chrono::detail::is_duration<Rep2>,
+    typename boost::chrono::detail::duration_modulo_result<duration<Rep1, Period>, Rep2>::type
+  >::type
+  operator%(const duration<Rep1, Period>& d, const Rep2& s) {
+    typedef typename common_type<Rep1, Rep2>::type CR;
+    duration<CR, Period> r = d;
+    r %= static_cast<CR>(s);
+    return r;
+  }
+  
+  template <class Rep1, class Period1, class Rep2, class Period2>
+  typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
+  operator%(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs) {
+    typedef typename common_type<duration<Rep1, Period1>,
+                                 duration<Rep2, Period2> >::type CD;
+    CD r(lhs);
+    r%=CD(rhs);
+    return r;
+  }
+
 
 //----------------------------------------------------------------------------//
 //      20.9.3.6 duration comparisons [time.duration.comparisons]             //
