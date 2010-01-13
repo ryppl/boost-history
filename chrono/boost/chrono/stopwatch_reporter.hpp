@@ -90,7 +90,7 @@ namespace boost { namespace chrono  {
 
         explicit stopwatch_reporter( const std::string & format,
                     system::error_code & ec = system::throws )
-        : m_places(Formatter::m_default_places), m_os(Formatter::m_cout()), m_format(format), m_reported(false) { }
+        : m_places(Formatter::m_default_places), m_os(Formatter::m_cout()), m_format(format), m_reported(false) {}
 
         explicit stopwatch_reporter( std::ostream & os, const std::string & format,
                     system::error_code & ec = system::throws )
@@ -120,8 +120,9 @@ namespace boost { namespace chrono  {
         ~stopwatch_reporter() {// never throws
             system::error_code ec;
             //this->stop(ec);
-            if ( !reported() ) 
+            if ( !reported() ) {
                 this->report( ec );
+            }
         }
 
 
@@ -145,57 +146,12 @@ namespace boost { namespace chrono  {
         stopwatch_reporter& operator=(const stopwatch_reporter&); // = delete;
     };
     
-   
-    namespace detail {
-
-      template <class Stopwatch > 
-      void show_time( Stopwatch & stopwatch_, const char * format, int places, std::ostream & os, system::error_code & ec)
-      //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
-      //  be as low as 10, although will be 15 for many common platforms.
-      {
-        typedef typename Stopwatch::duration duration;
-        duration d = stopwatch_.elapsed( ec );
-          
-        if ( d < duration(0) ) return;
-        if ( places > 9 )
-          places = 9;  // sanity check
-        else if ( places < 0 )
-          places = 0;
-
-        boost::io::ios_flags_saver ifs( os );
-        os.setf( std::ios_base::fixed, std::ios_base::floatfield );
-        boost::io::ios_precision_saver ips( os );
-        os.precision( places );
-
-        for ( ; *format; ++format )
-        {
-          if ( *format != '%' || !*(format+1) || !std::strchr("d", *(format+1)) )
-            os << *format;
-          
-          else
-          {
-            ++format;
-            switch ( *format )
-            {
-            case 'd':
-              os << boost::chrono::duration<double>(d).count();
-              //os << d.count();
-              break;
-            default:
-              assert(0 && "run_timer internal logic error");
-            }
-          }
-        }
-      }
-    }  
-    
     template <class Stopwatch, class Formatter> 
     void stopwatch_reporter<Stopwatch, Formatter>::report( system::error_code & ec ) {
         m_reported = true;
         if ( m_format.empty() ) m_format = Formatter::default_format;
 
         //typename Stopwatch::duration d = this->elapsed( ec );
-
         if ( &ec == &system::throws ) {
             Formatter::show_time( *this, m_format.c_str(), m_places, m_os, ec);
         } else {// non-throwing 

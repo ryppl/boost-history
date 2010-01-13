@@ -56,6 +56,10 @@ namespace boost { namespace chrono {
     public:
         struct times : arithmetic<times>, less_than_comparable<times>
         {
+            times() 
+                : real(0)
+                , user(0)
+                , system(0){}
             times(
                 process_real_cpu_clock::rep r,
                 process_user_cpu_clock::rep   u,
@@ -67,6 +71,12 @@ namespace boost { namespace chrono {
             process_real_cpu_clock::rep   real;    // real (i.e wall clock) time
             process_user_cpu_clock::rep   user;    // user cpu time
             process_system_cpu_clock::rep system;  // system cpu time
+
+            bool operator==(times const& rhs) {
+                return (real==rhs.real &&
+                        user==rhs.user &&
+                        system==rhs.system);
+            }
                     
             times operator+=(times const& rhs) {
                 real+=rhs.real;
@@ -111,6 +121,23 @@ namespace boost { namespace chrono {
         static time_point now( system::error_code & ec = system::throws );
     };
 
+    template <>
+    struct duration_values<process_cpu_clock::times>
+    {
+        typedef process_cpu_clock::times Rep;
+  public:
+        static Rep zero() {return Rep();}
+        static Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {
+          return Rep((std::numeric_limits<process_real_cpu_clock::rep>::max)(),
+                      (std::numeric_limits<process_user_cpu_clock::rep>::max)(),
+                      (std::numeric_limits<process_system_cpu_clock::rep>::max)());
+        }
+        static Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {
+          return Rep((std::numeric_limits<process_real_cpu_clock::rep>::min)(),
+                      (std::numeric_limits<process_user_cpu_clock::rep>::min)(),
+                      (std::numeric_limits<process_system_cpu_clock::rep>::min)());
+        }
+  };
     
 } // namespace chrono
 } // namespace boost

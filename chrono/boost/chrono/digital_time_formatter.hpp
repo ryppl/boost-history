@@ -46,10 +46,6 @@ namespace boost { namespace chrono  {
             duration d = stopwatch_.elapsed( ec );
           
             if ( d < duration(0) ) return;
-            if ( places > 9 )
-                places = 9;  // sanity check
-            else if ( places < 0 )
-                places = 0;
 
             boost::io::ios_flags_saver ifs( os );
             os.setf( std::ios_base::fixed, std::ios_base::floatfield );
@@ -66,18 +62,34 @@ namespace boost { namespace chrono  {
                     case 'd':
                         os << dt.days_.count();
                         break;
-                    case 'h':
+                    case 'h': 
+                    {
+                        boost::io::ios_flags_saver ifs( os );
+                        os.width(2); os.fill('0');
                         os << dt.hours_.count();
                         break;
+                    }
                     case 'm':
+                    {
+                        boost::io::ios_flags_saver ifs( os );
+                        os.width(2); os.fill('0');
                         os << dt.minutes_.count();
                         break;
+                    }
                     case 's':
+                    {
+                        boost::io::ios_flags_saver ifs( os );
+                        os.width(2); os.fill('0');
                         os << dt.seconds_.count();
                         break;
+                    }
                     case 'n':
+                    {
+                        boost::io::ios_flags_saver ifs( os );
+                        os.width(9); os.fill('0');
                         os << dt.nanoseconds_.count();
                         break;
+                    }
                     default:
                         assert(0 && "digital_time_formatter internal logic error");
                     }
