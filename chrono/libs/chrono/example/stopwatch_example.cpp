@@ -12,6 +12,7 @@
 #include <boost/chrono/stopwatch.hpp>
 #include <boost/chrono/stopwatch_accumulator.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
+#include <boost/chrono/time_formatter.hpp>
 #include <boost/chrono/digital_time_formatter.hpp>
 #include <cmath>
 
@@ -22,8 +23,13 @@ int f1(long j)
   static stopwatch_accumulator<process_real_cpu_clock>::reporter t(
     "\nf1 Count=%c times Sum=%ss Min=%ms Max=%Ms Mean=%as\n");
   stopwatch_accumulator<process_real_cpu_clock>::reporter::scoped_run _(t);
-  stopwatch<boost::chrono::process_real_cpu_clock>::reporter x("\nF1 %dsec\n");
+  stopwatch<process_real_cpu_clock>::reporter x("\nF1 %dsec\n");
+  
+#if 0    
   run_timer y;   
+#else    
+  stopwatch_reporter<stopwatch<process_cpu_clock>, time_formatter> y;
+#endif    
   stopwatch_reporter<stopwatch<process_real_cpu_clock>, digital_time_formatter> hhmmss;
     
 
