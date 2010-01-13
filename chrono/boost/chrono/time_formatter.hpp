@@ -103,6 +103,12 @@ namespace boost { namespace chrono  {
 
     
     std::ostream &  time_formatter::m_cout()  { return std::cout; }
+    
+    template <> 
+    struct stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> > {
+        typedef time_formatter type;
+    };
+    
 
   } // namespace chrono
 } // namespace boost

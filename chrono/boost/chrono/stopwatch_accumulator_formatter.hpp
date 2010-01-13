@@ -93,7 +93,7 @@ namespace boost { namespace chrono  {
             }
         }
     };  
-    const char * stopwatch_accumulator_formatter::default_format ="\nCount=%c times Sum=%ss Min=%ms Max=%Ms Mean=%as\n";
+    const char * stopwatch_accumulator_formatter::default_format ="\n%c times, sum=%ss, min=%ms, max=%Ms, mean=%as\n";
     std::ostream &  stopwatch_accumulator_formatter::m_cout()  { return std::cout; }
     
 } // namespace chrono

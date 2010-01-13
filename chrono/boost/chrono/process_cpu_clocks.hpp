@@ -125,7 +125,7 @@ namespace boost { namespace chrono {
     struct duration_values<process_cpu_clock::times>
     {
         typedef process_cpu_clock::times Rep;
-  public:
+    public:
         static Rep zero() {return Rep();}
         static Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {
           return Rep((std::numeric_limits<process_real_cpu_clock::rep>::max)(),
@@ -137,11 +137,11 @@ namespace boost { namespace chrono {
                       (std::numeric_limits<process_user_cpu_clock::rep>::min)(),
                       (std::numeric_limits<process_system_cpu_clock::rep>::min)());
         }
-  };
+    };
     
 } // namespace chrono
 } // namespace boost
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
-#endif  // BOOST_PROCESS_TIMES_HPP
+#endif  // BOOST_CHRONO_PROCESS_CPU_CLOCKS_HPP
