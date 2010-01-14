@@ -157,6 +157,59 @@ namespace boost { namespace msm { namespace front
 	    typedef typename TGT::Target type;
     };
 
+    template <class EVENT,class ACTION=none,class GUARD=none>
+    struct Internal
+    {
+        typedef EVENT   Evt;
+        typedef ACTION  Action;
+        typedef GUARD   Guard;
+        // action plus guard
+        typedef sm_i_row_tag row_type_tag;
+        template <class EVT,class FSM,class SourceState,class TargetState>
+        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        {
+            // create functor, call it
+            Action()(evt,fsm,src,tgt);
+        }
+        template <class EVT,class FSM,class SourceState,class TargetState>
+        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        {
+            // create functor, call it
+            return Guard()(evt,fsm,src,tgt);
+        }
+    };
+
+    template<class EVENT,class ACTION>
+    struct Internal<EVENT,ACTION,none>
+    {
+        typedef EVENT   Evt;
+        typedef ACTION  Action;
+        typedef none    Guard;
+        // no guard
+        typedef sm_a_i_row_tag row_type_tag;
+        template <class EVT,class FSM,class SourceState,class TargetState>
+        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        {
+            // create functor, call it
+            Action()(evt,fsm,src,tgt);
+        }
+    };
+    template<class EVENT,class GUARD>
+    struct Internal<EVENT,none,GUARD>
+    {
+        typedef EVENT   Evt;
+        typedef none    Action;
+        typedef GUARD   Guard;
+        // no action
+        typedef sm_g_i_row_tag row_type_tag;
+        template <class EVT,class FSM,class SourceState,class TargetState>
+        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        {
+            // create functor, call it
+            return Guard()(evt,fsm,src,tgt);
+        }
+    };
+
     struct state_tag{};
     struct event_tag{};
     struct action_tag{};

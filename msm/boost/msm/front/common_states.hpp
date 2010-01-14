@@ -13,6 +13,7 @@
 
 #include <boost/mpl/int.hpp>
 
+#include <boost/mpl/vector.hpp>
 #include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/include/at_c.hpp>
 
@@ -75,6 +76,9 @@ struct state_base : public inherit_attributes<Attributes>, USERBASE
     void on_entry(Event const& ,FSM&){}
     template <class Event,class FSM>
     void on_exit(Event const&,FSM& ){}
+    // default (empty) transition table;
+    typedef ::boost::mpl::vector0<>  internal_transition_table;
+    typedef ::boost::mpl::vector0<>  transition_table;
 };
 
 }}}

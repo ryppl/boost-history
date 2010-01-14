@@ -640,6 +640,84 @@ private:
         }
     };
 
+    // transitions internal to this state machine (no substate involved)
+    template<
+        typename ROW,
+        typename StateType
+    >
+    struct internal_
+    {
+        typedef StateType current_state_type;
+        typedef StateType next_state_type;
+        typedef typename ROW::Evt transition_event;
+
+        // if a guard condition is here, call it to check that the event is accepted
+        static bool check_guard(library_sm& fsm,transition_event const& evt)
+        {
+            if ( ROW::guard_call(fsm,evt,fsm,fsm) )
+                return true;
+            return false;
+        }
+        // Take the transition action and return the next state.
+        static HandledEnum execute(library_sm& fsm, int region_index, int state, transition_event const& evt)
+        {
+            if (!check_guard(fsm,evt))
+            {
+                // guard rejected the event, we stay in the current one
+                return HANDLED_GUARD_REJECT;
+            }
+
+            // then call the action method
+            ROW::action_call(fsm,evt,fsm,fsm);
+            return HANDLED_TRUE;
+        }
+    };
+    template<
+        typename ROW,
+        typename StateType
+    >
+    struct a_internal_
+    {
+        typedef StateType current_state_type;
+        typedef StateType next_state_type;
+        typedef typename ROW::Evt transition_event;
+
+        // Take the transition action and return the next state.
+        static HandledEnum execute(library_sm& fsm, int region_index, int state, transition_event const& evt)
+        {
+            // then call the action method
+            ROW::action_call(fsm,evt,fsm,fsm);
+            return HANDLED_TRUE;
+        }
+    };
+    template<
+        typename ROW,
+        typename StateType
+    >
+    struct g_internal_
+    {
+        typedef StateType current_state_type;
+        typedef StateType next_state_type;
+        typedef typename ROW::Evt transition_event;
+
+        // if a guard condition is here, call it to check that the event is accepted
+        static bool check_guard(library_sm& fsm,transition_event const& evt)
+        {
+            if ( ROW::guard_call(fsm,evt,fsm,fsm) )
+                return true;
+            return false;
+        }
+        // Take the transition action and return the next state.
+        static HandledEnum execute(library_sm& fsm, int region_index, int state, transition_event const& evt)
+        {
+            if (!check_guard(fsm,evt))
+            {
+                // guard rejected the event, we stay in the current one
+                return HANDLED_GUARD_REJECT;
+            }
+            return HANDLED_TRUE;
+        }
+    };
     // Template used to form forwarding rows in the transition table for every row of a composite SM
     template<
         typename T1
@@ -660,82 +738,104 @@ private:
              return res;
         }
     };
-    template <class Composite,class Event>
-    struct make_frow 
-    {
-        typedef frow<Composite,Event> type;
-    };
 
-    template <class Tag, class Transition>
+    template <class Tag, class Transition,class StateType>
     struct create_backend_stt
     {
     };
-    template <class Transition>
-    struct create_backend_stt<g_row_tag,Transition>
+    template <class Transition,class StateType>
+    struct create_backend_stt<g_row_tag,Transition,StateType>
     {
         typedef g_row_<Transition> type;
     };
-	template <class Transition>
-    struct create_backend_stt<a_row_tag,Transition>
+	template <class Transition,class StateType>
+    struct create_backend_stt<a_row_tag,Transition,StateType>
     {
         typedef a_row_<Transition> type;
     };
-	template <class Transition>
-    struct create_backend_stt<_row_tag,Transition>
+	template <class Transition,class StateType>
+    struct create_backend_stt<_row_tag,Transition,StateType>
     {
         typedef _row_<Transition> type;
     };
-	template <class Transition>
-	struct create_backend_stt<row_tag,Transition>
+	template <class Transition,class StateType>
+	struct create_backend_stt<row_tag,Transition,StateType>
 	{
 		typedef row_<Transition> type;
 	};
     // internal transitions
-    template <class Transition>
-    struct create_backend_stt<g_irow_tag,Transition>
+    template <class Transition,class StateType>
+    struct create_backend_stt<g_irow_tag,Transition,StateType>
     {
         typedef g_irow_<Transition> type;
     };
-	template <class Transition>
-    struct create_backend_stt<a_irow_tag,Transition>
+	template <class Transition,class StateType>
+    struct create_backend_stt<a_irow_tag,Transition,StateType>
     {
         typedef a_irow_<Transition> type;
     };
-	template <class Transition>
-	struct create_backend_stt<irow_tag,Transition>
+	template <class Transition,class StateType>
+	struct create_backend_stt<irow_tag,Transition,StateType>
 	{
 		typedef irow_<Transition> type;
 	};
-    template <class Transition>
+    template <class Transition,class StateType>
+    struct create_backend_stt<sm_a_i_row_tag,Transition,StateType>
+    {
+        typedef a_internal_<Transition,StateType> type;
+    };
+    template <class Transition,class StateType>
+    struct create_backend_stt<sm_g_i_row_tag,Transition,StateType>
+    {
+        typedef g_internal_<Transition,StateType> type;
+    };
+    template <class Transition,class StateType>
+    struct create_backend_stt<sm_i_row_tag,Transition,StateType>
+    {
+        typedef internal_<Transition,StateType> type;
+    };
+    template <class Transition,class StateType=void>
     struct make_row_tag
     {
-        typedef typename create_backend_stt<typename Transition::row_type_tag,Transition>::type type;
+        typedef typename create_backend_stt<typename Transition::row_type_tag,Transition,StateType>::type type;
     };
 
     // add to the stt the initial states which could be missing (if not being involved in a transition)
-    template <class BaseType>
+    template <class BaseType, class stt_simulated = typename BaseType::transition_table>
     struct create_real_stt 
     {
-        typedef typename BaseType::transition_table stt_simulated;
+        //typedef typename BaseType::transition_table stt_simulated;
 	    typedef typename ::boost::mpl::fold<
 		    stt_simulated,mpl::vector0<>,
             ::boost::mpl::push_back< ::boost::mpl::placeholders::_1,
-                                     make_row_tag< ::boost::mpl::placeholders::_2> >
+                                     make_row_tag< ::boost::mpl::placeholders::_2 , BaseType > >
 	    >::type type;
     };
 
     // gets the transition table from a composite and make from it a forwarding row
-    template <class Composite>
-    struct get_transition_table_as_frow
+    template <class StateType,class IsComposite>
+    struct get_internal_transition_table
     {
         // first get the table of a composite
-        typedef typename recursive_get_transition_table<Composite>::type original_table;
+        typedef typename recursive_get_transition_table<StateType>::type original_table;
         // and add for every event a forwarding row
         typedef typename generate_event_set<original_table>::type all_events;
         typedef typename ::boost::mpl::fold<
             all_events, ::boost::mpl::vector0<>,
             ::boost::mpl::push_back< ::boost::mpl::placeholders::_1,
-                                     frow<Composite, ::boost::mpl::placeholders::_2> > >::type type;
+                                     frow<StateType, ::boost::mpl::placeholders::_2> > >::type intermediate;
+
+        typedef typename StateType::internal_transition_table istt_simulated;
+	    typedef typename ::boost::mpl::fold<
+		    istt_simulated,intermediate,
+            ::boost::mpl::push_back< ::boost::mpl::placeholders::_1,
+                                     make_row_tag< ::boost::mpl::placeholders::_2 , StateType> >
+	    >::type type;
+    };
+    template <class StateType>
+    struct get_internal_transition_table<StateType, ::boost::mpl::false_ >
+    {
+        typedef typename create_real_stt<StateType, typename StateType::internal_transition_table >::type type;
     };
     typedef typename create_real_stt<Derived>::type real_transition_table;
     typedef typename create_stt<library_sm>::type stt;
@@ -755,9 +855,12 @@ private:
         // for every state, add its transition table (if any)
         // transformed as frow
 		typedef typename ::boost::mpl::fold<state_list,Stt,
-				::boost::mpl::insert_range< ::boost::mpl::placeholders::_1, 
-                                            ::boost::mpl::end< ::boost::mpl::placeholders::_1>,
-								            get_transition_table_as_frow< ::boost::mpl::placeholders::_2> > 
+				::boost::mpl::insert_range< 
+                        ::boost::mpl::placeholders::_1, 
+                        ::boost::mpl::end< ::boost::mpl::placeholders::_1>,
+						get_internal_transition_table< 
+                                ::boost::mpl::placeholders::_2,
+                                is_composite_state< ::boost::mpl::placeholders::_2> > > 
 		>::type type;
     };
     // extend the table with tables from composite states

@@ -174,6 +174,7 @@ struct state_machine_def :  public state_base<BaseState>
             return (fsm.*guard)(evt);
         }
     };
+
 protected:
     // Default no-transition handler. Can be replaced in the Derived SM class.
     template <class FSM,class Event>
