@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// statistics::detail::accumulator::threshold.hpp                            //
+// statistics::detail::accumulator::keyword::threshold.hpp                   //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -9,14 +9,12 @@
 #define BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_KEYWORD_THRESHOLD_HPP_2009
 #include <boost/parameter/name.hpp>
 #include <boost/parameter/keyword.hpp>
+#include <boost/statistics/detail/accumulator/tag/threshold.hpp>
 
 namespace boost { 
 namespace statistics{
 namespace detail{
 namespace accumulator{
-namespace tag{
-    struct threshold{};
-}// tag
 namespace keyword{
     namespace 
     {

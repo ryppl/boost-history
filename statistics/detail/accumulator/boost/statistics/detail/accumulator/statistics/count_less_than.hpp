@@ -79,13 +79,16 @@ namespace tag
 namespace extract
 {
 
-  template<typename AccumulatorSet>
-  typename 
-  	boost::mpl::apply<AccumulatorSet,tag::count_less_than>::type::result_type
-  count_less_than(AccumulatorSet const& acc){
-    typedef tag::count_less_than the_tag;
-    return boost::accumulators::extract_result<the_tag>(acc);
-  }
+  	template<typename AccumulatorSet>
+  	typename 
+  	boost::mpl::apply<
+    	AccumulatorSet,
+        statistics::detail::accumulator::tag::count_less_than
+	>::type::result_type
+  	count_less_than(AccumulatorSet const& acc){
+    	typedef statistics::detail::accumulator::tag::count_less_than the_tag;
+    	return boost::accumulators::extract_result<the_tag>(acc);
+  	}
 
 }
 

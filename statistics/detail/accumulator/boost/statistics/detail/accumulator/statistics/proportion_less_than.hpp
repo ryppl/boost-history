@@ -80,13 +80,16 @@ namespace tag
 namespace extract
 {
 
-  template<typename AccSet>
-  typename
-    boost::mpl::apply<AccSet,tag::proportion_less_than>::type::result_type
-  proportion_less_than(AccSet const& acc){
-    typedef tag::proportion_less_than the_tag;
-    return boost::accumulators::extract_result<the_tag>(acc);
-  }
+  	template<typename AccSet>
+  	typename boost::mpl::apply<
+    	AccSet,
+        statistics::detail::accumulator::tag::proportion_less_than
+	>::type::result_type
+  	proportion_less_than(AccSet const& acc){
+    	typedef statistics::detail::accumulator
+        	::tag::proportion_less_than the_tag;
+    	return boost::accumulators::extract_result<the_tag>(acc);
+  	}
 
 }
 
