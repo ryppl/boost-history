@@ -58,6 +58,16 @@ public:
 		head.m_prev = this;
 	}
 
+	void BOOST_MEMORY_CALL swap(dcl_list_node_base& inst)
+	{
+		m_prev->m_next = &inst;
+		m_next->m_prev = &inst;
+		inst.m_prev->m_next = this;
+		inst.m_next->m_prev = this;
+		std::swap(m_prev, inst.m_prev);
+		std::swap(m_next, inst.m_next);
+	}
+
 public:
 	void BOOST_MEMORY_CALL insert_me_front_(dcl_list_node_base& head)
 	{
