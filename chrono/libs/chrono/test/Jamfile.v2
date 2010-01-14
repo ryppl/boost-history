@@ -28,10 +28,10 @@ project
         <toolset>msvc:<asynch-exceptions>on
     ;
 
-#   test-suite "common_type"
-#       :
-#         [ run ../example/run_timer_example.cpp ]
-#         ;
+   test-suite "common_type"
+       :
+         [ run common_type_test.cpp ]
+         ;
 
     test-suite "ratio"
         :
