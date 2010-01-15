@@ -86,7 +86,7 @@ __forceinline unsigned int log2(unsigned int val)
 // -------------------------------------------------------------------------
 // class pools, scoped_pools
 
-template <class PolicyT, int m_fPreAlloc = 1>
+template <class PolicyT, int m_fPreAlloc = BOOST_MEMORY_PREALLOC>
 class pools_alloc
 {
 private:

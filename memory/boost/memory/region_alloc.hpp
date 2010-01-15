@@ -21,9 +21,13 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class region_alloc
 
+#ifndef BOOST_MEMORY_PREALLOC
+#define BOOST_MEMORY_PREALLOC	0
+#endif
+
 #pragma pack(1)
 
-template <class PolicyT, int m_fPreAlloc = 1>
+template <class PolicyT, int m_fPreAlloc = BOOST_MEMORY_PREALLOC>
 class region_alloc
 {
 private:
