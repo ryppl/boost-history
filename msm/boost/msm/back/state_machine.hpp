@@ -311,7 +311,8 @@ private:
         {
             if ( ROW::guard_call(fsm,evt,
                                  ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
-                                 ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list)) )
+                                 ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list),
+                                 fsm.m_substate_list ) )
                 return true;
             return false;
         }
@@ -341,7 +342,8 @@ private:
             // then call the action method
             ROW::action_call(fsm,evt,
                              ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
-                             ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list) );
+                             ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list),
+                             fsm.m_substate_list);
 
             // and finally the entry method of the new current state
             convert_event_and_execute_entry<next_state_type,T2>
@@ -386,7 +388,8 @@ private:
         {
             if ( ROW::guard_call(fsm,evt,
                                  ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
-                                 ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list)) )
+                                 ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list),
+                                 fsm.m_substate_list ))
                 return true;
             return false;
         }
@@ -471,7 +474,8 @@ private:
             // then call the action method
             ROW::action_call(fsm,evt,
                             ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
-                            ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list) );
+                            ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list),
+                            fsm.m_substate_list);
 
             // and finally the entry method of the new current state
             convert_event_and_execute_entry<next_state_type,T2>
@@ -554,7 +558,8 @@ private:
         {
             if ( ROW::guard_call(fsm,evt,
                                  ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
-                                 ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list)) )
+                                 ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list),
+                                 fsm.m_substate_list))
                 return true;
             return false;
         }
@@ -573,7 +578,8 @@ private:
             // call the action method
             ROW::action_call(fsm,evt,
                              ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
-                             ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list) );
+                             ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list),
+                             fsm.m_substate_list);
             return HANDLED_TRUE;
         }
     };
@@ -595,7 +601,8 @@ private:
         {
             if ( ROW::guard_call(fsm,evt,
                                  ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
-                                 ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list)) )
+                                 ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list),
+                                 fsm.m_substate_list) )
                 return true;
             return false;
         }
@@ -634,7 +641,8 @@ private:
             // call the action method
             ROW::action_call(fsm,evt,
                             ::boost::fusion::at_key<current_state_type>(fsm.m_substate_list),
-                            ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list) );
+                            ::boost::fusion::at_key<next_state_type>(fsm.m_substate_list),
+                            fsm.m_substate_list);
 
             return HANDLED_TRUE;
         }
@@ -654,7 +662,7 @@ private:
         // if a guard condition is here, call it to check that the event is accepted
         static bool check_guard(library_sm& fsm,transition_event const& evt)
         {
-            if ( ROW::guard_call(fsm,evt,fsm,fsm) )
+            if ( ROW::guard_call(fsm,evt,fsm,fsm,fsm.m_substate_list) )
                 return true;
             return false;
         }
@@ -668,7 +676,7 @@ private:
             }
 
             // then call the action method
-            ROW::action_call(fsm,evt,fsm,fsm);
+            ROW::action_call(fsm,evt,fsm,fsm,fsm.m_substate_list);
             return HANDLED_TRUE;
         }
     };
@@ -686,7 +694,7 @@ private:
         static HandledEnum execute(library_sm& fsm, int region_index, int state, transition_event const& evt)
         {
             // then call the action method
-            ROW::action_call(fsm,evt,fsm,fsm);
+            ROW::action_call(fsm,evt,fsm,fsm,fsm.m_substate_list);
             return HANDLED_TRUE;
         }
     };
@@ -703,7 +711,7 @@ private:
         // if a guard condition is here, call it to check that the event is accepted
         static bool check_guard(library_sm& fsm,transition_event const& evt)
         {
-            if ( ROW::guard_call(fsm,evt,fsm,fsm) )
+            if ( ROW::guard_call(fsm,evt,fsm,fsm,fsm.m_substate_list) )
                 return true;
             return false;
         }
@@ -818,19 +826,24 @@ private:
     {
         // first get the table of a composite
         typedef typename recursive_get_transition_table<StateType>::type original_table;
+
+        // add the internal events defined in the internal_transition_table
+        // Note: these are added first because they must have a lesser prio
+        // than the deeper transitions in the sub regions
+        typedef typename StateType::internal_transition_table istt_simulated;
+	    typedef typename ::boost::mpl::fold<
+		    istt_simulated,::boost::mpl::vector0<>,
+            ::boost::mpl::push_back< ::boost::mpl::placeholders::_1,
+                                     make_row_tag< ::boost::mpl::placeholders::_2 , StateType> >
+	    >::type intermediate;
+
         // and add for every event a forwarding row
         typedef typename generate_event_set<original_table>::type all_events;
         typedef typename ::boost::mpl::fold<
-            all_events, ::boost::mpl::vector0<>,
+            all_events, intermediate,
             ::boost::mpl::push_back< ::boost::mpl::placeholders::_1,
-                                     frow<StateType, ::boost::mpl::placeholders::_2> > >::type intermediate;
+                                     frow<StateType, ::boost::mpl::placeholders::_2> > >::type type;
 
-        typedef typename StateType::internal_transition_table istt_simulated;
-	    typedef typename ::boost::mpl::fold<
-		    istt_simulated,intermediate,
-            ::boost::mpl::push_back< ::boost::mpl::placeholders::_1,
-                                     make_row_tag< ::boost::mpl::placeholders::_2 , StateType> >
-	    >::type type;
     };
     template <class StateType>
     struct get_internal_transition_table<StateType, ::boost::mpl::false_ >
