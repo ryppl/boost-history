@@ -13,21 +13,11 @@ I welcome feedback including bug reports at erwann.rogard@gmail.com
 
 [ Overview ]
 
-    C++ class for non-parametric estimation.
+    C++ classes for non-parametric estimation. 
 
-[ Design ]
+[ Also see ]
 
-    The argument(s) passed to a statistic has to be a type that is an instance 
-    of fusion::map i.e. its elements, say x and y are identified by two keys, 
-    k1 and k2, respectively. 
-    
-    If the data is not of this type, for example, if x and y are stored in 
-    separate containers, a combination of zip_iterator and transform_iterator 
-    can achieve the requirement. 
-    
-    This approach is not less general, but somewhat more straightforward
-    than leaving the type unspecified but specifying extractor functions for x 
-    and y. 
+	http://boost-sandbox.sourceforge.net/libs/accumulators/doc/html/index.html
 
 [ Compiler ]
 
@@ -37,14 +27,13 @@ I welcome feedback including bug reports at erwann.rogard@gmail.com
 
     /boost_1_40_0
 
+
 [ History] 
+
+	January 14th, 2010. 
+    	- Added non_parametric/empirical_distribution
+        - Modified non_parametric/kolmogorov_smirnov/statistic.hpp to allow
+        combos
 
     October 11th 2009. First version. Implementation of kolmogorov_smirnov
     transfered from distribution_toolkit
-	
-
-	
-                        
-        
-
-                                   
