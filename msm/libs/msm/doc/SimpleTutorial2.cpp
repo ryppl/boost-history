@@ -3,7 +3,7 @@
 #include <boost/msm/back/state_machine.hpp>
 //front-end
 #include <boost/msm/front/state_machine_def.hpp>
-#include <boost/msm/front/functor_row.hpp>
+#include <boost/msm/front/row2.hpp>
 
 namespace msm = boost::msm;
 using namespace msm::front;
@@ -37,31 +37,6 @@ namespace
     // front-end: define the FSM structure 
     struct player_ : public msm::front::state_machine_def<player_>
     {
-        // actions for Empty's internal transitions
-        void internal_action(cd_detected const&){ std::cout << "Empty::internal action\n"; }
-        bool internal_guard(cd_detected const&)
-        {
-            std::cout << "Empty::internal guard\n";
-            return false;
-        }
-        struct internal_guard_fct 
-        {
-            template <class EVT,class FSM,class SourceState,class TargetState>
-            bool operator()(EVT const& evt ,FSM&,SourceState& ,TargetState& )
-            {
-                std::cout << "Empty::internal guard functor\n";
-                return false;
-            }
-        };
-        struct internal_action_fct 
-        {
-            template <class EVT,class FSM,class SourceState,class TargetState>
-            void operator()(EVT const& ,FSM& ,SourceState& ,TargetState& )
-            {
-                std::cout << "Empty::internal action functor" << std::endl;
-            }
-        };
-
         // The list of FSM states
         struct Empty : public msm::front::state<> 
         {
@@ -70,13 +45,14 @@ namespace
             void on_entry(Event const&,FSM& ) {std::cout << "entering: Empty" << std::endl;}
             template <class Event,class FSM>
             void on_exit(Event const&,FSM& ) {std::cout << "leaving: Empty" << std::endl;}
-
-            // Transition table for Empty
-            struct internal_transition_table : mpl::vector<
-                //    Start     Event         Next      Action				 Guard
-           Internal <           cd_detected           , internal_action_fct ,internal_guard_fct    >
-                //  +---------+-------------+---------+---------------------+----------------------+
-            > {};        
+            void open_drawer(open_close const&)    { std::cout << "Empty::open_drawer\n"; }
+            // actions for Empty's internal transitions
+            void internal_action(cd_detected const&){ std::cout << "Empty::internal action\n"; }
+            bool internal_guard(cd_detected const&)
+            {
+                std::cout << "Empty::internal guard\n";
+                return false;
+            }
         };
         struct Open : public msm::front::state<> 
         {	 
@@ -84,6 +60,8 @@ namespace
             void on_entry(Event const& ,FSM&) {std::cout << "entering: Open" << std::endl;}
             template <class Event,class FSM>
             void on_exit(Event const&,FSM& ) {std::cout << "leaving: Open" << std::endl;}
+            void close_drawer(open_close const&)   { std::cout << "Open::close_drawer\n"; }
+            void stop_and_open(open_close const&)  { std::cout << "Open::stop_and_open\n"; }
         };
 
         // sm_ptr still supported but deprecated as functors are a much better way to do the same thing
@@ -98,6 +76,8 @@ namespace
                 m_player=pl;
             }
             player_* m_player;
+            void start_playback(play const&)       { std::cout << "Stopped::start_playback\n"; }
+            void stop_playback(stop const&)        { std::cout << "Stopped::stop_playback\n"; }
         };
 
         struct Playing : public msm::front::state<>
@@ -106,27 +86,26 @@ namespace
             void on_entry(Event const&,FSM& ) {std::cout << "entering: Playing" << std::endl;}
             template <class Event,class FSM>
             void on_exit(Event const&,FSM& ) {std::cout << "leaving: Playing" << std::endl;}
+            // guard conditions
+            // used to show a transition conflict. This guard will simply deactivate one transition and thus
+            // solve the conflict
+            bool auto_start(cd_detected const&)
+            {
+                return false;
+            }
         };
 
         // state not defining any entry or exit
         struct Paused : public msm::front::state<>
         {
+            void pause_playback(pause const&)      { std::cout << "Paused::pause_playback\n"; }
+            void resume_playback(end_pause const&)      { std::cout << "Paused::resume_playback\n"; }
         };
 
-        // the initial state of the player SM. Must be defined
-        typedef Empty initial_state;
+        // action
+        void store_cd_info(cd_detected const&) { std::cout << "Player::store_cd_info\n"; }
 
-        // transition actions
-        void start_playback(play const&)       { std::cout << "player::start_playback\n"; }
-        void open_drawer(open_close const&)    { std::cout << "player::open_drawer\n"; }
-        void close_drawer(open_close const&)   { std::cout << "player::close_drawer\n"; }
-        void store_cd_info(cd_detected const&) { std::cout << "player::store_cd_info\n"; }
-        void stop_playback(stop const&)        { std::cout << "player::stop_playback\n"; }
-        void pause_playback(pause const&)      { std::cout << "player::pause_playback\n"; }
-        void resume_playback(end_pause const&)      { std::cout << "player::resume_playback\n"; }
-        void stop_and_open(open_close const&)  { std::cout << "player::stop_and_open\n"; }
-        void stopped_again(stop const&)	       {std::cout << "player::stopped_again\n";}
-        // guard conditions
+        // guard
         bool good_disk_format(cd_detected const& evt)
         {
             // to test a guard condition, let's say we understand only CDs, not DVD
@@ -137,32 +116,36 @@ namespace
             }
             return true;
         }
-
-        typedef player_ p; // makes transition table cleaner
+        // the initial state of the player SM. Must be defined
+        typedef Empty initial_state;
 
         // Transition table for player
         struct transition_table : mpl::vector<
-            //    Start     Event         Next      Action				 Guard
+            //    Start     Event         Next      Action/Guard				 
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Stopped , play        , Playing , &p::start_playback                         >,
-          a_row < Stopped , open_close  , Open    , &p::open_drawer                            >,
+         a_row2 < Stopped , play        , Playing , Stopped , &Stopped::start_playback         >,
+         a_row2 < Stopped , open_close  , Open    , Empty   , &Empty::open_drawer              >,
            _row < Stopped , stop        , Stopped                                              >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Open    , open_close  , Empty   , &p::close_drawer                           >,
+         a_row2 < Open    , open_close  , Empty   , Open    , &Open::close_drawer              >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Empty   , open_close  , Open    , &p::open_drawer                            >,
-          // conflict between a normal and 2 internal transitions (irow/g_irow)
-            row < Empty   , cd_detected , Stopped , &p::store_cd_info   ,&p::good_disk_format  >,
-           irow < Empty   , cd_detected ,           &p::internal_action ,&p::internal_guard    >,
-         g_irow < Empty   , cd_detected                                 ,&p::internal_guard    >,
+         a_row2 < Empty   , open_close  , Open    , Empty   ,&Empty::open_drawer               >,
+           row2 < Empty   , cd_detected , Stopped , player_ ,&player_::store_cd_info   
+                                                  , player_ ,&player_::good_disk_format        >,
+           row2 < Empty   , cd_detected , Playing , player_ ,&player_::store_cd_info   
+                                                  , Playing ,&Playing::auto_start              >,
+         // conflict with some internal rows
+          irow2 < Empty   , cd_detected           , Empty   ,&Empty::internal_action 
+                                                  , Empty   ,&Empty::internal_guard            >,
+        g_irow2 < Empty   , cd_detected           , Empty   ,&Empty::internal_guard           >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Playing , stop        , Stopped , &p::stop_playback                          >,
-          a_row < Playing , pause       , Paused  , &p::pause_playback                         >,
-          a_row < Playing , open_close  , Open    , &p::stop_and_open                          >,
+         a_row2 < Playing , stop        , Stopped , Stopped ,&Stopped::stop_playback           >,
+         a_row2 < Playing , pause       , Paused  , Paused  ,&Paused::pause_playback           >,
+         a_row2 < Playing , open_close  , Open    , Open    ,&Open::stop_and_open              >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Paused  , end_pause   , Playing , &p::resume_playback                        >,
-          a_row < Paused  , stop        , Stopped , &p::stop_playback                          >,
-          a_row < Paused  , open_close  , Open    , &p::stop_and_open                          >
+         a_row2 < Paused  , end_pause   , Playing , Paused  ,&Paused::resume_playback          >,
+         a_row2 < Paused  , stop        , Stopped , Stopped ,&Stopped::stop_playback           >,
+         a_row2 < Paused  , open_close  , Open    , Open    ,&Open::stop_and_open              >
             //  +---------+-------------+---------+---------------------+----------------------+
         > {};
         // Replaces the default no-transition response.

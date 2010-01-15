@@ -291,7 +291,7 @@ namespace
         p.process_event(NextSong());
         std::cout << "sending an internal event" << std::endl;
 		p.process_event(internal_event());
-        std::cout << "conflict between the internal and normal transition. Internal is tried first" << std::endl;
+        std::cout << "conflict between the internal and normal transition. Internal is tried last" << std::endl;
         p.process_event(PreviousSong());
 
         // at this point, Play is active      
