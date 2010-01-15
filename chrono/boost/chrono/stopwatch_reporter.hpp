@@ -83,37 +83,40 @@ namespace boost { namespace chrono  {
     class stopwatch_reporter : public Stopwatch {
     public:
         explicit stopwatch_reporter( system::error_code & ec = system::throws )
-        : m_places(Formatter::m_default_places), m_os(Formatter::m_cout()), m_reported(false) { }
+        : m_places(Formatter::m_default_places), m_os(Formatter::m_cout()), m_format(Formatter::default_format), m_reported(false) { }
         explicit stopwatch_reporter( std::ostream & os,
                     system::error_code & ec = system::throws )
-        : m_places(Formatter::m_default_places), m_os(os), m_reported(false) { }
+        : m_places(Formatter::m_default_places), m_os(os), m_format(Formatter::default_format), m_reported(false) { }
 
         explicit stopwatch_reporter( const std::string & format,
                     system::error_code & ec = system::throws )
         : m_places(Formatter::m_default_places), m_os(Formatter::m_cout()), m_format(format), m_reported(false) {}
 
-        explicit stopwatch_reporter( std::ostream & os, const std::string & format,
+        explicit stopwatch_reporter( int places,
+                    system::error_code & ec = system::throws )
+        : m_places(places), m_os(Formatter::m_cout()), m_format(Formatter::default_format), m_reported(false) { }
+
+        stopwatch_reporter( std::ostream & os, const std::string & format,
                     system::error_code & ec = system::throws )
         : m_places(Formatter::m_default_places), m_os(os), m_format(format), m_reported(false) { }
 
-        explicit stopwatch_reporter( const std::string & format, int places,
+        stopwatch_reporter( const std::string & format, int places,
                     system::error_code & ec = system::throws )
         : m_places(places), m_os(Formatter::m_cout()), m_format(format), m_reported(false) { }
-        explicit stopwatch_reporter( std::ostream & os, const std::string & format, int places,
+        
+        stopwatch_reporter( std::ostream & os, int places,
                     system::error_code & ec = system::throws )
-        : m_places(places), m_os(os), m_reported(false) { }
-
-        explicit stopwatch_reporter( int places,
-                    system::error_code & ec = system::throws )
-        : m_places(places), m_os(Formatter::m_cout()), m_reported(false) { }
-        explicit stopwatch_reporter( std::ostream & os, int places,
-                    system::error_code & ec = system::throws )
-        : m_places(places), m_os(os), m_reported(false) { }
-
-        explicit stopwatch_reporter( int places, const std::string & format,
+        : m_places(places), m_os(os), m_format(Formatter::default_format), m_reported(false) { }
+        
+        stopwatch_reporter( int places, const std::string & format,
                     system::error_code & ec = system::throws )
         : m_places(places), m_os(Formatter::m_cout()), m_format(format), m_reported(false) { }
-        explicit stopwatch_reporter( std::ostream & os, int places, const std::string & format,
+        
+        stopwatch_reporter( std::ostream & os, const std::string & format, int places,
+                    system::error_code & ec = system::throws )
+        : m_places(places), m_os(os), m_format(format), m_reported(false) { }
+
+        stopwatch_reporter( std::ostream & os, int places, const std::string & format,
                     system::error_code & ec = system::throws )
         : m_places(places), m_os(os), m_format(format), m_reported(false) { }
 
@@ -166,7 +169,6 @@ namespace boost { namespace chrono  {
             
     }
 
-    
 
   } // namespace chrono
 } // namespace boost

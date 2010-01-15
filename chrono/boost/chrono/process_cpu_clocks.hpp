@@ -112,7 +112,7 @@ namespace boost { namespace chrono {
             }
         };
 
-        typedef duration<times,  nano>                duration;
+        typedef boost::chrono::duration<times,  nano>                duration;
         typedef duration::rep                       rep;
         typedef duration::period                    period;
         typedef chrono::time_point<process_cpu_clock>  time_point;
