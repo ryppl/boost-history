@@ -67,7 +67,7 @@ namespace boost { namespace polygon{
     }
 
     template <typename iT>
-    static inline void compute_histogram_in_y(iT begin, iT end, int size, std::vector<std::pair<Unit, std::size_t> >& histogram) {
+    static inline void compute_histogram_in_y(iT begin, iT end, std::size_t size, std::vector<std::pair<Unit, std::pair<std::size_t, std::size_t> > >& histogram) {
       std::vector<std::pair<Unit, int> > ends;
       ends.reserve(size * 2);
       for(iT itr = begin ; itr != end; ++itr) {
@@ -77,47 +77,50 @@ namespace boost { namespace polygon{
       }
       std::sort(ends.begin(), ends.end());
       histogram.reserve(ends.size());
-      histogram.push_back(std::make_pair(ends.front().first, 0));
+      histogram.push_back(std::make_pair(ends.front().first, std::make_pair(0, 0)));
       for(typename std::vector<std::pair<Unit, int> >::iterator itr = ends.begin(); itr != ends.end(); ++itr) {
         if((*itr).first != histogram.back().first) {
           histogram.push_back(std::make_pair((*itr).first, histogram.back().second));
         }
-        histogram.back().second += (*itr).second;
+        if((*itr).second < 0)
+          histogram.back().second.second -= (*itr).second;
+        histogram.back().second.first += (*itr).second;
       }
     }
 
     template <typename iT>
     static inline void compute_y_cuts(std::vector<Unit>& y_cuts, iT begin, iT end, std::size_t size) {
       if(begin == end) return;
-      if(size < 10) return;
+      if(size < 30) return; //30 is empirically chosen, but the algorithm is not sensitive to this constant
       std::size_t min_cut = size;
       iT cut = begin;
       std::size_t position = 0;
       std::size_t cut_size = 0;
+      std::size_t histogram_size = std::distance(begin, end);
       for(iT itr = begin; itr != end; ++itr, ++position) {
-        if(position < size / 3)
+        if(position < histogram_size / 3)
           continue;
-        if(size - position < size / 3) break;
-        if((*itr).second < min_cut) {
+        if(histogram_size - position < histogram_size / 3) break;
+        if((*itr).second.first < min_cut) {
           cut = itr;
-          min_cut = (*cut).second;
+          min_cut = (*cut).second.first;
           cut_size = position;
         }
       }
-      if(cut_size == 0 || (*cut).second > size / 3) 
+      if(cut_size == 0 || (*cut).second.first > size / 9) //nine is empirically chosen
         return;
-      compute_y_cuts(y_cuts, begin, cut, cut_size);
+      compute_y_cuts(y_cuts, begin, cut, (*cut).second.first + (*cut).second.second);
       y_cuts.push_back((*cut).first);
-      compute_y_cuts(y_cuts, cut, end, size - cut_size);
+      compute_y_cuts(y_cuts, cut, end, size - (*cut).second.second);
     }
 
     template <typename iT>
     static inline void validate_scan_divide_and_conquer(std::vector<std::set<Point> >& intersection_points,
                                                         iT begin, iT end) {
-      std::vector<std::pair<Unit, std::size_t> > histogram;
+      std::vector<std::pair<Unit, std::pair<std::size_t, std::size_t> > > histogram;
       compute_histogram_in_y(begin, end, std::distance(begin, end), histogram);
       std::vector<Unit> y_cuts;
-      compute_y_cuts(y_cuts, histogram.begin(), histogram.end(), histogram.size());
+      compute_y_cuts(y_cuts, histogram.begin(), histogram.end(), std::distance(begin, end));
       std::map<Unit, std::vector<std::pair<half_edge, segment_id> > > bins;
       bins[histogram.front().first] = std::vector<std::pair<half_edge, segment_id> >();
       for(typename std::vector<Unit>::iterator itr = y_cuts.begin(); itr != y_cuts.end(); ++itr) {
@@ -149,7 +152,7 @@ namespace boost { namespace polygon{
     template <typename iT>
     static inline void validate_scan(std::vector<std::set<Point> >& intersection_points,
                                      iT begin, iT end, Unit min_y) {
-      std::set<Point> pts;
+      std::vector<Point> pts;
       std::vector<std::pair<half_edge, segment_id> > data(begin, end);
       for(std::size_t i = 0; i < data.size(); ++i) {
         if(data[i].first.second < data[i].first.first) {
@@ -163,11 +166,12 @@ namespace boost { namespace polygon{
           outer != data.end(); ++outer) {
         const half_edge& he1 = (*outer).first;
         //its own end points
-        pts.insert(he1.first);
-        pts.insert(he1.second);
+        pts.push_back(he1.first);
+        pts.push_back(he1.second);
         std::set<Point>& segmentpts = intersection_points[(*outer).second];
         for(typename std::set<Point>::iterator itr = segmentpts.begin(); itr != segmentpts.end(); ++itr) {
-          pts.insert(*itr);
+          if((*itr).y() > min_y - 1)
+            pts.push_back(*itr);
         }
         bool have_first_y = he1.first.y() >= min_y && he1.second.y() >= min_y;
         for(typename std::vector<std::pair<half_edge, segment_id> >::iterator inner = outer;
@@ -186,26 +190,32 @@ namespace boost { namespace polygon{
             Point intersection;
             if(pack_.compute_intersection(intersection, he1, he2)) {
               //their intersection point
-              pts.insert(intersection);
+              pts.push_back(intersection);
             } 
           }
         }
       }
+      std::sort(pts.begin(), pts.end());
+      typename std::vector<Point>::iterator newend = std::unique(pts.begin(), pts.end());
+      typename std::vector<Point>::iterator lfinger = pts.begin();
       //find all segments that interact with intersection points
       for(typename std::vector<std::pair<half_edge, segment_id> >::iterator outer = data.begin();
           outer != data.end(); ++outer) {
         const half_edge& he1 = (*outer).first;
         segment_id id1 = (*outer).second;
         typedef rectangle_data<Unit> Rectangle;
-        Rectangle rect1;
-        set_points(rect1, he1.first, he1.second);
-        typename std::set<Point>::iterator itr = pts.lower_bound((std::min)(he1.first, he1.second));
-        typename std::set<Point>::iterator itr2 = pts.upper_bound((std::max)(he1.first, he1.second));
-        while(itr != pts.end() && itr != pts.begin() && (*itr).get(HORIZONTAL) >= (std::min)(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) --itr;
-        while(itr2 != pts.end() && (*itr2).get(HORIZONTAL) <= (std::max)(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) ++itr2;
+        //Rectangle rect1;
+        //set_points(rect1, he1.first, he1.second);
+        //typename std::vector<Point>::iterator itr = lower_bound(pts.begin(), newend, (std::min)(he1.first, he1.second));
+        //typename std::vector<Point>::iterator itr2 = upper_bound(pts.begin(), newend, (std::max)(he1.first, he1.second));
+        Point startpt = (std::min)(he1.first, he1.second);
+        Point stoppt = (std::max)(he1.first, he1.second);
+        //while(itr != newend && itr != pts.begin() && (*itr).get(HORIZONTAL) >= (std::min)(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) --itr;
+        //while(itr2 != newend && (*itr2).get(HORIZONTAL) <= (std::max)(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) ++itr2;
         //itr = pts.begin();
         //itr2 = pts.end();
-        for( ; itr != itr2; ++itr) {
+        while(lfinger != newend && (*lfinger).x() < startpt.x()) ++lfinger; 
+        for(typename std::vector<Point>::iterator itr = lfinger ; itr != newend && (*itr).x() <= stoppt.x(); ++itr) {
           if(intersects_grid(*itr, he1))
             intersection_points[id1].insert(*itr);
         }
