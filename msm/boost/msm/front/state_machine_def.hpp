@@ -45,8 +45,8 @@ struct state_machine_def :  public state_base<BaseState>
 		typedef T1 Source;
 		typedef T2 Target;
 		typedef Event Evt;
-        template <class FSM,class SourceState,class TargetState>
-        static void action_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        template <class FSM,class SourceState,class TargetState,class AllStates>
+        static void action_call(FSM& fsm,Event const& evt,SourceState&,TargetState&, AllStates&)
         {
             // in this front-end, we don't need to know source and target states
             (fsm.*action)(evt);
@@ -79,14 +79,14 @@ struct state_machine_def :  public state_base<BaseState>
 		typedef T1 Source;
 		typedef T2 Target;
 		typedef Event Evt;
-        template <class FSM,class SourceState,class TargetState>
-        static void action_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        template <class FSM,class SourceState,class TargetState, class AllStates>
+        static void action_call(FSM& fsm,Event const& evt,SourceState&,TargetState&,AllStates&)
         {
             // in this front-end, we don't need to know source and target states
             (fsm.*action)(evt);
         }
-        template <class FSM,class SourceState,class TargetState>
-        static bool guard_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        template <class FSM,class SourceState,class TargetState,class AllStates>
+        static bool guard_call(FSM& fsm,Event const& evt,SourceState&,TargetState&,AllStates&)
         {
             // in this front-end, we don't need to know source and target states
             return (fsm.*guard)(evt);
@@ -104,8 +104,8 @@ struct state_machine_def :  public state_base<BaseState>
 		typedef T1 Source;
 		typedef T2 Target;
 		typedef Event Evt;
-        template <class FSM,class SourceState,class TargetState>
-        static bool guard_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        template <class FSM,class SourceState,class TargetState,class AllStates>
+        static bool guard_call(FSM& fsm,Event const& evt,SourceState&,TargetState&,AllStates&)
         {
             // in this front-end, we don't need to know source and target states
             return (fsm.*guard)(evt);
@@ -123,8 +123,8 @@ struct state_machine_def :  public state_base<BaseState>
 		typedef T1 Source;
 		typedef T1 Target;
 		typedef Event Evt;
-        template <class FSM,class SourceState,class TargetState>
-        static void action_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        template <class FSM,class SourceState,class TargetState,class AllStates>
+        static void action_call(FSM& fsm,Event const& evt,SourceState&,TargetState&,AllStates&)
         {
             // in this front-end, we don't need to know source and target states
             (fsm.*action)(evt);
@@ -143,14 +143,14 @@ struct state_machine_def :  public state_base<BaseState>
 		typedef T1 Source;
 		typedef T1 Target;
 		typedef Event Evt;
-        template <class FSM,class SourceState,class TargetState>
-        static void action_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        template <class FSM,class SourceState,class TargetState,class AllStates>
+        static void action_call(FSM& fsm,Event const& evt,SourceState&,TargetState&,AllStates&)
         {
             // in this front-end, we don't need to know source and target states
             (fsm.*action)(evt);
         }
-        template <class FSM,class SourceState,class TargetState>
-        static bool guard_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        template <class FSM,class SourceState,class TargetState,class AllStates>
+        static bool guard_call(FSM& fsm,Event const& evt,SourceState&,TargetState&,AllStates&)
         {
             // in this front-end, we don't need to know source and target states
             return (fsm.*guard)(evt);
@@ -167,8 +167,8 @@ struct state_machine_def :  public state_base<BaseState>
 		typedef T1 Source;
 		typedef T1 Target;
 		typedef Event Evt;
-        template <class FSM,class SourceState,class TargetState>
-        static bool guard_call(FSM& fsm,Event const& evt,SourceState&,TargetState&)
+        template <class FSM,class SourceState,class TargetState,class AllStates>
+        static bool guard_call(FSM& fsm,Event const& evt,SourceState&,TargetState&,AllStates&)
         {
             // in this front-end, we don't need to know source and target states
             return (fsm.*guard)(evt);

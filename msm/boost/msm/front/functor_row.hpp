@@ -34,14 +34,14 @@ namespace boost { namespace msm { namespace front
         typedef GUARD   Guard;
         // action plus guard
         typedef row_tag row_type_tag;
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt, AllStates&)
         {
             // create functor, call it
             Action()(evt,fsm,src,tgt);
         }
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt,AllStates&)
         {
             // create functor, call it
             return Guard()(evt,fsm,src,tgt);
@@ -69,8 +69,8 @@ namespace boost { namespace msm { namespace front
         typedef none    Guard;
         // no guard
         typedef a_row_tag row_type_tag;
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt, AllStates&)
         {
             // create functor, call it
             Action()(evt,fsm,src,tgt);
@@ -86,8 +86,8 @@ namespace boost { namespace msm { namespace front
         typedef GUARD   Guard;
         // no action
         typedef g_row_tag row_type_tag;
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt, AllStates&)
         {
             // create functor, call it
             return Guard()(evt,fsm,src,tgt);
@@ -104,8 +104,8 @@ namespace boost { namespace msm { namespace front
         typedef none    Guard;
         // no guard
         typedef a_irow_tag row_type_tag;
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt, AllStates&)
         {
             // create functor, call it
             Action()(evt,fsm,src,tgt);
@@ -121,8 +121,8 @@ namespace boost { namespace msm { namespace front
         typedef GUARD   Guard;
         // no action
         typedef g_irow_tag row_type_tag;
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt, AllStates&)
         {
             // create functor, call it
             return Guard()(evt,fsm,src,tgt);
@@ -138,14 +138,14 @@ namespace boost { namespace msm { namespace front
         typedef GUARD   Guard;
         // action + guard
         typedef irow_tag row_type_tag;
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt, AllStates&)
         {
             // create functor, call it
             Action()(evt,fsm,src,tgt);
         }
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt, AllStates&)
         {
             // create functor, call it
             return Guard()(evt,fsm,src,tgt);
@@ -165,14 +165,14 @@ namespace boost { namespace msm { namespace front
         typedef GUARD   Guard;
         // action plus guard
         typedef sm_i_row_tag row_type_tag;
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt, AllStates&)
         {
             // create functor, call it
             Action()(evt,fsm,src,tgt);
         }
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt, AllStates&)
         {
             // create functor, call it
             return Guard()(evt,fsm,src,tgt);
@@ -187,8 +187,8 @@ namespace boost { namespace msm { namespace front
         typedef none    Guard;
         // no guard
         typedef sm_a_i_row_tag row_type_tag;
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static void action_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt, AllStates&)
         {
             // create functor, call it
             Action()(evt,fsm,src,tgt);
@@ -202,8 +202,8 @@ namespace boost { namespace msm { namespace front
         typedef GUARD   Guard;
         // no action
         typedef sm_g_i_row_tag row_type_tag;
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt)
+        template <class EVT,class FSM,class SourceState,class TargetState,class AllStates>
+        static bool guard_call(FSM& fsm,EVT const& evt,SourceState& src,TargetState& tgt, AllStates&)
         {
             // create functor, call it
             return Guard()(evt,fsm,src,tgt);
