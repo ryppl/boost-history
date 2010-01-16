@@ -1,4 +1,4 @@
-//  boost/chrono/timer.hpp  ------------------------------------------------------------//
+//  boost/chrono/stopwatch_scoped.hpp  ------------------------------------------------------------//
 
 //  Copyright 2009-2010 Vicente J. Botet Escriba
 
@@ -24,7 +24,7 @@ namespace boost
     template <class Stopwatch> class stopwatch_runner {
     public:
         typedef Stopwatch stopwatch_type;
-        stopwatch_runner(stopwatch_type & a, system::error_code & ec = system::throws) 
+        stopwatch_runner(stopwatch_type & a, system::error_code & ec = system::throws)
         : stopwatch_(a) {
             stopwatch_.start(ec);
         }
@@ -32,12 +32,12 @@ namespace boost
             system::error_code ec;
             stopwatch_.stop(ec);
         }
-#if 0        
+#if 0
         typename Stopwatch::duration elapsed(system::error_code & ec = system::throws)
         {
             return stopwatch_.elapsed(ec)-stopwatch_.accumulated();
         }
-#endif        
+#endif
     private:
         stopwatch_type& stopwatch_;
         stopwatch_runner();//= delete;
@@ -50,7 +50,7 @@ namespace boost
     template <class Stopwatch> class stopwatch_suspender {
     public:
         typedef Stopwatch stopwatch_type;
-        stopwatch_suspender(stopwatch_type & a, system::error_code & ec = system::throws)  
+        stopwatch_suspender(stopwatch_type & a, system::error_code & ec = system::throws)
         : stopwatch_(a) {
             stopwatch_.suspend(ec);
         }
@@ -69,7 +69,7 @@ namespace boost
     template <class Stopwatch> class stopwatch_resumer {
     public:
         typedef Stopwatch stopwatch_type;
-        stopwatch_resumer(stopwatch_type & a, system::error_code & ec = system::throws)  
+        stopwatch_resumer(stopwatch_type & a, system::error_code & ec = system::throws)
         : stopwatch_(a) {
             stopwatch_.resume(ec);
         }
@@ -81,10 +81,10 @@ namespace boost
         stopwatch_type& stopwatch_;
         stopwatch_resumer(); // = delete;
         stopwatch_resumer(const stopwatch_resumer&); // = delete;
-        stopwatch_resumer& operator=(const stopwatch_resumer&); // = delete;        
+        stopwatch_resumer& operator=(const stopwatch_resumer&); // = delete;
     };
-    
-    
+
+
   } // namespace chrono
 } // namespace boost
 

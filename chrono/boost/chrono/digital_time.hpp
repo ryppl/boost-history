@@ -1,4 +1,4 @@
-//  boost digital_time.hpp  -----------------------------------------------------------//
+//  boost/chrono/digital_time.hpp  -----------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 
@@ -53,7 +53,7 @@ public:
     static nanoseconds get_nanoseconds(const boost::chrono::duration<Rep, Period>& d) {
         return boost::chrono::duration_cast<nanoseconds>(d % seconds(1));
     };
-    
+
     template <class Rep, class Period>
         explicit digital_time(const boost::chrono::duration<Rep, Period>& d)
         : days_  (get_days(d))

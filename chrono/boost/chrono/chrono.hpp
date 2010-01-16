@@ -2,7 +2,7 @@
 
 //  Copyright 2008 Howard Hinnant
 //  Copyright 2008 Beman Dawes
-//  Copyright 2009 Vicente J. Botet Escriba
+//  Copyright 2009-2010 Vicente J. Botet Escriba
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -169,7 +169,7 @@ namespace chrono {
         : duration_divide_imp<duration<Rep1, Period>, Rep2>
     {
     };
-    
+
 ///
     template <class Duration, class Rep, bool = is_duration<Rep>::value>
     struct duration_modulo_result
@@ -180,7 +180,7 @@ namespace chrono {
         bool = (
                     //boost::is_convertible<typename Duration::rep,
                         //typename common_type<typename Duration::rep, Rep2>::type>::value
-                //&&  
+                //&&
     boost::is_convertible<Rep2,
                         typename common_type<typename Duration::rep, Rep2>::type>::value
                 )
@@ -200,7 +200,7 @@ namespace chrono {
         : duration_modulo_imp<duration<Rep1, Period>, Rep2>
     {
     };
-    
+
   } // namespace detail
 } // namespace chrono
 
@@ -697,7 +697,7 @@ namespace chrono {
     r %= static_cast<CR>(s);
     return r;
   }
-  
+
   template <class Rep1, class Period1, class Rep2, class Period2>
   typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
   operator%(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs) {

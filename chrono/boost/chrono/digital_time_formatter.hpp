@@ -1,6 +1,6 @@
-//  boost/chrono/timer.hpp  ------------------------------------------------------------//
+//  boost/chrono/digital_time_formatter.hpp  ------------------------------------------------------------//
 
-//  Copyright 2009-2010 Vicente J. Botet Escriba
+//  Copyright 2010 Vicente J. Botet Escriba
 
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -35,7 +35,7 @@ namespace boost { namespace chrono  {
         static const char * default_format;
         static int default_places() { return m_default_places; }
 
-        template <class Stopwatch > 
+        template <class Stopwatch >
         static void show_time( Stopwatch & stopwatch_
             , const char * format, int places, std::ostream & os
             , system::error_code & ec)
@@ -44,7 +44,7 @@ namespace boost { namespace chrono  {
         {
             typedef typename Stopwatch::duration duration;
             duration d = stopwatch_.elapsed( ec );
-          
+
             if ( d < duration(0) ) return;
 
             boost::io::ios_flags_saver ifs( os );
@@ -62,7 +62,7 @@ namespace boost { namespace chrono  {
                     case 'd':
                         os << dt.days_.count();
                         break;
-                    case 'h': 
+                    case 'h':
                     {
                         boost::io::ios_flags_saver ifs( os );
                         os.width(2); os.fill('0');
@@ -96,9 +96,9 @@ namespace boost { namespace chrono  {
                 }
             }
         }
-    };  
+    };
     const char * digital_time_formatter::default_format ="\n%d days(s) %h:%m:%s.%n\n";
-    
+
     std::ostream &  digital_time_formatter::m_cout()  { return std::cout; }
 
   } // namespace chrono

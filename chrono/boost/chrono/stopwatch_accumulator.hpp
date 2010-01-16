@@ -1,4 +1,4 @@
-//  boost/chrono/timer.hpp  ------------------------------------------------------------//
+//  boost/chrono/stopwatch_accumulator.hpp  ------------------------------------------------------------//
 
 //  Copyright 2009-2010 Vicente J. Botet Escriba
 
@@ -46,23 +46,23 @@ namespace boost
 //--------------------------------------------------------------------------------------//
 
     // forward declaration
-    template <class Clock=high_resolution_clock, 
+    template <class Clock=high_resolution_clock,
         class Accumulator=accumulators::accumulator_set<typename Clock::duration::rep,
-                    accumulators::features< 
-                        accumulators::tag::count, 
-                        accumulators::tag::sum, 
-                        accumulators::tag::min, 
-                        accumulators::tag::max, 
+                    accumulators::features<
+                        accumulators::tag::count,
+                        accumulators::tag::sum,
+                        accumulators::tag::min,
+                        accumulators::tag::max,
                         accumulators::tag::mean >
-        > 
+        >
     >
     class stopwatch_accumulator;
-       
-    template <class Clock> 
+
+    template <class Clock>
     struct stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock> > {
         typedef stopwatch_accumulator_formatter type;
     };
-      
+
 //--------------------------------------------------------------------------------------//
     template <class Clock, class Accumulator>
     class stopwatch_accumulator
@@ -75,7 +75,7 @@ namespace boost
 
         stopwatch_accumulator( )
         : running_(false), partial_(0)
-        { 
+        {
         }
 
         std::pair<duration, time_point>  restart( system::error_code & ec = system::throws ) {
@@ -84,7 +84,7 @@ namespace boost
             if (running_&&(--level_==0)) {
                 partial_ += tmp - start_;
                 accumulated_(partial_.count());
-                partial_=duration(0);                
+                partial_=duration(0);
             } else {
                 running_=true;
             }
@@ -172,8 +172,8 @@ namespace boost
 
         typedef stopwatch_runner<stopwatch_accumulator<Clock> > scoped_run;
         typedef stopwatch_suspender<stopwatch_accumulator<Clock> > scoped_suspend;
-        typedef stopwatch_resumer<stopwatch_accumulator<Clock> > scoped_resume;        
-        typedef stopwatch_reporter<stopwatch_accumulator<Clock> > reporter;        
+        typedef stopwatch_resumer<stopwatch_accumulator<Clock> > scoped_resume;
+        typedef stopwatch_reporter<stopwatch_accumulator<Clock> > reporter;
     private:
         bool running_;
         bool suspended_;
@@ -192,8 +192,8 @@ namespace boost
     typedef boost::chrono::stopwatch_accumulator< boost::chrono::high_resolution_clock > high_resolution_stopwatch_accumulator;
 
 //--------------------------------------------------------------------------------------//
-    
-    
+
+
   } // namespace chrono
 } // namespace boost
 

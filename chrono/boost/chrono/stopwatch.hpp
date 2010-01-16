@@ -1,4 +1,4 @@
-//  boost/chrono/timer.hpp  ------------------------------------------------------------//
+//  boost/chrono/stopwatch.hpp  ------------------------------------------------------------//
 
 //  Copyright 2009-2010 Vicente J. Botet Escriba
 
@@ -41,12 +41,12 @@ namespace boost
 
     template <class Clock=high_resolution_clock>
     class stopwatch;
-      
-    template <class Clock> 
+
+    template <class Clock>
     struct stopwatch_reporter_default_formatter<stopwatch<Clock> > {
         typedef stopwatch_formatter type;
     };
-      
+
     struct dont_start_t{};
     static const dont_start_t dont_start = {};
     template <class Clock>
@@ -86,7 +86,7 @@ namespace boost
                 if (ec) return duration(0);
                 partial_ += tmp - start_;
                 duration frozen= partial_;
-                partial_=duration(0);                
+                partial_=duration(0);
                 running_=false;
                 return frozen;
             } else {
@@ -101,7 +101,7 @@ namespace boost
             if (running_&&(--level_==0)) {
                 partial_ += tmp - start_;
                 frozen = partial_;
-                partial_=duration(0);                
+                partial_=duration(0);
             } else {
                 frozen = duration(0);
                 running_=true;
@@ -138,7 +138,7 @@ namespace boost
                 return time_point();
             }
         }
-        
+
         duration elapsed( system::error_code & ec = system::throws )
         {
             return clock::now( ec ) - start_;
@@ -152,9 +152,9 @@ namespace boost
 
         typedef stopwatch_runner<stopwatch<Clock> > scoped_run;
         typedef stopwatch_suspender<stopwatch<Clock> > scoped_suspend;
-        typedef stopwatch_resumer<stopwatch<Clock> > scoped_resume;        
-        typedef stopwatch_reporter<stopwatch<Clock> > reporter;        
-        
+        typedef stopwatch_resumer<stopwatch<Clock> > scoped_resume;
+        typedef stopwatch_reporter<stopwatch<Clock> > reporter;
+
     private:
         bool running_;
         bool suspended_;
@@ -162,7 +162,7 @@ namespace boost
         std::size_t level_;
         duration partial_;
         std::size_t suspend_level_;
-    
+
     };
 
 //--------------------------------------------------------------------------------------//
@@ -172,8 +172,8 @@ namespace boost
 #endif
     typedef boost::chrono::stopwatch< boost::chrono::high_resolution_clock > high_resolution_stopwatch;
 
-    
-    
+
+
   } // namespace chrono
 } // namespace boost
 

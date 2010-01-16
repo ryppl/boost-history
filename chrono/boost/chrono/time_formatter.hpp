@@ -1,4 +1,4 @@
-//  boost/chrono/timer.hpp  ------------------------------------------------------------//
+//  boost/chrono/time_formatter.hpp  ------------------------------------------------------------//
 
 //  Copyright 2009-2010 Vicente J. Botet Escriba
 
@@ -35,7 +35,7 @@ namespace boost { namespace chrono  {
         static const char * default_format;
         static int default_places() { return m_default_places; }
 
-        template <class Stopwatch > 
+        template <class Stopwatch >
         static void show_time( Stopwatch & stopwatch_
             , const char * format, int places, std::ostream & os
             , system::error_code & ec)
@@ -45,7 +45,7 @@ namespace boost { namespace chrono  {
             typedef typename Stopwatch::duration duration;
             typedef typename duration::rep rep;
             duration d = stopwatch_.elapsed( ec );
-            rep times=d.count();  
+            rep times=d.count();
             if ( times.real < 0 ) return;
             if ( places > 9 )
               places = 9;  // sanity check
@@ -98,17 +98,17 @@ namespace boost { namespace chrono  {
             }
           }
 
-    };  
+    };
     const char * time_formatter::default_format = "\nreal %rs, cpu %cs (%p%), user %us, system %ss\n";
 
-    
+
     std::ostream &  time_formatter::m_cout()  { return std::cout; }
-    
-    template <> 
+
+    template <>
     struct stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> > {
         typedef time_formatter type;
     };
-    
+
 
   } // namespace chrono
 } // namespace boost

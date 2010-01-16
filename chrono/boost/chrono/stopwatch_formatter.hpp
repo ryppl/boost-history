@@ -1,4 +1,4 @@
-//  boost/chrono/timer.hpp  ------------------------------------------------------------//
+//  boost/chrono/stopwatch_formatter.hpp  ------------------------------------------------------------//
 
 //  Copyright 2009-2010 Vicente J. Botet Escriba
 
@@ -35,14 +35,14 @@ namespace boost { namespace chrono  {
         static const char * default_format;
         static int default_places() { return m_default_places; }
 
-        template <class Stopwatch > 
+        template <class Stopwatch >
         static void show_time( Stopwatch & stopwatch_, const char * format, int places, std::ostream & os, system::error_code & ec)
         //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
         //  be as low as 10, although will be 15 for many common platforms.
         {
             typedef typename Stopwatch::duration duration;
             duration d = stopwatch_.elapsed( ec );
-          
+
             if ( d < duration(0) ) return;
             if ( places > 9 )
                 places = 9;  // sanity check
@@ -69,9 +69,9 @@ namespace boost { namespace chrono  {
                 }
             }
         }
-    };  
+    };
     const char * stopwatch_formatter::default_format ="\n%ds\n";
-    
+
     std::ostream &  stopwatch_formatter::m_cout()  { return std::cout; }
 
   } // namespace chrono

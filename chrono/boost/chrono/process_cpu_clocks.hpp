@@ -1,4 +1,4 @@
-//  boost process_cpu_clocks.hpp  -----------------------------------------------------------//
+//  boost/chrono/process_cpu_clocks.hpp  -----------------------------------------------------------//
 
 //  Copyright 2009-2010 Vicente J. Botet Escriba
 
@@ -56,7 +56,7 @@ namespace boost { namespace chrono {
     public:
         struct times : arithmetic<times>, less_than_comparable<times>
         {
-            times() 
+            times()
                 : real(0)
                 , user(0)
                 , system(0){}
@@ -67,7 +67,7 @@ namespace boost { namespace chrono {
                 : real(r)
                 , user(u)
                 , system(s){}
-            
+
             process_real_cpu_clock::rep   real;    // real (i.e wall clock) time
             process_user_cpu_clock::rep   user;    // user cpu time
             process_system_cpu_clock::rep system;  // system cpu time
@@ -77,7 +77,7 @@ namespace boost { namespace chrono {
                         user==rhs.user &&
                         system==rhs.system);
             }
-                    
+
             times operator+=(times const& rhs) {
                 real+=rhs.real;
                 user+=rhs.user;
@@ -102,7 +102,7 @@ namespace boost { namespace chrono {
                 system/=rhs.system;
                 return *this;
             }
-            bool operator<(times const & rhs) const { 
+            bool operator<(times const & rhs) const {
                 if (real < rhs.real) return true;
                 if (real > rhs.real) return false;
                 if (user < rhs.user) return true;
@@ -138,7 +138,7 @@ namespace boost { namespace chrono {
                       (std::numeric_limits<process_system_cpu_clock::rep>::min)());
         }
     };
-    
+
 } // namespace chrono
 } // namespace boost
 
