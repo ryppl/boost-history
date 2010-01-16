@@ -4,6 +4,7 @@
 //front-end
 #include <boost/msm/front/state_machine_def.hpp>
 #include <boost/msm/front/functor_row.hpp>
+#include <boost/msm/front/internal_row.hpp>
 
 namespace msm = boost::msm;
 using namespace msm::front;
@@ -40,11 +41,38 @@ namespace
     // front-end: define the FSM structure 
     struct player_ : public msm::front::state_machine_def<player_>
     {
+        // transition actions
+        void start_playback(play const&)       { std::cout << "player::start_playback\n"; }
+        void open_drawer(open_close const&)    { std::cout << "player::open_drawer\n"; }
+        void close_drawer(open_close const&)   { std::cout << "player::close_drawer\n"; }
+        void store_cd_info(cd_detected const&) { std::cout << "player::store_cd_info\n"; }
+        void stop_playback(stop const&)        { std::cout << "player::stop_playback\n"; }
+        void pause_playback(pause const&)      { std::cout << "player::pause_playback\n"; }
+        void resume_playback(end_pause const&)      { std::cout << "player::resume_playback\n"; }
+        void stop_and_open(open_close const&)  { std::cout << "player::stop_and_open\n"; }
+        void stopped_again(stop const&)	       {std::cout << "player::stopped_again\n";}
+        // guard conditions
+        bool good_disk_format(cd_detected const& evt)
+        {
+            // to test a guard condition, let's say we understand only CDs, not DVD
+            if (evt.disc_type != DISK_CD)
+            {
+                std::cout << "wrong disk, sorry" << std::endl;
+                return false;
+            }
+            return true;
+        }
         // transitions internal to Empty
         void internal_action(cd_detected const&){ std::cout << "Empty::internal action\n"; }
         bool internal_guard(cd_detected const&)
         {
             std::cout << "Empty::internal guard\n";
+            return false;
+        }
+        void internal_action(internal_event const&){ std::cout << "Playing::internal action\n"; }
+        bool internal_guard(internal_event const&)
+        {
+            std::cout << "Playing::internal guard\n";
             return false;
         }
         struct internal_guard_fct 
@@ -140,7 +168,7 @@ namespace
                 template <class EVT,class FSM,class SourceState,class TargetState>
                 bool operator()(EVT const& evt ,FSM&,SourceState& ,TargetState& )
                 {
-                    std::cout << "Playing::internal guard\n";
+                    std::cout << "Playing::internal guard fct\n";
                     return true;
                 }
             };
@@ -179,7 +207,9 @@ namespace
                 //    Start     Event            Next      Action				 Guard
              Internal <         internal_event           , playing_internal_fct,playing_internal_guard >,
                 // conflict between internal and the external defined above
-             Internal <         PreviousSong             , playing_internal_fct,playing_false_guard    >
+             Internal <         PreviousSong             , playing_internal_fct,playing_false_guard    >,
+             internal <         internal_event           , player_,&player_::internal_action,
+                                                           player_,&player_::internal_guard            >
                 //  +---------+----------------+---------+---------------------+-----------------------+
             > {};        
 
@@ -201,28 +231,6 @@ namespace
 
         // the initial state of the player SM. Must be defined
         typedef Empty initial_state;
-
-        // transition actions
-        void start_playback(play const&)       { std::cout << "player::start_playback\n"; }
-        void open_drawer(open_close const&)    { std::cout << "player::open_drawer\n"; }
-        void close_drawer(open_close const&)   { std::cout << "player::close_drawer\n"; }
-        void store_cd_info(cd_detected const&) { std::cout << "player::store_cd_info\n"; }
-        void stop_playback(stop const&)        { std::cout << "player::stop_playback\n"; }
-        void pause_playback(pause const&)      { std::cout << "player::pause_playback\n"; }
-        void resume_playback(end_pause const&)      { std::cout << "player::resume_playback\n"; }
-        void stop_and_open(open_close const&)  { std::cout << "player::stop_and_open\n"; }
-        void stopped_again(stop const&)	       {std::cout << "player::stopped_again\n";}
-        // guard conditions
-        bool good_disk_format(cd_detected const& evt)
-        {
-            // to test a guard condition, let's say we understand only CDs, not DVD
-            if (evt.disc_type != DISK_CD)
-            {
-                std::cout << "wrong disk, sorry" << std::endl;
-                return false;
-            }
-            return true;
-        }
 
         typedef player_ p; // makes transition table cleaner
 
