@@ -11,8 +11,8 @@
 #define BOOST_CHRONO_STOPWATCH_FORMATTER_HPP
 
 #include <boost/chrono/chrono.hpp>
-//#include <boost/chrono/stopwatch.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/current_function.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
 #include <iostream>
@@ -30,9 +30,15 @@ namespace boost { namespace chrono  {
 
     class stopwatch_formatter {
     public:
-        static std::ostream &  m_cout();
+        static std::ostream &  default_os();
         static const int m_default_places = 3;
-        static const char * default_format;
+        static const char * m_default_format;
+        static const char* default_format() { return m_default_format; }
+        static std::string format(const char* s) {
+            std::string res(s);
+            res += " tokes %ds\n";
+            return res;
+        }
         static int default_places() { return m_default_places; }
 
         template <class Stopwatch >
@@ -70,12 +76,19 @@ namespace boost { namespace chrono  {
             }
         }
     };
-    const char * stopwatch_formatter::default_format ="\n%ds\n";
+    const char * stopwatch_formatter::m_default_format ="%ds\n";
 
-    std::ostream &  stopwatch_formatter::m_cout()  { return std::cout; }
+    std::ostream &  stopwatch_formatter::default_os()  { return std::cout; }
 
   } // namespace chrono
 } // namespace boost
+
+#define BOOST_CHRONO_STOPWATCH_FORMAT(F) F " tokes %ds\n"
+#ifdef __GNUC__
+#define BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT boost::chrono::stopwatch_formatter::format(BOOST_CURRENT_FUNCTION)
+#else
+#define BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT BOOST_CHRONO_STOPWATCH_FORMAT(BOOST_CURRENT_FUNCTION)
+#endif
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 

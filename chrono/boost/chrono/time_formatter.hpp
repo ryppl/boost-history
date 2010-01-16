@@ -12,6 +12,7 @@
 
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
+#include <boost/current_function.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
@@ -22,6 +23,8 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
+
+
 namespace boost { namespace chrono  {
 
 //--------------------------------------------------------------------------------------//
@@ -30,9 +33,15 @@ namespace boost { namespace chrono  {
 
     class time_formatter {
     public:
-        static std::ostream &  m_cout();
+        static std::ostream &  default_os();
         static const int m_default_places = 3;
-        static const char * default_format;
+        static const char* m_default_format;
+        static const char* default_format() { return m_default_format; }
+        static std::string format(const char* s) {
+            std::string res(s);
+            res += " spent real %rs, cpu %cs (%p%), user %us, system %ss\n";
+            return res;
+        }
         static int default_places() { return m_default_places; }
 
         template <class Stopwatch >
@@ -99,10 +108,9 @@ namespace boost { namespace chrono  {
           }
 
     };
-    const char * time_formatter::default_format = "\nreal %rs, cpu %cs (%p%), user %us, system %ss\n";
+    const char * time_formatter::m_default_format = "real %rs, cpu %cs (%p%), user %us, system %ss\n";
 
-
-    std::ostream &  time_formatter::m_cout()  { return std::cout; }
+    std::ostream &  time_formatter::default_os()  { return std::cout; }
 
     template <>
     struct stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> > {
@@ -112,6 +120,13 @@ namespace boost { namespace chrono  {
 
   } // namespace chrono
 } // namespace boost
+
+#define BOOST_CHRONO_TIME_FORMAT(F) F" spent real %rs, cpu %cs (%p%), user %us, system %ss\n"
+#ifdef __GNUC__
+#define BOOST_CHRONO_TIME_FUNCTION_FORMAT boost::chrono::time_formatter::format(BOOST_CURRENT_FUNCTION)
+#else
+#define BOOST_CHRONO_TIME_FUNCTION_FORMAT BOOST_CHRONO_TIME_FORMAT(BOOST_CURRENT_FUNCTION)
+#endif
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
