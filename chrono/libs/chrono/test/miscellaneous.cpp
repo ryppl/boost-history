@@ -152,7 +152,7 @@ int main()
     inspect_duration(milliseconds(3) * 2.5, "milliseconds(3) * 2.5");
     std::cout << d.count() << '\n';
 //    milliseconds ms(3.5);  // doesn't compile
-    std::cout << "milliseconds ms(3.5) doesn't compile\n";
+//    std::cout << "milliseconds ms(3.5) doesn't compile\n";
     return 0;
 }
 

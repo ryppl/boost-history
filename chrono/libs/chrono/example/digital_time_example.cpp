@@ -1,4 +1,4 @@
-//  stopwatch_example.cpp  ---------------------------------------------------//
+//  digital_time_example.cpp  ---------------------------------------------------//
 
 //  Copyright Beman Dawes 2006, 2008
 
@@ -8,13 +8,17 @@
 //  See http://www.boost.org/libs/chrono for documentation.
 
 #include <boost/chrono/stopwatch.hpp>
+#include <boost/chrono/stopwatch_reporter.hpp>
+#include <boost/chrono/process_cpu_clocks.hpp>
+#include <boost/chrono/digital_time_formatter.hpp>
 #include <cmath>
+
 
 using namespace boost::chrono;
 int f1(long j)
 {
-  stopwatch<>::reporter x("\nf1 %ds\n");
-  
+  stopwatch_reporter<stopwatch<process_real_cpu_clock>, digital_time_formatter> hhmmss;   
+
   for ( long i = 0; i < j; ++i )
     std::sqrt( 123.456L );  // burn some time
 
@@ -22,7 +26,7 @@ int f1(long j)
 }
 int main()
 {
-  stopwatch<>::reporter _("\nMain %ds\n");
+  stopwatch_reporter<stopwatch<process_real_cpu_clock>, digital_time_formatter> hhmmss();   
 
   f1(100000);
   f1(200000);

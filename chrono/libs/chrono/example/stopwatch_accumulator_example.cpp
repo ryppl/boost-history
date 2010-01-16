@@ -1,4 +1,4 @@
-//  stopwatch_example.cpp  ---------------------------------------------------//
+//  stopwatch_accumulator_example.cpp  ---------------------------------------------------//
 
 //  Copyright Beman Dawes 2006, 2008
 
@@ -7,14 +7,18 @@
 
 //  See http://www.boost.org/libs/chrono for documentation.
 
-#include <boost/chrono/stopwatch.hpp>
+#include <boost/chrono/stopwatch_accumulator.hpp>
+#include <boost/chrono/process_cpu_clocks.hpp>
 #include <cmath>
+
 
 using namespace boost::chrono;
 int f1(long j)
 {
-  stopwatch<>::reporter x("\nf1 %ds\n");
-  
+  static stopwatch_accumulator<process_real_cpu_clock>::reporter acc(
+    "\nf1 Count=%c times Sum=%ss Min=%ms Max=%Ms Mean=%as\n");
+  stopwatch_accumulator<process_real_cpu_clock>::reporter::scoped_run _(acc);
+
   for ( long i = 0; i < j; ++i )
     std::sqrt( 123.456L );  // burn some time
 
@@ -22,7 +26,6 @@ int f1(long j)
 }
 int main()
 {
-  stopwatch<>::reporter _("\nMain %ds\n");
 
   f1(100000);
   f1(200000);

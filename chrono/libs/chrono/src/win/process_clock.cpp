@@ -25,7 +25,7 @@ namespace boost
   namespace chrono
   {
 
-    void process_clocks::now( process_times & times_, system::error_code & ec )
+    void process_clock::now( process_times & times_, system::error_code & ec )
     {
 
       //  note that Windows uses 100 nanosecond ticks for FILETIME

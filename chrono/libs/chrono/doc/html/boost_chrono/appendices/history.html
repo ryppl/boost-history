@@ -27,7 +27,7 @@
 <a name="boost_chrono.appendices.history"></a><a href="history.html" title=" Appendix A: History"> Appendix A: History</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_3_0__january_9__2010____new_stopwatch_feature___bug_fixes_"><span class="bold"><strong>Version 0.3.0, January 9, 2010</strong></span> <span class="emphasis"><em>New stopwatch
+<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_3_0__january_15__2010____new_stopwatch_stopclock_feature___bug_fixes_"><span class="bold"><strong>Version 0.3.0, January 15, 2010</strong></span> <span class="emphasis"><em>New stopwatch/stopclock
         feature + Bug fixes</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_2_1__december_13__2009____bug_fixes_"><span class="bold"><strong>Version 0.2.1, December 13, 2009</strong></span> <span class="emphasis"><em>Bug fixes</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_2_0__december_8__2009______features___bug_fixes___updated_documentation_"><span class="bold"><strong>Version 0.2.0, December 8, 2009</strong></span> <span class="emphasis"><em>+ Features
@@ -37,8 +37,8 @@
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.appendices.history.__version_0_3_0__january_9__2010____new_stopwatch_feature___bug_fixes_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_3_0__january_9__2010____new_stopwatch_feature___bug_fixes_" title="Version 0.3.0, January 9, 2010 New stopwatch
-        feature + Bug fixes"><span class="bold"><strong>Version 0.3.0, January 9, 2010</strong></span> <span class="emphasis"><em>New stopwatch
+<a name="boost_chrono.appendices.history.__version_0_3_0__january_15__2010____new_stopwatch_stopclock_feature___bug_fixes_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_3_0__january_15__2010____new_stopwatch_stopclock_feature___bug_fixes_" title="Version 0.3.0, January 15, 2010 New stopwatch/stopclock
+        feature + Bug fixes"><span class="bold"><strong>Version 0.3.0, January 15, 2010</strong></span> <span class="emphasis"><em>New stopwatch/stopclock
         feature + Bug fixes</em></span></a>
 </h4></div></div></div>
 <p>
@@ -96,6 +96,9 @@
             for the Stopwatch concept.
           </li>
 <li>
+            Added stopclock&lt;Clock&gt; shortcut stopwatch_reporter&lt;stopwatch&lt;Clcok&gt;&gt;
+          </li>
+<li>
             The old classes process_times, process_clock, process_timer, timer and
             run_timer are deprecated as the preceding additions are more generic.
             However for backward compatibility they preserved until inclusion of
@@ -108,8 +111,7 @@
                 process_timer ~ stopwatch&lt;process_cpu_clock&gt;
               </li>
 <li>
-                run_timer ~ stopwatch_reporter&lt;stopwatch&lt;process_cpu_clock&gt;,
-                time_formatter&gt;
+                run_timer ~ stopclock&lt;&gt;
               </li>
 </ul></div>
 </li>

@@ -1,4 +1,4 @@
-//  boost process_stopwatches_reporter.cpp  ---------------------------------------------------------------//
+//  boost run_timer.cpp  ---------------------------------------------------------------//
 
 //  Copyright Beman Dawes 1994, 2006, 2008
 //  Copyright 2009-2010 Vicente J. Botet Escriba
@@ -93,43 +93,43 @@ namespace boost
   {
   
 
-      process_stopwatches_reporter::process_stopwatches_reporter( system::error_code & ec  )
+      run_timer::run_timer( system::error_code & ec  )
         : m_places(m_default_places), m_os(m_cout()) { start(ec); }
-      process_stopwatches_reporter::process_stopwatches_reporter( std::ostream & os,
+      run_timer::run_timer( std::ostream & os,
         system::error_code & ec  )
         : m_places(m_default_places), m_os(os) { start(ec); }
 
-      process_stopwatches_reporter::process_stopwatches_reporter( const std::string & format,
+      run_timer::run_timer( const std::string & format,
         system::error_code & ec  )
         : m_places(m_default_places), m_os(m_cout()), m_format(format) { start(ec); }
-      process_stopwatches_reporter::process_stopwatches_reporter( std::ostream & os, const std::string & format,
+      run_timer::run_timer( std::ostream & os, const std::string & format,
         system::error_code & ec  )
         : m_places(m_default_places), m_os(os), m_format(format) { start(ec); }
 
-      process_stopwatches_reporter::process_stopwatches_reporter( const std::string & format, int places,
+      run_timer::run_timer( const std::string & format, int places,
         system::error_code & ec  )
         : m_places(places), m_os(m_cout()), m_format(format) { start(ec); }
-      process_stopwatches_reporter::process_stopwatches_reporter( std::ostream & os, const std::string & format,
+      run_timer::run_timer( std::ostream & os, const std::string & format,
         int places, system::error_code & ec  )
         : m_places(places), m_os(os), m_format(format) { start(ec); }
 
-      process_stopwatches_reporter::process_stopwatches_reporter( int places,
+      run_timer::run_timer( int places,
         system::error_code & ec  )
         : m_places(places), m_os(m_cout()) { start(ec); }
-      process_stopwatches_reporter::process_stopwatches_reporter( std::ostream & os, int places,
+      run_timer::run_timer( std::ostream & os, int places,
         system::error_code & ec  )
         : m_places(places), m_os(os) { start(ec); }
 
-      process_stopwatches_reporter::process_stopwatches_reporter( int places, const std::string & format,
+      run_timer::run_timer( int places, const std::string & format,
         system::error_code & ec  )
         : m_places(places), m_os(m_cout()), m_format(format) { start(ec); }
-      process_stopwatches_reporter::process_stopwatches_reporter( std::ostream & os, int places, const std::string & format,
+      run_timer::run_timer( std::ostream & os, int places, const std::string & format,
         system::error_code & ec  )
         : m_places(places), m_os(os), m_format(format) { start(ec); }
 
-    //  process_stopwatches_reporter::report  -------------------------------------------------------------//
+    //  run_timer::report  -------------------------------------------------------------//
 
-    void process_stopwatches_reporter::report( system::error_code & ec )
+    void run_timer::report( system::error_code & ec )
     {
       m_reported = true;
       if ( m_format.empty() ) m_format = default_format;
@@ -157,9 +157,9 @@ namespace boost
       }
     }
 
-    //  process_stopwatches_reporter::test_report  --------------------------------------------------------//
+    //  run_timer::test_report  --------------------------------------------------------//
 
-    void process_stopwatches_reporter::test_report( duration real_, duration user_, duration system_ )
+    void run_timer::test_report( duration real_, duration user_, duration system_ )
     {
       if ( m_format.empty() ) m_format = default_format;
 

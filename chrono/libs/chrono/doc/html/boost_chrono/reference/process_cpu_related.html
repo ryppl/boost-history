@@ -214,7 +214,7 @@
     <span class="identifier">process_real_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span>   <span class="identifier">real</span><span class="special">;</span>    <span class="comment">// real (i.e wall clock) time
 </span>    <span class="identifier">process_user_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span>   <span class="identifier">user</span><span class="special">;</span>    <span class="comment">// user cpu time
 </span>    <span class="identifier">process_system_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span> <span class="identifier">system</span><span class="special">;</span>  <span class="comment">// system cpu time
-</span>    
+</span>
     <span class="identifier">times</span><span class="special">();</span>
     <span class="identifier">times</span><span class="special">(</span>
         <span class="identifier">process_real_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span> <span class="identifier">r</span><span class="special">,</span>
@@ -222,7 +222,7 @@
         <span class="identifier">process_system_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span> <span class="identifier">s</span><span class="special">);</span>
 
     <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="identifier">times</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
-            
+
     <span class="identifier">times</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="identifier">times</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
     <span class="identifier">times</span> <span class="keyword">operator</span><span class="special">-=(</span><span class="identifier">times</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
     <span class="identifier">times</span> <span class="keyword">operator</span><span class="special">*=(</span><span class="identifier">times</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>

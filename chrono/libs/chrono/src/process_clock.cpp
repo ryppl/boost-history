@@ -39,7 +39,7 @@
 #endif  // POSIX
 namespace boost { namespace chrono {
 
-    void process_clocks::now( time_points & tps, system::error_code & ec ) {
+    void process_clock::now( time_points & tps, system::error_code & ec ) {
         process_times t;
         process_clock::now(t,ec);
         tps.real=process_clock::time_point(t.real);

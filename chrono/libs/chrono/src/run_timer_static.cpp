@@ -29,7 +29,7 @@ namespace boost
   namespace chrono
   {
 
-    std::ostream &  process_stopwatches_reporter::m_cout()  { return std::cout; }
+    std::ostream &  run_timer::m_cout()  { return std::cout; }
 
   } // namespace chrono
 } // namespace boost

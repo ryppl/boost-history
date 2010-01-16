@@ -96,7 +96,7 @@
           is an instance of <code class="computeroutput"><span class="identifier">S</span></code>.
         </p>
 <div class="table">
-<a name="id4853554"></a><p class="title"><b>Table 2. Stopwatch Requirements</b></p>
+<a name="id4853463"></a><p class="title"><b>Table 2. Stopwatch Requirements</b></p>
 <table class="table" summary="Stopwatch Requirements">
 <colgroup>
 <col>
@@ -386,9 +386,9 @@
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span>  <span class="special">{</span>
     <span class="keyword">struct</span> <span class="identifier">dont_start_t</span><span class="special">;</span>
     <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">dont_start_t</span> <span class="identifier">dont_start</span><span class="special">;</span>
-    
+
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">high_resolution_clock</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch</span><span class="special">;</span>
-    
+
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">system_stopwatch</span><span class="special">;</span>
     <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch</span><span class="special">;</span>
@@ -443,11 +443,11 @@
     <span class="identifier">time_point</span> <span class="identifier">resume</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
 
     <span class="identifier">duration</span> <span class="identifier">elapsed</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-    
+
     <span class="keyword">typedef</span> <span class="identifier">stopwatch_runner</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">scoped_run</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">stopwatch_suspender</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">scoped_suspend</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">stopwatch_resumer</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">scoped_resume</span><span class="special">;</span>        
-    <span class="keyword">typedef</span> <span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">reporter</span><span class="special">;</span>        
+    <span class="keyword">typedef</span> <span class="identifier">stopwatch_resumer</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">scoped_resume</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">reporter</span><span class="special">;</span>
 
 <span class="special">};</span>
 </pre>
@@ -481,7 +481,7 @@
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_stopwatch</span><span class="special">;</span>
-        
+
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_real_cpu_stopwatch</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_user_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_user_cpu_stopwatch</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_system_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_system_cpu_stopwatch</span><span class="special">;</span>
@@ -505,8 +505,8 @@
 <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_accumulator</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
-    <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">high_resolution_stopwatch_accumulator</span><span class="special">;</span>        
-        
+    <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">high_resolution_stopwatch_accumulator</span><span class="special">;</span>
+
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">process_real_cpu_stopwatch_accumulator</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">process_user_cpu_stopwatch_accumulator</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">process_system_cpu_stopwatch_accumulator</span><span class="special">;</span>
@@ -556,19 +556,19 @@
     <span class="identifier">time_point</span> <span class="identifier">start</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
     <span class="identifier">duration</span> <span class="identifier">stop</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">time_point</span><span class="special">&gt;</span> <span class="identifier">restart</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-    
+
     <span class="identifier">duration</span> <span class="identifier">suspend</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
     <span class="identifier">time_point</span> <span class="identifier">resume</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-    
+
     <span class="identifier">duration</span> <span class="identifier">elapsed</span><span class="special">(</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span><span class="special">);</span>
-    
+
     <span class="identifier">accumulator</span><span class="special">&amp;</span> <span class="identifier">accumulated</span><span class="special">(</span> <span class="special">);</span>
     <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">();</span>
-    
+
     <span class="keyword">typedef</span> <span class="identifier">stopwatch_runner</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">scoped_run</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">stopwatch_suspender</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">scoped_suspend</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">stopwatch_resumer</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">scoped_resume</span><span class="special">;</span>        
-    <span class="keyword">typedef</span> <span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">reporter</span><span class="special">;</span>        
+    <span class="keyword">typedef</span> <span class="identifier">stopwatch_resumer</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">scoped_resume</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">reporter</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <div class="section" lang="en">
@@ -830,9 +830,9 @@
      <span class="keyword">static</span> <span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span> <span class="identifier">t</span><span class="special">;</span>
      <span class="identifier">stopwatch_runner</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
      <span class="comment">// ...
-</span>     
+</span>
      <span class="comment">// call to some function we don't want to measure
-</span>     <span class="special">{</span> 
+</span>     <span class="special">{</span>
         <span class="identifier">stopwatch_suspender</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
         <span class="identifier">external_function</span><span class="special">();</span>
      <span class="special">}</span>
@@ -868,14 +868,14 @@
      <span class="keyword">static</span> <span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span> <span class="identifier">t</span><span class="special">;</span>
      <span class="identifier">stopwatch_runner</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
      <span class="comment">// ...
-</span>     
+</span>
      <span class="comment">// call to some function we don't want to measure
-</span>     <span class="special">{</span> 
+</span>     <span class="special">{</span>
         <span class="identifier">stopwatch_suspender</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
-        
+
         <span class="special">{</span>
             <span class="identifier">stopwatch_resumer</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
-        
+
         <span class="special">}</span>
      <span class="special">}</span>
 <span class="special">}</span>

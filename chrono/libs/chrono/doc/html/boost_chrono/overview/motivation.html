@@ -237,7 +237,7 @@
           needs only 23 bits to cover that range.
         </p>
 <a name="boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_"></a><h5>
-<a name="id4759672"></a>
+<a name="id4759450"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_">So
           What Exactly is a <code class="computeroutput"><span class="identifier">duration</span></code>
           and How Do I Use One?</a>
@@ -295,7 +295,7 @@
           instead of inheritance).
         </p>
 <a name="boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to__code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__"></a><h5>
-<a name="id4813151"></a>
+<a name="id4813063"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to__code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__">What
           happens if I assign <code class="computeroutput"><span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span></code>
           to <code class="computeroutput"><span class="identifier">minutes</span></code> instead of
@@ -312,7 +312,7 @@
           ignored. This is similar to the problem of assigning a double to an <code class="computeroutput"><span class="keyword">int</span></code>: the fractional part gets silently discarded.
         </p>
 <a name="boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_"></a><h5>
-<a name="id4813320"></a>
+<a name="id4813231"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_">But
           what if the truncation behavior is what I want to do?</a>
         </h5>
@@ -332,7 +332,7 @@
           as often as it can.
         </p>
 <a name="boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation"></a><h5>
-<a name="id4813457"></a>
+<a name="id4813368"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation">I'm
           trafficking in floating point <code class="computeroutput"><span class="identifier">duration</span></code>s.
           I don't want to deal with writing <code class="computeroutput"><span class="identifier">duration_cast</span></code>
@@ -347,7 +347,7 @@
 <span class="identifier">dminutes</span> <span class="identifier">dm4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>  <span class="comment">// dm4.count() == 5.000000083333333
 </span></pre>
 <a name="boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_"></a><h5>
-<a name="id4813619"></a>
+<a name="id4813530"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_">How
           expensive is all of this?</a>
         </h5>
@@ -361,7 +361,7 @@
           tick counts.
         </p>
 <a name="boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_"></a><h5>
-<a name="id4813669"></a>
+<a name="id4813580"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_">How
           complicated is it to build a function taking a <code class="computeroutput"><span class="identifier">duration</span></code>
           parameter?</a>
@@ -583,7 +583,7 @@
           the relationship between the epochs associated with each clock is known.
         </p>
 <a name="boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_"></a><h5>
-<a name="id4815475"></a>
+<a name="id4815385"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_">So
           What Exactly is a <code class="computeroutput"><span class="identifier">time_point</span></code>
           and How Do I Use One?</a>
@@ -689,7 +689,7 @@
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">sqrt</span><span class="special">(</span> <span class="number">123.456L</span> <span class="special">);</span>  <span class="comment">// burn some time
 </span>
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
-<span class="special">}</span>    
+<span class="special">}</span>
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>  <span class="special">{</span>
     <span class="identifier">f1</span><span class="special">(</span><span class="number">100000</span><span class="special">);</span>
     <span class="identifier">f1</span><span class="special">(</span><span class="number">200000</span><span class="special">);</span>
@@ -719,7 +719,7 @@
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">sqrt</span><span class="special">(</span> <span class="number">123.456L</span> <span class="special">);</span>  <span class="comment">// burn some time
 </span>
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
-<span class="special">}</span>    
+<span class="special">}</span>
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>  <span class="special">{</span>
     <span class="identifier">f1</span><span class="special">(</span><span class="number">100000</span><span class="special">);</span>
     <span class="identifier">f1</span><span class="special">(</span><span class="number">200000</span><span class="special">);</span>
@@ -757,17 +757,13 @@
         </p>
 <p>
           These clocks capture the specific time unitarily. <span class="bold"><strong>Boost.Chrono</strong></span>
-          provides also a pseudo-clock <code class="computeroutput"><span class="identifier">process_clocks</span></code>
-          that captures the three times at once. As <code class="computeroutput"><span class="identifier">process_clocks</span></code>
-          do not conform to the Stopwatch concept, As <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">process_clocks</span><span class="special">&gt;</span></code> and <code class="computeroutput"><span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">process_clocks</span><span class="special">&gt;</span> <span class="special">&gt;</span></code>
-          do not works, <span class="bold"><strong>Boost.Chrono</strong></span> provides the
-          equivalent classes <code class="computeroutput"><span class="identifier">process_stopwatches</span></code>
-          and <code class="computeroutput"><span class="identifier">process_stopwatches_reporter</span></code>
+          provides also a clock <code class="computeroutput"><span class="identifier">process_cpu_clock</span></code>
+          that captures the three times at once.
         </p>
 <pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
-    <span class="identifier">process_stopwatches_reporter</span> <span class="identifier">_</span><span class="special">;</span>
+    <span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">_</span><span class="special">;</span>
   <span class="comment">// ...
 </span><span class="special">}</span>
 </pre>
@@ -775,6 +771,17 @@
           Will produce the following output
         </p>
 <pre class="programlisting"><span class="identifier">real</span> <span class="number">0.034</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">cpu</span> <span class="number">0.031</span><span class="identifier">s</span> <span class="special">(</span><span class="number">93.0</span><span class="special">%),</span> <span class="identifier">user</span> <span class="number">0.031</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">system</span> <span class="number">0.000</span><span class="identifier">s</span>
+</pre>
+<p>
+          As this is one of the expression more common the library provides a stopclock
+          shortcut so the preceding can be writen as
+        </p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">stopclock</span><span class="special">&lt;&gt;</span> <span class="identifier">_</span><span class="special">;</span>
+  <span class="comment">// ...
+</span><span class="special">}</span>
 </pre>
 </div>
 </div>

@@ -1,4 +1,4 @@
-//  stopwatch_example.cpp  ---------------------------------------------------//
+//  stopclock_example.cpp  ---------------------------------------------------//
 
 //  Copyright Beman Dawes 2006, 2008
 
@@ -7,14 +7,14 @@
 
 //  See http://www.boost.org/libs/chrono for documentation.
 
-#include <boost/chrono/stopwatch.hpp>
+#include <boost/chrono/stopclock.hpp>
 #include <cmath>
 
 using namespace boost::chrono;
 int f1(long j)
 {
-  stopwatch<>::reporter x("\nf1 %ds\n");
-  
+  stopclock<> _;   
+
   for ( long i = 0; i < j; ++i )
     std::sqrt( 123.456L );  // burn some time
 
@@ -22,7 +22,7 @@ int f1(long j)
 }
 int main()
 {
-  stopwatch<>::reporter _("\nMain %ds\n");
+  stopclock<> _("\nmain %ds\n");   
 
   f1(100000);
   f1(200000);
