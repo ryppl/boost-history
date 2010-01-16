@@ -15,57 +15,22 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/fusion/include/at_key.hpp>
 #include <boost/msm/row_tags.hpp>
+#include <boost/msm/front/detail/row2_helper.hpp>
 
 namespace boost { namespace msm { namespace front
 {
-    namespace detail
-    {
-        template<
-            typename CalledForAction
-            , typename Event
-            , void (CalledForAction::*action)(Event const&)
-        >
-        struct row2_action_helper
-        {
-            template <class FSM,class Event,class SourceState,class TargetState, class AllStates>
-            static void call_helper(FSM&,Event const& evt,SourceState&,TargetState&,
-                                    AllStates& all_states,::boost::mpl::false_ const &)
-            {
-                // in this front-end, we don't need to know source and target states
-                ( ::boost::fusion::at_key<CalledForAction>(all_states).*action)(evt);
-            }
-            template <class FSM,class Event,class SourceState,class TargetState, class AllStates>
-            static void call_helper(FSM& fsm,Event const& evt,SourceState&,TargetState&,AllStates&,
-                                    ::boost::mpl::true_ const &)
-            {
-                // in this front-end, we don't need to know source and target states
-                (fsm.*action)(evt);
-            }
-        };
-
-        template<
-            typename CalledForGuard
-            , typename Event
-            , bool (CalledForGuard::*guard)(Event const&)
-        >
-        struct row2_guard_helper
-        {
-            template <class FSM,class Event,class SourceState,class TargetState,class AllStates>
-            static bool call_helper(FSM&,Event const& evt,SourceState&,TargetState&,
-                                    AllStates& all_states, ::boost::mpl::false_ const &)
-            {
-                // in this front-end, we don't need to know source and target states
-                return ( ::boost::fusion::at_key<CalledForGuard>(all_states).*guard)(evt);
-            }
-            template <class FSM,class Event,class SourceState,class TargetState,class AllStates>
-            static bool call_helper(FSM& fsm,Event const& evt,SourceState&,TargetState&,
-                                    AllStates&,::boost::mpl::true_ const &)
-            {
-                // in this front-end, we don't need to know source and target states
-                return (fsm.*guard)(evt);
-            }
-        };
-    }
+	template<
+		typename T1
+		, class Event
+		, typename T2
+	>
+	struct _row2
+	{
+        typedef _row_tag row_type_tag;
+		typedef T1 Source;
+		typedef T2 Target;
+		typedef Event Evt;
+	};
 
 	template<
 		typename T1
@@ -85,7 +50,7 @@ namespace boost { namespace msm { namespace front
                                 AllStates& all_states)
         {
             // in this front-end, we don't need to know source and target states
-            detail::row2_action_helper<CalledForAction,Event,action>::call_helper
+            ::boost::msm::front::detail::row2_action_helper<CalledForAction,Event,action>::template call_helper
                 (fsm,evt,src,tgt,all_states,
                 ::boost::mpl::bool_< ::boost::is_base_of<CalledForAction,FSM>::type::value>());
         }
@@ -111,7 +76,7 @@ namespace boost { namespace msm { namespace front
                                 AllStates& all_states)
         {
             // in this front-end, we don't need to know source and target states
-            detail::row2_action_helper<CalledForAction,Event,action>::call_helper
+            ::boost::msm::front::detail::row2_action_helper<CalledForAction,Event,action>::call_helper
                 (fsm,evt,src,tgt,all_states,
                 ::boost::mpl::bool_< ::boost::is_base_of<CalledForAction,FSM>::type::value>());
         }
@@ -120,7 +85,7 @@ namespace boost { namespace msm { namespace front
                                AllStates& all_states)
         {
             // in this front-end, we don't need to know source and target states
-            return detail::row2_guard_helper<CalledForGuard,Event,guard>::call_helper
+            return ::boost::msm::front::detail::row2_guard_helper<CalledForGuard,Event,guard>::call_helper
                 (fsm,evt,src,tgt,all_states,
                 ::boost::mpl::bool_< ::boost::is_base_of<CalledForGuard,FSM>::type::value>());
         }
@@ -143,7 +108,7 @@ namespace boost { namespace msm { namespace front
                                AllStates& all_states)
         {
             // in this front-end, we don't need to know source and target states
-            return detail::row2_guard_helper<CalledForGuard,Event,guard>::call_helper
+            return ::boost::msm::front::detail::row2_guard_helper<CalledForGuard,Event,guard>::call_helper
                 (fsm,evt,src,tgt,all_states,
                 ::boost::mpl::bool_< ::boost::is_base_of<CalledForGuard,FSM>::type::value>());
         }
@@ -166,7 +131,7 @@ namespace boost { namespace msm { namespace front
                                 AllStates& all_states)
         {
             // in this front-end, we don't need to know source and target states
-            detail::row2_action_helper<CalledForAction,Event,action>::call_helper
+            ::boost::msm::front::detail::row2_action_helper<CalledForAction,Event,action>::call_helper
                 (fsm,evt,src,tgt,all_states,
                 ::boost::mpl::bool_< ::boost::is_base_of<CalledForAction,FSM>::type::value>());
         }
@@ -191,7 +156,7 @@ namespace boost { namespace msm { namespace front
                                 AllStates& all_states)
         {
             // in this front-end, we don't need to know source and target states
-            detail::row2_action_helper<CalledForAction,Event,action>::call_helper
+            ::boost::msm::front::detail::row2_action_helper<CalledForAction,Event,action>::call_helper
                 (fsm,evt,src,tgt,all_states,
                 ::boost::mpl::bool_< ::boost::is_base_of<CalledForAction,FSM>::type::value>());
         }
@@ -200,7 +165,7 @@ namespace boost { namespace msm { namespace front
                                AllStates& all_states)
         {
             // in this front-end, we don't need to know source and target states
-            return detail::row2_guard_helper<CalledForGuard,Event,guard>::call_helper
+            return ::boost::msm::front::detail::row2_guard_helper<CalledForGuard,Event,guard>::call_helper
                 (fsm,evt,src,tgt,all_states,
                 ::boost::mpl::bool_< ::boost::is_base_of<CalledForGuard,FSM>::type::value>());
         }
@@ -222,7 +187,7 @@ namespace boost { namespace msm { namespace front
                                AllStates& all_states)
         {
             // in this front-end, we don't need to know source and target states
-            return detail::row2_guard_helper<CalledForGuard,Event,guard>::call_helper
+            return ::boost::msm::front::detail::row2_guard_helper<CalledForGuard,Event,guard>::call_helper
                 (fsm,evt,src,tgt,all_states,
                 ::boost::mpl::bool_< ::boost::is_base_of<CalledForGuard,FSM>::type::value>());
         }
