@@ -98,4 +98,6 @@ project
         [ run ../example/stopclock_example.cpp :  :  : <library>/boost/system//boost_system  : stopclock_example_dll ]
         [ run ../example/digital_time_example.cpp :  :  : <link>static ]
         [ run ../example/digital_time_example.cpp :  :  : <library>/boost/system//boost_system  : digital_time_example_dll ]
+        [ run ../example/function_stopclock_example.cpp :  :  : <link>static ]
+        [ run ../example/function_stopclock_example.cpp :  :  : <library>/boost/system//boost_system  : function_stopclock_example_dll ]
         ;

@@ -15,8 +15,7 @@
 using namespace boost::chrono;
 int f1(long j)
 {
-  static stopwatch_accumulator<process_real_cpu_clock>::reporter acc(
-    "\nf1 Count=%c times Sum=%ss Min=%ms Max=%Ms Mean=%as\n");
+  static stopwatch_accumulator<process_real_cpu_clock>::reporter acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
   stopwatch_accumulator<process_real_cpu_clock>::reporter::scoped_run _(acc);
 
   for ( long i = 0; i < j; ++i )
