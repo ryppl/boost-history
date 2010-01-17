@@ -278,6 +278,10 @@ namespace filesystem
 
 # endif
 
+    //  -----  composition  -----
+
+    path  absolute(const path& base) const; 
+
     //  -----  decomposition  -----
 
     path  root_path() const; 

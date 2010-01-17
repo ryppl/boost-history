@@ -59,15 +59,6 @@
   take a path argument?</li>
   <li style="font-size: 10pt">Add test for scoped_path_locale.</li>
   <li style="font-size: 10pt">Add codepage 936/950/etc test cases.</li>
-  <li style="font-size: 10pt">Are generic versions of string(), native_string() 
-  needed? IE:<br>
-  template&lt; class T &gt;<br>
-  T string(const error_code ec = throws());<br>
-  TODO: Maybe; all member functions need to be usable in generic code.</li>
-  <li style="font-size: 10pt">Assuming generic versions of string(), 
-  native_string(), are the w flavors needed? No. KISS. basic_string&lt;char&gt; is 
-  special because it is the predominant use case. w (and other) flavors can be 
-  added later.</li>
   <li style="font-size: 10pt">Should UDT's be supported?</li>
   <li style="font-size: 10pt">Should path iteration to a separator result in:<br>
   -- the actual separator used<br>

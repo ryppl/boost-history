@@ -1779,10 +1779,9 @@ that any filesystem operational function, no matter how apparently innocuous, ma
 an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end note</i>]</p>
 <h4><a name="Function-specifications">Operational function specifications</a></h4>
 <pre>path <a name="complete">complete</a>(const path&amp; p, const path&amp; base, system::error_code&amp; ec);</pre>
-<blockquote>
   <p><i>Effects:</i> Composes an absolute path from <code>p</code> and <code>base</code>, 
   using the following rules:</p>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <table border="1" cellpadding="5" cellspacing="0" bordercolor="#111111" style="border-collapse: collapse">
     <tr>
       <td align="center">&nbsp;</td>
       <td align="center"><b><code>p.has_root_directory()</code></b></td>
@@ -1817,7 +1816,6 @@ an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end not
   paths supplied by user input, reported to program users, or when such behavior 
   is expected by program users. <i>-- 
   end note</i>]</p>
-</blockquote>
 <pre>path complete(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
 <p><i>Returns:</i> <code>path(p, initial_path(), ec)</code>.</p>

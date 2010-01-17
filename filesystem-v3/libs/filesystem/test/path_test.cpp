@@ -69,7 +69,7 @@ namespace
   path p4("foobar");
   path p5;
 
-  //  exception_tests  -------------------------------------------------------//
+  //  exception_tests  -----------------------------------------------------------------//
 
   void exception_tests()
   {
@@ -97,7 +97,7 @@ namespace
     }
   }
 
-  //  overload_tests  --------------------------------------------------------//
+  //  overload_tests  ------------------------------------------------------------------//
 
   // These verify various overloads don't cause compiler errors
   // They pre-date operations_unit_test.cpp
@@ -122,7 +122,7 @@ namespace
     p4 /= std::string("foo");
   }
 
-  //  iterator_tests  --------------------------------------------------------//
+  //  iterator_tests  ------------------------------------------------------------------//
 
   void iterator_tests()
   {
@@ -360,7 +360,7 @@ namespace
     }
   }
 
-  //  non_member_tests  ------------------------------------------------------//
+  //  non_member_tests  ----------------------------------------------------------------//
 
   void non_member_tests()
   {
@@ -398,6 +398,7 @@ namespace
     PATH_CHECK(path("") / "..", "..");
     if (platform == "Windows")
     {
+      BOOST_TEST(path("foo\\bar") == "foo/bar");
       BOOST_TEST((b / a).string() == "b\\a");
       BOOST_TEST((bs / a).string() == "b\\a");
       BOOST_TEST((bcs / a).string() == "b\\a");
@@ -655,9 +656,7 @@ namespace
       BOOST_TEST(!(L"c:/file" > p10));
       BOOST_TEST(!(L"c:\\file" > p11));
       BOOST_TEST(!(L"c:/file" > p11));
-
     }
-
   }
 
   //  query_and_decomposition_tests  ---------------------------------------------------//
@@ -1200,7 +1199,65 @@ namespace
     } // POSIX
   }
 
-  //  construction_tests  ----------------------------------------------------//
+ //  composition_tests  ----------------------------------------------------------------//
+
+  void composition_tests()
+  {
+    std::cout << "composition_tests..." << std::endl;
+
+    // these are white box tests constructed with knowledge of execution paths
+
+    // *this.empty()
+      BOOST_TEST_EQ(path().absolute("//foo/bar"), "//foo/bar");
+      if (platform == "Windows")
+        BOOST_TEST_EQ(path().absolute("a:/bar"), "a:/bar");
+
+    // *this.has_root_name()
+      //   *this.has_root_directory()
+        BOOST_TEST_EQ(path("//foo/bar").absolute("//uvw/xyz"), "//foo/bar");
+        if (platform == "Windows")
+          BOOST_TEST_EQ(path("a:/bar").absolute("b:/xyz"), "a:/bar");
+      //   !*this.has_root_directory()
+        BOOST_TEST_EQ(path("//net").absolute("//xyz/"), "//net/");
+        BOOST_TEST_EQ(path("//net").absolute("//xyz/abc"), "//net/abc");
+        BOOST_TEST_EQ(path("//net").absolute("//xyz/abc/def"), "//net/abc/def");
+        if (platform == "Windows")
+        {
+          BOOST_TEST_EQ(path("a:").absolute("b:/"), "a:/");
+          BOOST_TEST_EQ(path("a:").absolute("b:/abc"), "a:/abc");
+          BOOST_TEST_EQ(path("a:").absolute("b:/abc/def"), "a:/abc/def");
+          BOOST_TEST_EQ(path("a:foo").absolute("b:/"), "a:/foo");
+          BOOST_TEST_EQ(path("a:foo").absolute("b:/abc"), "a:/abc/foo");
+          BOOST_TEST_EQ(path("a:foo").absolute("b:/abc/def"), "a:/abc/def/foo");
+          BOOST_TEST_EQ(path("a:foo/bar").absolute("b:/"), "a:/foo/bar");
+          BOOST_TEST_EQ(path("a:foo/bar").absolute("b:/abc"), "a:/abc/foo/bar");
+          BOOST_TEST_EQ(path("a:foo/bar").absolute("b:/abc/def"), "a:/abc/def/foo/bar");
+        }
+    // !*this.has_root_name()
+      //   *this.has_root_directory()
+        BOOST_TEST_EQ(path("/").absolute("//xyz/"), "//xyz/");
+        BOOST_TEST_EQ(path("/").absolute("//xyz/abc"), "//xyz/");
+        BOOST_TEST_EQ(path("/foo").absolute("//xyz/"), "//xyz/foo");
+        BOOST_TEST_EQ(path("/foo").absolute("//xyz/abc"), "//xyz/foo");
+      //   !*this.has_root_directory()
+        BOOST_TEST_EQ(path("foo").absolute("//xyz/abc"), "//xyz/abc/foo");
+        BOOST_TEST_EQ(path("foo/bar").absolute("//xyz/abc"), "//xyz/abc/foo/bar");
+        BOOST_TEST_EQ(path(".").absolute("//xyz/abc"), "//xyz/abc/.");
+        BOOST_TEST_EQ(path("..").absolute("//xyz/abc"), "//xyz/abc/..");
+        BOOST_TEST_EQ(path("./foo").absolute("//xyz/abc"), "//xyz/abc/./foo");
+        BOOST_TEST_EQ(path("../foo").absolute("//xyz/abc"), "//xyz/abc/../foo");
+        if (platform == "POSIX")
+        {
+          BOOST_TEST_EQ(path("foo").absolute("/abc"), "/abc/foo");
+          BOOST_TEST_EQ(path("foo/bar").absolute("/abc"), "/abc/foo/bar");
+          BOOST_TEST_EQ(path(".").absolute("/abc"), "/abc/.");
+          BOOST_TEST_EQ(path("..").absolute("/abc"), "/abc/..");
+          BOOST_TEST_EQ(path("./foo").absolute("/abc"), "/abc/./foo");
+          BOOST_TEST_EQ(path("../foo").absolute("/abc"), "/abc/../foo");
+        }
+  }
+
+ //  construction_tests  ---------------------------------------------------------------//
 
   void construction_tests()
   {
@@ -1573,6 +1630,7 @@ int main(int, char*[])
   append_tests();
   overload_tests();
   query_and_decomposition_tests();
+  composition_tests();
   iterator_tests();
   non_member_tests();
   exception_tests();

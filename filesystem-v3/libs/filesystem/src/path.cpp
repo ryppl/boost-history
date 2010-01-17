@@ -218,6 +218,52 @@ namespace filesystem
 )) { m_pathname.erase(sep_pos, 1); } // erase the added separator
   }
 
+  //  composition  ---------------------------------------------------------------------//
+
+  path  path::absolute(const path& base) const
+  {
+    //  store expensive to compute values that are needed multiple times
+    path this_root_name (root_name());
+    path base_root_name (base.root_name());
+#   ifdef BOOST_WINDOWS_PATH
+    path this_root_directory (root_directory());
+#   endif
+
+#   ifndef BOOST_WINDOWS_PATH
+    BOOST_ASSERT(!this_root_name.empty() || !base_root_name.empty());
+#   endif
+
+    BOOST_ASSERT(!this_root_directory.empty() || base.has_root_directory());
+//
+//    if (has_root_directory() // is_absolute
+// #      ifdef BOOST_WINDOWS_PATH
+//        && !this_root_name.empty()
+// #      endif
+//       ) return *this;
+//
+//    return (!this_root_name.empty() ? this_root_name : base_root_name)
+//#     ifdef BOOST_POSIX_PATH
+//      / separator
+//#     else  // BOOST_WINDOWS_PATH
+//      // use actual separator, which may be slash or backslash
+//      / (!this_root_directory.empty() ? this_root_directory : base.root_directory())
+//#     endif
+//      / base.relative_path()
+//      / relative_path();
+
+    if (empty())
+      return base;
+
+    if (!this_root_name.empty()) // has_root_name
+      return has_root_directory()
+        ? m_pathname
+        : this_root_name / base.root_directory() / base.relative_path() / relative_path();
+
+    return has_root_directory()
+      ? base.root_name() / m_pathname
+      : base /  m_pathname;
+  }
+
   //  decomposition  -------------------------------------------------------------------//
 
   path  path::root_path() const

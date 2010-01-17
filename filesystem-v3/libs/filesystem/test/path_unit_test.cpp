@@ -398,7 +398,6 @@ namespace
     CHECK(path("").remove_filename() == "");
     CHECK(path("foo").remove_filename() == "");
     CHECK(path("foo/bar").remove_filename() == "foo");
-
   }
 
 //  //  test_modifiers  ------------------------------------------------------------------//
@@ -435,7 +434,20 @@ namespace
     CHECK(*++it == "bar");
     CHECK(*++it == "baz");
     CHECK(++it == p3.end());
+  }
 
+  //  test_compositions  ---------------------------------------------------------------//
+
+  void test_compositions()
+  {
+    std::cout << "testing compositions..." << std::endl;
+
+//    CHECK(path("").absolute("") == "");  // should assert
+//    CHECK(path("").absolute("foo") == ""); // should assert
+    CHECK(path("baa").absolute("c:/") == "c:/baa"); 
+    CHECK(path("/baa").absolute("c:/foo").string() == path("c:/baa").string()); 
+    CHECK(path("baa/baz").absolute("c:/foo/bar").string()
+      == path("c:/foo/bar\\baa/baz").string()); 
   }
 
   //  test_decompositions  -------------------------------------------------------------//
@@ -804,6 +816,7 @@ int main(int, char*[])
   test_other_non_members();
   //test_modifiers();
   test_iterators();
+  test_compositions();
   test_decompositions();
   test_queries();
   test_imbue_locale();
