@@ -37,7 +37,7 @@ project
         :
         [ compile-fail ratio_fail_test1.cpp  ]
         [ run ratio_test.cpp  :  :  : <link>static ]
-        [ run ratio_test.cpp  :  :  : <library>/boost/system//boost_system  : ratio_test_dll ]
+        #[ run ratio_test.cpp  :  :  : <library>/boost/system//boost_system  : ratio_test_dll ]
         ;
 
 
@@ -57,6 +57,9 @@ project
         [ run test_special_values.cpp :  :  : <library>/boost/system//boost_system  : test_special_values_dll ]
         [ run manipulate_clock_object.cpp :  :  : <link>static ]
         [ run manipulate_clock_object.cpp :  :  : <library>/boost/system//boost_system  : manipulate_clock_object_dll ]
+        [ run chrono_accuracy_test.cpp :  :  : <link>static ]
+        [ run chrono_accuracy_test.cpp :  :  : <library>/boost/system//boost_system  : chrono_accuracy_test_dll ]
+        
         [ run ../example/cycle_count.cpp :  :  : <link>static ]
         [ run ../example/cycle_count.cpp :  :  : <library>/boost/system//boost_system  : cycle_count_dll ]
         [ run ../example/runtime_resolution.cpp :  :  : <link>static ]
@@ -81,11 +84,8 @@ project
         [ run ../example/run_timer_example.cpp :  :  : <library>/boost/system//boost_system  : run_timer_example_dll ]
         [ run ../example/run_timer_example2.cpp :  :  : <link>static ]
         [ run ../example/run_timer_example2.cpp :  :  : <library>/boost/system//boost_system  : run_timer_example2_dll ]
-        [ link ../example/timex.cpp :  <link>static ]
-        [ link ../example/timex.cpp :  <library>/boost/system//boost_system  : timex_dll ]
         [ run run_timer_test.cpp  :  :  : <link>static ]
         [ run run_timer_test.cpp :  :  : <library>/boost/system//boost_system  : run_timer_test_dll ]
-        [ run test_minmax.cpp :  :  : <library>/boost/system//boost_system  : test_min_max_dll ]
         ;
 
     test-suite "stopwatch"
@@ -100,4 +100,10 @@ project
         [ run ../example/digital_time_example.cpp :  :  : <library>/boost/system//boost_system  : digital_time_example_dll ]
         [ run ../example/function_stopclock_example.cpp :  :  : <link>static ]
         [ run ../example/function_stopclock_example.cpp :  :  : <library>/boost/system//boost_system  : function_stopclock_example_dll ]
+        [ link ../example/timex.cpp :  <link>static ]
+        [ link ../example/timex.cpp :  <library>/boost/system//boost_system  : timex_dll ]
+        [ compile test_minmax.cpp ]
+        [ run stopclock_constructor_overload_test.cpp :  :  : <link>static ]
         ;
+        
+        

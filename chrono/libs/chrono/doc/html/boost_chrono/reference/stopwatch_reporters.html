@@ -44,6 +44,10 @@
           Class <code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.stopclock_hpp._stopclock__useful_typedefs"><code class="computeroutput"><span class="identifier">stopclock</span></code> useful typedefs</a></span></dt>
 </dl></dd>
+<dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.function_stopclock_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">function_stopclock</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.function_stopclock_hpp.template_class__function_stopclock___">Template
+          Class <code class="computeroutput"><span class="identifier">function_stopclock</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></dd>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -67,7 +71,7 @@
           <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span></code>, ec is a system::error_code
         </p>
 <div class="table">
-<a name="id4861716"></a><p class="title"><b>Table 3. Stopwatch Requirements</b></p>
+<a name="id4861820"></a><p class="title"><b>Table 3. Stopwatch Requirements</b></p>
 <table class="table" summary="Stopwatch Requirements">
 <colgroup>
 <col>
@@ -95,7 +99,7 @@
 <tr>
 <td>
               <p>
-                <code class="computeroutput"><span class="identifier">F</span><span class="special">::</span><span class="identifier">output</span><span class="special">()</span></code>
+                <code class="computeroutput"><span class="identifier">F</span><span class="special">::</span><span class="identifier">default_os</span><span class="special">()</span></code>
               </p>
               </td>
 <td>
@@ -220,12 +224,16 @@
             </li>
 </ul></div>
 <p>
-            The default places is given by Formatter::default_places. The default
-            format is given by Formatter::default_format.
+            The default places is given by Formatter::default_places(). The default
+            format is given by Formatter::default_format().
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Formatter</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">stopwatch_reporter</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">Stopwatch</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">Stopwatch</span><span class="special">::</span><span class="identifier">clock</span> <span class="identifier">clock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">Stopwatch</span> <span class="identifier">stopwatch</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">Formatter</span> <span class="identifier">formatter</span><span class="special">;</span>
+
     <span class="keyword">explicit</span> <span class="identifier">stopwatch_reporter</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
     <span class="keyword">explicit</span> <span class="identifier">stopwatch_reporter</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span>
                 <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
@@ -317,12 +325,16 @@
             <code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code>
             template class is a shortcut of <code class="computeroutput"><span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;</span></code>
           </p>
-<pre class="programlisting"><span class="keyword">template</span> 
+<pre class="programlisting"><span class="keyword">template</span>
     <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">process_cpu_clock</span>
     <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">=</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span>
     <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Formatter</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">Stopwatch</span><span class="special">&gt;::</span><span class="identifier">type</span>
 <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopclock</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">Stopwatch</span><span class="special">,</span> <span class="identifier">Formatter</span><span class="special">&gt;</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">Clock</span> <span class="identifier">clock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">Stopwatch</span> <span class="identifier">stopwatch</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">Formatter</span> <span class="identifier">formatter</span><span class="special">;</span>
+
     <span class="keyword">explicit</span> <span class="identifier">stopclock</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
     <span class="keyword">explicit</span> <span class="identifier">stopclock</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span>
                 <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
@@ -364,6 +376,101 @@
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_real_cpu_stopclock</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_user_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_user_cpu_stopclock</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_system_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_system_cpu_stopclock</span><span class="special">;</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.reference.stopwatch_reporters.function_stopclock_hpp"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.function_stopclock_hpp" title="
+        Header &lt;boost/chrono/function_stopclock.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">function_stopclock</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.function_stopclock_hpp.template_class__function_stopclock___">Template
+          Class <code class="computeroutput"><span class="identifier">function_stopclock</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
+    <span class="keyword">template</span>
+        <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">process_cpu_clock</span>
+        <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">=</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span>
+        <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Formatter</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">Stopwatch</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">function_stopclock</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.stopwatch_reporters.function_stopclock_hpp.template_class__function_stopclock___"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.function_stopclock_hpp.template_class__function_stopclock___" title="Template
+          Class function_stopclock&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">function_stopclock</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<p>
+            <code class="computeroutput"><span class="identifier">function_stopclock</span><span class="special">&lt;&gt;</span></code>is
+            like a <code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;&gt;</span></code>
+            but that in addition will outout a scoped trace. At construction time
+            it will output
+          </p>
+<pre class="programlisting"><span class="special">{{{</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
+</pre>
+<p>
+            and at destruction time
+          </p>
+<pre class="programlisting"><span class="special">}}}</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="special">&lt;</span><span class="identifier">output</span> <span class="identifier">of</span> <span class="identifier">stopwatch</span><span class="special">&gt;</span>
+</pre>
+<p>
+            A tipycal ussage of this class is
+          </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">f1</span><span class="special">(</span><span class="keyword">long</span> <span class="identifier">j</span><span class="special">)</span>
+<span class="special">{</span>
+  <span class="identifier">function_stopclock</span><span class="special">&lt;&gt;</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">BOOST_CURRENT_FUNCTION</span><span class="special">);</span>
+
+  <span class="keyword">for</span> <span class="special">(</span> <span class="keyword">long</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">j</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">sqrt</span><span class="special">(</span> <span class="number">123.456L</span> <span class="special">);</span>  <span class="comment">// burn some time
+</span>
+  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">&gt;,</span> <span class="keyword">class</span> <span class="identifier">Formatter</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">function_stopclock</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">Stopwatch</span><span class="special">,</span> <span class="identifier">Formatter</span><span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">Clock</span> <span class="identifier">clock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">Stopwatch</span> <span class="identifier">stopwatch</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">Formatter</span> <span class="identifier">formatter</span><span class="special">;</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">function_stopclock</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">func</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+    <span class="identifier">function_stopclock</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">func</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="identifier">function_stopclock</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">func</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="identifier">function_stopclock</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">func</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="identifier">function_stopclock</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">func</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span>
+                <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="identifier">function_stopclock</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">func</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span>
+                <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="identifier">function_stopclock</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">func</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="identifier">function_stopclock</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">func</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span>
+                <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="identifier">function_stopclock</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">func</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span>
+                <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span>
+                <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="identifier">function_stopclock</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">func</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span>
+                <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+
+    <span class="special">~</span><span class="identifier">function_stopclock</span><span class="special">();</span>
+
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">base_type</span><span class="special">::</span><span class="identifier">scoped_run</span> <span class="identifier">scoped_run</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">base_type</span><span class="special">::</span><span class="identifier">scoped_suspend</span> <span class="identifier">scoped_suspend</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">base_type</span><span class="special">::</span><span class="identifier">scoped_resume</span> <span class="identifier">scoped_resume</span><span class="special">;</span>
+<span class="special">};</span>
 </pre>
 </div>
 </div>

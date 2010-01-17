@@ -26,7 +26,7 @@ time2_demo contained this comment:
                    Anthony Williams.
 */
 
-#include <boost/chrono/chrono.hpp>
+#include <boost/chrono/typeof/boost/chrono/chrono.hpp>
 #include <boost/type_traits.hpp>
 
 #include <iostream>
@@ -52,6 +52,7 @@ min BOOST_PREVENT_MACRO_SUBSTITUTION  (time_point<Clock, Duration1> t1, time_poi
 
 void test_min()
 {
+#if 0    
     typedef time_point<system_clock,
       boost::common_type<system_clock::duration, seconds>::type> T1;
     typedef time_point<system_clock,
@@ -60,6 +61,11 @@ void test_min()
     /*auto*/ T1 t1 = system_clock::now() + seconds(3);
     /*auto*/ T2 t2 = system_clock::now() + nanoseconds(3);
     /*auto*/ T3 t3 = (min)(t1, t2);
+#else
+    BOOST_AUTO(t1, system_clock::now() + seconds(3));
+    BOOST_AUTO(t2, system_clock::now() + nanoseconds(3));
+    BOOST_AUTO(t3, (min)(t1, t2));
+#endif    
     print_duration(std::cout, t1 - t3);
     print_duration(std::cout, t2 - t3);
 }

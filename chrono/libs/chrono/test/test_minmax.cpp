@@ -10,10 +10,10 @@
 #define max(A,B) ((A)>(B)?(A):(B))
 
 #include <boost/chrono/chrono.hpp>
-#include <boost/chrono/process_times.hpp>
+#include <boost/chrono/stopclock.hpp>
 
  int main()
  {
-    boost::chrono::run_timer t;
+    boost::chrono::stopclock<> _;
  }
 

@@ -70,6 +70,10 @@
 <li><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></li>
 </ul></div>
 </li>
+<li>
+            typeof registration for classes <code class="computeroutput"><span class="identifier">duration</span></code>
+            and <code class="computeroutput"><span class="identifier">time_point</span></code>
+</li>
 </ul></div>
 </li>
 <li>
@@ -88,7 +92,7 @@
             capturing system-CPU times.
           </li>
 <li>
-<code class="computeroutput"><span class="identifier">process_cpu_clocks</span></code>, tuple-like
+<code class="computeroutput"><span class="identifier">process_cpu_clock</span></code>, tuple-like
             class capturing at once real, user-CPU, and system-CPU times.
           </li>
 </ul></div>
@@ -108,10 +112,6 @@
             scoped helper classes allowing to pairwise start/stop operations, suspend/resume
             and resume/suspend a Stopwatch.
           </li>
-<li>
-<code class="computeroutput"><span class="identifier">process_stopwatches</span></code>,
-            capturing elapsed real, user-CPU, and system-CPU times.
-          </li>
 </ul></div>
 </li>
 <li>
@@ -129,7 +129,7 @@
 </li>
 </ul></div>
 <a name="boost_chrono.overview.how_to_use_this_documentation"></a><h3>
-<a name="id4765060"></a>
+<a name="id4765070"></a>
       <a href="overview.html#boost_chrono.overview.how_to_use_this_documentation">How to
       Use This Documentation</a>
     </h3>
@@ -185,8 +185,7 @@
 </span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">ratio</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">common_type</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">timer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">process_times</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">stopclock</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 </pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

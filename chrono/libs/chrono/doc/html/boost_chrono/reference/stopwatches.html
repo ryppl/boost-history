@@ -96,7 +96,7 @@
           is an instance of <code class="computeroutput"><span class="identifier">S</span></code>.
         </p>
 <div class="table">
-<a name="id4853463"></a><p class="title"><b>Table 2. Stopwatch Requirements</b></p>
+<a name="id4853568"></a><p class="title"><b>Table 2. Stopwatch Requirements</b></p>
 <table class="table" summary="Stopwatch Requirements">
 <colgroup>
 <col>
@@ -782,8 +782,8 @@
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_runner</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">typedef</span> <span class="identifier">Stopwatch</span> <span class="identifier">stopwatch_type</span><span class="special">;</span>
-    <span class="identifier">stopwatch_runner</span><span class="special">(</span><span class="identifier">stopwatch_type</span> <span class="special">&amp;</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span><span class="special">);</span>
+    <span class="keyword">typedef</span> <span class="identifier">Stopwatch</span> <span class="identifier">stopwatch</span><span class="special">;</span>
+    <span class="identifier">stopwatch_runner</span><span class="special">(</span><span class="identifier">stopwatch</span> <span class="special">&amp;</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span><span class="special">);</span>
     <span class="special">~</span><span class="identifier">stopwatch_runner</span><span class="special">();</span>
     <span class="identifier">stopwatch_runner</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">delete</span><span class="special">;</span>
     <span class="identifier">stopwatch_runner</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">stopwatch_runner</span><span class="special">&amp;)</span> <span class="special">=</span> <span class="keyword">delete</span><span class="special">;</span>
@@ -814,8 +814,8 @@
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_suspender</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">typedef</span> <span class="identifier">Stopwatch</span> <span class="identifier">stopwatch_type</span><span class="special">;</span>
-    <span class="identifier">stopwatch_suspender</span><span class="special">(</span><span class="identifier">stopwatch_type</span> <span class="special">&amp;</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span><span class="special">);</span>
+    <span class="keyword">typedef</span> <span class="identifier">Stopwatch</span> <span class="identifier">stopwatch</span><span class="special">;</span>
+    <span class="identifier">stopwatch_suspender</span><span class="special">(</span><span class="identifier">stopwatch</span> <span class="special">&amp;</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span><span class="special">);</span>
     <span class="special">~</span><span class="identifier">stopwatch_suspender</span><span class="special">();</span>
     <span class="identifier">stopwatch_suspender</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">delete</span><span class="special">;</span>
     <span class="identifier">stopwatch_suspender</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">stopwatch_suspender</span><span class="special">&amp;)</span> <span class="special">=</span> <span class="keyword">delete</span><span class="special">;</span>
@@ -852,8 +852,8 @@
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_resumer</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">typedef</span> <span class="identifier">Stopwatch</span> <span class="identifier">stopwatch_type</span><span class="special">;</span>
-    <span class="identifier">stopwatch_resumer</span><span class="special">(</span><span class="identifier">stopwatch_type</span> <span class="special">&amp;</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span><span class="special">);</span>
+    <span class="keyword">typedef</span> <span class="identifier">Stopwatch</span> <span class="identifier">stopwatch</span><span class="special">;</span>
+    <span class="identifier">stopwatch_resumer</span><span class="special">(</span><span class="identifier">stopwatch</span> <span class="special">&amp;</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span><span class="special">);</span>
     <span class="special">~</span><span class="identifier">stopwatch_resumer</span><span class="special">();</span>
     <span class="identifier">stopwatch_resumer</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">delete</span><span class="special">;</span>
     <span class="identifier">stopwatch_resumer</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">stopwatch_resumer</span><span class="special">&amp;)</span> <span class="special">=</span> <span class="keyword">delete</span><span class="special">;</span>

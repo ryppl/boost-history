@@ -1,0 +1,390 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Appendix G: Tickets</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Boost.Chrono">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="tests.html" title=" Appendix F: Tests">
+<link rel="next" href="todo.html" title=" Appendix H: Future plans">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tests.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="todo.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_chrono.appendices.tickets"></a><a href="tickets.html" title=" Appendix G: Tickets"> Appendix G: Tickets</a>
+</h3></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Ticket
+              </p>
+              </th>
+<th>
+              <p>
+                Description
+              </p>
+              </th>
+<th>
+              <p>
+                Resolution
+              </p>
+              </th>
+<th>
+              <p>
+                State
+              </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                1
+              </p>
+              </td>
+<td>
+              <p>
+                operator/ was ambiguous
+              </p>
+              </td>
+<td>
+              <p>
+                Disambiguate duration operator/
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                2
+              </p>
+              </td>
+<td>
+              <p>
+                CLOCK_MONOTONIC is not defined with cygwin/gcc 3.4
+              </p>
+              </td>
+<td>
+              <p>
+                Disable code when BOOST_CHRONO_HAS_CLOCK_MONOTONIC is not defined.
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                3
+              </p>
+              </td>
+<td>
+              <p>
+                result of metafunctions ratio_multiply and ratio_divide were not
+                normalized ratios
+              </p>
+              </td>
+<td>
+              <p>
+                Use of the nested ratio typedef type on ratio arithmetic operations.
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                4
+              </p>
+              </td>
+<td>
+              <p>
+                Copy constructor from similar duration masked the defaulted operations
+              </p>
+              </td>
+<td>
+              <p>
+                Added duration defaulted implementations
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                5
+              </p>
+              </td>
+<td>
+              <p>
+                INTMAX_C is not always defined
+              </p>
+              </td>
+<td>
+              <p>
+                Replace INTMAX_C by BOOST_INTMAX_C until boost/cstdint.hpp ensures
+                INTMAX_C is always defined.
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                6
+              </p>
+              </td>
+<td>
+              <p>
+                undefined BOOST_CHRONO_HAS_CLOCK_MONOTONIC when BOOST_CHRONO_WINDOWS_API
+              </p>
+              </td>
+<td>
+              <p>
+                Define BOOST_CHRONO_HAS_CLOCK_MONOTONIC when BOOST_CHRONO_WINDOWS_API
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                7
+              </p>
+              </td>
+<td>
+              <p>
+                min/max macros intrussion
+              </p>
+              </td>
+<td>
+              <p>
+                Take care of Boost min/max recommendations
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                8
+              </p>
+              </td>
+<td>
+              <p>
+                declaration of 'typedef class boost::chrono::duration&lt;..&gt; changes
+                meaning of 'duration'
+              </p>
+              </td>
+<td>
+              <p>
+                complete qualification when defining nested typedef duration on clocks
+                to avoid the following compile error:
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                9
+              </p>
+              </td>
+<td>
+              <p>
+                VC++ warnings
+              </p>
+              </td>
+<td>
+              <p>
+                disable VC++ foolishness
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                10
+              </p>
+              </td>
+<td>
+              <p>
+                conversion warning in test_duration
+              </p>
+              </td>
+<td>
+              <p>
+                removal of conversion warning in test_duration
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                11
+              </p>
+              </td>
+<td>
+              <p>
+                MSVC reports a warning instead of an error when there is an integral
+                constant overflow
+              </p>
+              </td>
+<td>
+              <p>
+                manage with MSVC reporting a warning instead of an error when there
+                is an integral constant overflow
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                12
+              </p>
+              </td>
+<td>
+              <p>
+                ambiguities with MSVC when using detail:: namespace
+              </p>
+              </td>
+<td>
+              <p>
+                Qualify with boost::detail boost::chrono::detail
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                13
+              </p>
+              </td>
+<td>
+              <p>
+                warning C4251: 'boost::chrono::run_timer::m_format' : class 'std::basic_string&lt;_Elem,_Traits,_Ax&gt;'
+                needs to have dll-interface to be used by clients of class 'boost::chrono::run_timer'
+              </p>
+              </td>
+<td>
+              <p>
+                don't include inlines functions using the std::string m_format
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                #
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+<td>
+              <p>
+                Close
+              </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 -2010 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tests.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="todo.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,987 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Appendix F: Tests</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Boost.Chrono">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="acknowledgements.html" title=" Appendix E:
+      Acknowledgements">
+<link rel="next" href="tickets.html" title=" Appendix G: Tickets">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="acknowledgements.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tickets.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_chrono.appendices.tests"></a><a href="tests.html" title=" Appendix F: Tests"> Appendix F: Tests</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tests.html#boost_chrono.appendices.tests._common_type_"><code class="computeroutput"><span class="identifier">common_type</span></code></a></span></dt>
+<dt><span class="section"><a href="tests.html#boost_chrono.appendices.tests._ratio_"><code class="computeroutput"><span class="identifier">ratio</span></code></a></span></dt>
+<dt><span class="section"><a href="tests.html#boost_chrono.appendices.tests.chrono">chrono</a></span></dt>
+<dt><span class="section"><a href="tests.html#boost_chrono.appendices.tests.stopwatch">stopwatch</a></span></dt>
+</dl></div>
+<p>
+        In order to test you need to do.
+      </p>
+<pre class="programlisting"><span class="identifier">bjam</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">test</span>
+</pre>
+<p>
+        You can also run a specific suite of test by doing
+      </p>
+<pre class="programlisting"><span class="identifier">cd</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">test</span>
+<span class="identifier">bjam</span> <span class="identifier">common_type</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.appendices.tests._common_type_"></a><a href="tests.html#boost_chrono.appendices.tests._common_type_" title="common_type"><code class="computeroutput"><span class="identifier">common_type</span></code></a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+                </th>
+<th>
+                <p>
+                  kind
+                </p>
+                </th>
+<th>
+                <p>
+                  Description
+                </p>
+                </th>
+<th>
+                <p>
+                  Result
+                </p>
+                </th>
+<th>
+                <p>
+                  Ticket
+                </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  common_type_test
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.appendices.tests._ratio_"></a><a href="tests.html#boost_chrono.appendices.tests._ratio_" title="ratio"><code class="computeroutput"><span class="identifier">ratio</span></code></a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+                </th>
+<th>
+                <p>
+                  kind
+                </p>
+                </th>
+<th>
+                <p>
+                  Description
+                </p>
+                </th>
+<th>
+                <p>
+                  Result
+                </p>
+                </th>
+<th>
+                <p>
+                  Ticket
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  ratio_fail_test1
+                </p>
+                </td>
+<td>
+                <p>
+                  compile-fails
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  ratio_test
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.appendices.tests.chrono"></a><a href="tests.html#boost_chrono.appendices.tests.chrono" title="chrono">chrono</a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+                </th>
+<th>
+                <p>
+                  kind
+                </p>
+                </th>
+<th>
+                <p>
+                  Description
+                </p>
+                </th>
+<th>
+                <p>
+                  Result
+                </p>
+                </th>
+<th>
+                <p>
+                  Ticket
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  chrono_unit_test
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  explore_limits
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  test_duration
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  test_system_clock
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  miscellaneous
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  test_special_values
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  manipulate_clock_object
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  chrono_accuracy_test
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  cycle_count
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  runtime_resolution
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  xtime
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  saturating
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  min_time_point
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  i_dont_like_the_default_duration_behavior
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  simulated_thread_interface_demo
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  timeval_demo
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.appendices.tests.stopwatch"></a><a href="tests.html#boost_chrono.appendices.tests.stopwatch" title="stopwatch">stopwatch</a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+                </th>
+<th>
+                <p>
+                  kind
+                </p>
+                </th>
+<th>
+                <p>
+                  Description
+                </p>
+                </th>
+<th>
+                <p>
+                  Result
+                </p>
+                </th>
+<th>
+                <p>
+                  Ticket
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  test_min_max
+                </p>
+                </td>
+<td>
+                <p>
+                  compile
+                </p>
+                </td>
+<td>
+                <p>
+                  test compilation succeeds in the presence of macros min and max.
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  stopwatch_example
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  stopwatch_example
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  stopwatch_accumulator_example
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  stopclock_example
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  digital_time_example
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  function_stopclock_example
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  test_minmax
+                </p>
+                </td>
+<td>
+                <p>
+                  compile
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  stopclock_constructor_overload_test
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  ...
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 -2010 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="acknowledgements.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tickets.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
