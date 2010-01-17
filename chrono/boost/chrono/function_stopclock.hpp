@@ -46,51 +46,54 @@ namespace boost { namespace chrono  {
         typedef Clock clock;
         typedef Stopwatch stopwatch;
         typedef Formatter formatter;
+        typedef typename Formatter::string_type string_type;
+        typedef typename Formatter::char_type char_type;
+        typedef typename Formatter::ostream_type ostream_type;
 
-        explicit function_stopclock( const std::string& func, system::error_code & ec = system::throws )
+        explicit function_stopclock( const string_type& func, system::error_code & ec = system::throws )
         : base_type(ec), func_(func)
         { begin(); }
-        function_stopclock( const std::string& func, std::ostream & os,
+        function_stopclock( const string_type& func, ostream_type & os,
                     system::error_code & ec = system::throws )
         : base_type(os, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const std::string& func, const std::string & format,
+        function_stopclock( const string_type& func, const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(format, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const std::string& func, int places,
+        function_stopclock( const string_type& func, int places,
                     system::error_code & ec = system::throws )
         : base_type(places, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const std::string& func, std::ostream & os, const std::string & format,
+        function_stopclock( const string_type& func, ostream_type & os, const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(os, format, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const std::string& func, const std::string & format, int places,
+        function_stopclock( const string_type& func, const string_type & format, int places,
                     system::error_code & ec = system::throws )
         : base_type(format, places, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const std::string& func, std::ostream & os, int places,
+        function_stopclock( const string_type& func, ostream_type & os, int places,
                     system::error_code & ec = system::throws )
         : base_type(os, places, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const std::string& func, int places, const std::string & format,
+        function_stopclock( const string_type& func, int places, const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(places, format, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const std::string& func, std::ostream & os, const std::string & format, int places,
+        function_stopclock( const string_type& func, ostream_type & os, const string_type & format, int places,
                     system::error_code & ec = system::throws )
         : base_type(os, format, places, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const std::string& func, std::ostream & os, int places, const std::string & format,
+        function_stopclock( const string_type& func, ostream_type & os, int places, const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(os, places, format, ec), func_(func)
         { begin(); }
@@ -105,7 +108,7 @@ namespace boost { namespace chrono  {
         void begin() {
             this->m_os << "{{{ " << func_ << std::endl;
         }
-        std::string     func_;
+        string_type     func_;
 
     };
 

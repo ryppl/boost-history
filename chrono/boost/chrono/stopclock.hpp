@@ -46,14 +46,17 @@ namespace boost { namespace chrono  {
         typedef Clock clock;
         typedef Stopwatch stopwatch;
         typedef Formatter formatter;
+        typedef typename Formatter::string_type string_type;
+        typedef typename Formatter::char_type char_type;
+        typedef typename Formatter::ostream_type ostream_type;
         
         explicit stopclock( system::error_code & ec = system::throws )
         : base_type(ec) { }
-        explicit stopclock( std::ostream & os,
+        explicit stopclock( ostream_type & os,
                     system::error_code & ec = system::throws )
         : base_type(os, ec) { }
 
-        explicit stopclock( const std::string & format,
+        explicit stopclock( const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(format, ec) { }
 
@@ -61,27 +64,27 @@ namespace boost { namespace chrono  {
                     system::error_code & ec = system::throws )
         : base_type(places, ec) { }
 
-        stopclock( std::ostream & os, const std::string & format,
+        stopclock( ostream_type & os, const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(os, format, ec) { }
 
-        stopclock( const std::string & format, int places,
+        stopclock( const string_type & format, int places,
                     system::error_code & ec = system::throws )
         : base_type(format, places, ec) { }
 
-        stopclock( std::ostream & os, int places,
+        stopclock( ostream_type & os, int places,
                     system::error_code & ec = system::throws )
         : base_type(os, places, ec) { }
 
-        stopclock( int places, const std::string & format,
+        stopclock( int places, const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(places, format, ec) { }
 
-        stopclock( std::ostream & os, const std::string & format, int places,
+        stopclock( ostream_type & os, const string_type & format, int places,
                     system::error_code & ec = system::throws )
         : base_type(os, format, places, ec) { }
 
-        stopclock( std::ostream & os, int places, const std::string & format,
+        stopclock( ostream_type & os, int places, const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(os, places, format, ec) { }
 
