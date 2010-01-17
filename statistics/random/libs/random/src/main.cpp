@@ -1,12 +1,9 @@
-#include <iostream>
-#include <libs/random/example/categorical.h>
+//#include <iostream>
 
 int main(){
 
-    // Other examples are in 
-    // sandbox/statistics/dist_random/libs/dist_random/example
-
-    example_categorical(std::cout);
+    // See
+    // sandbox/statistics/distribution_toolkit
     
     return 0;
 }
