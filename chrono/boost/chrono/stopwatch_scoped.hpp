@@ -23,8 +23,8 @@ namespace boost
 //--------------------------------------------------------------------------------------//
     template <class Stopwatch> class stopwatch_runner {
     public:
-        typedef Stopwatch stopwatch_type;
-        stopwatch_runner(stopwatch_type & a, system::error_code & ec = system::throws)
+        typedef Stopwatch stopwatch;
+        stopwatch_runner(stopwatch & a, system::error_code & ec = system::throws)
         : stopwatch_(a) {
             stopwatch_.start(ec);
         }
@@ -39,7 +39,7 @@ namespace boost
         }
 #endif
     private:
-        stopwatch_type& stopwatch_;
+        stopwatch& stopwatch_;
         stopwatch_runner();//= delete;
         stopwatch_runner(const stopwatch_runner&); // = delete;
         stopwatch_runner& operator=(const stopwatch_runner&); // = delete;
@@ -49,8 +49,8 @@ namespace boost
 //--------------------------------------------------------------------------------------//
     template <class Stopwatch> class stopwatch_suspender {
     public:
-        typedef Stopwatch stopwatch_type;
-        stopwatch_suspender(stopwatch_type & a, system::error_code & ec = system::throws)
+        typedef Stopwatch stopwatch;
+        stopwatch_suspender(stopwatch & a, system::error_code & ec = system::throws)
         : stopwatch_(a) {
             stopwatch_.suspend(ec);
         }
@@ -59,7 +59,7 @@ namespace boost
             stopwatch_.resume(ec);
         }
     private:
-        stopwatch_type& stopwatch_;
+        stopwatch& stopwatch_;
         stopwatch_suspender(); // = delete;
         stopwatch_suspender(const stopwatch_suspender&); // = delete;
         stopwatch_suspender& operator=(const stopwatch_suspender&); // = delete;
@@ -68,8 +68,8 @@ namespace boost
 //--------------------------------------------------------------------------------------//
     template <class Stopwatch> class stopwatch_resumer {
     public:
-        typedef Stopwatch stopwatch_type;
-        stopwatch_resumer(stopwatch_type & a, system::error_code & ec = system::throws)
+        typedef Stopwatch stopwatch;
+        stopwatch_resumer(stopwatch & a, system::error_code & ec = system::throws)
         : stopwatch_(a) {
             stopwatch_.resume(ec);
         }
@@ -78,7 +78,7 @@ namespace boost
             stopwatch_.suspend(ec);
         }
     private:
-        stopwatch_type& stopwatch_;
+        stopwatch& stopwatch_;
         stopwatch_resumer(); // = delete;
         stopwatch_resumer(const stopwatch_resumer&); // = delete;
         stopwatch_resumer& operator=(const stopwatch_resumer&); // = delete;

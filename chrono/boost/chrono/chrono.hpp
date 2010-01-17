@@ -97,9 +97,7 @@ TODO:
 #define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES)                                 \
     BOOST_MPL_ASSERT_MSG(boost::mpl::bool_< (CND) >::type::value, MSG, TYPES)
 #elif defined(BOOST_CHRONO_USES_ARRAY_ASSERT)
-#define BOOST_CHRONO_CONCAT(A,B) A##B
-#define BOOST_CHRONO_NAME(A,B) BOOST_CHRONO_CONCAT(A,B)
-#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_CHRONO_NAME(__boost_chrono_test_,__LINE__)[CND];
+#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_JOIN(__boost_chrono_test_,__LINE__)[CND];
 #else
 #define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES)
 #endif

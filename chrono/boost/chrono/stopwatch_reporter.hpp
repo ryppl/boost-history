@@ -82,6 +82,10 @@ namespace boost { namespace chrono  {
     template <class Stopwatch, class Formatter>
     class stopwatch_reporter : public Stopwatch {
     public:
+        typedef typename Stopwatch::clock clock;
+        typedef Stopwatch stopwatch;
+        typedef Formatter formatter;
+    
         explicit stopwatch_reporter( system::error_code & ec = system::throws )
         : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false) { }
         explicit stopwatch_reporter( std::ostream & os,

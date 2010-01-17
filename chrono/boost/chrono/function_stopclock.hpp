@@ -43,6 +43,10 @@ namespace boost { namespace chrono  {
     class function_stopclock : public stopwatch_reporter<Stopwatch, Formatter> {
         typedef stopwatch_reporter<Stopwatch, Formatter> base_type;
     public:
+        typedef Clock clock;
+        typedef Stopwatch stopwatch;
+        typedef Formatter formatter;
+
         explicit function_stopclock( const std::string& func, system::error_code & ec = system::throws )
         : base_type(ec), func_(func)
         { begin(); }
