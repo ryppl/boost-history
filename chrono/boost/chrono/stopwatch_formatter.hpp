@@ -13,6 +13,7 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/current_function.hpp>
+#include <boost/chrono/detail/default_out.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
 #include <iostream>
@@ -28,21 +29,34 @@ namespace boost { namespace chrono  {
 //--------------------------------------------------------------------------------------//
 
 
-    class stopwatch_formatter {
+    template <
+        typename CharT=char, 
+        typename Traits=std::char_traits<CharT>, 
+        class Alloc=std::allocator<CharT>
+    >
+    class basic_stopwatch_formatter {
     public:
-        static std::ostream &  default_os();
+        //~ typedef std::string string_type;
+        //~ typedef string_type::value_type char_type;
+        //~ typedef std::ostream ostream_type;
+    
+        typedef std::basic_string<CharT,Traits,Alloc> string_type;
+        typedef CharT char_type;
+        typedef std::basic_ostream<CharT,Traits> ostream_type;
+        
+        static ostream_type &  default_os();
         static const int m_default_places = 3;
-        static const char * m_default_format;
-        static const char* default_format() { return m_default_format; }
-        static std::string format(const char* s) {
-            std::string res(s);
+        static const char_type* m_default_format;
+        static const char_type* default_format() { return m_default_format; }
+        static string_type format(const char_type* s) {
+            string_type res(s);
             res += " tokes %ds\n";
             return res;
         }
         static int default_places() { return m_default_places; }
 
         template <class Stopwatch >
-        static void show_time( Stopwatch & stopwatch_, const char * format, int places, std::ostream & os, system::error_code & ec)
+        static void show_time( Stopwatch & stopwatch_, const char_type* format, int places, ostream_type & os, system::error_code & ec)
         //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
         //  be as low as 10, although will be 15 for many common platforms.
         {
@@ -76,10 +90,17 @@ namespace boost { namespace chrono  {
             }
         }
     };
-    const char * stopwatch_formatter::m_default_format ="%ds\n";
+    template <typename CharT,typename Traits, class Alloc>
+    const typename basic_stopwatch_formatter<CharT,Traits,Alloc>::char_type* 
+    basic_stopwatch_formatter<CharT,Traits,Alloc>::m_default_format ="%ds\n";
 
-    std::ostream &  stopwatch_formatter::default_os()  { return std::cout; }
+    template <typename CharT,typename Traits, class Alloc>
+    typename basic_stopwatch_formatter<CharT,Traits,Alloc>::ostream_type &  
+    basic_stopwatch_formatter<CharT,Traits,Alloc>::default_os()  { return detail::default_out<CharT,Traits>::apply(); }
 
+    typedef basic_stopwatch_formatter<char> stopwatch_formatter;
+    typedef basic_stopwatch_formatter<wchar_t> wstopwatch_formatter;
+    
   } // namespace chrono
 } // namespace boost
 

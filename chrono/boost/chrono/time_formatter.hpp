@@ -13,6 +13,7 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/current_function.hpp>
+#include <boost/chrono/detail/default_out.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
@@ -31,14 +32,27 @@ namespace boost { namespace chrono  {
 //--------------------------------------------------------------------------------------//
 
 
-    class time_formatter {
+    template <
+        typename CharT=char, 
+        typename Traits=std::char_traits<CharT>, 
+        class Alloc=std::allocator<CharT>
+    >
+    class basic_time_formatter {
     public:
-        static std::ostream &  default_os();
+        //~ typedef std::string string_type;
+        //~ typedef string_type::value_type char_type;
+        //~ typedef std::ostream ostream_type;
+    
+        typedef std::basic_string<CharT,Traits,Alloc> string_type;
+        typedef CharT char_type;
+        typedef std::basic_ostream<CharT,Traits> ostream_type;
+
+        static ostream_type &  default_os();
         static const int m_default_places = 3;
-        static const char* m_default_format;
-        static const char* default_format() { return m_default_format; }
-        static std::string format(const char* s) {
-            std::string res(s);
+        static const char_type* m_default_format;
+        static const char_type* default_format() { return m_default_format; }
+        static string_type format(const char_type* s) {
+            string_type res(s);
             res += " spent real %rs, cpu %cs (%p%), user %us, system %ss\n";
             return res;
         }
@@ -46,7 +60,7 @@ namespace boost { namespace chrono  {
 
         template <class Stopwatch >
         static void show_time( Stopwatch & stopwatch_
-            , const char * format, int places, std::ostream & os
+            , const char_type* format, int places, ostream_type & os
             , system::error_code & ec)
           //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
           //  be as low as 10, although will be 15 for many common platforms.
@@ -108,10 +122,17 @@ namespace boost { namespace chrono  {
           }
 
     };
-    const char * time_formatter::m_default_format = "real %rs, cpu %cs (%p%), user %us, system %ss\n";
+    template <typename CharT,typename Traits, class Alloc>
+    const typename basic_time_formatter<CharT,Traits,Alloc>::char_type* 
+    basic_time_formatter<CharT,Traits,Alloc>::m_default_format = "real %rs, cpu %cs (%p%), user %us, system %ss\n";
 
-    std::ostream &  time_formatter::default_os()  { return std::cout; }
+    template <typename CharT,typename Traits, class Alloc>
+    typename basic_time_formatter<CharT,Traits,Alloc>::ostream_type &  
+    basic_time_formatter<CharT,Traits,Alloc>::default_os()  { return detail::default_out<CharT,Traits>::apply(); }
 
+    typedef basic_time_formatter<char> time_formatter;
+    typedef basic_time_formatter<wchar_t> wtime_formatter;
+    
     template <>
     struct stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> > {
         typedef time_formatter type;
