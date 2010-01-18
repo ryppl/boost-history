@@ -39,6 +39,8 @@
 
 <h1>Reference Documentation</h1>
 
+<p><a href="#dummy">dummy</a></p>
+
 <h2><a name="TOC">Table of Contents</a></h2>
 
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
@@ -1576,7 +1578,7 @@ directory_iterator(</code>const path&amp; p, system::error_code&amp; ec<code>);<
 entry in the directory <code>p</code> resolves to, if any; otherwise, the end iterator.</p>
 
 <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 
 <p>[<i>Note:</i> To iterate over the current directory, use <code>
@@ -1592,7 +1594,7 @@ directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
 <p><i>Returns:</i> <code>*this</code>.</p>
 
 <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 
 </blockquote>
@@ -1672,7 +1674,7 @@ entry in the directory <code>p</code> resolves to, if any; otherwise, the end it
 level() == 0</code>, <code>no_push_request() == false</code>.</p>
 
 <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 
 <p>[<i>Note:</i> To iterate over the current directory, use <code>recursive_directory_iterator(&quot;.&quot;)</code> rather than
@@ -1704,7 +1706,7 @@ is incremented and <code>(*this)-&gt;path()</code> is recursively iterated into.
 <p><i>Returns:</i> <code>*this</code>.</p>
 
 <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 
 </blockquote>
@@ -1827,7 +1829,7 @@ an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end not
   copy_option::fail_if_exists)</code>.</p>
   
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
   
 </blockquote>
@@ -1837,7 +1839,7 @@ an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end not
   copy_option::fail_if_exists, ec)</code>.</p>
   
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
   
 </blockquote>
@@ -1848,7 +1850,7 @@ void <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to,
   &amp;&amp; exists(to)</code>, an error is reported. Otherwise, t</span>he contents and attributes of the file <code>from</code> 
   resolves to are copied to the file <code>to</code> resolves to.</p>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
 <pre>bool <a name="create_directories">create_directories</a>(const path&amp; p);
@@ -1861,7 +1863,7 @@ bool <a name="create_directories">create_directories</a>(const path&amp; p, syst
   <p><i>Returns:</i> The value of <code>!exists(p)</code> prior to the 
   establishment of the postcondition.</p>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
 <pre>bool <a name="create_directory">create_directory</a>(const path&amp; p);
@@ -1874,7 +1876,7 @@ bool <a name="create_directory">create_directory</a>(const path&amp; p, system::
   <p><i>Returns:</i> <code>true</code> if a new directory was created, otherwise 
   <code>false</code>.</p>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
 <pre><span style="background-color: #FFFFFF">void <a name="create_hard_link">create_hard_link</a>(const path&amp; to, const path&amp; from);
@@ -1894,7 +1896,7 @@ void <a name="create_hard_link">create_hard_link</a>(const path&amp; to, const p
     <code>to</code> resolves to are unchanged.</span></li>
   </ul>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
   <p><span style="background-color: #FFFFFF">[</span><i><span style="background-color: #FFFFFF">Note:</span></i><span style="background-color: #FFFFFF"> 
   Some <b>operating systems</b> do not support hard links at all or support 
@@ -1917,7 +1919,7 @@ void <a name="create_symlink">create_symlink</a>(const path&amp; to, const path&
   Postconditions:</i> <code>from</code> resolves to a symbolic link file that 
   contains an unspecified representation of <code>to</code>.</span></p>
   <p style="font-size: 10pt"><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
   <p><span style="background-color: #FFFFFF">[</span><i><span style="background-color: #FFFFFF">Note:</span></i><span style="background-color: #FFFFFF"> 
   Some <b>operating systems</b> do not support symbolic links at all or support 
@@ -1938,7 +1940,7 @@ path <a name="current_path">current_path</a>(system::error_code&amp; ec);</pre>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/getcwd.html">
   getcwd()</a></code>. <code>is_absolute()</code> is true for the returned path.</p>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
   <p>[<i>Note:</i> The current path as returned by many operating systems is a 
   dangerous global variable. It may be changed unexpectedly by a third-party or 
@@ -1958,7 +1960,7 @@ void current_path(const path&amp; p, system::error_code&amp; ec);</pre>
   chdir()</a></span></code><span style="background-color: #FFFFFF">.</span></p>
 <p><i>Postconditions:</i> <code>equivalent(p, current_path())</code>.</p>
 <p><i>Throws:</i> As specified in
-<a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+<a href="#Error-reporting">
 Error reporting</a>.</p>
 </blockquote>
 <pre><span style="background-color: #FFFFFF">bool <a name="exists-file_status">exists</a>(file_status s);</span></pre>
@@ -2007,7 +2009,7 @@ bool <a name="equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2,
   <p style="font-size: 10pt"><i>Throws:</i> <code>filesystem_error</code><span style="background-color: #FFFFFF">
   </span>if <code>(!exists(s1) &amp;&amp; !exists(s2)) || (is_other(s1) &amp;&amp; is_other(s2))</code>, 
   otherwise as specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
 <pre><span style="background-color: #FFFFFF; ">uintmax_t</span> <a name="file_size">file_size</a>(const path&amp; p);<span style="background-color: #FFFFFF; ">
@@ -2023,7 +2025,7 @@ uintmax_t</span> <a name="file_size">file_size</a>(const path&amp; p, system::er
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>. 
   Otherwise, <code>static_cast&lt;uintmax_t&gt;(-1)</code>.</p>
   <p style="font-size: 10pt"><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
 <pre>const path&amp; <a name="initial_path">initial_path</a>();
@@ -2148,7 +2150,7 @@ void <a name="last_write_time2">last_write_time</a>(const path&amp; p, const std
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/utime.html">
   <code>utime()</code></a>.</p>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
   <p>[<i>Note:</i> A postcondition of <code>last_write_time(p) == 
   new_time</code> is not specified since it might not hold for file systems 
@@ -2161,7 +2163,7 @@ path read_symlink(const path&amp; p, system::error_code&amp; ec);</pre>
   link, a <code>path</code> object containing the contents of that symbolic 
   link. Otherwise an empty <code>path</code> object.</p>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>. [<i>Note:</i> It is an error if <code>p</code> does not 
   resolve to a symbolic link. <i>-- end note</i>]</p>
 </blockquote>
@@ -2180,7 +2182,7 @@ bool <a name="remove">remove</a>(const path&amp; p, system::error_code&amp; ec);
   <p><i>Returns:</i>&nbsp; <code>false</code> if p did not exist in the first 
   place, otherwise <code>true</code>.</p>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
 <pre>uintmax_t <a name="remove_all">remove_all</a>(const path&amp; p);
@@ -2197,7 +2199,7 @@ uintmax_t <a name="remove_all">remove_all</a>(const path&amp; p, system::error_c
   <p><i>Postcondition:</i> <code>!exists(p)</code></p>
   <p><i>Returns:</i> The number of files removed.</p>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p);
@@ -2215,7 +2217,7 @@ void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p, s
   the file it resolves to being renamed. <i>-- end note</i>]</p>
   </blockquote>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="resize_file">resize_file</a>(const path&amp; p, <span style="background-color: #FFFFFF; ">uintmax_t new_size</span>);
@@ -2223,7 +2225,7 @@ void <a name="resize_file">resize_file</a>(const path&amp; p, <span style="backg
 <blockquote>
 <p><i>Postconditions:</i> <code>file_size() == new_size</code>.</p>
 <p><i>Throws:</i> As specified in
-<a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+<a href="#Error-reporting">
 Error reporting</a>.</p>
   <p style="font-size: 10pt"><i>Remarks:</i> Achieves its postconditions as if by 
   POSIX <code>
@@ -2245,7 +2247,7 @@ space_info <a name="space">space</a>(const path&amp; p</span>, system::error_cod
   and <code>available</code> members respectively. Any members for which the 
   value cannot be determined shall be set to -1.</span></p>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
 </blockquote>
 <pre><a href="#file_status">file_status</a> <a name="status">status</a>(const path&amp; p);</pre>
@@ -2425,7 +2427,7 @@ path unique_path(const path&amp; model, system::error_code&amp; ec);</pre>
   occurrence of a percent sign character is replaced by a random hexadecimal 
   digit character in the range 0-9, a-f.</p>
   <p><i>Throws:</i> As specified in
-  <a href="file:///C:/boost/filesystem-v3-sandbox/libs/filesystem/doc/reference.html#Error-reporting">
+  <a href="#Error-reporting">
   Error reporting</a>.</p>
   <p><i>Remarks:</i> Implementations are encouraged to obtain the required 
   randomness via a
@@ -3198,7 +3200,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->13 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32139" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->17 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32147" --></p>
 
 </body>
 

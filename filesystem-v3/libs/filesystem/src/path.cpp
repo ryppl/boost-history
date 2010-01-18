@@ -110,11 +110,11 @@ namespace
       const string_type& src,
       size_type& element_pos,
       size_type& element_size,
-#    if !BOOST_WORKAROUND(BOOST_MSVC, <= 1310) // VC++ 7.1
+#     if !BOOST_WORKAROUND(BOOST_MSVC, <= 1310) // VC++ 7.1
       size_type size = string_type::npos
-#    else
+#     else
       size_type size = -1
-#    endif
+#     endif
     );
 
 }  // unnamed namespace
@@ -193,9 +193,9 @@ namespace filesystem
   path::string_type::size_type path::m_append_separator_if_needed()
   {
     if (!m_pathname.empty() &&
-#   ifdef BOOST_WINDOWS_PATH
+#     ifdef BOOST_WINDOWS_PATH
       *(m_pathname.end()-1) != colon && 
-#   endif
+#     endif
       !is_separator(*(m_pathname.end()-1)))
     {
       string_type::size_type tmp(m_pathname.size());
@@ -212,9 +212,9 @@ namespace filesystem
     if (sep_pos                         // a separator was added
       && sep_pos < m_pathname.size()         // and something was appended
       && (m_pathname[sep_pos+1] == separator // and it was also separator
-#   ifdef BOOST_WINDOWS_PATH
+#      ifdef BOOST_WINDOWS_PATH
        || m_pathname[sep_pos+1] == preferred_separator  // or preferred_separator
-#   endif
+#      endif
 )) { m_pathname.erase(sep_pos, 1); } // erase the added separator
   }
 
@@ -234,22 +234,6 @@ namespace filesystem
 #   endif
 
     BOOST_ASSERT(!this_root_directory.empty() || base.has_root_directory());
-//
-//    if (has_root_directory() // is_absolute
-// #      ifdef BOOST_WINDOWS_PATH
-//        && !this_root_name.empty()
-// #      endif
-//       ) return *this;
-//
-//    return (!this_root_name.empty() ? this_root_name : base_root_name)
-//#     ifdef BOOST_POSIX_PATH
-//      / separator
-//#     else  // BOOST_WINDOWS_PATH
-//      // use actual separator, which may be slash or backslash
-//      / (!this_root_directory.empty() ? this_root_directory : base.root_directory())
-//#     endif
-//      / base.relative_path()
-//      / relative_path();
 
     if (empty())
       return base;
@@ -306,9 +290,9 @@ namespace filesystem
 
     for (; itr.m_pos != m_pathname.size()
       && (is_separator(itr.m_element.m_pathname[0])
-#       ifdef BOOST_WINDOWS_PATH
+#     ifdef BOOST_WINDOWS_PATH
       || itr.m_element.m_pathname[itr.m_element.m_pathname.size()-1] == colon
-#       endif
+#     endif
     ); ++itr) {}
 
     return path(m_pathname.c_str() + itr.m_pos);
@@ -490,9 +474,9 @@ namespace
     return  pos != 0
       && (pos <= 2 || !is_separator(str[1])
         || str.find_first_of(separators, 2) != pos)
-#   ifdef BOOST_WINDOWS_PATH
+#     ifdef BOOST_WINDOWS_PATH
       && (pos !=2 || str[1] != colon)
-#   endif
+#     endif
         ;
   }
 
@@ -514,10 +498,10 @@ namespace
     // set pos to start of last element
     size_type pos(str.find_last_of(separators, end_pos-1));
 
-# ifdef BOOST_WINDOWS_PATH
+#   ifdef BOOST_WINDOWS_PATH
     if (pos == string_type::npos)
       pos = str.find_last_of(colon, end_pos-2);
-# endif
+#   endif
 
     return (pos == string_type::npos // path itself must be a filename (or empty)
       || (pos == 1 && is_separator(str[0]))) // or net
@@ -772,18 +756,18 @@ namespace
 
   std::locale default_locale()
   {
-# ifdef BOOST_WINDOWS_API
+#   ifdef BOOST_WINDOWS_API
     std::locale global_loc = std::locale();
     std::locale loc(global_loc, new windows_file_codecvt);
     return loc;
-# else
-    // ISO C calls this "the locale-specific native environment":
-#   if !defined(macintosh) && !defined(__APPLE__) && !defined(__APPLE_CC__) 
-      return std::locale("");
 #   else
+      // ISO C calls this "the locale-specific native environment":
+#     if !defined(macintosh) && !defined(__APPLE__) && !defined(__APPLE_CC__) 
+      return std::locale("");
+#     else
       return std::locale();  // std::locale("") throws on Mac OS
+#     endif
 #   endif
-# endif
   }
 
   std::locale & path_locale()

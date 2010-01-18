@@ -157,10 +157,6 @@ typedef struct _REPARSE_DATA_BUFFER {
 #include <cassert>
 // #include <iostream>    // for debugging only; comment out when not in use
 
-#ifdef BOOST_NO_STDC_NAMESPACE
-namespace std { using ::strcmp; using ::remove; using ::rename; }
-#endif
-
 //  POSIX/Windows macros  ----------------------------------------------------//
 
 //  Portions of the POSIX and Windows API's are very similar, except for name,
@@ -567,7 +563,7 @@ namespace
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
-//                 operations functions declared in operations.hpp                      //
+//                operations functions declared in operations.hpp                       //
 //                            in alphabetic order                                       //
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
@@ -580,12 +576,12 @@ namespace detail
 {
   BOOST_FILESYSTEM_DECL bool possible_large_file_size_support()
   {
-# ifdef BOOST_POSIX_API
+#   ifdef BOOST_POSIX_API
     struct stat lcl_stat;
     return sizeof(lcl_stat.st_size)> 4;
-# else
+#   else
     return true;
-# endif
+#   endif
   }
 
   BOOST_FILESYSTEM_DECL
@@ -654,16 +650,16 @@ namespace detail
   BOOST_FILESYSTEM_DECL
   void copy_symlink(const path& from, const path& to, system::error_code* ec)
   {
-# ifdef BOOST_POSIX_API  
+#   ifdef BOOST_POSIX_API  
     path p(read_symlink(from, ec));
     if (ec != 0 && ec) return;
     create_symlink(p, to, ec);
 
-# elif _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
+#   elif _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
     error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category), to, from, ec,
       "boost::filesystem::copy_symlink");
 
-# else  // modern Windows
+#   else  // modern Windows
 
     // see if actually supported by Windows runtime dll
     if (error(!create_symbolic_link_api,
@@ -672,11 +668,11 @@ namespace detail
         "boost::filesystem::copy_symlink"))
       return;
 
-	// preconditions met, so attempt the copy
-	error(!::CopyFileExW(from.c_str(), to.c_str(), 0, 0, 0,
-		COPY_FILE_COPY_SYMLINK | COPY_FILE_FAIL_IF_EXISTS), to, from, ec,
-		"boost::filesystem::copy_symlink");
-# endif
+	  // preconditions met, so attempt the copy
+	  error(!::CopyFileExW(from.c_str(), to.c_str(), 0, 0, 0,
+		  COPY_FILE_COPY_SYMLINK | COPY_FILE_FAIL_IF_EXISTS), to, from, ec,
+		  "boost::filesystem::copy_symlink");
+#   endif
 
   }
 
@@ -803,7 +799,7 @@ namespace detail
   BOOST_FILESYSTEM_DECL
   path current_path(error_code* ec)
   {
-# ifdef BOOST_POSIX_API
+#   ifdef BOOST_POSIX_API
     path cur;
     for (long path_max = 128;; path_max *=2)// loop 'til buffer large enough
     {
@@ -830,14 +826,14 @@ namespace detail
     }
     return cur;
 
-# else
+#   else
     DWORD sz;
     if ((sz = ::GetCurrentDirectoryW(0, NULL))== 0)sz = 1;
     boost::scoped_array<path::value_type> buf(new path::value_type[sz]);
     error(::GetCurrentDirectoryW(sz, buf.get())== 0, ec,
       "boost::filesystem::current_path");
     return path(buf.get());
-# endif
+#   endif
   }
 
 
@@ -851,7 +847,7 @@ namespace detail
   BOOST_FILESYSTEM_DECL
   bool equivalent(const path& p1, const path& p2, system::error_code* ec)
   {
-# ifdef BOOST_POSIX_API
+#   ifdef BOOST_POSIX_API
     struct stat s2;
     int e2(::stat(p2.c_str(), &s2));
     struct stat s1;
@@ -872,7 +868,7 @@ namespace detail
         // Just to be sure, size and mod time are also checked.
         && s1.st_size == s2.st_size && s1.st_mtime == s2.st_mtime;
 
-# else  // Windows
+#   else  // Windows
 
     // Note well: Physical location on external media is part of the
     // equivalence criteria. If there are no open handles, physical location
@@ -938,13 +934,13 @@ namespace detail
         && info1.ftLastWriteTime.dwHighDateTime
           == info2.ftLastWriteTime.dwHighDateTime;
 
-# endif
+#   endif
   }
 
   BOOST_FILESYSTEM_DECL
   boost::uintmax_t file_size(const path& p, error_code* ec)
   {
-# ifdef BOOST_POSIX_API
+#   ifdef BOOST_POSIX_API
 
     struct stat path_stat;
     if (error(::stat(p.c_str(), &path_stat)!= 0,
@@ -957,7 +953,7 @@ namespace detail
 
     return static_cast<boost::uintmax_t>(path_stat.st_size);
 
-# else  // Windows
+#   else  // Windows
 
     // assume uintmax_t is 64-bits on all Windows compilers
 
@@ -974,13 +970,13 @@ namespace detail
 
     return (static_cast<boost::uintmax_t>(fad.nFileSizeHigh)
               << (sizeof(fad.nFileSizeLow)*8)) + fad.nFileSizeLow;
-# endif
+#   endif
   }
 
   BOOST_FILESYSTEM_DECL
   boost::uintmax_t hard_link_count(const path& p, system::error_code* ec)
   {
-# ifdef BOOST_POSIX_API
+#   ifdef BOOST_POSIX_API
 
     struct stat path_stat;
     return error(::stat(p.c_str(), &path_stat)!= 0,
@@ -988,7 +984,7 @@ namespace detail
            ? 0
            : static_cast<boost::uintmax_t>(path_stat.st_nlink);
 
-# else // Windows
+#   else // Windows
 
     // Link count info is only available through GetFileInformationByHandle
     BY_HANDLE_FILE_INFORMATION info;
@@ -1003,7 +999,7 @@ namespace detail
                  p, ec, "boost::filesystem::hard_link_count")
            ? info.nNumberOfLinks
            : 0;
-# endif
+#   endif
   }
 
   BOOST_FILESYSTEM_DECL
@@ -1115,7 +1111,7 @@ namespace detail
   {
     path symlink_path;
 
-# ifdef BOOST_POSIX_API
+#   ifdef BOOST_POSIX_API
 
     for (std::size_t path_max = 64;; path_max *= 2)// loop 'til buffer large enough
     {
@@ -1140,10 +1136,10 @@ namespace detail
       }
     }
 
-# elif _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
+#   elif _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
     error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category), p, ec,
           "boost::filesystem::read_symlink");
-# else  // Vista and Server 2008 SDK, or later
+#   else  // Vista and Server 2008 SDK, or later
 
     union info_t
     {
@@ -1169,7 +1165,7 @@ namespace detail
         static_cast<wchar_t*>(info.rdb.SymbolicLinkReparseBuffer.PathBuffer)
         + info.rdb.SymbolicLinkReparseBuffer.PrintNameOffset/sizeof(wchar_t)
         + info.rdb.SymbolicLinkReparseBuffer.PrintNameLength/sizeof(wchar_t));
-#   endif
+#     endif
     return symlink_path;
   }
   
@@ -1215,8 +1211,7 @@ namespace detail
   BOOST_FILESYSTEM_DECL
   space_info space(const path& p, error_code* ec)
   {
-# ifdef BOOST_POSIX_API
-
+#   ifdef BOOST_POSIX_API
     struct BOOST_STATVFS vfs;
     space_info info;
     if (!error(::BOOST_STATVFS(p.c_str(), &vfs)!= 0,
@@ -1229,8 +1224,8 @@ namespace detail
       info.available
         = static_cast<boost::uintmax_t>(vfs.f_bavail)* BOOST_STATVFS_F_FRSIZE;
     }
-# else
 
+#   else
     ULARGE_INTEGER avail, total, free;
     space_info info;
 
@@ -1247,7 +1242,8 @@ namespace detail
         = (static_cast<boost::uintmax_t>(avail.HighPart)<< 32)
           + avail.LowPart;
     }
-# endif
+
+#   endif
 
     else
     {
@@ -1277,7 +1273,6 @@ namespace detail
         p, error_code(errval, system_category)));
     return file_status(status_error);
   }
-
 # endif
 
   BOOST_FILESYSTEM_DECL
@@ -1483,9 +1478,9 @@ namespace path_traits
 {
   void dispatch(const directory_entry & de,
 #                ifdef BOOST_WINDOWS_API
-                   std::wstring& to,
+                 std::wstring& to,
 #                else   
-                   std::string& to,
+                 std::string& to,
 #                endif
                  const codecvt_type &)
   {
@@ -1686,8 +1681,7 @@ namespace detail
 #   endif
    )
   {
-# ifdef BOOST_POSIX_API
-
+#   ifdef BOOST_POSIX_API
     std::free(buffer);
     buffer = 0;
     if (handle == 0)return ok;
@@ -1695,15 +1689,15 @@ namespace detail
     handle = 0;
     return error_code(::closedir(h)== 0 ? 0 : errno, system_category);
 
-# else
-
+#   else
     if (handle != 0)
     {
       ::FindClose(handle);
       handle = 0;
     }
     return ok;
-# endif
+
+#   endif
   }
 
   void directory_iterator_construct(directory_iterator& it,
@@ -1715,9 +1709,9 @@ namespace detail
     path::string_type filename;
     file_status file_stat, symlink_file_stat;
     error_code result = dir_itr_first(it.m_imp->handle,
-  #if   defined(BOOST_POSIX_API)
+#     if defined(BOOST_POSIX_API)
       it.m_imp->buffer,
-  #endif
+#     endif
       p.c_str(), filename, file_stat, symlink_file_stat);
 
     if (result)
@@ -1754,9 +1748,9 @@ namespace detail
     for (;;)
     {
       temp_ec = dir_itr_increment(it.m_imp->handle,
-#if     defined(BOOST_POSIX_API)
+#       if defined(BOOST_POSIX_API)
         it.m_imp->buffer,
-#endif
+#       endif
         filename, file_stat, symlink_file_stat);
 
       if (temp_ec)

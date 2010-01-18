@@ -31,11 +31,6 @@
 #include <locale>
 #include <algorithm>
 
-# ifdef BOOST_WINDOWS_API
-# else   // BOOST_POSIX_API
-# endif
-
-
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
 namespace boost
@@ -71,11 +66,11 @@ namespace filesystem
     //  value_type is the character type used by the operating system API to
     //  represent paths.
 
-# ifdef BOOST_WINDOWS_API
+#   ifdef BOOST_WINDOWS_API
     typedef wchar_t                        value_type;
-# else 
+#   else 
     typedef char                           value_type;
-# endif
+#   endif
     typedef std::basic_string<value_type>  string_type;  
     typedef path_traits::codecvt_type      codecvt_type;
 
@@ -210,11 +205,9 @@ namespace filesystem
     path&  replace_extension(const path& new_extension = path());
 
 #   ifdef BOOST_POSIX_API
-
     path& localize() { return *this; }  // POSIX m_pathname already localized
 
 #   else // BOOST_WINDOWS_API
-
     path& localize();  // change slashes to backslashes
 
 #   endif
@@ -246,11 +239,11 @@ namespace filesystem
     template <class String>
     String string() const;
 
-# ifdef BOOST_WINDOWS_API
+#   ifdef BOOST_WINDOWS_API
     const std::string    string() const;
     const std::wstring&  wstring() const { return m_pathname; }
 
-# else   // BOOST_POSIX_API
+#   else   // BOOST_POSIX_API
     const std::string&  string() const   { return m_pathname; }
     const std::wstring  wstring() const
     { 
@@ -261,22 +254,22 @@ namespace filesystem
       return tmp;
     }
 
-# endif
+#   endif
 
     //  -----  generic format observers  -----
 
     template <class String>
     String generic_string() const;
 
-# ifdef BOOST_WINDOWS_API
+#   ifdef BOOST_WINDOWS_API
     const std::string   generic_string() const; 
     const std::wstring  generic_wstring() const;
 
-# else // BOOST_POSIX_API
+#   else // BOOST_POSIX_API
     const std::string&  generic_string() const  { return m_pathname; }
     const std::wstring  generic_wstring() const { return wstring(); }
 
-# endif
+#   endif
 
     //  -----  composition  -----
 
@@ -307,11 +300,11 @@ namespace filesystem
     bool has_extension() const       { return !extension().empty(); }
     bool is_absolute() const
     {
-#   ifdef BOOST_WINDOWS_PATH
+#     ifdef BOOST_WINDOWS_PATH
       return has_root_name() && has_root_directory();
-#   else
+#     else
       return has_root_directory();
-#   endif
+#     endif
     }
     bool is_relative() const         { return !is_absolute(); } 
 

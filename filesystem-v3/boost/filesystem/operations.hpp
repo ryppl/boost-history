@@ -39,10 +39,6 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
-# ifdef BOOST_NO_STDC_NAMESPACE
-    namespace std { using ::time_t; }
-# endif
-
 //--------------------------------------------------------------------------------------//
 
 namespace boost
@@ -59,9 +55,9 @@ namespace boost
   enum file_type
   { 
     status_error,
-# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+#   ifndef BOOST_FILESYSTEM_NO_DEPRECATED
     status_unknown = status_error,
-# endif
+#   endif
     file_not_found,
     regular_file,
     directory_file,
@@ -426,7 +422,7 @@ namespace boost
   space_info space(const path& p, system::error_code& ec) {return detail::space(p, &ec);} 
 
 # ifndef BOOST_FILESYSTEM_NO_DEPRECATED
-    inline bool symbolic_link_exists(const path& p)
+  inline bool symbolic_link_exists(const path& p)
                                        { return is_symlink(symlink_status(p)); }
 # endif
 
@@ -512,9 +508,9 @@ namespace detail
   BOOST_FILESYSTEM_DECL
     system::error_code dir_itr_close(// never throws()
     void *& handle
-#     if     defined(BOOST_POSIX_API)
-        , void *& buffer
-#     endif
+#   if     defined(BOOST_POSIX_API)
+    , void *& buffer
+#   endif
   ); 
 
   struct dir_itr_imp
@@ -523,13 +519,13 @@ namespace detail
     void*            handle;
 
 #   ifdef BOOST_POSIX_API
-      void*            buffer;  // see dir_itr_increment implementation
+    void*            buffer;  // see dir_itr_increment implementation
 #   endif
 
     dir_itr_imp() : handle(0)
-#     ifdef BOOST_POSIX_API
-        , buffer(0)
-#     endif
+#   ifdef BOOST_POSIX_API
+      , buffer(0)
+#   endif
     {}
 
     ~dir_itr_imp() // never throws
@@ -792,7 +788,7 @@ namespace detail
   };
 
 # if !defined(BOOST_FILESYSTEM_NO_DEPRECATED)
-    typedef recursive_directory_iterator wrecursive_directory_iterator;
+  typedef recursive_directory_iterator wrecursive_directory_iterator;
 # endif
 
 //--------------------------------------------------------------------------------------//
