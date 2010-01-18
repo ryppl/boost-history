@@ -39,29 +39,27 @@
 
 <h1>Reference Documentation</h1>
 
-<p><a href="#dummy">dummy</a></p>
-
 <h2><a name="TOC">Table of Contents</a></h2>
 
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
   <tr>
     <td width="33%" valign="top"><a href="#Introduction">Introduction</a><br>
     <a href="#Definitions">Definitions</a><br>
+    <a href="#Conformance">Conformance</a><br>
     <a href="#Header-filesystem-synopsis">
     Header &lt;filesystem&gt; synopsis</a><br>
     <a href="#Error-reporting">Error reporting</a><br>
     <a href="#class-path">Class path</a><br>
-    &nbsp;&nbsp;&nbsp;
-<a href="#Pathname-formats">Pathname formats</a><br>
-    &nbsp;&nbsp;&nbsp;
-<a href="#Pathname-grammar">Pathname grammar</a><br>
-    &nbsp;&nbsp;&nbsp;
-<a href="#Input-conversion">Filename conversion</a><br>
     &nbsp;&nbsp;&nbsp; <a href="#path-constructors">path constructors</a><br>
 &nbsp;&nbsp;&nbsp; <a href="#path-assignments">path assignments</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-appends">path appends</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-modifiers">path modifiers</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-decompositions">path observers</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-native-format-observers">path native 
+    format observers</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-generic-format-observers">path generic 
+    format observers</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#path-decomposition">path decomposition</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#path-query">path query</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-iterators">path iterators</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-deprecated-functions">path deprecated functions</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-non-member-functions">path non-member functions</a><br>
@@ -77,7 +75,6 @@
 <a href="#directory_entry-constructors">directory_entry constructors</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#directory_entry-modifiers">directory_entry modifiers</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#directory_entry-observers">directory_entry observers</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#directory_entry-comparisons">directory_entry comparisons</a><br>
 <a href="#Class-directory_iterator">Class  directory_iterator</a><br>
 &nbsp;&nbsp;&nbsp; <a href="#directory_iterator-members">directory_iterator 
     members</a><br>
@@ -155,7 +152,7 @@ additional filenames that have special meaning.</p>
 <p><b><i><a name="Path">Path</a>:</i></b> A sequence of elements that identify 
 a location within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
 root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
-A pathname is the concrete representation of a path. <i>--end note</i>]</p>
+A <a href="#Pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
 <p><b><i><a name="Absolute-path">Absolute path</a>:</i></b> A path that uniquely 
 identifies a file. The format is implementation defined. </p>
 <blockquote>
@@ -287,7 +284,7 @@ is unreasonable for a program to detect them prior to calling the function. <i>
   {
     namespace filesystem
     {
-      class <a href="#Class-template-path">path</a>;
+      class <a href="#class-path">path</a>;
 
       void swap(path&amp; lhs, path&amp; rhs);
       bool lexicographical_compare(path::iterator first1, path::iterator last1,
@@ -364,9 +361,9 @@ is unreasonable for a program to detect them prior to calling the function. <i>
       void         <a href="#current_path">current_path</a>(const path&amp; p);
       void         <a href="#current_path">current_path</a>(const path&amp; p, system::error_code&amp; ec);
 
-      bool         <a href="#exists-path">exists</a>(file_status s);
-      bool         <a href="#exists-path">exists</a>(const path&amp; p);
-      bool         <a href="#exists-path">exists</a>(const path&amp; p, system::error_code&amp; ec);
+      bool         <a href="#exists">exists</a>(file_status s);
+      bool         <a href="#exists">exists</a>(const path&amp; p);
+      bool         <a href="#exists">exists</a>(const path&amp; p, system::error_code&amp; ec);
 
       bool         <a href="#equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2);
       bool         <a href="#equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2, system::error_code&amp; ec);
@@ -534,7 +531,7 @@ system. </p>
         path&amp; replace_extension(const path&amp; new_extension = path());
         path&amp; localize();  // POSIX: no effect. Windows: convert slashes to backslashes
 
-        // native format <a href="#path-observers">observers</a>
+        // <a href="#path-native-format-observers">native format observers</a>
         const string_type&amp;  native() const;            // native format, encoding
         const value_type*   c_str() const;             // native().c_str()
 
@@ -546,7 +543,7 @@ system. </p>
         const u16string     u16string() const;         // ditto
         const u32string     u32string() const;         // ditto
 
-        // generic format observers
+        // <a href="#path-generic-format-observers">generic format observers</a>
         template &lt;class String&gt;
         String generic_string() const;
 
@@ -634,7 +631,7 @@ pointing to contiguous storage. The iterator's value type is required to be <cod
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
   <li>A <code>boost::filesystem::directory_entry</code>.</li>
 </ul>
-<p>Iteration over <code><a name="ContiguousIterator">ContiguousIterator</a></code> 
+<p>Iteration over <code>ContiguousIterator</code> 
 and <code>Source</code> arguments shall result in generic pathname format or 
 native pathname format strings.</p>
 <p>The specifications for certain <code>path</code> functions require that 
@@ -719,8 +716,7 @@ letters to uppercase.<i> -- end note.</i>]</p>
   or <code>source</code> is not <code>value_type</code>, the contents are 
   converted by <code>codecvt()</code>.</p>
   </blockquote>
-<h3> <code><font size="4"> <a name="path-appends">path</a></font></code><a name="path-appends"> 
-appends</a></h3>
+<h3> <a name="path-appends"><code><font size="4"> path</font></code> appends</a></h3>
   <p>The append operations use <code>operator/=</code> to denote their semantic 
   effect of appending the platform's preferred directory separator when needed. The 
   preferred 
@@ -817,9 +813,10 @@ appends</a></h3>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
 
-<h3><code><font size="4">path</font></code><font size="4"> <a name="path-native-format-observers">
-native format</a></font><a name="path-native-format-observers"> observers</a></h3>
-<p>The string returned by all native format observers is in the <a href="#Native-pathname-format">native pathname format</a>.</p>
+<h3> <a name="path-native-format-observers"><code><font size="4">path</font></code> 
+native format observers</a></h3>
+<p>The string returned by all native format observers is in the
+<a href="#native-pathname-format">native pathname format</a>.</p>
 <pre>const string_type&amp;  native() const;</pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>.</p>
@@ -852,9 +849,8 @@ rather than <code>const</code> value. [<i>Note:</i> For POSIX, this occurs for
 <code>string()</code>, for Windows, <code>wstring()</code>. <i>--end note</i>]</p>
 </blockquote>
 
-<h3><code><font size="4">path</font></code><font size="4">
-<a name="path-generic-format-observers">generic format</a></font><a name="path-native-format-observers"> 
-observers</a></h3>
+<h3> <a name="path-generic-format-observers"><code><font size="4">path</font></code>
+generic format observers</a></h3>
 <p>The string returned by all generic format observers is in the
 <a href="#generic-pathname-format">generic pathname format</a>.</p>
 <p>[<i>Note:</i> For POSIX, no conversion occurs, since the native format and 
@@ -1020,8 +1016,7 @@ path</code>.</p>
 <blockquote>
   <p><i>Returns:</i> The end iterator.</p>
 </blockquote>
-<h3> <code><font size="4"> <a name="path-deprecated-functions">path</a></font></code><a name="path-deprecated-functions"> 
-deprecated functions</a></h3>
+<h3> <a name="path-deprecated-functions"><code><font size="4"> path</font></code> deprecated functions</a></h3>
 <p> <i> <span style="background-color: #FFFF00">index.htm 
 also has a section (see macros) partially duplicating this material. Change to 
 reference this.</span></i></p>
@@ -1110,8 +1105,7 @@ const string_type  external_directory_string() const { return native(); }</pre>
   representations only. Thus <code>path(&quot;foo&quot;) == &quot;bar&quot;</code> is never 
   <code>true</code>.</p>
   <p>Equivalence is determined by the <a href="#equivalent"><code>equivalent()</code></a> 
-  non-member function, which determines if two paths
-  <a href="#pathname-resolution">resolve</a> to the same file system entity. 
+  non-member function, which determines if two paths <a href="#Path">resolve</a> to the same file system entity. 
   Thus <code>equivalent(&quot;foo&quot;, &quot;bar&quot;)</code> will be <code>true</code> 
   when both paths resolve to the same file.</p>
   <p>Programmers wishing to determine if two paths are &quot;the same&quot; must decide if 
@@ -1693,8 +1687,8 @@ level() == 0</code>, <code>no_push_request() == false</code>.</p>
   <p><i>Returns:</i> <code>m_no_push_request</code>.</p>
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
-<pre><code>recursive_</code>directory_iterator&amp; <a name="directory_iterator-increment">operator++</a>();
-<code>recursive_</code>directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
+<pre><code>recursive_directory_iterator</code>&amp; <a name="recursive_directory_iterator-increment">operator++</a>();
+recursive_directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
 <blockquote>
 
 <p><i>Effects:</i> As specified by the C++ Standard, 24.1.1 Input iterators [input.iterators], 
@@ -1844,7 +1838,7 @@ an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end not
   
 </blockquote>
 <pre>void <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to, BOOST_SCOPED_ENUM(<a href="#copy_option">copy_option</a>) option);
-void <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to, BOOST_SCOPED_ENUM(<a href="#copy_option">copy_option</a>) option, system::error_code&amp; ec);</pre>
+void <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to, BOOST_SCOPED_ENUM(<a href="#copy_option">copy_option</a>) option, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Effects:</i> If <code>option == copy_option::</code><span style="background-color: #FFFFFF"><code>fail_if_exists 
   &amp;&amp; exists(to)</code>, an error is reported. Otherwise, t</span>he contents and attributes of the file <code>from</code> 
@@ -1854,7 +1848,7 @@ void <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to,
   Error reporting</a>.</p>
 </blockquote>
 <pre>bool <a name="create_directories">create_directories</a>(const path&amp; p);
-bool <a name="create_directories">create_directories</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+bool <a name="create_directories2">create_directories</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Requires:</i> <code>p.empty() || <br>
   forall px: px == p || is_parent(px, p): is_directory(px) || !exists( px )</code>
@@ -1867,7 +1861,7 @@ bool <a name="create_directories">create_directories</a>(const path&amp; p, syst
   Error reporting</a>.</p>
 </blockquote>
 <pre>bool <a name="create_directory">create_directory</a>(const path&amp; p);
-bool <a name="create_directory">create_directory</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+bool <a name="create_directory2">create_directory</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Effects:</i> Attempts to create the directory <code>p</code> resolves to, 
   as if by<i> POSIX </i><code>
@@ -1880,7 +1874,7 @@ bool <a name="create_directory">create_directory</a>(const path&amp; p, system::
   Error reporting</a>.</p>
 </blockquote>
 <pre><span style="background-color: #FFFFFF">void <a name="create_hard_link">create_hard_link</a>(const path&amp; to, const path&amp; from);
-void <a name="create_hard_link">create_hard_link</a>(const path&amp; to, const path&amp; from, system::error_code&amp; ec);</span></pre>
+void <a name="create_hard_link2">create_hard_link</a>(const path&amp; to, const path&amp; from, system::error_code&amp; ec);</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF"> Establishes the postcondition, as if by
   </span> <i><span style="background-color: #FFFFFF">POSIX</span></i><span style="background-color: #FFFFFF">
@@ -1907,7 +1901,7 @@ void <a name="create_hard_link">create_hard_link</a>(const path&amp; to, const p
   situations are not concerns, or if workarounds are provided. </span> <i><span style="background-color: #FFFFFF">-- end note</span></i><span style="background-color: #FFFFFF">]</span></p>
   </blockquote>
 <pre><span style="background-color: #FFFFFF">void <a name="create_symlink">create_symlink</a>(const path&amp; to, const path&amp; from);
-void <a name="create_symlink">create_symlink</a>(const path&amp; to, const path&amp; from, system::error_code&amp; ec);</span></pre>
+void <a name="create_symlink2">create_symlink</a>(const path&amp; to, const path&amp; from, system::error_code&amp; ec);</span></pre>
 <blockquote style="font-size: 10pt">
   <p style="font-size: 10pt"><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF"> 
   Establishes the postcondition, as if by </span><i>
@@ -1933,7 +1927,7 @@ void <a name="create_symlink">create_symlink</a>(const path&amp; to, const path&
   not concerns, or if workarounds are provided. </span> <i><span style="background-color: #FFFFFF">-- end note</span></i><span style="background-color: #FFFFFF">]</span></p>
   </blockquote>
 <pre>path <a name="current_path">current_path</a>();
-path <a name="current_path">current_path</a>(system::error_code&amp; ec);</pre>
+path <a name="current_path2">current_path</a>(system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Returns:</i> The current working directory path, as if by <i>POSIX</i>
   <code>
@@ -1963,14 +1957,14 @@ void current_path(const path&amp; p, system::error_code&amp; ec);</pre>
 <a href="#Error-reporting">
 Error reporting</a>.</p>
 </blockquote>
-<pre><span style="background-color: #FFFFFF">bool <a name="exists-file_status">exists</a>(file_status s);</span></pre>
+<pre><span style="background-color: #FFFFFF">bool <a name="exists">exists</a>(file_status s);</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
   <code>status_known(s) &amp;&amp; s.type() != file_not_found</code></span></p>
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
-<pre>bool <a name="exists-path">exists</a>(const path&amp; p);
-bool <a name="exists2">exists</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+<pre>bool <a name="exists2">exists</a>(const path&amp; p);
+bool <a name="exists3">exists</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Returns:</i> <code>exists(status(p))</code> or <code>exists(status(p, ec))</code>, 
   respectively.</p>
@@ -1978,7 +1972,7 @@ bool <a name="exists2">exists</a>(const path&amp; p, system::error_code&amp; ec)
 nothing.</p>
 </blockquote>
 <pre><code>bool <a name="equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2);
-bool <a name="equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2, system::error_code&amp; ec);</code></pre>
+bool <a name="equivalent2">equivalent</a>(const path&amp; p1, const path&amp; p2, system::error_code&amp; ec);</code></pre>
 <blockquote style="font-size: 10pt">
   <p style="font-size: 10pt"><i>Effects:</i> Determines <code>file_status s1</code> 
   and <code>s2</code>, as if by <code>status(p1)</code> and&nbsp; <code>status(p2)</code>, 
@@ -2013,7 +2007,7 @@ bool <a name="equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2,
   Error reporting</a>.</p>
 </blockquote>
 <pre><span style="background-color: #FFFFFF; ">uintmax_t</span> <a name="file_size">file_size</a>(const path&amp; p);<span style="background-color: #FFFFFF; ">
-uintmax_t</span> <a name="file_size">file_size</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+uintmax_t</span> <a name="file_size2">file_size</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><span style="background-color: #FFFF00">Remarks: </span></p>
   <p><i>Returns:</i> If <code>exists(p) &amp;&amp; is_regular_file(p)</code>, the size 
@@ -2029,7 +2023,7 @@ uintmax_t</span> <a name="file_size">file_size</a>(const path&amp; p, system::er
   Error reporting</a>.</p>
 </blockquote>
 <pre>const path&amp; <a name="initial_path">initial_path</a>();
-const path&amp; <a name="initial_path">initial_path</a>(system::error_code&amp; ec);</pre>
+const path&amp; <a name="initial_path2">initial_path</a>(system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Returns:</i> <code>current_path()</code> at the time of entry to <code>
   main()</code>.</p>
@@ -2039,9 +2033,9 @@ const path&amp; <a name="initial_path">initial_path</a>(system::error_code&amp; 
   <p>[<i>Note:</i> Full implementation requires runtime library support. 
   Implementations which cannot provide runtime library support are encouraged to 
   instead store the value of <code>current_path()</code> at the first call of
-  <a name="initial_path"><code>initial_path</code></a><code>()</code>, and 
+  <code>initial_path</code><code>()</code>, and 
   return this value for all subsequent calls. Programs using
-  <a name="initial_path"><code>initial_path</code></a><code>()</code> are 
+  <code>initial_path</code><code>()</code> are 
   encouraged to call it immediately on entrance to <code>main()</code> so that 
   they will work correctly with such partial implementations. <i>--end note</i>]</p>
 </blockquote>
@@ -2052,25 +2046,22 @@ const path&amp; <a name="initial_path">initial_path</a>(system::error_code&amp; 
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre><code>bool <a name="is_directory2">is_directory</a>(const path&amp; p);
-bool <a name="is_directory2">is_directory</a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
+bool <a name="is_directory3">is_directory</a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
 <blockquote>
-  <p dir="ltr"><i>Returns:</i> <code>is_<a name="is_directory2">directory</a>(status(p))</code> or <code>is_directory(status(p, ec))</code>, 
+  <p dir="ltr"><i>Returns:</i> <code>is_directory(status(p))</code> or <code>is_directory(status(p, ec))</code>, 
   respectively.</p>
 <p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
 nothing.</p>
 </blockquote>
-<pre><code><span style="background-color: #FFFF00">bool </span><span style="background-color: #FFFF00; text-decoration:underline"><a name="is_empty">is_</a></span><span style="background-color: #FFFF00"><a name="is_empty">empty</a>(const path&amp; p);
-bool </span><span style="background-color: #FFFF00; text-decoration:underline"><a name="is_empty">is_</a></span><span style="background-color: #FFFF00"><a name="is_empty">empty</a>(const path&amp; p, system::error_code&amp; ec);</span></code></pre>
+<pre><code>bool <a name="is_empty">is_empty</a>(const path&amp; p);
+bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
 <blockquote>
-  <p><i><span style="background-color: #FFFF00">Effects:</span></i><span style="background-color: #FFFF00"> Determines
-  </span> <code><span style="background-color: #FFFF00">file_status s</span></code><span style="background-color: #FFFF00">, as if by
-  </span> <code>
-  <span style="background-color: #FFFF00">status(p, ec)</span></code><span style="background-color: #FFFF00">.</span></p>
-  <p><i><span style="background-color: #FFFF00">Returns:</span></i><span style="background-color: #FFFF00">
-  </span> <code><span style="background-color: #FFFF00">is_directory(s)<br>
+  <p><i>Effects:</i> Determines <code>file_status s</code>, as if by <code>
+  status(p, ec)</code>.</p>
+  <p><i>Returns:</i> <code>is_directory(s)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ? 
   directory_iterator(p) == directory_iterator()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : file_size(p) == 0;</span></code></p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : file_size(p) == 0;</code></p>
 </blockquote>
 <pre>bool <code><a name="is_regular_file">is_regular_file</a></code>(file_status s);</pre>
 <blockquote>
@@ -2084,7 +2075,7 @@ bool </span><span style="background-color: #FFFF00; text-decoration:underline"><
   <p><i>Throws:</i> <code>filesystem_error</code> 
   if <code>status(p)</code> would throw <code>filesystem_error.</code></p>
   </blockquote>
-<pre><code>bool <a name="is_regular_file2">is_regular_file</a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
+<pre><code>bool <a name="is_regular_file3">is_regular_file</a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
 <blockquote>
   <p><i>Effects:</i> Sets <code>ec</code> as if by <code>status(p, ec)</code>.
   <span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00">
@@ -2109,7 +2100,7 @@ bool </span><span style="background-color: #FFFF00; text-decoration:underline"><
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre><code>bool <a name="is_other2">is_other</a>(const path&amp; p);
-bool <a name="is_other2">is_other</a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
+bool <a name="is_other3">is_other</a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_other(status(p))</code> or <code>is_other(status(p, ec))</code>, 
   respectively.</p>
@@ -2123,7 +2114,7 @@ bool <a name="is_other2">is_other</a>(const path&amp; p, system::error_code&amp;
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre><code>bool <a name="is_symlink2">is_symlink</a>(const path&amp; p);
-bool <a name="is_symlink2">is_symlink</a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
+bool <a name="is_symlink3">is_symlink</a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_symlink(symlink_status(p))</code> or <code>is_symlink(symlink_status(p, ec))</code>, 
   respectively.</p>
@@ -2131,7 +2122,7 @@ bool <a name="is_symlink2">is_symlink</a>(const path&amp; p, system::error_code&
   nothing.</p>
 </blockquote>
 <pre>std::time_t <a name="last_write_time">last_write_time</a>(const path&amp; p);
-std::time_t <a name="last_write_time">last_write_time</a>(const path&amp; p<code>, system::error_code&amp; ec</code>);</pre>
+std::time_t <a name="last_write_time2">last_write_time</a>(const path&amp; p<code>, system::error_code&amp; ec</code>);</pre>
 <blockquote>
   <p><i>Returns:</i> The time of last data modification of <code>p</code>, determined as if by the 
   value of the <i>POSIX</i> <code>
@@ -2139,8 +2130,8 @@ std::time_t <a name="last_write_time">last_write_time</a>(const path&amp; p<code
   as if by <i>POSIX</i> <code>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>.</p>
 </blockquote>
-<pre>void <a name="last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time);
-void <a name="last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time<code>, system::error_code&amp; ec</code>);</pre>
+<pre>void <a name="last_write_time3">last_write_time</a>(const path&amp; p, const std::time_t new_time);
+void <a name="last_write_time4">last_write_time</a>(const path&amp; p, const std::time_t new_time<code>, system::error_code&amp; ec</code>);</pre>
 <blockquote>
   <p><i>Effects:</i> Sets the time of last data modification of the file 
   resolved to by <code>p</code> 
@@ -2168,7 +2159,7 @@ path read_symlink(const path&amp; p, system::error_code&amp; ec);</pre>
   resolve to a symbolic link. <i>-- end note</i>]</p>
 </blockquote>
 <pre>bool <a name="remove">remove</a>(const path&amp; p);
-bool <a name="remove">remove</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+bool <a name="remove2">remove</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Effects:</i>&nbsp; If <code>exists(symlink_status(p,ec))</code>, it is 
   removed 
@@ -2186,7 +2177,7 @@ bool <a name="remove">remove</a>(const path&amp; p, system::error_code&amp; ec);
   Error reporting</a>.</p>
 </blockquote>
 <pre>uintmax_t <a name="remove_all">remove_all</a>(const path&amp; p);
-uintmax_t <a name="remove_all">remove_all</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+uintmax_t <a name="remove_all2">remove_all</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Effects:</i>&nbsp; Recursively deletes the contents of p if it exists, 
   then deletes file <code>p</code> itself, 
@@ -2203,7 +2194,7 @@ uintmax_t <a name="remove_all">remove_all</a>(const path&amp; p, system::error_c
   Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p);
-void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p, system::error_code&amp; ec);</pre>
+void <a name="rename2">rename</a>(const path&amp; old_p, const path&amp; new_p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Effects:</i> Renames <code>old_p</code> to <code>new_p</code>, as if by
   <i>POSIX</i> <code>
@@ -2221,7 +2212,7 @@ void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p, s
   Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="resize_file">resize_file</a>(const path&amp; p, <span style="background-color: #FFFFFF; ">uintmax_t new_size</span>);
-void <a name="resize_file">resize_file</a>(const path&amp; p, <span style="background-color: #FFFFFF; ">uintmax_t new_size, </span>system::error_code&amp; ec);</pre>
+void <a name="resize_file2">resize_file</a>(const path&amp; p, <span style="background-color: #FFFFFF; ">uintmax_t new_size, </span>system::error_code&amp; ec);</pre>
 <blockquote>
 <p><i>Postconditions:</i> <code>file_size() == new_size</code>.</p>
 <p><i>Throws:</i> As specified in
@@ -2233,7 +2224,7 @@ Error reporting</a>.</p>
   truncate()</a></code>.</p>
 </blockquote>
 <pre><span style="background-color: #FFFFFF">space_info <a name="space">space</a>(const path&amp; p);
-space_info <a name="space">space</a>(const path&amp; p</span>, system::error_code&amp; ec<span style="background-color: #FFFFFF">);</span></pre>
+space_info <a name="space2">space</a>(const path&amp; p</span>, system::error_code&amp; ec<span style="background-color: #FFFFFF">);</span></pre>
 <blockquote>
   <p><span style="background-color: #FFFFFF"><i>Returns:</i> An object of type <code>
   <a href="#space_info">space_info</a></code>. The value of the <code>space_info</code> object is determined as if by 
@@ -2268,7 +2259,7 @@ return result;</pre>
   cause an exception to be 
 thrown.<i> -- end note</i>] </p>
   </blockquote>
-<pre><a href="#file_status">file_status</a> <a name="status">status</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+<pre><a href="#file_status">file_status</a> <a name="status2">status</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Effects: </i></p>
   <blockquote>
@@ -2369,7 +2360,7 @@ directory_iterator(p)</code>would succeed.
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre><span style="background-color: #FFFF00">file_status</span><span style="background-color: #FFFF00"> </span><a name="symlink_status"><span style="background-color: #FFFF00">symlink_status</span></a><span style="background-color: #FFFF00">(const</span><span style="background-color: #FFFF00"> path&amp; p);
-</span><span style="background-color: #FFFF00">file_status</span><span style="background-color: #FFFF00"> </span><a name="symlink_status"><span style="background-color: #FFFF00">symlink_status</span></a><span style="background-color: #FFFF00">(const</span><span style="background-color: #FFFF00"> path&amp; p, </span><span style="background-color: #FFFF00">system::error_code</span><span style="background-color: #FFFF00">&amp; </span><span style="background-color: #FFFF00">ec</span><span style="background-color: #FFFF00">);</span></pre>
+</span><span style="background-color: #FFFF00">file_status</span><span style="background-color: #FFFF00"> </span><a name="symlink_status2"><span style="background-color: #FFFF00">symlink_status</span></a><span style="background-color: #FFFF00">(const</span><span style="background-color: #FFFF00"> path&amp; p, </span><span style="background-color: #FFFF00">system::error_code</span><span style="background-color: #FFFF00">&amp; </span><span style="background-color: #FFFF00">ec</span><span style="background-color: #FFFF00">);</span></pre>
 <blockquote>
   <p><i>Effects:</i>&nbsp; Same as <a href="#status">status()</a>, above, 
   except that the attributes 
@@ -2389,7 +2380,7 @@ directory_iterator(p)</code>would succeed.
 nothing.</p>
 </blockquote>
 <pre>path <a name="system_complete">system_complete</a>(const path&amp; p);
-path <a name="system_complete">system_complete</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+path <a name="system_complete2">system_complete</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Effects:</i> Composes an absolute path from <code>p</code>, using the 
   same rules used by the operating system to resolve a path passed as the 
@@ -2508,8 +2499,7 @@ implementations</span></a><span style="background-color: #E0E0E0"> for
 techniques to avoid breaking existing code in other environments, particularly 
 on operating systems allowing slashes in filenames.</span></i></p>
 <p><span style="background-color: #FFFFFF">[<i>Note:</i> The 
-&quot;do-the-right-thing&quot; rule from <a href="#Requirements-on-implementations">
-Requirements on implementations</a> does apply to header <code>&lt;fstream&gt;</code>.</span></p>
+&quot;do-the-right-thing&quot; rule in the <a href="#Conformance">conformance section</a> does apply to header <code>&lt;fstream&gt;</code>.</span></p>
 <p><span style="background-color: #FFFFFF">The overloads 
 below are specified as additions rather than replacements for existing 
 functions. This preserves existing code (perhaps 
@@ -2526,14 +2516,14 @@ add the above to the signature preceding paragraph 2, and replace the
 sentence:</i></span></p>
 <blockquote>
 <p><span style="background-color: #FFFFFF">It then opens a file, if possible, 
-whose name is the NTBS s (â€œas ifâ€ by calling <code>std::fopen(s ,<i>modstr</i> 
+whose name is the NTBS s (as if by calling <code>std::fopen(s ,<i>modstr</i> 
 ))</code>.</span></p>
 </blockquote>
 <p><span style="background-color: #FFFFFF"><i>with:</i></span></p>
 <blockquote>
 <p><span style="background-color: #FFFFFF">It then opens, if possible, the file 
 that
-<code>p</code> or <code>path(s)</code> resolves to, â€œas ifâ€ by calling <code>std::fopen()</code> with a 
+<code>p</code> or <code>path(s)</code> resolves to, as if by calling <code>std::fopen()</code> with a 
 second argument of <i>modstr</i>.</span></p>
 </blockquote>
 <p><span style="background-color: #FFFFFF"><i>In 27.8.1.5 Class template 
@@ -3132,8 +3122,7 @@ implementations yield different results. The top value is the
 implementations</h2>
 <p><span style="background-color: #FFFFFF">The change in semantics to functions 
 taking <code>const char*</code> arguments can break existing code, but only on 
-operating systems where implementations don't 
-<a href="#Pathname-formats">implicitly accept native format pathnames</a> or 
+operating systems where implementations don't implicitly accept native format pathnames or 
 operating systems that allow slashes in filenames. Thus on <i>POSIX</i>, 
 <i>Windows,</i> and <i>OpenVMS</i>, for example, there is no problem if the 
 implementation follows encouraged behavior.</span></p>
@@ -3196,11 +3185,11 @@ multiple string types. His idea became the basis for the version 3 path design.<
   </tr>
 </table>
 <hr>
-<p>© Copyright Beman Dawes, 2002, 2006, 2007, 2009</p>
+<p>� Copyright Beman Dawes, 2002, 2006, 2007, 2009</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->17 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32147" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->18 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32149" --></p>
 
 </body>
 
