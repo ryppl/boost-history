@@ -29,7 +29,7 @@
 <a name="boost_chrono.appendices.faq"></a><a href="faq.html" title=" Appendix D: FAQ"> Appendix D: FAQ</a>
 </h3></div></div></div>
 <a name="boost_chrono.appendices.faq.how_important_is_the_order_of_the_common_type_lt__gt__template_arguments_"></a><h4>
-<a name="id4906671"></a>
+<a name="id4908665"></a>
         <a href="faq.html#boost_chrono.appendices.faq.how_important_is_the_order_of_the_common_type_lt__gt__template_arguments_">How
         important is the order of the common_type&lt;&gt; template arguments?</a>
       </h4>
@@ -38,7 +38,7 @@
         is not able to find out common type if it is not present and second common_type&lt;A,B,C&gt;::type
         is equivalent to common_type&lt;common_type&lt;A,B&gt;::type, C&gt;::type.
       </p>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{};</span>        
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{};</span>
 <span class="keyword">struct</span> <span class="identifier">B</span> <span class="special">{};</span>
 <span class="keyword">struct</span> <span class="identifier">C</span> <span class="special">{</span>
     <span class="identifier">C</span><span class="special">()</span> <span class="special">{}</span>
@@ -60,7 +60,7 @@
         is also undefined.
       </p>
 <a name="boost_chrono.appendices.faq.why_does_stopwatch_reporter_only_display_millisecond_place_precision_when_the_underlying_timer_has_nanosecond_precision_"></a><h4>
-<a name="id4907082"></a>
+<a name="id4909076"></a>
         <a href="faq.html#boost_chrono.appendices.faq.why_does_stopwatch_reporter_only_display_millisecond_place_precision_when_the_underlying_timer_has_nanosecond_precision_">Why
         does stopwatch_reporter only display millisecond place precision when the
         underlying timer has nanosecond precision?</a>
@@ -71,7 +71,7 @@
         dangerously.
       </p>
 <a name="boost_chrono.appendices.faq.why_does_stopwatch_reporter_sometimes_report_more_cpu_seconds_than_real_seconds_"></a><h4>
-<a name="id4907122"></a>
+<a name="id4909117"></a>
         <a href="faq.html#boost_chrono.appendices.faq.why_does_stopwatch_reporter_sometimes_report_more_cpu_seconds_than_real_seconds_">Why
         does stopwatch_reporter sometimes report more cpu seconds than real seconds?</a>
       </h4>

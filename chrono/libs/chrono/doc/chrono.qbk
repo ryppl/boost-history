@@ -71,6 +71,8 @@ The Boost Chrono library provides:
 * Stopclocks or Stopwatch reporters:
     * `stopwatch_reporter`, convenient reporting of models of Stopwatch results.
     * `stopclock<Clock>` shortcut of `stopwatch_reporter<stopwatch<Clock>>`
+    * Allows wide characters
+
 
 [/====================================]
 [heading How to Use This Documentation]
@@ -92,10 +94,10 @@ This documentation makes use of the following naming and formatting conventions.
 Finally, you can mentally add the following to any code fragments in this document:
 
     // Include all of Chrono files
-    #include <boost/chrono.hpp>
-    #include <boost/ratio.hpp>
     #include <boost/type_traits/common_type.hpp>
-    #include <boost/chrono/stopclock.hpp>
+    #include <boost/ratio.hpp>
+    #include <boost/chrono.hpp>
+    #include <boost/stopwatches.hpp>
 
 [/=================]
 [section Motivation]
@@ -429,6 +431,10 @@ For example
 
 Will produce the following output
 
+0.006s
+0.011s
+0.017s
+
 The preceding stopwatch manage only with a measure. It is also interesting to have an statisitical view of these times, for example the sum, min, max and mean. `stopwatch_accumulator<>` associates an accumulator with a stopwatch, so we are able to retrieve any statistical feature Boost.Accumulator provides.
 
 For example
@@ -477,7 +483,7 @@ Will produce the following output
 
     real 0.034s, cpu 0.031s (93.0%), user 0.031s, system 0.000s
 
-As this is one of the expression more common the library provides a stopclock shortcut so the preceding can be writen as
+As this is one of the expression more commonly use, the library provides a stopclock shortcut so the preceding can be writen as
 
     using namespace boost::chrono;
     int main()
@@ -592,40 +598,39 @@ All functions in the library are thread-unsafe except when noted explicitly.
 [heading Tested compilers ]
 [/========================]
 
-The implementation will eventually work with most C++03 conforming compilers. Initial tests have been run on
+The implementation will eventually work with most C++03 conforming compilers.
+Current version has been tested on:
 
-On Windows with
+Windows with
 
-* VC++ 10.0
-* VC++ 9.0
+* MSVC 10.0
+* MSVC 9.0 Express
+* MSVC 5.0
+
 [/* Intel 11.0]
 
-[/On MacOS with
-
-* GCC 4.2.4
-]
-
-[/On Ubuntu Linux with
-
-* GCC 4.2.4
-]
-
-[/On SL Linux with
+[/SL Linux with
 
 * GCC 3.4.6
 * GCC 4.1.2
 ]
 
-On Cygwin with
+Cygwin with
 
 * GCC 3.4.4
 * GCC 4.3.2
 
-On MinGW with
+MinGW with
 
 * GCC 4.4.0
 
-[note Please let us know how this works on other platforms.]
+Initial version was tested on:
+
+MacOS with GCC 4.2.4
+
+Ubuntu Linux with GCC 4.2.4
+
+[note Please let us know how this works on other platforms/compilers.]
 
 [note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
 
@@ -976,9 +981,18 @@ Four of the typedefs in the recomendation which can be conditionally supported a
 
 [endsect]
 
-
 [/=============================================]
 [section:chrono_hpp Header `<boost/chrono.hpp>`]
+[/=============================================]
+
+This file is a redirection to `boost/chrono/chrono.hpp`
+
+    #include <boost/chrono/chrono.hpp>
+
+[endsect]
+
+[/=============================================]
+[section:chrono_chrono_hpp Header `<boost/chrono/chrono.hpp>`]
 [/=============================================]
 
     namespace boost {
@@ -2057,6 +2071,29 @@ The process relative real, user and system current time can be obtained at once 
 [/==================================================]
 [section Stopwatches]
 [/==================================================]
+[/=============================================]
+[section:stopwatches_hpp Header `<boost/stopwatches.hpp>`]
+[/=============================================]
+
+This file include all the stopwatches related files
+
+    #include <boost/chrono/digital_time.hpp>
+    #include <boost/chrono/digital_time_formatter.hpp>
+    #include <boost/chrono/function_stopwatch.hpp>
+    #include <boost/chrono/process_cpu_clocks.hpp>
+    #include <boost/chrono/stopclock.hpp>
+    #include <boost/chrono/stopclock_accumulator.hpp>
+    #include <boost/chrono/stopwatch.hpp>
+    #include <boost/chrono/stopwatch_accumulator.hpp>
+    #include <boost/chrono/stopwatch_accumulator_formatter.hpp>
+    #include <boost/chrono/stopwatch_formatter.hpp>
+    #include <boost/chrono/stopwatch_reporter.hpp>
+    #include <boost/chrono/stopwatch_scoped.hpp>
+    #include <boost/chrono/time_formatter.hpp>
+
+[endsect]
+
+
 [section `Stopwatch` Requirements]
 
 A Stopwatch measure the amount of time elapsed from a particular time when activated to when it is deactivated, or the accumulation of them.
@@ -2547,6 +2584,7 @@ class `stopwatch_reporter` provides a everything a Timer provides and it adds re
 * places(precission): the number of decimal placess used.
 
 The default places is given by Formatter::default_places().
+
 The default format is given by Formatter::default_format().
 
     template <class Stopwatch, class Formatter>
@@ -2792,26 +2830,39 @@ A tipycal ussage of this class is
 [/==================================================]
 
     namespace boost { namespace chrono  {
-        class stopwatch_formatter;
+        template <
+            typename CharT=char,
+            typename Traits=std::char_traits<CharT>,
+            class Alloc=std::allocator<CharT>
+        >
+        class basic_stopwatch_formatter;
+
+        typedef basic_stopwatch_formatter<char> stopwatch_formatter;
+        typedef basic_stopwatch_formatter<wchar_t> wstopwatch_formatter;
     }}
 
-[section Class `stopwatch_formatter`]
+[section Template Class `basic_stopwatch_formatter<>`]
 
 `stopwatch_formatter` is a model of `Formatter`.
 
-    class stopwatch_formatter {
+    template <
+        typename CharT=char,
+        typename Traits=std::char_traits<CharT>,
+        class Alloc=std::allocator<CharT>
+    >
+    class basic_stopwatch_formatter {
     public:
         static std::ostream &  default_os();
-        static const int m_default_places = 3;
         static const char * default_format();
-        static int default_places() { return m_default_places; }
+        static int default_places();
 
         template < class Stopwatch >
         static void show_time( Stopwatch & stopwatch_, const char * format, int places, std::ostream & os, system::error_code & ec);
     };
 
 The default places is given by default_places and is 3.
-The default format is "\\n%ts\\n", where
+
+The default format is "%ts\\n", where
 
 * `%d` : the result of elapsed() when the reporting is done.
 
@@ -2825,26 +2876,36 @@ The time is given using the suffix "s" following the System International d'Unit
 [/==================================================]
 
     namespace boost { namespace chrono  {
-        class stopwatch_accumulator_formatter;
+        template <
+            typename CharT=char,
+            typename Traits=std::char_traits<CharT>,
+            class Alloc=std::allocator<CharT>
+        > basic_stopwatch_accumulator_formatter;
+        typedef basic_stopwatch_formatter<char> stopwatch_formatter;
+        typedef basic_stopwatch_formatter<wchar_t> wstopwatch_formatter;
     }}
 
-[section Class `stopwatch_accumulator_formatter`]
+[section Template Class `basic_stopwatch_accumulator_formatter<>`]
 
 `stopwatch_accumulator_formatter` is a model of `Formatter`
 
-    class stopwatch_accumulator_formatter {
+    template <
+        typename CharT=char,
+        typename Traits=std::char_traits<CharT>,
+        class Alloc=std::allocator<CharT>
+    class basic_stopwatch_accumulator_formatter {
     public:
         static std::ostream &  default_os();
-        static const int m_default_places = 3;
         static const char * default_format();
-        static int default_places() { return m_default_places; }
+        static int default_places();
 
         template <class Stopwatch >
         static void show_time( Stopwatch & stopwatch_, const char * format, int places, std::ostream & os, system::error_code & ec);
     };
 
 The default places is given by default_places and is 3.
-The default format is "\\n"Count=%c times Sum=%ss Min=%ms Max=%Ms Mean=%as\\n", where
+
+The default format is "%c times, sum=%ss, min=%ms, max=%Ms, mean=%as\\n", where
 
 * `%c` : the counter of the number of times the pair srat/stop has been called.
 * `%s` : the sum of the samples of elapsed time between the call to start/stop.
@@ -2865,18 +2926,31 @@ The time is given using the suffix "s" following the System International d'Unit
 
     namespace boost { namespace chrono {
 
-        class time_formatter;
+        template <
+            typename CharT=char,
+            typename Traits=std::char_traits<CharT>,
+            class Alloc=std::allocator<CharT>
+        >
+        class basic_time_formatter;
+
+        typedef basic_time_formatter<char> time_formatter;
+        typedef basic_time_formatter<wchar_t> wtime_formatter;
+
+        template <>
+        struct stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> > {
+            typedef time_formatter type;
+        };
 
     } }
 
-[section Class `time_formatter`]
+[section Template Class `basic_time_formatter<>`]
 
-    class time_formatter {
+    template <typename CharT, typename Traits, class Alloc>
+    class basic_time_formatter {
     public:
         static std::ostream &  default_os();
-        static const int m_default_places = 3;
         static const char * default_format();
-        static int default_places() { return m_default_places; }
+        static int default_places();
 
         template <class Stopwatch >
         static void show_time( Stopwatch & stopwatch_
@@ -2885,7 +2959,8 @@ The time is given using the suffix "s" following the System International d'Unit
     };
 
 The default places is given by default_places and is 3.
-The default format is "\\nreal %rs, cpu %cs (%p%), user %us, system %ss\\n", where
+
+The default format is "nreal %rs, cpu %cs (%p%), user %us, system %ss\\n", where
 
 * `%r` : real process clock
 * `%u` : user process clock
@@ -2937,18 +3012,26 @@ All the units are given using the suffix "s" following the System International 
 
     namespace boost { namespace chrono {
 
-        class digital_time_formatter;
+        template <
+            typename CharT=char,
+            typename Traits=std::char_traits<CharT>,
+            class Alloc=std::allocator<CharT>
+        >
+        class basic_digital_time_formatter;
+
+        typedef basic_digital_time_formatter<char> digital_time_formatter;
+        typedef basic_digital_time_formatter<wchar_t> wdigital_time_formatter;
 
     } }
 
-[section Class `time_formatter`]
+[section Template Class `basic_digital_time_formatter<>`]
 
-    class time_formatter {
+    template <typename CharT, typename Traits, class Alloc>
+    class basic_digital_time_formatter {
     public:
         static std::ostream &  default_os();
-        static const int m_default_places = 3;
         static const char * default_format();
-        static int default_places() { return m_default_places; }
+        static int default_places();
 
         template <class Stopwatch >
         static void show_time( Stopwatch & stopwatch_
@@ -2957,7 +3040,8 @@ All the units are given using the suffix "s" following the System International 
     };
 
 The default places is given by default_places and is 3.
-The default format is "\\n%d days(s) %h:%m:%s.%n\\n", where
+
+The default format is "%d days(s) %h:%m:%s.%n\\n", where
 
 * `%d` : days
 * `%h` : hours
@@ -3117,7 +3201,8 @@ class `run_timer` provides a complete run time reporting package that can be inv
 * places(precission): the number of decimal placess used.
 
 The default places is given by default_places and is 3.
-The default format is "\\nreal %rs, cpu %cs (%p%), user %us, system %ss\\n", where
+
+The default format is "nreal %rs, cpu %cs (%p%), user %us, system %ss\\n", where
 
 * `%r` : real process clock
 * `%u` : user process clock
@@ -4178,6 +4263,18 @@ Here is the output for this program for several sets of command line arguments:
 [section:history Appendix A: History]
 [/==================================]
 
+[section [*Version 0.3.1, January 20, 2010] ['New Allow wide characters + Bug fixes]]
+[*Features:]
+
+* Allow wide characters on formatters and stopclocks
+* added chrono.hpp and stopwatches.hpp at the boost level
+
+[*Bug Fixes]
+
+* add static assertions to stopclock and stopclock_accumulator
+
+[endsect]
+
 [section [*Version 0.3.0, January 17, 2010] ['New stopwatch/stopclock feature + Bug fixes]]
 [*Features:]
 
@@ -4379,10 +4476,10 @@ If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/i
 [heading How important is the order of the common_type<> template arguments?]
 
 The order of the template parameters is important. First common_type<> is not able to find out common type if it is not present and second
-common_type<A,B,C>::type is equivalent to common_type<common_type<A,B>::type, C>::type. 
+common_type<A,B,C>::type is equivalent to common_type<common_type<A,B>::type, C>::type.
 
 
-    struct A {};        
+    struct A {};
     struct B {};
     struct C {
         C() {}
@@ -4423,7 +4520,7 @@ Much thanks to Andrei Alexandrescu, Walter Brown, Peter Dimov, Jeff Garland, Ter
 
 Beman Dawes added the timer<>, process_clock, process_timer, run_timer classes which are now deprecated and replaced by the stopwatch, process_cpu_clock and stopclock classes.
 
-Thanks to Tom Tan to report some compiler issues with MSVC V10 beta and MinGW-gcc-4.4.0 and for the many suggestion he did concerning the new stopwatch, process_cpu_clock, stopclock and function stopclock classes.
+Thanks to Tom Tan to report some compiler issues with MSVC V10 beta and MinGW-gcc-4.4.0 and for the many suggestion he did concerning the new stopwatch, process_cpu_clock, stopclock and function stopclock classes and a deep help with wide characters implementation.
 
 [endsect]
 
@@ -4490,6 +4587,7 @@ You can also run a specific suite of test by doing
     [[function_stopclock_example]      [run]          [...]                   [Pass]   [#]]
     [[test_minmax]      [compile]          [...]                   [Pass]   [#]]
     [[stopclock_constructor_overload_test]      [run]          [...]                   [Pass]   [#]]
+    [[wstopclock_constructor_overload_test]      [run]          [...]                   [Pass]   [#]]
 ]
 [endsect]
 
