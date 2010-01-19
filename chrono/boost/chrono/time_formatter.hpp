@@ -14,6 +14,7 @@
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/current_function.hpp>
 #include <boost/chrono/detail/default_out.hpp>
+#include <boost/chrono/detail/wide.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
@@ -24,6 +25,8 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
+
+#define BOOST_CHRONO_TIME_FORMAT_DEFAULT "real %rs, cpu %cs (%p%), user %us, system %ss\n"
 
 
 namespace boost { namespace chrono  {
@@ -48,15 +51,15 @@ namespace boost { namespace chrono  {
         typedef std::basic_ostream<CharT,Traits> ostream_type;
 
         static ostream_type &  default_os();
-        static const int m_default_places = 3;
-        static const char_type* m_default_format;
-        static const char_type* default_format() { return m_default_format; }
+        static const char_type* default_format();
         static string_type format(const char_type* s) {
             string_type res(s);
-            res += " spent real %rs, cpu %cs (%p%), user %us, system %ss\n";
+            res += boost::chrono::detail::adaptive_string(" : ");
+            res += default_format();
+            //res += boost::chrono::detail::adaptive_string(" spent real %rs, cpu %cs (%p%), user %us, system %ss\n");
             return res;
         }
-        static int default_places() { return m_default_places; }
+        static int default_places() { return 3; }
 
         template <class Stopwatch >
         static void show_time( Stopwatch & stopwatch_
@@ -122,27 +125,47 @@ namespace boost { namespace chrono  {
           }
 
     };
+
+namespace detail {
+    template <typename CharT>
+    struct basic_time_formatter_default_format;
+    template <>
+    struct basic_time_formatter_default_format<char> {
+        static const char* apply() {return BOOST_CHRONO_TIME_FORMAT_DEFAULT; }
+    };
+#ifndef BOOST_NO_STD_WSTRING
+    template <>
+    struct basic_time_formatter_default_format<wchar_t> {
+        static const wchar_t* apply() {return L"real %rs, cpu %cs (%p%), user %us, system %ss\n"; }
+    };
+    
+#endif    
+}
+    
     template <typename CharT,typename Traits, class Alloc>
     const typename basic_time_formatter<CharT,Traits,Alloc>::char_type* 
-    basic_time_formatter<CharT,Traits,Alloc>::m_default_format = "real %rs, cpu %cs (%p%), user %us, system %ss\n";
+    basic_time_formatter<CharT,Traits,Alloc>::default_format() {
+        return detail::basic_time_formatter_default_format<CharT>::apply();
+    }
 
     template <typename CharT,typename Traits, class Alloc>
     typename basic_time_formatter<CharT,Traits,Alloc>::ostream_type &  
-    basic_time_formatter<CharT,Traits,Alloc>::default_os()  { return detail::default_out<CharT,Traits>::apply(); }
-
+    basic_time_formatter<CharT,Traits,Alloc>::default_os()  { 
+        return detail::default_out<CharT,Traits>::apply(); 
+    }
+  
     typedef basic_time_formatter<char> time_formatter;
     typedef basic_time_formatter<wchar_t> wtime_formatter;
-    
+
     template <>
     struct stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> > {
         typedef time_formatter type;
     };
 
-
   } // namespace chrono
 } // namespace boost
 
-#define BOOST_CHRONO_TIME_FORMAT(F) F" spent real %rs, cpu %cs (%p%), user %us, system %ss\n"
+#define BOOST_CHRONO_TIME_FORMAT(F) boost::chrono::detail::adaptive_string(F " : " BOOST_CHRONO_TIME_FORMAT_DEFAULT)
 #ifdef __GNUC__
 #define BOOST_CHRONO_TIME_FUNCTION_FORMAT boost::chrono::time_formatter::format(BOOST_CURRENT_FUNCTION)
 #else

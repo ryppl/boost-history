@@ -14,6 +14,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/current_function.hpp>
 #include <boost/chrono/detail/default_out.hpp>
+#include <boost/chrono/detail/wide.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 #include <boost/accumulators/framework/accumulator_set.hpp>
@@ -21,7 +22,6 @@
 #include <boost/accumulators/statistics/min.hpp>
 #include <boost/accumulators/statistics/max.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
-//#include <boost/chrono/stopwatch_accumulator.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
 #include <iostream>
@@ -30,6 +30,8 @@
 #include <cassert>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
+
+#define BOOST_CHRONO_ACCUMULATOR_FORMAT_DEFAULT "%c times, sum=%ss, min=%ms, max=%Ms, mean=%as\n"
 
 
 namespace boost { namespace chrono  {
@@ -43,25 +45,20 @@ namespace boost { namespace chrono  {
         class Alloc=std::allocator<CharT>
     >
     class basic_stopwatch_accumulator_formatter {
-    public:
-        //~ typedef std::string string_type;
-        //~ typedef string_type::value_type char_type;
-        //~ typedef std::ostream ostream_type;
-    
+    public:   
         typedef std::basic_string<CharT,Traits,Alloc> string_type;
         typedef CharT char_type;
         typedef std::basic_ostream<CharT,Traits> ostream_type;
     
         static ostream_type &  default_os();
-        static const int m_default_places = 3;
-        static const char_type* m_default_format;
-        static const char_type* default_format() { return m_default_format; }
+        static const char_type* default_format();
         static string_type format(const char_type* s) {
             string_type res(s);
-            res += " called %c times, sum=%ss, min=%ms, max=%Ms, mean=%as\n";
+            res += boost::chrono::detail::adaptive_string(" : ");
+            res += default_format();
             return res;
         }
-        static int default_places() { return m_default_places; }
+        static int default_places() { return 3; }
 
         template <class Stopwatch >
         static void show_time( Stopwatch & stopwatch_, const char_type* format, int places, ostream_type & os, system::error_code & ec)
@@ -69,10 +66,11 @@ namespace boost { namespace chrono  {
         //  be as low as 10, although will be 15 for many common platforms.
         {
             typedef typename Stopwatch::accumulator accumulator;
-            typedef typename Stopwatch::duration duration;
+            typedef typename Stopwatch::duration duration_t;
             accumulator& acc = stopwatch_.accumulated();
+            //duration_t d0((0));
 
-            //if ( d < duration(0) ) return;
+            //if ( d < d0 ) return;
             if ( places > 9 )
                 places = 9;  // sanity check
             else if ( places < 0 )
@@ -91,17 +89,17 @@ namespace boost { namespace chrono  {
                     ++format;
                     switch ( *format ) {
                     case 's':
-                        os << boost::chrono::duration<double>(duration(accumulators::sum(acc))).count();
+                        os << boost::chrono::duration<double>(duration_t(accumulators::sum(acc))).count();
                         break;
                     case 'm':
-                        os << boost::chrono::duration<double>(duration((accumulators::min)(acc))).count();
+                        os << boost::chrono::duration<double>(duration_t((accumulators::min)(acc))).count();
                         break;
                     case 'M':
-                        os << boost::chrono::duration<double>(duration((accumulators::max)(acc))).count();
+                        os << boost::chrono::duration<double>(duration_t((accumulators::max)(acc))).count();
                         break;
                     case 'a':
                         os << ((accumulators::count(acc)>0)
-                                ? (boost::chrono::duration<double>(duration(accumulators::sum(acc))).count())/accumulators::count(acc)
+                                ? (boost::chrono::duration<double>(duration_t(accumulators::sum(acc))).count())/accumulators::count(acc)
                                 : 0);
                         break;
                     case 'c':
@@ -114,10 +112,28 @@ namespace boost { namespace chrono  {
             }
         }
     };
-
+    
+namespace detail {
+    template <typename CharT>
+    struct basic_stopwatch_accumulator_formatter_default_format;
+    template <>
+    struct basic_stopwatch_accumulator_formatter_default_format<char> {
+        static const char* apply() {return BOOST_CHRONO_ACCUMULATOR_FORMAT_DEFAULT; }
+    };
+#ifndef BOOST_NO_STD_WSTRING
+    template <>
+    struct basic_stopwatch_accumulator_formatter_default_format<wchar_t> {
+        static const wchar_t* apply() {return L"%c times, sum=%ss, min=%ms, max=%Ms, mean=%as\n"; }
+    };
+    
+#endif    
+}
+       
     template <typename CharT,typename Traits, class Alloc>
     const typename basic_stopwatch_accumulator_formatter<CharT,Traits,Alloc>::char_type* 
-    basic_stopwatch_accumulator_formatter<CharT,Traits,Alloc>::m_default_format ="%c times, sum=%ss, min=%ms, max=%Ms, mean=%as\n";
+    basic_stopwatch_accumulator_formatter<CharT,Traits,Alloc>::default_format() {
+        return detail::basic_stopwatch_accumulator_formatter_default_format<CharT>::apply();
+    }
 
     template <typename CharT,typename Traits, class Alloc>
     typename basic_stopwatch_accumulator_formatter<CharT,Traits,Alloc>::ostream_type &  
@@ -129,7 +145,7 @@ namespace boost { namespace chrono  {
 } // namespace chrono
 } // namespace boost
 
-#define BOOST_CHRONO_ACCUMULATOR_FORMAT(F) F" called %c times, sum=%ss, min=%ms, max=%Ms, mean=%as\n"
+#define BOOST_CHRONO_ACCUMULATOR_FORMAT(F) boost::chrono::detail::adaptive_string(F " : " BOOST_CHRONO_ACCUMULATOR_FORMAT_DEFAULT)
 #ifdef __GNUC__
 #define BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT boost::chrono::stopwatch_accumulator_formatter::format(BOOST_CURRENT_FUNCTION)
 #else

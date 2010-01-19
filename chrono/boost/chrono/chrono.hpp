@@ -58,18 +58,16 @@ TODO:
 
 #ifndef BOOST_CHRONO_HPP
 #define BOOST_CHRONO_HPP
+
+#include <boost/chrono/config.hpp>
+#include <boost/chrono/detail/static_assert.hpp>
+
 #include <iostream>
 
 #include <ctime>
 #include <climits>
 #include <limits>
 
-#include <boost/chrono/config.hpp>
-#if defined(BOOST_NO_CONSTEXPR)
-#define BOOST_CONSTEXPR
-#else
-#define BOOST_CONSTEXPR constexpr
-#endif
 
 #include <boost/ratio.hpp>
 #include <boost/type_traits/common_type.hpp>
@@ -86,21 +84,6 @@ TODO:
 #define BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_TIME_POINT_MUST_BE_A_BOOST_CHRONO_DURATION "Second template parameter of time_point must be a boost::chrono::duration"
 #endif
 
-#ifndef BOOST_NO_STATIC_ASSERT
-#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) static_assert(CND,MSG)
-#elif defined(BOOST_CHRONO_USES_STATIC_ASSERT)
-#include <boost/static_assert.hpp>
-#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) BOOST_STATIC_ASSERT(CND)
-#elif defined(BOOST_CHRONO_USES_MPL_ASSERT)
-#include <boost/mpl/assert.hpp>
-#include <boost/mpl/bool.hpp>
-#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES)                                 \
-    BOOST_MPL_ASSERT_MSG(boost::mpl::bool_< (CND) >::type::value, MSG, TYPES)
-#elif defined(BOOST_CHRONO_USES_ARRAY_ASSERT)
-#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_JOIN(__boost_chrono_test_,__LINE__)[CND];
-#else
-#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES)
-#endif
 
 #ifdef BOOST_CHRONO_WINDOWS_API
 // The system_clock tick is 100 nanoseconds
@@ -474,12 +457,12 @@ namespace chrono {
   template <class Rep>
   struct duration_values
   {
-      static BOOST_CONSTEXPR Rep m_min_imp(boost::false_type) {return -max();}
-      static BOOST_CONSTEXPR Rep m_min_imp(boost::true_type)  {return zero();}
+      static BOOST_CHRONO_CONSTEXPR Rep m_min_imp(boost::false_type) {return -max();}
+      static BOOST_CHRONO_CONSTEXPR Rep m_min_imp(boost::true_type)  {return zero();}
   public:
-      static BOOST_CONSTEXPR Rep zero() {return Rep(0);}
-      static BOOST_CONSTEXPR Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return (std::numeric_limits<Rep>::max)();}
-      static BOOST_CONSTEXPR Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return m_min_imp(boost::is_unsigned<Rep>());}
+      static BOOST_CHRONO_CONSTEXPR Rep zero() {return Rep(0);}
+      static BOOST_CHRONO_CONSTEXPR Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return (std::numeric_limits<Rep>::max)();}
+      static BOOST_CHRONO_CONSTEXPR Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return m_min_imp(boost::is_unsigned<Rep>());}
   };
 
 }  // namespace chrono
@@ -526,9 +509,9 @@ namespace chrono {
         rep rep_;
     public:
 
-        BOOST_CONSTEXPR duration() { } // = default;
+        BOOST_CHRONO_CONSTEXPR duration() { } // = default;
         template <class Rep2>
-        BOOST_CONSTEXPR explicit duration(const Rep2& r,
+        BOOST_CHRONO_CONSTEXPR explicit duration(const Rep2& r,
             typename boost::enable_if_c
                 <
                 (   boost::is_convertible<Rep2, rep>::value
@@ -549,7 +532,7 @@ namespace chrono {
 
         // conversions
         template <class Rep2, class Period2>
-        BOOST_CONSTEXPR duration(const duration<Rep2, Period2>& d,
+        BOOST_CHRONO_CONSTEXPR duration(const duration<Rep2, Period2>& d,
             typename boost::enable_if_c
                 <
                 (   treat_as_floating_point<rep>::value
@@ -570,7 +553,7 @@ namespace chrono {
 
         // observer
 
-        BOOST_CONSTEXPR rep count() const {return rep_;}
+        BOOST_CHRONO_CONSTEXPR rep count() const {return rep_;}
 
         // arithmetic
 
@@ -590,9 +573,9 @@ namespace chrono {
         duration& operator%=(const duration& rhs) {rep_ %= rhs.count(); return *this;};
         // 20.9.3.4 duration special values [time.duration.special]
 
-        static BOOST_CONSTEXPR duration zero() {return duration(duration_values<rep>::zero());}
-        static BOOST_CONSTEXPR duration min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return duration((duration_values<rep>::min)());}
-        static BOOST_CONSTEXPR duration max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return duration((duration_values<rep>::max)());}
+        static BOOST_CHRONO_CONSTEXPR duration zero() {return duration(duration_values<rep>::zero());}
+        static BOOST_CHRONO_CONSTEXPR duration min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return duration((duration_values<rep>::min)());}
+        static BOOST_CHRONO_CONSTEXPR duration max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return duration((duration_values<rep>::max)());}
     };
 
 //----------------------------------------------------------------------------//
@@ -865,8 +848,8 @@ template <class Clock, class Duration>
 
       // special values
 
-      static BOOST_CONSTEXPR time_point min BOOST_PREVENT_MACRO_SUBSTITUTION () {return time_point((duration::min)());}
-      static BOOST_CONSTEXPR time_point max BOOST_PREVENT_MACRO_SUBSTITUTION () {return time_point((duration::max)());}
+      static BOOST_CHRONO_CONSTEXPR time_point min BOOST_PREVENT_MACRO_SUBSTITUTION () {return time_point((duration::min)());}
+      static BOOST_CHRONO_CONSTEXPR time_point max BOOST_PREVENT_MACRO_SUBSTITUTION () {return time_point((duration::max)());}
   };
 
 //----------------------------------------------------------------------------//
@@ -1075,7 +1058,7 @@ template <class Clock, class Duration>
     // see comment above in section 20.9.3 Class template duration [time.duration]
     template <class Rep, class Period>
     template <class Rep2, class Period2>
-    BOOST_CONSTEXPR duration<Rep, Period>::duration(const duration<Rep2, Period2>& d,
+    BOOST_CHRONO_CONSTEXPR duration<Rep, Period>::duration(const duration<Rep2, Period2>& d,
         typename boost::enable_if_c
             <
             (   treat_as_floating_point<rep>::value
@@ -1090,13 +1073,5 @@ template <class Clock, class Duration>
 } // namespace boost
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
-
-#ifdef BOOST_CONSTEXPR
-#undef BOOST_CONSTEXPR
-#endif
-
-#ifdef BOOST_CHRONO_STATIC_ASSERT
-#undef BOOST_CHRONO_STATIC_ASSERT
-#endif
 
 #endif // BOOST_CHRONO_HPP

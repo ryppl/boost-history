@@ -10,12 +10,20 @@
 #ifndef BOOST_CHRONO_STOPCLOCK_HPP
 #define BOOST_CHRONO_STOPCLOCK_HPP
 
+#include <boost/chrono/config.hpp>
+#include <boost/chrono/detail/static_assert.hpp>
 #include <boost/chrono/stopwatch_reporter.hpp>
 #include <boost/chrono/stopwatch.hpp>
+//#include <boost/chrono/chrono.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/chrono/time_formatter.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
+
+#ifndef BOOST_CHRONO_USES_MPL_ASSERT
+#define BOOST_CHRONO_S_STOPWATCH_CLOCK_MUST_BE_CLOCK        "Stopwatch::clock must be the same as Clock"
+#endif
 
 namespace boost { namespace chrono  {
 
@@ -40,7 +48,18 @@ namespace boost { namespace chrono  {
 //--------------------------------------------------------------------------------------//
 
     template <class Clock=process_cpu_clock, class Stopwatch=stopwatch<Clock>, class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type>
+    class stopclock;
+
+    template <class Clock, class Stopwatch, class Formatter>
+    struct stopwatch_reporter_default_formatter<stopclock<Clock,Stopwatch, Formatter> > {
+        typedef typename stopwatch_reporter_default_formatter<Stopwatch>::type type;
+    };
+
+    template <class Clock, class Stopwatch, class Formatter>
     class stopclock : public stopwatch_reporter<Stopwatch, Formatter> {
+        BOOST_CHRONO_STATIC_ASSERT((boost::is_same<typename Stopwatch::clock, Clock>::value),
+            BOOST_CHRONO_S_STOPWATCH_CLOCK_MUST_BE_CLOCK, (Stopwatch)(Stopwatch::clock)(Clock));
+        
         typedef stopwatch_reporter<Stopwatch, Formatter> base_type;
     public:
         typedef Clock clock;
@@ -49,7 +68,7 @@ namespace boost { namespace chrono  {
         typedef typename Formatter::string_type string_type;
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
-        
+
         explicit stopclock( system::error_code & ec = system::throws )
         : base_type(ec) { }
         explicit stopclock( ostream_type & os,
@@ -103,6 +122,7 @@ namespace boost { namespace chrono  {
     typedef stopclock< boost::chrono::process_user_cpu_clock > process_user_cpu_stopclock;
     typedef stopclock< boost::chrono::process_system_cpu_clock > process_system_cpu_stopclock;
     //typedef stopclock< boost::chrono::process_cpu_clock > process_cpu_stopclock;
+
 
   } // namespace chrono
 } // namespace boost

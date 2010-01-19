@@ -81,6 +81,17 @@
 #define BOOST_CHRONO_DECL
 #endif
 
+//  define constexpr related macros  ------------------------------//
+
+#include <boost/chrono/config.hpp>
+#if defined(BOOST_NO_CONSTEXPR)
+#define BOOST_CHRONO_CONSTEXPR
+#define BOOST_CHRONO_CONST_REF const&
+#else
+#define BOOST_CHRONO_CONSTEXPR constexpr
+#define BOOST_CHRONO_CONST_REF
+#endif
+
 //  enable automatic library variant selection  ------------------------------//
 
 #if !defined(BOOST_CHRONO_SOURCE) && !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_CHRONO_NO_LIB)

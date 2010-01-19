@@ -14,6 +14,7 @@
 #include <boost/chrono/digital_time.hpp>
 #include <boost/current_function.hpp>
 #include <boost/chrono/detail/default_out.hpp>
+#include <boost/chrono/detail/wide.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
@@ -24,6 +25,7 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
+#define BOOST_CHRONO_DIGITAL_TIME_FORMAT_DEFAULT "%d day(s) %h:%m:%s.%n\n"
 
 namespace boost { namespace chrono  {
 
@@ -47,15 +49,15 @@ namespace boost { namespace chrono  {
         typedef std::basic_ostream<CharT,Traits> ostream_type;
 
         static ostream_type &  default_os();
-        static const int m_default_places = 3;
-        static const char_type* m_default_format;
-        static const char_type* default_format() { return m_default_format; }
+        static const char_type* default_format();
         static string_type format(const char_type* s) {
             string_type res(s);
-            res += " tokes %d day(s) %h:%m:%s.%n\n";
+            res += boost::chrono::detail::adaptive_string(" : ");
+            res += default_format();
+            //res += boost::chrono::detail::adaptive_string(" tokes %d day(s) %h:%m:%s.%n\n");
             return res;
         }
-        static int default_places() { return m_default_places; }
+        static int default_places() { return 3; }
 
         template <class Stopwatch >
         static void show_time( Stopwatch & stopwatch_
@@ -64,10 +66,11 @@ namespace boost { namespace chrono  {
         //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
         //  be as low as 10, although will be 15 for many common platforms.
         {
-            typedef typename Stopwatch::duration duration;
-            duration d = stopwatch_.elapsed( ec );
+            typedef typename Stopwatch::duration duration_t;
+            duration_t d = stopwatch_.elapsed( ec );
+            duration_t d0((0));
 
-            if ( d < duration(0) ) return;
+            if ( d < d0 ) return;
 
             boost::io::ios_flags_saver ifs( os );
             os.setf( std::ios_base::fixed, std::ios_base::floatfield );
@@ -119,13 +122,34 @@ namespace boost { namespace chrono  {
             }
         }
     };
+    
+namespace detail {
+    template <typename CharT>
+    struct basic_digital_time_formatter_default_format;
+    template <>
+    struct basic_digital_time_formatter_default_format<char> {
+        static const char* apply() {return BOOST_CHRONO_DIGITAL_TIME_FORMAT_DEFAULT; }
+    };
+#ifndef BOOST_NO_STD_WSTRING
+    template <>
+    struct basic_digital_time_formatter_default_format<wchar_t> {
+        static const wchar_t* apply() {return L"%d day(s) %h:%m:%s.%n\n"; }
+    };
+    
+#endif    
+}
+    
     template <typename CharT,typename Traits, class Alloc>
     const typename basic_digital_time_formatter<CharT,Traits,Alloc>::char_type* 
-    basic_digital_time_formatter<CharT,Traits,Alloc>::m_default_format ="%d day(s) %h:%m:%s.%n\n";
+    basic_digital_time_formatter<CharT,Traits,Alloc>::default_format() {
+        return detail::basic_stopwatch_formatter_default_format<CharT>::apply();
+    }
 
     template <typename CharT,typename Traits, class Alloc>
     typename basic_digital_time_formatter<CharT,Traits,Alloc>::ostream_type &  
-    basic_digital_time_formatter<CharT,Traits,Alloc>::default_os()  { return detail::default_out<CharT,Traits>::apply(); }
+    basic_digital_time_formatter<CharT,Traits,Alloc>::default_os()  { 
+        return detail::default_out<CharT,Traits>::apply(); 
+    }
 
     typedef basic_digital_time_formatter<char> digital_time_formatter;
     typedef basic_digital_time_formatter<wchar_t> wdigital_time_formatter;
@@ -133,7 +157,7 @@ namespace boost { namespace chrono  {
   } // namespace chrono
 } // namespace boost
 
-#define BOOST_CHRONO_DIGITAL_TIME_FORMAT(F) F " tokes %d day(s) %h:%m:%s.%n\n"
+#define BOOST_CHRONO_DIGITAL_TIME_FORMAT(F) boost::chrono::detail::adaptive_string(F " : "  BOOST_CHRONO_DIGITAL_TIME_FORMAT_DEFAULT)
 #ifdef __GNUC__
 #define BOOST_CHRONO_DIGITAL_TIME_FUNCTION_FORMAT boost::chrono::digital_time_formatter::format(BOOST_CURRENT_FUNCTION)
 #else

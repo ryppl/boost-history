@@ -14,6 +14,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/current_function.hpp>
 #include <boost/chrono/detail/default_out.hpp>
+#include <boost/chrono/detail/wide.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
 #include <iostream>
@@ -22,6 +23,8 @@
 #include <cassert>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
+
+#define BOOST_CHRONO_STOPWATCH_FORMAT_DEFAULT "%ds\n"
 
 namespace boost { namespace chrono  {
 
@@ -45,25 +48,26 @@ namespace boost { namespace chrono  {
         typedef std::basic_ostream<CharT,Traits> ostream_type;
         
         static ostream_type &  default_os();
-        static const int m_default_places = 3;
-        static const char_type* m_default_format;
-        static const char_type* default_format() { return m_default_format; }
+        static const char_type* default_format();
         static string_type format(const char_type* s) {
             string_type res(s);
-            res += " tokes %ds\n";
+            //res += boost::chrono::detail::adaptive_string(" tokes %ds\n");
+            res += boost::chrono::detail::adaptive_string(" : ");
+            res += default_format();
             return res;
         }
-        static int default_places() { return m_default_places; }
+        static int default_places() { return 3; }
 
         template <class Stopwatch >
         static void show_time( Stopwatch & stopwatch_, const char_type* format, int places, ostream_type & os, system::error_code & ec)
         //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
         //  be as low as 10, although will be 15 for many common platforms.
         {
-            typedef typename Stopwatch::duration duration;
-            duration d = stopwatch_.elapsed( ec );
+            typedef typename Stopwatch::duration duration_t;
+            duration_t d = stopwatch_.elapsed( ec );
+            duration_t d0((0));
 
-            if ( d < duration(0) ) return;
+            if ( d < d0 ) return;
             if ( places > 9 )
                 places = 9;  // sanity check
             else if ( places < 0 )
@@ -90,13 +94,34 @@ namespace boost { namespace chrono  {
             }
         }
     };
+
+namespace detail {
+    template <typename CharT>
+    struct basic_stopwatch_formatter_default_format;
+    template <>
+    struct basic_stopwatch_formatter_default_format<char> {
+        static const char* apply() {return BOOST_CHRONO_STOPWATCH_FORMAT_DEFAULT; }
+    };
+#ifndef BOOST_NO_STD_WSTRING
+    template <>
+    struct basic_stopwatch_formatter_default_format<wchar_t> {
+        static const wchar_t* apply() {return L"%ds\n"; }
+    };
+    
+#endif    
+}
+    
     template <typename CharT,typename Traits, class Alloc>
     const typename basic_stopwatch_formatter<CharT,Traits,Alloc>::char_type* 
-    basic_stopwatch_formatter<CharT,Traits,Alloc>::m_default_format ="%ds\n";
-
+    basic_stopwatch_formatter<CharT,Traits,Alloc>::default_format() { 
+        return detail::basic_stopwatch_formatter_default_format<CharT>::apply();
+    }
+    
     template <typename CharT,typename Traits, class Alloc>
     typename basic_stopwatch_formatter<CharT,Traits,Alloc>::ostream_type &  
-    basic_stopwatch_formatter<CharT,Traits,Alloc>::default_os()  { return detail::default_out<CharT,Traits>::apply(); }
+    basic_stopwatch_formatter<CharT,Traits,Alloc>::default_os()  { 
+        return detail::default_out<CharT,Traits>::apply(); 
+    }
 
     typedef basic_stopwatch_formatter<char> stopwatch_formatter;
     typedef basic_stopwatch_formatter<wchar_t> wstopwatch_formatter;
@@ -104,7 +129,7 @@ namespace boost { namespace chrono  {
   } // namespace chrono
 } // namespace boost
 
-#define BOOST_CHRONO_STOPWATCH_FORMAT(F) F " tokes %ds\n"
+#define BOOST_CHRONO_STOPWATCH_FORMAT(F) boost::chrono::detail::adaptive_string(F " : " BOOST_CHRONO_STOPWATCH_FORMAT_DEFAULT)
 #ifdef __GNUC__
 #define BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT boost::chrono::stopwatch_formatter::format(BOOST_CURRENT_FUNCTION)
 #else
