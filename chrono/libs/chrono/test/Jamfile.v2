@@ -104,6 +104,9 @@ project
         [ link ../example/timex.cpp :  <library>/boost/system//boost_system  : timex_dll ]
         [ compile test_minmax.cpp ]
         [ run stopclock_constructor_overload_test.cpp :  :  : <link>static ]
+        [ run stopclock_constructor_overload_test.cpp :  :  : <library>/boost/system//boost_system  : stopclock_constructor_overload_test_dll ]
+        [ run wstopclock_constructor_overload_test.cpp :  :  : <link>static ]
+        [ run wstopclock_constructor_overload_test.cpp :  :  : <library>/boost/system//boost_system  :  wstopclock_constructor_overload_test_dll ]
         ;
         
         
