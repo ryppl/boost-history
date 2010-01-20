@@ -40,9 +40,6 @@ namespace boost { namespace chrono  {
     >
     class basic_digital_time_formatter {
     public:
-        //~ typedef std::string string_type;
-        //~ typedef string_type::value_type char_type;
-        //~ typedef std::ostream ostream_type;
     
         typedef std::basic_string<CharT,Traits,Alloc> string_type;
         typedef CharT char_type;

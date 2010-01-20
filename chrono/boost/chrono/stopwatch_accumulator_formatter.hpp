@@ -81,7 +81,6 @@ namespace boost { namespace chrono  {
             boost::io::ios_precision_saver ips( os );
             os.precision( places );
 
-            os << "***" ;
             for ( ; *format; ++format ) {
                 if ( *format != '%' || !*(format+1) || !std::strchr("smMac", *(format+1)) ) {
                     os << *format;
