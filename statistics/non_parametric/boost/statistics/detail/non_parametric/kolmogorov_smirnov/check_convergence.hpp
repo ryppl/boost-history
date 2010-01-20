@@ -21,7 +21,7 @@
 #include <boost/accumulators/framework/accumulator_set.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 
-#include <boost/statistics/detail/non_parametric/empirical_distribution/kolmogorov_smirnov.hpp>
+#include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/statistic.hpp>
 
 namespace boost{
 namespace statistics{
