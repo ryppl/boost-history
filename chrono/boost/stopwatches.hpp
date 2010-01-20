@@ -16,7 +16,7 @@
 //-----------------------------------------------------------------------------
 #include <boost/chrono/digital_time.hpp>
 #include <boost/chrono/digital_time_formatter.hpp>
-#include <boost/chrono/function_stopwatch.hpp>
+#include <boost/chrono/function_stopclock.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/chrono/stopclock.hpp>
 #include <boost/chrono/stopclock_accumulator.hpp>
