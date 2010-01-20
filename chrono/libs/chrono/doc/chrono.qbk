@@ -2072,14 +2072,14 @@ The process relative real, user and system current time can be obtained at once 
 [section Stopwatches]
 [/==================================================]
 [/=============================================]
-[section:stopwatches_hpp Header `<boost/stopwatches.hpp>`]
+[section:chrono_stopwatches_hpp Header `<boost/chrono/stopwatches.hpp>`]
 [/=============================================]
 
 This file include all the stopwatches related files
 
     #include <boost/chrono/digital_time.hpp>
     #include <boost/chrono/digital_time_formatter.hpp>
-    #include <boost/chrono/function_stopwatch.hpp>
+    #include <boost/chrono/scoped_stopclock.hpp>
     #include <boost/chrono/process_cpu_clocks.hpp>
     #include <boost/chrono/stopclock.hpp>
     #include <boost/chrono/stopclock_accumulator.hpp>
@@ -2093,6 +2093,15 @@ This file include all the stopwatches related files
 
 [endsect]
 
+[/=============================================]
+[section:stopwatches_hpp Header `<boost/stopwatches.hpp>`]
+[/=============================================]
+
+This file include all the stopwatches related files
+
+    #include <boost/chrono/stopwatches.hpp>
+
+[endsect]
 
 [section `Stopwatch` Requirements]
 
@@ -2668,11 +2677,7 @@ Usage
 [/==================================================]
 
     namespace boost { namespace chrono {
-        template
-            < class Clock=process_cpu_clock
-            , class Stopwatch=stopwatch<Clock>
-            , class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type
-        > class stopclock;
+        template < class Clock, class Formatter > class stopclock;
         typedef <see above> system_stopclock;
         #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
         typedef <see above> monotonic_stopclock;
@@ -2689,34 +2694,36 @@ Usage
 
     template
         < class Clock=process_cpu_clock
-        , class Stopwatch=stopwatch<Clock>
-        , class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type
-    > class stopclock : public stopwatch_reporter<Stopwatch, Formatter> {
+        , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch<Clock>>::type
+    > class stopclock : public stopwatch_reporter<stopwatch<Clock>, Formatter> {
     public:
         typedef Clock clock;
-        typedef Stopwatch stopwatch;
+        typedef stopwatch<Clock> stopwatch;
         typedef Formatter formatter;
+        typedef typename Formatter::string_type string_type;
+        typedef typename Formatter::char_type char_type;
+        typedef typename Formatter::ostream_type ostream_type;
 
         explicit stopclock( system::error_code & ec = system::throws );
-        explicit stopclock( std::ostream & os,
+        explicit stopclock( ostream_type & os,
                     system::error_code & ec = system::throws );
-        explicit stopclock( const std::string & format,
+        explicit stopclock( const string_type & format,
                     system::error_code & ec = system::throws );
         explicit stopclock( int places,
                     system::error_code & ec = system::throws );
 
-        stopclock( std::ostream & os, const std::string & format,
+        stopclock( ostream_type & os, const string_type & format,
                     system::error_code & ec = system::throws );
-        stopclock( const std::string & format, int places,
+        stopclock( const string_type & format, int places,
                     system::error_code & ec = system::throws );
-        stopclock( std::ostream & os, int places,
+        stopclock( ostream_type & os, int places,
                     system::error_code & ec = system::throws );
-        stopclock( int places, const std::string & format,
+        stopclock( int places, const string_type & format,
                     system::error_code & ec = system::throws );
 
-        stopclock( std::ostream & os, const std::string & format, int places,
+        stopclock( ostream_type & os, const string_type & format, int places,
                     system::error_code & ec = system::throws );
-        stopclock( std::ostream & os, int places, const std::string & format,
+        stopclock( ostream_type & os, int places, const string_type & format,
                     system::error_code & ec = system::throws );
 
 
@@ -2745,7 +2752,7 @@ Usage
 [/==================================================]
 
     namespace boost { namespace chrono {
-        template < class Clock, class Stopwatch, class Formatter > 
+        template < class Clock, class Formatter > 
         class stopclock_accumulator;
         typedef <see above> system_stopclock_accumulator;
         #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
@@ -2763,34 +2770,37 @@ Usage
 
     template
         < class Clock=high_resolution_clock
-        , class Stopwatch=stopwatch_accumulator<Clock>
-        , class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type
-    > class stopclock_accumulator : public stopwatch_reporter<Stopwatch, Formatter> {
+        , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type
+    > class stopclock_accumulator 
+        : public stopwatch_reporter<stopwatch_accumulator<Clock>, Formatter> {
     public:
         typedef Clock clock;
-        typedef Stopwatch stopwatch;
+        typedef stopwatch_accumulator<Clock> stopwatch;
         typedef Formatter formatter;
+        typedef typename Formatter::string_type string_type;
+        typedef typename Formatter::char_type char_type;
+        typedef typename Formatter::ostream_type ostream_type;
 
         explicit stopclock_accumulator( system::error_code & ec = system::throws );
-        explicit stopclock_accumulator( std::ostream & os,
+        explicit stopclock_accumulator( ostream_type & os,
                     system::error_code & ec = system::throws );
-        explicit stopclock_accumulator( const std::string & format,
+        explicit stopclock_accumulator( const string_type & format,
                     system::error_code & ec = system::throws );
         explicit stopclock_accumulator( int places,
                     system::error_code & ec = system::throws );
 
-        stopclock_accumulator( std::ostream & os, const std::string & format,
+        stopclock_accumulator( ostream_type & os, const string_type & format,
                     system::error_code & ec = system::throws );
-        stopclock_accumulator( const std::string & format, int places,
+        stopclock_accumulator( const string_type & format, int places,
                     system::error_code & ec = system::throws );
-        stopclock_accumulator( std::ostream & os, int places,
+        stopclock_accumulator( ostream_type & os, int places,
                     system::error_code & ec = system::throws );
-        stopclock_accumulator( int places, const std::string & format,
+        stopclock_accumulator( int places, const string_type & format,
                     system::error_code & ec = system::throws );
 
-        stopclock_accumulator( std::ostream & os, const std::string & format, int places,
+        stopclock_accumulator( ostream_type & os, const string_type & format, int places,
                     system::error_code & ec = system::throws );
-        stopclock_accumulator( std::ostream & os, int places, const std::string & format,
+        stopclock_accumulator( ostream_type & os, int places, const string_type & format,
                     system::error_code & ec = system::throws );
 
 
@@ -2815,32 +2825,28 @@ Usage
 [endsect]
 
 [/==================================================]
-[section:function_stopclock_hpp Header `<boost/chrono/function_stopclock.hpp>`]
+[section:scoped_stopclock_hpp Header `<boost/chrono/scoped_stopclock.hpp>`]
 [/==================================================]
 
     namespace boost { namespace chrono {
-        template
-            < class Clock=process_cpu_clock
-            , class Stopwatch=stopwatch<Clock>
-            , class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type
-        > class function_stopclock;
+        template < class Clock, class Formatter > class scoped_stopclock;
     }}
 
-[section Template Class `function_stopclock<>`]
+[section Template Class `scoped_stopclock<>`]
 
-`function_stopclock<>`is like a `stopclock<>` but that in addition will outout a scoped trace. At construction time it will output
+`scoped_stopclock<>`is like a `stopclock<>` but that in addition will output a scoped trace. At construction time it will output
 
     {{{ <string>
 
 and at destruction time
 
-    }}} <string> <output of stopwatch>
+    }}} <string> <output of stopwatch_reporter>
 
-A tipycal ussage of this class is
+A typical ussage of this class is
 
     int f1(long j)
     {
-      function_stopclock<> _(BOOST_CURRENT_FUNCTION);
+      scoped_stopclock<> _(BOOST_CURRENT_FUNCTION);
 
       for ( long i = 0; i < j; ++i )
         std::sqrt( 123.456L );  // burn some time
@@ -2848,45 +2854,50 @@ A tipycal ussage of this class is
       return 0;
     }
 
-    template <class Clock, class Stopwatch>, class Formatter>
-    class function_stopclock : public stopwatch_reporter<Stopwatch, Formatter> {
+    template < class Clock=process_cpu_clock
+        , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch<Clock>>::type
+    > class scoped_stopclock 
+        : public stopwatch_reporter<stopwatch<Clock>, Formatter> {
     public:
         typedef Clock clock;
         typedef Stopwatch stopwatch;
         typedef Formatter formatter;
+        typedef typename Formatter::string_type string_type;
+        typedef typename Formatter::char_type char_type;
+        typedef typename Formatter::ostream_type ostream_type;
 
-        explicit function_stopclock( const std::string& func,
+        explicit scoped_stopclock( const std::string& func,
                     system::error_code & ec = system::throws );
-        function_stopclock( const std::string& func, std::ostream & os,
-                    system::error_code & ec = system::throws );
-
-        function_stopclock( const std::string& func, const std::string & format,
-                    system::error_code & ec = system::throws );
-
-        function_stopclock( const std::string& func, int places,
+        scoped_stopclock( const std::string& func, ostream_type & os,
                     system::error_code & ec = system::throws );
 
-        function_stopclock( const std::string& func, std::ostream & os,
-                    const std::string & format,
+        scoped_stopclock( const std::string& func, const string_type & format,
                     system::error_code & ec = system::throws );
 
-        function_stopclock( const std::string& func, const std::string & format,
+        scoped_stopclock( const std::string& func, int places,
+                    system::error_code & ec = system::throws );
+
+        scoped_stopclock( const std::string& func, ostream_type & os,
+                    const string_type & format,
+                    system::error_code & ec = system::throws );
+
+        scoped_stopclock( const std::string& func, const string_type & format,
                     int places, system::error_code & ec = system::throws );
 
-        function_stopclock( const std::string& func, std::ostream & os, int places,
+        scoped_stopclock( const std::string& func, ostream_type & os, int places,
                     system::error_code & ec = system::throws );
 
-        function_stopclock( const std::string& func, int places,
-                    const std::string & format, system::error_code & ec = system::throws );
+        scoped_stopclock( const std::string& func, int places,
+                    const string_type & format, system::error_code & ec = system::throws );
 
-        function_stopclock( const std::string& func, std::ostream & os,
-                    const std::string & format, int places,
+        scoped_stopclock( const std::string& func, ostream_type & os,
+                    const string_type & format, int places,
                     system::error_code & ec = system::throws );
 
-        function_stopclock( const std::string& func, std::ostream & os, int places,
-                    const std::string & format, system::error_code & ec = system::throws );
+        scoped_stopclock( const std::string& func, ostream_type & os, int places,
+                    const string_type & format, system::error_code & ec = system::throws );
 
-        ~function_stopclock();
+        ~scoped_stopclock();
 
         typedef typename base_type::scoped_run scoped_run;
         typedef typename base_type::scoped_suspend scoped_suspend;
@@ -2926,8 +2937,11 @@ A tipycal ussage of this class is
     >
     class basic_stopwatch_formatter {
     public:
-        static std::ostream &  default_os();
-        static const char * default_format();
+        typedef std::basic_string<CharT,Traits,Alloc> string_type;
+        typedef CharT char_type;
+        typedef std::basic_ostream<CharT,Traits> ostream_type;
+        static ostream_type &  default_os();
+        static const char_type * default_format();
         static int default_places();
 
         template < class Stopwatch >
@@ -2969,8 +2983,11 @@ The time is given using the suffix "s" following the System International d'Unit
         class Alloc=std::allocator<CharT>
     class basic_stopwatch_accumulator_formatter {
     public:
-        static std::ostream &  default_os();
-        static const char * default_format();
+        typedef std::basic_string<CharT,Traits,Alloc> string_type;
+        typedef CharT char_type;
+        typedef std::basic_ostream<CharT,Traits> ostream_type;
+        static ostream_type &  default_os();
+        static const char_type * default_format();
         static int default_places();
 
         template <class Stopwatch >
@@ -3022,8 +3039,11 @@ The time is given using the suffix "s" following the System International d'Unit
     template <typename CharT, typename Traits, class Alloc>
     class basic_time_formatter {
     public:
-        static std::ostream &  default_os();
-        static const char * default_format();
+        typedef std::basic_string<CharT,Traits,Alloc> string_type;
+        typedef CharT char_type;
+        typedef std::basic_ostream<CharT,Traits> ostream_type;
+        static ostream_type &  default_os();
+        static const char_type * default_format();
         static int default_places();
 
         template <class Stopwatch >
@@ -4366,7 +4386,7 @@ Here is the output for this program for several sets of command line arguments:
     * Added digital_time formatter "%d days(s) %h:%m:%s.%n\\n"
 * stopwatch_reporter is a convenient generic class reporting elapsed time for the Stopwatch concept.
 * Added stopclock<Clock> shortcut stopwatch_reporter<stopwatch<Clcok>>
-* Added function_stopclock which
+* Added scoped_stopclock which
 * Added typeof registration for classes `duration` and `time_point`
 
 * The old classes process_times, process_clock, process_timer, timer and run_timer are deprecated as the preceding additions are more generic. However for backward compatibility they preserved until inclusion of the library in Boost. Next follows the equivalences:
@@ -4658,7 +4678,7 @@ You can also run a specific suite of test by doing
     [[stopwatch_accumulator_example] [run]   [...]                   [Pass]   [#]]
     [[stopclock_example]      [run]          [...]                   [Pass]   [#]]
     [[digital_time_example]      [run]          [...]                   [Pass]   [#]]
-    [[function_stopclock_example]      [run]          [...]                   [Pass]   [#]]
+    [[scoped_stopclock_example]      [run]          [...]                   [Pass]   [#]]
     [[test_minmax]      [compile]          [...]                   [Pass]   [#]]
     [[stopclock_constructor_overload_test]      [run]          [...]                   [Pass]   [#]]
     [[wstopclock_constructor_overload_test]      [run]          [...]                   [Pass]   [#]]

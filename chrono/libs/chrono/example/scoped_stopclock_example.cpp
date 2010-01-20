@@ -1,4 +1,4 @@
-//  stopwatch_accumulator_example.cpp  ---------------------------------------------------//
+//  stopclock_example.cpp  ---------------------------------------------------//
 
 //  Copyright 2009 Vicente J. Botet Escriba
 
@@ -7,14 +7,13 @@
 
 //  See http://www.boost.org/libs/chrono for documentation.
 
-#include <boost/chrono/stopclock_accumulator.hpp>
+#include <boost/chrono/scoped_stopclock.hpp>
 #include <cmath>
 
 using namespace boost::chrono;
 int f1(long j)
 {
-  static stopclock_accumulator<> acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
-  stopclock_accumulator<>::scoped_run _(acc);
+  scoped_stopclock<> _(BOOST_CURRENT_FUNCTION);   
 
   for ( long i = 0; i < j; ++i )
     std::sqrt( 123.456L );  // burn some time
@@ -23,8 +22,7 @@ int f1(long j)
 }
 int main()
 {
-  static stopclock_accumulator<> acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
-  stopclock_accumulator<>::scoped_run _(acc);
+  scoped_stopclock<> _(BOOST_CURRENT_FUNCTION);   
 
   f1(100000);
   f1(200000);

@@ -63,7 +63,7 @@ namespace util
 } // namespace util
 
 
-    // overload TR for streaming operation with cout/wcout
+    // overload adaptive_string for streaming operation with cout/wcout
     template<class charT>
     std::basic_ostream<charT>& operator << (std::basic_ostream<charT>& os, const boost::chrono::detail::adaptive_string& s)
     {
@@ -119,7 +119,6 @@ namespace
     typedef stopclock <> stopclock_t;
     typedef stopclock <
             process_cpu_clock, 
-            stopwatch<process_cpu_clock>, 
             boost::chrono::wtime_formatter
             > wstopclock_t; 
 }
