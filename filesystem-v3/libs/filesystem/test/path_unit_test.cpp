@@ -436,11 +436,11 @@ namespace
     CHECK(++it == p3.end());
   }
 
-  //  test_compositions  ---------------------------------------------------------------//
+  //  test_modifiers  ------------------------------------------------------------------//
 
-  void test_compositions()
+  void test_modifiers()
   {
-    std::cout << "testing compositions..." << std::endl;
+    std::cout << "testing modifiers..." << std::endl;
 
 //    CHECK(path("").absolute("") == "");  // should assert
 //    CHECK(path("").absolute("foo") == ""); // should assert
@@ -810,13 +810,12 @@ int main(int, char*[])
   test_constructors();
   test_assignments();
   test_appends();
+  test_modifiers();
   test_observers();
   test_relationals();
   test_inserter_and_extractor();
   test_other_non_members();
-  //test_modifiers();
   test_iterators();
-  test_compositions();
   test_decompositions();
   test_queries();
   test_imbue_locale();

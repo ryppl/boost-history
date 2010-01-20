@@ -175,17 +175,6 @@ namespace filesystem
     return tmp.wstring();
   }
 
-  path & path::preferred()
-  {
-    for (string_type::iterator it = m_pathname.begin();
-          it != m_pathname.end(); ++it)
-    {
-      if (*it == L'/')
-        *it = L'\\';
-    }
-    return *this;
-  }
-
 # endif  // BOOST_WINDOWS_PATH
 
   //  m_append_separator_if_needed  ----------------------------------------------------//
@@ -218,16 +207,14 @@ namespace filesystem
 )) { m_pathname.erase(sep_pos, 1); } // erase the added separator
   }
 
-  //  composition  ---------------------------------------------------------------------//
+  //  modifiers  -----------------------------------------------------------------------//
 
-  path  path::absolute(const path& base) const
+  path&  path::absolute(const path& base)
   {
     //  store expensive to compute values that are needed multiple times
     path this_root_name (root_name());
     path base_root_name (base.root_name());
-#   ifdef BOOST_WINDOWS_PATH
     path this_root_directory (root_directory());
-#   endif
 
 #   ifndef BOOST_WINDOWS_PATH
     BOOST_ASSERT(!this_root_name.empty() || !base_root_name.empty());
@@ -235,17 +222,70 @@ namespace filesystem
 
     BOOST_ASSERT(!this_root_directory.empty() || base.has_root_directory());
 
-    if (empty())
-      return base;
+    if (m_pathname.empty())
+      m_pathname = base.m_pathname;
 
-    if (!this_root_name.empty()) // has_root_name
-      return has_root_directory()
-        ? m_pathname
-        : this_root_name / base.root_directory() / base.relative_path() / relative_path();
+    else if (!this_root_name.empty()) // has_root_name
+    {
+      if (this_root_directory.empty()) // !root_directory()
+      {
+        path tmp (this_root_name / base.root_directory()
+                   / base.relative_path() / relative_path());
+        m_pathname.swap(tmp.m_pathname);
+      }
+      // else is_absolute() so do nothing at all
+    }
 
-    return has_root_directory()
-      ? base.root_name() / m_pathname
-      : base /  m_pathname;
+    else if (has_root_directory())
+    {
+#     ifdef BOOST_POSIX_PATH
+      if (base_root_name.empty() return *this;
+#     endif
+      path tmp (base_root_name / m_pathname);
+      m_pathname.swap(tmp.m_pathname);
+    }
+
+    else
+    {
+      path tmp (base / m_pathname);
+      m_pathname.swap(tmp.m_pathname);
+    }
+
+    return *this;
+  }
+
+# ifdef BOOST_WINDOWS_PATH
+  path & path::preferred()
+  {
+    for (string_type::iterator it = m_pathname.begin();
+          it != m_pathname.end(); ++it)
+    {
+      if (*it == L'/')
+        *it = L'\\';
+    }
+    return *this;
+  }
+# endif
+
+  path& path::remove_filename()
+  {
+    m_pathname.erase(m_parent_path_end());
+    return *this;
+  }
+
+  path & path::replace_extension(const path & source)
+  {
+    // erase existing extension if any
+    size_type pos(m_pathname.rfind(dot));
+    if (pos != string_type::npos)
+      m_pathname.erase(pos);
+
+    // append source extension if any
+    pos = source.m_pathname.rfind(dot);
+    if (pos != string_type::npos)
+      m_pathname += source.c_str() + pos;
+
+    return *this;
   }
 
   //  decomposition  -------------------------------------------------------------------//
@@ -327,12 +367,6 @@ namespace filesystem
      : path(m_pathname.c_str(), m_pathname.c_str() + end_pos);
   }
 
-  path& path::remove_filename()
-  {
-    m_pathname.erase(m_parent_path_end());
-    return *this;
-  }
-
   path path::filename() const
   {
     size_type pos(filename_pos(m_pathname, m_pathname.size()));
@@ -363,22 +397,6 @@ namespace filesystem
       ? path()
       : path(name.m_pathname.c_str() + pos);
   }
-
-  path & path::replace_extension(const path & source)
-  {
-    // erase existing extension if any
-    size_type pos(m_pathname.rfind(dot));
-    if (pos != string_type::npos)
-      m_pathname.erase(pos);
-
-    // append source extension if any
-    pos = source.m_pathname.rfind(dot);
-    if (pos != string_type::npos)
-      m_pathname += source.c_str() + pos;
-
-    return *this;
-  }
-
 
   // m_normalize  ----------------------------------------------------------------------//
 

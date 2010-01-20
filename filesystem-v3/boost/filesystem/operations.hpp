@@ -126,8 +126,6 @@ namespace boost
     BOOST_FILESYSTEM_DECL
     file_status symlink_status(const path& p, system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
-    path complete(const path& p, const path& base);
-    BOOST_FILESYSTEM_DECL
     bool is_empty(const path& p, system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
     path initial_path(system::error_code* ec=0);
@@ -248,23 +246,19 @@ namespace boost
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
+# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
   inline
   path complete(const path& p)
   {
-    path base (detail::initial_path(0));
-    return detail::complete(p, base);
+    return path(p).absolute(detail::initial_path(0));
   }
 
   inline
-  path complete(const path& p, system::error_code& ec)
+  path complete(const path& p, const path& base)
   {
-    path base (detail::initial_path(&ec));
-    if (ec) return path();
-    return detail::complete(p, base);
+    return path(p).absolute(base);
   }
-
-  inline
-  path complete(const path& p, const path& base) {return detail::complete(p, base);}
+# endif
 
   inline
   void copy(const path& from, const path& to) {detail::copy(from, to);}

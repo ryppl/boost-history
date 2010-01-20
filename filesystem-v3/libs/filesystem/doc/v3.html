@@ -43,10 +43,21 @@ changes include:</p>
   supported. This is a major simplification of the path abstraction, 
   particularly for functions that take path arguments.<br>
 &nbsp;</li>
-  <li>Support for error reporting via <code>error_code</code> is now uniform 
-  throughout the library.<br>
-&nbsp;</li>
-  <li>New or improved operational functions include:<br>
+  <li>New class path members include:<br>
+&nbsp;<ul>
+  <li><code>has_stem()</code></li>
+  <li><code>has_extension()</code></li>
+  <li><code>is_absolute()</code>. This renames <code>is_complete()</code>, which 
+  is now deprecated.</li>
+  <li><code>is_relative()</code></li>
+  <li><code>absolute()</code>. This replaces the operations function <code>
+  complete()</code>, which is now deprecated.</li>
+  <li><code>preferred()<br>
+&nbsp;</code></li>
+</ul>
+
+  </li>
+  <li>New or improved operations functions include:<br>
 &nbsp;<ul>
     <li><code>create_symlink()</code> now supported on both POSIX and Windows.</li>
     <li><code>read_symlink()</code> function added. Supported on both POSIX and 
@@ -58,26 +69,16 @@ changes include:</p>
 &nbsp;</li>
   </ul>
   </li>
-  <li>New class path members include:<br>
-&nbsp;<ul>
-  <li><code>has_stem()</code></li>
-  <li><code>has_extension()</code></li>
-  <li><code>is_relative()<br>
-&nbsp;</code></li>
-</ul>
-
-  </li>
-  <li>Other changes:<br>
-&nbsp;<ul>
-  <li>The preferred name for <code>path</code> member <code>is_complete()</code> 
-  is now <code>is_absolute()</code>. Use of <code>is_complete()</code> is 
-  deprecated.</li>
-</ul>
-
-  </li>
+  <li>Support for error reporting via <code>error_code</code> is now uniform 
+  throughout the operations functions.<br>
+&nbsp;</li>
 </ul>
 
 <h2>Breaking changes</h2>
+
+<p>To ease the transition, Versions 2 and 3 will both included in the next 
+several Boost releases. Version 2 will be the default version for one release 
+cycle, and then Version 3 will become the default version.</p>
 <h3>Class <code>path</code></h3>
 <ul>
   <li>Class template <code>basic_path</code> and its specializations are gone.
@@ -110,7 +111,7 @@ changes include:</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->08 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32148" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->20 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32134" --></p>
 
 </body>
 

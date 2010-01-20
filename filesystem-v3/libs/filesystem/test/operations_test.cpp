@@ -1062,10 +1062,10 @@ namespace
       std::string s2(fs::initial_path().root_path().string()+"foo");
       BOOST_TEST_EQ(s1, s2);
 
-      BOOST_TEST(fs::complete(fs::path("c:/")).string()
-        == "c:/");
-      BOOST_TEST(fs::complete(fs::path("c:/foo")).string()
-        ==  "c:/foo");
+      BOOST_TEST(fs::path("x:/").absolute(fs::initial_path()).string()
+        == "x:/");
+      BOOST_TEST(fs::path("x:/foo").absolute(fs::initial_path()).string()
+        ==  "x:/foo");
 
       BOOST_TEST(fs::system_complete(fs::path(fs::initial_path().root_name()))
         == fs::initial_path());
@@ -1105,15 +1105,6 @@ namespace
     BOOST_TEST(fs::current_path().is_absolute());
     BOOST_TEST(fs::initial_path().string()
       == fs::current_path().string());
-
-    BOOST_TEST(fs::complete("").empty());
-    fs::path px1 = fs::complete("/");
-    fs::path px2 = fs::initial_path().root_path();
-    BOOST_TEST(px1 == px2);
-    BOOST_TEST(fs::complete("foo") == fs::initial_path().string()+"/foo");
-    BOOST_TEST(fs::complete("/foo") == fs::initial_path().root_path().string()+"foo");
-    BOOST_TEST(fs::complete("foo", fs::path("//net/bar"))
-        ==  "//net/bar/foo");
   }
 
   //  space_tests  ---------------------------------------------------------------------//

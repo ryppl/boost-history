@@ -20,8 +20,7 @@
     <td width="633" align="middle">
     <font size="7">Filesystem Library<br>
     </font>
-    <font size="6">Version 3</font><font size="7"><br>
-&nbsp;</font></td>
+    <font size="6">Version 3</font></td>
   </tr>
 </table>
 
@@ -85,7 +84,6 @@
     <td width="33%" valign="top">
     <a href="#Operational-functions">
     Operational functions</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#complete">complete</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#copy_file">copy_file</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#create_directories">create_directories</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#create_directory">create_directory</a><br>
@@ -525,11 +523,12 @@ system. </p>
           path&amp; operator/=(Source const&amp; source);
 
         // <a href="#path-modifiers">modifiers</a>
+        path&amp; absolute(const path&amp; base);
         void  clear();
-        void  swap(path&amp; rhs);
+        path&amp; preferred();  // POSIX: no effect. Windows: convert slashes to backslashes
         path&amp; remove_filename();
         path&amp; replace_extension(const path&amp; new_extension = path());
-        path&amp; preferred();  // POSIX: no effect. Windows: convert slashes to backslashes
+        void  swap(path&amp; rhs);
 
         // <a href="#path-native-format-observers">native format observers</a>
         const string_type&amp;  native() const;            // native format, encoding
@@ -775,19 +774,57 @@ letters to uppercase.<i> -- end note.</i>]</p>
   
 <h3> <a name="path-modifiers"> <code>
 <font size="4">path</font></code> modifiers</a></h3>
+<pre>path&amp; absolute(const path&amp; base);</pre>
+  <blockquote>
+  <p><i>Preconditions:</i> <code>
+  (has_root_name() || base.has_root_name() || path(&quot;/&quot;).is_absolute()) &amp;&amp; (has_root_directory() 
+  || base.has_root_directory())</code> is true.</p>
+  <p><i>Effects:</i> Makes <code>pathname</code> absolute by applying the following rules:</p>
+  <table border="1" cellpadding="5" cellspacing="0" bordercolor="#111111" style="border-collapse: collapse">
+    <tr>
+      <td align="center">&nbsp;</td>
+      <td align="center"><i><b><code>has_root_directory()</code></b></i></td>
+      <td align="center"><i><b><code>!has_root_directory()</code></b></i></td>
+    </tr>
+    <tr>
+      <td align="center"><i><b><code>has_root_name()</code></b></i></td>
+      <td align="center">No change</td>
+      <td align="center"><code>root_name() / base.root_directory()<br>
+      / base.relative_path() / relative_path()</code></td>
+    </tr>
+    <tr>
+      <td align="center"><i><b><code>!has_root_name()</code></b></i></td>
+      <td align="center"><code>base.root_name()<br>
+      / pathname</code></td>
+      <td align="center"><code>base / pathname</code></td>
+    </tr>
+  </table>
+  <p><i>Postconditions:</i> <code>
+  is_absolute()</code> is true.</p>
+  <p><i>Returns:</i> <code>*this</code>.</p>
+  <p>[<i><a name="complete_note">Note</a>:</i> When portable behavior is 
+  required, use <i>absolute()</i>. When operating system dependent behavior is 
+  required, use <i>system_complete()</i>.</p>
+  <p>Portable behavior is useful when dealing with paths created 
+  internally within a program, particularly if the program should exhibit the 
+  same behavior on all operating systems.</p>
+  <p>Operating system dependent behavior is useful when dealing with 
+  paths supplied by user input, reported to program users, or when such behavior 
+  is expected by program users. <i>-- 
+  end note</i>]</p>
+</blockquote>
 <pre>void clear();</pre>
 <blockquote>
 <p><i>Postcondition:</i> <code>this-&gt;empty()</code> is true.</p>
 </blockquote>
-<pre><code><span style="background-color: #FFFFFF">void swap( path&amp; rhs );</span></code></pre>
+<pre>path&amp; preferred();</pre>
 <blockquote>
-  <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF"> 
-  Swaps the contents of the two paths.</span></p>
-  <p><i><span style="background-color: #FFFFFF">Throws: </span></i>
-  <span style="background-color: #FFFFFF">nothing.</span></p>
-  <p><i><span style="background-color: #FFFFFF">Complexity: </span></i>
-  <span style="background-color: #FFFFFF">constant time.</span></p>
+  <p><i>Effects:</i> The contained pathname is converted to the preferred native 
+  format. [<i>Note:</i> On Windows, the effect is to replace slashes with 
+  backslashes. On POSIX, there is no effect. <i>-- end note</i>]</p>
+  <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
+
 <pre>path&amp; remove_filename();</pre>
 <blockquote>
   <p><i>Returns: </i>As if, <code>*this = parent_path();</code></p>
@@ -805,12 +842,14 @@ letters to uppercase.<i> -- end note.</i>]</p>
   <code>new_extension</code>.</p>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
-<pre>path&amp; preferred();</pre>
+<pre><code><span style="background-color: #FFFFFF">void swap(path&amp; rhs);</span></code></pre>
 <blockquote>
-  <p><i>Effects:</i> The contained pathname is converted to the preferred native 
-  format. [<i>Note:</i> On Windows, the effect is to replace slashes with 
-  backslashes. On POSIX, there is no effect. <i>-- end note</i>]</p>
-  <p><i>Returns:</i> <code>*this</code></p>
+  <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF"> 
+  Swaps the contents of the two paths.</span></p>
+  <p><i><span style="background-color: #FFFFFF">Throws: </span></i>
+  <span style="background-color: #FFFFFF">nothing.</span></p>
+  <p><i><span style="background-color: #FFFFFF">Complexity: </span></i>
+  <span style="background-color: #FFFFFF">constant time.</span></p>
 </blockquote>
 
 <h3> <a name="path-native-format-observers"><code><font size="4">path</font></code> 
@@ -1774,49 +1813,6 @@ other kinds of errors occur frequently in file system operations, users should b
 that any filesystem operational function, no matter how apparently innocuous, may encounter 
 an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end note</i>]</p>
 <h4><a name="Function-specifications">Operational function specifications</a></h4>
-<pre>path <a name="complete">complete</a>(const path&amp; p, const path&amp; base, system::error_code&amp; ec);</pre>
-  <p><i>Effects:</i> Composes an absolute path from <code>p</code> and <code>base</code>, 
-  using the following rules:</p>
-  <table border="1" cellpadding="5" cellspacing="0" bordercolor="#111111" style="border-collapse: collapse">
-    <tr>
-      <td align="center">&nbsp;</td>
-      <td align="center"><b><code>p.has_root_directory()</code></b></td>
-      <td align="center"><b><code>!p.has_root_directory()</code></b></td>
-    </tr>
-    <tr>
-      <td align="center"><b><code>p.has_root_name()</code></b></td>
-      <td align="center"><code>p</code></td>
-      <td align="center">precondition failure</td>
-    </tr>
-    <tr>
-      <td align="center"><b><code>!p.has_root_name()</code></b></td>
-      <td align="center"><code>base.root_name()<br>
-      / p</code></td>
-      <td align="center"><code>base / p</code></td>
-    </tr>
-  </table>
-  <p><i>Postconditions:</i> For the returned path, <code>rp,</code> <code>
-  rp.is_absolute()</code> is true.</p>
-  <p><i>Returns:</i> The composed path.</p>
-  <p><i><span style="background-color: #FFFF00">Throws: </span> </i> <code>
-  <span style="background-color: #FFFF00">filesystem_error</span></code><span style="background-color: #FFFF00"> if
-  </span> <code>
-  <span style="background-color: #FFFF00">!(base.is_absolute() &amp;&amp; (p.is_absolute() || !p.has_root_name()))</span></code></p>
-  <p>[<i><a name="complete_note">Note</a>:</i> When portable behavior is 
-  required, use <i>complete()</i>. When operating system dependent behavior is 
-  required, use <i>system_complete()</i>.</p>
-  <p>Portable behavior is useful when dealing with paths created 
-  internally within a program, particularly if the program should exhibit the 
-  same behavior on all operating systems.</p>
-  <p>Operating system dependent behavior is useful when dealing with 
-  paths supplied by user input, reported to program users, or when such behavior 
-  is expected by program users. <i>-- 
-  end note</i>]</p>
-<pre>path complete(const path&amp; p, system::error_code&amp; ec);</pre>
-<blockquote>
-<p><i>Returns:</i> <code>path(p, initial_path(), ec)</code>.</p>
-<p><i><span style="background-color: #FFFF00">Throws: </span> </i> </p>
-</blockquote>
 <pre>void copy_file(const path&amp; from, const path&amp; to);</pre>
 <blockquote>
   <p><i>Effects: </i><code>copy_file(from, to, 
@@ -3189,7 +3185,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->18 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32149" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->20 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32134" --></p>
 
 </body>
 

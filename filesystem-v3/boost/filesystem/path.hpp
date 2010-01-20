@@ -199,18 +199,17 @@ namespace filesystem
 
     //  -----  modifiers  -----
 
+    path&  absolute(const path& base); 
     void   clear()             { m_pathname.clear(); }
-    void   swap(path& rhs)     { m_pathname.swap(rhs.m_pathname); }
+    path&  preferred()
+#                              ifdef BOOST_POSIX_PATH
+                               { return *this; }  // POSIX no effect
+#                              else // BOOST_WINDOWS_PATH
+                               ;  // change slashes to backslashes
+#                              endif
     path&  remove_filename();
     path&  replace_extension(const path& new_extension = path());
-
-#   ifdef BOOST_POSIX_API
-    path& preferred() { return *this; }  // POSIX m_pathname already localized
-
-#   else // BOOST_WINDOWS_API
-    path& preferred();  // change slashes to backslashes
-
-#   endif
+    void   swap(path& rhs)     { m_pathname.swap(rhs.m_pathname); }
 
     //  -----  observers  -----
   
@@ -270,10 +269,6 @@ namespace filesystem
     const std::wstring  generic_wstring() const { return wstring(); }
 
 #   endif
-
-    //  -----  composition  -----
-
-    path  absolute(const path& base) const; 
 
     //  -----  decomposition  -----
 

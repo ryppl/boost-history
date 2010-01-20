@@ -585,22 +585,6 @@ namespace detail
   }
 
   BOOST_FILESYSTEM_DECL
-  path complete(const path& p, const path& base)
-  {
-    if (p.empty() || base.empty())
-      return p;
-    if (p.has_root_name())
-    {
-      return p.has_root_directory()
-        ? p
-        : p.root_name()/ base.root_directory()/ base.relative_path()/ p.relative_path();
-    }
-    return p.has_root_directory()
-      ? base.root_name()/ p
-      : base / p;
-  }
-
-  BOOST_FILESYSTEM_DECL
   void copy(const path& from, const path& to, system::error_code* ec)
   {
     file_status s(symlink_status(from, *ec));
