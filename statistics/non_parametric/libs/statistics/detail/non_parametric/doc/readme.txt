@@ -29,7 +29,11 @@ I welcome feedback including bug reports at erwann.rogard@gmail.com
 
 
 [ History] 
-
+	January 17th, 2010. 
+        - Modified non_parametric/kolmogorov_smirnov/statistic.hpp from an 
+        STL-like algorithm to a (much simplified) accumulator.
+        - Added check_convergence
+        
 	January 14th, 2010. 
     	- Added non_parametric/empirical_distribution
         - Modified non_parametric/kolmogorov_smirnov/statistic.hpp to allow

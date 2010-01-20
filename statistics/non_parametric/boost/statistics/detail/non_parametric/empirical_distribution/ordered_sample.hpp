@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// accumulator::statistics::empirical_distribution_int.hpp     				 //
+// accumulator::statistics::empirical_distribution::ordered_sample.hpp     	 //
 //                                                                           //
 //  Copyright 2010 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_EMPIRICAL_DISTRIBUTION_INT_HPP_ER_2010
-#define BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_EMPIRICAL_DISTRIBUTION_INT_HPP_ER_2010
+#ifndef BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_EMPIRICAL_DISTRIBUTION_ORDERED_SAMPLE_HPP_ER_2010
+#define BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_EMPIRICAL_DISTRIBUTION_ORDERED_SAMPLE_HPP_ER_2010
 #include <map>
 #include <functional>
 
@@ -20,35 +20,41 @@
 #include <boost/accumulators/framework/depends_on.hpp>
 #include <boost/accumulators/statistics_fwd.hpp>
 
-#include <boost/statistics/detail/accumulator/statistics/keyword/key.hpp>
-
 namespace boost { 
 namespace statistics{
 namespace detail{
-namespace accumulator{
+namespace empirical_distribution{
 
 namespace impl{
 
-	template<typename Int>
-	class empirical_distribution_int 
+	// Associates sample values (type T) with their number of occurences in the sample
+	template<typename T>
+	class ordered_sample 
     		: public boost::accumulators::accumulator_base{
-		typedef std::less<Int> comp_;
+		typedef std::less<T> comp_;
 		typedef std::size_t size_;
         typedef boost::accumulators::dont_care dont_care_;
-        typedef std::map<Int,size_,comp_> map_;
+        typedef std::map<T,size_,comp_> map_;
 
         public:
-
-		typedef size_ size_type;
+		
+        // See accumulator_set for convention naming sample_type
+        typedef T 		sample_type; 
+		typedef size_ 	size_type;	 
 
 		// non-const because map::operator[](key) returns a non-const
 		typedef map_& result_type;
 
-		empirical_distribution_int(dont_care_){}
+		ordered_sample(dont_care_){}
 
 		template<typename Args>
 		void operator()(const Args& args){
-        	++(this->freq[args[boost::accumulators::sample]]);
+        	++(this->freq[
+            		static_cast<T>(
+            			args[boost::accumulators::sample]
+                	)
+                ]
+            );
         }
 		
 		// Returns the entire distribution, represented by a map
@@ -60,38 +66,46 @@ namespace impl{
         mutable map_ freq;
 	};
     
-}
+}// impl
 
 namespace tag
 {
-    struct empirical_distribution_int
+    struct ordered_sample
       : boost::accumulators::depends_on<>
     {
-      typedef statistics::detail::accumulator::
-      	impl::empirical_distribution_int<boost::mpl::_1> impl;
+      typedef statistics::detail::empirical_distribution::
+      	impl::ordered_sample<boost::mpl::_1> impl;
     };
-}
+}// tag
+
+namespace result_of{
+
+    template<typename AccSet>
+    struct ordered_sample : boost::accumulators::detail::extractor_result<
+        AccSet,
+        boost::statistics::detail::empirical_distribution::tag::ordered_sample
+    >{};
+
+}// result_of
 
 namespace extract
 {
 
-  	template<typename AccumulatorSet>
-	typename boost::mpl::apply<
-		AccumulatorSet,
-        boost::statistics::detail::accumulator::tag::empirical_distribution_int
-    >::type::result_type
-  	empirical_distribution_int(AccumulatorSet const& acc)
+  	template<typename AccSet>
+    typename boost::statistics::detail::empirical_distribution
+    	::result_of::template ordered_sample<AccSet>::type
+  	ordered_sample(AccSet const& acc)
     {
-    	typedef boost::statistics::detail::accumulator::
-    		tag::empirical_distribution_int the_tag;
+    	typedef boost::statistics::detail::empirical_distribution
+    		::tag::ordered_sample the_tag;
         return boost::accumulators::extract_result<the_tag>(acc);
   	}
 
-}
+}// extract
 
-using extract::empirical_distribution_int;
+using extract::ordered_sample;
 
-}// accumulator
+}// empirical_distribution
 }// detail
 }// statistics
 }// boost

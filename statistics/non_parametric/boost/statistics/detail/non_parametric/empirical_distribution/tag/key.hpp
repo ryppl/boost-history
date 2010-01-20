@@ -1,23 +1,23 @@
-///////////////////////////////////////////////////////////////////////////////
-// statistics::detail::accumulator::tag::key.hpp                       		 //
-//                                                                           //
-//  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
-//  Software License, Version 1.0. (See accompanying file                    //
-//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
-///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_TAG_KEY_HPP_2010
-#define BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_TAG_KEY_HPP_2010
+////////////////////////////////////////////////////////////////////////////////
+// kolmogorov_smirnov::tag::reference_distribution.hpp 					  	  //
+//                                                                            //
+//  Copyright 2009 Erwann Rogard. Distributed under the Boost                 //
+//  Software License, Version 1.0. (See accompanying file                     //
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)          //
+////////////////////////////////////////////////////////////////////////////////
+#ifndef BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_KOLMOGOROV_SMIRNOV_TAG_REFERENCE_DISTRIBUTION_HPP_2010
+#define BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_KOLMOGOROV_SMIRNOV_TAG_REFERENCE_DISTRIBUTION_HPP_2010
 #include <boost/parameter/name.hpp>
 #include <boost/parameter/keyword.hpp>
 
 namespace boost { 
 namespace statistics{
 namespace detail{
-namespace accumulator{
+namespace kolmogorov_smirnov{
 namespace tag{
-    struct key{};
+    struct reference_distribution{};
 }// tag
-}// accumulator
+}// kolmogorov_smirnov
 }// detail
 }// statistics
 }// boost

@@ -7,8 +7,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef LIBS_STATISTICS_DETAIL_NON_PARAMETRIC_KOLMOGOROV_SMIRNOV_HPP_ER_2010
 #define LIBS_STATISTICS_DETAIL_NON_PARAMETRIC_KOLMOGOROV_SMIRNOV_HPP_ER_2010
+#include <ostream>
 
-void example_kolmogorov_smirnov(std::ostream& os);
+void example_kolmogorov_smirnov(
+	std::ostream& os,
+    double poisson_mean = 1.0,
+    std::size_t n_loops = 1,
+    std::size_t n_init = 10,
+    std::size_t n_factor = 10 // n_init *= n_factor at each loop
+);
 
 #endif
 

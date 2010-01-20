@@ -1,14 +1,16 @@
 ///////////////////////////////////////////////////////////////////////////////
-// accumulator::statistics::count_int.hpp     						     	 //
+// accumulator::statistics::empirical_distribution::count.hpp     			 //
 //                                                                           //
 //  Copyright 2010 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_COUNT_INT_HPP_ER_2010
-#define BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_COUNT_INT_HPP_ER_2010
+#ifndef BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_EMPIRICAL_DISTRIBUTION_COUNT_HPP_ER_2010
+#define BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_EMPIRICAL_DISTRIBUTION_COUNT_HPP_ER_2010
 #include <map>
-#include <functional>
+#include <functional> // less
+
+#include <boost/type_traits.hpp>
 
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/apply.hpp>
@@ -23,36 +25,42 @@
 #include <boost/accumulators/framework/depends_on.hpp>
 #include <boost/accumulators/statistics_fwd.hpp>
 
-#include <boost/statistics/detail/accumulator/statistics/keyword/key.hpp>
-#include <boost/statistics/detail/accumulator/statistics/empirical_distribution_int.hpp>
+#include <boost/statistics/detail/non_parametric/empirical_distribution/ordered_sample.hpp>
 
 namespace boost { 
 namespace statistics{
 namespace detail{
-namespace accumulator{
+namespace empirical_distribution{
 
 namespace impl{
 
-	template<typename Int,bool Cum>
-	class count_int : public boost::accumulators::accumulator_base{
-		typedef std::less<Int> comp_;
+	
+	// Count of occurences matching (or less equal than) a given value
+    //
+    // Warning : If Cum == true boost::is_float<T> affects the implementa-
+    // tion. For example, if say the samples are generated from a Poisson
+    // [Normal] distribution, T must be an integral [a float] type.
+    template<typename T,bool Cum,typename Comp = std::less<T> >
+	class count : public boost::accumulators::accumulator_base{
+		typedef Comp comp_;
 		typedef std::size_t size_;
         typedef boost::accumulators::dont_care dont_care_;
 
         public:
 
 		typedef size_ result_type;
+        typedef T sample_type;
 
-		count_int(dont_care_){}
+		count(dont_care_){}
 
 		void operator()(dont_care_){}
 		
         template<typename Args>
         result_type result(const Args& args)const{
-        	Int key = args[statistics::detail::accumulator::keyword::key];
+        	sample_type key = args[boost::accumulators::sample];
         	typedef typename boost::mpl::bool_<Cum> is_cum_;
-            typedef statistics::detail::accumulator
-            	::tag::empirical_distribution_int tag_;
+            typedef boost::statistics::detail
+            	::empirical_distribution::tag::ordered_sample tag_;
         	return this->result_impl(
             	boost::accumulators::extract_result<tag_>(
                 	args[boost::accumulators::accumulator]
@@ -64,26 +72,35 @@ namespace impl{
 
 		private:
 		
-        template<typename Map,typename N>
+        template<typename Map>
 		result_type result_impl(
         	Map& map,
-            const N& key,
+            const sample_type& key,
             boost::mpl::bool_<false> cum
         )const{
         	return (map[key]); 
         }
 
-        template<typename Map,typename N>
+        template<typename Map>
 		result_type result_impl(
         	Map& map, 
-            const N& key,
+            const sample_type& x,
             boost::mpl::bool_<true> cum
         )const{
         	return std::for_each(
-            	boost::begin(map),
-                map.upper_bound(key),
+            	boost::const_begin(map),
+				this->bound(map,x),
             	accumulator()
             ).value; 
+        }
+
+		template<typename Map>
+        typename boost::range_iterator<const Map>::type
+		bound(
+        	const Map& map,
+            const sample_type& x
+        )const{
+        	return map.upper_bound(x);
         }
 
 		struct accumulator{
@@ -106,50 +123,54 @@ namespace impl{
 namespace tag
 {
 	template<bool Cum>
-    struct count_int
-      : boost::accumulators::depends_on<
-      	statistics::detail::accumulator::tag::empirical_distribution_int
+    struct count: boost::accumulators::depends_on<
+      	boost::statistics::detail
+        	::empirical_distribution::tag::ordered_sample
     >
     {
-
-// TODO compile error
-//      typedef statistics::detail::accumulator::
-//      	impl::count_int<boost::mpl::_1,Cum> impl;
-// must explicitly have:        
-        
         struct impl{
-        	template<typename Int,typename W>
+        	template<typename T,typename W>
             struct apply{
-            	typedef statistics::detail::accumulator::
-                	impl::count_int<Int,Cum> type;
+            	typedef boost::statistics::detail::empirical_distribution
+                	::impl::count<T,Cum> type;
             };
         };
     };
 }
+namespace result_of{
 
+	template<bool Cum,typename AccSet>
+    struct count{
+    	typedef boost::statistics::detail
+        	::empirical_distribution::tag::count<Cum> tag_;
+		 typedef typename 
+         	boost::accumulators::detail::template 
+            	extractor_result<AccSet,tag_>::type type; 
+    };
+
+}
 namespace extract
 {
 
-  	template<bool Cum,typename AccumulatorSet,typename Int>
-	typename boost::mpl::apply<
-		AccumulatorSet,
-        boost::statistics::detail::accumulator::tag::count_int<Cum>
-    >::type::result_type
-  	count_int(AccumulatorSet const& acc,const Int& i)
+	// Usage : count<Cum>(acc,x)
+  	template<bool Cum,typename AccSet,typename T>
+	typename boost::statistics::detail
+    	::empirical_distribution::result_of::template count<Cum,AccSet>::type
+  	count(AccSet const& acc,const T& x)
     {
     	typedef boost::statistics::detail
-        	::accumulator::tag::count_int<Cum> the_tag;
-        return boost::accumulators::extract_result<the_tag>(
+        	::empirical_distribution::tag::count<Cum> tag_;
+        return boost::accumulators::extract_result<tag_>(
             acc,
-            (boost::statistics::detail::accumulator::keyword::key = i)
+            (boost::accumulators::sample = x)
         );
   	}
 
 }
 
-using extract::count_int;
+using extract::count;
 
-}// accumulator
+}// empirical_distribution
 }// detail
 }// statistics
 }// boost
