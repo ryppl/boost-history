@@ -36,28 +36,18 @@ namespace detail {
         adaptive_string(const std::string& s):str_(s)
         {}
         
-        // implicit convert to string         
+        // implicit convert to  any basic_string
         template <
+            typename CharT, 
             typename Traits, 
             class Alloc
         >
-        operator std::basic_string<char, Traits, Alloc>() const
+        operator std::basic_string<CharT, Traits, Alloc>() const
         {
             //return str_;
-            std::basic_string<char, Traits, Alloc> s;
+            std::basic_string<CharT, Traits, Alloc> s;
             s.assign(str_.begin(), str_.end());
             return s;
-        }
-        // implicit convert to wstring 
-        template <
-            typename Traits, 
-            class Alloc
-        >
-        operator std::basic_string<wchar_t, Traits, Alloc>() const
-        {
-            std::basic_string<wchar_t, Traits, Alloc> ws;
-            ws.assign(str_.begin(), str_.end());
-            return ws;
         }
       
       private:

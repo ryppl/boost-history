@@ -14,7 +14,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/current_function.hpp>
 #include <boost/chrono/detail/default_out.hpp>
-#include <boost/chrono/detail/wide.hpp>
+#include <boost/chrono/detail/adaptive_string.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 #include <boost/accumulators/framework/accumulator_set.hpp>

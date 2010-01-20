@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org/libs/system for documentation.
 
-#ifndef BOOST_CHRONO_FUNCTION_STOPCLOCK_HPP
-#define BOOST_CHRONO_FUNCTION_STOPCLOCK_HPP
+#ifndef BOOST_CHRONO_SCOPED_STOPCLOCK_HPP
+#define BOOST_CHRONO_SCOPED_STOPCLOCK_HPP
 
 #include <boost/chrono/stopwatch_reporter.hpp>
 #include <boost/chrono/stopwatch.hpp>
@@ -39,66 +39,67 @@ namespace boost { namespace chrono  {
  */
 //--------------------------------------------------------------------------------------//
 
-    template <class Clock=process_cpu_clock, class Stopwatch=stopwatch<Clock>, class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type>
-    class function_stopclock : public stopwatch_reporter<Stopwatch, Formatter> {
-        typedef stopwatch_reporter<Stopwatch, Formatter> base_type;
+    template <class Clock=process_cpu_clock, class Formatter=typename stopwatch_reporter_default_formatter<chrono::stopwatch<Clock> >::type >
+    class scoped_stopclock 
+        : public stopwatch_reporter<chrono::stopwatch<Clock>, Formatter> {
+        typedef stopwatch_reporter<chrono::stopwatch<Clock>, Formatter> base_type;
     public:
         typedef Clock clock;
-        typedef Stopwatch stopwatch;
+        typedef chrono::stopwatch<Clock> stopwatch;
         typedef Formatter formatter;
         typedef typename Formatter::string_type string_type;
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit function_stopclock( const string_type& func, system::error_code & ec = system::throws )
+        explicit scoped_stopclock( const string_type& func, system::error_code & ec = system::throws )
         : base_type(ec), func_(func)
         { begin(); }
-        function_stopclock( const string_type& func, ostream_type & os,
+        scoped_stopclock( const string_type& func, ostream_type & os,
                     system::error_code & ec = system::throws )
         : base_type(os, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const string_type& func, const string_type & format,
+        scoped_stopclock( const string_type& func, const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(format, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const string_type& func, int places,
+        scoped_stopclock( const string_type& func, int places,
                     system::error_code & ec = system::throws )
         : base_type(places, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const string_type& func, ostream_type & os, const string_type & format,
+        scoped_stopclock( const string_type& func, ostream_type & os, const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(os, format, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const string_type& func, const string_type & format, int places,
+        scoped_stopclock( const string_type& func, const string_type & format, int places,
                     system::error_code & ec = system::throws )
         : base_type(format, places, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const string_type& func, ostream_type & os, int places,
+        scoped_stopclock( const string_type& func, ostream_type & os, int places,
                     system::error_code & ec = system::throws )
         : base_type(os, places, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const string_type& func, int places, const string_type & format,
+        scoped_stopclock( const string_type& func, int places, const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(places, format, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const string_type& func, ostream_type & os, const string_type & format, int places,
+        scoped_stopclock( const string_type& func, ostream_type & os, const string_type & format, int places,
                     system::error_code & ec = system::throws )
         : base_type(os, format, places, ec), func_(func)
         { begin(); }
 
-        function_stopclock( const string_type& func, ostream_type & os, int places, const string_type & format,
+        scoped_stopclock( const string_type& func, ostream_type & os, int places, const string_type & format,
                     system::error_code & ec = system::throws )
         : base_type(os, places, format, ec), func_(func)
         { begin(); }
 
-        ~function_stopclock() {
+        ~scoped_stopclock() {
             this->m_os << "}}} " << func_ << " : ";
         }
         typedef typename base_type::scoped_run scoped_run;

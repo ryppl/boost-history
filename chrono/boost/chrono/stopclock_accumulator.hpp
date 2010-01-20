@@ -43,25 +43,21 @@ namespace boost { namespace chrono  {
  * }
  */
 //--------------------------------------------------------------------------------------//
-#ifndef BOOST_CHRONO_USES_MPL_ASSERT
-#define BOOST_CHRONO_SA_STOPWATCH_CLOCK_MUST_BE_CLOCK        "Stopwatch::clock must be the same as Clock"
-#endif
-    template <class Clock=high_resolution_clock, class Stopwatch=stopwatch_accumulator<Clock>, class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type>
+    
+    template <class Clock=high_resolution_clock, class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock> >::type>
     class stopclock_accumulator;
 
-    template <class Clock, class Stopwatch, class Formatter>
-    struct stopwatch_reporter_default_formatter<stopclock_accumulator<Clock,Stopwatch, Formatter> > {
-        typedef typename stopwatch_reporter_default_formatter<Stopwatch>::type type;
+    template <class Clock, class Formatter>
+    struct stopwatch_reporter_default_formatter<stopclock_accumulator<Clock,Formatter> > {
+        typedef typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock> >::type type;
     };
 
-    template <class Clock, class Stopwatch, class Formatter>
-    class stopclock_accumulator : public stopwatch_reporter<Stopwatch, Formatter> {
-        BOOST_CHRONO_STATIC_ASSERT((boost::is_same<typename Stopwatch::clock, Clock>::value),
-            BOOST_CHRONO_S_STOPWATCH_CLOCK_MUST_BE_CLOCK, (Stopwatch)(Stopwatch::clock)(Clock));
-        typedef stopwatch_reporter<Stopwatch, Formatter> base_type;
+    template <class Clock, class Formatter>
+    class stopclock_accumulator : public stopwatch_reporter<stopwatch_accumulator<Clock>, Formatter> {
+        typedef stopwatch_reporter<stopwatch_accumulator<Clock>, Formatter> base_type;
     public:
         typedef Clock clock;
-        typedef Stopwatch stopwatch;
+        typedef stopwatch_accumulator<Clock> stopwatch;
         typedef Formatter formatter;
         typedef typename Formatter::string_type string_type;
         typedef typename Formatter::char_type char_type;

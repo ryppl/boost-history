@@ -21,10 +21,6 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
-#ifndef BOOST_CHRONO_USES_MPL_ASSERT
-#define BOOST_CHRONO_S_STOPWATCH_CLOCK_MUST_BE_CLOCK        "Stopwatch::clock must be the same as Clock"
-#endif
-
 namespace boost { namespace chrono  {
 
 //--------------------------------------------------------------------------------------//
@@ -47,23 +43,20 @@ namespace boost { namespace chrono  {
  */
 //--------------------------------------------------------------------------------------//
 
-    template <class Clock=process_cpu_clock, class Stopwatch=stopwatch<Clock>, class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type>
+    template <class Clock=process_cpu_clock, class Formatter=typename stopwatch_reporter_default_formatter<stopwatch<Clock> >::type>
     class stopclock;
 
-    template <class Clock, class Stopwatch, class Formatter>
-    struct stopwatch_reporter_default_formatter<stopclock<Clock,Stopwatch, Formatter> > {
-        typedef typename stopwatch_reporter_default_formatter<Stopwatch>::type type;
+    template <class Clock, class Formatter>
+    struct stopwatch_reporter_default_formatter<stopclock<Clock,Formatter> > {
+        typedef typename stopwatch_reporter_default_formatter<stopwatch<Clock> >::type type;
     };
 
-    template <class Clock, class Stopwatch, class Formatter>
-    class stopclock : public stopwatch_reporter<Stopwatch, Formatter> {
-        BOOST_CHRONO_STATIC_ASSERT((boost::is_same<typename Stopwatch::clock, Clock>::value),
-            BOOST_CHRONO_S_STOPWATCH_CLOCK_MUST_BE_CLOCK, (Stopwatch)(Stopwatch::clock)(Clock));
-        
-        typedef stopwatch_reporter<Stopwatch, Formatter> base_type;
+    template <class Clock, class Formatter>
+    class stopclock : public stopwatch_reporter<chrono::stopwatch<Clock>, Formatter> {
+        typedef stopwatch_reporter<chrono::stopwatch<Clock>, Formatter> base_type;
     public:
         typedef Clock clock;
-        typedef Stopwatch stopwatch;
+        typedef chrono::stopwatch<Clock> stopwatch;
         typedef Formatter formatter;
         typedef typename Formatter::string_type string_type;
         typedef typename Formatter::char_type char_type;

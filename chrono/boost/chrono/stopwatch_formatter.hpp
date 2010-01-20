@@ -14,7 +14,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/current_function.hpp>
 #include <boost/chrono/detail/default_out.hpp>
-#include <boost/chrono/detail/wide.hpp>
+#include <boost/chrono/detail/adaptive_string.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
 #include <iostream>
