@@ -2741,6 +2741,80 @@ Usage
 [endsect]
 
 [/==================================================]
+[section:stopclock_accumulator_hpp Header `<boost/chrono/stopclock_accumulator.hpp>`]
+[/==================================================]
+
+    namespace boost { namespace chrono {
+        template < class Clock, class Stopwatch, class Formatter > 
+        class stopclock_accumulator;
+        typedef <see above> system_stopclock_accumulator;
+        #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+        typedef <see above> monotonic_stopclock_accumulator;
+        #endif
+        typedef <see above> high_resolution_stopclock_accumulator;
+        typedef <see above> process_real_cpu_stopclock_accumulator;
+        typedef <see above> process_user_cpu_stopclock_accumulator;
+        typedef <see above> process_system_cpu_stopclock_accumulator;
+    }}
+
+[section Template Class `stopclock_accumulator<>`]
+
+`stopclock_accumulator<Clock>` template class is a shortcut of `stopwatch_reporter<stopwatch<Clock>>`
+
+    template
+        < class Clock=high_resolution_clock
+        , class Stopwatch=stopwatch_accumulator<Clock>
+        , class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type
+    > class stopclock_accumulator : public stopwatch_reporter<Stopwatch, Formatter> {
+    public:
+        typedef Clock clock;
+        typedef Stopwatch stopwatch;
+        typedef Formatter formatter;
+
+        explicit stopclock_accumulator( system::error_code & ec = system::throws );
+        explicit stopclock_accumulator( std::ostream & os,
+                    system::error_code & ec = system::throws );
+        explicit stopclock_accumulator( const std::string & format,
+                    system::error_code & ec = system::throws );
+        explicit stopclock_accumulator( int places,
+                    system::error_code & ec = system::throws );
+
+        stopclock_accumulator( std::ostream & os, const std::string & format,
+                    system::error_code & ec = system::throws );
+        stopclock_accumulator( const std::string & format, int places,
+                    system::error_code & ec = system::throws );
+        stopclock_accumulator( std::ostream & os, int places,
+                    system::error_code & ec = system::throws );
+        stopclock_accumulator( int places, const std::string & format,
+                    system::error_code & ec = system::throws );
+
+        stopclock_accumulator( std::ostream & os, const std::string & format, int places,
+                    system::error_code & ec = system::throws );
+        stopclock_accumulator( std::ostream & os, int places, const std::string & format,
+                    system::error_code & ec = system::throws );
+
+
+        typedef typename base_type::scoped_run scoped_run;
+        typedef typename base_type::scoped_suspend scoped_suspend;
+        typedef typename base_type::scoped_resume scoped_resume;
+    };
+
+[endsect]
+[section `stopclock_accumulator` useful typedefs]
+
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::system_clock > system_stopwatch_reporter;
+        #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::monotonic_clock > monotonic_stopwatch_reporter;
+        #endif
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::high_resolution_clock > high_resolution_stopclock_accumulator;
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_stopclock_accumulator;
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_user_cpu_clock > process_user_cpu_stopclock_accumulator;
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_system_cpu_clock > process_system_cpu_stopclock_accumulator;
+
+[endsect]
+[endsect]
+
+[/==================================================]
 [section:function_stopclock_hpp Header `<boost/chrono/function_stopclock.hpp>`]
 [/==================================================]
 
