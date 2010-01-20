@@ -205,10 +205,10 @@ namespace filesystem
     path&  replace_extension(const path& new_extension = path());
 
 #   ifdef BOOST_POSIX_API
-    path& localize() { return *this; }  // POSIX m_pathname already localized
+    path& preferred() { return *this; }  // POSIX m_pathname already localized
 
 #   else // BOOST_WINDOWS_API
-    path& localize();  // change slashes to backslashes
+    path& preferred();  // change slashes to backslashes
 
 #   endif
 

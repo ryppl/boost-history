@@ -175,7 +175,7 @@ namespace filesystem
     return tmp.wstring();
   }
 
-  path & path::localize()
+  path & path::preferred()
   {
     for (string_type::iterator it = m_pathname.begin();
           it != m_pathname.end(); ++it)

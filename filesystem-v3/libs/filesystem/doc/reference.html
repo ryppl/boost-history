@@ -529,7 +529,7 @@ system. </p>
         void  swap(path&amp; rhs);
         path&amp; remove_filename();
         path&amp; replace_extension(const path&amp; new_extension = path());
-        path&amp; localize();  // POSIX: no effect. Windows: convert slashes to backslashes
+        path&amp; preferred();  // POSIX: no effect. Windows: convert slashes to backslashes
 
         // <a href="#path-native-format-observers">native format observers</a>
         const string_type&amp;  native() const;            // native format, encoding
@@ -805,7 +805,7 @@ letters to uppercase.<i> -- end note.</i>]</p>
   <code>new_extension</code>.</p>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
-<pre>path&amp; localize();</pre>
+<pre>path&amp; preferred();</pre>
 <blockquote>
   <p><i>Effects:</i> The contained pathname is converted to the preferred native 
   format. [<i>Note:</i> On Windows, the effect is to replace slashes with 

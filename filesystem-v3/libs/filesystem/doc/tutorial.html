@@ -57,8 +57,8 @@ interfaces.</p>
     <p><b>Boost Filesystem library <code>rename</code> function from 
     &lt;filesystem.hpp&gt;</b></p>
     <blockquote style="font-size: 10pt">
-      <pre>void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p);
-void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p, system::error_code&amp; ec);</pre>
+      <pre>void rename(const path&amp; old_p, const path&amp; new_p);
+void rename(const path&amp; old_p, const path&amp; new_p, system::error_code&amp; ec);</pre>
     </blockquote>
     </td>
   </tr>
@@ -527,7 +527,7 @@ example:</p>
 
 composed path:
   cout &lt;&lt; -------------: /foo/bar/baa.txt
-  localize()-----------: /foo/bar/baa.txt
+  preferred()----------: /foo/bar/baa.txt
 ...
 observers, native format:
   native()-------------: /foo/bar/baa.txt
@@ -544,7 +544,7 @@ observers, generic format:
 
 composed path:
   cout &lt;&lt; -------------: /foo/bar/baa.txt
-  localize()-----------: \foo\bar\baa.txt
+  preferred()----------: \foo\bar\baa.txt
 ...
 observers, native format:
   native()-------------: /foo/bar\baa.txt
@@ -583,7 +583,7 @@ portable and uniform regardless of the operating system.</p>
 
 <p dir="ltr"><code>path</code> objects always hold pathnames in the native 
 format, but otherwise leave them unchanged from their source. The
-<a href="reference.html#localize">localize()</a> function will convert to the 
+<a href="reference.html#preferred">preferred()</a> function will convert to the 
 preferred form, if the native format has several forms. Thus on Windows, it will 
 convert slashes to backslashes.</p>
 
@@ -677,7 +677,7 @@ for (; argc &gt; 1; --argc, ++argv)
 
 cout &lt;&lt; &quot;\ncomposed path:\n&quot;;
 cout &lt;&lt; &quot; cout &lt;&lt; -------------: &quot; &lt;&lt; p &lt;&lt; &quot;\n&quot;;
-cout &lt;&lt; &quot; localize()-----------: &quot; &lt;&lt; p.localize() &lt;&lt; &quot;\n&quot;;</pre>
+cout &lt;&lt; &quot; preferred()----------: &quot; &lt;&lt; p.preferred() &lt;&lt; &quot;\n&quot;;</pre>
     </blockquote>
     </td>
   </tr>
@@ -696,14 +696,14 @@ cout &lt;&lt; &quot; localize()-----------: &quot; &lt;&lt; p.localize() &lt;&lt
 
 composed path:
   cout &lt;&lt; -------------: /foo/bar/baa.txt
-  localize()-----------: /foo/bar/baa.txt</pre>
+  preferred()----------: /foo/bar/baa.txt</pre>
       </td>
       <td style="font-size: 10pt">
       <pre>&gt;path_info / foo/bar baa.txt
 
 composed path:
   cout &lt;&lt; -------------: /foo/bar\baa.txt
-  localize()-----------: \foo\bar\baa.txt</pre>
+  preferred()----------: \foo\bar\baa.txt</pre>
       </td>
     </tr>
   </table>
@@ -752,7 +752,7 @@ composed path:
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->12 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32137" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->20 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32134" --></p>
 
 </body>
 

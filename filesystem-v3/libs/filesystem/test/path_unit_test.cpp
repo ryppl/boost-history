@@ -380,15 +380,15 @@ namespace
 
     //  operator /
 
-    CHECK(p1 / p2 == path("foo/bar").localize());
-    CHECK("foo" / p2 == path("foo/bar").localize());
-    CHECK(L"foo" / p2 == path("foo/bar").localize());
-    CHECK(string("foo") / p2 == path("foo/bar").localize());
-    CHECK(wstring(L"foo") / p2 == path("foo/bar").localize());
-    CHECK(p1 / "bar" == path("foo/bar").localize());
-    CHECK(p1 / L"bar" == path("foo/bar").localize());
-    CHECK(p1 / string("bar") == path("foo/bar").localize());
-    CHECK(p1 / wstring(L"bar") == path("foo/bar").localize());
+    CHECK(p1 / p2 == path("foo/bar").preferred());
+    CHECK("foo" / p2 == path("foo/bar").preferred());
+    CHECK(L"foo" / p2 == path("foo/bar").preferred());
+    CHECK(string("foo") / p2 == path("foo/bar").preferred());
+    CHECK(wstring(L"foo") / p2 == path("foo/bar").preferred());
+    CHECK(p1 / "bar" == path("foo/bar").preferred());
+    CHECK(p1 / L"bar" == path("foo/bar").preferred());
+    CHECK(p1 / string("bar") == path("foo/bar").preferred());
+    CHECK(p1 / wstring(L"bar") == path("foo/bar").preferred());
 
     swap(p1, p2);
 

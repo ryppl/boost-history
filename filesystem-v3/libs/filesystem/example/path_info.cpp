@@ -20,11 +20,11 @@ int main(int argc, char* argv[])
   {
     cout << "Usage: path_info path-portion...\n"
              "Example: path_info foo/bar baz\n"
-#ifdef BOOST_POSIX_PATH
+#            ifdef BOOST_POSIX_PATH
              "         would report info about the composed path foo/bar/baz\n";
-#else  // BOOST_WINDOWS_PATH
+#            else  // BOOST_WINDOWS_PATH
              "         would report info about the composed path foo/bar\\baz\n";
-#endif
+#            endif
     return 1;
   }
 
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
   cout  <<  "\ncomposed path:\n";
   cout  <<  "  cout << -------------: " << p << "\n";
-  cout  <<  "  localize()-----------: " << path(p).localize() << "\n";
+  cout  <<  "  preferred()----------: " << path(p).preferred() << "\n";
 
   cout << "\nelements:\n";
 
@@ -43,13 +43,13 @@ int main(int argc, char* argv[])
     cout << "  " << *it << '\n';
 
   cout  <<  "\nobservers, native format:" << endl;
-#ifdef BOOST_POSIX_API
+# ifdef BOOST_POSIX_API
   cout  <<  "  native()-------------: " << p.native() << endl;
   cout  <<  "  c_str()--------------: " << p.c_str() << endl;
-#else  // BOOST_WINDOWS_API
+# else  // BOOST_WINDOWS_API
   wcout << L"  native()-------------: " << p.native() << endl;
   wcout << L"  c_str()--------------: " << p.c_str() << endl;
-#endif
+# endif
   cout  <<  "  string()-------------: " << p.string() << endl;
   wcout << L"  wstring()------------: " << p.wstring() << endl;
 
