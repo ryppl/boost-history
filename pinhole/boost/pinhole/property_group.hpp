@@ -159,6 +159,16 @@ namespace boost { namespace pinhole
                 (*actionItr).second = NULL;
             }
             m_actions.clear();
+            
+            // cleanup all the signal classes
+            signal_collection::iterator signalItr    = m_signals.begin();
+            signal_collection::iterator signalItrEnd = m_signals.end();
+            for( ; signalItr != signalItrEnd; ++signalItr )
+            {
+                delete (*signalItr).second;
+                (*signalItr).second = NULL;
+            }
+            m_signals.clear();
         }
 
         property_group& operator=( const property_group& other )
