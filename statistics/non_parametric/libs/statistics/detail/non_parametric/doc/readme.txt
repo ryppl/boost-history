@@ -29,9 +29,12 @@ I welcome feedback including bug reports at erwann.rogard@gmail.com
 
 
 [ History] 
+	January 20th, 2010
+    	- Miscellanea reorganization of the files
+
 	January 17th, 2010. 
         - Modified non_parametric/kolmogorov_smirnov/statistic.hpp from an 
-        STL-like algorithm to a (much simplified) accumulator.
+        STL-like algorithm to a simpler accumulator.
         - Added check_convergence
         
 	January 14th, 2010. 

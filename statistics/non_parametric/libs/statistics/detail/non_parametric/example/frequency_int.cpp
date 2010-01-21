@@ -38,7 +38,6 @@ void example_frequency_int(std::ostream& os)
     } // 3, 3, 3, 2, 2, 1
 
 	namespace ed = boost::statistics::detail::empirical_distribution;
-//	namespace ks = boost::statistics::detail::ks;
 
     typedef ed::tag::frequency<false,val_> tag_freq_;
     typedef ed::tag::frequency<true,val_> tag_cum_freq_;
@@ -54,7 +53,9 @@ void example_frequency_int(std::ostream& os)
         acc_()
     );
 
-	os << (boost::format("empirical {(pdf,cdf):i=1,...,%1%} : ")%n).str() << std::endl;
+	os 
+    	<< (boost::format("empirical {(pdf,cdf):i=1,...,%1%} : ")%n).str() 
+        << std::endl;
     int sum = 0;
     for(int i = 0; i<n; i++){
 		BOOST_ASSERT( ed::extract::count<false>(acc,i+1) == i+1);
