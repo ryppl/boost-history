@@ -76,10 +76,7 @@ namespace boost
         stopwatch_accumulator( )
         : running_(false), suspended_(false), accumulated_(), 
           partial_(), start_(duration::zero()), level_(0), suspend_level_(0)
-        {
-            //duration d0((0));
-            //partial_=d0;
-        }
+        {}
 
         std::pair<duration, time_point>  restart( system::error_code & ec = system::throws ) {
             time_point tmp=clock::now( ec );
@@ -87,7 +84,7 @@ namespace boost
             if (running_&&(--level_==0)) {
                 partial_ += tmp - start_;
                 accumulated_(partial_.count());
-                partial_=duration(0);
+                partial_=duration::zero();
             } else {
                 running_=true;
             }
@@ -112,14 +109,14 @@ namespace boost
         duration stop( system::error_code & ec = system::throws ) {
             if (running_&&(--level_==0)) {
                 time_point tmp=clock::now( ec );
-                if (ec) return duration(0);
+                if (ec) return duration::zero();
                 partial_ += tmp - start_;
                 accumulated_(partial_.count());
-                partial_=duration(0);
+                partial_=duration::zero();
                 running_=false;
                 return duration(accumulators::extract::sum(accumulated_));
             } else {
-                return duration(0);
+                return duration::zero();
             }
         }
 
@@ -128,15 +125,15 @@ namespace boost
                 ++suspend_level_;
                 if (!suspended_) {
                     time_point tmp=clock::now( ec );
-                    if (ec) return duration(0);
+                    if (ec) return duration::zero();
                     partial_ += tmp - start_;
                     suspended_=true;
                     return duration(accumulators::sum(accumulated_));
                 } else {
-                    return duration(0);
+                    return duration::zero();
                 }
             } else {
-                return duration(0);
+                return duration::zero();
             }
         }
         time_point resume( system::error_code & ec = system::throws ) {
@@ -157,7 +154,7 @@ namespace boost
                     return duration(accumulators::sum(accumulated_));
                 else {
                     time_point tmp = clock::now( ec );
-                    if (ec) return duration(0);
+                    if (ec) return duration::zero();
                     return duration(accumulators::sum(accumulated_))+tmp - start_;
                 }
             } else {

@@ -62,17 +62,12 @@ namespace boost
         explicit stopwatch( system::error_code & ec = system::throws  )
         : running_(false), suspended_(false), start_(), level_(0), partial_(duration::zero()), suspend_level_(0)
         {
-            //duration d0((0));
-            //partial_=d0;
             start(ec);
         }
 
         explicit stopwatch( const dont_start_t& t )
         : running_(false), suspended_(false), start_(), level_(0), partial_(duration::zero()), suspend_level_(0)
-        { 
-            //duration d0((0));
-            //partial_=d0;
-        }
+        { }
 
         time_point start( system::error_code & ec = system::throws ) {
             ++level_;
@@ -90,14 +85,14 @@ namespace boost
         duration stop( system::error_code & ec = system::throws ) {
             if (running_&&(--level_==0)) {
                 time_point tmp=clock::now( ec );
-                if (ec) return duration(0);
+                if (ec) return duration::zero();
                 partial_ += tmp - start_;
                 duration frozen= partial_;
-                partial_=duration(0);
+                partial_=duration::zero();
                 running_=false;
                 return frozen;
             } else {
-                return duration(0);
+                return duration::zero();
             }
         }
 
@@ -108,9 +103,9 @@ namespace boost
             if (running_&&(--level_==0)) {
                 partial_ += tmp - start_;
                 frozen = partial_;
-                partial_=duration(0);
+                partial_=duration::zero();
             } else {
-                frozen = duration(0);
+                frozen = duration::zero();
                 running_=true;
             }
             start_=tmp;
@@ -123,15 +118,15 @@ namespace boost
                 ++suspend_level_;
                 if (!suspended_) {
                     time_point tmp=clock::now( ec );
-                    if (ec) return duration(0);
+                    if (ec) return duration::zero();
                     partial_ += tmp - start_;
                     suspended_=true;
                     return partial_;
                 } else {
-                    return duration(0);
+                    return duration::zero();
                 }
             } else {
-                return duration(0);
+                return duration::zero();
             }
         }
         time_point resume( system::error_code & ec = system::throws ) {

@@ -11,6 +11,7 @@
 #define BOOST_CHRONO_SUSPENDABLE_CLOCK_HPP
 
 #include <boost/chrono/chrono.hpp>
+#include <boost/chrono/scoped_suspend.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/thread/tss.hpp>
 #include <memory>
@@ -35,9 +36,20 @@ namespace boost { namespace chrono {
             duration suspended_duration_;
             std::size_t suspend_level_;
             
+            duration suspended(system::error_code & ec = system::throws) {
+                if (!suspended_) return suspended_duration_;
+                else {
+                    time_point tmp;
+                    tmp+=duration(Clock::now(ec).time_since_epoch().count());
+                    if (ec) return duration::zero();
+                    return suspended_duration_ + tmp - suspended_time_;
+                }
+            }
+            
             void suspend( system::error_code & ec = system::throws ) {
                 if (!suspended_) {
-                    time_point tmp=Clock::now( ec );
+                    time_point tmp;
+                    tmp+=duration(Clock::now(ec).time_since_epoch().count());
                     if (ec) return;
                     ++suspend_level_;
                     suspended_time_ = tmp;
@@ -48,7 +60,8 @@ namespace boost { namespace chrono {
             }
             void resume( system::error_code & ec = system::throws ) {
                 if (suspended_&&(--suspend_level_==0)) {
-                    time_point tmp = Clock::now( ec );
+                    time_point tmp;
+                    tmp+=duration(Clock::now(ec).time_since_epoch().count());
                     if (ec) return;
                     suspended_duration_ += tmp - suspended_time_;
                     suspended_=false;
@@ -79,26 +92,30 @@ namespace boost { namespace chrono {
             }
             return ptr;
         }
-        duration suspended(system::error_code & ec = system::throws)
-        {
-            thread_specific_context* ptr= instance(ec);
-            if (ptr!=0) return ptr->suspended_duration_;
-            else return duration(0);
-        }
 
         static thread_specific_ptr<thread_specific_context> ptr_;
     public:
         static time_point now( system::error_code & ec = system::throws ) {
-            return Clock::now(ec)-suspended(ec);
+            time_point res;
+            res+= duration(Clock::now(ec).time_since_epoch().count())-suspended(ec);
+            return res;
         }
 
         static void suspend( system::error_code & ec = system::throws ) {
             thread_specific_context* ptr= instance(ec);
             if (ptr!=0) ptr->suspend(ec);
         }
-        void resume( system::error_code & ec = system::throws ) {
+        static void resume( system::error_code & ec = system::throws ) {
             thread_specific_context* ptr= instance(ec);
             if (ptr!=0) ptr->resume(ec);
+        }
+        static duration suspended(system::error_code & ec = system::throws)
+        {
+            thread_specific_context* ptr= instance(ec);
+            if (ptr!=0) {
+                return ptr->suspended(ec);
+            }
+            else return duration::zero();
         }
         class scoped_suspend {
         public:
@@ -119,19 +136,15 @@ namespace boost { namespace chrono {
     
     };
 
-    template <class Clock>
-    struct is_suspendable : mpl:: false_ {};
+    template < class Clock >
+    thread_specific_ptr<typename suspendable_clock<Clock>::thread_specific_context> suspendable_clock<Clock>::ptr_;
+    
+    
         
     template <class Clock>
     struct is_suspendable<suspendable_clock<Clock> > : mpl:: true_ {};
         
         
-    template <class Clock>
-    class scoped_suspend {
-    public:
-        scoped_suspend(system::error_code & ec = system::throws) {}
-        ~scoped_suspend() {}
-    };        
 
     template <class Clock>
     class scoped_suspend<suspendable_clock<Clock> > 

@@ -13,7 +13,7 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/stopwatch_scoped.hpp>
 #include <boost/system/error_code.hpp>
-#include <boost/chrono/suspendable_clock.hpp>
+#include <boost/chrono/scoped_suspend.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
 #include <iostream>
