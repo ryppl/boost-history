@@ -70,6 +70,10 @@ Mac OS X 10.6        gcc 4.2                                    boost_1_41_0
         
 [ History ]
 
+Jan 20 2010 :  
+	- Began /distributions/poisson
+    - Update to sampler.cpp due to changes in /non_parametric/kolmogorov_smirnov
+
 Jan 6 2010 :  Fixed this bug : example/distribution_function outputs a boost 
 format runtime error under MSVC and mingw.
 
