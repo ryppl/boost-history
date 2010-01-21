@@ -97,7 +97,6 @@ project
     test-suite "stopwatch"
         :
         [ run ../example/stopwatch_example.cpp :  :  : <link>static ]
-        [ run ../example/stopwatch_example.cpp :  :  : <link>static ]
         [ run ../example/stopwatch_example.cpp :  :  : <library>/boost/system//boost_system  : stopwatch_example_dll ]
         [ run ../example/scoped_stopwatch_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
         [ run ../example/scoped_stopwatch_example.cpp :  :  : <library>/boost/thread//boost_thread  <library>/boost/system//boost_system  : scoped_stopwatch_example_dll ]
