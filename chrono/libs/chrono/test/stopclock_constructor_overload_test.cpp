@@ -1,4 +1,4 @@
-//  boost run_timer_test.cpp  -----------------------------------------------------//
+//  boost stopclock_constructor_overload_test.cpp  -----------------------------------------------------//
 
 //  Copyright Beman Dawes 2006, 2008
 //  Copyright 2009 Vicente J. Botet Escriba
