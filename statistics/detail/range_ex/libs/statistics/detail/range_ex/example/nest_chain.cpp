@@ -61,5 +61,5 @@ void example_nest_chain(std::ostream& os)
     );
 
 	BOOST_ASSERT(boost::equal(chained,vec));
-
+    
 }
