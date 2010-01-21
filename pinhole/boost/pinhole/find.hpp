@@ -12,6 +12,7 @@
 
 #include "./detail/tokenizer.hpp"
 #include "path_filtered_iterator.hpp"
+#include <boost/foreach.hpp>
 
 namespace boost { namespace pinhole
 {

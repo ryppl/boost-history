@@ -9,6 +9,8 @@
 #define BOOST_PINHOLE_DETAIL_TOKENIZER
 
 #include <vector>
+#include <list>
+#include <boost/algorithm/string.hpp>
 #include "../exceptions.hpp"
 #include"../find.hpp"
 
