@@ -17,7 +17,6 @@
 #include <boost/accumulators/statistics/stats.hpp>
 
 #include <boost/statistics/detail/non_parametric/empirical_distribution/frequency.hpp>
-#include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/frequency_adaptor.hpp>
 #include <libs/statistics/detail/non_parametric/example/frequency_int.h>
 
 void example_frequency_int(std::ostream& os)
@@ -55,20 +54,15 @@ void example_frequency_int(std::ostream& os)
         acc_()
     );
 
-// TODO boost::format runtime bug
-//	os << (boost::format("empirical {(pdf,cdf):i=1,...,%1%} : ")%n) << std::endl;
-	os << "empirical {(pdf,cdf):i=1,...,n} : " << std::endl;
+	os << (boost::format("empirical {(pdf,cdf):i=1,...,%1%} : ")%n).str() << std::endl;
     int sum = 0;
     for(int i = 0; i<n; i++){
 		BOOST_ASSERT( ed::extract::count<false>(acc,i+1) == i+1);
         sum += i+1;
 		BOOST_ASSERT( ed::extract::count<true>(acc,i+1) == sum);
 
-		//boost::format f("(%1%,%2%)");
         val_ freq = ed::extract::frequency<false,val_>(acc,i+1);
         val_ cum_freq = ed::extract::frequency<true,val_>(acc,i+1);
-        //f % freq % cum_freq;
-		//os << f << std::endl;        
         os << '(' << freq << ',' << cum_freq << ')' << std::endl;
 
     }

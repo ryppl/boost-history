@@ -32,7 +32,7 @@ namespace empirical_distribution{
 
 namespace impl{
 
-	// Same as count but expressed as a percentage (type T1) of the sample size
+	// Frequency as percentage of the sample size 
     //
     // Warning : See empirical_distribution::impl::count.
 	template<typename T,bool Cum,typename T1>

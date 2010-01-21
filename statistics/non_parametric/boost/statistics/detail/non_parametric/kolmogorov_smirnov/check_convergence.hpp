@@ -28,6 +28,8 @@ namespace statistics{
 namespace detail{
 namespace kolmogorov_smirnov{
 
+	// Generates kolmogorov-smirnov statistics for each of a sequence of 
+    // sample sizes, given a random generator and a reference distribution
 	template<
     	typename T1 = double,
     	typename MoreFeatures = boost::accumulators::stats<>

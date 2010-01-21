@@ -27,7 +27,8 @@ namespace empirical_distribution{
 
 namespace impl{
 
-	// Associates sample values (type T) with their number of occurences in the sample
+	// Associates sample values (type T) with their number of occurences in 
+    // the sample
 	template<typename T>
 	class ordered_sample 
     		: public boost::accumulators::accumulator_base{

@@ -7,8 +7,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_DETAIL_KOLMOGOROV_SMIRNOV_STATISTIC_HPP_ER_2010
 #define BOOST_STATISTICS_DETAIL_KOLMOGOROV_SMIRNOV_STATISTIC_HPP_ER_2010
-#include <iostream> // tmp
-
 #include <boost/type_traits.hpp>
 #include <boost/range.hpp>
 
@@ -24,7 +22,7 @@
 #include <boost/accumulators/framework/parameters/sample.hpp>
 #include <boost/accumulators/framework/parameters/accumulator.hpp>
 #include <boost/accumulators/framework/depends_on.hpp>
-#include <boost/accumulators/statistics_fwd.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/count.hpp>
 
 #include <boost/statistics/detail/non_parametric/empirical_distribution/count.hpp>
@@ -37,10 +35,8 @@ namespace kolmogorov_smirnov{
 
 namespace impl{
 
-	// Usage :
-    // Let acc denote an accumulator with feature kolmogorov::tag::statistic,
-    // T1 result = extract::statistic(acc,dist); 
-    //
+	// Computes the kolmogorov-statistic for a given reference distribution
+	//
     // Warning : See empirical_distribution::impl::count
 	template<typename T,typename T1>
 	class statistic : public boost::accumulators::accumulator_base{
@@ -144,6 +140,7 @@ namespace result_of{
 namespace extract
 {
 
+	// Usage : statistic<T1>(acc,dist)
   	template<typename T1,typename AccSet,typename D>
     typename boost::statistics::detail::kolmogorov_smirnov
     	::result_of::template statistic<T1,AccSet>::type

@@ -35,11 +35,10 @@ namespace empirical_distribution{
 namespace impl{
 
 	
-	// Count of occurences matching (or less equal than) a given value
-    //
-    // Warning : If Cum == true boost::is_float<T> affects the implementa-
-    // tion. For example, if say the samples are generated from a Poisson
-    // [Normal] distribution, T must be an integral [a float] type.
+	// Count of occurences matching (Cum = false) a given value or less or equal
+    // to that value (Cum = true). 
+    // 
+    // T can be an integer or a float
     template<typename T,bool Cum,typename Comp = std::less<T> >
 	class count : public boost::accumulators::accumulator_base{
 		typedef Comp comp_;
