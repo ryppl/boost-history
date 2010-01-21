@@ -27,8 +27,12 @@ either i) too small a ESS ii) incorrect computations
 
 [ Platform/Compiler ]
 
+Tested January 20th 2010 
+Mac OS X 10.6        gcc 4.0                                    boost_1_41_0
+Note: gcc 4.2 and boost::format recently don't mix well.
+
+As of November 1st 2009: 
 Win7-32 V6.1.7100    Dev-C++ 5.0 beta 9.2 with Mingw/GCC 3.4.2 	boost_1_41_0
-Mac OS X 10.6        gcc 4.2                                    boost_1_41_0
 
 
 [ Dependencies ]
@@ -56,6 +60,9 @@ Ridgeway and Madigan
 [5] Andrew Gelman et al., Bayesian Data Analysis, CRC Press
 
 [ History ]
+
+January 20th 2010 
+	Changes to sampler.cpp to due those in changes in non_parametric/kolmogorov_statistic
 
 November 1st 2009: 
     Removed computations of ess and pc_lt_eps from prepare_weights. In their

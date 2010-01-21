@@ -35,11 +35,12 @@
 
 #include <boost/statistics/detail/accumulator/statistics/proportion_less_than.hpp>
 #include <boost/statistics/detail/distribution_common/distributions/reference/wrapper.hpp>
+#include <boost/statistics/detail/distribution_common/meta/random/generator.hpp>
 #include <boost/statistics/detail/distribution_common/functor/log_unnormalized_pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/map_pdf/ratio_pdf/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/test/detail/x_f.hpp>
-#include <boost/statistics/detail/distribution_toolkit/test/random.hpp>
+
+#include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/check_convergence.hpp>
 
 #include <boost/statistics/detail/fusion/at_key/functor.hpp>
 #include <boost/statistics/detail/fusion/at_key/range.hpp>
@@ -61,7 +62,6 @@ void example_sampler(std::ostream& os){
     namespace dist = stat::distribution;
     namespace tk = stat::distribution::toolkit;
     namespace is = stat::importance_sampling;
-    namespace np = stat::non_parametric;
 
     typedef std::string                                 str_;
     typedef double                                      val_;
@@ -70,6 +70,7 @@ void example_sampler(std::ostream& os){
     typedef math::normal_distribution<val_>             dist_;
     typedef mt19937                                     urng_;
     typedef is::prepare_weights<val_>                   prepare_weights_;
+
     typedef stat::accumulator::tag::percentage_effective_sample_size tag_ess_;
     typedef stat::accumulator::tag::proportion_less_than tag_plt_; 
     typedef boost::accumulators::stats<tag_ess_,tag_plt_> stats_;
@@ -79,8 +80,6 @@ void example_sampler(std::ostream& os){
     typedef boost::mpl::int_<0> k0_;
     typedef boost::mpl::int_<1> k1_;
 	typedef boost::fusion::result_of::make_map<k0_,k1_,val_,val_>::type data_;
-	
-    typedef np::kolmogorov_smirnov::statistic<val_,k0_,k1_> ks_stat_;
     typedef std::vector<data_>                          vec_data_;
     typedef range_iterator<vec_data_>::type             vec_data_it_;
 
@@ -152,9 +151,9 @@ void example_sampler(std::ostream& os){
         );
         val_ ess = boost::accumulators::extract_result<tag_ess_>(acc);
         val_ plt_eps = boost::accumulators::extract_result<tag_plt_>(acc);
-        boost::format f("(ess,plt_eps) = (%1%,%2%)");
-        f % ess % plt_eps;
-        os << f.str() << std::endl;
+        const std::string str 
+        	= (boost::format("(ess,plt_eps) = (%1%,%2%)")% ess % plt_eps).str();
+        os << str << std::endl;
     }
     {
         range1_ r1 = stat::fusion::at_key::make_range<k0_>(
@@ -171,15 +170,12 @@ void example_sampler(std::ostream& os){
         vec_data_ targets;
         {
             os << "proposal : " << description(p_d) << std::endl; 
-            os << ks_stat_::description_header << std::endl;
-			dist::toolkit::test::random(
-            	t_d,
-                vg,
-                n_loops,
-                n1,
-                n2,
-                os
-            );
+            os << "target : " 	<< description(t_d) << std::endl; 
+			namespace ks = boost::statistics::detail::kolmogorov_smirnov;
+			typedef ks::check_convergence<val_> check_;
+	        check_ check;
+			check(n_loops,n1,n2,t_d,vg,os);
+
         }
     }
 
