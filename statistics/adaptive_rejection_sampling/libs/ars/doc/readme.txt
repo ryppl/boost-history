@@ -19,10 +19,18 @@ sampler (Gilks, 1992).
 A tool for testing is provided for standard distributions, which makes use of 
 their known cdf to produce kolmogorov-smirnov statistics.
 
+[ Bugs ]
+
+Since Jan 20, convergence fails in the test.
+
 [ Compiler ]
 
+Tested Jan 20, 2010
+Mac OS X 10.6        gcc 4.0                                    boost_1_41_0
+Note: gcc4.2 currently does not mix well with boost::format
+
+Tested Jan 8 2010
 Win7-32 V6.1.7100    Dev-C++ 5.0 beta 9.2 with Mingw/GCC 3.4.2 	boost_1_41_0
-Mac OS X 10.6        gcc 4.2                                    boost_1_41_0
 
 [ Dependencies ]
 
@@ -33,6 +41,9 @@ boost_1_40_0
 /sandbox/statistics/distribution_random
 
 [ History ]
+
+Jan 20  2010 : small changes to test functions to adapt to the new 
+	non_parametric::kolmogorov_smirnov functionality.
 
 Jan 8 	2010 : in proposal_sampler, found and fixed bug
 		//T t = max_element(

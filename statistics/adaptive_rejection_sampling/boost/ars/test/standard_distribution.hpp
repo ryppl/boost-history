@@ -31,6 +31,7 @@
 
 #include <boost/statistics/detail/distribution_common/meta/random/generator.hpp>
 #include <boost/statistics/detail/distribution_common/meta/value.hpp>
+#include <boost/accumulators/accumulators.hpp>
 #include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/statistic.hpp>
 
 #include <boost/random/mersenne_twister.hpp>
@@ -50,11 +51,10 @@ namespace detail{
 namespace ars{
 namespace test{
 
-// This function draws samples from distribution D, and outputs the 
-// kolmogorov-smirnov statistics and the average number of rejections per draws.
+// This function samples from distribution D and outputs convergence statistics
 template<typename D,typename U>
 void standard_distribution(
-    const D& mdist, //e.g. D == math::normal_distribution
+    const D& mdist, //e.g. D == math::normal_distribution<T>
     typename D::value_type x_min,
     typename D::value_type x_max,
     typename D::value_type init_0,
@@ -75,6 +75,7 @@ void standard_distribution(
     using namespace math;
     using namespace assign;
     namespace dist = boost::statistics::detail::distribution;
+    namespace ks = boost::statistics::detail::kolmogorov_smirnov;
     typedef std::string                                     str_;
     typedef std::runtime_error                              err_;
     typedef typename dist::meta::value<D>::type 			val_;
@@ -86,15 +87,10 @@ void standard_distribution(
     typedef random::ref_distribution<ars_&>                 ref_ars_;
     typedef variate_generator<U&,ref_ars_>                  vg_ars_;
 
-    typedef boost::mpl::int_<0>							key1_;
-    typedef boost::mpl::int_<1>							key2_;
-    typedef typename boost::fusion::result_of::make_map<
-    	key1_,key2_,val_,val_
-    >::type data_;
-    typedef non_parametric::kolmogorov_smirnov::statistic<val_,key1_,key2_> ks_;
-    typedef std::vector<data_> dataset_;
-    dataset_ dataset;
-    ks_ ks;
+    typedef ks::tag::statistic<val_> 						tag_ks_;
+    typedef boost::accumulators::stats<tag_ks_> 			acc_features_;
+    typedef boost::accumulators::accumulator_set<val_,acc_features_> acc_;
+
     ars_ ars;
     ars.set_function(x_min, x_max, fun_t(mdist));
     {
@@ -104,37 +100,27 @@ void standard_distribution(
         f%n3%init_0%init_1;
         os << f.str() << std::endl;
         os << description(mdist) << std::endl;
-        {
-        	format f("(%1%,%2%)");
-            f%ks.description_header%"rejection rate";
-        	os 
-        		<< f.str() 
-        		<< std::endl;
-        }
     }
     long unsigned n_reject;
+    os << "(sample size" << ','
+     	<< "kolmogorov-smirnov statistic" << ','
+     	<< "number of rejection steps)" 
+     	<< std::endl;
+    
     try{
         for(unsigned i1 = 0; i1<n1; i1++){
-            dataset.clear();
             n_reject = 0;
-
+            acc_ acc;
             for(unsigned i2 = 0; i2<n2; i2++){
                 try{
                     ars.initialize(init_0,init_1);
                     vg_ars_ vg_ars(urng,ref_ars_(ars)); 
-            		dataset.reserve(dataset.size()+n3);
                     for(unsigned i = 0; i<n3; i++)
                     {
 						val_ x = vg_ars();
-                    	dataset.push_back(
-							boost::fusion::make_map<key1_,key2_>(
-                            	x,
-                                cdf(mdist,x)
-                            )                        
-                        );
+						acc(x);
                     }
-            		ks(boost::begin(dataset),boost::end(dataset));
-                    // Without ref_s_, n would be reset to 0
+                    // Without ref_ars_, n would be reset to 0
                     n_reject += (
                         (vg_ars.distribution()).distribution()
                     ).n_reject();
@@ -146,9 +132,10 @@ void standard_distribution(
             }
             val_ rate 
                 = static_cast<val_>(n_reject)/static_cast<val_>(n3*n2);
+                
             os 
                 << '(' 
-                << ks.description()
+                << ks::extract::statistic<val_>(acc,mdist)
                 << ','
                 << rate 
                 << ')'
@@ -169,3 +156,5 @@ void standard_distribution(
 }// boost
 
 #endif
+
+
