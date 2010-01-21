@@ -28,7 +28,7 @@
 #include <boost/accumulators/statistics/count.hpp>
 
 #include <boost/statistics/detail/non_parametric/empirical_distribution/count.hpp>
-#include <boost/statistics/detail/non_parametric/empirical_distribution/keyword/key.hpp> // TODO rename 
+#include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/keyword/reference_distribution.hpp> 
 
 namespace boost { 
 namespace statistics{

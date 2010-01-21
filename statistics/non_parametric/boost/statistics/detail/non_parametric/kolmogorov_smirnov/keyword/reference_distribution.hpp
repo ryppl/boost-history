@@ -9,7 +9,7 @@
 #define BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_KOLMOGOROV_SMIRNOV_KEYWORD_REFERENCE_DISTRIBUTION_HPP_2010
 #include <boost/parameter/name.hpp>
 #include <boost/parameter/keyword.hpp>
-#include <boost/statistics/detail/non_parametric/empirical_distribution/tag/key.hpp> // TODO rename
+#include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/tag/reference_distribution.hpp> 
 
 namespace boost { 
 namespace statistics{
