@@ -55,7 +55,7 @@ namespace boost
             stopwatch_.suspend(ec);
         }
         ~stopwatch_suspender() {
-            system::error_code & ec;
+            system::error_code ec;
             stopwatch_.resume(ec);
         }
     private:
@@ -74,7 +74,7 @@ namespace boost
             stopwatch_.resume(ec);
         }
         ~stopwatch_resumer() {
-            system::error_code & ec;
+            system::error_code ec;
             stopwatch_.suspend(ec);
         }
     private:

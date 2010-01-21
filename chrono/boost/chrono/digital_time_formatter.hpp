@@ -65,9 +65,8 @@ namespace boost { namespace chrono  {
         {
             typedef typename Stopwatch::duration duration_t;
             duration_t d = stopwatch_.elapsed( ec );
-            duration_t d0((0));
 
-            if ( d < d0 ) return;
+            if ( d < duration_t::zero() ) return;
 
             boost::io::ios_flags_saver ifs( os );
             os.setf( std::ios_base::fixed, std::ios_base::floatfield );

@@ -68,9 +68,8 @@ namespace boost { namespace chrono  {
             typedef typename Stopwatch::accumulator accumulator;
             typedef typename Stopwatch::duration duration_t;
             accumulator& acc = stopwatch_.accumulated();
-            //duration_t d0((0));
 
-            //if ( d < d0 ) return;
+            //if ( d < duration_t::zero() ) return;
             if ( places > 9 )
                 places = 9;  // sanity check
             else if ( places < 0 )

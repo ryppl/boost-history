@@ -65,9 +65,8 @@ namespace boost { namespace chrono  {
         {
             typedef typename Stopwatch::duration duration_t;
             duration_t d = stopwatch_.elapsed( ec );
-            duration_t d0((0));
 
-            if ( d < d0 ) return;
+            if ( d < duration_t::zero() ) return;
             if ( places > 9 )
                 places = 9;  // sanity check
             else if ( places < 0 )

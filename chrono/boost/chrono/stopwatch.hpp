@@ -56,16 +56,23 @@ namespace boost
         typedef Clock                       clock;
         typedef typename Clock::duration    duration;
         typedef typename Clock::time_point  time_point;
+        typedef typename Clock::rep         rep;
+        typedef typename Clock::period      period;
 
         explicit stopwatch( system::error_code & ec = system::throws  )
-        : running_(false), start_(), level_(0)
+        : running_(false), suspended_(false), start_(), level_(0), partial_(duration::zero()), suspend_level_(0)
         {
+            //duration d0((0));
+            //partial_=d0;
             start(ec);
         }
 
         explicit stopwatch( const dont_start_t& t )
-        : running_(false), start_(), level_(0)
-        { }
+        : running_(false), suspended_(false), start_(), level_(0), partial_(duration::zero()), suspend_level_(0)
+        { 
+            //duration d0((0));
+            //partial_=d0;
+        }
 
         time_point start( system::error_code & ec = system::throws ) {
             ++level_;
@@ -141,7 +148,15 @@ namespace boost
 
         duration elapsed( system::error_code & ec = system::throws )
         {
-            return clock::now( ec ) - start_;
+            if (running_)
+                return clock::now( ec ) - start_ + partial_;
+            else 
+                return partial_;
+        }
+
+        time_point now( system::error_code & ec = system::throws )
+        {
+            return time_point(elapsed( ec ));
         }
 
         void reset( system::error_code & ec = system::throws ) {

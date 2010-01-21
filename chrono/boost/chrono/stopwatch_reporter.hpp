@@ -13,6 +13,7 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/stopwatch_scoped.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/chrono/suspendable_clock.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
 #include <iostream>
@@ -158,6 +159,7 @@ namespace boost { namespace chrono  {
 
     template <class Stopwatch, class Formatter>
     void stopwatch_reporter<Stopwatch, Formatter>::report( system::error_code & ec ) {
+        chrono::scoped_suspend<typename Stopwatch::clock> _(ec);
         m_reported = true;
         if ( m_format.empty() ) m_format = Formatter::default_format();
 

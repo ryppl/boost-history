@@ -74,8 +74,11 @@ namespace boost
         typedef Accumulator accumulator;
 
         stopwatch_accumulator( )
-        : running_(false), partial_(0)
+        : running_(false), suspended_(false), accumulated_(), 
+          partial_(), start_(duration::zero()), level_(0), suspend_level_(0)
         {
+            //duration d0((0));
+            //partial_=d0;
         }
 
         std::pair<duration, time_point>  restart( system::error_code & ec = system::throws ) {
