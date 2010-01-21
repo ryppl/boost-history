@@ -26,9 +26,14 @@ http://www.boost.org/doc/libs/1_40_0/libs/random/index.html
 
 [ Platform/Compiler ]
 
+Tested January 20, 2010:
+Mac OS X 10.6        gcc 4.0                                    boost_1_41_0
+
+Note: gcc 4.2 and boost::format recently don't mix well.
+
+Tested Jan 6 2010:
 Win7-32 V6.1.7100    Dev-C++ 5.0 beta 9.2 with Mingw/GCC 3.4.2 	boost_1_41_0
 Win7-32 V6.1.7100    Visual Studio 2010                         boost_1_41_0
-Mac OS X 10.6        gcc 4.2                                    boost_1_41_0
 
 [ Dependencies ]
 
