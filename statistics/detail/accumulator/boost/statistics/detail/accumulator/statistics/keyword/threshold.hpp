@@ -9,7 +9,7 @@
 #define BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_KEYWORD_THRESHOLD_HPP_2009
 #include <boost/parameter/name.hpp>
 #include <boost/parameter/keyword.hpp>
-#include <boost/statistics/detail/accumulator/tag/threshold.hpp>
+#include <boost/statistics/detail/accumulator/statistics/tag/threshold.hpp>
 
 namespace boost { 
 namespace statistics{
