@@ -34,11 +34,11 @@ Win7-32 V6.1.7100    Dev-C++ 5.0 beta 9.2 with Mingw/GCC 3.4.2 	boost_1_41_0
 
 [ Dependencies ]
 
-boost_1_40_0
+boost_1_41_0
 /sandbox/statistics/non_parametric
 /sandbox/statistics/distribution_common
 /sandbox/statistics/distribution_toolkit
-/sandbox/statistics/distribution_random
+/sandbox/statistics/random
 
 [ History ]
 
