@@ -161,6 +161,7 @@ namespace boost
         }
 
         typedef stopwatch_runner<stopwatch<Clock> > scoped_run;
+        typedef stopwatch_stopper<stopwatch<Clock> > scoped_stop;
         typedef stopwatch_suspender<stopwatch<Clock> > scoped_suspend;
         typedef stopwatch_resumer<stopwatch<Clock> > scoped_resume;
         typedef stopwatch_reporter<stopwatch<Clock> > reporter;

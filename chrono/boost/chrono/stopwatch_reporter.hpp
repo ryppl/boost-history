@@ -142,6 +142,7 @@ namespace boost { namespace chrono  {
 
 
         typedef stopwatch_runner<stopwatch_reporter<Stopwatch> > scoped_run;
+        typedef stopwatch_stopper<stopwatch_reporter<Stopwatch> > scoped_stop;
         typedef stopwatch_suspender<stopwatch_reporter<Stopwatch> > scoped_suspend;
         typedef stopwatch_resumer<stopwatch_reporter<Stopwatch> > scoped_resume;
 

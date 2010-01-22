@@ -47,6 +47,32 @@ namespace boost
     };
 
 //--------------------------------------------------------------------------------------//
+    template <class Stopwatch> class stopwatch_stopper {
+    public:
+        typedef Stopwatch stopwatch;
+        stopwatch_stopper(stopwatch & a, system::error_code & ec = system::throws)
+        : stopwatch_(a) {
+            stopwatch_.stop(ec);
+        }
+        ~stopwatch_stopper() {
+            system::error_code ec;
+            stopwatch_.start(ec);
+        }
+#if 0
+        typename Stopwatch::duration elapsed(system::error_code & ec = system::throws)
+        {
+            return stopwatch_.elapsed(ec)-stopwatch_.accumulated();
+        }
+#endif
+    private:
+        stopwatch& stopwatch_;
+        stopwatch_stopper();//= delete;
+        stopwatch_stopper(const stopwatch_stopper&); // = delete;
+        stopwatch_stopper& operator=(const stopwatch_stopper&); // = delete;
+
+    };
+
+//--------------------------------------------------------------------------------------//
     template <class Stopwatch> class stopwatch_suspender {
     public:
         typedef Stopwatch stopwatch;
