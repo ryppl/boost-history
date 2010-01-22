@@ -39,7 +39,6 @@ public:
 	/// Throws: Nothing
 	/// \brief Destructs the basic_transaction object
 	~basic_transaction(){
-		this->pop();
 		if(!this->done){
 			try{
 				TxMgr::rollback_transaction(this->tx);
@@ -49,6 +48,7 @@ public:
 #endif
 			}
 		}
+		this->pop();
 	}
 
 	/// If this is a nested transaction, sets the active transaction to the parent transaction.
@@ -58,9 +58,13 @@ public:
 	/// \c archive_exception, \c io_failure, \c thread_resource_error, any exception thrown by the following user-supplied functions: \c T::T(), \c serialize(), \c save(), \c load(), \c construct(), \c equal(), \c finalize()
 	/// \brief Commits the transaction.
 	void commit(){
-		this->pop();
 		this->done=true;
-		TxMgr::commit_transaction(this->tx);
+		try{
+			TxMgr::commit_transaction(this->tx);
+		}catch(...){
+			this->pop();
+			throw;
+		}
 	}
 
 	/// If this is a nested transaction, sets the active transaction to the parent transaction.
@@ -69,9 +73,14 @@ public:
 	/// Throws: \c io_failure, \c thread_resource_error
 	/// \brief Unwinds all changes made during this transaction.
 	void rollback(){
-		this->pop();
 		this->done=true;
-		TxMgr::rollback_transaction(this->tx);
+		try{
+			TxMgr::rollback_transaction(this->tx);
+		}catch(...){
+			this->pop();
+			throw;
+		}
+		this->pop();
 	}
 
 	/// Throws: Nothing
@@ -92,10 +101,8 @@ public:
 	/// \cond
 private:
 	void pop(){
-		if(TxMgr::has_active_transaction() && &TxMgr::active_transaction() == &this->tx){
-			if(this->parent) TxMgr::bind_transaction(*this->parent);
-			else TxMgr::unbind_transaction();
-		}
+		if(this->parent) TxMgr::bind_transaction(*this->parent);
+		else TxMgr::unbind_transaction();
 	}
 
 	typename TxMgr::transaction *parent;
