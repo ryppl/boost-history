@@ -11,6 +11,13 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/greater.hpp>
+#include <boost/mpl/eval_if.hpp>
+
+#include <boost/utility/enable_if.hpp>
+
+#include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/range.hpp>
 
 #include <boost/fusion/include/back.hpp>
 #include <boost/fusion/include/pop_back.hpp>
@@ -18,6 +25,8 @@
 
 #include <boost/statistics/detail/range_ex/chain/result_of.hpp>
 #include <boost/statistics/detail/range_ex/chain/detail/nest.hpp>
+#include <boost/statistics/detail/range_ex/chain/detail/dont_nest.hpp>
+#include <boost/statistics/detail/range_ex/chain/detail/result_of_nest.hpp>
 
 namespace boost{
 namespace statistics{
@@ -25,28 +34,36 @@ namespace detail{
 namespace range{
 
 namespace result_of{
-
+	
 	template<typename Seq>
-    struct nest_chain : range::impl::nest_chain<
-    	typename boost::remove_const<
-    		typename boost::remove_reference<
-    			typename boost::fusion::result_of::pop_back<Seq>::type
-            >::type
-        >::type,
-    	typename boost::remove_const<
-    		typename boost::remove_reference<
-        		typename boost::fusion::result_of::back<Seq>::type
-            >::type
-        >::type
+    struct nest_chain : boost::mpl::eval_if<
+    	range::impl::dont_nest<Seq>,
+		range::impl::result_of::first<Seq>,
+        range::impl::result_of::nest_chain<Seq>
     >{};
 
-}
+}// result_of
 
-	// Possible Usage:
-    // nest_chain(fusion::make_vector(vec1,vec2,vec3,...)); 	
-	// TODO case size(seq) = 1 ?
+
+	// Usage for n=1
+    // nest_chain(fusion::make_vector(vec1)); 	
     template<typename Seq>
-    typename range::result_of::nest_chain<Seq>::type
+    typename boost::lazy_enable_if<
+    	range::impl::dont_nest<Seq>,
+    	range::impl::result_of::first<Seq>
+    >::type
+    nest_chain(const Seq& seq){
+		typedef range::impl::result_of::first<Seq> meta_;
+        return meta_::call(seq);
+	}
+
+	// Usage for n>1
+    // nest_chain(fusion::make_vector(vec1,vec2,vec3,...vec_n)); 	
+    template<typename Seq>
+    typename boost::lazy_disable_if<
+    	range::impl::dont_nest<Seq>,
+    	range::impl::result_of::nest_chain<Seq>
+    >::type
     nest_chain(const Seq& seq){
     	typedef typename boost::fusion::result_of::size<Seq>::type size_;
         typedef boost::mpl::int_<1> int1_;

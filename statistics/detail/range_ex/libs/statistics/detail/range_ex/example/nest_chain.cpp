@@ -34,32 +34,52 @@ void example_nest_chain(std::ostream& os)
 
 	using namespace boost::assign;
 
+    typedef boost::fusion::vector<vec_> seq1_;
     typedef boost::fusion::vector<vec_,list_,vec_> seq_;
-
+	
+    BOOST_MPL_ASSERT((
+		range::impl::dont_nest<seq1_>
+	));
+	seq1_ seq1;
 	seq_ seq;
-    
-    boost::fusion::at_c<0>(seq) += 0,1,2,3,4,5,6,7,8,9;
+    boost::fusion::at_c<0>(seq1) += 0,1,2,3,4,5,6,7,8,9;
+    boost::fusion::at_c<0>(seq)  += 0,1,2,3,4,5,6,7,8,9;
     boost::fusion::at_c<1>(seq) = list_of(10)(11)(12)(13)(14)(15)(16)(17)(18)(19);
     boost::fusion::at_c<2>(seq) += 20, 21, 22, 23, 24, 25, 26, 27, 28, 29;
-
-	typedef range::result_of::nest_chain<seq_>::type chained_;
-
-    chained_ chained = range::nest_chain( seq );
-	vec_ vec;
+	
+    {
+		typedef range::result_of::nest_chain<seq1_>::type chained_;
+    	chained_ chained = range::nest_chain( seq1 );
+        vec_ vec;
     
-    boost::copy(
-    	boost::fusion::at_c<2>(seq), 
-    	boost::copy(boost::fusion::at_c<1>(seq),
-    		boost::copy(boost::fusion::at_c<0>(seq), std::back_inserter(vec))
-        )
-    );
-
-	std::copy(
-    	boost::begin(chained),
-        boost::end(chained),
-        std::ostream_iterator<val_>(std::cout," ")
-    );
-
-	BOOST_ASSERT(boost::equal(chained,vec));
+    	boost::copy(
+            boost::fusion::at_c<0>(seq), std::back_inserter(vec)
+    	);
+		std::copy(
+    		boost::begin(chained),
+        	boost::end(chained),
+        	std::ostream_iterator<val_>(std::cout," ")
+    	);
+		BOOST_ASSERT(boost::equal(chained,vec));
+	}
+    os << std::endl;
+    {
+		typedef range::result_of::nest_chain<seq_>::type chained_;
+    	chained_ chained = range::nest_chain( seq );
+		vec_ vec;
+    
+    	boost::copy(
+    		boost::fusion::at_c<2>(seq), 
+    		boost::copy(boost::fusion::at_c<1>(seq),
+    			boost::copy(boost::fusion::at_c<0>(seq), std::back_inserter(vec))
+        	)
+    	);
+		std::copy(
+    		boost::begin(chained),
+        	boost::end(chained),
+        	std::ostream_iterator<val_>(std::cout," ")
+    	);
+		BOOST_ASSERT(boost::equal(chained,vec));
+	}
     
 }

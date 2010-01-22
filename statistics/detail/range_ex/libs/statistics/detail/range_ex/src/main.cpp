@@ -11,6 +11,9 @@
 
 int main(){
 
+	// Don't forget for your search paths that 
+	// As of January 2010, /boost/range_ex is in the Vault.
+
 	example_nest_chain(std::cout);
 
 	return 0;
