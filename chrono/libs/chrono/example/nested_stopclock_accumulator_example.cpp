@@ -12,25 +12,58 @@
 #include <boost/thread.hpp>
 
 using namespace boost::chrono;
+
+#define BOOST_CHRONO_STOPCLOCK_ACCUMULATOR \
+    static stopclock_accumulator<> BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__)( \
+        std::string(__FILE__) + "[" + BOOST_STRINGIZE(__LINE__) + "] " + stopwatch_accumulator_formatter::default_format() \
+    ); \
+    stopclock_accumulator<>::scoped_run BOOST_JOIN(_boost_chrono_stopclock_accumulator_run_, __LINE__)(BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__))
+
+#define BOOST_CHRONO_STOPCLOCK_ACCUMULATOR_FCT \
+    static stopclock_accumulator<> BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__)( \
+        std::string(BOOST_CURRENT_FUNCTION) + ":  " + stopwatch_accumulator_formatter::default_format() \
+    ); \
+    stopclock_accumulator<>::scoped_stop BOOST_JOIN(_boost_chrono_stopclock_accumulator_run_, __LINE__)(BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__))
+
+#define BOOST_CHRONO_STOPCLOCK_ACCUMULATOR_FCT_REVERSE \
+    static stopclock_accumulator<> BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__)( \
+        std::string(BOOST_CURRENT_FUNCTION) + "(between calls):  " + stopwatch_accumulator_formatter::default_format() \
+    ); \
+    stopclock_accumulator<>::scoped_stop BOOST_JOIN(_boost_chrono_stopclock_accumulator_stop_, __LINE__)(BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__))
+
 void f1()
 {
-    static stopclock_accumulator<> acc(stopwatch_accumulator_formatter::format(BOOST_STRINGIZE(__LINE__)));
-    stopclock_accumulator<>::scoped_run _(acc);
+    //~ static stopclock_accumulator<> acc(
+        //~ std::string(__FILE__) + "[" + BOOST_STRINGIZE(__LINE__) + "] " + stopwatch_accumulator_formatter::default_format()
+    //~ );
+    //~ stopclock_accumulator<>::scoped_run _(acc);
+    BOOST_CHRONO_STOPCLOCK_ACCUMULATOR_FCT;
+    //BOOST_CHRONO_STOPCLOCK_ACCUMULATOR_FCT_REVERSE;
     boost::this_thread::sleep(boost::posix_time::milliseconds(100));
     {
-        static stopclock_accumulator<> acc(stopwatch_accumulator_formatter::format(BOOST_STRINGIZE(__LINE__)));
-        stopclock_accumulator<>::scoped_run _(acc);
+        BOOST_CHRONO_STOPCLOCK_ACCUMULATOR;
+        //~ static stopclock_accumulator<> acc(
+            //~ std::string(__FILE__) + "[" + BOOST_STRINGIZE(__LINE__) + "] " + stopwatch_accumulator_formatter::default_format()
+        //~ );
+        //~ stopclock_accumulator<>::scoped_run _(acc);
         boost::this_thread::sleep(boost::posix_time::milliseconds(200));
     }
 
 }
 int main()
 {
-  static stopclock_accumulator<> acc(stopwatch_accumulator_formatter::format(BOOST_STRINGIZE(__LINE__)));
-  stopclock_accumulator<>::scoped_run _(acc);
+    BOOST_CHRONO_STOPCLOCK_ACCUMULATOR_FCT;
+    //~ static stopclock_accumulator<> acc(
+        //~ std::string(__FILE__) + "[" + BOOST_STRINGIZE(__LINE__) + "] " + stopwatch_accumulator_formatter::default_format()
+    //~ );
+    //~ stopclock_accumulator<>::scoped_run _(acc);
 
-  f1();
-  f1();
-  f1();
-  return 0;
+    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    f1();
+    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+    f1();
+    boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+    f1();
+    boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+    return 0;
 }

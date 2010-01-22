@@ -10,10 +10,9 @@
 #include <boost/chrono/stopwatches.hpp>
 #include <cmath>
 
-
 using namespace boost::chrono;
 using namespace boost::accumulators;
-typedef stopwatch_accumulator<process_real_cpu_clock, 
+typedef stopwatch_accumulator<process_real_cpu_clock, kind::running,
             accumulator_set<process_real_cpu_clock::rep,
                 features<
                         tag::count,

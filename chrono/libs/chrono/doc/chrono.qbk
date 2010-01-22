@@ -681,8 +681,10 @@ In other words, the program took 0.832 real-time (i.e. wall clock) seconds to ex
 
 [section Tutorial]
 
-
 [section thread clock]
+[endsect]
+
+[section How to define a thread clock]
 
     class thread_clock {
     public:
@@ -699,6 +701,139 @@ In other words, the program took 0.832 real-time (i.e. wall clock) seconds to ex
         // transform to nanoseconds
       }
     };
+
+[endsect]
+
+[section How can I prefix each report with `BOOST_CURRENT_FUNCTION` function signature?]
+
+You will need to give a specific format to you stopclock. You just need to concatenate the your specific patter to the default_format of the formatter.
+
+For example, for a stopclock_accumulator the default formatter is stopwatch_accumulator_formatter, this you will need to do something like:
+
+    static stopclock_accumulator<> acc(
+        std::string(BOOST_CURRENT_FUNCTION) + ":  " + stopwatch_accumulator_formatter::default_format()
+    );
+    stopclock_accumulator<>::scoped_run _(acc);
+
+
+Some of you will say that this is too long to type just to get the a report. You can of course define your own macro as
+
+    #define REPORT_FUNCTION_ACCUMULATED_LIFETIME\
+        static boost::chrono::stopclock_accumulator<> BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__)( \
+            std::string(BOOST_CURRENT_FUNCTION) + ":  " + boost::chrono::stopwatch_accumulator_formatter::default_format() \
+        ); \
+        boost::chrono::stopclock_accumulator<>::scoped_stop BOOST_JOIN(_boost_chrono_stopclock_accumulator_run_, __LINE__)(BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__))
+
+
+With this macro you will just ave
+
+    void foo()
+    {
+        REPORT_FUNCTION_ACCUMULATED_LIFETIME() ;
+        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+        // ...
+    }
+
+[endsect]
+
+[section How can I prefix each report with `__FILE__[__LINE__]` pattern?]
+
+When you want to prefixx with the `__FILE__[__LINE__]` pattern you can follow the same technique as described below:
+
+    #define REPORT_LINE_ACCUMULATED_LIFETIME \
+        static stopclock_accumulator<> BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__)( \
+            std::string(__FILE__) + "[" + BOOST_STRINGIZE(__LINE__) + "] " + stopwatch_accumulator_formatter::default_format() \
+        ); \
+        stopclock_accumulator<>::scoped_run BOOST_JOIN(_boost_chrono_stopclock_accumulator_run_, __LINE__) (BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__))
+
+Now you can mix fcntion and line reports as follows
+
+    void foo()
+    {
+        REPORT_FUNCTION_ACCUMULATED_LIFETIME;
+        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+        {
+            REPORT_LINE_ACCUMULATED_LIFETIME;
+            boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+        }
+
+    }
+
+[endsect]
+[section Can I use an stopclock accumulator which is not static?]
+
+The typical example of stopclock_accumulator is to get statistical measures of the time a function takes for each one of its calls. You an also use stopclock_accumulator to get statistical measures of the time a given loop takes for each one of its laps.
+
+        stopclock_accumulator<> acc(
+            std::string(__FILE__) + "[" + BOOST_STRINGIZE(__LINE__) + "] " + stopwatch_accumulator_formatter::default_format()
+        );
+        for (int i=0; i<N; i++) {
+            stopclock_accumulator<>::scoped_run _(acc);
+            // ...
+        }
+        
+
+[endsect]
+
+[section How can I suspend a stopwatch?]
+
+    #include <boost/chrono/stopwatch.hpp>
+    #include <cmath>
+    #include <boost/thread.hpp>
+
+
+    using namespace boost::chrono;
+    double res;
+    void f1(long j)
+    {   
+        stopwatch<>::reporter _(BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT);
+        for (long i =0; i< j; i+=1)
+            res+=std::sqrt( res+123.456L+i );  // burn some time
+        stopwatch<>::reporter::scoped_suspend s(_);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+    }
+
+[endsect]
+
+[section How get specific statistics from stopwatches accumulator]
+
+    #include <boost/chrono/stopwatches.hpp>
+    #include <cmath>
+
+    using namespace boost::chrono;
+    using namespace boost::accumulators;
+    typedef stopwatch_accumulator<process_real_cpu_clock, kind::running,
+                accumulator_set<process_real_cpu_clock::rep,
+                    features<
+                            tag::count,
+                            tag::sum,
+                            tag::mean 
+                    >
+                >
+      >::reporter my_stopwatch_accumulator_reporter;
+
+    int f1(long j)
+    {
+      static my_stopwatch_accumulator_reporter acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
+      my_stopwatch_accumulator_reporter::scoped_run _(acc);
+
+      for ( long i = 0; i < j; ++i )
+        std::sqrt( 123.456L );  // burn some time
+
+      return 0;
+    }
+    int main()
+    {
+
+      f1(100000);
+      f1(200000);
+      f1(300000);
+      return 0;
+    }
+
+[endsect]
+
+[section How can I make a specific formatter when the defaul do not satisfy my expectations]
 
 [endsect]
 
