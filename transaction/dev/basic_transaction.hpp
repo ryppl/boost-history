@@ -28,10 +28,10 @@ public:
 	/// Throws: \c no_active_transaction_manager, \c finalize_error, \c io_failure, \c thread_resource_error
 	/// \brief Constructs a basic_transaction, beginning a new transaction scope
 	explicit basic_transaction()
-		: manager(TxMgr::active())
-		, tx(manager.begin_transaction())
+		: parent(TxMgr::has_active_transaction() ? &TxMgr::active_transaction() : 0)
+		, tx(TxMgr::begin_transaction())
 		, done(false){
-		this->manager.bind_transaction(this->tx);
+		TxMgr::bind_transaction(this->tx);
 	}
 
 	/// The transaction is rolled back if it was not yet committed.
@@ -39,9 +39,10 @@ public:
 	/// Throws: Nothing
 	/// \brief Destructs the basic_transaction object
 	~basic_transaction(){
+		this->pop();
 		if(!this->done){
 			try{
-				this->manager.rollback_transaction(this->tx);
+				TxMgr::rollback_transaction(this->tx);
 			}catch(...){
 #ifndef NDEBUG
 				std::cerr << "ignored exception" << std::endl;
@@ -57,8 +58,9 @@ public:
 	/// \c archive_exception, \c io_failure, \c thread_resource_error, any exception thrown by the following user-supplied functions: \c T::T(), \c serialize(), \c save(), \c load(), \c construct(), \c equal(), \c finalize()
 	/// \brief Commits the transaction.
 	void commit(){
+		this->pop();
 		this->done=true;
-		this->manager.commit_transaction(this->tx);
+		TxMgr::commit_transaction(this->tx);
 	}
 
 	/// If this is a nested transaction, sets the active transaction to the parent transaction.
@@ -67,28 +69,36 @@ public:
 	/// Throws: \c io_failure, \c thread_resource_error
 	/// \brief Unwinds all changes made during this transaction.
 	void rollback(){
+		this->pop();
 		this->done=true;
-		this->manager.rollback_transaction(this->tx);
+		TxMgr::rollback_transaction(this->tx);
 	}
 
 	/// Throws: Nothing
 	/// \brief Binds the current thread to this transaction
 	void bind(){
-		this->manager.bind_transaction(this->tx);
+		TxMgr::bind_transaction(this->tx);
 	}
 
 	/// Throws: Nothing
 	/// \brief If the current thread is bound to this transaction, unbinds it
 	void unbind(){
-		if(this->manager.has_active_transaction() &&
-			&this->manager.active_transaction() == &this->tx){
-			this->manager.unbind_transaction();
+		if(TxMgr::has_active_transaction() &&
+			&TxMgr::active_transaction() == &this->tx){
+			TxMgr::unbind_transaction();
 		}
 	}
 
 	/// \cond
 private:
-	TxMgr &manager;
+	void pop(){
+		if(TxMgr::has_active_transaction() && &TxMgr::active_transaction() == &this->tx){
+			if(this->parent) TxMgr::bind_transaction(*this->parent);
+			else TxMgr::unbind_transaction();
+		}
+	}
+
+	typename TxMgr::transaction *parent;
 	typename TxMgr::transaction tx;
 	bool done;
 	/// \endcond

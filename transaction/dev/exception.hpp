@@ -43,8 +43,8 @@ struct finalize_error : persistent::exception{};
 ///Indicates that the operation required an active transaction but there was no active transaction set for this thread.
 struct no_active_transaction : persistent::exception{};
 
-///Indicates that the operation required an active transaction manager but there is none set.
-struct no_active_transaction_manager : persistent::exception{};
+///TODO doc
+struct resource_error : persistent::exception{};
 
 ///Indicates that the operation is not supported by this implementation
 struct unsupported_exception : persistent::exception{};
@@ -58,20 +58,20 @@ struct visolation_exception;
 
 template<class TxMgr,class Iterator>
 struct isolation_unwind_visitor{
-	void operator()(TxMgr &txmgr,isolation_exception const &iso){
+	void operator()(isolation_exception const &iso){
 		typedef typename mpl::deref<Iterator>::type resource_type;
 		if(visolation_exception<resource_type> const *viso=dynamic_cast<visolation_exception<resource_type> const *>(&iso)){
-			viso->unwind(txmgr);
+			viso->template unwind<TxMgr>();
 		}else{
 			isolation_unwind_visitor<TxMgr,typename mpl::next<Iterator>::type> visit;
-			visit(txmgr,iso);
+			visit(iso);
 		}
 	}
 };
 
 template<class TxMgr>
 struct isolation_unwind_visitor<TxMgr,typename mpl::end<typename TxMgr::resource_types>::type>{
-	void operator()(TxMgr &,isolation_exception const &){
+	void operator()(isolation_exception const &){
 		BOOST_ASSERT(false);
 	}
 };
@@ -82,9 +82,9 @@ struct isolation_unwind_visitor<TxMgr,typename mpl::end<typename TxMgr::resource
 struct isolation_exception : persistent::exception{
 	///Rethrows the exception if the active transaction is a nested transaction but the isolation exception was caused by a parent transaction of it.
 	template<class TxMgr>
-	void unwind(TxMgr &txmgr=TxMgr::active()) const{ //pseudo-virtual
+	void unwind() const{ //pseudo-virtual
 		detail::isolation_unwind_visitor<TxMgr,typename mpl::begin<typename TxMgr::resource_types>::type> visit;
-		visit(txmgr,*this);
+		visit(*this);
 	}
 };
 
@@ -95,11 +95,11 @@ template<class ResMgr>
 struct visolation_exception : isolation_exception{
 	visolation_exception(typename ResMgr::transaction *unwind_to) : to(unwind_to){}
 	template<class TxMgr>
-	void unwind(TxMgr &txmgr) const{ //pseudo-virtual
+	void unwind() const{ //pseudo-virtual
 		if(this->to){
-			typename ResMgr::transaction &tx=txmgr.template resource_transaction<typename ResMgr::tag>(txmgr.active_transaction());
+			typename ResMgr::transaction &tx=TxMgr::template resource_transaction<typename ResMgr::tag>(TxMgr::active_transaction());
 			if(&tx != this->to) throw;
-		}else if(txmgr.has_active_transaction()) throw;
+		}else if(TxMgr::has_active_transaction()) throw;
 	}
 private:
 	typename ResMgr::transaction *to;

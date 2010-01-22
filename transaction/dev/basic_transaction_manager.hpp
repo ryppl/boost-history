@@ -15,7 +15,7 @@
 #include <boost/persistent/detail/utility.hpp>
 #include <boost/persistent/detail/null_mutex.hpp>
 #include <boost/persistent/detail/mutex.hpp>
-#include <boost/type_traits/add_reference.hpp>
+#include <boost/type_traits/add_pointer.hpp>
 #include <boost/fusion/include/mpl.hpp>
 #include <boost/fusion/include/as_vector.hpp>
 #include <boost/fusion/include/count_if.hpp>
@@ -71,8 +71,8 @@ private:
 				>::type
 			>::type::tag type;
 		};
-		typedef typename mpl::transform<resource_types,add_reference<mpl::_1> >::type resource_references;
-		typedef typename fusion::result_of::as_vector<resource_references>::type resources_tuple;
+		typedef typename mpl::transform<resource_types,add_pointer<mpl::_1> >::type resource_pointers;
+		typedef typename fusion::result_of::as_vector<resource_pointers>::type resources_tuple;
 
 		class transaction;
 		class transaction_construct_t{
@@ -105,6 +105,7 @@ private:
 			mutex_type mutex;
 		};
 	};
+	basic_transaction_manager();
 	/// \endcond
 public:
 	typedef typename detail::transaction transaction;
@@ -114,37 +115,34 @@ public:
 		typedef typename detail::template default_resource<ServiceTag>::type type;
 	};
 
-	/// This constructor is only available if this transaction manager uses only one
-	/// resource manager.
-	/// 
-	/// Throws: Nothing
-	/// \brief Constructs a basic_transaction_manager using the passed resource manager
-	/// \param resource The resource manager
-	explicit basic_transaction_manager(typename mpl::front<resource_types>::type &resource)
-		: resources(ref(resource))
-		, activetx(){
-		BOOST_STATIC_ASSERT(mpl::size<resource_types>::value==1);
-		this->bind();
+	/// TODO doc, not part of the concept
+	template<class Resource>
+	static void connect_resource(Resource &newres){
+		typedef typename Resource::tag tag;
+		typedef typename persistent::detail::index_by_tag<resource_types,tag>::type index;
+		Resource *&res=fusion::at<index>(resources);
+		if(res) persistent::detail::throw_(resource_error());
+		res=&newres;
 	}
 
-	/// Throws: Nothing
-	/// \brief Constructs a basic_transaction_manager using the passed resource managers
-	/// \param resources A Boost.Fusion Sequence of non-const references to the resource
-	///                  managers. For example, fusion::vector<res1_type &,res2_type &>
-	explicit basic_transaction_manager(typename detail::resources_tuple const &resources)
-		: resources(resources)
-		, activetx(){
-		this->bind();
+	/// TODO doc, not part of the concept
+	template<class ResourceTag>
+	static void disconnect_resource(ResourceTag tag=ResourceTag()){
+		typedef typename persistent::detail::index_by_tag<resource_types,ResourceTag>::type index;
+		fusion::at<index>(resources)=0;		
 	}
 
 	template<class Tag>
-	typename persistent::detail::type_by_tag<resource_types,Tag>::type &resource(Tag tag=Tag()){
+	static typename persistent::detail::type_by_tag<resource_types,Tag>::type &resource(Tag tag=Tag()){
+		typedef typename persistent::detail::type_by_tag<resource_types,Tag>::type resource_type;
 		typedef typename persistent::detail::index_by_tag<resource_types,Tag>::type index;
-		return fusion::at<index>(this->resources);
+		resource_type *res=fusion::at<index>(resources);
+		if(res) return *res;
+		else persistent::detail::throw_(resource_error());
 	}
 
 	template<class Tag>
-	typename persistent::detail::type_by_tag<resource_types,Tag>::type::transaction &
+	static typename persistent::detail::type_by_tag<resource_types,Tag>::type::transaction &
 	resource_transaction(transaction &tx,Tag tag=Tag()){
 		typedef typename persistent::detail::type_by_tag<resource_types,Tag>::type resource_type;
 		typedef typename persistent::detail::index_by_tag<resource_types,Tag>::type index;
@@ -157,93 +155,66 @@ public:
 		//manager is the only one, or according to user configuration.
 		lock_guard<typename transaction::mutex_type> l(tx.mutex);
 		if(!rtx){
-			resource_type &resource=fusion::at<index>(this->resources);
+			resource_type &res=resource(tag);
 			if(tx.parent){
 				//TODO optimization: if 10 nested transactions were created in one resource manager,
 				//and then a second resource manager is called for the first time in the innermost
 				//transaction, 10 nested transactions are created in the second resource manager,
 				//even though it would be enough to create one transaction
 				//that gets committed only when the outermost global transaction is committed.
+				//(or is moved to the parent on commit instead of performing an actual commit?)
 
-				typename resource_type::transaction &parentrtx=this->resource_transaction<Tag>(*tx.parent);
-				rtx=in_place(resource.begin_nested_transaction(parentrtx));
+				typename resource_type::transaction &parentrtx=resource_transaction<Tag>(*tx.parent);
+				rtx=in_place(res.begin_nested_transaction(parentrtx));
 			}else{
-				rtx=in_place(resource.begin_root_transaction());
+				rtx=in_place(res.begin_root_transaction());
 			}
 		}
 		return *rtx;
 	}
 
-	typename detail::transaction_construct_t begin_transaction(){
-		if(this->has_active_transaction()) return typename detail::transaction_construct_t(&this->active_transaction());
-		else return typename detail::transaction_construct_t(0);
+	static typename detail::transaction_construct_t begin_transaction(){
+		return typename detail::transaction_construct_t(active_transaction(mpl::bool_<Threads>()));
 	}
 
-	void commit_transaction(transaction &tx){
-		this->bind_transaction(tx);
+	static void commit_transaction(transaction &tx){
+		bind_transaction(tx);
 
-		try{
-			std::size_t nr=fusion::count_if(tx.resource_transactions,is());
-			if(nr > 0){
-				if(nr == 1){
-					//FIXME the local transaction commit might access other resource managers
-					//(e.g. for reference counting). that can start another resource transaction
-					//and a two-phase-commit must take place.
-					//finish-phase must be introduced to make sure the commit itself doesn't
-					//access other resource managers
-					this->for_each_transaction(tx,committer());
-				}else{
-					persistent::detail::throw_(unsupported_exception()); //TODO distributed transaction
-				}
+		std::size_t nr=fusion::count_if(tx.resource_transactions,is());
+		if(nr > 0){
+			if(nr == 1){
+				//FIXME the local transaction commit might access other resource managers
+				//(e.g. for reference counting). that can start another resource transaction
+				//and a two-phase-commit must take place.
+				//finish-phase must be introduced to make sure the commit itself doesn't
+				//access other resource managers
+				for_each_transaction(tx,committer());
+			}else{
+				persistent::detail::throw_(unsupported_exception()); //TODO distributed transaction
 			}
-		}catch(...){ //commit_transaction is called exactly once, even if something goes wrong. unbind transaction:
-			if(tx.parent) this->bind_transaction(*tx.parent);
-			else this->unbind_transaction();
-			throw;
 		}
-		if(tx.parent) this->bind_transaction(*tx.parent);
-		else this->unbind_transaction();
 	}
 
-	void rollback_transaction(transaction &tx){
-		this->bind_transaction(tx);
+	static void rollback_transaction(transaction &tx){
+		bind_transaction(tx);
 
-		try{ this->for_each_transaction(tx,rollbacker()); }
-		catch(...){
-			if(tx.parent) this->bind_transaction(*tx.parent);
-			else this->unbind_transaction();
-			throw;
-		}
-
-		if(tx.parent) this->bind_transaction(*tx.parent);
-		else this->unbind_transaction();
+		for_each_transaction(tx,rollbacker());
 	}
 
-	void bind_transaction(transaction &tx){
-		this->active_transaction(&tx,mpl::bool_<Threads>());
+	static void bind_transaction(transaction &tx){
+		active_transaction(&tx,mpl::bool_<Threads>());
 	}
-	void unbind_transaction(){
-		this->active_transaction(0,mpl::bool_<Threads>());
+	static void unbind_transaction(){
+		active_transaction(0,mpl::bool_<Threads>());
 	}
 
-	transaction &active_transaction() const{
-		if(transaction *tx=this->active_transaction(mpl::bool_<Threads>())) return *tx;
+	static transaction &active_transaction(){
+		if(transaction *tx=active_transaction(mpl::bool_<Threads>())) return *tx;
 		else persistent::detail::throw_(no_active_transaction());
 	}
-	bool has_active_transaction() const{
-		return this->active_transaction(mpl::bool_<Threads>()) ? true : false;
+	static bool has_active_transaction(){
+		return active_transaction(mpl::bool_<Threads>()) ? true : false;
 	}
-
-	static bool has_active(){
-		return active_;
-	}
-
-	static basic_transaction_manager &active(){
-		if(active_) return *active_;
-		else persistent::detail::throw_(no_active_transaction_manager());
-	}
-	void bind(){ active_=this; }
-	static void unbind(){ active_=0; }
 
 	/// \cond
 private:
@@ -266,53 +237,70 @@ private:
 	};
 	template<class F>
 	struct for_each_helper{
-		explicit for_each_helper(basic_transaction_manager *this_,transaction &tx,F const &f) : this_(this_),tx(tx),f(f){}
+		explicit for_each_helper(transaction &tx,F const &f) : tx(tx),f(f){}
 		template<class U>
 		void operator()(U) const{
 			typedef typename mpl::at<resource_types,U>::type resource_type;
 			optional<typename resource_type::transaction> &rtx=fusion::at<U>(tx.resource_transactions);
 			if(rtx){
-				resource_type &rmgr=fusion::at<U>(this_->resources);
-				f(rmgr,*rtx);
+				resource_type *rmgr=fusion::at<U>(resources);
+				BOOST_ASSERT(rmgr);
+				f(*rmgr,*rtx);
 			}
 		}
 	private:
-		basic_transaction_manager *this_;
 		transaction &tx;
 		F f;
 	};
 	template<class F>
-	void for_each_transaction(transaction &tx,F const &f){
+	static void for_each_transaction(transaction &tx,F const &f){
 		static unsigned int const size=mpl::size<resource_types>::type::value;
 		typedef mpl::range_c<unsigned int,0,size> range;
-		mpl::for_each<range>(for_each_helper<F>(this,tx,f));
+		mpl::for_each<range>(for_each_helper<F>(tx,f));
 	}
-	void active_transaction(transaction *newtx,mpl::true_){
-		if(transaction **tx=this->activetx.get()) *tx=newtx;
-		else this->activetx.reset(new transaction *(newtx));
-	}
-	void active_transaction(transaction *newtx,mpl::false_){
-		this->activetx=newtx;
-	}
-	transaction *active_transaction(mpl::true_) const{
-		if(transaction **tx=this->activetx.get()){
-			if(*tx) return *tx;
-		}
-		return 0;	
-	}
-	transaction *active_transaction(mpl::false_) const{
-		return this->activetx;
-	}
+#if defined(__GNUG__) || defined(BOOST_MSVC)
+	template<class T>
+	static void active_transaction(transaction *newtx,T){ activetx=newtx; }
+	template<class T>
+	static transaction *active_transaction(T){ return activetx; }
+	typedef transaction *activetx_type;
+	#ifdef BOOST_MSVC
+		static __declspec(thread) transaction *activetx; //TODO MSVC untested
+	#else
+		static __thread transaction *activetx;
+	#endif
+#else
+	static void active_transaction(transaction *newtx,mpl::true_){ activetx.reset(newtx); }
+	static void active_transaction(transaction *newtx,mpl::false_){ activetx=newtx; }
+	static transaction *active_transaction(mpl::true_){ return activetx.get(); }
+	static transaction *active_transaction(mpl::false_){ return activetx; }
+	typedef typename mpl::if_c<
+		Threads,
+		thread_specific_ptr<transaction>,
+		transaction *>::type activetx_type;	
+	activetx_type activetx;
+#endif
 
-	typename detail::resources_tuple const resources;
-	//TODO optimization: use thread local variable instead of thread_specific_ptr
-	typename mpl::if_c<Threads,thread_specific_ptr<transaction *>,transaction *>::type activetx;
-	static basic_transaction_manager *active_; 
+
+	typedef typename detail::resources_tuple resources_type;
+	static resources_type resources;
 	/// \endcond
 };
 
-template<class Resources,bool Threads,bool TThreads>
-basic_transaction_manager<Resources,Threads,TThreads> *basic_transaction_manager<Resources,Threads,TThreads>::active_=0;
+template<class Res,bool Thr,bool TThr>
+typename basic_transaction_manager<Res,Thr,TThr>::resources_type
+basic_transaction_manager<Res,Thr,TThr>::resources;
+
+template<class Res,bool Thr,bool TThr>
+#if defined(__GNUG__)
+__thread
+#elif defined(BOOST_MSVC)
+__declspec(thread)
+#endif
+typename basic_transaction_manager<Res,Thr,TThr>::activetx_type
+basic_transaction_manager<Res,Thr,TThr>::activetx(0); //the 0-argument either initializes
+//the pointer to 0, or passes a 0 cleanup function to the thread_specific_ptr constructor.
+
 
 }
 }
