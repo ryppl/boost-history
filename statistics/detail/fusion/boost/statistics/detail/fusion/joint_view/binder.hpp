@@ -26,6 +26,8 @@ namespace detail{
 namespace fusion{
 namespace joint_view{
 
+
+	// binds a sequence of type Seq1 to a sequence of arbitrary type. 
 	template<
     	typename Seq1, 
         bool is_left = true
@@ -53,6 +55,8 @@ namespace joint_view{
         >{};
     
 		public:
+
+		typedef Seq1 seq1_type;
 
 		template<typename S>
         struct result{};

@@ -12,9 +12,9 @@
 
 int main(){
 
-    // example_at_key_iterator(std::cout);
+    example_at_key_iterator(std::cout);
     example_serialize(std::cout);
-    // example_joint_view_binder(std::cout);
+    example_joint_view_binder(std::cout);
 
     return 0;
 }

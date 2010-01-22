@@ -20,10 +20,10 @@ namespace detail{
 namespace fusion{
 namespace joint_view{
 
-	template<typename Seq1, bool is_left = true>
+	template<typename Binder, bool is_left = true>
     struct binder_iterator
     {
-		typedef binder<Seq1,is_left> binder_;
+		typedef Binder binder_;
 
         template<typename It>
 		struct apply{
@@ -33,36 +33,36 @@ namespace joint_view{
             typedef typename boost::result_of<binder_(cref_)>::type res_;
             typedef boost::function<res_(cref_)> 					fun_; 
             typedef boost::transform_iterator<fun_,It>  			type;
-			static type call(const Seq1& seq1,It it)
+			static type call(const binder_& binder,It it)
             {
-            	return type(it,binder_(seq1));
+            	return type(it,binder);
             }
 
 			typedef boost::iterator_range<type> range_type;
-            static range_type call(const Seq1& seq1,It b,It e){
+            static range_type call(const binder_& binder,It b,It e){
             	return range_type(
-                	call(seq1,b),
-                    call(seq1,e)
+                	call(binder,b),
+                    call(binder,e)
                 );
             }
 
 		};
     };
     
-    template<typename Seq1,typename It>
-    typename binder_iterator<Seq1>::template apply<It>::type
-    make_binder_iterator(const Seq1& seq1,It it)
+    template<typename Binder,typename It>
+    typename binder_iterator<Binder>::template apply<It>::type
+    make_binder_iterator(const Binder& binder,It it)
     {
-    	typedef binder_iterator<Seq1> meta_;
-    	return meta_::template apply<It>::call(seq1,it);
+    	typedef binder_iterator<Binder> meta_;
+    	return meta_::template apply<It>::call(binder,it);
     }
 
-    template<typename Seq1,typename It>
-    typename binder_iterator<Seq1>::template apply<It>::range_type
-    make_binder_range(const Seq1& seq1,It b,It e)
+    template<typename Binder,typename It>
+    typename binder_iterator<Binder>::template apply<It>::range_type
+    make_binder_range(const Binder& binder,It b,It e)
     {
-    	typedef binder_iterator<Seq1> meta_;
-    	return meta_::template apply<It>::call(seq1,b,e);
+    	typedef binder_iterator<Binder> meta_;
+    	return meta_::template apply<It>::call(binder,b,e);
     }
 
     

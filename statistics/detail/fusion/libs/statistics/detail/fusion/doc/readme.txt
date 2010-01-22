@@ -16,13 +16,18 @@ erwann.rogard@gmail.com
 These are small C++ tools that exploit Boost.Fusion and are used throughout the 
 sandbox/statistics package 
 
+[ Note ]
+
+The functionality in joint_view necessitates a patch (that eventually will be 
+part of the release).  See boost.user mailing 9/19/09.
+
 [ Compiler ]
 
 gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 
 [ Dependencies ]
 
-boost_1_39_0
+boost_1_40_0
 
 [ Related ]
 

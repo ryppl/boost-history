@@ -8,9 +8,10 @@
 #include <vector>
 #include <fstream>
 #include <string>
-#include <boost/typeof/typeof.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/int.hpp>
+
+#include <boost/typeof/typeof.hpp>
 #include <boost/utility/result_of.hpp>
 #include <boost/assert.hpp>
 #include <boost/range.hpp>
