@@ -28,7 +28,6 @@ void test_system_clock()
     stop = suspendible_clock<system_clock>::now();
     std::cout << "suspendible_clock<system_clock> resolution estimate: " << nanoseconds(stop-start).count() << " nanoseconds\n";
     start = suspendible_clock<system_clock>::now();
-#if 0
     suspendible_clock<system_clock>::suspend();
     system_clock::duration delay3 = milliseconds(50);
     system_clock::time_point start3 = system_clock::now();
@@ -39,7 +38,6 @@ void test_system_clock()
     std::cout << "system_clock 50ms: " << nanoseconds(stop3-start3).count() << " nanoseconds\n";
     std::cout << "suspendible_clock<system_clock> 50ms: " << nanoseconds(stop-start).count() << " nanoseconds\n";
     suspendible_clock<system_clock>::resume();   
-#endif
     
 }
 

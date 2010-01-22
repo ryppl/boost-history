@@ -63,6 +63,11 @@ The Boost Chrono library provides:
     * `process_system_CPU_clocks`, capturing system-CPU times.
     * `process_cpu_clock`, tuple-like class capturing at once real, user-CPU, and system-CPU times.
 
+* Suspendible Clock
+    * Suspendible Clock concept
+    * template class suspendible_clock<>
+    * Added scope_suspend which do suspend/resume if the Clock is a model of Suspendible Clock concept, and nothing otherwise.
+
 * Stopwatches:
     * `stopwatch`, capturing elapsed Clock times.
     * `stopwatch_accumulator`, capturing cummulated elapsed Clock times.
@@ -985,9 +990,11 @@ Four of the typedefs in the recomendation which can be conditionally supported a
 [section:chrono_hpp Header `<boost/chrono.hpp>`]
 [/=============================================]
 
-This file is a redirection to `boost/chrono/chrono.hpp`
+This file is a redirection to `boost/chrono/chrono.hpp` including in addition registration for `duration<>` and `timepoint<>` class templates to Boost.Typeof.
+
 
     #include <boost/chrono/chrono.hpp>
+    #include <boost/chrono/typeof/boost/chrono/chrono.hpp>
 
 [endsect]
 
@@ -1155,16 +1162,16 @@ The `duration` template uses the `treat_as_floating_point` trait to help determi
     struct duration_values
     {
     public:
-        static BOOST_CONSTEXPR  Rep zero();
-        static BOOST_CONSTEXPR  Rep max();
-        static BOOST_CONSTEXPR  Rep min();
+        static BOOST_CHRONO_CONSTEXPR  Rep zero();
+        static BOOST_CHRONO_CONSTEXPR  Rep max();
+        static BOOST_CHRONO_CONSTEXPR  Rep min();
     };
 
 The `duration` template uses the `duration_values` trait to construct special values of the `duration`s representation (`Rep`). This is done because the representation might be a class type with behavior which requires some other implementation to return these special values. In that case, the author of that class type should specialize `duration_values` to return the indicated values.
 
-[section:zero Static member function`zero()`]
+[section:zero Static member Function `zero()`]
 
-    static BOOST_CONSTEXPR Rep zero();
+    static BOOST_CHRONO_CONSTEXPR Rep zero();
 
 [*Returns:] `Rep(0)`. [*Note:] `Rep(0)` is specified instead of `Rep()` since `Rep()` may have some other meaning, such as an uninitialized value.
 
@@ -1173,7 +1180,7 @@ The `duration` template uses the `duration_values` trait to construct special va
 [endsect]
 [section:max Static member function `max()`]
 
-    static BOOST_CONSTEXPR Rep max();
+    static BOOST_CHRONO_CONSTEXPR Rep max();
 
 [*Returns:] `numeric_limits<Rep>::max()`.
 
@@ -1182,7 +1189,7 @@ The `duration` template uses the `duration_values` trait to construct special va
 [endsect]
 [section:min Static member function `min()`]
 
-    static BOOST_CONSTEXPR Rep min();
+    static BOOST_CHRONO_CONSTEXPR Rep min();
 
 [*Returns:] `numeric_limits<Rep>::lowest()`.
 
@@ -1231,9 +1238,9 @@ A `duration` measures time between two points in time (`time_point`). A `duratio
         private:
             rep rep_; // exposition only
         public:
-            BOOST_CONSTEXPR duration() {} // = default;
+            BOOST_CHRONO_CONSTEXPR duration() {} // = default;
             template <class Rep2>
-            BOOST_CONSTEXPR explicit duration(const Rep2& r,
+            BOOST_CHRONO_CONSTEXPR explicit duration(const Rep2& r,
                   typename boost::enable_if_c
                   <
                   boost::is_convertible<Rep2, rep>::value
@@ -1243,7 +1250,7 @@ A `duration` measures time between two points in time (`time_point`). A `duratio
                   >::type* = 0);
 
             template <class Rep2, class Period2>
-            BOOST_CONSTEXPR duration(const duration<Rep2, Period2>& d,
+            BOOST_CHRONO_CONSTEXPR duration(const duration<Rep2, Period2>& d,
                   typename boost::enable_if_c
                   <
                       treat_as_floating_point<rep>::value
@@ -1255,10 +1262,10 @@ A `duration` measures time between two points in time (`time_point`). A `duratio
             //duration(const duration&) = default;
             //duration& operator=(const duration&) = default;
 
-            BOOST_CONSTEXPR rep count() const;
+            BOOST_CHRONO_CONSTEXPR rep count() const;
 
-            BOOST_CONSTEXPR duration  operator+();
-            BOOST_CONSTEXPR duration  operator-();
+            BOOST_CHRONO_CONSTEXPR duration  operator+();
+            BOOST_CHRONO_CONSTEXPR duration  operator-();
             duration& operator++();
             duration  operator++(int);
             duration& operator--();
@@ -1272,9 +1279,9 @@ A `duration` measures time between two points in time (`time_point`). A `duratio
             duration& operator%=(const rep& rhs);
             duration& operator%=(const duration& rhs);
 
-            static BOOST_CONSTEXPR duration zero();
-            static BOOST_CONSTEXPR duration min();
-            static BOOST_CONSTEXPR duration max();
+            static BOOST_CHRONO_CONSTEXPR duration zero();
+            static BOOST_CHRONO_CONSTEXPR duration min();
+            static BOOST_CHRONO_CONSTEXPR duration max();
         };
 
     }}
@@ -1298,7 +1305,7 @@ The following members of `duration` do not throw an exception unless the indicat
 [section:duration_c_1 Constructor `duration(const Rep2&)`]
 
     template <class Rep2>
-    BOOST_CONSTEXPR explicit duration(const Rep2& r);
+    BOOST_CHRONO_CONSTEXPR explicit duration(const Rep2& r);
 
 [*Remarks:] `Rep2` is implicitly convertible to `rep`, and
 
@@ -1320,7 +1327,7 @@ If these constraints are not met, this constructor shall not participate in over
 [section:duration_c_2 Constructor `duration(const duration&)`]
 
     template <class Rep2, class Period2>
-    BOOST_CONSTEXPR duration(const duration<Rep2, Period2>& d);
+    BOOST_CHRONO_CONSTEXPR duration(const duration<Rep2, Period2>& d);
 
 [*Remarks:] `treat_as_floating_point<rep>::value`, or `ratio_divide<Period2, period>::type::den == 1`, else this constructor shall not participate in overload resolution. [*note] This requirement prevents implicit truncation error when converting between integral-based `duration`s. Such a construction could easily lead to confusion about the value of the `duration`.
 
@@ -1335,21 +1342,21 @@ If these constraints are not met, this constructor shall not participate in over
 [endsect]
 [section:count Member function `count() const`]
 
-    BOOST_CONSTEXPR rep count() const;
+    BOOST_CHRONO_CONSTEXPR rep count() const;
 
 [*Returns:] `rep_v.
 
 [endsect]
 [section:duration_operator_p Member function `operator+() const`]
 
-    BOOST_CONSTEXPR duration operator+() const;
+    BOOST_CHRONO_CONSTEXPR duration operator+() const;
 
 [*Returns:] `*this`.
 
 [endsect]
 [section:duration_operator_m Member function `operator+() const`]
 
-    BOOST_CONSTEXPR duration operator-() const;
+    BOOST_CHRONO_CONSTEXPR duration operator-() const;
 
 [*Returns:] `duration(-rep_)`.
 
@@ -1666,8 +1673,8 @@ A `time_point` represents a point in time with respect to a specific clock.
 
         // special values
 
-        static BOOST_CONSTEXPR time_point min();
-        static BOOST_CONSTEXPR time_point max();
+        static BOOST_CHRONO_CONSTEXPR time_point min();
+        static BOOST_CHRONO_CONSTEXPR time_point max();
     };
 
 Clock must meet the Clock Requirements.
@@ -1725,14 +1732,14 @@ Duration must be an instantiation of `duration`, compile diagnostic otherwise.
 [endsect]
 [section:time_point_min Static Member function `min`]
 
-    static BOOST_CONSTEXPR time_point min();
+    static BOOST_CHRONO_CONSTEXPR time_point min();
 
 [*Returns:] `time_point(duration::min())`.
 
 [endsect]
 [section:time_point_max Static Member function `max`]
 
-    static BOOST_CONSTEXPR time_point max();
+    static BOOST_CHRONO_CONSTEXPR time_point max();
 
 [*Returns:] `time_point(duration::max())`.
 
@@ -1928,7 +1935,7 @@ Register `duration<>` and `timepoint<>` class templates to Boost.Typeof.
 [endsect]
 [endsect]
 
-[section Process CPU related]
+[section Other clocks]
 
 [/==================================================================]
 [section:process_cpu_clocks_hpp Header `<boost/chrono/process_cpu_clocks.hpp>`]
@@ -2006,9 +2013,9 @@ Knowing how long a program takes to execute is useful in both test and productio
 
 [section Class `process_cpu_clock`]
 
-`process_clocks` can be considered as a `tuple<process_real_cpu_clock, process_user_cpu_clock, process_system_cpu_clock>`.
+`process_cpu_clock` can be considered as a `tuple<process_real_cpu_clock, process_user_cpu_clock, process_system_cpu_clock>`.
 
-`process_clocks` provides a thin wrapper around the operating system's process timer API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
+`process_cpu_clock` provides a thin wrapper around the operating system's process timer API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
 
 The process relative real, user and system current time can be obtained at once by calling `process_clocks::now()`.
 
@@ -2028,14 +2035,12 @@ The process relative real, user and system current time can be obtained at once 
     };
 
     template <>
-    struct duration_values<process_cpu_clock::times>
-    {
-        static process_cpu_clock::times zero();
-        static process_cpu_clock::times max();
-        static process_cpu_clock::times min();
-    };
+    struct duration_values<process_cpu_clock::times>;
+
 
 [section Class `times`]
+
+This class is the representation of the process_cpu_clock::duration class. As such it needs to implements the arithmetic operators.
 
         struct times : arithmetic<times>, less_than_comparable<times>
         {
@@ -2060,17 +2065,172 @@ The process relative real, user and system current time can be obtained at once 
 
 [endsect]
 
+[section `duration_values` specialization for `times`]
+
+    template <>
+    struct duration_values<process_cpu_clock::times>
+    {
+        static process_cpu_clock::times zero();
+        static process_cpu_clock::times max();
+        static process_cpu_clock::times min();
+    };
+
+The `times` specific functions `zero()`, `max()` and `min()` uses the relative functions on the representation of each component.
+
+[endsect]
+
+[endsect]
+
+[endsect]
+
+[section:suspendible_clock_req `SuspendibleClock` requirements]
+
+A `SuspendibleClock` is a Clock that in addition support for `suspend`/`resume` operations.
+
+A `SuspendibleClock` must meet the requirements in the following Table.
+
+In this table `C`  denote `clock` types.
+
+[table SuspendibleClock Requirements
+    [[expression]        [return type]  [operational semantics]]
+    [[`C::suspend()`]   [`void`]  [Suspends the time counting of the clock C.]]
+    [[`C::resume()`]   [`void`]  [Resumes the time counting of the clock C.]]
+    [[`C::suspended()`]   [`duration`]  [Returns the delay(duration during which the clock has been suspended.]]
+]
+
+[section:SuspendibleClock_suspend Static Member Function `suspend()`]
+
+    void suspend( system::error_code & ec = system::throws );
+
+[*Effect:] Suspends the SuspendibleClock.
+
+[*Throw:] Any exception the `Clock::now(ec)` function can throw. Otherwise `ec` is set with the correspoding error code set by `Clock::now(ec)`.
+
+[endsect]
+[section:SuspendibleClock_resume Static Member Function `resume()`]
+
+    void resume( system::error_code & ec = system::throws );
+
+[*Effect:] Resumes the `SuspendibleClock`.
+
+[*Throw:] Any exception the `Clock::now(ec)` can throw. Otherwise `ec` is set with the correspoding error code set by `Clock::now(ec)`.
+
+[endsect]
+
+[section:SuspendibleClock_suspended Static Member Function `suspended()`]
+
+    duration suspended( system::error_code & ec = system::throws );
+
+[*Returns:] the cumalative elapsed duration during which the `SuspendibleClock` has been suspendeed.
+
+[*Throw:] Any exception the Clock::now function can throw if `ec == system::throws`. Otherwise `ec` is set with the correspoding error code set by `Clock::now(ec)`.
+
+[endsect]
+
+[endsect]
+
+[/==================================================================]
+[section:scoped_suspend_hpp Header `<boost/chrono/scoped_suspend.hpp>`]
+[/==================================================================]
+
+    namespace boost { namespace chrono {
+        template <class Clock> struct is_suspendible;
+        template <class Clock> class scoped_suspend;
+    }}
+
+[section Meta Function Class `is_suspendible`]
+
+    template <class Clock>
+    struct is_suspendible : mpl:: false_ {};
+
+[endsect]
+
+[section Template Class `scoped_suspend`]
+
+    template <class Clock>
+    class scoped_suspend {
+    public:
+        scoped_suspend(system::error_code & ec = system::throws) {}
+        ~scoped_suspend() {}
+    private:
+        scoped_suspend(); // = delete;
+        scoped_suspend(const scoped_suspend&); // = delete;
+        scoped_suspend& operator=(const scoped_suspend&); // = delete;
+    };
+
+[endsect]
+
 [endsect]
 
 
+[/==================================================================]
+[section:suspendible_clock_hpp Header `<boost/chrono/suspendible_clock.hpp>`]
+[/==================================================================]
+
+    namespace boost { namespace chrono {
+
+        template <class Clock>
+        class suspendible_clock;
+
+        template <class Clock>
+        struct is_suspendible<suspendible_clock<Clock> > : mpl:: true_ {};
+
+        template <class Clock>
+        class scoped_suspend<suspendible_clock<Clock> >;
+
+    }}
+
+[section Template Class `suspendible_clock<>`]
+
+Given a `Clock`, `suspendible_clock<Clock>` is a model of SuspendibleClock.
+
+    template < class Clock >
+    class suspendible_clock {
+    public:
+        typedef typename Clock::duration                           duration;
+        typedef typename Clock::rep                                       rep;
+        typedef typename Clock::period                                    period;
+        typedef chrono::time_point<suspendible_clock<Clock> >  time_point;
+        static const bool is_monotonic =             true;
+
+        static time_point now( system::error_code & ec = system::throws );
+
+        static void suspend( system::error_code & ec = system::throws );
+        static void resume( system::error_code & ec = system::throws );
+        static duration suspended(system::error_code & ec = system::throws);
+    };
+
+[section `scoped_suspend` specialization for `suspendible_clock<>`]
+
+        template <class Clock>
+        class scoped_suspend<suspendible_clock<Clock> > {
+        public:
+            scoped_suspend(system::error_code & ec = system::throws);
+            ~scoped_suspend();
+        };
+
 [endsect]
 
+[endsect]
 
 [endsect]
+
+[endsect]
+
 
 [/==================================================]
 [section Stopwatches]
 [/==================================================]
+[/=============================================]
+[section:stopwatches_hpp Header `<boost/stopwatches.hpp>`]
+[/=============================================]
+
+This file include all the stopwatches related files
+
+    #include <boost/chrono/stopwatches.hpp>
+
+[endsect]
+
 [/=============================================]
 [section:chrono_stopwatches_hpp Header `<boost/chrono/stopwatches.hpp>`]
 [/=============================================]
@@ -2093,16 +2253,6 @@ This file include all the stopwatches related files
 
 [endsect]
 
-[/=============================================]
-[section:stopwatches_hpp Header `<boost/stopwatches.hpp>`]
-[/=============================================]
-
-This file include all the stopwatches related files
-
-    #include <boost/chrono/stopwatches.hpp>
-
-[endsect]
-
 [section `Stopwatch` Requirements]
 
 A Stopwatch measure the amount of time elapsed from a particular time when activated to when it is deactivated, or the accumulation of them.
@@ -2113,7 +2263,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
 [table Stopwatch Requirements
     [[expression]        [return type]  [operational semantics]]
-    [[`S::clock`]        [A model of the CLock concept.]  [The clock associated to this Stopwatch.]]
+    [[`S::clock`]        [A model of the Clock concept.]  [The clock associated to this Stopwatch.]]
     [[`S::duration`]        [`S::clock::duration`]  [The `duration` type of the `clock`.]]
     [[`S::time_point`]        [`S::clock::time_point`]  [The `time_point` type of the `clock`.]]
     [[`s.start()`]        [`S::time_point`]  [starts a Stopwatch.]]
@@ -2125,7 +2275,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 ]
 
 
-[section:stopwatch_start Member function`start()`]
+[section:stopwatch_start Member Function `start()`]
 
     time_point start( system::error_code & ec = system::throws );
 
@@ -2136,7 +2286,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 [*Throw:] Any exception the Clock::now function can throw.
 
 [endsect]
-[section:stopwatch_stop Member function`stop()`]
+[section:stopwatch_stop Member Function `stop()`]
 
     duration stop( system::error_code & ec = system::throws );
 
@@ -2147,7 +2297,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 [*Throw:] Any exception the Clock::now function can throw.
 
 [endsect]
-[section:stopwatch_suspend Member function`suspend()`]
+[section:stopwatch_suspend Member Function `suspend()`]
 
     duration suspend( system::error_code & ec = system::throws );
 
@@ -2156,7 +2306,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 [*Throw:] Any exception the Clock::now function can throw.
 
 [endsect]
-[section:stopwatch_resume Member function`resume()`]
+[section:stopwatch_resume Member Function `resume()`]
 
     time_point resume( system::error_code & ec = system::throws );
 
@@ -2168,7 +2318,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
 [endsect]
 
-[section:stopwatch_restart Member function`restart()`]
+[section:stopwatch_restart Member Function `restart()`]
 
     time_point restart( system::error_code & ec = system::throws );
 
@@ -2239,7 +2389,7 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 
         };
 
-[section:stopwatch_elapsed Member function`elapsed()`]
+[section:stopwatch_elapsed Member Function `elapsed()`]
 
             duration elapsed(system::error_code & ec = system::throws) const;
 
@@ -2325,7 +2475,7 @@ A `stopwatch_accumulator<>` is a model of a Stopwatch that allows to accumulate 
 [*Effect:] Initialize the elapsed duration and the times counter to 0.
 
 [endsect]
-[section:stopwatch_accumulator_start Member function`start()`]
+[section:stopwatch_accumulator_start Member Function `start()`]
 
     time_point start( system::error_code & ec = system::throws );
 
@@ -2336,7 +2486,7 @@ A `stopwatch_accumulator<>` is a model of a Stopwatch that allows to accumulate 
 [*Throw:] Any exception the Clock::now function can throw.
 
 [endsect]
-[section:stopwatch_accumulator_stop Member function`stop()`]
+[section:stopwatch_accumulator_stop Member Function `stop()`]
 
     duration stop( system::error_code & ec = system::throws );
 
@@ -2347,7 +2497,7 @@ A `stopwatch_accumulator<>` is a model of a Stopwatch that allows to accumulate 
 [*Throw:] Any exception the Clock::now function can throw.
 
 [endsect]
-[section:stopwatch_accumulator_suspend Member function`suspend()`]
+[section:stopwatch_accumulator_suspend Member Function `suspend()`]
 
     duration suspend( system::error_code & ec = system::throws );
 
@@ -2356,7 +2506,7 @@ A `stopwatch_accumulator<>` is a model of a Stopwatch that allows to accumulate 
 [*Throw:] Any exception the Clock::now function can throw.
 
 [endsect]
-[section:stopwatch_accumulator_resume Member function`resume()`]
+[section:stopwatch_accumulator_resume Member Function `resume()`]
 
     time_point resume( system::error_code & ec = system::throws );
 
@@ -2368,7 +2518,7 @@ A `stopwatch_accumulator<>` is a model of a Stopwatch that allows to accumulate 
 
 [endsect]
 
-[section:stopwatch_accumulator_restart Member function`restart()`]
+[section:stopwatch_accumulator_restart Member Function `restart()`]
 
     time_point restart( system::error_code & ec = system::throws );
 
@@ -2379,7 +2529,7 @@ A `stopwatch_accumulator<>` is a model of a Stopwatch that allows to accumulate 
 [*Throw:] Any exception the Clock::now function can throw.
 
 [endsect]
-[section:stopwatch_accumulator_reset Member function`reset()`]
+[section:stopwatch_accumulator_reset Member Function `reset()`]
 
     void reset( );
 
@@ -2388,7 +2538,7 @@ A `stopwatch_accumulator<>` is a model of a Stopwatch that allows to accumulate 
 [*Throw:] Nothing.
 
 [endsect]
-[section:stopwatch_accumulator_elapsed Member function`elapsed()`]
+[section:stopwatch_accumulator_elapsed Member Function `elapsed()`]
 
             duration elapsed(system::error_code & ec = system::throws) const;
 
@@ -2398,7 +2548,7 @@ A `stopwatch_accumulator<>` is a model of a Stopwatch that allows to accumulate 
 
 [endsect]
 
-[section:stopwatch_accumulator_accumulated Member function`accumulated()`]
+[section:stopwatch_accumulator_accumulated Member Function `accumulated()`]
 
             accumulator& accumulated();
 
@@ -2752,7 +2902,7 @@ Usage
 [/==================================================]
 
     namespace boost { namespace chrono {
-        template < class Clock, class Formatter > 
+        template < class Clock, class Formatter >
         class stopclock_accumulator;
         typedef <see above> system_stopclock_accumulator;
         #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
@@ -2771,7 +2921,7 @@ Usage
     template
         < class Clock=high_resolution_clock
         , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type
-    > class stopclock_accumulator 
+    > class stopclock_accumulator
         : public stopwatch_reporter<stopwatch_accumulator<Clock>, Formatter> {
     public:
         typedef Clock clock;
@@ -2856,7 +3006,7 @@ A typical ussage of this class is
 
     template < class Clock=process_cpu_clock
         , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch<Clock>>::type
-    > class scoped_stopclock 
+    > class scoped_stopclock
         : public stopwatch_reporter<stopwatch<Clock>, Formatter> {
     public:
         typedef Clock clock;
@@ -4357,15 +4507,25 @@ Here is the output for this program for several sets of command line arguments:
 [section:history Appendix A: History]
 [/==================================]
 
-[section [*Version 0.3.1, January 20, 2010] ['New Allow wide characters + Bug fixes]]
+[section [*Version 0.3.2, January 24, 2010] ['New SuspendibleClock + Bug fixes]]
 [*Features:]
 
-* Allow wide characters on formatters and stopclocks
-* added chrono.hpp and stopwatches.hpp at the boost level
+* Suspendible Clock concept + template class suspendible_clock<>
+* Added scope_suspend which will do nothing if the Clock is not a Suspendible Clock concept, and suspend/resume otherwise.
+* Use of scope_suspend while reporting on stopwatch reporter
 
 [*Bug Fixes]
 
 * add static assertions to stopclock and stopclock_accumulator
+
+[endsect]
+
+[section [*Version 0.3.1, January 20, 2010] ['New Allow wide characters + Bug fixes]]
+[*Features:]
+
+* Support for wide characters on formatters and stopclocks
+* added chrono.hpp and stopwatches.hpp at the boost level
+
 
 [endsect]
 
@@ -4437,7 +4597,7 @@ More updated documentation.
 * Added nested ratio typedef type ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
 * Added BOOST_CHRONO_HAS_CLOCK_MONOTONIC macro to state if monotonic_clock is provided on this platform.
 * Added duration operator% ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934 [*LGW 934. duration is missing operator%]])
-* Added BOOST_CONSTEXPR when constexpr should be used
+* Added BOOST_CHRONO_CONSTEXPR when constexpr should be used
 * Complete duration operator* and operator/
 
 
@@ -4669,19 +4829,30 @@ You can also run a specific suite of test by doing
 ]
 [endsect]
 
+[section Other Clocks]
+[table
+    [[Name]                         [kind]          [Description]           [Result] [Ticket]]
+    [[test_suspendible_clock]               [run]           [test basic uses of suspendible_clock.]                   [Pass]   [#]]
+]
+[endsect]
 [section stopwatch]
 [table
     [[Name]                         [kind]          [Description]           [Result] [Ticket]]
     [[test_min_max]               [compile]           [test compilation succeeds in the presence of macros min and max.]                   [Pass]   [#]]
     [[stopwatch_example]               [run]           [...]                   [Pass]   [#]]
     [[stopwatch_example]               [run]           [...]                   [Pass]   [#]]
+    [[scoped_stopwatch_example]               [run]           [...]                   [Pass]   [#]]
     [[stopwatch_accumulator_example] [run]   [...]                   [Pass]   [#]]
+    [[specific_stopwatch_accumulator_example] [run]   [...]                   [Pass]   [#]]
     [[stopclock_example]      [run]          [...]                   [Pass]   [#]]
+    [[stopclock_accumulator_example]      [run]          [...]                   [Pass]   [#]]
+    [[nested_stopclock_accumulator_example]      [run]          [...]                   [Pass]   [#]]
     [[digital_time_example]      [run]          [...]                   [Pass]   [#]]
     [[scoped_stopclock_example]      [run]          [...]                   [Pass]   [#]]
     [[test_minmax]      [compile]          [...]                   [Pass]   [#]]
     [[stopclock_constructor_overload_test]      [run]          [...]                   [Pass]   [#]]
     [[wstopclock_constructor_overload_test]      [run]          [...]                   [Pass]   [#]]
+
 ]
 [endsect]
 
@@ -4704,6 +4875,16 @@ You can also run a specific suite of test by doing
     [[11]    [MSVC reports a warning instead of an error when there is an integral constant overflow] [manage with MSVC reporting a warning instead of an error when there is an integral constant overflow]                  [Close]]
     [[12]    [ambiguities with MSVC when using detail:: namespace] [Qualify with boost::detail boost::chrono::detail ]                  [Close]]
     [[13]    [warning C4251: 'boost::chrono::run_timer::m_format' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'boost::chrono::run_timer'] [don't include inlines functions using the std::string m_format]                  [Close]]
+    [[14]    [Bade use of duration(0) on template classes] [remplace by duration::zero()]                  [Close]]
+    [[15]    [suspend don't works: partial_ not initialized] [initialize with duration::zero()]                  [Close]]
+    [[16]    [suspend don't works: elapsed don't take care of partial_] [take care of partial]                  [Close]]
+    [[17]    [suspend don't works: bad use of system::error_code & ec] [replace by system::error_code ec]                  [Close]]
+    [[18]    [warnings on mingw-gcc.4.4:[br]..\..\../boost/chrono/chrono.hpp: In copy constructor 'boost::chrono::time_point<boost::chrono::process_cpu_clock, boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1ll, 1000000000ll> > >::time_point(const boost::chrono::time_point<boost::chrono::process_cpu_clock, boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1ll, 1000000000ll> > >&)':
+..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'
+..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'] [???]                  [Open]]
+    [[19]    [suspendible_clock_test don't works in my windows environement (issue with tss)] [XXXX]                  [Open]]
+    [[#]    [XXXX] [XXXX]                  [Close]]
+    [[#]    [XXXX] [XXXX]                  [Close]]
     [[#]    [XXXX] [XXXX]                  [Close]]
 ]
 

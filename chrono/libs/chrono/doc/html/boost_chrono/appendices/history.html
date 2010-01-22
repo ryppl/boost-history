@@ -27,6 +27,8 @@
 <a name="boost_chrono.appendices.history"></a><a href="history.html" title=" Appendix A: History"> Appendix A: History</a>
 </h3></div></div></div>
 <div class="toc"><dl>
+<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_3_2__january_24__2010____new_suspendibleclock___bug_fixes_"><span class="bold"><strong>Version 0.3.2, January 24, 2010</strong></span> <span class="emphasis"><em>New SuspendibleClock
+        + Bug fixes</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_3_1__january_20__2010____new_allow_wide_characters___bug_fixes_"><span class="bold"><strong>Version 0.3.1, January 20, 2010</strong></span> <span class="emphasis"><em>New Allow
         wide characters + Bug fixes</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_3_0__january_17__2010____new_stopwatch_stopclock_feature___bug_fixes_"><span class="bold"><strong>Version 0.3.0, January 17, 2010</strong></span> <span class="emphasis"><em>New stopwatch/stopclock
@@ -39,6 +41,34 @@
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.appendices.history.__version_0_3_2__january_24__2010____new_suspendibleclock___bug_fixes_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_3_2__january_24__2010____new_suspendibleclock___bug_fixes_" title="Version 0.3.2, January 24, 2010 New SuspendibleClock
+        + Bug fixes"><span class="bold"><strong>Version 0.3.2, January 24, 2010</strong></span> <span class="emphasis"><em>New SuspendibleClock
+        + Bug fixes</em></span></a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Features:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Suspendible Clock concept + template class suspendible_clock&lt;&gt;
+          </li>
+<li>
+            Added scope_suspend which will do nothing if the Clock is not a Suspendible
+            Clock concept, and suspend/resume otherwise.
+          </li>
+<li>
+            Use of scope_suspend while reporting on stopwatch reporter
+          </li>
+</ul></div>
+<p>
+          <span class="bold"><strong>Bug Fixes</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            add static assertions to stopclock and stopclock_accumulator
+          </li></ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
 <a name="boost_chrono.appendices.history.__version_0_3_1__january_20__2010____new_allow_wide_characters___bug_fixes_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_3_1__january_20__2010____new_allow_wide_characters___bug_fixes_" title="Version 0.3.1, January 20, 2010 New Allow
         wide characters + Bug fixes"><span class="bold"><strong>Version 0.3.1, January 20, 2010</strong></span> <span class="emphasis"><em>New Allow
         wide characters + Bug fixes</em></span></a>
@@ -48,18 +78,12 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Allow wide characters on formatters and stopclocks
+            Support for wide characters on formatters and stopclocks
           </li>
 <li>
             added chrono.hpp and stopwatches.hpp at the boost level
           </li>
 </ul></div>
-<p>
-          <span class="bold"><strong>Bug Fixes</strong></span>
-        </p>
-<div class="itemizedlist"><ul type="disc"><li>
-            add static assertions to stopclock and stopclock_accumulator
-          </li></ul></div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -249,7 +273,7 @@
             Added duration operator% (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934" target="_top"><span class="bold"><strong>LGW 934. duration is missing operator%</strong></span></a>)
           </li>
 <li>
-            Added BOOST_CONSTEXPR when constexpr should be used
+            Added BOOST_CHRONO_CONSTEXPR when constexpr should be used
           </li>
 <li>
             Complete duration operator* and operator/
