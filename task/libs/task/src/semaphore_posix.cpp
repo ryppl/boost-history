@@ -16,16 +16,19 @@ extern "C" {
 #include <stdexcept>
 
 #include <boost/assert.hpp>
+#include <boost/config.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 
 namespace {
 
+#if ! defined(__FreeBSD__)
 union semun {
 	int				val;
 	semid_ds	*	buf;
 	ushort		*	array;
 };
+#endif
 
 }
 
