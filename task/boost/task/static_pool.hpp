@@ -10,7 +10,7 @@
 #include <cstddef>
 
 #include <boost/config.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/fiber/fiber.hpp>
 #include <boost/fiber/round_robin.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/move/move.hpp>
@@ -21,7 +21,6 @@
 #include <boost/task/exceptions.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/poolsize.hpp>
-#include <boost/task/scanns.hpp>
 #include <boost/task/stacksize.hpp>
 #include <boost/task/task.hpp>
 #include <boost/task/watermark.hpp>
@@ -62,39 +61,31 @@ public:
 	
 	explicit static_pool(
 			poolsize const& psize,
-			posix_time::time_duration const& asleep = posix_time::microseconds( 10),
-			scanns const& max_scns = scanns( 20),
-			stacksize const& stack_size = stacksize( 64000) ) :
-		pool_( new base_type( psize, asleep, max_scns, stack_size) )
+			stacksize const& stack_size = stacksize( fiber::default_stacksize) ) :
+		pool_( new base_type( psize, stack_size) )
 	{}
 
 	explicit static_pool(
 			poolsize const& psize,
 			high_watermark const& hwm,
 			low_watermark const& lwm,
-			posix_time::time_duration const& asleep = posix_time::microseconds( 100),
-			scanns const& max_scns = scanns( 20),
-			stacksize const& stack_size = stacksize( 64000) ) :
-		pool_( new base_type( psize, hwm, lwm, asleep, max_scns, stack_size) )
+			stacksize const& stack_size = stacksize( fiber::default_stacksize) ) :
+		pool_( new base_type( psize, hwm, lwm, stack_size) )
 	{}
 
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
 	explicit static_pool(
 			tag_bind_to_processors,
-			posix_time::time_duration const& asleep = posix_time::microseconds( 10),
-			scanns const& max_scns = scanns( 20),
-			stacksize const& stack_size = stacksize( 64000) ) :
-		pool_( new base_type( asleep, max_scns, stack_size) )
+			stacksize const& stack_size = stacksize( fiber::default_stacksize) ) :
+		pool_( new base_type( stack_size) )
 	{}
 
 	explicit static_pool(
 			tag_bind_to_processors,
 			high_watermark const& hwm,
 			low_watermark const& lwm,
-			posix_time::time_duration const& asleep = posix_time::microseconds( 100),
-			scanns const& max_scns = scanns( 20),
-			stacksize const& stack_size = stacksize( 64000) ) :
-		pool_( new base_type( hwm, lwm, asleep, max_scns, stack_size) )
+			stacksize const& stack_size = stacksize( fiber::default_stacksize) ) :
+		pool_( new base_type( hwm, lwm, stack_size) )
 	{}
 
 	static tag_bind_to_processors bind_to_processors()

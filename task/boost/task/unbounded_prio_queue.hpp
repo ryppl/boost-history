@@ -23,6 +23,7 @@
 #include <boost/task/callable.hpp>
 #include <boost/task/detail/meta.hpp>
 #include <boost/task/exceptions.hpp>
+#include <boost/task/fast_semaphore.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -68,7 +69,7 @@ private:
 		value_type,
 		std::deque< value_type >,
 		compare
-	>								queue_type;
+	>						queue_type;
 
 	enum state
 	{
@@ -79,7 +80,7 @@ private:
 	atomic< state >			state_;
 	queue_type				queue_;
 	mutable shared_mutex	mtx_;
-	condition				not_empty_cond_;
+	fast_semaphore		&	fsem_;
 
 	bool active_() const
 	{ return ACTIVE == state_.load(); }
@@ -95,67 +96,7 @@ private:
 		if ( ! active_() )
 			throw task_rejected("queue is not active");
 		queue_.push( va);
-		not_empty_cond_.notify_one();
-	}
-
-	bool take_(
-		callable & ca,
-		unique_lock< shared_mutex > & lk)
-	{
-		bool empty = empty_();
-		if ( ! active_() && empty)
-			return false;
-		if ( empty)
-		{
-			try
-			{
-				not_empty_cond_.wait(
-					lk,
-					bind(
-						& unbounded_prio_queue::consumers_activate_,
-						this) );
-			}
-			catch ( thread_interrupted const&)
-			{ return false; }
-		}
-		if ( ! active_() && empty_() )
-			return false;
-		callable tmp( queue_.top().ca);
-		queue_.pop();
-		ca.swap( tmp);
-		return ! ca.empty();
-	}
-
-	template< typename TimeDuration >
-	bool take_(
-		callable & ca,
-		TimeDuration const& rel_time,
-		unique_lock< shared_mutex > & lk)
-	{
-		bool empty = empty_();
-		if ( ! active_() && empty)
-			return false;
-		if ( empty)
-		{
-			try
-			{
-				if ( ! not_empty_cond_.timed_wait(
-					lk,
-					rel_time,
-					bind(
-						& unbounded_prio_queue::consumers_activate_,
-						this) ) )
-					return false;
-			}
-			catch ( thread_interrupted const&)
-			{ return false; }
-		}
-		if ( ! active_() && empty_() )
-			return false;
-		callable tmp( queue_.top().ca);
-		queue_.pop();
-		ca.swap( tmp);
-		return ! ca.empty();
+		fsem_.post();
 	}
 
 	bool try_take_( callable & ca)
@@ -168,22 +109,22 @@ private:
 		return ! ca.empty();
 	}
 
-	bool consumers_activate_() const
-	{ return ! active_() || ! empty_(); }
-
 public:
-	unbounded_prio_queue() :
+	unbounded_prio_queue( fast_semaphore & fsem) :
 		state_( ACTIVE),
 		queue_(),
 		mtx_(),
-		not_empty_cond_()
+		fsem_( fsem)
 	{}
 
 	bool active() const
 	{ return active_(); }
 
 	void deactivate()
-	{ deactivate_(); }
+	{
+		unique_lock< shared_mutex > lk( mtx_);
+		deactivate_();
+	}
 
 	bool empty() const
 	{
@@ -195,21 +136,6 @@ public:
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		put_( va);
-	}
-
-	bool take( callable & ca)
-	{
-		unique_lock< shared_mutex > lk( mtx_);
-		return take_( ca, lk);
-	}
-
-	template< typename TimeDuration >
-	bool take(
-		callable & ca,
-		TimeDuration const& rel_time)
-	{
-		unique_lock< shared_mutex > lk( mtx_);
-		return take_( ca, rel_time, lk);
 	}
 
 	bool try_take( callable & ca)

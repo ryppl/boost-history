@@ -14,6 +14,7 @@
 
 #include <boost/task/callable.hpp>
 #include <boost/task/detail/config.hpp>
+#include <boost/task/fast_semaphore.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -36,9 +37,10 @@ private:
 	atomic< unsigned int >		head_idx_;
 	atomic< unsigned int >		tail_idx_;
 	recursive_mutex				mtx_;
+	fast_semaphore			&	fsem_;
 
 public:
-	wsq();
+	wsq( fast_semaphore & fsem);
 
 	bool empty() const;
 

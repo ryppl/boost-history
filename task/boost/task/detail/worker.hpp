@@ -20,10 +20,8 @@
 
 #include <boost/task/callable.hpp>
 #include <boost/task/detail/config.hpp>
-#include <boost/task/detail/guard.hpp>
 #include <boost/task/detail/wsq.hpp>
 #include <boost/task/poolsize.hpp>
-#include <boost/task/scanns.hpp>
 #include <boost/task/stacksize.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -91,9 +89,6 @@ private:
 
 	wsq								wsq_;
 	bool							shtdwn_;
-	posix_time::time_duration		asleep_;
-	scanns							max_scns_;
-	std::size_t						scns_;
 	std::size_t						stack_size_;
 	random_idx						rnd_idx_;
 
@@ -107,11 +102,6 @@ private:
 		ca.clear();
 		BOOST_ASSERT( ca.empty() );
 	}
-
-	bool take_global_callable_(
-			callable & ca,
-			posix_time::time_duration const& asleep)
-	{ return pool_.queue_.take( ca, asleep); }
 
 	bool try_take_global_callable_( callable & ca)
 	{ return pool_.queue_.try_take( ca); }
@@ -143,37 +133,12 @@ private:
 				 try_take_global_callable_( ca) )
 			{
 				execute_( ca);
-				scns_ = 0;
 				if ( 0 < sched_->ready() ) return;
 			}
 			else
 			{
-				guard grd( pool_.idle_worker_);
-				++scns_;
-				if ( scns_ >= max_scns_)
-				{
-					if ( pool_.size_() > pool_.idle_worker_)
-					{
-						if ( take_global_callable_( ca, asleep_) )
-						{
-							execute_( ca);
-							if ( 0 < sched_->ready() ) return;
-						}
-					}
-					else if ( 0 == sched_->ready() )
-					{
-						try
-						{ this_thread::sleep( asleep_); }
-						catch ( thread_interrupted const&)
-						{ return; }
-					}
-					scns_ = 0;
-				}
-				else
-				{
-					if ( 0 < sched_->ready() ) return;
-					this_thread::yield();
-				}
+				if ( 0 < sched_->ready() ) return;
+				pool_.fsem_.wait();
 			}
 		}
 	}
@@ -201,18 +166,13 @@ public:
 	worker_object(
 			Pool & pool,
 			poolsize const& psize,
-			posix_time::time_duration const& asleep,
-			scanns const& max_scns,
 			stacksize const& stack_size,
 			function< void() > const& fn) :
 		pool_( pool),
 		thrd_( new thread( fn) ),
 		sched_(),
-		wsq_(),
+		wsq_( pool_.fsem_),
 		shtdwn_( false),
-		asleep_( asleep),
-		max_scns_( max_scns),
-		scns_( 0),
 		stack_size_( stack_size),
 		rnd_idx_( psize)
 	{ BOOST_ASSERT( ! fn.empty() ); }
@@ -278,16 +238,12 @@ public:
 	worker(
 			Pool & pool,
 			poolsize const& psize,
-			posix_time::time_duration const& asleep,
-			scanns const& max_scns,
 			stacksize const& stack_size,
 			function< void() > const& fn) :
 		impl_(
 			new worker_object< Pool, worker >(
 				pool,
 				psize,
-				asleep,
-				max_scns,
 				stack_size,
 				fn) )
 	{}

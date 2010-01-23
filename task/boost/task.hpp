@@ -15,12 +15,13 @@
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
 #include <boost/task/exceptions.hpp>
+#include <boost/task/fast_semaphore.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/meta.hpp>
 #include <boost/task/new_thread.hpp>
 #include <boost/task/own_thread.hpp>
 #include <boost/task/poolsize.hpp>
-#include <boost/task/scanns.hpp>
+#include <boost/task/semaphore.hpp>
 #include <boost/task/spin/auto_reset_event.hpp>
 #include <boost/task/spin/barrier.hpp>
 #include <boost/task/spin/bounded_channel.hpp>

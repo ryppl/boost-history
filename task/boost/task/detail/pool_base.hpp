@@ -25,9 +25,9 @@
 #include <boost/task/detail/worker_group.hpp>
 #include <boost/task/detail/worker.hpp>
 #include <boost/task/exceptions.hpp>
+#include <boost/task/fast_semaphore.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/poolsize.hpp>
-#include <boost/task/scanns.hpp>
 #include <boost/task/spin/future.hpp>
 #include <boost/task/stacksize.hpp>
 #include <boost/task/task.hpp>
@@ -62,12 +62,12 @@ private:
 		DEACTIVE	
 	};
 
+	fast_semaphore			fsem_;
 	atomic< unsigned int >	use_count_;
 	worker_group			wg_;
 	shared_mutex			mtx_wg_;
 	atomic< state >			state_;
 	queue_type				queue_;
-	atomic< unsigned int >	idle_worker_;
 	atomic< bool >			shtdwn_;
 	atomic< bool >			shtdwn_now_;
 
@@ -84,16 +84,12 @@ private:
 
 	void create_worker_(
 		poolsize const& psize,
-		posix_time::time_duration const& asleep,
-		scanns const& max_scns,
 		stacksize const& stack_size)
 	{
 		wg_.insert(
 			worker(
 				* this,
 				psize,
-				asleep,
-				max_scns,
 				stack_size,
 				boost::bind(
 					& pool_base::worker_entry_,
@@ -109,8 +105,6 @@ private:
 
 	void create_worker_(
 		poolsize const& psize,
-		posix_time::time_duration const& asleep,
-		scanns const& max_scns,
 		stacksize const& stack_size,
 		std::size_t n)
 	{
@@ -118,8 +112,6 @@ private:
 			worker(
 				* this,
 				psize,
-				asleep,
-				max_scns,
 				stack_size,
 				boost::bind(
 					& pool_base::worker_entry_,
@@ -140,93 +132,76 @@ private:
 public:
 	explicit pool_base(
 			poolsize const& psize,
-			posix_time::time_duration const& asleep,
-			scanns const& max_scns,
 			stacksize const& stack_size) :
+		fsem_( 0),
 		use_count_( 0),
 		wg_(),
 		mtx_wg_(),
 		state_( ACTIVE),
-		queue_(),
-		idle_worker_( 0),
+		queue_( fsem_),
 		shtdwn_( false),
 		shtdwn_now_( false)
 	{
-		if ( asleep.is_special() || asleep.is_negative() )
-			throw invalid_timeduration();
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_( psize, asleep, max_scns, stack_size);
+			create_worker_( psize, stack_size);
 	}
 
 	explicit pool_base(
 			poolsize const& psize,
 			high_watermark const& hwm,
 			low_watermark const& lwm,
-			posix_time::time_duration const& asleep,
-			scanns const& max_scns,
 			stacksize const& stack_size) :
+		fsem_( 0),
 		use_count_( 0),
 		wg_(),
 		mtx_wg_(),
 		state_( ACTIVE),
-		queue_( hwm, lwm),
-		idle_worker_( 0),
+		queue_( fsem_, hwm, lwm),
 		shtdwn_( false),
 		shtdwn_now_( false)
 	{
-		if ( asleep.is_special() || asleep.is_negative() )
-			throw invalid_timeduration();
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_( psize, asleep, max_scns, stack_size);
+			create_worker_( psize, stack_size);
 	}
 
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
-	explicit pool_base(
-			posix_time::time_duration const& asleep,
-			scanns const& max_scns,
-			stacksize const& stack_size) :
+	explicit pool_base( stacksize const& stack_size) :
+		fsem_( 0),
 		use_count_( 0),
 		wg_(),
 		mtx_wg_(),
 		state_( ACTIVE),
-		queue_(),
-		idle_worker_( 0),
+		queue_( fsem_),
 		shtdwn_( false),
 		shtdwn_now_( false)
 	{
-		if ( asleep.is_special() || asleep.is_negative() )
-			throw invalid_timeduration();
 		poolsize psize( thread::hardware_concurrency() );
 		BOOST_ASSERT( psize > 0);
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_( psize, asleep, max_scns, stack_size, i);
+			create_worker_( psize, stack_size, i);
 	}
 
 	explicit pool_base(
 			high_watermark const& hwm,
 			low_watermark const& lwm,
-			posix_time::time_duration const& asleep,
-			scanns const& max_scns,
 			stacksize const& stack_size) :
+		fsem_( 0),
 		use_count_( 0),
 		wg_(),
 		mtx_wg_(),
 		state_( ACTIVE),
-		queue_( hwm, lwm),
-		idle_worker_( 0),
+		queue_( fsem_, hwm, lwm),
 		shtdwn_( false),
 		shtdwn_now_( false)
 	{
-		if ( asleep.is_special() || asleep.is_negative() )
-			throw invalid_timeduration();
 		poolsize psize( thread::hardware_concurrency() );
 		BOOST_ASSERT( psize > 0);
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_( psize, asleep, max_scns, stack_size, i);
+			create_worker_( psize, stack_size, i);
 	}
 # endif
 
@@ -246,6 +221,7 @@ public:
 		if ( deactivated_() || ! deactivate_() ) return;
 
 		queue_.deactivate();
+		fsem_.deactivate();
 		shared_lock< shared_mutex > lk( mtx_wg_);
 		shtdwn_.store( true);
 		wg_.join_all();
@@ -256,6 +232,7 @@ public:
 		if ( deactivated_() || ! deactivate_() ) return;
 
 		queue_.deactivate();
+		fsem_.deactivate();
 		shared_lock< shared_mutex > lk( mtx_wg_);
 		shtdwn_now_.store( true);
 		wg_.interrupt_all();

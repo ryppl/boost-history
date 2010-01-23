@@ -23,27 +23,11 @@ public:
 	{}
 };
 
-class invalid_scanns : public std::invalid_argument
-{
-public:
-    invalid_scanns() :
-		std::invalid_argument("scanns must be greater than or equal to zero")
-	{}
-};
-
 class invalid_stacksize : public std::invalid_argument
 {
 public:
     invalid_stacksize() :
 		std::invalid_argument("stacksize must be greater than zero")
-	{}
-};
-
-class invalid_timeduration : public std::invalid_argument
-{
-public:
-    invalid_timeduration() :
-		std::invalid_argument("argument asleep is not valid")
 	{}
 };
 

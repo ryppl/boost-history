@@ -20,6 +20,7 @@
 #include <boost/task/callable.hpp>
 #include <boost/task/detail/meta.hpp>
 #include <boost/task/exceptions.hpp>
+#include <boost/task/fast_semaphore.hpp>
 #include <boost/task/watermark.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -54,10 +55,10 @@ private:
 	mutable mutex			head_mtx_;
 	node::sptr_t			tail_;
 	mutable mutex			tail_mtx_;
-	condition				not_empty_cond_;
 	condition				not_full_cond_;
 	std::size_t				hwm_;
 	std::size_t				lwm_;
+	fast_semaphore		&	fsem_;
 
 	bool active_() const
 	{ return ACTIVE == state_.load(); }
@@ -91,6 +92,7 @@ private:
 
 public:
 	bounded_fifo(
+			fast_semaphore & fsem,
 			high_watermark const& hwm,
 			low_watermark const& lwm) :
 		state_( ACTIVE),
@@ -99,32 +101,14 @@ public:
 		head_mtx_(),
 		tail_( head_),
 		tail_mtx_(),
-		not_empty_cond_(),
 		not_full_cond_(),
 		hwm_( hwm),
-		lwm_( lwm)
+		lwm_( lwm),
+		fsem_( fsem)
 	{}
-
-	void upper_bound_( std::size_t hwm)
-	{
-		if ( lwm_ > hwm )
-			throw invalid_watermark();
-		std::size_t tmp( hwm_);
-		hwm_ = hwm;
-		if ( hwm_ > tmp) not_full_cond_.notify_one();
-	}
 
 	std::size_t upper_bound() const
 	{ return hwm_; }
-
-	void lower_bound_( std::size_t lwm)
-	{
-		if ( lwm > hwm_ )
-			throw invalid_watermark();
-		std::size_t tmp( lwm_);
-		lwm_ = lwm;
-		if ( lwm_ > tmp) not_full_cond_.notify_one();
-	}
 
 	std::size_t lower_bound() const
 	{ return lwm_; }
@@ -133,7 +117,11 @@ public:
 	{ return active_(); }
 
 	void deactivate()
-	{ deactivate_(); }
+	{
+		unique_lock< mutex > lk( head_mtx_);
+		deactivate_();
+		not_full_cond_.notify_all();
+	}
 
 	bool empty() const
 	{
@@ -160,7 +148,7 @@ public:
 			tail_ = new_node;
 			count_.fetch_add( 1);
 		}
-		not_empty_cond_.notify_one();
+		fsem_.post();
 	}
 
 	template< typename TimeDuration >
@@ -186,75 +174,7 @@ public:
 			tail_ = new_node;
 			count_.fetch_add( 1);
 		}
-		not_empty_cond_.notify_one();
-	}
-
-	bool take( value_type & va)
-	{
-		unique_lock< mutex > lk( head_mtx_);
-		bool empty = empty_();
-		if ( ! active_() && empty)
-			return false;
-		if ( empty)
-		{
-			try
-			{
-				while ( active_() && empty_() )
-					not_empty_cond_.wait( lk);
-			}
-			catch ( thread_interrupted const&)
-			{ return false; }
-		}
-		if ( ! active_() && empty_() )
-			return false;
-		va.swap( head_->va);
-		pop_head_();
-		if ( size_() <= lwm_)
-		{
-			if ( lwm_ == hwm_)
-				not_full_cond_.notify_one();
-			else
-				// more than one producer could be waiting
-				// for submiting an action object
-				not_full_cond_.notify_all();
-		}
-		return ! va.empty();
-	}
-
-	template< typename TimeDuration >
-	bool take(
-		value_type & va,
-		TimeDuration const& rel_time)
-	{
-		unique_lock< mutex > lk( head_mtx_);
-		bool empty = empty_();
-		if ( ! active_() && empty)
-			return false;
-		if ( empty)
-		{
-			try
-			{
-				while ( active_() && empty_() )
-					if ( ! not_empty_cond_.timed_wait( lk, rel_time) )
-						return false;
-			}
-			catch ( thread_interrupted const&)
-			{ return false; }
-		}
-		if ( ! active_() && empty_() )
-			return false;
-		va.swap( head_->va);
-		pop_head_();
-		if ( size_() <= lwm_)
-		{
-			if ( lwm_ == hwm_)
-				not_full_cond_.notify_one();
-			else
-				// more than one producer could be waiting
-				// for submiting an action object
-				not_full_cond_.notify_all();
-		}
-		return ! va.empty();
+		fsem_.post();
 	}
 
 	bool try_take( value_type & va)

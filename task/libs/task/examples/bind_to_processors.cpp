@@ -65,16 +65,33 @@ int main( int argc, char *argv[])
 		std::vector< tsk::handle< int > > results;
 		results.reserve( 10);
 
-		for ( int i = 0; i < 10; ++i)
-			results.push_back(
-				tsk::async(
-					tsk::make_task(
-						parallel_fib,
-						i,
-						5),
-					pool) );
+		pt::ptime start = pt::microsec_clock::universal_time();
+
+//	for ( int i = 0; i < 15; ++i)
+//		results.push_back(
+//			tsk::async(
+//				tsk::make_task(
+//					parallel_fib,
+//					10,
+//					5),
+//				pool) );
+//
+
+		results.push_back(
+			tsk::async(
+				tsk::make_task(
+					parallel_fib,
+					25,
+					5),
+				pool) );
 
 		tsk::waitfor_all( results.begin(), results.end() );
+
+		pt::ptime stop = pt::microsec_clock::universal_time();
+
+		pt::time_duration elapsed = stop - start;
+		std::cout << "total microseconds == " << elapsed.total_microseconds() << std::endl;
+		std::cout << "total milliseconds == " << elapsed.total_milliseconds() << std::endl;
 
 		int k = 0;
 		std::vector< tsk::handle< int > >::iterator e( results.end() );

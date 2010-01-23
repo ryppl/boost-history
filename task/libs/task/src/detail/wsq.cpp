@@ -12,14 +12,15 @@ namespace boost {
 namespace tasks {
 namespace detail {
 
-wsq::wsq() :
-initial_size_( 32),
-array_( new callable[ initial_size_]),
-capacity_( initial_size_),
-mask_( initial_size_ - 1),
-head_idx_( 0),
-tail_idx_( 0),
-mtx_()
+wsq::wsq( fast_semaphore & fsem) :
+	initial_size_( 32),
+	array_( new callable[ initial_size_]),
+	capacity_( initial_size_),
+	mask_( initial_size_ - 1),
+	head_idx_( 0),
+	tail_idx_( 0),
+	mtx_(),
+	fsem_( fsem)
 {}
 
 bool
@@ -60,6 +61,7 @@ wsq::put( callable const& ca)
 		array_[tail & mask_] = ca;
 		tail_idx_.fetch_add( 1);
 	}
+	fsem_.post();
 }
 
 bool

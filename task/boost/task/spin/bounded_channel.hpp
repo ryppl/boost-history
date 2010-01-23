@@ -143,26 +143,8 @@ public:
 		use_count_( 0)
 	{}
 
-	void upper_bound_( std::size_t hwm)
-	{
-		if ( hwm < lwm_)
-			throw invalid_watermark();
-		unsigned int tmp( hwm_);
-		hwm_ = hwm;
-		if ( hwm_ > tmp) not_full_cond_.notify_one();
-	}
-
 	std::size_t upper_bound() const
 	{ return hwm_; }
-
-	void lower_bound_( std::size_t lwm)
-	{
-		if ( lwm > hwm_ )
-			throw invalid_watermark();
-		unsigned int tmp( lwm_);
-		lwm_ = lwm;
-		if ( lwm_ > tmp) not_full_cond_.notify_one();
-	}
 
 	std::size_t lower_bound() const
 	{ return lwm_; }
@@ -171,7 +153,13 @@ public:
 	{ return active_(); }
 
 	void deactivate()
-	{ deactivate_(); }
+	{
+		mutex::scoped_lock head_lk( head_mtx_);
+		mutex::scoped_lock tail_lk( tail_mtx_);
+		not_empty_cond_.notify_all();
+		not_full_cond_.notify_all();
+		deactivate_();
+	}
 
 	bool empty() const
 	{

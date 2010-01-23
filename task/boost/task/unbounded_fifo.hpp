@@ -20,6 +20,7 @@
 #include <boost/task/callable.hpp>
 #include <boost/task/detail/meta.hpp>
 #include <boost/task/exceptions.hpp>
+#include <boost/task/fast_semaphore.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -52,7 +53,7 @@ private:
 	mutable mutex		head_mtx_;
 	node::sptr_t		tail_;
 	mutable mutex		tail_mtx_;
-	condition			not_empty_cond_;
+	fast_semaphore	&	fsem_;
 
 	bool active_() const
 	{ return ACTIVE == state_.load(); }
@@ -78,20 +79,23 @@ private:
 	}
 
 public:
-	unbounded_fifo() :
+	unbounded_fifo( fast_semaphore & fsem) :
 		state_( ACTIVE),
 		head_( new node),
 		head_mtx_(),
 		tail_( head_),
 		tail_mtx_(),
-		not_empty_cond_()
+		fsem_( fsem)
 	{}
 
 	bool active() const
 	{ return active_(); }
 
 	void deactivate()
-	{ deactivate_(); }
+	{
+		unique_lock< mutex > lk( head_mtx_);
+		deactivate_();
+	}
 
 	bool empty() const
 	{
@@ -104,61 +108,13 @@ public:
 		node::sptr_t new_node( new node);
 		{
 			unique_lock< mutex > lk( tail_mtx_);
+			if ( ! active_() )
+				throw task_rejected("queue is not active");
 			tail_->va = va;
 			tail_->next = new_node;
 			tail_ = new_node;
 		}
-		not_empty_cond_.notify_one();
-	}
-
-	bool take( value_type & va)
-	{
-		unique_lock< mutex > lk( head_mtx_);
-		bool empty = empty_();
-		if ( ! active_() && empty)
-			return false;
-		if ( empty)
-		{
-			try
-			{
-				while ( active_() && empty_() )
-					not_empty_cond_.wait( lk);
-			}
-			catch ( thread_interrupted const&)
-			{ return false; }
-		}
-		if ( ! active_() && empty_() )
-			return false;
-		va.swap( head_->va);
-		pop_head_();
-		return ! va.empty();
-	}
-
-	template< typename TimeDuration >
-	bool take(
-		value_type & va,
-		TimeDuration const& rel_time)
-	{
-		unique_lock< mutex > lk( head_mtx_);
-		bool empty = empty_();
-		if ( ! active_() && empty)
-			return false;
-		if ( empty)
-		{
-			try
-			{
-				while ( active_() && empty_() )
-					if ( ! not_empty_cond_.timed_wait( lk, rel_time) )
-						return false;
-			}
-			catch ( thread_interrupted const&)
-			{ return false; }
-		}
-		if ( ! active_() && empty_() )
-			return false;
-		va.swap( head_->va);
-		pop_head_();
-		return ! va.empty();
+		fsem_.post();
 	}
 
 	bool try_take( value_type & va)

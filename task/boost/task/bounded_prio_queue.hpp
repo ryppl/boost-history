@@ -23,6 +23,7 @@
 #include <boost/task/callable.hpp>
 #include <boost/task/detail/meta.hpp>
 #include <boost/task/exceptions.hpp>
+#include <boost/task/fast_semaphore.hpp>
 #include <boost/task/watermark.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -80,10 +81,10 @@ private:
 	atomic< state >			state_;
 	queue_type				queue_;
 	mutable shared_mutex	mtx_;
-	condition				not_empty_cond_;
 	condition				not_full_cond_;
 	std::size_t				hwm_;
 	std::size_t				lwm_;
+	fast_semaphore		&	fsem_;
 
 	bool active_() const
 	{ return ACTIVE == state_.load(); }
@@ -100,24 +101,6 @@ private:
 	std::size_t size_() const
 	{ return queue_.size(); }
 
-	void upper_bound_( std::size_t hwm)
-	{
-		if ( lwm_ > hwm )
-			throw invalid_watermark();
-		std::size_t tmp( hwm_);
-		hwm_ = hwm;
-		if ( hwm_ > tmp) not_full_cond_.notify_one();
-	}
-
-	void lower_bound_( std::size_t lwm)
-	{
-		if ( lwm > hwm_ )
-			throw invalid_watermark();
-		std::size_t tmp( lwm_);
-		lwm_ = lwm;
-		if ( lwm_ > tmp) not_full_cond_.notify_one();
-	}
-
 	void put_(
 		value_type const& va,
 		unique_lock< shared_mutex > & lk)
@@ -133,7 +116,7 @@ private:
 		if ( ! active_() )
 			throw task_rejected("queue is not active");
 		queue_.push( va);
-		not_empty_cond_.notify_one();
+		fsem_.post();
 	}
 
 	template< typename TimeDuration >
@@ -155,85 +138,7 @@ private:
 		if ( ! active_() )
 			throw task_rejected("queue is not active");
 		queue_.push( va);
-		not_empty_cond_.notify_one();
-	}
-
-	bool take_(
-		callable & ca,
-		unique_lock< shared_mutex > & lk)
-	{
-		bool empty = empty_();
-		if ( ! active_() && empty)
-			return false;
-		if ( empty)
-		{
-			try
-			{
-				not_empty_cond_.wait(
-					lk,
-					bind(
-						& bounded_prio_queue::consumers_activate_,
-						this) );
-			}
-			catch ( thread_interrupted const&)
-			{ return false; }
-		}
-		if ( ! active_() && empty_() )
-			return false;
-		callable tmp( queue_.top().ca);
-		queue_.pop();
-		ca.swap( tmp);
-		if ( size_() <= lwm_)
-		{
-			if ( lwm_ == hwm_)
-				not_full_cond_.notify_one();
-			else
-				// more than one producer could be waiting
-				// for submiting an action object
-				not_full_cond_.notify_all();
-		}
-		return ! ca.empty();
-	}
-
-	template< typename TimeDuration >
-	bool take_(
-		callable & ca,
-		TimeDuration const& rel_time,
-		unique_lock< shared_mutex > & lk)
-	{
-		bool empty = empty_();
-		if ( ! active_() && empty)
-			return false;
-		if ( empty)
-		{
-			try
-			{
-				if ( ! not_empty_cond_.timed_wait(
-					lk,
-					rel_time,
-					bind(
-						& bounded_prio_queue::consumers_activate_,
-						this) ) )
-					return false;
-			}
-			catch ( thread_interrupted const&)
-			{ return false; }
-		}
-		if ( ! active_() && empty_() )
-			return false;
-		callable tmp( queue_.top().ca);
-		queue_.pop();
-		ca.swap( tmp);
-		if ( size_() <= lwm_)
-		{
-			if ( lwm_ == hwm_)
-				not_full_cond_.notify_one();
-			else
-				// more than one producer could be waiting
-				// in order to submit an task
-				not_full_cond_.notify_all();
-		}
-		return ! ca.empty();
+		fsem_.post();
 	}
 
 	bool try_take_( callable & ca)
@@ -259,20 +164,18 @@ private:
 	bool producers_activate_() const
 	{ return ! active_() || ! full_(); }
 
-	bool consumers_activate_() const
-	{ return ! active_() || ! empty_(); }
-
 public:
 	bounded_prio_queue(
+			fast_semaphore & fsem,
 			high_watermark const& hwm,
 			low_watermark const& lwm) :
 		state_( ACTIVE),
 		queue_(),
 		mtx_(),
-		not_empty_cond_(),
 		not_full_cond_(),
 		hwm_( hwm),
-		lwm_( lwm)
+		lwm_( lwm),
+		fsem_( fsem)
 	{
 		if ( lwm_ > hwm_ )
 			throw invalid_watermark();
@@ -282,7 +185,11 @@ public:
 	{ return active_(); }
 
 	void deactivate()
-	{ deactivate_(); }
+	{
+		unique_lock< shared_mutex > lk( mtx_);
+		deactivate_();
+		not_full_cond_.notify_all();
+	}
 
 	bool empty() const
 	{
@@ -296,22 +203,10 @@ public:
 		return hwm_;
 	}
 
-	void upper_bound( std::size_t hwm)
-	{
-		unique_lock< shared_mutex > lk( mtx_);
-		upper_bound_( hwm);
-	}
-
 	std::size_t lower_bound() const
 	{
 		shared_lock< shared_mutex > lk( mtx_);
 		return lwm_;
-	}
-
-	void lower_bound( std::size_t lwm)
-	{
-		unique_lock< shared_mutex > lk( mtx_);
-		lower_bound_( lwm);
 	}
 
 	void put( value_type const& va)
@@ -327,21 +222,6 @@ public:
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		put_( va, rel_time, lk);
-	}
-
-	bool take( callable & ca)
-	{
-		unique_lock< shared_mutex > lk( mtx_);
-		return take_( ca, lk);
-	}
-
-	template< typename TimeDuration >
-	bool take(
-		callable & ca,
-		TimeDuration const& rel_time)
-	{
-		unique_lock< shared_mutex > lk( mtx_);
-		return take_( ca, rel_time, lk);
 	}
 
 	bool try_take( callable & ca)
