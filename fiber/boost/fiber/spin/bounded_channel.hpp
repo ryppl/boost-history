@@ -173,7 +173,11 @@ public:
 	{ return active_(); }
 
 	void deactivate()
-	{ deactivate_(); }
+	{
+		deactivate_();
+		not_empty_cond_.notify_all();
+		not_full_cond_.notify_all();
+	}
 
 	bool empty() const
 	{

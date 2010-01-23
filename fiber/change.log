@@ -1,3 +1,11 @@
+0.3.10:
+------
+- bugfix related to notify all waiting fibers if channel is deactivated
+
+0.3.9:
+------
+- correction for intel compiler
+
 0.3.8:
 ------
 - code formating
