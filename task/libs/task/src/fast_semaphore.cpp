@@ -34,7 +34,7 @@ fast_semaphore::post( int count)
 	int sem_count = sem_count_.fetch_add( count);
 
 	if ( sem_count < 0)
-		sem_.post( std::min( count, -sem_count) );
+		sem_.post( ( std::min)( count, -sem_count) );
 }
 
 void
