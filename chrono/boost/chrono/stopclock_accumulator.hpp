@@ -43,13 +43,13 @@ namespace boost { namespace chrono  {
  * }
  */
 //--------------------------------------------------------------------------------------//
-    
+
     template <class Clock=high_resolution_clock, class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock> >::type>
     class stopclock_accumulator;
 
     template <class Clock, class Formatter>
     struct stopwatch_reporter_default_formatter<stopclock_accumulator<Clock,Formatter> > {
-        typedef typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock> >::type type;
+        typedef Formatter type;
     };
 
     template <class Clock, class Formatter>
@@ -102,9 +102,10 @@ namespace boost { namespace chrono  {
         : base_type(os, places, format, ec) { }
 
 
-        typedef typename base_type::scoped_run scoped_run;
-        typedef typename base_type::scoped_suspend scoped_suspend;
-        typedef typename base_type::scoped_resume scoped_resume;
+        typedef stopwatch_runner<stopclock_accumulator> scoped_run;
+        typedef stopwatch_stopper<stopclock_accumulator> scoped_stop;
+        typedef stopwatch_suspender<stopclock_accumulator> scoped_suspend;
+        typedef stopwatch_resumer<stopclock_accumulator> scoped_resume;
     };
 
     typedef stopclock_accumulator< boost::chrono::system_clock > system_stopclock_accumulator;

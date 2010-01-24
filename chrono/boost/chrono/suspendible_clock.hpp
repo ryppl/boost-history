@@ -22,7 +22,7 @@ namespace boost { namespace chrono {
 
     template < class Clock >
     class suspendible_clock {
-    public:        
+    public:
         typedef typename Clock::duration                           duration;
         typedef typename Clock::rep                                       rep;
         typedef typename Clock::period                                    period;
@@ -35,7 +35,7 @@ namespace boost { namespace chrono {
             time_point suspended_time_;
             duration suspended_duration_;
             std::size_t suspend_level_;
-            
+
             duration suspended(system::error_code & ec = system::throws) {
                 if (!suspended_) return suspended_duration_;
                 else {
@@ -45,7 +45,7 @@ namespace boost { namespace chrono {
                     return suspended_duration_ + tmp - suspended_time_;
                 }
             }
-            
+
             void suspend( system::error_code & ec = system::throws ) {
                 if (!suspended_) {
                     time_point tmp;
@@ -67,7 +67,7 @@ namespace boost { namespace chrono {
                     suspended_=false;
                 }
             }
-            
+
         };
         static thread_specific_context* instance(system::error_code & ec) {
             thread_specific_context* ptr= ptr_.get();
@@ -86,7 +86,7 @@ namespace boost { namespace chrono {
                         ptr_.reset(ptr);
                     } catch (...) {
                         //ec=...
-                        return 0;                        
+                        return 0;
                     }
                 }
             }
@@ -120,7 +120,7 @@ namespace boost { namespace chrono {
         class scoped_suspend {
         public:
             scoped_suspend(system::error_code & ec = system::throws)
-                : ptr_(instance(ec)) 
+                : ptr_(instance(ec))
             {
                 ptr_->suspend(ec);
             }
@@ -134,26 +134,30 @@ namespace boost { namespace chrono {
             scoped_suspend(const scoped_suspend&); // = delete;
             scoped_suspend& operator=(const scoped_suspend&); // = delete;
         };
-    
+
     };
 
     template < class Clock >
     thread_specific_ptr<typename suspendible_clock<Clock>::thread_specific_context> suspendible_clock<Clock>::ptr_;
-    
-    
-        
-    template <class Clock>
-    struct is_suspendible<suspendible_clock<Clock> > : mpl:: true_ {};
-        
-        
+
+
 
     template <class Clock>
-    class scoped_suspend<suspendible_clock<Clock> > 
+    struct is_suspendible<suspendible_clock<Clock> > : mpl:: true_ {};
+
+
+
+    template <class Clock>
+    class scoped_suspend<suspendible_clock<Clock> >
         : public suspendible_clock<Clock>::scoped_suspend {
     public:
         scoped_suspend(system::error_code & ec = system::throws) : Clock::scoped_suspend(ec) {}
-    };        
-    
+    private:
+        scoped_suspend(); // = delete;
+        scoped_suspend(const scoped_suspend&); // = delete;
+        scoped_suspend& operator=(const scoped_suspend&); // = delete;
+    };
+
 } // namespace chrono
 } // namespace boost
 

@@ -25,7 +25,10 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
-namespace boost {  namespace chrono {
+namespace boost
+{
+  namespace chrono
+  {
 
 //--------------------------------------------------------------------------------------//
 //                                    stopwatch
@@ -42,106 +45,8 @@ namespace boost {  namespace chrono {
 //~ but the watch mechanism continues running to record total elapsed time.
 //--------------------------------------------------------------------------------------//
 
-namespace kind {
-struct idle {};
-struct running {};
-struct running_and_idle {};
-}
-namespace detail {
-template <
-    class Clock,
-    class RunningIdleKind,
-    class Accumulator
->
-struct basic_stopwatch_accumulator;
-    
-template <
-    class Clock,
-    class Accumulator
->
-class basic_stopwatch_accumulator<Clock, kind::running, Accumulator> {
-public:
-    typedef Clock                       clock;
-    typedef typename Clock::duration    duration;
-    typedef typename Clock::time_point  time_point;
-    typedef Accumulator accumulator;
-
-    accumulator& accumulated( ) { return accumulated_; }   
-  
-protected:
-    basic_stopwatch_accumulator( )
-    : running_(false), suspended_(false), accumulated_(), 
-      partial_(duration::zero()), start_((duration::zero())), level_(0), suspend_level_(0)
-    {}
-
-    void idle_on_start(time_point &) {}
-    void idle_on_stop(time_point &) {}
-    
-    bool running_;
-    bool suspended_;
-    accumulator accumulated_;
-    duration partial_;
-    time_point start_;
-    std::size_t level_;
-    std::size_t suspend_level_;
-    
-};
-
-        
-template <
-    class Clock,
-    class Accumulator
->
-class basic_stopwatch_accumulator<Clock, kind::running_and_idle, Accumulator> 
-    : public basic_stopwatch_accumulator<Clock, kind::running, Accumulator>
-{
-        typedef basic_stopwatch_accumulator<Clock, kind::running, Accumulator> base_type;
-public:
-    typedef Clock                       clock;
-    typedef typename Clock::duration    duration;
-    typedef typename Clock::time_point  time_point;
-    typedef Accumulator accumulator;
-
-    accumulator& idle_accumulated( ) { return idle_accumulated_; }   
-    
-protected:
-    basic_stopwatch_accumulator( )
-    : base_type(),
-      stopped_(false), idle_accumulated_(), idle_partial_(duration::zero()), stop_(duration::zero()) 
-    {}
-
-    void idle_on_start(time_point &tmp) {
-        if (stopped_) {
-            idle_partial_ += tmp - this->start_;
-            idle_accumulated_(idle_partial_.count());
-            idle_partial_=duration::zero();
-        }
-    }
-
-    void idle_on_stop(time_point &tmp) {
-        stop_ = tmp;
-        stopped_=true;
-    }
-
-    void idle_on_reset() {
-        stopped_=false;
-        idle_accumulated_ = accumulator();
-        idle_partial_=duration::zero();
-        stop_  = time_point(duration::zero());
-    }
-    
-    bool stopped_;
-    accumulator idle_accumulated_;
-    duration idle_partial_;
-    time_point stop_;
-};
-
-}        
-
-
     // forward declaration
     template <class Clock=high_resolution_clock,
-        class RunningIdleKind=kind::running,
         class Accumulator=accumulators::accumulator_set<typename Clock::duration::rep,
                     accumulators::features<
                         accumulators::tag::count,
@@ -153,70 +58,70 @@ protected:
     >
     class stopwatch_accumulator;
 
-    template <class Clock>
-    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock> > {
+    template <class Clock, class Accumulator>
+    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
         typedef stopwatch_accumulator_formatter type;
     };
 
 //--------------------------------------------------------------------------------------//
-    template <class Clock, class RunningIdleKind, class Accumulator >
-    class stopwatch_accumulator 
-        : public detail::basic_stopwatch_accumulator<Clock, RunningIdleKind, Accumulator>
+    template <class Clock, class Accumulator>
+    class stopwatch_accumulator
     {
-        typedef detail::basic_stopwatch_accumulator<Clock, RunningIdleKind, Accumulator> base_type;
     public:
         typedef Clock                       clock;
         typedef typename Clock::duration    duration;
         typedef typename Clock::time_point  time_point;
         typedef Accumulator accumulator;
 
-        stopwatch_accumulator( ) : base_type() {}
+        stopwatch_accumulator( )
+        : running_(false), suspended_(false), accumulated_(),
+          partial_(), start_(duration::zero()), level_(0), suspend_level_(0)
+          , construction_(clock::now( ))
+        {}
 
         std::pair<duration, time_point>  restart( system::error_code & ec = system::throws ) {
             time_point tmp=clock::now( ec );
             if (ec) return time_point();
-            if (this->running_&&(--this->level_==0)) {
-                this->partial_ += tmp - this->start_;
-                this->accumulated_(this->partial_.count());
-                this->partial_=duration::zero();
+            if (running_&&(--level_==0)) {
+                partial_ += tmp - start_;
+                accumulated_(partial_.count());
+                partial_=duration::zero();
             } else {
-                this->running_=true;
+                running_=true;
             }
-            this->start_=tmp;
-            ++this->level_;
-            return std::make_pair(duration(accumulators::sum(this->accumulated_)),this->start_);
+            start_=tmp;
+            ++level_;
+            return std::make_pair(duration(accumulators::sum(accumulated_)),start_);
         }
 
         time_point start( system::error_code & ec = system::throws ) {
-            if (!this->running_) {
+            if (!running_) {
                 time_point tmp = clock::now( ec );
                 if (ec) return time_point();
-                ++this->level_;
-                this->start_ = tmp;
-                this->running_ = true;
-                this->idle_on_start(tmp);
-                return this->start_;
+                start_ = tmp;
+                ++level_;
+                running_ = true;
+                return start_;
             }  else {
-                ++this->level_;
+                ++level_;
                 return time_point();
             }
         }
 
         duration stop( system::error_code & ec = system::throws ) {
-            if (this->running_) {
-                if (this->level_==1) {
+            if (running_) {
+                if (level_==1) {
                     time_point tmp=clock::now( ec );
                     if (ec) return duration::zero();
-                    --this->level_;
-                    this->partial_ += tmp - this->start_;
-                    this->accumulated_(this->partial_.count());
-                    this->partial_=duration::zero();
-                    this->running_=false;
-                    this->idle_on_stop(tmp);
-                    return duration(accumulators::extract::sum(this->accumulated_));
+                    partial_ += tmp - start_;
+                    accumulated_(partial_.count());
+                    partial_=duration::zero();
+                    --level_;
+                    running_=false;
+                    return duration(accumulators::extract::sum(accumulated_));
                 } else {
-                   --this->level_; 
-                   return duration::zero();
+                    --level_;
+                    return duration::zero();
                 }
             } else {
                 return duration::zero();
@@ -224,14 +129,14 @@ protected:
         }
 
         duration suspend( system::error_code & ec = system::throws ) {
-            if (this->running_) {
-                ++this->suspend_level_;
-                if (!this->suspended_) {
+            if (running_) {
+                ++suspend_level_;
+                if (!suspended_) {
                     time_point tmp=clock::now( ec );
                     if (ec) return duration::zero();
-                    this->partial_ += tmp - this->start_;
-                    this->suspended_=true;
-                    return duration(accumulators::sum(this->accumulated_));
+                    partial_ += tmp - start_;
+                    suspended_=true;
+                    return duration(accumulators::sum(accumulated_));
                 } else {
                     return duration::zero();
                 }
@@ -240,40 +145,44 @@ protected:
             }
         }
         time_point resume( system::error_code & ec = system::throws ) {
-            if (this->suspended_&&(--this->suspend_level_==0)) {
+            if (suspended_&&(--suspend_level_==0)) {
                 time_point tmp = clock::now( ec );
                 if (ec) return time_point();
-                this->start_ = tmp;
-                this->suspended_=false;
-                return this->start_;
+                start_ = tmp;
+                suspended_=false;
+                return start_;
             } else {
                 return time_point();
             }
         }
         duration elapsed( system::error_code & ec = system::throws )
         {
-            if (this->running_) {
-                if (this->suspended_)
-                    return duration(accumulators::sum(this->accumulated_));
+            if (running_) {
+                if (suspended_)
+                    return duration(accumulators::sum(accumulated_));
                 else {
                     time_point tmp = clock::now( ec );
                     if (ec) return duration::zero();
-                    return duration(accumulators::sum(this->accumulated_))+tmp - this->start_;
+                    return duration(accumulators::sum(accumulated_))+tmp - start_;
                 }
             } else {
-                return duration(accumulators::sum(this->accumulated_));
+                return duration(accumulators::sum(accumulated_));
             }
         }
 
-        void reset( ) {
-            this->running_=false;
-            this->suspended_=false;
-            this->accumulated_ = accumulator();
-            this->partial_=duration::zero();
-            this->start_  = time_point(duration::zero());
-            this->level_=0;
-            this->suspend_level_=0;
-            this->idle_on_reset();
+        void reset( system::error_code & ec = system::throws ) {
+            construction_=clock::now( ec );
+            running_=false;
+            suspended_=false;
+            accumulated_ = accumulator();
+            partial_=duration::zero();
+            start_  = time_point(duration::zero());
+            level_=0;
+            suspend_level_=0;
+        }
+        accumulator& accumulated( ) { return accumulated_; }
+        duration lifetime( system::error_code & ec = system::throws ) {
+            return  clock::now( ec ) - construction_;
         }
 
         typedef stopwatch_runner<stopwatch_accumulator<Clock> > scoped_run;
@@ -281,6 +190,15 @@ protected:
         typedef stopwatch_suspender<stopwatch_accumulator<Clock> > scoped_suspend;
         typedef stopwatch_resumer<stopwatch_accumulator<Clock> > scoped_resume;
         typedef stopwatch_reporter<stopwatch_accumulator<Clock> > reporter;
+    private:
+        bool running_;
+        bool suspended_;
+        accumulator accumulated_;
+        duration partial_;
+        time_point start_;
+        std::size_t level_;
+        std::size_t suspend_level_;
+        time_point construction_;
     };
 
 //--------------------------------------------------------------------------------------//

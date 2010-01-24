@@ -76,7 +76,7 @@ namespace boost { namespace chrono  {
 
     template <class Stopwatch, class Formatter>
     struct stopwatch_reporter_default_formatter<stopwatch_reporter<Stopwatch, Formatter> > {
-        typedef typename stopwatch_reporter_default_formatter<Stopwatch>::type type;
+        typedef Formatter type;
     };
 
 
@@ -89,7 +89,7 @@ namespace boost { namespace chrono  {
         typedef typename Formatter::string_type string_type;
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
-    
+
         explicit stopwatch_reporter( system::error_code & ec = system::throws )
         : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false) { }
         explicit stopwatch_reporter( ostream_type & os,
@@ -141,10 +141,10 @@ namespace boost { namespace chrono  {
         bool reported() const { return m_reported; }
 
 
-        typedef stopwatch_runner<stopwatch_reporter<Stopwatch> > scoped_run;
-        typedef stopwatch_stopper<stopwatch_reporter<Stopwatch> > scoped_stop;
-        typedef stopwatch_suspender<stopwatch_reporter<Stopwatch> > scoped_suspend;
-        typedef stopwatch_resumer<stopwatch_reporter<Stopwatch> > scoped_resume;
+        typedef stopwatch_runner<stopwatch_reporter<Stopwatch,Formatter> > scoped_run;
+        typedef stopwatch_stopper<stopwatch_reporter<Stopwatch,Formatter> > scoped_stop;
+        typedef stopwatch_suspender<stopwatch_reporter<Stopwatch,Formatter> > scoped_suspend;
+        typedef stopwatch_resumer<stopwatch_reporter<Stopwatch,Formatter> > scoped_resume;
 
     protected:
         int             m_places;

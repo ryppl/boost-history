@@ -48,7 +48,7 @@ namespace boost { namespace chrono  {
 
     template <class Clock, class Formatter>
     struct stopwatch_reporter_default_formatter<stopclock<Clock,Formatter> > {
-        typedef typename stopwatch_reporter_default_formatter<stopwatch<Clock> >::type type;
+        typedef Formatter type;
     };
 
     template <class Clock, class Formatter>
@@ -100,10 +100,11 @@ namespace boost { namespace chrono  {
                     system::error_code & ec = system::throws )
         : base_type(os, places, format, ec) { }
 
+        typedef stopwatch_runner<stopclock> scoped_run;
+        typedef stopwatch_stopper<stopclock> scoped_stop;
+        typedef stopwatch_suspender<stopclock> scoped_suspend;
+        typedef stopwatch_resumer<stopclock> scoped_resume;
 
-        typedef typename base_type::scoped_run scoped_run;
-        typedef typename base_type::scoped_suspend scoped_suspend;
-        typedef typename base_type::scoped_resume scoped_resume;
     };
 
     typedef stopclock< boost::chrono::system_clock > system_stopclock;
