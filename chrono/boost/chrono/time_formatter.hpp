@@ -15,6 +15,7 @@
 #include <boost/current_function.hpp>
 #include <boost/chrono/detail/default_out.hpp>
 #include <boost/chrono/detail/adaptive_string.hpp>
+#include <boost/chrono/suspendible_clock.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
@@ -162,6 +163,11 @@ namespace detail {
         typedef time_formatter type;
     };
 
+    template <>
+    struct stopwatch_reporter_default_formatter<stopwatch<suspendible_clock<process_cpu_clock> > > {
+        typedef stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> >::type  type;
+    };
+    
   } // namespace chrono
 } // namespace boost
 

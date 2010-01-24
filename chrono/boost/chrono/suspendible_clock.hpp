@@ -20,7 +20,7 @@
 
 namespace boost { namespace chrono {
 
-    template < class Clock >
+    template < class Clock=high_resolution_clock >
     class suspendible_clock {
     public:
         typedef typename Clock::duration                           duration;
@@ -140,18 +140,14 @@ namespace boost { namespace chrono {
     template < class Clock >
     thread_specific_ptr<typename suspendible_clock<Clock>::thread_specific_context> suspendible_clock<Clock>::ptr_;
 
-
-
     template <class Clock>
     struct is_suspendible<suspendible_clock<Clock> > : mpl:: true_ {};
-
-
 
     template <class Clock>
     class scoped_suspend<suspendible_clock<Clock> >
         : public suspendible_clock<Clock>::scoped_suspend {
     public:
-        scoped_suspend(system::error_code & ec = system::throws) : Clock::scoped_suspend(ec) {}
+        scoped_suspend(system::error_code & ec = system::throws) : suspendible_clock<Clock>::scoped_suspend(ec) {}
     private:
         scoped_suspend(); // = delete;
         scoped_suspend(const scoped_suspend&); // = delete;
@@ -163,4 +159,4 @@ namespace boost { namespace chrono {
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
-#endif  // BOOST_CHRONO_PROCESS_CPU_CLOCKS_HPP
+#endif  // BOOST_CHRONO_SUSPENDIBLE_CLOCK_HPP

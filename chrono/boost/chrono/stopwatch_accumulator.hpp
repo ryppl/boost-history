@@ -189,6 +189,10 @@ namespace boost
         typedef stopwatch_stopper<stopwatch_accumulator<Clock> > scoped_stop;
         typedef stopwatch_suspender<stopwatch_accumulator<Clock> > scoped_suspend;
         typedef stopwatch_resumer<stopwatch_accumulator<Clock> > scoped_resume;
+        template <class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator>::type> 
+        struct get_reporter {
+            typedef stopwatch_reporter<stopwatch_accumulator,Formatter > type;
+        };
         typedef stopwatch_reporter<stopwatch_accumulator<Clock> > reporter;
     private:
         bool running_;
