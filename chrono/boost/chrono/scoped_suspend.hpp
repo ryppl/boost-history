@@ -15,10 +15,10 @@
 
 namespace boost { namespace chrono {
 
-    
+
     template <class Clock>
     struct is_suspendible : mpl:: false_ {};
-        
+
     template <class Clock>
     class scoped_suspend {
     public:
@@ -28,9 +28,9 @@ namespace boost { namespace chrono {
         scoped_suspend(); // = delete;
         scoped_suspend(const scoped_suspend&); // = delete;
         scoped_suspend& operator=(const scoped_suspend&); // = delete;
-    };        
+    };
 
-    
+
 } // namespace chrono
 } // namespace boost
 

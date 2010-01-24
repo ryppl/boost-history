@@ -34,13 +34,13 @@ namespace boost { namespace chrono  {
 
 
     template <
-        typename CharT=char, 
-        typename Traits=std::char_traits<CharT>, 
+        typename CharT=char,
+        typename Traits=std::char_traits<CharT>,
         class Alloc=std::allocator<CharT>
     >
     class basic_digital_time_formatter {
     public:
-    
+
         typedef std::basic_string<CharT,Traits,Alloc> string_type;
         typedef CharT char_type;
         typedef std::basic_ostream<CharT,Traits> ostream_type;
@@ -118,7 +118,7 @@ namespace boost { namespace chrono  {
             }
         }
     };
-    
+
 namespace detail {
     template <typename CharT>
     struct basic_digital_time_formatter_default_format;
@@ -131,25 +131,25 @@ namespace detail {
     struct basic_digital_time_formatter_default_format<wchar_t> {
         static const wchar_t* apply() {return L"%d day(s) %h:%m:%s.%n\n"; }
     };
-    
-#endif    
+
+#endif
 }
-    
+
     template <typename CharT,typename Traits, class Alloc>
-    const typename basic_digital_time_formatter<CharT,Traits,Alloc>::char_type* 
+    const typename basic_digital_time_formatter<CharT,Traits,Alloc>::char_type*
     basic_digital_time_formatter<CharT,Traits,Alloc>::default_format() {
         return detail::basic_digital_time_formatter_default_format<CharT>::apply();
     }
 
     template <typename CharT,typename Traits, class Alloc>
-    typename basic_digital_time_formatter<CharT,Traits,Alloc>::ostream_type &  
-    basic_digital_time_formatter<CharT,Traits,Alloc>::default_os()  { 
-        return detail::default_out<CharT,Traits>::apply(); 
+    typename basic_digital_time_formatter<CharT,Traits,Alloc>::ostream_type &
+    basic_digital_time_formatter<CharT,Traits,Alloc>::default_os()  {
+        return detail::default_out<CharT,Traits>::apply();
     }
 
     typedef basic_digital_time_formatter<char> digital_time_formatter;
     typedef basic_digital_time_formatter<wchar_t> wdigital_time_formatter;
-    
+
   } // namespace chrono
 } // namespace boost
 

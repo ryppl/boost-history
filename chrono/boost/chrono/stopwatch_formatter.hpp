@@ -33,8 +33,8 @@ namespace boost { namespace chrono  {
 
 
     template <
-        typename CharT=char, 
-        typename Traits=std::char_traits<CharT>, 
+        typename CharT=char,
+        typename Traits=std::char_traits<CharT>,
         class Alloc=std::allocator<CharT>
     >
     class basic_stopwatch_formatter {
@@ -42,11 +42,11 @@ namespace boost { namespace chrono  {
         //~ typedef std::string string_type;
         //~ typedef string_type::value_type char_type;
         //~ typedef std::ostream ostream_type;
-    
+
         typedef std::basic_string<CharT,Traits,Alloc> string_type;
         typedef CharT char_type;
         typedef std::basic_ostream<CharT,Traits> ostream_type;
-        
+
         static ostream_type &  default_os();
         static const char_type* default_format();
         static string_type format(const char_type* s) {
@@ -106,25 +106,25 @@ namespace detail {
     struct basic_stopwatch_formatter_default_format<wchar_t> {
         static const wchar_t* apply() {return L"%ds\n"; }
     };
-    
-#endif    
+
+#endif
 }
-    
+
     template <typename CharT,typename Traits, class Alloc>
-    const typename basic_stopwatch_formatter<CharT,Traits,Alloc>::char_type* 
-    basic_stopwatch_formatter<CharT,Traits,Alloc>::default_format() { 
+    const typename basic_stopwatch_formatter<CharT,Traits,Alloc>::char_type*
+    basic_stopwatch_formatter<CharT,Traits,Alloc>::default_format() {
         return detail::basic_stopwatch_formatter_default_format<CharT>::apply();
     }
-    
+
     template <typename CharT,typename Traits, class Alloc>
-    typename basic_stopwatch_formatter<CharT,Traits,Alloc>::ostream_type &  
-    basic_stopwatch_formatter<CharT,Traits,Alloc>::default_os()  { 
-        return detail::default_out<CharT,Traits>::apply(); 
+    typename basic_stopwatch_formatter<CharT,Traits,Alloc>::ostream_type &
+    basic_stopwatch_formatter<CharT,Traits,Alloc>::default_os()  {
+        return detail::default_out<CharT,Traits>::apply();
     }
 
     typedef basic_stopwatch_formatter<char> stopwatch_formatter;
     typedef basic_stopwatch_formatter<wchar_t> wstopwatch_formatter;
-    
+
   } // namespace chrono
 } // namespace boost
 

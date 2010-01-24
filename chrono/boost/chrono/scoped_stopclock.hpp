@@ -40,7 +40,7 @@ namespace boost { namespace chrono  {
 //--------------------------------------------------------------------------------------//
 
     template <class Clock=process_cpu_clock, class Formatter=typename stopwatch_reporter_default_formatter<chrono::stopwatch<Clock> >::type >
-    class scoped_stopclock 
+    class scoped_stopclock
         : public stopwatch_reporter<chrono::stopwatch<Clock>, Formatter> {
         typedef stopwatch_reporter<chrono::stopwatch<Clock>, Formatter> base_type;
     public:

@@ -36,8 +36,8 @@ namespace boost { namespace chrono  {
 
 
     template <
-        typename CharT=char, 
-        typename Traits=std::char_traits<CharT>, 
+        typename CharT=char,
+        typename Traits=std::char_traits<CharT>,
         class Alloc=std::allocator<CharT>
     >
     class basic_time_formatter {
@@ -45,7 +45,7 @@ namespace boost { namespace chrono  {
         //~ typedef std::string string_type;
         //~ typedef string_type::value_type char_type;
         //~ typedef std::ostream ostream_type;
-    
+
         typedef std::basic_string<CharT,Traits,Alloc> string_type;
         typedef CharT char_type;
         typedef std::basic_ostream<CharT,Traits> ostream_type;
@@ -138,22 +138,22 @@ namespace detail {
     struct basic_time_formatter_default_format<wchar_t> {
         static const wchar_t* apply() {return L"real %rs, cpu %cs (%p%), user %us, system %ss\n"; }
     };
-    
-#endif    
+
+#endif
 }
-    
+
     template <typename CharT,typename Traits, class Alloc>
-    const typename basic_time_formatter<CharT,Traits,Alloc>::char_type* 
+    const typename basic_time_formatter<CharT,Traits,Alloc>::char_type*
     basic_time_formatter<CharT,Traits,Alloc>::default_format() {
         return detail::basic_time_formatter_default_format<CharT>::apply();
     }
 
     template <typename CharT,typename Traits, class Alloc>
-    typename basic_time_formatter<CharT,Traits,Alloc>::ostream_type &  
-    basic_time_formatter<CharT,Traits,Alloc>::default_os()  { 
-        return detail::default_out<CharT,Traits>::apply(); 
+    typename basic_time_formatter<CharT,Traits,Alloc>::ostream_type &
+    basic_time_formatter<CharT,Traits,Alloc>::default_os()  {
+        return detail::default_out<CharT,Traits>::apply();
     }
-  
+
     typedef basic_time_formatter<char> time_formatter;
     typedef basic_time_formatter<wchar_t> wtime_formatter;
 

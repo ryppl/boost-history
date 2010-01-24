@@ -145,7 +145,7 @@ namespace boost
         {
             if (running_)
                 return clock::now( ec ) - start_ + partial_;
-            else 
+            else
                 return partial_;
         }
 
@@ -164,6 +164,10 @@ namespace boost
         typedef stopwatch_stopper<stopwatch<Clock> > scoped_stop;
         typedef stopwatch_suspender<stopwatch<Clock> > scoped_suspend;
         typedef stopwatch_resumer<stopwatch<Clock> > scoped_resume;
+        template <class Formatter=typename stopwatch_reporter_default_formatter<stopwatch<Clock> >::type> 
+        struct get_reporter {
+            typedef stopwatch_reporter<stopwatch<Clock>,Formatter > type;
+        };
         typedef stopwatch_reporter<stopwatch<Clock> > reporter;
 
     private:

@@ -48,13 +48,13 @@ namespace boost
           process_clock::time_point                       user;    // user cpu time
           process_clock::time_point                       system;  // system cpu time
         };
-    
+
         static void now( durations & times,
                          system::error_code & ec = system::throws );
         static void now( time_points & times,
                          system::error_code & ec = system::throws );
     };
-    
+
 //--------------------------------------------------------------------------------------//
 //                                  process_times                                       //
 //--------------------------------------------------------------------------------------//
