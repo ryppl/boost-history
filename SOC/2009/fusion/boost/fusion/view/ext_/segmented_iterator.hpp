@@ -1,81 +1,55 @@
 /*=============================================================================
-   Copyright (c) 2006 Eric Niebler
+    Copyright (c) 2006 Eric Niebler
+    Copyright (c) 2010 Christopher Schmidt
 
-   Use, modification and distribution is subject to the Boost Software
-   License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-   http://www.boost.org/LICENSE_1_0.txt)
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#ifndef FUSION_SEGMENTED_ITERATOR_EAN_05032006_1027
-#define FUSION_SEGMENTED_ITERATOR_EAN_05032006_1027
 
+#ifndef BOOST_FUSION_VIEW_EXT_SEGMENTED_ITERATOR_HPP
+#define BOOST_FUSION_VIEW_EXT_SEGMENTED_ITERATOR_HPP
+
+#include <boost/fusion/sequence/intrinsic/ext_/segments.hpp>
+#include <boost/fusion/sequence/intrinsic/empty.hpp>
+#include <boost/fusion/container/list/cons.hpp>
+#include <boost/fusion/container/generation/make_cons.hpp>
+#include <boost/fusion/iterator/distance.hpp>
+#include <boost/fusion/view/filter_view.hpp>
+#include <boost/fusion/support/tag_of.hpp>
+#include <boost/fusion/support/is_sequence.hpp>
+#include <boost/fusion/support/ext_/is_segmented.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/placeholders.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_reference.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/is_sequence.hpp>
-#include <boost/fusion/view/filter_view.hpp>
-#include <boost/fusion/container/list/cons.hpp> // for nil
-#include <boost/fusion/container/generation/make_cons.hpp>
-#include <boost/fusion/iterator/distance.hpp>
-#include <boost/fusion/sequence/intrinsic/ext_/segments.hpp>
-#include <boost/fusion/support/ext_/is_segmented.hpp>
 
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
+    struct segmented_range_tag;
 
     namespace detail
     {
-        using mpl::_;
-        using mpl::not_;
-
-        ////////////////////////////////////////////////////////////////////////////
-        template<typename Sequence>
-        struct is_empty
-          : result_of::equal_to<
-                typename result_of::begin<Sequence>::type
-              , typename result_of::end<Sequence>::type
-            >
-        {};
-
-        template<typename Sequence>
-        struct is_empty<Sequence &>
-          : is_empty<Sequence>
-        {};
-
-        ////////////////////////////////////////////////////////////////////////////
-        struct not_is_empty_pred
-        {
-            template<typename Sequence>
-            struct apply
-              : not_<is_empty<Sequence> >
-            {};
-        };
-
-        struct segmented_range_tag;
-
-        ////////////////////////////////////////////////////////////////////////////
         template<typename Sequence, typename Iterator, bool IsSegmented>
         struct segmented_range
           : sequence_base<segmented_range<Sequence, Iterator, IsSegmented> >
         {
-            BOOST_MPL_ASSERT_NOT((is_reference<Sequence>));
             typedef mpl::bool_<IsSegmented> is_segmented;
+            // If this is a range of segments, skip over the empty ones
+            typedef typename
+                mpl::if_c<
+                    IsSegmented
+                  , filter_view<Sequence, mpl::not_<result_of::empty<mpl::_1> > >
+                  , Sequence
+                >::type
+            sequence_non_ref_type;
+
             typedef segmented_range_tag fusion_tag;
-            typedef fusion_sequence_tag tag; // this gets picked up by MPL
+            typedef fusion_sequence_tag tag;
             typedef mpl::true_ is_view;
             typedef Iterator iterator_type;
-
-            // If this is a range of segments, skip over the empty ones
-            typedef typename mpl::if_<
-                is_segmented
-              , filter_view<Sequence, not_is_empty_pred>
-              , Sequence
-            >::type sequence_non_ref_type;
 
             typedef typename mpl::if_<
                 traits::is_view<sequence_non_ref_type>
@@ -103,7 +77,7 @@ namespace boost { namespace fusion
     namespace extension
     {
         template<>
-        struct is_segmented_impl<detail::segmented_range_tag>
+        struct is_segmented_impl<segmented_range_tag>
         {
             template<typename Sequence>
             struct apply
@@ -112,7 +86,7 @@ namespace boost { namespace fusion
         };
 
         template<>
-        struct size_impl<detail::segmented_range_tag>
+        struct size_impl<segmented_range_tag>
         {
             template<typename Sequence>
             struct apply
@@ -129,7 +103,7 @@ namespace boost { namespace fusion
         };
 
         template<>
-        struct segments_impl<detail::segmented_range_tag>
+        struct segments_impl<segmented_range_tag>
         {
             template<typename Sequence>
             struct apply
@@ -143,7 +117,7 @@ namespace boost { namespace fusion
         };
 
         template<>
-        struct begin_impl<detail::segmented_range_tag>
+        struct begin_impl<segmented_range_tag>
         {
             template<typename Sequence>
             struct apply
@@ -160,7 +134,7 @@ namespace boost { namespace fusion
         };
 
         template<>
-        struct end_impl<detail::segmented_range_tag>
+        struct end_impl<segmented_range_tag>
         {
             template<typename Sequence>
             struct apply
@@ -199,7 +173,7 @@ namespace boost { namespace fusion
         ///////////////////////////////////////////////////////////////////////
         template<typename Cons>
         struct is_range_next_empty
-          : is_empty<typename range_next<typename Cons::car_type>::type>
+          : result_of::empty<typename range_next<typename Cons::car_type>::type>
         {};
 
         template<>
@@ -213,7 +187,7 @@ namespace boost { namespace fusion
         {
             typedef typename result_of::segments<Sequence>::type segments;
             typedef typename remove_reference<segments>::type sequence;
-            typedef typename result_of::begin<filter_view<sequence, not_is_empty_pred> >::type begin;
+            typedef typename result_of::begin<filter_view<sequence, mpl::not_<result_of::empty<mpl::_1> > > >::type begin;
             typedef segmented_range<sequence, begin, true> type;
 
             static type call(Sequence &seq)
@@ -252,7 +226,10 @@ namespace boost { namespace fusion
           , typename State = nil
           , bool IsSegmented = traits::is_segmented<Sequence>::value
         >
-        struct push_segments
+        struct push_segments;
+
+        template<typename Sequence, typename State>
+        struct push_segments<Sequence, State, true>
         {
             typedef typename as_segmented_range<Sequence>::type range;
             typedef typename result_of::begin<range>::type begin;

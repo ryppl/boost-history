@@ -10,11 +10,10 @@
 #define BOOST_FUSION_ADAPTED_STRUCT_ADAPT_STRUCT_HPP
 
 #include <boost/fusion/support/internal/ref.hpp>
+#include <boost/preprocessor/cat.hpp>
 
 #include <boost/fusion/adapted/detail/struct/extension.hpp>
 #include <boost/fusion/adapted/detail/struct/adapt_base.hpp>
-#include <boost/fusion/adapted/detail/struct/adapt_struct.hpp>
-
 #include <boost/fusion/adapted/detail/struct/at_impl.hpp>
 #include <boost/fusion/adapted/detail/struct/is_view_impl.hpp>
 #include <boost/fusion/adapted/detail/struct/is_sequence_impl.hpp>
@@ -25,5 +24,22 @@
 #include <boost/fusion/adapted/detail/struct/end_impl.hpp>
 #include <boost/fusion/adapted/detail/struct/value_of_impl.hpp>
 #include <boost/fusion/adapted/detail/struct/deref_impl.hpp>
+
+#define BOOST_FUSION_ADAPT_STRUCT_FILLER_0(X, Y)\
+    ((X, Y)) BOOST_FUSION_ADAPT_STRUCT_FILLER_1
+#define BOOST_FUSION_ADAPT_STRUCT_FILLER_1(X, Y)\
+    ((X, Y)) BOOST_FUSION_ADAPT_STRUCT_FILLER_0
+#define BOOST_FUSION_ADAPT_STRUCT_FILLER_0_END
+#define BOOST_FUSION_ADAPT_STRUCT_FILLER_1_END
+
+#define BOOST_FUSION_ADAPT_STRUCT(NAME, SEQ)\
+    BOOST_FUSION_ADAPT_STRUCT_BASE(\
+        NAME,\
+        struct_tag,\
+        BOOST_PP_CAT(BOOST_FUSION_ADAPT_STRUCT_FILLER_0 SEQ,_END),\
+        BOOST_FUSION_ADAPT_STRUCT_C)
+
+#define BOOST_FUSION_ADAPT_STRUCT_C(R, NAME, I, XY)\
+    BOOST_FUSION_ADAPT_STRUCT_C_BASE(NAME, I, XY, 2)
 
 #endif

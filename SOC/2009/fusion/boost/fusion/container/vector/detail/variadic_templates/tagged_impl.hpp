@@ -24,14 +24,14 @@ namespace boost { namespace fusion { namespace detail
     static typename add_lref<T>::type
     at_helper(element<I,T>& element)
     {
-        return element._element;
+        return element.element;
     }
 
     template<int I, typename T>
     static typename add_lref<typename add_const<T>::type>::type
     at_helper(element<I,T>const& element)
     {
-        return element._element;
+        return element.element;
     }
 }}}
 

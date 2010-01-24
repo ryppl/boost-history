@@ -96,9 +96,9 @@ import testing ;
     [ run sequence/zip_view_ignore.cpp : : : : ]
     [ run sequence/repetitive_view.cpp : : : : ]
     [ run sequence/deduce_sequence.cpp : : : : ]
+    [ run sequence/adapt_class.cpp : : : : ]
     [ run sequence/adapt_struct.cpp : : : : ]
     [ run sequence/adapt_assoc_struct.cpp : : : : ]
-    [ run sequence/swap.cpp :  :  :  : ]
 
     [ run functional/fused.cpp : : : : ]
     [ run functional/fused_function_object.cpp : : : : ]
@@ -112,6 +112,11 @@ import testing ;
     [ run functional/invoke.cpp : : : : ]
     [ run functional/invoke_function_object.cpp : : : : ]
     [ run functional/invoke_procedure.cpp : : : : ]
+    [ run sequence/swap.cpp :  :  :  : ]
+
+#    [ run algorithm/ext_/for_each_s.cpp :  :  :  : ]
+#    [ run algorithm/ext_/find_if_s.cpp :  :  :  : ]
+#    [ run sequence/ext_/iterator_range_s.cpp :  :  :  : ]
 
 #   [ compile-fail xxx.cpp :  :  :  :  ]
 

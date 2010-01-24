@@ -1,12 +1,13 @@
 /*=============================================================================
- Copyright (c) 2006 Eric Niebler
+    Copyright (c) 2006 Eric Niebler
+    Copyright (c) 2010 Christopher Schmidt
 
- Use, modification and distribution is subject to the Boost Software
- License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
- http://www.boost.org/LICENSE_1_0.txt)
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#ifndef FUSION_SEGMENTED_ITERATOR_RANGE_EAN_05032006_1027
-#define FUSION_SEGMENTED_ITERATOR_RANGE_EAN_05032006_1027
+
+#ifndef BOOST_FUSION_VIEW_EXT_SEGMENTED_ITERATOR_RANGE_HPP
+#define BOOST_FUSION_VIEW_EXT_SEGMENTED_ITERATOR_RANGE_HPP
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/minus.hpp>
@@ -14,15 +15,13 @@
 #include <boost/mpl/and.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/fusion/iterator/mpl/convert_iterator.hpp>
 #include <boost/fusion/container/list/cons.hpp>
 #include <boost/fusion/view/joint_view.hpp>
 #include <boost/fusion/view/single_view.hpp>
 #include <boost/fusion/view/transform_view.hpp>
 #include <boost/fusion/view/iterator_range.hpp>
-#include <boost/fusion/view/ext_/multiple_view.hpp>
+#include <boost/fusion/view/repetitive_view.hpp>
 #include <boost/fusion/view/ext_/segmented_iterator.hpp>
-#include <boost/fusion/adapted/mpl/mpl_iterator.hpp>
 
 namespace boost { namespace fusion
 {
@@ -73,7 +72,7 @@ namespace boost { namespace fusion
           : sequence_base<segmented_view<Tag, Cons1, Cons2> >
         {
             typedef segmented_view_tag<Tag> fusion_tag;
-            typedef fusion_sequence_tag tag; // this gets picked up by MPL
+            typedef fusion_sequence_tag tag;
             typedef mpl::true_ is_view;
             typedef forward_traversal_tag category;
 
@@ -92,7 +91,7 @@ namespace boost { namespace fusion
           : sequence_base<segmented_view<center_view, Cons1, Cons2> >
         {
             typedef segmented_view_tag<center_view> fusion_tag;
-            typedef fusion_sequence_tag tag; // this gets picked up by MPL
+            typedef fusion_sequence_tag tag;
             typedef mpl::true_ is_view;
             typedef forward_traversal_tag category;
 
@@ -149,8 +148,8 @@ namespace boost { namespace fusion
             template<typename Sig>
             struct result;
 
-            template<typename This, typename First, typename Second>
-            struct result<This(First, Second)>
+            template<typename Self, typename First, typename Second>
+            struct result<Self(First, Second)>
               : result_<
                     typename remove_cv<typename remove_reference<First>::type>::type
                   , typename remove_cv<typename remove_reference<Second>::type>::type
@@ -210,7 +209,7 @@ namespace boost { namespace fusion
                 typedef detail::segments_transform<Cdr> tfx;
                 typedef joint_view<
                     single_view<detail::right_view> const
-                  , multiple_view<size_minus_1, detail::full_view> const
+                  , repetitive_view<single_view<detail::full_view>, size_minus_1::value> const
                 > mask;
                 typedef transform_view<mask const, segmented_range const, tfx> type;
 
@@ -219,7 +218,7 @@ namespace boost { namespace fusion
                     return type(
                         mask(
                             make_single_view(detail::right_view())
-                          , make_multiple_view<size_minus_1>(detail::full_view())
+                          , repeat<size_minus_1::value>(make_single_view(detail::full_view()))
                         )
                       , seq.cons.car
                       , tfx(seq.cons.cdr)
@@ -265,9 +264,8 @@ namespace boost { namespace fusion
 
                 typedef detail::segments_transform<Cdr> tfx;
                 typedef typename result_of::size<segmented_range>::type size;
-                typedef typename mpl::prior<size>::type size_minus_1;
                 typedef joint_view<
-                    multiple_view<size_minus_1, detail::full_view> const
+                    repetitive_view<detail::full_view, size::value-1> const
                   , single_view<detail::left_view> const
                 > mask;
                 typedef transform_view<mask const, segmented_range const, tfx> type;
@@ -276,7 +274,7 @@ namespace boost { namespace fusion
                 {
                     return type(
                         mask(
-                            make_multiple_view<size_minus_1>(detail::full_view())
+                            repeat<size::value-1>(detail::full_view())
                           , make_single_view(detail::left_view())
                         )
                       , segmented_range(fusion::begin(seq.cons.car.sequence), fusion::next(seq.cons.car.where_))
@@ -332,7 +330,7 @@ namespace boost { namespace fusion
                 > tfx;
 
                 typedef joint_view<
-                    multiple_view<size_minus_2, detail::full_view> const
+                    repetitive_view<single_view<detail::full_view>,size_minus_2::value> const
                   , single_view<detail::left_view> const
                 > left_mask;
 
@@ -346,7 +344,7 @@ namespace boost { namespace fusion
                 static type call(Sequence &seq)
                 {
                     left_mask lmask(
-                        make_multiple_view<size_minus_2>(detail::full_view())
+                        repeat<size_minus_2>(detail::full_view())
                       , make_single_view(detail::left_view())
                     );
                     return type(
@@ -368,19 +366,19 @@ namespace boost { namespace fusion
     struct iterator_range<segmented_iterator<First>, segmented_iterator<Last> >
       : sequence_base<iterator_range<segmented_iterator<First>, segmented_iterator<Last> > >
     {
-        typedef typename convert_iterator<segmented_iterator<First> >::type begin_type;
-        typedef typename convert_iterator<segmented_iterator<Last> >::type end_type;
+        typedef segmented_iterator<First> begin_type;
+        typedef segmented_iterator<Last> end_type;
         typedef typename detail::reverse_cons<First>::type begin_cons_type;
         typedef typename detail::reverse_cons<Last>::type end_cons_type;
         typedef iterator_range_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
+        typedef fusion_sequence_tag tag;
         typedef typename traits::category_of<begin_type>::type category;
         typedef typename result_of::distance<begin_type, end_type>::type size;
         typedef mpl::true_ is_view;
 
         iterator_range(segmented_iterator<First> const& first_, segmented_iterator<Last> const& last_)
-          : first(convert_iterator<segmented_iterator<First> >::call(first_))
-          , last(convert_iterator<segmented_iterator<Last> >::call(last_))
+          : first(first_)
+          , last(last_)
           , first_cons(detail::reverse_cons<First>::call(first_.cons()))
           , last_cons(detail::reverse_cons<Last>::call(last_.cons()))
         {}

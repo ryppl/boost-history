@@ -74,15 +74,15 @@ namespace boost { namespace fusion
         template<int I, typename Element>
         struct element
         {
-            Element _element;
+            Element element;
 
             element()
-              : _element()
+              : element()
             {}
 
             template<typename It>
             element(assign_by_deref,It const& it)
-              : _element(fusion::deref(fusion::advance_c<I>(it)))
+              : element(fusion::deref(fusion::advance_c<I>(it)))
             {}
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -96,7 +96,7 @@ namespace boost { namespace fusion
                 OtherArgument&& argument
 #endif
                 )
-              : _element(BOOST_FUSION_FORWARD(OtherArgument,argument))
+              : element(BOOST_FUSION_FORWARD(OtherArgument,argument))
             {}
         };
 
@@ -178,14 +178,14 @@ namespace boost { namespace fusion
         };
 
 #   define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEFAULT_INIT(Z,N,_)\
-        BOOST_PP_CAT(_element,N)()
+        BOOST_PP_CAT(element,N)()
 
 #   define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN_PARAMS(Z,N,_)\
-        BOOST_PP_CAT(_element,N)(\
+        BOOST_PP_CAT(element,N)(\
             fusion::deref(fusion::advance_c<N>(it)))
 
 #   define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN(Z,N,_)\
-        BOOST_PP_CAT(_element,N)=fusion::deref(BOOST_PP_CAT(it,N));\
+        BOOST_PP_CAT(element,N)=fusion::deref(BOOST_PP_CAT(it,N));\
         \
         typedef typename\
             result_of::next<BOOST_PP_CAT(It,N)>::type\
@@ -207,7 +207,7 @@ namespace boost { namespace fusion
 #   endif
 
 #   define BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN(Z,N,_)\
-        BOOST_PP_CAT(_element,N)(BOOST_PP_CAT(_,N))
+        BOOST_PP_CAT(element,N)(BOOST_PP_CAT(_,N))
 
 #   ifdef BOOST_FUSION_PREFER_MPL
 #       define BOOST_FUSION_META_VALUE_AT(N)
@@ -222,7 +222,7 @@ namespace boost { namespace fusion
         typename add_lref<BOOST_PP_CAT(H,N)>::type\
         at_impl(mpl::int_<I+N>)\
         {\
-            return BOOST_PP_CAT(_element,N) ;\
+            return BOOST_PP_CAT(element,N) ;\
         }\
         \
         typename add_lref<\
@@ -230,10 +230,10 @@ namespace boost { namespace fusion
         >::type\
         at_impl(mpl::int_<I+N>)const\
         {\
-            return BOOST_PP_CAT(_element,N) ;\
+            return BOOST_PP_CAT(element,N) ;\
         }\
         \
-        BOOST_PP_CAT(H,N) BOOST_PP_CAT(_element,N);
+        BOOST_PP_CAT(H,N) BOOST_PP_CAT(element,N);
 
 #   define BOOST_FUSION_UNROLLED_VECTOR_IMPL(Z, N, MAX)\
         template<int I, BOOST_PP_ENUM_PARAMS(N, typename H)>\

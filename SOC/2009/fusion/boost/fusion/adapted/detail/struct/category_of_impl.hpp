@@ -35,9 +35,7 @@ namespace boost { namespace fusion
             template<typename Seq>
             struct apply
             {
-                struct type
-                  : random_access_traversal_tag, associative_tag
-                {};
+                typedef assoc_struct_category type;
             };
         };
     }
