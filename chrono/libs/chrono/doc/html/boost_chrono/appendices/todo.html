@@ -26,40 +26,23 @@
 <a name="boost_chrono.appendices.todo"></a><a href="todo.html" title=" Appendix H: Future plans"> Appendix H: Future plans</a>
 </h3></div></div></div>
 <a name="boost_chrono.appendices.todo.tasks_to_do_before_review"></a><h4>
-<a name="id4920251"></a>
+<a name="id4925742"></a>
         <a href="todo.html#boost_chrono.appendices.todo.tasks_to_do_before_review">Tasks
         to do before review</a>
       </h4>
 <div class="itemizedlist"><ul type="disc">
 <li>
+          Complete documentation
+        </li>
+<li>
           Fully implement error handling, with test cases.
         </li>
 <li>
-          Consider issues raised by Michael Marcin:
+          Fix open isues.
         </li>
 </ul></div>
-<pre class="programlisting"><span class="identifier">In</span> <span class="identifier">the</span> <span class="identifier">past</span> <span class="identifier">I</span><span class="char">'ve seen QueryPerformanceCounter give incorrect results,
-especially with SpeedStep processors on laptops. This was many years ago and
-might have been fixed by service packs and drivers.
-
-Typically you check the results of QPC against GetTickCount to see if the
-results are reasonable.
-http://support.microsoft.com/kb/274323
-
-I'</span><span class="identifier">ve</span> <span class="identifier">also</span> <span class="identifier">heard</span> <span class="identifier">of</span> <span class="identifier">problems</span> <span class="identifier">with</span> <span class="identifier">QueryPerformanceCounter</span> <span class="identifier">in</span> <span class="identifier">multi</span><span class="special">-</span><span class="identifier">processor</span>
-<span class="identifier">systems</span><span class="special">.</span>
-
-<span class="identifier">I</span> <span class="identifier">know</span> <span class="identifier">some</span> <span class="identifier">people</span> <span class="identifier">SetThreadAffinityMask</span> <span class="identifier">to</span> <span class="number">1</span> <span class="keyword">for</span> <span class="identifier">the</span> <span class="identifier">current</span> <span class="identifier">thread</span> <span class="identifier">call</span>
-<span class="identifier">their</span> <span class="identifier">QueryPerformance</span><span class="special">*</span> <span class="identifier">functions</span> <span class="identifier">then</span> <span class="identifier">restore</span> <span class="identifier">SetThreadAffinityMask</span><span class="special">.</span> <span class="identifier">This</span>
-<span class="identifier">seems</span> <span class="identifier">horrible</span> <span class="identifier">to</span> <span class="identifier">me</span> <span class="identifier">because</span> <span class="identifier">it</span> <span class="identifier">forces</span> <span class="identifier">your</span> <span class="identifier">program</span> <span class="identifier">to</span> <span class="identifier">jump</span> <span class="identifier">to</span> <span class="identifier">another</span>
-<span class="identifier">physical</span> <span class="identifier">processor</span> <span class="keyword">if</span> <span class="identifier">it</span> <span class="identifier">isn</span><span class="error">'</span><span class="identifier">t</span> <span class="identifier">already</span> <span class="identifier">on</span> <span class="identifier">cpu0</span> <span class="identifier">but</span> <span class="identifier">they</span> <span class="identifier">claim</span> <span class="identifier">it</span> <span class="identifier">worked</span> <span class="identifier">well</span>
-<span class="identifier">in</span> <span class="identifier">practice</span> <span class="identifier">because</span> <span class="identifier">they</span> <span class="identifier">called</span> <span class="identifier">the</span> <span class="identifier">timing</span> <span class="identifier">functions</span> <span class="identifier">infrequently</span><span class="special">.</span>
-
-<span class="identifier">In</span> <span class="identifier">the</span> <span class="identifier">past</span> <span class="identifier">I</span> <span class="identifier">have</span> <span class="identifier">chosen</span> <span class="identifier">to</span> <span class="identifier">use</span> <span class="identifier">timeGetTime</span> <span class="identifier">with</span> <span class="identifier">timeBeginPeriod</span><span class="special">(</span><span class="number">1</span><span class="special">)</span> <span class="keyword">for</span>
-<span class="identifier">high</span> <span class="identifier">resolution</span> <span class="identifier">timers</span> <span class="identifier">to</span> <span class="identifier">avoid</span> <span class="identifier">these</span> <span class="identifier">issues</span><span class="special">.</span>
-</pre>
 <a name="boost_chrono.appendices.todo.for_later_releases"></a><h4>
-<a name="id4920855"></a>
+<a name="id4925781"></a>
         <a href="todo.html#boost_chrono.appendices.todo.for_later_releases">For later
         releases</a>
       </h4>

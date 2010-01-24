@@ -59,6 +59,51 @@
 <tr>
 <td>
               <p>
+                0
+              </p>
+              </td>
+<td>
+              <p>
+                Issues raised by Michael Marcin: In the past I've seen QueryPerformanceCounter
+                give incorrect results, especially with SpeedStep processors on laptops.
+                This was many years ago and might have been fixed by service packs
+                and drivers.
+              </p>
+              <p>
+                Typically you check the results of QPC against GetTickCount to see
+                if the results are reasonable. http://support.microsoft.com/kb/274323
+              </p>
+              <p>
+                I've also heard of problems with QueryPerformanceCounter in multi-processor
+                systems.
+              </p>
+              <p>
+                I know some people SetThreadAffinityMask to 1 for the current thread
+                call their QueryPerformance* functions then restore SetThreadAffinityMask.
+                This seems horrible to me because it forces your program to jump
+                to another physical processor if it isn't already on cpu0 but they
+                claim it worked well in practice because they called the timing functions
+                infrequently.
+              </p>
+              <p>
+                In the past I have chosen to use timeGetTime with timeBeginPeriod(1)
+                for high resolution timers to avoid these issues.
+              </p>
+              </td>
+<td>
+              <p>
+                XXXX
+              </p>
+              </td>
+<td>
+              <p>
+                Open
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
                 1
               </p>
               </td>
@@ -492,12 +537,12 @@
 <tr>
 <td>
               <p>
-                #
+                20
               </p>
               </td>
 <td>
               <p>
-                XXXX
+                Use of Specific formatters doesn't works
               </p>
               </td>
 <td>
@@ -514,7 +559,13 @@
 <tr>
 <td>
               <p>
-                #
+                21
+              </p>
+              </td>
+<td>
+              <p>
+                boost/chrono/scoped_suspend.hpp(31) : warning C4520: 'boost::chrono::scoped_suspend&lt;Clock&gt;'
+                : multiple default constructors specified
               </p>
               </td>
 <td>
@@ -524,12 +575,7 @@
               </td>
 <td>
               <p>
-                XXXX
-              </p>
-              </td>
-<td>
-              <p>
-                Close
+                Open
               </p>
               </td>
 </tr>

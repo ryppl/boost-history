@@ -78,6 +78,18 @@ typedef stopwatch_reporter<
         , my_stopwatch_accumulator_formatter
     > my_stopwatch_accumulator_reporter;
 
+typedef stopwatch_accumulator<process_real_cpu_clock,
+            accumulator_set<process_real_cpu_clock::rep,
+                features<
+                        tag::count,
+                        tag::sum,
+                        tag::mean,
+                        tag::variance(lazy)
+                >
+            >
+        >::get_reporter< my_stopwatch_accumulator_formatter>::type
+    my_stopwatch_accumulator_reporter2;
+    
 int f1(long j)
 {
   //static my_stopwatch_accumulator_reporter acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);

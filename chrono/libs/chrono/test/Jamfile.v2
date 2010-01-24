@@ -88,10 +88,13 @@ project
         [ run run_timer_test.cpp :  :  : <library>/boost/system//boost_system  : run_timer_test_dll ]
         ;
 
-    #test-suite "other_clocks"
+    # test-suite "other_clocks"
     #    :
     #    [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread  <link>static ]
     #    [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread  <library>/boost/system//boost_system  : test_suspendible_clock_dll  ]
+    #    [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+    #    [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <library>/boost/system//boost_system  : suspendible_stopclock_example_dll ]
+    #    [ run test_thread_clock.cpp :  :  : <link>static ]
     #    ;
 
     test-suite "stopwatch"

@@ -436,9 +436,9 @@ For example
 
 Will produce the following output
 
-0.006s
-0.011s
-0.017s
+    0.006s
+    0.011s
+    0.017s
 
 The preceding stopwatch manage only with a measure. It is also interesting to have an statisitical view of these times, for example the sum, min, max and mean. `stopwatch_accumulator<>` associates an accumulator with a stopwatch, so we are able to retrieve any statistical feature Boost.Accumulator provides.
 
@@ -463,7 +463,7 @@ For example
 
 Will produce the following output
 
-    3 times, sum 0.034s, min 0.006s, max 0.017s, mean 0.011s
+    3 times, sum=0.034s, min=0.006s, max=0.017s, mean=0.011s
 
 It is also helpful if such timing information is broken down into real (wall clock) time, CPU time spent by the user, and CPU time spent by the operating system servicing user requests.
 
@@ -610,7 +610,7 @@ Windows with
 
 * MSVC 10.0
 * MSVC 9.0 Express
-* MSVC 5.0
+* MSVC 8.0
 
 [/* Intel 11.0]
 
@@ -656,12 +656,12 @@ If all you want to do is to time a program's execution:
 
 Here is a complete program (stopclock_example.cpp):
 
-    #include <boost/chrono/process_times.hpp>
+    #include <boost/chrono/stopclock.hpp>
     #include <cmath>
 
     int main()
     {
-      boost::chrono::stopclockstopclock<> t;
+      boost::chrono::stopclock<> t;
 
       for ( long i = 0; i < 10000000; ++i )
         std::sqrt( 123.456L ); // burn some time
@@ -681,27 +681,57 @@ In other words, the program took 0.832 real-time (i.e. wall clock) seconds to ex
 
 [section Tutorial]
 
-[section thread clock]
-[endsect]
-
 [section How to define a thread clock]
+
+On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we can get the time associated to a specific thread.
 
     class thread_clock {
     public:
-        typedef boost::intmax_t                    rep;
-        typedef boost::chrono::nanoseconds              period;
-        typedef boost::chrono::duration<rep, period>     duration;
-        typedef boost::chrono::time_point<Clock>         time_point;
-        static const bool is_monotonic =               true;
+        typedef nanoseconds                          duration;
+        typedef duration::rep                        rep;
+        typedef duration::period                     period;
+        typedef chrono::time_point<process_real_cpu_clock>    time_point;
+        static const bool is_monotonic =             true;
 
-        static time_point now() {
-        // get the current thread
-        // get the clock_id associated to the current thread
-        // get the clock_t associated to the thread clock
-        // transform to nanoseconds
-      }
+        static time_point now( ) {
+            // get the current thread
+            pthread_t pth=pthread_self(void);
+            // get the clock_id associated to the current thread
+            clockid_t clock_id;
+            pthread_getcpuclockid(pth, clock_id);
+            // get the timespec associated to the thread clock
+            struct timespec ts;
+            if ( ::clock_gettime( clock_id, &ts ) )
+            {
+                boost::throw_exception(
+                system::system_error( errno, system::system_category, "chrono::thread_clock" ));
+            }
+
+            // transform to nanoseconds
+            return time_point(duration(
+                static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
+                 
+        }
+        static time_point now( system::error_code & ec ) {
+            // get the current thread
+            pthread_t pth=pthread_self(void);
+            // get the clock_id associated to the current thread
+            clockid_t clock_id;
+            pthread_getcpuclockid(pth, clock_id);
+            // get the timespec associated to the thread clock
+            struct timespec ts;
+            if ( ::clock_gettime( clock_id, &ts ) )
+            {
+              ec.assign( errno, system::system_category );
+              return time_point();
+            }
+            ec.clear();
+            // transform to nanoseconds
+            return time_point(duration(
+                static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
+                 
+        }
     };
-
 [endsect]
 
 [section How can I prefix each report with `BOOST_CURRENT_FUNCTION` function signature?]
@@ -722,7 +752,7 @@ Some of you will say that this is too long to type just to get the a report. You
         static boost::chrono::stopclock_accumulator<> BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__)( \
             std::string(BOOST_CURRENT_FUNCTION) + ":  " + boost::chrono::stopwatch_accumulator_formatter::default_format() \
         ); \
-        boost::chrono::stopclock_accumulator<>::scoped_stop BOOST_JOIN(_boost_chrono_stopclock_accumulator_run_, __LINE__)(BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__))
+        boost::chrono::stopclock_accumulator<>::scoped_run BOOST_JOIN(_boost_chrono_stopclock_accumulator_run_, __LINE__)(BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__))
 
 
 With this macro you will just ave
@@ -738,7 +768,7 @@ With this macro you will just ave
 
 [section How can I prefix each report with `__FILE__[__LINE__]` pattern?]
 
-When you want to prefixx with the `__FILE__[__LINE__]` pattern you can follow the same technique as described below:
+When you want to prefix with the `__FILE__[__LINE__]` pattern you can follow the same technique as described below:
 
     #define REPORT_LINE_ACCUMULATED_LIFETIME \
         static stopclock_accumulator<> BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__)( \
@@ -760,6 +790,7 @@ Now you can mix fcntion and line reports as follows
     }
 
 [endsect]
+
 [section Can I use an stopclock accumulator which is not static?]
 
 The typical example of stopclock_accumulator is to get statistical measures of the time a function takes for each one of its calls. You an also use stopclock_accumulator to get statistical measures of the time a given loop takes for each one of its laps.
@@ -795,14 +826,18 @@ The typical example of stopclock_accumulator is to get statistical measures of t
 
 [endsect]
 
-[section How get specific statistics from stopwatches accumulator]
+[section How to get specific statistics from stopwatches accumulator?]
 
-    #include <boost/chrono/stopwatches.hpp>
-    #include <cmath>
+There are two use cases that coul need to change the statistics associated to a stopwatches accumulator:
 
-    using namespace boost::chrono;
+# We want to reduce the default reporting and we preffer to adapt the statistics to the reporting
+# We want to report other statistics of the samples
+
+For the first case we just need to change the accumulator_set and the format we want to get. Imagin we want to get only the count, sam and mean statistics, no need to calculate the min neither the max.
+
     using namespace boost::accumulators;
-    typedef stopwatch_accumulator<process_real_cpu_clock, kind::running,
+    
+    typedef stopwatch_accumulator<process_real_cpu_clock, 
                 accumulator_set<process_real_cpu_clock::rep,
                     features<
                             tag::count,
@@ -814,7 +849,7 @@ The typical example of stopclock_accumulator is to get statistical measures of t
 
     int f1(long j)
     {
-      static my_stopwatch_accumulator_reporter acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
+      static my_stopwatch_accumulator_reporter acc("%c times, sum=%ss, mean=%as\n");
       my_stopwatch_accumulator_reporter::scoped_run _(acc);
 
       for ( long i = 0; i < j; ++i )
@@ -822,18 +857,104 @@ The typical example of stopclock_accumulator is to get statistical measures of t
 
       return 0;
     }
-    int main()
-    {
 
-      f1(100000);
-      f1(200000);
-      f1(300000);
-      return 0;
-    }
+But wat would hapend if we haven't forced the format:
+
+      static my_stopwatch_accumulator_reporter acc;
+      my_stopwatch_accumulator_reporter::scoped_run _(acc);
+
+Unfortunately there is no error at compile time. Fortunately, the run-time execution is not undefined and will return 0 for the missing statistics.
+
 
 [endsect]
 
-[section How can I make a specific formatter when the defaul do not satisfy my expectations]
+[section How can I make a specific formatter when the default do not satisfy my expectations]
+
+Imagine then that we want to report the tag::variance(lazy). We will need to include the specific accumulator file
+
+    ...
+    #include <boost/accumulators/statistics/variance.hpp>
+    ...
+    typedef stopwatch_accumulator<process_real_cpu_clock, 
+                accumulator_set<process_real_cpu_clock::rep,
+                    features<
+                            tag::count,
+                            tag::sum,
+                            tag::mean,
+                            tag::variance(lazy)                            
+                    >
+                >
+    >::reporter my_stopwatch_accumulator_reporter;
+
+But what happens if we add new statistics to the accumulator_set that are not taken in account by the default formatter? These statistics will simply be ignored. So we will need to define own own accumulator formatter. 
+
+    typedef stopwatch_accumulator<process_real_cpu_clock, 
+                accumulator_set<process_real_cpu_clock::rep,
+                    features<
+                            tag::count,
+                            tag::sum,
+                            tag::mean,
+                            tag::variance(lazy)                            
+                    >
+                >,
+                my_stopwatch_accumulator_formatter
+    >::reporter my_stopwatch_accumulator_reporter;
+
+Next follow the definition of a formatter taking care of count, sum, mean and variance
+
+    class my_stopwatch_accumulator_formatter {
+    public:   
+        typedef std::string string_type;
+        typedef char char_type;
+        typedef std::ostream ostream_type;
+    
+        static ostream_type &  default_os() {return std::cout;}
+        static const char_type* default_format() {return "%c times, sum=%ss, mean=%as, variance=%vs\n";}
+        static int default_places() { return 3; }
+
+        template <class Stopwatch >
+        static void show_time( Stopwatch & stopwatch_, const char_type* format, 
+                                int places, ostream_type & os, system::error_code & ec)
+        {
+            typedef typename Stopwatch::duration duration_t;
+            typename Stopwatch::accumulator accumulator& acc = stopwatch_.accumulated();
+
+            boost::io::ios_flags_saver ifs( os );
+            os.setf( std::ios_base::fixed, std::ios_base::floatfield );
+            boost::io::ios_precision_saver ips( os );
+            os.precision( places );
+
+            for ( ; *format; ++format ) {
+                if ( *format != '%' || !*(format+1) || !std::strchr("acsv", *(format+1)) ) {
+                    os << *format;
+                } else {
+                    ++format;
+                    switch ( *format ) {
+                    case 's':
+                        os << boost::chrono::duration<double>(duration_t(accumulators::sum(acc))).count();
+                        break;
+                    case 'a':
+                        os << (accumulators::count(acc)>0)
+                                ? boost::chrono::duration<double>(duration_t(duration_t::rep(accumulators::mean(acc)))).count()
+                                : 0;
+                        break;
+                    case 'c':
+                        os << accumulators::count(acc);
+                        break;
+                    case 'v':
+                        os << (accumulators::count(acc)>0)
+                                ? boost::chrono::duration<double>(duration_t(duration_t::rep(accumulators::variance(acc)))).count()
+                                : 0;
+                        break;
+                    default:
+                        assert(0 && "my_stopwatch_accumulator_formatter internal logic error");
+                    }
+                }
+            }
+        }
+    };
+
+
 
 [endsect]
 
@@ -1182,6 +1303,9 @@ This file is a redirection to `boost/chrono/chrono.hpp` including in addition re
         template <class Rep1, class Period1, class Rep2, class Period2>
         typename common_type<Rep1, Rep2>::type
         operator/(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+
+        template <class Rep1, class Rep2, class Period>
+        double operator/(const Rep1& s, const duration<Rep2, Period>& d);
 
         // duration comparisons
         template <class Rep1, class Period1, class Rep2, class Period2>
@@ -1669,8 +1793,20 @@ If these constraints are not met, this constructor shall not participate in over
 
 [endsect]
 
+[section:duration_operator_d_3 Non-Member function `operator/(Rep1,duration)`]
+
+    template <class Rep1, class Rep2, class Period>
+    double operator/(const Rep1& s, const duration<Rep2, Period>& d);
+
+[*Remarks:] Let `CR` represent the `common_type` of `Rep1` and `Rep2`. This function will not participate in overload resolution unless both `Rep1` and `Rep2` are implicitly convertible to `CR`, and `Rep1` is  not an instantiation of `duration`.
+
+[*Returns:] `CR(s)/duration<CR, Period>(d)`.
+
+[endsect]
+
 
 [section:duration_operator_mod_1 Non-Member function `operator%(duration,Rep2)`]
+
   template <class Rep1, class Period, class Rep2>
   duration<typename common_type<Rep1, Rep2>::type, Period>
   operator%(const duration<Rep1, Period>& d, const Rep2& s);
@@ -3281,15 +3417,18 @@ The time is given using the suffix "s" following the System International d'Unit
 
 The default places is given by default_places and is 3.
 
-The default format is "%c times, sum=%ss, min=%ms, max=%Ms, mean=%as\\n", where
+The default format is "%c times, sum=%ss, min=%ms, max=%Ms, mean=%as, frequency=%fherzs, lifetime=%ls, percentage=%p\%\\n", where
 
 * `%c` : the counter of the number of times the pair srat/stop has been called.
 * `%s` : the sum of the samples of elapsed time between the call to start/stop.
 * `%m` : the min of the samples of elapsed time between the call to start/stop.
 * `%M` : the max of the samples of elapsed time between the call to start/stop.
 * `%a` : the mean of the samples of elapsed time between the call to start/stop.
+* `%f` : the frequency of calls to start.
+* `%l` : the lifetime of the stopwatch_accumulator.
+* `%p` : the percentage of time spent by this stopwatch respect to its lifetime.
 
-The time is given using the suffix "s" following the System International d'Unites Std.
+The time is given using the suffix "s", the frequency is given using the suffix "herzs", both following the System International d'Unites Std.
 
 [endsect]
 
@@ -4642,20 +4781,21 @@ Here is the output for this program for several sets of command line arguments:
 [section:history Appendix A: History]
 [/==================================]
 
-[section [*Version 0.3.2, January 24, 2010] ['New SuspendibleClock + Bug fixes]]
+[section [*Version 0.3.2, January 24, 2010] ['New SuspendibleClock, New frequency, lifetime and percentage stopwatch_accumulator  features]]
 [*Features:]
 
 * Suspendible Clock concept + template class suspendible_clock<>
-* Added scope_suspend which will do nothing if the Clock is not a Suspendible Clock concept, and suspend/resume otherwise.
+* Added scope_suspend which do suspend/resume if the Clock is a model of Suspendible Clock concept, and nothing otherwise.
 * Use of scope_suspend while reporting on stopwatch reporter
+* Added overloading for operator/(Integer/Duration)
+* Added frequency, lifetime and percentage to the default stopwatch_accumulator_formatter
 
 [*Bug Fixes]
-
-* add static assertions to stopclock and stopclock_accumulator
+* Specific formatters doesn't works
 
 [endsect]
 
-[section [*Version 0.3.1, January 20, 2010] ['New Allow wide characters + Bug fixes]]
+[section [*Version 0.3.1, January 20, 2010] ['New support for wide characters]]
 [*Features:]
 
 * Support for wide characters on formatters and stopclocks
@@ -4896,6 +5036,10 @@ To avoid giving the impression of precision where none exists. See Caveat emptor
 
 Ask your operating system supplier. The results have been inspected with a debugger, and both for Windows and Linux, that's what the OS appears to be reporting at times.
 
+[heading  Can I obtain statistics of the time elapsed between calls to a function?]
+
+The library do not provides this feature.
+
 [endsect]
 
 [/====================================================]
@@ -4997,6 +5141,26 @@ You can also run a specific suite of test by doing
 
 [table
     [[Ticket]             [Description]          [Resolution] [State]]
+    [[0]    [ Issues raised by Michael Marcin:  In the past I've seen QueryPerformanceCounter give incorrect results,
+    especially with SpeedStep processors on laptops. This was many years ago and
+    might have been fixed by service packs and drivers.
+
+    Typically you check the results of QPC against GetTickCount to see if the
+    results are reasonable.
+    http://support.microsoft.com/kb/274323
+
+    I've also heard of problems with QueryPerformanceCounter in multi-processor
+    systems.
+
+    I know some people SetThreadAffinityMask to 1 for the current thread call
+    their QueryPerformance* functions then restore SetThreadAffinityMask. This
+    seems horrible to me because it forces your program to jump to another
+    physical processor if it isn't already on cpu0 but they claim it worked well
+    in practice because they called the timing functions infrequently.
+
+    In the past I have chosen to use timeGetTime with timeBeginPeriod(1) for
+    high resolution timers to avoid these issues.
+    ] [XXXX] [Open]]
     [[1]    [operator/ was ambiguous] [Disambiguate duration operator/]                  [Close]]
     [[2]    [CLOCK_MONOTONIC is not defined with cygwin/gcc 3.4] [Disable code when BOOST_CHRONO_HAS_CLOCK_MONOTONIC is not defined.]                  [Close]]
     [[3]    [result of metafunctions ratio_multiply and ratio_divide were not normalized ratios] [Use of the nested ratio typedef type on ratio arithmetic operations.]                  [Close]]
@@ -5018,10 +5182,14 @@ You can also run a specific suite of test by doing
 ..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'
 ..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'] [???]                  [Open]]
     [[19]    [suspendible_clock_test don't works in my windows environement (issue with tss)] [XXXX]                  [Open]]
-    [[#]    [XXXX] [XXXX]                  [Close]]
-    [[#]    [XXXX] [XXXX]                  [Close]]
+    [[20]    [Use of Specific formatters doesn't works] [XXXX]                  [Close]]
+
+    [[21]    [boost/chrono/scoped_suspend.hpp(31) : warning C4520: 'boost::chrono::scoped_suspend<Clock>' : multiple default constructors specified
+] [XXXX]                  [Open]]
     [[#]    [XXXX] [XXXX]                  [Close]]
 ]
+
+
 
 
 [endsect]
@@ -5032,28 +5200,9 @@ You can also run a specific suite of test by doing
 
 [heading Tasks to do before review]
 
+* Complete documentation
 * Fully implement error handling, with test cases.
-* Consider issues raised by Michael Marcin:
-
-    In the past I've seen QueryPerformanceCounter give incorrect results,
-    especially with SpeedStep processors on laptops. This was many years ago and
-    might have been fixed by service packs and drivers.
-
-    Typically you check the results of QPC against GetTickCount to see if the
-    results are reasonable.
-    http://support.microsoft.com/kb/274323
-
-    I've also heard of problems with QueryPerformanceCounter in multi-processor
-    systems.
-
-    I know some people SetThreadAffinityMask to 1 for the current thread call
-    their QueryPerformance* functions then restore SetThreadAffinityMask. This
-    seems horrible to me because it forces your program to jump to another
-    physical processor if it isn't already on cpu0 but they claim it worked well
-    in practice because they called the timing functions infrequently.
-
-    In the past I have chosen to use timeGetTime with timeBeginPeriod(1) for
-    high resolution timers to avoid these issues.
+* Fix open isues.
 
 [heading For later releases]
 
