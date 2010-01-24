@@ -180,6 +180,8 @@ int main()
 
     {
     double r = double(milliseconds(3) / milliseconds(3));
+    std::cout << r << '\n';
+        
     duration<double, boost::milli> d = milliseconds(3) * 2.5;
     duration<double, boost::milli> d2 = 2.5 * milliseconds(3) ;
     duration<double, boost::milli> d3 = milliseconds(3) / 2.5;

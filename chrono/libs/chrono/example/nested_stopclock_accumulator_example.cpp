@@ -23,7 +23,7 @@ using namespace boost::chrono;
     static stopclock_accumulator<> BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__)( \
         std::string(BOOST_CURRENT_FUNCTION) + ":  " + stopwatch_accumulator_formatter::default_format() \
     ); \
-    stopclock_accumulator<>::scoped_stop BOOST_JOIN(_boost_chrono_stopclock_accumulator_run_, __LINE__)(BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__))
+    stopclock_accumulator<>::scoped_run BOOST_JOIN(_boost_chrono_stopclock_accumulator_run_, __LINE__)(BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__))
 
 #define BOOST_CHRONO_STOPCLOCK_ACCUMULATOR_FCT_REVERSE \
     static stopclock_accumulator<> BOOST_JOIN(_boost_chrono_stopclock_accumulator_, __LINE__)( \

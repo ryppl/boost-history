@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org/libs/chrono for documentation.
 
-#include <boost/chrono/stopclock_accumulator.hpp>
-//#include <boost/chrono/stopwatches.hpp>
+//#include <boost/chrono/stopclock_accumulator.hpp>
+#include <boost/chrono/stopwatches.hpp>
 
 #include <cmath>
 #include <boost/thread.hpp>
@@ -16,12 +16,15 @@
 using namespace boost::chrono;
 int f1(long j)
 {
-  static stopclock_accumulator<> acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
-  stopclock_accumulator<>::scoped_run _(acc);
-
-  for ( long i = 0; i < j; ++i )
+  stopclock_accumulator<> acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
+  for ( long i = 0; i < j; ++i ) {
+    stopclock_accumulator<>::scoped_run _(acc);
+      //~ std::cout << "i="<<i <<" ";
+      //~ std::cout << " j="<<j <<" ";
+    //~ stopclock<> s;
     std::sqrt( 123.456L );  // burn some time
-  boost::this_thread::sleep(boost::posix_time::milliseconds(20));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(20));
+  }
   
 
   return 0;
@@ -31,8 +34,8 @@ int main()
   static stopclock_accumulator<> acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
   stopclock_accumulator<>::scoped_run _(acc);
 
-  f1(100000);
-  f1(200000);
-  f1(300000);
+  f1(100);
+  f1(200);
+  f1(300);
   return 0;
 }

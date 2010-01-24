@@ -14,12 +14,13 @@
 using namespace boost::chrono;
 double res;
 void f1(long j)
-{   
+{
     stopwatch<>::reporter _(BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT);
     for (long i =0; i< j; i+=1)
         res+=std::sqrt( res+123.456L+i );  // burn some time
+    if (j!=0) f1(j-1);
     stopwatch<>::reporter::scoped_suspend s(_);
-    boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
 }
 int main()
@@ -29,7 +30,7 @@ int main()
     res=0;
     for (long i =0; i< 3; ++i)
         f1(i*100);
-        
+
     std::cout<< res << std::endl;
   return 0;
 }
