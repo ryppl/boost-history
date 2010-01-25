@@ -36,11 +36,18 @@ namespace boost { namespace chrono {
             duration suspended_duration_;
             std::size_t suspend_level_;
 
+            thread_specific_context() 
+                : suspended_(false)
+                , suspended_time_()
+                , suspended_duration_(duration::zero())
+                , suspend_level_(0)
+            {}
             duration suspended(system::error_code & ec = system::throws) {
-                if (!suspended_) return suspended_duration_;
-                else {
+                if (!suspended_) {
+                    return suspended_duration_;                   
+                } else {
                     time_point tmp;
-                    tmp+=duration(Clock::now(ec).time_since_epoch().count());
+                    tmp+=duration(Clock::now(ec).time_since_epoch());
                     if (ec) return duration::zero();
                     return suspended_duration_ + tmp - suspended_time_;
                 }
@@ -49,7 +56,7 @@ namespace boost { namespace chrono {
             void suspend( system::error_code & ec = system::throws ) {
                 if (!suspended_) {
                     time_point tmp;
-                    tmp+=duration(Clock::now(ec).time_since_epoch().count());
+                    tmp+=duration(Clock::now(ec).time_since_epoch());
                     if (ec) return;
                     ++suspend_level_;
                     suspended_time_ = tmp;
@@ -61,7 +68,7 @@ namespace boost { namespace chrono {
             void resume( system::error_code & ec = system::throws ) {
                 if (suspended_&&(--suspend_level_==0)) {
                     time_point tmp;
-                    tmp+=duration(Clock::now(ec).time_since_epoch().count());
+                    tmp+=duration(Clock::now(ec).time_since_epoch());
                     if (ec) return;
                     suspended_duration_ += tmp - suspended_time_;
                     suspended_=false;
@@ -95,9 +102,18 @@ namespace boost { namespace chrono {
 
         static thread_specific_ptr<thread_specific_context> ptr_;
     public:
-        static time_point now( system::error_code & ec = system::throws ) {
+        static time_point now( ) {
             time_point res;
-            res+= duration(Clock::now(ec).time_since_epoch().count())-suspended(ec);
+            res+= duration(Clock::now().time_since_epoch())-suspended();
+            return res;
+        }
+
+        static time_point now( system::error_code & ec ) {
+            time_point res;
+            typename Clock::time_point t=Clock::now(ec);
+            if (ec) return time_point();
+            res+= duration(t.time_since_epoch())-suspended(ec);
+            if (ec) return time_point();
             return res;
         }
 
@@ -122,11 +138,14 @@ namespace boost { namespace chrono {
             scoped_suspend(system::error_code & ec = system::throws)
                 : ptr_(instance(ec))
             {
-                ptr_->suspend(ec);
+                if (ptr_!=0) ptr_->suspend(ec);
             }
             ~scoped_suspend() {
-                system::error_code ec;
-                ptr_->resume(ec);
+                if (ptr_!=0) {
+                    system::error_code ec;
+                    ptr_->resume(ec);
+                }
+                
             }
         private:
             thread_specific_context* ptr_;

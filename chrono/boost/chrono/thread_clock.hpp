@@ -11,7 +11,7 @@
 #define BOOST_CHRONO_THREAD_CLOCK_HPP
 
 #include <time.h>
-#include <pthread.h>
+//#include <pthread.h>
 
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/chrono.hpp>
@@ -21,9 +21,11 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
+#if defined(BOOST_CHRONO_POSIX_API) && defined(_POSIX_THREAD_CPUTIME)
+#define BOOST_CHRONO_HAS_THREAD_CLOCK
+
 namespace boost { namespace chrono {
 
-#if defined(BOOST_CHRONO_POSIX_API) && defined(_POSIX_THREAD_CPUTIME)
 class BOOST_CHRONO_DECL thread_clock {
 public:
     typedef nanoseconds                          duration;
@@ -37,7 +39,7 @@ public:
         pthread_t pth=pthread_self();
         // get the clock_id associated to the current thread
         clockid_t clock_id;
-        pthread_getcpuclockid(pth, clock_id);
+        pthread_getcpuclockid(pth, &clock_id);
         // get the timespec associated to the thread clock
         struct timespec ts;
         if ( ::clock_gettime( clock_id, &ts ) )
@@ -56,7 +58,7 @@ public:
         pthread_t pth=pthread_self();
         // get the clock_id associated to the current thread
         clockid_t clock_id;
-        pthread_getcpuclockid(pth, clock_id);
+        pthread_getcpuclockid(pth, &clock_id);
         // get the timespec associated to the thread clock
         struct timespec ts;
         if ( ::clock_gettime( clock_id, &ts ) )
@@ -71,9 +73,10 @@ public:
              
     }
 };
-#endif
 } // namespace chrono
 } // namespace boost
+
+#endif
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
