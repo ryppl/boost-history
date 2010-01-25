@@ -17,23 +17,24 @@ double res;
 
 int f1(long j)
 {
-    stopclock<suspendible_clock<process_cpu_clock> > a(9);   
-    //stopclock<> b(9);   
+    stopclock<suspendible_clock<high_resolution_clock> > a(9);   
+    //stopclock<high_resolution_clock> b(9);   
 
     for ( long i = 0; i < j; ++i )
-        res+=std::sqrt( 123.456L );  // burn some time
-    //if (j!=0) f1(j-1);
+        res+=std::sqrt( res+123.456L+i );  // burn some time
+    if (j!=0) f1(j-1);
     //boost::this_thread::sleep(boost::posix_time::milliseconds(10));
-
     return 0;
 }
 int main()
 {
     //stopclock<> _(BOOST_CHRONO_TIME_FUNCTION_FORMAT);   
-    stopclock<> _(9);   
+    //stopclock<> _(9);   
+    stopclock<suspendible_clock<high_resolution_clock> > a(9);   
+    //stopclock<high_resolution_clock> b(9);   
 
     for (long i =1; i<= 3; ++i)
-        f1(i*100000);
+        f1(i*100);
     std::cout<< res << std::endl;
     return 0;
 }

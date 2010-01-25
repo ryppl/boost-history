@@ -19,14 +19,24 @@ void test_system_clock()
     std::cout << "suspendible_clock<system_clock> test" << std::endl;
     suspendible_clock<system_clock>::duration delay = milliseconds(5);
     suspendible_clock<system_clock>::time_point start = suspendible_clock<system_clock>::now();
-    while (suspendible_clock<system_clock>::now() - start <= delay)
-        ;
+    //std::cout << "start: " << start.time_since_epoch().count() << " nanoseconds\n";
+    //std::cout << "start: " << nanoseconds(start.time_since_epoch()).count() << " nanoseconds\n";
+    //std::cout << "Clock::now: " << nanoseconds(system_clock::now().time_since_epoch()).count() << " nanoseconds\n";
+    //std::cout << "now: " << nanoseconds(suspendible_clock<system_clock>::now().time_since_epoch()).count() << " nanoseconds\n";
+    while (suspendible_clock<system_clock>::now() - start <= delay) {
+    //std::cout << "delta: " << (suspendible_clock<system_clock>::now() - start).count() << " nanoseconds\n";
+    //std::cout << "Clock::now: " << nanoseconds(system_clock::now().time_since_epoch()).count() << " nanoseconds\n";
+    //std::cout << "now: " << nanoseconds(suspendible_clock<system_clock>::now().time_since_epoch()).count() << " nanoseconds\n";
+        
+    }
+        
     suspendible_clock<system_clock>::time_point stop = suspendible_clock<system_clock>::now();
     suspendible_clock<system_clock>::duration elapsed = stop - start;
     std::cout << "paused " << nanoseconds(elapsed).count() << " nanoseconds\n";
     start = suspendible_clock<system_clock>::now();
     stop = suspendible_clock<system_clock>::now();
     std::cout << "suspendible_clock<system_clock> resolution estimate: " << nanoseconds(stop-start).count() << " nanoseconds\n";
+    
     start = suspendible_clock<system_clock>::now();
     suspendible_clock<system_clock>::suspend();
     system_clock::duration delay3 = milliseconds(50);

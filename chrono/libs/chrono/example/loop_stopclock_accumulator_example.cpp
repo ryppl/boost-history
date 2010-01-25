@@ -11,7 +11,8 @@
 #include <boost/chrono/stopwatches.hpp>
 
 #include <cmath>
-#include <boost/thread.hpp>
+//#include <boost/thread.hpp>
+#include "sleep_for.hpp"
 
 using namespace boost::chrono;
 int f1(long j)
@@ -23,7 +24,7 @@ int f1(long j)
       //~ std::cout << " j="<<j <<" ";
     //~ stopclock<> s;
     std::sqrt( 123.456L );  // burn some time
-    boost::this_thread::sleep(boost::posix_time::milliseconds(20));
+    boost::this_thread::sleep_for(boost::chrono::milliseconds(20));
   }
   
 

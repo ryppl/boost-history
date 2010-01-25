@@ -9,7 +9,8 @@
 
 #include <boost/chrono/stopwatch.hpp>
 #include <cmath>
-#include <boost/thread.hpp>
+//#include <boost/thread.hpp>
+#include "sleep_for.hpp"
 
 using namespace boost::chrono;
 double res;
@@ -20,7 +21,7 @@ void f1(long j)
         res+=std::sqrt( res+123.456L+i );  // burn some time
     if (j!=0) f1(j-1);
     stopwatch<>::reporter::scoped_suspend s(_);
-    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    boost::this_thread::sleep_for(boost::chrono::milliseconds(10));
 
 }
 int main()

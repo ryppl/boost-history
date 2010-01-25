@@ -237,7 +237,7 @@
           needs only 23 bits to cover that range.
         </p>
 <a name="boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_"></a><h5>
-<a name="id4759436"></a>
+<a name="id4759415"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.so_what_exactly_is_a__code__phrase_role__identifier__duration__phrase___code__and_how_do_i_use_one_">So
           What Exactly is a <code class="computeroutput"><span class="identifier">duration</span></code>
           and How Do I Use One?</a>
@@ -295,7 +295,7 @@
           instead of inheritance).
         </p>
 <a name="boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to__code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__"></a><h5>
-<a name="id4813050"></a>
+<a name="id4813031"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to__code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__">What
           happens if I assign <code class="computeroutput"><span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span></code>
           to <code class="computeroutput"><span class="identifier">minutes</span></code> instead of
@@ -312,7 +312,7 @@
           ignored. This is similar to the problem of assigning a double to an <code class="computeroutput"><span class="keyword">int</span></code>: the fractional part gets silently discarded.
         </p>
 <a name="boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_"></a><h5>
-<a name="id4813220"></a>
+<a name="id4813200"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_">But
           what if the truncation behavior is what I want to do?</a>
         </h5>
@@ -332,7 +332,7 @@
           as often as it can.
         </p>
 <a name="boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation"></a><h5>
-<a name="id4813356"></a>
+<a name="id4813336"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point__code__phrase_role__identifier__duration__phrase___code_s__i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation">I'm
           trafficking in floating point <code class="computeroutput"><span class="identifier">duration</span></code>s.
           I don't want to deal with writing <code class="computeroutput"><span class="identifier">duration_cast</span></code>
@@ -347,7 +347,7 @@
 <span class="identifier">dminutes</span> <span class="identifier">dm4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>  <span class="comment">// dm4.count() == 5.000000083333333
 </span></pre>
 <a name="boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_"></a><h5>
-<a name="id4813518"></a>
+<a name="id4813499"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_">How
           expensive is all of this?</a>
         </h5>
@@ -361,7 +361,7 @@
           tick counts.
         </p>
 <a name="boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_"></a><h5>
-<a name="id4813568"></a>
+<a name="id4813549"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a__code__phrase_role__identifier__duration__phrase___code__parameter_">How
           complicated is it to build a function taking a <code class="computeroutput"><span class="identifier">duration</span></code>
           parameter?</a>
@@ -583,7 +583,7 @@
           the relationship between the epochs associated with each clock is known.
         </p>
 <a name="boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_"></a><h5>
-<a name="id4815374"></a>
+<a name="id4815354"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.time_point.so_what_exactly_is_a__code__phrase_role__identifier__time_point__phrase___code__and_how_do_i_use_one_">So
           What Exactly is a <code class="computeroutput"><span class="identifier">time_point</span></code>
           and How Do I Use One?</a>
@@ -674,6 +674,7 @@
           introduces the Stopwatch concept which captures the mechanism to measure
           the elapsed time. A Stopwatch allows to start, stop, suspend and resume
           the measure of the eleapsed time. <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code> is the basic model of Stopwatch
+          allowing to make a single measure.
         </p>
 <p>
           At the user level, the main use case of measuring the elapsed time is to
@@ -700,9 +701,15 @@
 <p>
           Will produce the following output
         </p>
-<p>
-          0.006s 0.011s 0.017s
-        </p>
+<pre class="programlisting"><span class="number">0.006</span><span class="identifier">s</span>
+<span class="number">0.011</span><span class="identifier">s</span>
+<span class="number">0.017</span><span class="identifier">s</span>
+</pre>
+<a name="boost_chrono.overview.motivation.stopwatches.stopwatches_accumulation_and_statistics"></a><h5>
+<a name="id4816458"></a>
+          <a href="motivation.html#boost_chrono.overview.motivation.stopwatches.stopwatches_accumulation_and_statistics">Stopwatches
+          accumulation and statistics</a>
+        </h5>
 <p>
           The preceding stopwatch manage only with a measure. It is also interesting
           to have an statisitical view of these times, for example the sum, min,
@@ -735,6 +742,11 @@
         </p>
 <pre class="programlisting"><span class="number">3</span> <span class="identifier">times</span><span class="special">,</span> <span class="identifier">sum</span><span class="special">=</span><span class="number">0.034</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">min</span><span class="special">=</span><span class="number">0.006</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">max</span><span class="special">=</span><span class="number">0.017</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">mean</span><span class="special">=</span><span class="number">0.011</span><span class="identifier">s</span>
 </pre>
+<a name="boost_chrono.overview.motivation.stopwatches.wall_clock_versus_system_and_user_time"></a><h5>
+<a name="id4816976"></a>
+          <a href="motivation.html#boost_chrono.overview.motivation.stopwatches.wall_clock_versus_system_and_user_time">Wall
+          clock versus system and user time</a>
+        </h5>
 <p>
           It is also helpful if such timing information is broken down into real
           (wall clock) time, CPU time spent by the user, and CPU time spent by the

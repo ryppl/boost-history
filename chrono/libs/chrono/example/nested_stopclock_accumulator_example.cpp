@@ -9,7 +9,8 @@
 
 #include <boost/stopwatches.hpp>
 #include <cmath>
-#include <boost/thread.hpp>
+//#include <boost/thread.hpp>
+#include "sleep_for.hpp"
 
 using namespace boost::chrono;
 
@@ -39,14 +40,14 @@ void f1()
     //~ stopclock_accumulator<>::scoped_run _(acc);
     BOOST_CHRONO_STOPCLOCK_ACCUMULATOR_FCT;
     //BOOST_CHRONO_STOPCLOCK_ACCUMULATOR_FCT_REVERSE;
-    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+    boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
     {
         BOOST_CHRONO_STOPCLOCK_ACCUMULATOR;
         //~ static stopclock_accumulator<> acc(
             //~ std::string(__FILE__) + "[" + BOOST_STRINGIZE(__LINE__) + "] " + stopwatch_accumulator_formatter::default_format()
         //~ );
         //~ stopclock_accumulator<>::scoped_run _(acc);
-        boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+        boost::this_thread::sleep_for(boost::chrono::milliseconds(200));
     }
 
 }
@@ -58,12 +59,12 @@ int main()
     //~ );
     //~ stopclock_accumulator<>::scoped_run _(acc);
 
-    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    boost::this_thread::sleep_for(boost::chrono::milliseconds(10));
     f1();
-    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+    boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
     f1();
-    boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+    boost::this_thread::sleep_for(boost::chrono::milliseconds(50));
     f1();
-    boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+    boost::this_thread::sleep_for(boost::chrono::milliseconds(200));
     return 0;
 }

@@ -15,6 +15,7 @@ using namespace boost::chrono;
 
 void test_thread_clock()
 {
+#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
     std::cout << "thread_clock test" << std::endl;
     thread_clock::duration delay = milliseconds(5);
     thread_clock::time_point start = thread_clock::now();
@@ -26,6 +27,9 @@ void test_thread_clock()
     start = thread_clock::now();
     stop = thread_clock::now();
     std::cout << "thread_clock resolution estimate: " << nanoseconds(stop-start).count() << " nanoseconds\n";
+#else
+    std::cout << "thread_clock not available\n";
+#endif    
 }
 
 

@@ -63,10 +63,12 @@ The Boost Chrono library provides:
     * `process_system_CPU_clocks`, capturing system-CPU times.
     * `process_cpu_clock`, tuple-like class capturing at once real, user-CPU, and system-CPU times.
 
+[/
 * Suspendible Clock
     * Suspendible Clock concept
     * template class suspendible_clock<>
     * Added scope_suspend which do suspend/resume if the Clock is a model of Suspendible Clock concept, and nothing otherwise.
+]
 
 * Stopwatches:
     * `stopwatch`, capturing elapsed Clock times.
@@ -412,7 +414,7 @@ The above code will delay as close as possible to half a microsecond, no matter 
 Knowing how long a program, a function or a specific block takes to execute is useful in both test and production environments.
 __Boost_Chrono__ introduces the Stopwatch concept which captures the mechanism to measure the elapsed time.
 A Stopwatch allows to start, stop, suspend and resume the measure of the eleapsed time.
-`stopwatch<>` is the basic model of Stopwatch
+`stopwatch<>` is the basic model of Stopwatch allowing to make a single measure.
 
 At the user level, the main use case of measuring the elapsed time is to report these measures on the display.
 `stopwatch_reporter<>` provides a run time reporting package that can be invoked in a single line of code to report the usage of a Clock.
@@ -440,6 +442,8 @@ Will produce the following output
     0.011s
     0.017s
 
+[heading Stopwatches accumulation and statistics]
+
 The preceding stopwatch manage only with a measure. It is also interesting to have an statisitical view of these times, for example the sum, min, max and mean. `stopwatch_accumulator<>` associates an accumulator with a stopwatch, so we are able to retrieve any statistical feature Boost.Accumulator provides.
 
 For example
@@ -464,6 +468,9 @@ For example
 Will produce the following output
 
     3 times, sum=0.034s, min=0.006s, max=0.017s, mean=0.011s
+
+
+[heading Wall clock versus system and user time]
 
 It is also helpful if such timing information is broken down into real (wall clock) time, CPU time spent by the user, and CPU time spent by the operating system servicing user requests.
 
@@ -496,6 +503,27 @@ As this is one of the expression more commonly use, the library provides a stopc
         stopclock<> _;
       // ...
     }
+
+[/
+[heading How reliable are these measure?]
+
+[info this section need to be reworked, the ideas are there, but ...]
+
+There are three context on which you can get unreliable measures:
+
+# the precission of your clock. If the precission of your clock is 10ms you can not be able to measure the time spent by blocks of code that takes the same order of magnitude. The library provides a hig_resolution_clock that gives you the higher resolution available on your platform. Respect to the precission, nothing to do except to take the clock with the highest resolution and measures blocks of code that will spent time having more than one order of magnitude.
+
+# When your application is multithreaded, and you use a process clock, the time you get is the delay during which your block has been executed, in concurrency with the other threads of execution. The library provide a thread_clock on platforms providing this kind of data.
+
+# Nested stopclocks (usually nested function calls where each function contains a stopclock). When the nesting is deep enough, the cumulative overhead of all the stopclock functionality make the data unreliable except for the inner-most trace points. The question is,how many time is related to the application code we want to measure and how many to the fact we are meassuring and logging in inner blocks? 
+
+Some measures let me think that most of the time spent by the stopclock mechanism is associated to the logging part. There are two things we can do to make the difference :
+
+* Avoid the expensive operations as reporting while doing the measures. Note that reporting in itself is not too expensive as far as we don't need to flush the buffer. This can be achieved either using a stopclock accumulator, 'i.e. don't report until all the measures have been compiled and then report some statistics) or using an asynchronous stream. 
+
+* Introduce some cheap mechanism that allows us to make the difference between the application time and the intrinsec stopclock time. When the precission of the clock is enough, we can suspend the counting of the Clock while we are speending time reporting the measures, and resume it once the work is done. 
+
+]
 
 
 [endsect]
@@ -581,6 +609,7 @@ In particular, __Boost_Chrono__ depends on:
 ]
 ]
 
+
 [/=========================================================]
 [heading Building an executable that uses __Boost_Chrono__ ]
 [/=========================================================]
@@ -614,11 +643,9 @@ Windows with
 
 [/* Intel 11.0]
 
-[/SL Linux with
+Scientific Linux with
 
-* GCC 3.4.6
 * GCC 4.1.2
-]
 
 Cygwin with
 
@@ -1124,7 +1151,7 @@ Let `gcd` denote the greatest common divisor of `N`'s absolute value and of `D`'
 
 * `den` has the value `abs(D)/gcd`.
 
-The nested typedef `type` denotes the normalized form of this ratio type. It should be used when the template parameters don't give a normalized form.
+The nested typedef `type` denotes the normalized form of this ratio type. It should be used when the template parameters doesn't give a normalized form.
 
 Two `ratio` classes `ratio<N1,D1>` and `ratio<N2,D2>` have the same normalized form if `ratio<N1,D1>::type` is the same type as `ratio<N2,D2>::type`
 
@@ -2354,6 +2381,7 @@ The `times` specific functions `zero()`, `max()` and `min()` uses the relative f
 
 [endsect]
 
+[/
 [section:suspendible_clock_req `SuspendibleClock` requirements]
 
 A `SuspendibleClock` is a Clock that in addition support for `suspend`/`resume` operations.
@@ -2485,7 +2513,7 @@ Given a `Clock`, `suspendible_clock<Clock>` is a model of SuspendibleClock.
 [endsect]
 
 [endsect]
-
+]
 [endsect]
 
 
@@ -4781,17 +4809,20 @@ Here is the output for this program for several sets of command line arguments:
 [section:history Appendix A: History]
 [/==================================]
 
-[section [*Version 0.3.2, January 24, 2010] ['New SuspendibleClock, New frequency, lifetime and percentage stopwatch_accumulator  features]]
+[section [*Version 0.3.2, January 25, 2010] ['New frequency, lifetime and percentage stopwatch_accumulator features]]
 [*Features:]
 
-* Suspendible Clock concept + template class suspendible_clock<>
+[/* Suspendible Clock concept + template class suspendible_clock<>
 * Added scope_suspend which do suspend/resume if the Clock is a model of Suspendible Clock concept, and nothing otherwise.
 * Use of scope_suspend while reporting on stopwatch reporter
+]
 * Added overloading for operator/(Integer/Duration)
 * Added frequency, lifetime and percentage to the default stopwatch_accumulator_formatter
 
 [*Bug Fixes]
-* Specific formatters doesn't works
+* Specific formatters didn't work completly
+* Replace duration(0) by duration::zero() on template classes. 
+* suspend doesn't works: partial_ not initialized neither taken in account by the elapsed function.
 
 [endsect]
 
@@ -5108,12 +5139,16 @@ You can also run a specific suite of test by doing
 ]
 [endsect]
 
+[/
 [section Other Clocks]
 [table
     [[Name]                         [kind]          [Description]           [Result] [Ticket]]
     [[test_suspendible_clock]               [run]           [test basic uses of suspendible_clock.]                   [Pass]   [#]]
 ]
 [endsect]
+
+]
+
 [section stopwatch]
 [table
     [[Name]                         [kind]          [Description]           [Result] [Ticket]]
@@ -5174,18 +5209,18 @@ You can also run a specific suite of test by doing
     [[11]    [MSVC reports a warning instead of an error when there is an integral constant overflow] [manage with MSVC reporting a warning instead of an error when there is an integral constant overflow]                  [Close]]
     [[12]    [ambiguities with MSVC when using detail:: namespace] [Qualify with boost::detail boost::chrono::detail ]                  [Close]]
     [[13]    [warning C4251: 'boost::chrono::run_timer::m_format' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'boost::chrono::run_timer'] [don't include inlines functions using the std::string m_format]                  [Close]]
-    [[14]    [Bade use of duration(0) on template classes] [remplace by duration::zero()]                  [Close]]
-    [[15]    [suspend don't works: partial_ not initialized] [initialize with duration::zero()]                  [Close]]
-    [[16]    [suspend don't works: elapsed don't take care of partial_] [take care of partial]                  [Close]]
-    [[17]    [suspend don't works: bad use of system::error_code & ec] [replace by system::error_code ec]                  [Close]]
+    [[14]    [Bad use of duration(0) on template classes] [remplace by duration::zero()]                  [Close]]
+    [[15]    [suspend doesn't works: partial_ not initialized] [initialize with duration::zero()]                  [Close]]
+    [[16]    [suspend doesn't works: elapsed doesn't take care of partial_] [take care of partial]                  [Close]]
+    [[17]    [suspend doesn't works: bad use of system::error_code & ec] [replace by system::error_code ec]                  [Close]]
     [[18]    [warnings on mingw-gcc.4.4:[br]..\..\../boost/chrono/chrono.hpp: In copy constructor 'boost::chrono::time_point<boost::chrono::process_cpu_clock, boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1ll, 1000000000ll> > >::time_point(const boost::chrono::time_point<boost::chrono::process_cpu_clock, boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1ll, 1000000000ll> > >&)':
 ..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'
 ..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'] [???]                  [Open]]
-    [[19]    [suspendible_clock_test don't works in my windows environement (issue with tss)] [XXXX]                  [Open]]
-    [[20]    [Use of Specific formatters doesn't works] [XXXX]                  [Close]]
+    [[19]    [Use of Specific formatters doesn't works] [XXXX]                  [Close]]
 
-    [[21]    [boost/chrono/scoped_suspend.hpp(31) : warning C4520: 'boost::chrono::scoped_suspend<Clock>' : multiple default constructors specified
+    [[20]    [boost/chrono/scoped_suspend.hpp(31) : warning C4520: 'boost::chrono::scoped_suspend<Clock>' : multiple default constructors specified
 ] [XXXX]                  [Open]]
+    [/[[19]    [suspendible_clock_test doesn't works in my mingw environement (issue with tss)] [XXXX]                  [Open]]]
     [[#]    [XXXX] [XXXX]                  [Close]]
 ]
 

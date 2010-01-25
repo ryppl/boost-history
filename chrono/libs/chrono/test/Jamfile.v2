@@ -18,9 +18,11 @@ if ! $(BOOST_ROOT)
 
 project
     : requirements
+        <os>LINUX:<threading>multi
         #<library>/boost/chrono//boost_chrono
         #<library>/boost/system//boost_system
         <library>../build//boost_chrono
+        #<library>/boost/thread//boost_thread/<link>shared
         # uncomment the line above if you build outside the Boost release
         #<include>$(BOOST_ROOT) 
         # uncomment the line above if you build outside the Boost release
@@ -37,95 +39,96 @@ project
         :
         [ compile-fail ratio_fail_test1.cpp  ]
         [ run ratio_test.cpp  :  :  : <link>static ]
-        #[ run ratio_test.cpp  :  :  : <library>/boost/system//boost_system  : ratio_test_dll ]
+        #[ run ratio_test.cpp  :  :  :  : ratio_test_dll ]
         ;
 
 
     test-suite "chrono"
         :
         [ run chrono_unit_test.cpp :  :  : <link>static ]
-        [ run chrono_unit_test.cpp :  :  : <library>/boost/system//boost_system : chrono_unit_test_dll ]
+        [ run chrono_unit_test.cpp :  :  : : chrono_unit_test_dll ]
         [ run explore_limits.cpp :  :  : <link>static ]
-        [ run explore_limits.cpp :  :  : <library>/boost/system//boost_system  : explore_limits_dll ]
+        [ run explore_limits.cpp :  :  :  : explore_limits_dll ]
         [ run test_duration.cpp :  :  : <link>static ]
-        [ run test_duration.cpp :  :  : <library>/boost/system//boost_system  : test_duration_dll ]
+        [ run test_duration.cpp :  :  :  : test_duration_dll ]
         [ run test_system_clock.cpp :  :  : <link>static ]
-        [ run test_system_clock.cpp :  :  : <library>/boost/system//boost_system  : test_system_clock_dll ]
+        [ run test_system_clock.cpp :  :  :  : test_system_clock_dll ]
         [ run miscellaneous.cpp :  :  : <link>static ]
-        [ run miscellaneous.cpp :  :  : <library>/boost/system//boost_system  : miscellaneous_dll ]
+        [ run miscellaneous.cpp :  :  :  : miscellaneous_dll ]
         [ run test_special_values.cpp :  :  : <link>static ]
-        [ run test_special_values.cpp :  :  : <library>/boost/system//boost_system  : test_special_values_dll ]
+        [ run test_special_values.cpp :  :  :  : test_special_values_dll ]
         [ run manipulate_clock_object.cpp :  :  : <link>static ]
-        [ run manipulate_clock_object.cpp :  :  : <library>/boost/system//boost_system  : manipulate_clock_object_dll ]
+        [ run manipulate_clock_object.cpp :  :  :  : manipulate_clock_object_dll ]
         [ run chrono_accuracy_test.cpp :  :  : <link>static ]
-        [ run chrono_accuracy_test.cpp :  :  : <library>/boost/system//boost_system  : chrono_accuracy_test_dll ]
+        [ run chrono_accuracy_test.cpp :  :  :  : chrono_accuracy_test_dll ]
         
         [ run ../example/cycle_count.cpp :  :  : <link>static ]
-        [ run ../example/cycle_count.cpp :  :  : <library>/boost/system//boost_system  : cycle_count_dll ]
+        [ run ../example/cycle_count.cpp :  :  :  : cycle_count_dll ]
         [ run ../example/runtime_resolution.cpp :  :  : <link>static ]
-        [ run ../example/runtime_resolution.cpp :  :  : <library>/boost/system//boost_system  : runtime_resolution_dll ]
+        [ run ../example/runtime_resolution.cpp :  :  :  : runtime_resolution_dll ]
         [ run ../example/xtime.cpp :  :  : <link>static ]
-        [ run ../example/xtime.cpp :  :  : <library>/boost/system//boost_system  : xtime_dll ]
+        [ run ../example/xtime.cpp :  :  :  : xtime_dll ]
         [ run ../example/saturating.cpp :  :  : <link>static ]
-        [ run ../example/saturating.cpp  :  :  : <library>/boost/system//boost_system  : saturating_dll ]
+        [ run ../example/saturating.cpp  :  :  :  : saturating_dll ]
         [ run ../example/min_time_point.cpp :  :  : <link>static ]
-        [ run ../example/min_time_point.cpp  :  :  : <library>/boost/system//boost_system  : min_time_point_dll ]
+        [ run ../example/min_time_point.cpp  :  :  :  : min_time_point_dll ]
         [ run ../example/i_dont_like_the_default_duration_behavior.cpp :  :  : <link>static ]
-        [ run ../example/i_dont_like_the_default_duration_behavior.cpp  :  :  : <library>/boost/system//boost_system  : i_dont_like_the_default_duration_behavior_dll ]
+        [ run ../example/i_dont_like_the_default_duration_behavior.cpp  :  :  :  : i_dont_like_the_default_duration_behavior_dll ]
         [ run ../example/simulated_thread_interface_demo.cpp :  :  : <link>static ]
-        [ run ../example/simulated_thread_interface_demo.cpp  :  :  : <library>/boost/system//boost_system  : simulated_thread_interface_demo_dll ]
+        [ run ../example/simulated_thread_interface_demo.cpp  :  :  :  : simulated_thread_interface_demo_dll ]
         [ run ../example/timeval_demo.cpp :  :  : <link>static ]
-        [ run ../example/timeval_demo.cpp :  :  : <library>/boost/system//boost_system  : timeval_demo_dll ]
+        [ run ../example/timeval_demo.cpp :  :  :  : timeval_demo_dll ]
         ;
 
     test-suite "timer"
         :
         [ run ../example/run_timer_example.cpp :  :  : <link>static ]
-        [ run ../example/run_timer_example.cpp :  :  : <library>/boost/system//boost_system  : run_timer_example_dll ]
+        [ run ../example/run_timer_example.cpp :  :  :  : run_timer_example_dll ]
         [ run ../example/run_timer_example2.cpp :  :  : <link>static ]
-        [ run ../example/run_timer_example2.cpp :  :  : <library>/boost/system//boost_system  : run_timer_example2_dll ]
+        [ run ../example/run_timer_example2.cpp :  :  :  : run_timer_example2_dll ]
         [ run run_timer_test.cpp  :  :  : <link>static ]
-        [ run run_timer_test.cpp :  :  : <library>/boost/system//boost_system  : run_timer_test_dll ]
+        [ run run_timer_test.cpp :  :  :  : run_timer_test_dll ]
         ;
 
-    # test-suite "other_clocks"
-    #    :
-    #    [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread  <link>static ]
-    #    [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread  <library>/boost/system//boost_system  : test_suspendible_clock_dll  ]
-    #    [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-    #    [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <library>/boost/system//boost_system  : suspendible_stopclock_example_dll ]
-    #    [ run test_thread_clock.cpp :  :  : <link>static ]
-    #    ;
+     #test-suite "other_clocks"
+     #   :
+     #   [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+     #   [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread : test_suspendible_clock_dll  ]
+     #   [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+     #   [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread : suspendible_stopclock_example_dll ]
+     #   [ run test_thread_clock.cpp :  :  : <link>static ]
+     #   [ run test_thread_clock.cpp :  :  :  : test_thread_clock_dll ]
+     #   ;
 
     test-suite "stopwatch"
         :
         [ run ../example/stopwatch_example.cpp :  :  : <link>static ]
-        [ run ../example/stopwatch_example.cpp :  :  : <library>/boost/system//boost_system  : stopwatch_example_dll ]
-        [ run ../example/scoped_stopwatch_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-        [ run ../example/scoped_stopwatch_example.cpp :  :  : <library>/boost/thread//boost_thread  <library>/boost/system//boost_system  : scoped_stopwatch_example_dll ]
+        [ run ../example/stopwatch_example.cpp :  :  :   : stopwatch_example_dll ]
+        [ run ../example/scoped_stopwatch_example.cpp :  :  : <link>static ]
+        [ run ../example/scoped_stopwatch_example.cpp :  :  :  : scoped_stopwatch_example_dll ]
         [ run ../example/stopwatch_accumulator_example.cpp :  :  : <link>static ]
-        [ run ../example/stopwatch_accumulator_example.cpp :  :  : <library>/boost/system//boost_system  : stopwatch_accumulator_example_dll ]
-        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  : <library>/boost/thread//boost_thread  <library>/boost/system//boost_system  : nested_stopclock_accumulator_example_dll ]
+        [ run ../example/stopwatch_accumulator_example.cpp :  :  :   : stopwatch_accumulator_example_dll ]
+        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  :  <link>static ]
+        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  :  : nested_stopclock_accumulator_example_dll ]
         [ run ../example/specific_stopwatch_accumulator_example.cpp :  :  : <link>static ]
-        [ run ../example/specific_stopwatch_accumulator_example.cpp :  :  : <library>/boost/system//boost_system  : specific_stopwatch_accumulator_example_dll ]
+        [ run ../example/specific_stopwatch_accumulator_example.cpp :  :  :   : specific_stopwatch_accumulator_example_dll ]
         [ run ../example/stopclock_example.cpp :  :  : <link>static ]
-        [ run ../example/stopclock_example.cpp :  :  : <library>/boost/system//boost_system  : stopclock_example_dll ]
-        [ run ../example/stopclock_accumulator_example.cpp :  :  : <library>/boost/thread//boost_thread  <link>static ]
-        [ run ../example/stopclock_accumulator_example.cpp :  :  : <library>/boost/thread//boost_thread  <library>/boost/system//boost_system  : stopclock_accumulator_example_dll ]
-        [ run ../example/loop_stopclock_accumulator_example.cpp :  :  : <library>/boost/thread//boost_thread  <link>static ]
-        [ run ../example/loop_stopclock_accumulator_example.cpp :  :  : <library>/boost/thread//boost_thread  <library>/boost/system//boost_system  : loop_stopclock_accumulator_example_dll ]
+        [ run ../example/stopclock_example.cpp :  :  :   : stopclock_example_dll ]
+        [ run ../example/stopclock_accumulator_example.cpp :  :  : <link>static ]
+        [ run ../example/stopclock_accumulator_example.cpp :  :  :  : stopclock_accumulator_example_dll ]
+        [ run ../example/loop_stopclock_accumulator_example.cpp :  :  :  <link>static ]
+        [ run ../example/loop_stopclock_accumulator_example.cpp :  :  :  : loop_stopclock_accumulator_example_dll ]
         [ run ../example/digital_time_example.cpp :  :  : <link>static ]
-        [ run ../example/digital_time_example.cpp :  :  : <library>/boost/system//boost_system  : digital_time_example_dll ]
+        [ run ../example/digital_time_example.cpp :  :  :   : digital_time_example_dll ]
         [ run ../example/scoped_stopclock_example.cpp :  :  : <link>static ]
-        [ run ../example/scoped_stopclock_example.cpp :  :  : <library>/boost/system//boost_system  : function_stopclock_example_dll ]
+        [ run ../example/scoped_stopclock_example.cpp :  :  :   : function_stopclock_example_dll ]
         [ link ../example/timex.cpp :  <link>static ]
-        [ link ../example/timex.cpp :  <library>/boost/system//boost_system  : timex_dll ]
+        [ link ../example/timex.cpp :    : timex_dll ]
         [ compile test_minmax.cpp ]
         [ run stopclock_constructor_overload_test.cpp :  :  : <link>static ]
-        [ run stopclock_constructor_overload_test.cpp :  :  : <library>/boost/system//boost_system  : stopclock_constructor_overload_test_dll ]
+        [ run stopclock_constructor_overload_test.cpp :  :  :   : stopclock_constructor_overload_test_dll ]
         [ run wstopclock_constructor_overload_test.cpp :  :  : <link>static ]
-        [ run wstopclock_constructor_overload_test.cpp :  :  : <library>/boost/system//boost_system  :  wstopclock_constructor_overload_test_dll ]
+        [ run wstopclock_constructor_overload_test.cpp :  :  :   :  wstopclock_constructor_overload_test_dll ]
         ;
         
         

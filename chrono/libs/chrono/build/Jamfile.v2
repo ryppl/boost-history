@@ -18,11 +18,13 @@ if ! $(BOOST_ROOT)
 
 project boost/chrono
     : source-location ../src
-    : requirements 
+    : requirements                 
+        <os>LINUX:<threading>multi
         # uncomment the line above if you build outside the Boost release
         #<include>$(BOOST_ROOT) 
         # uncomment the line above if you build outside the Boost release
         #<include>../../.. 
+        <library>/boost/system//boost_system/<link>shared
         <define>BOOST_RATIO_USES_STATIC_ASSERT
         <define>BOOST_CHRONO_USES_STATIC_ASSERT
         #<define>BOOST_RATIO_USES_MPL_ASSERT
@@ -31,6 +33,8 @@ project boost/chrono
         #<define>BOOST_CHRONO_USES_ARRAY_ASSERT
         #<toolset>gcc:<linkflags>--enable-auto-import        
     : usage-requirements  # pass these requirement to dependents (i.e. users)
+        #<os>LINUX:<threading>multi
+        <library>/boost/system//boost_system/<link>shared
         <define>BOOST_RATIO_USES_STATIC_ASSERT
         <define>BOOST_CHRONO_USES_STATIC_ASSERT
         #<define>BOOST_RATIO_USES_MPL_ASSERT
@@ -45,7 +49,7 @@ SOURCES = chrono process_clock run_timer run_timer_static process_cpu_clocks ;
 
 lib boost_chrono
     : $(SOURCES).cpp 
-    $(BOOST_ROOT)/libs/system/build//boost_system 
+    #$(BOOST_ROOT)/libs/system/build//boost_system 
     :
     <link>shared:<define>BOOST_ALL_DYN_LINK=1 # tell source we're building dll's
     <link>static:<define>BOOST_All_STATIC_LINK=1 # tell source we're building static lib's
