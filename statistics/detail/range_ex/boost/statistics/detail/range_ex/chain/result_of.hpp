@@ -19,13 +19,25 @@ namespace range{
 
     	template<typename R1,typename R2>
 		struct chain{
-        
-    		typedef BOOST_TYPEOF_TPL(
+
+			// This version rather than the simpler BOOST_TYPEOF_TYPE
+            // is needed for MSVC.
+    		typedef BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
+            	nested,
         		boost::chain(
             		R1(),
                 	R2()
             	)
-        	) type;
+        	);
+            
+            typedef typename nested::type type;
+                
+    		//typedef BOOST_TYPEOF_TPL(
+        	//	boost::chain(
+            //		R1(),
+            //    	R2()
+            //	)
+        	//) type;
 		};
 
 	}

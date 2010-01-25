@@ -25,12 +25,13 @@ namespace result_of{
     // Case size(seq) > 1
     template<typename Seq>
     struct nest_chain : range::impl::nest_chain<
-        typename boost::remove_const<
+        typename boost::remove_cv<
             typename boost::remove_reference<
                 typename boost::fusion::result_of::pop_back<Seq>::type
             >::type
-        >::type,
-        typename boost::remove_const<
+        >::type
+        ,
+        typename boost::remove_cv<
             typename boost::remove_reference<
                 typename boost::fusion::result_of::back<Seq>::type
             >::type
