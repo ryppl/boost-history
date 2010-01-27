@@ -10,10 +10,6 @@
 #if !defined(BOOST_SPIRIT_QUICKBOOK_CODE_HPP)
 #define BOOST_SPIRIT_QUICKBOOK_CODE_HPP
 
-#include <string>
-#include <boost/fusion/include/adapt_struct.hpp>
-#include "fwd.hpp"
-
 namespace quickbook
 {
     struct code {
