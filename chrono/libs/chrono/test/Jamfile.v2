@@ -51,8 +51,8 @@ project
         [ run explore_limits.cpp :  :  :  : explore_limits_dll ]
         [ run test_duration.cpp :  :  : <link>static ]
         [ run test_duration.cpp :  :  :  : test_duration_dll ]
-        [ run test_system_clock.cpp :  :  : <link>static ]
-        [ run test_system_clock.cpp :  :  :  : test_system_clock_dll ]
+        [ run test_clock.cpp :  :  : <link>static ]
+        [ run test_clock.cpp :  :  :  : test_clock_dll ]
         [ run miscellaneous.cpp :  :  : <link>static ]
         [ run miscellaneous.cpp :  :  :  : miscellaneous_dll ]
         [ run test_special_values.cpp :  :  : <link>static ]
@@ -90,16 +90,16 @@ project
         [ run run_timer_test.cpp :  :  :  : run_timer_test_dll ]
         ;
 
-     #test-suite "other_clocks"
-     #   :
-     #   [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-     #   [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread : test_suspendible_clock_dll  ]
-     #   [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-     #   [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread : suspendible_stopclock_example_dll ]
-     #   [ run test_thread_clock.cpp :  :  : <link>static ]
-     #   [ run test_thread_clock.cpp :  :  :  : test_thread_clock_dll ]
-     #   ;
-
+    test-suite "other_clocks"
+        :
+        #[ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+        #[ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread : test_suspendible_clock_dll  ]
+        #[ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+        #[ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread : suspendible_stopclock_example_dll ]
+        [ run test_thread_clock.cpp :  :  : <link>static ]
+        [ run test_thread_clock.cpp :  :  :  : test_thread_clock_dll ]
+        ;
+       
     test-suite "stopwatch"
         :
         [ run ../example/stopwatch_example.cpp :  :  : <link>static ]
@@ -131,4 +131,8 @@ project
         [ run wstopclock_constructor_overload_test.cpp :  :  :   :  wstopclock_constructor_overload_test_dll ]
         ;
         
-        
+    test-suite "perf"
+        :
+        [ run ../perf/stopclock_perf.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+        [ run ../perf/stopclock_perf.cpp :  :  :  <library>/boost/thread//boost_thread : stopclock_perf_dll ]
+        ;        

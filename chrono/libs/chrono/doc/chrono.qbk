@@ -62,13 +62,13 @@ The Boost Chrono library provides:
     * `process_user_CPU_clocks`, capturing user-CPU times.
     * `process_system_CPU_clocks`, capturing system-CPU times.
     * `process_cpu_clock`, tuple-like class capturing at once real, user-CPU, and system-CPU times.
+    
+* Thread clock
 
-[/
 * Suspendible Clock
     * Suspendible Clock concept
     * template class suspendible_clock<>
     * Added scope_suspend which do suspend/resume if the Clock is a model of Suspendible Clock concept, and nothing otherwise.
-]
 
 * Stopwatches:
     * `stopwatch`, capturing elapsed Clock times.
@@ -504,7 +504,7 @@ As this is one of the expression more commonly use, the library provides a stopc
       // ...
     }
 
-[/
+
 [heading How reliable are these measure?]
 
 [info this section need to be reworked, the ideas are there, but ...]
@@ -523,7 +523,7 @@ Some measures let me think that most of the time spent by the stopclock mechanis
 
 * Introduce some cheap mechanism that allows us to make the difference between the application time and the intrinsec stopclock time. When the precission of the clock is enough, we can suspend the counting of the Clock while we are speending time reporting the measures, and resume it once the work is done. 
 
-]
+
 
 
 [endsect]
@@ -4809,13 +4809,22 @@ Here is the output for this program for several sets of command line arguments:
 [section:history Appendix A: History]
 [/==================================]
 
+
+[section [*Version 0.4, Febrary 5, 2010] ['New thread clock and Suspendible clock ]]
+
+[*New Features:]
+
+* Suspendible Clock concept + template class suspendible_clock<>
+* Added scope_suspend which do suspend/resume if the Clock is a model of Suspendible Clock concept, and nothing otherwise.
+* thread_clock support on platforms providing it natively.
+
+[*Bug Fixes]
+
+[endsect]
+
 [section [*Version 0.3.2, January 25, 2010] ['New frequency, lifetime and percentage stopwatch_accumulator features]]
 [*Features:]
 
-[/* Suspendible Clock concept + template class suspendible_clock<>
-* Added scope_suspend which do suspend/resume if the Clock is a model of Suspendible Clock concept, and nothing otherwise.
-* Use of scope_suspend while reporting on stopwatch reporter
-]
 * Added overloading for operator/(Integer/Duration)
 * Added frequency, lifetime and percentage to the default stopwatch_accumulator_formatter
 
@@ -5139,15 +5148,13 @@ You can also run a specific suite of test by doing
 ]
 [endsect]
 
-[/
+
 [section Other Clocks]
 [table
     [[Name]                         [kind]          [Description]           [Result] [Ticket]]
     [[test_suspendible_clock]               [run]           [test basic uses of suspendible_clock.]                   [Pass]   [#]]
 ]
 [endsect]
-
-]
 
 [section stopwatch]
 [table
@@ -5220,7 +5227,7 @@ You can also run a specific suite of test by doing
 
     [[20]    [boost/chrono/scoped_suspend.hpp(31) : warning C4520: 'boost::chrono::scoped_suspend<Clock>' : multiple default constructors specified
 ] [XXXX]                  [Open]]
-    [/[[19]    [suspendible_clock_test doesn't works in my mingw environement (issue with tss)] [XXXX]                  [Open]]]
+    [[[19]    [suspendible_clock_test doesn't works in my mingw environement (issue with tss)] [XXXX]                  [Open]]
     [[#]    [XXXX] [XXXX]                  [Close]]
 ]
 
