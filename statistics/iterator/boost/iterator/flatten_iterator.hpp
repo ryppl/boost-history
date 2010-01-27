@@ -110,18 +110,11 @@ namespace boost{
         	return (*this->nb_);
     	}
 
-    	diff_ distance_to()
+    	diff_ distance_to(flatten_iterator other)
     	{   
-			diff_ d = 0;
-            It it = this->b_; 
-            if(it!=this->e_){ 
-				d += std::distance(this->nb_,this->ne_);
-                ++it; 
-            } 
-            while(it<this->e_){
-				d += std::distance(boost::begin(*it),boost::end(*it));				
-            	++it;
-            }
+			throw std::runtime_error(
+            	"flatten_iterator::distance_to"
+            );
     	}
 
     	bool equal(const flatten_iterator& rhs)const
@@ -147,6 +140,26 @@ namespace boost{
             	this->ne_ = boost::end(*this->b_);
         	}
     	}
+
+/*	
+    	diff_ dist_impl(
+        	const flatten_iterator& x,
+            const flatten_iterator& y
+        ){
+        	BOOST_ASSERT(x.b_ < y.b_);
+            diff_ d = std::distance(x.nb_,x.ne_);
+            It it = x.b_;
+            while((++it)<y.b_){
+                d += std::distance(boost::begin(*it),boost::end(*it));
+            }
+        	BOOST_ASSERT(it == y.b_);
+			if(it!=x.e_){
+            	d += std::distance(boost::begin(*it),boost::end(x.nb_));
+            }
+			
+        }
+*/        
+
         
 	};        
 

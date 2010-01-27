@@ -1,9 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////////
-// example::iterator::range_cycle.h                                          //
+// example::iterator::flatten_iterator.h                                     //
 //                                                                           //
 /////////////////////////////////////////////////////////////////////////////// 
-#ifndef LIBS_ITERATOR_EXAMPLE_CYCLE_ITERATOR_ER_2009
-#define LIBS_ITERATOR_EXAMPLE_CYCLE_ITERATOR_ER_2009
+#ifndef LIBS_ITERATOR_EXAMPLE_FLATTEN_ITERATOR_ER_2010
+#define LIBS_ITERATOR_EXAMPLE_FLATTEN_ITERATOR_ER_2010
 #include <ostream>
 
 void example_flatten_iterator(std::ostream& os);
