@@ -39,11 +39,12 @@ BOOST_CGI_NAMESPACE_BEGIN
 
     typedef fcgi::acceptor_service_impl<>               service_impl_type;
     typedef service_impl_type::implementation_type      implementation_type;
-    typedef
-      typename implementation_type::protocol_type       protocol_type;
+    typedef service_impl_type::native_type              native_type;
+    typedef service_impl_type::protocol_service_type    protocol_service_type;
+    typedef service_impl_type::accept_handler_type      accept_handler_type;
+    typedef implementation_type::protocol_type          protocol_type;
     typedef implementation_type::endpoint_type          endpoint_type;
-    typedef typename service_impl_type::native_type     native_type;
-    //typedef basic_protocol_service<protocol_type>       protocol_service_type;
+    typedef implementation_type::acceptor_service_type  acceptor_service_type;
 
     /// The unique service identifier
     //static boost::asio::io_service::id id;
@@ -121,13 +122,17 @@ BOOST_CGI_NAMESPACE_BEGIN
       return service_impl_.listen(impl, backlog, ec);
     }
 
-//    template<typename CommonGatewayRequest>
-//    boost::system::error_code
-//      accept(implementation_type& impl, CommonGatewayRequest& request
-//            , boost::system::error_code& ec)
-//    {
-//      return service_impl_.accept(impl, request, NULL, ec);
-//    }
+    int accept(implementation_type& impl, accept_handler_type handler
+            , endpoint_type * ep, boost::system::error_code& ec)
+    {
+      return service_impl_.accept(impl, handler, ep, ec);
+    }
+
+    void async_accept(implementation_type& impl
+            , accept_handler_type handler)
+    {
+      return service_impl_.async_accept(impl, handler);
+    }
 
     template<typename CommonGatewayRequest>
     boost::system::error_code

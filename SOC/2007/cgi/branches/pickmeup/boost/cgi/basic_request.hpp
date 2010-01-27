@@ -104,6 +104,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     common::data_map_proxy<get_map>    get;
     common::data_map_proxy<form_map>   form;
     common::data_map_proxy<cookie_map> cookies;
+    common::data_map_proxy<upload_map> uploads;
 
     basic_request(
         int opts
@@ -171,7 +172,6 @@ BOOST_CGI_NAMESPACE_BEGIN
       set_protocol_service(*impl.service_);
       this->service.begin_request_helper(this->implementation
                                         , impl.header_buf_, ec);
-      construct();
     }
       
     ~basic_request()
@@ -180,17 +180,6 @@ BOOST_CGI_NAMESPACE_BEGIN
       //  close(http::internal_server_error, 0);
     }
     
-    void construct()
-    {
-      this->env.set(env_vars(this->implementation.vars_));
-      // By default, set the form map to the environment.
-      //if (!this->form)
-      //  this->form.set(env_vars(this->implementation.vars_));
-      this->post.set(post_vars(this->implementation.vars_));
-      this->get.set(get_vars(this->implementation.vars_));
-      this->cookies.set(cookie_vars(this->implementation.vars_));
-    }
-
     static pointer create(protocol_service_type& ps)
     {
       return pointer(new self_type(ps));
@@ -243,7 +232,6 @@ BOOST_CGI_NAMESPACE_BEGIN
       load(parse_options parse_opts, boost::system::error_code& ec
           , char** base_environment = NULL, bool is_command_line = true)
     {
-      construct();
       // Parse just the environment first, then check the user
       // isn't trying to upload more data than we want to let them.
       // Define `BOOST_CGI_POST_MAX` to set the maximum content-length
@@ -262,8 +250,18 @@ BOOST_CGI_NAMESPACE_BEGIN
           this->service.load_environment(
               this->implementation, base_environment
             , is_command_line);
-
-        if (parse_opts > parse_env && parse_opts & parse_form)
+        
+        if (parse_opts & parse_env)
+          env.set(env_vars(this->implementation.vars_));
+        if (parse_opts & parse_get_only)
+          get.set(get_vars(this->implementation.vars_));
+        if (parse_opts & parse_post_only)
+          post.set(post_vars(this->implementation.vars_));
+        if (parse_opts & parse_get_only || parse_opts & parse_get_only)
+          uploads.set(upload_vars(this->implementation.vars_));
+        if (parse_opts & parse_cookies)
+          cookies.set(cookie_vars(this->implementation.vars_));
+        if (parse_opts & parse_form_only)
         {
           common::name rm(request_method().c_str());
           form.set(
@@ -312,6 +310,8 @@ BOOST_CGI_NAMESPACE_BEGIN
      * read functions) it will be necessary to call end, rather than 
      * just returning from the sub_main function.
      *
+     * @param http_status The HTTP status of the request.
+     *
      * @param program_status This value is returned to the server
      * indicating the state of the request after it was finished 
      * handling. It is implementation defined how the server deals with
@@ -352,34 +352,6 @@ BOOST_CGI_NAMESPACE_BEGIN
     void abort()
     {
       this->service.set_status(this->implementation, aborted);
-    }
-
-    /// Check if a POST variable references a file upload.
-    /**
-     * File uploads, which originate from a form POSTed using the
-     * multipart/form-data encoding type are saved to disk.
-     *
-     * Only the filename is stored in the POST map for the request.
-     * If you expect a field to be a file upload, check if it is using
-     * this function.
-     */
-    bool is_file(common::name const& key)
-    {
-      return this->service.is_file(this->implementation, key.c_str());
-    }
-
-    /// Check if a POST variable references a file upload.
-    /**
-     * File uploads, which originate from a form POSTed using the
-     * multipart/form-data encoding type are saved to disk.
-     *
-     * Only the filename is stored in the POST map for the request.
-     * If you expect a field to be a file upload, check if it is using
-     * this function.
-     */
-    bool is_file(string_type& key)
-    {
-      return this->service.is_file(this->implementation, key);
     }
 
     /// Clear the data for the request, for reusing this object.
@@ -662,14 +634,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
       this->service.status(this->implementation, status);
     }
-    
-    /// Get the form_part for the passed key, which may not exist.
-    boost::optional<common::form_part&> get_form_part(string_type const& key)
-    {
-      return this->service.get_form_part(this->implementation, key);
-    }
-    
-  };
+   };
 
    template<typename P>
    std::size_t hash_value(basic_request<P> const& req)

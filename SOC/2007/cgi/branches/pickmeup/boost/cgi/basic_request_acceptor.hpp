@@ -35,25 +35,15 @@ BOOST_CGI_NAMESPACE_BEGIN
     typedef
         typename service_type::implementation_type::port_number_type
     port_number_type;
-    typedef
-        typename service_type::implementation_type::acceptor_service_type
-    next_layer_type;
-    typedef
-        typename service_type::endpoint_type
-    endpoint_type;
-    typedef typename service_type::native_type             native_type;
-    typedef
-        typename service_type::service_impl_type::protocol_service_type
-    protocol_service_type;
-    
-
-    //template<typename IoServiceProvider>
-    //explicit basic_request_acceptor(
-    //      basic_protocol_service<protocol_type, IoServiceProvider>& ps)
-    //  : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
-    //{
-    //  this->service.set_protocol_service(this->implementation, ps);
-    //}
+    typedef typename 
+        service_type::acceptor_service_type       next_layer_type;
+    typedef typename
+        service_type::endpoint_type               endpoint_type;
+    typedef typename service_type::native_type    native_type;
+    typedef typename 
+        service_type::protocol_service_type       protocol_service_type;
+    typedef typename 
+        service_type::accept_handler_type         accept_handler_type;
 
     template<typename IoServiceProvider>
     explicit basic_request_acceptor(
@@ -223,7 +213,25 @@ BOOST_CGI_NAMESPACE_BEGIN
                                  , native_acceptor, ec);
     }
 
-    /// Accept one request
+    /// Accept one request and handle it with `handler`.
+    int accept(accept_handler_type handler)
+    {
+      boost::system::error_code ec;
+      int status = this->service.accept(this->implementation, handler, 0, ec);
+      detail::throw_error(ec);
+      return status;
+    }
+
+    int accept(accept_handler_type handler, boost::system::error_code& ec)
+    {
+      return this->service.accept(this->implementation, handler, 0, ec);
+    }
+
+    void async_accept(accept_handler_type handler)
+    {
+      this->service.async_accept(this->implementation, handler);
+    }
+
     template<typename CommonGatewayRequest>
     void accept(CommonGatewayRequest& request)
     {
@@ -237,7 +245,6 @@ BOOST_CGI_NAMESPACE_BEGIN
     boost::system::error_code
       accept(CommonGatewayRequest& request, boost::system::error_code& ec)
     {
-      //std::cerr<< "mine:::: endpoint.port := " << this->implementation.endpoint_.port() << std::endl;
       return this->service.accept(this->implementation, request, 0, ec);
     }
 
@@ -248,9 +255,6 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
       return this->service.accept(this->implementation, request, &ep, ec);
     }
-
-    //template<typename CommonGatewayRequest, typename Endpoint>
-    //boost::system::error_code
 
     /// Asynchronously accept one request
     template<typename CommonGatewayRequest, typename Handler>

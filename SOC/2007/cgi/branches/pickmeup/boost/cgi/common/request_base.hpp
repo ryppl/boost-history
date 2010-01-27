@@ -43,13 +43,7 @@ BOOST_CGI_NAMESPACE_BEGIN
   public:
     typedef common::request_base<Protocol> base_type;
 
-    /// Get the request ID of a FastCGI request, or 1.
-    template<typename ImplType>
-    boost::uint16_t const& request_id(ImplType& impl) const
-    {
-      return impl.client_.request_id();
-    }
-
+  protected:
     // impl_base is the common base class for all request types'
     // implementation_type and should be inherited by it.
     struct impl_base
@@ -82,7 +76,7 @@ BOOST_CGI_NAMESPACE_BEGIN
       typedef boost::fusion::vector<
           common::env_map, common::get_map
         , common::post_map, common::cookie_map
-        , common::session_map
+        , common::upload_map, common::session_map
       >   var_map_type;
       
       /// Construct.
@@ -103,6 +97,15 @@ BOOST_CGI_NAMESPACE_BEGIN
       common::request_status status() const    { return request_status_; }
       void status(common::request_status& st)  { request_status_ = st; }
 
+      mutable_buffers_type prepare(std::size_t size)
+      {
+        // Make sure we're not trying to make a zero-sized buffer.
+        BOOST_ASSERT(size && "Attempting to allocate a zero-sized buffer.");
+        std::size_t bufsz(post_buffer_.size());
+        post_buffer_.resize(bufsz + size);
+        return boost::asio::buffer(&post_buffer_[bufsz], size);
+      }
+
       protocol_service_type* service_;
       
       var_map_type vars_;
@@ -117,21 +120,12 @@ BOOST_CGI_NAMESPACE_BEGIN
 
       common::http::status_code http_status_;
       common::request_status request_status_;
-      
+
       client_type client_;
       
       boost::scoped_ptr<form_parser_type> fp_;
 
       std::vector<common::form_part> form_parts_;
-
-      mutable_buffers_type prepare(std::size_t size)
-      {
-        // Make sure we're not trying to make a zero-sized buffer.
-        BOOST_ASSERT(size && "Attempting to allocate a zero-sized buffer.");
-        std::size_t bufsz(post_buffer_.size());
-        post_buffer_.resize(bufsz + size);
-        return boost::asio::buffer(&post_buffer_[bufsz], size);
-      }
     };
     
     template<typename ImplType, typename Service>
@@ -152,7 +146,16 @@ BOOST_CGI_NAMESPACE_BEGIN
       ImplType& impl_;
       Service* service_;
     };
-     
+    
+  public:
+  
+    /// Get the request ID of a FastCGI request, or 1.
+    template<typename ImplType>
+    boost::uint16_t const& request_id(ImplType& impl) const
+    {
+      return impl.client_.request_id();
+    }
+
     /// Load the base_environment into the current environment.
     /**
      * Parsed the base_environment and add it to the current request's
@@ -237,33 +240,6 @@ BOOST_CGI_NAMESPACE_BEGIN
           && impl.client_.is_open();
     }
 
-    /// Check if a given POST variable represents a file upload.
-    template<typename ImplType>
-    bool is_file(ImplType& impl
-                , typename ImplType::string_type const& key)
-    {
-      boost::optional<common::form_part&>
-        part = get_form_part(impl, key);
-      return part && !part->filename.empty();
-    }
-    
-    /// Get the form_part for the passed key, which may not exist.
-    template<typename ImplType>
-    boost::optional<common::form_part&>
-      get_form_part(ImplType& impl, typename ImplType::string_type const& key)
-    {
-       typedef std::vector<common::form_part>::iterator
-          iter_t;
-
-       for(iter_t iter (impl.form_parts_.begin())
-          , end (impl.form_parts_.end()); iter != end; ++iter)
-       {
-          if (iter->name == key.c_str())
-             return boost::optional<common::form_part&>(*iter);
-       }
-       return boost::optional<common::form_part&>();
-    }
-
     /// Synchronously read/parse the request meta-data
     template<typename ImplType>
     boost::system::error_code
@@ -283,22 +259,21 @@ BOOST_CGI_NAMESPACE_BEGIN
          = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
       impl.client_.bytes_left() = impl.bytes_left_;
 
-      std::string const& request_method
-         = env_vars(impl.vars_)["REQUEST_METHOD"];
-
-      if ((request_method == "GET" || request_method == "HEAD")
-          && (parse_opts & common::parse_get_only))
+      // We could check the request method to determine if the query string
+      // should be parsed, but it is useful to always parse it. AFAIK this is
+      // portable.
+      if (parse_opts & common::parse_get_only)
       {
-        parse_get_vars(impl, ec);
+        if (!parse_get_vars(impl, ec))
+          return ec;
       }
-      else
-      if (request_method == "POST"
+      
+      if (env_vars(impl.vars_)["REQUEST_METHOD"] == "POST"
           && parse_opts & common::parse_post_only)
       {
-        parse_post_vars(impl, ec);
+        if (!parse_post_vars(impl, ec))
+          return ec;
       }
-
-      if (ec) return ec;
 
       if (parse_opts & common::parse_cookies_only)
       {
@@ -367,9 +342,9 @@ BOOST_CGI_NAMESPACE_BEGIN
             context
                 = { env_vars(impl.vars_)["CONTENT_TYPE"]
                   , impl.post_buffer_
-                  , impl.form_parts_
                   , impl.client_.bytes_left_
                   , post_vars(impl.vars_)
+                  , upload_vars(impl.vars_)
                   , callback
                   , impl.stdin_parsed_
                   , env_vars(impl.vars_)["REMOTE_ADDR"]

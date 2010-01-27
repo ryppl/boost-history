@@ -18,11 +18,12 @@ BOOST_CGI_NAMESPACE_BEGIN
      , unloaded       = null
      , activated      = 1
      , accepted       = activated
-     , env_read       = 2
-     , get_read       = 4
-     , post_read      = 8
-     , cookies_read   = 16
-     , loaded         = 32
+     , begin_request_found = 2
+     , env_read       = 4
+     , get_read       = 8
+     , post_read      = 16
+     , cookies_read   = 32
+     , loaded         = 64
      , ok             = loaded
      , aborted
      , closed

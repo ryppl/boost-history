@@ -50,7 +50,6 @@
  * Usage:
  * ------
  * // Default to a HTML content-type.
- * #define BOOST_CGI_DEFAULT_CONTENT_TYPE "text/html"
  */
 #if defined(BOOST_CGI_NO_DEFAULT_CONTENT_TYPE)
 //{

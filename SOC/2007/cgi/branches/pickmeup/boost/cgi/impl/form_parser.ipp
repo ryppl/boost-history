@@ -21,6 +21,16 @@
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/random/mersenne_twister.hpp>
 
+/// Characters that should be removed from any file uploads.
+/**
+ * The filename of any file uploads is a stripped version of
+ * the provided file's name. As such, we need to clean the uploaded
+ * file's name.
+ */
+#ifndef BOOST_CGI_UNSAFE_FILENAME_CHARS
+#   define BOOST_CGI_UNSAFE_FILENAME_CHARS ":~.|"
+#endif // BOOST_CGI_UNSAFE_FILENAME_CHARS
+
 BOOST_CGI_NAMESPACE_BEGIN
 
  namespace common {
@@ -148,11 +158,9 @@ BOOST_CGI_NAMESPACE_BEGIN
       string_type field_name (meta.substr(pos3+5, pos4-pos3-5));
       algo::trim_if(field_name, algo::is_any_of("\" "));
       
-      string_type content_disposition (meta.substr(pos1+11, pos2-pos1-11));
-      
       common::form_part part;
       part.name = field_name;
-      part.content_disposition = content_disposition;
+      part.content_disposition = meta.substr(pos1+11, pos2-pos1-11);
 
       std::size_t next_pos = buffer.find(string_type("\r\n") + marker, end);
       
@@ -169,6 +177,7 @@ BOOST_CGI_NAMESPACE_BEGIN
         string_type filename (meta.substr(pos6+9, pos5-pos6-9));
         algo::trim_if(filename, algo::is_any_of("\" "));
         // Load the filename as the value on the request's post map.
+        //part.value = "<FileUpload: '" + filename + "'>";
         part.value = filename;
         // Empty parameters could probably be left out, but setting even
         // an empty variable is consistent with the rest of the library.
@@ -184,6 +193,8 @@ BOOST_CGI_NAMESPACE_BEGIN
           string_type randomatter (
             boost::lexical_cast<string_type>(time(NULL)));
           string_type user_ip (context_->random_string);
+          // Clean dangerous characters.
+          algo::trim_if(filename, algo::is_any_of(BOOST_CGI_UNSAFE_FILENAME_CHARS));
           string_type internal_filename(
             BOOST_CGI_UPLOAD_DIRECTORY+filename+"."+user_ip+"."+randomatter);
           part.path = internal_filename;
@@ -192,11 +203,11 @@ BOOST_CGI_NAMESPACE_BEGIN
             , std::ios::out | std::ios::binary);
           file<< content;
           //file.flush();
+          context_->uploads_map[part.name.c_str()] = part;
         }
       }
       // Load the data to the request's post map.
       context_->data_map[part.name.c_str()] = part.value;
-      context_->form_parts.push_back(part);
       
       buffer.erase(0, next_pos+marker.length()+2);
       if (buffer.length() >= 2

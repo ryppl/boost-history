@@ -18,8 +18,8 @@ BOOST_CGI_NAMESPACE_BEGIN
    /// Typedef for common usage (FCGI)
    typedef
      ::BOOST_CGI_NAMESPACE::common::basic_request_acceptor<
-	   fcgi_request_acceptor_service<>
-     >
+	       fcgi_request_acceptor_service<>
+       >
    acceptor;
 
  } // namespace fcgi

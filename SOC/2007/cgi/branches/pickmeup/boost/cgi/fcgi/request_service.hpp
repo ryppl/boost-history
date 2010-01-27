@@ -45,8 +45,7 @@ BOOST_CGI_NAMESPACE_BEGIN
       typedef spec_detail::Header                   header_type;
 
       implementation_type()
-        : base_type::impl_base()
-        , id_(0)
+        : id_(0)
         , request_role_(spec_detail::ANY)
       {
       }
@@ -79,6 +78,7 @@ BOOST_CGI_NAMESPACE_BEGIN
 
     fcgi_request_service(::BOOST_CGI_NAMESPACE::common::io_service& ios)
       : detail::service_base<fcgi_request_service>(ios)
+      , strand_(ios)
     {
     }
 
@@ -125,7 +125,7 @@ BOOST_CGI_NAMESPACE_BEGIN
 
     // **FIXME**
     template<typename Handler>
-    void async_load(implementation_type& impl, bool parse_stdin, Handler handler);
+    void async_load(implementation_type& impl, common::parse_options opts, Handler handler);
 
     /// Returns true if the request environment params have been read.
     bool params_read(implementation_type& impl);
@@ -140,6 +140,35 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
       return impl.client_;
     }
+    
+  private:
+  
+    template<typename Handler>
+    void do_load(
+        implementation_type& impl, common::parse_options opts,
+        Handler handler, boost::system::error_code const& ec
+      );
+
+    template<typename Handler>
+    void handle_read_header(
+        implementation_type& impl, 
+        Handler handler,
+        boost::system::error_code const& ec,
+        const std::size_t bytes_transferred
+      );
+
+    template<typename Handler>
+    void handle_begin_request_header(
+        implementation_type& impl,
+        Handler handler,
+        boost::system::error_code const& ec
+      );
+
+    template<typename Handler>
+    void async_read_header(
+        implementation_type& impl
+      , Handler handler
+      , boost::system::error_code& ec);
 
   protected:
     /// Read and parse the cgi POST meta variables (greedily)
@@ -171,6 +200,18 @@ BOOST_CGI_NAMESPACE_BEGIN
     /// Read a single header, buf do nothing with it.
     boost::system::error_code
       read_header(implementation_type& impl, boost::system::error_code& ec);
+
+    /// Asynchronously read a single header, but do nothing with it.
+    template<typename Handler>
+    void async_read_header(implementation_type& impl, Handler handler)
+    {
+      // clear the header first (might be unneccesary).
+      impl.header_buf_ = implementation_type::header_buffer_type();
+
+      async_read(*impl.client_.connection(), buffer(impl.header_buf_)
+                , boost::asio::transfer_all(), handler);
+    }
+
 
     /*** Various handlers go below here; they might find a
      * better place to live ***/
@@ -237,6 +278,8 @@ BOOST_CGI_NAMESPACE_BEGIN
                           , implementation_type::header_buffer_type& header
                           , boost::system::error_code& ec);
                           
+  private:
+    boost::asio::io_service::strand strand_;
   };
 
  } // namespace fcgi

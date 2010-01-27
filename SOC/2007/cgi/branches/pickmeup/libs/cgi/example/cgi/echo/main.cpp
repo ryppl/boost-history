@@ -66,7 +66,7 @@ void format_map(OStream& os, Request& req, Map& m, const std::string& title)
         <<   "</div>"
              "<div class=\"var_value\">"
         <<       iter->second
-             << (req.is_file(iter->first) ? " (file)" : "")
+             << (req.uploads.count(iter->first) ? " (file)" : "")
         <<   "</div>"
            "</div>";
     }
@@ -100,24 +100,22 @@ int main()
              "<br />"
              "<input type=file name=user_file />"
              "<input type=hidden name=cmd value=multipart_test />"
-             "<br />"
-             "<input type=submit value=submit />"
-           "</form><p />";
+             "<br />";
+  // Access file uploads (which are saved to disk).
+  if (req.uploads.count("user_file")) {
+    cgi::common::form_part& part = req.uploads["user_file"];
+    if (!part.filename.empty())
+      resp<< "Saved uploaded file to: " << part.path << "<br />";
+  }
+  resp<< "<input type=submit value=submit />"
+         "<br />";
+         "</form><p />";
 
   format_map(resp, req, req.env, "Environment Variables");
   //format_map(resp, req, req.get, "GET Variables");
   format_map(resp, req, req.form, "Form [" + req.method() + "] Variables");
   format_map(resp, req, req.cookies, "Cookie Variables");
-
-  boost::optional<cgi::common::form_part&> part = req.get_form_part("user_file");
-  if (part)
-    resp<< "File path: " << (*part).path;
-  else
-    resp<< "File not found.";
-    
-  if (req.is_file("user_file"))
-    resp<< " (uploaded as a file)";
-
+  format_map(resp, req, req.uploads, "Uploaded Files");
 
   // Note that this (and any other) HTTP header can go either before or after
   // the response contents.

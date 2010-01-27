@@ -23,22 +23,20 @@
 #include "boost/cgi/fcgi.hpp"
 
 //using namespace std;
-using std::cerr;
-using std::endl;
 using namespace boost::fcgi;
 
 // The styling information for the page, just to make things look nicer.
 static const char* gCSS_text =
 "body { padding: 0; margin: 3%; border-color: #efe; }"
-"ul.data-map .title"
+".var_map_title"
     "{ font-weight: bold; font-size: large; }"
-"ul.data-map"
+".var_map"
     "{ border: 1px dotted; padding: 2px 3px 2px 3px; margin-bottom: 3%; }"
-"ul.data-map li"
+".var_pair"
     "{ border-top: 1px dotted; overflow: auto; padding: 0; margin: 0; }"
-"ul.data-map div.name"
+".var_name"
     "{ position: relative; float: left; width: 30%; font-weight: bold; }"
-"ul.data-map div.value"
+".var_value"
     "{ position: relative; float: left; width: 65%; left: 1%;"
      " border-left: 1px solid; padding: 0 5px 0 5px;"
      " overflow: auto; white-space: pre; }"
@@ -53,26 +51,27 @@ static const char* gCSS_text =
 template<typename OStream, typename Request, typename Map>
 void format_map(OStream& os, Request& req, Map& m, const std::string& title)
 {
-  os<< "<ul class=\"data-map\">"
-         "<div class=\"title\">"
+  os<< "<div class=\"var_map\">"
+         "<div class=\"var_map_title\">"
     <<       title
     <<   "</div>";
 
   if (m.empty())
-    os<< "<li>EMPTY</li>";
+    os<< "<div class=\"var_pair\">EMPTY</div>";
   else
     for (typename Map::const_iterator i = m.begin(); i != m.end(); ++i)
     {
-      os<< "<li>"
-             "<div class=\"name\">"
+      os<< "<div class=\"var_pair\">"
+             "<div class=\"var_name\">"
         <<       i->first
         <<   "</div>"
-             "<div class=\"value\">"
+             "<div class=\"var_value\">"
         <<       i->second
+             << (req.is_file(i->first) ? " (file)" : "")
         <<   "</div>"
-           "</li>";
+           "</div>";
     }
-  os<< "<div class=\"clear\"></div></ul>";
+  os<< "<div class=\"clear\"></div></div>";
 }
 
 std::size_t process_id()
@@ -85,7 +84,9 @@ std::size_t process_id()
 }
 
 
-int handle_request(request& req)
+/// This function accepts and handles a single request.
+template<typename Request>
+int handle_request(Request& req)
 {
   boost::system::error_code ec;
   
@@ -118,7 +119,7 @@ int handle_request(request& req)
            "Request ID = " << req.id() << "<br />"
            "Request Hash = " << req.hash() << "<br />"
            "Process ID = " << process_id() << "<br />"
-           "<form method=post enctype=\"multipart/form-data\">"
+           "<form method=post>" // enctype=\"multipart/form-data\">"
              "<input type=text name=name value='"
       <<         req.post["name"] << "' />"
              "<br />"
@@ -138,7 +139,6 @@ int handle_request(request& req)
   format_map(resp, req, req.env, "Environment Variables");
   format_map(resp, req, req.get, "GET Variables");
   format_map(resp, req, req.post, "POST Variables");
-  format_map(resp, req, req.uploads, "File Uploads");
   format_map(resp, req, req.cookies, "Cookie Variables");
 
   // Print the buffer containing the POST data and the FastCGI params.
@@ -165,6 +165,8 @@ try {
   // Make a `service` (more about this in other examples).
   service s;
   
+  using boost::asio::ip::tcp;
+
   // Make an `acceptor` for accepting requests through.
 #if defined (BOOST_WINDOWS)
   acceptor a(s, 8009);    // Accept requests on port 8009.
@@ -179,25 +181,28 @@ try {
   int ret(0);
   for (;;)
   {
+    request req(s);
     //
-    // An acceptor can take a request handler as an argument to `accept` and it
-    // will accept a request and pass the handler the request. The return value
-    // of `accept` when used like this is the result of the handler.
+    // Now we enter another loop that reuses the request's memory - makes
+    // things more efficient). You should always do this for 
+    // now; this requirement might be removed in future.
     //
-    // Note that a request handler is any function or function object with the
-    // signature:
-    //  boost::function<int (boost::fcgi::request&)>
-    // See the documentation for Boost.Function and Boost.Bind for more.
-    //
-    // The acceptor maintains an internal queue of requests and will reuse a
-    // dead request if one is waiting.
-    //
-    ret = a.accept(&handle_request);
-    if (ret)
-      break;
+    for (;;)
+    {
+      a.accept(req);
+      std::cerr<< "Accepted new request.\n";
+      ret = handle_request(req);
+      if (ret)
+        break;
+      //
+      // Clear the request's data, so information doesn't pass between
+      // different users (this step isn't really necessary, because
+      // the library will do this automatically.
+      //
+      req.clear();
+    }
   }
   
-  std::cerr<< "Processing finished. Press enter to continue..." << std::endl;
   std::cin.get();
   
   return ret;

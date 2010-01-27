@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <boost/range.hpp>
+#include <boost/filesystem.hpp>
 #include "boost/cgi/config.hpp"
 #include "boost/cgi/common/name.hpp"
 
@@ -27,13 +28,23 @@ BOOST_CGI_NAMESPACE_BEGIN
      typedef std::map<
        string_type, pair_t
      > meta_data_map_type;
-   
-     form_part()
+     
+     ~form_part()
      {
-     }
-
-     bool operator==(form_part& other) {
-        return this->name == other.name;
+     /*
+       try {
+           // Delete any file saved in uploading this.
+           namespace fs = boost::filesystem;
+           if (!path.empty() && fs::exists(path)) {
+#ifndef NDEBUG
+             std::cerr<< "Removing file: " << path << std::endl;
+#endif // NDEBUG
+             fs::remove(path);
+           }
+       } catch(...) {
+           // pass
+       }
+       */
      }
 
      meta_data_map_type meta_data_;
@@ -48,10 +59,10 @@ BOOST_CGI_NAMESPACE_BEGIN
      string_type content_type; // must exist
      string_type content_disposition; // must exist
      string_type name; // must exist
-     string_type value; // Either the data itself, or the filename for 
-     string_type filename;
+     string_type value; // Either the data itself, or the filename for file uploads.
+     boost::filesystem::path filename;
      // Where the actual uploaded file is stored.
-     string_type path;
+     boost::filesystem::path path;
 
    public:
      /// TODO: Check that the uploaded file isn't empty too.
@@ -65,14 +76,6 @@ BOOST_CGI_NAMESPACE_BEGIN
      operator std::basic_string<T> () { return value; }
     
      friend std::ostream& operator<<(std::ostream& os, form_part const& part);
-    
-     // Using a simple map while everything is changing. This will not copy the
-     // values when it is properly implemented (it'll hold a pair of iterators 
-     // to the data).
-     //std::map<string_type, string_type> meta_data_;
-     
-     // Boolean to show if the form part has been completely read/parsed
-     //bool finished_;
    };
 
   inline

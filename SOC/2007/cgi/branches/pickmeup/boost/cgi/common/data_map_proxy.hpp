@@ -7,9 +7,30 @@
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/config.hpp"
 
+/// Throws an exception if you try to use some request data without
+/// loading the request first. This checking is only done in debug
+/// builds and is a noop in release builds.
+#ifndef BOOST_CGI_MAP_ASSERT
+# ifndef NDEBUG
+#   define BOOST_CGI_MAP_ASSERT(x) if (!x) throw map_read_error<map_type>()
+# else
+#   define BOOST_CGI_MAP_ASSERT(x) void
+# endif // NDEBUG
+#endif // BOOST_CGI_MAP_ASSERT
+
 BOOST_CGI_NAMESPACE_BEGIN
 
  namespace common {
+ 
+  template<typename T>
+  struct map_read_error
+    : std::runtime_error
+  {
+    map_read_error()
+      : std::runtime_error("Attempt to access uninitialised data map. Did you forget to call request::load()?")
+    {
+    }
+  };
 
   /// A proxy class to provide access to the data maps as member variables.
   /**
@@ -17,12 +38,13 @@ BOOST_CGI_NAMESPACE_BEGIN
    * interface for the different data maps.
    *
    * It also includes an as<> member function which casts the found data
-   * into any type the user specifies.
+   * into a type the user specifies.
    */
   template<typename MapType>
   struct data_map_proxy
   {
     typedef MapType                                   map_type;
+    typedef data_map_proxy<map_type>                  self_type;
     typedef typename map_type::key_type               key_type;
     typedef typename map_type::value_type             value_type;
     typedef typename map_type::mapped_type            mapped_type;
@@ -33,41 +55,49 @@ BOOST_CGI_NAMESPACE_BEGIN
     typedef typename map_type::const_reverse_iterator const_reverse_iterator;
     typedef typename map_type::allocator_type         allocator_type;
     
-    void set(map_type& data) { impl = &data; }
-    
-    iterator begin() {
-       BOOST_ASSERT(impl); return impl->begin(); }
-    iterator end() {
-       BOOST_ASSERT(impl); return impl->end(); }
-    const_iterator begin() const {
-       BOOST_ASSERT(impl); return impl->begin(); }
-    const_iterator end() const {
-       BOOST_ASSERT(impl); return impl->end(); }
-    reverse_iterator rbegin() {
-       BOOST_ASSERT(impl); return impl->rbegin(); }
-    reverse_iterator rend() {
-       BOOST_ASSERT(impl); return impl->rend(); }
-    const_reverse_iterator rbegin() const {
-       BOOST_ASSERT(impl); return impl->rbegin(); }
-    const_reverse_iterator rend() const {
-       BOOST_ASSERT(impl); return impl->rend(); }
+    self_type()
+      : impl(NULL)
+    {
+    }
 
-    bool empty() { BOOST_ASSERT(impl); return impl->empty(); }
+    /// Map iterators.
     
-    void clear() { BOOST_ASSERT(impl); return impl->clear(); }
-    
-    size_type size() const { BOOST_ASSERT(impl); return impl->size(); }
-    
+    iterator begin() { 
+       BOOST_CGI_MAP_ASSERT(impl); return impl->begin(); }
+    iterator end() {
+       BOOST_CGI_MAP_ASSERT(impl); return impl->end(); }
+    const_iterator begin() const {
+       BOOST_CGI_MAP_ASSERT(impl); return impl->begin(); }
+    const_iterator end() const {
+       BOOST_CGI_MAP_ASSERT(impl); return impl->end(); }
+    reverse_iterator rbegin() {
+       BOOST_CGI_MAP_ASSERT(impl); return impl->rbegin(); }
+    reverse_iterator rend() {
+       BOOST_CGI_MAP_ASSERT(impl); return impl->rend(); }
+    const_reverse_iterator rbegin() const {
+       BOOST_CGI_MAP_ASSERT(impl); return impl->rbegin(); }
+    const_reverse_iterator rend() const {
+       BOOST_CGI_MAP_ASSERT(impl); return impl->rend(); }
+
+
+    void set(map_type& data) { impl = &data; }
+
+    bool empty() { BOOST_CGI_MAP_ASSERT(impl); return impl->empty(); }
+
+    void clear() { BOOST_CGI_MAP_ASSERT(impl); return impl->clear(); }
+
+    size_type size() const { BOOST_CGI_MAP_ASSERT(impl); return impl->size(); }
+
     size_type count(const key_type& key) {
-       BOOST_ASSERT(impl);
+       BOOST_CGI_MAP_ASSERT(impl);
        return impl->count(key);
     }
-    
+
     /// Get a value for the key, with fallback.
     mapped_type const&
       pick(key_type const& key, mapped_type const& default_value) const
     {
-      BOOST_ASSERT(impl);
+      BOOST_CGI_MAP_ASSERT(impl);
       const_iterator iter = impl->find(key);
       return iter == impl->end() ? default_value : iter->second;
     }
@@ -90,7 +120,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     template<typename T>
     T as(key_type const& key, T const& default_value = T()) const
     {
-      BOOST_ASSERT(impl);
+      BOOST_CGI_MAP_ASSERT(impl);
       const_iterator iter = impl->find(key);
 
       T val (default_value);
@@ -104,28 +134,28 @@ BOOST_CGI_NAMESPACE_BEGIN
       }
       return val;
     }
-    
+
     mapped_type& operator[](const char* varname) {
-      BOOST_ASSERT(impl); 
+      BOOST_CGI_MAP_ASSERT(impl); 
       return (*impl)[varname];
     }
-    
+
     mapped_type& operator[](const char* varname) const {
-      BOOST_ASSERT(impl); 
+      BOOST_CGI_MAP_ASSERT(impl); 
       return (*impl)[varname];
     }
-    
+
     mapped_type& operator[](key_type const& varname) {
-      BOOST_ASSERT(impl); 
+      BOOST_CGI_MAP_ASSERT(impl); 
       return (*impl)[varname.c_str()];
     }
-    
+
     mapped_type const& operator[](key_type const& varname) const {
-      BOOST_ASSERT(impl); 
+      BOOST_CGI_MAP_ASSERT(impl); 
       return (*impl)[varname.c_str()];
     }
-    
-    operator map_type&() { BOOST_ASSERT(impl); return *impl; }
+
+    operator map_type&() { BOOST_CGI_MAP_ASSERT(impl); return *impl; }
     bool operator!() const { return !impl; }
 
   private:      

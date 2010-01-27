@@ -42,31 +42,20 @@ BOOST_CGI_NAMESPACE_BEGIN
     typedef typename traits::request_type                    request_type;
     typedef typename boost::shared_ptr<request_type>         request_ptr;
     typedef std::set<request_ptr>                            set_type;
-      //typename boost::mpl::if_<
-      //  boost::is_same<protocol_type, tags::acgi>::value
-      //  , request_type::pointer
-      //  , std::set<request_type::pointer>
-      //  >::type
-
     typedef std::queue<request_ptr>                          queue_type;
 
     basic_protocol_service(int pool_size_hint = 1)
       : ios_provider_(pool_size_hint)
-                          //, strand_(ios_provider_.io_service())
-                          //, gateway_(*this)
     {
     }
 
     basic_protocol_service(boost::asio::io_service& ios)
       : ios_provider_(ios)
-                          //, strand_(ios)
-                          //, gateway_(*this)
     {
     }
 
     ~basic_protocol_service()
     {
-      //gateway_.stop();
     }
 
     /// Run all the io_services contained by this service
@@ -99,8 +88,6 @@ BOOST_CGI_NAMESPACE_BEGIN
     void reset()
     {
       request_queue_.clear();
-      //std::for_each(request_set_.begin(), request_set_.end()
-      //              , boost::bind(&request_type::abort, boost::arg<1>()));
       request_set_.clear();
       ios_provider_.reset();
     }
@@ -136,9 +123,6 @@ BOOST_CGI_NAMESPACE_BEGIN
 
   private:
     ios_provider_type ios_provider_;
-
-    /// A strand is used for guaranteeing handlers are dispatched sequentially
-    //boost::asio::strand strand_;
 
     /// A std::set of all the requests.
     set_type request_set_;

@@ -18,6 +18,8 @@
 #include <boost/cgi/common/response.hpp>
 #include <ctemplate/template.h>
 
+#define BOOST_CGI_HAS_STENCIL 1
+
 namespace stencils {
 
 class include_error
@@ -33,6 +35,16 @@ public:
   {}
 };
 
+class template_error
+  : public std::logic_error
+{
+public:
+  template<typename Str>
+  template_error(Str const& filename)
+     : std::logic_error(
+        "Unable to find <Template: " + filename + ">")
+  {}
+};
 
 /// A class used to represent a section in the stencil.
 class section
@@ -143,7 +155,7 @@ public:
    * @return dictionary  The returned sub-dictionary is used to set fields in
    *                     an included stencil.
    *
-   * @param section      The section to include. Be sure to set *both* the
+   * @param sec          The section to include. Be sure to set *both* the
    *                     section name and filename first.
    */
   dictionary include(section const& sec)
@@ -169,7 +181,8 @@ public:
 
   /// Set the varible `name` to `value` in the stencil.
   template<>
-  dictionary& dictionary::set(string_type const& name, string_type const& value)
+  inline dictionary&
+  dictionary::set(string_type const& name, string_type const& value)
   {
     impl->SetValue(name, value);
     return *this;
@@ -177,7 +190,8 @@ public:
   
   /// Set a variable and show a section in one go.
   template<>
-  dictionary& dictionary::set(
+  inline dictionary&
+  dictionary::set(
       string_type const& name,
       string_type const& value,
       section const& sec
@@ -204,30 +218,66 @@ public:
   typedef stencils::section             section;
   typedef stencils::dictionary          dictionary;
   
+  enum reload_option
+  {
+    cached,
+    reload,
+    reload_all
+  };
+  
   enum strip
   {
     do_not_strip = ctemplate::DO_NOT_STRIP,
     strip_blank_lines = ctemplate::STRIP_BLANK_LINES,
     strip_whitespace = ctemplate::STRIP_WHITESPACE
   };
-  
+
+  enum parse_state
+  {
+    unused = ctemplate::TS_UNUSED,
+    empty = ctemplate::TS_EMPTY,
+    error = ctemplate::TS_ERROR,
+    ready = ctemplate::TS_READY,
+    should_reload = ctemplate::TS_SHOULD_RELOAD
+  };
+ 
   stencil(impl_type* parent_dict)
-    : impl(parent_dict->MakeCopy("response"))
+    : tmpl(NULL)
+    , impl(parent_dict->MakeCopy("response"))
+    , expanded(false)
+    , per_expand_data()
   {
   }
   
   stencil(string_type const& root_dir = "")
-    : impl(new impl_type("response"))
+    : tmpl(NULL)
+    , impl(new impl_type("response"))
+    , expanded(false)
+    , per_expand_data()
   {
     if (!root_dir.empty())
       ctemplate::Template::SetTemplateRootDirectory(root_dir);
   }
   
+  /// Clear the response buffer.
+  void reset(impl_type* use_dict = NULL)
+  {
+    impl.reset(use_dict ? use_dict : new impl_type("response"));
+    tmpl = NULL;
+    base_type::reset();
+  }
+  
   /// Get the implementation type of the template.
   impl_type& native() { return *impl; }
+  
+  parse_state state()
+  {
+    return tmpl ? (parse_state)tmpl->state() : unused;
+  }
 
   bool expand(
       string_type const& template_name,
+      enum reload_option reload_if_changed = cached,
       enum strip strip_option = strip_blank_lines
     )
   {
@@ -236,21 +286,29 @@ public:
     // Clear the response body (but not headers).
     clear(false);
 
+    if (reload_if_changed == reload_all)
+      ctemplate::Template::ReloadAllIfChanged();
+
     // Get hold of the template to output.
     tmpl = ctemplate::Template::GetTemplate(
               template_name,
               (ctemplate::Strip)strip_option
            );
-           
-    if (!tmpl)
-      return false;
-    
+
+    if (!tmpl || state() == error)
+      throw template_error(template_name);
+    else
+    if (reload_if_changed == reload)
+      tmpl->ReloadIfChanged();
+
     // Add the response content back into the template.
     set("content", content);
     
     // Expand the template and write it to the response.
     string_type body;
-    tmpl->Expand(&body, impl.get());
+    bool success = tmpl->ExpandWithData(&body, impl.get(), &per_expand_data);
+    if (!success)
+      return false;
     write(body);
 
     // All ok.
@@ -320,15 +378,23 @@ public:
     }
     return *this;
   }
+  
+  self_type& annotate_output(bool annotate = true) {
+    if (annotate)
+      per_expand_data.SetAnnotateOutput("");
+    return *this;
+  }
 
   stencil_type* tmpl;
   boost::scoped_ptr<impl_type> impl;
   bool expanded;
+  ctemplate::PerExpandData per_expand_data;
 };
 
   /// Set the varible `name` to `value` in the stencil.
   template<>
-  stencil& stencil::set(string_type const& name, string_type const& value)
+  inline stencil&
+  stencil::set(string_type const& name, string_type const& value)
   {
     impl->SetValue(name, value);
     return *this;
@@ -336,7 +402,8 @@ public:
 
   /// Set a variable and show a section in one go.
   template<>
-  stencil& stencil::set(
+  inline stencil&
+  stencil::set(
       string_type const& name,
       string_type const& value,
       section const& sec
@@ -348,10 +415,11 @@ public:
 
 } } } // namespace boost::cgi::common
 
-namespace boost { namespace cgi {
+namespace boost {
 
-  using common::stencil;
+ namespace cgi { using common::stencil; }
+ namespace fcgi { using cgi::common::stencil; }
   
-} } // namespace boost::cgi
+} // namespace boost
 
 #endif // BOOST_CGI_UTILITY_STENCIL_HPP_INCLUDED_20091222_

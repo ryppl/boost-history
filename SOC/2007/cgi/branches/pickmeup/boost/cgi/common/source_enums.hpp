@@ -20,15 +20,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     *   > Update this file
     *   > Update map.hpp with a new map type
     *   > Update `data_map_type` in the `request_base` class
-    *   > Use the `BOOST_CGI_DETAIL_MAP_ACCESS` macro in `basic_request<>`,
-    *     next to the other uses of it.
     */
-   enum env_data_type     { env,        env_data       };
-   enum get_data_type     { get,        get_data       };
-   enum post_data_type    { post,       post_data      };
-   enum cookie_data_type  { cookies,    cookie_data    };
-   enum form_data_type    { form,       form_data      };
-   enum session_data_type { session,    session_data   };
 
    template<typename Impl>
      env_map&
@@ -43,8 +35,11 @@ BOOST_CGI_NAMESPACE_BEGIN
      cookie_map&
        cookie_vars(Impl& impl)  { return boost::fusion::at_c<3>(impl); }
    template<typename Impl>
+     upload_map&
+       upload_vars(Impl& impl)  { return boost::fusion::at_c<4>(impl); }
+   template<typename Impl>
      session_map&
-       session_vars(Impl& impl) { return boost::fusion::at_c<4>(impl); }
+       session_vars(Impl& impl) { return boost::fusion::at_c<5>(impl); }
 
  } // namespace common
 BOOST_CGI_NAMESPACE_END

@@ -10,6 +10,7 @@
 #define CGI_FCGI_REQUEST_SERVICE_IPP_INCLUDED__
 
 #include <boost/fusion/support.hpp>
+#include <boost/fusion/include/algorithm.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/fusion/include/vector.hpp>
 ////////////////////////////////////////////////////////////////
@@ -64,6 +65,14 @@ BOOST_CGI_NAMESPACE_BEGIN
        bool parse_stdin_;
        Handler handler_;
      };
+     
+     struct clear_data
+     {
+       template<typename T>
+       void operator()(T& x) const {
+         x.clear();
+       }
+     };
 
   } // namespace detail
 
@@ -110,20 +119,10 @@ BOOST_CGI_NAMESPACE_BEGIN
     BOOST_CGI_INLINE void
     fcgi_request_service::clear(implementation_type& impl)
     {
-      /*
-      BOOST_ASSERT
-      (   impl.request_status_ < common::activated
-       && impl.request_status_ > common::ok
-       && "Are you trying to clear() a request without closing it?"
-      );
-      */
-                
       impl.post_buffer_.clear();
       impl.param_buffer_.clear();
-      common::get_vars(impl.vars_).clear();
-      common::post_vars(impl.vars_).clear();
-      common::cookie_vars(impl.vars_).clear();
-      common::env_vars(impl.vars_).clear();
+      // Clear all request data.
+      boost::fusion::for_each(impl.vars_, detail::clear_data());
       impl.stdin_parsed_ = false;
       impl.http_status_ = common::http::no_content;
       impl.request_status_ = common::null;
@@ -148,9 +147,6 @@ BOOST_CGI_NAMESPACE_BEGIN
         implementation_type& impl, common::parse_options opts
       , boost::system::error_code& ec)
     {
-      BOOST_ASSERT(!ec &&
-        "Can't load request due to previous errors.");
-
       impl.client_.construct(impl, ec);
       // Bomb out if the client isn't open here.
       if (!impl.client_.connection()->is_open())
@@ -210,7 +206,7 @@ BOOST_CGI_NAMESPACE_BEGIN
       if (request_method == "POST" 
           && opts & common::parse_post_only)
       {
-        std::cerr<< "Parsing post vars now.\n";
+        //std::cerr<< "Parsing post vars now.\n";
 
         if (opts & common::parse_post_only)
         {
@@ -238,14 +234,131 @@ BOOST_CGI_NAMESPACE_BEGIN
 
       return ec;
     }
+    
+    template<typename Handler>
+    BOOST_CGI_INLINE
+    void fcgi_request_service::do_load(
+        implementation_type& impl, common::parse_options opts,
+        Handler handler, boost::system::error_code const& ec
+      )
+    {
+      impl.client_.construct(impl, ec);
+      // Bomb out if the client isn't open here.
+      if (!impl.client_.connection()->is_open())
+          ec = error::client_not_open;
+
+    }
+    
+    template<typename Handler>
+    BOOST_CGI_INLINE
+    void fcgi_request_service::handle_read_header(
+        implementation_type& impl, 
+        Handler handler,
+        boost::system::error_code const& ec,
+        const std::size_t bytes_transferred
+      )
+    {
+      if(ec)
+        handler(ec);
+      else
+      {
+        int id(spec::get_request_id(impl.header_buf_));
+        if (id == spec::null_request_id::value)
+          handle_admin_request(impl);
+        else
+        if (impl.id_ && impl.id_ != id)
+        {
+          // The library doesn't "officially" support multiplexed
+          // connections yet, because I've never had access to a server
+          // that supports it.
+          //
+          // If you have one, can I use it?
+          handler(error::multiplexing_not_supported);
+        }
+        else
+        if (spec::get_type(impl.header_buf_) 
+            == spec::begin_request::value)
+        {
+          impl.id_ = id;
+          impl.client_.request_id_ = id;
+          if (!read_header(impl, ec))
+          {
+            spec::begin_request packet(impl.header_buf_);
+            impl.request_role_ = packet.role();
+            impl.client_.keep_connection_
+              = packet.flags() & spec::keep_connection;
+            strand_.post(&self_type::handle_begin_request_header,
+                this, boost::ref(impl), handler, _1
+              );
+          }
+        }else
+          handle_other_request_header(impl);
+      }
+    }
+        
+    template<typename Handler>
+    BOOST_CGI_INLINE
+    void fcgi_request_service::handle_begin_request_header(
+        implementation_type& impl,
+        Handler handler,
+        boost::system::error_code const& ec
+      )
+    {
+      if (//impl.request_status_ < common::env_read &&
+          opts & common::parse_env)
+      {
+        read_env_vars(impl, ec);
+        //impl.request_status_ = common::env_read;
+      }
+
+      string_type const&
+        request_method (env_vars(impl.vars_)["REQUEST_METHOD"]);
+        
+      if (request_method == "GET")
+      {
+        if (parse_get_vars(impl, ec))
+          return ec;
+      }
+      else
+      if (request_method == "POST" 
+          && opts & common::parse_post_only)
+      {
+        //std::cerr<< "Parsing post vars now.\n";
+
+        if (opts & common::parse_post_only)
+        {
+          while(!ec 
+            && impl.client_.status() < common::stdin_read
+            && impl.request_status_ != common::loaded)
+          {
+            parse_packet(impl, ec);
+          }
+        }
+        
+        if (parse_post_vars(impl, ec))
+	      return ec;
+      }
+      if (opts & common::parse_cookies_only)
+        parse_cookie_vars(impl, ec);
+        
+      if (ec == error::eof) {
+        ec = boost::system::error_code();
+      }
+    }
 
     // **FIXME**
     template<typename Handler> BOOST_CGI_INLINE
     void fcgi_request_service::async_load(
-        implementation_type& impl, bool parse_stdin, Handler handler)
+        implementation_type& impl, common::parse_options opts, Handler handler)
     {
+      strand_.post(
+          boost::bind(&self_type::do_load<Handler>,
+              this, boost::ref(impl), opts, handler
+            )
+        );
+        
       this->io_service().post(
-        detail::async_load_helper<self_type, Handler>(this, parse_stdin, handler)
+        detail::async_load_helper<self_type, Handler>(this, opts & common::parse_post_only, handler)
       );
     }
 
@@ -346,7 +459,7 @@ BOOST_CGI_NAMESPACE_BEGIN
             ec = error::couldnt_write_complete_packet;
         }
 
-      } // while(!ec && !params_read(impl))
+      } // while(!ec && !(status(impl) & common::env_read))
       return ec;
     }
 
@@ -364,6 +477,29 @@ BOOST_CGI_NAMESPACE_BEGIN
         return ec;
       
       return ec;
+    }
+
+    template<typename Handler>
+    BOOST_CGI_INLINE void
+    fcgi_request_service::async_read_header(
+        implementation_type& impl
+      , Handler handler
+      , boost::system::error_code& ec)
+    {
+      // clear the header first (might be unneccesary).
+      impl.header_buf_ = implementation_type::header_buffer_type();
+
+      boost::asio::async_read(
+          *impl.client_.connection(), buffer(impl.header_buf_)
+        , boost::asio::transfer_all()
+        , strand_.wrap(
+              boost::bind(&self_type::handle_read_header,
+                  this, boost::ref(impl), handler,
+                  boost::asio::placeholders::error,
+                  boost::asio::placeholders::bytes_transferred
+                )
+            )
+        )
     }
 
     /*** Various handlers go below here; they might find a

@@ -117,6 +117,12 @@ BOOST_CGI_NAMESPACE_BEGIN
                   tags::shareable_tcp_socket
               >                                      connection_type;
       typedef boost::asio::ip::tcp                   native_protocol_type;
+      typedef boost::asio::socket_acceptor_service<
+                  native_protocol_type
+              >                                      acceptor_service_type;
+      typedef 
+          acceptor_service_type::implementation_type acceptor_impl_type;
+      typedef acceptor_service_type::native_type     native_type;
       typedef unsigned short                         port_number_type;
       typedef boost::asio::ip::tcp::endpoint         endpoint_type;
       typedef common::basic_client<

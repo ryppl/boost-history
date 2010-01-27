@@ -116,17 +116,14 @@ BOOST_CGI_NAMESPACE_BEGIN
     return ec;
   }
 
-  /// Write some data to the client.
+  
   template<>
   template<typename ConstBufferSequence>
-  std::size_t 
+  void
   basic_client<
       connections::shareable_tcp
     , ::BOOST_CGI_NAMESPACE::common::tags::fcgi
-  >::write_some(
-      const ConstBufferSequence& buf
-    , boost::system::error_code& ec
-  )
+  >::prepare_buffer(const ConstBufferSequence& buf)
   {
     typename ConstBufferSequence::const_iterator iter = buf.begin();
     typename ConstBufferSequence::const_iterator end  = buf.end(); 
@@ -167,33 +164,84 @@ BOOST_CGI_NAMESPACE_BEGIN
       }
     }
     header_.reset(fcgi::spec_detail::STDOUT, request_id_, total_buffer_size);
-    
-    std::size_t bytes_transferred
-      = boost::asio::write(*connection_, outbuf_
-                          , boost::asio::transfer_all(), ec);
-
+  }
+  
+  template<>
+  void
+  basic_client<
+      connections::shareable_tcp
+    , ::BOOST_CGI_NAMESPACE::common::tags::fcgi
+  >::handle_write(std::size_t bytes_transferred, boost::system::error_code& ec)
+  {
     total_sent_bytes_ += bytes_transferred;
     total_sent_packets_ += 1;
+    
+    std::size_t total_buffer_size = static_cast<std::size_t>(header_.content_length());
     
 #ifndef NDEBUG
     if (ec)
       std::cerr<< "Error " << ec << ": " << ec.message() << '\n';
     else    
       std::cerr
-        << "Transferred " << bytes_transferred
-        << " / " << total_buffer_size << " bytes (running total: "
+        << "Transferred " << total_buffer_size
+        << " (+" << (bytes_transferred - total_buffer_size)
+        << " protocol) bytes (running total: "
         << total_sent_bytes_ << " bytes; "
         << total_sent_packets_ << " packets).\n";
 #endif // NDEBUG
 
     // Now remove the protocol overhead for the caller, who
-    // doesn't care about them.
+    // doesn't want to know about them.
     bytes_transferred -= fcgi::spec::header_length::value;
     // Check everything was written ok.
-    if (!ec && bytes_transferred != static_cast<std::size_t>(total_buffer_size))
+    if (!ec && bytes_transferred != total_buffer_size)
       ec = ::BOOST_CGI_NAMESPACE::fcgi::error::couldnt_write_complete_packet;
+  }
 
+
+  /// Write some data to the client.
+  template<>
+  template<typename ConstBufferSequence>
+  std::size_t 
+  basic_client<
+      connections::shareable_tcp
+    , ::BOOST_CGI_NAMESPACE::common::tags::fcgi
+  >::write_some(
+      const ConstBufferSequence& buf
+    , boost::system::error_code& ec
+  )
+  {
+    prepare_buffer(buf);
+    
+    std::size_t bytes_transferred
+      = boost::asio::write(*connection_, outbuf_
+                          , boost::asio::transfer_all(), ec);
+
+    handle_write(bytes_transferred, ec);
+    
     return bytes_transferred;
+  }
+
+
+  /// Write some data to the client.
+  template<>
+  template<typename ConstBufferSequence, typename Handler>
+  void
+  basic_client<
+      connections::shareable_tcp
+    , ::BOOST_CGI_NAMESPACE::common::tags::fcgi
+  >::async_write_some(
+      const ConstBufferSequence& buf
+    , Handler handler
+  )
+  {
+    prepare_buffer(buf);
+    
+    std::size_t bytes_transferred
+      = boost::asio::write(*connection_, outbuf_
+                          , boost::asio::transfer_all(), ec);
+
+    handle_write(bytes_transferred, ec);
   }
 
  } // namespace common

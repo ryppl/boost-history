@@ -15,6 +15,7 @@
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
+#include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -82,9 +83,22 @@ BOOST_CGI_NAMESPACE_BEGIN
        >
    {
    public:
-
-     /// The unique service identifier
-     //static boost::asio::io_service::id id;
+   
+     typedef acceptor_service_impl<Protocol>        self_type;
+     typedef Protocol                               protocol_type;
+     typedef detail::protocol_traits<Protocol>      traits;
+     typedef typename traits::protocol_service_type protocol_service_type;
+     typedef typename traits::native_protocol_type  native_protocol_type;
+     typedef typename traits::native_type           native_type;
+     typedef typename traits::request_type          request_type;
+     typedef typename traits::pointer               request_ptr;
+     typedef typename traits::acceptor_service_type acceptor_service_type;
+     typedef typename traits::acceptor_impl_type    acceptor_impl_type;
+     typedef typename traits::port_number_type      port_number_type;
+     typedef typename traits::endpoint_type         endpoint_type;
+     typedef std::pair<
+       typename std::set<request_ptr>::iterator, bool> request_iter;
+     typedef boost::function<int (request_type&)>   accept_handler_type;
 
      struct implementation_type
      {
@@ -104,32 +118,17 @@ BOOST_CGI_NAMESPACE_BEGIN
        acceptor_impl_type                            acceptor_;
        boost::mutex                                  mutex_;
        std::queue<boost::shared_ptr<request_type> >  waiting_requests_;
+       std::set<request_ptr>                         running_requests_;
        protocol_service_type*                        service_;
        port_number_type                              port_num_;
        endpoint_type                                 endpoint_;
+       
      };
-
-     typedef acceptor_service_impl<Protocol>            type;
-     typedef Protocol                                   protocol_type;
-     typedef typename
-       type::implementation_type::protocol_service_type
-                                                         protocol_service_type;
-     typedef typename
-       type::implementation_type::acceptor_service_type
-                                                         acceptor_service_type;
-     typedef typename
-       type::implementation_type::native_protocol_type
-                                                         native_protocol_type;
-     typedef typename
-       acceptor_service_type::native_type                native_type;
-
-     typedef typename
-       type::implementation_type::endpoint_type          endpoint_type;
-
 
      explicit acceptor_service_impl(::BOOST_CGI_NAMESPACE::common::io_service& ios)
        : detail::service_base< ::BOOST_CGI_NAMESPACE::fcgi::acceptor_service_impl<Protocol> >(ios)
        , acceptor_service_(boost::asio::use_service<acceptor_service_type>(ios))
+       , strand_(ios)
      {
      }
 
@@ -219,6 +218,126 @@ BOOST_CGI_NAMESPACE_BEGIN
      {
        return acceptor_service_.listen(impl.acceptor_, backlog, ec);
      }
+     
+     void do_accept(implementation_type& impl
+             , accept_handler_type handler)
+     {
+       request_ptr new_request;
+       
+       if (impl.waiting_requests_.empty())
+       {
+         // Accepting on new request.
+         new_request = request_type::create(*impl.service_);
+       }
+       else
+       {
+         // Accepting on existing request.
+         new_request = impl.waiting_requests_.front();
+         impl.waiting_requests_.pop();
+       }
+       
+       impl.running_requests_.insert(new_request);
+       
+       // The waiting request may be open if it is a multiplexed request.
+       // If we can reuse this request's connection, return.
+       if (!new_request->is_open() && !new_request->client().keep_connection())
+       {
+         // ...otherwise accept a new connection.
+         //std::cerr<< "Accepting a new connection." << std::endl;
+         acceptor_service_.async_accept(impl.acceptor_,
+             new_request->client().connection()->next_layer(), 0,
+             strand_.wrap(
+               boost::bind(&self_type::handle_accept
+                , this, boost::ref(impl), new_request, handler, _1
+               )
+             )
+           );
+       }
+       else
+       {
+         //std::cerr<< "Reusing existing connection." << std::endl;
+         impl.service_->post(
+           strand_.wrap(
+             boost::bind(&self_type::handle_accept
+                 , this, boost::ref(impl), new_request, handler, boost::system::error_code()
+               )
+             )
+           );
+       }
+     }
+
+     void handle_accept(
+         implementation_type& impl, request_ptr new_request,
+         accept_handler_type handler, const boost::system::error_code& ec
+      )
+     {
+       new_request->status(common::accepted);
+       int status = handler(*new_request);
+       impl.running_requests_.erase(impl.running_requests_.find(new_request));
+       if (new_request->is_open()) {
+         new_request->close(http::ok, status);
+       }
+       new_request->clear();
+       impl.waiting_requests_.push(new_request);
+     }
+
+     /// Accepts a request and runs the passed handler.
+     void async_accept(implementation_type& impl
+             , accept_handler_type handler)
+     {
+       //impl.service_->post(
+           strand_.post(
+             boost::bind(&self_type::do_accept,
+                 this, boost::ref(impl), handler)
+             );
+         //);
+     }
+     
+     int accept(implementation_type& impl, accept_handler_type handler
+             , endpoint_type* endpoint, boost::system::error_code& ec)
+     {
+       typedef std::pair<std::set<request_type::pointer>::iterator, bool> pair_t;
+       
+       request_ptr new_request;
+       pair_t insert_result;
+       
+       if (impl.waiting_requests_.empty())
+       {
+         // Accepting on new request.
+         new_request = request_type::create(*impl.service_);
+       }
+       else
+       {
+         // Accepting on existing request.
+         new_request = impl.waiting_requests_.front();
+         impl.waiting_requests_.pop();
+       }
+       
+       insert_result = impl.running_requests_.insert(new_request);
+       
+       // The waiting request may be open if it is a multiplexed request.
+       if (!new_request->is_open())
+       {
+         // If we can reuse this request's connection, return.
+         if (!new_request->client().keep_connection())
+         {
+           // ...otherwise accept a new connection.
+           ec = acceptor_service_.accept(impl.acceptor_,
+                    new_request->client().connection()->next_layer(), endpoint, ec);
+         }
+       }
+       new_request->status(common::accepted);
+       int status = handler(*new_request);
+       
+       impl.running_requests_.erase(insert_result.first);
+       if (new_request->is_open()) {
+         new_request->close(http::ok, status);
+       }
+       new_request->clear();
+       impl.waiting_requests_.push(new_request);
+       
+       return status;
+     }
 
      /// Accepts one request.
      template<typename CommonGatewayRequest>
@@ -226,27 +345,6 @@ BOOST_CGI_NAMESPACE_BEGIN
        accept(implementation_type& impl, CommonGatewayRequest& request
              , endpoint_type* endpoint, boost::system::error_code& ec)
      {
-       /* THIS BIT IS BROKEN:
-        *-- The noncopyable semantics of a basic_request<> don't allow the
-            assignment. There are a couple of ways around this; the one that
-            seems sensible is to keep the basic_request<>s noncopyable, but
-            allow the actual data be copied. At the moment the actual data is
-            held in a vector<string> headers container and a BOOST_CGI_NAMESPACE::streambuf.
-            These two bits should really be factored out into a message type.
-            IOW, the message type will be copyable (but should probably have
-            unique-ownership semantics).
-        --*
-       {
-         boost::mutex::scoped_lock lk(impl.mutex_);
-         if (!impl.waiting_requests_.empty())
-         {
-           request = *(impl.waiting_requests_.front());
-           impl.waiting_requests_.pop();
-           return ec;
-         }
-       }
-       */
-
        BOOST_ASSERT
        ( ! request.is_open()
         && "Error: Calling accept on open request (close it first?)."
@@ -278,7 +376,7 @@ BOOST_CGI_NAMESPACE_BEGIN
                       , Handler handler)
      {
        this->io_service().post(
-         detail::accept_handler<type, Handler>(*this, impl, request, handler)
+         detail::accept_handler<self_type, Handler>(*this, impl, request, handler)
        );
      }
 
@@ -349,7 +447,8 @@ BOOST_CGI_NAMESPACE_BEGIN
 
    public:
      /// The underlying socket acceptor service.
-     acceptor_service_type& acceptor_service_;
+     acceptor_service_type&          acceptor_service_;
+     boost::asio::io_service::strand strand_;
    };
 
  } // namespace fcgi

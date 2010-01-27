@@ -85,9 +85,9 @@ BOOST_CGI_NAMESPACE_BEGIN
     {
       string_type& content_type;
       buffer_type& buffer;
-      std::vector<common::form_part>& form_parts;
       std::size_t& bytes_left;
       common::post_map& data_map;
+      common::upload_map& uploads_map;
       const callback_type callback;
       bool& stdin_parsed;
       // A random string, used for marking uploaded files.

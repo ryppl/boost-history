@@ -9,6 +9,8 @@
 
 [include cookie_game/doc.qbk]
 
+[include cookie_game2/doc.qbk]
+
 [include file_browser/doc.qbk]
 
 [include stencil/doc.qbk]

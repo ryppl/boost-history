@@ -42,8 +42,7 @@ void fill_amortization_dictionary(
 {
   dict.SetValue("LoanAmt", has_key(req.post, "LoanAmt")
       ? "$250,000" : req.post["LoanAmt"]);
-  dict.SetValue("YearlyIntRate", has_key(req.post, "YearlyIntRate")
-      ? "6.000" : req.post["YearlyIntRate"]);
+  dict.SetIntValue("YearlyIntRate", req.post.as("YearlyIntRate", 6.000));
 
   boost::array<std::string, 8> year_opts
     = {{ "5", "7", "10", "20", "30", "40", "50" }};
@@ -59,8 +58,8 @@ void fill_amortization_dictionary(
   {
     double P = boost::lexical_cast<double>(
       string_from_currency(req.post["LoanAmt"]));
-    double i = boost::lexical_cast<double>(req.post["YearlyIntRate"]) / 1200;
-    double n = boost::lexical_cast<double>(req.post["TermYrs"]) * 12;
+    double i = req.post.as<double>("YearlyIntRate", 1) / 1200;
+    double n = req.post.as<double>("TermYrs", 1) * 12;
     double monthly_payments = (P*i) / (1 - std::pow((1+i), -n));
     
     ctemplate::TemplateDictionary* sub_dict
@@ -113,33 +112,29 @@ int write_amortization_template(Request& req, response& resp)
   std::string h("Content-type: text/html\r\n\r\n");
   write(req.client(), buffer(h));
 
-  std::string arg(req.get["arg"]);
-  if (arg.empty())
-    arg = "2"; // set this as default (for no particular reason).
+  int arg = req.get.as("arg", 2); // 2 is the default.
 
   // Different, but equivalent ways of writing the output.
-  if (arg == "1")
+  std::string output;
+  switch (arg)
   {
-    std::string output;
+  case 1:
     tmpl->Expand(&output, &dict);
     resp<< output;
-  }else
-  if (arg == "2")
-  {
-    std::string output;
+    break;
+  case 2:
     tmpl->Expand(&output, &dict);
     write(req.client(), buffer(output));
-  }else
-//  if (arg == "3")
-//  {
+    break;
+  case 3:
 //    // This requires a modified version of Google.cTemplate, so it won't work.
 //    std::string s;
 //    std::vector<boost::asio::const_buffer> out;
 //
 //    tmpl->Expand(&s, &out, &dict);
 //    write(req.client(), out);
-//  }else
-  {
+    break;
+  default:
     resp<< "Error!";
     return 1;
   }

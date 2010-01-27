@@ -4,6 +4,7 @@
 #include <map>
 #include "boost/cgi/common/name.hpp"
 #include "boost/cgi/common/cookie.hpp"
+#include "boost/cgi/common/form_part.hpp"
 
 /// You can define your 
 #ifndef BOOST_CGI_SESSION_MAP_TYPE
@@ -23,8 +24,6 @@ BOOST_CGI_NAMESPACE_BEGIN
     *   > Update this file
     *   > Update source_enums.hpp
     *   > Update `data_map_type` in the `request_base` class
-    *   > Use the `BOOST_CGI_DETAIL_MAP_ACCESS` macro in `basic_request<>`,
-    *     next to the other uses of it.
     */
   typedef map        env_map;
   typedef map        get_map;
@@ -34,6 +33,10 @@ BOOST_CGI_NAMESPACE_BEGIN
       ::BOOST_CGI_NAMESPACE::common::name,
       ::BOOST_CGI_NAMESPACE::common::cookie
   >                  cookie_map;
+  typedef std::map<
+      ::BOOST_CGI_NAMESPACE::common::name,
+      ::BOOST_CGI_NAMESPACE::common::form_part
+  >                  upload_map;
   typedef map        session_map;
 
  } // namespace common

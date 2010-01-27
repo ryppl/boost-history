@@ -233,6 +233,15 @@ BOOST_CGI_NAMESPACE_BEGIN
     }
 
   private:
+  
+    template<typename ConstBufferSequence>
+    void prepare_buffer(const ConstBufferSequence& buf)
+    { /* NOOP */ }
+        
+    void handle_write(
+      std::size_t bytes_transferred, boost::system::error_code& ec)
+    { /* NOOP */ }
+  
     //io_service&                           io_service_;
     connection_ptr                        connection_;
 

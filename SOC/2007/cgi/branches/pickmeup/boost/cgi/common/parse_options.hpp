@@ -18,9 +18,10 @@ BOOST_CGI_NAMESPACE_BEGIN
      , parse_post_only    = 4
      , parse_post         = parse_post_only | parse_env
      , parse_form         = parse_env | parse_get | parse_post
+     , parse_form_only    = parse_get_only | parse_post_only
      , parse_cookie_only  = 8
      , parse_cookie       = parse_cookie_only | parse_env
-     , parse_cookies_only = 8
+     , parse_cookies_only = parse_cookie_only
      , parse_cookies      = parse_cookies_only | parse_env
      , parse_all          = parse_env | parse_form | parse_cookie
    };
