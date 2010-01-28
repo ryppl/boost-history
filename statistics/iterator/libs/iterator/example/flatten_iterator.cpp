@@ -33,8 +33,8 @@ void example_flatten_iterator(std::ostream& os){
     	typedef boost::range_iterator<mat_>::type			it_mat_;
 		typedef flatten_iterator<it_mat_>					flat_it_;
 	
-		flat_it_ b = make_flatten_iterator(boost::begin(mat),boost::end(mat));
-		flat_it_ e = make_flatten_iterator(boost::end(mat),boost::end(mat));
+		flat_it_ b(boost::begin(mat),boost::end(mat));
+		flat_it_ e(boost::end(mat),boost::end(mat));
 
 		int j = 0;
     	int n = std::distance(b,e);
@@ -45,8 +45,9 @@ void example_flatten_iterator(std::ostream& os){
         	typedef flat_it_::difference_type diff_;
         	val_ val = *i;
    			BOOST_ASSERT(val == j+1);
-            // diff_ d = std::distance(b,e);
-   			//BOOST_ASSERT(std::distance(b,e)==n-j); //not required for single pass
+            diff_ d = std::distance(b,e);
+            // std::cout << "d = " << d << std::endl;
+   			//BOOST_ASSERT(d==n-j);
     	}
     }
 /*

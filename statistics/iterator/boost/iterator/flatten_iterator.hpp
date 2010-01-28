@@ -5,41 +5,53 @@
 #ifndef BOOST_ITERATOR_FLATTEN_ITERATOR_HPP_ER_2010
 #define BOOST_ITERATOR_FLATTEN_ITERATOR_HPP_ER_2010
 #include <stdexcept>
+#include <boost/mpl/if.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/range.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 
-// As per M.P.'suggestion
+// As per M.P.'s suggestion
 
 namespace boost{
 
+
 	template<typename It>
-	struct flatten_iterator_default{
-    	typedef typename boost::iterator_value<It>::type r_;
-    	typedef typename boost::range_iterator<r_>::type it_;
-        typedef typename boost::iterator_reference<it_>::type reference_;
+	struct flatten_iterator_nested
+    {
+    	typedef typename boost::iterator_reference<It>::type ref_range_;
+        typedef typename boost::remove_reference<ref_range_>::type range_;
+    	typedef typename boost::range_iterator<range_>::type it_;
+        typedef typename boost::iterator_reference<it_>::type ref_;
+        typedef typename boost::remove_cv<
+        	typename boost::remove_reference<ref_>::type
+        >::type val_;
         typedef typename boost::iterator_difference<it_>::type diff_;
     };
-
+    
 	template<
     	class It,
-        typename R = typename flatten_iterator_default<It>::reference_,
-        typename D = typename flatten_iterator_default<It>::diff_
+        bool is_ref = true,
+        typename R = typename boost::mpl::if_c<
+        	is_ref,
+            typename flatten_iterator_nested<It>::ref_,
+            typename flatten_iterator_nested<It>::val_
+        >::type,
+        typename D = typename flatten_iterator_nested<It>::diff_
     >
 	class flatten_iterator : public boost::iterator_facade<
-        flatten_iterator<It,R,D>
-      , It
+        flatten_iterator<It,is_ref,R,D>
+      , typename flatten_iterator_nested<It>::val_
       , boost::forward_traversal_tag
       , R
       , D
     >{
-		typedef typename boost::iterator_value<It>::type nested_range_;
-		typedef typename boost::range_iterator<nested_range_>::type nested_;
+		typedef flatten_iterator_nested<It> nested_;
+		typedef typename nested_::it_ nit_;
 
 		typedef typename boost::iterator_facade<
-        	flatten_iterator<It,R,D>
-      		, It
+        	flatten_iterator<It,is_ref,R,D>
+      		, typename flatten_iterator_nested<It>::val_
       		, boost::forward_traversal_tag
       		, R
       		, D
@@ -110,10 +122,19 @@ namespace boost{
         	return (*this->nb_);
     	}
 
-    	diff_ distance_to(flatten_iterator other)
+    	diff_ distance_to(const flatten_iterator& other)const
     	{   
-			throw std::runtime_error(
-            	"flatten_iterator::distance_to"
+        	if(this->b_ == other.b_){
+            	return std::distance(this->nb_,other.nb_);
+            }
+            if(this->b_ < other.b_){
+            	return dist_impl(other,*this);
+            }
+            if(this->b_ < other.b_){
+            	return dist_impl(*this,other);
+            }
+            throw std::runtime_error(
+                "flatten_iterator::distance_to"
             );
     	}
 
@@ -129,11 +150,10 @@ namespace boost{
         	return (this->nb_ == this->ne_);
     	}
 
-        It b_,e_;
-        bool ready_;
-        nested_ nb_,ne_; // nested in b_
+        mutable It b_,e_;
+        mutable nit_ nb_,ne_; // nested in *b_
 
-    	void update()
+    	void update()const
     	{
         	if((this->b_) != (this->e_)){
             	this->nb_ = boost::begin(*this->b_);
@@ -141,8 +161,7 @@ namespace boost{
         	}
     	}
 
-/*	
-    	diff_ dist_impl(
+    	static diff_ dist_impl(
         	const flatten_iterator& x,
             const flatten_iterator& y
         ){
@@ -158,7 +177,6 @@ namespace boost{
             }
 			
         }
-*/        
 
         
 	};        
