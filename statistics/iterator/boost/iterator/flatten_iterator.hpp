@@ -27,7 +27,16 @@ namespace boost{
         	typename boost::remove_reference<ref_>::type
         >::type val_;
         typedef typename boost::iterator_difference<it_>::type diff_;
+        // TODO category_traversal
     };
+
+	template<typename It>
+	struct flatten_iterator_category_traversal{
+		// TODO
+    	// weaker of outer and inner iterator
+    
+    };
+
     
 	template<
     	class It,
@@ -63,7 +72,6 @@ namespace boost{
 		public:        
 		typedef typename super_::difference_type diff_;
 		typedef typename super_::reference ref_;
-        
                         
         explicit flatten_iterator(It b,It e):super_(),b_(b),e_(e){
         	this->update();
@@ -73,8 +81,8 @@ namespace boost{
         :super_(that),b_(that.b_),e_(that.e_)
         {
         	if(!this->is_end()){
-				nb_ = (that.nb_);
-                ne_ = (that.ne_);            
+				this->nb_ = (that.nb_);
+                this->ne_ = (that.ne_);            
             }
         }
 
@@ -85,8 +93,8 @@ namespace boost{
 				this->b_ = that.b_;
                 this->e_ = that.e_;
                 if(!this->is_end()){
-                    nb_ = (that.nb_);
-                    ne_ = (that.ne_);            
+                    this->nb_ = (that.nb_);
+                    this->ne_ = (that.ne_);            
                 }
             }
             return (*this);
