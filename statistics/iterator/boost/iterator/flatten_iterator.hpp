@@ -34,6 +34,7 @@ namespace boost{
 	struct flatten_iterator_category_traversal{
 		// TODO
     	// weaker of outer and inner iterator
+        // also not allowed decremment and advance(n<0)
     
     };
 
@@ -117,7 +118,6 @@ namespace boost{
 		}
         
         void decrement(){
-        	// For now
 			throw std::runtime_error(
 				"flatten_iterator::decrement() not allowed"            
             );
