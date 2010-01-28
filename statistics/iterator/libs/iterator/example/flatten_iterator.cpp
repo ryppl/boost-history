@@ -49,30 +49,12 @@ void example_flatten_iterator(std::ostream& os){
    			BOOST_ASSERT(val == j+1);
             diff_ d = std::distance(i,e);
    			BOOST_ASSERT(d==n-j);
+            flat_it_ ii = b;
+            std::advance(ii,j);
+            BOOST_ASSERT(ii==i);
     	}
 
     }
-/*
-	{
-    	typedef boost::range_iterator<const mat_>::type		it_mat_;
-		typedef flatten_iterator<it_mat_>					flat_it_;
-        
-		const mat_& cmat = mat;
-	
-		flat_it_ b = make_flatten_iterator(boost::begin(cmat),boost::end(cmat));
-		flat_it_ e = make_flatten_iterator(boost::end(cmat),boost::end(cmat));
 
-		int j = 0;
-    	int n = std::distance(b,e);
-    	BOOST_ASSERT(
-    		n == boost::size(vals1) + boost::size(vals2) + boost::size(vals3)
-    	);
-		for(flat_it_ i = b; i!=e; i++, j++){
-        	val_ val = *i;
-   			BOOST_ASSERT(val = j);
-   			BOOST_ASSERT(std::distance(b,e)==n-j);
-    	}
-    }
-*/    
     os << "<-" << std::endl;
 }

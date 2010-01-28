@@ -67,12 +67,13 @@ namespace boost{
       		, D
     	> super_;
 
-        flatten_iterator();
-        
-		public:        
+        public:        
+
 		typedef typename super_::difference_type diff_;
 		typedef typename super_::reference ref_;
                         
+        flatten_iterator(){}
+
         explicit flatten_iterator(It b,It e):super_(),b_(b),e_(e){
         	this->update();
         }
@@ -115,24 +116,30 @@ namespace boost{
         	}
 		}
         
-        //Not needed given category_traversal
         void decrement(){
+        	// For now
 			throw std::runtime_error(
 				"flatten_iterator::decrement() not allowed"            
             );
         }
 	
 		void advance(diff_ n){
-        	// Needs checking
-        
-        	diff_ k = std::distance(this->b_,this->e_);
-			if(n<k){
-            	this->nb_ += boost::next(this->nb_,n);
+            if(n>0){
+            	BOOST_ASSERT(!this->is_end());
+        		diff_ k = std::distance(this->nb_,this->ne_);
+				if(n<k){
+            		this->nb_ = boost::next(this->nb_,n);
+            	}else{
+            		++this->b_;
+                	this->update(); 
+            		return this->advance(n-k);
+            	}
             }else{
-                diff_ nk = std::distance(this->nb_,this->ne_);
-            	++this->b_;
-                this->update(); 
-            	return this->advance(n-nk);
+            	if(n!=0){
+                    throw std::runtime_error(
+                        "flatten_iterator::advance(n<0) not allowed"            
+                    );
+            	}
             }
         }
 
