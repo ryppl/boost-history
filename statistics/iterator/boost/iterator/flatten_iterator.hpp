@@ -72,16 +72,22 @@ namespace boost{
         flatten_iterator(const flatten_iterator& that)
         :super_(that),b_(that.b_),e_(that.e_)
         {
-            this->update();
+        	if(!this->is_end()){
+				nb_ = (that.nb_);
+                ne_ = (that.ne_);            
+            }
         }
 
 		flatten_iterator& 
         operator=(const flatten_iterator& that){
-        	if(that!=&this){
+        	if(&that!=this){
             	super_::operator=(that);
 				this->b_ = that.b_;
                 this->e_ = that.e_;
-                this->update();
+                if(!this->is_end()){
+                    nb_ = (that.nb_);
+                    ne_ = (that.ne_);            
+                }
             }
             return (*this);
         }
