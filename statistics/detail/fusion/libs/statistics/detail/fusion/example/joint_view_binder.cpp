@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// statistics::detail::fusion::example::serialize.cpp                  		 //
+// detail::fusion::example::joint_view_binder.cpp                  		 	 //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
