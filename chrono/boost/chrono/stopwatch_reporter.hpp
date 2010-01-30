@@ -65,23 +65,8 @@ namespace boost { namespace chrono  {
  */
 //--------------------------------------------------------------------------------------//
 
-
-    template <class Stopwatch>
-    struct stopwatch_reporter_default_formatter {
-        typename Stopwatch::formatter type;
-    };
-
-    template <class Stopwatch, class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type>
-    class stopwatch_reporter;
-
     template <class Stopwatch, class Formatter>
-    struct stopwatch_reporter_default_formatter<stopwatch_reporter<Stopwatch, Formatter> > {
-        typedef Formatter type;
-    };
-
-
-    template <class Stopwatch, class Formatter>
-    class stopwatch_reporter : public Stopwatch {
+    class basic_stopwatch_reporter : public Stopwatch {
     public:
         typedef typename Stopwatch::clock clock;
         typedef Stopwatch stopwatch;
@@ -90,45 +75,45 @@ namespace boost { namespace chrono  {
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit stopwatch_reporter( system::error_code & ec = system::throws )
+        explicit basic_stopwatch_reporter( system::error_code & ec = system::throws )
         : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false) { }
-        explicit stopwatch_reporter( ostream_type & os,
+        explicit basic_stopwatch_reporter( ostream_type & os,
                     system::error_code & ec = system::throws )
         : m_places(Formatter::default_places()), m_os(os), m_format(Formatter::default_format()), m_reported(false) { }
 
-        explicit stopwatch_reporter( const string_type & format,
+        explicit basic_stopwatch_reporter( const string_type & format,
                     system::error_code & ec = system::throws )
         : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(format), m_reported(false) {}
 
-        explicit stopwatch_reporter( int places,
+        explicit basic_stopwatch_reporter( int places,
                     system::error_code & ec = system::throws )
         : m_places(places), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false) { }
 
-        stopwatch_reporter( ostream_type & os, const string_type & format,
+        basic_stopwatch_reporter( ostream_type & os, const string_type & format,
                     system::error_code & ec = system::throws )
         : m_places(Formatter::default_places()), m_os(os), m_format(format), m_reported(false) { }
 
-        stopwatch_reporter( const string_type & format, int places,
+        basic_stopwatch_reporter( const string_type & format, int places,
                     system::error_code & ec = system::throws )
         : m_places(places), m_os(Formatter::default_os()), m_format(format), m_reported(false) { }
 
-        stopwatch_reporter( ostream_type & os, int places,
+        basic_stopwatch_reporter( ostream_type & os, int places,
                     system::error_code & ec = system::throws )
         : m_places(places), m_os(os), m_format(Formatter::default_format()), m_reported(false) { }
 
-        stopwatch_reporter( int places, const string_type & format,
+        basic_stopwatch_reporter( int places, const string_type & format,
                     system::error_code & ec = system::throws )
         : m_places(places), m_os(Formatter::default_os()), m_format(format), m_reported(false) { }
 
-        stopwatch_reporter( ostream_type & os, const string_type & format, int places,
+        basic_stopwatch_reporter( ostream_type & os, const string_type & format, int places,
                     system::error_code & ec = system::throws )
         : m_places(places), m_os(os), m_format(format), m_reported(false) { }
 
-        stopwatch_reporter( ostream_type & os, int places, const string_type & format,
+        basic_stopwatch_reporter( ostream_type & os, int places, const string_type & format,
                     system::error_code & ec = system::throws )
         : m_places(places), m_os(os), m_format(format), m_reported(false) { }
 
-        ~stopwatch_reporter() {// never throws
+        ~basic_stopwatch_reporter() {// never throws
             system::error_code ec;
             //this->stop(ec);
             if ( !reported() ) {
@@ -141,10 +126,10 @@ namespace boost { namespace chrono  {
         bool reported() const { return m_reported; }
 
 
-        typedef stopwatch_runner<stopwatch_reporter<Stopwatch,Formatter> > scoped_run;
-        typedef stopwatch_stopper<stopwatch_reporter<Stopwatch,Formatter> > scoped_stop;
-        typedef stopwatch_suspender<stopwatch_reporter<Stopwatch,Formatter> > scoped_suspend;
-        typedef stopwatch_resumer<stopwatch_reporter<Stopwatch,Formatter> > scoped_resume;
+        typedef stopwatch_runner<basic_stopwatch_reporter<Stopwatch,Formatter> > scoped_run;
+        typedef stopwatch_stopper<basic_stopwatch_reporter<Stopwatch,Formatter> > scoped_stop;
+        typedef stopwatch_suspender<basic_stopwatch_reporter<Stopwatch,Formatter> > scoped_suspend;
+        typedef stopwatch_resumer<basic_stopwatch_reporter<Stopwatch,Formatter> > scoped_resume;
 
     protected:
         int             m_places;
@@ -153,13 +138,13 @@ namespace boost { namespace chrono  {
         bool            m_reported;
 
 
-        //stopwatch_reporter(); // = delete;
-        stopwatch_reporter(const stopwatch_reporter&); // = delete;
-        stopwatch_reporter& operator=(const stopwatch_reporter&); // = delete;
+        //basic_stopwatch_reporter(); // = delete;
+        basic_stopwatch_reporter(const basic_stopwatch_reporter&); // = delete;
+        basic_stopwatch_reporter& operator=(const basic_stopwatch_reporter&); // = delete;
     };
 
     template <class Stopwatch, class Formatter>
-    void stopwatch_reporter<Stopwatch, Formatter>::report( system::error_code & ec ) {
+    void basic_stopwatch_reporter<Stopwatch, Formatter>::report( system::error_code & ec ) {
         chrono::scoped_suspend<typename Stopwatch::clock> _(ec);
         m_reported = true;
         if ( m_format.empty() ) m_format = Formatter::default_format();
@@ -179,6 +164,154 @@ namespace boost { namespace chrono  {
 
     }
 
+
+    template <class Stopwatch>
+    struct stopwatch_reporter_default_formatter;
+
+    template <class Stopwatch, class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type>
+    class stopwatch_reporter;
+
+    template <class Stopwatch, class Formatter>
+    struct stopwatch_reporter_default_formatter<stopwatch_reporter<Stopwatch, Formatter> > {
+        typedef Formatter type;
+    };
+
+
+    template <class Stopwatch, class Formatter>
+    class stopwatch_reporter : public basic_stopwatch_reporter<Stopwatch,Formatter> {
+        typedef basic_stopwatch_reporter<Stopwatch,Formatter> base_type;
+    public:
+        typedef typename Stopwatch::clock clock;
+        typedef Stopwatch stopwatch;
+        typedef Formatter formatter;
+        typedef typename Formatter::string_type string_type;
+        typedef typename Formatter::char_type char_type;
+        typedef typename Formatter::ostream_type ostream_type;
+
+        explicit stopwatch_reporter( system::error_code & ec = system::throws )
+        : base_type(ec) { }
+        explicit stopwatch_reporter( ostream_type & os,
+                    system::error_code & ec = system::throws )
+        : base_type(os, ec) { }
+
+        explicit stopwatch_reporter( const string_type & format,
+                    system::error_code & ec = system::throws )
+        : base_type(format, ec) { }
+
+        explicit stopwatch_reporter( int places,
+                    system::error_code & ec = system::throws )
+        : base_type(places, ec) { }
+
+        stopwatch_reporter( ostream_type & os, const string_type & format,
+                    system::error_code & ec = system::throws )
+        : base_type(os, format, ec) { }
+
+        stopwatch_reporter( const string_type & format, int places,
+                    system::error_code & ec = system::throws )
+        : base_type(format, places, ec) { }
+
+        stopwatch_reporter( ostream_type & os, int places,
+                    system::error_code & ec = system::throws )
+        : base_type(os, places, ec) { }
+
+        stopwatch_reporter( int places, const string_type & format,
+                    system::error_code & ec = system::throws )
+        : base_type(places, format, ec) { }
+
+        stopwatch_reporter( ostream_type & os, const string_type & format, int places,
+                    system::error_code & ec = system::throws )
+        : base_type(os, format, places, ec) { }
+
+        stopwatch_reporter( ostream_type & os, int places, const string_type & format,
+                    system::error_code & ec = system::throws )
+        : base_type(os, places, format, ec) { }
+
+        typedef stopwatch_runner<stopwatch_reporter<Stopwatch,Formatter> > scoped_run;
+        typedef stopwatch_stopper<stopwatch_reporter<Stopwatch,Formatter> > scoped_stop;
+        typedef stopwatch_suspender<stopwatch_reporter<Stopwatch,Formatter> > scoped_suspend;
+        typedef stopwatch_resumer<stopwatch_reporter<Stopwatch,Formatter> > scoped_resume;
+
+    protected:
+
+
+        //stopwatch_reporter(); // = delete;
+        stopwatch_reporter(const stopwatch_reporter&); // = delete;
+        stopwatch_reporter& operator=(const stopwatch_reporter&); // = delete;
+    };
+
+
+    template <class Stopwatch>
+    struct wstopwatch_reporter_default_formatter;
+
+    template <class Stopwatch, class Formatter=typename wstopwatch_reporter_default_formatter<Stopwatch>::type>
+    class wstopwatch_reporter;
+
+    template <class Stopwatch, class Formatter>
+    struct wstopwatch_reporter_default_formatter<wstopwatch_reporter<Stopwatch, Formatter> > {
+        typedef Formatter type;
+    };
+
+
+    template <class Stopwatch, class Formatter>
+    class wstopwatch_reporter : public basic_stopwatch_reporter<Stopwatch,Formatter> {
+        typedef basic_stopwatch_reporter<Stopwatch,Formatter> base_type;
+    public:
+        typedef typename Stopwatch::clock clock;
+        typedef Stopwatch stopwatch;
+        typedef Formatter formatter;
+        typedef typename Formatter::string_type string_type;
+        typedef typename Formatter::char_type char_type;
+        typedef typename Formatter::ostream_type ostream_type;
+
+        explicit wstopwatch_reporter( system::error_code & ec = system::throws )
+        : base_type(ec) { }
+        explicit wstopwatch_reporter( ostream_type & os,
+                    system::error_code & ec = system::throws )
+        : base_type(os, ec) { }
+
+        explicit wstopwatch_reporter( const string_type & format,
+                    system::error_code & ec = system::throws )
+        : base_type(format, ec) { }
+
+        explicit wstopwatch_reporter( int places,
+                    system::error_code & ec = system::throws )
+        : base_type(places, ec) { }
+
+        wstopwatch_reporter( ostream_type & os, const string_type & format,
+                    system::error_code & ec = system::throws )
+        : base_type(os, format, ec) { }
+
+        wstopwatch_reporter( const string_type & format, int places,
+                    system::error_code & ec = system::throws )
+        : base_type(format, places, ec) { }
+
+        wstopwatch_reporter( ostream_type & os, int places,
+                    system::error_code & ec = system::throws )
+        : base_type(os, places, ec) { }
+
+        wstopwatch_reporter( int places, const string_type & format,
+                    system::error_code & ec = system::throws )
+        : base_type(places, format, ec) { }
+
+        wstopwatch_reporter( ostream_type & os, const string_type & format, int places,
+                    system::error_code & ec = system::throws )
+        : base_type(os, format, places, ec) { }
+
+        wstopwatch_reporter( ostream_type & os, int places, const string_type & format,
+                    system::error_code & ec = system::throws )
+        : base_type(os, places, format, ec) { }
+
+        typedef stopwatch_runner<wstopwatch_reporter<Stopwatch,Formatter> > scoped_run;
+        typedef stopwatch_stopper<wstopwatch_reporter<Stopwatch,Formatter> > scoped_stop;
+        typedef stopwatch_suspender<wstopwatch_reporter<Stopwatch,Formatter> > scoped_suspend;
+        typedef stopwatch_resumer<wstopwatch_reporter<Stopwatch,Formatter> > scoped_resume;
+
+    protected:
+
+        //wstopwatch_reporter(); // = delete;
+        wstopwatch_reporter(const wstopwatch_reporter&); // = delete;
+        wstopwatch_reporter& operator=(const wstopwatch_reporter&); // = delete;
+    };
 
   } // namespace chrono
 } // namespace boost

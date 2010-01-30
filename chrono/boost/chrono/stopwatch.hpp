@@ -47,6 +47,11 @@ namespace boost
         typedef stopwatch_formatter type;
     };
 
+    template <class Clock>
+    struct wstopwatch_reporter_default_formatter<stopwatch<Clock> > {
+        typedef wstopwatch_formatter type;
+    };
+
     struct dont_start_t{};
     static const dont_start_t dont_start = {};
     template <class Clock>
