@@ -14,8 +14,8 @@
 #define BOOST_CHRONO_STOPWATCHES__HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/chrono/digital_time.hpp>
-#include <boost/chrono/digital_time_formatter.hpp>
+#include <boost/chrono/t24_hours.hpp>
+#include <boost/chrono/t24_hours_formatter.hpp>
 #include <boost/chrono/scoped_stopclock.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/chrono/stopclock.hpp>
