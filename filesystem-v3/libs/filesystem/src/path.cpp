@@ -239,7 +239,7 @@ namespace filesystem
     else if (has_root_directory())
     {
 #     ifdef BOOST_POSIX_PATH
-      if (base_root_name.empty() return *this;
+      if (base_root_name.empty()) return *this;
 #     endif
       path tmp (base_root_name / m_pathname);
       m_pathname.swap(tmp.m_pathname);

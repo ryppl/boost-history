@@ -9,18 +9,15 @@
 
 #include <iostream>
 #include <boost/filesystem.hpp>
-using namespace std;
 using namespace boost::filesystem;
 
 int main(int argc, char* argv[])
 {
   if (argc < 2)
   {
-    cout << "Usage: tut1 path\n";
+    std::cout << "Usage: tut1 path\n";
     return 1;
   }
-
-  cout << argv[1] << ": " << file_size(argv[1]) << '\n';
-
+  std::cout << argv[1] << ": " << file_size(argv[1]) << '\n';
   return 0;
 }

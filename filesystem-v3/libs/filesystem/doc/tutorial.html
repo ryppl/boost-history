@@ -36,11 +36,129 @@
   </tr>
 </table>
 
+<h2>Introduction</h2>
+
+<p>This tutorial develops a little command line program to list information 
+about files and directories - essentially a much simplified version of the POSIX <code>ls</code> or Windows <code>dir</code> 
+commands. We'll start with the simplest possible version and progress to more 
+complex functionality. Along the way we'll digress to cover topics you'll need 
+to know about to use Boost.Filesystem effectively.</p>
+
+<p>Source code for each version of the tutorial program is available, and you 
+are encouraged to compile, test, and experiment with it. To conserve space, we won't 
+always show boilerplate code here, but the provided source is complete and 
+ready to build.</p>
+
 <h3>Preliminaries</h3>
 
-<p>Install the Boost distribution if you haven't already done so. Since 
-Boost.Filesystem is a compiled library, you will need to do a library build if 
-this hasn't been done already.</p>
+<p>Install the Boost distribution if you haven't already done so. See the
+<a href="http://www.boost.org/more/getting_started/index.html">Boost Getting 
+Started</a> docs.</p>
+
+<p>The Boost.Filesystem and Boost.System compiled libraries are going to be 
+needed. If you are planning to use Boost's bjam for builds, it will take care of 
+building these if needed. If you are a different build system, or are planning 
+to build by hand, you might want to make sure your build approach knows where to 
+locate or build the library binaries.</p>
+
+<h2><a href="../example/tut1.cpp">tut1.cpp</a> - Reporting the size of a file</h2>
+
+<p>Let's get started. One of the simplest things we can do is report the size of 
+a file.</p>
+
+<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <tr>
+    <td style="font-size: 10pt">
+    <pre><a href="../example/tut1.cpp">tut1.cpp</a></pre>
+    <blockquote style="font-size: 10pt">
+      <pre>#include &lt;iostream&gt;
+#include &lt;boost/filesystem.hpp&gt;
+using namespace boost::filesystem;
+
+int main(int argc, char* argv[])
+{
+  if (argc &lt; 2)
+  {
+    std::cout &lt;&lt; &quot;Usage: tut1 path\n&quot;;
+    return 1;
+  }
+  std::cout &lt;&lt; argv[1] &lt;&lt; &quot;: &quot; &lt;&lt; file_size(argv[1]) &lt;&lt; '\n';
+  return 0;
+}</pre>
+    </blockquote>
+    </td>
+  </tr>
+</table>
+
+<p>The Boost.Filesystem <code>file_size</code> function returns an <code>uintmax_t</code> 
+containing the size of the file named by the argument. The code should be 
+self-evident - if not you are probably in the wrong place!</p>
+
+<p>Build <a href="../example/tut1.cpp">tut1.cpp</a>.&nbsp; Use whatever build environment you 
+are most comfortable with.</p>
+<blockquote>
+
+<p>Building using the Boost build system:</p>
+  <blockquote>
+    <pre>cd <i><b>boost-root</b></i>/libs/filesystem/example
+bjam tut1</pre>
+  </blockquote>
+  <p>Building using Microsoft Visual C++, with all variants of the Boost 
+  libraries located in <i><b><code>boost-root</code></b></i><code>\stage\lib</code>:</p>
+  <blockquote>
+    <pre>cd <i><b>boost-root</b></i>\libs\filesystem\example
+cl /EHsc /I ..\..\.. tut1.cpp /link /LIBPATH:..\..\..\stage\lib</pre>
+  </blockquote>
+</blockquote>
+<p>Here are tests on Linux and Windows:</p>
+
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt">
+      <pre>$ ./tut1 tut1.cpp
+tut1.cpp: 570</pre>
+      </td>
+      <td style="font-size: 10pt">
+      <pre>&gt;tut1 tut1.cpp
+tut1.cpp: 593</pre>
+      </td>
+    </tr>
+  </table>
+
+<p>So far, so good. </p>
+<p>Here's a test on Windows, in the 
+directory containing the build output. It contains a directory named test with a 
+file named valentine:</p>
+<blockquote style="font-size: 10pt">
+  <pre>C:\v3d&gt;dir test\valentine          
+...
+12/30/2009 10:06 AM 23 valentine
+...
+
+C:\v3d&gt;tut1 test\valentine
+test\valentine: 23
+
+C:\v3d&gt;tut1 test/valentine
+test/valentine: 23
+
+C:\v3d&gt;tut1 test</pre>
+</blockquote>
+  <p><img border="0" src="tut1_crash.jpg" width="474" height="302"><br>
+  <br>
+  Oops! <code>file_size</code> only works on files, not directories, so an 
+  exception was thrown.</p>
+<blockquote style="font-size: 10pt">
+  <pre>C:\v3d&gt;tut1 foo</pre>
+</blockquote>
+  <p><img border="0" src="tut1_crash.jpg" width="474" height="302"><br>
+  <br>
+  There's no file named <code>foo</code> in the current directory, so again an 
+exception was thrown.</p>
+  <p>We'll deal with those conditions in <code>tut2.cpp</code>.</p>
 
 <h2>Basics</h2>
 
@@ -134,71 +252,6 @@ argument throw exceptions to report operational errors. These functions should
 argument report operational error status by setting the <code>ec</code> argument, and 
 do not throw exceptions when I/O errors occur. 
   <span style="background-color: #FFFF00">More on that later in the tutorial.</span></p>
-
-<h2><a href="../example/tut1.cpp">tut1.cpp</a> - Reporting the size of a file</h2>
-
-<p>Let's develop a little command line program to list information about 
-files and directories - essentially a much simplified version of the POSIX <code>ls</code> or Windows <code>dir</code> 
-commands. We'll start with the simplest possible version and progress to more 
-complex functionality. Source code for each version is available, and you are 
-encouraged to compile, test, and experiment with it.</p>
-
-<p>To conserve space, we won't show all the boilerplate code here, but the 
-source code does include it. </p>
-
-<p>Let's get started.</p>
-
-<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
-  <tr>
-    <td style="font-size: 10pt">
-    <pre><a href="../example/tut1.cpp">tut1.cpp</a></pre>
-    <blockquote>
-      <pre>int main(int argc, char* argv[])
-{
-
-  std::cout &lt;&lt; argv[1] &lt;&lt; &quot;: &quot; &lt;&lt; file_size(argv[1]) &lt;&lt; '\n';
-
-  return 0;
-}</pre>
-    </blockquote>
-    </td>
-  </tr>
-</table>
-
-<p>The Boost.Filesystem <code>file_size</code> function returns an <code>uintmax_t</code> 
-containing the size of the file named in the argument.</p>
-
-<p>Build tut1.cpp and give it a try.&nbsp; Use whatever build environment you 
-are most comfortable with.</p>
-<p>Here's a test on Windows, in the 
-directory containing the build output. It contains a directory named test with a 
-file named valentine:</p>
-<blockquote>
-  <pre>C:\v3d&gt;dir test\valentine          
-...
-12/30/2009 10:06 AM 23 valentine
-...
-
-C:\v3d&gt;tut1 test\valentine
-test\valentine: 23
-
-C:\v3d&gt;tut1 test/valentine
-test/valentine: 23
-
-C:\v3d&gt;tut1 test</pre>
-</blockquote>
-  <p><img border="0" src="tut1_crash.jpg" width="474" height="302"><br>
-  <br>
-  Oops! <code>file_size</code> only works on files, not directories, so an 
-  exception was thrown.</p>
-<blockquote>
-  <pre>C:\v3d&gt;tut1 foo</pre>
-</blockquote>
-  <p><img border="0" src="tut1_crash.jpg" width="474" height="302"><br>
-  <br>
-  There's no file named <code>foo</code> in the current directory, so again an 
-exception was thrown.</p>
-  <p>We'll deal with those conditions in <code>tut2.cpp</code>.</p>
 
 <h2><a href="../example/tut2.cpp">tut2.cpp</a> - Using status queries to determine file existence and type</h2>
 
@@ -752,7 +805,7 @@ composed path:
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->20 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32134" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->29 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32152" --></p>
 
 </body>
 
