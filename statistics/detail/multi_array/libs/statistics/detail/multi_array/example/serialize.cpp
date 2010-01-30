@@ -15,6 +15,7 @@
 #include <boost/multi_array.hpp>
 #include <boost/statistics/detail/multi_array/serialization/serialize.hpp>
 #include <boost/statistics/detail/fusion/serialization/include.hpp>
+
 #include <boost/serialization/serialization.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -23,6 +24,7 @@
 
 void example_multi_array_serialize(std::ostream& os)
 {
+	// This example serializes an array of boost::fusion::map
 
 	os << "multi_array_serialize ->" << std::endl;
 
@@ -37,7 +39,7 @@ void example_multi_array_serialize(std::ostream& os)
     typedef std::vector<val_> vec_;
     typedef boost::mpl::int_<0> tag_;
     typedef boost::fusion::result_of::make_map<tag_,val_>::type map_;
-	typedef boost::multi_array<val_, 2> array_;
+	typedef boost::multi_array<val_,2> array_;
 	typedef boost::multi_array<vec_,2> array_vec_;
     typedef boost::multi_array<map_,2> array_map_;
     typedef boost::array<ma::multi_array_base::index,2> extents_;
