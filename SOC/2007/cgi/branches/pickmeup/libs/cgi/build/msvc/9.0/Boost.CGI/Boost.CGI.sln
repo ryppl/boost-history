@@ -47,6 +47,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fcgi_stencil", "fcgi_stenci
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_images", "cgi_images\cgi_images.vcproj", "{B59C59FA-E4A0-498D-A8CF-9FAD68B4315C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fcgi_echo2", "fcgi_echo2\fcgi_echo2.vcproj", "{D6BF1E74-AD28-4F65-8E2B-175BDA6550F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -144,6 +146,10 @@ Global
 		{B59C59FA-E4A0-498D-A8CF-9FAD68B4315C}.Debug|Win32.Build.0 = Debug|Win32
 		{B59C59FA-E4A0-498D-A8CF-9FAD68B4315C}.Release|Win32.ActiveCfg = Release|Win32
 		{B59C59FA-E4A0-498D-A8CF-9FAD68B4315C}.Release|Win32.Build.0 = Release|Win32
+		{D6BF1E74-AD28-4F65-8E2B-175BDA6550F0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D6BF1E74-AD28-4F65-8E2B-175BDA6550F0}.Debug|Win32.Build.0 = Debug|Win32
+		{D6BF1E74-AD28-4F65-8E2B-175BDA6550F0}.Release|Win32.ActiveCfg = Release|Win32
+		{D6BF1E74-AD28-4F65-8E2B-175BDA6550F0}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
