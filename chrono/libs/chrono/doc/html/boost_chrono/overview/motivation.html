@@ -798,10 +798,10 @@
   <span class="comment">// ...
 </span><span class="special">}</span>
 </pre>
-<a name="boost_chrono.overview.motivation.stopwatches.how_reliable_are_these_measure_"></a><h5>
+<a name="boost_chrono.overview.motivation.stopwatches.how_reliable_are_these_measures_"></a><h5>
 <a name="id4817380"></a>
-          <a href="motivation.html#boost_chrono.overview.motivation.stopwatches.how_reliable_are_these_measure_">How
-          reliable are these measure?</a>
+          <a href="motivation.html#boost_chrono.overview.motivation.stopwatches.how_reliable_are_these_measures_">How
+          reliable are these measures?</a>
         </h5>
 <p>
           [info this section need to be reworked, the ideas are there, but ...]
@@ -817,44 +817,73 @@
             that gives you the higher resolution available on your platform. Respect
             to the precission, nothing to do except to take the clock with the highest
             resolution and measures blocks of code that will spent time having more
-            than one order of magnitude.
-          </li>
+            than one order of magnitude the precission of the clock.
+            <div class="orderedlist"><ol type="a"><li>
+                include &lt;boost/chrono/thread_clock.hpp&gt; ... stopclock&lt;high_resolution_clock&gt;
+                _;
+              </li></ol></div>
+</li>
 <li>
             When your application is multithreaded, and you use a process clock,
             the time you get is the delay during which your block has been executed,
-            in concurrency with the other threads of execution. The library provide
-            a thread_clock on platforms providing this kind of data.
-          </li>
+            in concurrency with the other threads of execution. If what you want
+            is the time spent by this specific thread another clock is needed. The
+            library provide a thread_clock that returns the time spent by the thread
+            on platforms providing this kind of data. It can be used as follows
+            <div class="orderedlist"><ol type="a">
+<li>
+                include &lt;boost/chrono/thread_clock.hpp&gt; ...
+              </li>
+<li>
+                if defined(BOOST_CHRONO_HAS_THREAD_CLOCK) stopclock&lt;thread_clock&gt;
+                _;
+              </li>
+<li>
+                else stopclock&lt;process_real_cpu_clock&gt; _;
+              </li>
+<li>
+                endif
+              </li>
+</ol></div>
+</li>
 <li>
             Nested stopclocks (usually nested function calls where each function
             contains a stopclock). When the nesting is deep enough, the cumulative
             overhead of all the stopclock functionality make the data unreliable
-            except for the inner-most trace points. The question is,how many time
-            is related to the application code we want to measure and how many to
+            except for the inner-most trace points. The question is, how much time
+            is related to the application code we want to measure and how much to
             the fact we are meassuring and logging in inner blocks?
           </li>
 </ol></div>
 <p>
-          Some measures let me think that most of the time spent by the stopclock
+          Some measures let us think that most of the time spent by the stopclock
           mechanism is associated to the logging part. There are two things we can
           do to make the difference :
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Avoid the expensive operations as reporting while doing the measures.
-            Note that reporting in itself is not too expensive as far as we don't
-            need to flush the buffer. This can be achieved either using a stopclock
-            accumulator, 'i.e. don't report until all the measures have been compiled
-            and then report some statistics) or using an asynchronous stream.
+            Avoid expensive operations as logging while doing the measures. Note
+            that reporting in itself is not too expensive as far as we don't need
+            to flush the buffer. This can be achieved either using a stopclock accumulator,
+            'i.e. don't report until all the measures have been compiled and then
+            report some statistics or using an asynchronous stream.
           </li>
 <li>
             Introduce some cheap mechanism that allows us to make the difference
             between the application time and the intrinsec stopclock time. When the
             precission of the clock is enough, we can suspend the counting of the
-            Clock while we are speending time reporting the measures, and resume
-            it once the work is done.
+            Clock while we are spending time reporting the measures, and resume it
+            once the work is done. The library provide a Clock wrapper suspendible_clock
+            that make the resulting clock suspendible. The stopwatch_reporter is
+            able to detect if the CLock is Suspendible and then suspend/resume the
+            clock while doing the report.
           </li>
 </ul></div>
+<pre class="programlisting"><span class="identifier">stopclock</span><span class="special">&lt;</span><span class="identifier">suspendible_clock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">_</span><span class="special">;</span>
+</pre>
+<p>
+          See the performances section for more deep details.
+        </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

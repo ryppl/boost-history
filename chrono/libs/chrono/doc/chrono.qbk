@@ -62,7 +62,7 @@ The Boost Chrono library provides:
     * `process_user_CPU_clocks`, capturing user-CPU times.
     * `process_system_CPU_clocks`, capturing system-CPU times.
     * `process_cpu_clock`, tuple-like class capturing at once real, user-CPU, and system-CPU times.
-    
+
 * Thread clock
 
 * Suspendible Clock
@@ -505,26 +505,41 @@ As this is one of the expression more commonly use, the library provides a stopc
     }
 
 
-[heading How reliable are these measure?]
+[heading How reliable are these measures?]
 
 [info this section need to be reworked, the ideas are there, but ...]
 
 There are three context on which you can get unreliable measures:
 
-# the precission of your clock. If the precission of your clock is 10ms you can not be able to measure the time spent by blocks of code that takes the same order of magnitude. The library provides a hig_resolution_clock that gives you the higher resolution available on your platform. Respect to the precission, nothing to do except to take the clock with the highest resolution and measures blocks of code that will spent time having more than one order of magnitude.
+# the precission of your clock. If the precission of your clock is 10ms you can not be able to measure the time spent by blocks of code that takes the same order of magnitude. The library provides a hig_resolution_clock that gives you the higher resolution available on your platform. Respect to the precission, nothing to do except to take the clock with the highest resolution and measures blocks of code that will spent time having more than one order of magnitude the precission of the clock.
 
-# When your application is multithreaded, and you use a process clock, the time you get is the delay during which your block has been executed, in concurrency with the other threads of execution. The library provide a thread_clock on platforms providing this kind of data.
-
-# Nested stopclocks (usually nested function calls where each function contains a stopclock). When the nesting is deep enough, the cumulative overhead of all the stopclock functionality make the data unreliable except for the inner-most trace points. The question is,how many time is related to the application code we want to measure and how many to the fact we are meassuring and logging in inner blocks? 
-
-Some measures let me think that most of the time spent by the stopclock mechanism is associated to the logging part. There are two things we can do to make the difference :
-
-* Avoid the expensive operations as reporting while doing the measures. Note that reporting in itself is not too expensive as far as we don't need to flush the buffer. This can be achieved either using a stopclock accumulator, 'i.e. don't report until all the measures have been compiled and then report some statistics) or using an asynchronous stream. 
-
-* Introduce some cheap mechanism that allows us to make the difference between the application time and the intrinsec stopclock time. When the precission of the clock is enough, we can suspend the counting of the Clock while we are speending time reporting the measures, and resume it once the work is done. 
+    #include <boost/chrono/thread_clock.hpp>
+    ...
+        stopclock<high_resolution_clock> _;
 
 
+# When your application is multithreaded, and you use a process clock, the time you get is the delay during which your block has been executed, in concurrency with the other threads of execution. If what you want is the time spent by this specific thread another clock is needed. The library provide a thread_clock that returns the time spent by the thread on platforms providing this kind of data. It can be used as follows
 
+    #include <boost/chrono/thread_clock.hpp>
+    ...
+    #if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
+        stopclock<thread_clock> _;
+    #else
+        stopclock<process_real_cpu_clock> _;
+    #endif
+
+# Nested stopclocks (usually nested function calls where each function contains a stopclock). When the nesting is deep enough, the cumulative overhead of all the stopclock functionality make the data unreliable except for the inner-most trace points. The question is, how much time is related to the application code we want to measure and how much to the fact we are meassuring and logging in inner blocks?
+
+Some measures let us think that most of the time spent by the stopclock mechanism is associated to the logging part. There are two things we can do to make the difference :
+
+* Avoid expensive operations as logging while doing the measures. Note that reporting in itself is not too expensive as far as we don't need to flush the buffer. This can be achieved either using a stopclock accumulator, 'i.e. don't report until all the measures have been compiled and then report some statistics or using an asynchronous stream.
+
+* Introduce some cheap mechanism that allows us to make the difference between the application time and the intrinsec stopclock time. When the precission of the clock is enough, we can suspend the counting of the Clock while we are spending time reporting the measures, and resume it once the work is done. The library provide a Clock wrapper suspendible_clock that make the resulting clock suspendible. The stopwatch_reporter is able to detect if the CLock is Suspendible and then suspend/resume the clock while doing the report.
+
+    stopclock<suspendible_clock<Clock> > _;
+
+
+See the performances section for more deep details.
 
 [endsect]
 [endsect]
@@ -737,7 +752,7 @@ On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we can get
             // transform to nanoseconds
             return time_point(duration(
                 static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
-                 
+
         }
         static time_point now( system::error_code & ec ) {
             // get the current thread
@@ -756,7 +771,7 @@ On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we can get
             // transform to nanoseconds
             return time_point(duration(
                 static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
-                 
+
         }
     };
 [endsect]
@@ -829,7 +844,7 @@ The typical example of stopclock_accumulator is to get statistical measures of t
             stopclock_accumulator<>::scoped_run _(acc);
             // ...
         }
-        
+
 
 [endsect]
 
@@ -843,7 +858,7 @@ The typical example of stopclock_accumulator is to get statistical measures of t
     using namespace boost::chrono;
     double res;
     void f1(long j)
-    {   
+    {
         stopwatch<>::reporter _(BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT);
         for (long i =0; i< j; i+=1)
             res+=std::sqrt( res+123.456L+i );  // burn some time
@@ -863,13 +878,13 @@ There are two use cases that coul need to change the statistics associated to a 
 For the first case we just need to change the accumulator_set and the format we want to get. Imagin we want to get only the count, sam and mean statistics, no need to calculate the min neither the max.
 
     using namespace boost::accumulators;
-    
-    typedef stopwatch_accumulator<process_real_cpu_clock, 
+
+    typedef stopwatch_accumulator<process_real_cpu_clock,
                 accumulator_set<process_real_cpu_clock::rep,
                     features<
                             tag::count,
                             tag::sum,
-                            tag::mean 
+                            tag::mean
                     >
                 >
       >::reporter my_stopwatch_accumulator_reporter;
@@ -902,26 +917,26 @@ Imagine then that we want to report the tag::variance(lazy). We will need to inc
     ...
     #include <boost/accumulators/statistics/variance.hpp>
     ...
-    typedef stopwatch_accumulator<process_real_cpu_clock, 
+    typedef stopwatch_accumulator<process_real_cpu_clock,
                 accumulator_set<process_real_cpu_clock::rep,
                     features<
                             tag::count,
                             tag::sum,
                             tag::mean,
-                            tag::variance(lazy)                            
+                            tag::variance(lazy)
                     >
                 >
     >::reporter my_stopwatch_accumulator_reporter;
 
-But what happens if we add new statistics to the accumulator_set that are not taken in account by the default formatter? These statistics will simply be ignored. So we will need to define own own accumulator formatter. 
+But what happens if we add new statistics to the accumulator_set that are not taken in account by the default formatter? These statistics will simply be ignored. So we will need to define own own accumulator formatter.
 
-    typedef stopwatch_accumulator<process_real_cpu_clock, 
+    typedef stopwatch_accumulator<process_real_cpu_clock,
                 accumulator_set<process_real_cpu_clock::rep,
                     features<
                             tag::count,
                             tag::sum,
                             tag::mean,
-                            tag::variance(lazy)                            
+                            tag::variance(lazy)
                     >
                 >,
                 my_stopwatch_accumulator_formatter
@@ -930,17 +945,17 @@ But what happens if we add new statistics to the accumulator_set that are not ta
 Next follow the definition of a formatter taking care of count, sum, mean and variance
 
     class my_stopwatch_accumulator_formatter {
-    public:   
+    public:
         typedef std::string string_type;
         typedef char char_type;
         typedef std::ostream ostream_type;
-    
+
         static ostream_type &  default_os() {return std::cout;}
         static const char_type* default_format() {return "%c times, sum=%ss, mean=%as, variance=%vs\n";}
         static int default_places() { return 3; }
 
         template <class Stopwatch >
-        static void show_time( Stopwatch & stopwatch_, const char_type* format, 
+        static void show_time( Stopwatch & stopwatch_, const char_type* format,
                                 int places, ostream_type & os, system::error_code & ec)
         {
             typedef typename Stopwatch::duration duration_t;
@@ -2536,8 +2551,6 @@ This file include all the stopwatches related files
 
 This file include all the stopwatches related files
 
-    #include <boost/chrono/digital_time.hpp>
-    #include <boost/chrono/digital_time_formatter.hpp>
     #include <boost/chrono/scoped_stopclock.hpp>
     #include <boost/chrono/process_cpu_clocks.hpp>
     #include <boost/chrono/stopclock.hpp>
@@ -2549,6 +2562,8 @@ This file include all the stopwatches related files
     #include <boost/chrono/stopwatch_reporter.hpp>
     #include <boost/chrono/stopwatch_scoped.hpp>
     #include <boost/chrono/time_formatter.hpp>
+    #include <boost/chrono/t24_hours.hpp>
+    #include <boost/chrono/t24_hours_formatter.hpp>
 
 [endsect]
 
@@ -2641,6 +2656,16 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
         template <class Clock=high_resolution_clock> class stopwatch;
 
+        template <class Clock>
+        struct stopwatch_reporter_default_formatter<stopwatch<Clock> > {
+            typedef stopwatch_formatter type;
+        };
+
+        template <class Clock>
+        struct wstopwatch_reporter_default_formatter<stopwatch<Clock> > {
+            typedef wstopwatch_formatter type;
+        };
+
         typedef <see above> system_stopwatch;
         #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
         typedef <see above> monotonic_stopwatch;
@@ -2723,6 +2748,17 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 
     namespace boost { namespace chrono  {
         template <class Clock, class Accumulator> class stopwatch_accumulator;
+
+        template <class Clock, class Accumulator>
+        struct stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
+            typedef stopwatch_accumulator_formatter type;
+        };
+
+        template <class Clock, class Accumulator>
+        struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
+            typedef wstopwatch_accumulator_formatter type;
+        };
+
         typedef <see below> system_stopwatch_accumulator;
     #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
         typedef <see below> monotonic_stopwatch_accumulator;
@@ -3015,24 +3051,70 @@ The nested typedef `type` defines the default formatter used by the `stopwatch_r
 
     namespace boost { namespace chrono  {
         template <class Stopwatch>
+        struct basic_stopwatch_reporter_default_formatter;
+        template <class Stopwatch>
         struct stopwatch_reporter_default_formatter;
+        template <class Stopwatch>
+        struct wstopwatch_reporter_default_formatter;
 
         template <class Stopwatch, class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type>
         class stopwatch_reporter;
     }}
 
-[/
-        typedef <see above> system_stopwatch_reporter;
-        #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef <see above> monotonic_stopwatch_reporter;
-        #endif
-        typedef <see above> high_resolution_stopwatch_reporter;
-        typedef <see above> process_real_cpu_stopwatch_reporter;
-        typedef <see above> process_user_cpu_stopwatch_reporter;
-        typedef <see above> process_system_cpu_stopwatch_reporter;
-        typedef <see above> process_cpu_stopwatch_reporter;
+[section Template Class `basic_stopwatch_reporter<>`]
 
-]
+class `basic_stopwatch_reporter` provides a everything a Timer provides and it adds reporting capabilities that can be invoked in a single line of code. The reporting is controleed by two parameters:
+
+* format : The output format
+* places(precission): the number of decimal placess used.
+
+The default places is given by Formatter::default_places().
+
+The default format is given by Formatter::default_format().
+
+    template <class Stopwatch, class Formatter>
+    class basic_stopwatch_reporter : public Stopwatch {
+    public:
+        typedef typename Stopwatch::clock clock;
+        typedef Stopwatch stopwatch;
+        typedef Formatter formatter;
+
+        explicit basic_stopwatch_reporter( system::error_code & ec = system::throws );
+        explicit basic_stopwatch_reporter( std::ostream & os,
+                    system::error_code & ec = system::throws );
+
+        explicit basic_stopwatch_reporter( const std::string & format,
+                    system::error_code & ec = system::throws );
+        explicit basic_stopwatch_reporter( std::ostream & os, const std::string & format,
+                    system::error_code & ec = system::throws );
+
+        explicit basic_stopwatch_reporter( const std::string & format, int places,
+                    system::error_code & ec = system::throws );
+        explicit basic_stopwatch_reporter( std::ostream & os, const std::string & format, int places,
+                    system::error_code & ec = system::throws );
+
+        explicit basic_stopwatch_reporter( int places,
+                    system::error_code & ec = system::throws );
+        explicit basic_stopwatch_reporter( std::ostream & os, int places,
+                    system::error_code & ec = system::throws );
+
+        explicit basic_stopwatch_reporter( int places, const std::string & format,
+                    system::error_code & ec = system::throws );
+        explicit basic_stopwatch_reporter( std::ostream & os, int places, const std::string & format,
+                    system::error_code & ec = system::throws );
+
+        ~basic_stopwatch_reporter();
+
+        void report( system::error_code & ec = system::throws );
+        bool reported() const;
+
+
+        typedef stopwatch_runner<basic_stopwatch_reporter<Stopwatch> > scoped_run;
+        typedef stopwatch_suspender<basic_stopwatch_reporter<Stopwatch> > scoped_suspend;
+        typedef stopwatch_resumer<basic_stopwatch_reporter<Stopwatch> > scoped_resume;
+    };
+
+[endsect]
 
 [section Template Class `stopwatch_reporter<>`]
 
@@ -3046,7 +3128,7 @@ The default places is given by Formatter::default_places().
 The default format is given by Formatter::default_format().
 
     template <class Stopwatch, class Formatter>
-    class stopwatch_reporter : public Stopwatch {
+    class stopwatch_reporter : public basic_stopwatch_reporter<Stopwatch,Formatter> {
     public:
         typedef typename Stopwatch::clock clock;
         typedef Stopwatch stopwatch;
@@ -3104,21 +3186,78 @@ Usage
     }
 
 [endsect]
-[/
-[section `stopwatch_reporter` useful typedefs]
 
-        typedef stopwatch_reporter< stopwatch<system_clock> > system_stopwatch_reporter;
-        #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef stopwatch_reporter< stopwatch<monotonic_clock> > monotonic_stopwatch_reporter;
-        #endif
-        typedef stopwatch_reporter< stopwatch<high_resolution_clock> > high_resolution_stopwatch_reporter;
-        typedef stopwatch_reporter< stopwatch<process_real_cpu_clock> > process_real_cpu_stopwatch_reporter;
-        typedef stopwatch_reporter< stopwatch<process_user_cpu_clock> > process_user_cpu_stopwatch_reporter;
-        typedef stopwatch_reporter< stopwatch<process_system_cpu_clock> > process_system_cpu_stopwatch_reporter;
-        typedef stopwatch_reporter< stopwatch<process_cpu_clock> > process_cpu_stopwatch_reporter;
+[section Template Class `wstopwatch_reporter<>`]
+
+class `wstopwatch_reporter` provides a everything a Timer provides and it adds reporting capabilities that can be invoked in a single line of code. The reporting is controleed by two parameters:
+
+* format : The output format
+* places(precission): the number of decimal placess used.
+
+The default places is given by Formatter::default_places().
+
+The default format is given by Formatter::default_format().
+
+    template <class Stopwatch, class Formatter>
+    class wstopwatch_reporter : public basic_wstopwatch_reporter<Stopwatch,Formatter> {
+    public:
+        typedef typename Stopwatch::clock clock;
+        typedef Stopwatch stopwatch;
+        typedef Formatter formatter;
+
+        explicit wstopwatch_reporter( system::error_code & ec = system::throws );
+        explicit wstopwatch_reporter( std::ostream & os,
+                    system::error_code & ec = system::throws );
+
+        explicit wstopwatch_reporter( const std::string & format,
+                    system::error_code & ec = system::throws );
+        explicit wstopwatch_reporter( std::ostream & os, const std::string & format,
+                    system::error_code & ec = system::throws );
+
+        explicit wstopwatch_reporter( const std::string & format, int places,
+                    system::error_code & ec = system::throws );
+        explicit wstopwatch_reporter( std::ostream & os, const std::string & format, int places,
+                    system::error_code & ec = system::throws );
+
+        explicit wstopwatch_reporter( int places,
+                    system::error_code & ec = system::throws );
+        explicit wstopwatch_reporter( std::ostream & os, int places,
+                    system::error_code & ec = system::throws );
+
+        explicit wstopwatch_reporter( int places, const std::string & format,
+                    system::error_code & ec = system::throws );
+        explicit wstopwatch_reporter( std::ostream & os, int places, const std::string & format,
+                    system::error_code & ec = system::throws );
+
+        ~wstopwatch_reporter();
+
+        void report( system::error_code & ec = system::throws );
+        bool reported() const;
+
+
+        typedef stopwatch_runner<wstopwatch_reporter<Stopwatch> > scoped_run;
+        typedef stopwatch_suspender<wstopwatch_reporter<Stopwatch> > scoped_suspend;
+        typedef stopwatch_resumer<wstopwatch_reporter<Stopwatch> > scoped_resume;
+    };
+
+Usage
+
+    void f1()
+    {
+        typedef wstopwatch_reporter<stopwatch_accumulator<> > accumulator;
+        static accumulator t;
+        accumulator::scoped_run _(t);
+        // ...
+
+        // call to some function we don't want to measure
+        {
+            accumulator::scoped_suspend _(t);
+            external_function();
+        }
+    }
 
 [endsect]
-]
+
 [endsect]
 
 [/==================================================]
@@ -3126,7 +3265,10 @@ Usage
 [/==================================================]
 
     namespace boost { namespace chrono {
+        template < class Clock, class Formatter > class basic_stopclock;
         template < class Clock, class Formatter > class stopclock;
+        template < class Clock, class Formatter > class wstopclock;
+
         typedef <see above> system_stopclock;
         #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
         typedef <see above> monotonic_stopclock;
@@ -3135,16 +3277,69 @@ Usage
         typedef <see above> process_real_cpu_stopclock;
         typedef <see above> process_user_cpu_stopclock;
         typedef <see above> process_system_cpu_stopclock;
+
+        typedef <see above> system_wstopclock;
+        #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+        typedef <see above> monotonic_wstopclock;
+        #endif
+        typedef <see above> high_resolution_wstopclock;
+        typedef <see above> process_real_cpu_wstopclock;
+        typedef <see above> process_user_cpu_wstopclock;
+        typedef <see above> process_system_cpu_wstopclock;
     }}
+
+[section Template Class `basic_stopclock<>`]
+
+`basic_stopclock<Clock>` template class is a shortcut of `basic_stopwatch_reporter<stopwatch<Clock>>`
+
+    template< class Clock, class Formatter>
+    class basic_stopclock : public basic_stopwatch_reporter<stopwatch<Clock>, Formatter> {
+    public:
+        typedef Clock clock;
+        typedef stopwatch<Clock> stopwatch;
+        typedef Formatter formatter;
+        typedef typename Formatter::string_type string_type;
+        typedef typename Formatter::char_type char_type;
+        typedef typename Formatter::ostream_type ostream_type;
+
+        explicit basic_stopclock( system::error_code & ec = system::throws );
+        explicit basic_stopclock( ostream_type & os,
+                    system::error_code & ec = system::throws );
+        explicit basic_stopclock( const string_type & format,
+                    system::error_code & ec = system::throws );
+        explicit basic_stopclock( int places,
+                    system::error_code & ec = system::throws );
+
+        basic_stopclock( ostream_type & os, const string_type & format,
+                    system::error_code & ec = system::throws );
+        basic_stopclock( const string_type & format, int places,
+                    system::error_code & ec = system::throws );
+        basic_stopclock( ostream_type & os, int places,
+                    system::error_code & ec = system::throws );
+        basic_stopclock( int places, const string_type & format,
+                    system::error_code & ec = system::throws );
+
+        basic_stopclock( ostream_type & os, const string_type & format, int places,
+                    system::error_code & ec = system::throws );
+        basic_stopclock( ostream_type & os, int places, const string_type & format,
+                    system::error_code & ec = system::throws );
+
+
+        typedef typename base_type::scoped_run scoped_run;
+        typedef typename base_type::scoped_suspend scoped_suspend;
+        typedef typename base_type::scoped_resume scoped_resume;
+    };
+
+[endsect]
 
 [section Template Class `stopclock<>`]
 
-`stopclock<Clock>` template class is a shortcut of `stopwatch_reporter<stopwatch<Clock>>`
+`stopclock<Clock>` template class is a shortcut of `stopwatch_reporter<stopwatch<Clock>>` with a specific default formatter.
 
     template
         < class Clock=process_cpu_clock
         , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch<Clock>>::type
-    > class stopclock : public stopwatch_reporter<stopwatch<Clock>, Formatter> {
+    > class stopclock : public basic_stopclock<Clock, Formatter> {
     public:
         typedef Clock clock;
         typedef stopwatch<Clock> stopwatch;
@@ -3194,6 +3389,66 @@ Usage
         typedef boost::chrono::stopclock< boost::chrono::process_system_cpu_clock > process_system_cpu_stopclock;
 
 [endsect]
+
+[section Template Class `wstopclock<>`]
+
+`wstopclock<Clock>` template class is a shortcut of `stopwatch_reporter<stopwatch<Clock>>` with a specific default formatter.
+
+    template
+        < class Clock=process_cpu_clock
+        , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch<Clock>>::type
+    > class wstopclock : public basic_wstopclock<Clock, Formatter> {
+    public:
+        typedef Clock clock;
+        typedef stopwatch<Clock> stopwatch;
+        typedef Formatter formatter;
+        typedef typename Formatter::string_type string_type;
+        typedef typename Formatter::char_type char_type;
+        typedef typename Formatter::ostream_type ostream_type;
+
+        explicit wstopclock( system::error_code & ec = system::throws );
+        explicit wstopclock( ostream_type & os,
+                    system::error_code & ec = system::throws );
+        explicit wstopclock( const string_type & format,
+                    system::error_code & ec = system::throws );
+        explicit wstopclock( int places,
+                    system::error_code & ec = system::throws );
+
+        wstopclock( ostream_type & os, const string_type & format,
+                    system::error_code & ec = system::throws );
+        wstopclock( const string_type & format, int places,
+                    system::error_code & ec = system::throws );
+        wstopclock( ostream_type & os, int places,
+                    system::error_code & ec = system::throws );
+        wstopclock( int places, const string_type & format,
+                    system::error_code & ec = system::throws );
+
+        wstopclock( ostream_type & os, const string_type & format, int places,
+                    system::error_code & ec = system::throws );
+        wstopclock( ostream_type & os, int places, const string_type & format,
+                    system::error_code & ec = system::throws );
+
+
+        typedef typename base_type::scoped_run scoped_run;
+        typedef typename base_type::scoped_suspend scoped_suspend;
+        typedef typename base_type::scoped_resume scoped_resume;
+    };
+
+[endsect]
+[section `wstopclock` useful typedefs]
+
+        typedef boost::chrono::wstopclock< boost::chrono::system_clock > system_stopwatch_reporter;
+        #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+        typedef boost::chrono::wstopclock< boost::chrono::monotonic_clock > monotonic_stopwatch_reporter;
+        #endif
+        typedef boost::chrono::wstopclock< boost::chrono::high_resolution_clock > high_resolution_wstopclock;
+        typedef boost::chrono::wstopclock< boost::chrono::process_real_cpu_clock > process_real_cpu_wstopclock;
+        typedef boost::chrono::wstopclock< boost::chrono::process_user_cpu_clock > process_user_cpu_wstopclock;
+        typedef boost::chrono::wstopclock< boost::chrono::process_system_cpu_clock > process_system_cpu_wstopclock;
+
+[endsect]
+
+
 [endsect]
 
 [/==================================================]
@@ -3202,7 +3457,12 @@ Usage
 
     namespace boost { namespace chrono {
         template < class Clock, class Formatter >
+        class basic_stopclock_accumulator;
+        template < class Clock, class Formatter >
         class stopclock_accumulator;
+        template < class Clock, class Formatter >
+        class wstopclock_accumulator;
+
         typedef <see above> system_stopclock_accumulator;
         #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
         typedef <see above> monotonic_stopclock_accumulator;
@@ -3211,17 +3471,73 @@ Usage
         typedef <see above> process_real_cpu_stopclock_accumulator;
         typedef <see above> process_user_cpu_stopclock_accumulator;
         typedef <see above> process_system_cpu_stopclock_accumulator;
+
+        typedef <see above> system_wstopclock_accumulator;
+        #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+        typedef <see above> monotonic_wstopclock_accumulator;
+        #endif
+        typedef <see above> high_resolution_wstopclock_accumulator;
+        typedef <see above> process_real_cpu_wstopclock_accumulator;
+        typedef <see above> process_user_cpu_wstopclock_accumulator;
+        typedef <see above> process_system_cpu_wstopclock_accumulator;
     }}
+
+[section Template Class `basic_stopclock_accumulator<>`]
+
+`basic_stopclock_accumulator<Clock>` template class is a shortcut of `stopwatch_reporter<stopwatch<Clock>>`
+
+    template
+        < class Clock=high_resolution_clock
+        , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type
+    > class basic_stopclock_accumulator
+        : public basic_stopwatch_reporter<stopwatch_accumulator<Clock>, Formatter> {
+    public:
+        typedef Clock clock;
+        typedef stopwatch_accumulator<Clock> stopwatch;
+        typedef Formatter formatter;
+        typedef typename Formatter::string_type string_type;
+        typedef typename Formatter::char_type char_type;
+        typedef typename Formatter::ostream_type ostream_type;
+
+        explicit basic_stopclock_accumulator( system::error_code & ec = system::throws );
+        explicit basic_stopclock_accumulator( ostream_type & os,
+                    system::error_code & ec = system::throws );
+        explicit basic_stopclock_accumulator( const string_type & format,
+                    system::error_code & ec = system::throws );
+        explicit basic_stopclock_accumulator( int places,
+                    system::error_code & ec = system::throws );
+
+        basic_stopclock_accumulator( ostream_type & os, const string_type & format,
+                    system::error_code & ec = system::throws );
+        basic_stopclock_accumulator( const string_type & format, int places,
+                    system::error_code & ec = system::throws );
+        basic_stopclock_accumulator( ostream_type & os, int places,
+                    system::error_code & ec = system::throws );
+        basic_stopclock_accumulator( int places, const string_type & format,
+                    system::error_code & ec = system::throws );
+
+        basic_stopclock_accumulator( ostream_type & os, const string_type & format, int places,
+                    system::error_code & ec = system::throws );
+        basic_stopclock_accumulator( ostream_type & os, int places, const string_type & format,
+                    system::error_code & ec = system::throws );
+
+
+        typedef typename base_type::scoped_run scoped_run;
+        typedef typename base_type::scoped_suspend scoped_suspend;
+        typedef typename base_type::scoped_resume scoped_resume;
+    };
+
+[endsect]
 
 [section Template Class `stopclock_accumulator<>`]
 
-`stopclock_accumulator<Clock>` template class is a shortcut of `stopwatch_reporter<stopwatch<Clock>>`
+`stopclock_accumulator<Clock>` template class is a shortcut of `stopwatch_reporter<stopwatch<Clock>>` with a specific formatter.
 
     template
         < class Clock=high_resolution_clock
         , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type
     > class stopclock_accumulator
-        : public stopwatch_reporter<stopwatch_accumulator<Clock>, Formatter> {
+        : public basic_stopclock_accumulator<Clock, Formatter> {
     public:
         typedef Clock clock;
         typedef stopwatch_accumulator<Clock> stopwatch;
@@ -3269,6 +3585,64 @@ Usage
         typedef boost::chrono::stopclock_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_stopclock_accumulator;
         typedef boost::chrono::stopclock_accumulator< boost::chrono::process_user_cpu_clock > process_user_cpu_stopclock_accumulator;
         typedef boost::chrono::stopclock_accumulator< boost::chrono::process_system_cpu_clock > process_system_cpu_stopclock_accumulator;
+
+[endsect]
+[section Template Class `wstopclock_accumulator<>`]
+
+`wstopclock_accumulator<Clock>` template class is a shortcut of `stopwatch_reporter<stopwatch<Clock>>` with a specific formatter.
+
+    template
+        < class Clock=high_resolution_clock
+        , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type
+    > class wstopclock_accumulator
+        : public basic_wstopclock_accumulator<Clock, Formatter> {
+    public:
+        typedef Clock clock;
+        typedef stopwatch_accumulator<Clock> stopwatch;
+        typedef Formatter formatter;
+        typedef typename Formatter::string_type string_type;
+        typedef typename Formatter::char_type char_type;
+        typedef typename Formatter::ostream_type ostream_type;
+
+        explicit wstopclock_accumulator( system::error_code & ec = system::throws );
+        explicit wstopclock_accumulator( ostream_type & os,
+                    system::error_code & ec = system::throws );
+        explicit wstopclock_accumulator( const string_type & format,
+                    system::error_code & ec = system::throws );
+        explicit wstopclock_accumulator( int places,
+                    system::error_code & ec = system::throws );
+
+        wstopclock_accumulator( ostream_type & os, const string_type & format,
+                    system::error_code & ec = system::throws );
+        wstopclock_accumulator( const string_type & format, int places,
+                    system::error_code & ec = system::throws );
+        wstopclock_accumulator( ostream_type & os, int places,
+                    system::error_code & ec = system::throws );
+        wstopclock_accumulator( int places, const string_type & format,
+                    system::error_code & ec = system::throws );
+
+        wstopclock_accumulator( ostream_type & os, const string_type & format, int places,
+                    system::error_code & ec = system::throws );
+        wstopclock_accumulator( ostream_type & os, int places, const string_type & format,
+                    system::error_code & ec = system::throws );
+
+
+        typedef typename base_type::scoped_run scoped_run;
+        typedef typename base_type::scoped_suspend scoped_suspend;
+        typedef typename base_type::scoped_resume scoped_resume;
+    };
+
+[endsect]
+[section `wstopclock_accumulator` useful typedefs]
+
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::system_clock > system_stopwatch_reporter;
+        #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::monotonic_clock > monotonic_stopwatch_reporter;
+        #endif
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::high_resolution_clock > high_resolution_wstopclock_accumulator;
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_wstopclock_accumulator;
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_user_cpu_clock > process_user_cpu_wstopclock_accumulator;
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_system_cpu_clock > process_system_cpu_wstopclock_accumulator;
 
 [endsect]
 [endsect]
@@ -3521,16 +3895,16 @@ All the units are given using the suffix "s" following the System International 
 [endsect]
 
 [/==================================================]
-[section:digital_time_hpp Header `<boost/chrono/digital_time.hpp>`]
+[section:t24_hours_hpp Header `<boost/chrono/t24_hours.hpp>`]
 [/==================================================]
 
     namespace boost { namespace chrono {
-        class digital_time;
+        class t24_hours;
     }}
 
-[section Class `digital_time`]
+[section Class `t24_hours`]
 
-    class digital_time {
+    class t24_hours {
     public:
         typedef boost::chrono::duration<boost::int_least32_t, ratio<24*3600> > days;
         typedef boost::chrono::hours hours;
@@ -3545,14 +3919,14 @@ All the units are given using the suffix "s" following the System International 
         nanoseconds nanoseconds_;
 
         template <class Rep, class Period>
-            explicit digital_time(const boost::chrono::duration<Rep, Period>& d);
+            explicit t24_hours(const boost::chrono::duration<Rep, Period>& d);
     };
 
 [endsect]
 [endsect]
 
 [/==================================================================]
-[section:digital_time_formatter_hpp Header `<boost/chrono/digital_time_formatter.hpp>`]
+[section:t24_hours_formatter_hpp Header `<boost/chrono/t24_hours_formatter.hpp>`]
 [/==================================================================]
 
 
@@ -3563,17 +3937,17 @@ All the units are given using the suffix "s" following the System International 
             typename Traits=std::char_traits<CharT>,
             class Alloc=std::allocator<CharT>
         >
-        class basic_digital_time_formatter;
+        class basic_24_hours_formatter;
 
-        typedef basic_digital_time_formatter<char> digital_time_formatter;
-        typedef basic_digital_time_formatter<wchar_t> wdigital_time_formatter;
+        typedef basic_24_hours_formatter<char> t24_hours_formatter;
+        typedef basic_24_hours_formatter<wchar_t> wt24_hours_formatter;
 
     } }
 
-[section Template Class `basic_digital_time_formatter<>`]
+[section Template Class `basic_24_hours_formatter<>`]
 
     template <typename CharT, typename Traits, class Alloc>
-    class basic_digital_time_formatter {
+    class basic_24_hours_formatter {
     public:
         static std::ostream &  default_os();
         static const char * default_format();
@@ -4810,15 +5184,35 @@ Here is the output for this program for several sets of command line arguments:
 [/==================================]
 
 
-[section [*Version 0.4, Febrary 5, 2010] ['New thread clock and Suspendible clock ]]
+[section [*Version 0.4, Febrary 31, 2010] ['New thread clock and Suspendible clock ]]
 
 [*New Features:]
 
 * Suspendible Clock concept + template class suspendible_clock<>
 * Added scope_suspend which do suspend/resume if the Clock is a model of Suspendible Clock concept, and nothing otherwise.
 * thread_clock support on platforms providing it natively.
+* Added support for wide character for stopwatch_reporter, stopclock, and stopclock_accumulator.
+* digital_time renamed t24_hours
+
+[*Perf]
+
+Added performances measures.
 
 [*Bug Fixes]
+
+* Bug on timeval_demo.
+
+    time_point t(duration(xtime(0)));  // this was taken as a function declaration
+    gettimeofday((timeval*)&t, 0);
+    return t;
+by
+
+    timeval tv;
+    gettimeofday(&tv, 0);
+    xtime xt( tv.tv_sec, tv.tv_usec);
+    return time_point(duration(xt));
+
+* Bug on run_timer_test (add a global variable to avoid optimization that removes completely the code to be  measured
 
 [endsect]
 
@@ -4830,7 +5224,7 @@ Here is the output for this program for several sets of command line arguments:
 
 [*Bug Fixes]
 * Specific formatters didn't work completly
-* Replace duration(0) by duration::zero() on template classes. 
+* Replace duration(0) by duration::zero() on template classes.
 * suspend doesn't works: partial_ not initialized neither taken in account by the elapsed function.
 
 [endsect]
@@ -5168,7 +5562,7 @@ You can also run a specific suite of test by doing
     [[stopclock_example]      [run]          [...]                   [Pass]   [#]]
     [[stopclock_accumulator_example]      [run]          [...]                   [Pass]   [#]]
     [[nested_stopclock_accumulator_example]      [run]          [...]                   [Pass]   [#]]
-    [[digital_time_example]      [run]          [...]                   [Pass]   [#]]
+    [[t24_hours_example]      [run]          [...]                   [Pass]   [#]]
     [[scoped_stopclock_example]      [run]          [...]                   [Pass]   [#]]
     [[test_minmax]      [compile]          [...]                   [Pass]   [#]]
     [[stopclock_constructor_overload_test]      [run]          [...]                   [Pass]   [#]]
@@ -5237,9 +5631,72 @@ You can also run a specific suite of test by doing
 [endsect]
 
 [/=====================================]
-[section:todo  Appendix H: Future plans]
+[section:perf  Appendix H: Performances]
 [/=====================================]
 
+
+We have run some program changing how the reporting is done.
+
+NONE: no report is done on the inner function
+HIGH: every call to the recursive function is reported using an stopclock
+SUSPEND: every call to the recursive function is reported using a using an stopclock on a suspendible clock
+ACCU: every call to the recursive function is tracked using a stopclock_accumulator
+
+We have run the programm with two different clocks, high_resolution_clock and thread_clock.
+
+The programs are either single-threaded or multi-threaded.
+
+Two kind of inner functions are used: recursive or non recursive. In order to test the influence of nesting reports, the non recursive functions use up to 10 nesting levels, depending on its parameter.
+
+the function at level n is defined as follows
+
+    void fn(long v) {
+        // reporting or not
+        stopclock<> _;
+        // burn some time
+        for ( long i = 0; i < v; ++i )
+            res+=std::sqrt( res+123.456L+i );  // burn some time
+        if (v==0) return;
+
+        if (v%(n-1)==0) fn-1(v-1);
+        if (v%(n-2)==0) fn-2(v-1);
+        ...
+        f1(v-1);
+    }
+
+This gives a variable number in nesting reporting depending on the parameter, with a variable lifetime.
+
+[heading Single-Threaded Recursive function]
+
+We have run the same program and changed how the reporting is done.
+
+The programm creates two thread of execution. the thread entry point calls a function which makes some calculation depending on its parameter and call recursivelly itself decreasing the parameter.
+
+NONE: no report is done on the inner function
+HIGH: every call to the recursive function is reported using an stopclock
+SUSPEND: every call to the recursive function is reported using a using an stopclock on a suspendible clock
+ACCU: every call to the recursive function is tracked using a stopclock_accumulator
+
+We have run the programm with two different clocks, high_resolution_clock and thread_clock.
+
+[heading Multi-Threaded Recursive function]
+
+We have run the same program and changed how the reporting is done.
+
+The programm creates two thread of execution. the thread entry point calls a function which makes some calculation depending on its parameter and call recursivelly itself decreasing the parameter.
+
+NONE: no report is done on the inner function
+HIGH: every call to the recursive function is reported using an stopclock
+SUSPEND: every call to the recursive function is reported using a using an stopclock on a suspendible clock
+ACCU: every call to the recursive function is tracked using a stopclock_accumulator
+
+We have run the programm with two different clocks, high_resolution_clock and thread_clock.
+
+[endsect]
+
+[/=====================================]
+[section:todo  Appendix I: Future plans]
+[/=====================================]
 [heading Tasks to do before review]
 
 * Complete documentation

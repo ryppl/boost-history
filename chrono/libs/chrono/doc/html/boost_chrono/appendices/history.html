@@ -27,7 +27,7 @@
 <a name="boost_chrono.appendices.history"></a><a href="history.html" title=" Appendix A: History"> Appendix A: History</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_4__febrary_5__2010____new_thread_clock_and_suspendible_clock__"><span class="bold"><strong>Version 0.4, Febrary 5, 2010</strong></span> <span class="emphasis"><em>New thread
+<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_4__febrary_31__2010____new_thread_clock_and_suspendible_clock__"><span class="bold"><strong>Version 0.4, Febrary 31, 2010</strong></span> <span class="emphasis"><em>New thread
         clock and Suspendible clock </em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_3_2__january_25__2010____new_frequency__lifetime_and_percentage_stopwatch_accumulator_features_"><span class="bold"><strong>Version 0.3.2, January 25, 2010</strong></span> <span class="emphasis"><em>New frequency,
         lifetime and percentage stopwatch_accumulator features</em></span></a></span></dt>
@@ -43,8 +43,8 @@
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.appendices.history.__version_0_4__febrary_5__2010____new_thread_clock_and_suspendible_clock__"></a><a href="history.html#boost_chrono.appendices.history.__version_0_4__febrary_5__2010____new_thread_clock_and_suspendible_clock__" title="Version 0.4, Febrary 5, 2010 New thread
-        clock and Suspendible clock "><span class="bold"><strong>Version 0.4, Febrary 5, 2010</strong></span> <span class="emphasis"><em>New thread
+<a name="boost_chrono.appendices.history.__version_0_4__febrary_31__2010____new_thread_clock_and_suspendible_clock__"></a><a href="history.html#boost_chrono.appendices.history.__version_0_4__febrary_31__2010____new_thread_clock_and_suspendible_clock__" title="Version 0.4, Febrary 31, 2010 New thread
+        clock and Suspendible clock "><span class="bold"><strong>Version 0.4, Febrary 31, 2010</strong></span> <span class="emphasis"><em>New thread
         clock and Suspendible clock </em></span></a>
 </h4></div></div></div>
 <p>
@@ -61,10 +61,43 @@
 <li>
             thread_clock support on platforms providing it natively.
           </li>
+<li>
+            Added support for wide character for stopwatch_reporter, stopclock, and
+            stopclock_accumulator.
+          </li>
+<li>
+            digital_time renamed t24_hours
+          </li>
 </ul></div>
+<p>
+          <span class="bold"><strong>Perf</strong></span>
+        </p>
+<p>
+          Added performances measures.
+        </p>
 <p>
           <span class="bold"><strong>Bug Fixes</strong></span>
         </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            Bug on timeval_demo.
+          </li></ul></div>
+<pre class="programlisting"><span class="identifier">time_point</span> <span class="identifier">t</span><span class="special">(</span><span class="identifier">duration</span><span class="special">(</span><span class="identifier">xtime</span><span class="special">(</span><span class="number">0</span><span class="special">)));</span>  <span class="comment">// this was taken as a function declaration
+</span><span class="identifier">gettimeofday</span><span class="special">((</span><span class="identifier">timeval</span><span class="special">*)&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="number">0</span><span class="special">);</span>
+<span class="keyword">return</span> <span class="identifier">t</span><span class="special">;</span>
+</pre>
+<p>
+          time_point t(duration(xtime(0))); // this was taken as a function declaration
+          gettimeofday((timeval*)&amp;t, 0); return t; by
+        </p>
+<pre class="programlisting"><span class="identifier">timeval</span> <span class="identifier">tv</span><span class="special">;</span>
+<span class="identifier">gettimeofday</span><span class="special">(&amp;</span><span class="identifier">tv</span><span class="special">,</span> <span class="number">0</span><span class="special">);</span>
+<span class="identifier">xtime</span> <span class="identifier">xt</span><span class="special">(</span> <span class="identifier">tv</span><span class="special">.</span><span class="identifier">tv_sec</span><span class="special">,</span> <span class="identifier">tv</span><span class="special">.</span><span class="identifier">tv_usec</span><span class="special">);</span>
+<span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">(</span><span class="identifier">duration</span><span class="special">(</span><span class="identifier">xt</span><span class="special">));</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+            Bug on run_timer_test (add a global variable to avoid optimization that
+            removes completely the code to be measured
+          </li></ul></div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">

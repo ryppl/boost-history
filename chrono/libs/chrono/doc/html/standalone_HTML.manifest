@@ -36,4 +36,5 @@ boost_chrono/appendices/faq.html
 boost_chrono/appendices/acknowledgements.html
 boost_chrono/appendices/tests.html
 boost_chrono/appendices/tickets.html
+boost_chrono/appendices/perf.html
 boost_chrono/appendices/todo.html

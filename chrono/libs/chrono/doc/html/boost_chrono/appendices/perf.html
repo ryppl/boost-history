@@ -1,0 +1,131 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Appendix H: Performances</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Boost.Chrono">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="tickets.html" title=" Appendix G: Tickets">
+<link rel="next" href="todo.html" title=" Appendix I: Future plans">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tickets.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="todo.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_chrono.appendices.perf"></a><a href="perf.html" title=" Appendix H: Performances"> Appendix H: Performances</a>
+</h3></div></div></div>
+<p>
+        We have run some program changing how the reporting is done.
+      </p>
+<p>
+        NONE: no report is done on the inner function HIGH: every call to the recursive
+        function is reported using an stopclock SUSPEND: every call to the recursive
+        function is reported using a using an stopclock on a suspendible clock ACCU:
+        every call to the recursive function is tracked using a stopclock_accumulator
+      </p>
+<p>
+        We have run the programm with two different clocks, high_resolution_clock
+        and thread_clock.
+      </p>
+<p>
+        The programs are either single-threaded or multi-threaded.
+      </p>
+<p>
+        Two kind of inner functions are used: recursive or non recursive. In order
+        to test the influence of nesting reports, the non recursive functions use
+        up to 10 nesting levels, depending on its parameter.
+      </p>
+<p>
+        the function at level n is defined as follows
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">fn</span><span class="special">(</span><span class="keyword">long</span> <span class="identifier">v</span><span class="special">)</span> <span class="special">{</span>
+    <span class="comment">// reporting or not
+</span>    <span class="identifier">stopclock</span><span class="special">&lt;&gt;</span> <span class="identifier">_</span><span class="special">;</span>
+    <span class="comment">// burn some time
+</span>    <span class="keyword">for</span> <span class="special">(</span> <span class="keyword">long</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">v</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span>
+        <span class="identifier">res</span><span class="special">+=</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">sqrt</span><span class="special">(</span> <span class="identifier">res</span><span class="special">+</span><span class="number">123.456L</span><span class="special">+</span><span class="identifier">i</span> <span class="special">);</span>  <span class="comment">// burn some time
+</span>    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">v</span><span class="special">==</span><span class="number">0</span><span class="special">)</span> <span class="keyword">return</span><span class="special">;</span>
+
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">v</span><span class="special">%(</span><span class="identifier">n</span><span class="special">-</span><span class="number">1</span><span class="special">)==</span><span class="number">0</span><span class="special">)</span> <span class="identifier">fn</span><span class="special">-</span><span class="number">1</span><span class="special">(</span><span class="identifier">v</span><span class="special">-</span><span class="number">1</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">v</span><span class="special">%(</span><span class="identifier">n</span><span class="special">-</span><span class="number">2</span><span class="special">)==</span><span class="number">0</span><span class="special">)</span> <span class="identifier">fn</span><span class="special">-</span><span class="number">2</span><span class="special">(</span><span class="identifier">v</span><span class="special">-</span><span class="number">1</span><span class="special">);</span>
+    <span class="special">...</span>
+    <span class="identifier">f1</span><span class="special">(</span><span class="identifier">v</span><span class="special">-</span><span class="number">1</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+        This gives a variable number in nesting reporting depending on the parameter,
+        with a variable lifetime.
+      </p>
+<a name="boost_chrono.appendices.perf.single_threaded_recursive_function"></a><h4>
+<a name="id4936420"></a>
+        <a href="perf.html#boost_chrono.appendices.perf.single_threaded_recursive_function">Single-Threaded
+        Recursive function</a>
+      </h4>
+<p>
+        We have run the same program and changed how the reporting is done.
+      </p>
+<p>
+        The programm creates two thread of execution. the thread entry point calls
+        a function which makes some calculation depending on its parameter and call
+        recursivelly itself decreasing the parameter.
+      </p>
+<p>
+        NONE: no report is done on the inner function HIGH: every call to the recursive
+        function is reported using an stopclock SUSPEND: every call to the recursive
+        function is reported using a using an stopclock on a suspendible clock ACCU:
+        every call to the recursive function is tracked using a stopclock_accumulator
+      </p>
+<p>
+        We have run the programm with two different clocks, high_resolution_clock
+        and thread_clock.
+      </p>
+<a name="boost_chrono.appendices.perf.multi_threaded_recursive_function"></a><h4>
+<a name="id4936469"></a>
+        <a href="perf.html#boost_chrono.appendices.perf.multi_threaded_recursive_function">Multi-Threaded
+        Recursive function</a>
+      </h4>
+<p>
+        We have run the same program and changed how the reporting is done.
+      </p>
+<p>
+        The programm creates two thread of execution. the thread entry point calls
+        a function which makes some calculation depending on its parameter and call
+        recursivelly itself decreasing the parameter.
+      </p>
+<p>
+        NONE: no report is done on the inner function HIGH: every call to the recursive
+        function is reported using an stopclock SUSPEND: every call to the recursive
+        function is reported using a using an stopclock on a suspendible clock ACCU:
+        every call to the recursive function is tracked using a stopclock_accumulator
+      </p>
+<p>
+        We have run the programm with two different clocks, high_resolution_clock
+        and thread_clock.
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 -2010 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tickets.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="todo.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
