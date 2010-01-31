@@ -1,4 +1,4 @@
-//                     -- tags.hpp --
+//                   -- common/tags.hpp --
 //
 //            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -6,45 +6,43 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_TAGS_HPP_INCLUDED__
-#define CGI_TAGS_HPP_INCLUDED__
+#ifndef CGI_COMMON_TAGS_HPP_INCLUDED__
+#define CGI_COMMON_TAGS_HPP_INCLUDED__
 
 #if _MSC_VER > 1020
 #pragma once
 #endif
 
-namespace cgi {
+#include "boost/cgi/config.hpp"
 
-  /// SCGI (note, this must be removed)
-   struct scgi_{};
-  /// FastCGI
-   struct fcgi_{};
- 
- namespace tags {
+BOOST_CGI_NAMESPACE_BEGIN
+ namespace common {
 
-   // the null tag type
-   struct null {};
+  namespace tags {
 
-   // protocol types
-   struct cgi {};
-   struct async_cgi {}; // call it acgi?
-   struct acgi {};
-   struct fcgi {};
-   struct scgi {};
+    // the null tag type
+    struct null {};
 
-   // IoServiceProvider PoolingPolicy types
-   struct single_service {};
-   struct service_pool {};
-   struct round_robin {};
+    // protocol types
+    struct cgi {};
+    struct fcgi {};
+    struct scgi {};
 
-   // Connection types
-   struct stdio {};
-   struct async_stdio {};
-   struct tcp_socket {};
-   // A shareable tcp_socket (ie. one that can be locked)
-   struct shareable_tcp_socket {};
+    // IoServiceProvider PoolingPolicy types
+    struct single_service {};
+    struct service_pool {};
+    struct round_robin {};
 
- } // namespace tags
-} // namespace cgi
+    // Connection types
+    struct stdio {};
+    //struct stderr {};
+    struct async_stdio {};
+    struct tcp_socket {};
+    // A shareable tcp_socket (ie. one that can be locked)
+    struct shareable_tcp_socket {};
+
+  } // namespace tags
+ } // namespace common
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_TAGS_HPP_INCLUDED__

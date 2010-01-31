@@ -13,13 +13,16 @@
 #pragma once
 #endif
 
-#include "boost/cgi/tags.hpp"
+#include "boost/cgi/common/tags.hpp"
 
-namespace cgi {
+BOOST_CGI_NAMESPACE_BEGIN
+ namespace common {
 
-  template<typename = tags::single_service>
-  class io_service_provider;
+   template<typename = tags::single_service>
+   class io_service_provider;
 
-} // namespace cgi
+ } // namespace common
+BOOST_CGI_NAMESPACE_END
 
 #endif // CGI_IO_SERVICE_PROVIDER_FWD_HPP_INCLUDED__
+
