@@ -7997,7 +7997,7 @@ members
 </rationale>
 </comment>
 
-<comment nb="UK" num="172" uknum="99" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
+<comment nb="UK" num="172" uknum="99" type="Te" owner="LWG" issue="1264" disp="" date="" extdoc="">
 <section>
 17.6.2.4
 </section>
