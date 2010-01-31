@@ -447,7 +447,7 @@ class BOOST_FILESYSTEM_DECL directory_entry
 {
 public:
 
-  // compiler generated copy-ctor, copy assignment, and destructor apply
+  // compiler generated copy constructor, copy assignment, and destructor apply
 
   directory_entry() {}
   explicit directory_entry(const boost::filesystem::path& p,

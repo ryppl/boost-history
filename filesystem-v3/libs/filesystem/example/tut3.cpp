@@ -33,15 +33,15 @@ int main(int argc, char* argv[])
     {
       cout << "is a directory containing:\n";
 
-      for ( directory_iterator it (p);     // initialize it to the first element
-            it != directory_iterator();    // test for the past-the-end element
-            ++it )                         // increment
+      for ( directory_iterator it (p);      // initialize it to the first element
+            it != directory_iterator();     // test for the past-the-end element
+            ++it )                          // increment
       {
-        cout << "   " << *it << '\n';      // *it returns a directory_entry,
-                                           // which is converted to a path
-                                           // by the stream inserter.
-                                           // it->path() would be wordier, but would
-                                           // eliminate an unnecessary path temporary
+        cout << "   " << *it << '\n';       // *it returns a directory_entry,
+                                            // which is converted to a path
+                                            // by the stream inserter.
+                                            // it->path() would be wordier, but would
+                                            // eliminate an unnecessary path temporary
       }
     }
     else

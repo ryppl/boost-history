@@ -8,6 +8,8 @@
 //  Library home page: http://www.boost.org/libs/filesystem
 
 #include <iostream>
+#include <vector>
+#include <algorithm>
 #include <boost/filesystem.hpp>
 using namespace std;
 using namespace boost::filesystem;
@@ -20,9 +22,9 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  path p (argv[1]);   // p reads better than argv[1] in following code
+  path p (argv[1]);   // p reads clearer than argv[1] in the following code
 
-  cout << p << ": ";  // utilize the path stream inserter
+  cout << p << ": ";  // utilize the path narrow stream inserter
 
   if ( exists(p) )    // does p actually exist?
   {
@@ -32,9 +34,23 @@ int main(int argc, char* argv[])
     else if ( is_directory(p) )      // is p a directory?
     {
       cout << "is a directory containing:\n";
-      for ( directory_iterator it (p); it != directory_iterator (); ++it )
+
+      typedef vector<path> vec;             // store paths,
+      vec v;                                // so we can sort them later
+
+      for ( directory_iterator it (p);      // initialize it to the first element
+            it != directory_iterator();     // test for the past-the-end element
+            ++it )                          // increment
       {
-        cout << "   " << it->path().filename() << '\n';
+        v.push_back(it->path().filename()); // we only care about the filename
+      }
+
+      sort(v.begin(), v.end());             // sort, since directory iteration
+                                            // is not ordered on some file systems
+
+      for (vec::const_iterator it (v.begin()); it != v.end(); ++it)
+      {
+        cout << "   " << *it << '\n';
       }
     }
     else

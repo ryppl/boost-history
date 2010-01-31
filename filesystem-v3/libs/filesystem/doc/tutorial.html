@@ -55,11 +55,64 @@ ready to build.</p>
 <a href="http://www.boost.org/more/getting_started/index.html">Boost Getting 
 Started</a> docs.</p>
 
-<p>The Boost.Filesystem and Boost.System compiled libraries are going to be 
-needed. If you are planning to use Boost's bjam for builds, it will take care of 
-building these if needed. If you are a different build system, or are planning 
-to build by hand, you might want to make sure your build approach knows where to 
-locate or build the library binaries.</p>
+<p>This tutorial assumes you are going to compile and test the examples using 
+the provided scripts. That's highly recommended.</p>
+
+<blockquote>
+
+<p><b>If you are planning to compile and test the examples but not use the 
+scripts, make sure your build setup knows where to 
+locate or build the Boost library binaries.</b></p>
+
+</blockquote>
+<p>Fire up your command line interpreter, and type the following commands:</p>
+
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt">
+      <pre>$ cd <i><b>boost-root</b></i>/libs/filesystem/example/test
+$ ./setup
+$ ./bld
+$ ./tut1
+Usage: tut1 path</pre>
+      </td>
+      <td style="font-size: 10pt">
+      <pre>&gt;cd <i><b>boost-root</b></i>\libs\filesystem\example\test
+&gt;setup
+&gt;bld
+&gt;tut1
+Usage: tut1 path</pre>
+      </td>
+    </tr>
+  </table>
+
+<p>If the <code>tut1</code> command outputs &quot;<code>Usage: tut1 path</code>&quot;, all 
+is well. A set of tutorial programs has been copied (by <code>setup</code>) to
+<i><b><code>boost-root</code></b></i><code>/libs/filesystem/example/test</code> 
+and then built. You are encouraged to modify and experiment with them as the 
+tutorial progresses. Just invoke the <code>bld</code> script again to rebuild.</p>
+
+<p>If something didn't work right, here are some troubleshooting suggestions:</p>
+
+<blockquote>
+
+<p><b>Windows:</b></p>
+
+  <ul>
+    <li><code>'bjam' is not recognized as an internal or external command, 
+    operable program or batch file</code>. The bjam program isn't being found. 
+    Check your path environmental variable if it should have been found, 
+    otherwise see
+    <a href="http://www.boost.org/more/getting_started/windows.html">Boost 
+    Getting Started</a>.</li>
+    <li>Look at <code>bjam.log</code> to try to spot an indication of the 
+    problem.</li>
+  </ul>
+</blockquote>
 
 <h2><a href="../example/tut1.cpp">tut1.cpp</a> - Reporting the size of a file</h2>
 
@@ -90,27 +143,20 @@ int main(int argc, char* argv[])
   </tr>
 </table>
 
-<p>The Boost.Filesystem <code>file_size</code> function returns an <code>uintmax_t</code> 
-containing the size of the file named by the argument. The code should be 
-self-evident - if not you are probably in the wrong place!</p>
+<p>The Boost.Filesystem <code><a href="reference.html#file_size">file_size</a></code> function returns an <code>uintmax_t</code> 
+containing the size of the file named by the argument. The declaration looks 
+like this:</p>
 
-<p>Build <a href="../example/tut1.cpp">tut1.cpp</a>.&nbsp; Use whatever build environment you 
-are most comfortable with.</p>
 <blockquote>
-
-<p>Building using the Boost build system:</p>
-  <blockquote>
-    <pre>cd <i><b>boost-root</b></i>/libs/filesystem/example
-bjam tut1</pre>
-  </blockquote>
-  <p>Building using Microsoft Visual C++, with all variants of the Boost 
-  libraries located in <i><b><code>boost-root</code></b></i><code>\stage\lib</code>:</p>
-  <blockquote>
-    <pre>cd <i><b>boost-root</b></i>\libs\filesystem\example
-cl /EHsc /I ..\..\.. tut1.cpp /link /LIBPATH:..\..\..\stage\lib</pre>
-  </blockquote>
+  <pre><span style="background-color: #FFFFFF; ">uintmax_t</span> <a name="file_size">file_size</a>(const path&amp; p);</pre>
 </blockquote>
-<p>Here are tests on Linux and Windows:</p>
+<p>For now, all you need to know is that class path has constructors that take
+<code>const char *</code> and many other useful types. (If you can't wait to 
+find out more, skip ahead to the <a href="#Class-path">class path</a> section of 
+the tutorial.)</p>
+<p>Please take a minute to try out <code>tut1</code> on your system, using a 
+file that is known to exist, such as <code>tut1.cpp</code>. Here is what the 
+results look like on two different operating systems:</p>
 
   <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
     <tr>
@@ -119,139 +165,64 @@ cl /EHsc /I ..\..\.. tut1.cpp /link /LIBPATH:..\..\..\stage\lib</pre>
     </tr>
     <tr>
       <td width="50%" style="font-size: 10pt">
-      <pre>$ ./tut1 tut1.cpp
-tut1.cpp: 570</pre>
+      <pre><span style="background-color: #FFFF00">$ ./tut1 tut1.cpp
+tut1.cpp: 570</span></pre>
       </td>
       <td style="font-size: 10pt">
       <pre>&gt;tut1 tut1.cpp
-tut1.cpp: 593</pre>
+tut1.cpp: 593
+&gt;dir tut1.cpp
+...
+01/30/2010 10:47 AM 593 tut1.cpp
+...</pre>
       </td>
     </tr>
   </table>
 
-<p>So far, so good. </p>
-<p>Here's a test on Windows, in the 
-directory containing the build output. It contains a directory named test with a 
-file named valentine:</p>
-<blockquote style="font-size: 10pt">
-  <pre>C:\v3d&gt;dir test\valentine          
-...
-12/30/2009 10:06 AM 23 valentine
-...
+<p>So far, so good. The reported Linux and Windows sizes are different because 
+the Linux tests used <code>&quot;\n&quot;</code> line endings, while the Windows tests 
+used <code>&quot;\r\n&quot;</code> line endings.</p>
+  <p>Now try again, but give a path that doesn't exist:</p>
 
-C:\v3d&gt;tut1 test\valentine
-test\valentine: 23
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt">
+      <pre>$ ./tut1 foo</pre>
+      </td>
+      <td style="font-size: 10pt">
+      <pre>&gt;tut1 foo</pre>
+      </td>
+    </tr>
+  </table>
 
-C:\v3d&gt;tut1 test/valentine
-test/valentine: 23
+  <p>What happens?
+  There's no file named <code>foo</code> in the current directory, so an 
+exception is thrown.</p>
+  <p>Try this:</p>
 
-C:\v3d&gt;tut1 test</pre>
-</blockquote>
-  <p><img border="0" src="tut1_crash.jpg" width="474" height="302"><br>
-  <br>
-  Oops! <code>file_size</code> only works on files, not directories, so an 
-  exception was thrown.</p>
-<blockquote style="font-size: 10pt">
-  <pre>C:\v3d&gt;tut1 foo</pre>
-</blockquote>
-  <p><img border="0" src="tut1_crash.jpg" width="474" height="302"><br>
-  <br>
-  There's no file named <code>foo</code> in the current directory, so again an 
-exception was thrown.</p>
-  <p>We'll deal with those conditions in <code>tut2.cpp</code>.</p>
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt">
+      <pre>$ ./tut1 .</pre>
+      </td>
+      <td style="font-size: 10pt">
+      <pre>&gt;tut1 .</pre>
+      </td>
+    </tr>
+  </table>
 
-<h2>Basics</h2>
+  <p>The current directory exists, but <code>file_size()</code> works on regular 
+  files, not directories, so again, an exception is thrown.</p>
 
-<p>Let's look at the <code>rename</code> function to get an idea of some of the 
-differences in approach taken by Boost.Filesystem compared to legacy C language 
-interfaces.</p>
-
-<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
-  <tr>
-    <td style="font-size: 10pt">
-    <b>C++ Standard library <code>rename</code> function from &lt;cstdio&gt;</b><blockquote style="font-size: 10pt">
-      <pre>int rename(const char *old, const char *new);</pre>
-    </blockquote>
-    <p><b>Boost Filesystem library <code>rename</code> function from 
-    &lt;filesystem.hpp&gt;</b></p>
-    <blockquote style="font-size: 10pt">
-      <pre>void rename(const path&amp; old_p, const path&amp; new_p);
-void rename(const path&amp; old_p, const path&amp; new_p, system::error_code&amp; ec);</pre>
-    </blockquote>
-    </td>
-  </tr>
-</table>
-
-<h3>Class path</h3>
-
-<p>Rather than trafficking in <code>const char*</code>'s, Boost.Filesystem 
-operational functions traffics in objects of <a href="reference.html#Path">class path</a>, 
-which are a lot more flexible. For example, class path has a converting constructor 
-template:</p>
-
-<blockquote>
-  <pre>template &lt;class Source&gt;
-  path(Source const&amp; source);</pre>
-</blockquote>
-<p>and this allows <code>const path&amp;</code> arguments to be called with a 
-variety of object types, such as:</p>
-<ul>
-  <li style="font-size: 10pt">An iterator, such as a pointer, for a null terminated byte-string. 
-  Value type can be <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li>A container with a value type of <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li>A C-array with a value type of <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li>A <code>boost::filesystem::directory_entry</code>.</li>
-</ul>
-<p>In addition to handling a variety of types, class path function templates 
-also handle conversion between the argument's encoding and the internal encoding 
-required for communication with the operating system. Thus it's no problem to 
-pass a wide character string to a Boost.Filesystem operational function even if 
-the underlying operating system uses narrow characters, and visa versa. </p>
-<p>Say we have a file named <code><font size="4">valentine</font></code> we'd 
-like to rename <code><font size="4">&#9829;valentine</font></code>. Here's the code:</p>
-<blockquote>
-  <pre>boost::filesystem::rename(&quot;valentine&quot;, L&quot;\u2665valentine&quot;);</pre>
-</blockquote>
-
-  <p>Class <code>path</code> will take care of whatever character type or 
-  encoding conversions are required by the particular operating system. It also 
-  provides path syntax that is portable across operating systems, element 
-  iterators, and observer, composition, decomposition, and query functions to 
-  manipulate the elements of a path. <span style="background-color: #FFFF00">
-  More on class </span><code><span style="background-color: #FFFF00">path</span></code><span style="background-color: #FFFF00"> 
-  later in this tutorial.</span></p>
-
-  <h3>Error reporting</h3>
-
-  <p>Legacy C interfaces like the original <code>rename</code> function report 
-  errors via an error code, typically obtained via <code>errno</code>. The 
-  preferred C++ practice is to throw an exception to report an error, and that's 
-  how the first of the two Boost.Filesystem <code>rename</code> functions 
-  reports errors. A <code>filesystem_error</code> exception will be thrown on an 
-  operational error. It's derived from <code>std::runtime_error</code> and has a 
-  member function to obtain the <code>error_code</code> reported by the source 
-  of the error. It also has member functions to obtain the path[s] that caused 
-  the error.</p>
-
-  <p>That was the entire error reporting story for the earliest versions of 
-  Boost.Filesystem, and indeed throwing exceptions on errors worked very well in 
-  many applications. But some user reports trickled in of code that became so 
-  littered by try and catch blocks as to be unreadable and unmaintainable. In 
-  some applications I/O errors aren't exceptional, and that's why most 
-  Boost.Filesystem operational functions come in two flavors.</p>
-
-  <p>Functions without a <code>system::error_code&amp;</code> 
-argument throw exceptions to report operational errors. These functions should 
-  be your default choice, unless you really do need to deal with errors via hand 
-  coded error tests.</p>
-
-  <p>Functions with a <code>system::error_code&amp;</code> 
-argument report operational error status by setting the <code>ec</code> argument, and 
-do not throw exceptions when I/O errors occur. 
-  <span style="background-color: #FFFF00">More on that later in the tutorial.</span></p>
+  <p>We'll deal with those situations in <code>tut2.cpp</code>.</p>
 
 <h2><a href="../example/tut2.cpp">tut2.cpp</a> - Using status queries to determine file existence and type</h2>
 
@@ -296,8 +267,32 @@ files and with different file types. </p>
   </tr>
 </table>
 
-<p>This works fine - give it a try yourself. However, the output is less than 
-satisfactory a directory because we'd typically like to see its contents. Move 
+<p>Give it a try:</p>
+
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt">
+      <pre><span style="background-color: #FFFF00">$ ./tut2 ..</span></pre>
+      </td>
+      <td style="font-size: 10pt">
+      <pre>&gt;tut2 tut2.cpp
+tut2.cpp: 1079
+
+&gt;tut2 foo
+foo: does not exist
+
+&gt;tut2 .
+.: is a directory</pre>
+      </td>
+    </tr>
+  </table>
+
+<p>Although tut2 works, the output is less than 
+satisfactory for a directory since we'd typically like to see the directory's contents. Move 
 on to <code>tut3.cpp</code> to see how to iterate over directories.</p>
 
 <h2><a href="../example/tut3.cpp">tut3.cpp</a> - Directory iteration</h2>
@@ -372,29 +367,29 @@ Here is a run on a checkout of the Boost Subversion trunk:</p>
       <td width="50%" style="font-size: 10pt">
       <pre>$ ./tut3 ~/boost/trunk
 /home/beman/boost/trunk: is a directory containing:
-/home/beman/boost/trunk/tools
-/home/beman/boost/trunk/boost-build.jam
-/home/beman/boost/trunk/dist
-/home/beman/boost/trunk/doc
-/home/beman/boost/trunk/bootstrap.sh
-/home/beman/boost/trunk/index.html
-/home/beman/boost/trunk/bin.v2
-/home/beman/boost/trunk/bootstrap.bat
-/home/beman/boost/trunk/boost.css
-/home/beman/boost/trunk/INSTALL
-/home/beman/boost/trunk/rst.css
-/home/beman/boost/trunk/boost
-/home/beman/boost/trunk/people
-/home/beman/boost/trunk/wiki
-/home/beman/boost/trunk/boost.png
-/home/beman/boost/trunk/LICENSE_1_0.txt
-/home/beman/boost/trunk/more
-/home/beman/boost/trunk/Jamroot
-/home/beman/boost/trunk/.svn
-/home/beman/boost/trunk/libs
-/home/beman/boost/trunk/index.htm
-/home/beman/boost/trunk/status
-/home/beman/boost/trunk/CMakeLists.txt</pre>
+  /home/beman/boost/trunk/tools
+  /home/beman/boost/trunk/boost-build.jam
+  /home/beman/boost/trunk/dist
+  /home/beman/boost/trunk/doc
+  /home/beman/boost/trunk/bootstrap.sh
+  /home/beman/boost/trunk/index.html
+  /home/beman/boost/trunk/bin.v2
+  /home/beman/boost/trunk/bootstrap.bat
+  /home/beman/boost/trunk/boost.css
+  /home/beman/boost/trunk/INSTALL
+  /home/beman/boost/trunk/rst.css
+  /home/beman/boost/trunk/boost
+  /home/beman/boost/trunk/people
+  /home/beman/boost/trunk/wiki
+  /home/beman/boost/trunk/boost.png
+  /home/beman/boost/trunk/LICENSE_1_0.txt
+  /home/beman/boost/trunk/more
+  /home/beman/boost/trunk/Jamroot
+  /home/beman/boost/trunk/.svn
+  /home/beman/boost/trunk/libs
+  /home/beman/boost/trunk/index.htm
+  /home/beman/boost/trunk/status
+  /home/beman/boost/trunk/CMakeLists.txt</pre>
       </td>
       <td style="font-size: 10pt">
       <pre>&gt;tut3 c:\boost\trunk
@@ -426,8 +421,8 @@ c:\boost\trunk: is a directory containing:
     </tr>
   </table>
 
-<h2><a href="../example/tut4.cpp">tut4.cpp</a> - Using a patch decomposition 
-function</h2>
+<h2><a href="../example/tut4.cpp">tut4.cpp</a> - Using a path decomposition 
+function and sorting results</h2>
 
 <p>It might be clearer to output just the filename, without the parent path. Class 
 <code>path</code> has a decomposition function to extract the filename, so 
@@ -450,56 +445,52 @@ that's easy to try. Just change</p>
       <td width="50%" style="font-size: 10pt">
       <pre>$ ./tut4 ~/boost/trunk
 /home/beman/boost/trunk: is a directory containing:
-   tools
-   boost-build.jam
-   dist
-   doc
-   bootstrap.sh
-   index.html
-   bin.v2
-   bootstrap.bat
-   boost.css
-   INSTALL
-   rst.css
-   boost
-   people
-   wiki
-   boost.png
-   LICENSE_1_0.txt
-   more
-   Jamroot
-   .svn
-   libs
-   index.htm
-   status
-   CMakeLists.txt</pre>
+  .svn
+  CMakeLists.txt
+  INSTALL
+  Jamroot
+  LICENSE_1_0.txt
+  boost
+  boost-build.jam
+  boost.css
+  boost.png
+  bootstrap.bat
+  bootstrap.sh
+  doc
+  index.htm
+  index.html
+  libs
+  more
+  people
+  rst.css
+  status
+  tools
+  wiki</pre>
       </td>
       <td style="font-size: 10pt">
       <pre>C:\v3d&gt;tut4 c:\boost\trunk
 c:\boost\trunk: is a directory containing:
-   .svn
-   bin.v2
-   boost
-   boost-build.jam
-   boost.css
-   boost.png
-   bootstrap.bat
-   bootstrap.sh
-   CMakeLists.txt
-   dist
-   doc
-   index.htm
-   index.html
-   INSTALL
-   Jamroot
-   libs
-   LICENSE_1_0.txt
-   more
-   people
-   rst.css
-   status
-   tools
-   wiki</pre>
+  .svn
+  CMakeLists.txt
+  INSTALL
+  Jamroot
+  LICENSE_1_0.txt
+  boost
+  boost-build.jam
+  boost.css
+  boost.png
+  bootstrap.bat
+  bootstrap.sh
+  doc
+  index.htm
+  index.html
+  libs
+  more
+  people
+  rst.css
+  status
+  tools
+  wiki</pre>
       </td>
     </tr>
   </table>
@@ -801,11 +792,88 @@ composed path:
 <h3>Error handling - tut5.cpp</h3>
 
 <hr>
+
+<h3><a name="Class-path">Class path</a></h3>
+
+<p>Rather than trafficking in <code>const char*</code>'s, Boost.Filesystem 
+operational functions traffics in objects of <a href="reference.html#Path">class path</a>, 
+which are a lot more flexible. For example, class path has a converting constructor 
+template:</p>
+
+<blockquote style="font-size: 10pt">
+  <pre>template &lt;class Source&gt;
+  path(Source const&amp; source);</pre>
+</blockquote>
+<p>and this allows <code>const path&amp;</code> arguments to be called with a 
+variety of object types, such as:</p>
+<ul>
+  <li style="font-size: 10pt">An iterator, such as a pointer, for a null terminated byte-string. 
+  Value type can be <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li style="font-size: 10pt">A container with a value type of <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li style="font-size: 10pt">A C-array with a value type of <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li style="font-size: 10pt">A <code>boost::filesystem::directory_entry</code>.</li>
+</ul>
+<p>In addition to handling a variety of types, class path function templates 
+also handle conversion between the argument's encoding and the internal encoding 
+required for communication with the operating system. Thus it's no problem to 
+pass a wide character string to a Boost.Filesystem operational function even if 
+the underlying operating system uses narrow characters, and visa versa. </p>
+<p>Say we have a file named <code><font size="4">valentine</font></code> we'd 
+like to rename <code><font size="4">&#9829;valentine</font></code>. Here's the code:</p>
+<blockquote style="font-size: 10pt">
+  <pre>boost::filesystem::rename(&quot;valentine&quot;, L&quot;\u2665valentine&quot;);</pre>
+</blockquote>
+
+  <p>Class <code>path</code> will take care of whatever character type or 
+  encoding conversions are required by the particular operating system. It also 
+  provides path syntax that is portable across operating systems, element 
+  iterators, and observer, composition, decomposition, and query functions to 
+  manipulate the elements of a path. <span style="background-color: #FFFF00">
+  More on class </span><code><span style="background-color: #FFFF00">path</span></code><span style="background-color: #FFFF00"> 
+  later in this tutorial.</span></p>
+
+  <hr>
+
+  <h3>Error reporting</h3>
+
+  <p>Legacy C interfaces like the original <code>rename</code> function report 
+  errors via an error code, typically obtained via <code>errno</code>. The 
+  preferred C++ practice is to throw an exception to report an error, and that's 
+  how the first of the two Boost.Filesystem <code>rename</code> functions 
+  reports errors. A <code>filesystem_error</code> exception will be thrown on an 
+  operational error. It's derived from <code>std::runtime_error</code> and has a 
+  member function to obtain the <code>error_code</code> reported by the source 
+  of the error. It also has member functions to obtain the path[s] that caused 
+  the error.</p>
+
+  <p>That was the entire error reporting story for the earliest versions of 
+  Boost.Filesystem, and indeed throwing exceptions on errors worked very well in 
+  many applications. But some user reports trickled in of code that became so 
+  littered by try and catch blocks as to be unreadable and unmaintainable. In 
+  some applications I/O errors aren't exceptional, and that's why most 
+  Boost.Filesystem operational functions come in two flavors.</p>
+
+  <p>Functions without a <code>system::error_code&amp;</code> 
+argument throw exceptions to report operational errors. These functions should 
+  be your default choice, unless you really do need to deal with errors via hand 
+  coded error tests.</p>
+
+  <p>Functions with a <code>system::error_code&amp;</code> 
+argument report operational error status by setting the <code>ec</code> argument, and 
+do not throw exceptions when I/O errors occur. 
+  <span style="background-color: #FFFF00">More on that later in the tutorial.</span></p>
+
+<p>&nbsp;</p>
+
+<hr>
 <p>© Copyright Beman Dawes 2009</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->29 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32152" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->31 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32137" --></p>
 
 </body>
 

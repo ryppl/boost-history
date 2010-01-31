@@ -1,5 +1,6 @@
-# Boost Filesystem Library Example Jamfile
+# Boost Filesystem Library Tutorial Jamfile
  
+# (C) Copyright Beman Dawes 2010
 # (C) Copyright Vladimir Prus 2003
 
 # Distributed under the Boost Software License, Version 1.0.
@@ -12,7 +13,6 @@ project
       <library>/boost/filesystem//boost_filesystem
       <library>/boost/system//boost_system
       <toolset>msvc:<asynch-exceptions>on
-      <link>static
     ;
     
 exe tut1 : tut1.cpp ;
@@ -25,5 +25,5 @@ install tut1-copy : tut1 : <location>. ;
 install tut2-copy : tut2 : <location>. ;
 install tut3-copy : tut3 : <location>. ;
 install tut4-copy : tut4 : <location>. ;
-install convenient-copy : path_info : <location>. ;
+install path_info-copy : path_info : <location>. ;
   
