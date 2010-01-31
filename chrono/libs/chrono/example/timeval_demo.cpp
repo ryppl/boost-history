@@ -169,15 +169,17 @@ xtime_clock::time_point
 xtime_clock::now()
 {
 #if defined(BOOST_CHRONO_WINDOWS_API)
-    time_point t(duration(xtime(0)));
-    gettimeofday((timeval*)&t, 0);
-    return t;
+    timeval tv;
+    gettimeofday(&tv, 0);
+    xtime xt( tv.tv_sec, tv.tv_usec);
+    return time_point(duration(xt));
 
 #elif defined(BOOST_CHRONO_MAC_API)
 
-    time_point t(duration(xtime(0)));
-    gettimeofday((timeval*)&t, 0);
-    return t;
+    timeval tv;
+    gettimeofday(&tv, 0);
+    xtime xt( tv.tv_sec, tv.tv_usec);
+    return time_point(duration(xt));
 
 #elif defined(BOOST_CHRONO_POSIX_API)
     //time_point t(0,0);
@@ -187,7 +189,6 @@ xtime_clock::now()
 
     xtime xt( ts.tv_sec, ts.tv_nsec/1000);
     return time_point(duration(xt));
-
 #endif  // POSIX
 
 }
@@ -201,6 +202,7 @@ void test_xtime_clock()
     std::cout << "sizeof xtime_clock::rep = " << sizeof(xtime_clock::rep) << '\n';
     xtime_clock::duration delay(milliseconds(5));
     xtime_clock::time_point start = xtime_clock::now();
+
     while (xtime_clock::now() - start <= delay)
     {
     }

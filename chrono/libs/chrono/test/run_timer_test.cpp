@@ -183,10 +183,10 @@ namespace
     std::cout << "process_timer_test..." << std::flush;
 
     boost::chrono::process_timer t;
-
+    double res; // avoids optimization 
     for (long i = 0; i < 10000000L; ++i)
     {
-      std::sqrt( static_cast<double>(i) );
+      res+=std::sqrt( static_cast<double>(i) ); // avoids optimization 
     }
 
     boost::chrono::process_times times;
@@ -200,12 +200,14 @@ namespace
     std::cout << "\n";
 
     std::cout << times.real.count() << " times.real\n";
+    std::cout << times.user.count() << " times.user\n";
+    std::cout << times.system.count() << " times.system\n";
+    std::cout << (times.user+times.system).count() << " times.user+system\n";
     BOOST_CHECK( times.real > ns(1) );
 
-    std::cout << times.user.count() << " times.user\n";
-    BOOST_CHECK( times.user > ns(1) );
+    BOOST_CHECK( times.user+times.system  > ns(1) );
 
-    std::cout << "complete" << std::endl;
+    std::cout << "complete " << res << std::endl;
   }
 }
 
