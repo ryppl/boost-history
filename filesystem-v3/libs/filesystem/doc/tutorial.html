@@ -96,23 +96,18 @@ is well. A set of tutorial programs has been copied (by <code>setup</code>) to
 and then built. You are encouraged to modify and experiment with them as the 
 tutorial progresses. Just invoke the <code>bld</code> script again to rebuild.</p>
 
-<p>If something didn't work right, here are some troubleshooting suggestions:</p>
-
-<blockquote>
-
-<p><b>Windows:</b></p>
+<p>If something didn't work right, here are troubleshooting suggestions:</p>
 
   <ul>
-    <li><code>'bjam' is not recognized as an internal or external command, 
-    operable program or batch file</code>. The bjam program isn't being found. 
+    <li>The <code>bjam</code> program executable isn't being found. 
     Check your path environmental variable if it should have been found, 
     otherwise see
     <a href="http://www.boost.org/more/getting_started/windows.html">Boost 
-    Getting Started</a>.</li>
+    Getting Started</a>.<br>
+&nbsp;</li>
     <li>Look at <code>bjam.log</code> to try to spot an indication of the 
     problem.</li>
   </ul>
-</blockquote>
 
 <h2><a href="../example/tut1.cpp">tut1.cpp</a> - Reporting the size of a file</h2>
 
@@ -164,11 +159,13 @@ results look like on two different operating systems:</p>
       <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
     </tr>
     <tr>
-      <td width="50%" style="font-size: 10pt">
-      <pre><span style="background-color: #FFFF00">$ ./tut1 tut1.cpp
-tut1.cpp: 570</span></pre>
+      <td width="50%" style="font-size: 10pt" valign="top">
+      <pre>$ ./tut1 tut1.cpp
+tut1.cpp: 570</pre>
+      <pre>$ ls -l tut1.cpp
+-rwxrwxrwx 1 root root 570 2010-02-01 07:31 tut1.cpp</pre>
       </td>
-      <td style="font-size: 10pt">
+      <td style="font-size: 10pt" valign="top">
       <pre>&gt;tut1 tut1.cpp
 tut1.cpp: 593
 &gt;dir tut1.cpp
@@ -184,18 +181,25 @@ the Linux tests used <code>&quot;\n&quot;</code> line endings, while the Windows
 used <code>&quot;\r\n&quot;</code> line endings.</p>
   <p>Now try again, but give a path that doesn't exist:</p>
 
-  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <table align="center" border="1" cellpadding="5" cellspacing="0"
+    style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
     <tr>
       <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
       <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
     </tr>
     <tr>
-      <td width="50%" style="font-size: 10pt">
-      <pre>$ ./tut1 foo</pre>
+      <td width="50%" style="font-size: 10pt" valign="top">
+      <pre>$ ./tut1 foo
+terminate called after throwing an instance of 'boost::exception_detail::
+clone_impl&lt;boost::exception_detail::error_info_injector&lt;boost::
+filesystem::filesystem_error&gt; &gt;'
+  what(): boost::filesystem::file_size: No such file or directory: &quot;foo&quot;
+Aborted</pre>
       </td>
-      <td style="font-size: 10pt">
+      <td style="font-size: 10pt" valign="top">
       <pre>&gt;tut1 foo</pre>
-      </td>
+      <p><b><i>An exception is thrown; the exact form of the response depends on 
+      Windows system options.</i></b></td>
     </tr>
   </table>
 
@@ -211,11 +215,17 @@ exception is thrown.</p>
     </tr>
     <tr>
       <td width="50%" style="font-size: 10pt">
-      <pre>$ ./tut1 .</pre>
+      <pre>$ ./tut1 .
+terminate called after throwing an instance of 'boost::exception_detail::
+clone_impl&lt;boost::exception_detail::error_info_injector&lt;boost::
+filesystem::filesystem_error&gt; &gt;'
+  what(): boost::filesystem::file_size: Operation not permitted &quot;.&quot;
+Aborted</pre>
       </td>
-      <td style="font-size: 10pt">
+      <td style="font-size: 10pt" valign="top">
       <pre>&gt;tut1 .</pre>
-      </td>
+      <p><b><i>An exception is thrown; the exact form of the response depends on 
+      Windows system options.</i></b></td>
     </tr>
   </table>
 
@@ -226,14 +236,17 @@ exception is thrown.</p>
 
 <h2><a href="../example/tut2.cpp">tut2.cpp</a> - Using status queries to determine file existence and type</h2>
 
-<p>Boost.filesystem includes status query functions such as <code>exists</code>,
-<code>is_directory</code>, and <code>is_regular_file</code>. These all return
+<p>Boost.Filesystem includes status query functions such as <code>
+<a href="reference.html#exists-path">exists</a></code>,
+<code><a href="reference.html#is_directory-path">is_directory</a></code>, and <code>
+<a href="reference.html#is_regular_file-path">is_regular_file</a></code>. These return
 <code>bool</code>'s, and will return <code>true</code> if the condition 
-described by their name is met. They return <code>false</code> when any element 
+described by their name is met. Otherwise they return <code>false</code>, 
+including when any element 
 of the path argument can't be found.</p>
 
 <p>tut2.cpp uses several of the status query functions to cope with non-existent 
-files and with different file types. </p>
+files and with different kinds of files:</p>
 
 <table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
   <tr>
@@ -275,10 +288,15 @@ files and with different file types. </p>
       <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
     </tr>
     <tr>
-      <td width="50%" style="font-size: 10pt">
-      <pre><span style="background-color: #FFFF00">$ ./tut2 ..</span></pre>
+      <td width="50%" style="font-size: 10pt" valign="top">
+      <pre>$ ./tut2 tut2.cpp
+tut2.cpp: 1037
+$ ./tut2 foo
+foo: does not exist
+$ ./tut2 .
+.: is a directory</pre>
       </td>
-      <td style="font-size: 10pt">
+      <td style="font-size: 10pt" valign="top">
       <pre>&gt;tut2 tut2.cpp
 tut2.cpp: 1079
 
@@ -291,7 +309,7 @@ foo: does not exist
     </tr>
   </table>
 
-<p>Although tut2 works, the output is less than 
+<p>Although tut2 works OK, the output is less than 
 satisfactory for a directory since we'd typically like to see the directory's contents. Move 
 on to <code>tut3.cpp</code> to see how to iterate over directories.</p>
 
@@ -364,7 +382,7 @@ Here is a run on a checkout of the Boost Subversion trunk:</p>
       <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
     </tr>
     <tr>
-      <td width="50%" style="font-size: 10pt">
+      <td width="50%" style="font-size: 10pt" valign="top">
       <pre>$ ./tut3 ~/boost/trunk
 /home/beman/boost/trunk: is a directory containing:
   /home/beman/boost/trunk/tools
@@ -373,7 +391,6 @@ Here is a run on a checkout of the Boost Subversion trunk:</p>
   /home/beman/boost/trunk/doc
   /home/beman/boost/trunk/bootstrap.sh
   /home/beman/boost/trunk/index.html
-  /home/beman/boost/trunk/bin.v2
   /home/beman/boost/trunk/bootstrap.bat
   /home/beman/boost/trunk/boost.css
   /home/beman/boost/trunk/INSTALL
@@ -391,11 +408,10 @@ Here is a run on a checkout of the Boost Subversion trunk:</p>
   /home/beman/boost/trunk/status
   /home/beman/boost/trunk/CMakeLists.txt</pre>
       </td>
-      <td style="font-size: 10pt">
+      <td style="font-size: 10pt" valign="top">
       <pre>&gt;tut3 c:\boost\trunk
 c:\boost\trunk: is a directory containing:
    c:\boost\trunk\.svn
-   c:\boost\trunk\bin.v2
    c:\boost\trunk\boost
    c:\boost\trunk\boost-build.jam
    c:\boost\trunk\boost.css
@@ -421,20 +437,101 @@ c:\boost\trunk: is a directory containing:
     </tr>
   </table>
 
-<h2><a href="../example/tut4.cpp">tut4.cpp</a> - Using a path decomposition 
-function and sorting results</h2>
+<p>Not bad, but we can make further improvements:</p>
 
-<p>It might be clearer to output just the filename, without the parent path. Class 
-<code>path</code> has a decomposition function to extract the filename, so 
-that's easy to try. Just change</p>
-<blockquote>
-  <pre>cout &lt;&lt; &quot; &quot; &lt;&lt; *it &lt;&lt; '\n';</pre>
-</blockquote>
-<p>to</p>
-<blockquote>
-  <pre>cout &lt;&lt; &quot; &quot; &lt;&lt; it-&gt;path().filename() &lt;&lt; '\n'; </pre>
-</blockquote>
-<p>Here is the output from <code><a href="../example/tut4.cpp">tut4.cpp</a></code>, which makes that change:</p>
+    <ul>
+      <li>The listing would be much easier to read if only the filename was 
+      displayed, rather than the full path.<br>
+&nbsp;</li>
+      <li>The Linux listing isn't sorted. That's because the ordering of 
+      directory iteration is unspecified. Ordering depends on the underlying 
+      operating system API and file system specifics. So we need to sort the 
+      results ourselves. </li>
+    </ul>
+
+<h2><a href="../example/tut4.cpp">tut4.cpp</a> - Using a path decomposition 
+function, plus sorting results</h2>
+
+    <p>blah, blah</p>
+
+<p>&nbsp;</p>
+
+<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <tr>
+    <td style="font-size: 10pt">
+    <pre><a href="../example/tut4.cpp">tut4.cpp</a></pre>
+    <blockquote style="font-size: 10pt">
+      <pre>int main(int argc, char* argv[])
+{
+  <a href="reference.html#class-path">path</a> p (argv[1]);   // p reads clearer than argv[1] in the following code
+
+  cout &lt;&lt; p &lt;&lt; &quot;: &quot;;  // utilize the <a href="reference.html#path-inserter-extractor">path narrow stream inserter</a>
+
+  if ( <a href="reference.html#exists-path">exists</a>(p) )    // does p actually exist?
+  {
+    if ( <a href="reference.html#is_regular_file-path">is_regular_file</a>(p) )        // is p a regular file?   
+      cout &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
+
+    else if ( <a href="reference.html#is_directory-path">is_directory</a>(p) )      // is p a directory?
+    {
+      cout &lt;&lt; &quot;is a directory containing:\n&quot;;
+
+      typedef vector&lt;path&gt; vec;             // store paths,
+      vec v;                                // so we can sort them later
+
+      for ( <a href="reference.html#directory_iterator-ctor-path">directory_iterator</a> it (p);      // initialize it to the first element
+            it != <a href="reference.html#directory_iterator-default-ctor">directory_iterator()</a>;     // test for the past-the-end element
+            ++it )                          // increment
+      {
+        path fn = it-&gt;path().<a href="reference.html#path-filename">filename</a>();    // extract the filename from the path
+        v.push_back(fn);                    // push into vector for later sorting
+      }
+
+      sort(v.begin(), v.end());             // sort, since directory iteration
+                                            // is not ordered on some file systems
+
+      for (vec::const_iterator it (v.begin()); it != v.end(); ++it)
+      {
+        cout &lt;&lt; &quot;   &quot; &lt;&lt; *it &lt;&lt; '\n';
+      }
+    }
+
+    else
+      cout &lt;&lt; &quot;exists, but is neither a regular file nor a directory\n&quot;;
+  }
+  else
+    cout &lt;&lt; &quot;does not exist\n&quot;;
+
+  return 0;
+}</pre>
+    </blockquote>
+    </td>
+  </tr>
+</table>
+
+    <p>The key change between <code>tut3.cpp</code> and <code>tut4.cpp</code> is 
+    what happens in the directory iteration loop. We changed:</p>
+    <blockquote>
+      <pre>cout &lt;&lt; &quot; &quot; &lt;&lt; *it &lt;&lt; '\n';   // *it returns a <a href="reference.html#Class-directory_entry">directory_entry</a>,</pre>
+    </blockquote>
+    <p>to:</p>
+    <blockquote>
+      <pre>path fn = it-&gt;path().filename();   // extract the filename from the path
+v.push_back(fn);                   // push into vector for later sorting</pre>
+    </blockquote>
+    <p><code><a href="reference.html#directory_entry-observers">path()</a></code> 
+    is a <code>directory_entry</code> observer function. <code>
+    <a href="reference.html#path-filename">filename()</a></code> is one of 
+    several path decomposition functions. It extracts the filename portion (<code>&quot;foo.txt&quot;</code>) 
+    from a path (<code>&quot;/bar/foo.txt&quot;</code>). These decomposition functions are 
+    explored in the <a href="#path-iteration-etc">Path iterators, observers, 
+    composition, decomposition and query</a> portion of this tutorial.</p>
+    <p>We wrote the above as two lines of code for clarity. It could have been 
+    written more concisely as:</p>
+    <blockquote>
+      <pre>v.push_back(it-&gt;path().filename()); // we only care about the filename</pre>
+    </blockquote>
+    <p>Here is the output from a test of <code><a href="../example/tut4.cpp">tut4.cpp</a></code>:</p>
 
   <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
     <tr>
@@ -495,7 +592,10 @@ c:\boost\trunk: is a directory containing:
     </tr>
   </table>
 
-<h2><a href="../example/path_info.cpp">path_info.cpp</a> - Path iterators, observers, composition, decomposition and query</h2>
+    <hr>
+
+<h2><a href="../example/path_info.cpp">path_info.cpp</a>
+<a name="path-iteration-etc"></a>- Path iterators, observers, composition, decomposition and query</h2>
 
 <p>The <code>path_info</code> program is handy for learning how class <code>path</code> 
 iterators, 
@@ -752,45 +852,6 @@ composed path:
     </tr>
   </table>
 
-<h3>Directory iteration tweak - tut4.cpp</h3>
-
-<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
-  <tr>
-    <td style="font-size: 10pt">
-    <pre><a href="../tutorial/tut4.cpp">tut4.cpp</a></pre>
-    <blockquote>
-      <pre>int main(int argc, char* argv[])
-{
-  path p (argv[1]);
-
-  cout &lt;&lt; p &lt;&lt; &quot;: &quot;;
-  if ( exists(p) )
-  {
-    if ( is_regular_file(p) )
-      cout &lt;&lt; file_size(p) &lt;&lt; '\n';
-    else if ( is_directory(p) )
-    {
-      cout &lt;&lt; &quot;is a directory containing:\n&quot;;
-      for ( directory_iterator it (p); it != directory_iterator (); ++it )
-      {
-        <span style="background-color: #88FFA3">cout &lt;&lt; &quot; &quot; &lt;&lt; it-&gt;</span><span style="background-color: #88FFA3">path().filename</span><span style="background-color: #88FFA3">() &lt;&lt; '\n';</span>
-      }
-    }
-    else
-      cout &lt;&lt; &quot;exists, but is neither a regular file nor a directory\n&quot;;<span style="background-color: #88FFA3">
-</span>  }
-  else
-    cout &lt;&lt; &quot;does not exist\n&quot;;
-
-  return 0;
-}</pre>
-    </blockquote>
-    </td>
-  </tr>
-</table>
-
-<h3>Error handling - tut5.cpp</h3>
-
 <hr>
 
 <h3><a name="Class-path">Class path</a></h3>
@@ -873,7 +934,7 @@ do not throw exceptions when I/O errors occur.
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->31 January 2010<!--webbot bot="Timestamp" endspan i-checksum="32137" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->01 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40539" --></p>
 
 </body>
 

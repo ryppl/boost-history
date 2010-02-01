@@ -42,7 +42,8 @@ int main(int argc, char* argv[])
             it != directory_iterator();     // test for the past-the-end element
             ++it )                          // increment
       {
-        v.push_back(it->path().filename()); // we only care about the filename
+        path fn = it->path().filename();    // extract the filename from the path
+        v.push_back(fn);                    // push into vector for later sorting
       }
 
       sort(v.begin(), v.end());             // sort, since directory iteration
