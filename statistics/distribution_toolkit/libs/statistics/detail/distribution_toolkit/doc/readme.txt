@@ -38,7 +38,6 @@ Win7-32 V6.1.7100    Visual Studio 2010                         boost_1_41_0
 [ Dependencies ]
 
 /sandbox/statistics/non_parametric/ 
-/sandbox/statistics/detail/fusion/ 
 /sandbox/statistics/distribution_common/ 
 /sandbox/statistics/random/
 /usr/local/boost_1_41_0/
