@@ -1,0 +1,80 @@
+[article Version 1.42.0
+    [quickbook 1.5]
+    [source-mode c++]
+    [purpose New Libraries: Updated Libraries: ]
+    [authors [Dawes, Beman]]
+    [last-revision ]
+]
+
+[include ext.qbk]
+
+[/ TODO: Check download link on release.]
+[download http://sourceforge.net/projects/boost/files/boost/1.42.0/]
+
+[/
+    When adding libraries:
+
+    1. Libraries are listed in alphabetical order.
+    2. Besides the dedicated entry, the lib name should be added to the
+       [purpose] section at the beginning of the page.
+
+    Example new libraries message:
+
+* [phrase library..[@/libs/accumulators/index.html Accumulators]:] Framework for
+  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
+
+    Example update message:
+
+* [phrase library..[@/libs/interprocess/index.html Interprocess]:]
+  * Added anonymous shared memory for UNIX systems.
+  * Fixed missing move semantics on managed memory classes.
+  * Added copy_on_write and open_read_only options for shared memory
+    and mapped file managed classes.
+  * `shared_ptr` is movable and supports aliasing.
+]
+
+[section New Libraries]
+
+* /TODO/
+
+[endsect]
+
+[section Updated Libraries]
+
+* [phrase library..[@/libs/program_options/index.html Program.Options]:]
+  * Information about option name added to a few exception classes
+    ([@https://svn.boost.org/trac/boost/ticket/3423 #3423]).
+  * Description wordwrapping in presense of default parameters fixed
+    ([@https://svn.boost.org/trac/boost/ticket/2613 #2613]).
+  * Empty value in configuration file is now permitted
+    ([@https://svn.boost.org/trac/boost/ticket/1537 #1537]).
+  * Quotes are no longer stripped from string values
+    ([@https://svn.boost.org/trac/boost/ticket/850 #850]).
+  * Fix endless loop in case of long default arguments
+    ([@https://svn.boost.org/trac/boost/ticket/689 #689]).
+  * Fix compile warning caused by usage of boost::any
+    ([@https://svn.boost.org/trac/boost/ticket/2562 #2562]).
+  * Fix memory bug in example/response_file.cpp
+    ([@https://svn.boost.org/trac/boost/ticket/3525 #3525]).  
+  * Most compilation warnings were fixed.
+    
+[endsect]
+
+[section Compilers Tested]
+
+Boost's primary test compilers are:
+
+* /TODO/
+
+Boost's additional test compilers include:
+
+* /TODO/
+
+[endsect]
+
+[section Acknowledgements]
+
+/TODO/
+
+[endsect]
+
