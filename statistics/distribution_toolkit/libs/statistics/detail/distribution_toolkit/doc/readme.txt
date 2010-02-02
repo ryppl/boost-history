@@ -66,8 +66,7 @@ Win7-32 V6.1.7100    Visual Studio 2010                         boost_1_41_0
 
     Rationale: the pseudo distribution returned by make_inverse_pdf is more
     convenient than a hypothetical function inverse_pdf(dist,x). For example,
-    pseudo distributions can be combined (make_ratio_pdf) and the functionality
-    associated with distributions can be reused (e.g. fun_wrap::pdf_).
+    pseudo distributions can be combined (make_ratio_pdf).
 
 /meta
 /test    

@@ -13,12 +13,7 @@
 #include <boost/range.hpp>
 #include <boost/function.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
 #include <boost/random/mersenne_twister.hpp>
-#include <boost/fusion/include/map.hpp>
-#include <boost/fusion/include/at_key.hpp>
-#include <boost/statistics/detail/distribution_toolkit/test/detail/x_f.hpp>
 #include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/statistic.hpp>
 #include <boost/statistics/detail/distribution_common/functor/cdf.hpp>
 #include <boost/statistics/detail/distribution_common/meta/random/generator.hpp>

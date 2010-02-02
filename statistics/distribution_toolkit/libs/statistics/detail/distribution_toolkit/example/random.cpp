@@ -70,8 +70,8 @@ void example_random(std::ostream& os)
     }
     { 
         typedef math::gamma_distribution<val_>            dist_;
-        const val_ shape = 2.0;
-        const val_ scale = 3.0;
+        const val_ shape = 1.0;
+        const val_ scale = 1.0;
         dist_ d( shape, scale );
         os << d << std::endl;
             
