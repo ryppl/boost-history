@@ -23,6 +23,8 @@ namespace assign{
 
 // Usage : vec = cref_list2_of(a)(b)(c)
 
+// The idea of this class was developed in collaboration with P.M.
+
 template<
 	typename T,
 	int N, 
