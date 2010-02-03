@@ -88,9 +88,12 @@ class cref_impl : B{
 	// Requirement: C(begin,end) constructor
 	template<typename C>
 	operator C(){
+    	// TODO consider either bypassing the array altogether and call push_front
+        // (if available) or replace the array<T1> by array<assign::assign_reference<T1> > >
+    
     	typedef typename boost::range_value<C>::type val_;
-		typedef typename array<val_>::type ar_;
-        ar_ ar;
+		typedef typename array<val_>::type ar_; 
+        ar_ ar; 
         this->write_to_array(ar,exit_());
         return C(boost::begin(ar),boost::end(ar));
     }
