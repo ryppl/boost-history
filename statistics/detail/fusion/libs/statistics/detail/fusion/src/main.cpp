@@ -9,12 +9,14 @@
 #include <libs/statistics/detail/fusion/example/at_key.h>
 #include <libs/statistics/detail/fusion/example/serialize.h>
 #include <libs/statistics/detail/fusion/example/joint_view_binder.h>
+#include <libs/statistics/detail/fusion/example/joint_view_flatten_bind_range.h>
 
 int main(){
 
     example_at_key_iterator(std::cout);
     example_serialize(std::cout);
     example_joint_view_binder(std::cout);
+    example_joint_view_flatten_bind_range(std::cout);
 
     return 0;
 }

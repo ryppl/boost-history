@@ -29,7 +29,6 @@ range_ex (in the vault under algorithm)
 
 [ History ]
 
-
 January 25, 2010: MSVC workaround in /chain/result_of.hpp
 Januray 12, 2010 Added nest_chain 
 

@@ -21,6 +21,7 @@
 #include <boost/fusion/include/at_c.hpp>
 #include <boost/fusion/include/vector.hpp>
 #include <boost/statistics/detail/range_ex/chain/nest.hpp>
+#include <boost/statistics/detail/range_ex/chain/chain2.hpp>
 #include <libs/statistics/detail/range_ex/example/nest_chain.h>
 
 void example_nest_chain(std::ostream& os)
@@ -81,5 +82,13 @@ void example_nest_chain(std::ostream& os)
     	);
 		BOOST_ASSERT(boost::equal(chained,vec));
 	}
+
+	range::chain2(
+    	boost::fusion::at_c<0>(seq)
+    )(
+    	boost::fusion::at_c<1>(seq)
+    )(
+    	boost::fusion::at_c<2>(seq)
+    );
     
 }
