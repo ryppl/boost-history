@@ -89,7 +89,7 @@ class cref_impl : B{
 	template<typename C>
 	operator C(){
     	// TODO consider either bypassing the array altogether and call push_front
-        // (if available) or replace the array<T1> by array<assign::assign_reference<T1> > >
+        // to preserve the referenceness of the approach
     
     	typedef typename boost::range_value<C>::type val_;
 		typedef typename array<val_>::type ar_; 
