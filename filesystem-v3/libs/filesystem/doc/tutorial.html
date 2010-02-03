@@ -449,12 +449,10 @@ c:\boost\trunk: is a directory containing:
       results ourselves. </li>
     </ul>
 
+<p>Move on to the next section to see how those changes play out!</p>
+
 <h2><a href="../example/tut4.cpp">tut4.cpp</a> - Using a path decomposition 
 function, plus sorting results</h2>
-
-    <p>blah, blah</p>
-
-<p>&nbsp;</p>
 
 <table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
   <tr>
@@ -526,8 +524,8 @@ v.push_back(fn);                   // push into vector for later sorting</pre>
     from a path (<code>&quot;/bar/foo.txt&quot;</code>). These decomposition functions are 
     explored in the <a href="#path-iteration-etc">Path iterators, observers, 
     composition, decomposition and query</a> portion of this tutorial.</p>
-    <p>We wrote the above as two lines of code for clarity. It could have been 
-    written more concisely as:</p>
+    <p>The above was written as two lines of code for clarity. It could have 
+    been written more concisely as:</p>
     <blockquote>
       <pre>v.push_back(it-&gt;path().filename()); // we only care about the filename</pre>
     </blockquote>
@@ -592,12 +590,63 @@ c:\boost\trunk: is a directory containing:
     </tr>
   </table>
 
+    <p>That completes the main section of this tutorial. If you haven't already 
+    worked through the <a href="#Class-path">Class path</a> and
+    <a href="#path-iteration-etc">Path iterators, observers, composition, 
+    decomposition and query</a> sections of this tutorial, dig into them now. 
+    The <a href="#Error-reporting">Error reporting</a> section may also be of 
+    interest, although it can be skipped unless you are deeply concerned with 
+    error handling issues.</p>
+
+<hr>
+
+<h2><a name="Class-path">Class path</a></h2>
+
+<p>Rather than trafficking in <code>const char*</code>'s, Boost.Filesystem 
+operational functions traffics in objects of <a href="reference.html#Path">class path</a>, 
+which are a lot more flexible. For example, class path has a converting constructor 
+template:</p>
+
+<blockquote style="font-size: 10pt">
+  <pre>template &lt;class Source&gt;
+  path(Source const&amp; source);</pre>
+</blockquote>
+<p>and this allows <code>const path&amp;</code> arguments to be called with a 
+variety of object types, such as:</p>
+<ul>
+  <li style="font-size: 10pt">An iterator, such as a pointer, for a null terminated byte-string. 
+  Value type can be <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li style="font-size: 10pt">A container with a value type of <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li style="font-size: 10pt">A C-array with a value type of <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li style="font-size: 10pt">A <code>boost::filesystem::directory_entry</code>.</li>
+</ul>
+<p>In addition to handling a variety of types, class path function templates 
+also handle conversion between the argument's encoding and the internal encoding 
+required for communication with the operating system. Thus it's no problem to 
+pass a wide character string to a Boost.Filesystem operational function even if 
+the underlying operating system uses narrow characters, and visa versa. </p>
+<p>Say we have a file named <code><font size="4">valentine</font></code> we'd 
+like to rename <code><font size="4">&#9829;valentine</font></code>. Here's the code:</p>
+<blockquote style="font-size: 10pt">
+  <pre>boost::filesystem::rename(&quot;valentine&quot;, L&quot;\u2665valentine&quot;);</pre>
+</blockquote>
+
+  <p>Class <code>path</code> will take care of whatever character type or 
+  encoding conversions are required by the particular operating system. It also 
+  provides path syntax that is portable across operating systems, element 
+  iterators, and observer, composition, decomposition, and query functions to 
+  manipulate the elements of a path. <span style="background-color: #FFFF00">
+  More on class </span><code><span style="background-color: #FFFF00">path</span></code><span style="background-color: #FFFF00"> 
+  later in this tutorial.</span></p>
+
     <hr>
 
-<h2><a href="../example/path_info.cpp">path_info.cpp</a>
-<a name="path-iteration-etc"></a>- Path iterators, observers, composition, decomposition and query</h2>
+<h2><a name="path-iteration-etc"></a>Path iterators, observers, composition, decomposition, and query</h2>
 
-<p>The <code>path_info</code> program is handy for learning how class <code>path</code> 
+<p>The <a href="../example/path_info.cpp"><code>path_info.cpp</code></a> program is handy for learning how class <code>path</code> 
 iterators, 
 observers, composition, decomposition, and query functions work on your system. 
 If it hasn't already already been built on your system, please build it now. Run 
@@ -852,53 +901,11 @@ composed path:
     </tr>
   </table>
 
-<hr>
-
-<h3><a name="Class-path">Class path</a></h3>
-
-<p>Rather than trafficking in <code>const char*</code>'s, Boost.Filesystem 
-operational functions traffics in objects of <a href="reference.html#Path">class path</a>, 
-which are a lot more flexible. For example, class path has a converting constructor 
-template:</p>
-
-<blockquote style="font-size: 10pt">
-  <pre>template &lt;class Source&gt;
-  path(Source const&amp; source);</pre>
-</blockquote>
-<p>and this allows <code>const path&amp;</code> arguments to be called with a 
-variety of object types, such as:</p>
-<ul>
-  <li style="font-size: 10pt">An iterator, such as a pointer, for a null terminated byte-string. 
-  Value type can be <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li style="font-size: 10pt">A container with a value type of <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li style="font-size: 10pt">A C-array with a value type of <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li style="font-size: 10pt">A <code>boost::filesystem::directory_entry</code>.</li>
-</ul>
-<p>In addition to handling a variety of types, class path function templates 
-also handle conversion between the argument's encoding and the internal encoding 
-required for communication with the operating system. Thus it's no problem to 
-pass a wide character string to a Boost.Filesystem operational function even if 
-the underlying operating system uses narrow characters, and visa versa. </p>
-<p>Say we have a file named <code><font size="4">valentine</font></code> we'd 
-like to rename <code><font size="4">&#9829;valentine</font></code>. Here's the code:</p>
-<blockquote style="font-size: 10pt">
-  <pre>boost::filesystem::rename(&quot;valentine&quot;, L&quot;\u2665valentine&quot;);</pre>
-</blockquote>
-
-  <p>Class <code>path</code> will take care of whatever character type or 
-  encoding conversions are required by the particular operating system. It also 
-  provides path syntax that is portable across operating systems, element 
-  iterators, and observer, composition, decomposition, and query functions to 
-  manipulate the elements of a path. <span style="background-color: #FFFF00">
-  More on class </span><code><span style="background-color: #FFFF00">path</span></code><span style="background-color: #FFFF00"> 
-  later in this tutorial.</span></p>
+    <p>&nbsp;</p>
 
   <hr>
 
-  <h3>Error reporting</h3>
+  <h2><a name="Error-reporting">Error reporting</a></h2>
 
   <p>Legacy C interfaces like the original <code>rename</code> function report 
   errors via an error code, typically obtained via <code>errno</code>. The 
@@ -930,7 +937,7 @@ do not throw exceptions when I/O errors occur.
 <p>&nbsp;</p>
 
 <hr>
-<p>© Copyright Beman Dawes 2009</p>
+<p>© Copyright Beman Dawes 2010</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
