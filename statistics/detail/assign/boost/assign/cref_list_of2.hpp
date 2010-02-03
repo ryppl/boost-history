@@ -17,22 +17,22 @@
 #include <boost/ref.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
+#include <boost/assign/list_of.hpp>
 
 namespace boost{
 namespace assign{
 
 // Usage : vec = cref_list2_of(a)(b)(c)
-
 // The idea of this class was developed in collaboration with P.M.
-
+// Complexity of cref_list2_of for size N : 2*N allocation of references
 template<
 	typename T,
 	int N, 
     typename B
 >
 class cref_impl : B{
-        
-    typedef boost::reference_wrapper<const T> ref_;
+    
+    typedef boost::assign_detail::assign_reference<const T> ref_;
 
 	typedef cref_impl<T,N,B> this_;
 
@@ -49,6 +49,9 @@ class cref_impl : B{
 
 	template<typename T1>
     struct array{ typedef boost::array<T1,N+1> type; };
+
+	template<typename T1> // because reference_wrapper has no default constructor
+    struct ref_array : array<boost::assign_detail::assign_reference<const T1> >{};
     
 	typedef typename boost::is_same<
     	boost::mpl::int_<N>,
@@ -58,7 +61,6 @@ class cref_impl : B{
 	public: 
 
 	typedef boost::mpl::bool_<exit_impl_::value> exit_; 
-
     
 	cref_impl(const T& t):ref(t){} 
 
@@ -88,11 +90,12 @@ class cref_impl : B{
 	// Requirement: C(begin,end) constructor
 	template<typename C>
 	operator C(){
-    	// TODO consider either bypassing the array altogether and call push_front
-        // to preserve the referenceness of the approach
+    	// TODO consider instead:
+        // C c; c.reserve()
+        // and recursively calling push_front
     
     	typedef typename boost::range_value<C>::type val_;
-		typedef typename array<val_>::type ar_; 
+		typedef typename ref_array<val_>::type ar_; 
         ar_ ar; 
         this->write_to_array(ar,exit_());
         return C(boost::begin(ar),boost::end(ar));
