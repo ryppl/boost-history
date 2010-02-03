@@ -51,7 +51,8 @@ class cref_impl : B{
     struct array{ typedef boost::array<T1,N+1> type; };
 
 	template<typename T1> // because reference_wrapper has no default constructor
-    struct ref_array : array<boost::assign_detail::assign_reference<const T1> >{};
+    struct ref_array 
+    	: array<boost::assign_detail::assign_reference<const T1> >{};
     
 	typedef typename boost::is_same<
     	boost::mpl::int_<N>,
@@ -92,7 +93,7 @@ class cref_impl : B{
 	operator C(){
     	// TODO consider instead:
         // C c; c.reserve()
-        // and recursively calling push_front
+        // and recursively calling c.push_front(ref)
     
     	typedef typename boost::range_value<C>::type val_;
 		typedef typename ref_array<val_>::type ar_; 
