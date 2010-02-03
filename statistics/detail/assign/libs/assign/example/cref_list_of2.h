@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// example::list_of2.cpp                               						//
+// example::list_of2.h                               						//
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
