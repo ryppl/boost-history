@@ -24,7 +24,7 @@ namespace assign{
 
 // Usage : vec = cref_list2_of(a)(b)(c)
 // The idea of this class was developed in collaboration with P.M.
-// Complexity of cref_list2_of for size N : 2*N allocation of references
+// Complexity of cref_list2_of for size N : 2*N allocation of reference wrappers.
 template<
 	typename T,
 	int N, 
@@ -92,7 +92,7 @@ class cref_impl : B{
 	template<typename C>
 	operator C(){
     	// TODO consider instead:
-        // C c; c.reserve()
+        // C c; c.reserve(N+1)
         // and recursively calling c.push_front(ref)
     
     	typedef typename boost::range_value<C>::type val_;
