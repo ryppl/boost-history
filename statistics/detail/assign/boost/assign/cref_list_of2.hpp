@@ -31,10 +31,17 @@ namespace assign{
 namespace cref_list_of2_impl{
             
 	typedef boost::mpl::void_ top_;
+
+	template<typename T,bool do_const>
+    struct value : boost::mpl::if_<
+    	boost::mpl::bool_<do_const>,
+        typename add_const<T>::type,
+        T
+    >{};
             
     template<typename T>
     struct ref{
-        typedef boost::assign_detail::assign_reference<const T> type;
+        typedef boost::assign_detail::assign_reference<T> type;
     };
             
     template<typename T,int N>
@@ -69,10 +76,10 @@ namespace cref_list_of2_impl{
         // public:
         typedef next_ result_type;
                 
-        expr(const T& t):ref(t){} // only for N == 1
-        expr(E& p,const T& t):previous(p),ref(t){}
+        expr(T& t):ref(t){} // only for N == 1
+        expr(E& p,T& t):previous(p),ref(t){}
                 
-        next_ operator()(const T& t){ return next_(*this,t); }
+        next_ operator()(T& t){ return next_(*this,t); }
                 
         template<typename T1>
         operator boost::array<T1,N>(){
@@ -167,12 +174,19 @@ namespace cref_list_of2_impl{
 }// cref_list_of2_impl        
         
     template<typename T>
-    typename cref_list_of2_impl::first<T>::type
+    typename cref_list_of2_impl::first<const T>::type
     cref_list_of2(const T& t){
+        typedef typename cref_list_of2_impl::first<const T>::type expr_;
+        return expr_(t);
+    }
+
+    template<typename T>
+    typename cref_list_of2_impl::first<T>::type
+    ref_list_of2(T& t){
         typedef typename cref_list_of2_impl::first<T>::type expr_;
         return expr_(t);
     }
-        
+    
 }// assign
 }// boost
 
