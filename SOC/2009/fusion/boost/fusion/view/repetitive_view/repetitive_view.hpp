@@ -23,12 +23,12 @@
 #include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/long.hpp>
+#include <boost/mpl/int.hpp>
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/mpl/eqaul_to.hpp>
 #   include <boost/mpl/not.hpp>
 #   include <boost/mpl/or_.hpp>
-#   include <boost/mpl/bool.hpp>
+#   include <boost/mpl/not.hpp>
 #endif
 #include <boost/integer_traits.hpp>
 
@@ -51,7 +51,10 @@ namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
 
-    template<typename Seq, int Size=integer_traits<int>::const_max-1>
+    template<
+        typename Seq
+      , typename Size=mpl::int_<integer_traits<int>::const_max-1>
+    >
     struct repetitive_view
       : sequence_base<repetitive_view<Seq> >
     {
@@ -59,14 +62,14 @@ namespace boost { namespace fusion
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
         BOOST_FUSION_MPL_ASSERT((mpl::or_<
                             mpl:not_<result_of::empty<Seq> >
-                          , mpl::bool_<!Size>
+                          , mpl::not_<Size>
                         >));
 
         typedef detail::view_storage<Seq> storage_type;
         typedef typename storage_type::type seq_type;
 
         typedef typename traits::category_of<seq_type>::type category;
-        typedef mpl::int_<Size> size;
+        typedef Size size;
         typedef repetitive_view_tag fusion_tag;
         typedef fusion_sequence_tag tag;
         typedef mpl::true_ is_view;
@@ -115,14 +118,17 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template<typename Seq, int Size=integer_traits<int>::const_max-1>
+        template<
+            typename Seq
+          , typename Size=mpl::int_<integer_traits<int>::const_max-1>
+        >
         struct repeat
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
             BOOST_FUSION_MPL_ASSERT((mpl::or_<
                                 mpl:not_<result_of::empty<Seq> >
-                              , mpl::bool_<!Size>
+                              , mpl::not_<Size>
                             >));
 
             typedef
@@ -131,7 +137,7 @@ namespace boost { namespace fusion
         };
     };
 
-    template<int Size, typename Seq>
+    template<typename Size, typename Seq>
     inline typename
         result_of::repeat<BOOST_FUSION_R_ELSE_CLREF(Seq),Size>::type
     repeat(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
@@ -143,7 +149,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template<int Size, typename Seq>
+    template<typename Size, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::repeat<,Seq,&, Size>)
     repeat(Seq& seq)

@@ -19,13 +19,13 @@ namespace boost { namespace fusion
 {
     struct repetitive_view_iterator_tag;
 
-    template<typename SeqRef, typename It, int I>
+    template<typename SeqRef, typename It, typename Index>
     struct repetitive_view_iterator
-      : iterator_base<repetitive_view_iterator<SeqRef, It, I> >
+      : iterator_base<repetitive_view_iterator<SeqRef, It, Index> >
     {
         typedef SeqRef seq_type;
         typedef It it_type;
-        typedef mpl::int_<I> index;
+        typedef Index index;
 
         typedef repetitive_view_iterator_tag fusion_tag;
         typedef typename traits::category_of<It>::type category;

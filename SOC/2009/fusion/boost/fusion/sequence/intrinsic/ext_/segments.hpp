@@ -36,7 +36,7 @@ namespace boost { namespace fusion
         };
     }
 
-    /*template<typename Seq>
+    template<typename Seq>
     typename result_of::segments<Seq>::type
     segments(Seq& seq)
     {
@@ -48,9 +48,9 @@ namespace boost { namespace fusion
     segments(Seq const& seq)
     {
         return result_of::segments<Seq const>::call(seq);
-    }*/
+    }
 
-    template<typename Seq>
+    /*template<typename Seq>
     typename result_of::segments<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     segments(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
@@ -65,7 +65,7 @@ namespace boost { namespace fusion
     {
         return result_of::segments<Seq&>::call(seq);
     }
-#endif
+#endif*/
 }}
 
 #endif

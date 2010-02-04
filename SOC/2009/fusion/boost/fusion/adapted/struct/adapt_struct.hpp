@@ -11,6 +11,7 @@
 
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/empty.hpp>
 
 #include <boost/fusion/adapted/detail/struct/extension.hpp>
 #include <boost/fusion/adapted/detail/struct/adapt_base.hpp>
@@ -39,7 +40,7 @@
         BOOST_PP_CAT(BOOST_FUSION_ADAPT_STRUCT_FILLER_0 SEQ,_END),\
         BOOST_FUSION_ADAPT_STRUCT_C)
 
-#define BOOST_FUSION_ADAPT_STRUCT_C(R, NAME, I, XY)\
-    BOOST_FUSION_ADAPT_STRUCT_C_BASE(NAME, I, XY, 2)
+#define BOOST_FUSION_ADAPT_STRUCT_C(R, NAME, I, TUPLE)\
+    BOOST_FUSION_ADAPT_STRUCT_C_BASE(NAME, I, BOOST_PP_EMPTY(), TUPLE, 2)
 
 #endif

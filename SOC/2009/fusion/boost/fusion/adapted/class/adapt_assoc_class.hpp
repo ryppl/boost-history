@@ -5,27 +5,33 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_ADAPTED_STRUCT_ADAPT_ASSOC_STRUCT_HPP
-#define BOOST_FUSION_ADAPTED_STRUCT_ADAPT_ASSOC_STRUCT_HPP
+#ifndef BOOST_FUSION_ADAPTED_CLASS_ADAPT_ASSOC_CLASS_NAMED_HPP
+#define BOOST_FUSION_ADAPTED_CLASS_ADAPT_ASSOC_CLASS_NAMED_HPP
 
-#include <boost/fusion/support/internal/ref.hpp>
+#define BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_0(A, B, C, D, E)\
+    ((A, B, C, D, E)) BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_1
+#define BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_1(A, B, C, D, E)\
+    ((A, B, C, D, E)) BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_0
+#define BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_0_END
+#define BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_1_END
 
-#include <boost/fusion/adapted/detail/class/extension.hpp>
-#include <boost/fusion/adapted/detail/class/adapt_base.hpp>
-#include <boost/fusion/adapted/detail/class/at_impl.hpp>
-#include <boost/fusion/adapted/detail/class/is_view_impl.hpp>
-#include <boost/fusion/adapted/detail/class/is_sequence_impl.hpp>
-#include <boost/fusion/adapted/detail/class/value_at_impl.hpp>
-#include <boost/fusion/adapted/detail/class/category_of_impl.hpp>
-#include <boost/fusion/adapted/detail/class/size_impl.hpp>
-#include <boost/fusion/adapted/detail/class/begin_impl.hpp>
-#include <boost/fusion/adapted/detail/class/end_impl.hpp>
-#include <boost/fusion/adapted/detail/class/value_of_impl.hpp>
-#include <boost/fusion/adapted/detail/class/deref_impl.hpp>
-#include <boost/fusion/adapted/detail/class/deref_data_impl.hpp>
-#include <boost/fusion/adapted/detail/class/key_of_impl.hpp>
-#include <boost/fusion/adapted/detail/class/value_of_data_impl.hpp>
+#define BOOST_FUSION_ADAPT_ASSOC_CLASS(NAME, SEQ)\
+    BOOST_FUSION_ADAPT_STRUCT_BASE(\
+        NAME,\
+        assoc_class_tag,\
+        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_0 SEQ,_END),\
+        BOOST_FUSION_ADAPT_ASSOC_CLASS_C)
 
-//TODO???
+#define BOOST_FUSION_ADAPT_ASSOC_CLASS_C(R, NAME, I, TUPLE)\
+    BOOST_FUSION_ADAPT_STRUCT_C_BASE(NAME, I, PREFIX, TUPLE, 5)                 \
+                                                                                \
+namespace boost { namespace fusion { namespace extension                        \
+{                                                                               \
+    template<>                                                                  \
+    struct struct_assoc_key<NAME, I>                                            \
+    {                                                                           \
+        typedef BOOST_PP_TUPLE_ELEM(5, 4, TUPLE) type;                          \
+    };                                                                          \
+}}}
 
 #endif

@@ -12,6 +12,7 @@
 
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/empty.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 
 #include <boost/fusion/adapted/detail/struct/extension.hpp>
@@ -44,16 +45,20 @@
         BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_STRUCT_FILLER_0 SEQ,_END),\
         BOOST_FUSION_ADAPT_ASSOC_STRUCT_C)
 
-#define BOOST_FUSION_ADAPT_ASSOC_STRUCT_C(R, NAME, I, XYZ)                      \
-    BOOST_FUSION_ADAPT_STRUCT_C_BASE(NAME, I, XYZ, 3)                           \
+#define BOOST_FUSION_ADAPT_ASSOC_STRUCT_C(R, NAME, I, TUPLE)\
+    BOOST_FUSION_ADAPT_ASSOC_STRUCT_C_BASE(NAME, I, BOOST_PP_EMPTY(), TUPLE)
+
+#define BOOST_FUSION_ADAPT_ASSOC_STRUCT_C_BASE(NAME, I, PREFIX, TUPLE)          \
+    BOOST_FUSION_ADAPT_STRUCT_C_BASE(NAME, I, PREFIX, TUPLE, 3)                 \
                                                                                 \
 namespace boost { namespace fusion { namespace extension                        \
 {                                                                               \
     template<>                                                                  \
     struct struct_assoc_key<NAME, I>                                            \
     {                                                                           \
-        typedef BOOST_PP_TUPLE_ELEM(3, 2, XYZ) type;                            \
+        typedef BOOST_PP_TUPLE_ELEM(3, 2, TUPLE) type;                          \
     };                                                                          \
 }}}
+
 
 #endif

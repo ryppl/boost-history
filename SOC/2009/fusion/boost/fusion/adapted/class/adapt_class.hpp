@@ -5,8 +5,8 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_ADAPTED_STRUCT_ADAPT_STRUCT_HPP
-#define BOOST_FUSION_ADAPTED_STRUCT_ADAPT_STRUCT_HPP
+#ifndef BOOST_FUSION_ADAPTED_CLASS_ADAPT_CLASS_HPP
+#define BOOST_FUSION_ADAPTED_CLASS_ADAPT_CLASS_HPP
 
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -38,7 +38,7 @@
         BOOST_PP_CAT(BOOST_FUSION_ADAPT_CLASS_FILLER_0 SEQ,_END),\
         BOOST_FUSION_ADAPT_CLASS_C)
 
-#define BOOST_FUSION_ADAPT_CLASS_C(R, NAME, I, XY)\
-    BOOST_FUSION_ADAPT_CLASS_C_BASE(NAME, I, XY, 4)
+#define BOOST_FUSION_ADAPT_CLASS_C(R, NAME, I, TUPLE)\
+    BOOST_FUSION_ADAPT_CLASS_C_BASE(NAME, I, TUPLE, 4)
 
 #endif

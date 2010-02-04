@@ -33,8 +33,8 @@
     };
 #endif
 
-#define BOOST_FUSION_ADAPT_STRUCT_BASE(NAME,TAG,TUPLE_SEQ,CALLBACK)             \
-    BOOST_PP_SEQ_FOR_EACH_I(CALLBACK,NAME,TUPLE_SEQ)                            \
+#define BOOST_FUSION_ADAPT_STRUCT_BASE(NAME,TAG,SEQ,CALLBACK)                   \
+    BOOST_PP_SEQ_FOR_EACH_I(CALLBACK,NAME,SEQ)                                  \
                                                                                 \
 namespace boost                                                                 \
 {                                                                               \
@@ -50,7 +50,7 @@ namespace boost                                                                 
         {                                                                       \
             template <>                                                         \
             struct struct_size<NAME>                                            \
-              : mpl::int_<BOOST_PP_SEQ_SIZE(TUPLE_SEQ)>                         \
+              : mpl::int_<BOOST_PP_SEQ_SIZE(SEQ)>                               \
             {};                                                                 \
         }                                                                       \
     }                                                                           \
@@ -74,7 +74,7 @@ namespace boost                                                                 
     }                                                                           \
 }
 
-#define BOOST_FUSION_ADAPT_STRUCT_C_BASE(NAME, I, TUPLE, MAX_SIZE)              \
+#define BOOST_FUSION_ADAPT_STRUCT_C_BASE(NAME, I, PREFIX, TUPLE, MAX_SIZE)      \
 namespace boost { namespace fusion { namespace extension                        \
 {                                                                               \
     template <>                                                                 \
@@ -86,7 +86,7 @@ namespace boost { namespace fusion { namespace extension                        
         static typename detail::forward_as<Seq&,type>::type                     \
         call(Seq& seq)                                                          \
         {                                                                       \
-            return seq.BOOST_PP_TUPLE_ELEM(MAX_SIZE, 1, TUPLE);                 \
+            return seq.PREFIX BOOST_PP_TUPLE_ELEM(MAX_SIZE, 1, TUPLE);          \
         }                                                                       \
     };                                                                          \
 }}}

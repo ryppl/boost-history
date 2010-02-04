@@ -39,7 +39,7 @@ namespace boost { namespace fusion { namespace extension
     };
 
     template <>
-    struct begin_impl<assoc_struct_tag>
+    struct begin_impl<assoc_class_tag>
     {
         template <typename Seq>
         struct apply

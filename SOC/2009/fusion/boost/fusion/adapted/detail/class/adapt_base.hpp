@@ -14,7 +14,7 @@
 namespace boost { namespace fusion { namespace extension                        \
 {                                                                               \
     template <>                                                                 \
-    struct struct_member<NAME, I>                                                \
+    struct struct_member<NAME, I>                                               \
     {                                                                           \
         typedef BOOST_PP_TUPLE_ELEM(MAX_SIZE, 0, TUPLE) type;                   \
         typedef BOOST_PP_TUPLE_ELEM(MAX_SIZE, 1, TUPLE) get_type;               \

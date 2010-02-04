@@ -21,6 +21,8 @@
 #   include <boost/type_traits/is_convertible.hpp>
 #endif
 
+//TODO is_convertible -> is_explicitly_convertible
+
 namespace boost { namespace fusion
 {
     // A half runtime pair where the first type does not have data
@@ -59,9 +61,9 @@ namespace boost { namespace fusion
 #else
         template<typename Arg>
         pair(BOOST_FUSION_R_ELSE_CLREF(Arg) arg
-          , typename enable_if<
+          /*, typename enable_if<
                 is_convertible<BOOST_FUSION_R_ELSE_CLREF(Arg),second_type>
-            >::type* =0)
+            >::type* =0*/)
           : second(BOOST_FUSION_FORWARD(Arg,arg))
         {}
 

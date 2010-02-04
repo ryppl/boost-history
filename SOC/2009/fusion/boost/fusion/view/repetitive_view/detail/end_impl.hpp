@@ -96,7 +96,7 @@ namespace boost { namespace fusion
                           , typename seq::seq_type
                         >::type
                       , typename gen::type
-                      , seq::size::value
+                      , typename seq::size
                     >
                 type;
 

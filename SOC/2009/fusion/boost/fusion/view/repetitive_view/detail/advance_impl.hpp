@@ -90,7 +90,7 @@ namespace boost { namespace fusion
                     repetitive_view_iterator<
                         typename it::seq_type
                       , typename gen::type
-                      , mpl::plus<typename it::index, N>::value
+                      , typename mpl::plus<typename it::index, N>::type
                     >
                 type;
 

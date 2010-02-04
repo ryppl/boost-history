@@ -31,7 +31,7 @@ namespace boost { namespace fusion { namespace extension
                       , typename seq::seq_type
                     >::type
                   , typename result_of::begin<typename seq::seq_type>::type
-                  , 0
+                  , mpl::int_<0>
                 >
             type;
 
