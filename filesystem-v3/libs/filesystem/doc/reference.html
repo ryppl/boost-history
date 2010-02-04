@@ -496,8 +496,8 @@ system. </p>
         path();
         path(const path&amp; p);
 
-        template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
-          path(ContiguousIterator begin, ContiguousIterator end);
+        template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+          path(InputIterator begin, InputIterator end);
 
         template &lt;class Source&gt;
           path(Source const&amp; source);
@@ -507,8 +507,8 @@ system. </p>
         // <a href="#path-assignments">assignments</a>
         path&amp; operator=(const path&amp; p);
 
-        template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
-          path&amp; assign(ContiguousIterator begin, ContiguousIterator end);
+        template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+          path&amp; assign(InputIterator begin, InputIterator end);
 
         template &lt;class Source&gt;
           path&amp; operator=(Source const&amp; source);
@@ -516,8 +516,8 @@ system. </p>
         // <a href="#path-appends">appends</a>
         path&amp; operator/=(const path&amp; p);
 
-        template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
-          path&amp; append(ContiguousIterator begin, ContiguousIterator end);
+        template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+          path&amp; append(InputIterator begin, InputIterator end);
 
         template &lt;class Source&gt;
           path&amp; operator/=(Source const&amp; source);
@@ -615,9 +615,9 @@ Return-by-value is specified as
 implementation. <i>-- 
 end note</i>]</p>
 </blockquote>
-<p><code><a name="ContiguousIterator">ContiguousIterator</a></code> is required be a standard library <code>RandomIterator</code> 
-compliant iterator 
-pointing to contiguous storage. The iterator's value type is required to be <code>char</code>, <code>
+<p><code><a name="InputIterator">InputIterator</a></code> is required meet the 
+requirements for a C++ standard library <code>RandomIterator</code> 
+compliant iterator. The iterator's value type is required to be <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
 <p><code><a name="Source">Source</a></code> is required to be one of:</p>
 <ul>
@@ -630,9 +630,6 @@ pointing to contiguous storage. The iterator's value type is required to be <cod
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
   <li>A <code>boost::filesystem::directory_entry</code>.</li>
 </ul>
-<p>Iteration over <code>ContiguousIterator</code> 
-and <code>Source</code> arguments shall result in generic pathname format or 
-native pathname format strings.</p>
 <p>The specifications for certain <code>path</code> functions require that 
 arguments in the generic pathname format be converted to native pathname format 
 as they are stored in <code>pathname</code>. If the native format requires 
@@ -679,8 +676,8 @@ letters to uppercase.<i> -- end note.</i>]</p>
 <blockquote>
   <p><i>Postconditions:</i> <code>empty()</code>.</p>
   </blockquote>
-<pre>template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
-  path(ContiguousIterator begin, ContiguousIterator end);</pre>
+<pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+  path(InputIterator begin, InputIterator end);</pre>
 <pre>template &lt;class Source&gt;
   path(Source const&amp; source);</pre>
 <blockquote>
@@ -697,8 +694,8 @@ letters to uppercase.<i> -- end note.</i>]</p>
 </blockquote>
 <h3> <a name="path-assignments"> <code>
 <font size="4">path</font></code> assignments</a></h3>
-<pre>template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
-  path&amp; assign(ContiguousIterator begin, ContiguousIterator end);</pre>
+<pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+  path&amp; assign(InputIterator begin, InputIterator end);</pre>
 <pre>template &lt;class Source&gt;
   path&amp; operator=(Source const&amp; source);</pre>
 <blockquote>
@@ -744,8 +741,8 @@ letters to uppercase.<i> -- end note.</i>]</p>
   </blockquote>
   <p><i>Returns: </i><code>*this</code></p>
 </blockquote>
-<pre>template &lt;class <a href="#ContiguousIterator">ContiguousIterator</a>&gt;
-  path&amp; append(ContiguousIterator begin, ContiguousIterator end);</pre>
+<pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+  path&amp; append(InputIterator begin, InputIterator end);</pre>
 <pre>template &lt;class Source&gt;
   path&amp; operator/=(Source const &amp; source);</pre>
 <blockquote>
@@ -3181,11 +3178,11 @@ multiple string types. His idea became the basis for the version 3 path design.<
   </tr>
 </table>
 <hr>
-<p>© Copyright Beman Dawes, 2002, 2006, 2007, 2009</p>
+<p>ï¿½ Copyright Beman Dawes, 2002, 2006, 2007, 2009</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->03 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40543" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->04 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40545" --></p>
 
 </body>
 

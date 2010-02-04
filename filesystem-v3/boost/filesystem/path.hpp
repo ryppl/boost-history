@@ -24,6 +24,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/static_assert.hpp>
 #include <string>
+#include <iterator>
 #include <cstring>
 #include <iosfwd>    // needed by basic_path inserter and extractor
 #include <stdexcept>
@@ -144,12 +145,15 @@ namespace filesystem
 
     path(const path& p) : m_pathname(p.m_pathname) {}
 
-    template <class ContiguousIterator>
-    path(ContiguousIterator begin, ContiguousIterator end)
+    template <class InputIterator>
+    path(InputIterator begin, InputIterator end)
     { 
       if (begin != end)
-        path_traits::convert(&*begin, &*begin+std::distance(begin, end),
-          m_pathname, codecvt());
+      {
+        std::basic_string<typename std::iterator_traits<InputIterator>::value_type>
+          s(begin, end);
+        path_traits::convert(s.c_str(), s.c_str()+s.size(), m_pathname, codecvt());
+      }
     }
 
     template <class Source>
@@ -166,13 +170,16 @@ namespace filesystem
       return *this;
     }
 
-    template <class ContiguousIterator>
-    path& assign(ContiguousIterator begin, ContiguousIterator end)
+    template <class InputIterator>
+    path& assign(InputIterator begin, InputIterator end)
     { 
       m_pathname.clear();
       if (begin != end)
-        path_traits::convert(&*begin, &*begin+std::distance(begin, end),
-          m_pathname, codecvt());
+      {
+        std::basic_string<typename std::iterator_traits<InputIterator>::value_type>
+          s(begin, end);
+        path_traits::convert(s.c_str(), s.c_str()+s.size(), m_pathname, codecvt());
+      }
       return *this;
     }
 
@@ -191,8 +198,8 @@ namespace filesystem
 
     path& operator/=(const path& p);
 
-    template <class ContiguousIterator>
-    path& append(ContiguousIterator begin, ContiguousIterator end);
+    template <class InputIterator>
+    path& append(InputIterator begin, InputIterator end);
 
     template <class Source>
     path& operator/=(Source const& source);
@@ -578,15 +585,15 @@ namespace filesystem
 //                     class path member template implementation                        //
 //--------------------------------------------------------------------------------------//
 
-  template <class ContiguousIterator>
-  path& path::append(ContiguousIterator begin, ContiguousIterator end)
+  template <class InputIterator>
+  path& path::append(InputIterator begin, InputIterator end)
   { 
     if (begin == end)
       return *this;
     string_type::size_type sep_pos(m_append_separator_if_needed());
-    if (begin != end)
-      path_traits::convert(&*begin, &*begin+std::distance(begin, end),
-        m_pathname, codecvt());
+    std::basic_string<typename std::iterator_traits<InputIterator>::value_type>
+      s(begin, end);
+    path_traits::convert(s.c_str(), s.c_str()+s.size(), m_pathname, codecvt());
     if (sep_pos)
       m_erase_redundant_separator(sep_pos);
     return *this;

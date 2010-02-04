@@ -7,6 +7,7 @@ copy /y ..\tut1.cpp >nul
 copy /y ..\tut2.cpp >nul
 copy /y ..\tut3.cpp >nul
 copy /y ..\tut4.cpp >nul
+copy /y ..\tut5.cpp >nul
 copy /y ..\path_info.cpp >nul
 del *.exe 2>nul
 del *.pdb 2>nul

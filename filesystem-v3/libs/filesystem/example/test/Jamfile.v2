@@ -19,11 +19,13 @@ exe tut1 : tut1.cpp ;
 exe tut2 : tut2.cpp ;
 exe tut3 : tut3.cpp ;
 exe tut4 : tut4.cpp ;
+exe tut5 : tut5.cpp ;
 exe path_info : path_info.cpp ;
 
 install tut1-copy : tut1 : <location>. ;
 install tut2-copy : tut2 : <location>. ;
 install tut3-copy : tut3 : <location>. ;
 install tut4-copy : tut4 : <location>. ;
+install tut5-copy : tut5 : <location>. ;
 install path_info-copy : path_info : <location>. ;
   

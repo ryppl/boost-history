@@ -27,6 +27,7 @@
 #include <sstream>
 #include <string>
 #include <locale>
+#include <list>
 
 namespace fs = boost::filesystem;
 namespace bs = boost::system;
@@ -93,6 +94,8 @@ namespace
 
   string s("string");
   wstring ws(L"wstring");
+  std::list<char> l;      // see main() for initialization to s, t, r, i, n, g
+  std::list<wchar_t> wl;  // see main() for initialization to w, s, t, r, i, n, g
 
   //  test_constructors  ---------------------------------------------------------------//
 
@@ -104,7 +107,7 @@ namespace
     PATH_IS(x0, L"");
     BOOST_TEST_EQ(x0.native().size(), 0U);
 
-    path x1(s.begin(), s.end());                       // iterator range char
+    path x1(l.begin(), l.end());                       // iterator range char
     PATH_IS(x1, L"string");
     BOOST_TEST_EQ(x1.native().size(), 6U);
 
@@ -112,7 +115,7 @@ namespace
     PATH_IS(x2, L"string");
     BOOST_TEST_EQ(x2.native().size(), 6U);
 
-    path x3(ws.begin(), ws.end());                     // iterator range wchar_t
+    path x3(wl.begin(), wl.end());                     // iterator range wchar_t
     PATH_IS(x3, L"wstring");
     BOOST_TEST_EQ(x3.native().size(), 7U);
 
@@ -158,10 +161,10 @@ namespace
     PATH_IS(x, L"yet another path");
     BOOST_TEST_EQ(x.native().size(), 16U);
 
-    x.assign(s.begin(), s.end());                      // iterator range char
+    x.assign(l.begin(), l.end());                      // iterator range char
     PATH_IS(x, L"string");
 
-    x.assign(ws.begin(), ws.end());                    // iterator range wchar_t
+    x.assign(wl.begin(), wl.end());                    // iterator range wchar_t
     PATH_IS(x, L"wstring");
 
     x = string("std::string");                         // container char
@@ -216,11 +219,11 @@ namespace
     PATH_IS(x, BOOST_FS_FOO L"yet another path");
 
     x = "/foo";
-    x.append(s.begin(), s.end());                      // iterator range char
+    x.append(l.begin(), l.end());                      // iterator range char
     PATH_IS(x, BOOST_FS_FOO L"string");
 
     x = "/foo";
-    x.append(ws.begin(), ws.end());                    // iterator range wchar_t
+    x.append(wl.begin(), wl.end());                    // iterator range wchar_t
     PATH_IS(x, BOOST_FS_FOO L"wstring");
 
     x = "/foo";
@@ -805,6 +808,21 @@ int main(int, char*[])
 #ifdef BOOST_WINDOWS_PATH
   cout << "BOOST_WINDOWS_PATH\n";
 #endif
+
+  l.push_back('s');
+  l.push_back('t');
+  l.push_back('r');
+  l.push_back('i');
+  l.push_back('n');
+  l.push_back('g');
+
+  wl.push_back(L'w');
+  wl.push_back(L's');
+  wl.push_back(L't');
+  wl.push_back(L'r');
+  wl.push_back(L'i');
+  wl.push_back(L'n');
+  wl.push_back(L'g');
 
   test_overloads();
   test_constructors();

@@ -14,8 +14,9 @@
 #define BOOST_FILESYSTEM_FILESYSTEM_HPP
 
 #include <boost/filesystem/config.hpp>
-#include <boost/filesystem/operations.hpp>   // includes path.hpp
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/convenience.hpp>
-
+#include <boost/filesystem/fstream.hpp>
 #endif
 
