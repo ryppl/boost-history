@@ -32,13 +32,6 @@ namespace cref_list_of2_impl{
             
 	typedef boost::mpl::void_ top_;
 
-	template<typename T,bool do_const>
-    struct value : boost::mpl::if_<
-    	boost::mpl::bool_<do_const>,
-        typename add_const<T>::type,
-        T
-    >{};
-            
     template<typename T>
     struct ref{
         typedef boost::assign_detail::assign_reference<T> type;
