@@ -449,7 +449,7 @@ c:\boost\trunk: is a directory containing:
       results ourselves. </li>
     </ul>
 
-<p>Move on to the next section to see how those changes play out!</p>
+<p>Move on to <code>tut4.cpp</code> to see how those changes play out!</p>
 
 <h2><a href="../example/tut4.cpp">tut4.cpp</a> - Using a path decomposition 
 function, plus sorting results</h2>
@@ -507,7 +507,7 @@ function, plus sorting results</h2>
   </tr>
 </table>
 
-    <p>The key change between <code>tut3.cpp</code> and <code>tut4.cpp</code> is 
+    <p>The key difference between <code>tut3.cpp</code> and <code>tut4.cpp</code> is 
     what happens in the directory iteration loop. We changed:</p>
     <blockquote>
       <pre>cout &lt;&lt; &quot; &quot; &lt;&lt; *it &lt;&lt; '\n';   // *it returns a <a href="reference.html#Class-directory_entry">directory_entry</a>,</pre>
@@ -520,9 +520,9 @@ v.push_back(fn);                   // push into vector for later sorting</pre>
     <p><code><a href="reference.html#directory_entry-observers">path()</a></code> 
     is a <code>directory_entry</code> observer function. <code>
     <a href="reference.html#path-filename">filename()</a></code> is one of 
-    several path decomposition functions. It extracts the filename portion (<code>&quot;foo.txt&quot;</code>) 
-    from a path (<code>&quot;/bar/foo.txt&quot;</code>). These decomposition functions are 
-    explored in the <a href="#path-iteration-etc">Path iterators, observers, 
+    several path decomposition functions. It extracts the filename portion (<code>&quot;index.html&quot;</code>) 
+    from a path (<code>&quot;/home/beman/boost/trunk/index.html&quot;</code>). These decomposition functions are 
+    more fully explored in the <a href="#path-iteration-etc">Path iterators, observers, 
     composition, decomposition and query</a> portion of this tutorial.</p>
     <p>The above was written as two lines of code for clarity. It could have 
     been written more concisely as:</p>
@@ -602,27 +602,41 @@ c:\boost\trunk: is a directory containing:
 
 <h2><a name="Class-path">Class path</a></h2>
 
-<p>Rather than trafficking in <code>const char*</code>'s, Boost.Filesystem 
-operational functions traffics in objects of <a href="reference.html#Path">class path</a>, 
-which are a lot more flexible. For example, class path has a converting constructor 
-template:</p>
+<p>A traditional C-style interface to <code>file_size()</code> would look like 
+this:</p>
+
+<blockquote>
+  <pre><span style="background-color: #FFFFFF; ">uintmax_t</span> <a name="file_size">file_size</a>(const char* p);</pre>
+</blockquote>
+<p>Compare that with Boost.Filesystem's interface:</p>
+<blockquote>
+  <pre><span style="background-color: #FFFFFF; ">uintmax_t</span> <a name="file_size">file_size</a>(const path&amp; p);</pre>
+</blockquote>
+<p>Class <code>path</code> is far more flexible:</p>
+<ol>
+  <li>It supports multiple character types and encodings, including Unicode, to 
+  ease internationalization.</li>
+  <li>It supports multiple source types, such as iterators for null terminated 
+  sequences, iterator ranges, containers (including <code>std::basic_string</code>), 
+  and <code><a href="reference.html#Class-directory_entry">directory_entry</a></code>'s, 
+  so functions taking paths don't need to provide several overloads.</li>
+  <li>It supports both native and generic pathname formats, so programs can be 
+  portable between operating systems yet use native conventions where desirable.</li>
+  <li>It supplies a full set of iterators, observers, composition, 
+  decomposition, and query functions, making pathname manipulations easy, 
+  convenient, reliable, and portable.</li>
+</ol>
+<p>Let's take a look at how (1) and (2) work. Class path constructors, 
+assignments, and appends have member templates for sources. For example, here 
+are the constructors that take sources:</p>
 
 <blockquote style="font-size: 10pt">
-  <pre>template &lt;class Source&gt;
+  <pre>template &lt;class <a href="reference.html#Source">Source</a>&gt;
   path(Source const&amp; source);</pre>
+  <pre>template &lt;class <a href="reference.html#ContiguousIterator">ContiguousIterator</a>&gt;
+  path(ContiguousIterator begin, ContiguousIterator end);</pre>
 </blockquote>
-<p>and this allows <code>const path&amp;</code> arguments to be called with a 
-variety of object types, such as:</p>
-<ul>
-  <li style="font-size: 10pt">An iterator, such as a pointer, for a null terminated byte-string. 
-  Value type can be <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li style="font-size: 10pt">A container with a value type of <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li style="font-size: 10pt">A C-array with a value type of <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li style="font-size: 10pt">A <code>boost::filesystem::directory_entry</code>.</li>
-</ul>
+<p>&nbsp;</p>
 <p>In addition to handling a variety of types, class path function templates 
 also handle conversion between the argument's encoding and the internal encoding 
 required for communication with the operating system. Thus it's no problem to 
@@ -638,9 +652,7 @@ like to rename <code><font size="4">&#9829;valentine</font></code>. Here's the c
   encoding conversions are required by the particular operating system. It also 
   provides path syntax that is portable across operating systems, element 
   iterators, and observer, composition, decomposition, and query functions to 
-  manipulate the elements of a path. <span style="background-color: #FFFF00">
-  More on class </span><code><span style="background-color: #FFFF00">path</span></code><span style="background-color: #FFFF00"> 
-  later in this tutorial.</span></p>
+  manipulate the elements of a path. </p>
 
     <hr>
 
@@ -941,7 +953,7 @@ do not throw exceptions when I/O errors occur.
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->01 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40539" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->03 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40543" --></p>
 
 </body>
 
