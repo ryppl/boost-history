@@ -52,26 +52,24 @@ namespace cref_list_of2_impl{
     };
             
     template<typename E,typename T,int N>
-    struct expr{
+    class expr{
         typedef boost::mpl::int_<N> int_n_;
         typedef boost::mpl::int_<1> int_1_;
-        typedef typename boost::mpl::equal_to<int_n_,int_1_>::type is_first_;
-                
-        typedef typename boost::mpl::if_<is_first_,E,E&>::type previous_;
-                
         typedef typename ref<T>::type ref_;
+
+		public:       
+        typedef typename boost::mpl::equal_to<int_n_,int_1_>::type is_first_;
+        typedef typename boost::mpl::if_<is_first_,E,E&>::type previous_;
         typedef typename ref_array<T,N>::type ref_array_;
+        typedef typename next<E,T,N>::type next_;
 
         previous_ previous;
-        typedef typename next<E,T,N>::type next_;
         ref_ ref;
-                
-        // public:
-        typedef next_ result_type;
-                
+                                
         expr(T& t):ref(t){} // only for N == 1
         expr(E& p,T& t):previous(p),ref(t){}
                 
+        typedef next_ result_type;
         next_ operator()(T& t){ return next_(*this,t); }
                 
         template<typename T1>
@@ -119,7 +117,7 @@ namespace cref_list_of2_impl{
             return !(this->size());
         }
                 
-        // private:
+        private:
         void alloc(){ 
             this->ptr = smart_ptr_(new ref_array_);
             write_to_array(*ptr,*this);		
@@ -162,7 +160,6 @@ namespace cref_list_of2_impl{
         typedef cref_list_of2_impl::expr<
         	cref_list_of2_impl::top_,T,1> type;   
     };
-            
             
 }// cref_list_of2_impl        
         
