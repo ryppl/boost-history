@@ -24,7 +24,10 @@ namespace assign{
 
 // Usage : vec = cref_list2_of(a)(b)(c)
 // The idea of this class was developed in collaboration with P.M.
-// Complexity of cref_list2_of for size N : 2*N allocation of reference wrappers.
+// Complexity of cref_list2_of for size N : A total of N reference_wrappers
+// are stored. Another N are constructed at conversion.
+//
+// TODO perhaps the stored ref_ could be used as a private base ();
 template<
 	typename T,
 	int N, 
