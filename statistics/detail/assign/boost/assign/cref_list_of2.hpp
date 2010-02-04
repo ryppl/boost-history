@@ -27,12 +27,8 @@ namespace assign{
 // Complexity of cref_list2_of for size N : A total of N reference_wrappers
 // are stored. Another N are constructed at conversion.
 //
-// TODO perhaps the stored ref_ could be used as a private base ();
-template<
-	typename T,
-	int N, 
-    typename B
->
+// TODO perhaps the stored ref_ could be used as a private base;
+template<typename T,int N, typename B>
 class cref_impl : B{
     
     typedef boost::assign_detail::assign_reference<const T> ref_;
@@ -53,7 +49,9 @@ class cref_impl : B{
 	template<typename T1>
     struct array{ typedef boost::array<T1,N+1> type; };
 
-	template<typename T1> // because reference_wrapper has no default constructor
+	// because reference_wrapper has no default constructor, assign_reference
+    // is needed
+	template<typename T1> 
     struct ref_array 
     	: array<boost::assign_detail::assign_reference<const T1> >{};
     
@@ -91,7 +89,7 @@ class cref_impl : B{
         return ar;
     }
     
-	// Requirement: C(begin,end) constructor
+	// Requirement: C(begin,end) is a valid constructor
 	template<typename C>
 	operator C(){
     	// TODO consider instead:
