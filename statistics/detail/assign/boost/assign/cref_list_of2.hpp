@@ -132,7 +132,7 @@ class cref_impl : protected B{
 	// Requirement: C(begin,end) is a valid constructor
 	template<typename C>
 	operator C(){
-    	// TODO consider instead:
+    	// might consider instead:
         // C c; c.reserve(N+1)
         // and recursively calling c.push_front(ref)
     
