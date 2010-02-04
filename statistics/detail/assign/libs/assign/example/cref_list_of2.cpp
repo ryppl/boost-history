@@ -20,6 +20,9 @@ void example_cref_list_of2(std::ostream& os)
 	using namespace boost::assign;
     
   	typedef std::vector<int> ints_;
+    typedef boost::array<int,3> array_;
+	array_ array0 = {{-1,-1,-1}};
+	array_ array = array0;
 
 	{    
     	int a=1,b=2,c=3;
@@ -29,14 +32,23 @@ void example_cref_list_of2(std::ostream& os)
 		BOOST_ASSERT(ints[0] == a);    
 		BOOST_ASSERT(ints[1] == b);    
 		BOOST_ASSERT(ints[2] == 3);    
-
+        array = array0;
+		array = cref_list_of<3>(a)(b)(3);
+		BOOST_ASSERT(array[0] == a);    
+		BOOST_ASSERT(array[1] == b);    
+		BOOST_ASSERT(array[2] == c);    
+        
 		// cref_list_of2
     	ints.clear();
 		ints = cref_list_of2(a)(b)(3);     
 		BOOST_ASSERT(ints[0] == a);    
 		BOOST_ASSERT(ints[1] == b);    
-		BOOST_ASSERT(ints[2] == 3);    
-
+		BOOST_ASSERT(ints[2] == c);    
+        array = array0;
+		array = cref_list_of2(a)(b)(3);
+		BOOST_ASSERT(array[0] == a);    
+		BOOST_ASSERT(array[1] == b);    
+		BOOST_ASSERT(array[2] == c);    
 		{
     		ints.clear();
         	BOOST_AUTO(
@@ -46,7 +58,7 @@ void example_cref_list_of2(std::ostream& os)
         	ints = ints_(boost::begin(tmp),boost::end(tmp));
 			BOOST_ASSERT(ints[0] == a);    
 			BOOST_ASSERT(ints[1] == b);    
-			BOOST_ASSERT(ints[2] == 3);    
+			BOOST_ASSERT(ints[2] == c);    
 		}
 
 		// ref_list_of2
@@ -55,6 +67,11 @@ void example_cref_list_of2(std::ostream& os)
 		BOOST_ASSERT(ints[0] == a);    
 		BOOST_ASSERT(ints[1] == b);    
 		BOOST_ASSERT(ints[2] == c);    
+        array = array0;
+		array = ref_list_of2(a)(b)(c);
+		BOOST_ASSERT(array[0] == a);    
+		BOOST_ASSERT(array[1] == b);    
+		BOOST_ASSERT(array[2] == c);    
         
 		{
     		ints.clear();
@@ -65,7 +82,7 @@ void example_cref_list_of2(std::ostream& os)
         	ints = ints_(boost::begin(tmp),boost::end(tmp));
 			BOOST_ASSERT(ints[0] == a);    
 			BOOST_ASSERT(ints[1] == b);    
-			BOOST_ASSERT(ints[2] == 3);    
+			BOOST_ASSERT(ints[2] == c);    
 		}
         
     }
