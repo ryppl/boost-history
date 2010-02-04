@@ -23,8 +23,10 @@
 namespace boost{
 namespace assign{
 
+    // This is as efficient as Boost.Assign's cref_list_of but more 
+    // convenient as the number of items must not be specified in advance
     // Usage : vec = cref_list2_of(a)(b)(c)
-    // The idea of this class was developed in collaboration with M.P.
+    // The idea of this class was developed in collaboration with M.P.G.
 
 namespace cref_list_of2_impl{
             
@@ -59,12 +61,10 @@ namespace cref_list_of2_impl{
                 
         typedef typename ref<T>::type ref_;
         typedef typename ref_array<T,N>::type ref_array_;
-                
-                
+
         previous_ previous;
-        ref_ ref;
-                
         typedef typename next<E,T,N>::type next_;
+        ref_ ref;
                 
         // public:
         typedef next_ result_type;
@@ -160,12 +160,11 @@ namespace cref_list_of2_impl{
     template<typename T>
     struct first{
         typedef cref_list_of2_impl::expr<
-        cref_list_of2_impl::top_,T,1> type;   
+        	cref_list_of2_impl::top_,T,1> type;   
     };
             
             
 }// cref_list_of2_impl        
-        
         
     template<typename T>
     typename cref_list_of2_impl::first<T>::type
