@@ -14,7 +14,6 @@
 #include <boost/accumulators/framework/parameters/sample.hpp>
 #include <boost/accumulators/framework/parameters/accumulator.hpp>
 #include <boost/accumulators/framework/depends_on.hpp>
-#include <boost/accumulators/statistics_fwd.hpp>
 
 #include <boost/statistics/detail/accumulator/statistics/keyword/threshold.hpp>
 
@@ -61,8 +60,6 @@ namespace impl
 
 }//impl
 
-///////////////////////////////////////////////////////////////////////////////
-// tag::count_less_than
 namespace tag
 {
     struct count_less_than
@@ -74,8 +71,6 @@ namespace tag
     };
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// extract::count_less_than
 namespace extract
 {
 
