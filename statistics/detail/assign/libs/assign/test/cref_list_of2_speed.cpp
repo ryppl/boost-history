@@ -12,7 +12,7 @@
 #include <boost/assign/cref_list_of2.hpp>
 #include <libs/assign/test/cref_list_of2_speed.h>
 
-// This file is courtesy of M.P.G 
+// This file was provided by M.P.G 
 
 // http://www.eternallyconfuzzled.com/arts/jsw_art_rand.aspx
 inline double uniform_deviate ( int seed )
