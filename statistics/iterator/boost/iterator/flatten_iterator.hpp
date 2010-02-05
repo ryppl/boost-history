@@ -5,23 +5,28 @@
 #ifndef BOOST_ITERATOR_FLATTEN_ITERATOR_HPP_ER_2010
 #define BOOST_ITERATOR_FLATTEN_ITERATOR_HPP_ER_2010
 #include <stdexcept>
-#include <boost/mpl/if.hpp>
+//#include <boost/mpl/if.hpp>
 #include <boost/next_prior.hpp>
-#include <boost/iterator/iterator_traits.hpp>
 #include <boost/range.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/iterator/iterator_traits.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 
 // As per M.P.'s suggestion
 
 namespace boost{
 
-
 	template<typename It>
 	struct flatten_iterator_nested
     {
     	typedef typename boost::iterator_reference<It>::type ref_range_;
         typedef typename boost::remove_reference<ref_range_>::type range_;
-    	typedef typename boost::range_iterator<range_>::type it_;
+
+        // Why const? That's need to be made rigorous. For now it just works
+        // in cases it doesn't without
+        typedef typename boost::range_iterator<
+        	typename boost::add_const<range_>::type
+        >::type it_;
         typedef typename boost::iterator_reference<it_>::type ref_;
         typedef typename boost::remove_cv<
         	typename boost::remove_reference<ref_>::type
@@ -35,23 +40,16 @@ namespace boost{
 		// TODO
     	// weaker of outer and inner iterator
         // also not allowed decremment and advance(n<0)
-    
     };
-
     
 	template<
     	class It,
-        bool is_ref = true,
         typename C = random_access_traversal_tag,
-        typename R = typename boost::mpl::if_c<
-        	is_ref,
-            typename flatten_iterator_nested<It>::ref_,
-            typename flatten_iterator_nested<It>::val_
-        >::type,
+        typename R =  typename flatten_iterator_nested<It>::ref_,
         typename D = typename flatten_iterator_nested<It>::diff_
     >
 	class flatten_iterator : public boost::iterator_facade<
-        flatten_iterator<It,is_ref,C,R,D>
+        flatten_iterator<It,C,R,D>
       , typename flatten_iterator_nested<It>::val_
       , C
       , R
@@ -61,7 +59,7 @@ namespace boost{
 		typedef typename nested_::it_ nit_;
 
 		typedef typename boost::iterator_facade<
-        	flatten_iterator<It,is_ref,C,R,D>
+        	flatten_iterator<It,C,R,D>
       		, typename flatten_iterator_nested<It>::val_
       		, C
       		, R
@@ -222,10 +220,8 @@ namespace boost{
             }
 			return d;	
         }
-
         
 	};        
-
 
 	template<typename It>	
     flatten_iterator<It>
