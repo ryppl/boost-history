@@ -71,15 +71,16 @@ void example_random(std::ostream& os)
     { 
         typedef math::gamma_distribution<val_>            dist_;
         const val_ shape = 1.0;
-        const val_ scale = 1.0;
+        const val_ scale = 0.5;
         dist_ d( shape, scale );
+        dist_ d1( shape + 0.01, scale );
         os << d << std::endl;
             
         BOOST_AUTO(
         	vg,
             dist::make_random_generator(urng,d)
         );
-        check(n_loops,n1,n2,d,vg,os);
+        check(n_loops,n1,n2,d1,vg,os);
     }
     {
         typedef math::normal_distribution<val_>            dist_;

@@ -15,7 +15,7 @@ int main(){
 
     	example_distribution_function(std::cout);
     	example_random(std::cout);
-      	test_functions<double>(std::cout);
+    	test_functions<double>(std::cout);
 
     return 0;
 }
