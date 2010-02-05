@@ -1,0 +1,26 @@
+Output from cref_list_of2_speed.h for n = 1000 * 1000
+Mac OS Leopard 10.6 - x86_64 - Release mode - gcc 4.0
+
+cref_list_of2(1) => 0.01 s
+
+cref_list_of(1) => 0.01 s
+
+cref_list_of2(3) => 0.03 s
+
+cref_list_of(3) => 0.01 s
+
+cref_list_of2(10) => 0.09 s
+
+cref_list_of(10) => 0.05 s
+
+cref_list_of2(30) => 0.29 s
+
+cref_list_of(30) => 0.21 s
+
+cref_list_of2(80) => 0.86 s
+
+cref_list_of(80) => 0.47 s
+
+cref_list_of2(160) => 1.94 s
+
+cref_list_of(160) => 0.92 s

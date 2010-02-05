@@ -15,7 +15,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/ref.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
 #include <boost/assign/list_of.hpp>

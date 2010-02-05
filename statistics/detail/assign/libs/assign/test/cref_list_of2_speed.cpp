@@ -46,7 +46,7 @@ void test_cref_list_of2_speed(std::ostream& os)
     int const str_len = 100, // Irrelevant bec. we don't copy them
     max_N = 200;
     
-    const int n = 100 * 1000;
+    const int n = 1000 * 1000;
     int N;
     Vec v;
     std::generate_n(std::back_inserter(v), max_N, boost::bind(&rand_str, str_len));
