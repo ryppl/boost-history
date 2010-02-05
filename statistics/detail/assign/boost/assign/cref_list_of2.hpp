@@ -100,12 +100,12 @@ namespace cref_list_of2_impl{
         iterator begin()
         {
             this->alloc_if();
-            return boost::begin(*ptr);
+            return boost::begin(*this->ptr);
         }
         iterator end() 
         {
             this->alloc_if();
-            return boost::end(*ptr);
+            return boost::end(*this->ptr);
         }
         size_type size() const
         {
@@ -119,11 +119,11 @@ namespace cref_list_of2_impl{
         private:
         void alloc(){ 
             this->ptr = smart_ptr_(new ref_array_);
-            write_to_array(*ptr,*this);		
+            write_to_array(*this->ptr,*this);		
         }
                 
         void alloc_if(){
-            if(!ptr){
+            if(!this->ptr){
                 return this->alloc();
             }
         }
