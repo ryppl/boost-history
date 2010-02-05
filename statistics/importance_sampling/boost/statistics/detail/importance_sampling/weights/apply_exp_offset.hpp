@@ -33,8 +33,13 @@ namespace importance_sampling{
         typedef typename iterator_value<It>::type val_;
         val_ max = *std::max_element(b,e);
         val_ offset = (t - max); 
-        std::transform(b,e,b,
-            lambda::bind<val_>(exp,lambda::_1 + offset)
+        typedef val_(*fp_)(val_);
+        fp_ fp = std::exp;
+        std::transform(
+        	b,
+            e,
+            b,
+            lambda::bind<val_>(fp,lambda::_1 + offset)
         );
         return offset;
     }
