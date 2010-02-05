@@ -23,7 +23,7 @@
 namespace boost{
 namespace assign{
 
-    // This is as efficient as Boost.Assign's cref_list_of but more 
+    // This a variation on Boost.Assign's cref_list_of that is more 
     // convenient as the number of items must not be specified in advance
     // Usage : vec = cref_list2_of(a)(b)(c)
     // The idea of this class was developed in collaboration with M.P.G.
@@ -42,7 +42,7 @@ namespace cref_list_of2_impl{
         typedef boost::array<typename ref<T>::type,N> type;
     };
             
-    template<typename L,typename R,int N>
+    template<typename L,typename T,int N>
     struct expr;
             
     template<typename E,typename T,int N>
@@ -130,7 +130,7 @@ namespace cref_list_of2_impl{
         }
                 
         typedef boost::shared_ptr<ref_array_> smart_ptr_;
-        mutable smart_ptr_ ptr;
+        smart_ptr_ ptr;
                 
     };
             
@@ -145,13 +145,13 @@ namespace cref_list_of2_impl{
     }
             
     template<typename A,typename E,typename T,int N>
-    void write_to_array(A& a,expr<E,T,N>& e,false_ exit){
+    void write_to_array(A& a,expr<E,T,N>& e,false_ /*exit*/){
         a[N-1] = e.ref;
         write_to_array(a,e.previous);
     }
             
     template<typename A,typename E,typename T,int N>
-    void write_to_array(A& a,expr<E,T,N>& e,true_ exit){
+    void write_to_array(A& a,expr<E,T,N>& e,true_ /*exit*/){
         a[N-1] = e.ref;
     }
             
@@ -181,4 +181,3 @@ namespace cref_list_of2_impl{
 }// boost
 
 #endif
-

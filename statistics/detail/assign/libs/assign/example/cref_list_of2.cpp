@@ -100,8 +100,6 @@ void example_cref_list_of2(std::ostream& os)
         
     }
 
-
-
 	os << "<- " << std::endl;
     
 };
