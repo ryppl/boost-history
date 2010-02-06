@@ -6,9 +6,9 @@
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#include "./post_process.hpp"
-#include "./utils.hpp"
-#include "../parse_utils.hpp"
+#include "post_process.hpp"
+#include "utils.hpp"
+#include "parse_utils.hpp"
 #include <boost/spirit/include/qi_core.hpp>
 #include <boost/spirit/include/qi_lexeme.hpp>
 #include <boost/spirit/include/qi_char_.hpp>
@@ -188,8 +188,11 @@ namespace quickbook
           "author"
         , "blockquote"
         , "bridgehead"
+        , "callout"
+        , "calloutlist"
         , "caution"
         , "copyright"
+        , "entry"
         , "footnote"
         , "important"
         , "informaltable"
@@ -199,20 +202,19 @@ namespace quickbook
         , "note"
         , "orderedlist"
         , "para"
-        , "replaceable"
         , "row"
         , "section"
+        , "table"
         , "tbody"
         , "textobject"
         , "tgroup"
         , "thead"
         , "tip"
         , "variablelist"
+        , "varlistentry"
         , "warning"
         , "xml"
         , "xi:include"
-        , "calloutlist"
-        , "callout"
     };
 
     char const* doc_types_[] =
