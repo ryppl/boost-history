@@ -11,6 +11,7 @@
 
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
 #include <boost/task/spin/condition.hpp>
 #include <boost/task/spin/mutex.hpp>
 
@@ -18,7 +19,7 @@ namespace boost {
 namespace tasks {
 namespace spin {
 
-class barrier : private noncopyable
+class BOOST_TASKS_DECL barrier : private noncopyable
 {
 private:
 	std::size_t		initial_;

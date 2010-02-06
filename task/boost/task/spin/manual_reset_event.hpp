@@ -13,13 +13,14 @@
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
 #include <boost/task/spin/mutex.hpp>
 
 namespace boost {
 namespace tasks {
 namespace spin {
 
-class manual_reset_event : private noncopyable
+class BOOST_TASKS_DECL manual_reset_event : private noncopyable
 {
 private:
 	enum state

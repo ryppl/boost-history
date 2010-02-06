@@ -11,11 +11,13 @@
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
+
 namespace boost {
 namespace tasks {
 namespace spin {
 
-class auto_reset_event : private noncopyable
+class BOOST_TASKS_DECL auto_reset_event : private noncopyable
 {
 private:
 	enum state

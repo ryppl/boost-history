@@ -17,6 +17,7 @@
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/spin/mutex.hpp>
 #include <boost/task/utility.hpp>
@@ -25,7 +26,7 @@ namespace boost {
 namespace tasks {
 namespace spin {
 
-class condition : private noncopyable
+class BOOST_TASKS_DECL condition : private noncopyable
 {
 private:
 	enum command

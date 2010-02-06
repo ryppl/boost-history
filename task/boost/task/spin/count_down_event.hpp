@@ -13,11 +13,13 @@
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
+
 namespace boost {
 namespace tasks {
 namespace spin {
 
-class count_down_event : private noncopyable
+class BOOST_TASKS_DECL count_down_event : private noncopyable
 {
 private:
 	std::size_t				initial_;

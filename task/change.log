@@ -1,7 +1,13 @@
+* boost.task-0.4.3:
+-------------------
+- bugfix related to export declaration on WIndows (thanks to Alexander Tsvyashchenko)
+
+
 * boost.task-0.4.2:
 -------------------
 - bugfix related to deactivating queues and channels
 - introduction of fast_semaphore for notification of worker-threads in a pool
+
 
 * boost.task-0.4.1:
 -------------------
