@@ -22,7 +22,7 @@
 namespace boost{
 namespace assign{
 
-    // This a variation on Boost.Assign's cref_list_of that is more 
+    // This is a variation on Boost.Assign's cref_list_of that is more 
     // convenient as the number of items must not be specified in advance
     // Usage : vec = cref_list2_of(a)(b)(c)
     // The idea of this class was developed in collaboration with M.P.G.
