@@ -22,7 +22,6 @@
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/is_const.hpp>
-#include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/add_const.hpp>
 #ifndef BOOST_FUSION_NO_PROPAGATE_VOLATILE
 #   include <boost/type_traits/is_volatile.hpp>

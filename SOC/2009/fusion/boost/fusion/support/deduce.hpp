@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2007 Tobias Schwinger
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -36,7 +36,7 @@ namespace boost { namespace fusion
             typedef T& type;
         };
 
-#define BOOST_FUSION_CV_REF_SPECIALIZATION(MODIFIER,_)\
+#define BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(MODIFIER,_)\
         template <typename T>\
         struct deduce<T MODIFIER>\
         {\
@@ -61,63 +61,43 @@ namespace boost { namespace fusion
             typedef T& type;\
         };
 
-        BOOST_FUSION_CV_REF_SPECIALIZATION(volatile&,_)
-        BOOST_FUSION_CV_REF_SPECIALIZATION(const volatile&,_)
+        BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(volatile&,_)
+        BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(const volatile&,_)
 #ifndef BOOST_NO_RVALUE_REFERENCES
-        BOOST_FUSION_CV_REF_SPECIALIZATION(volatile&&,_)
-        BOOST_FUSION_CV_REF_SPECIALIZATION(const volatile&&,_)
+        BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(volatile&&,_)
+        BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(const volatile&&,_)
 #endif
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(BOOST_FUSION_CV_REF_SPECIALIZATION,_)
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION,_)
 
-#undef BOOST_FUSION_CV_REF_SPECIALIZATION
+#undef BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION
 
-        template <typename T, int N>
-        struct deduce<T[N]>
-        {
-            typedef const T(&type)[N];
+#define BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(MODIFIER1,MODIFIER2,MODIFIER3)\
+        template <typename T, int N>\
+        struct deduce<T MODIFIER1[N]>\
+        {\
+            typedef T MODIFIER2(MODIFIER3 type)[N];\
         };
 
-        template <typename T, int N>
-        struct deduce<const T[N]>
-        {
-            typedef const T(&type)[N];
-        };
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(
+            BOOST_PP_EMPTY(),BOOST_PP_EMPTY(),&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(const,const,&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(volatile,volatile,&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(
+            const volatile,const volatile,&);
 
-        template <typename T, int N>
-        struct deduce<volatile T[N]>
-        {
-            typedef const volatile T(&type)[N];
-        };
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION((&),BOOST_PP_EMPTY(),&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(const(&),const,&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(volatile(&),volatile,&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(
+            const volatile(&),const volatile,&);
 
-        template <typename T, int N>
-        struct deduce<const volatile T[N]>
-        {
-            typedef const volatile T(&type)[N];
-        };
-
-        template <typename T, int N>
-        struct deduce<T(&)[N]>
-        {
-            typedef T(&type)[N];
-        };
-
-        template <typename T, int N>
-        struct deduce<const T(&)[N]>
-        {
-            typedef const T(&type)[N];
-        };
-
-        template <typename T, int N>
-        struct deduce<volatile T(&)[N]>
-        {
-            typedef volatile T(&type)[N];
-        };
-
-        template <typename T, int N>
-        struct deduce<const volatile T(&)[N]>
-        {
-            typedef const volatile T(&type)[N];
-        };
+#ifndef BOOST_NO_RVALUE_REFERENCES
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION((&&),BOOST_PP_EMPTY(),&&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(const(&&),const,&&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(volatile(&&),volatile,&&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(
+            const volatile(&&),const volatile,&&);
+#endif
     }
 
     namespace detail
