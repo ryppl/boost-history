@@ -9,6 +9,7 @@
 #define BOOST_FUSION_SEQUENCE_HPP
 
 #include <boost/fusion/sequence/comparison.hpp>
+#include <boost/fusion/sequence/convenience.hpp>
 #include <boost/fusion/sequence/convert.hpp>
 #include <boost/fusion/sequence/intrinsic.hpp>
 #include <boost/fusion/sequence/io.hpp>

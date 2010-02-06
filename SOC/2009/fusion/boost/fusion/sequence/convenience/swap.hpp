@@ -8,6 +8,15 @@
 #ifndef BOOST_FUSION_SEQUENCE_CONVENIENCE_SWAP_HPP
 #define BOOST_FUSION_SEQUENCE_CONVENIENCE_SWAP_HPP
 
+#include <boost/fusion/sequence/intrinsic/front.hpp>
+#include <boost/fusion/sequence/intrinsic/back.hpp>
+#include <boost/fusion/algorithm/transformation/zip.hpp>
+#include <boost/fusion/algorithm/iteration/for_each.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
+#ifdef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/ref.hpp>
+#endif
 #include <algorithm>
 
 namespace boost { namespace fusion
@@ -33,7 +42,9 @@ namespace boost { namespace fusion
         struct swap
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<From>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<From>));
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<To>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<To>));
 
             typedef void type;
         };
@@ -45,8 +56,14 @@ namespace boost { namespace fusion
     {
         fusion::for_each(
             fusion::zip(
-                BOOST_FUSION_FORWARD(From,from),
-                BOOST_FUSION_FORWARD(To,to)),
+#ifdef BOOST_NO_RVALUE_REFERENCES
+                boost::ref(from),
+                boost::ref(to)
+#else
+                std::forward<From>(from),
+                std::forward<To>(to)
+#endif
+                ),
             detail::swapper());
     }
 }}

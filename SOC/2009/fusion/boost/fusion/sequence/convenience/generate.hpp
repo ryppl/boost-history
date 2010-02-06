@@ -8,6 +8,10 @@
 #ifndef BOOST_FUSION_SEQUENCE_CONVENIENCE_GENERATE_HPP
 #define BOOST_FUSION_SEQUENCE_CONVENIENCE_GENERATE_HPP
 
+#include <boost/fusion/algorithm/iteration/for_each.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
+
 namespace boost { namespace fusion
 {
     namespace detail
@@ -40,6 +44,7 @@ namespace boost { namespace fusion
         struct generate
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
             typedef void type;
         };
