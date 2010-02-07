@@ -22,7 +22,7 @@ namespace quickbook
         std::string code;
     };
     
-    void process(quickbook::actions&, code const&);
+    nothing process(quickbook::actions&, code const&);
 }
 
 BOOST_FUSION_ADAPT_STRUCT(

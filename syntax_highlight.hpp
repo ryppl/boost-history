@@ -7,8 +7,8 @@
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#if !defined(BOOST_SPIRIT_QUICKBOOK_PARSE_TYPES_HPP)
-#define BOOST_SPIRIT_QUICKBOOK_PARSE_TYPES_HPP
+#if !defined(BOOST_SPIRIT_QUICKBOOK_CODE_HPP)
+#define BOOST_SPIRIT_QUICKBOOK_CODE_HPP
 
 #include <string>
 #include <boost/fusion/include/adapt_struct.hpp>
@@ -16,28 +16,20 @@
 
 namespace quickbook
 {
-    struct markup {
-        markup()
-            : pre(""), post("") {}
-        markup(char const* pre, char const* post)
-            : pre(pre), post(post) {}
-
-        char const* pre;
-        char const* post;
+    struct code {
+        bool block;
+        file_position position;
+        std::string code;
     };
-
-    struct formatted {
-        markup type;
-        std::string content;
-    };
-
-    nothing process(quickbook::actions&, formatted const&);
+    
+    void process(quickbook::actions&, code const&);
 }
 
 BOOST_FUSION_ADAPT_STRUCT(
-    quickbook::formatted,
-    (quickbook::markup, type)
-    (std::string, content)
+    quickbook::code,
+    (quickbook::file_position, position)
+    (std::string, code)
+    (bool, block)
 )
 
 #endif
