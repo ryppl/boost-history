@@ -8,18 +8,10 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_HPP
 
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/sequence/intrinsic/size.hpp>
-#endif
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-
 #include <boost/mpl/int.hpp>
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/mpl/or.hpp>
-#   include <boost/type_traits/is_same.hpp>
-#endif
 
 namespace boost { namespace fusion
 {

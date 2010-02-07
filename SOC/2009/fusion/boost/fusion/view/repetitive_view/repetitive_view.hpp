@@ -17,19 +17,10 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/sequence/intrinsic/empty.hpp>
-#endif
 #include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/mpl/eqaul_to.hpp>
-#   include <boost/mpl/not.hpp>
-#   include <boost/mpl/or_.hpp>
-#   include <boost/mpl/not.hpp>
-#endif
 #include <boost/integer_traits.hpp>
 
 #include <boost/fusion/view/repetitive_view/detail/repetitive_view_fwd.hpp>

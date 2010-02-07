@@ -24,7 +24,7 @@ namespace boost { namespace fusion { namespace extension
         {
             typedef typename detail::remove_reference<Seq>::type seq;
 
-            typedef typename extent<seq,rank<seq>::value>::type type;
+            typedef typename extent<seq,rank<seq>::value-1>::type type;
         };
     };
 }}}

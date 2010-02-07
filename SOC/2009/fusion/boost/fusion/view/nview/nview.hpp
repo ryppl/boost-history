@@ -12,9 +12,6 @@
 
 #include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/support/category_of.hpp>
-#endif
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>

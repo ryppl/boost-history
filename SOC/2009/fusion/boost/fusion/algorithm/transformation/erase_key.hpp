@@ -11,9 +11,6 @@
 
 #include <boost/fusion/algorithm/query/find_key.hpp>
 #include <boost/fusion/algorithm/transformation/erase.hpp>
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/sequence/intrinsic/has_key.hpp>
-#endif
 #include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>

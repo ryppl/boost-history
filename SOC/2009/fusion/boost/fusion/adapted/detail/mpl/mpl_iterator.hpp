@@ -11,7 +11,6 @@
 
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/fusion/support/category_of.hpp>
-
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
 

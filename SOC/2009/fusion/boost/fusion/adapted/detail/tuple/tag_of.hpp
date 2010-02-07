@@ -8,7 +8,6 @@
 
 #include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
-#include <boost/fusion/support/category_of.hpp>
 
 #include <boost/mpl/tag.hpp>
 #ifdef BOOST_FUSION_ADAPTED_STD_TUPLE
@@ -30,6 +29,7 @@ namespace boost
         struct boost_tuple_tag;
         struct boost_tuple_iterator_tag;
         struct fusion_sequence_tag;
+        struct random_access_traversal_tag;
 
         namespace traits
         {

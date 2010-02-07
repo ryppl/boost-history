@@ -9,9 +9,6 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_KEY_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_KEY_HPP
 
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/sequence/intrinsic/has_key.hpp>
-#endif
 #include <boost/fusion/iterator/value_of_data.hpp>
 #include <boost/fusion/algorithm/query/find_key.hpp>
 #include <boost/fusion/support/tag_of.hpp>

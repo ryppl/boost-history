@@ -11,10 +11,6 @@
 #   ifdef BOOST_FUSION_TAGGED_VECTOR
 #       include <boost/fusion/container/vector/detail/variadic_templates/tagged_impl.hpp>
 #   endif
-#   ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#       include <boost/fusion/sequence/intrinsic/size.hpp>
-#       include <boost/fusion/sequence/intrinsic/empty.hpp>
-#   endif
 #   include <boost/fusion/sequence/intrinsic/front.hpp>
 #   include <boost/fusion/sequence/intrinsic/begin.hpp>
 #   include <boost/fusion/iterator/deref.hpp>
@@ -37,9 +33,6 @@
 #   include <boost/mpl/bool.hpp>
 #   ifdef BOOST_FUSION_PREFER_MPL
 #       include <boost/mpl/at.hpp>
-#   endif
-#   ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#       include <boost/mpl/equal_to.hpp>
 #   endif
 #   include <boost/type_traits/is_convertible.hpp>
 #   include <boost/type_traits/add_const.hpp>

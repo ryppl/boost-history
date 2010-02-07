@@ -14,10 +14,6 @@
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
 
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/mpl/and.hpp>
-#endif
-
 namespace boost { namespace fusion {
 
     namespace result_of

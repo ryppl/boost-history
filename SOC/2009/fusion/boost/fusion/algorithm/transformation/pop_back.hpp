@@ -11,9 +11,6 @@
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/sequence/intrinsic/empty.hpp>
-#endif
 #include <boost/fusion/iterator/prior.hpp>
 #include <boost/fusion/view/iterator_range/iterator_range.hpp>
 #include <boost/fusion/support/internal/ref.hpp>

@@ -9,12 +9,6 @@
 #define BOOST_FUSION_SUPPORT_DETAIL_IS_IN_SEQ_HPP
 
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/sequence/intrinsic/begin.hpp>
-#   include <boost/fusion/sequence/intrinsic/end.hpp>
-#   include <boost/fusion/iterator/next.hpp>
-#   include <boost/fusion/iterator/next.hpp>
-#   include <boost/fusion/iterator/equal_to.hpp>
-
 #   include <boost/mpl/bool.hpp>
 #   include <boost/mpl/identity.hpp>
 #   include <boost/mpl/eval_if.hpp>

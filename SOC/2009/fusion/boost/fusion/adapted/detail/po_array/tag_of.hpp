@@ -9,7 +9,6 @@
 #define BOOST_FUSION_ADAPTED_DETAIL_PO_ARRAY_TAG_OF_HPP
 
 #include <boost/fusion/support/tag_of_fwd.hpp>
-#include <boost/fusion/support/category_of.hpp>
 #include <cstddef>
 
 namespace boost

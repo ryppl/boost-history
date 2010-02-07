@@ -12,9 +12,6 @@
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/front.hpp>
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/sequence/intrinsic/empty.hpp>
-#endif
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
@@ -26,9 +23,6 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/mpl/equal_to.hpp>
-#endif
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif

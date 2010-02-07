@@ -11,9 +11,6 @@
 
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/supported/ext_/is_segmented.hpp>
-#endif
 
 namespace boost { namespace fusion
 {

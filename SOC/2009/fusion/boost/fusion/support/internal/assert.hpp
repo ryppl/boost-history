@@ -96,12 +96,13 @@ namespace boost { namespace fusion { namespace detail
     BOOST_FUSION_MPL_ASSERT((is_same<typename traits::tag_of<TYPE>::type,TAG>))
 
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/support/is_sequence.hpp>
-#   include <boost/fusion/support/is_view.hpp>
-#   include <boost/fusion/support/is_iterator.hpp>
-#   include <boost/fusion/support/category_of.hpp>
-#   include <boost/fusion/support/tag_of.hpp>
-
+#   include <boost/fusion/sequence.hpp>
+#   include <boost/fusion/iterator.hpp>
+#   include <boost/fusion/support.hpp>
+#   include <boost/mpl/and.hpp>
+#   include <boost/mpl/or.hpp>
+#   include <boost/mpl/not.hpp>
+#   include <boost/mpl/equal_to.hpp>
 #   include <boost/type_traits/is_same.hpp>
 #endif
 

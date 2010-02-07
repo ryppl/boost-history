@@ -30,7 +30,7 @@ namespace boost { namespace fusion { namespace extension
                     po_array_iterator_tag
                   , random_access_traversal_tag
                   , typename detail::add_lref<Seq>::type
-                  , extent<seq,rank<seq>::value>::value
+                  , extent<seq,rank<seq>::value-1>::value
                 >
             type;
 

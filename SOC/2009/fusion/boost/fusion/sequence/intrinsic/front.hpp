@@ -8,9 +8,6 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_FRONT_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_FRONT_HPP
 
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/sequence/intrinsic/empty.hpp>
-#endif
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/support/internal/ref.hpp>

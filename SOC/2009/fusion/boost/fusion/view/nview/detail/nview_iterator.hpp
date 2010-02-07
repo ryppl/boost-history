@@ -12,10 +12,6 @@
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
 
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/mpl/eqaul_to.hpp>
-#endif
-
 namespace boost { namespace fusion
 {
     struct nview_iterator_tag;

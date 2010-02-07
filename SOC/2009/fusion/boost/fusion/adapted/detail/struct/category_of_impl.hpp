@@ -10,8 +10,6 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_CATEGORY_OF_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_CATEGORY_OF_IMPL_HPP
 
-#include <boost/fusion/support/category_of.hpp>
-
 namespace boost { namespace fusion
 {
     namespace extension

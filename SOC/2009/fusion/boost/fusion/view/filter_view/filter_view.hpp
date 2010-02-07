@@ -16,14 +16,10 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
-
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/inherit.hpp>
 #include <boost/mpl/identity.hpp>
-#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/type_traits/is_same.hpp>
-#endif
 
 #include <boost/fusion/view/filter_view/detail/filter_view_fwd.hpp>
 #include <boost/fusion/view/filter_view/detail/filter_view_iterator.hpp>
