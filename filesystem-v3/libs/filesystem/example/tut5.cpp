@@ -40,8 +40,5 @@ int main()
   { fs::ofstream f(fs::path(narrow_list.begin(), narrow_list.end())); }
   { fs::ofstream f(fs::path(wide_list.begin(), wide_list.end())); }
 
-  { fs::ofstream f("../test/smile-generic"); }
-  { fs::ofstream f("..\\test\\smile-windows"); }
-
   return 0;
 }

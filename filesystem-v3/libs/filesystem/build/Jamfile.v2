@@ -15,7 +15,7 @@ project boost/filesystem
     ;
 
 SOURCES =
-    operations path path_traits portability utf8_codecvt_facet windows_file_codecvt codecvt_error_category ;
+    operations path path_traits portability unique_path utf8_codecvt_facet windows_file_codecvt codecvt_error_category ;
 
 lib boost_filesystem
     :

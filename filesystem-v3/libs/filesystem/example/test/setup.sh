@@ -10,10 +10,10 @@ cp ../tut3.cpp .
 cp ../tut4.cpp .
 cp ../tut5.cpp .
 cp ../path_info.cpp .
-rm tut1 2>/dev/nul
-rm tut2 2>/dev/nul
-rm tut3 2>/dev/nul
-rm tut4 2>/dev/nul
-rm tut5 2>/dev/nul
-rm path_info 2>/dev/nul
+rm tut1 2>~/junk
+rm tut2 2>~/junk
+rm tut3 2>~/junk
+rm tut4 2>~/junk
+rm tut5 2>~/junk
+rm path_info 2>~/junk
 

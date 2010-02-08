@@ -33,6 +33,7 @@ namespace fs = boost::filesystem;
 namespace bs = boost::system;
 using boost::filesystem::path;
 using std::cout;
+using std::endl;
 using std::string;
 using std::wstring;
 
@@ -447,10 +448,18 @@ namespace
 
 //    CHECK(path("").absolute("") == "");  // should assert
 //    CHECK(path("").absolute("foo") == ""); // should assert
+
+#   ifdef BOOST_WINDOWS_PATH
     CHECK(path("baa").absolute("c:/") == "c:/baa"); 
     CHECK(path("/baa").absolute("c:/foo").string() == path("c:/baa").string()); 
     CHECK(path("baa/baz").absolute("c:/foo/bar").string()
-      == path("c:/foo/bar\\baa/baz").string()); 
+      == path("c:/foo/bar\\baa/baz").string());
+#   else
+    CHECK(path("baa").absolute("/") == "/baa"); 
+    CHECK(path("/baa").absolute("/foo").string() == path("/baa").string()); 
+    CHECK(path("baa/baz").absolute("/foo/bar").string()
+      == path("/foo/bar\\baa/baz").string());
+#   endif
   }
 
   //  test_decompositions  -------------------------------------------------------------//
@@ -797,16 +806,16 @@ int main(int, char*[])
 {
 // document state of critical macros
 #ifdef BOOST_POSIX_API
-  cout << "BOOST_POSIX_API\n";
+  cout << "BOOST_POSIX_API" << endl;
 #endif
 #ifdef BOOST_WINDOWS_API
-  cout << "BOOST_WINDOWS_API\n";
+  cout << "BOOST_WINDOWS_API" << endl;
 #endif
 #ifdef BOOST_POSIX_PATH
-  cout << "BOOST_PATH_API\n";
+  cout << "BOOST_PATH_API" << endl;
 #endif
 #ifdef BOOST_WINDOWS_PATH
-  cout << "BOOST_WINDOWS_PATH\n";
+  cout << "BOOST_WINDOWS_PATH" << endl;
 #endif
 
   l.push_back('s');

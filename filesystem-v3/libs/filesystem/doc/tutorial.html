@@ -626,7 +626,7 @@ this:</p>
   decomposition, and query functions, making pathname manipulations easy, 
   convenient, reliable, and portable.</li>
 </ol>
-<p>Let's take a look at how (1) and (2) work. Class path constructors, 
+<p>Here is how (1) and (2) work. Class path constructors, 
 assignments, and appends have member templates for sources. For example, here 
 are the constructors that take sources:</p>
 
@@ -636,7 +636,81 @@ are the constructors that take sources:</p>
   <pre>template &lt;class InputIterator&gt;
   path(InputIterator begin, InputIterator end);</pre>
 </blockquote>
-<p>&nbsp;</p>
+<p>Let's look at a little program that shows off these features:</p>
+
+<table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+  <tr>
+    <td style="font-size: 10pt">
+    <pre><a href="../example/tut4.cpp">tut5.cpp</a></pre>
+    <blockquote>
+      <pre>#include &lt;boost/filesystem.hpp&gt;
+#include &lt;string&gt;
+#include &lt;list&gt;
+namespace fs = boost::filesystem;
+
+int main()
+{
+  // \u263A is &quot;Unicode WHITE SMILING FACE = have a nice day!&quot;
+  std::string narrow_string (&quot;smile2&quot;);
+  std::wstring wide_string (L&quot;smile2\u263A&quot;);
+  std::list&lt;char&gt; narrow_list;
+  narrow_list.push_back('s');
+  narrow_list.push_back('m');
+  narrow_list.push_back('i');
+  narrow_list.push_back('l');
+  narrow_list.push_back('e');
+  narrow_list.push_back('3');
+  std::list&lt;wchar_t&gt; wide_list;
+  wide_list.push_back(L's');
+  wide_list.push_back(L'm');
+  wide_list.push_back(L'i');
+  wide_list.push_back(L'l');
+  wide_list.push_back(L'e');
+  wide_list.push_back(L'3');
+  wide_list.push_back(L'\u263A');
+
+  { fs::ofstream f(&quot;smile&quot;); }
+  { fs::ofstream f(L&quot;smile\u263A&quot;); }
+  { fs::ofstream f(narrow_string); }
+  { fs::ofstream f(wide_string); }
+  { fs::ofstream f(fs::path(narrow_list.begin(), narrow_list.end())); }
+  { fs::ofstream f(fs::path(wide_list.begin(), wide_list.end())); }
+
+  return 0;
+}</pre>
+    </blockquote>
+    </td>
+  </tr>
+</table>
+
+<p>Testing tut5:</p>
+
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt" valign="top">
+      <pre>$ ./tut5
+$ ls smile*
+smile smile&#9786; smile2 smile2&#9786; smile3 smile3&#9786;</pre>
+      </td>
+      <td style="font-size: 10pt" valign="top">
+      <pre>&gt;tut5
+&gt;dir /b smile*
+smile
+smile2
+smile2&#9786;
+smile3
+smile3&#9786;
+smile&#9786;</pre>
+      </td>
+    </tr>
+  </table>
+
+<p>Note that the exact appearance of the smiling face will depend on the font, 
+font size, and other settings for your command line window.</p>
 <p>In addition to handling a variety of types, class path function templates 
 also handle conversion between the argument's encoding and the internal encoding 
 required for communication with the operating system. Thus it's no problem to 
@@ -953,7 +1027,7 @@ do not throw exceptions when I/O errors occur.
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->04 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40545" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->05 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40547" --></p>
 
 </body>
 

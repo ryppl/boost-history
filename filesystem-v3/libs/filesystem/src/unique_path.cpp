@@ -21,6 +21,7 @@
 # else // BOOST_WINDOWS_API
 #   include <windows.h>
 #   include <wincrypt.h>
+#   pragma comment(lib, "Advapi32.lib")
 # endif
 
 namespace {
@@ -72,12 +73,12 @@ void system_crypt_random(void* buf, std::size_t len, boost::system::error_code* 
   HCRYPTPROV handle;
   int errval = 0;
 
-  if (!::CryptAcquireContext(&handle, 0, 0, PROV_RSA_FULL, 0))
+  if (!::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, 0))
   {
     errval = ::GetLastError();
     if (errval == NTE_BAD_KEYSET)
     {
-      if (!::CryptAcquireContext(&handle, 0, 0, PROV_RSA_FULL, CRYPT_NEWKEYSET))
+      if (!::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, CRYPT_NEWKEYSET))
       {
         errval = ::GetLastError();
       }
