@@ -41,6 +41,7 @@
 #include <boost/bind.hpp>
 #include <boost/bind/apply.hpp>
 #include <boost/function.hpp>
+#include <boost/any.hpp>
 
 #include <boost/msm/row_tags.hpp>
 #include <boost/msm/back/metafunctions.hpp>
@@ -48,6 +49,7 @@
 #include <boost/msm/back/bind_helpers.hpp>
 #include <boost/msm/back/common_types.hpp>
 #include <boost/msm/back/args.hpp>
+#include <boost/msm/back/default_compile_policy.hpp>
 #include <boost/msm/back/dispatch_table.hpp>
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(accept_sig)
@@ -73,26 +75,18 @@ struct direct_entry_event
 };
 
 // This declares the statically-initialized dispatch_table instance.
-template <class Fsm,class Stt, class Event>
-const boost::msm::back::dispatch_table<Fsm,Stt, Event>
-dispatch_table<Fsm,Stt, Event>::instance;
+template <class Fsm,class Stt, class Event,class CompilePolicy>
+const boost::msm::back::dispatch_table<Fsm,Stt, Event,CompilePolicy>
+dispatch_table<Fsm,Stt, Event,CompilePolicy>::instance;
 
 // library-containing class for state machines.  Pass the actual FSM class as
 // the Concrete parameter.
-template<class Derived,class HistoryPolicy=NoHistory
-#ifdef BOOST_MSVC
-,class WorkaroundVC9=void
-#endif
->
+template<class Derived,class HistoryPolicy=NoHistory,class CompilePolicy=favor_runtime_speed>
 class state_machine : public Derived
 {
 private: 
     typedef boost::msm::back::state_machine<Derived,
-        HistoryPolicy
-#ifdef BOOST_MSVC
-        ,WorkaroundVC9
-#endif
-    >                                               library_sm;
+        HistoryPolicy,CompilePolicy>                library_sm;
 
     typedef ::boost::function<
         execute_return ()>                          transition_fct;
@@ -103,10 +97,7 @@ private:
     typedef bool (*flag_handler)(library_sm&);
 
     // all state machines are friend with each other to allow embedding any of them in another fsm
-    template <class ,class 
-#ifdef BOOST_MSVC
-        ,class 
-#endif
+    template <class ,class , class
     > friend class boost::msm::back::state_machine;
 
     // helper to add, if needed, visitors to all states
@@ -182,6 +173,7 @@ private:
 
  public: 
     // tags
+	//typedef ::boost::mpl::true_	 composite_state;
     typedef int composite_tag;
 
     // in case someone needs to know
@@ -820,6 +812,15 @@ private:
 	    >::type type;
     };
 
+	template <class Table,class Intermediate,class StateType>
+	struct add_forwarding_row_helper
+	{
+		typedef typename generate_event_set<Table>::type all_events;
+		typedef typename ::boost::mpl::fold<
+			all_events, Intermediate,
+			::boost::mpl::push_back< ::boost::mpl::placeholders::_1,
+			frow<StateType, ::boost::mpl::placeholders::_2> > >::type type;
+	};
     // gets the transition table from a composite and make from it a forwarding row
     template <class StateType,class IsComposite>
     struct get_internal_transition_table
@@ -838,12 +839,11 @@ private:
 	    >::type intermediate;
 
         // and add for every event a forwarding row
-        typedef typename generate_event_set<original_table>::type all_events;
-        typedef typename ::boost::mpl::fold<
-            all_events, intermediate,
-            ::boost::mpl::push_back< ::boost::mpl::placeholders::_1,
-                                     frow<StateType, ::boost::mpl::placeholders::_2> > >::type type;
-
+		typedef typename ::boost::mpl::eval_if<
+				typename CompilePolicy::add_forwarding_rows,
+				add_forwarding_row_helper<original_table,intermediate,StateType>,
+				::boost::mpl::identity<intermediate>
+		>::type type;
     };
     template <class StateType>
     struct get_internal_transition_table<StateType, ::boost::mpl::false_ >
@@ -900,9 +900,6 @@ private:
     template<class Event>
     execute_return process_event(Event const& evt)
     {
-        // use this table as if it came directly from the user
-        typedef dispatch_table<library_sm,complete_table,Event> table;
-
         HandledEnum ret_handled=HANDLED_FALSE;
         // if the state machine has terminate or interrupt flags, check them, otherwise skip
         if (is_event_handling_blocked_helper<Event>
@@ -917,7 +914,6 @@ private:
         }
         else
         {
-
             // prepare the next deferred event for handling
             // if one defer is found in the SM, otherwise skip
             handle_defer_helper<library_sm> defer_helper(m_deferred_events_queue);
@@ -1065,11 +1061,7 @@ private:
      };
      public:
      // Construct with the default initial states
-     state_machine<Derived,HistoryPolicy
-#ifdef BOOST_MSVC          
-          ,WorkaroundVC9
-#endif      
-      >()
+     state_machine<Derived,HistoryPolicy,CompilePolicy   >()
 	     :Derived()
 	     ,m_events_queue() 
 	     ,m_deferred_events_queue()
@@ -1088,37 +1080,10 @@ private:
      }
 
      // Construct with the default initial states and some default argument(s)
-#ifdef BOOST_MSVC
-
 #define MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB(z, n, unused) ARG ## n t ## n
 #define MSM_CONSTRUCTOR_HELPER_EXECUTE(z, n, unused)                                \
         template <BOOST_PP_ENUM_PARAMS(n, class ARG)>                               \
-        state_machine<Derived,HistoryPolicy                                         \
-          ,WorkaroundVC9                                                            \
-        >(BOOST_PP_ENUM(n, MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB, ~ ) )                \
-        :Derived(BOOST_PP_ENUM_PARAMS(n,t))                                         \
-	     ,m_events_queue()                                                          \
-	     ,m_deferred_events_queue()                                                 \
-	     ,m_history()                                                               \
-         ,m_event_processing(false)                                                 \
-         ,m_is_included(false)                                                      \
-         ,m_visitors()                                                              \
-         ,m_substate_list()                                                         \
-     {                                                                              \
-         ::boost::mpl::for_each< seq_initial_states, ::boost::msm::wrap<mpl::placeholders::_1> > \
-                        (init_states(m_states));                                    \
-         m_history.set_initial_states(m_states);                                    \
-         fill_states(this);                                                         \
-     }
-     BOOST_PP_REPEAT_FROM_TO(1,BOOST_PP_ADD(BOOST_MSM_CONSTRUCTOR_ARG_SIZE,1), MSM_CONSTRUCTOR_HELPER_EXECUTE, ~)
-#undef MSM_CONSTRUCTOR_HELPER_EXECUTE
-#undef MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB
-#else
-
-#define MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB(z, n, unused) ARG ## n t ## n
-#define MSM_CONSTRUCTOR_HELPER_EXECUTE(z, n, unused)                                \
-        template <BOOST_PP_ENUM_PARAMS(n, class ARG)>                               \
-        state_machine<Derived,HistoryPolicy                                         \
+        state_machine<Derived,HistoryPolicy,CompilePolicy                           \
         >(BOOST_PP_ENUM(n, MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB, ~ ) )                \
         :Derived(BOOST_PP_ENUM_PARAMS(n,t))                                         \
 	     ,m_events_queue()                                                          \
@@ -1138,7 +1103,6 @@ private:
 #undef MSM_CONSTRUCTOR_HELPER_EXECUTE
 #undef MSM_CONSTRUCTOR_HELPER_EXECUTE_SUB
 
-#endif
 
 
      // assignment operator using the copy policy to decide if non_copyable, shallow or deep copying is necessary
@@ -1153,11 +1117,7 @@ private:
          }
         return *this;
      }
-     state_machine<Derived,HistoryPolicy
-#ifdef BOOST_MSVC
-         ,WorkaroundVC9
-#endif
-     > 
+     state_machine<Derived,HistoryPolicy,CompilePolicy> 
          (library_sm const& rhs)
          : Derived(rhs)
      {
@@ -1335,7 +1295,7 @@ private:
         void process(Event const& evt)
         {
             // use this table as if it came directly from the user
-            typedef dispatch_table<library_sm,complete_table,Event> table;
+            typedef dispatch_table<library_sm,complete_table,Event,CompilePolicy> table;
             HandledEnum res =
                 table::instance.entries[self->m_states[0]](
                 *self, 0, self->m_states[0], evt);
@@ -1358,7 +1318,7 @@ private:
             static void process(Event const& evt,library_sm* self_,HandledEnum& result_)
             {
                 // use this table as if it came directly from the user
-                typedef dispatch_table<library_sm,complete_table,Event> table;
+                typedef dispatch_table<library_sm,complete_table,Event,CompilePolicy> table;
                 HandledEnum res =
                     table::instance.entries[self_->m_states[region_id::value]](
                     *self_, region_id::value , self_->m_states[region_id::value], evt);
@@ -1380,7 +1340,7 @@ private:
         void process(Event const& evt)
         {
             // use this table as if it came directly from the user
-            typedef dispatch_table<library_sm,complete_table,Event> table;
+            typedef dispatch_table<library_sm,complete_table,Event,CompilePolicy> table;
             In< ::boost::mpl::int_<0> >::template process(evt,self,result);
         }
 
@@ -1392,9 +1352,6 @@ private:
     template<class Event>
     HandledEnum do_process_event(Event const& evt)
     {
-        // use this table as if it came directly from the user
-        typedef dispatch_table<library_sm,complete_table,Event> table;
-
         HandledEnum handled = HANDLED_FALSE;
         // dispatch the event to every region
         region_processing_helper<Derived> helper(this,handled);
@@ -1421,6 +1378,7 @@ private:
     template <class Event>
     void no_action(Event const&){}
 
+	HandledEnum process_any_event( ::boost::any const& evt);
 
 private:
     // composite accept implementation. First calls accept on the composite, then accept on all its active states.
@@ -1628,7 +1586,7 @@ BOOST_PP_REPEAT(BOOST_PP_ADD(BOOST_MSM_VISITOR_ARG_SIZE,1), MSM_VISITOR_ARGS_EXE
         // State is a sub fsm with exit pseudo states and gets a pointer to this fsm, so it can build a callback
         template <class StateType>
         typename ::boost::enable_if<
-            typename has_exit_pseudo_states<StateType>::type,void >::type
+            typename is_composite_state<StateType>::type,void >::type
         new_state_helper(boost::msm::back::dummy<0> = 0) const
         {
             ::boost::fusion::at_key<StateType>(self->m_substate_list).set_containing_sm(containing_sm);
@@ -1638,7 +1596,7 @@ BOOST_PP_REPEAT(BOOST_PP_ADD(BOOST_MSM_VISITOR_ARG_SIZE,1), MSM_VISITOR_ARGS_EXE
         template <class StateType>
         typename ::boost::enable_if<
             typename boost::mpl::and_<typename boost::mpl::not_
-                                                    <typename has_exit_pseudo_states<StateType>::type>::type,
+                                                    <typename is_composite_state<StateType>::type>::type,
                                       typename boost::mpl::not_
                                                     <typename is_pseudo_exit<StateType>::type>::type
                    >::type,void>::type
@@ -2104,11 +2062,6 @@ BOOST_PP_REPEAT(BOOST_PP_ADD(BOOST_MSM_VISITOR_ARG_SIZE,1), MSM_VISITOR_ARGS_EXE
 
     }
 
-
-public:
-
-
-
 private:
     template <class StateType,class Enable=void>
     struct msg_queue_helper 
@@ -2123,7 +2076,7 @@ private:
     {
     };
 
-    template <class Fsm,class Stt, class Event>
+    template <class Fsm,class Stt, class Event, class Compile>
     friend struct dispatch_table;
 
     // data members

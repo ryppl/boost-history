@@ -29,7 +29,7 @@ namespace boost { namespace msm { namespace back
 // Generates a singleton runtime lookup table that maps current state
 // to a function that makes the SM take its transition on the given
 // Event type.
-template <class Fsm,class Stt, class Event>
+template <class Fsm,class Stt, class Event,class CompilePolicy>
 struct dispatch_table
 {
  private:
