@@ -23,10 +23,12 @@ struct row_tag {};
 // tags for internal transitions
 struct a_irow_tag {};
 struct g_irow_tag {};
+struct _irow_tag {};
 struct irow_tag {};
 // tags for transitions internal to state machines (not using any substate)
 struct sm_a_i_row_tag {};
 struct sm_g_i_row_tag {};
+struct sm__i_row_tag {};
 struct sm_i_row_tag {};
 
 // flags used internally to handle terminate / interrupt states
