@@ -151,6 +151,17 @@ namespace boost { namespace msm { namespace front
             return Guard()(evt,fsm,src,tgt);
         }
     };
+    template<class SOURCE,class EVENT>
+    struct Row<SOURCE,EVENT,none,none,none>
+    {
+        typedef SOURCE  Source;
+        typedef EVENT   Evt;
+        typedef Source  Target;
+        typedef none    Action;
+        typedef none    Guard;
+        // no action, no guard
+        typedef _irow_tag row_type_tag;
+    };
     template<class TGT>
     struct get_row_target
     {
@@ -209,7 +220,15 @@ namespace boost { namespace msm { namespace front
             return Guard()(evt,fsm,src,tgt);
         }
     };
-
+    template<class EVENT>
+    struct Internal<EVENT,none,none>
+    {
+        typedef EVENT   Evt;
+        typedef none    Action;
+        typedef none    Guard;
+        // no action, no guard
+        typedef sm__i_row_tag row_type_tag;
+    };
     struct state_tag{};
     struct event_tag{};
     struct action_tag{};

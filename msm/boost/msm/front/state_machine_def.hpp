@@ -174,7 +174,18 @@ struct state_machine_def :  public state_base<BaseState>
             return (fsm.*guard)(evt);
         }
     };
-
+    // internal row withou action or guard. Does nothing except forcing the event to be ignored.
+	template<
+		typename T1
+		, class Event
+	>
+	struct _irow
+	{
+        typedef _irow_tag row_type_tag;
+		typedef T1 Source;
+		typedef T1 Target;
+		typedef Event Evt;
+    };
 protected:
     // Default no-transition handler. Can be replaced in the Derived SM class.
     template <class FSM,class Event>

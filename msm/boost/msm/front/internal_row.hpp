@@ -88,7 +88,15 @@ namespace boost { namespace msm { namespace front
                 ::boost::mpl::bool_< ::boost::is_base_of<CalledForGuard,FSM>::type::value>());
         }
     };
-
+	template<
+		class Event
+        , typename CalledForGuard
+	>
+	struct _internal
+	{
+        typedef sm__i_row_tag row_type_tag;
+		typedef Event Evt;
+    };
 }}}
 
 #endif //BOOST_MSM_INTERNAL_ROW_HPP
