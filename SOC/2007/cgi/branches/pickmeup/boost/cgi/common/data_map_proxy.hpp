@@ -55,7 +55,7 @@ BOOST_CGI_NAMESPACE_BEGIN
     typedef typename map_type::const_reverse_iterator const_reverse_iterator;
     typedef typename map_type::allocator_type         allocator_type;
     
-    self_type()
+    data_map_proxy()
       : impl(NULL)
     {
     }
