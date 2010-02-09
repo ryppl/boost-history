@@ -28,7 +28,7 @@ The main groups ['*itl containers*] can be
 divided in are summarized in the next table:
 
 [table
-[[]                  []                                             []           ]
+[]
 [[]                  [`Set`]                                        [`Map`]      ]
 [[element container] [__itl_set__]                                  [__itl_map__]]
 [[interval container][__itv_set__, __sep_itv_set__, __spl_itv_set__][__itv_map__, __spl_itv_map__]]
