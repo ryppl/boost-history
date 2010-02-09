@@ -7,6 +7,11 @@
 
 //  Library home page: http://www.boost.org/libs/filesystem
 
+#include <boost/config/warning_disable.hpp>
+
+//  See deprecated_test for tests of deprecated features
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+
 #include <iostream>
 #include <boost/filesystem/operations.hpp>
 #include <boost/system/error_code.hpp>
@@ -111,8 +116,6 @@ namespace
 
     error_code ec;
 
-    CHECK(complete("foo", "c:/") == "c:/foo");
-
     CHECK(!create_directory("/", ec));
 
     CHECK(!boost::filesystem::remove("no-such-file-or-directory"));
@@ -158,7 +161,7 @@ int main(int, char* argv[])
   cout << "BOOST_WINDOWS_API\n";
 #endif
 #ifdef BOOST_POSIX_PATH
-  cout << "BOOST_PATH_API\n";
+  cout << "BOOST_POSIX_PATH\n";
 #endif
 #ifdef BOOST_WINDOWS_PATH
   cout << "BOOST_WINDOWS_PATH\n";

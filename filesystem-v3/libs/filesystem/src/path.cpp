@@ -216,7 +216,7 @@ namespace filesystem
     path base_root_name (base.root_name());
     path this_root_directory (root_directory());
 
-#   ifndef BOOST_WINDOWS_PATH
+#   ifdef BOOST_WINDOWS_PATH
     BOOST_ASSERT(!this_root_name.empty() || !base_root_name.empty());
 #   endif
 

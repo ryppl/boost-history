@@ -13,6 +13,8 @@
 //  on basename(), extension(), and change_extension() tests from the original
 //  convenience_test.cpp by Vladimir Prus.
 
+#include <boost/config/warning_disable.hpp>
+
 //  See deprecated_test for tests of deprecated features
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 

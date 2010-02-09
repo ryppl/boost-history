@@ -19,6 +19,11 @@
 //
 //  ----------------------------------------------------------------------------------  //
 
+#include <boost/config/warning_disable.hpp>
+
+//  See deprecated_test for tests of deprecated features
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+
 #include <boost/filesystem/path.hpp>
 #include "../src/utf8_codecvt_facet.hpp"  // for imbue tests
 #include <boost/detail/lightweight_test.hpp>
@@ -458,7 +463,7 @@ namespace
     CHECK(path("baa").absolute("/") == "/baa"); 
     CHECK(path("/baa").absolute("/foo").string() == path("/baa").string()); 
     CHECK(path("baa/baz").absolute("/foo/bar").string()
-      == path("/foo/bar\\baa/baz").string());
+      == path("/foo/bar/baa/baz").string());
 #   endif
   }
 
