@@ -74,6 +74,20 @@ T::element_const_reverse_iterator T::elements_rbegin()const``] [Returns a revers
 T::element_const_reverse_iterator T::elements_rend()const``]   [Returns a reverse element iterator to a position `elements_rend()` before the first element of the container.]]
 ]
 
+
+['*See also . . .*]
+[table
+[[]]
+[[[link boost_itl.function_reference.iterator_related ['*Segment iteration*]]   ]]
+]
+
+['*Back to section . . .*]
+[table
+[[]]
+[[[link function_synopsis_table ['*Function Synopsis*]]]]
+[[[link boost_itl.interface ['*Interface*]]                          ]]
+]
+
 [endsect][/ Element iteration]
 
 

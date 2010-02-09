@@ -162,5 +162,19 @@ m  | m m m m      M  | M M M M M M
 ``
 [endsect][/- Infix operator Subtraction]
 
+
+['*See also . . .*]
+[table
+[[]]
+[[[link boost_itl.function_reference.addition ['*Addition*]]         ]]
+[[[link boost_itl.function_reference.erasure  ['*Erasure*]]          ]]
+]
+['*Back to section . . .*]
+[table
+[[]]
+[[[link function_synopsis_table ['*Function Synopsis*]]    ]]
+[[[link boost_itl.interface ['*Interface*]]                ]]
+]
+
 [endsect][/ Subtraction]
 

@@ -26,7 +26,7 @@ Also helpful have been conversations, hints and contributions
 at the BoostCon 2009 by Jeff Garland, David Jenkins, Tobias Loew,
 Barend Gehrels, Luke Simonson and Hartmut Kaiser. 
 Special thanks for reading and improving this documentation to
-Neal Becker and Ilya Bobir.
+Neal Becker, Ilya Bobir and Brian Wood.
 Jeff Flinn provided valuable feedback and a codepatch to fix 
 portability problems with CodeWarrior 9.4. Many thanks for that.
 

@@ -109,6 +109,19 @@ larger container to compare.
 
 [endsect]
 
+
+['*See also . . .*]
+[table
+[[]]
+[[[link boost_itl.semantics.orderings_and_equivalences ['*Semantics*]]]]
+]
+['*Back to section . . .*]
+[table
+[[]]
+[[[link function_synopsis_table ['*Function Synopsis*]]]]
+[[[link boost_itl.interface ['*Interface*]]                          ]]
+]
+
 [endsect][/ Equivalences and Orderings]
 
 

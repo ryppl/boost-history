@@ -117,6 +117,14 @@ small. In this case the loglinear implementation approaches
 logarithmic behavior, whereas the linear implementation
 stays linear.
 
+
+['*Back to section . . .*]
+[table
+[[]]
+[[[link function_synopsis_table ['*Function Synopsis*]]]]
+[[[link boost_itl.interface ['*Interface*]]                          ]]
+]
+
 [endsect][/ Containedness]
 
 

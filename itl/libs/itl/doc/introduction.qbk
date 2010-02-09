@@ -12,6 +12,9 @@
 
 The /Interval Template Library/ is currently submitted 
 for a formal review on the boost developer's list.
+
+[* The review will start on February 18, 2010 and will end on February 27, 2010.]
+
 Depending on the review's result the library might or 
 might not become a boost library. 
 
@@ -155,6 +158,14 @@ the associated values are `guest sets`. Thus a `guest set` has to implement
 As can be seen from the example an __itv_map__ has both 
 a ['*decompositional behavior*] (on the time dimension) as well as 
 an ['*accumulative one*] (on the associated values). 
+
+Addability and aggregate on overlap are useful features on 
+__itv_maps__ implemented via function `add` and `operator +=`. 
+But you can also use them with the ['traditional] 
+[link boost_itl.function_reference.insertion insert semantics] 
+that behaves like `std::map::insert` generalized for 
+interval insertion.
+
 [endsect]
 
 [section Itl's class templates]
@@ -165,7 +176,7 @@ __itl_set__ and __itl_map__.
 * An __itl_set__ is behavioral equal to __itv_bsets__ on the __bi_conceptual__ aspect.
 
 * An __itl_map__ is behavioral equal to __itv_bmaps__ on the __bi_conceptual__  aspect. 
-  Specifically a __itl_map__
+  Specifically an __itl_map__
   implements ['*aggregate on overlap*], which is
   named ['*aggregate on collision*] for an element container.
 
@@ -279,7 +290,7 @@ or calendar weeks or both. See example [link boost_itl.examples.month_and_week_g
 
 __Sep_itv_set__ implements the separating style.
 This style preserves borders, that are never passed by an overlapping
-interval. So if all intervals that are inserted into an __sep_itv_set__ 
+interval. So if all intervals that are inserted into a __sep_itv_set__ 
 are generated form a certain grid that never pass say month borders, then
 these borders are preserved in the __sep_itv_set__.
  

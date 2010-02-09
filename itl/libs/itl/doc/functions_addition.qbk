@@ -15,6 +15,7 @@
 [table
 [[Addition]                                [__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map] ]
 [[`T& T::add(const P&)`]                                     [__ei]    [__bp]   [__e]   [__b]     ]
+[[`T& T::add(J prior, const P&)`]                            [__i]     [__p]    [__e]   [__b]     ]
 [[`T& operator +=(T&, const P&)`]                            [__eiS]   [__bpM]  [__es]  [__bm]    ]
 [[`T operator + (T, const P&)`\n`T operator + (const P&, T)`][__eiS]   [__bpM]  [__es]  [__bm]    ]
 [[`T& operator |=(      T&, const P&)`]                      [__eiS]   [__bpM]  [__es]  [__bm]    ]
@@ -23,7 +24,8 @@
 
 Functions and operators that implement ['*Addition*] on *itl* objects
 are given in the table above.
-`operator |=` and `operator |` are identical to `operator +=` and `operator +`.
+`operator |=` and `operator |` are behavioral identical to 
+`operator +=` and `operator +`.
 This is a redundancy that has been introduced deliberately, because 
 a /set union/ semantics is often attached `operators |=` and `|`. 
 
@@ -48,6 +50,12 @@ a /set union/ semantics is often attached `operators |=` and `|`.
           [link boost_itl.examples.partys_height_average ['party's height average.]] 
          ]]
 ]
+
+For `Sets` ['*addition*] and ['*insertion*] are implemented identically.
+Functions `add` and `insert` collapse to the same function. 
+For `Maps` ['*addition*] and ['*insertion*] work differently. 
+Function `add` performs aggregations on collision or overlap, 
+while function `insert` only inserts values that do not yet have key values. 
 
 [endsect][/ Synopsis]
 
@@ -79,6 +87,25 @@ The next table contains complexity characteristics for `add`.
 [[__spl_itv_set__]             [__Olgn__] [__On__]    []        []          ]
 [[__itv_map__\n__spl_itv_map__][]         []          [__Olgn__][__On__]    ]
 ]
+
+[h5 Hinted addition]
+
+Function `T& T::add(T::iterator prior, const P& addend)` allows
+for an addition in ['*constant time*], if `addend` can be inserted
+right after iterator `prior` without collision. If this is not possible
+the complexity characteristics are as stated for the non hinted addition
+above. Hinted addition is available for these combinations of types:
+``
+// overload table for addition with hint
+T& T::add(T::iterator prior, const P&)
+
+add | e i b p    
+----+--------
+s   | s
+m   |     m
+S   |   S         
+M   |       M    
+``
 
 [endsect][/ Member function Addition]
 
@@ -211,6 +238,21 @@ m  |   m   m            p  |                      M1 M3
 ``
 
 [endsect][/ Infix operators]
+
+
+['*See also . . .*]
+[table
+[[]]
+[[[link boost_itl.function_reference.subtraction ['*Subtraction*]]   ]]
+[[[link boost_itl.function_reference.insertion ['*Insertion*]]       ]]
+]
+
+['*Back to section . . .*]
+[table
+[[]]
+[[[link function_synopsis_table ['*Function Synopsis*]]    ]]
+[[[link boost_itl.interface ['*Interface*]]                          ]]
+]
 
 [endsect][/ Addition]
 

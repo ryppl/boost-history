@@ -154,6 +154,21 @@ in the number `k` of iterators in range `[first, past)`.
 
 [endsect][/ Erasure by Iterators]
 
+
+['*See also . . .*]
+[table
+[[]]
+[[[link boost_itl.function_reference.insertion   ['*Insertion*]]      ]]
+[[[link boost_itl.function_reference.subtraction ['*Subtraction*]]    ]]
+]
+
+['*Back to section . . .*]
+[table
+[[]]
+[[[link function_synopsis_table ['*Function Synopsis*]] ]]
+[[[link boost_itl.interface ['*Interface*]]             ]]
+]
+
 [endsect][/ Erasure]
 
 

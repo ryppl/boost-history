@@ -99,6 +99,26 @@ is given by this table.
 [[interval_maps][]                            []         []          [__Olgn__][__On__]  []               [__Omlgnpm__]    ]
 ]
 
+
+[h4 Hinted insertion]
+
+Function `T& T::insert(T::iterator prior, const P& addend)` allows
+for an insertion in ['*constant time*], if `addend` can be inserted
+right after iterator `prior` without collision. If this is not possible
+the complexity characteristics are as stated for the non hinted insertion
+above. Hinted insertion is available for these combinations of types:
+``
+// overload table for insertion with hint
+T& T::insert(T::iterator prior, const P&)
+
+insert | e i b p    
+-------+--------
+s      | s
+m      |     m
+S      |   S         
+M      |       M    
+``
+
 [endsect][/ Insertion]
 
 
@@ -123,6 +143,19 @@ M   |   M
 
 [endsect][/ Set]
 
+['*See also . . .*]
+[table
+[[]]
+[[[link boost_itl.function_reference.addition ['*Erasure*]]          ]]
+[[[link boost_itl.function_reference.addition ['*Addition*]]         ]]
+]
+
+['*Back to section . . .*]
+[table
+[[]]
+[[[link function_synopsis_table ['*Function Synopsis*]]]]
+[[[link boost_itl.interface ['*Interface*]]                          ]]
+]
 
 [endsect][/ Insertion]
 

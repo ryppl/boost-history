@@ -17,9 +17,9 @@
 [[`J T::end()`]                                    [__O1__]    [__O1__]   [__O1__]    [__O1__]   ]
 [[`J T::rbegin()`]                                 [__O1__]    [__O1__]   [__O1__]    [__O1__]   ]
 [[`J T::rend()`]                                   [__O1__]    [__O1__]   [__O1__]    [__O1__]   ]
-[[`J T::lower_bound(const key_value&)`]            [__Olgn__]  [__Olgn__] [__Olgn__]  [__Olgn__] ]
-[[`J T::upper_bound(const key_value&)`]            [__Olgn__]  [__Olgn__] [__Olgn__]  [__Olgn__] ]
-[[`pair<J,J> T::equal_range(const key_value&)`]    [__Olgn__]  [__Olgn__] [__Olgn__]  [__Olgn__] ]
+[[`J T::lower_bound(const key_type&)`]            [__Olgn__]  [__Olgn__] [__Olgn__]  [__Olgn__] ]
+[[`J T::upper_bound(const key_type&)`]            [__Olgn__]  [__Olgn__] [__Olgn__]  [__Olgn__] ]
+[[`pair<J,J> T::equal_range(const key_type&)`]    [__Olgn__]  [__Olgn__] [__Olgn__]  [__Olgn__] ]
 ]
 
 [table
@@ -32,18 +32,18 @@ const_iterator T::end()const``]                            [Returns an iterator 
 const_reverse_iterator T::rbegin()const``]                 [Returns a reverse iterator to the last value of the container.]                  ]
 [[``      reverse_iterator T::rend()
 const_reverse_iterator T::rend()const``]                   [Returns a reverse iterator to a position `rend()` before the first value of the container.]]
-[[``      iterator T::lower_bound(const key_value& k)
-const_iterator T::lower_bound(const key_value& key)const``][Returns an iterator that points to the first element `first`, that does not compare less than `key_value key`.
+[[``      iterator T::lower_bound(const key_type& k)
+const_iterator T::lower_bound(const key_type& key)const``][Returns an iterator that points to the first element `first`, that does not compare less than `key_type key`.
                                                             `first` can be equal or greater than `key`, or it may overlap `key` for interval containers.]]
-[[``      iterator T::upper_bound(const key_value&)
-const_iterator T::upper_bound(const key_value&)const``]    [Returns an iterator that points to the first element `past`, that compares greater than `key_value key`.]]
+[[``      iterator T::upper_bound(const key_type&)
+const_iterator T::upper_bound(const key_type&)const``]    [Returns an iterator that points to the first element `past`, that compares greater than `key_type key`.]]
 [[``
-            pair<iterator,iterator> T::equal_range(const key_value& key)
-pair<const_iterator,const_iterator> T::equal_range(const key_value& key)const
+            pair<iterator,iterator> T::equal_range(const key_type& key)
+pair<const_iterator,const_iterator> T::equal_range(const key_type& key)const
 ``
 ]                                                                                                           
     [Returns a range `[first, past)` of iterators to all elements of the container
-     that compare neither less than nor greater than `key_value key`.
+     that compare neither less than nor greater than `key_type key`.
      For element containers __itl_set__ and __itl_map__, `equal_range` 
      contains at most one iterator pointing the element equal to `key`,
      if it exists.
@@ -57,6 +57,18 @@ pair<const_iterator,const_iterator> T::equal_range(const key_value& key)const
 Functions `begin`, `end`, `rbegin`, `rend` need ['*constant time*].
 Complexity of `lower_bound`, `upper_bound` and `equal_range` are 
 ['*logarithmic*] in the `iterative_size` of the container. 
+]
+
+['*See also . . .*]
+[table
+[[]]
+[[[link boost_itl.function_reference.element_iteration ['*Element iteration*]] ]]
+]
+['*Back to section . . .*]
+[table
+[[]]
+[[[link function_synopsis_table ['*Function Synopsis*]]    ]]
+[[[link boost_itl.interface ['*Interface*]]                ]]
 ]
 
 [endsect][/ Iterator related]
