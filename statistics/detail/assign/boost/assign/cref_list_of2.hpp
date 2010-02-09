@@ -17,50 +17,66 @@
 #include <boost/type_traits.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
-#include <boost/assign/list_of.hpp>
+#include <boost/assign/detail/assign_value.hpp>
+#include <boost/assign/list_of.hpp> // optionally needed for assign_referene
 
 namespace boost{
 namespace assign{
 
-    // This is a variation on Boost.Assign's cref_list_of that is more 
-    // convenient as the number of items must not be specified in advance
-    // Usage : vec = cref_list2_of(a)(b)(c)
-    // The idea of this class was developed in collaboration with M.P.G.
+    // This is a variation on Boost.Assign's ref_list_of that does not require
+    // the number of items to be specified in advance and uses copy semantics
+    // for the assignment operator.
+    // Usage 1: 
+    // 	std::vector<T> vec = cref_list_of2(a)(b)(c);
+    // Usage 2: 
+    // 	boost::fill( ref_list_of2(a)(b)(c) , 0); 
+	//
+    // For rebind semantics use ref_bind_list_of2(a)(b)(c)
+	//    
+    // Acknowledgement: The idea of this class was developed in collaboration 
+    // with M.P.G
 
 namespace cref_list_of2_impl{
             
 	typedef boost::mpl::void_ top_;
 
     template<typename T>
-    struct ref{
+    struct ref_bind{
         typedef boost::assign_detail::assign_reference<T> type;
     };
-            
-    template<typename T,int N>
-    struct ref_array{
-        typedef boost::array<typename ref<T>::type,N> type;
+
+	// Copy semantics
+    template<typename T>
+    struct ref_value{
+        typedef boost::assign_detail::assign_value<T> type;
     };
             
-    template<typename L,typename T,int N>
+	// Rebind semantics
+    template<typename T,int N,template<typename> class Ref>
+    struct ref_array{
+        typedef boost::array<typename Ref<T>::type,N> type;
+    };
+            
+    template<typename L,typename T,int N,template<typename> class Ref>
     struct expr;
             
-    template<typename E,typename T,int N>
+    template<typename E,typename T,int N,template<typename> class Ref>
     struct next{
-        typedef expr<E,T,N> expr_;
-        typedef expr<expr_,T,N+1> type;
+        typedef expr<E,T,N,Ref> expr_;
+        typedef expr<expr_,T,N+1,Ref> type;
     };
             
-    template<typename E,typename T,int N>
+    template<typename E,typename T,int N,template<typename> class Ref = ref_value>
     class expr{
         typedef boost::mpl::int_<N> int_n_;
         typedef boost::mpl::int_<1> int_1_;
-        typedef typename ref<T>::type ref_;
+        typedef typename Ref<T>::type ref_;
 
 		public:       
         typedef typename boost::mpl::equal_to<int_n_,int_1_>::type is_first_;
         typedef typename boost::mpl::if_<is_first_,E,E&>::type previous_;
-        typedef typename ref_array<T,N>::type ref_array_;
-        typedef typename next<E,T,N>::type next_;
+        typedef typename ref_array<T,N,Ref>::type ref_array_;
+        typedef typename next<E,T,N,Ref>::type next_;
 
         previous_ previous;
         ref_ ref;
@@ -136,21 +152,21 @@ namespace cref_list_of2_impl{
     typedef boost::mpl::bool_<false> false_;
     typedef boost::mpl::bool_<true> true_;
             
-    template<typename A,typename E,typename T,int N>
-    void write_to_array(A& a,expr<E,T,N>& e){
-        typedef expr<E,T,N> expr_;
+    template<typename A,typename E,typename T,int N,template<typename> class Ref>
+    void write_to_array(A& a,expr<E,T,N,Ref>& e){
+        typedef expr<E,T,N,Ref> expr_;
         typedef typename expr_::is_first_ exit_;
         write_to_array(a,e,exit_());
     }
             
-    template<typename A,typename E,typename T,int N>
-    void write_to_array(A& a,expr<E,T,N>& e,false_ /*exit*/){
+    template<typename A,typename E,typename T,int N,template<typename> class Ref>
+    void write_to_array(A& a,expr<E,T,N,Ref>& e,false_ /*exit*/){
         a[N-1] = e.ref;
         write_to_array(a,e.previous);
     }
             
-    template<typename A,typename E,typename T,int N>
-    void write_to_array(A& a,expr<E,T,N>& e,true_ /*exit*/){
+    template<typename A,typename E,typename T,int N,template<typename> class Ref>
+    void write_to_array(A& a,expr<E,T,N,Ref>& e,true_ /*exit*/){
         a[N-1] = e.ref;
     }
             
@@ -159,6 +175,13 @@ namespace cref_list_of2_impl{
         typedef cref_list_of2_impl::expr<
         	cref_list_of2_impl::top_,T,1> type;   
     };
+
+    template<typename T>
+    struct bind_first{
+        typedef cref_list_of2_impl::expr<
+        	cref_list_of2_impl::top_,T,1,ref_bind> type;   
+    };
+
             
 }// cref_list_of2_impl        
         
@@ -175,6 +198,21 @@ namespace cref_list_of2_impl{
         typedef typename cref_list_of2_impl::first<T>::type expr_;
         return expr_(t);
     }
+
+    template<typename T>
+    typename cref_list_of2_impl::bind_first<const T>::type
+    cref_bind_list_of2(const T& t){
+        typedef typename cref_list_of2_impl::bind_first<const T>::type expr_;
+        return expr_(t);
+    }
+
+    template<typename T>
+    typename cref_list_of2_impl::bind_first<T>::type
+    ref_bind_list_of2(T& t){
+        typedef typename cref_list_of2_impl::bind_first<T>::type expr_;
+        return expr_(t);
+    }
+
     
 }// assign
 }// boost
