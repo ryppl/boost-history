@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// example::cref_list_of.cpp                               				//
+// example::cref_list_of.cpp                               					//
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/cref_list_of2.hpp>
+#include <boost/assign/ref_list_of_rebind.hpp>
 #include <boost/assign/list_of.hpp>
 #include <libs/assign/example/cref_list_of2.h>
 
