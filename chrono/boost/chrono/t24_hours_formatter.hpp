@@ -1,4 +1,4 @@
-//  boost/chrono/digital_time_formatter.hpp  ------------------------------------------------------------//
+//  boost/chrono/t24_hours_formatter.hpp  ------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 
@@ -7,11 +7,11 @@
 
 //  See http://www.boost.org/libs/system for documentation.
 
-#ifndef BOOST_CHRONO_DIGITAL_TIME_FORMATTER_HPP
-#define BOOST_CHRONO_DIGITAL_TIME_FORMATTER_HPP
+#ifndef BOOST_CHRONO_T24_HOURS_FORMATTER_HPP
+#define BOOST_CHRONO_T24_HOURS_FORMATTER_HPP
 
 #include <boost/chrono/chrono.hpp>
-#include <boost/chrono/digital_time.hpp>
+#include <boost/chrono/t24_hours.hpp>
 #include <boost/current_function.hpp>
 #include <boost/chrono/detail/default_out.hpp>
 #include <boost/chrono/detail/adaptive_string.hpp>
@@ -25,7 +25,7 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
-#define BOOST_CHRONO_DIGITAL_TIME_FORMAT_DEFAULT "%d day(s) %h:%m:%s.%n\n"
+#define BOOST_CHRONO_24_HOURS_FORMAT_DEFAULT "%d day(s) %h:%m:%s.%n\n"
 
 namespace boost { namespace chrono  {
 
@@ -38,7 +38,7 @@ namespace boost { namespace chrono  {
         typename Traits=std::char_traits<CharT>,
         class Alloc=std::allocator<CharT>
     >
-    class basic_digital_time_formatter {
+    class basic_24_hours_formatter {
     public:
 
         typedef std::basic_string<CharT,Traits,Alloc> string_type;
@@ -73,9 +73,9 @@ namespace boost { namespace chrono  {
             boost::io::ios_precision_saver ips( os );
             os.precision( places );
 
-            digital_time dt(d);
+            t24_hours dt(d);
             for ( ; *format; ++format ) {
-                if ( *format != '%' || !*(format+1) || !std::strchr("dhmsn", *(format+1)) ) {
+                if ( (*format != '%') || (!*(format+1)) || (!std::strchr("dhmsn", *(format+1))) ) {
                     os << *format;
                 } else {
                     ++format;
@@ -112,7 +112,7 @@ namespace boost { namespace chrono  {
                         break;
                     }
                     default:
-                        assert(0 && "digital_time_formatter internal logic error");
+                        assert(0 && "basic_24_hours_formatter internal logic error");
                     }
                 }
             }
@@ -121,14 +121,14 @@ namespace boost { namespace chrono  {
 
 namespace detail {
     template <typename CharT>
-    struct basic_digital_time_formatter_default_format;
+    struct basic_24_hours_formatter_default_format;
     template <>
-    struct basic_digital_time_formatter_default_format<char> {
-        static const char* apply() {return BOOST_CHRONO_DIGITAL_TIME_FORMAT_DEFAULT; }
+    struct basic_24_hours_formatter_default_format<char> {
+        static const char* apply() {return BOOST_CHRONO_24_HOURS_FORMAT_DEFAULT; }
     };
 #ifndef BOOST_NO_STD_WSTRING
     template <>
-    struct basic_digital_time_formatter_default_format<wchar_t> {
+    struct basic_24_hours_formatter_default_format<wchar_t> {
         static const wchar_t* apply() {return L"%d day(s) %h:%m:%s.%n\n"; }
     };
 
@@ -136,31 +136,31 @@ namespace detail {
 }
 
     template <typename CharT,typename Traits, class Alloc>
-    const typename basic_digital_time_formatter<CharT,Traits,Alloc>::char_type*
-    basic_digital_time_formatter<CharT,Traits,Alloc>::default_format() {
-        return detail::basic_digital_time_formatter_default_format<CharT>::apply();
+    const typename basic_24_hours_formatter<CharT,Traits,Alloc>::char_type*
+    basic_24_hours_formatter<CharT,Traits,Alloc>::default_format() {
+        return detail::basic_24_hours_formatter_default_format<CharT>::apply();
     }
 
     template <typename CharT,typename Traits, class Alloc>
-    typename basic_digital_time_formatter<CharT,Traits,Alloc>::ostream_type &
-    basic_digital_time_formatter<CharT,Traits,Alloc>::default_os()  {
+    typename basic_24_hours_formatter<CharT,Traits,Alloc>::ostream_type &
+    basic_24_hours_formatter<CharT,Traits,Alloc>::default_os()  {
         return detail::default_out<CharT,Traits>::apply();
     }
 
-    typedef basic_digital_time_formatter<char> digital_time_formatter;
-    typedef basic_digital_time_formatter<wchar_t> wdigital_time_formatter;
+    typedef basic_24_hours_formatter<char> t24_hours_formatter;
+    typedef basic_24_hours_formatter<wchar_t> wt24_hours_formatter;
 
   } // namespace chrono
 } // namespace boost
 
-#define BOOST_CHRONO_DIGITAL_TIME_FORMAT(F) boost::chrono::detail::adaptive_string(F " : "  BOOST_CHRONO_DIGITAL_TIME_FORMAT_DEFAULT)
+#define BOOST_CHRONO_24_HOURS_FORMAT(F) boost::chrono::detail::adaptive_string(F " : "  BOOST_CHRONO_24_HOURS_FORMAT_DEFAULT)
 #ifdef __GNUC__
-#define BOOST_CHRONO_DIGITAL_TIME_FUNCTION_FORMAT boost::chrono::digital_time_formatter::format(BOOST_CURRENT_FUNCTION)
+#define BOOST_CHRONO_24_HOURS_FUNCTION_FORMAT boost::chrono::t24_hours_formatter::format(BOOST_CURRENT_FUNCTION)
 #else
-#define BOOST_CHRONO_DIGITAL_TIME_FUNCTION_FORMAT BOOST_CHRONO_DIGITAL_TIME_FORMAT(BOOST_CURRENT_FUNCTION)
+#define BOOST_CHRONO_24_HOURS_FUNCTION_FORMAT BOOST_CHRONO_24_HOURS_FORMAT(BOOST_CURRENT_FUNCTION)
 #endif
 
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
-#endif // BOOST_CHRONO_DIGITAL_TIME_FORMATTER_HPP
+#endif // BOOST_CHRONO_T24_HOURS_FORMATTER_HPP

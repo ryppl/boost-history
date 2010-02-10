@@ -31,7 +31,7 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
-#define BOOST_CHRONO_ACCUMULATOR_FORMAT_DEFAULT "%c times, sum=%ss, min=%ms, max=%Ms, mean=%as, frequency=%fHz, lifetime=%ls, percentage=%p\%\n"
+#define BOOST_CHRONO_ACCUMULATOR_FORMAT_DEFAULT "%c times, sum=%ss, min=%ms, max=%Ms, mean=%as, frequency=%fHz, lifetime=%ls, percentage=%p%\n"
 
 
 namespace boost { namespace chrono  {
@@ -82,7 +82,7 @@ namespace boost { namespace chrono  {
             os.precision( places );
 
             for ( ; *format; ++format ) {
-                if ( *format != '%' || !*(format+1) || !std::strchr("acflmMps", *(format+1)) ) {
+                if ( (*format != '%') || (!*(format+1)) || (!std::strchr("acflmMps", *(format+1))) ) {
                     os << *format;
                 } else {
                     ++format;
@@ -133,7 +133,7 @@ namespace detail {
 #ifndef BOOST_NO_STD_WSTRING
     template <>
     struct basic_stopwatch_accumulator_formatter_default_format<wchar_t> {
-        static const wchar_t* apply() {return L"%c times, sum=%ss, min=%ms, max=%Ms, mean=%as, frequency=%fHz, lifetime=%ls, percentage=%p\%\n"; }
+        static const wchar_t* apply() {return L"%c times, sum=%ss, min=%ms, max=%Ms, mean=%as, frequency=%fHz, lifetime=%ls, percentage=%p%\n"; }
     };
 
 #endif

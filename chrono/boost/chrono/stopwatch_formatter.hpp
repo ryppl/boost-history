@@ -39,10 +39,6 @@ namespace boost { namespace chrono  {
     >
     class basic_stopwatch_formatter {
     public:
-        //~ typedef std::string string_type;
-        //~ typedef string_type::value_type char_type;
-        //~ typedef std::ostream ostream_type;
-
         typedef std::basic_string<CharT,Traits,Alloc> string_type;
         typedef CharT char_type;
         typedef std::basic_ostream<CharT,Traits> ostream_type;
@@ -78,7 +74,7 @@ namespace boost { namespace chrono  {
             os.precision( places );
 
             for ( ; *format; ++format ) {
-                if ( *format != '%' || !*(format+1) || !std::strchr("d", *(format+1)) ) {
+                if ( (*format != '%') || (!*(format+1)) || (!std::strchr("d", *(format+1))) ) {
                     os << *format;
                 } else {
                     ++format;

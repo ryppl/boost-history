@@ -88,7 +88,7 @@ namespace boost { namespace chrono  {
 
             for ( ; *format; ++format )
             {
-              if ( *format != '%' || !*(format+1) || !std::strchr("rcpus", *(format+1)) )
+              if ( (*format != '%') || (!*(format+1)) || (!std::strchr("rcpus", *(format+1))) )
                 os << *format;
               else
               {

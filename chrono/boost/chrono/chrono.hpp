@@ -129,10 +129,10 @@ namespace chrono {
 
     template <class Duration, class Rep2,
         bool = (
-                    boost::is_convertible<typename Duration::rep,
-                        typename common_type<typename Duration::rep, Rep2>::type>::value
-                &&  boost::is_convertible<Rep2,
-                        typename common_type<typename Duration::rep, Rep2>::type>::value
+                    (boost::is_convertible<typename Duration::rep,
+                        typename common_type<typename Duration::rep, Rep2>::type>::value)
+                &&  (boost::is_convertible<Rep2,
+                        typename common_type<typename Duration::rep, Rep2>::type>::value)
                 )
         >
     struct duration_divide_imp
@@ -159,10 +159,10 @@ namespace chrono {
 
     template <class Rep, class Duration,
         bool = (
-                    boost::is_convertible<typename Duration::rep,
-                        typename common_type<typename Duration::rep, Rep>::type>::value
-                &&  boost::is_convertible<Rep,
-                        typename common_type<typename Duration::rep, Rep>::type>::value
+                    (boost::is_convertible<typename Duration::rep,
+                        typename common_type<typename Duration::rep, Rep>::type>::value)
+                &&  (boost::is_convertible<Rep,
+                        typename common_type<typename Duration::rep, Rep>::type>::value)
                 )
         >
     struct duration_divide_imp2
@@ -545,8 +545,8 @@ namespace chrono {
         BOOST_CHRONO_CONSTEXPR explicit duration(const Rep2& r,
             typename boost::enable_if_c
                 <
-                (   boost::is_convertible<Rep2, rep>::value
-                &&  (treat_as_floating_point<rep>::value
+                (   (boost::is_convertible<Rep2, rep>::value)
+                &&  ((treat_as_floating_point<rep>::value)
                     || (    !treat_as_floating_point<rep>::value
                         &&  !treat_as_floating_point<Rep2>::value)
                     )
@@ -566,9 +566,9 @@ namespace chrono {
         BOOST_CHRONO_CONSTEXPR duration(const duration<Rep2, Period2>& d,
             typename boost::enable_if_c
                 <
-                (   treat_as_floating_point<rep>::value
-                || (    ratio_divide<Period2, period>::type::den == 1
-                    &&  !treat_as_floating_point<Rep2>::value)
+                (   (treat_as_floating_point<rep>::value)
+                || (    (ratio_divide<Period2, period>::type::den == 1)
+                    &&  (!treat_as_floating_point<Rep2>::value))
                 )
                 >::type* = 0)
 #ifdef        __GNUC__
@@ -645,8 +645,8 @@ namespace chrono {
   inline
   typename boost::enable_if_c
     <
-        (   boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value
-        &&  boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value
+        (   (boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value)
+        &&  (boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value)
         ),
         duration<typename common_type<Rep1, Rep2>::type, Period>
   >::type
@@ -662,8 +662,8 @@ namespace chrono {
   inline
   typename boost::enable_if_c
     <
-        (   boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value
-        &&  boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value
+        (   (boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value)
+        &&  (boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value)
         ),
         duration<typename common_type<Rep1, Rep2>::type, Period>
   >::type
@@ -1105,9 +1105,9 @@ template <class Clock, class Duration>
     BOOST_CHRONO_CONSTEXPR duration<Rep, Period>::duration(const duration<Rep2, Period2>& d,
         typename boost::enable_if_c
             <
-            (   treat_as_floating_point<rep>::value
-            || (    ratio_divide<Period2, period>::type::den == 1
-                &&  !treat_as_floating_point<Rep2>::value)
+            (   (treat_as_floating_point<rep>::value)
+            || (    (ratio_divide<Period2, period>::type::den == 1)
+                &&  (!treat_as_floating_point<Rep2>::value))
             )
             >::type*)
           : rep_(duration_cast<duration>(d).count()) {}
