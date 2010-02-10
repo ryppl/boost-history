@@ -88,8 +88,9 @@ void example_cref_list_of(std::ostream& os)
 			BOOST_ASSERT(b == 0);   
 			BOOST_ASSERT(c == 0);    
         }
+        // ref_list_of_rebind
 		{
-            int a=1, b=2, c=3, d = 4;
+            int a=1, b=2, c=3;
     		ints.clear();
         	BOOST_AUTO(
                 tmp,
@@ -107,6 +108,8 @@ void example_cref_list_of(std::ostream& os)
 				BOOST_ASSERT(ints[1] == b);    
 				BOOST_ASSERT(ints[2] == c);    
             }
+
+            int d = 4;
             std::fill(boost::begin(tmp),boost::end(tmp),d);
             {
         		ints = ints_(boost::begin(tmp),boost::end(tmp));
@@ -115,7 +118,7 @@ void example_cref_list_of(std::ostream& os)
 				BOOST_ASSERT(ints[2] == d);    
             }
             {
-            	// Before rev. Feb 8, 2010,  there was an inconsistency here
+            	// Before rev. Feb 9, 2010,  this required a,b,c, respectively
         		ints = tmp;
 				BOOST_ASSERT(ints[0] == d);    
 				BOOST_ASSERT(ints[1] == d);    

@@ -19,9 +19,8 @@
 #include <boost/assign/list_of.hpp> // needed for assign_referene
 #include <boost/assign/detail/assign_value.hpp>
 
-// This supplies the implementation to both ref_list_of() and ref_list_rebind()
-// which unlike ref_list_of<int>(), deduce the size of the number of items 
-// automatically. 
+// This is the implementation behind ref_list_of() and ref_list_rebind() which,
+// unlike ref_list_of<int>(), deduces the size of the number of items. 
 //    
 // Acknowledgement: The idea of this class was developed in collaboration 
 // with M.P.G
@@ -41,6 +40,7 @@ namespace cref_list_of_impl{
             
 	typedef boost::mpl::void_ top_;
 
+	// Rebind semantics
     template<typename T>
     struct ref_bind{
         typedef boost::assign_detail::assign_reference<T> type;
@@ -52,7 +52,6 @@ namespace cref_list_of_impl{
         typedef boost::assign_detail::assign_value<T> type;
     };
             
-	// Rebind semantics
     template<typename T,int N,template<typename> class Ref>
     struct ref_array{
         typedef boost::array<typename Ref<T>::type,N> type;
@@ -67,7 +66,7 @@ namespace cref_list_of_impl{
         typedef expr<expr_,T,N+1,Ref> type;
     };
             
-    template<typename E,typename T,int N,template<typename> class Ref = ref_value>
+    template<typename E,typename T,int N,template<typename> class Ref>
     class expr{
         typedef boost::mpl::int_<N> int_n_;
         typedef boost::mpl::int_<1> int_1_;
@@ -161,28 +160,31 @@ namespace cref_list_of_impl{
     typedef boost::mpl::bool_<false> false_;
     typedef boost::mpl::bool_<true> true_;
             
-    template<typename A,typename E,typename T,int N,template<typename> class Ref>
+    template<typename A,typename E,typename T,int N,
+    	template<typename> class Ref>
     void write_to_array(A& a,expr<E,T,N,Ref>& e){
         typedef expr<E,T,N,Ref> expr_;
         typedef typename expr_::is_first_ exit_;
         write_to_array(a,e,exit_());
     }
             
-    template<typename A,typename E,typename T,int N,template<typename> class Ref>
+    template<typename A,typename E,typename T,int N,
+    	template<typename> class Ref>
     void write_to_array(A& a,expr<E,T,N,Ref>& e,false_ /*exit*/){
         a[N-1] = e.ref;
         write_to_array(a,e.previous);
     }
             
-    template<typename A,typename E,typename T,int N,template<typename> class Ref>
+    template<typename A,typename E,typename T,int N,
+    	template<typename> class Ref>
     void write_to_array(A& a,expr<E,T,N,Ref>& e,true_ /*exit*/){
         a[N-1] = e.ref;
     }
             
     template<typename T>
-    struct first{
+    struct copy_first{
         typedef cref_list_of_impl::expr<
-        	cref_list_of_impl::top_,T,1> type;   
+        	cref_list_of_impl::top_,T,1,ref_value> type;   
     };
 
     template<typename T>
