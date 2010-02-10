@@ -223,7 +223,7 @@ int main()
     std::cout << "* testUser1 *\n";
     std::cout << "*************\n";
     User1::Distance d( User1::mile(110) );
-    User1::Time t( boost::chrono::hours(2) );
+    User1::Time t(( boost::chrono::hours(2) ));
     
     //typedef User1::quantity<boost::ratio_subtract<User1::Distance::time_dim, User1::Time::time_dim >::type, 
     //                        boost::ratio_subtract<User1::Distance::distance_dim, User1::Time::distance_dim >::type > R;
