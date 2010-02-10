@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::cref_list_of2.hpp                               					//
+// assign::cref_list_of.hpp                               					//
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -27,16 +27,16 @@ namespace assign{
     // the number of items to be specified in advance and uses copy semantics
     // for the assignment operator.
     // Usage 1: 
-    // 	std::vector<T> vec = cref_list_of2(a)(b)(c);
+    // 	std::vector<T> vec = cref_list_of(a)(b)(c);
     // Usage 2: 
-    // 	boost::fill( ref_list_of2(a)(b)(c) , 0); 
+    // 	boost::fill( ref_list_of(a)(b)(c) , 0); 
 	//
-    // For rebind semantics use ref_bind_list_of2(a)(b)(c)
+    // For rebind semantics use ref_rebind_list_of(a)(b)(c)
 	//    
     // Acknowledgement: The idea of this class was developed in collaboration 
     // with M.P.G
 
-namespace cref_list_of2_impl{
+namespace cref_list_of_impl{
             
 	typedef boost::mpl::void_ top_;
 
@@ -172,44 +172,44 @@ namespace cref_list_of2_impl{
             
     template<typename T>
     struct first{
-        typedef cref_list_of2_impl::expr<
-        	cref_list_of2_impl::top_,T,1> type;   
+        typedef cref_list_of_impl::expr<
+        	cref_list_of_impl::top_,T,1> type;   
     };
 
     template<typename T>
     struct bind_first{
-        typedef cref_list_of2_impl::expr<
-        	cref_list_of2_impl::top_,T,1,ref_bind> type;   
+        typedef cref_list_of_impl::expr<
+        	cref_list_of_impl::top_,T,1,ref_bind> type;   
     };
 
             
-}// cref_list_of2_impl        
+}// cref_list_of_impl        
         
     template<typename T>
-    typename cref_list_of2_impl::first<const T>::type
-    cref_list_of2(const T& t){
-        typedef typename cref_list_of2_impl::first<const T>::type expr_;
+    typename cref_list_of_impl::first<const T>::type
+    cref_list_of(const T& t){
+        typedef typename cref_list_of_impl::first<const T>::type expr_;
         return expr_(t);
     }
 
     template<typename T>
-    typename cref_list_of2_impl::first<T>::type
-    ref_list_of2(T& t){
-        typedef typename cref_list_of2_impl::first<T>::type expr_;
+    typename cref_list_of_impl::first<T>::type
+    ref_list_of(T& t){
+        typedef typename cref_list_of_impl::first<T>::type expr_;
         return expr_(t);
     }
 
     template<typename T>
-    typename cref_list_of2_impl::bind_first<const T>::type
-    cref_bind_list_of2(const T& t){
-        typedef typename cref_list_of2_impl::bind_first<const T>::type expr_;
+    typename cref_list_of_impl::bind_first<const T>::type
+    cref_rebind_list_of(const T& t){
+        typedef typename cref_list_of_impl::bind_first<const T>::type expr_;
         return expr_(t);
     }
 
     template<typename T>
-    typename cref_list_of2_impl::bind_first<T>::type
-    ref_bind_list_of2(T& t){
-        typedef typename cref_list_of2_impl::bind_first<T>::type expr_;
+    typename cref_list_of_impl::bind_first<T>::type
+    ref_rebind_list_of(T& t){
+        typedef typename cref_list_of_impl::bind_first<T>::type expr_;
         return expr_(t);
     }
 

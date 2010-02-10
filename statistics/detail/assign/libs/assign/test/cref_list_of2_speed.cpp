@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// test::cref_list_of2_speed.cpp                               				//
+// test::cref_list_of_speed.cpp                               				//
 //                                                                          //
 //////////////////////////////////////////////////////////////////////////////
 #include <iostream>
@@ -35,7 +35,7 @@ std::string rand_str(int len)
     return result;
 }
 
-void test_cref_list_of2_speed(std::ostream& os)
+void test_cref_list_of_speed(std::ostream& os)
 {
 	os << "-> test_cref_listof2_speed : " << std::endl;
 
@@ -58,12 +58,12 @@ void test_cref_list_of2_speed(std::ostream& os)
             timer_ timer;
             for(int i = 0; i < n; ++i)
             {
-                BOOST_AUTO(rng, boost::assign::cref_list_of2(v[0]));
+                BOOST_AUTO(rng, boost::assign::cref_list_of(v[0]));
                 int sz = (int)rng.size();
                 if(sz != N)
                     os << "ERROR\n";
             }
-            os << "cref_list_of2(" << N << ") => ";
+            os << "cref_list_of(" << N << ") => ";
         }
         {
  			timer_ timer;
@@ -84,12 +84,12 @@ void test_cref_list_of2_speed(std::ostream& os)
  			timer_ timer;
             for(int i = 0; i < n; ++i)
             {
-                BOOST_AUTO(rng, boost::assign::cref_list_of2(v[0])(v[1])(v[2]));
+                BOOST_AUTO(rng, boost::assign::cref_list_of(v[0])(v[1])(v[2]));
                 int sz = (int)rng.size();
                 if(sz != N)
                     os << "ERROR\n";
             }
-            os << "cref_list_of2(" << N << ") => ";
+            os << "cref_list_of(" << N << ") => ";
         }
         {
  			timer_ timer;
@@ -111,12 +111,12 @@ void test_cref_list_of2_speed(std::ostream& os)
  			timer_ timer;
             for(int i = 0; i < n; ++i)
             {
-                BOOST_AUTO(rng, boost::assign::cref_list_of2(v[0])(v[1])(v[2])(v[3])(v[4])(v[5])(v[6])(v[7])(v[8])(v[9]));
+                BOOST_AUTO(rng, boost::assign::cref_list_of(v[0])(v[1])(v[2])(v[3])(v[4])(v[5])(v[6])(v[7])(v[8])(v[9]));
                 int sz = (int)rng.size();
                 if(sz != N)
                     os << "ERROR\n";
             }
- 			os << "cref_list_of2(" << N << ") => ";
+ 			os << "cref_list_of(" << N << ") => ";
         }
         {
  			timer_ timer;
@@ -138,14 +138,14 @@ void test_cref_list_of2_speed(std::ostream& os)
  			timer_ timer;
             for(int i = 0; i < n; ++i)
             {
-                BOOST_AUTO(rng, boost::assign::cref_list_of2(v[0])(v[1])(v[2])(v[3])(v[4])(v[5])(v[6])(v[7])(v[8])(v[9])
+                BOOST_AUTO(rng, boost::assign::cref_list_of(v[0])(v[1])(v[2])(v[3])(v[4])(v[5])(v[6])(v[7])(v[8])(v[9])
                            (v[10])(v[11])(v[12])(v[13])(v[14])(v[15])(v[16])(v[17])(v[18])(v[19])
                            (v[20])(v[21])(v[22])(v[23])(v[24])(v[25])(v[26])(v[27])(v[28])(v[29]));
                 int sz = (int)rng.size();
                 if(sz != N)
                     os << "ERROR\n";
             }
- 			os << "cref_list_of2(" << N << ") => ";
+ 			os << "cref_list_of(" << N << ") => ";
         }
         {
  			timer_ timer;
@@ -169,7 +169,7 @@ void test_cref_list_of2_speed(std::ostream& os)
             timer_ timer;
             for(int i = 0; i < n; ++i)
             {
-                BOOST_AUTO(rng, boost::assign::cref_list_of2( v[0])( v[1])( v[2])( v[3])( v[4])( v[5])( v[6])( v[7])( v[8])( v[9])
+                BOOST_AUTO(rng, boost::assign::cref_list_of( v[0])( v[1])( v[2])( v[3])( v[4])( v[5])( v[6])( v[7])( v[8])( v[9])
                            (v[10])(v[11])(v[12])(v[13])(v[14])(v[15])(v[16])(v[17])(v[18])(v[19])
                            (v[20])(v[21])(v[22])(v[23])(v[24])(v[25])(v[26])(v[27])(v[28])(v[29])
                            (v[30])(v[31])(v[32])(v[33])(v[34])(v[35])(v[36])(v[37])(v[38])(v[39])
@@ -181,7 +181,7 @@ void test_cref_list_of2_speed(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
- 			os << "cref_list_of2(" << N << ") => ";
+ 			os << "cref_list_of(" << N << ") => ";
         }
         {
  			timer_ timer;
@@ -210,7 +210,7 @@ void test_cref_list_of2_speed(std::ostream& os)
  			timer_ timer;
             for(int i = 0; i < n; ++i)
             {
-                BOOST_AUTO(rng, boost::assign::cref_list_of2( v[0])( v[1])( v[2])( v[3])( v[4])( v[5])( v[6])( v[7])( v[8])( v[9])
+                BOOST_AUTO(rng, boost::assign::cref_list_of( v[0])( v[1])( v[2])( v[3])( v[4])( v[5])( v[6])( v[7])( v[8])( v[9])
                            (v[10])(v[11])(v[12])(v[13])(v[14])(v[15])(v[16])(v[17])(v[18])(v[19])
                            (v[20])(v[21])(v[22])(v[23])(v[24])(v[25])(v[26])(v[27])(v[28])(v[29])
                            (v[30])(v[31])(v[32])(v[33])(v[34])(v[35])(v[36])(v[37])(v[38])(v[39])
@@ -230,7 +230,7 @@ void test_cref_list_of2_speed(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
- 			os << "cref_list_of2(" << N << ") => ";
+ 			os << "cref_list_of(" << N << ") => ";
         }
         {
  			timer_ timer;

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// example::cref_list_of2.h                               					//
+// example::cref_list_of.h                               					//
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -10,6 +10,6 @@
 #define LIBS_ASSIGN_EXAMPLE_CREF_LIST_OF2_ER_2010_HPP
 #include <ostream>
 
-void example_cref_list_of2(std::ostream&);
+void example_cref_list_of(std::ostream&);
 
 #endif

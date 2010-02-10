@@ -4,8 +4,8 @@
 
 int main (int argc, char * const argv[]) {
 
-	example_cref_list_of2(std::cout);
-	//test_cref_list_of2_speed(std::cout);
+	example_cref_list_of(std::cout);
+	test_cref_list_of_speed(std::cout);
     
     return 0;
 }
