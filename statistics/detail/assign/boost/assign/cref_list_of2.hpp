@@ -20,36 +20,70 @@
 #include <boost/assign/detail/assign_value.hpp>
 #include <boost/assign/list_of.hpp> // needed for assign_referene
 
+// This is a variation on Boost.Assign's ref_list_of<> that does not require
+// the number of items to be specified in advance and uses copy semantics
+// for the assignment operator.
+// Usage 1: 
+// 	std::vector<T> vec = cref_list_of(a)(b)(c);
+// Usage 2: 
+// 	boost::array<T,3> vec = cref_list_of(a)(b)(c);
+// Usage 4: 
+// 	boost::fill( ref_list_of(a)(b)(c) , 0); 
+// Usage 5:
+// BOOST_AUTO(tmp,ref_rebind_list_of(a)(b)(c)); boost::fill(tmp,d);
+//    
+// Acknowledgement: The idea of this class was developed in collaboration 
+// with M.P.G
+//
+// Revision history:
+// Feb 9, 2010 : 
+// - Added copy semantics.
+// - The temporary array in conversion operator is now assigned by calling 
+// begin() and end() rather than write_to_array() to ensure consistency of 
+// side effect when assigning with rebind semantics. The loss of performance
+// is neligible in the test.
+// Feb 5, 2010 : First version. rebind semantics.
+//
+// Note : ref_list_of<int>(), developed prior to this, and ref_list_of() are 
+// overloads hence do not conflict with each other.
+
 namespace boost{
 namespace assign{
+namespace cref_list_of_impl{
+	template<typename T> struct first;
+	template<typename T> struct rebind_first;
+}
 
-    // This is a variation on Boost.Assign's ref_list_of that does not require
-    // the number of items to be specified in advance and uses copy semantics
-    // for the assignment operator.
-    // Usage 1: 
-    // 	std::vector<T> vec = cref_list_of(a)(b)(c);
-    // Usage 2: 
-    // 	boost::array<T,3> vec = cref_list_of(a)(b)(c);
-    // Usage 4: 
-    // 	boost::fill( ref_list_of(a)(b)(c) , 0); 
-    // Usage 5:
-    // BOOST_AUTO(tmp,ref_rebind_list_of(a)(b)(c)); boost::fill(tmp,d);
-	//    
-    // Acknowledgement: The idea of this class was developed in collaboration 
-    // with M.P.G
-    //
-    // Revision history:
-    // Feb 9, 2010 : 
-    // - Added copy semantics.
-    // - temporary array in conversion operator is now assigned by call to 
-    // begin() and end() rather than write_to_array() to ensure consistency of 
-    // side effect when assigning with rebind semantics. The loss of performan-
-    // ce is neligible in the test.
-    // Feb 5, 2010 : First version. rebind semantics.
-	//
-    // Note : ref_list_of<int>() and ref_list_of() are overloads hence do not
-    // conflict with each other.
-        
+    // Copy semantics
+    template<typename T>
+    typename cref_list_of_impl::first<const T>::type
+    cref_list_of(const T& t){
+        typedef typename cref_list_of_impl::first<const T>::type expr_;
+        return expr_(t);
+    }
+
+    template<typename T>
+    typename cref_list_of_impl::first<T>::type
+    ref_list_of(T& t){
+        typedef typename cref_list_of_impl::first<T>::type expr_;
+        return expr_(t);
+    }
+
+    // Rebind semantics
+    template<typename T>
+    typename cref_list_of_impl::rebind_first<const T>::type
+    cref_rebind_list_of(const T& t){
+        typedef typename cref_list_of_impl::rebind_first<const T>::type expr_;
+        return expr_(t);
+    }
+
+    template<typename T>
+    typename cref_list_of_impl::rebind_first<T>::type
+    ref_rebind_list_of(T& t){
+        typedef typename cref_list_of_impl::rebind_first<T>::type expr_;
+        return expr_(t);
+    }
+
 namespace cref_list_of_impl{
             
 	typedef boost::mpl::void_ top_;
@@ -199,44 +233,12 @@ namespace cref_list_of_impl{
     };
 
     template<typename T>
-    struct bind_first{
+    struct rebind_first{
         typedef cref_list_of_impl::expr<
         	cref_list_of_impl::top_,T,1,ref_bind> type;   
     };
-
             
 }// cref_list_of_impl        
-        
-    // Copy semantics
-    template<typename T>
-    typename cref_list_of_impl::first<const T>::type
-    cref_list_of(const T& t){
-        typedef typename cref_list_of_impl::first<const T>::type expr_;
-        return expr_(t);
-    }
-
-    template<typename T>
-    typename cref_list_of_impl::first<T>::type
-    ref_list_of(T& t){
-        typedef typename cref_list_of_impl::first<T>::type expr_;
-        return expr_(t);
-    }
-
-    // Rebind semantics
-    template<typename T>
-    typename cref_list_of_impl::bind_first<const T>::type
-    cref_rebind_list_of(const T& t){
-        typedef typename cref_list_of_impl::bind_first<const T>::type expr_;
-        return expr_(t);
-    }
-
-    template<typename T>
-    typename cref_list_of_impl::bind_first<T>::type
-    ref_rebind_list_of(T& t){
-        typedef typename cref_list_of_impl::bind_first<T>::type expr_;
-        return expr_(t);
-    }
-
 }// assign
 }// boost
 
