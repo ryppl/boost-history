@@ -14,11 +14,11 @@
 #ifndef BOOST_STM_TXW__HPP
 #define BOOST_STM_TXW__HPP
 
-#include <boost/stm/txw/transactional_object.hpp>
+//#include <boost/stm/txw/transactional_object.hpp>
 //#include <boost/stm/tx/object.hpp>
 //#include <boost/stm/tx/numeric.hpp>
 //#include <boost/stm/tx/pointer.hpp>
-#include <boost/stm/txw/smart_ptr.hpp>
+//#include <boost/stm/txw/smart_ptr.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 #endif // TRANSACTION_H
