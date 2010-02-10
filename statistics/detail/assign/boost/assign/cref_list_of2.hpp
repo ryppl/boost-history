@@ -18,7 +18,7 @@
 #include <boost/array.hpp>
 #include <boost/range.hpp>
 #include <boost/assign/detail/assign_value.hpp>
-#include <boost/assign/list_of.hpp> // optionally needed for assign_referene
+#include <boost/assign/list_of.hpp> // needed for assign_referene
 
 namespace boost{
 namespace assign{
@@ -29,8 +29,10 @@ namespace assign{
     // Usage 1: 
     // 	std::vector<T> vec = cref_list_of(a)(b)(c);
     // Usage 2: 
+    // 	boost::array<T,3> vec = cref_list_of(a)(b)(c);
+    // Usage 4: 
     // 	boost::fill( ref_list_of(a)(b)(c) , 0); 
-    // Usage 3:
+    // Usage 5:
     // BOOST_AUTO(tmp,ref_rebind_list_of(a)(b)(c)); boost::fill(tmp,d);
 	//    
     // Acknowledgement: The idea of this class was developed in collaboration 
@@ -44,7 +46,10 @@ namespace assign{
     // side effect when assigning with rebind semantics. The loss of performan-
     // ce is neligible in the test.
     // Feb 5, 2010 : First version. rebind semantics.
-    
+	//
+    // Note : ref_list_of<int>() and ref_list_of() are overloads hence do not
+    // conflict with each other.
+        
 namespace cref_list_of_impl{
             
 	typedef boost::mpl::void_ top_;
@@ -202,6 +207,7 @@ namespace cref_list_of_impl{
             
 }// cref_list_of_impl        
         
+    // Copy semantics
     template<typename T>
     typename cref_list_of_impl::first<const T>::type
     cref_list_of(const T& t){
@@ -216,6 +222,7 @@ namespace cref_list_of_impl{
         return expr_(t);
     }
 
+    // Rebind semantics
     template<typename T>
     typename cref_list_of_impl::bind_first<const T>::type
     cref_rebind_list_of(const T& t){
@@ -230,7 +237,6 @@ namespace cref_list_of_impl{
         return expr_(t);
     }
 
-    
 }// assign
 }// boost
 
