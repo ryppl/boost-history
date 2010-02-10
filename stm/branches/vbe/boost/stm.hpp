@@ -14,25 +14,8 @@
 #ifndef BOOST_STM__HPP
 #define BOOST_STM__HPP
 
-#include <boost/stm/detail/config.hpp>
+#include <boost/stm/stm.hpp>
 
-#include <boost/stm/base_transaction_object.hpp>
-#include <boost/stm/cache_fct.hpp>
-#include <boost/stm/datatypes.hpp>
-#include <boost/stm/exceptions.hpp>
-#include <boost/stm/language_like.hpp>
-//#include <boost/stm/move.hpp>
-#include <boost/stm/transaction.hpp>
-#include <boost/stm/transaction_bookkeeping.hpp>
-#include <boost/stm/transaction_object_ptr.hpp>
-
-#include <boost/stm/contention_managers.hpp>
-#include <boost/stm/non_tx.hpp>
-#include <boost/stm/synch.hpp>
-#include <boost/stm/tx.hpp>
-#include <boost/stm/txw.hpp>
-
-///////////////////////////////////////////////////////////////////////////////
 #endif // BOOST_STM__HPP
 
 
