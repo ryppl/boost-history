@@ -68,7 +68,7 @@ void example_cref_list_of(std::ostream& os)
 		BOOST_ASSERT(ints[1] == b);    
 		BOOST_ASSERT(ints[2] == c);    
         array = array0;
-		array = ref_list_of(a)(b)(c);
+		array = cref_list_of(a)(b)(c);
 		BOOST_ASSERT(array[0] == a);    
 		BOOST_ASSERT(array[1] == b);    
 		BOOST_ASSERT(array[2] == c);    
@@ -114,11 +114,11 @@ void example_cref_list_of(std::ostream& os)
 				BOOST_ASSERT(ints[2] == d);    
             }
             {
-            	// TODO : resolve inconsistency here
+            	// Before rev. Feb 8, 2010,  there was an inconsistency here
         		ints = tmp;
-				BOOST_ASSERT(ints[0] == a);    
-				BOOST_ASSERT(ints[1] == b);    
-				BOOST_ASSERT(ints[2] == c);    
+				BOOST_ASSERT(ints[0] == d);    
+				BOOST_ASSERT(ints[1] == d);    
+				BOOST_ASSERT(ints[2] == d);    
             }
         }
         

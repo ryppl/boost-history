@@ -30,12 +30,21 @@ namespace assign{
     // 	std::vector<T> vec = cref_list_of(a)(b)(c);
     // Usage 2: 
     // 	boost::fill( ref_list_of(a)(b)(c) , 0); 
-	//
-    // For rebind semantics use ref_rebind_list_of(a)(b)(c)
+    // Usage 3:
+    // BOOST_AUTO(tmp,ref_rebind_list_of(a)(b)(c)); boost::fill(tmp,d);
 	//    
     // Acknowledgement: The idea of this class was developed in collaboration 
     // with M.P.G
-
+    //
+    // Revision history:
+    // Feb 9, 2010 : 
+    // - Added copy semantics.
+    // - temporary array in conversion operator is now assigned by call to 
+    // begin() and end() rather than write_to_array() to ensure consistency of 
+    // side effect when assigning with rebind semantics. The loss of performan-
+    // ce is neligible in the test.
+    // Feb 5, 2010 : First version. rebind semantics.
+    
 namespace cref_list_of_impl{
             
 	typedef boost::mpl::void_ top_;
@@ -89,18 +98,22 @@ namespace cref_list_of_impl{
                 
         template<typename T1>
         operator boost::array<T1,N>(){
-            typedef boost::array<T1,N> ar_;
-            ar_ ar;
-            write_to_array(ar,*this);
+        	boost::array<T1,N> ar;
+			std::copy(	
+            	boost::begin(this->ref_array()),
+            	boost::end(this->ref_array()),
+                boost::begin(ar)
+            );
             return ar;
         }
                 
         template<typename C>
         operator C()
         {
-            ref_array_ ref_array;
-            write_to_array(ref_array,*this);
-            return C(boost::begin(ref_array),boost::end(ref_array));
+            return C(
+            	boost::begin(this->ref_array()),
+                boost::end(this->ref_array())
+            );
         }
                 
         // -------- as container ---- //
@@ -115,13 +128,12 @@ namespace cref_list_of_impl{
                 
         iterator begin()
         {
-            this->alloc_if();
-            return boost::begin(*this->ptr);
+            return boost::begin(this->ref_array());
         }
         iterator end() 
         {
             this->alloc_if();
-            return boost::end(*this->ptr);
+            return boost::end(this->ref_array());
         }
         size_type size() const
         {
@@ -142,6 +154,11 @@ namespace cref_list_of_impl{
             if(!this->ptr){
                 return this->alloc();
             }
+        }
+
+		ref_array_& ref_array(){ 
+        	this->alloc_if();
+            return (*this->ptr);
         }
                 
         typedef boost::shared_ptr<ref_array_> smart_ptr_;

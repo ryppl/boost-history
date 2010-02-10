@@ -36,6 +36,11 @@ namespace assign_detail{
             return *ref_;
         }
 
+		//template<typename T1>
+		//operator T1()const{
+        //	return *ref_;
+        //}
+
         void swap( assign_value& r )
         {
             std::swap( *ref_, *r.ref_ );
