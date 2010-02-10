@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2007 Joel de Guzman
     Copyright (c) 2007 Dan Marsden
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -38,27 +38,42 @@
 #define BOOST_FUSION_ADAPT_ASSOC_STRUCT_FILLER_0_END
 #define BOOST_FUSION_ADAPT_ASSOC_STRUCT_FILLER_1_END
 
-#define BOOST_FUSION_ADAPT_ASSOC_STRUCT(NAME, SEQ)\
-    BOOST_FUSION_ADAPT_STRUCT_BASE(\
-        NAME,\
-        assoc_struct_tag,\
-        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_STRUCT_FILLER_0 SEQ,_END),\
+#define BOOST_FUSION_ADAPT_ASSOC_STRUCT_C_BASE(                                 \
+    TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,PREFIX,ATTRIBUTE)                            \
+                                                                                \
+    BOOST_FUSION_ADAPT_STRUCT_C_BASE(                                           \
+        TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, BOOST_PP_EMPTY(), ATTRIBUTE, 3)       \
+                                                                                \
+    template<                                                                   \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \
+    >                                                                           \
+    struct struct_assoc_key<BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ), I> \
+    {                                                                           \
+        typedef BOOST_PP_TUPLE_ELEM(3, 2, ATTRIBUTE) type;                      \
+    };
+
+#define BOOST_FUSION_ADAPT_ASSOC_STRUCT_C(                                      \
+    TEMPLATE_PARAMS_SEQ,NAME_SEQ, I, ATTRIBUTE)                                 \
+                                                                                \
+    BOOST_FUSION_ADAPT_ASSOC_STRUCT_C_BASE(                                     \
+        TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,BOOST_PP_EMPTY(),ATTRIBUTE)
+
+#define BOOST_FUSION_ADAPT_ASSOC_TPL_STRUCT(                                    \
+    TEMPLATE_PARAMS_SEQ, NAME_SEQ, ATTRIBUTES)                                  \
+                                                                                \
+    BOOST_FUSION_ADAPT_STRUCT_BASE(                                             \
+        (1)TEMPLATE_PARAMS_SEQ,                                                 \
+        (1)NAME_SEQ,                                                            \
+        assoc_struct_tag,                                                       \
+        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_STRUCT_FILLER_0 ATTRIBUTES,_END), \
         BOOST_FUSION_ADAPT_ASSOC_STRUCT_C)
 
-#define BOOST_FUSION_ADAPT_ASSOC_STRUCT_C(R, NAME, I, TUPLE)\
-    BOOST_FUSION_ADAPT_ASSOC_STRUCT_C_BASE(NAME, I, BOOST_PP_EMPTY(), TUPLE)
-
-#define BOOST_FUSION_ADAPT_ASSOC_STRUCT_C_BASE(NAME, I, PREFIX, TUPLE)          \
-    BOOST_FUSION_ADAPT_STRUCT_C_BASE(NAME, I, PREFIX, TUPLE, 3)                 \
-                                                                                \
-namespace boost { namespace fusion { namespace extension                        \
-{                                                                               \
-    template<>                                                                  \
-    struct struct_assoc_key<NAME, I>                                            \
-    {                                                                           \
-        typedef BOOST_PP_TUPLE_ELEM(3, 2, TUPLE) type;                          \
-    };                                                                          \
-}}}
-
+#define BOOST_FUSION_ADAPT_ASSOC_STRUCT(NAME, ATTRIBUTES)                       \
+    BOOST_FUSION_ADAPT_STRUCT_BASE(                                             \
+        (0),                                                                    \
+        (0)(NAME),                                                              \
+        assoc_struct_tag,                                                       \
+        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_STRUCT_FILLER_0 ATTRIBUTES,_END), \
+        BOOST_FUSION_ADAPT_ASSOC_STRUCT_C)
 
 #endif

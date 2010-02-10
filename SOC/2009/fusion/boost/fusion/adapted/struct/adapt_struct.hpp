@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2007 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -26,21 +26,31 @@
 #include <boost/fusion/adapted/detail/struct/value_of_impl.hpp>
 #include <boost/fusion/adapted/detail/struct/deref_impl.hpp>
 
-#define BOOST_FUSION_ADAPT_STRUCT_FILLER_0(X, Y)\
+#define BOOST_FUSION_ADAPT_STRUCT_FILLER_0(X, Y)                                \
     ((X, Y)) BOOST_FUSION_ADAPT_STRUCT_FILLER_1
-#define BOOST_FUSION_ADAPT_STRUCT_FILLER_1(X, Y)\
+#define BOOST_FUSION_ADAPT_STRUCT_FILLER_1(X, Y)                                \
     ((X, Y)) BOOST_FUSION_ADAPT_STRUCT_FILLER_0
 #define BOOST_FUSION_ADAPT_STRUCT_FILLER_0_END
 #define BOOST_FUSION_ADAPT_STRUCT_FILLER_1_END
 
-#define BOOST_FUSION_ADAPT_STRUCT(NAME, SEQ)\
-    BOOST_FUSION_ADAPT_STRUCT_BASE(\
-        NAME,\
-        struct_tag,\
-        BOOST_PP_CAT(BOOST_FUSION_ADAPT_STRUCT_FILLER_0 SEQ,_END),\
+#define BOOST_FUSION_ADAPT_STRUCT_C(TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, ATTRIBUTE)\
+    BOOST_FUSION_ADAPT_STRUCT_C_BASE(                                           \
+        TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,BOOST_PP_EMPTY(),ATTRIBUTE,2)
+
+#define BOOST_FUSION_ADAPT_TPL_STRUCT(TEMPLATE_PARAMS_SEQ,NAME_SEQ, ATTRIBUTES) \
+    BOOST_FUSION_ADAPT_STRUCT_BASE(                                             \
+        (1)TEMPLATE_PARAMS_SEQ,                                                 \
+        (1)NAME_SEQ,                                                            \
+        struct_tag,                                                             \
+        BOOST_PP_CAT(BOOST_FUSION_ADAPT_STRUCT_FILLER_0 ATTRIBUTES,_END),       \
         BOOST_FUSION_ADAPT_STRUCT_C)
 
-#define BOOST_FUSION_ADAPT_STRUCT_C(R, NAME, I, TUPLE)\
-    BOOST_FUSION_ADAPT_STRUCT_C_BASE(NAME, I, BOOST_PP_EMPTY(), TUPLE, 2)
+#define BOOST_FUSION_ADAPT_STRUCT(NAME, ATTRIBUTES)                             \
+    BOOST_FUSION_ADAPT_STRUCT_BASE(                                             \
+        (0),                                                                    \
+        (0)(NAME),                                                              \
+        struct_tag,                                                             \
+        BOOST_PP_CAT(BOOST_FUSION_ADAPT_STRUCT_FILLER_0 ATTRIBUTES,_END),       \
+        BOOST_FUSION_ADAPT_STRUCT_C)
 
 #endif

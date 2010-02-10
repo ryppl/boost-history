@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -11,30 +11,95 @@
 #include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
 
-#include <boost/mpl/tag.hpp>
+#include <boost/preprocessor/control/if.hpp>
 #include <boost/preprocessor/seq/size.hpp>
+#include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
+#include <boost/preprocessor/seq/enum.hpp>
+#include <boost/preprocessor/seq/seq.hpp>
+#include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
-#include <boost/preprocessor/tuple/elem.hpp>
+#include <boost/mpl/tag.hpp>
+
+#define BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME_TEMPLATE_PARAMS(SEQ)              \
+    BOOST_PP_SEQ_HEAD(SEQ)<BOOST_PP_SEQ_ENUM(BOOST_PP_SEQ_TAIL(SEQ))>
+#define BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(SEQ)                              \
+    BOOST_PP_IF(                                                                \
+        BOOST_PP_SEQ_HEAD(SEQ),                                                 \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME_TEMPLATE_PARAMS,                  \
+        BOOST_PP_SEQ_HEAD)(BOOST_PP_SEQ_TAIL(SEQ))
+
+#define BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS_IMPL_C(R, _, ELEM)     \
+    (typename ELEM)
+#define BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS_IMPL(SEQ)              \
+    BOOST_PP_SEQ_ENUM(                                                          \
+        BOOST_PP_SEQ_FOR_EACH(                                                  \
+            BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS_IMPL_C,            \
+            _,                                                                  \
+            BOOST_PP_SEQ_TAIL(SEQ)))
+#define BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(SEQ)                   \
+    BOOST_PP_IF(                                                                \
+        BOOST_PP_SEQ_HEAD(SEQ),                                                 \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS_IMPL,                  \
+        BOOST_PP_TUPLE_EAT(1))(SEQ)
 
 #ifdef BOOST_NO_PARTIAL_SPECIALIZATION_IMPLICIT_DEFAULT_ARGS
 #   define BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(MODIFIER, DATA)      \
-    template <>                                                                 \
-    struct tag_of<BOOST_PP_TUPLE_ELEM(2,0,DATA) MODIFIER,void>                  \
+    template<                                                                   \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(                       \
+            BOOST_PP_TUPLE_ELEM(3,0,DATA))                                      \
+    >                                                                           \
+    struct tag_of<                                                              \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(BOOST_PP_TUPLE_ELEM(3,1,DATA))    \
+            MODIFIER                                                            \
+      , void                                                                    \
+    >                                                                           \
     {                                                                           \
-        typedef BOOST_PP_TUPLE_ELEM(2,1,DATA) type;                             \
+        typedef BOOST_PP_TUPLE_ELEM(3,2,DATA) type;                             \
     };
 #else
 #   define BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(MODIFIER, DATA)      \
-    template <>                                                                 \
-    struct tag_of<BOOST_PP_TUPLE_ELEM(2,0,DATA) MODIFIER>                       \
+    template<                                                                   \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(                       \
+            BOOST_PP_TUPLE_ELEM(3,0,DATA))                                      \
+    >                                                                           \
+    struct tag_of<                                                              \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(BOOST_PP_TUPLE_ELEM(3,1,DATA))    \
+            MODIFIER                                                            \
+    >                                                                           \
     {                                                                           \
-        typedef BOOST_PP_TUPLE_ELEM(2,1,DATA) type;                             \
+        typedef BOOST_PP_TUPLE_ELEM(3,2,DATA) type;                             \
     };
 #endif
 
-#define BOOST_FUSION_ADAPT_STRUCT_BASE(NAME,TAG,SEQ,CALLBACK)                   \
-    BOOST_PP_SEQ_FOR_EACH_I(CALLBACK,NAME,SEQ)                                  \
+#define BOOST_FUSION_ADAPT_STRUCT_BASE_UNPACK_AND_CALL(R,DATA,I,ATTRIBUTE)      \
+    BOOST_PP_TUPLE_ELEM(3,0,DATA)(                                              \
+        BOOST_PP_TUPLE_ELEM(3,1,DATA),                                          \
+        BOOST_PP_TUPLE_ELEM(3,2,DATA),                                          \
+        I,                                                                      \
+        ATTRIBUTE)
+
+#define BOOST_FUSION_ADAPT_STRUCT_C_BASE(                                       \
+    TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,PREFIX,ATTRIBUTE,ATTRIBUTE_TUPEL_SIZE)       \
+                                                                                \
+    template<                                                                   \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \
+    >                                                                           \
+    struct struct_member<BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ), I>    \
+    {                                                                           \
+        typedef BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE) type;   \
+                                                                                \
+        template<typename Seq>                                                  \
+        static typename detail::forward_as<Seq&,type>::type                     \
+        call(Seq& seq)                                                          \
+        {                                                                       \
+            return seq.PREFIX                                                   \
+                BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 1, ATTRIBUTE);        \
+        }                                                                       \
+    };
+
+#define BOOST_FUSION_ADAPT_STRUCT_BASE(                                         \
+    TEMPLATE_PARAMS_SEQ,NAME_SEQ,TAG,ATTRIBUTES_SEQ,ATTRIBUTES_CALLBACK)        \
                                                                                 \
 namespace boost                                                                 \
 {                                                                               \
@@ -43,14 +108,24 @@ namespace boost                                                                 
         namespace traits                                                        \
         {                                                                       \
             BOOST_FUSION_ALL_CV_REF_NON_REF_COMBINATIONS(                       \
-                BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION,(NAME,TAG))     \
+                BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION,                \
+                (TEMPLATE_PARAMS_SEQ,NAME_SEQ,TAG))                             \
         }                                                                       \
                                                                                 \
         namespace extension                                                     \
         {                                                                       \
-            template <>                                                         \
-            struct struct_size<NAME>                                            \
-              : mpl::int_<BOOST_PP_SEQ_SIZE(SEQ)>                               \
+            BOOST_PP_SEQ_FOR_EACH_I_R(                                          \
+                1,                                                              \
+                BOOST_FUSION_ADAPT_STRUCT_BASE_UNPACK_AND_CALL,                 \
+                (ATTRIBUTES_CALLBACK,TEMPLATE_PARAMS_SEQ,NAME_SEQ),             \
+                ATTRIBUTES_SEQ)                                                 \
+                                                                                \
+            template<                                                           \
+                BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(               \
+                    TEMPLATE_PARAMS_SEQ)                                        \
+            >                                                                   \
+            struct struct_size<BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)> \
+              : mpl::int_<BOOST_PP_SEQ_SIZE(ATTRIBUTES_SEQ)>                    \
             {};                                                                 \
         }                                                                       \
     }                                                                           \
@@ -60,35 +135,26 @@ namespace boost                                                                 
         template<typename>                                                      \
         struct sequence_tag;                                                    \
                                                                                 \
-        template <>                                                             \
-        struct sequence_tag<NAME>                                               \
+        template<                                                               \
+            BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(                   \
+                TEMPLATE_PARAMS_SEQ)                                            \
+        >                                                                       \
+        struct sequence_tag<BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)>    \
         {                                                                       \
             typedef fusion::fusion_sequence_tag type;                           \
         };                                                                      \
                                                                                 \
-        template <>                                                             \
-        struct sequence_tag<NAME const>                                         \
+        template<                                                               \
+            BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(                   \
+                TEMPLATE_PARAMS_SEQ)                                            \
+        >                                                                       \
+        struct sequence_tag<                                                    \
+            BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ) const               \
+        >                                                                       \
         {                                                                       \
             typedef fusion::fusion_sequence_tag type;                           \
         };                                                                      \
     }                                                                           \
 }
-
-#define BOOST_FUSION_ADAPT_STRUCT_C_BASE(NAME, I, PREFIX, TUPLE, MAX_SIZE)      \
-namespace boost { namespace fusion { namespace extension                        \
-{                                                                               \
-    template <>                                                                 \
-    struct struct_member<NAME, I>                                               \
-    {                                                                           \
-        typedef BOOST_PP_TUPLE_ELEM(MAX_SIZE, 0, TUPLE) type;                   \
-                                                                                \
-        template<typename Seq>                                                  \
-        static typename detail::forward_as<Seq&,type>::type                     \
-        call(Seq& seq)                                                          \
-        {                                                                       \
-            return seq.PREFIX BOOST_PP_TUPLE_ELEM(MAX_SIZE, 1, TUPLE);          \
-        }                                                                       \
-    };                                                                          \
-}}}
 
 #endif

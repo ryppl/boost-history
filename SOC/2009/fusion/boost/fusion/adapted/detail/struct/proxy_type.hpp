@@ -12,12 +12,16 @@
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 
-#define BOOST_FUSION_PROXY_TYPE_NS_BEGIN(R,DATA,ELEM) namespace ELEM {
-#define BOOST_FUSION_PROXY_TYPE_NS_END(Z,I,DATA) }
-#define BOOST_FUSION_NAMESPACE_DECLARATION_I(Z,I,ELEM) ELEM::
+#define BOOST_FUSION_ADAPT_STRUCT_PROXY_TYPE_NS_BEGIN(R,DATA,ELEM)              \
+    namespace ELEM {
+#define BOOST_FUSION_ADAPT_STRUCT_PROXY_TYPE_NS_END(Z,I,DATA) }
+#define BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION_I(Z,I,ELEM) ELEM::
 
-#define BOOST_FUSION_DEFINE_PROXY_TYPE(WRAPPED_TYPE,NAMESPACE,NAME)             \
-    BOOST_PP_SEQ_FOR_EACH_R(1, BOOST_FUSION_PROXY_TYPE_NS_BEGIN, _, NAMESPACE)  \
+#define BOOST_FUSION_ADAPT_STRUCT_DEFINE_PROXY_TYPE(                            \
+    WRAPPED_TYPE,NAMESPACE_SEQ,NAME)                                            \
+                                                                                \
+    BOOST_PP_SEQ_FOR_EACH_R(                                                    \
+        1, BOOST_FUSION_ADAPT_STRUCT_PROXY_TYPE_NS_BEGIN, _, NAMESPACE_SEQ)     \
                                                                                 \
     struct NAME                                                                 \
     {                                                                           \
@@ -28,15 +32,13 @@
         WRAPPED_TYPE& obj;                                                      \
     };                                                                          \
                                                                                 \
-    BOOST_PP_REPEAT_1(BOOST_PP_SEQ_SIZE(NAMESPACE),                             \
-        BOOST_FUSION_PROXY_TYPE_NS_END,                                         \
+    BOOST_PP_REPEAT_1(                                                          \
+        BOOST_PP_SEQ_SIZE(NAMESPACE_SEQ),                                       \
+        BOOST_FUSION_ADAPT_STRUCT_PROXY_TYPE_NS_END,                            \
         _)
 
-#define BOOST_FUSION_NAMESPACE_DECLARATION(NAMESPACE)\
-    BOOST_PP_SEQ_FOR_EACH_R(\
-                    1,\
-                    BOOST_FUSION_NAMESPACE_DECLARATION_I,\
-                    _,\
-                    NAMESPACE)
+#define BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION(NAMESPACE_SEQ)          \
+    BOOST_PP_SEQ_FOR_EACH_R(                                                    \
+       1,BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION_I,_,NAMESPACE_SEQ)
 
 #endif

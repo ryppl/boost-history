@@ -11,17 +11,17 @@
 #include <boost/fusion/adapted/class/adapt_class.hpp>
 #include <boost/fusion/adapted/detail/struct/proxy_type.hpp>
 
-#define BOOST_FUSION_ADAPT_CLASS_NAMED(WRAPPED_TYPE, NAME, SEQ)\
-    BOOST_FUSION_ADAPT_CLASS_NAMED_NS(\
-        WRAPPED_TYPE,\
-        (boost)(fusion)(adapted),\
-        NAME,\
-        SEQ)
+#define BOOST_FUSION_ADAPT_CLASS_NAMED_NS(                                      \
+    WRAPPED_TYPE, NAMESPACE_SEQ, NAME, ATTRIBUTES)                              \
+                                                                                \
+    BOOST_FUSION_ADAPT_STRUCT_DEFINE_PROXY_TYPE(WRAPPED_TYPE,NAMESPACE_SEQ,NAME)\
+                                                                                \
+    BOOST_FUSION_ADAPT_CLASS(                                                   \
+        BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION(NAMESPACE_SEQ)NAME,     \
+        ATTRIBUTES)
 
-#define BOOST_FUSION_ADAPT_CLASS_NAMED_NS(WRAPPED_TYPE, NAMESPACE, NAME, SEQ)\
-    BOOST_FUSION_DEFINE_PROXY_TYPE(WRAPPED_TYPE,NAMESPACE,NAME)\
-    BOOST_FUSION_ADAPT_CLASS(\
-        BOOST_FUSION_NAMESPACE_DECLARATION(NAMESPACE)NAME,\
-        SEQ)
+#define BOOST_FUSION_ADAPT_CLASS_NAMED(WRAPPED_TYPE, NAME, ATTRIBUTES)          \
+   BOOST_FUSION_ADAPT_CLASS_NAMED_NS(                                           \
+        WRAPPED_TYPE,(boost)(fusion)(adapted),NAME,ATTRIBUTES)
 
 #endif

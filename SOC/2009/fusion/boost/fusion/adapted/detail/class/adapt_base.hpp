@@ -10,20 +10,26 @@
 
 #include <boost/fusion/adapted/detail/struct/adapt_base.hpp>
 
-#define BOOST_FUSION_ADAPT_CLASS_C_BASE(NAME, I, TUPLE, MAX_SIZE)               \
-namespace boost { namespace fusion { namespace extension                        \
-{                                                                               \
-    template <>                                                                 \
-    struct struct_member<NAME, I>                                               \
+#define BOOST_FUSION_ADAPT_CLASS_C_BASE(\
+    TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,ATTRIBUTE,ATTRIBUTE_TUPEL_SIZE)              \
+                                                                                \
+    template<                                                                   \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \
+    >                                                                           \
+    struct struct_member<BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ), I>    \
     {                                                                           \
-        typedef BOOST_PP_TUPLE_ELEM(MAX_SIZE, 0, TUPLE) type;                   \
-        typedef BOOST_PP_TUPLE_ELEM(MAX_SIZE, 1, TUPLE) get_type;               \
+        typedef BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE) type;   \
+        typedef                                                                 \
+            BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 1, ATTRIBUTE)             \
+        get_type;                                                               \
                                                                                 \
         struct proxy                                                            \
         {                                                                       \
-            typedef BOOST_PP_TUPLE_ELEM(MAX_SIZE, 0, TUPLE) type;               \
+            typedef                                                             \
+                BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE)         \
+            type;                                                               \
                                                                                 \
-            proxy(NAME& obj)                                                    \
+            proxy(BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)& obj)         \
               : obj(obj)                                                        \
             {}                                                                  \
                                                                                 \
@@ -31,30 +37,29 @@ namespace boost { namespace fusion { namespace extension                        
             proxy&                                                              \
             operator=(BOOST_FUSION_R_ELSE_CLREF(Arg) val)                       \
             {                                                                   \
-                BOOST_PP_TUPLE_ELEM(MAX_SIZE, 3, TUPLE);                        \
+                BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 3, ATTRIBUTE);        \
                 return *this;                                                   \
             }                                                                   \
                                                                                 \
             operator type()                                                     \
             {                                                                   \
-                return BOOST_PP_TUPLE_ELEM(MAX_SIZE, 2, TUPLE);                 \
+                return BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 2, ATTRIBUTE); \
             }                                                                   \
                                                                                 \
-            NAME& obj;                                                          \
+            BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)& obj;               \
         };                                                                      \
                                                                                 \
         static get_type                                                         \
-        call(NAME const& obj)                                                   \
+        call(BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ) const& obj)        \
         {                                                                       \
-            return BOOST_PP_TUPLE_ELEM(MAX_SIZE, 2, TUPLE);                     \
+            return BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 2, ATTRIBUTE);     \
         };                                                                      \
                                                                                 \
         static proxy                                                            \
-        call(NAME& obj)                                                         \
+        call(BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)& obj)              \
         {                                                                       \
             return proxy(obj);                                                  \
         };                                                                      \
-    };                                                                          \
-}}}
+    };
 
 #endif
