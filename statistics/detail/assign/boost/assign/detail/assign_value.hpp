@@ -16,7 +16,7 @@ namespace assign_detail{
     // the rhs to the object pointed to.
     //
     // This is in contrast to assign_reference whose operator= rebinds the 
-    // address of the internal pointer. To that effect, call instead rebind() 
+    // address of the internal pointer. To that effect,here, call rebind() 
 	template< class T >
     struct assign_value
     {
@@ -35,11 +35,6 @@ namespace assign_detail{
         {
             return *ref_;
         }
-
-		//template<typename T1>
-		//operator T1()const{
-        //	return *ref_;
-        //}
 
         void swap( assign_value& r )
         {

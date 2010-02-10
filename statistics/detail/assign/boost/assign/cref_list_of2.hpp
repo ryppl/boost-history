@@ -38,9 +38,9 @@
 // Revision history:
 // Feb 9, 2010 : 
 // - Added copy semantics.
-// - The temporary array in conversion operator is now assigned by calling 
+// - The temporary array in the conversion operator is now assigned by calling 
 // begin() and end() rather than write_to_array() to ensure consistency of 
-// side effect when assigning with rebind semantics. The loss of performance
+// side effect when assigning under rebind semantics. The loss of performance
 // is neligible in the test.
 // Feb 5, 2010 : First version. rebind semantics.
 //
