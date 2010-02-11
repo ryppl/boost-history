@@ -14,7 +14,7 @@
 #include <boost/mpl/int.hpp>
 
 #include <boost/mpl/vector.hpp>
-#include <boost/fusion/container/vector.hpp>
+#include <boost/fusion/container/map.hpp>
 #include <boost/fusion/include/at_c.hpp>
 
 #include <boost/type_traits/add_const.hpp>
@@ -32,30 +32,30 @@ struct polymorphic_state
     virtual ~polymorphic_state() {}
 };
 
-template <class Attributes= ::boost::fusion::vector<> >
+template <class Attributes= ::boost::fusion::map<> >
 struct inherit_attributes
 {
 	// on the fly attribute creation capability
 	typedef Attributes		attributes_type;
-    template <int Index>
-    typename ::boost::fusion::result_of::at<attributes_type, 
-                                            ::boost::mpl::int_<Index> >::type
-    get_attribute() 
+    template <class Index>
+    typename ::boost::fusion::result_of::at_key<attributes_type, 
+                                                Index>::type
+    get_attribute(Index const&) 
     {
-        return ::boost::fusion::at_c<Index>(m_attributes);
+        return ::boost::fusion::at_key<Index>(m_attributes);
     }
     
-    template <int Index>
+    template <class Index>
     typename ::boost::add_const<
-        typename ::boost::fusion::result_of::at<attributes_type,
-                                                ::boost::mpl::int_<Index> >::type>::type
-	get_attribute()const 
+        typename ::boost::fusion::result_of::at_key<attributes_type,
+                                                    Index>::type>::type
+	get_attribute(Index const&)const 
     {
         return const_cast< 
             typename ::boost::add_const< 
-                typename ::boost::fusion::result_of::at< attributes_type,
-                                                ::boost::mpl::int_<Index> >::type>::type>
-                                (::boost::fusion::at_c<Index>(m_attributes));
+                typename ::boost::fusion::result_of::at_key< attributes_type,
+                                                             Index >::type>::type>
+                                (::boost::fusion::at_key<Index>(m_attributes));
     }
 
 private:
