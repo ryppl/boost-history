@@ -10,7 +10,8 @@
 #define BOOST_ASSIGN_DETAIL_ASSIGN_REFERENCE_COPY_MPG_2010_HPP
 
 namespace boost{
-namespace assign_detail{
+namespace assign{
+namespace detail{
 
 	// This is a reference wrapper whose assignment operator copies the value of
     // the rhs to the object pointed to.
@@ -56,7 +57,8 @@ namespace assign_detail{
 
     };
     
-}// assign_detail
+}// detail
+}// assign
 }// boost
 
 #endif

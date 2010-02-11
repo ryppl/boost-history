@@ -1,13 +1,13 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::ref_list_of_auto_size_copy_rebind.hpp                    //
+// assign::detail::auto_size.hpp                    						//
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_DETAIL_REF_LIST_OF_AUTO_SIZE_COPY_REBIND_ER_2010_HPP
-#define BOOST_ASSIGN_DETAIL_REF_LIST_OF_AUTO_SIZE_COPY_REBIND_ER_2010_HPP
+#ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_AUTO_SIZE_ER_2010_HPP
+#define BOOST_ASSIGN_AUTO_SIZE_DETAIL_AUTO_SIZE_ER_2010_HPP
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
@@ -52,7 +52,7 @@ namespace auto_size{
 
     template<typename T>
     struct ref_copy{
-        typedef boost::assign_detail::assign_reference_copy<T> type;
+        typedef boost::assign::detail::assign_reference_copy<T> type;
     };
             
     template<typename T,int N,template<typename> class Ref>

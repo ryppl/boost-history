@@ -9,7 +9,7 @@
 #include <boost/progress.hpp>
 #include <boost/bind.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/cref_list_of2.hpp>
+#include <boost/assign/auto_size/ref_copy_list_of.hpp>
 #include <libs/assign/test/cref_list_of2_speed.h>
 
 // This file was provided by M.P.G 
