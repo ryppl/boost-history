@@ -54,6 +54,7 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(explicit_entry_state)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(automatic_event)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(no_exception_thrown)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(no_message_queue)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(activate_deferred_events)
 
 namespace boost { namespace msm { namespace back
 {
@@ -264,7 +265,7 @@ struct generate_event_set
         >::type type;
 };
 
-// returns a mpl::bool_<true> if State has Event as delayed event
+// returns a mpl::bool_<true> if State has Event as deferred event
 template <class State, class Event>
 struct has_state_delayed_event  
 {
@@ -274,7 +275,7 @@ struct has_state_delayed_event
 	    ::boost::mpl::bool_<false>,
 	    ::boost::mpl::bool_<true> >::type type;
 };
-// returns a mpl::bool_<true> if State has any delayed event
+// returns a mpl::bool_<true> if State has any deferred event
 template <class State>
 struct has_state_delayed_events  
 {
@@ -413,13 +414,24 @@ struct recursive_get_transition_table
 
 // metafunction used to say if a SM has pseudo exit states
 template <class Derived>
-struct has_fsm_delayed_events 
+struct has_fsm_deferred_events 
 {
     typedef typename create_stt<Derived>::type Stt;
     typedef typename generate_state_set<Stt>::type state_list;
 
-    typedef ::boost::mpl::bool_< ::boost::mpl::count_if<
-        state_list,has_state_delayed_events< ::boost::mpl::placeholders::_1 > >::value != 0> type;
+    typedef typename ::boost::mpl::or_<
+        typename has_activate_deferred_events<Derived>::type,
+        ::boost::mpl::bool_< ::boost::mpl::count_if<
+                typename Derived::configuration,
+                has_activate_deferred_events< ::boost::mpl::placeholders::_1 > >::value != 0> 
+    >::type found_in_fsm;
+
+    typedef typename ::boost::mpl::or_<
+            found_in_fsm,
+            ::boost::mpl::bool_< ::boost::mpl::count_if<
+                state_list,has_state_delayed_events<
+                    ::boost::mpl::placeholders::_1 > >::value != 0>
+            >::type type;
 };
 
 // returns a mpl::bool_<true> if State has any delayed event

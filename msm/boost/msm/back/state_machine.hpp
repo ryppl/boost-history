@@ -164,7 +164,7 @@ private:
     template <class StateType>
     struct deferred_msg_queue_helper<StateType,
         typename ::boost::enable_if< 
-            typename ::boost::msm::back::has_fsm_delayed_events<StateType>::type >::type> 
+            typename ::boost::msm::back::has_fsm_deferred_events<StateType>::type >::type> 
     {
     public:
         deferred_msg_queue_helper():m_deferred_events_queue(){}
@@ -1086,6 +1086,19 @@ private:
 #undef MSM_VISIT_STATE_EXECUTE
 #undef MSM_VISIT_STATE_SUB
 
+    // puts the given event into the deferred queue
+    template <class Event>
+    void defer_event(Event const& e)
+    {
+        // to call this function, you need either a state with a deferred_events typedef
+        // or that the fsm provides the activate_deferred_events typedef
+        BOOST_MPL_ASSERT(( has_fsm_deferred_events<library_sm> ));
+        execute_return (library_sm::*pf) (Event const& evt)= &library_sm::process_event;
+        Event temp (e);
+        ::boost::function<execute_return () > f= ::boost::bind(pf, this,temp);
+        post_deferred_event(f);
+    }
+
  protected:    // interface for the derived class
 
      // helper used to fill the initial states
@@ -1264,7 +1277,7 @@ private:
     // otherwise the standard version handling the deferred events
     template <class StateType>
     struct handle_defer_helper
-        <StateType, typename enable_if< typename ::boost::msm::back::has_fsm_delayed_events<StateType>::type >::type>
+        <StateType, typename enable_if< typename ::boost::msm::back::has_fsm_deferred_events<StateType>::type >::type>
     {
         handle_defer_helper(deferred_msg_queue_helper<library_sm>& a_queue):
             events_queue(a_queue),next_deferred_event(){}
@@ -1985,10 +1998,7 @@ BOOST_PP_REPEAT(BOOST_PP_ADD(BOOST_MSM_VISITOR_ARG_SIZE,1), MSM_VISITOR_ARGS_EXE
     template <class Event>
     static HandledEnum defer_transition(library_sm& fsm, int , int , Event const& e)
     {
-        execute_return (library_sm::*pf) (Event const& evt)= &library_sm::process_event;
-        Event temp (e);
-        ::boost::function<execute_return () > f= ::boost::bind(pf, ::boost::ref(fsm),temp);
-        fsm.post_deferred_event(f);
+        fsm.defer_event(e);
         return HANDLED_DEFERRED;
     }
 

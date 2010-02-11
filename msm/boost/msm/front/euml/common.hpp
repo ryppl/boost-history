@@ -267,6 +267,10 @@ struct no_msg_queue : euml_config<no_msg_queue>
 {
     typedef int no_message_queue;
 };
+struct deferred_events : euml_config<deferred_events>
+{
+    typedef int activate_deferred_events;
+};
 
 struct invalid_type{};
 struct make_invalid_type
@@ -1501,6 +1505,32 @@ struct Get_Flag_Helper: proto::extends< proto::terminal<get_flag_tag>::type, Get
     };
 };
 Get_Flag_Helper const is_flag_;
+
+// deferring an event
+struct DeferEvent_ : euml_action< DeferEvent_ >
+{
+    typedef ::boost::mpl::set<action_tag> tag_type;
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    void operator()(EVT const& evt,FSM& fsm,SourceState& ,TargetState& ) const
+    {
+        fsm.defer_event(evt);
+    }
+};
+struct defer_event_tag {};
+struct Defer_Helper : proto::extends< proto::terminal<defer_event_tag>::type, Defer_Helper, sm_domain>
+{
+    using proto::extends< proto::terminal<defer_event_tag>::type, Defer_Helper, sm_domain>::operator=;
+    template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
+#ifdef BOOST_MSVC 
+ ,class Arg6 
+#endif
+>
+    struct In
+    {
+        typedef DeferEvent_ type;
+    };
+};
+Defer_Helper const defer_;
 
 #ifdef BOOST_MSVC
 #define MSM_EUML_FUNCTION(functor,function,function_name,result_trans,result_state)                     \

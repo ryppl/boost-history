@@ -298,5 +298,15 @@ namespace boost { namespace msm { namespace front
                 (Call2<EVT,FSM,SourceState,TargetState>(evt,fsm,src,tgt));
         }
     };
+
+    // functor pre-defined for basic functionality
+    struct Defer 
+    {
+        template <class EVT,class FSM,class SourceState,class TargetState>
+        void operator()(EVT const& evt,FSM& fsm,SourceState& ,TargetState& ) const
+        {
+            fsm.defer_event(evt);
+        }
+    };
 }}}
 #endif //BOOST_MSM_FRONT_FUNCTOR_ROW_H
