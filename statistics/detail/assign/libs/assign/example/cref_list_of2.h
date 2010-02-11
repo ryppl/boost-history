@@ -10,6 +10,7 @@
 #define LIBS_ASSIGN_EXAMPLE_CREF_LIST_OF2_ER_2010_HPP
 #include <ostream>
 
+
 void example_cref_list_of(std::ostream&);
 
 #endif

@@ -1,13 +1,13 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::assign_value.hpp                               			//
+// assign::detail::assign_reference_copy.hpp                               	//
 //                                                                          //
 //  (C) Copyright 2010 M.P.G                                        		//
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_DETAIL_ASSIGN_VALUE_MPG_2010_HPP
-#define BOOST_ASSIGN_DETAIL_ASSIGN_VALUE_MPG_2010_HPP
+#ifndef BOOST_ASSIGN_DETAIL_ASSIGN_REFERENCE_COPY_MPG_2010_HPP
+#define BOOST_ASSIGN_DETAIL_ASSIGN_REFERENCE_COPY_MPG_2010_HPP
 
 namespace boost{
 namespace assign_detail{
@@ -18,12 +18,12 @@ namespace assign_detail{
     // This is in contrast to assign_reference whose operator= rebinds the 
     // address of the internal pointer. To that effect,here, call rebind() 
 	template< class T >
-    struct assign_value
+    struct assign_reference_copy
     {
-        assign_value()
+        assign_reference_copy()
         { /* intentionally empty */ }
 
-        assign_value( T& r ) : ref_(&r)
+        assign_reference_copy( T& r ) : ref_(&r)
         { }
 
         void operator=( const T& r )
@@ -36,7 +36,7 @@ namespace assign_detail{
             return *ref_;
         }
 
-        void swap( assign_value& r )
+        void swap( assign_reference_copy& r )
         {
             std::swap( *ref_, *r.ref_ );
         }

@@ -19,8 +19,12 @@
 #include <boost/assign/list_of.hpp> // needed for assign_referene
 #include <boost/assign/detail/assign_value.hpp>
 
-// This is the implementation behind ref_list_of() and ref_list_rebind() which,
-// unlike ref_list_of<int>(), deduces the size of the number of items. 
+// This is the implementation behind ref_list_of() and ref_copy_list_of().
+//
+// The motivation for this class was to improve upon ref_list_of<int>(), by 
+// deducing the number of arguments at compile time, and allowing for either 
+// of copy or rebind semantics, in case it is used as the lhs of an assignment; 
+// the former (copy) being both safer and more common than the latter (rebind).
 //    
 // Acknowledgement: The idea of this class was developed in collaboration 
 // with M.P.G
@@ -36,7 +40,8 @@
 
 namespace boost{
 namespace assign{
-namespace cref_list_of_impl{
+namespace detail{
+namespace auto_size{
             
 	typedef boost::mpl::void_ top_;
 
@@ -49,7 +54,7 @@ namespace cref_list_of_impl{
 	// Copy semantics
     template<typename T>
     struct ref_value{
-        typedef boost::assign_detail::assign_value<T> type;
+        typedef boost::assign_detail::assign_reference_copy<T> type;
     };
             
     template<typename T,int N,template<typename> class Ref>
@@ -183,17 +188,18 @@ namespace cref_list_of_impl{
             
     template<typename T>
     struct copy_first{
-        typedef cref_list_of_impl::expr<
-        	cref_list_of_impl::top_,T,1,ref_value> type;   
+        typedef detail::auto_size::expr<
+        	detail::auto_size::top_,T,1,ref_value> type;   
     };
 
     template<typename T>
     struct rebind_first{
-        typedef cref_list_of_impl::expr<
-        	cref_list_of_impl::top_,T,1,ref_bind> type;   
+        typedef detail::auto_size::expr<
+        	detail::auto_size::top_,T,1,ref_bind> type;   
     };
             
-}// cref_list_of_impl        
+}// auto_size  
+}// detail      
 }// assign
 }// boost
 
