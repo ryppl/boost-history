@@ -13,6 +13,9 @@
 
 #include <boost/msm/front/euml/common.hpp>
 #include <boost/fusion/container/vector.hpp>
+#include <boost/fusion/include/pair.hpp>
+#include <boost/fusion/include/as_map.hpp>
+
 #include <boost/mpl/remove_if.hpp>
 #include <boost/mpl/eval_if.hpp>
 
@@ -489,9 +492,32 @@ struct BuildActions
 {};
 
 // attributes building
+#define BOOST_MSM_EUML_DECLARE_ATTRIBUTE(attr_type,attr_name)                                           \
+struct attr_name ## _                                                                                   \
+    : proto::extends< proto::terminal<msm::front::action_tag>::type, attr_name ## _, sm_domain>         \
+    {                                                                                                   \
+        typedef ::boost::fusion::pair<attr_name ## _,attr_type> attribute_type;                         \
+    };                                                                                                  \
+attr_name ## _ const attr_name;
+
 struct make_attributes_tag
 {
     typedef int attribute_tag;
+};
+
+template <class T>
+struct get_attribute_type
+{
+    typedef typename T::attribute_type type;
+};
+template <class Seq>
+struct transform_to_fusion_pair 
+{
+    typedef typename ::boost::mpl::fold<
+        Seq,::boost::mpl::vector<>,
+        ::boost::mpl::push_back< ::boost::mpl::placeholders::_1, 
+                                 get_attribute_type< ::boost::mpl::placeholders::_2> >
+        >::type type;
 };
 
 template<class X = proto::is_proto_expr>
@@ -500,8 +526,9 @@ struct attribute
    BOOST_PROTO_BASIC_EXTENDS(
        proto::terminal<make_attributes_tag>::type
      , attribute
-     , proto::default_domain
+     , sm_domain
    )
+   typedef ::boost::fusion::pair<int,int> attribute_type;
 };
 
  attribute<> const attributes_ = {{}};
@@ -513,17 +540,22 @@ struct attribute
           proto::fold_tree<
               proto::_
             , ::boost::fusion::vector<>()
-            , ::boost::mpl::push_back<proto::_state, proto::_value>()
+            , ::boost::mpl::push_back<proto::_state, 
+                                      ::boost::mpl::if_< has_attribute_tag< proto::_value>,
+                                                         proto::_value,
+                                                         get_attribute_type<proto::_> > 
+                >()
            >
        >
     >
  {};
+
 struct BuildAttributes 
  : proto::make<
       ::boost::mpl::if_<
           has_attribute_tag< ::boost::mpl::deref< ::boost::mpl::prior< ::boost::mpl::end< BuildAttributesHelper > > > >,
-          ::boost::mpl::pop_back< BuildAttributesHelper >,
-          BuildAttributesHelper > 
+          ::boost::fusion::result_of::as_map< ::boost::mpl::pop_back< BuildAttributesHelper > >,
+          ::boost::fusion::result_of::as_map< BuildAttributesHelper > > 
    > 
 {};
 

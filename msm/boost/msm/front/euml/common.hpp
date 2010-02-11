@@ -318,9 +318,27 @@ struct NoAction : euml_action<NoAction>
     }
 };
 
-struct GetSource_ : euml_action<GetSource_ >
+template <class Index=void>
+struct GetSource_ : euml_action<GetSource_<Index> >
 {
-    using euml_action<GetSource_ >::operator=;
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    struct transition_action_result 
+    {
+        typedef typename ::boost::fusion::result_of::at_key<typename SourceState::attributes_type,
+                                                        Index >::type type;
+    };
+    typedef ::boost::mpl::set<action_tag> tag_type;
+
+	template <class EVT,class FSM,class SourceState,class TargetState>
+	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+		operator()(EVT const& ,FSM& ,SourceState& src,TargetState&)const
+	{
+        return src.get_attribute(Index());
+	}
+};
+template<>
+struct GetSource_<void> : euml_action<GetSource_<void> >
+{
 	template <class EVT,class FSM,class SourceState,class TargetState>
 	struct transition_action_result 
 	{
@@ -345,14 +363,32 @@ struct GetSource_Helper: proto::extends< proto::terminal<get_source_tag>::type, 
 >
     struct In
     {
-        typedef GetSource_ type;
+        typedef GetSource_<Arg1> type;
     };
 };
 GetSource_Helper const source_;
 
-struct GetTarget_ : euml_action<GetTarget_ >
+template <class Index=void>
+struct GetTarget_ : euml_action<GetTarget_<Index> >
 {
-    using euml_action<GetTarget_ >::operator=;
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    struct transition_action_result 
+    {
+        typedef typename ::boost::fusion::result_of::at_key<typename TargetState::attributes_type,
+                                                        Index >::type type;
+    };
+    typedef ::boost::mpl::set<action_tag> tag_type;
+
+	template <class EVT,class FSM,class SourceState,class TargetState>
+	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+		operator()(EVT const& ,FSM& ,SourceState& ,TargetState& tgt)const
+	{
+        return tgt.get_attribute(Index());
+	}
+};
+template<>
+struct GetTarget_<void> : euml_action<GetTarget_<void> >
+{
 	template <class EVT,class FSM,class SourceState,class TargetState>
 	struct transition_action_result 
 	{
@@ -377,12 +413,31 @@ struct GetTarget_Helper: proto::extends< proto::terminal<get_target_tag>::type, 
 >
     struct In
     {
-        typedef GetTarget_ type;
+        typedef GetTarget_<Arg1> type;
     };
 };
 GetTarget_Helper const target_;
 
-struct GetState_ : euml_action<GetState_ >
+template <class Index=void>
+struct GetState_ : euml_action<GetState_<Index> >
+{
+    template <class Event,class FSM,class STATE >
+    struct state_action_result 
+    {
+        typedef typename ::boost::fusion::result_of::at_key<typename STATE::attributes_type,
+                                                        Index >::type type;
+    };
+    typedef ::boost::mpl::set<state_action_tag> tag_type;
+
+    template <class Event,class FSM,class STATE>
+    typename state_action_result<Event,FSM,STATE>::type
+        operator()(Event const&,FSM& ,STATE& state )
+	{
+        return state.get_attribute(Index());
+	}
+};
+template<>
+struct GetState_<void> : euml_action<GetState_<void> >
 {
     using euml_action<GetState_ >::operator=;
 
@@ -410,15 +465,46 @@ struct GetState_Helper: proto::extends< proto::terminal<get_state_tag>::type, Ge
 >
     struct In
     {
-        typedef GetState_ type;
+        typedef GetState_<Arg1> type;
     };
 };
 GetState_Helper const state_;
 
-struct GetEvent_ : euml_action<GetEvent_ >
+template <class Index=void>
+struct GetEvent_ : euml_action<GetEvent_<Index> >
 {
-    using euml_action<GetEvent_ >::operator=;
+    template <class Event,class FSM,class STATE >
+    struct state_action_result 
+    {
+        typedef typename ::boost::add_const<
+            typename ::boost::fusion::result_of::at_key<typename Event::attributes_type,
+                                                        Index >::type>::type type;
+    };
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    struct transition_action_result 
+    {
+        typedef typename ::boost::add_const<
+            typename ::boost::fusion::result_of::at_key<typename EVT::attributes_type,
+                                                        Index >::type>::type type;
+    };
+    typedef ::boost::mpl::set<state_action_tag,action_tag> tag_type;
 
+	template <class Event,class FSM,class STATE>
+	typename state_action_result<Event,FSM,STATE>::type
+		operator()(Event const& evt,FSM& ,STATE& )
+	{
+		return evt.get_attribute(Index());
+	}
+	template <class EVT,class FSM,class SourceState,class TargetState>
+	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+		operator()(EVT const& evt ,FSM& ,SourceState& ,TargetState&)const
+	{
+        return evt.get_attribute(Index());
+	}
+};
+template <>
+struct GetEvent_<void> : euml_action<GetEvent_<void> >
+{
 	template <class Event,class FSM,class STATE >
 	struct state_action_result 
 	{
@@ -454,12 +540,43 @@ struct GetEvent_Helper: proto::extends< proto::terminal<get_event_tag>::type, Ge
 >
     struct In
     {
-        typedef GetEvent_ type;
+        typedef GetEvent_<Arg1> type;
     };
 };
 GetEvent_Helper const event_;
 
-struct GetFsm_ : euml_action<GetFsm_>
+template <class Index=void>
+struct GetFsm_ : euml_action<GetFsm_<Index> >
+{
+    template <class Event,class FSM,class STATE >
+    struct state_action_result 
+    {
+        typedef typename ::boost::fusion::result_of::at_key<typename FSM::attributes_type,
+                                                        Index >::type type;
+    };
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    struct transition_action_result 
+    {
+        typedef typename ::boost::fusion::result_of::at_key<typename FSM::attributes_type,
+                                                        Index >::type type;
+    };
+    typedef ::boost::mpl::set<state_action_tag,action_tag> tag_type;
+
+    template <class Event,class FSM,class STATE>
+    typename state_action_result<Event,FSM,STATE>::type
+        operator()(Event const&,FSM& fsm,STATE& )
+    {
+        return fsm.get_attribute(Index());
+    }
+	template <class EVT,class FSM,class SourceState,class TargetState>
+	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+		operator()(EVT const& ,FSM& fsm,SourceState& ,TargetState&)const
+	{
+        return fsm.get_attribute(Index());
+	}
+};
+template<>
+struct GetFsm_<void> : euml_action<GetFsm_<void> >
 {
     using euml_action<GetFsm_>::operator=;
 
@@ -498,7 +615,7 @@ struct GetFsm_Helper: proto::extends< proto::terminal<get_fsm_tag>::type, GetFsm
 >
     struct In
     {
-        typedef GetFsm_ type;
+        typedef GetFsm_<Arg1> type;
     };
 };
 GetFsm_Helper const fsm_;
@@ -583,21 +700,21 @@ struct GetAttribute_  : euml_action<GetAttribute_<Target, Index> >
     struct state_action_result 
     {
 		typedef typename 
-            ::boost::fusion::result_of::at<
+            ::boost::fusion::result_of::at_key<
             typename get_attributes_type<
-            typename ::boost::remove_reference<
-                        typename get_result_type2<Target,Event,FSM,STATE>::type>::type>::type,
-                typename Index::value_type >::type type;
+                    typename ::boost::remove_reference<
+                                typename get_result_type2<Target,Event,FSM,STATE>::type>::type>::type,
+                    Index >::type type;
     };
     template <class EVT,class FSM,class SourceState,class TargetState>
     struct transition_action_result 
     {
 		typedef typename 
-            ::boost::fusion::result_of::at<
+            ::boost::fusion::result_of::at_key<
             typename get_attributes_type<
                     typename ::boost::remove_reference<
                         typename get_result_type<Target,EVT,FSM,SourceState,TargetState>::type>::type>::type,
-                typename Index::value_type >::type type;
+                    Index >::type type;
     };
 
     typedef ::boost::mpl::set<state_action_tag,action_tag> tag_type;
@@ -609,7 +726,7 @@ struct GetAttribute_  : euml_action<GetAttribute_<Target, Index> >
 			typename transition_action_result<EVT,FSM,SourceState,TargetState>::type >::type 
      operator()(EVT const& evt, FSM& fsm,SourceState& src,TargetState& tgt)const
     {
-        return (Target()(evt,fsm,src,tgt)).template get_attribute<Index::value_type::value>();
+        return (Target()(evt,fsm,src,tgt)).get_attribute(Index());
     }
     template <class Event,class FSM,class STATE>
 	typename ::boost::enable_if<
@@ -618,7 +735,7 @@ struct GetAttribute_  : euml_action<GetAttribute_<Target, Index> >
 			typename state_action_result<Event,FSM,STATE>::type >::type 
      operator()(Event const& evt,FSM& fsm,STATE& state )const
     {
-        return (Target()(evt,fsm,state)).template get_attribute<Index::value_type::value>();
+        return (Target()(evt,fsm,state)).get_attribute(Index());
     }
 };
 
@@ -639,7 +756,7 @@ struct GetAttribute_Helper: proto::extends< proto::terminal<get_attribute_tag>::
 };
 GetAttribute_Helper const attribute_;
 
-template <int Index>
+template <class Index>
 struct Source_ : euml_action<Source_<Index> >
 {
     using euml_action<Source_<Index> >::operator=;
@@ -647,8 +764,8 @@ struct Source_ : euml_action<Source_<Index> >
 	struct transition_action_result 
 	{
 		typedef typename 
-			::boost::fusion::result_of::at<typename SourceState::attributes_type,
-			::boost::mpl::int_<Index> >::type type;
+			::boost::fusion::result_of::at_key<typename SourceState::attributes_type,
+			                                   Index >::type type;
 	};
 	typedef ::boost::mpl::set<action_tag> tag_type;
 
@@ -656,10 +773,10 @@ struct Source_ : euml_action<Source_<Index> >
 	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
 		operator()(EVT const& , FSM&,SourceState& src,TargetState& )const
 	{
-        return src.template get_attribute<Index>();
+        return src.get_attribute(Index());
 	}
 };
-template <int Index>
+template <class Index>
 struct Target_ : euml_action<Target_<Index> >
 {
     using euml_action<Target_<Index> >::operator=;
@@ -667,8 +784,8 @@ struct Target_ : euml_action<Target_<Index> >
 	struct transition_action_result 
 	{
 		typedef typename 
-			::boost::fusion::result_of::at<typename TargetState::attributes_type,
-			::boost::mpl::int_<Index> >::type type;
+			::boost::fusion::result_of::at_key<typename TargetState::attributes_type,
+			                                   Index >::type type;
 	};
 	typedef ::boost::mpl::set<action_tag> tag_type;
 
@@ -676,10 +793,10 @@ struct Target_ : euml_action<Target_<Index> >
 	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
 		operator()(EVT const& ,FSM& ,SourceState& ,TargetState& tgt)const
 	{
-        return tgt.template get_attribute<Index>();
+        return tgt.get_attribute(Index());
 	}
 };
-template <int Index>
+template <class Index>
 struct State_ : euml_action<State_<Index> >
 {
     using euml_action<State_<Index> >::operator=;
@@ -688,8 +805,8 @@ struct State_ : euml_action<State_<Index> >
 	struct state_action_result 
 	{
 		typedef typename 
-			::boost::fusion::result_of::at<typename STATE::attributes_type,
-			::boost::mpl::int_<Index> >::type type;
+			::boost::fusion::result_of::at_key<typename STATE::attributes_type,
+			                                   Index >::type type;
 	};
 	typedef ::boost::mpl::set<state_action_tag> tag_type;
 
@@ -697,10 +814,10 @@ struct State_ : euml_action<State_<Index> >
 	typename state_action_result<Event,FSM,STATE>::type
 		operator()(Event const&,FSM& ,STATE& state )
 	{
-        return state.template get_attribute<Index>();
+        return state.get_attribute(Index());
 	}
 };
-template <int Index>
+template <class Index>
 struct Event_ : euml_action<Event_<Index> >
 {
     using euml_action<Event_<Index> >::operator=;
@@ -709,15 +826,15 @@ struct Event_ : euml_action<Event_<Index> >
 	struct state_action_result 
 	{
 		typedef typename ::boost::add_const<
-			typename ::boost::fusion::result_of::at<typename Event::attributes_type,
-                                                    ::boost::mpl::int_<Index> >::type>::type type;
+			typename ::boost::fusion::result_of::at_key<typename Event::attributes_type,
+                                                        Index >::type>::type type;
 	};
 	template <class EVT,class FSM,class SourceState,class TargetState>
 	struct transition_action_result 
 	{
 		typedef typename ::boost::add_const<
-            typename ::boost::fusion::result_of::at<typename EVT::attributes_type,
-                                                    ::boost::mpl::int_<Index> >::type>::type type;
+            typename ::boost::fusion::result_of::at_key<typename EVT::attributes_type,
+                                                        Index >::type>::type type;
 	};
     typedef ::boost::mpl::set<state_action_tag,action_tag> tag_type;
 
@@ -725,16 +842,16 @@ struct Event_ : euml_action<Event_<Index> >
 	typename state_action_result<Event,FSM,STATE>::type
 		operator()(Event const& evt,FSM& ,STATE& )
 	{
-		return evt.template get_attribute<Index>();
+		return evt.get_attribute(Index());
 	}
 	template <class EVT,class FSM,class SourceState,class TargetState>
 	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
 		operator()(EVT const& evt ,FSM& ,SourceState& ,TargetState&)const
 	{
-		return evt.template get_attribute<Index>();
+		return evt.get_attribute(Index());
 	}
 };
-template <class StateType,int Index>
+template <class StateType,class Index>
 struct State_Attribute_ : euml_action<State_Attribute_<StateType,Index> >
 {
     using euml_action<State_Attribute_<StateType,Index> >::operator=;
@@ -743,8 +860,8 @@ struct State_Attribute_ : euml_action<State_Attribute_<StateType,Index> >
 	struct state_action_result 
 	{
 		typedef typename 
-			::boost::fusion::result_of::at<typename StateType::attributes_type,
-			::boost::mpl::int_<Index> >::type type;
+			::boost::fusion::result_of::at_key<typename StateType::attributes_type,
+			                                   Index >::type type;
 	};
     typedef ::boost::mpl::set<state_action_tag> tag_type;
 
@@ -752,11 +869,11 @@ struct State_Attribute_ : euml_action<State_Attribute_<StateType,Index> >
 	typename state_action_result<Event,FSM,STATE>::type
 		operator()(Event const&,FSM& fsm,STATE& )
 	{
-        return fsm.template get_state<StateType&>().template get_attribute<Index>();
+        return fsm.template get_state<StateType&>().get_attribute(Index());
 	}
 };
 
-template <int Index>
+template <class Index>
 struct Fsm_ : euml_action<Fsm_<Index> >
 {
     using euml_action<Fsm_<Index> >::operator=;
@@ -765,15 +882,15 @@ struct Fsm_ : euml_action<Fsm_<Index> >
     struct state_action_result 
     {
         typedef typename 
-            ::boost::fusion::result_of::at<typename FSM::attributes_type,
-            ::boost::mpl::int_<Index> >::type type;
+            ::boost::fusion::result_of::at_key<typename FSM::attributes_type,
+                                               Index >::type type;
     };
     template <class EVT,class FSM,class SourceState,class TargetState>
     struct transition_action_result 
     {
         typedef typename 
-            ::boost::fusion::result_of::at<typename FSM::attributes_type,
-            ::boost::mpl::int_<Index> >::type type;
+            ::boost::fusion::result_of::at_key<typename FSM::attributes_type,
+                                               Index >::type type;
     };
     typedef ::boost::mpl::set<state_action_tag,action_tag> tag_type;
 
@@ -781,13 +898,13 @@ struct Fsm_ : euml_action<Fsm_<Index> >
     typename state_action_result<Event,FSM,STATE>::type
         operator()(Event const&,FSM& fsm,STATE& )
     {
-        return fsm.template get_attribute<Index>();;
+        return fsm.get_attribute(Index());
     }
     template <class EVT,class FSM,class SourceState,class TargetState>
     typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
         operator()(EVT const& evt ,FSM& fsm,SourceState& ,TargetState&)const
     {
-        return fsm.template get_attribute<Index>();
+        return fsm.get_attribute(Index());
     }
 };
 
