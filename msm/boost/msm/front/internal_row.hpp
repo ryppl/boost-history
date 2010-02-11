@@ -90,7 +90,6 @@ namespace boost { namespace msm { namespace front
     };
 	template<
 		class Event
-        , typename CalledForGuard
 	>
 	struct _internal
 	{
