@@ -13,10 +13,11 @@
 using namespace std;
 using namespace boost::msm::front::euml;
 namespace msm = boost::msm;
-//attributes
-#define m_SongIndex 0
-#define m_NumberOfSongs 1
-#define m_Selected 0
+
+// attribute names and types
+BOOST_MSM_EUML_DECLARE_ATTRIBUTE(int,m_Selected)
+BOOST_MSM_EUML_DECLARE_ATTRIBUTE(int,m_SongIndex)
+BOOST_MSM_EUML_DECLARE_ATTRIBUTE(int,m_NumberOfSongs)
 #include "ipod_functors.hpp"
 
 
@@ -50,13 +51,13 @@ namespace  // Concrete FSM implementation
     struct SelectSong : euml_event<SelectSong> {};
     struct SongFinished : euml_event<SongFinished> {};
 
-    typedef BOOST_TYPEOF(build_attributes(attributes_ << int()/*m_Selected*/ )) StartSongAttributes;
+    typedef BOOST_TYPEOF(build_attributes(attributes_ << m_Selected )) StartSongAttributes;
     struct StartSong : euml_event<StartSong> ,StartSongAttributes
     {
         StartSong(){}//defined only for stt
         StartSong (int song_index)
         {
-            get_attribute<m_Selected>()=song_index;
+            get_attribute(m_Selected)=song_index;
         }
     };
     struct PreviousSong : euml_event<PreviousSong> {};
@@ -91,41 +92,41 @@ namespace  // Concrete FSM implementation
     //stt
     typedef BOOST_TYPEOF(build_stt((
         //  +------------------------------------------------------------------------------+
-        Playing()           + PlayPause()           == Paused()                                 ,
-        Playing()           + Off()                 == Paused()                                 ,
-        Playing()           + StartSong()           == Playing() 
-           / (if_then_(Event_<m_Selected>() > Int_<0>() && 
-                       Event_<m_Selected>() < Fsm_<m_NumberOfSongs>(),
-                       Fsm_<m_SongIndex>() = Event_<m_Selected>() ),show_selected_song())       ,
-        Playing()           + SongFinished()        == Playing() 
-           / (if_then_else_(++Fsm_<m_SongIndex>() <= Fsm_<m_NumberOfSongs>(),  /*if*/
-                            show_playing_song(),                               /*then*/
-                            (Fsm_<m_SongIndex>()=Int_<1>(),process_(EndPlay()))/*else*/ ) )     ,
-        Paused()            + PlayPause()           == Playing()                                ,
-        Paused()            + StartSong()           == Playing()
-           / (if_then_(Event_<m_Selected>() > Int_<0>() && 
-                       Event_<m_Selected>() < Fsm_<m_NumberOfSongs>(),
-                       Fsm_<m_SongIndex>() = Event_<m_Selected>() ),show_selected_song())       ,
-        WaitingForNextPrev()+ PreviousSong()        == WaitingForNextPrev()                     
-          /( if_then_else_(--Fsm_<m_SongIndex>() > Int_<0>(),                  /*if*/
-                           show_playing_song(),                                /*then*/
-                           (Fsm_<m_SongIndex>()=Int_<1>(),process_(EndPlay())) /*else*/ ) )      ,
-        WaitingForNextPrev()+ NextSong()            == WaitingForNextPrev()
-           / (if_then_else_(++Fsm_<m_SongIndex>() <= Fsm_<m_NumberOfSongs>(),  /*if*/
-                    show_playing_song(),                                       /*then*/
-                    (Fsm_<m_SongIndex>()=Int_<1>(),process_(EndPlay()))        /*else*/ ) )     ,
+        Paused()             == Playing()           + PlayPause()                                            ,
+        Paused()             == Playing()           + Off()                                                  ,
+        Playing()            == Playing()           + StartSong() 
+                             / (if_then_(event_(m_Selected) > Int_<0>() && 
+                                         event_(m_Selected) < fsm_(m_NumberOfSongs),
+                                         fsm_(m_SongIndex) = event_(m_Selected) ),show_selected_song())   ,
+        Playing()            == Playing() + SongFinished()
+                             / (if_then_else_(++fsm_(m_SongIndex) <= fsm_(m_NumberOfSongs),  /*if*/
+                                             show_playing_song(),                               /*then*/
+                                             (fsm_(m_SongIndex)=Int_<1>(),process_(EndPlay()))/*else*/ ) )  ,
+        Playing()            == Paused()            + PlayPause()                                             ,
+        Playing()            == Paused()            + StartSong()
+                             / (if_then_(event_(m_Selected) > Int_<0>() && 
+                                         event_(m_Selected) < fsm_(m_NumberOfSongs),
+                                         fsm_(m_SongIndex) = event_(m_Selected) ),show_selected_song())    ,
+        WaitingForNextPrev() == WaitingForNextPrev()+ PreviousSong()                     
+                             /( if_then_else_(--fsm_(m_SongIndex) > Int_<0>(),                  /*if*/
+                                              show_playing_song(),                                /*then*/
+                                              (fsm_(m_SongIndex)=Int_<1>(),process_(EndPlay())) /*else*/ ) ) ,
+        WaitingForNextPrev() == WaitingForNextPrev()+ NextSong()
+                               / (if_then_else_(++fsm_(m_SongIndex) <= fsm_(m_NumberOfSongs),      /*if*/
+                                                show_playing_song(),                               /*then*/
+                                                (fsm_(m_SongIndex)=Int_<1>(),process_(EndPlay()))  /*else*/ ) ),
 
-        WaitingForEnd()     + EndPlay()             == PlayingExit()                            ,
-        NoForward()         + EastPressed()         == ForwardPressed() [!is_flag_(NoFastFwd())] ,
-        ForwardPressed()    + EastReleased()        == NoForward()      / process_(NextSong())  ,
-        ForwardPressed()    + ForwardTimer()        == FastForward()    / do_fast_forward()     ,
-        FastForward()       + ForwardTimer()        == FastForward()    / do_fast_forward()     ,
-        FastForward()       + EastReleased()        == NoForward()                              ,
-        StdDisplay()        + PlayingMiddleButton() == SetPosition()                            ,
-        SetPosition()       + StartSong()           == StdDisplay()                             ,
-        SetPosition()       + PlayingMiddleButton() == SetMark()                                ,
-        SetMark()           + PlayingMiddleButton() == StdDisplay()                             ,
-        SetMark()           + StartSong()           == StdDisplay()  
+        PlayingExit()        == WaitingForEnd()     + EndPlay()                                                ,
+        ForwardPressed()     == NoForward()         + EastPressed() [!is_flag_(NoFastFwd())]                   ,
+        NoForward()          == ForwardPressed()    + EastReleased()      / process_(NextSong())               ,
+        FastForward()        == ForwardPressed()    + ForwardTimer()    / do_fast_forward()                    ,
+        FastForward()        == FastForward()       + ForwardTimer()    / do_fast_forward()                    ,
+        FastForward()        == NoForward()         + EastReleased()                                           ,
+        SetPosition()        == StdDisplay()        + PlayingMiddleButton()                                    ,
+        StdDisplay()         == SetPosition()       + StartSong()                                              ,
+        SetMark()            == SetPosition()       + PlayingMiddleButton()                                    ,
+        StdDisplay()         == SetMark()           + PlayingMiddleButton()                                    ,
+        StdDisplay()         == SetMark()           + StartSong()  
         //  +------------------------------------------------------------------------------+
         ) ) ) playingmode_transition_table;
 
@@ -135,9 +136,9 @@ namespace  // Concrete FSM implementation
     typedef BOOST_TYPEOF(build_sm(  playingmode_transition_table(), //STT
         init_ << Playing() << WaitingForNextPrev() << WaitingForEnd() 
               << NoForward() << StdDisplay(), // Init States
-        Fsm_<m_NumberOfSongs>()=Int_<5>(), // entry
+        fsm_(m_NumberOfSongs)=Int_<5>(), // entry
         NoAction(), // exit
-        attributes_ << int() /*m_SongIndex*/ << int() /*m_NumberOfSongs*/, //attributes
+        attributes_ << m_SongIndex << m_NumberOfSongs, //attributes
         configure_<< NoFastFwd() // Flags, Deferred events, configuration
 
         )) PlayingMode_;
@@ -146,9 +147,9 @@ namespace  // Concrete FSM implementation
     struct PlayingMode_ : public BOOST_TYPEOF(build_sm(  playingmode_transition_table(), //STT
         init_ << Playing() << WaitingForNextPrev() << WaitingForEnd() 
               << NoForward() << StdDisplay(), // Init States
-        Fsm_<m_NumberOfSongs>()=Int_<5>(), // entry
+        fsm_(m_NumberOfSongs)=Int_<5>(), // entry
         NoAction(), // exit
-        attributes_ << int() /*m_SongIndex*/ << int() /*m_NumberOfSongs*/, //attributes
+        attributes_ << m_SongIndex << m_NumberOfSongs, //attributes
         configure_<< NoFastFwd() // Flags, Deferred events, configuration
         )) 
     {
@@ -165,8 +166,8 @@ namespace  // Concrete FSM implementation
     //stt
     typedef BOOST_TYPEOF(build_stt((
         //  +------------------------------------------------------------------------------+
-        WaitingForSongChoice()  + MenuMiddleButton()   == StartCurrentSong()  ,
-        StartCurrentSong()      + SelectSong()         == MenuExit()  
+        StartCurrentSong()   == WaitingForSongChoice()  + MenuMiddleButton()  ,
+        MenuExit()           == StartCurrentSong()      + SelectSong() 
         //  +------------------------------------------------------------------------------+
         ) ) ) menumode_transition_table;
 
@@ -198,23 +199,25 @@ namespace  // Concrete FSM implementation
     // iPod stt
     typedef BOOST_TYPEOF(build_stt((
         //  +------------------------------------------------------------------------------+
-        NotHolding()            + Hold()           == Holding()  ,
-        Holding()               + NoHold()         == NotHolding()  ,
-        NotPlaying()            + PlayPause()      == PlayingMode() ,
-        PlayingMode::
-        exit_pt<PlayingExit>()  + EndPlay()        == NotPlaying()    / process_(MenuButton()) ,
-        NoMenuMode()            + MenuButton()     == MenuMode()  ,
-        MenuMode::
-        exit_pt<MenuExit>()     + CloseMenu()      == NoMenuMode()    / process2_(StartSong(),Int_<5>()) ,
-        NoOnOffButton()         + SouthPressed()   == OffDown()  ,
-        OffDown()               + SouthReleased()  == NoOnOffButton() / process_(PlayPause()) ,
-        OffDown()               + OnOffTimer()     == PlayerOff()     / (show_player_off(),process_(Off())) ,
-        PlayerOff()             + SouthPressed()   == NoOnOffButton() / show_player_on() ,
-        PlayerOff()             + NoHold()         == NoOnOffButton() / show_player_on(),
-        CheckMiddleButton()     + MiddleButton()   == CheckMiddleButton() 
-                [is_flag_(MenuActive())] / process_(PlayingMiddleButton()) ,
-        CheckMiddleButton()     + MiddleButton()   == CheckMiddleButton() 
-                [!is_flag_(MenuActive())] / process_(PlayingMiddleButton()) 
+        Holding()           == NotHolding()                 + Hold()                        ,
+        NotHolding()        == Holding()                    + NoHold()                      ,
+        PlayingMode()       == NotPlaying()                 + PlayPause()                   ,
+        NotPlaying()        == PlayingMode::exit_pt<PlayingExit>()  + EndPlay()    
+                                / process_(MenuButton())                                    ,
+        MenuMode()          == NoMenuMode()                 + MenuButton()                  ,
+        NoMenuMode()        == MenuMode::exit_pt<MenuExit>()+ CloseMenu()    
+                                / process2_(StartSong(),Int_<5>())                          ,
+        OffDown()           == NoOnOffButton()              + SouthPressed()                ,
+        NoOnOffButton()     == OffDown()                    + SouthReleased() 
+                                / process_(PlayPause())                                     ,
+        PlayerOff()         == OffDown()                    + OnOffTimer()     
+                                / (show_player_off(),process_(Off()))                       ,
+        NoOnOffButton()     == PlayerOff()                  + SouthPressed() / show_player_on() ,
+        NoOnOffButton()     == PlayerOff()                  + NoHold() / show_player_on()   ,
+        CheckMiddleButton() == CheckMiddleButton()          + MiddleButton() 
+                               [is_flag_(MenuActive())] / process_(PlayingMiddleButton())   ,
+        CheckMiddleButton() == CheckMiddleButton() + MiddleButton()
+                               [!is_flag_(MenuActive())] / process_(PlayingMiddleButton()) 
         //  +------------------------------------------------------------------------------+
         ) ) ) ipod_transition_table;
     // VC9 cannot compile the typedef with build_sm if one is also used for player

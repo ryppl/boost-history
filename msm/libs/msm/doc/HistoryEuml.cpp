@@ -22,17 +22,19 @@ namespace  // Concrete FSM implementation
     struct previous_song : euml_event<previous_song>{};
 
     // A "complicated" event type that carries some data.
-    typedef BOOST_TYPEOF(build_attributes(attributes_ << std::string() << DiskTypeEnum() )) cd_detected_def;
-    struct cd_detected : euml_event<cd_detected>,cd_detected_def
-        
+    BOOST_MSM_EUML_DECLARE_ATTRIBUTE(std::string,cd_name)
+    BOOST_MSM_EUML_DECLARE_ATTRIBUTE(DiskTypeEnum,cd_type)
+    typedef BOOST_TYPEOF(build_attributes(attributes_ << cd_name << cd_type )) cd_detected_attributes;
+    struct cd_detected : euml_event<cd_detected>,cd_detected_attributes
     {
         cd_detected(){}
         cd_detected(std::string name, DiskTypeEnum diskType)
         {
-            get_attribute<0>()=name;
-            get_attribute<1>()=diskType;
+            get_attribute(cd_name)=name;
+            get_attribute(cd_type)=diskType;
         }
     };
+
 
     // Seems to correct random VC9 bug
     struct PlayingPaused: euml_flag<PlayingPaused>{};
@@ -87,6 +89,23 @@ namespace  // Concrete FSM implementation
     // choice of back-end
     typedef msm::back::state_machine<Playing_,msm::back::ShallowHistory<mpl::vector<end_pause> > > Playing;
 
+    // guard conditions
+    struct good_disk_format : euml_action<good_disk_format>
+    {
+        template <class FSM,class EVT,class SourceState,class TargetState>
+        bool operator()(EVT const& evt,FSM&,SourceState& ,TargetState& )
+        {
+            // to test a guard condition, let's say we understand only CDs, not DVD
+            if (evt.get_attribute(cd_type)!=DISK_CD)
+            {
+                std::cout << "wrong disk, sorry" << std::endl;
+                // just for logging, does not block any transition
+                return true;
+            }
+            std::cout << "good disk" << std::endl;
+            return true;
+        }
+    };
     // replaces the old transition table
     typedef BOOST_TYPEOF(build_stt((
           Playing()   == Stopped()  + play()        / start_playback() ,
@@ -103,7 +122,8 @@ namespace  // Concrete FSM implementation
           //  +------------------------------------------------------------------------------+
           Stopped()   == Playing()  + stop()        / stop_playback(),
           Stopped()   == Paused()   + stop()        / stop_playback(),
-          Stopped()   == Empty()    + cd_detected() [good_disk_format()&&(Event_<1>()==Int_<DISK_CD>())] 
+          Stopped()   == Empty()    + cd_detected() [good_disk_format()&&
+                                                     (event_(cd_type)==Int_<DISK_CD>())] 
                                                     / (store_cd_info(),process_(play())),
           Stopped()   == Stopped()  + stop()                            
           //  +------------------------------------------------------------------------------+

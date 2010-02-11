@@ -1,10 +1,13 @@
+#include <vector>
 #include <iostream>
 
+//#define BOOST_PROTO_MAX_ARITY 5
 #include <boost/msm/back/state_machine.hpp>
 #include <boost/msm/front/euml/euml.hpp>
 
 using namespace std;
 using namespace boost::msm::front::euml;
+using namespace boost::msm::front;
 namespace msm = boost::msm;
 
 // entry/exit/action/guard logging functors
@@ -13,13 +16,13 @@ namespace msm = boost::msm;
 namespace  // Concrete FSM implementation
 {
     // events
-    struct play : euml_event<play>{};
+    // note that unlike the SimpleTutorial, events must derive from euml_event.
+    struct play : euml_event<play>{}; 
     struct end_pause : euml_event<end_pause>{};
     struct stop : euml_event<stop>{};
     struct pause : euml_event<pause>{};
     struct open_close : euml_event<open_close>{};
-    struct next_song : euml_event<next_song>{};
-    struct previous_song : euml_event<previous_song>{};
+    struct internal_event : euml_event<internal_event>{};
 
     // A "complicated" event type that carries some data.
     BOOST_MSM_EUML_DECLARE_ATTRIBUTE(std::string,cd_name)
@@ -35,10 +38,6 @@ namespace  // Concrete FSM implementation
         }
     };
 
-    // Flags. Allow information about a property of the current state
-    struct PlayingPaused: euml_flag<PlayingPaused>{};
-    struct CDLoaded : euml_flag<CDLoaded>{};
-    struct FirstSongPlaying : euml_flag<FirstSongPlaying>{};
 
     // Concrete FSM implementation 
 
@@ -46,61 +45,14 @@ namespace  // Concrete FSM implementation
 
     typedef BOOST_TYPEOF(build_state(Empty_Entry(),Empty_Exit())) Empty;
 
-    typedef BOOST_TYPEOF(build_state( Open_Entry(),Open_Exit(),
-                                      attributes_ << no_attributes_,
-                                      configure_<< CDLoaded() )) Open;
+    typedef BOOST_TYPEOF(build_state( Open_Entry(),Open_Exit() )) Open;
 
-    typedef BOOST_TYPEOF(build_state( Stopped_Entry(),Stopped_Exit(),
-                                      attributes_ << no_attributes_,
-                                      configure_<< CDLoaded() )) Stopped;
+    typedef BOOST_TYPEOF(build_state( Stopped_Entry(),Stopped_Exit() )) Stopped;
 
-    // state not defining any entry or exit
-    typedef BOOST_TYPEOF(build_state(NoAction(),NoAction(),
-                                     attributes_ << no_attributes_,
-                                     configure_<< PlayingPaused() << CDLoaded() )) Paused;
-
-    // Playing is now a state machine itself.
-
-    // It has 3 substates
-    typedef BOOST_TYPEOF(build_state( Song1_Entry(),Song1_Exit(),
-                                      attributes_ << no_attributes_,
-                                      configure_<< FirstSongPlaying() )) Song1;
-
-    typedef BOOST_TYPEOF(build_state( Song2_Entry(),Song2_Exit() )) Song2;
-
-    typedef BOOST_TYPEOF(build_state( Song3_Entry(),Song3_Exit() )) Song3;
-
-
-    // Playing has a transition table 
-    typedef BOOST_TYPEOF(build_stt(
-        //  +------------------------------------------------------------------------------+
-        (   Song2()  == Song1() + next_song()  / start_next_song(),
-            Song1()  == Song2() + previous_song()  / start_prev_song(),
-            Song3()  == Song2() + next_song()   / start_next_song(),
-            Song2()  == Song3() + previous_song() / start_prev_song()
-        //  +------------------------------------------------------------------------------+
-        ) ) ) playing_transition_table;
-
-    // VC9 cannot compile the typedef with build_sm if one is also used for player
-#ifndef BOOST_MSVC
-    // create a state machine "on the fly" for Playing
-    typedef BOOST_TYPEOF(build_sm(  playing_transition_table(), //STT
-                                    init_ << Song1() // Init State
-                                    )) Playing_;
-#else
-    // but this definition is ok
-    struct Playing_ : public BOOST_TYPEOF(build_sm(  playing_transition_table(), //STT
-                                                     init_ << Song1(), // Init State
-                                                     NoAction(), // entry
-                                                     NoAction(), // exit
-                                                     attributes_ << no_attributes_, //attributes
-                                                     configure_<< PlayingPaused() << CDLoaded() // Flags, Deferred events, configuration
-                                                   )) 
-    {
-    };
-#endif
-    // choice of back-end
-    typedef msm::back::state_machine<Playing_> Playing;
+    typedef BOOST_TYPEOF(build_state( (Playing_Entry()),(Playing_Exit()) )) Playing;
+    
+    // state not needing any entry or exit
+    typedef BOOST_TYPEOF(build_state( )) Paused;
 
     // guard conditions
     struct good_disk_format : euml_action<good_disk_format>
@@ -130,32 +82,59 @@ namespace  // Concrete FSM implementation
           Open()      == Paused()   + open_close()  / stop_and_open(),
           Open()      == Stopped()  + open_close()  / open_drawer(),
           Open()      == Playing()  + open_close()  / stop_and_open(),
+          Open()                    + open_close()  [internal_guard1()] / internal_action1(),
+          Open()                    + open_close()  [internal_guard2()] / internal_action2(),
+          Open()                    + internal_event() / internal_action()                  ,
           //  +------------------------------------------------------------------------------+
           Paused()    == Playing()  + pause()       / pause_playback(),
           //  +------------------------------------------------------------------------------+
           Stopped()   == Playing()  + stop()        / stop_playback(),
           Stopped()   == Paused()   + stop()        / stop_playback(),
           Stopped()   == Empty()    + cd_detected() [good_disk_format()&&
-                                                     (event_(cd_type)==Int_<DISK_CD>())] 
+                                                     (attribute_(event_(),cd_type)==Int_<DISK_CD>())] 
                                                     / (store_cd_info(),process_(play())),
           Stopped()   == Stopped()  + stop()                            
           //  +------------------------------------------------------------------------------+
                     ) ) ) transition_table;
 
+    //typedef BOOST_TYPEOF(build_sm(  transition_table(), //STT
+    //                                init_ << Empty(), // Init State
+    //                                NoAction(), // Entry
+    //                                NoAction(), // Exit
+    //                                attributes_ << no_attributes_, // Attributes
+    //                                configure_<< no_configure_, // Flags, Deferred events, configuration
+    //                                Log_No_Transition() // no_transition handler
+    //                                )) player_;
+    // or simply, if no no_transition handler needed:
+    //typedef BOOST_TYPEOF(build_sm(  transition_table(), //STT
+    //                                Empty() // Init State
+    //                                )) player_;
+
     // create a state machine "on the fly"
+    // VC9 sometimes cannot compile the typedef with build_sm
+#ifndef BOOST_MSVC
+    // create a state machine "on the fly" for player
     typedef BOOST_TYPEOF(build_sm(  transition_table(), //STT
                                     init_ << Empty(), // Init State
                                     NoAction(), // Entry
                                     NoAction(), // Exit
                                     attributes_ << no_attributes_, // Attributes
-                                    configure_<< no_configure_, // Flags, Deferred events, configuration
+                                    configure_ << no_configure_, 
                                     Log_No_Transition() // no_transition handler
                                     )) player_;
-    // or simply, if no no_transition handler needed:
-    //typedef BOOST_TYPEOF(build_sm(  transition_table(), //STT
-    //                                Empty(), // Init State
-    //                                )) player_;
-
+#else
+    // but this definition is ok
+    struct player_ : public BOOST_TYPEOF(build_sm(  transition_table(), //STT
+                                                    init_ << Empty(), // Init State
+                                                    NoAction(), // Entry
+                                                    NoAction(), // Exit
+                                                    attributes_ << no_attributes_, // Attributes
+                                                    configure_ << no_configure_, // configuration
+                                                    Log_No_Transition() // no_transition handler
+                                                    ))
+    {
+    };
+#endif
     // choice of back-end
     typedef msm::back::state_machine<player_> player;
 
@@ -173,10 +152,11 @@ namespace  // Concrete FSM implementation
 		player p;
         // needed to start the highest-level SM. This will call on_entry and mark the start of the SM
         p.start(); 
-        // tests some flags
-        std::cout << "CDLoaded active:" << std::boolalpha << p.is_flag_active<CDLoaded>() << std::endl; //=> false (no CD yet)
         // go to Open, call on_exit on Empty, then action, then on_entry on Open
         p.process_event(open_close()); pstate(p);
+        std::cout << "sending internal event (not rejected)" << std::endl;
+        p.process_event(internal_event());
+        std::cout << "sending open_close event. Conflict with internal transitions (rejecting event)" << std::endl;
         p.process_event(open_close()); pstate(p);
         // will be rejected, wrong disk type
         p.process_event(
@@ -186,31 +166,17 @@ namespace  // Concrete FSM implementation
         // no need to call play() as the previous event does it in its action method
 		//p.process_event(play());
 
-        // at this point, Play is active 
-        std::cout << "PlayingPaused active:" << std::boolalpha << p.is_flag_active<PlayingPaused>() << std::endl;//=> true
-        std::cout << "FirstSong active:" << std::boolalpha << p.is_flag_active<FirstSongPlaying>() << std::endl;//=> true
-
-        // make transition happen inside it. Player has no idea about this event but it's ok.
-        p.process_event(next_song());pstate(p); //2nd song active
-        p.process_event(next_song());pstate(p);//3rd song active
-        p.process_event(previous_song());pstate(p);//2nd song active
-        std::cout << "FirstSong active:" << std::boolalpha << p.is_flag_active<FirstSongPlaying>() << std::endl;//=> false
-        std::cout << "PlayingPaused active:" << std::boolalpha << p.is_flag_active<PlayingPaused>() << std::endl;//=> true
-
         // at this point, Play is active      
         p.process_event(pause()); pstate(p);
-        std::cout << "PlayingPaused active:" << std::boolalpha << p.is_flag_active<PlayingPaused>() << std::endl;//=> true
-
         // go back to Playing
         p.process_event(end_pause());  pstate(p);
         p.process_event(pause()); pstate(p);
         p.process_event(stop());  pstate(p);
-        std::cout << "PlayingPaused active:" << std::boolalpha << p.is_flag_active<PlayingPaused>() << std::endl;//=> false
-        std::cout << "CDLoaded active:" << std::boolalpha << p.is_flag_active<CDLoaded>() << std::endl;//=> true
-
         // event leading to the same state
         // no action method called as none is defined in the transition table
         p.process_event(stop());  pstate(p);
+        // test call to no_transition
+        p.process_event(pause()); pstate(p);
     }
 }
 

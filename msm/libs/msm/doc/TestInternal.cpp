@@ -1,4 +1,6 @@
 #include <iostream>
+#include "boost/mpl/vector/vector30.hpp"
+
 // back-end
 #include <boost/msm/back/state_machine.hpp>
 //front-end
@@ -20,6 +22,7 @@ namespace
     struct open_close {};
     struct NextSong {};
     struct PreviousSong {};
+    struct to_ignore {};
 
     // A "complicated" event type that carries some data.
 	enum DiskTypeEnum
@@ -106,7 +109,8 @@ namespace
             struct internal_transition_table : mpl::vector<
                 //    Start     Event         Next      Action				 Guard
                 Row < Empty   , cd_detected , none    , internal_action_fct ,internal_guard_fct    >,
-           Internal <           cd_detected           , internal_action_fct ,internal_guard_fct >
+           Internal <           cd_detected           , internal_action_fct ,internal_guard_fct    >,
+           _internal<           to_ignore                                                          >
                 //  +---------+-------------+---------+---------------------+----------------------+
             > {};        
         };
@@ -287,6 +291,8 @@ namespace
 		player p;
         // needed to start the highest-level SM. This will call on_entry and mark the start of the SM
         p.start(); 
+        // this event will be ignored and not call no_transition
+        p.process_event(to_ignore());
         // go to Open, call on_exit on Empty, then action, then on_entry on Open
         p.process_event(open_close()); pstate(p);
         p.process_event(open_close()); pstate(p);

@@ -25,15 +25,16 @@ namespace  // Concrete FSM implementation
     struct error_found : euml_event<error_found> {};
 
     // A "complicated" event type that carries some data.
-    typedef BOOST_TYPEOF(build_attributes(attributes_ << std::string() << DiskTypeEnum() )) cd_detected_attr;
-    struct cd_detected : euml_event<cd_detected>,cd_detected_attr
-        
+    BOOST_MSM_EUML_DECLARE_ATTRIBUTE(std::string,cd_name)
+    BOOST_MSM_EUML_DECLARE_ATTRIBUTE(DiskTypeEnum,cd_type)
+    typedef BOOST_TYPEOF(build_attributes(attributes_ << cd_name << cd_type )) cd_detected_attributes;
+    struct cd_detected : euml_event<cd_detected>,cd_detected_attributes
     {
         cd_detected(){}
         cd_detected(std::string name, DiskTypeEnum diskType)
         {
-            get_attribute<0>()=name;
-            get_attribute<1>()=diskType;
+            get_attribute(cd_name)=name;
+            get_attribute(cd_type)=diskType;
         }
     };
 
@@ -116,6 +117,23 @@ namespace  // Concrete FSM implementation
     // choice of back-end
     typedef msm::back::state_machine<Playing_> Playing;
 
+    // guard conditions
+    struct good_disk_format : euml_action<good_disk_format>
+    {
+        template <class FSM,class EVT,class SourceState,class TargetState>
+        bool operator()(EVT const& evt,FSM&,SourceState& ,TargetState& )
+        {
+            // to test a guard condition, let's say we understand only CDs, not DVD
+            if (evt.get_attribute(cd_type)!=DISK_CD)
+            {
+                std::cout << "wrong disk, sorry" << std::endl;
+                // just for logging, does not block any transition
+                return true;
+            }
+            std::cout << "good disk" << std::endl;
+            return true;
+        }
+    };
     // replaces the old transition table
     typedef BOOST_TYPEOF(build_stt((
           Playing()   == Stopped()  + play()        / start_playback() ,
@@ -132,9 +150,12 @@ namespace  // Concrete FSM implementation
           //  +------------------------------------------------------------------------------+
           Stopped()   == Playing()  + stop()        / stop_playback(),
           Stopped()   == Paused()   + stop()        / stop_playback(),
-          Stopped()   == Empty()    + cd_detected() [good_disk_format()&&(Event_<1>()==Int_<DISK_CD>())] 
+          Stopped()   == Empty()    + cd_detected() [good_disk_format()&&
+                                                     (event_(cd_type)==Int_<DISK_CD>())] 
                                                     / (store_cd_info(),process_(play())),
-          Stopped()   == Stopped()  + stop()                            
+          Stopped()   == Stopped()  + stop(),
+          ErrorMode() == AllOk()    + error_found() / report_error(),
+          AllOk()     == ErrorMode()+ end_error()   / report_end_error()
           //  +------------------------------------------------------------------------------+
                     ) ) ) transition_table;
 
@@ -158,7 +179,7 @@ namespace  // Concrete FSM implementation
     //
     // Testing utilities.
     //
-    static char const* const state_names[] = { "Stopped", "Paused", "Open", "Empty", "Playing" };
+    static char const* const state_names[] = { "Stopped", "Paused", "Open", "Empty", "Playing","AllOk","ErrorMode" };
     void pstate(player const& p)
     {
         // we have now several active states, which we show
@@ -173,9 +194,6 @@ namespace  // Concrete FSM implementation
 		player p;
         // needed to start the highest-level SM. This will call on_entry and mark the start of the SM
         p.start(); 
-        // test deferred event
-        // deferred in Empty and Open, will be handled only after event cd_detected
-        p.process_event(play());
 
         // tests some flags
         std::cout << "CDLoaded active:" << std::boolalpha << p.is_flag_active<CDLoaded>() << std::endl; //=> false (no CD yet)

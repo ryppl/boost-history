@@ -16,6 +16,7 @@ namespace
     struct stop {};
     struct pause {};
     struct open_close {};
+    struct to_ignore {};
 
     // A "complicated" event type that carries some data.
 	enum DiskTypeEnum
@@ -145,6 +146,7 @@ namespace
           a_row < Empty   , open_close  , Open    , &p::open_drawer                            >,
             row < Empty   , cd_detected , Stopped , &p::store_cd_info   ,&p::good_disk_format  >,
            irow < Empty   , cd_detected ,           &p::internal_action ,&p::internal_guard    >,
+          _irow < Empty   , to_ignore                                                          >,
          g_irow < Empty   , cd_detected                                 ,&p::internal_guard    >,
             Row < Empty   , cd_detected , none    , internal_action_fct ,internal_guard_fct    >,
             //  +---------+-------------+---------+---------------------+----------------------+
@@ -184,6 +186,8 @@ namespace
 		player p;
         // needed to start the highest-level SM. This will call on_entry and mark the start of the SM
         p.start(); 
+        // this event will be ignored and not call no_transition
+        p.process_event(to_ignore());
         // go to Open, call on_exit on Empty, then action, then on_entry on Open
         p.process_event(open_close()); pstate(p);
         p.process_event(open_close()); pstate(p);

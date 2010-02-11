@@ -22,24 +22,26 @@ namespace  // Concrete FSM implementation
     struct open_close : euml_event<open_close>{};
 
     // A "complicated" event type that carries some data.
-    // first define the attributes
-    typedef BOOST_TYPEOF(build_attributes(attributes_ << std::string() << DiskTypeEnum() )) cd_detected_def;
-    // pass the attributes to the event
-    struct cd_detected : euml_event<cd_detected>,cd_detected_def
+    BOOST_MSM_EUML_DECLARE_ATTRIBUTE(std::string,cd_name)
+    BOOST_MSM_EUML_DECLARE_ATTRIBUTE(DiskTypeEnum,cd_type)
+    typedef BOOST_TYPEOF(build_attributes(attributes_ << cd_name << cd_type )) cd_detected_attributes;
+    struct cd_detected : euml_event<cd_detected>,cd_detected_attributes
     {
         cd_detected(){}
         cd_detected(std::string name, DiskTypeEnum diskType)
         {
-            // 1st attribute, a string
-            get_attribute<0>()=name;
-            // 2nd attribute, a DiskTypeEnum
-            get_attribute<1>()=diskType;
+            get_attribute(cd_name)=name;
+            get_attribute(cd_type)=diskType;
         }
     };
+
 
     // Concrete FSM implementation 
 
     // The list of FSM states
+
+    // state not needing any entry or exit
+    typedef BOOST_TYPEOF(build_state( )) Paused;
 
     typedef BOOST_TYPEOF(build_state(Empty_Entry(),Empty_Exit())) Empty;
 
@@ -49,9 +51,23 @@ namespace  // Concrete FSM implementation
 
     typedef BOOST_TYPEOF(build_state( (Playing_Entry()),(Playing_Exit()) )) Playing;
     
-    // state not needing any entry or exit
-    typedef BOOST_TYPEOF(build_state( )) Paused;
-
+    // guard conditions
+    struct good_disk_format : euml_action<good_disk_format>
+    {
+        template <class FSM,class EVT,class SourceState,class TargetState>
+        bool operator()(EVT const& evt,FSM&,SourceState& ,TargetState& )
+        {
+            // to test a guard condition, let's say we understand only CDs, not DVD
+            if (evt.get_attribute(cd_type)!=DISK_CD)
+            {
+                std::cout << "wrong disk, sorry" << std::endl;
+                // just for logging, does not block any transition
+                return true;
+            }
+            std::cout << "good disk" << std::endl;
+            return true;
+        }
+    };
     // replaces the old transition table
     typedef BOOST_TYPEOF(build_stt((
           Playing()   == Stopped()  + play()        / start_playback() ,
@@ -68,7 +84,8 @@ namespace  // Concrete FSM implementation
           //  +------------------------------------------------------------------------------+
           Stopped()   == Playing()  + stop()        / stop_playback(),
           Stopped()   == Paused()   + stop()        / stop_playback(),
-          Stopped()   == Empty()    + cd_detected() [good_disk_format()&&(Event_<1>()==Int_<DISK_CD>())] 
+          Stopped()   == Empty()    + cd_detected() [good_disk_format()&&
+                                                    (event_(cd_type)==Int_<DISK_CD>())] 
                                                     / (store_cd_info(),process_(play())),
           Stopped()   == Stopped()  + stop()                            
           //  +------------------------------------------------------------------------------+
