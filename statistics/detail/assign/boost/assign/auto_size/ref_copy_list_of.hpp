@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_REF_COPY_LIST_OF_COPY_ER_2010_HPP
 #define BOOST_ASSIGN_REF_COPY_LIST_OF_COPY_ER_2010_HPP
-#include <boost/assign/detail/ref_list_of_auto_size_copy_rebind.hpp>
+#include <boost/assign/auto_size/detail/auto_size.hpp>
 
 // Usage 1: 
 // 	std::vector<T> vec = cref_copy_list_of(a)(b)(c);

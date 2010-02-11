@@ -17,7 +17,7 @@
 #include <boost/array.hpp>
 #include <boost/range.hpp>
 #include <boost/assign/list_of.hpp> // needed for assign_referene
-#include <boost/assign/detail/assign_value.hpp>
+#include <boost/assign/auto_size/detail/assign_refence_copy.hpp>
 
 // This is the implementation behind ref_list_of() and ref_copy_list_of().
 //
@@ -45,15 +45,13 @@ namespace auto_size{
             
 	typedef boost::mpl::void_ top_;
 
-	// Rebind semantics
     template<typename T>
-    struct ref_bind{
+    struct ref_rebind{
         typedef boost::assign_detail::assign_reference<T> type;
     };
 
-	// Copy semantics
     template<typename T>
-    struct ref_value{
+    struct ref_copy{
         typedef boost::assign_detail::assign_reference_copy<T> type;
     };
             
@@ -189,13 +187,13 @@ namespace auto_size{
     template<typename T>
     struct copy_first{
         typedef detail::auto_size::expr<
-        	detail::auto_size::top_,T,1,ref_value> type;   
+        	detail::auto_size::top_,T,1,ref_copy> type;   
     };
 
     template<typename T>
     struct rebind_first{
         typedef detail::auto_size::expr<
-        	detail::auto_size::top_,T,1,ref_bind> type;   
+        	detail::auto_size::top_,T,1,ref_rebind> type;   
     };
             
 }// auto_size  
