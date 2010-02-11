@@ -3,8 +3,10 @@
 #include <boost/msm/back/state_machine.hpp>
 //front-end
 #include <boost/msm/front/state_machine_def.hpp>
+#include <boost/msm/front/functor_row.hpp>
 
 namespace msm = boost::msm;
+using namespace boost::msm::front;
 
 namespace
 {
@@ -37,12 +39,12 @@ namespace
     // front-end: define the FSM structure 
     struct player_ : public msm::front::state_machine_def<player_>
     {
+        // we want deferred events and no state requires deferred events (only the fsm in the
+        // transition table), so the fsm does.
+        typedef int activate_deferred_events;
         // The list of FSM states
         struct Empty : public msm::front::state<> 
         {
-            // if the play event arrives in this state, defer it until a state handles it or
-            // rejects it
-            typedef mpl::vector<play> deferred_events;
             // every (optional) entry/exit methods get the event passed.
             template <class Event,class FSM>
             void on_entry(Event const&,FSM& ) {std::cout << "entering: Empty" << std::endl;}
@@ -51,9 +53,6 @@ namespace
         };
         struct Open : public msm::front::state<> 
         {	 
-            // if the play event arrives in this state, defer it until a state handles it or
-            // rejects it
-            typedef mpl::vector<play> deferred_events;
             typedef mpl::vector1<CDLoaded>		flag_list;
             template <class Event,class FSM>
             void on_entry(Event const&,FSM& ) {std::cout << "entering: Open" << std::endl;}
@@ -186,9 +185,11 @@ namespace
             a_row < Stopped , stop        , Stopped , &p::stopped_again                          >,
             //    +---------+-------------+---------+---------------------+----------------------+
             a_row < Open    , open_close  , Empty   , &p::close_drawer                           >,
+            Row   < Open    , play        , none    , Defer               , none                 >,
             //    +---------+-------------+---------+---------------------+----------------------+
             a_row < Empty   , open_close  , Open    , &p::open_drawer                            >,
             a_row < Empty   , cd_detected , Stopped , &p::store_cd_info                          >,
+            Row   < Empty   , play        , none    , Defer               , none                 >,
             //    +---------+-------------+---------+---------------------+----------------------+
             a_row < Playing , stop        , Stopped , &p::stop_playback                          >,
             a_row < Playing , pause       , Paused  , &p::pause_playback                         >,
