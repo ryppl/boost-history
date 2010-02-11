@@ -639,7 +639,26 @@ private:
             return HANDLED_TRUE;
         }
     };
+    // row simply ignoring the event
+    template<
+        typename ROW
+    >
+    struct _irow_ 
+    {
+        typedef typename ROW::Source T1;
+        typedef typename ROW::Target T2;
+        typedef typename ROW::Evt transition_event;
+        typedef T1 current_state_type;
+        typedef T2 next_state_type;
 
+        // Take the transition action and return the next state.
+        static HandledEnum execute(library_sm& , int , int state, transition_event const& )
+        {
+            BOOST_STATIC_CONSTANT(int, current_state = (get_state_id<stt,current_state_type>::type::value));
+            BOOST_ASSERT(state == (current_state));
+            return HANDLED_TRUE;
+        }
+    };
     // transitions internal to this state machine (no substate involved)
     template<
         typename ROW,
@@ -718,6 +737,20 @@ private:
             return HANDLED_TRUE;
         }
     };
+    template<
+        typename ROW,
+        typename StateType
+    >
+    struct _internal_
+    {
+        typedef StateType current_state_type;
+        typedef StateType next_state_type;
+        typedef typename ROW::Evt transition_event;
+        static HandledEnum execute(library_sm& , int , int , transition_event const& )
+        {
+            return HANDLED_TRUE;
+        }
+    };
     // Template used to form forwarding rows in the transition table for every row of a composite SM
     template<
         typename T1
@@ -780,6 +813,11 @@ private:
 		typedef irow_<Transition> type;
 	};
     template <class Transition,class StateType>
+    struct create_backend_stt<_irow_tag,Transition,StateType>
+    {
+        typedef _irow_<Transition> type;
+    };
+    template <class Transition,class StateType>
     struct create_backend_stt<sm_a_i_row_tag,Transition,StateType>
     {
         typedef a_internal_<Transition,StateType> type;
@@ -793,6 +831,11 @@ private:
     struct create_backend_stt<sm_i_row_tag,Transition,StateType>
     {
         typedef internal_<Transition,StateType> type;
+    };
+    template <class Transition,class StateType>
+    struct create_backend_stt<sm__i_row_tag,Transition,StateType>
+    {
+        typedef _internal_<Transition,StateType> type;
     };
     template <class Transition,class StateType=void>
     struct make_row_tag
