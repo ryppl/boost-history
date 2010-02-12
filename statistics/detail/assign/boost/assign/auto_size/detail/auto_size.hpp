@@ -23,7 +23,7 @@
 //
 // The motivation for this class was to improve upon ref_list_of<int>(), by 
 // deducing the number of arguments at compile time, and allowing for either 
-// of copy or rebind semantics, in case it is used as the lhs of an assignment; 
+// of copy and rebind semantics, in case it is used as the lhs of an assignment; 
 // the former (copy) being both safer and more common than the latter (rebind).
 //    
 // Acknowledgement: The idea of this class was developed in collaboration 
