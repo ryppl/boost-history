@@ -29,7 +29,7 @@ namespace impl_inherit2_stream{
 	template<typename T1,typename T2>
     struct inherit2;
 
-	// Writes a comma separated list of a succession of casts of the non-empty
+	// Writes a comma separated list of the instances of the non-empty
 	// "terminal types" within the nested structure inherit2<T1,T2>. A terminal 
     // type is one that is not an instance of inherit2.
     // For example, if these type are A,B,C, with descriptions 'a, 'b' and 'c',
