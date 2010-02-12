@@ -53,7 +53,7 @@ namespace  // Concrete FSM implementation
 
     // Playing is now a state machine itself.
 
-    // It has 3 substates
+    // It has 5 substates
     typedef BOOST_TYPEOF(build_state( Song1_Entry(),Song1_Exit() )) Song1;
 
     typedef BOOST_TYPEOF(build_state( Song2_Entry(),Song2_Exit() )) Song2;
@@ -79,7 +79,7 @@ namespace  // Concrete FSM implementation
 #ifndef BOOST_MSVC
     // create a state machine "on the fly" for Playing
     typedef BOOST_TYPEOF(build_sm(  playing_transition_table(), //STT
-                                    init_ << Song1() // Init State
+                                    init_ << Song1() << Region2State1() // Init State
                                     )) Playing_;
 #else
     // but this definition is ok
