@@ -40,7 +40,12 @@ struct convert_to_row
     typedef Row<typename TEMP_ROW::Source,typename TEMP_ROW::Evt,typename TEMP_ROW::Target,
                 typename TEMP_ROW::Action,typename TEMP_ROW::Guard> type;
 };
-
+template <class TEMP_ROW>
+struct convert_to_internal_row
+{
+    typedef Internal<typename TEMP_ROW::Evt,
+                     typename TEMP_ROW::Action,typename TEMP_ROW::Guard> type;
+};
 // row grammar
 struct BuildNextStates
    : proto::or_<
@@ -202,7 +207,6 @@ struct BuildStt
    >
 {};
 
-
 template <class Expr>
 typename ::boost::mpl::eval_if<
     typename proto::matches<Expr,BuildStt>::type,
@@ -211,6 +215,37 @@ typename ::boost::mpl::eval_if<
 build_stt(Expr const& expr)
 {
     return typename boost::result_of<BuildStt(Expr)>::type();
+}
+
+// internal stt grammar
+struct BuildInternalRow
+    :   proto::when<
+            BuildEvent,
+            convert_to_internal_row<
+                fusion_left_right<TempRow<none,none,none>,BuildEvent(proto::_)> >()
+        >
+{};
+struct BuildInternalStt
+   : proto::or_<
+        proto::when<
+                    proto::comma<BuildInternalStt,BuildInternalStt>,
+                    boost::mpl::push_back<BuildInternalStt(proto::_left),BuildInternalRow(proto::_right)>()
+                >,
+        proto::when <
+                    BuildInternalRow,
+                    make_vector_one_row<BuildInternalRow(proto::_)>()
+        >
+   >
+{};
+
+template <class Expr>
+typename ::boost::mpl::eval_if<
+    typename proto::matches<Expr,BuildInternalStt>::type,
+    boost::result_of<BuildInternalStt(Expr)>,
+    make_invalid_type>::type
+build_internal_stt(Expr const& expr)
+{
+    return typename boost::result_of<BuildInternalStt(Expr)>::type();
 }
 
 
