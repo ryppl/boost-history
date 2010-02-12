@@ -1,7 +1,6 @@
 #include <vector>
 #include <iostream>
 
-//#define BOOST_PROTO_MAX_ARITY 5
 #include <boost/msm/back/state_machine.hpp>
 #include <boost/msm/front/euml/euml.hpp>
 
@@ -22,6 +21,9 @@ namespace  // Concrete FSM implementation
     struct stop : euml_event<stop>{};
     struct pause : euml_event<pause>{};
     struct open_close : euml_event<open_close>{};
+
+    struct next_song : euml_event<next_song>{};
+    struct previous_song : euml_event<previous_song>{};
     struct internal_event : euml_event<internal_event>{};
 
     // A "complicated" event type that carries some data.
@@ -45,21 +47,69 @@ namespace  // Concrete FSM implementation
     typedef BOOST_TYPEOF(build_state(Empty_Entry(),Empty_Exit())) Empty;
 
     typedef BOOST_TYPEOF(build_state( Open_Entry(),Open_Exit() )) Open_def;
+    // derive to be able to add an internal transition table
     struct Open : public Open_def
     {
-        // declare a constructor for use in the following transition table
-        Open(){}
-        typedef BOOST_TYPEOF(build_stt((
-            Open()    + open_close()  [internal_guard1()] / internal_action1()                ,
-            Open()    + open_close()  [internal_guard2()] / internal_action2()                ,
-            Open()    + internal_event() / internal_action()
+        typedef BOOST_TYPEOF(build_internal_stt((
+            open_close()  [internal_guard1()] / internal_action1()                ,
+            open_close()  [internal_guard2()] / internal_action2()                ,
+            internal_event() / internal_action()
             ) ) ) internal_transition_table;
     };
 
     typedef BOOST_TYPEOF(build_state( Stopped_Entry(),Stopped_Exit() )) Stopped;
 
-    typedef BOOST_TYPEOF(build_state( (Playing_Entry()),(Playing_Exit()) )) Playing;
-    
+    // Playing is a state machine itself.
+    // It has 3 substates
+    typedef BOOST_TYPEOF(build_state( Song1_Entry(),Song1_Exit() )) Song1;
+
+    typedef BOOST_TYPEOF(build_state( Song2_Entry(),Song2_Exit() )) Song2;
+
+    typedef BOOST_TYPEOF(build_state( Song3_Entry(),Song3_Exit() )) Song3;
+
+    // Playing has a transition table 
+    typedef BOOST_TYPEOF(build_stt((
+        //  +------------------------------------------------------------------------------+
+            Song2()         == Song1()          + next_song()       / start_next_song(),
+            Song1()         == Song2()          + previous_song()   / start_prev_song(),
+            Song3()         == Song2()          + next_song()       / start_next_song(),
+            Song2()         == Song3()          + previous_song()   / start_prev_song()
+        //  +------------------------------------------------------------------------------+
+        ) ) ) playing_transition_table;
+
+    // VC9 cannot compile the typedef with build_sm if one is also used for player
+#ifndef BOOST_MSVC
+    // create a state machine "on the fly" for Playing
+    typedef BOOST_TYPEOF(build_sm(  playing_transition_table(), //STT
+                                    init_ << Song1()  // Init State
+                                    )) Playing_def;
+#else
+    // but this definition is ok
+    struct Playing_def : public BOOST_TYPEOF(build_sm(  playing_transition_table(), //STT
+                                                        init_ << Song1() // Init State
+                                                   )) 
+    {
+    };
+#endif
+    // derive to be able to add an internal transition table
+    struct Playing_ : public Playing_def
+    {   
+        // some action for the internal transition
+        struct playing_internal_action : euml_action<playing_internal_action>
+        {
+            template <class FSM,class EVT,class SourceState,class TargetState>
+            void operator()(EVT const&, FSM& ,SourceState& ,TargetState& )
+            {
+                cout << "Playing::internal action" << endl;
+            }
+        };
+        typedef BOOST_TYPEOF(build_internal_stt((
+            internal_event() / playing_internal_action()
+            ) ) ) internal_transition_table;
+    };
+    // choice of back-end
+    typedef msm::back::state_machine<Playing_> Playing;
+
     // state not needing any entry or exit
     typedef BOOST_TYPEOF(build_state( )) Paused;
 
@@ -161,8 +211,15 @@ namespace  // Concrete FSM implementation
             cd_detected("louie, louie",DISK_CD)); pstate(p);
         // no need to call play() as the previous event does it in its action method
 		//p.process_event(play());
-
         // at this point, Play is active      
+        // make transition happen inside it. Player has no idea about this event but it's ok.
+        p.process_event(next_song());pstate(p); //2nd song active
+        p.process_event(next_song());pstate(p);//3rd song active
+        p.process_event(previous_song());pstate(p);//2nd song active
+        // event handled internally in Playing, without region checking
+        std::cout << "sending internal event (not rejected)" << std::endl;
+        p.process_event(internal_event());
+
         p.process_event(pause()); pstate(p);
         // go back to Playing
         p.process_event(end_pause());  pstate(p);
