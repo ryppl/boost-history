@@ -484,7 +484,11 @@ struct BuildActionsCases::case_<proto::tag::terminal>
         proto::when<
             proto::terminal<event_tag>,
             proto::_
-                >
+                >,
+        proto::when<
+                proto::terminal<proto::_>,
+                get_fct<proto::_ >()
+				>
     >
 {};
 struct BuildActions
