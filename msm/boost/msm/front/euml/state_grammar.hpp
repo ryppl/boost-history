@@ -41,7 +41,7 @@ template<class EntryFunctor=NoAction,
 		 class Attributes= ::boost::fusion::vector<>,
          class Flags = ::boost::mpl::vector0<>,
          class Defer = ::boost::mpl::vector0<>,
-         class BASE = default_base_state>
+         class BASE = ::boost::msm::front::default_base_state>
 struct func_state :  public ::boost::msm::front::state_base<BASE,Attributes>, 
                      euml_state<func_state<EntryFunctor,ExitFunctor,Attributes,Flags,Defer,BASE> >
 {
