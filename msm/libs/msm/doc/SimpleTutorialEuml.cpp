@@ -43,7 +43,27 @@ namespace  // Concrete FSM implementation
     // state not needing any entry or exit
     typedef BOOST_TYPEOF(build_state( )) Paused;
 
-    typedef BOOST_TYPEOF(build_state(Empty_Entry(),Empty_Exit())) Empty;
+    // it is also possible to define a state without macro
+    // just make it a state, as usual, and also a grammar terminal, euml_state
+    struct Empty : public msm::front::state<> ,
+                   public euml_state<Empty>
+    {
+        // this allows us to add some functions
+        void activate_empty() {std::cout << "switching to Empty " << std::endl;}
+        template <class Event,class FSM>
+        void on_entry(Event const& evt,FSM& fsm) 
+        {
+            // we can call the entry functor directly or whatever we want
+            Empty_Entry()(evt,fsm,*this);
+        }
+        template <class Event,class FSM>
+        void on_exit(Event const& evt,FSM& fsm) 
+        {
+            Empty_Exit()(evt,fsm,*this);
+        }
+    };
+    // create a functor and a eUML function for the activate_empty method from Entry 
+    MSM_EUML_METHOD(ActivateEmpty_ , activate_empty , activate_empty_ , void , void )
 
     typedef BOOST_TYPEOF(build_state( Open_Entry(),Open_Exit() )) Open;
 
@@ -73,7 +93,7 @@ namespace  // Concrete FSM implementation
           Playing()   == Stopped()  + play()        / start_playback() ,
           Playing()   == Paused()   + end_pause()   / resume_playback(),
           //  +------------------------------------------------------------------------------+
-          Empty()     == Open()     + open_close()  / close_drawer(),
+          Empty()     == Open()     + open_close()  / (close_drawer(),activate_empty_(target_)),
           //  +------------------------------------------------------------------------------+
           Open()      == Empty()    + open_close()  / open_drawer(),
           Open()      == Paused()   + open_close()  / stop_and_open(),
