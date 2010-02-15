@@ -19,7 +19,12 @@
 #include <cstddef>
 #include <cstring>
 #include <cassert>
-#include "windows_file_codecvt.hpp"
+
+#ifdef BOOST_WINDOWS_API
+# include "windows_file_codecvt.hpp"
+#elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
+# include "utf8_codecvt_facet.hpp"
+#endif
 
 #ifdef BOOST_FILESYSTEM_DEBUG
 # include <iostream>
@@ -778,19 +783,24 @@ namespace
     std::locale global_loc = std::locale();
     std::locale loc(global_loc, new windows_file_codecvt);
     return loc;
+
+#   elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
+    // "All BSD system functions expect their string parameters to be in UTF-8 encoding
+    // and nothing else."
+    // see http://developer.apple.com/mac/library/documentation/MacOSX/Conceptual/BPInternational/Articles/FileEncodings.html
+    std::locale global_loc = std::locale();
+    std::locale loc(global_loc, new fs::detail::utf8_codecvt_facet);
+    return loc;
+
 #   else
-      // ISO C calls this "the locale-specific native environment":
-#     if !defined(macintosh) && !defined(__APPLE__) && !defined(__APPLE_CC__) 
-      return std::locale("");
-#     else
-      return std::locale();  // std::locale("") throws on Mac OS
-#     endif
+    // ISO C calls this "the locale-specific native environment":
+    return std::locale("");
+
 #   endif
   }
 
   std::locale & path_locale()
   {
-    // ISO C calls this "the locale-specific native environment":
     static std::locale loc(default_locale());
     return loc;
   }
