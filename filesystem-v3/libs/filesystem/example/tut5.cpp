@@ -37,6 +37,8 @@ int main()
   { fs::ofstream f(L"smile\u263A"); }
   { fs::ofstream f(narrow_string); }
   { fs::ofstream f(wide_string); }
+  // { fs::ofstream f(narrow_list); } and { fs::ofstream f(wide_list); }
+  // would work, but we want to show off construction from an iterator range:
   { fs::ofstream f(fs::path(narrow_list.begin(), narrow_list.end())); }
   { fs::ofstream f(fs::path(wide_list.begin(), wide_list.end())); }
 

@@ -35,21 +35,32 @@
     <a href="faq.htm">FAQ</a></td>
   </tr>
 </table>
-
-<h2>Introduction</h2>
+<p>
+      <a href="#Introduction">Introduction</a><br>
+      <a href="#Preliminaries">Preliminaries</a><br>
+      <a href="#Reporting-size">Reporting the size of a file - (tut1.cpp)</a><br>
+      <a href="#Using-status-queries">Using status queries to determine file existence and type - (tut2.cpp)</a><br>
+      <a href="#Directory-iteration">Directory iteration - (tut3.cpp)</a><br>
+      <a href="#Using-path-decomposition">Using path decomposition, plus sorting results - (tut4.cpp)</a><br>
+      <a href="#Class-path-Constructors">Class path: Constructors - (tut5.cpp)</a><br>
+      <a href="#Class-path-formats">Class path: Generic format vs. Native format</a><br>
+      <a href="#Class path-iterators-etc">Class path: Iterators, observers, composition, decomposition, and query - (path_info.cpp)</a><br>
+      <a href="#Error-reporting">Error reporting</a><br>
+</p>
+<h2><a name="Introduction">Introduction</a></h2>
 
 <p>This tutorial develops a little command line program to list information 
 about files and directories - essentially a much simplified version of the POSIX <code>ls</code> or Windows <code>dir</code> 
 commands. We'll start with the simplest possible version and progress to more 
 complex functionality. Along the way we'll digress to cover topics you'll need 
-to know about to use Boost.Filesystem effectively.</p>
+to know about to understand Boost.Filesystem.</p>
 
-<p>Source code for each version of the tutorial program is available, and you 
+<p>Source code for each  of the tutorial programs is available, and you 
 are encouraged to compile, test, and experiment with it. To conserve space, we won't 
 always show boilerplate code here, but the provided source is complete and 
 ready to build.</p>
 
-<h3>Preliminaries</h3>
+<h2><a name="Preliminaries">Preliminaries</a></h2>
 
 <p>Install the Boost distribution if you haven't already done so. See the
 <a href="http://www.boost.org/more/getting_started/index.html">Boost Getting 
@@ -109,7 +120,7 @@ tutorial progresses. Just invoke the <code>bld</code> script again to rebuild.</
     problem.</li>
   </ul>
 
-<h2><a href="../example/tut1.cpp">tut1.cpp</a> - Reporting the size of a file</h2>
+<h2><a name="Reporting-size">Reporting the size of a file</a> - (<a href="../example/tut1.cpp">tut1.cpp</a>)</h2>
 
 <p>Let's get started. One of the simplest things we can do is report the size of 
 a file.</p>
@@ -234,7 +245,7 @@ Aborted</pre>
 
   <p>We'll deal with those situations in <code>tut2.cpp</code>.</p>
 
-<h2><a href="../example/tut2.cpp">tut2.cpp</a> - Using status queries to determine file existence and type</h2>
+<h2><a name="Using-status-queries">Using status queries to determine file existence and type</a> - (<a href="../example/tut2.cpp">tut2.cpp</a>)</h2>
 
 <p>Boost.Filesystem includes status query functions such as <code>
 <a href="reference.html#exists-path">exists</a></code>,
@@ -313,7 +324,7 @@ foo: does not exist
 satisfactory for a directory since we'd typically like to see the directory's contents. Move 
 on to <code>tut3.cpp</code> to see how to iterate over directories.</p>
 
-<h2><a href="../example/tut3.cpp">tut3.cpp</a> - Directory iteration</h2>
+<h2><a name="Directory-iteration">Directory iteration</a> - (<a href="../example/tut3.cpp">tut3.cpp</a>)</h2>
 
 <p>Boost.Filesystem's <code><a href="reference.html#directory_iterator">
 directory_iterator</a></code> class is just what we need here. It follows the 
@@ -451,8 +462,7 @@ c:\boost\trunk: is a directory containing:
 
 <p>Move on to <code>tut4.cpp</code> to see how those changes play out!</p>
 
-<h2><a href="../example/tut4.cpp">tut4.cpp</a> - Using a path decomposition 
-function, plus sorting results</h2>
+<h2><a name="Using-path-decomposition">Using path decomposition, plus sorting results</a> - (<a href="../example/tut4.cpp">tut4.cpp</a>)</h2>
 
 <table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
   <tr>
@@ -600,29 +610,24 @@ c:\boost\trunk: is a directory containing:
 
 <hr>
 
-<h2><a name="Class-path">Class path</a></h2>
+<h2>&nbsp;<a name="Class-path-Constructors">Class path: Constructors</a> - (<a href="../example/tut5.cpp">tut5.cpp</a>)</h2>
 
-<p>A traditional C-style interface to <code>file_size()</code> would look like 
-this:</p>
-
-<blockquote>
-  <pre><span style="background-color: #FFFFFF; ">uintmax_t</span> <a name="file_size">file_size</a>(const char* p);</pre>
-</blockquote>
-<p>Compare that with Boost.Filesystem's interface:</p>
-<blockquote>
-  <pre><span style="background-color: #FFFFFF; ">uintmax_t</span> <a name="file_size">file_size</a>(const path&amp; p);</pre>
-</blockquote>
-<p>Class <code>path</code> is far more flexible:</p>
+<p>Traditional C interfaces pass paths as <code>const char*</code> arguments. 
+C++ interfaces may add <code>const std::string&amp;</code> overloads, but adding 
+overloads becomes untenable if wide characters, containers, and iterator ranges 
+need to be supported.</p>
+<p>Passing paths as <code>const path&amp;</code> arguments is far simpler, yet far 
+more flexible because class <code>path</code> itself is far more flexible:</p>
 <ol>
-  <li>It supports multiple character types and encodings, including Unicode, to 
+  <li>Class <code>path</code> supports multiple character types and encodings, including Unicode, to 
   ease internationalization.</li>
-  <li>It supports multiple source types, such as iterators for null terminated 
+  <li>Class <code>path</code> supports multiple source types, such as iterators for null terminated 
   sequences, iterator ranges, containers (including <code>std::basic_string</code>), 
   and <code><a href="reference.html#Class-directory_entry">directory_entry</a></code>'s, 
   so functions taking paths don't need to provide several overloads.</li>
-  <li>It supports both native and generic pathname formats, so programs can be 
-  portable between operating systems yet use native conventions where desirable.</li>
-  <li>It supplies a full set of iterators, observers, composition, 
+  <li>Class <code>path</code> supports both native and generic pathname formats, so programs can be 
+  portable between operating systems yet use native formats where desirable.</li>
+  <li>Class <code>path</code> supplies a full set of iterators, observers, composition, 
   decomposition, and query functions, making pathname manipulations easy, 
   convenient, reliable, and portable.</li>
 </ol>
@@ -636,7 +641,9 @@ are the constructors that take sources:</p>
   <pre>template &lt;class InputIterator&gt;
   path(InputIterator begin, InputIterator end);</pre>
 </blockquote>
-<p>Let's look at a little program that shows off these features:</p>
+<p>Let's look at a little program that shows how comfortable class <code>path</code> is with 
+both narrow and wide characters in C-style strings, C++ strings, and via C++ 
+iterators:</p>
 
 <table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
   <tr>
@@ -673,6 +680,8 @@ int main()
   { fs::ofstream f(L&quot;smile\u263A&quot;); }
   { fs::ofstream f(narrow_string); }
   { fs::ofstream f(wide_string); }
+  // { fs::ofstream f(narrow_list); } and { fs::ofstream f(wide_list); }
+  // would work, but we want to show off construction from an iterator range:
   { fs::ofstream f(fs::path(narrow_list.begin(), narrow_list.end())); }
   { fs::ofstream f(fs::path(wide_list.begin(), wide_list.end())); }
 
@@ -683,7 +692,7 @@ int main()
   </tr>
 </table>
 
-<p>Testing tut5:</p>
+<p>Testing <code>tut5</code>:</p>
 
   <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
     <tr>
@@ -710,29 +719,96 @@ smile&#9786;</pre>
   </table>
 
 <p>Note that the exact appearance of the smiling face will depend on the font, 
-font size, and other settings for your command line window.</p>
-<p>In addition to handling a variety of types, class path function templates 
-also handle conversion between the argument's encoding and the internal encoding 
-required for communication with the operating system. Thus it's no problem to 
-pass a wide character string to a Boost.Filesystem operational function even if 
-the underlying operating system uses narrow characters, and visa versa. </p>
-<p>Say we have a file named <code><font size="4">valentine</font></code> we'd 
-like to rename <code><font size="4">&#9829;valentine</font></code>. Here's the code:</p>
-<blockquote style="font-size: 10pt">
-  <pre>boost::filesystem::rename(&quot;valentine&quot;, L&quot;\u2665valentine&quot;);</pre>
-</blockquote>
+font size, and other settings for your command line window. The above tests were 
+run with out-of-the-box Ubuntu 9.10 and Windows 7, US Edition. If you don't get 
+the above results, take a look at the <code><i>boost-root</i>/libs/filesystem/example/test</code> 
+directory with your system's GUI file browser, such as Linux Nautilus, Mac OS X 
+Finder, or Windows Explorer. These tend to be more comfortable with 
+international character sets than command line interpreters.</p>
 
-  <p>Class <code>path</code> will take care of whatever character type or 
-  encoding conversions are required by the particular operating system. It also 
-  provides path syntax that is portable across operating systems, element 
-  iterators, and observer, composition, decomposition, and query functions to 
-  manipulate the elements of a path. </p>
+  <p>Class <code>path</code> takes care of whatever character type or encoding 
+  conversions are required by the particular operating system. Thus as <code>
+  tut5</code> demonstrates, it's no problem to pass a wide character string to a 
+  Boost.Filesystem operational function even if the underlying operating system 
+  uses narrow characters, and visa versa. And the same applies to user supplied 
+  functions that take <code>const path&amp;</code> arguments.</p>
+
+  <p>Class <code>path</code> also provides path syntax that is portable across operating systems, 
+  element iterators, and observer, composition, decomposition, and query 
+  functions to manipulate the elements of a path. The next section of this 
+  tutorial deals with path syntax.</p>
 
     <hr>
 
-<h2><a name="path-iteration-etc"></a>Path iterators, observers, composition, decomposition, and query</h2>
+<h2><a name="Class-path-formats">Class path: Generic format vs. Native format</a></h2>
 
-<p>The <a href="../example/path_info.cpp"><code>path_info.cpp</code></a> program is handy for learning how class <code>path</code> 
+<p dir="ltr"><b>Class <code>path</code> deals with two different pathname 
+formats - generic format and native format.</b> In the case of POSIX-like 
+file systems, these formats are the same. But for users of Windows and 
+other non-POSIX file systems, the distinction is important. Even 
+programmers writing for POSIX-like systems need to understand the distinction if 
+they want their code to be portable to non-POSIX systems.</p>
+
+<p dir="ltr">The <b>generic format</b> is the familiar <code>/my_directory/my_file.txt</code> format used by POSIX-like 
+operating systems such as the Unix variants, Linux, and Mac OS X. Windows also 
+recognizes the generic format, and it is the basis for the familiar Internet URL 
+format. The directory 
+separator character is always one or more slash characters.</p>
+
+<p dir="ltr">The <b>native format</b> is the format as defined by the particular 
+operating system. For Windows, either the slash or the backslash can be used as 
+the directory separator character. If a drive specified or a backslash appears 
+in a pathname on a Windows system, it is always treated as the native format.</p>
+
+<p dir="ltr">We can use <code>tut4</code> to explore the two formats:</p>
+
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt" valign="top">
+      <pre>$ ./tut4 tut4.cpp
+tut4.cpp: 1920
+
+$ ./tut4 ./tut4.cpp
+./tut4.cpp: 1920
+
+$ ./tut4 .\tut4.cpp
+.tut4.cpp: does not exist
+
+$ ./tut4 .\\tut4.cpp
+.\tut4.cpp: does not exist</pre>
+      </td>
+      <td style="font-size: 10pt" valign="top">
+      <pre>&gt;tut4 tut4.cpp
+tut4.cpp: 1984
+
+&gt;tut4 ./tut4.cpp
+./tut4.cpp: 1984
+
+&gt;tut4 .\tut4.cpp
+.\tut4.cpp: 1984
+
+&gt;tut4 .\\tut4.cpp
+.\\tut4.cpp: 1984</pre>
+      </td>
+    </tr>
+  </table>
+
+  <p>The distinction between generic format and native format is important when 
+  communicating with native C-style API's and with users. Both tend to expect 
+  paths in the native format and are confused by the generic format. The generic 
+  format is great, however, for writing portable programs that work regardless 
+  of operating system.</p>
+
+    <hr>
+
+<h2><a name="Class path-iterators-etc">Class path: Iterators, observers, composition, decomposition, and query</a> 
+- (<a href="../example/path_info.cpp">path_info.cpp</a>)</h2>
+
+<p>The <code><a href="../example/path_info.cpp">path_info.cpp</a></code> program is handy for learning how class <code>path</code> 
 iterators, 
 observers, composition, decomposition, and query functions work on your system. 
 If it hasn't already already been built on your system, please build it now. Run 
@@ -837,22 +913,6 @@ observers, generic format:
       </td>
     </tr>
   </table>
-
-<p dir="ltr"><b>Class <code>path</code> deals with two different pathname 
-formats - a generic format and a native format.</b> In the case of POSIX-like 
-operating systems, these formats are the same. But for users of Windows and 
-other non-POSIX operating systems, the distinction is important. Even 
-programmers writing for POSIX-like systems need to understand the distinction if 
-they want their code to be portable to non-POSIX systems.</p>
-
-<p dir="ltr">The <b>generic format</b> is the format used by POSIX-like 
-operating systems such as the Unixes, Linux, and Mac OS X. The directory 
-separator character is a slash.</p>
-
-<p dir="ltr">The <b>native format</b> is the format as defined by the particular 
-operating system. For Windows, either the slash or the backslash can be used as 
-the directory separator character. If a drive specified or a backslash appears 
-in a pathname on a Windows system, it is always treated as the native format.</p>
 
 <p dir="ltr">Native format observers should be used when interacting with the 
 operating system or with users; that's what they expect.</p>
@@ -1017,17 +1077,14 @@ argument throw exceptions to report operational errors. These functions should
 
   <p>Functions with a <code>system::error_code&amp;</code> 
 argument report operational error status by setting the <code>ec</code> argument, and 
-do not throw exceptions when I/O errors occur. 
-  <span style="background-color: #FFFF00">More on that later in the tutorial.</span></p>
-
-<p>&nbsp;</p>
+do not throw exceptions when I/O errors occur.</p>
 
 <hr>
 <p>© Copyright Beman Dawes 2010</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->05 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40547" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->15 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40548" --></p>
 
 </body>
 

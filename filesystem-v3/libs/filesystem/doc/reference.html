@@ -111,11 +111,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#symlink_status">symlink_status</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#system_complete">system_complete</a></td>
     <td width="34%" valign="top">
-    <a href="#header-fstream">Additions 
-    to header &lt;fstream&gt;</a><br>
-<a href="#Suggestions-for-fstream">Suggestions for <code>&lt;fstream&gt;</code></a><code><br>
-&nbsp; </code>
-<a href="#Suggestions-for-fstream">&nbsp;implementations</a><br>
+    <a href="#File-streams">File streams</a><br>
 <a href="#Path-decomposition-table">Path decomposition table</a><br>
 <a href="#Acknowledgements">Acknowledgements</a><br>
 <a href="#References">References</a><br>
@@ -212,7 +208,7 @@ operating system.</p>
 <p><b><i><a name="native-pathname-format">Native pathname format:</a></i></b>&nbsp; 
 An implementation defined format. [<i>Note:</i> For POSIX-like operating 
 systems, the native format is the same as the generic format. For Windows, the 
-native format is the same as the generic format, except that directory-separator 
+native format is similar to the generic format, but the directory-separator 
 characters can be either slashes or backslashes. <i>--end note</i>]</p>
 <p><i><b><a name="Link">Link</a>:</b> </i>A directory entry object that associates a 
 filename with a file. On some file systems, several directory entries can 
@@ -2478,148 +2474,64 @@ path unique_path(const path&amp; model, system::error_code&amp; ec);</pre>
     </td>
   </tr>
 </table>
-<h3><a name="header-fstream">Additions</a> to header <code>&lt;fstream&gt;</code></h3>
-<blockquote>
-<p><span style="background-color: #E0E0E0; font-style:italic">These additions have been carefully 
-specified to avoid breaking existing code in common operating environments such as
-</span> <i><span style="background-color: #E0E0E0">POSIX</span></i><span style="background-color: #E0E0E0; font-style:italic">,
-</span> <i>
-<span style="background-color: #E0E0E0">Windows</span></i><span style="background-color: #E0E0E0; font-style:italic">, and
-</span> <i><span style="background-color: #E0E0E0">OpenVMS. 
-See </span><a href="#Suggestions-for-fstream">
-<span style="background-color: #E0E0E0">Suggestions for <code>&lt;fstream&gt;</code> 
-implementations</span></a><span style="background-color: #E0E0E0"> for 
-techniques to avoid breaking existing code in other environments, particularly 
-on operating systems allowing slashes in filenames.</span></i></p>
-<p><span style="background-color: #FFFFFF">[<i>Note:</i> The 
-&quot;do-the-right-thing&quot; rule in the <a href="#Conformance">conformance section</a> does apply to header <code>&lt;fstream&gt;</code>.</span></p>
-<p><span style="background-color: #FFFFFF">The overloads 
-below are specified as additions rather than replacements for existing 
-functions. This preserves existing code (perhaps 
-using a <a name="home-grown-path">home-grown path</a> class) that relies on an 
-automatic conversion to <code>const char*</code>.<i> -- end note</i>]</span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>In 27.8.1.1 Class template 
-basic_filebuf [lib.filebuf] synopsis preceding paragraph 1, add the function:</i></span></p>
-<blockquote>
-<pre><span style="background-color: #FFFFFF"></span><span style="background-color: #FFFFFF">basic_filebuf</span><span style="background-color: #FFFFFF">&lt;charT,traits&gt;* </span><span style="background-color: #FFFFFF">open(const</span><span style="background-color: #FFFFFF"> path p, </span><span style="background-color: #FFFFFF">ios_base::openmode</span><span style="background-color: #FFFFFF"> mode);</span></pre>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>In 27.8.1.3 Member functions [lib.filebuf.members], 
-add the above to the signature preceding paragraph 2, and replace the 
-sentence:</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF">It then opens a file, if possible, 
-whose name is the NTBS s (as if by calling <code>std::fopen(s ,<i>modstr</i> 
-))</code>.</span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>with:</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF">It then opens, if possible, the file 
-that
-<code>p</code> or <code>path(s)</code> resolves to, as if by calling <code>std::fopen()</code> with a 
-second argument of <i>modstr</i>.</span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>In 27.8.1.5 Class template 
-basic_ifstream [lib.ifstream] synopsis preceding paragraph 1, add the functions:</i></span></p>
-<blockquote>
-  <pre><span style="background-color: #FFFFFF">explicit basic_ifstream(const path&amp; p, ios_base::openmode mode = ios_base::in);
-void open(const path&amp; p, ios_base::openmode mode = ios_base::in);</span></pre>
-</blockquote>
-<p><i><span style="background-color: #FFFFFF">In 27.8.1.6 basic_ifstream 
-constructors [lib.ifstream.cons] </span></i>
-<span style="background-color: #FFFFFF"><i>add the above constructor to the signature preceding 
-paragraph 2, and in paragraph 2 replace</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(s, mode | 
-ios_base::in)</code></span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>with</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(path(s), mode | 
-ios_base::in)</code> or <code>rdbuf()-&gt;open(p, mode | ios_base::in)</code> as 
-appropriate</span></p>
-</blockquote>
-<p><i><span style="background-color: #FFFFFF">In 27.8.1.7 Member functions [lib.ifstream.members]
-</span></i><span style="background-color: #FFFFFF"><i>add the above open 
-function to the signature 
-preceding paragraph 3, and in paragraph 3 replace</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(s, mode | 
-ios_base::in)</code></span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>with</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(path(s), mode | 
-ios_base::in)</code> or <code>rdbuf()-&gt;open(p, mode | ios_base::in)</code> as 
-appropriate</span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>In 27.8.1.8 Class template 
-basic_ofstream [lib.ofstream] synopsis preceding paragraph 1, add the 
- 
-functions:</i></span></p>
-<blockquote>
-  <pre><span style="background-color: #FFFFFF">explicit basic_ofstream(const path&amp; p, ios_base::openmode mode = ios_base::out);
-void open(const path&amp; p, ios_base::openmode mode = ios_base::out);</span></pre>
-</blockquote>
-<p><i><span style="background-color: #FFFFFF">In 27.8.1.9 basic_ofstream 
-constructors [lib.ofstream.cons] </span></i>
-<span style="background-color: #FFFFFF"><i>add the above constructor to the signature preceding 
-paragraph 2, and in paragraph 2 replace</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(s, mode | 
-ios_base::out)</code></span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>with</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(path(s), mode | 
-ios_base::out)</code> or <code>rdbuf()-&gt;open(p, mode | ios_base::out)</code> as 
-appropriate</span></p>
-</blockquote>
-<p><i><span style="background-color: #FFFFFF">In 27.8.1.10 Member functions [lib.ofstream.members]
-</span></i><span style="background-color: #FFFFFF"><i>add the above open 
-function to the signature 
-preceding paragraph 3, and in paragraph 3 replace</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(s, mode | 
-ios_base::out)</code></span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>with</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(path(s), mode | 
-ios_base::out)</code> or <code>rdbuf()-&gt;open(p, mode | ios_base::out)</code> as 
-appropriate</span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>In 27.8.1.11 Class template 
-basic_fstream [lib.fstream] synopsis preceding paragraph 1, add the  functions:</i></span></p>
-<blockquote>
-  <pre><span style="background-color: #FFFFFF">explicit basic_fstream(const path&amp; p, ios_base::openmode mode = ios_base::in|ios_base::out);
-void open(const path&amp; p, ios_base::openmode mode = ios_base::in|ios_base::out);</span></pre>
-</blockquote>
-<p><i><span style="background-color: #FFFFFF">In 27.8.1.12 basic_fstream 
-constructors [lib.fstream.cons] </span></i>
-<span style="background-color: #FFFFFF"><i>add the above constructor to the signature preceding 
-paragraph 2, and in paragraph 2 replace</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(s, mode)</code></span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>with</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(path(s), mode)</code> 
-or <code>rdbuf()-&gt;open(p, mode)</code> as appropriate</span></p>
-</blockquote>
-<p><i><span style="background-color: #FFFFFF">In 27.8.1.13 Member functions [lib.fstream.members]
-</span></i><span style="background-color: #FFFFFF"><i>add the above open 
-function to the signature 
-preceding paragraph 3, and in paragraph 3 replace</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(s, mode)</code></span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>with</i></span></p>
-<blockquote>
-<p><span style="background-color: #FFFFFF"><code>rdbuf()-&gt;open(path(s), mode)</code> 
-or <code>rdbuf()-&gt;open(p, mode)</code> as appropriate</span></p>
-</blockquote>
-<p><span style="background-color: #FFFFFF"><i>End of proposed text.</i></span></p>
+<h3><a name="File-streams">File streams</a></h3>
+<p>Replacements are provided for the file stream classes from the C++ standard 
+library's <code>&lt;fstream&gt;</code> header. These replacement classes 
+publicly inherit from the standard library classes. In the Boost.Filesystem 
+version, constructors and open functions take <code>const path&amp;</code> arguments 
+instead of <code>
+const char*</code> arguments. There are no other differences in syntax or 
+semantics.</p>
+<pre>namespace boost
+{
+  namespace filesystem
+  {
+    template &lt; class charT, class traits = std::char_traits&lt;charT&gt; &gt;
+    class basic_filebuf : public std::basic_filebuf&lt;charT,traits&gt;
+    {
+    public:
+      basic_filebuf&lt;charT,traits&gt;*
+        open(const path&amp; p, std::ios_base::openmode mode);
+    };
+
+    template &lt; class charT, class traits = std::char_traits&lt;charT&gt; &gt;
+    class basic_ifstream : public std::basic_ifstream&lt;charT,traits&gt;
+    {
+    public:
+      explicit basic_ifstream(const path&amp; p, std::ios_base::openmode mode=std::ios_base::in)
+      void open(const path&amp; p, std::ios_base::openmode mode=std::ios_base::in);
+    };
+
+    template &lt; class charT, class traits = std::char_traits&lt;charT&gt; &gt;
+    class basic_ofstream : public std::basic_ofstream&lt;charT,traits&gt;
+    {
+    public:
+      explicit basic_ofstream(const path&amp; p, std::ios_base::openmode mode=std::ios_base::out);
+      void open(const path&amp; p, std::ios_base::openmode mode=std::ios_base::out);
+    };
+
+    template &lt; class charT, class traits = std::char_traits&lt;charT&gt; &gt;
+    class basic_fstream : public std::basic_fstream&lt;charT,traits&gt;
+    {
+    public:
+      explicit basic_fstream(const path&amp; p,
+        std::ios_base::openmode mode=std::ios_base::in | std::ios_base::out);
+      void open(const path&amp; p,
+        std::ios_base::openmode mode=std::ios_base::in | std::ios_base::out);
+    };
+
+    typedef basic_filebuf&lt;char&gt; filebuf;
+    typedef basic_ifstream&lt;char&gt; ifstream;
+    typedef basic_ofstream&lt;char&gt; ofstream;
+    typedef basic_fstream&lt;char&gt; fstream;
+
+    typedef basic_filebuf&lt;wchar_t&gt; wfilebuf;
+    typedef basic_ifstream&lt;wchar_t&gt; wifstream;
+    typedef basic_fstream&lt;wchar_t&gt; wfstream;
+    typedef basic_ofstream&lt;wchar_t&gt; wofstream;
+    
+  } // namespace filesystem
+} // namespace boost</pre>
 <h2><a name="Path-decomposition-table">Path decomposition table</a></h2>
 <p>The table is generated by a program compiled with the Boost implementation.</p>
 <p>Shaded entries indicate cases where <i>POSIX</i> and <i>Windows</i> 
@@ -3182,7 +3094,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->04 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40545" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->14 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40546" --></p>
 
 </body>
 
