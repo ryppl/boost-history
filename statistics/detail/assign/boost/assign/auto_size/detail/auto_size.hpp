@@ -31,7 +31,7 @@
 //
 // Revision history:
 // Feb 9, 2010 : 
-// 	- Added copy semantics.
+// 	- Added a template parameter for the reference_wrapper
 // 	- The temporary array in the conversion operator is now assigned by calling 
 // 	begin() and end() rather than write_to_array() to ensure consistency of 
 //  side effect when assigning under rebind semantics. Negligible loss in 
@@ -156,8 +156,8 @@ namespace auto_size{
         }
                 
         typedef boost::shared_ptr<ref_array_> smart_ptr_;
-        // Only one of the N expressions, the last one, needs to instantiate an 
-        // array, hence a pointer.
+        // Only the last of N expressions needs to instantiate an array, hence a
+        // pointer.
         smart_ptr_ ptr;
                 
     };
