@@ -21,10 +21,10 @@
 
 // This is the implementation behind ref_list_of() and ref_copy_list_of().
 //
-// The motivation for this class was to improve upon ref_list_of<int>(), by 
-// deducing the number of arguments at compile time, and allowing for either 
-// of copy and rebind semantics, in case it is used as the lhs of an assignment; 
-// the former (copy) being both safer and more common than the latter (rebind).
+// This approach improves upon ref_list_of<int>() by deducing the number of 
+// arguments at compile time and factors the reference wrapper for each element
+// into a template parameter. In general, a reference wrapper that implements
+// copy semantics for operator= is preferable.
 //    
 // Acknowledgement: The idea of this class was developed in collaboration 
 // with M.P.G
@@ -156,6 +156,8 @@ namespace auto_size{
         }
                 
         typedef boost::shared_ptr<ref_array_> smart_ptr_;
+        // Only one of the N expressions, the last one, needs to instantiate an 
+        // array, hence a pointer.
         smart_ptr_ ptr;
                 
     };

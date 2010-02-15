@@ -17,7 +17,7 @@ namespace detail{
     // the rhs to the object pointed to.
     //
     // This is in contrast to assign_reference whose operator= rebinds the 
-    // address of the internal pointer. To that effect,here, call rebind() 
+    // address of the internal pointer. To that effect, here, call rebind() 
 	template< class T >
     struct assign_reference_copy
     {
@@ -41,6 +41,8 @@ namespace detail{
         {
             std::swap( *ref_, *r.ref_ );
         }
+
+		// destructor?
 
         T& get_ref() const
         {
