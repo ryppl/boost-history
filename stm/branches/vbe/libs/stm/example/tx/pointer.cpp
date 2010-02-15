@@ -67,12 +67,12 @@ bool test_ptr_to_const() {
     stm::tx::pointer<const int> const cpc = pc;
     //cpc=pc2; // this must not compile
     stm::tx::pointer<stm::tx::pointer<const int> > ppc;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         pc=&cj;
-    } end_atom
-    BOOST_STM_ATOMIC(_) {
+    } BOOST_STM_RETRY
+    BOOST_STM_OUTER_TRANSACTION(_) {
         BOOST_STM_TX_RETURN(_, (pc==&cj)&&(*pc==20)&&(*cpc==10));
-    } end_atom
+    } BOOST_STM_RETRY
     return false;
 }
 
@@ -84,12 +84,12 @@ bool test_ptr_to_const2() {
     stm::tx::pointer<const int> const cpc = pc;
     //cpc=pc2; // this must not compile
     stm::tx::pointer<stm::tx::pointer<const int> > ppc;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         pc=pc2;
-    } BOOST_STM_END_ATOMIC
-    BOOST_STM_ATOMIC(_) {
+    } BOOST_STM_RETRY
+    BOOST_STM_OUTER_TRANSACTION(_) {
         BOOST_STM_TX_RETURN(_, (pc==&cj)&&(*pc==20)&&(*cpc==10));
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     return false;
 }
 
@@ -98,26 +98,26 @@ bool test_ptr_to_tx() {
     stm::tx::int_t i;
     stm::tx::pointer<stm::tx::int_t > p;
     stm::tx::pointer<stm::tx::int_t > const cp = &i;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         i=5;
         p=&i;
-    } BOOST_STM_END_ATOMIC
-    BOOST_STM_ATOMIC(_) {
+    } BOOST_STM_RETRY
+    BOOST_STM_OUTER_TRANSACTION(_) {
         BOOST_STM_TX_RETURN(_, (i==5)&&(p==&i));
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     return false;
 }
 
 bool test_ptr_to_tx_assignment() {
     A a;
     B b;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         b.a_ptr=&a;
         b.a_ptr->i =1;
-    } BOOST_STM_END_ATOMIC
-    BOOST_STM_ATOMIC(_) {
+    } BOOST_STM_RETRY
+    BOOST_STM_OUTER_TRANSACTION(_) {
         BOOST_STM_TX_RETURN(_, (b.a_ptr->i==1)&&(*b.a_ptr->ptr==1));
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     return false;
 }
 

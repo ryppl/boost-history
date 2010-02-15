@@ -27,59 +27,59 @@ int counter2;
 void inc() {
     thread_initializer thi;
 
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         non_tx::wr_ptr<int> tx_counter(_, counter);
         ++(*tx_counter);
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
 }
 void decr() {
     thread_initializer thi;
 
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         non_tx::wr_ptr<int> tx_counter(_, counter);
         --(*tx_counter);
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
 }
 bool check(int val) {
     //thread_initializer thi;
     bool res;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         non_tx::rd_ptr<int> tx_counter(_, counter);
         res =(*tx_counter==val);
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     return res;
 }
 
 bool assign() {
     //thread_initializer thi;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         non_tx::wr_ptr<int> tx_counter(_, counter);
         non_tx::wr_ptr<int> tx_counter2(_, counter2);
         *tx_counter=1;
         *tx_counter2=*tx_counter;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     bool res;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         non_tx::rd_ptr<int> tx_counter(_, counter);
         non_tx::rd_ptr<int> tx_counter2(_, counter2);
         res =(*tx_counter==1) && (*tx_counter2==1) && (tx_counter==tx_counter2) ;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     return res;
 }
 
 bool test_const(int const& c) {
     //thread_initializer thi;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         non_tx::rd_ptr<int> tx_c(_, c);
         non_tx::wr_ptr<int> tx_counter2(_, counter2);
         *tx_counter2=*tx_c;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     bool res;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         non_tx::rd_ptr<int> tx_c(_, c);
         non_tx::wr_ptr<int> tx_counter2(_, counter2);
         res =(*tx_c==*tx_counter2) ;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     return res;
 }
 

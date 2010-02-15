@@ -11,7 +11,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-    
+
 /*
 Should we enable embedded TO?
 
@@ -38,17 +38,17 @@ interval_map : address -> {address, {smart_pointers, offset}*}
 write : address, size
     pair<interval_map::iterator> r = get [address, address+size);
     if (p.first!=p.second) // found
-    
-        if p.first.first==[address, address+size) // 
+
+        if p.first.first==[address, address+size) //
             return p.first.second.first
         if p.first.first includes [address, address+size) //
             return p.first.second.first + offset
         create new cache
-        for each interval 
+        for each interval
             update the cache with already written members
             update smart pointers with new offset
-            concatenate smart pointers list            
-            
+            concatenate smart pointers list
+
         replace all the intervals by the new interval
     else // not found
         insert
@@ -56,7 +56,7 @@ write : address, size
 
 
 This introduce an intrusive pointer class.
-All this sems quite complex and will decreased the performance of 
+All this sems quite complex and will decreased the performance of
 reads/writes and conflict detection.
 
 */
@@ -68,13 +68,13 @@ using namespace boost;
 using namespace boost::stm;
 
 
-struct Inner : transaction_object<Inner> 
+struct Inner : transaction_object<Inner>
 {
     Inner(): i(0) {}
     int i;
 };
 
-struct Outer : transaction_object<Outer> 
+struct Outer : transaction_object<Outer>
 {
     Outer(): e(), j(0) {}
     Inner e;
@@ -82,82 +82,82 @@ struct Outer : transaction_object<Outer>
 };
 
 
-  
+
 bool check_in_nested_fails() {
     Outer obj;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         _.write(obj.e).i=1;
-        BOOST_STM_ATOMIC(_) {
+        BOOST_STM_INNER_TRANSACTION(_) {
             std::cout <<__LINE__<<" "<< "obj.e.i 1!=" << _.read(obj).e.i << std::endl;
             if (_.read(obj).e.i>0) {
                 std::cout <<__LINE__<<" "<< "obj.e.i 1!=" << _.read(obj).e.i << std::endl;
                 _.write(obj).j=2;
             }
-        } BOOST_STM_END_ATOMIC
-    } BOOST_STM_END_ATOMIC
-    BOOST_STM_ATOMIC(_) {
+        }
+    } BOOST_STM_RETRY
+    BOOST_STM_OUTER_TRANSACTION(_) {
         std::cout <<__LINE__<<" "<< "obj.e.i 1=" << _.read(obj.e).i << std::endl;
         std::cout <<__LINE__<<" "<< "obj.j 2!=" << _.read(obj).j << std::endl;
         BOOST_STM_TX_RETURN(_, _.read(obj.e).i==1 && _.read(obj).j==2) ;
-    } BOOST_STM_END_ATOMIC
-    return false;    
-}  
+    } BOOST_STM_RETRY
+    return false;
+}
 
 bool check_after_nested_fails() {
     Outer obj;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         _.write(obj).j=0;
-        BOOST_STM_ATOMIC(_) {
+        BOOST_STM_INNER_TRANSACTION(_) {
             _.write(obj.e).i=1;
-        } BOOST_STM_END_ATOMIC
+        }
         std::cout <<__LINE__<<" "<< "obj.e.i 1!=" << _.read(obj).e.i << std::endl;
         if (_.read(obj).e.i>0)
             _.write(obj).j=2;
-    } BOOST_STM_END_ATOMIC
-    BOOST_STM_ATOMIC(_) {
+    } BOOST_STM_RETRY
+    BOOST_STM_OUTER_TRANSACTION(_) {
         std::cout <<__LINE__<<" "<< "obj.e.i 1=" << _.read(obj.e).i << std::endl;
         std::cout <<__LINE__<<" "<< "obj.j 2!=" << _.read(obj).j << std::endl;
         BOOST_STM_TX_RETURN(_, _.read(obj.e).i==1 && _.read(obj).j==2) ;
-    } BOOST_STM_END_ATOMIC
-    return false;    
-}  
+    } BOOST_STM_RETRY
+    return false;
+}
 
 bool mod_outer_same_in_nested_fails() {
     Outer obj;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         _.write(obj.e).i=1;
-        BOOST_STM_ATOMIC(_) {
+        BOOST_STM_INNER_TRANSACTION(_) {
             _.write(obj).e.i=2;
-        } BOOST_STM_END_ATOMIC
+        }
         std::cout << "obj.e.i= 2!=" << _.read(obj.e).i << std::endl;
-    } BOOST_STM_END_ATOMIC
-    BOOST_STM_ATOMIC(_) {
+    } BOOST_STM_RETRY
+    BOOST_STM_OUTER_TRANSACTION(_) {
         std::cout << "obj.e.i= 2!=" << _.read(obj.e).i << std::endl;
         std::cout << "obj.j= 0=" << _.read(obj).j << std::endl;
         BOOST_STM_TX_RETURN(_, _.read(obj.e).i==2 && _.read(obj).j==0) ;
-    } BOOST_STM_END_ATOMIC
-    return false;    
-}  
+    } BOOST_STM_RETRY
+    return false;
+}
 
 bool mod_inner_same_in_nested_and_check_after_fails() {
     Outer obj;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         _.write(obj).e.i=1;
-        BOOST_STM_ATOMIC(_) {
+        BOOST_STM_INNER_TRANSACTION(_) {
             _.write(obj.e).i=2;
-        } BOOST_STM_END_ATOMIC
+        }
         std::cout << "obj.e.i= 2!=" << _.read(obj).e.i << std::endl;
         if (_.read(obj).e.i>1)
             _.write(obj).j=1;
         //BOOST_STM_TX_RETURN(_, _.read(obj).e.i==2) ;
-    } BOOST_STM_END_ATOMIC
-    BOOST_STM_ATOMIC(_) {
+    } BOOST_STM_RETRY
+    BOOST_STM_OUTER_TRANSACTION(_) {
         std::cout << "obj.e.i= 2=" << _.read(obj).e.i << std::endl;
         std::cout << "obj.j= 1!=" << _.read(obj).j << std::endl;
         BOOST_STM_TX_RETURN(_, _.read(obj).e.i==2 && _.read(obj).j==1) ;
-    } BOOST_STM_END_ATOMIC
-    return false;    
-}  
+    } BOOST_STM_RETRY
+    return false;
+}
 
 
 int main() {

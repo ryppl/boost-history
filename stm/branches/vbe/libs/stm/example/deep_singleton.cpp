@@ -43,13 +43,13 @@ using namespace boost::stm;
 
   
 bool test() {
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_TRANSACTION(_) {
         _.write_ptr(Singleton::instance());
         Singleton::instance()->f=1;
-    } BOOST_STM_END_ATOMIC
-    BOOST_STM_ATOMIC(_) {
+    } BOOST_STM_RETRY
+    BOOST_STM_TRANSACTION(_) {
         BOOST_STM_TX_RETURN(_, Singleton::instance()->f==1) ;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     return false;    
 }  
 

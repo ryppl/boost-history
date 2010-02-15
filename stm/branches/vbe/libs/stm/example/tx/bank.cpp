@@ -36,20 +36,21 @@ public:
     }
 
     void Deposit(int amount) {
-        BOOST_STM_ATOMIC(_) {
+        BOOST_STM_TRANSACTION(_) {
             balance_ += amount;
-        } BOOST_STM_END_ATOMIC
+        } BOOST_STM_RETRY
     }
     int Withdraw(int amount) {
-        BOOST_STM_ATOMIC(_) {
+        BOOST_STM_TRANSACTION(_) {
             balance_ -= amount;
-        } BOOST_STM_END_ATOMIC
+        } BOOST_STM_RETRY
         return amount;
     }
     int Balance() const {
-        BOOST_STM_ATOMIC(_) {
+        BOOST_STM_TRANSACTION(_) {
             BOOST_STM_TX_RETURN(_, balance_);
-        } BOOST_STM_END_ATOMIC
+        } BOOST_STM_RETRY
+        return 0;
     }
     int Nb() const {
         return nb_;
@@ -86,13 +87,13 @@ struct Teller {
         thread_initializer thi;
         for(int i=10; i>0;--i)
         {
-            BOOST_STM_ATOMIC(_) {
+            BOOST_STM_OUTER_TRANSACTION(_) {
                 int amount=random() % 1000;
                 int acc1=random() % bank_->accounts.size();
                 int acc2=random() % bank_->accounts.size();
                 bank_->accounts[acc1]->Withdraw(amount);
                 bank_->accounts[acc2]->Deposit(amount+1);
-            } BOOST_STM_END_ATOMIC
+            } BOOST_STM_RETRY
             catch(...) {
                 cerr << "aborted"<< endl;
             }
@@ -107,33 +108,34 @@ bool volatile Teller::exit=false;
 
 void create_db(tx::pointer<Bank> b, int nr_of_accounts){
     for(int c=0;c<nr_of_accounts;++c) {
-        BOOST_STM_ATOMIC(_) {
+        BOOST_STM_OUTER_TRANSACTION(_) {
             tx::pointer<BankAccount> acc(BOOST_STM_TX_NEW_PTR(_, BankAccount(c)));
             b->accounts.push_back(acc);
-        } BOOST_STM_END_ATOMIC
+        } BOOST_STM_RETRY
     }
 }
 
 tx::pointer<BankAccount> a;
+//tx::tx_ptr<BankAccount> a;
 void account_withdraw_thr() {
     thread_initializer thi;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         a->Withdraw(10);
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
 }
 
 void account_deposit_thr() {
     thread_initializer thi;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         a->Deposit(10);
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
 }
 
 int test_account() {
     
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         a=BOOST_STM_TX_NEW_PTR(_, BankAccount(1));
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     thread  th1(account_withdraw_thr);
     thread  th2(account_deposit_thr);
     thread  th3(account_withdraw_thr);
@@ -143,11 +145,11 @@ int test_account() {
     th2.join();
     th3.join();
     th4.join();
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         int res = (a->Balance()==0?0:1);
         BOOST_STM_TX_DELETE_PTR(_, a.value());
         BOOST_STM_TX_RETURN(_,res);
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
 }
 
 bool test_bank() {
@@ -173,9 +175,9 @@ bool test_bank() {
     cin >> wait;Teller::exit=true;
     th1.join();
     th2.join();
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         address_of(mybank)->print_balance();
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
 #endif
 
     return true;
@@ -190,7 +192,7 @@ int main() {
 
     int res=0;
     res+=test_account();
-    res+=test_bank();
+    //res+=test_bank();
 
     return res;
 

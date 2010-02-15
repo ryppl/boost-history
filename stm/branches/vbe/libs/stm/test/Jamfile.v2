@@ -188,7 +188,8 @@ project
 
     alias embedded
         :
-            [ run ../example/embed.cpp ]
+            [ run-fail ../example/embed.cpp ]
+            [ run ../example/multiple_inheritance.cpp ]
     ;
 
     alias examples_tx
@@ -197,12 +198,12 @@ project
             [ run ../example/singleton.cpp ]
             [ run ../example/dyn_poly.cpp ]
             
-            [ run ../example/tx/bank.cpp : : : : tx_bank ]
+            #[ run ../example/tx/bank.cpp : : : : tx_bank ]
             [ run ../example/tx/numeric.cpp ]
             [ run ../example/tx/array.cpp ]
             [ run ../example/tx/pointer.cpp ]
             [ run ../example/tx/list.cpp : : : : tx_list ]
-            [ run ../example/tx/list_sp.cpp : : : : tx_list_sp ]
+            #[ run ../example/tx/list_sp.cpp : : : : tx_list_sp ]
     ;
 
     #alias examples_txw

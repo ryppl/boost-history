@@ -35,13 +35,13 @@ bool test_array() {
     }
     stm::tx::int_t v[2];
     stm::tx::pointer<stm::tx::int_t > p;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         p = &v[0];
         *p=1;
         p = v;
         ++p;
         *p=2;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     return (v[0]==1) && (v[1]==2);
 }
 
@@ -54,14 +54,14 @@ bool test_array_ptr() {
         ++p;
     }
     stm::tx::pointer<stm::tx::int_t > v;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         v= BOOST_STM_TX_NEW_ARRAY(_,2, stm::tx::int_t);
 
         stm::tx::pointer<stm::tx::int_t > p;
         p = &v[0];
         p = v;
         //++p;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
 
     #if 0
     {

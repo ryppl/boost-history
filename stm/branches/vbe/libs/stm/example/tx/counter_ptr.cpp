@@ -53,7 +53,7 @@ void decr() {
 bool check(int val) {
     //thread_initializer thi;
     bool res;
-    BOOST_STM_TRANSACTION(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         // *counter_ptr==val
         read_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
         read_ptr<tx_int> tx_counter_ptr(_, **tx_counter_ptr_ptr);
@@ -64,14 +64,14 @@ bool check(int val) {
 
 bool assign() {
     //thread_initializer thi;
-    BOOST_STM_TRANSACTION(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         // *tx_counter2_ptr=*tx_counter_ptr;
         read_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
         write_ptr<tx_int_ptr> tx_counter2_ptr_ptr(_, counter2_ptr);
         tx_counter2_ptr_ptr=tx_counter_ptr_ptr;
     } BOOST_STM_RETRY
     bool res=true;
-    BOOST_STM_TRANSACTION(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         //res = (counter2_ptr==counter_ptr) ;
         read_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
         read_ptr<tx_int_ptr> tx_counter2_ptr_ptr(_, counter2_ptr);
@@ -83,12 +83,12 @@ bool assign() {
 #if 0
 bool test_const(tx_int_const_ptr& const  ptr) {
     //thread_initializer thi;
-    BOOST_STM_TRANSACTION(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         write_ptr<tx_int_const_ptr> tx_counter_const_ptr_ptr(_, counter_const_ptr);
         tx_counter_const_ptr_ptr=ptr;
     } BOOST_STM_RETRY
     bool res=true;
-    BOOST_STM_TRANSACTION(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         //res =(c==counter2) ;
     } BOOST_STM_RETRY
     return res;
@@ -124,8 +124,5 @@ int main() {
     thread_initializer thi;
     srand(time(0));
 
-    test_counter();
-
-    return 0;
-
+    return test_counter();
 }

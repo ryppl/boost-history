@@ -27,45 +27,45 @@ stm::tx_obj<int> counter2(0);
 void inc() {
     thread_initializer thi;
 
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         ++counter;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
 }
 void decr() {
     thread_initializer thi;
 
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         --counter;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
 }
 bool check(int val) {
     //thread_initializer thi;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_TRANSACTION(_) {
         BOOST_STM_TX_RETURN(_, *counter==val);
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
 }
 
 bool assign() {
     //thread_initializer thi;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_TRANSACTION(_) {
         counter=1;
         counter2=counter;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     bool res;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_TRANSACTION(_) {
         BOOST_STM_TX_RETURN(_, (*counter==1) && (*counter2==1) && (counter==counter2)) ;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
     return res;
 }
 
 bool test_const(stm::tx_obj<int> const& c) {
     //thread_initializer thi;
-    BOOST_STM_ATOMIC(_) {
+    BOOST_STM_TRANSACTION(_) {
         counter2=c;
-    } BOOST_STM_END_ATOMIC
-    BOOST_STM_ATOMIC(_) {
+    } BOOST_STM_RETRY
+    BOOST_STM_TRANSACTION(_) {
         BOOST_STM_TX_RETURN(_, c==counter2) ;
-    } BOOST_STM_END_ATOMIC
+    } BOOST_STM_RETRY
 }
 
 int test_counter() {
