@@ -65,7 +65,8 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
         for (InflightTxes::iterator i = transactionsInFlight_.begin();
                 i != transactionsInFlight_.end(); ++i)
         {
-            transaction *t = (transaction*)*i;
+            //transaction *t = (transaction*)*i;
+            transaction *t = *i;
 
             if (!t->irrevocable() &&
                 cm_allow_lock_to_abort_tx(lockWaitTime, lockAborted, false, *t))

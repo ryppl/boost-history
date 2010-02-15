@@ -18,10 +18,35 @@
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/transaction.hpp>
+#include <cstring>
 
+//---------------------------------------------------------------------------
+// helper function to implement macros
 namespace boost { namespace stm { namespace detail {
-    inline bool no_opt_false() {return false;}
+
+bool no_opt_false() {return false;}
+
+template <typename T>
+T commit_and_return(transaction&t, T expression) {
+    t.commit(); return expression;
+}
+
+bool commit_expr(transaction&t) {
+    t.commit(); return true;
+}
+
+int get_int(const char* s) {
+    return 1+strlen(s);
+}
+
+void commit(std::nothrow_t, transaction&t)
+{
+    try { t.commit(); }
+    catch (...) {}
+}
+
 }}}
+
 
 //---------------------------------------------------------------------------
 // Transaction control constructs
@@ -45,6 +70,7 @@ namespace boost { namespace stm { namespace detail {
 
 #define BOOST_STM_LABEL_CONTINUE(TX) BOOST_JOIN(__boost_stm_continue_, TX)
 #define BOOST_STM_LABEL_BREAK(TX) BOOST_JOIN(__boost_stm_break_, TX)
+#define BOOST_STM_LABEL_TRICK(TX) BOOST_JOIN(__boost_stm_trick_, TX)
 #define BOOST_STM_VAR_STOP __boost_stm_stop_
 
 #define BOOST_STM_MANAGE_BREAK_CONTINUE(TX)                                 \
@@ -53,28 +79,64 @@ namespace boost { namespace stm { namespace detail {
             continue;                                                       \
         BOOST_STM_LABEL_BREAK(TX):                                          \
             break;                                                          \
+        BOOST_STM_LABEL_TRICK(TX):                                          \
+            if(boost::stm::detail::get_int(#TX)%3==0) goto BOOST_STM_LABEL_CONTINUE(TX);                  \
+            if(boost::stm::detail::get_int(#TX)%3==1) goto BOOST_STM_LABEL_BREAK(TX);                     \
+            if(boost::stm::detail::get_int(#TX)%3==2) goto BOOST_STM_LABEL_TRICK(TX);                     \
     } else
 
 //---------------------------------------------------------------------------
 // Usage
-// BOOST_STM_USE_ATOMIC(_) {
-//   transactional block
-// }
+// BOOST_STM_OUTER_TRANSACTION(_) {
+// ...
+//   BOOST_STM_INNER_TRANSACTION(_) {
+//      transactional block
+//   }
+// ...
+// } BOOST_STM_RETRY    // or BOOST_STM_CACHE_BEFORE_RETRY(E)
+//                      // or BOOST_STM_BEFORE_RETRY
 //---------------------------------------------------------------------------
 
-#define BOOST_STM_USE_ATOMIC(TX)                                \
+#define BOOST_STM_INNER_TRANSACTION(TX)                                \
+    if (bool BOOST_STM_VAR_STOP = boost::stm::detail::no_opt_false()) {} else   \
+    for (boost::stm::transaction TX;                            \
+            !   BOOST_STM_VAR_STOP;                                  \
+        BOOST_STM_VAR_STOP=true, TX.end())
+
+#define BOOST_STM_INNER_TRANSACTION_IN_LOOP(TX)                        \
+    BOOST_STM_MANAGE_BREAK_CONTINUE(TX)                         \
+    for (boost::stm::transaction TX;                            \
+            !   BOOST_STM_VAR_STOP;                                  \
+        BOOST_STM_VAR_STOP=true, TX.end())
+
+
+#define BOOST_STM_USE_ATOMIC(TX) BOOST_STM_INNER_TRANSACTION(TX)
+#define BOOST_STM_USE_ATOMIC_IN_LOOP(TX) BOOST_STM_INNER_TRANSACTION_IN_LOOP(TX)
+
+//---------------------------------------------------------------------------
+// Usage
+// BOOST_STM_OUTER_TRANSACTION(_) {
+//   transactional block
+// } BOOST_STM_RETRY    // or BOOST_STM_CACHE_BEFORE_RETRY(E)
+//                      // or BOOST_STM_BEFORE_RETRY
+//---------------------------------------------------------------------------
+
+#define BOOST_STM_OUTER_TRANSACTION(TX)                                \
     BOOST_STM_COMPILER_DONT_DESTROY_FOR_VARIABLES_WORKAROUND    \
     for (boost::stm::transaction TX;                            \
             !   TX.committed()                                  \
             &&  TX.restart();                                   \
-        TX.end())
+        TX.no_throw_end()) try
 
-#define BOOST_STM_USE_ATOMIC_IN_LOOP(TX)                        \
+#define BOOST_STM_OUTER_TRANSACTION_IN_LOOP(TX)                                \
     BOOST_STM_MANAGE_BREAK_CONTINUE(TX)                         \
     for (boost::stm::transaction TX;                            \
             !   TX.committed()                                  \
             &&  TX.restart();                                   \
-        TX.end())
+        BOOST_STM_VAR_STOP=true, TX.no_throw_end()) try
+
+#define BOOST_STM_TRY_ATOMIC(TX) BOOST_STM_TRY_TRANSACTION(TX)
+#define BOOST_STM_TRY_ATOMIC_IN_LOOP(TX) BOOST_STM_TRY_TRANSACTION_IN_LOOP(TX)
 
 //---------------------------------------------------------------------------
 // Usage
@@ -84,29 +146,7 @@ namespace boost { namespace stm { namespace detail {
 //                      // or BOOST_STM_BEFORE_RETRY
 //---------------------------------------------------------------------------
 
-#define BOOST_STM_TRY_ATOMIC(TX)                                \
-    BOOST_STM_COMPILER_DONT_DESTROY_FOR_VARIABLES_WORKAROUND    \
-    for (boost::stm::transaction TX;                            \
-            !   TX.committed()                                  \
-            &&  TX.restart();                                   \
-        TX.no_throw_end()) try
-
-#define BOOST_STM_TRY_ATOMIC_IN_LOOP(TX)                                \
-    BOOST_STM_MANAGE_BREAK_CONTINUE(TX)                         \
-    for (boost::stm::transaction TX;                            \
-            !   TX.committed()                                  \
-            &&  TX.restart();                                   \
-        TX.no_throw_end()) try
-
-//---------------------------------------------------------------------------
-// Usage
-// BOOST_STM_TRY_ATOMIC(_) {
-//   transactional block
-// } BOOST_STM_RETRY    // or BOOST_STM_CACHE_BEFORE_RETRY(E)
-//                      // or BOOST_STM_BEFORE_RETRY
-//---------------------------------------------------------------------------
-
-#define BOOST_STM_ATOMIC(TX)                                    \
+#define BOOST_STM_TRANSACTION(TX)                                    \
     BOOST_STM_COMPILER_DONT_DESTROY_FOR_VARIABLES_WORKAROUND    \
     for (boost::stm::transaction TX;                            \
             !   TX.committed()                                  \
@@ -114,14 +154,17 @@ namespace boost { namespace stm { namespace detail {
             &&  TX.restart_if_not_inflight();                   \
         TX.no_throw_end()) try
 
-#define BOOST_STM_ATOMIC_IN_LOOP(TX)                            \
+#define BOOST_STM_TRANSACTION_IN_LOOP(TX)                            \
     BOOST_STM_MANAGE_BREAK_CONTINUE(TX)                         \
     for (boost::stm::transaction TX;                            \
             !   TX.committed()                                  \
             &&  TX.check_throw_before_restart()                 \
             &&  TX.restart_if_not_inflight();                   \
-        TX.no_throw_end()) try
+        BOOST_STM_VAR_STOP=true, TX.no_throw_end()) try
 
+
+#define BOOST_STM_ATOMIC(TX) BOOST_STM_TRANSACTION(TX)
+#define BOOST_STM_ATOMIC_IN_LOOP(TX) BOOST_STM_TRANSACTION_IN_LOOP(TX)
 
 //---------------------------------------------------------------------------
 // Catch a named abort exception leting the user to do somethink before retry
@@ -142,12 +185,12 @@ namespace boost { namespace stm { namespace detail {
 //---------------------------------------------------------------------------
 // Catch a named exception and re-throw it after commiting
 //---------------------------------------------------------------------------
-#define BOOST_STM_RETHROW(TX, E) catch (E&) {(TX).commit(); throw;}
+#define BOOST_STM_RETHROW(TX, E) catch (E&) {boost::stm::detail::commit_expr(TX); throw;}
 
 //---------------------------------------------------------------------------
 // Catch any exception and re-throw it after commiting
 //---------------------------------------------------------------------------
-#define BOOST_STM_RETHROW_ANY(TX) catch (...) {(TX).commit(); throw;}
+#define BOOST_STM_RETHROW_ANY(TX) catch (...) {boost::stm::detail::commit_expr(TX); throw;}
 
 //---------------------------------------------------------------------------
 // Catch a named exception and abort the transaction TX
@@ -163,24 +206,13 @@ namespace boost { namespace stm { namespace detail {
     catch (...) {(TX).force_to_abort();}
 
 //---------------------------------------------------------------------------
-// helper function to implement BOOST_STM_RETURN
-namespace boost { namespace stm { namespace detail {
-
-template <typename T>
-T commit_and_return(transaction&t, T expression) {
-    t.commit(); return expression;
-}
-
-}}}
-
-//---------------------------------------------------------------------------
 // return the expression EXPRESSION from inside a transaction TX
 //---------------------------------------------------------------------------
 #define BOOST_STM_TX_RETURN(TX, EXPRESSION) \
     return boost::stm::detail::commit_and_return(TX, EXPRESSION)
 
 #define BOOST_STM_TX_RETURN_NOTHING(TX) \
-    if (!TX.commit());else return
+    if (!boost::stm::detail::commit_expr(TX));else return
 
 //---------------------------------------------------------------------------
 // return the expression EXPRESSION from inside a transaction TX
@@ -194,21 +226,21 @@ T commit_and_return(transaction&t, T expression) {
 //---------------------------------------------------------------------------
 
 #define BOOST_STM_BREAK(TX)    \
-    if (!TX.commit());else goto BOOST_STM_LABEL_BREAK(TX)
+    if (!boost::stm::detail::commit_expr(TX));else goto BOOST_STM_LABEL_BREAK(TX)
 
 
 //---------------------------------------------------------------------------
 // continue: exit from the transaction block associate to TX successfully
 //---------------------------------------------------------------------------
 #define BOOST_STM_CONTINUE(TX)    \
-    if (!TX.commit());else goto BOOST_STM_LABEL_CONTINUE(TX)
+    if (!boost::stm::detail::commit_expr(TX));else goto BOOST_STM_LABEL_CONTINUE(TX)
 
 //---------------------------------------------------------------------------
 // goto : exit from the transaction block associate to T successfully jumping to the named label LABEL
 // Note that label must be outside the transaction block.
 //---------------------------------------------------------------------------
 #define BOOST_STM_TX_GOTO(TX, LABEL) \
-    if (!TX.commit());else goto LABEL
+    if (!boost::stm::detail::commit_expr(TX));else goto LABEL
 
 #define BOOST_STM_GOTO(LABEL) \
     if (boost::stm::current_transaction()==0) goto LABEL;  \

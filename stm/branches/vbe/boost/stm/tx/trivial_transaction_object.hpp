@@ -73,23 +73,61 @@ class trivial_transaction_object : public
     Base
 #endif
 {
-#ifdef USE_STM_MEMORY_MANAGER
-    typedef memory_manager<Final, Base> base_type;
-#else
-    typedef Base base_type;
-#endif
     Final* final() { return static_cast<Final*>(this); }
     const Final* final() const { return static_cast<Final const*>(this); }
 public:
-    static Final* make_cache(Final const& rhs, transaction& t) {
+    static Final* make_cache(Final const* rhs, transaction& t) {
         Final* p = cache_allocate<Final>(t);
-        std::memcpy(p, static_cast<Final const*>(&rhs), sizeof(Final));
+        std::memcpy(p, rhs.final(), sizeof(Final));
         return p;
     };
 
     //--------------------------------------------------------------------------
     virtual base_transaction_object* make_cache(transaction& t) const {
-        //~ return make_cache(*final(), t);
+        Final* p = cache_allocate<Final>(t);
+        std::memcpy(p, final(), sizeof(Final));
+        return p;
+    }
+
+   //--------------------------------------------------------------------------
+    virtual void delete_cache() {
+        boost::stm::cache_deallocate(this);
+    }
+
+    //--------------------------------------------------------------------------
+    virtual void copy_cache(base_transaction_object const &rhs)
+    {
+        std::memcpy(final(), boost::safe_polymorphic_downcast_2<Final const *, Base const>(&rhs), sizeof(Final));
+    }
+
+#if BUILD_MOVE_SEMANTICS
+    virtual void move_state(base_transaction_object * rhs)
+    {
+        *final() = draco_move(*(boost::safe_polymorphic_downcast_2<Final*, Base>(rhs)));
+    }
+#endif
+
+};
+
+template <class Final, class Base1, class Base2>
+class trivial_transaction_object2 :
+#ifdef USE_STM_MEMORY_MANAGER
+    public memory_manager<Final, Base1>, public Base2
+#else        
+    public Base1, public Base2
+#endif
+{
+    Final* final() { return static_cast<Final*>(this); }
+    const Final* final() const { return static_cast<Final const*>(this); }
+public:
+    static Final* make_cache(Final const* rhs, transaction& t) {
+        Final* p = cache_allocate<Final>(t);
+        std::memcpy(p, rhs.final(), sizeof(Final));
+        return p;
+    };
+
+    //--------------------------------------------------------------------------
+    virtual base_transaction_object* make_cache(transaction& t) const {
         Final* p = cache_allocate<Final>(t);
         std::memcpy(p, final(), sizeof(Final));
         return p;
@@ -103,18 +141,17 @@ public:
    //--------------------------------------------------------------------------
    virtual void copy_cache(base_transaction_object const &rhs)
    {
-        std::memcpy(final(), static_cast<Final const *>(&rhs), sizeof(Final));
+        std::memcpy(final(), boost::safe_polymorphic_downcast_3<Final const *, Base1 const, Base2 const>(&rhs), sizeof(Final));
    }
 
 #if BUILD_MOVE_SEMANTICS
    virtual void move_state(base_transaction_object * rhs)
    {
-      *final() = draco_move(*(static_cast<Final*>(rhs)));
+      *final() = draco_move(*(boost::safe_polymorphic_downcast_3<Final*, Base1, Base2>(rhs)));
    }
 #endif
 
 };
-
 
 }}
 #endif // BOOST_STM_TX_TRIVIAL_TRANSACTION_OBJECT__HPP

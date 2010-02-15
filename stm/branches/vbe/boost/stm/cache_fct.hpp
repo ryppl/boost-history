@@ -41,8 +41,8 @@ class transaction;
 void cache_release(base_transaction_object* ptr);
 
 
-template <class T> T* cache_allocate(transaction&);
-template <class T> void cache_deallocate(T*);
+template <class T> T* cache_allocate(transaction& t);
+template <class T> void cache_deallocate(T* ptr);
 
 
 } // namespace core

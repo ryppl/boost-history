@@ -203,7 +203,7 @@ public:
             res.reset(new cache<T>(const_cast<T*>(ptr)));
             map_.insert(std::make_pair(const_cast<T*>(ptr), res.get()));
         } else {
-            if (typeid(it->second)==typeid(cache<T>*)) {
+            if (typeid(it->second)==typeid( cache<T>* )) {
                 res.reset(static_cast<cache<T>*>(it->second));
             } else {
                 // When cached value do not corresponds to the type we need

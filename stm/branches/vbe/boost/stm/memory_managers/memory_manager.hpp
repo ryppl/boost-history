@@ -19,12 +19,14 @@
 #include <pthread.h>
 //-----------------------------------------------------------------------------
 #include <list>
+#include <exception>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction_object.hpp>
 #include <boost/stm/cache_fct.hpp>
 #include <boost/stm/datatypes.hpp>
+#include <boost/stm/memory_managers/base_memory_manager.hpp>
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -37,7 +39,7 @@ namespace boost { namespace stm {
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // memory_manager mixin
-// Functions new and delete 
+// Functions new and delete
 
 // The parameter Base allows to mix memory_manager and polymorphism
 // class B : memory_manager<B> {}
@@ -50,24 +52,22 @@ class memory_manager : public Base
 public:
     typedef memory_manager<Derived, Base> this_type;
 
-    void* operator new(std::size_t size, const nothrow_t&) throw () {
+    void* operator new(std::size_t size, const std::nothrow_t&) throw () {
         return base_memory_manager::retrieve_mem(size);
     }
-    
+
     void* operator new(std::size_t size) throw (std::bad_alloc) {
         void* ptr= base_memory_manager::retrieve_mem(size);
-        if (ptr==0) throw std::bad_alloc;
+        if (ptr==0) throw std::bad_alloc();
         return ptr;
     }
 
     void operator delete(void* mem) throw () {
-        static Derived elem;
-        static std::size_t elemSize = sizeof(elem);
-        base_memory_manager::return_mem(mem, elemSize);
+        base_memory_manager::return_mem(mem, sizeof(Derived));
    }
 };
 
 }}
-#endif // BOOST_STM_TRANSACTION_OBJECT__HPP
+#endif // BOOST_STM_MEMORY_MANAGER__HPP
 
 

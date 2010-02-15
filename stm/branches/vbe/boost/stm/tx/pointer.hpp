@@ -71,12 +71,14 @@ public:
         return *this->value();
     }
 
+    #if 0
     T* operator->() {
         return this->ref();
     }
     T& operator*() {
         return *this->ref();
     }
+    #endif
 
 };
 

@@ -158,8 +158,6 @@ public:
     void lock_for(chrono::duration<Rep, Period> const & rel_time)
     {transaction::::lock_for(the_lock(), rel_time);}
 
-protected:
-    //TimedLock& the_lock() {return *static_cast<TimedLock*>(&this->lock_);}
 };
 
 #endif

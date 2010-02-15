@@ -35,6 +35,11 @@
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
 
+template <class B>
+struct virtually : virtual B {
+    // forward constructors
+};
+
 namespace detail {
 template <class Final, class Base,
    bool hasShallowCopySemantics,
@@ -50,9 +55,28 @@ class transaction_object_aux<F, B, true, false>:
 template <class F, class B>
 class transaction_object_aux<F, B, false, true>:
     public trivial_transaction_object<F, B> {};
-template <class F, typename B>
+template <class F, class B>
 class transaction_object_aux<F, B, false, false>:
     public deep_transaction_object<F, B> {};
+
+template <class Final, class Base1,class Base2,
+   bool hasShallowCopySemantics,
+   bool hasTrivialCopySemantics>
+class transaction_object2_aux;
+
+template <class F, class B1, class B2>
+class transaction_object2_aux<F, B1, B2, true, true>:
+    public trivial_transaction_object2<F, B1, B2> {};
+template <class F, class B1, class B2>
+class transaction_object2_aux<F, B1, B2, true, false>:
+    public shallow_transaction_object2<F, B1, B2> {};
+template <class F, class B1, class B2>
+class transaction_object2_aux<F, B1, B2, false, true>:
+    public trivial_transaction_object2<F, B1,B2> {};
+template <class F, class B1, class B2>
+class transaction_object2_aux<F, B1, B2, false, false>:
+    public deep_transaction_object2<F, B1, B2> {};
+
 }
 #if 1
 
@@ -65,6 +89,18 @@ class transaction_object : public detail::transaction_object_aux<Final, Base,
     has_trivial_copy_semantics<Final>::value
     >
 {};
+
+template <
+    class Final,
+    class Base1,
+    class Base2
+>
+class transaction_object2 : public detail::transaction_object2_aux<Final, Base1, Base2,
+    has_shallow_copy_semantics<Final>::value,
+    has_trivial_copy_semantics<Final>::value
+    >
+{};
+
     #else
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -88,13 +124,7 @@ class transaction_object : public
     memory_manager<Final, Base>
 #else
     Base
-#endif
-{
-#ifdef USE_STM_MEMORY_MANAGER
-    typedef memory_manager<Final, Base> base_type;
-#else
-    typedef Base base_type;
-#endif
+#endif{
 public:
     typedef transaction_object<Final, Base> this_type;
 
@@ -109,7 +139,7 @@ public:
         return p;
     }
 #else
-    virtual base_transaction_object* make_cache(transaction*) const {
+    virtual base_transaction_object* make_cache(transaction*/*t*/) const {
         Final* tmp = new Final(*static_cast<Final const*>(this));
         return tmp;
     }

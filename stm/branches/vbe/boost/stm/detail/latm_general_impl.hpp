@@ -484,7 +484,8 @@ inline boost::stm::transaction* boost::stm::transaction::get_inflight_tx_of_same
    for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
-      transaction *t = (transaction*)*i;
+      //~ transaction *t = (transaction*)*i;
+      transaction *t = *i;
 
       //--------------------------------------------------------------------
       // if this tx's thread is the same thread iterating through the in-flight

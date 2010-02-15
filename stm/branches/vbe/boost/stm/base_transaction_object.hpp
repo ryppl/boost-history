@@ -24,6 +24,7 @@
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/datatypes.hpp>
+#include <boost/stm/safe_downcast.hpp>
 
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/memory_pool.hpp>
@@ -54,9 +55,7 @@ namespace detail {
     struct make_cache_aux<static_poly> {
         template <typename T>
         static T* apply(T & rhs, transaction& t) {
-            //return T::make_cache(static_cast<T const&>(rhs), t);
-            return T::make_cache(rhs, t);
-            //return static_cast<T*>(rhs.make_cache(t));
+            return T::make_cache(&rhs, t);
         }
     };
 
@@ -64,7 +63,7 @@ namespace detail {
     struct make_cache_aux<dyn_poly> {
         template <typename T>
         static T* apply(T & rhs, transaction& t) {
-            return static_cast<T*>(rhs.make_cache(t));
+            return boost::safe_polymorphic_downcast<T*>(rhs.make_cache(t));
         };
     };
 }

@@ -33,6 +33,7 @@
 #ifdef BOOST_STM_USE_BOOST
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/fusion/include/is_sequence.hpp>
 #endif
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction.hpp>
@@ -49,6 +50,7 @@
 #include <boost/stm/detail/transactions_stack.hpp>
 #include <boost/stm/detail/vector_map.hpp>
 #include <boost/stm/detail/vector_set.hpp>
+#include <boost/stm/safe_downcast.hpp>
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
@@ -416,13 +418,13 @@ public:
       if (1 == in.new_memory()) return in;
       if (in.transaction_thread() == invalid_thread_id()) return in;
 
-      base_transaction_object *inPtr = (base_transaction_object*)&in;
+      //base_transaction_object *inPtr = (base_transaction_object*)&in;
 
       for (WriteContainer::iterator i = writeList().begin(); i != writeList().end(); ++i)
       {
-         if (i->second == (inPtr))
+         if (i->second == &in)
          {
-            return *static_cast<T*>(i->first);
+            return *boost::safe_polymorphic_downcast<T*>(i->first);
          }
       }
 
@@ -431,6 +433,34 @@ public:
       //-----------------------------------------------------------------------
       throw aborted_transaction_exception("original not found");
    }
+
+   template <typename T>
+   T* find_original_ptr(T* ptr)
+   {
+      //-----------------------------------------------------------------------
+      // if transactionThread_ is not invalid it means this is the original, so
+      // we can return it. Otherwise, we need to search for the original in
+      // our write set
+      //-----------------------------------------------------------------------
+      if (1 == ptr->new_memory()) return ptr;
+      if (ptr->transaction_thread() == invalid_thread_id()) return ptr;
+
+      //base_transaction_object *inPtr = ptr;
+
+      for (WriteContainer::iterator i = writeList().begin(); i != writeList().end(); ++i)
+      {
+         if (i->second == ptr)
+         {
+            return boost::safe_polymorphic_downcast<T*>(i->first);
+         }
+      }
+
+      //-----------------------------------------------------------------------
+      // if it's not in our original / new list, then we need to except
+      //-----------------------------------------------------------------------
+      throw aborted_transaction_exception("original not found");
+   }
+
 
    //--------------------------------------------------------------------------
    // The below methods change their behavior based on whether the transaction
@@ -471,15 +501,29 @@ public:
    {
       if (direct_updating())
       {
-         if (in.transaction_thread() == threadId_) return (T*)(&in);
+         if (in.transaction_thread() == threadId_) return const_cast<T*>(&in);
          else return 0;
       }
       else
       {
-         WriteContainer::iterator i = writeList().find
-            ((base_transaction_object*)(&in));
+         WriteContainer::iterator i = writeList().find(const_cast<T*>(&in));
          if (i == writeList().end()) return 0;
-         else return static_cast<T*>(i->second);
+         else return boost::safe_polymorphic_downcast<T*>(i->second);
+      }
+   }
+   template <typename T>
+   T* get_written_ptr(T const * ptr)
+   {
+      if (direct_updating())
+      {
+         if (ptr->transaction_thread() == threadId_) return const_cast<T*>(ptr);
+         else return 0;
+      }
+      else
+      {
+         WriteContainer::iterator i = writeList().find(const_cast<T*>(ptr));
+         if (i == writeList().end()) return 0;
+         else return boost::safe_polymorphic_downcast<T*>(i->second);
       }
    }
 
@@ -488,8 +532,9 @@ public:
     inline bool has_been_read(T const & in)
     {
         #ifndef DISABLE_READ_SETS
-        ReadContainer::iterator i = readList().find
-            (static_cast<base_transaction_object*>(&in));
+        //~ ReadContainer::iterator i = readList().find
+            //~ (static_cast<base_transaction_object*>(&in));
+        ReadContainer::iterator i = readList().find(&in);
         //----------------------------------------------------------------
         // if this object is already in our read list, bail
         //----------------------------------------------------------------
@@ -542,11 +587,11 @@ public:
    }
 
    //--------------------------------------------------------------------------
-   template <typename Poly, typename T> 
+   template <typename Poly, typename T>
    T* write_ptr_poly(T* in)
    {
       if (0 == in) return 0;
-      return &write_poly<Poly>(*in);       
+      return &write_poly<Poly>(*in);
    }
    template <typename Poly, typename T>
    inline T& write_poly(T& in)
@@ -567,7 +612,7 @@ public:
 
    //--------------------------------------------------------------------------
    template <typename T>
-   inline void delete_memory(T &in)
+   inline void delete_memory(T const&in)
    {
       if (direct_updating())
       {
@@ -759,7 +804,7 @@ public:
     #endif
    //--------------------------------------------------------------------------
    template <typename T>
-   T* new_shared_memory(T*)
+   T* new_shared_memory(T*/*ptr*/)
    {
       throw_if_forced_to_abort_on_new();
       make_irrevocable();
@@ -768,7 +813,7 @@ public:
 
    //--------------------------------------------------------------------------
    template <typename T>
-   T* new_memory(T*)
+   T* new_memory(T*/*ptr*/)
    {
       throw_if_forced_to_abort_on_new();
       return as_new(new T());
@@ -793,8 +838,13 @@ public:
    }
 
    void end();
-   bool commit() {end(); return true;}
-   void no_throw_end();
+    void commit() { end(); }
+    void commit(std::nothrow_t)
+    {
+        try { end(); }
+        catch (...) {}
+    }
+    void no_throw_end();
 
    void force_to_abort()
    {
@@ -809,7 +859,8 @@ public:
       for (InflightTxes::iterator j = transactionsInFlight_.begin();
       j != transactionsInFlight_.end(); ++j)
       {
-         transaction *t = (transaction*)*j;
+         //~ transaction *t = (transaction*)*j;
+         transaction *t = *j;
 
          // if this is a parent or child tx, it must abort too
          if (t->threadId_ == this->threadId_) t->forced_to_abort_ref() = true;
@@ -890,7 +941,8 @@ private:
       // otherwise, see if its in our read list
       //--------------------------------------------------------------------
 #ifndef DISABLE_READ_SETS
-      ReadContainer::iterator i = readList().find((base_transaction_object*)&in);
+      //~ ReadContainer::iterator i = readList().find((base_transaction_object*)&in);
+      ReadContainer::iterator i = readList().find(&in);
       if (i != readList().end()) return in;
 #endif
 #if USE_BLOOM_FILTER
@@ -920,14 +972,16 @@ private:
             //stm::lock(m);
 
             WriteContainer* c = write_lists(in.transaction_thread());
-            WriteContainer::iterator readMem = c->find((base_transaction_object*)&in);
+            //~ WriteContainer::iterator readMem = c->find((base_transaction_object*)&in);
+            WriteContainer::iterator readMem = c->find(const_cast<T*>(&in));
             if (readMem == c->end())
             {
                std::cout << "owner did not contain item in write list" << std::endl;
             }
 
 #ifndef DISABLE_READ_SETS
-            readList().insert((base_transaction_object*)readMem->second);
+            //~ readList().insert((base_transaction_object*)readMem->second);
+            readList().insert(readMem->second);
 #endif
 #if USE_BLOOM_FILTER
             bloom().insert((std::size_t)readMem->second);
@@ -935,12 +989,13 @@ private:
             //unlock_tx();
 
             ++reads_;
-            return *static_cast<T*>(readMem->second);
+            return *boost::safe_polymorphic_downcast<T*>(readMem->second);
          }
 
          // already have locked us above - in both if / else
 #ifndef DISABLE_READ_SETS
-         readList().insert((base_transaction_object*)&in);
+         //~ readList().insert((base_transaction_object*)&in);
+         readList().insert(&in);
 #endif
 #if USE_BLOOM_FILTER
          bloom().insert((std::size_t)&in);
@@ -965,7 +1020,8 @@ private:
          //lock_tx();
          // already have locked us above - in both if / else
 #ifndef DISABLE_READ_SETS
-         readList().insert((base_transaction_object*)&in);
+         //~ readList().insert((base_transaction_object*)&in);
+         readList().insert(&in);
 #endif
 #if USE_BLOOM_FILTER
          bloom().insert((std::size_t)&in);
@@ -1004,7 +1060,8 @@ private:
       }
 
       in.transaction_thread(threadId_);
-      writeList().insert(tx_pair((base_transaction_object*)&in, detail::make_cache_aux<Poly>::apply(in , *this)));
+      //~ writeList().insert(tx_pair((base_transaction_object*)&in, detail::make_cache_aux<Poly>::apply(in , *this)));
+      writeList().insert(tx_pair(&in, detail::make_cache_aux<Poly>::apply(in , *this)));
 #if USE_BLOOM_FILTER
       bloom().insert((std::size_t)&in);
 #endif
@@ -1013,7 +1070,7 @@ private:
 
    //--------------------------------------------------------------------------
    template <typename T>
-   void direct_delete_memory(T &in)
+   void direct_delete_memory(T const&in)
    {
       if (in.transaction_thread() == threadId_)
       {
@@ -1075,6 +1132,72 @@ private:
 
          deletedMemoryList().push_back(detail::make_non_tx(in));
       }
+   }
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   typename boost::enable_if<fusion::traits::is_sequence<T>, bool>::type
+   all_members_in_this_thread(T const & in, dummy<0> = 0) {
+       // not yet implemented
+       return false;
+   }
+
+   template <typename T>
+   typename boost::disable_if<fusion::traits::is_sequence<T>, bool>::type
+   all_members_in_this_thread(T const & in, dummy<1> = 0) {
+       return true;
+   }
+
+   template <typename T>
+   typename boost::enable_if<is_base_of<base_transaction_object, T>, bool>::type
+   all_in_this_thread(T const & in, dummy<0> = 0) {
+       return (in.transaction_thread() != threadId_) && all_members_in_this_thread(in);
+   }
+
+   template <typename T>
+   typename boost::disable_if<is_base_of<base_transaction_object, T>, bool>::type
+   all_in_this_thread(T const & in, dummy<1> = 0) {
+       return all_members_in_this_thread(in);
+   }
+
+   template <typename T>
+   bool all_in_this_thread(T const * const in, std::size_t size, dummy<0> = 0) {
+        for (int i=size-1; i>=0; --i) {
+            if (!all_in_this_thread(in[i])) {
+                return false;
+            }
+        }
+        return true;
+   }
+
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   static typename boost::enable_if<is_base_of<base_transaction_object, T>, bool>::type
+   valid_thread(T const &in, dummy<0> = 0) {
+       return in.transaction_thread() != invalid_thread_id();
+   }
+
+   template <typename T>
+   typename boost::disable_if<is_base_of<base_transaction_object, T>, bool>::type
+   static valid_thread(T const &in, dummy<1> = 0) {
+       // not yet implemented
+
+       return in.transaction_thread() != invalid_thread_id();
+   }
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   static typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
+   set_thread(T & in, thread_id_t thread_id, dummy<0> = 0) {
+       in.transaction_thread() = thread_id;
+   }
+
+   template <typename T>
+   typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
+   static set_thread(T & in, thread_id_t thread_id, dummy<1> = 0) {
+       // not yet implemented
+       in.transaction_thread() = thread_id;
    }
 
    //--------------------------------------------------------------------------
@@ -1150,14 +1273,15 @@ private:
       if (writeList().empty()) return insert_and_return_read_memory(in);
 #endif
 
-      WriteContainer::iterator i = writeList().find
-         ((base_transaction_object*)(&in));
+      //~ WriteContainer::iterator i = writeList().find
+         //~ ((base_transaction_object*)(&in));
+      WriteContainer::iterator i = writeList().find(const_cast<T*>(&in));
       //----------------------------------------------------------------
       // always check to see if read memory is in write list since it is
       // possible to have already written to memory being read now
       //----------------------------------------------------------------
       if (i == writeList().end()) return insert_and_return_read_memory(in);
-      else return *static_cast<T*>(i->second);
+      else return *boost::safe_polymorphic_downcast<T*>(i->second);
    }
 
 public:
@@ -1166,8 +1290,9 @@ public:
    T& insert_and_return_read_memory(T& in)
    {
 #ifndef DISABLE_READ_SETS
-      ReadContainer::iterator i = readList().find
-         (static_cast<base_transaction_object*>(&in));
+      //~ ReadContainer::iterator i = readList().find
+         //~ (static_cast<base_transaction_object*>(&in));
+      ReadContainer::iterator i = readList().find(&in);
       //----------------------------------------------------------------
       // if this object is already in our read list, bail
       //----------------------------------------------------------------
@@ -1179,9 +1304,11 @@ public:
       //lock_tx();
 #ifndef DISABLE_READ_SETS
 #if PERFORMING_VALIDATION
-      readList()[(base_transaction_object*)&in] = in.version_;
+      //~ readList()[(base_transaction_object*)&in] = in.version_;
+      readList()[&in] = in.version_;
 #else
-      readList().insert((base_transaction_object*)&in);
+      //~ readList().insert((base_transaction_object*)&in);
+      readList().insert(&in);
 #endif
 #endif
 #if USE_BLOOM_FILTER
@@ -1207,8 +1334,9 @@ private:
       //----------------------------------------------------------------
       if (in.transaction_thread() != invalid_thread_id()) return in;
 
-      WriteContainer::iterator i = writeList().find
-         (static_cast<base_transaction_object*>(&in));
+      //~ WriteContainer::iterator i = writeList().find
+         //~ (static_cast<base_transaction_object*>(&in));
+      WriteContainer::iterator i = writeList().find(&in);
       //----------------------------------------------------------------
       // if !in write set, add. lock first, for version consistency
       //----------------------------------------------------------------
@@ -1227,17 +1355,19 @@ private:
 #endif
          base_transaction_object* returnValue = detail::make_cache_aux<Poly>::apply(in, *this);
          returnValue->transaction_thread(threadId_);
-         writeList().insert(tx_pair((base_transaction_object*)&in, returnValue));
-         return *static_cast<T*>(returnValue);
+         //~ writeList().insert(tx_pair((base_transaction_object*)&in, returnValue));
+         writeList().insert(tx_pair(&in, returnValue));
+         //return *static_cast<T*>(returnValue);
+         return *boost::safe_polymorphic_downcast<T*>(returnValue);
       }
       else {
-          return *static_cast<T*>(i->second);
+          return *boost::safe_polymorphic_downcast<T*>(i->second);
       }
    }
 
    //--------------------------------------------------------------------------
    template <typename T>
-   void deferred_delete_memory(T &in)
+   void deferred_delete_memory(T const&in)
    {
       if (forced_to_abort())
       {
@@ -1254,7 +1384,8 @@ private:
          synchro::lock_guard<Mutex> lock(*mutex());
          bloom().insert((std::size_t)&in);
          }
-         writeList().insert(tx_pair((base_transaction_object*)&in, 0));
+         //~ writeList().insert(tx_pair((base_transaction_object*)&in, 0));
+         writeList().insert(tx_pair(const_cast<T*>(&in), 0));
       }
       //-----------------------------------------------------------------------
       // this isn't real memory, it's transactional memory. But the good news is,
@@ -1271,7 +1402,8 @@ private:
          // second location. If it's there, it means we made a copy of a piece
          for (WriteContainer::iterator j = writeList().begin(); writeList().end() != j; ++j)
          {
-            if (j->second == (base_transaction_object*)&in)
+            //~ if (j->second == (base_transaction_object*)&in)
+            if (j->second == &in)
             {
                writeList().insert(tx_pair(j->first, 0));
                deletedMemoryList().push_back(detail::make(j->first));
@@ -1329,6 +1461,33 @@ private:
       deletedMemoryList().push_back(detail::make_non_tx(in));
    }
 
+    //--------------------------------------------------------------------------
+    template <typename T>
+    typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
+    writeList_insert(T & in, dummy<0> = 0) {
+        writeList().insert(tx_pair(&in, 0));
+    }
+
+    template <typename T>
+    typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
+    writeList_insert(T & in, dummy<1> = 0) {
+        // not yet implemented
+        writeList().insert(tx_pair(&in, 0));
+    }
+    //--------------------------------------------------------------------------
+    template <typename T>
+    typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
+    bloom_insert(T & in, dummy<0> = 0) {
+        bloom().insert((std::size_t)(&in));
+    }
+
+    template <typename T>
+    typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
+    bloom_insert(T & in, dummy<1> = 0) {
+        // not yet implemented
+        bloom().insert((std::size_t)(&in));
+    }
+
    //--------------------------------------------------------------------------
    template <typename T>
    void deferred_delete_tx_array(T *in, std::size_t size)
@@ -1357,7 +1516,8 @@ private:
                 }
             }
             for (int i=size-1; i>=0; --i) {
-                writeList().insert(tx_pair((base_transaction_object*)(&in[i]), 0));
+                //~ writeList().insert(tx_pair((base_transaction_object*)(&in[i]), 0));
+                writeList().insert(tx_pair(&in[i], 0));
             }
         }
        //-----------------------------------------------------------------------
@@ -1378,7 +1538,8 @@ private:
             for (int i=size-1; i>=0; --i)
             for (WriteContainer::iterator j = writeList().begin(); writeList().end() != j; ++j)
             {
-                if (j->second == (base_transaction_object*)(&in[i]))
+                //~ if (j->second == (base_transaction_object*)(&in[i]))
+                if (j->second == &in[i])
                 {
                     writeList().insert(tx_pair(j->first, 0));
                     deletedMemoryList().push_back(detail::make(j->first));

@@ -61,7 +61,8 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
     for (InflightTxes::iterator i = transactionsInFlight_.begin();
             i != transactionsInFlight_.end(); ++i)
     {
-        transaction *t = (transaction*)*i;
+        //~ transaction *t = (transaction*)*i;
+        transaction *t = *i;
 
         // if this tx is part of this thread, skip it (it's an LiT)
         if (t->threadId_ == this_thread::get_id()) continue;
@@ -84,7 +85,8 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
     {
         for (std::list<transaction*>::iterator it = txList.begin(); txList.end() != it; ++it)
         {
-            transaction *t = (transaction*)*it;
+            //~ transaction *t = (transaction*)*it;
+            transaction *t = *it;
 
             t->force_to_abort();
             t->block();
@@ -128,7 +130,8 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
             for (InflightTxes::iterator i = transactionsInFlight_.begin();
                 i != transactionsInFlight_.end(); ++i)
             {
-                transaction *t = (transaction*)*i;
+                //~ transaction *t = (transaction*)*i;
+                transaction *t = *i;
 
                 if (t->get_tx_conflicting_locks().find(mutex) != t->get_tx_conflicting_locks().end())
                 {
