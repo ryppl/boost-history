@@ -7,7 +7,7 @@
 
 //  Library home page: http://www.boost.org/libs/filesystem
 
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <string>
 #include <list>
 namespace fs = boost::filesystem;

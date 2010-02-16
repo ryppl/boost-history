@@ -5,7 +5,7 @@ rem  Copyright 2009 Beman Dawes
 rem  Distributed under the Boost Software License, Version 1.0.
 rem  See http://www.boost.org/LICENSE_1_0.txt
 
-echo Create Boost Filesystem Version 3 distribution for Windows
+echo Create Boost Filesystem Version 3 distribution files
 if {%1}=={} goto usage
 
 pushd %TEMP%
@@ -43,5 +43,7 @@ goto done
 
 :usage
 echo Usage: create_distro distro-name
-echo Will create distro-name.zip, distro-name.tar.gz, distro-name.tar.bz2 in temp
+echo Example: create_distro filesystem-v3-alpha-0.3
+echo Creates distro-name.zip, distro-name.tar.gz, distro-name.tar.bz2 in %TEMP%
+
 :done

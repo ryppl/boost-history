@@ -786,8 +786,20 @@ namespace
 
 #   elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
     // "All BSD system functions expect their string parameters to be in UTF-8 encoding
-    // and nothing else."
-    // see http://developer.apple.com/mac/library/documentation/MacOSX/Conceptual/BPInternational/Articles/FileEncodings.html
+    // and nothing else." http://developer.apple.com/mac/library/documentation/MacOSX/Conceptual/BPInternational/Articles/FileEncodings.html
+    //
+    // "The kernel will reject any filename that is not a valid UTF-8 string, and it will
+    // even be normalized (to Unicode NFD) before stored on disk, at least when using HFS.
+    // The right way to deal with it would be to always convert the filename to UTF-8
+    // before trying to open/create a file." http://lists.apple.com/archives/unix-porting/2007/Sep/msg00023.html
+    //
+    // "How a file name looks at the API level depends on the API. Current Carbon APIs
+    // handle file names as an array of UTF-16 characters; POSIX ones handle them as an
+    // array of UTF-8, which is why UTF-8 works well in Terminal. How it's stored on disk
+    // depends on the disk format; HFS+ uses UTF-16, but that's not important in most
+    // cases." http://lists.apple.com/archives/applescript-users/2002/Sep/msg00319.html
+    //
+    // Many thanks to Peter Dimov for digging out the above references!
     std::locale global_loc = std::locale();
     std::locale loc(global_loc, new fs::detail::utf8_codecvt_facet);
     return loc;

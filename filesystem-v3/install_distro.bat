@@ -25,22 +25,24 @@ if not exist %2\boost-build.jam (
   goto done
 )
 
-pushd %2
 echo Delete prior version of Filesystem library...
-del boost\filesystem.hpp
-rmdir /S /Q boost\filesystem
-rmdir /S /Q libs\filesystem
+del %2\boost\filesystem.hpp 2>nul
+rmdir /S /Q %2\boost\filesystem 2>nul
+rmdir /S /Q %2\libs\filesystem 2>nul
 
 if not exist bjam.exe (
   echo Running bootstrap script...
-  bootstrap >bootstrap.log 2>&1
+  pushd %2
+  call bootstrap >bootstrap.log 2>&1
   echo bootstrap complete - see %2\boostrap.log for details
+  popd
 )
 
 echo Copy files from %1 to %2...
-xcopy /s /q %1\* .
+xcopy /s /q %1\* %2
 
 echo Build libraries...
+pushd %2
 time /t
 echo If other libraries have not been previously built, this step may take a
 echo long time - 10 minutes on a fast machine, much longer on a slow machine.

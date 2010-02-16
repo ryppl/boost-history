@@ -1,0 +1,68 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Filesystem Version 3 Installation</title>
+</head>
+
+<body>
+
+<h1>Boost Filesystem Version 3 Download and Installation</h1>
+<p>The alpha and beta releases of Boost.Filesystem are distributed as .bz2 and 
+.zip files, differing only in having Unix or Windows line endings, respectively.</p>
+<h2>Copy Boost installation</h2>
+<p>The installation procedure overwrites existing Boost.Filesystem files, so you 
+probably want to make a copy of your Boost installation to experiment with. 
+Let's assume you copy your current <code>boost_1_42_0</code> directory tree to 
+directory <code>boost-v3-test</code>. </p>
+<h2>Download</h2>
+<ul>
+  <li>Go to the <a href="http://www.boostpro.com/vault/">Boost Vault</a> with 
+  your web browser.</li>
+  <li>Click on the <b><font face="sans-serif">Filesystem-V3</font></b> Folder.</li>
+  <li>For the distribution file matching your operating system's line endings, 
+  click on the <b><font face="sans-serif">download icon</font></b> (with the 
+  down arrow) in the <b><font face="sans-serif">Actions</font></b> column.</li>
+</ul>
+<h2>Windows installation</h2>
+<ul>
+  <li>Unzip the distribution file you just downloaded. On my Windows system, 
+  that produced a directory named <code>d:\download\filesystem-v3-alpha-0.3</code><br>
+&nbsp;</li>
+  <li>Change to the unziped distribution directory, and run the <code>
+  install_distro</code> script with dot and the test directory as arguments. On 
+  my system, these are the command lines:</li>
+</ul>
+<blockquote>
+  <blockquote>
+    <pre>&gt;cd D:\download\filesystem-v3-alpha-0.3
+&gt;install_distro . d:\boost-v3-test</pre>
+  </blockquote>
+</blockquote>
+<h2>All other operating systems installation</h2>
+<ul>
+  <li>Unpack the distribution file you just downloaded. On my Linux system, that 
+  produced a directory named <code>~/filesystem-v3-alpha-0.3</code><br>
+&nbsp;</li>
+  <li>Change to the unpacked distribution directory, and run the <code>
+  install_distro</code> script with dot and the test directory as arguments. On 
+  my system, these are the command lines:</li>
+</ul>
+<blockquote>
+  <blockquote>
+    <pre>cd ~/filesystem-v3-alpha-0.3
+$ ./install_distro.sh . ~/boost-v3-test</pre>
+  </blockquote>
+</blockquote>
+<hr>
+<p>© Beman Dawes 2010</p>
+<p>Revision date:
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->16 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40550" --></p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>
