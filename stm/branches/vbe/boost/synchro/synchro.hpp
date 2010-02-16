@@ -11,11 +11,15 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_SYNCHO__HPP
-#define BOOST_SYNCHO__HPP
+#ifndef BOOST_SYNCHO_SYNCHRO__HPP
+#define BOOST_SYNCHO_SYNCHRO__HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/synchro/synchro.hpp>
+#include <boost/synchro/lockable.hpp>
+#include <boost/synchro/locks.hpp>
+#include <boost/synchro/pthread/mutex.hpp>
+#include <boost/synchro/thread/mutex.hpp>
+#include <boost/synchro/tss.hpp>
 //-----------------------------------------------------------------------------
 
 #endif // BOOST_SYNCHO__HPP
