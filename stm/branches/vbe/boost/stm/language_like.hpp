@@ -24,6 +24,33 @@
 // helper function to implement macros
 namespace boost { namespace stm { namespace detail {
 
+enum control_flow {
+    none,
+    break_,
+    continue_
+};
+
+
+struct commit_on_destruction {
+    transaction* tx_;
+    bool stop_;
+    commit_on_destruction(transaction& tx, bool &stop)
+    : tx_(&tx), stop_(stop) {}
+
+    ~commit_on_destruction() {
+        if (tx_!=0) {
+            tx_->commit();
+            stop_ = !(!tx_->committed()                                  \
+                &&  tx_->check_throw_before_restart()                 \
+                &&  tx_->restart_if_not_inflight());
+        };
+    }
+
+    void release() {
+        tx_=0;
+    }
+};
+
 bool no_opt_false() {return false;}
 
 template <typename T>
@@ -45,6 +72,7 @@ void commit(std::nothrow_t, transaction&t)
     catch (...) {}
 }
 
+struct dummy{};
 }}}
 
 
@@ -71,6 +99,7 @@ void commit(std::nothrow_t, transaction&t)
 #define BOOST_STM_LABEL_CONTINUE(TX) BOOST_JOIN(__boost_stm_continue_, TX)
 #define BOOST_STM_LABEL_BREAK(TX) BOOST_JOIN(__boost_stm_break_, TX)
 #define BOOST_STM_LABEL_TRICK(TX) BOOST_JOIN(__boost_stm_trick_, TX)
+#define BOOST_STM_VAR_DESTR(TX) BOOST_JOIN(__boost_stm_destr_, TX)
 #define BOOST_STM_VAR_STOP __boost_stm_stop_
 
 #define BOOST_STM_MANAGE_BREAK_CONTINUE(TX)                                 \
@@ -140,7 +169,7 @@ void commit(std::nothrow_t, transaction&t)
 
 //---------------------------------------------------------------------------
 // Usage
-// BOOST_STM_TRY_ATOMIC(_) {
+// BOOST_STM_TRANSACTION(_) {
 //   transactional block
 // } BOOST_STM_RETRY    // or BOOST_STM_CACHE_BEFORE_RETRY(E)
 //                      // or BOOST_STM_BEFORE_RETRY
@@ -165,6 +194,90 @@ void commit(std::nothrow_t, transaction&t)
 
 #define BOOST_STM_ATOMIC(TX) BOOST_STM_TRANSACTION(TX)
 #define BOOST_STM_ATOMIC_IN_LOOP(TX) BOOST_STM_TRANSACTION_IN_LOOP(TX)
+
+//---------------------------------------------------------------------------
+// Usage
+// BOOST_STM_B_TRANSACTION(_) {
+//   transactional block
+// } BOOST_STM_RETRY_END    // or BOOST_STM_CACHE_BEFORE_RETRY(E)
+//                      // or BOOST_STM_BEFORE_RETRY
+//---------------------------------------------------------------------------
+
+#define BOOST_STM_B_TRANSACTION(TX)                                    \
+if (bool BOOST_STM_VAR_STOP = boost::stm::detail::no_opt_false()) {} else      \
+{  \
+    boost::stm::detail::control_flow ctrl; \
+    do { \
+        try{ \
+            boost::stm::transaction TX; \
+            boost::stm::detail::commit_on_destruction BOOST_STM_VAR_DESTR(TX)(TX, BOOST_STM_VAR_STOP); \
+            try{ \
+                { \
+                    try {
+
+
+// abort on destruction if active
+// allow the user to compose exception handlers after his/her code
+// avoid the commit on destruction when an exception is thrown
+
+#define BOOST_STM_B_TRANSACTION_IN_LOOP(TX)                                     \
+if (bool BOOST_STM_VAR_STOP = boost::stm::detail::no_opt_false()) {} else       \
+{                                                                               \
+    boost::stm::detail::control_flow ctrl;                                      \
+    do {                                                                        \
+        try {                                                                   \
+            boost::stm::transaction TX;                                         \
+            boost::stm::detail::commit_on_destruction BOOST_STM_VAR_DESTR(TX)(TX, BOOST_STM_VAR_STOP); \
+            try {                                                               \
+                for (ctrl=boost::stm::detail::break_;                           \
+                    ctrl==boost::stm::detail::break_;                           \
+                    ctrl=boost::stm::detail::continue_)                         \
+                {                                                               \
+                    try {
+
+                        // user code here
+
+#define BOOST_STM_E_RETRY(TX)                                                   \
+                    } catch(boost::stm::detail::dummy &ex) { throw; }           \
+                    ctrl=boost::stm::detail::none;                              \
+                }                                                               \
+            } catch(...) {                                                      \
+                BOOST_STM_VAR_DESTR(TX).release();                              \
+                throw;                                                          \
+            }                                                                   \
+            break;                                                              \
+        } BOOST_STM_RETRY
+
+#define BOOST_STM_E_BEFORE_RETRY(TX)                                            \
+                    } catch(boost::stm::detail::dummy &ex) { throw; }           \
+                    ctrl=boost::stm::detail::none;                              \
+                }                                                               \
+            } catch(...) {                                                      \
+                BOOST_STM_VAR_DESTR(TX).release();                              \
+                throw;                                                          \
+            }                                                                   \
+            break;                                                              \
+        } BOOST_STM_BEFORE_RETRY
+
+#define BOOST_STM_E_END(TX)                                                     \
+    } while(!BOOST_STM_VAR_STOP);                                               \
+}
+
+#define BOOST_STM_RETRY_END(TX)                                                 \
+ BOOST_STM_E_RETRY(TX)                                                          \
+ BOOST_STM_E_END(TX)
+
+
+#define BOOST_STM_E_END_IN_LOOP(TX)                                             \
+    } while(!BOOST_STM_VAR_STOP);                                               \
+    if (ctrl==boost::stm::detail::continue_) continue;                          \
+    else if (ctrl==boost::stm::detail::break_) break;                           \
+    else ;                                                                      \
+}
+
+#define BOOST_STM_RETRY_END_IN_LOOP(TX)                                         \
+ BOOST_STM_E_RETRY(TX)                                                          \
+ BOOST_STM_E_END_IN_LOOP(TX)
 
 //---------------------------------------------------------------------------
 // Catch a named abort exception leting the user to do somethink before retry

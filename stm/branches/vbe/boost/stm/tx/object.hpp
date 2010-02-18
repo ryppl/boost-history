@@ -33,27 +33,35 @@ class object : public mixin< object<T>, T >
 public:
     typedef mixin< object<T>, T > base_type;
     //-----------------------------------------------------------------------------
-    object() : base_type() {
-            //std::cerr << __LINE__ << " object" << std::endl;
-    }
+    object() : base_type() {}
     template<typename U>
-    object(object<U> const& r) : base_type(r) {
-            //std::cerr << __LINE__ << " object" << std::endl;
-    }
-    object(object const& r) : base_type(r) {
-            //std::cerr << __LINE__ << " object" << std::endl;
-    }
+    object(object<U> const& r) : base_type(r) {}
+    object(object const& r) : base_type(r) {}
     // contructor from a convertible to T
     template <typename U>
-    object(U v) : base_type(v) {
-            //std::cerr << __LINE__ << " object" << std::endl;
+    object(U v) : base_type(v) {}
+    object(T v) : base_type(v) {}
+    // shallow copy
+    object(object const& rhs, stm::shallow_t)
+    : base_type(rhs, stm::shallow)
+    {}
+    // shallow assignment
+    object& shallow_assign(object const& rhs)
+    {
+        this->base_type::shallow_assign(rhs);
+        return *this;
     }
-    object(T v) : base_type(v) {
-            //std::cerr << __LINE__ << " object" << std::endl;
-    }
+
 };
 
-}}}
+
+}
+// shallow trait
+template <typename T>
+struct has_shallow_copy_semantics<tx::object<T> > : boost::mpl::true_
+{};
+
+}}
 #endif //BOOST_STM_TX_OBJECT__HPP
 
 

@@ -27,6 +27,7 @@ namespace boost { namespace stm { namespace tx {
 // a non-transactional view on a non-transactional context
 // Note: the sizeof(numeric<T>)>>>>=sizeof(T)
 //-----------------------------------------------------------------------------
+
 template <typename T>
 class numeric : public mixin< numeric<T>, T >
 {
@@ -38,9 +39,27 @@ public:
     numeric(numeric<U> const& r) : base_type(r) {}
     template <typename U>
     numeric(U v) : base_type(v) {}
+
+    // shallow copy
+    numeric(numeric const& rhs, stm::shallow_t)
+    : base_type(rhs, stm::shallow)
+    {}
+    // shallow assignment
+    numeric& shallow_assign(numeric const& rhs)
+    {
+        this->base_type::shallow_assign(rhs);
+        return *this;
+    }
+
 };
 
+}
+// shallow trait
+template <typename T>
+struct has_shallow_copy_semantics<tx::numeric<T> > : boost::mpl::true_
+{};
 
+namespace tx {
 typedef numeric<bool> boolean;
 
 typedef numeric<char> char_t;

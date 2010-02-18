@@ -34,30 +34,17 @@ class pointer : public mixin< pointer<T>, T* >
 
 public:
     //-----------------------------------------------------------------------------
-    pointer() : base_type(static_cast<T*>(0)) {
-            //std::cerr << __LINE__ << " pointer" << std::endl;
-    }
-    //pointer(pointer const& r) : base_type(*((base_type const*)(&r))) {
-    pointer(pointer const& r) : base_type(r) {
-            //std::cerr << __LINE__ << " pointer" << std::endl;
-    }
+    pointer() : base_type(static_cast<T*>(0)) {}
+    pointer(pointer const& r) : base_type(r) {}
     template<class U>
-    pointer(pointer<U> const& r) : base_type(r) {
-            //std::cerr << __LINE__ << " pointer" << std::endl;
-    }
+    pointer(pointer<U> const& r) : base_type(r) {}
 
     template<class U, class V, class B>
-    pointer(mixin<U, V*, B> const& rhs) : base_type(rhs.value()) {
-            //std::cerr << __LINE__ << " pointer" << std::endl;
-    }
+    pointer(mixin<U, V*, B> const& rhs) : base_type(rhs.value()) {}
 
-    pointer(T* v) : base_type(v) {
-            //std::cerr << __LINE__ << " pointer" << std::endl;
-    }
+    pointer(T* v) : base_type(v) {}
     template <typename U>
-    pointer(U* v) : base_type(v) {
-            //std::cerr << __LINE__ << " pointer" << std::endl;
-    }
+    pointer(U* v) : base_type(v) {}
 
     template<class U, class V, class B>
     pointer& operator=(mixin<U, V*, B> const& rhs) {
@@ -80,7 +67,25 @@ public:
     }
     #endif
 
+    // shallow copy
+    pointer(pointer const& rhs, stm::shallow_t)
+    : base_type(rhs, stm::shallow)
+    {}
+    // shallow assignment
+    pointer& shallow_assign(pointer const& rhs)
+    {
+        this->base_type::shallow_assign(rhs);
+        return *this;
+    }
+
 };
+}
+// shallow trait
+template <typename T>
+struct has_shallow_copy_semantics<tx::pointer<T> > : boost::mpl::true_
+{};
+
+namespace tx {
 
 template <typename T>
 pointer<T> address_of(object<T>& obj) {

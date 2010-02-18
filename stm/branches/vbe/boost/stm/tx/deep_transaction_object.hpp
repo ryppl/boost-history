@@ -61,8 +61,10 @@ class deep_transaction_object : public
     Base
 #endif
 {
-    Final* final() { return static_cast<Final*>(this); }
-    const Final* final() const { return static_cast<Final const*>(this); }
+    Final* final() {
+        return static_cast<Final*>(this); }
+    const Final* final() const {
+        return static_cast<Final const*>(this); }
 public:
 
     //--------------------------------------------------------------------------
@@ -103,7 +105,7 @@ public:
    //--------------------------------------------------------------------------
    virtual void copy_cache(base_transaction_object const & rhs)
    {
-       *final() = 
+       *final() =
        *boost::safe_polymorphic_downcast_2<Final const *, Base const>(&rhs);
    }
 
@@ -121,7 +123,7 @@ public:
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
 template <class Final, typename Base>
-Final* 
+Final*
 deep_transaction_object<Final,Base>::
 make_cache(Final const* rhs, transaction& t) {
         Final* p = cache_allocate<Final>(t);
@@ -129,7 +131,7 @@ make_cache(Final const* rhs, transaction& t) {
         return p;
     }
 template <class Final, typename Base>
-base_transaction_object* 
+base_transaction_object*
 deep_transaction_object<Final,Base>::
 make_cache(transaction& t) const {
         Final const* f=boost::safe_polymorphic_downcast_2<Final const*, Base const>(this);
@@ -137,14 +139,14 @@ make_cache(transaction& t) const {
     }
 #else
 template <class Final, typename Base>
-Final* 
+Final*
 deep_transaction_object<Final,Base>::
 make_cache(Final const* rhs, transaction& ) {
         Final* tmp = new Final(*rhs);
         return tmp;
     }
 template <class Final, typename Base>
-base_transaction_object* 
+base_transaction_object*
 deep_transaction_object<Final,Base>::
 make_cache(transaction& t) const {
         Final* tmp = new Final(*boost::safe_polymorphic_downcast_2<Final const*, Base const>(this));
@@ -152,14 +154,14 @@ make_cache(transaction& t) const {
     }
 #endif
 #endif
-    
+
 
 
 template <class Final, class Base1, class Base2>
 class deep_transaction_object2 :
 #ifdef USE_STM_MEMORY_MANAGER
     public memory_manager<Final, Base1>, public Base2
-#else        
+#else
     public Base1, public Base2
 #endif
 {

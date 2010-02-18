@@ -840,7 +840,6 @@ inline void transaction::invalidating_deferred_end_transaction()
    // this is an optimization to check forced to abort before obtaining the
    // transaction mutex, so if we do need to abort we do it now
    //--------------------------------------------------------------------------
-    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
 #ifndef DELAY_INVALIDATION_DOOMED_TXS_UNTIL_COMMIT
    if (forced_to_abort())
    {
@@ -872,7 +871,6 @@ inline void transaction::invalidating_deferred_end_transaction()
         else
 #endif
         {
-
             lk_i.unlock();
             tx_type(eNormalTx);
 #if PERFORMING_LATM
@@ -899,7 +897,6 @@ inline void transaction::invalidating_deferred_end_transaction()
    // anyway. so we actually lose performance by doing it here and then
    // doing it again inside abort()
    //--------------------------------------------------------------------------
-    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
    if (forced_to_abort())
    {
       synchro::unlock(*general_lock()); //TBR
@@ -920,10 +917,9 @@ inline void transaction::invalidating_deferred_end_transaction()
 
       //-----------------------------------------------------------------------
       // before we get the transactions in flight mutex - get all the locks for
-      // al threads, because aborted threads will try to obtain the
+      // all threads, because aborted threads will try to obtain the
       // transactionsInFlightMutex
       //-----------------------------------------------------------------------
-    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
       lock_all_mutexes(); //TBR
        //all_mutexes lk_all(this);
       synchro::lock(*inflight_lock());
@@ -932,7 +928,6 @@ inline void transaction::invalidating_deferred_end_transaction()
 #if PERFORMING_COMPOSITION
       if (other_in_flight_same_thread_transactions())
       {
-    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
          transactionsInFlight_.erase(this);
          state_ = e_hand_off;
          unlock_all_mutexes();//TBR
@@ -944,13 +939,10 @@ inline void transaction::invalidating_deferred_end_transaction()
 #endif
       {
          // commit releases the inflight mutex as soon as its done with it
-    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
          invalidating_deferred_commit();
       }
 
-    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
       ++global_clock();
-    //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
    }
 }
 
@@ -1332,7 +1324,9 @@ inline void transaction::deferred_abort
 
       synchro::unlock(*inflight_lock());
    }
-   else unforce_to_abort();
+   else {
+       unforce_to_abort();
+   }
 }
 
 ////////////////////////////////////////////////////////////////////////////

@@ -113,7 +113,7 @@ template <class Final, class Base1, class Base2>
 class trivial_transaction_object2 :
 #ifdef USE_STM_MEMORY_MANAGER
     public memory_manager<Final, Base1>, public Base2
-#else        
+#else
     public Base1, public Base2
 #endif
 {

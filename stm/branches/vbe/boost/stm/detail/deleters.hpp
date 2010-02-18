@@ -220,7 +220,7 @@ struct non_transaction_object_array_deleter : deleter {
         return new non_transaction_object_deleter<T>(const_cast<T*>(&r));
     }
 
-    
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
     template <typename T>

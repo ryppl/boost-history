@@ -1355,9 +1355,7 @@ private:
 #endif
          base_transaction_object* returnValue = detail::make_cache_aux<Poly>::apply(in, *this);
          returnValue->transaction_thread(threadId_);
-         //~ writeList().insert(tx_pair((base_transaction_object*)&in, returnValue));
          writeList().insert(tx_pair(&in, returnValue));
-         //return *static_cast<T*>(returnValue);
          return *boost::safe_polymorphic_downcast<T*>(returnValue);
       }
       else {
@@ -1384,7 +1382,6 @@ private:
          synchro::lock_guard<Mutex> lock(*mutex());
          bloom().insert((std::size_t)&in);
          }
-         //~ writeList().insert(tx_pair((base_transaction_object*)&in, 0));
          writeList().insert(tx_pair(const_cast<T*>(&in), 0));
       }
       //-----------------------------------------------------------------------
@@ -1555,7 +1552,9 @@ private:
    void verifyWrittenMemoryIsValidWithGlobalMemory();
 
    //--------------------------------------------------------------------------
+public:
    inline void abort() throw() { direct_updating() ? direct_abort() : deferred_abort(); }
+private:
    inline void deferred_abort(bool const &alreadyRemovedFromInflightList = false) throw();
    inline void direct_abort(bool const &alreadyRemovedFromInflightList = false) throw();
 
@@ -1582,7 +1581,9 @@ private:
 #ifndef DISABLE_READ_SETS
    inline bool isReading() const { return !readListRef_.empty(); }
 #endif
-   inline bool isWriting() const { return !write_list()->empty(); }
+   inline bool isWriting() const {
+       return !write_list()->empty();
+    }
    inline bool is_only_reading() const { return !isWriting(); }
 
    // undefined and hidden - never allow these - bad things would happen
@@ -1829,8 +1830,12 @@ private:
 //private:
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
     mutable WriteContainer *write_list_ref_;
-    inline WriteContainer *write_list() {return write_list_ref_;}
-    inline const WriteContainer *write_list() const {return write_list_ref_;}
+    inline WriteContainer *write_list() {
+        return write_list_ref_;
+    }
+    inline const WriteContainer *write_list() const {
+        return write_list_ref_;
+    }
 
     mutable bloom_filter *bloomRef_;
 #if PERFORMING_WRITE_BLOOM
@@ -1854,8 +1859,12 @@ private:
     inline void tx_type(TxType const &rhs) { *txTypeRef_ = rhs; }
     inline TxType&  tx_type_ref() { return *txTypeRef_; }
 #else // BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
-    inline WriteContainer *write_list() {return &context_.writeMem;}
-    inline const WriteContainer *write_list() const {return &context_.writeMem;}
+    inline WriteContainer *write_list() {
+        return &context_.writeMem;
+    }
+    inline const WriteContainer *write_list() const {
+        return &context_.writeMem;
+    }
 
     inline bloom_filter& bloom() { return context_.bloom; }
 #if PERFORMING_WRITE_BLOOM
@@ -1986,8 +1995,12 @@ private:
 
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
     mutable WriteContainer *write_list_ref_;
-    inline WriteContainer *write_list() {return write_list_ref_;}
-    inline const WriteContainer *write_list() const {return write_list_ref_;}
+    inline WriteContainer *write_list() {
+        return write_list_ref_;
+    }
+    inline const WriteContainer *write_list() const {
+        return write_list_ref_;
+    }
 
     mutable bloom_filter *bloomRef_;
 #if PERFORMING_WRITE_BLOOM
@@ -2011,8 +2024,12 @@ private:
     inline void tx_type(TxType const &rhs) { *txTypeRef_ = rhs; }
     inline TxType&  tx_type_ref() { return *txTypeRef_; }
 #else // BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
-    inline WriteContainer *write_list() {return &context_.tx_.writeMem;}
-    inline const WriteContainer *write_list() const {return &context_.tx_.writeMem;}
+    inline WriteContainer *write_list() {
+        return &context_.tx_.writeMem;
+    }
+    inline const WriteContainer *write_list() const {
+        return &context_.tx_.writeMem;
+    }
 
     inline bloom_filter& bloom() { return context_.tx_.bloom; }
 #if PERFORMING_WRITE_BLOOM
@@ -2143,8 +2160,12 @@ private:
 ////////////////////////////////////////
 
    mutable WriteContainer *write_list_ref_;
-   inline WriteContainer *write_list() {return write_list_ref_;}
-   inline const WriteContainer *write_list() const {return write_list_ref_;}
+   inline WriteContainer *write_list() {
+       return write_list_ref_;
+    }
+   inline const WriteContainer *write_list() const {
+       return write_list_ref_;
+    }
 #ifndef DISABLE_READ_SETS
    mutable ReadContainer &readListRef_;
 #endif
@@ -2293,7 +2314,9 @@ private:
 
    inline transaction_state const & state() const { return state_; }
 
-   inline WriteContainer& writeList() { return *write_list(); }
+   inline WriteContainer& writeList() {
+       return *write_list();
+    }
     #ifndef DISABLE_READ_SETS
    inline ReadContainer& readList() { return readListRef_; }
     #endif

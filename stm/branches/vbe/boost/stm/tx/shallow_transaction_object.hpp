@@ -35,10 +35,9 @@ namespace boost { namespace stm {
 struct shallow_t {};
 const shallow_t shallow = {};
 
- template <class T>
- struct has_shallow_copy_semantics : boost::mpl::false_
- {};
-
+template <class T>
+struct has_shallow_copy_semantics : boost::mpl::false_
+{};
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -88,7 +87,7 @@ public:
    //--------------------------------------------------------------------------
    virtual void copy_cache(base_transaction_object const &rhs)
    {
-        final()->shallow_assign(*boost::safe_polymorphic_downcast_2<Final const *, Base const>(&rhs));
+       final()->shallow_assign(*boost::safe_polymorphic_downcast_2<Final const *, Base const>(&rhs));
    }
 
 #if BUILD_MOVE_SEMANTICS
@@ -104,7 +103,7 @@ template <class Final, class Base1, class Base2>
 class shallow_transaction_object2 :
 #ifdef USE_STM_MEMORY_MANAGER
     public memory_manager<Final, Base1>, public Base2
-#else        
+#else
     public Base1, public Base2
 #endif
 {

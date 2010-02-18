@@ -32,32 +32,29 @@ template <typename Final, typename T, typename Base=base_transaction_object>
 class mixin : public transaction_object< Final, Base >
 {
 protected:
+public:
     T val_;
 public:
     typedef mixin<Final, T, Base> this_type;
     typedef Final final_type;
     typedef T value_type;
     //-----------------------------------------------------------------------------
-    mixin() : val_() {
-            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;
-    }
+    mixin() : val_() {}
 
-    mixin(mixin const& r) : val_(r.value()) {
-            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;
-    }
+    mixin(mixin const& r) : val_(r.value()) {}
     template<typename F, typename U>
-    mixin(mixin<F,U> const& r) : val_(r.value()) {
-            //std::cerr << __LINE__ << " mixin val_=" << val_ << std::endl;
+    mixin(mixin<F,U> const& r) : val_(r.value()) {}
+    mixin(T v) : val_(v) {}
+    mixin& operator=(mixin const& rhs) {
+        if (this!=&rhs) {
+            ref()=rhs.value();
+        }
+        return *this;
     }
 
-    mixin(T v) : val_(v) {
-            //std::cerr << __LINE__ << " mixin val_=" << v << std::endl;
-    }
     // contructor from a convertible to T
     template <typename U>
-    mixin(U v) : val_(v) {
-            //std::cerr << __LINE__ << " mixin val_=" << v << std::endl;
-    }
+    mixin(U v) : val_(v) {}
 
     operator T() const { return value(); }
     operator T&() { return ref(); }
@@ -92,10 +89,27 @@ public:
         }
         return val_;
     }
+    // shallow copy
+    mixin(mixin const& rhs, stm::shallow_t)
+    : val_(rhs.val_)
+    {}
+    // shallow assignment
+    mixin& shallow_assign(mixin const& rhs)
+    {
+        val_=rhs.val_;
+        return *this;
+    }
 };
 
 
-}}}
+
+}
+// shallow trait
+template <typename F, typename T, typename B>
+struct has_shallow_copy_semantics<tx::mixin<F,T,B> > : boost::mpl::true_
+{};
+
+}}
 #endif //BOOST_STM_TX_MIXIN__HPP
 
 

@@ -407,13 +407,7 @@ public:
     mutable bool written_;
 
     inline upgrd_ptr(transaction &t, tx_ptr<T> tx_obj) : tx_(&t),
-        ptr_(const_cast<transactional_object<T>*>(t.read_ptr(tx_obj.ptr_))), written_(false)    {
-            std::cout << __LINE__ << " ptr_ " << ptr_ << std::endl;
-            if (ptr_!=0) {
-            std::cout << __LINE__ << " ptr_->value" << ptr_->value << std::endl;
-            std::cout << __LINE__ << " &ptr_->value" << &ptr_->value << std::endl;
-            }
-            }
+        ptr_(const_cast<transactional_object<T>*>(t.read_ptr(tx_obj.ptr_))), written_(false) {}
 
     template<class Y>
     upgrd_ptr & operator=(tx_ptr<Y> const&  r) { // never throws
@@ -427,8 +421,7 @@ public:
     }
 
     const T* get() const {
-            std::cout << __LINE__ << " ptr_" << ptr_ << std::endl;
-            if (ptr_==0) return 0;
+        if (ptr_==0) return 0;
         if (tx_->forced_to_abort()) {
             tx_->lock_and_abort();
             throw aborted_transaction_exception("aborting transaction");
@@ -446,12 +439,7 @@ public:
             }
         }
 
-            std::cout << __LINE__ << " ptr_" << ptr_ << std::endl;
-            if (ptr_!=0) {
-                std::cout << __LINE__ << " ptr_->value" << ptr_->value << std::endl;
-                std::cout << __LINE__ << " &ptr_->value" << &ptr_->value << std::endl;
-            }
-            if (ptr_==0) return 0;
+        if (ptr_==0) return 0;
         return &ptr_->value;
     }
 
