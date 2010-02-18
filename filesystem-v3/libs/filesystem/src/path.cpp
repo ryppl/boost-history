@@ -801,7 +801,7 @@ namespace
     //
     // Many thanks to Peter Dimov for digging out the above references!
     std::locale global_loc = std::locale();
-    std::locale loc(global_loc, new fs::detail::utf8_codecvt_facet);
+    std::locale loc(global_loc, new boost::filesystem::detail::utf8_codecvt_facet);
     return loc;
 
 #   else

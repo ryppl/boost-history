@@ -11,12 +11,12 @@
 
 <body>
 
-<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="742">
+<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td width="277">
 <a href="../../../index.htm">
-<img src="../../../boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86" border="0"></a></td>
-    <td width="442" align="middle">
+<img src="../../../boost.png" alt="boost.png (6897 bytes)" align="middle" width="300" height="86" border="0"></a></td>
+    <td align="middle">
     <font size="7">Filesystem Tutorial</font>
     </td>
   </tr>
@@ -24,11 +24,16 @@
 
 <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="100%">
   <tr>
-    <td><a href="../../../index.htm">Boost Home</a>&nbsp;&nbsp;&nbsp;
-    <a href="index.htm">Library Home</a>&nbsp; &nbsp; 
-    <a href="reference.html">
-    Reference</a>&nbsp;&nbsp; 
-    <a href="faq.htm">FAQ</a></td>
+    <td><a href="../../../index.htm">Boost Home</a> &nbsp;&nbsp;
+    <a href="index.htm">Library Home</a> &nbsp;&nbsp;
+    <a href="reference.html">Reference</a> &nbsp;&nbsp;
+    <a href="tutorial.html">Tutorial</a> &nbsp;&nbsp;
+    <a href="faq.htm">FAQ</a> &nbsp;&nbsp;
+    <a href="portability_guide.htm">Portability</a> &nbsp;&nbsp;
+    <a href="v3.html">V3 Intro</a> &nbsp;&nbsp;
+    <a href="v3_design.html">V3 Design</a> &nbsp;&nbsp;
+    <a href="deprecated.html">Deprecated</a> &nbsp;&nbsp;
+    </td>
   </tr>
 </table>
 <p>
@@ -154,7 +159,7 @@ like this:</p>
 </blockquote>
 <p>For now, all you need to know is that class path has constructors that take
 <code>const char *</code> and many other useful types. (If you can't wait to 
-find out more, skip ahead to the <a href="#Class-path">class path</a> section of 
+find out more, skip ahead to the <a href="#Class-path-Constructors">class path</a> section of 
 the tutorial.)</p>
 <p>Please take a minute to try out <code>tut1</code> on your system, using a 
 file that is known to exist, such as <code>tut1.cpp</code>. Here is what the 
@@ -528,7 +533,7 @@ v.push_back(fn);                   // push into vector for later sorting</pre>
     <a href="reference.html#path-filename">filename()</a></code> is one of 
     several path decomposition functions. It extracts the filename portion (<code>&quot;index.html&quot;</code>) 
     from a path (<code>&quot;/home/beman/boost/trunk/index.html&quot;</code>). These decomposition functions are 
-    more fully explored in the <a href="#path-iteration-etc">Path iterators, observers, 
+    more fully explored in the <a href="#Class path-iterators-etc">Path iterators, observers, 
     composition, decomposition and query</a> portion of this tutorial.</p>
     <p>The above was written as two lines of code for clarity. It could have 
     been written more concisely as:</p>
@@ -596,12 +601,10 @@ c:\boost\trunk: is a directory containing:
     </tr>
   </table>
 
-    <p>That completes the main section of this tutorial. If you haven't already 
-    worked through the <a href="#Class-path">Class path</a> and
-    <a href="#path-iteration-etc">Path iterators, observers, composition, 
-    decomposition and query</a> sections of this tutorial, dig into them now. 
+    <p>That completes the main portion of this tutorial. If you haven't already 
+    worked through the <a href="#Class-path-Constructors">Class path</a> sections of this tutorial, dig into them now. 
     The <a href="#Error-reporting">Error reporting</a> section may also be of 
-    interest, although it can be skipped unless you are deeply concerned with 
+    interest, although it can be skipped unless you are deeply concerned about 
     error handling issues.</p>
 
 <hr>
@@ -798,6 +801,9 @@ tut4.cpp: 1984
   paths in the native format and are confused by the generic format. The generic 
   format is great, however, for writing portable programs that work regardless 
   of operating system.</p>
+
+  <p>The next section covers class <code>path</code> observers, composition, 
+  decomposition, query, and iteration over the elements of a path.</p>
 
     <hr>
 
@@ -1080,7 +1086,7 @@ do not throw exceptions when I/O errors occur.</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->16 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40550" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->18 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40554" --></p>
 
 </body>
 

@@ -5,28 +5,35 @@
 <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>Filesystem V3 Introduction</title>
+<title>Filesystem V3 Design</title>
 <link rel="stylesheet" type="text/css" href="minimal.css">
 </head>
 
 <body>
 
-<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
+<table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
-    <td width="277">
+    <td>
 <a href="../../../index.htm">
-<img src="boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86" border="0"></a></td>
-    <td width="410" align="middle">
-    <font size="7">Boost.Filesystem Version 3 </font>
-    </td>
+<img src="boost.png" alt="boost.png (6897 bytes)" align="middle" border="0" width="300" height="86"></a></td>
+    <td align="middle">
+    <font size="7">Filesystem Version 3<br>
+    Design</font></td>
   </tr>
 </table>
 
 <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="100%">
   <tr>
-    <td><a href="../../../index.htm">Boost Home</a>&nbsp;&nbsp;&nbsp;
-    <a href="index.htm">Library Home</a>&nbsp; &nbsp; <a href="#tutorial">Tutorial</a>&nbsp; &nbsp; <a href="reference.html">
-    Reference</a>&nbsp;&nbsp; <a href="faq.htm">FAQ</a></td>
+    <td><a href="../../../index.htm">Boost Home</a> &nbsp;&nbsp;
+    <a href="index.htm">Library Home</a> &nbsp;&nbsp;
+    <a href="reference.html">Reference</a> &nbsp;&nbsp;
+    <a href="tutorial.html">Tutorial</a> &nbsp;&nbsp;
+    <a href="faq.htm">FAQ</a> &nbsp;&nbsp;
+    <a href="portability_guide.htm">Portability</a> &nbsp;&nbsp;
+    <a href="v3.html">V3 Intro</a> &nbsp;&nbsp;
+    <a href="v3_design.html">V3 Design</a> &nbsp;&nbsp;
+    <a href="deprecated.html">Deprecated</a> &nbsp;&nbsp;
+    </td>
   </tr>
 </table>
 
@@ -42,30 +49,24 @@
     <a href="#Solution">Solution</a><br>
     <a href="#Details">Details</a><br>
     <a href="#Other-changes">Other changes</a><br>
-    <a href="#Prototype">Prototype</a><br>
-    <a href="#Trying-the-prototype">Using the prototype</a><br>
     <a href="#Acknowledgements">Acknowledgements</a></td>
   </tr>
-  <tr>
-    <td width="100%" bgcolor="#D7EEFF" align="center">
-      <i><b>Other Documents</b></i></td>
-  </tr>
-  <tr>
-    <td width="100%" bgcolor="#E8F5FF">
-    &nbsp;</td>
-  </tr>
-</table>
+  </table>
+
+<p><b>Caution:</b> This page documents thinking early in the V3 development 
+process, and is intended to serve historical purposes. It is not updated to 
+reflect the current state of the library.</p>
 
 <h2><a name="Introduction">Introduction</a></h2>
 
 <p>During the review of Boost.Filesystem.V2 (Internationalization), Peter Dimov 
-suggested that the  basic_path class template was unwieldy, and that a single 
+suggested that the<code> basic_path</code> class template was unwieldy, and that a single 
 path type that accommodated multiple character types and encodings would be more 
 flexible. Although I wasn't willing to stop development at that time to 
 explore how this idea might be implemented, or to break from the pattern for 
 Internationalization used the C++ standard library, I've often thought about 
-Peter's suggestion. With the advent of C++0x char16_t and char32_t character 
-types, the basic_path class template approach becomes even more unwieldy, so it 
+Peter's suggestion. With the advent of C++0x <code>char16_t</code> and <code>char32_t</code> character 
+types, the <code>basic_path</code> class template approach becomes even more unwieldy, so it 
 is time to revisit the problem in light of Peter's suggestion.</p>
 
 <h2><b><a name="Problem">Problem</a></b></h2>
@@ -171,60 +172,6 @@ unintended consequences, etc.</p>
 <p><b>Uniform hybrid error handling: </b>The hybrid error handling idiom has 
 been consistently applied to all applicable functions.</p>
 
-<p><b>Additional filesystem operations:</b></p>
-
-<ul>
-  <li>copy_directory().</li>
-  <li>copy_symlink(). On Windows, requires Vista or later.</li>
-  <li>copy().</li>
-  <li>create_symlink().&nbsp; On Windows, requires Vista or later.</li>
-  <li>create_directory_symlink().&nbsp; On Windows, requires Vista or later.</li>
-  <li>read_symlink().&nbsp; Not supported on Windows.</li>
-</ul>
-
-<h2><a name="Prototype">Prototype</a></h2>
-
-<p>Currently incomplete. Not thoroughly tested. Should not be used for 
-production work.</p>
-
-<p>The prototype can be viewed at
-<a href="http://svn.boost.org/svn/boost/sandbox/filesystem-v3/">
-http://svn.boost.org/svn/boost/sandbox/filesystem-v3/</a></p>
-
-<p>There is a (partial) TO DO list at the beginning of
-<a href="http://svn.boost.org/svn/boost/sandbox/filesystem-v3/boost/filesystem/path.hpp">
-http://svn.boost.org/svn/boost/sandbox/filesystem-v3/boost/filesystem/path.hpp</a></p>
-
-<h2><a name="Trying-the-prototype">Using the prototype</a></h2>
-
-<p>Note that testing has been concentrated on VC++ 9.0 Express, with occasional 
-Linux GCC tests. Only the core path tests and operations tests are passing. 
-Expect problems with other compilers or test programs.</p>
-
-<p>Windows install:</p>
-
-<blockquote>
-  <pre>cd to the directory where you wish to download the prototype
-svn export http://svn.boost.org/svn/boost/trunk filesystem-v3
-rmdir /s /q filesystem-v3\boost\filesystem
-rmdir /s /q filesystem-v3\libs\filesystem
-svn --force co http://svn.boost.org/svn/boost/sandbox/filesystem-v3 filesystem-v3</pre>
-</blockquote>
-<p>POSIX install (warning - untested code):</p>
-
-<blockquote>
-  <pre>cd to the directory where you wish to download the prototype
-svn export http://svn.boost.org/svn/boost/trunk filesystem-v3
-rm -fr filesystem-v3/boost/filesystem
-rm -fr filesystem-v3/libs/filesystem
-svn --force co http://svn.boost.org/svn/boost/sandbox/filesystem-v3 filesystem-v3</pre>
-</blockquote>
-<p>To see what tests are passing on your system:</p>
-
-<blockquote>
-  <pre>cd filesystem-v3/libs/filesystem/test
-bjam</pre>
-</blockquote>
 <h2><a name="Acknowledgements">Acknowledgements</a></h2>
 
 <p>Peter Dimov suggested the idea of a single path class that could cope with 
@@ -233,7 +180,7 @@ copy_directory, copy_symlink, and read_symlink functions.</p>
 
 <hr>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->01 February, 2009<!--webbot bot="Timestamp" endspan i-checksum="40404" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->18 February, 2010<!--webbot bot="Timestamp" endspan i-checksum="40538" --></p>
 
 <p>© Copyright Beman Dawes, 2008</p>
 <p> Use, modification, and distribution are subject to the Boost Software 
