@@ -11,6 +11,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+#include <iostream>
 #include <boost/stm.hpp>
 #include <boost/thread.hpp>
 #include <vector>
@@ -71,16 +72,31 @@ bool test_equal() {
     return false;
 }
 
+bool test_diff() {
+    //thread_initializer thi;
+    BOOST_STM_TRANSACTION(_) {
+        counter=1;
+        counter2=2;
+        BOOST_STM_TX_GOTO(_, label1);
+        counter2=3;
+    } BOOST_STM_RETRY
+    label1:
+    BOOST_STM_TRANSACTION(_) {
+        BOOST_STM_TX_RETURN(_, (counter!=counter2));
+    } BOOST_STM_RETRY
+    return false;
+}
+
 bool test_assign() {
     //thread_initializer thi;
     for(int i=0; i<2;++i)
-    BOOST_STM_TRANSACTION_IN_LOOP(_) {
+    BOOST_STM_B_TRANSACTION_IN_LOOP(_) {
         counter=1;
         counter2=counter;
-        BOOST_STM_CONTINUE(_);
+        continue;
         counter2=3;
-    } BOOST_STM_RETRY
-    
+    } BOOST_STM_RETRY_END(_)
+
     BOOST_STM_TRANSACTION(_) {
         //assert((counter==1) && (counter2==1) && (counter==counter2));
         BOOST_STM_TX_RETURN(_, (counter==1) && (counter2==1) && (counter==counter2)) ;
@@ -90,17 +106,78 @@ bool test_assign() {
 
 bool test_less() {
     //thread_initializer thi;
-    for(;;)
-    BOOST_STM_TRANSACTION_IN_LOOP(_) {
+    for(;;) {
+    BOOST_STM_B_TRANSACTION_IN_LOOP(_) {
         counter=1;
         counter2=2;
-        BOOST_STM_BREAK(_);
+        break;
         counter2=0;
-    } BOOST_STM_RETRY
-    BOOST_STM_TRANSACTION(_) {
-        //assert(counter<counter2);
-        BOOST_STM_TX_RETURN(_, (counter<counter2)) ;
-    } BOOST_STM_RETRY
+    } BOOST_STM_RETRY_END(_)
+    }
+    BOOST_STM_B_TRANSACTION(_) {
+        return (counter<counter2) ;
+    } BOOST_STM_RETRY_END(_)
+    return false;
+}
+
+bool test_throw_e() {
+    boost::stm::native_trans<int> x = 0;
+
+    //thread_initializer thi;
+    BOOST_STM_B_TRANSACTION(_) {
+        counter=0; counter2=0;
+    } BOOST_STM_RETRY_END(_)
+
+    try{
+    for(int i=0; i<2;++i) {
+        BOOST_STM_B_TRANSACTION_IN_LOOP(_) {
+            counter=1;
+            throw 1;
+            counter2=3;
+        } BOOST_STM_RETRY_END_IN_LOOP(_)
+    }
+    } catch (...) {}
+
+    BOOST_STM_B_TRANSACTION(_) {
+        return (counter==0) && (counter2==0);
+    } BOOST_STM_RETRY_END(_)
+
+    return false;
+}
+
+
+bool test_assign_e() {
+    //thread_initializer thi;
+    for(int i=0; i<2;++i)
+    BOOST_STM_B_TRANSACTION_IN_LOOP(_) {
+        counter=1;
+        counter2=counter;
+        continue;
+        counter2=3;
+    } BOOST_STM_RETRY_END_IN_LOOP(_)
+
+    BOOST_STM_B_TRANSACTION(_) {
+        return (counter==1) && (counter2==1) && (counter==counter2) ;
+    } BOOST_STM_RETRY_END(_)
+
+    return false;
+}
+
+bool test_less_e() {
+    //thread_initializer thi;
+    for(;;) {
+    BOOST_STM_B_TRANSACTION_IN_LOOP(_)
+    {
+        counter=1;
+        counter2=2;
+        break;
+        counter2=0;
+    } BOOST_STM_RETRY_END_IN_LOOP(_)
+    }
+    BOOST_STM_B_TRANSACTION(_)
+    {
+        return counter<counter2;
+    } BOOST_STM_RETRY_END(_)
     return false;
 }
 
@@ -144,8 +221,12 @@ int test_all() {
     int fails=0;
     fails += !check(2);
     fails += !test_equal();
+    fails += !test_diff();
     fails += !test_assign();
-    fails += !test_less();
+    //~ fails += !test_less();
+    fails += !test_assign_e();
+    fails += !test_less_e();
+    fails += !test_throw_e();
     fails += !test_le();
     fails += !test_const(counter);
     return fails;

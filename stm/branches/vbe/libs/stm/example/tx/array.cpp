@@ -22,7 +22,6 @@
 using namespace std;
 using namespace boost;
 
-
 bool test_array() {
     {
         int v[2];
@@ -44,7 +43,6 @@ bool test_array() {
     } BOOST_STM_RETRY
     return (v[0]==1) && (v[1]==2);
 }
-
 bool test_array_ptr() {
     {
         int * v= new int[2];
@@ -54,13 +52,13 @@ bool test_array_ptr() {
         ++p;
     }
     stm::tx::pointer<stm::tx::int_t > v;
+    stm::tx::pointer<stm::tx::int_t > p;
     BOOST_STM_OUTER_TRANSACTION(_) {
         v= BOOST_STM_TX_NEW_ARRAY(_,2, stm::tx::int_t);
 
-        stm::tx::pointer<stm::tx::int_t > p;
         p = &v[0];
         p = v;
-        //++p;
+        ++p;
     } BOOST_STM_RETRY
 
     #if 0
@@ -74,7 +72,7 @@ bool test_array_ptr() {
     }
     #endif
     bool res=true;
-    BOOST_STM_RETURN(res);
+    return res;
     return false;
 }
 
@@ -82,7 +80,7 @@ bool test_array_ptr() {
 int test_all() {
 
     int fails=0;
-    //fails += !test_array();
+    fails += !test_array();
     fails += !test_array_ptr();
     return fails;
 }

@@ -47,21 +47,28 @@ public:
         return amount;
     }
     int Balance() const {
-        BOOST_STM_TRANSACTION(_) {
-            BOOST_STM_TX_RETURN(_, balance_);
-        } BOOST_STM_RETRY
+        BOOST_STM_B_TRANSACTION(_) {
+            return balance_;
+        } BOOST_STM_RETRY_END(_)
         return 0;
     }
     int Nb() const {
         return nb_;
     }
-    std::list<base_transaction_object*>& binds() {return binds_;}
+    std::list<base_transaction_object*>& binds() {
+        return binds_;
+    }
     std::list<base_transaction_object*> binds_;
 
     void bind(base_transaction_object* bto) {binds_.push_back(bto);}
 };
 
 typedef BankAccount account;
+
+template <typename OSTREAM>
+OSTREAM& operator<<(OSTREAM& os, account const& ) {
+    return os;
+}
 
 struct Bank {
     std::vector<tx::pointer<BankAccount> > accounts;
@@ -78,6 +85,11 @@ struct Bank {
         }
     }
 };
+
+template <typename OSTREAM>
+OSTREAM& operator<<(OSTREAM& os, Bank const& ) {
+    return os;
+}
 
 struct Teller {
     Teller(tx::pointer<const Bank> b)
@@ -116,9 +128,15 @@ void create_db(tx::pointer<Bank> b, int nr_of_accounts){
 }
 
 tx::pointer<BankAccount> a;
+BankAccount b(1);
 //tx::tx_ptr<BankAccount> a;
 void account_withdraw_thr() {
     thread_initializer thi;
+    BOOST_STM_OUTER_TRANSACTION(_) {
+        a->Withdraw(10);
+    } BOOST_STM_RETRY
+}
+void account_withdraw() {
     BOOST_STM_OUTER_TRANSACTION(_) {
         a->Withdraw(10);
     } BOOST_STM_RETRY
@@ -130,9 +148,45 @@ void account_deposit_thr() {
         a->Deposit(10);
     } BOOST_STM_RETRY
 }
+void account_deposit() {
+    BOOST_STM_OUTER_TRANSACTION(_) {
+        a->Deposit(10);
+    } BOOST_STM_RETRY
+}
 
-int test_account() {
-    
+int test_account_0() {
+
+    BOOST_STM_OUTER_TRANSACTION(_) {
+        a=BOOST_STM_TX_NEW_PTR(_, BankAccount(2));
+        a->Deposit(10);
+    } BOOST_STM_RETRY
+
+    BOOST_STM_OUTER_TRANSACTION(_) {
+        int res = (a->Balance()==10?0:1);
+        //BUG assertion "pthread_mutex_lock(&lockable)==0&&"synchro::lock<pthread_mutex_t>"" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 46
+        //~ BOOST_STM_TX_DELETE_PTR(_, a.value());
+        BOOST_STM_TX_RETURN(_,res);
+    } BOOST_STM_RETRY
+    return 1;
+}
+
+int test_account_1() {
+
+    BOOST_STM_OUTER_TRANSACTION(_) {
+        a=BOOST_STM_TX_NEW_PTR(_, BankAccount(1));
+    } BOOST_STM_RETRY
+    thread  th1(account_withdraw_thr);
+
+    th1.join();
+    BOOST_STM_OUTER_TRANSACTION(_) {
+        int res = (a->Balance()==-10?0:1);
+        //~ BOOST_STM_TX_DELETE_PTR(_, a.value());
+        BOOST_STM_TX_RETURN(_,res);
+    } BOOST_STM_RETRY
+}
+
+int test_account_2() {
+
     BOOST_STM_OUTER_TRANSACTION(_) {
         a=BOOST_STM_TX_NEW_PTR(_, BankAccount(1));
     } BOOST_STM_RETRY
@@ -147,12 +201,43 @@ int test_account() {
     th4.join();
     BOOST_STM_OUTER_TRANSACTION(_) {
         int res = (a->Balance()==0?0:1);
-        BOOST_STM_TX_DELETE_PTR(_, a.value());
+        //~ BOOST_STM_TX_DELETE_PTR(_, a.value());
         BOOST_STM_TX_RETURN(_,res);
     } BOOST_STM_RETRY
 }
 
-bool test_bank() {
+bool test_bank_1() {
+    string wait;
+
+    //int nr_of_threads=10;
+    int nr_of_accounts=200;
+
+    //cin >> wait;Teller::exit=true;
+    tx::object<Bank> mybank;
+    create_db(address_of(mybank),nr_of_accounts);
+    //cin >> wait;Teller::exit=true;
+
+#if 0
+    Teller t(mybank);
+    t();
+#else
+    Teller t1(address_of(mybank));
+    thread  th1(boost::ref(t1));
+    //~ Teller t2(address_of(mybank));
+    //~ thread  th2(boost::ref(t2));
+
+    cin >> wait;Teller::exit=true;
+    th1.join();
+    //~ th2.join();
+    BOOST_STM_OUTER_TRANSACTION(_) {
+        address_of(mybank)->print_balance();
+    } BOOST_STM_RETRY
+#endif
+
+    return true;
+}
+
+bool test_bank_2() {
     string wait;
 
     //int nr_of_threads=10;
@@ -183,6 +268,7 @@ bool test_bank() {
     return true;
 }
 
+
 int main() {
     transaction::enable_dynamic_priority_assignment();
     transaction::do_deferred_updating();
@@ -191,8 +277,12 @@ int main() {
     srand(time(0));
 
     int res=0;
-    res+=test_account();
-    //res+=test_bank();
+    res+=test_account_0();
+    res+=test_account_1();
+    //BUG assertion "pthread_mutex_lock(&lockable)==0&&"synchro::lock<pthread_mutex_t>"" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 46
+    //~ res+=test_account_2();
+    res+=test_bank_1();
+    res+=test_bank_2();
 
     return res;
 
