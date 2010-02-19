@@ -53,10 +53,12 @@ struct commit_on_destruction {
 
 bool no_opt_false() {return false;}
 
-template <typename T>
-T commit_and_return(transaction&t, T expression) {
-    t.commit(); return expression;
+template <typename T> T commit_and_return(transaction&t, T const& var) {
+    T tmp(var); 
+    t.commit(); 
+    return tmp;
 }
+
 
 bool commit_expr(transaction&t) {
     t.commit(); return true;
@@ -72,7 +74,7 @@ void commit(std::nothrow_t, transaction&t)
     catch (...) {}
 }
 
-struct dummy{};
+struct dummy_exception{};
 }}}
 
 
@@ -238,7 +240,7 @@ if (bool BOOST_STM_VAR_STOP = boost::stm::detail::no_opt_false()) {} else       
                         // user code here
 
 #define BOOST_STM_E_RETRY(TX)                                                   \
-                    } catch(boost::stm::detail::dummy &ex) { throw; }           \
+                    } catch(boost::stm::detail::dummy_exception &ex) { throw; }           \
                     ctrl=boost::stm::detail::none;                              \
                 }                                                               \
             } catch(...) {                                                      \
@@ -249,7 +251,7 @@ if (bool BOOST_STM_VAR_STOP = boost::stm::detail::no_opt_false()) {} else       
         } BOOST_STM_RETRY
 
 #define BOOST_STM_E_BEFORE_RETRY(TX)                                            \
-                    } catch(boost::stm::detail::dummy &ex) { throw; }           \
+                    } catch(boost::stm::detail::dummy_exception &ex) { throw; }           \
                     ctrl=boost::stm::detail::none;                              \
                 }                                                               \
             } catch(...) {                                                      \

@@ -63,7 +63,7 @@ public:
     // accessors
     T& ref() {
         transaction* tx=current_transaction();
-        if (tx!=0) {
+        if (tx!=0 && tx->in_flight()) {
             if (tx->forced_to_abort()) {
                 tx->lock_and_abort();
                 throw aborted_transaction_exception("aborting transaction");
@@ -80,7 +80,7 @@ public:
     //-----------------------------------------------------------------------------
     T value() const {
         transaction* tx=current_transaction();
-        if (tx!=0) {
+        if (tx!=0 && tx->in_flight()) {
             if (tx->forced_to_abort()) {
                 tx->lock_and_abort();
                 throw aborted_transaction_exception("aborting transaction");

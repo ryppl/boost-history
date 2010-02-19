@@ -55,6 +55,10 @@
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
 
+namespace detail {
+    template <int> struct dummy { dummy(int) {} };
+}
+
 //-----------------------------------------------------------------------------
 // boolean which is used to invoke "begin_transaction()" upon transaction
 // object construction (so two lines of code aren't needed to make a
@@ -651,18 +655,17 @@ public:
       }
    }
    #ifdef BOOST_STM_USE_BOOST
-    template <int> struct dummy { dummy(int) {} };
 //--------------------------------------------------------------------------
    template <typename T>
    inline
    typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
-   delete_ptr(T *in, dummy<0> = 0) {
+   delete_ptr(T *in, detail::dummy<0> = 0) {
        delete_tx_ptr(in);
    }
    template <typename T>
    inline
    typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
-   delete_ptr(T *in, dummy<1> = 0) {
+   delete_ptr(T *in, detail::dummy<1> = 0) {
        delete_non_tx_ptr(in);
    }
    #endif
@@ -705,13 +708,13 @@ public:
    template <typename T>
    inline
    typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
-   delete_array(T *in, std::size_t size, dummy<0> = 0) {
+   delete_array(T *in, std::size_t size, detail::dummy<0> = 0) {
        delete_tx_ptr(in, size);
    }
    template <typename T>
    inline
    typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
-   delete_array(T *in, std::size_t size, dummy<1> = 0) {
+   delete_array(T *in, std::size_t size, detail::dummy<1> = 0) {
        delete_non_tx_ptr(in, size);
    }
    #endif
@@ -759,13 +762,13 @@ public:
    template <typename T>
    inline
    typename enable_if<is_base_of<base_transaction_object, T>, T*>::type
-   as_new(T *in, dummy<0> = 0) {
+   as_new(T *in, detail::dummy<0> = 0) {
        return as_new_tx(in);
    }
    template <typename T>
    inline
    typename disable_if<is_base_of<base_transaction_object, T>, T*>::type
-   as_new(T *in, dummy<1> = 0) {
+   as_new(T *in, detail::dummy<1> = 0) {
        return as_new_non_tx(in);
    }
     #endif
@@ -792,13 +795,13 @@ public:
    template <typename T>
    inline
    typename enable_if<is_base_of<base_transaction_object, T>, T*>::type
-   as_new_array(T *in, std::size_t size, dummy<0> = 0) {
+   as_new_array(T *in, std::size_t size, detail::dummy<0> = 0) {
        return as_new_tx_array(in, size);
    }
    template <typename T>
    inline
    typename disable_if<is_base_of<base_transaction_object, T>, T*>::type
-   as_new_array(T *in, std::size_t size, dummy<1> = 0) {
+   as_new_array(T *in, std::size_t size, detail::dummy<1> = 0) {
        return as_new_non_tx_array(in, size);
    }
     #endif
@@ -1137,31 +1140,31 @@ private:
    //--------------------------------------------------------------------------
    template <typename T>
    typename boost::enable_if<fusion::traits::is_sequence<T>, bool>::type
-   all_members_in_this_thread(T const & in, dummy<0> = 0) {
+   all_members_in_this_thread(T const & in, detail::dummy<0> = 0) {
        // not yet implemented
        return false;
    }
 
    template <typename T>
    typename boost::disable_if<fusion::traits::is_sequence<T>, bool>::type
-   all_members_in_this_thread(T const & in, dummy<1> = 0) {
+   all_members_in_this_thread(T const & in, detail::dummy<1> = 0) {
        return true;
    }
 
    template <typename T>
    typename boost::enable_if<is_base_of<base_transaction_object, T>, bool>::type
-   all_in_this_thread(T const & in, dummy<0> = 0) {
+   all_in_this_thread(T const & in, detail::dummy<0> = 0) {
        return (in.transaction_thread() != threadId_) && all_members_in_this_thread(in);
    }
 
    template <typename T>
    typename boost::disable_if<is_base_of<base_transaction_object, T>, bool>::type
-   all_in_this_thread(T const & in, dummy<1> = 0) {
+   all_in_this_thread(T const & in, detail::dummy<1> = 0) {
        return all_members_in_this_thread(in);
    }
 
    template <typename T>
-   bool all_in_this_thread(T const * const in, std::size_t size, dummy<0> = 0) {
+   bool all_in_this_thread(T const * const in, std::size_t size, detail::dummy<0> = 0) {
         for (int i=size-1; i>=0; --i) {
             if (!all_in_this_thread(in[i])) {
                 return false;
@@ -1174,13 +1177,13 @@ private:
    //--------------------------------------------------------------------------
    template <typename T>
    static typename boost::enable_if<is_base_of<base_transaction_object, T>, bool>::type
-   valid_thread(T const &in, dummy<0> = 0) {
+   valid_thread(T const &in, detail::dummy<0> = 0) {
        return in.transaction_thread() != invalid_thread_id();
    }
 
    template <typename T>
    typename boost::disable_if<is_base_of<base_transaction_object, T>, bool>::type
-   static valid_thread(T const &in, dummy<1> = 0) {
+   static valid_thread(T const &in, detail::dummy<1> = 0) {
        // not yet implemented
 
        return in.transaction_thread() != invalid_thread_id();
@@ -1189,13 +1192,13 @@ private:
    //--------------------------------------------------------------------------
    template <typename T>
    static typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
-   set_thread(T & in, thread_id_t thread_id, dummy<0> = 0) {
+   set_thread(T & in, thread_id_t thread_id, detail::dummy<0> = 0) {
        in.transaction_thread() = thread_id;
    }
 
    template <typename T>
    typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
-   static set_thread(T & in, thread_id_t thread_id, dummy<1> = 0) {
+   static set_thread(T & in, thread_id_t thread_id, detail::dummy<1> = 0) {
        // not yet implemented
        in.transaction_thread() = thread_id;
    }
@@ -1461,26 +1464,26 @@ private:
     //--------------------------------------------------------------------------
     template <typename T>
     typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
-    writeList_insert(T & in, dummy<0> = 0) {
+    writeList_insert(T & in, detail::dummy<0> = 0) {
         writeList().insert(tx_pair(&in, 0));
     }
 
     template <typename T>
     typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
-    writeList_insert(T & in, dummy<1> = 0) {
+    writeList_insert(T & in, detail::dummy<1> = 0) {
         // not yet implemented
         writeList().insert(tx_pair(&in, 0));
     }
     //--------------------------------------------------------------------------
     template <typename T>
     typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
-    bloom_insert(T & in, dummy<0> = 0) {
+    bloom_insert(T & in, detail::dummy<0> = 0) {
         bloom().insert((std::size_t)(&in));
     }
 
     template <typename T>
     typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
-    bloom_insert(T & in, dummy<1> = 0) {
+    bloom_insert(T & in, detail::dummy<1> = 0) {
         // not yet implemented
         bloom().insert((std::size_t)(&in));
     }
