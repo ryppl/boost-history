@@ -242,18 +242,16 @@ int test_all() {
     fails= fails || !n3();
     fails= fails || !check_size(0);
     //fails= fails || !insert1();
-#if 1
     thread  th1(insert1_th);
     thread  th2(insert2_th);
     thread  th3(insert2_th);
     thread  th4(insert3_th);
-        cout << __LINE__ << " * test_all" << endl;
 
     th1.join();
     th2.join();
     th3.join();
     th4.join();
-        cout << __LINE__ << " * test_all" << endl;
+    
     fails= fails || !check_lookup(1);
     fails= fails || !check_lookup(2);
     fails= fails || !check_lookup(3);
@@ -263,7 +261,6 @@ int test_all() {
     fails= fails || check_lookup(2);
     fails= fails || !check_lookup(3);
     fails= fails || !check_size(2);
-#endif
     return fails;
 }
 

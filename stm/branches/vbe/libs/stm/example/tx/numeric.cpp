@@ -66,7 +66,6 @@ bool test_equal() {
     label1:
     BOOST_STM_TRANSACTION(_) {
         counter=2;
-        //assert(counter==counter2);
         BOOST_STM_TX_RETURN(_, (counter==counter2));
     } BOOST_STM_RETRY
     return false;

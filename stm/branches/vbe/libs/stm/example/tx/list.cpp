@@ -82,9 +82,12 @@ public:
     ~list() { }
 
     std::size_t size() const {
-        BOOST_STM_B_TRANSACTION(_) {
-            return size_;
-        }  BOOST_STM_RETRY_END(_)
+        //~ BOOST_STM_B_TRANSACTION(_) {
+            //~ return size_;
+        //~ }  BOOST_STM_RETRY_END(_)
+        BOOST_STM_TRANSACTION(_) {
+            BOOST_STM_RETURN(size_);
+        }  BOOST_STM_RETRY
         return 0;
     }
 
@@ -167,6 +170,7 @@ void create() {
 }
 bool check_size(std::size_t val) {
     BOOST_STM_B_TRANSACTION(_) {
+    std::cout<< __FILE__<<"["<<__LINE__<<"]"<<std::endl;        
         return (l.size()==val);
     } BOOST_STM_RETRY_END(_)
     return false;
@@ -255,7 +259,7 @@ int test_all() {
     fails= fails || !n2();
     fails= fails || !n3();
     fails= fails || !check_size(0);
-    //~ fails= fails || !insert1();
+    //fails= fails || !insert1();
     thread  th1(insert1_th);
     thread  th2(insert2_th);
     thread  th3(insert2_th);
@@ -280,6 +284,7 @@ int main() {
     transaction::do_deferred_updating();
     transaction::initialize();
     thread_initializer thi;
+
 
     return test_all();
 
