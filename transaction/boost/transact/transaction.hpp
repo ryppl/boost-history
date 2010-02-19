@@ -21,5 +21,22 @@ typedef basic_transaction<transaction_manager> transaction;
 }
 }
 
+#define BOOST_TRANSACT_BEGIN_TRANSACTION \
+	BOOST_TRANSACT_BASIC_BEGIN_TRANSACTION(boost::transact::transaction_manager)
+
+#define BOOST_TRANSACT_RETRY \
+	BOOST_TRANSACT_BASIC_RETRY(boost::transact::transaction_manager)
+
+#define BOOST_TRANSACT_END_RETRY \
+	BOOST_TRANSACT_BASIC_END_RETRY(boost::transact::transaction_manager)
+
+#define BOOST_TRANSACT_END_RETRY_IN_LOOP \
+	BOOST_TRANSACT_BASIC_END_RETRY_IN_LOOP(boost::transact::transaction_manager)
+
+#define BOOST_TRANSACT_END_TRANSACTION \
+	BOOST_TRANSACT_BASIC_END_TRANSACTION(boost::transact::transaction_manager)
+
+#define BOOST_TRANSACT_END_TRANSACTION_IN_LOOP \
+	BOOST_TRANSACT_BASIC_END_TRANSACTION_IN_LOOP(boost::transact::transaction_manager)
 
 #endif

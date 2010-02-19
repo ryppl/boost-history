@@ -8,6 +8,8 @@
 #define BOOST_TRANSACT_BASIC_TRANSACTION_HEADER_HPP
 
 #include <boost/noncopyable.hpp>
+#include <boost/transact/exception.hpp>
+#include <boost/assert.hpp>
 
 namespace boost{
 namespace transact{
@@ -128,10 +130,74 @@ private:
 };
 
 
+namespace detail{
+
+template<class TxMgr>
+struct commit_on_destruction{
+	explicit commit_on_destruction(basic_transaction<TxMgr> &tx)
+		: tx(&tx){}
+	~commit_on_destruction(){
+		if(this->tx) this->tx->commit();
+	}
+	void nullify(){
+		this->tx=0;
+	}
+private:
+	basic_transaction<TxMgr> *tx;
+};
+
+}
+
 }
 }
 
 
+#define BOOST_TRANSACT_BASIC_BEGIN_TRANSACTION(TXMGR) \
+	{ \
+		int ___control; \
+		while(true){ \
+			try{ \
+				boost::transact::basic_transaction<TXMGR> ___tx; \
+				boost::transact::detail::commit_on_destruction<TXMGR> ___commit(___tx); \
+				try{ \
+					do{ \
+						___control=1;
+
+#define BOOST_TRANSACT_BASIC_RETRY(TXMGR) \
+						___control=0; \
+						break; \
+					}while((___control=2),false); \
+				}catch(...){ \
+					___commit.nullify(); \
+					throw; \
+				} \
+				break; \
+			}catch(boost::transact::isolation_exception &___i){ \
+				___i.unwind<TXMGR>(); \
+				___control=0;
+
+#define BOOST_TRANSACT_BASIC_END_RETRY(TXMGR) \
+			} \
+		}; \
+		BOOST_ASSERT(___control == 0); \
+	}void()
+
+#define BOOST_TRANSACT_BASIC_END_RETRY_IN_LOOP(TXMGR) \
+			} \
+		}; \
+		if(___control > 0){ \
+			if(___control==1) break; \
+			else continue; \
+		} \
+	}void()
+
+#define BOOST_TRANSACT_BASIC_END_TRANSACTION(TXMGR) \
+	BOOST_TRANSACT_BASIC_RETRY(TXMGR){} \
+	BOOST_TRANSACT_BASIC_END_RETRY(TXMGR)
+
+#define BOOST_TRANSACT_BASIC_END_TRANSACTION_IN_LOOP(TXMGR) \
+	BOOST_TRANSACT_BASIC_RETRY(TXMGR){} \
+	BOOST_TRANSACT_BASIC_END_RETRY_IN_LOOP(TXMGR)
 
 
 
