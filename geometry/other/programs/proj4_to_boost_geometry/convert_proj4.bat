@@ -1,7 +1,11 @@
 @echo off
 
-:: Set this path to the path were proj lives:
-set proj4=./contrib/proj-4.7.0/src
+:: Set this path to the path were proj4.*/src lives:
+:: set proj4=./contrib/proj-4.7.0/src
+:: Please note that proj-4.7.0 has still an error in pconics, which is
+:: solved in the trunk of proj. So take that trunk somewhere.
+
+set proj4=c:\svn\other\osgeo_proj4\src
 
 :: This is the path where Boost.Geometry extensions gis projections proj lives:
 set bg_proj=../../../boost/geometry/extensions/gis/projections/proj
