@@ -13,6 +13,7 @@
 
 #ifndef BOOST_SYNCHO_PTHREAD_MUTEX_HPP
 #define BOOST_SYNCHO_PTHREAD_MUTEX_HPP
+#include <iostream>
 
 //-----------------------------------------------------------------------------
 #include <pthread.h>
@@ -41,12 +42,14 @@ namespace boost { namespace synchro {
 
     template<>
     inline void lock<pthread_mutex_t>(pthread_mutex_t& lockable) {
+        //~ std::cout << __FILE__<< __LINE__ << " mutex::lock " << & lockable << std::endl;
         BOOST_STM_VERIFY(pthread_mutex_lock(&lockable)==0&&"synchro::lock<pthread_mutex_t>");
         //if (res!=0) throw lock_error();
     }
 
     template<>
     inline void unlock<pthread_mutex_t>(pthread_mutex_t& lockable) {
+        //~ std::cout << __FILE__<< __LINE__ << " mutex::unlock " << & lockable << std::endl;
         BOOST_STM_VERIFY(pthread_mutex_unlock(&lockable)==0&&"synchro::unlock<pthread_mutex_t>");
         //if (res!=0) throw lock_error();
     }
