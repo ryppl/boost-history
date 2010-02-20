@@ -82,15 +82,15 @@ public:
     ~list() { }
 
     std::size_t size() const {
-        BOOST_STM_B_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION(_) {
             BOOST_STM_E_RETURN(_,size_);
-        }  BOOST_STM_RETRY_END(_)
+        }  BOOST_STM_E_END_TRANSACTION(_)
         //~ BOOST_STM_TRANSACTION(_) {
             //~ BOOST_STM_RETURN(_, size_);
         //~ }  BOOST_STM_RETRY
-        BOOST_STM_B_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION(_) {
             BOOST_STM_E_RETURN(_,size_);
-        }  BOOST_STM_RETRY_END(_)
+        }  BOOST_STM_E_END_TRANSACTION(_)
         //~ BOOST_STM_TRANSACTION(_) {
             //~ BOOST_STM_RETURN(_, size_);
         //~ }  BOOST_STM_RETRY
@@ -101,7 +101,7 @@ public:
     // find the location to insert the node. if the value already exists, fail
     //--------------------------------------------------------------------------
     void insert(const T& val) {
-        BOOST_STM_B_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION(_) {
             list_node<T> * prev = head_;
             list_node<T> * curr = prev->next_;
             while (curr!=0) {
@@ -115,7 +115,7 @@ public:
                 prev->next_=BOOST_STM_TX_NEW_PTR(_,list_node<T>(val, curr));
                 ++size_;
             }
-        } BOOST_STM_RETRY_END(_)
+        } BOOST_STM_E_END_TRANSACTION(_)
         //~ catch (...) {
             //~ cerr << __LINE__ << " * insert" << endl;
         //~ }
@@ -123,14 +123,14 @@ public:
 
     // search function
     bool lookup(const T& val) const {
-        BOOST_STM_B_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION(_) {
             list_node<T> const * curr=head_->next_;
             while (curr) {
                 if (curr->value_ >= val) break;
                 curr = curr->next_;
             }
             BOOST_STM_E_RETURN(_,  ((curr) && (curr->value_ == val)));
-        }  BOOST_STM_RETRY_END(_)
+        }  BOOST_STM_E_END_TRANSACTION(_)
         return false;
     }
 
@@ -176,17 +176,17 @@ void create() {
     }
 }
 bool check_size(std::size_t val) {
-    BOOST_STM_B_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION(_) {
     //~ std::cout<< __FILE__<<"["<<__LINE__<<"]"<<std::endl;        
         BOOST_STM_E_RETURN(_,  (l.size()==val));
-    } BOOST_STM_RETRY_END(_)
+    } BOOST_STM_E_END_TRANSACTION(_)
     return false;
 }
 bool check_lookup(int val) {
-    BOOST_STM_B_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION(_) {
         //cerr << " check_lookup " << l.lookup(val) << endl;
         BOOST_STM_E_RETURN(_,  (l.lookup(val)));
-    } BOOST_STM_RETRY_END(_)
+    } BOOST_STM_E_END_TRANSACTION(_)
     return false;
 }
 
@@ -229,9 +229,9 @@ bool n1() {
         int val = 10;
         n.next_=BOOST_STM_TX_NEW_PTR(_,test::list_node<int>(val, 0));
     } BOOST_STM_RETRY
-    BOOST_STM_B_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION(_) {
         BOOST_STM_E_RETURN(_,  (n.next_->value_==10));
-    } BOOST_STM_RETRY_END(_)
+    } BOOST_STM_E_END_TRANSACTION(_)
     return false;
 }
 
@@ -239,9 +239,9 @@ bool n2() {
     BOOST_STM_TRANSACTION(_) {
         n.next_->value_=12;
     } BOOST_STM_RETRY
-    BOOST_STM_B_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION(_) {
         BOOST_STM_E_RETURN(_,  (n.next_->value_==12));
-    } BOOST_STM_RETRY_END(_)
+    } BOOST_STM_E_END_TRANSACTION(_)
     return false;
 }
 
@@ -252,9 +252,9 @@ bool n3() {
         int val = 10;
         prev->next_=BOOST_STM_TX_NEW_PTR(_,test::list_node<int>(val, curr));
     } BOOST_STM_RETRY
-    BOOST_STM_B_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION(_) {
         BOOST_STM_E_RETURN(_,  (n.next_->value_==10));
-    } BOOST_STM_RETRY_END(_)
+    } BOOST_STM_E_END_TRANSACTION(_)
     return false;
 }
 

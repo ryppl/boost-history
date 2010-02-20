@@ -88,14 +88,14 @@ bool test_diff() {
 
 bool test_assign() {
     //thread_initializer thi;
-    for(int i=0; i<2;++i)
-    BOOST_STM_B_TRANSACTION_IN_LOOP(_) {
+    for(int i=0; i<2;++i) {
+    BOOST_STM_TRANSACTION_IN_LOOP(_) {
         counter=1;
         counter2=counter;
-        continue;
+        BOOST_STM_CONTINUE(_);
         counter2=3;
-    } BOOST_STM_RETRY_END(_)
-
+    } BOOST_STM_END_TRANSACTION_IN_LOOP(_)
+    }
     BOOST_STM_TRANSACTION(_) {
         //assert((counter==1) && (counter2==1) && (counter==counter2));
         BOOST_STM_TX_RETURN(_, (counter==1) && (counter2==1) && (counter==counter2)) ;
@@ -106,40 +106,40 @@ bool test_assign() {
 bool test_less() {
     //thread_initializer thi;
     for(;;) {
-    BOOST_STM_B_TRANSACTION_IN_LOOP(_) {
+    BOOST_STM_TRANSACTION_IN_LOOP(_) {
         counter=1;
         counter2=2;
-        break;
+        BOOST_STM_BREAK(_);
         counter2=0;
-    } BOOST_STM_RETRY_END(_)
+    } BOOST_STM_END_TRANSACTION_IN_LOOP(_)
     }
-    BOOST_STM_B_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION(_)
         BOOST_STM_E_RETURN(_,  (counter<counter2)) ;
-    } BOOST_STM_RETRY_END(_)
+    BOOST_STM_E_END_TRANSACTION(_)
     return false;
 }
 
 bool test_throw_e() {
-    boost::stm::native_trans<int> x = 0;
-
     //thread_initializer thi;
-    BOOST_STM_B_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION(_) {
         counter=0; counter2=0;
-    } BOOST_STM_RETRY_END(_)
+    } BOOST_STM_E_END_TRANSACTION(_)
 
     try{
-        BOOST_STM_B_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION(_) {
             counter=1;
-            //~ BOOST_STM_B_TRANSACTION(_) {
+            // BUG /bin/sh: line 4:  4428 Aborted                 (core dumped) "../../../bin.v2/libs/stm/test/numeric.test/gcc-3.4.4/debug/threading-multi/numeric.exe" > "../../../bin.v2/libs/stm/test/numeric.test/gcc-3.4.4/debug/threading-multi/numeric.output" 2>&1
+            //~ BOOST_STM_E_TRANSACTION(_) {
+                //~ counter=2;
                 throw 1;
-            //~ } BOOST_STM_RETRY_END(_)
+            //~ } BOOST_STM_E_END_TRANSACTION(_)
             counter2=3;
-        } BOOST_STM_RETRY_END(_)
+        } BOOST_STM_E_END_TRANSACTION(_)
     } catch (...) {}
 
-    BOOST_STM_B_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION(_) {
         BOOST_STM_E_RETURN(_,  (counter==0) && (counter2==0));
-    } BOOST_STM_RETRY_END(_)
+    } BOOST_STM_E_END_TRANSACTION(_)
 
     return false;
 }
@@ -148,35 +148,37 @@ bool test_throw_e() {
 bool test_assign_e() {
     //thread_initializer thi;
     for(int i=0; i<2;++i)
-    BOOST_STM_B_TRANSACTION_IN_LOOP(_) {
+    {
+    BOOST_STM_E_TRANSACTION_IN_LOOP(_) {
         counter=1;
         counter2=counter;
         continue;
         counter2=3;
-    } BOOST_STM_RETRY_END_IN_LOOP(_)
-
-    BOOST_STM_B_TRANSACTION(_) {
+    } BOOST_STM_E_END_TRANSACTION_IN_LOOP(_)
+    }
+    BOOST_STM_E_TRANSACTION(_) {
         BOOST_STM_E_RETURN(_,  (counter==1) && (counter2==1) && (counter==counter2)) ;
-    } BOOST_STM_RETRY_END(_)
+    } BOOST_STM_E_END_TRANSACTION(_)
 
     return false;
 }
 
 bool test_less_e() {
     //thread_initializer thi;
-    for(;;) {
-    BOOST_STM_B_TRANSACTION_IN_LOOP(_)
+    for(;;)
+    {
+    BOOST_STM_E_TRANSACTION_IN_LOOP(_)
     {
         counter=1;
         counter2=2;
         break;
         counter2=0;
-    } BOOST_STM_RETRY_END_IN_LOOP(_)
+    } BOOST_STM_E_END_TRANSACTION_IN_LOOP(_)
     }
-    BOOST_STM_B_TRANSACTION(_)
+    BOOST_STM_E_TRANSACTION(_)
     {
         BOOST_STM_E_RETURN(_,  counter<counter2);
-    } BOOST_STM_RETRY_END(_)
+    } BOOST_STM_E_END_TRANSACTION(_)
     return false;
 }
 
@@ -198,10 +200,10 @@ bool test_const(stm::tx::numeric<int> const& c) {
     BOOST_STM_TRANSACTION(_) {
         counter2=c;
     } BOOST_STM_RETRY
-    BOOST_STM_B_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION(_) {
         //assert(c==counter2);
-        BOOST_STM_TX_RETURN(_, c==counter2) ;
-    } BOOST_STM_RETRY_END(_)
+        BOOST_STM_E_RETURN(_, c==counter2) ;
+    } BOOST_STM_E_END_TRANSACTION(_)
     return false;
 }
 bool test_par() {
@@ -225,7 +227,7 @@ int test_all() {
     fails += !test_equal();
     fails += !test_diff();
     fails += !test_assign();
-    //~ // fails += !test_less();
+    fails += !test_less();
     fails += !test_assign_e();
     fails += !test_less_e();
     fails += !test_throw_e();
