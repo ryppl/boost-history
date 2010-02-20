@@ -19,6 +19,7 @@
 //-----------------------------------------------------------------------------
 #include <boost/stm/transaction.hpp>
 #include <cstring>
+#include <iostream>
 
 //---------------------------------------------------------------------------
 // helper function to implement macros
@@ -30,22 +31,33 @@ enum control_flow {
     continue_
 };
 
-
 struct commit_on_destruction {
     transaction* tx_;
-    bool stop_;
-    commit_on_destruction(transaction& tx, bool &stop)
-    : tx_(&tx), stop_(stop) {}
+    bool &stop_;
+    bool &exception_catched_;
+    bool commited_;
+    commit_on_destruction(transaction& tx, bool &stop, bool& exception_catched)
+    : tx_(&tx), stop_(stop), exception_catched_(exception_catched), commited_(false) {}
 
     ~commit_on_destruction() {
         if (tx_!=0) {
-            tx_->commit();
-            stop_ = !(!tx_->committed()                                  \
-                &&  tx_->check_throw_before_restart()                 \
-                &&  tx_->restart_if_not_inflight());
+            if(!commited_) {
+                try {
+                    tx_->commit();
+                } catch (...) {
+                    exception_catched_=true;
+                }
+            }
+            stop_ = tx_->committed();
         };
     }
 
+    void commit() {
+        if (tx_!=0&&!commited_) {
+            tx_->commit();
+            commited_=true;
+        }
+    }
     void release() {
         tx_=0;
     }
@@ -53,14 +65,14 @@ struct commit_on_destruction {
 
 bool no_opt_false() {return false;}
 
-template <typename T> T commit_and_return(transaction&t, T const& var) {
+template <typename TX, typename T> T commit_and_return(TX &t, T const& var) {
     T tmp(var); 
     t.commit(); 
     return tmp;
 }
 
-
-bool commit_expr(transaction&t) {
+template <typename TX> 
+bool commit_expr(TX &t) {
     t.commit(); return true;
 }
 
@@ -205,19 +217,23 @@ struct dummy_exception{};
 //                      // or BOOST_STM_BEFORE_RETRY
 //---------------------------------------------------------------------------
 
-#define BOOST_STM_B_TRANSACTION(TX)                                    \
-if (bool BOOST_STM_VAR_STOP = boost::stm::detail::no_opt_false()) {} else      \
-{  \
-    boost::stm::detail::control_flow ctrl; \
-    do { \
-        try{ \
-            boost::stm::transaction TX; \
-            boost::stm::detail::commit_on_destruction BOOST_STM_VAR_DESTR(TX)(TX, BOOST_STM_VAR_STOP); \
-            try{ \
-                { \
-                    try {
+#define BOOST_STM_B_TRANSACTION(TX)                                             \
+if (bool BOOST_STM_VAR_STOP = boost::stm::detail::no_opt_false()) {} else       \
+{                                                                               \
+    boost::stm::detail::control_flow ctrl;                                      \
+    do {                                                                        \
+        boost::stm::transaction TX;                                                 \
+        try{                                                                    \
+            bool exception_catched=false;\
+            {\
+                boost::stm::detail::commit_on_destruction BOOST_STM_VAR_DESTR(TX)(TX, BOOST_STM_VAR_STOP, exception_catched); \
+                try{                                                                \
+                    {                                                               \
+                        try {
 
-
+//~ ctrl: states if a specific control flow must be done
+//~ TX: the transaction     
+//~ exception_catched: variable
 // abort on destruction if active
 // allow the user to compose exception handlers after his/her code
 // avoid the commit on destruction when an exception is thrown
@@ -227,50 +243,70 @@ if (bool BOOST_STM_VAR_STOP = boost::stm::detail::no_opt_false()) {} else       
 {                                                                               \
     boost::stm::detail::control_flow ctrl;                                      \
     do {                                                                        \
+        boost::stm::transaction TX;                                             \
         try {                                                                   \
-            boost::stm::transaction TX;                                         \
-            boost::stm::detail::commit_on_destruction BOOST_STM_VAR_DESTR(TX)(TX, BOOST_STM_VAR_STOP); \
-            try {                                                               \
-                for (ctrl=boost::stm::detail::break_;                           \
-                    ctrl==boost::stm::detail::break_;                           \
-                    ctrl=boost::stm::detail::continue_)                         \
-                {                                                               \
-                    try {
+            bool exception_catched=false;                                       \
+            {                                                                   \
+                boost::stm::detail::commit_on_destruction BOOST_STM_VAR_DESTR(TX)(TX, BOOST_STM_VAR_STOP, exception_catched); \
+                try {                                                           \
+                    for (ctrl=boost::stm::detail::break_;                       \
+                        ctrl==boost::stm::detail::break_;                       \
+                        ctrl=boost::stm::detail::continue_)                     \
+                    {                                                           \
+                        try {
 
                         // user code here
 
-#define BOOST_STM_E_RETRY(TX)                                                   \
-                    } catch(boost::stm::detail::dummy_exception &ex) { throw; }           \
-                    ctrl=boost::stm::detail::none;                              \
-                }                                                               \
-            } catch(...) {                                                      \
-                BOOST_STM_VAR_DESTR(TX).release();                              \
-                throw;                                                          \
-            }                                                                   \
-            break;                                                              \
-        } BOOST_STM_RETRY
+#define BOOST_STM_E_RETRY(TX)                                                       \
+                        } catch(boost::stm::detail::dummy_exception &ex) { throw; } \
+                        ctrl=boost::stm::detail::none;                              \
+                    }                                                               \
+                    BOOST_STM_VAR_DESTR(TX).commit();                               \
+                } catch(...) {                                                      \
+                    BOOST_STM_VAR_DESTR(TX).release();                              \
+                    throw;                                                          \
+                }                                                                   \
+            }                                                                       \
+            if (exception_catched) {                                                \
+                throw boost::stm::aborted_tx("commit throw");                       \
+            }                                                                       \
+            break;                                                                  \
+        } catch (boost::stm::aborted_tx &) {                                        \
+            if (TX.is_nested()) throw;                                              \
+            TX.restart();            
 
-#define BOOST_STM_E_BEFORE_RETRY(TX)                                            \
-                    } catch(boost::stm::detail::dummy_exception &ex) { throw; }           \
-                    ctrl=boost::stm::detail::none;                              \
-                }                                                               \
-            } catch(...) {                                                      \
-                BOOST_STM_VAR_DESTR(TX).release();                              \
-                throw;                                                          \
-            }                                                                   \
-            break;                                                              \
-        } BOOST_STM_BEFORE_RETRY
+
+#define BOOST_STM_E_BEFORE_RETRY(TX)                                                \
+                        } catch(boost::stm::detail::dummy_exception &ex) { throw; } \
+                        ctrl=boost::stm::detail::none;                              \
+                    }                                                               \
+                    BOOST_STM_VAR_DESTR(TX).commit();                               \
+                } catch(...) {                                                      \
+                    BOOST_STM_VAR_DESTR(TX).release();                              \
+                    throw;                                                          \
+                }                                                                   \
+            }                                                                       \
+            if (exception_catched) {                                                \
+                throw boost::stm::aborted_tx("commit throw");                       \
+            }                                                                       \
+            break;                                                                  \
+        } catch (boost::stm::aborted_tx &) {                                        \
+            if (TX.is_nested()) throw;                                              \
+            TX.restart();                                                                          
+
 
 #define BOOST_STM_E_END(TX)                                                     \
+        }                                                                       \
     } while(!BOOST_STM_VAR_STOP);                                               \
 }
 
 #define BOOST_STM_RETRY_END(TX)                                                 \
- BOOST_STM_E_RETRY(TX)                                                          \
+ BOOST_STM_E_RETRY(TX) {}                                                       \
  BOOST_STM_E_END(TX)
 
 
 #define BOOST_STM_E_END_IN_LOOP(TX)                                             \
+        }                                                                       \
     } while(!BOOST_STM_VAR_STOP);                                               \
     if (ctrl==boost::stm::detail::continue_) continue;                          \
     else if (ctrl==boost::stm::detail::break_) break;                           \
@@ -278,8 +314,15 @@ if (bool BOOST_STM_VAR_STOP = boost::stm::detail::no_opt_false()) {} else       
 }
 
 #define BOOST_STM_RETRY_END_IN_LOOP(TX)                                         \
- BOOST_STM_E_RETRY(TX)                                                          \
+ BOOST_STM_E_RETRY(TX) {}                                                       \
  BOOST_STM_E_END_IN_LOOP(TX)
+
+
+#define BOOST_STM_E_RETURN(TX, EXPRESSION) \
+    return boost::stm::detail::commit_and_return(BOOST_STM_VAR_DESTR(TX), EXPRESSION)
+
+#define BOOST_STM_E_RETURN_NOTHING(TX) \
+    if (!boost::stm::detail::commit_expr(BOOST_STM_VAR_DESTR(TX)));else return
 
 //---------------------------------------------------------------------------
 // Catch a named abort exception leting the user to do somethink before retry

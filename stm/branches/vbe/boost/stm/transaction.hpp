@@ -384,6 +384,11 @@ public:
    transaction();
    ~transaction();
 
+   bool is_nested() const
+   {
+      synchro::lock_guard<Mutex> lock_m(*inflight_lock());
+      return other_in_flight_same_thread_transactions();
+   }
 
    bool check_throw_before_restart() const
    {
