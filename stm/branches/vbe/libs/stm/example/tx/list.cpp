@@ -82,12 +82,18 @@ public:
     ~list() { }
 
     std::size_t size() const {
-        //~ BOOST_STM_B_TRANSACTION(_) {
-            //~ return size_;
-        //~ }  BOOST_STM_RETRY_END(_)
-        BOOST_STM_TRANSACTION(_) {
-            BOOST_STM_RETURN(size_);
-        }  BOOST_STM_RETRY
+        BOOST_STM_B_TRANSACTION(_) {
+            BOOST_STM_E_RETURN(_,size_);
+        }  BOOST_STM_RETRY_END(_)
+        //~ BOOST_STM_TRANSACTION(_) {
+            //~ BOOST_STM_RETURN(_, size_);
+        //~ }  BOOST_STM_RETRY
+        BOOST_STM_B_TRANSACTION(_) {
+            BOOST_STM_E_RETURN(_,size_);
+        }  BOOST_STM_RETRY_END(_)
+        //~ BOOST_STM_TRANSACTION(_) {
+            //~ BOOST_STM_RETURN(_, size_);
+        //~ }  BOOST_STM_RETRY
         return 0;
     }
 
@@ -99,7 +105,8 @@ public:
             list_node<T> * prev = head_;
             list_node<T> * curr = prev->next_;
             while (curr!=0) {
-                if (curr->value_ == val) return;
+                if (curr->value_ == val) BOOST_STM_E_RETURN_NOTHING(_);
+                //~ if (curr->value_ == val) return;
                 else if (curr->value_ > val) break;
                 prev = curr;
                 curr = curr->next_;
@@ -122,7 +129,7 @@ public:
                 if (curr->value_ >= val) break;
                 curr = curr->next_;
             }
-            return ((curr) && (curr->value_ == val));
+            BOOST_STM_E_RETURN(_,  ((curr) && (curr->value_ == val)));
         }  BOOST_STM_RETRY_END(_)
         return false;
     }
@@ -170,15 +177,15 @@ void create() {
 }
 bool check_size(std::size_t val) {
     BOOST_STM_B_TRANSACTION(_) {
-    std::cout<< __FILE__<<"["<<__LINE__<<"]"<<std::endl;        
-        return (l.size()==val);
+    //~ std::cout<< __FILE__<<"["<<__LINE__<<"]"<<std::endl;        
+        BOOST_STM_E_RETURN(_,  (l.size()==val));
     } BOOST_STM_RETRY_END(_)
     return false;
 }
 bool check_lookup(int val) {
     BOOST_STM_B_TRANSACTION(_) {
         //cerr << " check_lookup " << l.lookup(val) << endl;
-        return (l.lookup(val));
+        BOOST_STM_E_RETURN(_,  (l.lookup(val)));
     } BOOST_STM_RETRY_END(_)
     return false;
 }
@@ -223,7 +230,7 @@ bool n1() {
         n.next_=BOOST_STM_TX_NEW_PTR(_,test::list_node<int>(val, 0));
     } BOOST_STM_RETRY
     BOOST_STM_B_TRANSACTION(_) {
-        return (n.next_->value_==10);
+        BOOST_STM_E_RETURN(_,  (n.next_->value_==10));
     } BOOST_STM_RETRY_END(_)
     return false;
 }
@@ -233,13 +240,12 @@ bool n2() {
         n.next_->value_=12;
     } BOOST_STM_RETRY
     BOOST_STM_B_TRANSACTION(_) {
-        return (n.next_->value_==12);
+        BOOST_STM_E_RETURN(_,  (n.next_->value_==12));
     } BOOST_STM_RETRY_END(_)
     return false;
 }
 
 bool n3() {
-        //cerr << __LINE__ << " * n3" << endl;
     BOOST_STM_TRANSACTION(_) {
         test::list_node<int>* prev =&n;
         test::list_node<int>* curr =prev->next_;
@@ -247,19 +253,20 @@ bool n3() {
         prev->next_=BOOST_STM_TX_NEW_PTR(_,test::list_node<int>(val, curr));
     } BOOST_STM_RETRY
     BOOST_STM_B_TRANSACTION(_) {
-        return (n.next_->value_==10);
+        BOOST_STM_E_RETURN(_,  (n.next_->value_==10));
     } BOOST_STM_RETRY_END(_)
     return false;
 }
 
 int test_all() {
+
     //create();
     bool fails=false;
     fails= fails || !n1();
     fails= fails || !n2();
     fails= fails || !n3();
     fails= fails || !check_size(0);
-    //fails= fails || !insert1();
+    //~ fails= fails || !insert1();
     thread  th1(insert1_th);
     thread  th2(insert2_th);
     thread  th3(insert2_th);
@@ -271,10 +278,12 @@ int test_all() {
     th4.join();
     fails= fails || !check_lookup(1);
     fails= fails || !check_lookup(2);
+    fails= fails || !check_lookup(3);
     fails= fails || !check_size(3);
     remove2();
     fails= fails || !check_lookup(1);
     fails= fails || check_lookup(2);
+    fails= fails || !check_lookup(3);
     fails= fails || !check_size(2);
     return fails;
 }

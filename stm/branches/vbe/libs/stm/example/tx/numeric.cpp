@@ -114,7 +114,7 @@ bool test_less() {
     } BOOST_STM_RETRY_END(_)
     }
     BOOST_STM_B_TRANSACTION(_) {
-        return (counter<counter2) ;
+        BOOST_STM_E_RETURN(_,  (counter<counter2)) ;
     } BOOST_STM_RETRY_END(_)
     return false;
 }
@@ -128,17 +128,17 @@ bool test_throw_e() {
     } BOOST_STM_RETRY_END(_)
 
     try{
-    for(int i=0; i<2;++i) {
-        BOOST_STM_B_TRANSACTION_IN_LOOP(_) {
+        BOOST_STM_B_TRANSACTION(_) {
             counter=1;
-            throw 1;
+            //~ BOOST_STM_B_TRANSACTION(_) {
+                throw 1;
+            //~ } BOOST_STM_RETRY_END(_)
             counter2=3;
-        } BOOST_STM_RETRY_END_IN_LOOP(_)
-    }
+        } BOOST_STM_RETRY_END(_)
     } catch (...) {}
 
     BOOST_STM_B_TRANSACTION(_) {
-        return (counter==0) && (counter2==0);
+        BOOST_STM_E_RETURN(_,  (counter==0) && (counter2==0));
     } BOOST_STM_RETRY_END(_)
 
     return false;
@@ -156,7 +156,7 @@ bool test_assign_e() {
     } BOOST_STM_RETRY_END_IN_LOOP(_)
 
     BOOST_STM_B_TRANSACTION(_) {
-        return (counter==1) && (counter2==1) && (counter==counter2) ;
+        BOOST_STM_E_RETURN(_,  (counter==1) && (counter2==1) && (counter==counter2)) ;
     } BOOST_STM_RETRY_END(_)
 
     return false;
@@ -175,7 +175,7 @@ bool test_less_e() {
     }
     BOOST_STM_B_TRANSACTION(_)
     {
-        return counter<counter2;
+        BOOST_STM_E_RETURN(_,  counter<counter2);
     } BOOST_STM_RETRY_END(_)
     return false;
 }
@@ -198,15 +198,13 @@ bool test_const(stm::tx::numeric<int> const& c) {
     BOOST_STM_TRANSACTION(_) {
         counter2=c;
     } BOOST_STM_RETRY
-    BOOST_STM_TRANSACTION(_) {
+    BOOST_STM_B_TRANSACTION(_) {
         //assert(c==counter2);
-        BOOST_STM_TX_RETURN(_, (c==counter2)) ;
-    } BOOST_STM_RETRY
+        BOOST_STM_TX_RETURN(_, c==counter2) ;
+    } BOOST_STM_RETRY_END(_)
     return false;
 }
-
-int test_all() {
-
+bool test_par() {
     thread  th1(inc);
     thread  th2(decr);
     thread  th3(inc1);
@@ -217,12 +215,17 @@ int test_all() {
     th3.join();
     th4.join();
 
+    return check(2);
+}
+
+int test_all() {
     int fails=0;
-    fails += !check(2);
+
+    fails += !test_par();
     fails += !test_equal();
     fails += !test_diff();
     fails += !test_assign();
-    //~ fails += !test_less();
+    //~ // fails += !test_less();
     fails += !test_assign_e();
     fails += !test_less_e();
     fails += !test_throw_e();

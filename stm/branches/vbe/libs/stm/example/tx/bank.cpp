@@ -48,7 +48,7 @@ public:
     }
     int Balance() const {
         BOOST_STM_B_TRANSACTION(_) {
-            return balance_;
+            BOOST_STM_E_RETURN(_, balance_);
         } BOOST_STM_RETRY_END(_)
         return 0;
     }
@@ -161,12 +161,12 @@ int test_account_0() {
         a->Deposit(10);
     } BOOST_STM_RETRY
 
-    BOOST_STM_OUTER_TRANSACTION(_) {
+    BOOST_STM_B_TRANSACTION(_) {
         int res = (a->Balance()==10?0:1);
         //BUG assertion "pthread_mutex_lock(&lockable)==0&&"synchro::lock<pthread_mutex_t>"" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 46
         //~ BOOST_STM_TX_DELETE_PTR(_, a.value());
-        BOOST_STM_TX_RETURN(_,res);
-    } BOOST_STM_RETRY
+        BOOST_STM_E_RETURN(_,  res);
+    } BOOST_STM_RETRY_END(_)
     return 1;
 }
 
@@ -178,11 +178,12 @@ int test_account_1() {
     thread  th1(account_withdraw_thr);
 
     th1.join();
-    BOOST_STM_OUTER_TRANSACTION(_) {
+    BOOST_STM_B_TRANSACTION(_) {
         int res = (a->Balance()==-10?0:1);
         //~ BOOST_STM_TX_DELETE_PTR(_, a.value());
-        BOOST_STM_TX_RETURN(_,res);
-    } BOOST_STM_RETRY
+        BOOST_STM_E_RETURN(_,  res);
+    } BOOST_STM_RETRY_END(_)
+    return 1;
 }
 
 int test_account_2() {
@@ -199,11 +200,12 @@ int test_account_2() {
     th2.join();
     th3.join();
     th4.join();
-    BOOST_STM_OUTER_TRANSACTION(_) {
+    BOOST_STM_B_TRANSACTION(_) {
         int res = (a->Balance()==0?0:1);
         //~ BOOST_STM_TX_DELETE_PTR(_, a.value());
-        BOOST_STM_TX_RETURN(_,res);
-    } BOOST_STM_RETRY
+        BOOST_STM_E_RETURN(_,  res);
+    } BOOST_STM_RETRY_END(_)
+    return 1;
 }
 
 bool test_bank_1() {
@@ -280,7 +282,7 @@ int main() {
     res+=test_account_0();
     res+=test_account_1();
     //BUG assertion "pthread_mutex_lock(&lockable)==0&&"synchro::lock<pthread_mutex_t>"" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 46
-    //~ res+=test_account_2();
+    res+=test_account_2();
     res+=test_bank_1();
     res+=test_bank_2();
 

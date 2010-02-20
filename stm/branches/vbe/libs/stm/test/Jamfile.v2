@@ -189,14 +189,14 @@ project
     alias embedded
         :
             [ run-fail ../example/embed.cpp ]
-            [ run ../example/multiple_inheritance.cpp ]
     ;
 
     alias examples_tx
-        :
+        :   embedded
             [ compile-fail ../example/deep_singleton.cpp ]
             [ run ../example/singleton.cpp ]
             [ run ../example/dyn_poly.cpp ]
+            [ run ../example/multiple_inheritance.cpp ]
 
             [ run ../example/tx/bank.cpp : : : : tx_bank ]
             [ run ../example/tx/numeric.cpp ]

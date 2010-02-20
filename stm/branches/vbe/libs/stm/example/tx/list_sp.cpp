@@ -67,7 +67,7 @@ public:
 
     std::size_t size() const {
         BOOST_STM_B_TRANSACTION(_) {
-            return size_;
+            BOOST_STM_E_RETURN(_,  size_);
         }  BOOST_STM_RETRY_END(_)
         return 0;
     }
@@ -90,9 +90,6 @@ public:
                 ++(make_write_ptr<static_poly>(_, this)->size_);
             }
         } BOOST_STM_RETRY_END(_)
-        //~ catch (...) {
-        //~ cout << __LINE__ << " * insert" << endl;
-        //~ }
     }
 
     // search function
