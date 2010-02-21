@@ -1,0 +1,42 @@
+# Boost.Tokenmap
+#
+# Copyright (c) 2009 Slawomir Lisznianski
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+
+# Quickbook
+# -----------------------------------------------------------------------------
+
+import quickbook ;
+
+xml tokenmap
+    :
+        tokenmap.qbk
+    ;
+
+path-constant images_location : html ;
+
+boostbook standalone
+    :
+        tokenmap
+    :
+        <xsl:param>boost.root=../../../..
+        <xsl:param>boost.libraries=../../../libraries.htm
+        <xsl:param>toc.max.depth=2
+        <xsl:param>toc.section.depth=4
+        <xsl:param>chunk.section.depth=2
+        <format>pdf:<xsl:param>img.src.path=$(images_location)/
+        <format>pdf:<xsl:param>boost.url.prefix=http://www.boost.org/doc/libs/release/libs/tokenmap/doc/html
+    ;
+
+
+# Doxygen
+# -----------------------------------------------------------------------------
+# This generate the doxydocs and write "tokenmap.hdt".
+# Delete this file if you want to regenerate the doxydocs again
+# import directdoxygen ;
+# html-doxydocs tokenmap.hdt : tokenmap.hdf ;
+
