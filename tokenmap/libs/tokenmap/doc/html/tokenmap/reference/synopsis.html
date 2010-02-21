@@ -1,0 +1,86 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Synopsis</title>
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Tokenmap">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="../reference.html" title="Reference">
+<link rel="next" href="class_template_tokenmap.html" title="Class template tokenmap">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../reference.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="class_template_tokenmap.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="tokenmap.reference.synopsis"></a><a class="link" href="synopsis.html" title="Synopsis">Synopsis</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">tokenmaps</span> <span class="special">{</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">value__</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">key__</span> <span class="special">=</span> <span class="identifier">uint32_t</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">tokenmap</span>
+<span class="special">{</span>
+  <span class="keyword">public</span><span class="special">:</span>
+
+  <span class="comment">// Metadata
+</span>
+  <span class="keyword">typedef</span> <span class="identifier">uint64_t</span>                           <span class="identifier">hash_type</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">key__</span>                              <span class="identifier">key_type</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">value__</span>                            <span class="identifier">mapped_type</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">,</span> <span class="identifier">mapped_type</span><span class="special">*&gt;</span>  <span class="identifier">value_type</span><span class="special">;</span>
+
+  <span class="comment">// Constructor 
+</span>
+  <span class="identifier">tokenmap</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">capacity</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">load_factor</span><span class="special">,</span> <span class="identifier">hash_type</span> <span class="identifier">seed</span><span class="special">);</span>
+
+  <span class="comment">// Destructor 
+</span>
+  <span class="special">~</span><span class="identifier">tokenmap</span><span class="special">();</span>
+
+  <span class="comment">// Modifiers
+</span>
+  <span class="identifier">value_type</span> <span class="identifier">insert</span><span class="special">(</span><span class="identifier">mapped_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">);</span>
+
+  <span class="identifier">value_type</span> <span class="identifier">insert</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">mapped_type</span><span class="special">&gt;</span> <span class="identifier">value</span><span class="special">);</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">mapped_type</span><span class="special">&gt;</span> <span class="identifier">pop</span><span class="special">(</span><span class="identifier">key_type</span> <span class="identifier">key</span><span class="special">);</span>
+
+  <span class="comment">// Accessors
+</span>
+  <span class="identifier">mapped_type</span> <span class="special">*</span> <span class="identifier">find</span><span class="special">(</span><span class="identifier">key_type</span> <span class="identifier">key</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+
+  <span class="keyword">bool</span> <span class="identifier">exists</span><span class="special">(</span><span class="identifier">key_type</span> <span class="identifier">key</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+
+  <span class="identifier">key_type</span> <span class="identifier">size</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="comment">// namespace tokenmap
+</span><span class="special">}</span> <span class="comment">// namespace boost
+</span></pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 Slawomir Lisznianski<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../reference.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="class_template_tokenmap.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

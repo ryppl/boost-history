@@ -1,0 +1,76 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Chapter&#160;1.&#160;Boost.Tokenmap</title>
+<link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Chapter&#160;1.&#160;Boost.Tokenmap">
+<link rel="next" href="tokenmap/quick_tutorial.html" title="Quick tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="tokenmap/quick_tutorial.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="chapter" lang="en">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="tokenmap"></a>Chapter&#160;1.&#160;Boost.Tokenmap</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Slawomir</span> <span class="surname">Lisznianski</span>
+</h3></div></div>
+<div><p class="copyright">Copyright &#169; 2009 Slawomir Lisznianski</p></div>
+<div><div class="legalnotice">
+<a name="id477452"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#tokenmap.description">Description</a></span></dt>
+<dt><span class="section"><a href="tokenmap/quick_tutorial.html">Quick tutorial</a></span></dt>
+<dt><span class="section"><a href="tokenmap/reference.html">Reference</a></span></dt>
+<dt><span class="section"><a href="tokenmap/performance_.html">Performance </a></span></dt>
+<dt><span class="section"><a href="tokenmap/examples_.html">Examples </a></span></dt>
+<dt><span class="section"><a href="tokenmap/rationale_.html">Rationale </a></span></dt>
+<dt><span class="section"><a href="tokenmap/future_work_.html">Future Work </a></span></dt>
+<dt><span class="section"><a href="tokenmap/acknowledgements_.html">Acknowledgements </a></span></dt>
+</dl>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="tokenmap.description"></a><a class="link" href="index.html#tokenmap.description" title="Description">Description</a>
+</h2></div></div></div>
+<p>
+      A <code class="computeroutput"><span class="identifier">tokenmap</span></code> is a data structure
+      that uniquely maps pseudo-random generated keys with elements of the collection.
+    </p>
+<p>
+      Boost.Tokenmap is a (perfect) hash container library for C++. An important
+      distinction between <code class="computeroutput"><span class="identifier">tokenmap</span></code>
+      and other dictionary-like containers, such as std::map or <a href="http://www.boost.org/libs/libs/unordered/doc/index.html" target="_top"><span class="bold"><strong>Boost.Unordered</strong></span></a>, is that <code class="computeroutput"><span class="identifier">tokenmap</span></code>
+      generates keys internally (referred to as "tokens") rather than relying
+      on user to provide them. Specifically, when a new element is inserted into
+      the <code class="computeroutput"><span class="identifier">tokenmap</span></code>, an apparently
+      random key is returned back to the caller which uniquely maps to the stored
+      element. The returned key can later be used for a very efficient lookup.
+    </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: February 21, 2010 at 19:46:48 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="tokenmap/quick_tutorial.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+</body>
+</html>

@@ -1,7 +1,11 @@
+[/ Copyright 2009 Slawomir Lisznianski
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) ]
+
 [library Boost.Tokenmap
     [quickbook 1.4]
     [authors [Lisznianski, Slawomir]]
-    [copyright 2006-2007 Slawomir Lisznianski]
+    [copyright 2009 Slawomir Lisznianski]
     [category container]
     [id tokenmap]
     [dirname tokenmap]
@@ -40,25 +44,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 [/ Boost Libraries ]
 
-[def __BOOST_MULTI_INDEX__ [@http://www.boost.org/libs/multi_index/doc/index.html [*Boost.MultiIndex]]]
-[def __BOOST_MPL__ [@http://www.boost.org/libs/mpl/doc/index.html [*Boost.MPL]]]
-[def __BOOST_TYPE_TRAITS__ [@http://www.boost.org/doc/html/boost_typetraits.html [*Boost.TypeTraits]]]
-[def __BOOST_ENABLE_IF__ [@http://www.boost.org/libs/utility/enable_if.html [*Boost.enable_if]]]
-[def __BOOST_ITERATORS__ [@http://www.boost.org/libs/iterator/doc/index.html [*Boost.Iterators]]]
-[def __BOOST_CALL_TRAITS__ [@http://www.boost.org/libs/utility/call_traits.htm [*Boost.call_traits]]]
-[def __BOOST_STATIC_ASSERT__ [@http://www.boost.org/doc/html/boost_staticassert.html [*Boost.StaticAssert]]]
-
-[def __BOOST_SERIALIZATION__ [@http://www.boost.org/libs/serialization/doc/index.html [*Boost.Serialization]]]
-[def __BOOST_HASH__ [@http://www.boost.org/doc/html/hash.html [*Boost.Hash]]]
-[def __BOOST_ASSIGN__ [@http://www.boost.org/libs/assign/doc/index.html [*Boost.Assign]]]
-[def __BOOST_LAMBDA__ [@http://www.boost.org/doc/html/lambda.html [*Boost.Lambda]]]
-[def __BOOST_PROPERTY_MAP__ [@http://www.boost.org/doc/html/property_map.html [*Boost.PropertyMap]]]
-[def __BOOST_RANGE__ [@http://www.boost.org/doc/html/range.html [*Boost.Range]]]
-[def __BOOST_FOREACH__ [@http://www.boost.org/doc/html/foreach.html [*Boost.Foreach]]]
-[def __BOOST_TEST__ [@http://www.boost.org/libs/test/doc/index.html [*Boost.Test]]]
-[def __BOOST_TYPEOF__ [@http://www.boost.org/libs/typeof/doc/index.html [*Boost.Typeof]]]
-[def __BOOST_XPRESSIVE__ [@http://www.boost.org/libs/xpressive/doc/index.html [*Boost.Xpressive]]]
-
+[def _boost_unordered_  [@http://www.boost.org/libs/libs/unordered/doc/index.html [*Boost.Unordered]]] 
 
 [/ Extern Links ]
 
@@ -111,78 +97,67 @@ Distributed under the Boost Software License, Version 1.0.
 
 [import ../example/simple_tokenmap.cpp]
 
-[section Preface]
+[section Description]
 
-[heading Description]
-
-In summary, a tokenmap is a data structure that maps auto-generated tokens with 
+A `tokenmap` is a data structure that uniquely maps pseudo-random generated keys with 
 elements of the collection. 
 
-Boost.Tokenmap is a (perfect) hash container library for C++. The library provides
-a tokenmap, a data structure that maps auto-generated tokens with elements of 
-the collection. An important distinction between tokenmap and other dictionary-like
-containers (such as std::map or boost::unordered) is that tokenmap generates the 
-keys internally (referred to as "tokens") rather than relying on users to provide 
-them. Specifically, when a new element is inserted into the tokenmap, an apparently
-random token is returned back to the caller. The returned token can later be used 
-for very efficient lookups.
-
-[heading Influences and Related Work]
-
-The design of Boost.Tokenmap interface follows the standard template library.
+Boost.Tokenmap is a (perfect) hash container library for C++. An important distinction 
+between `tokenmap` and other dictionary-like containers, such as std::map or 
+_boost_unordered_, is that `tokenmap` generates keys internally (referred to as 
+"tokens") rather than relying on user to provide them. Specifically, when a new element
+is inserted into the `tokenmap`, an apparently random key is returned back to the caller 
+which uniquely maps to the stored element. The returned key can later be used for a very 
+efficient lookup.
 
 [endsect]
 
 [section Quick tutorial]
 
-A convenience header is avaiable in the boost directory:
+Start by including a convenience header avaiable in the boost directory:
 
     #include <boost/tokenmap.hpp>
 
-Lets define a token map for strings. The following code creates an empty tokenamp 
+Next, we define a `tokenmap` for storing strings. The following code creates an empty `tokenmap` 
 container with initial capacity set to 10000, load factor set to 0.7 and current 
 time as seed for pseudo-number generator:
 
-typedef tokenmap<std::string, unsigned int> tokenmap_type;
-tokenmap_type names( 10000, 0.7, time(NULL) );
+    typedef boost::tokenmap<std::string, unsigned int> tokenmap_type;
+    tokenmap_type names( 10000, 0.7, time(NULL) );
 
-Next, to insert elements into the container we do:
+To insert elements into the container we do:
 
-tokenamp_type::value_type rob = 
-    names.insert( "Robert DeNiro" );
-tokenamp_type::value_type mart = 
-    names.insert( "Martin Scorsese" );
+    tokenmap_type::value_type rob = 
+        names.insert( "Robert DeNiro" );
+    tokenmap_type::value_type mart = 
+        names.insert( "Martin Scorsese" );
 
-The returned from insert `tokenamp_type::value_type' is a pair, defined as 
-std::pair<unsigned int, std::string*>.  The first element of the pair is an 
-auto-generated token, whereas the second element is a pointer to the stored 
-element that maps to it.
+The value returned from insert is a pair, defined as std::pair<unsigned int, std::string*>.
+The first element of the pair is an auto-generated token, whereas the second element
+is a pointer to the element that maps to it.
 
-With the returned token we can perform efficient lookups within the container,
-example:
+With the returned token, we can perform efficient lookups on the container, for example:
 
-tokenamp_type::mapped_type * name = names.find( rob.first ); 
+    tokenmap_type::mapped_type * name = names.find( rob.first ); 
 
 We can also check if an element exists:
 
-bool found = names.exists( rob.first );
+    bool found = names.exists( rob.first );
 
 Finally, we can remove the element:
 
-std::auto_ptr<map_type::mapped_type> take_over 
-  = names.pop( rob.first );
+    std::auto_ptr<map_type::mapped_type> take_over = 
+        names.pop( rob.first );
 
 [endsect]
 
 [section Reference]
 
-[section Headers]
+[heading Headers]
 
-* "boost/tokenmap.hpp" ['(includes "boost/tokenmap/tokenmap.hpp" and imports the tokenmap class to boost namespace)]
+"boost/tokenmap.hpp" includes "boost/tokenmap/tokenmap.hpp" and imports the `tokenmap` class to boost namespace.
 
-[endsect]
-
-[section Header "boost/tokenmap/tokenmap.hpp" synopsis]
+[heading Synopsis]
 
     namespace boost {
     namespace tokenmaps {
@@ -224,18 +199,15 @@ std::auto_ptr<map_type::mapped_type> take_over
       key_type size() const;
     };
 
-    } // namespace tokenmap
+    } // namespace tokenmaps
     } // namespace boost
 
-[endsect]
+[heading Class template tokenmap]
 
-[section Class template tokenmap]
-[endsect]
+[heading Nested types]
 
-[section Nested types]
-[endsect]
+[heading Constructors, copy and assignment]
 
-[section Constructors, copy and assignment]
       tokenmap(size_t capacity, float load_factor, hash_type seed);
 
 * [*Effects:] Constructs an empty `tokenmap`.
@@ -257,3 +229,4 @@ std::auto_ptr<map_type::mapped_type> take_over
 
 [section Acknowledgements ]
 [endsect]
+

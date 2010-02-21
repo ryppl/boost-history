@@ -1,0 +1,87 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Quick tutorial</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter&#160;1.&#160;Boost.Tokenmap">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Tokenmap">
+<link rel="prev" href="../index.html" title="Chapter&#160;1.&#160;Boost.Tokenmap">
+<link rel="next" href="reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="tokenmap.quick_tutorial"></a><a class="link" href="quick_tutorial.html" title="Quick tutorial">Quick tutorial</a>
+</h2></div></div></div>
+<p>
+      Start by including a convenience header avaiable in the boost directory:
+    </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tokenmap</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+      Next, we define a <code class="computeroutput"><span class="identifier">tokenmap</span></code>
+      for storing strings. The following code creates an empty <code class="computeroutput"><span class="identifier">tokenmap</span></code>
+      container with initial capacity set to 10000, load factor set to 0.7 and current
+      time as seed for pseudo-number generator:
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tokenmap</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">tokenmap_type</span><span class="special">;</span>
+<span class="identifier">tokenmap_type</span> <span class="identifier">names</span><span class="special">(</span> <span class="number">10000</span><span class="special">,</span> <span class="number">0.7</span><span class="special">,</span> <span class="identifier">time</span><span class="special">(</span><span class="identifier">NULL</span><span class="special">)</span> <span class="special">);</span>
+</pre>
+<p>
+      To insert elements into the container we do:
+    </p>
+<pre class="programlisting"><span class="identifier">tokenmap_type</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">rob</span> <span class="special">=</span> 
+    <span class="identifier">names</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span> <span class="string">"Robert DeNiro"</span> <span class="special">);</span>
+<span class="identifier">tokenmap_type</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">mart</span> <span class="special">=</span> 
+    <span class="identifier">names</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span> <span class="string">"Martin Scorsese"</span> <span class="special">);</span>
+</pre>
+<p>
+      The value returned from insert is a pair, defined as std::pair&lt;unsigned
+      int, std::string*&gt;. The first element of the pair is an auto-generated token,
+      whereas the second element is a pointer to the element that maps to it.
+    </p>
+<p>
+      With the returned token, we can perform efficient lookups on the container,
+      for example:
+    </p>
+<pre class="programlisting"><span class="identifier">tokenmap_type</span><span class="special">::</span><span class="identifier">mapped_type</span> <span class="special">*</span> <span class="identifier">name</span> <span class="special">=</span> <span class="identifier">names</span><span class="special">.</span><span class="identifier">find</span><span class="special">(</span> <span class="identifier">rob</span><span class="special">.</span><span class="identifier">first</span> <span class="special">);</span> 
+</pre>
+<p>
+      We can also check if an element exists:
+    </p>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">found</span> <span class="special">=</span> <span class="identifier">names</span><span class="special">.</span><span class="identifier">exists</span><span class="special">(</span> <span class="identifier">rob</span><span class="special">.</span><span class="identifier">first</span> <span class="special">);</span>
+</pre>
+<p>
+      Finally, we can remove the element:
+    </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">map_type</span><span class="special">::</span><span class="identifier">mapped_type</span><span class="special">&gt;</span> <span class="identifier">take_over</span> 
+  <span class="special">=</span> <span class="identifier">names</span><span class="special">.</span><span class="identifier">pop</span><span class="special">(</span> <span class="identifier">rob</span><span class="special">.</span><span class="identifier">first</span> <span class="special">);</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 Slawomir Lisznianski<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
