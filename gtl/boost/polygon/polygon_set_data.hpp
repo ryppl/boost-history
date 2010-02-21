@@ -9,8 +9,29 @@
 #define BOOST_POLYGON_POLYGON_SET_DATA_HPP
 #include "polygon_45_set_data.hpp"
 #include "polygon_45_set_concept.hpp"
+#include "polygon_traits.hpp"
 #include "detail/polygon_arbitrary_formation.hpp"
-namespace boost { namespace polygon{
+#include <iostream>
+
+namespace boost { namespace polygon {
+
+
+  // utility function to round coordinate types down
+  // rounds down for both negative and positive numbers
+  // intended really for integer type T (does not make sense for float)
+  template <typename T>
+  static inline T round_down(double val) {
+     T rounded_val = (T)(val);
+     if(val < (double)rounded_val) 
+        --rounded_val;
+     return rounded_val;
+  }
+  template <typename T>
+  static inline point_data<T> round_down(point_data<double> v) {
+     return point_data<T>(round_down<T>(v.x()),round_down<T>(v.y()));
+  }
+
+
 
   //foward declare view
   template <typename ltype, typename rtype, int op_type> class polygon_set_view;
@@ -73,22 +94,22 @@ namespace boost { namespace polygon{
 
 
     // insert iterator range
-    inline void insert(iterator_type input_begin, iterator_type input_end) {
+    inline void insert(iterator_type input_begin, iterator_type input_end, bool is_hole = false) {
       if(input_begin == input_end || (!data_.empty() && &(*input_begin) == &(*(data_.begin())))) return;
       dirty_ = true;
       unsorted_ = true;
       while(input_begin != input_end) {
-        insert(*input_begin);
+        insert(*input_begin, is_hole);
         ++input_begin;
       }
     }
 
     // insert iterator range
     template <typename iT>
-    inline void insert(iT input_begin, iT input_end) {
+    inline void insert(iT input_begin, iT input_end, bool is_hole = false) {
       if(input_begin == input_end) return;
       for(; input_begin != input_end; ++input_begin) {
-        insert(*input_begin);
+        insert(*input_begin, is_hole);
       }
     }
 
@@ -133,18 +154,22 @@ namespace boost { namespace polygon{
       }
     }
 
-    template <typename coordinate_type_2>
-    inline void insert(const polygon_45_set_data<coordinate_type_2>& ps) {
-      std::vector<polygon_45_with_holes_data<coordinate_type_2> > polys;
-      assign(polys, ps);
-      insert(polys.begin(), polys.end());
+    inline void insert(const polygon_set_data& ps, bool is_hole = false) {
+      insert(ps.data_.begin(), ps.data_.end(), is_hole);
     }
 
-    template <typename coordinate_type_2>
-    inline void insert(const polygon_90_set_data<coordinate_type_2>& ps) {
-      std::vector<polygon_90_with_holes_data<coordinate_type_2> > polys;
+    template <typename polygon_45_set_type>
+    inline void insert(const polygon_45_set_type& ps, bool is_hole, polygon_45_set_concept) {
+      std::vector<polygon_45_with_holes_data<typename polygon_45_set_traits<polygon_45_set_type>::coordinate_type> > polys;
       assign(polys, ps);
-      insert(polys.begin(), polys.end());
+      insert(polys.begin(), polys.end(), is_hole);
+    }
+
+    template <typename polygon_90_set_type>
+    inline void insert(const polygon_90_set_type& ps, bool is_hole, polygon_90_set_concept) {
+      std::vector<polygon_90_with_holes_data<typename polygon_90_set_traits<polygon_90_set_type>::coordinate_type> > polys;
+      assign(polys, ps);
+      insert(polys.begin(), polys.end(), is_hole);
     }
 
     template <typename polygon_type>
@@ -183,7 +208,7 @@ namespace boost { namespace polygon{
       insert(poly, is_hole, polygon_concept());
     }
 
-    inline void insert_clean(const element_type& edge) {
+    inline void insert_clean(const element_type& edge, bool is_hole = false) {
       if( ! scanline_base<coordinate_type>::is_45_degree(edge.first) &&
           ! scanline_base<coordinate_type>::is_horizontal(edge.first) &&
           ! scanline_base<coordinate_type>::is_vertical(edge.first) ) is_45_ = false;
@@ -192,12 +217,21 @@ namespace boost { namespace polygon{
         std::swap(data_.back().first.second, data_.back().first.first);
         data_.back().second *= -1;
       }
+      if(is_hole)
+        data_.back().second *= -1;
     }
 
-    inline void insert(const element_type& edge) {
-      insert_clean(edge);
+    inline void insert(const element_type& edge, bool is_hole = false) {
+      insert_clean(edge, is_hole);
       dirty_ = true;
       unsorted_ = true;
+    }
+
+    template <class iT>
+    inline void insert_vertex_sequence(iT begin_vertex, iT end_vertex, direction_1d winding, bool is_hole) {
+       polygon_data<coordinate_type> poly;
+       poly.set(begin_vertex, end_vertex);
+       insert(poly, is_hole);
     }
 
     template <typename output_container>
@@ -327,6 +361,19 @@ namespace boost { namespace polygon{
       return true;
     }
 
+    inline polygon_set_data&
+    resize(coordinate_type resizing, bool corner_fill_arc = false, unsigned int num_circle_segments=0) {
+      if(resizing == 0) return *this;
+      std::list<polygon_with_holes_data<coordinate_type> > pl;
+      get(pl);
+      clear();
+      for(typename std::list<polygon_with_holes_data<coordinate_type> >::iterator itr = pl.begin(); itr != pl.end(); ++itr) {
+        insert_with_resize(*itr, resizing, corner_fill_arc, num_circle_segments);
+      }
+      clean();
+      return *this;
+    }
+
     template <typename transform_type>
     inline polygon_set_data& 
     transform(const transform_type& tr) {
@@ -373,6 +420,167 @@ namespace boost { namespace polygon{
       dirty_ = true;
       return *this;
     }
+
+    // TODO:: should be private
+    template <typename geometry_type>
+    inline polygon_set_data&
+    insert_with_resize(const geometry_type& poly, coordinate_type resizing, bool corner_fill_arc=false, unsigned int num_circle_segments=0, bool hole = false) {
+      return insert_with_resize_dispatch(poly, resizing,  corner_fill_arc, num_circle_segments, hole, typename geometry_concept<geometry_type>::type());
+    }
+
+    template <typename geometry_type>
+    inline polygon_set_data& 
+    insert_with_resize_dispatch(const geometry_type& poly, coordinate_type resizing, bool corner_fill_arc, unsigned int num_circle_segments, bool hole, 
+	                             polygon_with_holes_concept tag) {
+      insert_with_resize_dispatch(poly, resizing, corner_fill_arc, num_circle_segments, hole, polygon_concept());
+      for(typename polygon_with_holes_traits<geometry_type>::iterator_holes_type itr =
+            begin_holes(poly); itr != end_holes(poly);
+          ++itr) {
+        insert_with_resize_dispatch(*itr, resizing,  corner_fill_arc, num_circle_segments, !hole, polygon_concept());
+      }
+      return *this;
+    }
+
+    template <typename geometry_type>
+    inline polygon_set_data& 
+    insert_with_resize_dispatch(const geometry_type& poly, coordinate_type resizing, bool corner_fill_arc, unsigned int num_circle_segments, bool hole, 
+	                        polygon_concept tag) {
+
+      if (resizing==0)
+         return *this;
+
+      
+      // one dimensional used to store CCW/CW flag
+      //direction_1d wdir = winding(poly);
+      // LOW==CLOCKWISE just faster to type
+      // so > 0 is CCW
+      //int multiplier = wdir == LOW ? -1 : 1;
+      //std::cout<<" multiplier : "<<multiplier<<std::endl;
+      //if(hole) resizing *= -1;
+      direction_1d resize_wdir = resizing>0?COUNTERCLOCKWISE:CLOCKWISE;
+
+      typedef typename polygon_data<T>::iterator_type piterator;
+      piterator first, second, third, end, real_end;
+      real_end = end_points(poly);
+      third = begin_points(poly);
+      first = third;
+      if(first == real_end) return *this;
+      ++third;
+      if(third == real_end) return *this;
+      second = end = third;
+      ++third;
+      if(third == real_end) return *this;
+
+        // for 1st corner
+      std::vector<point_data<T> > first_pts;
+      std::vector<point_data<T> > all_pts;
+      direction_1d first_wdir = CLOCKWISE;
+
+      // for all corners
+      polygon_set_data<T> sizingSet;
+      bool sizing_sign = resizing>0;
+      bool prev_concave = true;
+      point_data<T> prev_point;
+      int iCtr=0;
+
+
+      //insert minkofski shapes on edges and corners
+      do { // REAL WORK IS HERE
+
+
+        //first, second and third point to points in correct CCW order
+        // check if convex or concave case
+        point_data<coordinate_type> normal1( second->y()-first->y(), first->x()-second->x());
+        point_data<coordinate_type> normal2( third->y()-second->y(), second->x()-third->x());
+        double direction = normal1.x()*normal2.y()- normal2.x()*normal1.y();
+        bool convex = direction>0;
+ 
+        bool treat_as_concave = convex ^ sizing_sign ;
+        point_data<double> v;
+        assign(v, normal1);
+        double s2 = (v.x()*v.x()+v.y()*v.y());
+        double s = sqrt(s2)/resizing;
+        v = point_data<double>(v.x()/s,v.y()/s);
+        point_data<T> curr_prev;
+        if (prev_concave)
+	//TODO missing round_down()
+          curr_prev = point_data<T>(first->x()+v.x(),first->y()+v.y());
+        else 
+          curr_prev = prev_point;
+
+           // around concave corners - insert rectangle
+           // if previous corner is concave it's point info may be ignored
+        if ( treat_as_concave) { 
+           std::vector<point_data<T> > pts;
+
+           pts.push_back(point_data<T>(second->x()+v.x(),second->y()+v.y()));
+           pts.push_back(*second);
+           pts.push_back(*first);
+           pts.push_back(point_data<T>(curr_prev));
+           if (first_pts.size()){
+              sizingSet.insert_vertex_sequence(pts.begin(),pts.end(), resize_wdir,false);
+           }else {
+               first_pts=pts;
+               first_wdir = resize_wdir;
+           }
+        } else {
+
+            // add either intersection_quad or pie_shape, based on corner_fill_arc option
+           // for convex corner (convexity depends on sign of resizing, whether we shrink or grow)
+           std::vector< std::vector<point_data<T> > > pts;
+           direction_1d winding;
+           winding = convex?COUNTERCLOCKWISE:CLOCKWISE;
+           if (make_resizing_vertex_list(pts, curr_prev, prev_concave, *first, *second, *third, resizing
+                                         , num_circle_segments, corner_fill_arc)) 
+           {
+               if (first_pts.size()) {
+                  for (int i=0; i<pts.size(); i++) {
+                    sizingSet.insert_vertex_sequence(pts[i].begin(),pts[i].end(),winding,false);
+                  }
+  
+               } else {
+                  first_pts = pts[0];
+                  first_wdir = resize_wdir;
+                  for (int i=1; i<pts.size(); i++) {
+                    sizingSet.insert_vertex_sequence(pts[i].begin(),pts[i].end(),winding,false);
+                  }
+               }
+               prev_point = curr_prev;
+          
+           } else {
+              treat_as_concave = true;
+           }
+        }
+
+        prev_concave = treat_as_concave;
+        first = second;
+        second = third;
+        ++third;
+        if(third == real_end) {
+          third = begin_points(poly);
+          if(*second == *third) {
+            ++third; //skip first point if it is duplicate of last point
+          }
+        }
+      } while(second != end);
+
+      // handle insertion of first point
+      if (!prev_concave) {
+          first_pts[first_pts.size()-1]=prev_point;
+      }
+      sizingSet.insert_vertex_sequence(first_pts.begin(),first_pts.end(),first_wdir,false);
+         
+      polygon_set_data<coordinate_type> tmp;
+
+      //insert original shape
+      tmp.insert(poly, false, polygon_concept());
+      if(resizing < 0 ^ hole) tmp -= sizingSet;
+      else tmp += sizingSet;
+      //tmp.clean();
+      insert(tmp, hole);
+      return (*this);
+    }
+
 
     inline polygon_set_data&
     interact(const polygon_set_data& that); 
@@ -426,12 +634,6 @@ namespace boost { namespace polygon{
   private:
     //functions
 
-    //TODO write trapezoidization function, object, concept and hook up
-    //template <typename output_container>
-    //void get_dispatch(output_container& output, rectangle_concept tag) {
-    //  clean();
-    //  get_rectangles(output, data_.begin(), data_.end(), orient_, tag);
-    //}
     template <typename output_container>
     void get_dispatch(output_container& output, polygon_concept tag) const {
       get_fracture(output, true, tag);
@@ -460,8 +662,132 @@ namespace boost { namespace polygon{
   struct geometry_concept<polygon_set_data<T> > {
     typedef polygon_set_concept type;
   };
-}
-}
+
+  template <typename  T>
+  inline double compute_area(point_data<T>& a, point_data<T>& b, point_data<T>& c) {
+
+     return (double)(b.x()-a.x())*(double)(c.y()-a.y())- (double)(c.x()-a.x())*(double)(b.y()-a.y());
+
+
+  }
+
+  template <typename  T>
+  inline int make_resizing_vertex_list(std::vector<std::vector<point_data< T> > >& return_points, 
+                       point_data<T>& curr_prev, bool ignore_prev_point,
+                       point_data< T> start, point_data<T> middle, point_data< T>  end,
+                       double sizing_distance, unsigned int num_circle_segments, bool corner_fill_arc) {
+
+      // handle the case of adding an intersection point
+      point_data<double> dn1( middle.y()-start.y(), start.x()-middle.x());
+      double size = sizing_distance/sqrt( dn1.x()*dn1.x()+dn1.y()*dn1.y());
+      dn1 = point_data<double>( dn1.x()*size, dn1.y()* size);
+      point_data<double> dn2( end.y()-middle.y(), middle.x()-end.x());
+      size = sizing_distance/sqrt( dn2.x()*dn2.x()+dn2.y()*dn2.y());
+      dn2 = point_data<double>( dn2.x()*size, dn2.y()* size);
+      point_data<double> start_offset((start.x()+dn1.x()),(start.y()+dn1.y()));
+      point_data<double> mid1_offset((middle.x()+dn1.x()),(middle.y()+dn1.y()));
+      point_data<double> end_offset((end.x()+dn2.x()),(end.y()+dn2.y()));
+      point_data<double> mid2_offset((middle.x()+dn2.x()),(middle.y()+dn2.y()));
+      if (ignore_prev_point)
+            curr_prev = round_down<T>(start_offset);
+
+
+      if (corner_fill_arc) {
+         std::vector<point_data< T> > return_points1;
+         return_points.push_back(return_points1);
+         std::vector<point_data< T> >& return_points_back = return_points[return_points.size()-1];
+         return_points_back.push_back(round_down<T>(mid1_offset));
+         return_points_back.push_back(middle);
+         return_points_back.push_back(start);
+         return_points_back.push_back(curr_prev);
+         point_data<double> dmid(middle.x(),middle.y());
+         return_points.push_back(return_points1);
+         int num = make_arc(return_points[return_points.size()-1],mid1_offset,mid2_offset,dmid,sizing_distance,num_circle_segments);
+         curr_prev = round_down<T>(mid2_offset);
+         return num;
+         
+      }
+
+      std::pair<point_data<double>,point_data<double> > he1(start_offset,mid1_offset);
+      std::pair<point_data<double>,point_data<double> > he2(mid2_offset ,end_offset);
+      typedef typename high_precision_type<double>::type high_precision;
+
+      point_data<T> intersect;
+      typename scanline_base<T>::compute_intersection_pack pack;
+      bool res = pack.compute_intersection(intersect,he1,he2,true);
+      if( res ) {
+         std::vector<point_data< T> > return_points1;
+         return_points.push_back(return_points1);
+         std::vector<point_data< T> >& return_points_back = return_points[return_points.size()-1];
+         return_points_back.push_back(intersect);
+         return_points_back.push_back(middle);
+         return_points_back.push_back(start);
+         return_points_back.push_back(curr_prev);
+
+         double d1= compute_area(intersect,middle,start);
+         double d2= compute_area(start,curr_prev,intersect);
+
+         curr_prev = intersect;
+
+
+         return return_points.size();
+      }
+      return 0;
+
+  }
+
+  // this routine should take in start and end point s.t. end point is CCW from start
+  // it sould make a pie slice polygon  that is an intersection of that arc
+  // with an ngon segments approximation of the circle centered at center with radius r
+  // point start is gauaranteed to be on the segmentation
+  // returnPoints will start with the first point after start
+  // returnPoints vector  may be empty
+  template <typename  T>
+  inline int  make_arc(std::vector<point_data< T> >& return_points,  
+                       point_data< double> start, point_data< double>  end,
+                       point_data< double> center,  double r, unsigned int num_circle_segments) {
+      const double our_pi=3.1415926535897932384626433832795028841971;
+
+      // derive start and end angles 
+      double ps = atan2(start.y()-center.y(), start.x()-center.x());
+      double pe = atan2(end.y()-center.y(), end.x()-center.x());
+      if (ps <  0.0) 
+         ps += 2.0 * our_pi;
+      if (pe <= 0.0) 
+         pe += 2.0 * our_pi;
+      if (ps >= 2.0 * M_PI) 
+         ps -= 2.0 * our_pi;
+      while (pe <= ps)  
+         pe += 2.0 * our_pi;
+      double delta_angle = (2.0 * our_pi) / (double)num_circle_segments;
+      if ( start==end) // full circle?
+      {
+          ps = delta_angle*0.5;
+          pe = ps + our_pi * 2.0;
+          double x,y;
+          x =  center.x() + r * cos(ps);
+          y = center.y() + r * sin(ps);
+          start = point_data<double>(x,y);
+          end = start;
+      }
+      return_points.push_back(round_down<T>(center));
+      return_points.push_back(round_down<T>(start));
+      int i=0;
+      double curr_angle = ps+delta_angle;
+      while( curr_angle < pe - 0.01 && i < 2 * num_circle_segments) {
+         i++;
+         double x = center.x() + r * cos( curr_angle);
+         double y = center.y() + r * sin( curr_angle);
+         return_points.push_back( round_down<T>((point_data<double>(x,y))));
+         curr_angle+=delta_angle;
+      }
+      return_points.push_back(round_down<T>(end));
+      return return_points.size();
+  }
+
+}// close namespace
+}// close name space
+
 #include "detail/scan_arbitrary.hpp"
 
 namespace boost { namespace polygon {

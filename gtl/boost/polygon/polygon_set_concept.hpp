@@ -148,6 +148,36 @@ namespace boost { namespace polygon{
     return retval;
   }
 
+  // TODO: Dafna add ngon parameter passing
+  template <typename polygon_set_type, typename coord_type>
+  typename enable_if< typename is_mutable_polygon_set_type<polygon_set_type>::type,
+                       polygon_set_type>::type &
+  resize(polygon_set_type& polygon_set, coord_type resizing, bool corner_fill_arcs = false, int ngon=0) {
+    typedef typename polygon_set_traits<polygon_set_type>::coordinate_type Unit;
+    clean(polygon_set);
+    polygon_set_data<Unit> ps;
+    assign(ps, polygon_set);
+    ps.resize(resizing, corner_fill_arcs,ngon);
+    assign(polygon_set, ps);
+    return polygon_set;
+  }
+
+  template <typename polygon_set_type>
+  typename enable_if< typename is_mutable_polygon_set_type<polygon_set_type>::type,
+                       polygon_set_type>::type &
+  bloat(polygon_set_type& polygon_set,
+        typename coordinate_traits<typename polygon_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
+    return resize(polygon_set, bloating);
+  }
+
+  template <typename polygon_set_type>
+  typename enable_if< typename is_mutable_polygon_set_type<polygon_set_type>::type,
+                       polygon_set_type>::type &
+  shrink(polygon_set_type& polygon_set,
+        typename coordinate_traits<typename polygon_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type shrinking) {
+    return resize(polygon_set, -(typename polygon_set_traits<polygon_set_type>::coordinate_type)shrinking);
+  }
+
   //interact
   template <typename polygon_set_type_1, typename polygon_set_type_2>
   typename enable_if< typename gtl_and_3 < 
@@ -385,6 +415,56 @@ namespace boost { namespace polygon{
   operator-=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, 3>(lvalue, rvalue);
   }
+
+  // TODO: Dafna, test these four resizing operators
+  struct y_ps_rpe : gtl_yes {};
+
+  template <typename geometry_type_1, typename coordinate_type_1>
+  typename enable_if< typename gtl_and_3< y_ps_rpe, typename is_mutable_polygon_set_type<geometry_type_1>::type,
+                                         typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type,
+                                                                coordinate_concept>::type>::type,
+                       geometry_type_1>::type &
+  operator+=(geometry_type_1& lvalue, coordinate_type_1 rvalue) {
+    return resize(lvalue, rvalue);
+  }
+
+  struct y_ps_rme : gtl_yes {};
+
+  template <typename geometry_type_1, typename coordinate_type_1>
+  typename enable_if< typename gtl_and_3<y_ps_rme, typename gtl_if<typename is_mutable_polygon_set_type<geometry_type_1>::type>::type,
+                                         typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type,
+                                                                coordinate_concept>::type>::type,
+                       geometry_type_1>::type &
+  operator-=(geometry_type_1& lvalue, coordinate_type_1 rvalue) {
+    return resize(lvalue, -rvalue);
+  }
+
+  struct y_ps_rp : gtl_yes {};
+
+  template <typename geometry_type_1, typename coordinate_type_1>
+  typename enable_if< typename gtl_and_3<y_ps_rp, typename gtl_if<typename is_mutable_polygon_set_type<geometry_type_1>::type>::type,
+                                        typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type,
+                                                               coordinate_concept>::type>
+  ::type, geometry_type_1>::type
+  operator+(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
+    geometry_type_1 retval(lvalue);
+    retval += rvalue;
+    return retval;
+  }
+
+  struct y_ps_rm : gtl_yes {};
+
+  template <typename geometry_type_1, typename coordinate_type_1>
+  typename enable_if< typename gtl_and_3<y_ps_rm, typename gtl_if<typename is_mutable_polygon_set_type<geometry_type_1>::type>::type,
+                                        typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type,
+                                                               coordinate_concept>::type>
+  ::type, geometry_type_1>::type
+  operator-(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
+    geometry_type_1 retval(lvalue);
+    retval -= rvalue;
+    return retval;
+  }
+
 
   } //end operators namespace
 

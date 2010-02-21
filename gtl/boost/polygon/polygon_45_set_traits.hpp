@@ -96,6 +96,7 @@ namespace boost { namespace polygon{
       polygon_45_set_data<typename polygon_45_set_traits<std::list<T> >::coordinate_type> ps;
       ps.insert(input_begin, input_end);
       ps.sort();
+      ps.clean();
       get_45_polygons_T(polygon_set, ps.begin(), ps.end());
     }
   };
@@ -107,6 +108,7 @@ namespace boost { namespace polygon{
       polygon_45_set_data<typename polygon_45_set_traits<std::list<T> >::coordinate_type> ps;
       ps.insert(input_begin, input_end);
       ps.sort();
+      ps.clean();
       get_45_polygons_T(polygon_set, ps.begin(), ps.end());
     }
   };

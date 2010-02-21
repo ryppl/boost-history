@@ -748,6 +748,7 @@ namespace boost { namespace polygon{
     for(typename std::list<polygon_45_with_holes_data<Unit> >::iterator itr = pl.begin(); itr != pl.end(); ++itr) {
       insert_with_resize(*itr, resizing, rounding, corner);
     }
+    clean();
     //perterb 45 edges to prevent non-integer intersection errors upon boolean op
     //snap();
     return *this;
@@ -1133,6 +1134,8 @@ namespace boost { namespace polygon{
     else tmp += sizingSet;
     tmp.clean();
     insert(tmp, hole);
+    dirty_ = true;
+    unsorted_ = true;
     return (*this);
   }
 
