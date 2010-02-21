@@ -22,9 +22,26 @@
 <div class="spirit-nav">
 <a accesskey="p" href="reference.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="examples_.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="tokenmap.performance_"></a><a class="link" href="performance_.html" title="Performance">Performance </a>
-</h2></div></div></div></div>
+</h2></div></div></div>
+<p>
+      (this section requires far more work)
+    </p>
+<p>
+      Below is a comparison of insertions and lookups, compiled with gcc 4.4.1:
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">token</span><span class="special">,</span> <span class="identifier">session</span><span class="special">*&gt;</span> <span class="identifier">map_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">tokenmap</span><span class="special">&lt;</span><span class="identifier">session</span><span class="special">,</span> <span class="identifier">uint32_t</span><span class="special">&gt;</span> <span class="identifier">token_type</span><span class="special">;</span>
+
+<span class="identifier">tokenmap</span> <span class="identifier">insert</span><span class="special">:</span> <span class="number">0.107066</span> <span class="identifier">usecs</span> <span class="identifier">per</span> <span class="identifier">op</span>
+<span class="identifier">stdmap</span> <span class="identifier">insert</span><span class="special">:</span> <span class="number">0.693195</span> <span class="identifier">usecs</span> <span class="identifier">per</span> <span class="identifier">op</span>
+
+<span class="identifier">tokenmap</span> <span class="identifier">find</span><span class="special">:</span> <span class="number">0.011401</span> <span class="identifier">usecs</span> <span class="identifier">per</span> <span class="identifier">op</span>
+<span class="identifier">stdmap</span> <span class="identifier">find</span><span class="special">:</span> <span class="number">0.344964</span> <span class="identifier">usecs</span> <span class="identifier">per</span> <span class="identifier">op</span>
+</pre>
+</div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
 <td align="right"><div class="copyright-footer">Copyright &#169; 2009 Slawomir Lisznianski<p>

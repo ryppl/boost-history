@@ -216,15 +216,45 @@ Finally, we can remove the element:
 [endsect]
 
 [section Performance ]
+
+(this section requires far more work)
+
+Below is a comparison of insertions and lookups, compiled with gcc 4.4.1: 
+
+    typedef map<token, session*> map_type;
+    typedef tokenmap<session, uint32_t> token_type;
+
+    tokenmap insert: 0.107066 usecs per op
+    stdmap insert: 0.693195 usecs per op
+
+    tokenmap find: 0.011401 usecs per op
+    stdmap find: 0.344964 usecs per op
+
 [endsect]
 
 [section Examples ]
+
+In the folder [@../../example libs/tokenmap/example] you can find all the examples
+used in tokenmap documentation. Here is a list of them:
+
+[table Tutorial examples
+[[Program                          ][Description                          ]]
+
+[[[@../../example/simple_tokenmap.cpp
+    simple_tokenmap.cpp                                                   ]]
+    [Basic operations example                                             ]]
+]
+
 [endsect]
 
 [section Rationale ]
-[endsect]
 
-[section Future Work ]
+Network applications often require keeping track of sessions where a "session key" is 
+exchanged between a server and a client. The server then keeps track of the client's 
+state by having the session key mapped to an in-memory "session object". 
+Today, developers often use `std::map` for this purpose, which has sub-optimal 
+performance and requires users to come up with sufficiently hard to guess random keys.
+
 [endsect]
 
 [section Acknowledgements ]
