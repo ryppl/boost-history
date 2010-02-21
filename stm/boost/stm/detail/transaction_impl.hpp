@@ -1322,7 +1322,7 @@ inline void boost::stm::transaction::deferred_abort
    wbloom().clear();
 #endif
 
-   if (alreadyRemovedFromInFlight)
+   if (!alreadyRemovedFromInFlight)
    {
       lock_inflight_access();
       // if I'm the last transaction of this thread, reset abort to false
@@ -1871,6 +1871,31 @@ inline void boost::stm::transaction::doIntervalDeletions()
       // so exit, since no other deletions will succeed
       else break;
    }
+
+//----------------------------------------------------------------------------
+// TODO: Vicente, do you know what the below code is used for?
+//----------------------------------------------------------------------------
+#if 0
+
+   for (UnsafeDeletionBuffer::iterator i = unsafeDeletionBuffer_.begin(); 
+        i != unsafeDeletionBuffer_.end();)
+   {
+      if (earliestInFlightTx > i->first)
+      {
+         for (UnsafeMemoryContainerList::iterator j = i->second.begin(); j != i->second.end(); ++j)
+         {
+            free(j);
+         }
+         unsafeDeletionBuffer_.erase(i);
+         i = unsafeDeletionBuffer_.begin();
+      }
+      // getting to the else means there is an inflight
+      // tx that is older than the first entry to delete,
+      // so exit, since no other deletions will succeed
+      else break;
+   }
+#endif
+
 }
 
 //----------------------------------------------------------------------------
