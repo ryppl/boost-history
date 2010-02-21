@@ -275,17 +275,21 @@ project
             ########### fails sometimes
             #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52
             [ run stm : -bench linkedlist -def -threads 4 -inserts 100 : : : linkedlist_def_t4_i100 ]
-    ;
 
-    alias failures
-        :
+            ########### fails sometimes
+            [ run stm : -bench tx_linear_lock -def -threads 2 -inserts 100 -latm tx : : : tx_linear_lock_def_tx_t2_i100 ]
+
             ########### fails sometimes
             [ run stm : -bench ll -dir -threads 4 -inserts 100 -latm tx : : : ll_dir_t4_tx_i100 ]
 
             ########### fails sometimes 19:00 091107
             [ run stm : -bench ll -dir -threads 2 -inserts 100 -latm tx : : : ll_dir_t2_tx_i100 ]
 
-            ########### fails sometimes
+    ;
+
+    alias failures
+        :
+            ########### fails often
             [ run stm : -bench ll -def -threads 2 -inserts 100 -latm tx : : : ll_def_tx_t2_i100 ]
 
             ########### fails with CHECK  all-modes
@@ -305,14 +309,10 @@ project
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
             [ run stm : -bench ll -def -threads 2 -inserts 100 -latm full : : : ll_def_full_t2_i100 ]
 
-
             ########### fails all-modes
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
             #   19469 [sig] tx_linear_lock_def_t2 3768 _cygtls::handle_exceptions: Error while dumping state (probably corrupted stack)
             [ run stm : -bench tx_linear_lock -def -threads 2 -inserts 100 -latm full : : : tx_linear_lock_def_full_t2_i100 ]
-
-            ########### fails
-            [ run stm : -bench tx_linear_lock -def -threads 2 -inserts 100 -latm tx : : : tx_linear_lock_def_tx_t2_i100 ]
 
             ###########  fails all-modes
             # /bin/sh: line 4:  3660 Segmentation fault      (core dumped) "bin/isolated_composed_int_lock_def_t2.test/gcc-3.4.4/debug/threading-multi/isolated_composed_int_lock_def_t2.exe" > "bin/isolated_composed_int_lock_def_t2.test/gcc-3.4.4/debug/threading-multi/isolated_composed_int_lock_def_t2.output" 2>&1

@@ -26,6 +26,13 @@ using namespace boost;
 stm::tx::int_t counter(0);
 stm::tx::int_t counter2(0);
 
+void reset() {
+
+    BOOST_STM_OUTER_TRANSACTION(_) {
+        counter=0;
+    } BOOST_STM_RETRY
+}
+
 void inc() {
     stm::thread_initializer thi;
 
@@ -48,7 +55,6 @@ void decr() {
     } BOOST_STM_RETRY
 }
 bool check(int val) {
-    //thread_initializer thi;
     BOOST_STM_TRANSACTION(_) {
         BOOST_STM_TX_RETURN(_, (counter==val));
     } BOOST_STM_RETRY
@@ -56,7 +62,7 @@ bool check(int val) {
 }
 
 bool test_equal() {
-    //thread_initializer thi;
+    reset();
     BOOST_STM_TRANSACTION(_) {
         counter=1;
         counter2=2;
@@ -72,7 +78,7 @@ bool test_equal() {
 }
 
 bool test_diff() {
-    //thread_initializer thi;
+    reset();
     BOOST_STM_TRANSACTION(_) {
         counter=1;
         counter2=2;
@@ -87,7 +93,7 @@ bool test_diff() {
 }
 
 bool test_assign() {
-    //thread_initializer thi;
+    reset();
     for(int i=0; i<2;++i) {
     BOOST_STM_TRANSACTION_IN_LOOP(_) {
         counter=1;
@@ -97,14 +103,13 @@ bool test_assign() {
     } BOOST_STM_END_TRANSACTION_IN_LOOP(_)
     }
     BOOST_STM_TRANSACTION(_) {
-        //assert((counter==1) && (counter2==1) && (counter==counter2));
         BOOST_STM_TX_RETURN(_, (counter==1) && (counter2==1) && (counter==counter2)) ;
     } BOOST_STM_RETRY
     return false;
 }
 
 bool test_less() {
-    //thread_initializer thi;
+    reset();
     for(;;) {
     BOOST_STM_TRANSACTION_IN_LOOP(_) {
         counter=1;
@@ -119,8 +124,74 @@ bool test_less() {
     return false;
 }
 
-bool test_throw_e() {
-    //thread_initializer thi;
+bool test_outer_throw() {
+    reset();
+    BOOST_STM_TRANSACTION(_) {
+        counter=0;
+    } BOOST_STM_END_TRANSACTION(_)
+
+    try{
+        BOOST_STM_TRANSACTION(_) {
+            counter=1;
+            throw 1;
+        } BOOST_STM_END_TRANSACTION(_)
+    } catch (...) {}
+
+    BOOST_STM_TRANSACTION(_) {
+        BOOST_STM_TX_RETURN(_,  (counter==0));
+    } BOOST_STM_END_TRANSACTION(_)
+
+    return true;
+}
+bool test_outer_throw_e() {
+    reset();
+    BOOST_STM_E_TRANSACTION(_) {
+        counter=0;
+    } BOOST_STM_E_END_TRANSACTION(_)
+
+    try{
+        BOOST_STM_E_TRANSACTION(_) {
+            counter=1;
+            throw 1;
+        } BOOST_STM_E_END_TRANSACTION(_)
+    } catch (...) {}
+
+    BOOST_STM_E_TRANSACTION(_) {
+        BOOST_STM_E_RETURN(_,  (counter==0));
+    } BOOST_STM_E_END_TRANSACTION(_)
+
+    return true;
+}
+
+
+
+bool test_inner_throw() {
+    reset();
+    BOOST_STM_E_TRANSACTION(_) {
+        counter=0; counter2=0;
+    } BOOST_STM_E_END_TRANSACTION(_)
+
+    try{
+        BOOST_STM_TRANSACTION(_) {
+            counter=1;
+            BOOST_STM_TRANSACTION(__) {
+                throw 1;
+            } BOOST_STM_END_TRANSACTION(_)
+            catch (...){throw;}
+            counter=3;
+        } BOOST_STM_END_TRANSACTION(_)
+    } catch (...) {}
+    bool res=false;
+    BOOST_STM_TRANSACTION(_) {
+        //~ res=(counter==0) && (counter2==0);
+        BOOST_STM_TX_RETURN(_,  (counter==0) && (counter2==0));
+    } BOOST_STM_END_TRANSACTION(_)
+
+    return res;
+}
+
+bool test_inner_throw_e() {
+    reset();
     BOOST_STM_E_TRANSACTION(_) {
         counter=0; counter2=0;
     } BOOST_STM_E_END_TRANSACTION(_)
@@ -128,33 +199,46 @@ bool test_throw_e() {
     try{
         BOOST_STM_E_TRANSACTION(_) {
             counter=1;
-            // BUG /bin/sh: line 4:  4428 Aborted                 (core dumped) "../../../bin.v2/libs/stm/test/numeric.test/gcc-3.4.4/debug/threading-multi/numeric.exe" > "../../../bin.v2/libs/stm/test/numeric.test/gcc-3.4.4/debug/threading-multi/numeric.output" 2>&1
-            //~ BOOST_STM_E_TRANSACTION(_) {
-                //~ counter=2;
+            BOOST_STM_E_TRANSACTION(_) {
+                counter=2;
                 throw 1;
-            //~ } BOOST_STM_E_END_TRANSACTION(_)
-            counter2=3;
+            } BOOST_STM_E_END_TRANSACTION(_)
+            counter=3;
         } BOOST_STM_E_END_TRANSACTION(_)
     } catch (...) {}
 
     BOOST_STM_E_TRANSACTION(_) {
-        BOOST_STM_E_RETURN(_,  (counter==0) && (counter2==0));
+        BOOST_STM_E_RETURN(_,  (counter==0) );
     } BOOST_STM_E_END_TRANSACTION(_)
 
     return false;
 }
 
+bool test_nested_e() {
+    reset();
+    BOOST_STM_E_TRANSACTION(_) {
+        counter=1; 
+        BOOST_STM_E_TRANSACTION(_) {
+            counter2=2;
+        } BOOST_STM_E_END_TRANSACTION(_)
+    } BOOST_STM_E_END_TRANSACTION(_)
+
+    BOOST_STM_E_TRANSACTION(_) {
+        BOOST_STM_E_RETURN(_,  (counter==1) && (counter2==2));
+    } BOOST_STM_E_END_TRANSACTION(_)
+
+    return false;
+}
 
 bool test_assign_e() {
-    //thread_initializer thi;
-    for(int i=0; i<2;++i)
-    {
-    BOOST_STM_E_TRANSACTION_IN_LOOP(_) {
-        counter=1;
-        counter2=counter;
-        continue;
-        counter2=3;
-    } BOOST_STM_E_END_TRANSACTION_IN_LOOP(_)
+    reset();
+    for(int i=0; i<2;++i) {
+        BOOST_STM_E_TRANSACTION_IN_LOOP(_) {
+            counter=1;
+            counter2=counter;
+            continue;
+            counter2=3;
+        } BOOST_STM_E_END_TRANSACTION_IN_LOOP(_)
     }
     BOOST_STM_E_TRANSACTION(_) {
         BOOST_STM_E_RETURN(_,  (counter==1) && (counter2==1) && (counter==counter2)) ;
@@ -164,49 +248,45 @@ bool test_assign_e() {
 }
 
 bool test_less_e() {
-    //thread_initializer thi;
-    for(;;)
-    {
-    BOOST_STM_E_TRANSACTION_IN_LOOP(_)
-    {
-        counter=1;
-        counter2=2;
-        break;
-        counter2=0;
-    } BOOST_STM_E_END_TRANSACTION_IN_LOOP(_)
+    reset();
+    for(;;) {
+        BOOST_STM_E_TRANSACTION_IN_LOOP(_) {
+            counter=1;
+            counter2=2;
+            break;
+            counter2=0;
+        } BOOST_STM_E_END_TRANSACTION_IN_LOOP(_)
     }
-    BOOST_STM_E_TRANSACTION(_)
-    {
+    BOOST_STM_E_TRANSACTION(_) {
         BOOST_STM_E_RETURN(_,  counter<counter2);
     } BOOST_STM_E_END_TRANSACTION(_)
     return false;
 }
 
 bool test_le() {
-    //thread_initializer thi;
+    reset();
     BOOST_STM_TRANSACTION(_) {
         counter=1;
         counter2=1;
     } BOOST_STM_RETRY
     BOOST_STM_TRANSACTION(_) {
-        //assert(counter<=counter2);
         BOOST_STM_TX_RETURN(_, (counter<=counter2)) ;
     } BOOST_STM_RETRY
     return false;
 }
 
 bool test_const(stm::tx::numeric<int> const& c) {
-    //thread_initializer thi;
+    reset();
     BOOST_STM_TRANSACTION(_) {
         counter2=c;
     } BOOST_STM_RETRY
     BOOST_STM_E_TRANSACTION(_) {
-        //assert(c==counter2);
         BOOST_STM_E_RETURN(_, c==counter2) ;
     } BOOST_STM_E_END_TRANSACTION(_)
     return false;
 }
 bool test_par() {
+    reset();
     thread  th1(inc);
     thread  th2(decr);
     thread  th3(inc1);
@@ -220,19 +300,47 @@ bool test_par() {
     return check(2);
 }
 
+bool test_twice() {
+    BOOST_STM_TRANSACTION(_) {
+        BOOST_STM_TRANSACTION(_) {
+        } BOOST_STM_END_TRANSACTION(_)
+    } BOOST_STM_END_TRANSACTION(_)
+
+    return true;
+}
+
+bool test_twice_e() {
+    BOOST_STM_E_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION(_) {
+        } BOOST_STM_E_END_TRANSACTION(_)
+    } BOOST_STM_E_END_TRANSACTION(_)
+
+    return true;
+}
+
 int test_all() {
     int fails=0;
 
-    fails += !test_par();
+    //~ fails += !test_twice();
+    //~ fails += !test_twice();
+    //~ fails += !test_twice_e();
+    //~ fails += !test_twice_e();
+    fails += !test_inner_throw_e();
+    fails += !test_outer_throw();
+    fails += !test_outer_throw_e();
+
     fails += !test_equal();
     fails += !test_diff();
     fails += !test_assign();
-    fails += !test_less();
     fails += !test_assign_e();
+    fails += !test_less();
     fails += !test_less_e();
-    fails += !test_throw_e();
+    fails += !test_nested_e();
     fails += !test_le();
     fails += !test_const(counter);
+    
+    fails += !test_par();
+    
     return fails;
 }
 

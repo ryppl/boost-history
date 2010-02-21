@@ -177,7 +177,6 @@ void create() {
 }
 bool check_size(std::size_t val) {
     BOOST_STM_E_TRANSACTION(_) {
-    //~ std::cout<< __FILE__<<"["<<__LINE__<<"]"<<std::endl;        
         BOOST_STM_E_RETURN(_,  (l.size()==val));
     } BOOST_STM_E_END_TRANSACTION(_)
     return false;
@@ -190,10 +189,9 @@ bool check_lookup(int val) {
     return false;
 }
 
-bool insert1() {
+bool insert(int val) {
     //thread_initializer thi;
     BOOST_STM_TRANSACTION(_) {
-        int val = 10;
         l.insert(val);
     }  BOOST_STM_RETRY
     return check_size(1);
@@ -210,20 +208,21 @@ void insert2_th() {
         l.insert(2);
     } BOOST_STM_RETRY
 }
-
-void remove2() {
-    //thread_initializer thi;
-    BOOST_STM_TRANSACTION(_) {
-        l.remove(2);
-    } BOOST_STM_RETRY
-}
-
 void insert3_th() {
     thread_initializer thi;
     BOOST_STM_OUTER_TRANSACTION(_) {
         l.insert(3);
     } BOOST_STM_RETRY
 }
+
+bool remove(int val) {
+    //thread_initializer thi;
+    BOOST_STM_TRANSACTION(_) {
+        l.remove(val);
+    } BOOST_STM_RETRY
+    return true;
+}
+
 bool n1() {
     BOOST_STM_TRANSACTION(_) {
         int val = 10;
@@ -258,15 +257,8 @@ bool n3() {
     return false;
 }
 
-int test_all() {
-
-    //create();
+bool test_par() {
     bool fails=false;
-    fails= fails || !n1();
-    fails= fails || !n2();
-    fails= fails || !n3();
-    fails= fails || !check_size(0);
-    //~ fails= fails || !insert1();
     thread  th1(insert1_th);
     thread  th2(insert2_th);
     thread  th3(insert2_th);
@@ -280,11 +272,31 @@ int test_all() {
     fails= fails || !check_lookup(2);
     fails= fails || !check_lookup(3);
     fails= fails || !check_size(3);
-    remove2();
+    fails= fails || !remove(2);
     fails= fails || !check_lookup(1);
     fails= fails || check_lookup(2);
     fails= fails || !check_lookup(3);
     fails= fails || !check_size(2);
+    
+    return !fails;
+}
+
+int test_all() {
+
+    //create();
+    bool fails=false;
+    fails= fails || !n1();
+    fails= fails || !n2();
+    fails= fails || !n3();
+    fails= fails || !check_size(0);
+    fails= fails || !insert(1);
+    fails= fails || !remove(1);
+    fails= fails || !check_size(0);
+    fails= fails || !remove(2);
+    fails= fails || !check_size(0);
+    
+    fails= fails || !test_par();
+    
     return fails;
 }
 
