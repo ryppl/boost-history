@@ -7,8 +7,10 @@
 */
 #define BOOST_POLYGON_NO_DEPS
 #include <iostream>
+#define BOOST_VERY_LITTLE_SFINAE
 //#include <boost/polygon/polygon.hpp>
 #include "polygon.hpp"
+//#include "ac_int_override.hpp"
 namespace gtl = boost::polygon;
 using namespace boost::polygon::operators;
 #include <time.h>
@@ -16,11 +18,11 @@ using namespace boost::polygon::operators;
 
 namespace boost { namespace polygon{
 
-template <class T>
-std::ostream& operator << (std::ostream& o, const interval_data<T>& i)
-{
-  return o << i.get(LOW) << ' ' << i.get(HIGH);
-}
+  template <class T>
+  std::ostream& operator << (std::ostream& o, const interval_data<T>& i)
+  {
+    return o << i.get(LOW) << ' ' << i.get(HIGH);
+  }
   template <class T>
   std::ostream& operator << (std::ostream& o, const point_data<T>& r)
   {
@@ -58,53 +60,53 @@ std::ostream& operator << (std::ostream& o, const interval_data<T>& i)
     //TODO
     return i;
   }
-template <typename T>
-std::ostream& operator << (std::ostream& o, const polygon_90_data<T>& r)
-{
-  o << "Polygon { ";
-  for(typename polygon_90_data<T>::iterator_type itr = r.begin(); itr != r.end(); ++itr) {
-    o << *itr << ", ";
+  template <typename T>
+  std::ostream& operator << (std::ostream& o, const polygon_90_data<T>& r)
+  {
+    o << "Polygon { ";
+    for(typename polygon_90_data<T>::iterator_type itr = r.begin(); itr != r.end(); ++itr) {
+      o << *itr << ", ";
+    }
+    return o << "} ";
   }
-  return o << "} ";
-}
 
-template <typename T>
-std::istream& operator >> (std::istream& i, polygon_90_data<T>& r)
-{
-  std::size_t size;
-  i >> size; 
-  std::vector<T> vec;
-  vec.reserve(size);
-  for(std::size_t ii = 0; ii < size; ++ii) {
-    T coord;
-    i >> coord;
-    vec.push_back(coord);
+  template <typename T>
+  std::istream& operator >> (std::istream& i, polygon_90_data<T>& r)
+  {
+    std::size_t size;
+    i >> size; 
+    std::vector<T> vec;
+    vec.reserve(size);
+    for(std::size_t ii = 0; ii < size; ++ii) {
+      T coord;
+      i >> coord;
+      vec.push_back(coord);
+    }
+    r.set_compact(vec.begin(), vec.end());
+    return i;
   }
-  r.set_compact(vec.begin(), vec.end());
-  return i;
-}
   
-template <typename T>
-std::ostream& operator << (std::ostream& o, const std::vector<polygon_90_data<T> >& r) {
-  o << r.size() << ' ';
-  for(std::size_t ii = 0; ii < r.size(); ++ii) {
-    o << (r[ii]); 
+  template <typename T>
+  std::ostream& operator << (std::ostream& o, const std::vector<polygon_90_data<T> >& r) {
+    o << r.size() << ' ';
+    for(std::size_t ii = 0; ii < r.size(); ++ii) {
+      o << (r[ii]); 
+    }
+    return o;
   }
-  return o;
-}
-template <typename T>
-std::istream& operator >> (std::istream& i, std::vector<polygon_90_data<T> >& r) {
-  std::size_t size;
-  i >> size;
-  r.clear();
-  r.reserve(size);
-  for(std::size_t ii = 0; ii < size; ++ii) {
-    polygon_90_data<T> tmp;
-    i >> tmp;
-    r.push_back(tmp);
+  template <typename T>
+  std::istream& operator >> (std::istream& i, std::vector<polygon_90_data<T> >& r) {
+    std::size_t size;
+    i >> size;
+    r.clear();
+    r.reserve(size);
+    for(std::size_t ii = 0; ii < size; ++ii) {
+      polygon_90_data<T> tmp;
+      i >> tmp;
+      r.push_back(tmp);
+    }
+    return i;
   }
-  return i;
-}
   template <typename T>
   std::ostream& operator<<(std::ostream& o, const polygon_data<T>& poly) {
     o << "Polygon { ";
@@ -171,11 +173,11 @@ std::istream& operator >> (std::istream& i, std::vector<polygon_90_data<T> >& r)
     o << " } } ";
     return o;
   }
-template <class T>
-std::ostream& operator << (std::ostream& o, const rectangle_data<T>& r)
-{
-  return o << r.get(HORIZONTAL) << ' ' << r.get(VERTICAL);
-}
+  template <class T>
+  std::ostream& operator << (std::ostream& o, const rectangle_data<T>& r)
+  {
+    return o << r.get(HORIZONTAL) << ' ' << r.get(VERTICAL);
+  }
 
 
   template <typename T>
@@ -184,130 +186,130 @@ std::ostream& operator << (std::ostream& o, const rectangle_data<T>& r)
   template <typename T>
   typename enable_if<typename is_mutable_polygon_90_set_type<T>::type, void>::type
   print_is_mutable_polygon_90_set_concept(const T& ) { std::cout << "is mutable polygon 90 set concept\n"; }
-namespace boolean_op {
-  //self contained unit test for BooleanOr algorithm
-  template <typename Unit>
-  inline bool testBooleanOr() {
-    BooleanOp<int, Unit> booleanOr;
-    //test one rectangle
-    std::vector<std::pair<interval_data<Unit>, int> > container;
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
-    if(container.size() != 2) { 
-      std::cout << "Test one rectangle, wrong output size\n";
-      return false;
-    }
-    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
-      std::cout << "Test one rectangle, first output wrong: Interval(" <<
-        container[0].first << "), " << container[0].second << std::endl;
-    }
-    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
-      std::cout << "Test one rectangle, second output wrong: Interval(" <<
-        container[1].first << "), " << container[1].second << std::endl;
-    }
-
-    //test two rectangles
-    container.clear();
-    booleanOr = BooleanOp<int, Unit>();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(5, 15), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(5, 15), -1);
-    if(container.size() != 4) {
-      std::cout << "Test two rectangles, wrong output size\n";
-      for(std::size_t i = 0; i < container.size(); ++i){
-              std::cout << container[i].first << "), " << container[i].second << std::endl;
+  namespace boolean_op {
+    //self contained unit test for BooleanOr algorithm
+    template <typename Unit>
+    inline bool testBooleanOr() {
+      BooleanOp<int, Unit> booleanOr;
+      //test one rectangle
+      std::vector<std::pair<interval_data<Unit>, int> > container;
+      booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
+      booleanOr.advanceScan();
+      booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
+      if(container.size() != 2) { 
+        std::cout << "Test one rectangle, wrong output size\n";
+        return false;
       }
-      return false;
-    }
-    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
-            std::cout << "Test two rectangles, first output wrong: Interval(" <<
-        container[0].first << "), " << container[0].second << std::endl;
-    }
-    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(10, 15), 1)) {
-            std::cout << "Test two rectangles, second output wrong: Interval(" <<
-        container[1].first << "), " << container[1].second << std::endl;
-    }
-    if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 5), -1)) {
-            std::cout << "Test two rectangles, third output wrong: Interval(" <<
-        container[2].first << "), " << container[2].second << std::endl;
-    }
-    if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(5, 15), -1)) {
-            std::cout << "Test two rectangles, fourth output wrong: Interval(" <<
-        container[3].first << "), " << container[3].second << std::endl;
-    }
-
-    //test two rectangles
-    container.clear();
-    booleanOr = BooleanOp<int, Unit>();
-    booleanOr.processInterval(container, interval_data<Unit>(5, 15), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(5, 15), -1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
-    if(container.size() != 4) {
-            std::cout << "Test other two rectangles, wrong output size\n";
-      for(std::size_t i = 0; i < container.size(); ++i){
-              std::cout << container[i].first << "), " << container[i].second << std::endl;
+      if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
+        std::cout << "Test one rectangle, first output wrong: Interval(" <<
+          container[0].first << "), " << container[0].second << std::endl;
       }
-      return false;
-    }
-    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(5, 15), 1)) {
-            std::cout << "Test other two rectangles, first output wrong: Interval(" <<
-        container[0].first << "), " << container[0].second << std::endl;
-    }
-    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 5), 1)) {
-            std::cout << "Test other two rectangles, second output wrong: Interval(" <<
-        container[1].first << "), " << container[1].second << std::endl;
-    }
-    if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(10, 15), -1)) {
-            std::cout << "Test other two rectangles, third output wrong: Interval(" <<
-        container[2].first << "), " << container[2].second << std::endl;
-    }
-    if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
-            std::cout << "Test other two rectangles, fourth output wrong: Interval(" <<
-        container[3].first << "), " << container[3].second << std::endl;
-    }
+      if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
+        std::cout << "Test one rectangle, second output wrong: Interval(" <<
+          container[1].first << "), " << container[1].second << std::endl;
+      }
 
-    //test two nonoverlapping rectangles
-    container.clear();
-    booleanOr = BooleanOp<int, Unit>();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(15, 25), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(15, 25), -1);
-    if(container.size() != 4) {
-            std::cout << "Test two nonoverlapping rectangles, wrong output size\n";
-      return false;
+      //test two rectangles
+      container.clear();
+      booleanOr = BooleanOp<int, Unit>();
+      booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
+      booleanOr.advanceScan();
+      booleanOr.processInterval(container, interval_data<Unit>(5, 15), 1);
+      booleanOr.advanceScan();
+      booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
+      booleanOr.advanceScan();
+      booleanOr.processInterval(container, interval_data<Unit>(5, 15), -1);
+      if(container.size() != 4) {
+        std::cout << "Test two rectangles, wrong output size\n";
+        for(std::size_t i = 0; i < container.size(); ++i){
+          std::cout << container[i].first << "), " << container[i].second << std::endl;
+        }
+        return false;
+      }
+      if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
+        std::cout << "Test two rectangles, first output wrong: Interval(" <<
+          container[0].first << "), " << container[0].second << std::endl;
+      }
+      if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(10, 15), 1)) {
+        std::cout << "Test two rectangles, second output wrong: Interval(" <<
+          container[1].first << "), " << container[1].second << std::endl;
+      }
+      if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 5), -1)) {
+        std::cout << "Test two rectangles, third output wrong: Interval(" <<
+          container[2].first << "), " << container[2].second << std::endl;
+      }
+      if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(5, 15), -1)) {
+        std::cout << "Test two rectangles, fourth output wrong: Interval(" <<
+          container[3].first << "), " << container[3].second << std::endl;
+      }
+
+      //test two rectangles
+      container.clear();
+      booleanOr = BooleanOp<int, Unit>();
+      booleanOr.processInterval(container, interval_data<Unit>(5, 15), 1);
+      booleanOr.advanceScan();
+      booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
+      booleanOr.advanceScan();
+      booleanOr.processInterval(container, interval_data<Unit>(5, 15), -1);
+      booleanOr.advanceScan();
+      booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
+      if(container.size() != 4) {
+        std::cout << "Test other two rectangles, wrong output size\n";
+        for(std::size_t i = 0; i < container.size(); ++i){
+          std::cout << container[i].first << "), " << container[i].second << std::endl;
+        }
+        return false;
+      }
+      if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(5, 15), 1)) {
+        std::cout << "Test other two rectangles, first output wrong: Interval(" <<
+          container[0].first << "), " << container[0].second << std::endl;
+      }
+      if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 5), 1)) {
+        std::cout << "Test other two rectangles, second output wrong: Interval(" <<
+          container[1].first << "), " << container[1].second << std::endl;
+      }
+      if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(10, 15), -1)) {
+        std::cout << "Test other two rectangles, third output wrong: Interval(" <<
+          container[2].first << "), " << container[2].second << std::endl;
+      }
+      if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
+        std::cout << "Test other two rectangles, fourth output wrong: Interval(" <<
+          container[3].first << "), " << container[3].second << std::endl;
+      }
+
+      //test two nonoverlapping rectangles
+      container.clear();
+      booleanOr = BooleanOp<int, Unit>();
+      booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
+      booleanOr.advanceScan();
+      booleanOr.processInterval(container, interval_data<Unit>(15, 25), 1);
+      booleanOr.advanceScan();
+      booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
+      booleanOr.advanceScan();
+      booleanOr.processInterval(container, interval_data<Unit>(15, 25), -1);
+      if(container.size() != 4) {
+        std::cout << "Test two nonoverlapping rectangles, wrong output size\n";
+        return false;
+      }
+      if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
+        std::cout << "Test two nonoverlapping rectangles, first output wrong: Interval(" <<
+          container[0].first << "), " << container[0].second << std::endl;
+      }
+      if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(15, 25), 1)) {
+        std::cout << "Test two nonoverlapping rectangles, second output wrong: Interval(" <<
+          container[1].first << "), " << container[1].second << std::endl;
+      }
+      if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
+        std::cout << "Test two nonoverlapping rectangles, third output wrong: Interval(" <<
+          container[2].first << "), " << container[2].second << std::endl;
+      }
+      if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(15, 25), -1)) {
+        std::cout << "Test two nonoverlapping rectangles, fourth output wrong: Interval(" <<
+          container[3].first << "), " << container[3].second << std::endl;
+      }
+      return true;
     }
-    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
-            std::cout << "Test two nonoverlapping rectangles, first output wrong: Interval(" <<
-        container[0].first << "), " << container[0].second << std::endl;
-    }
-    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(15, 25), 1)) {
-            std::cout << "Test two nonoverlapping rectangles, second output wrong: Interval(" <<
-        container[1].first << "), " << container[1].second << std::endl;
-    }
-    if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
-            std::cout << "Test two nonoverlapping rectangles, third output wrong: Interval(" <<
-        container[2].first << "), " << container[2].second << std::endl;
-    }
-    if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(15, 25), -1)) {
-            std::cout << "Test two nonoverlapping rectangles, fourth output wrong: Interval(" <<
-        container[3].first << "), " << container[3].second << std::endl;
-    }
-    return true;
   }
-}
 
   void test_assign() {
     using namespace gtl;
@@ -393,7 +395,7 @@ namespace boolean_op {
     points.push_back(point_data<int>(10,0));
     polygon_45_data<int> poly;
     poly.set(points.begin(), points.end());
-      polygon_45_set_data<int> ps;
+    polygon_45_set_data<int> ps;
     ps.insert(poly);
     std::vector<polygon_45_data<int> > polys;
     ps.get_polygons(polys);

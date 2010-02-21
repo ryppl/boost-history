@@ -35,17 +35,8 @@ namespace boost { namespace polygon{
     }
   };
 
-  template <typename T, typename enable = gtl_yes>
-  struct polygon_traits {};
-
   template <typename T>
-  struct polygon_traits<T, 
-                        typename gtl_or_4<
-    typename gtl_same_type<typename geometry_concept<T>::type, polygon_concept>::type,
-    typename gtl_same_type<typename geometry_concept<T>::type, polygon_45_concept>::type,
-    typename gtl_same_type<typename geometry_concept<T>::type, polygon_with_holes_concept>::type,
-    typename gtl_same_type<typename geometry_concept<T>::type, polygon_45_with_holes_concept>::type
-  >::type> {
+  struct polygon_traits_general {
     typedef typename T::coordinate_type coordinate_type;
     typedef typename T::iterator_type iterator_type;
     typedef typename T::point_type point_type;
@@ -72,11 +63,7 @@ namespace boost { namespace polygon{
   };
 
   template <typename T>
-  struct polygon_traits< T, 
-                         typename gtl_or<
-    typename gtl_same_type<typename geometry_concept<T>::type, polygon_90_concept>::type,
-    typename gtl_same_type<typename geometry_concept<T>::type, polygon_90_with_holes_concept>::type
-  >::type > {
+  struct polygon_traits_90 {
     typedef typename polygon_90_traits<T>::coordinate_type coordinate_type;
     typedef iterator_compact_to_points<typename polygon_90_traits<T>::compact_iterator_type, point_data<coordinate_type> > iterator_type;
     typedef point_data<coordinate_type> point_type;
@@ -103,6 +90,61 @@ namespace boost { namespace polygon{
       return polygon_90_traits<T>::winding(t);
     }
   };
+
+#ifndef BOOST_VERY_LITTLE_SFINAE
+
+  template <typename T, typename enable = gtl_yes>
+  struct polygon_traits {};
+
+  template <typename T>
+  struct polygon_traits<T, 
+                        typename gtl_or_4<
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_45_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_with_holes_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_45_with_holes_concept>::type
+  >::type> : public polygon_traits_general<T> {};
+
+  template <typename T>
+  struct polygon_traits< T, 
+                         typename gtl_or<
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_90_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_90_with_holes_concept>::type
+  >::type > : public polygon_traits_90<T> {};
+
+#else
+
+  template <typename T, typename T_IF, typename T_ELSE>
+  struct gtl_ifelse {};
+  template <typename T_IF, typename T_ELSE>
+  struct gtl_ifelse<gtl_no, T_IF, T_ELSE> {
+    typedef T_ELSE type;
+  };
+  template <typename T_IF, typename T_ELSE>
+  struct gtl_ifelse<gtl_yes, T_IF, T_ELSE> {
+    typedef T_IF type;
+  };
+
+  template <typename T, typename enable = gtl_yes>
+  struct polygon_traits {};
+
+  template <typename T>
+  struct polygon_traits<T, typename gtl_or<typename gtl_or_4<
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_45_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_with_holes_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_45_with_holes_concept>::type
+  >::type, typename gtl_or<
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_90_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_90_with_holes_concept>::type
+  >::type>::type > : public gtl_ifelse<typename gtl_or<
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_90_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_90_with_holes_concept>::type >::type,
+      polygon_traits_90<T>,
+      polygon_traits_general<T> >::type {
+  };
+
+#endif
 
   template <typename T, typename enable = void>
   struct polygon_with_holes_traits {

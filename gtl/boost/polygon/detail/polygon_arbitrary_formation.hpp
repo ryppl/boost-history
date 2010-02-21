@@ -385,96 +385,33 @@ namespace boost { namespace polygon{
       };
     }
 
-    //slower but more overflow protected way to compute coordinate of intersection
-    template <typename product_type>
-    static inline Unit compute_x_intercept(product_type x11,
-                                           product_type x21,
-                                           product_type y11,
-                                           product_type y21,
-                                           product_type dy1,
-                                           product_type dy2,
-                                           product_type dx1,
-                                           product_type dx2) {
-      // x = (x11 * dy1 * dx2 - x21 * dy2 * dx1 + y21 * dx1 * dx2 - y11 * dx1 * dx2) / (dy1 * dx2 - dy2 * dx1);
-      typedef typename coordinate_traits<Unit>::unsigned_area_type unsigned_product_type;
-      unsigned_product_type udy1 = dy1 < 0 ? -dy1 : dy1;
-      int dy1sign = dy1 < 0 ? -1 : 1;
-      unsigned_product_type udy2 = dy2 < 0 ? -dy2 : dy2;
-      int dy2sign = dy2 < 0 ? -1 : 1;
-      unsigned_product_type udx1 = dx1 < 0 ? -dx1 : dx1;
-      int dx1sign = dx1 < 0 ? -1 : 1;
-      unsigned_product_type udx2 = dx2 < 0 ? -dx2 : dx2;
-      int dx2sign = dx2 < 0 ? -1 : 1;
-      unsigned_product_type u_dy1dx2 = udy1 * udx2;
-      unsigned_product_type u_dy2dx1 = udy2 * udx1;
-      unsigned_product_type u_dx1dx2 = udx1 * udx2;
-      int dy1dx2sign = dy1sign * dx2sign;
-      int dy2dx1sign = dy2sign * dx1sign;
-      int dx1dx2sign = dx1sign * dx2sign;
-      unsigned_product_type u_den = 0;;
-      int den_sign = 0;;
-      unsigned_add(u_den, den_sign, u_dy1dx2, dy1dx2sign, u_dy2dx1, -dy2dx1sign);
-      product_type dy1dx2_q = u_dy1dx2 / u_den;
-      product_type dy2dx1_q = u_dy2dx1 / u_den;
-      product_type dx1dx2_q = u_dx1dx2 / u_den;
-      dy1dx2_q *= dy1dx2sign * den_sign;
-      dy2dx1_q *= dy2dx1sign * den_sign;
-      dx1dx2_q *= dx1dx2sign * den_sign;
-      unsigned_product_type u_dy1dx2_r = 0;;
-      unsigned_product_type u_dy2dx1_r = 0;;
-      unsigned_product_type u_dx1dx2_r = 0;;
-      int dy1dx2_r_sign = 0;
-      int dy2dx1_r_sign = 0;
-      int dx1dx2_r_sign = 0;
-      unsigned_mod(u_dy1dx2_r, dy1dx2_r_sign, u_dy1dx2, dy1dx2sign, u_den, den_sign);
-      unsigned_mod(u_dy2dx1_r, dy2dx1_r_sign, u_dy2dx1, dy2dx1sign, u_den, den_sign);
-      unsigned_mod(u_dx1dx2_r, dx1dx2_r_sign, u_dx1dx2, dx1dx2sign, u_den, den_sign);
-      product_type dy1dx2_r = u_dy1dx2_r;
-      product_type dy2dx1_r = u_dy2dx1_r;
-      product_type dx1dx2_r = u_dx1dx2_r;
-      dy1dx2_r *= dy1dx2_r_sign;
-      dy2dx1_r *= dy2dx1_r_sign;
-      dx1dx2_r *= dx1dx2_r_sign;
-      product_type q = x11 * dy1dx2_q - x21 * dy2dx1_q + (y21 - y11) * dx1dx2_q;
-      product_type r = x11 * dy1dx2_r - x21 * dy2dx1_r + (y21 - y11) * dx1dx2_r;
-      unsigned_product_type ur = 0;
-      int rsign = 0;;
-      if(r < 0) { ur = -r; rsign = -1; } else { ur = r; rsign = 1; }
-      //this operation performs only one truncation
-      ur /= u_den;
-      rsign *= den_sign;
-      r = ur;
-      r *= rsign;
-      return q + r;
-    }
-
     struct compute_intersection_pack {
       typedef typename high_precision_type<Unit>::type high_precision;
       high_precision y_high, dx1, dy1, dx2, dy2, x11, x21, y11, y21, x_num, y_num, x_den, y_den, x, y;
-      static inline bool compute_lazy_intersection(Point& intersection, const half_edge& he1, const half_edge& he2) {
+      static inline bool compute_lazy_intersection(Point& intersection, const half_edge& he1, const half_edge& he2, bool projected = false) {
         long double y_high, dx1, dy1, dx2, dy2, x11, x21, y11, y21, x_num, y_num, x_den, y_den, x, y;
         typedef rectangle_data<Unit> Rectangle;
         Rectangle rect1, rect2;
         set_points(rect1, he1.first, he1.second);
         set_points(rect2, he2.first, he2.second);
-        if(!::boost::polygon::intersects(rect1, rect2, true)) return false;
+        if(!projected && !::boost::polygon::intersects(rect1, rect2, true)) return false;
         if(is_vertical(he1)) {
           if(is_vertical(he2)) return false;
           y_high = evalAtXforYlazy(he1.first.get(HORIZONTAL), he2.first, he2.second);
-          Unit y = (Unit)y_high;
-          if(y_high < y) --y;
-          if(contains(rect1.get(VERTICAL), y, true)) {
-            intersection = Point(he1.first.get(HORIZONTAL), y);
+          Unit y_local = (Unit)y_high;
+          if(y_high < y_local) --y_local;
+          if(projected || contains(rect1.get(VERTICAL), y_local, true)) {
+            intersection = Point(he1.first.get(HORIZONTAL), y_local);
             return true;
           } else {
             return false;
           }
         } else if(is_vertical(he2)) {
           y_high = evalAtXforYlazy(he2.first.get(HORIZONTAL), he1.first, he1.second);
-          Unit y = (Unit)y_high;
-          if(y_high < y) --y;
-          if(contains(rect2.get(VERTICAL), y, true)) {
-            intersection = Point(he2.first.get(HORIZONTAL), y);
+          Unit y_local = (Unit)y_high;
+          if(y_high < y_local) --y_local;
+          if(projected || contains(rect2.get(VERTICAL), y_local, true)) {
+            intersection = Point(he2.first.get(HORIZONTAL), y_local);
             return true;
           } else {
             return false;
@@ -519,18 +456,30 @@ namespace boost { namespace polygon{
         //Unit y2 = evalAtXforY(exp_x, he2.first, he2.second);
         //std::cout << exp_x << " " << exp_y << " " << y1 << " " << y2 << std::endl;
         Point result(x_unit, y_unit);
-        if(!contains(rect1, result, true)) return false;
-        if(!contains(rect2, result, true)) return false;
+        if(!projected && !contains(rect1, result, true)) return false;
+        if(!projected && !contains(rect2, result, true)) return false;
         intersection = result;
         return true;
       }
-      inline bool compute_intersection(Point& intersection, const half_edge& he1, const half_edge& he2) {
-        if(!intersects(he1, he2))
+      inline bool compute_intersection(Point& intersection, const half_edge& he1, const half_edge& he2, bool projected = false) {
+        if(!projected && !intersects(he1, he2))
            return false;
-        compute_lazy_intersection(intersection, he1, he2); 
-        if(intersects_grid(intersection, he1) &&
-           intersects_grid(intersection, he2))
-          return true;
+        bool lazy_success = compute_lazy_intersection(intersection, he1, he2, projected); 
+        if(!projected) {
+          if(lazy_success) {
+            if(intersects_grid(intersection, he1) &&
+               intersects_grid(intersection, he2))
+              return true;
+          }
+        } else {
+          if(lazy_success) {
+            rectangle_data<Unit> inf_rect((std::numeric_limits<Unit>::min)(),  (std::numeric_limits<Unit>::min)(), 
+                                          (std::numeric_limits<Unit>::max)(),  (std::numeric_limits<Unit>::max)() );
+            return contains(inf_rect, intersection, true);
+          } else {
+            return false;
+          }
+        }
         typedef rectangle_data<Unit> Rectangle;
         Rectangle rect1, rect2;
         set_points(rect1, he1.first, he1.second);
@@ -768,7 +717,7 @@ namespace boost { namespace polygon{
       inline bool operator>(const vertex_half_edge& vertex) const { return vertex < (*this); }
       inline bool operator<=(const vertex_half_edge& vertex) const { return !((*this) > vertex); }
       inline bool operator>=(const vertex_half_edge& vertex) const { return !((*this) < vertex); }
-      inline high_precision evalAtX(Unit xIn) const { return evalAtXforY(xIn, pt, other_pt); }
+      inline high_precision evalAtX(Unit xIn) const { return evalAtXforYlazy(xIn, pt, other_pt); }
       inline bool is_vertical() const {
         return pt.get(HORIZONTAL) == other_pt.get(HORIZONTAL);
       }
@@ -2277,6 +2226,7 @@ namespace boost { namespace polygon{
     inline trapezoid_arbitrary_formation(const trapezoid_arbitrary_formation& that) : polygon_arbitrary_formation<Unit>(that) {}
     inline trapezoid_arbitrary_formation& operator=(const trapezoid_arbitrary_formation& that) {
       * static_cast<polygon_arbitrary_formation<Unit>*>(this) = * static_cast<polygon_arbitrary_formation<Unit>*>(&that);
+      return *this;
     }
    
     //cT is an output container of Polygon45 or Polygon45WithHoles

@@ -985,12 +985,12 @@ namespace boost { namespace polygon{
     typename scanline_base<Unit>::evalAtXforYPack evalAtXforYPack_;
   public:
     inline scanline() : scan_data_(), removal_set_(), insertion_set_(), end_point_queue_(), 
-                        x_((std::numeric_limits<Unit>::max)()), y_((std::numeric_limits<Unit>::max)()), just_before_(false) {
+                        x_((std::numeric_limits<Unit>::max)()), y_((std::numeric_limits<Unit>::max)()), just_before_(false), evalAtXforYPack_() {
       less_half_edge lessElm(&x_, &just_before_, &evalAtXforYPack_);
       scan_data_ = scanline_type(lessElm);
     }
     inline scanline(const scanline& that) : scan_data_(), removal_set_(), insertion_set_(), end_point_queue_(), 
-                                            x_((std::numeric_limits<Unit>::max)()), y_((std::numeric_limits<Unit>::max)()), just_before_(false) {
+                                            x_((std::numeric_limits<Unit>::max)()), y_((std::numeric_limits<Unit>::max)()), just_before_(false), evalAtXforYPack_() {
       (*this) = that; }
     inline scanline& operator=(const scanline& that) {
       x_ = that.x_;
@@ -1512,7 +1512,7 @@ namespace boost { namespace polygon{
     class less_vertex_data {
       typename scanline_base<Unit>::evalAtXforYPack* pack_;
     public:
-      less_vertex_data() {}
+      less_vertex_data() : pack_() {}
       less_vertex_data(typename scanline_base<Unit>::evalAtXforYPack* pack) : pack_(pack) {}
       bool operator()(const vertex_data_type& lvalue, const vertex_data_type& rvalue) {
         less_point lp;
@@ -1532,8 +1532,8 @@ namespace boost { namespace polygon{
     }
   public:
     inline property_merge_data& get_property_merge_data() { return pmd; }
-    inline property_merge() : pmd() {}
-    inline property_merge(const property_merge& pm) : pmd(pm.pmd) {}
+    inline property_merge() : pmd(), evalAtXforYPack_() {}
+    inline property_merge(const property_merge& pm) : pmd(pm.pmd), evalAtXforYPack_(pm.evalAtXforYPack_) {}
     inline property_merge& operator=(const property_merge& pm) { pmd = pm.pmd; return *this; }
 
     template <typename polygon_type>
@@ -2512,7 +2512,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
     class less_vertex_data {
       typename scanline_base<Unit>::evalAtXforYPack* pack_;
     public:
-      less_vertex_data() {}
+      less_vertex_data() : pack_() {}
       less_vertex_data(typename scanline_base<Unit>::evalAtXforYPack* pack) : pack_(pack) {}
       bool operator()(const vertex_data_type& lvalue, const vertex_data_type& rvalue) {
         less_point lp;
@@ -2583,8 +2583,8 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
       std::sort(pmd.begin(), pmd.end(), lvd);
     }
   public:
-    inline arbitrary_boolean_op() : pmd() {}
-    inline arbitrary_boolean_op(const arbitrary_boolean_op& pm) : pmd(pm.pmd) {}
+    inline arbitrary_boolean_op() : pmd(), evalAtXforYPack_() {}
+    inline arbitrary_boolean_op(const arbitrary_boolean_op& pm) : pmd(pm.pmd), evalAtXforYPack_(pm.evalAtXforYPack_) {}
     inline arbitrary_boolean_op& operator=(const arbitrary_boolean_op& pm) { pmd = pm.pmd; return *this; }
 
     enum BOOLEAN_OP_TYPE {
@@ -2606,6 +2606,8 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
       property_merge<Unit, property_type, std::vector<property_type> >::print(debug_file, pmd);
       debug_file.close();
 #endif
+      if(pmd.empty())
+        return;
       line_intersection<Unit>::validate_scan(tmp_pmd, pmd.begin(), pmd.end());
       pmd.swap(tmp_pmd);
       sort_property_merge_data();
@@ -2728,7 +2730,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
     class less_vertex_data {
       typename scanline_base<Unit>::evalAtXforYPack* pack_;
     public:
-      less_vertex_data() {}
+      less_vertex_data() : pack_() {}
       less_vertex_data(typename scanline_base<Unit>::evalAtXforYPack* pack) : pack_(pack) {}
       bool operator()(const vertex_data_type& lvalue, const vertex_data_type& rvalue) {
         less_point lp;
@@ -2749,9 +2751,9 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
       Unit x = output.first.first;
       for(typename std::map<point_data<Unit>, std::set<property_type> >::iterator itr = 
             y_prop_map.begin(); itr != y_prop_map.end(); ++itr) {
-        if((*itr).first.x() != x) {
+        if((*itr).first.x() < x) {
           y_prop_map.erase(y_prop_map.begin(), itr);
-          break;
+          continue;
         }
         for(typename std::set<property_type>::iterator inner_itr = itr->second.begin();
             inner_itr != itr->second.end(); ++inner_itr) {
@@ -2805,9 +2807,9 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
       std::sort(pmd.begin(), pmd.end(), lvd);
     }
   public:
-    inline arbitrary_connectivity_extraction() : pmd() {}
+    inline arbitrary_connectivity_extraction() : pmd(), evalAtXforYPack_() {}
     inline arbitrary_connectivity_extraction
-    (const arbitrary_connectivity_extraction& pm) : pmd(pm.pmd) {}
+    (const arbitrary_connectivity_extraction& pm) : pmd(pm.pmd), evalAtXforYPack_(pm.evalAtXforYPack_) {}
     inline arbitrary_connectivity_extraction& operator=
       (const arbitrary_connectivity_extraction& pm) { pmd = pm.pmd; return *this; }
 
