@@ -24,18 +24,18 @@ int main(int argc, char* argv[])
 
   cout << p << ": ";  // utilize the path narrow stream inserter
 
-  if ( exists(p) )    // does p actually exist?
+  if (exists(p))    // does p actually exist?
   {
-    if ( is_regular_file(p) )        // is p a regular file?
+    if (is_regular_file(p))        // is p a regular file?
       cout << file_size(p) << '\n';
 
-    else if ( is_directory(p) )      // is p a directory?
+    else if (is_directory(p))      // is p a directory?
     {
       cout << "is a directory containing:\n";
 
-      for ( directory_iterator it (p);      // initialize it to the first element
+      for (directory_iterator it (p);       // initialize it to the first element
             it != directory_iterator();     // test for the past-the-end element
-            ++it )                          // increment
+            ++it)                           // increment
       {
         cout << "   " << *it << '\n';       // *it returns a directory_entry,
                                             // which is converted to a path

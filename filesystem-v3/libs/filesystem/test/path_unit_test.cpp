@@ -102,6 +102,8 @@ namespace
   wstring ws(L"wstring");
   std::list<char> l;      // see main() for initialization to s, t, r, i, n, g
   std::list<wchar_t> wl;  // see main() for initialization to w, s, t, r, i, n, g
+  std::vector<char> v;      // see main() for initialization to f, u, z
+  std::vector<wchar_t> wv;  // see main() for initialization to w, f, u, z
 
   //  test_constructors  ---------------------------------------------------------------//
 
@@ -125,13 +127,22 @@ namespace
     PATH_IS(x3, L"wstring");
     BOOST_TEST_EQ(x3.native().size(), 7U);
 
-    path x4(string("std::string"));                    // container char
+    // contiguous containers
+    path x4(string("std::string"));                    // std::string
     PATH_IS(x4, L"std::string");
     BOOST_TEST_EQ(x4.native().size(), 11U);
 
-    path x5(wstring(L"std::wstring"));                 // container wchar_t
+    path x5(wstring(L"std::wstring"));                 // std::wstring
     PATH_IS(x5, L"std::wstring");
     BOOST_TEST_EQ(x5.native().size(), 12U);
+
+    path x4v(v);                                       // std::vector<char>
+    PATH_IS(x4v, L"fuz");
+    BOOST_TEST_EQ(x4v.native().size(), 3U);
+
+    path x5v(wv);                                      // std::vector<wchar_t>
+    PATH_IS(x5v, L"wfuz");
+    BOOST_TEST_EQ(x5v.native().size(), 4U);
 
     path x6("array char");                             // array char
     PATH_IS(x6, L"array char");
@@ -141,13 +152,22 @@ namespace
     PATH_IS(x7, L"array wchar_t");
     BOOST_TEST_EQ(x7.native().size(), 13U);
 
-    path x8(s.c_str());                              // const char* null terminated
+    path x8(s.c_str());                                // const char* null terminated
     PATH_IS(x8, L"string");
     BOOST_TEST_EQ(x8.native().size(), 6U);
 
-    path x9(ws.c_str());                             // const wchar_t* null terminated
+    path x9(ws.c_str());                               // const wchar_t* null terminated
     PATH_IS(x9, L"wstring");
     BOOST_TEST_EQ(x9.native().size(), 7U);
+
+    // non-contiguous containers
+    path x10(l);                                       // std::list<char>
+    PATH_IS(x10, L"string");
+    BOOST_TEST_EQ(x10.native().size(), 6U);
+
+    path xll(wl);                                      // std::list<wchar_t>
+    PATH_IS(xll, L"wstring");
+    BOOST_TEST_EQ(xll.native().size(), 7U);
   }
 
   path x;
@@ -511,6 +531,7 @@ namespace
     CHECK(path("/foo/bar/baz.zoo").stem().string() == "baz");
     CHECK(path("/foo/bar.woo/baz").stem().string() == "baz");
 
+    CHECK(path("foo.bar.baz.tar.bz2").extension().string() == ".bz2");
     CHECK(path("/foo/bar/baz.zoo").extension().string() == ".zoo");
     CHECK(path("/foo/bar.woo/baz").extension().string() == "");
   }
@@ -837,6 +858,15 @@ int main(int, char*[])
   wl.push_back(L'i');
   wl.push_back(L'n');
   wl.push_back(L'g');
+
+  v.push_back('f');
+  v.push_back('u');
+  v.push_back('z');
+
+  wv.push_back(L'w');
+  wv.push_back(L'f');
+  wv.push_back(L'u');
+  wv.push_back(L'z');
 
   test_overloads();
   test_constructors();

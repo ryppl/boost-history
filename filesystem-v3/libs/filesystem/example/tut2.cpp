@@ -24,12 +24,12 @@ int main(int argc, char* argv[])
 
   cout << p << ": ";  // utilize the path narrow stream inserter
 
-  if ( exists(p) )    // does p actually exist?
+  if (exists(p))    // does p actually exist?
   {
-    if ( is_regular_file(p) )        // is p a regular file?
+    if (is_regular_file(p))        // is p a regular file?
       cout << file_size(p) << '\n';
 
-    else if ( is_directory(p) )      // is p a directory?
+    else if (is_directory(p))      // is p a directory?
       cout << "is a directory\n";
 
     else

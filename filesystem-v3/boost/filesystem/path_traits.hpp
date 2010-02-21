@@ -12,6 +12,7 @@
 
 #include <boost/filesystem/config.hpp>
 #include <string>
+#include <vector>
 #include <iterator>
 #include <boost/assert.hpp>
 #include <boost/system/error_code.hpp>
@@ -55,26 +56,57 @@ namespace path_traits {
      bool empty(T (&)[N])
        { return N <= 1; }
 
-  //  Pathable dispatch
+  //  Source dispatch
 
-  template <class Container, class U> inline
-  void dispatch(const Container & c, U & to, const codecvt_type & cvt)
+  //  contiguous containers
+  template <class U> inline
+    void dispatch(const std::string& c, U& to, const codecvt_type& cvt)
   {
-//    std::cout << "dispatch() container\n";
+    if (c.size())
+      convert(&*c.begin(), &*c.begin() + c.size(), to, cvt);
+  }
+  template <class U> inline
+    void dispatch(const std::wstring& c, U& to, const codecvt_type& cvt)
+  {
+    if (c.size())
+      convert(&*c.begin(), &*c.begin() + c.size(), to, cvt);
+  }
+  template <class U> inline
+    void dispatch(const std::vector<char>& c, U& to, const codecvt_type& cvt)
+  {
+    if (c.size())
+      convert(&*c.begin(), &*c.begin() + c.size(), to, cvt);
+  }
+  template <class U> inline
+    void dispatch(const std::vector<wchar_t>& c, U& to, const codecvt_type& cvt)
+  {
     if (c.size())
       convert(&*c.begin(), &*c.begin() + c.size(), to, cvt);
   }
 
+  //  non-contiguous containers
+  template <class Container, class U> inline
+  void dispatch(const Container & c, U& to, const codecvt_type& cvt)
+  {
+    if (c.size())
+    {
+      std::basic_string<typename Container::value_type> s(c.begin(), c.end());
+      path_traits::convert(s.c_str(), s.c_str()+s.size(), to, cvt);
+    }
+  }
+
+  //  c_str
   template <class T, class U> inline
-  void dispatch(T * const & c_str, U & to, const codecvt_type & cvt)
+  void dispatch(T * const & c_str, U& to, const codecvt_type& cvt)
   {
 //    std::cout << "dispatch() const T *\n";
     BOOST_ASSERT(c_str);
     convert(c_str, to, cvt);
   }
   
+  //  C-style array
   template <typename T, size_t N, class U> inline
-  void dispatch(T (&array)[N], U & to, const codecvt_type & cvt) // T, N, U deduced
+  void dispatch(T (&array)[N], U& to, const codecvt_type& cvt) // T, N, U deduced
   {
 //    std::cout << "dispatch() array, N=" << N << "\n"; 
     convert(array, array + N - 1, to, cvt);
@@ -87,7 +119,7 @@ namespace path_traits {
 #                else   
                    std::string & to,
 #                endif
-                 const codecvt_type &);
+                 const codecvt_type&);
 
   // value types differ  ---------------------------------------------------------------//
   //
@@ -97,18 +129,18 @@ namespace path_traits {
   void convert(const char* from,
                 const char* from_end,    // 0 for null terminated MBCS
                 std::wstring & to,
-                const codecvt_type & cvt);
+                const codecvt_type& cvt);
 
   BOOST_FILESYSTEM_DECL
   void convert(const wchar_t* from,
                 const wchar_t* from_end,  // 0 for null terminated MBCS
                 std::string & to,
-                const codecvt_type & cvt);
+                const codecvt_type& cvt);
 
   inline 
   void convert(const char* from,
                 std::wstring & to,
-                const codecvt_type & cvt)
+                const codecvt_type& cvt)
   {
     BOOST_ASSERT(from);
     convert(from, 0, to, cvt);
@@ -117,7 +149,7 @@ namespace path_traits {
   inline 
   void convert(const wchar_t* from,
                 std::string & to,
-                const codecvt_type & cvt)
+                const codecvt_type& cvt)
   {
     BOOST_ASSERT(from);
     convert(from, 0, to, cvt);
@@ -129,7 +161,7 @@ namespace path_traits {
 
   inline 
   void convert(const char* from, const char* from_end, std::string & to,
-    const codecvt_type &)
+    const codecvt_type&)
   {
     BOOST_ASSERT(from);
     BOOST_ASSERT(from_end);
@@ -139,7 +171,7 @@ namespace path_traits {
   inline 
   void convert(const char* from,
                 std::string & to,
-                const codecvt_type &)
+                const codecvt_type&)
   {
     BOOST_ASSERT(from);
     to += from;
@@ -149,7 +181,7 @@ namespace path_traits {
 
   inline 
   void convert(const wchar_t* from, const wchar_t* from_end, std::wstring & to,
-    const codecvt_type &)
+    const codecvt_type&)
   {
     BOOST_ASSERT(from);
     BOOST_ASSERT(from_end);
@@ -159,7 +191,7 @@ namespace path_traits {
   inline 
   void convert(const wchar_t* from,
                 std::wstring & to,
-                const codecvt_type &)
+                const codecvt_type&)
   {
     BOOST_ASSERT(from);
     to += from;
