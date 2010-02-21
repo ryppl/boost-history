@@ -107,7 +107,7 @@ between `tokenmap` and other dictionary-like containers, such as std::map or
 _boost_unordered_, is that `tokenmap` generates keys internally (referred to as 
 "tokens") rather than relying on user to provide them. Specifically, when a new element
 is inserted into the `tokenmap`, an apparently random key is returned back to the caller 
-which uniquely maps to the stored element. The returned key can later be used for a very 
+which uniquely maps to the stored element. The returned key can later be used in a very 
 efficient lookup.
 
 [endsect]
