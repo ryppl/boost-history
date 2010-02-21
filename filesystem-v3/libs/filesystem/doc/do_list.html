@@ -16,9 +16,48 @@
 <body>
 
 <h1>Boost Filesystem Do List<br>
-18 February 2010</h1>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->20 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40539" --></h1>
 
-<h2>Docs</h2>
+<h2>Beta 1 comments</h2>
+<ul>
+  <li>Add ack for commenters.</li>
+  <li>Rename absolute. make_absolute?</li>
+  <li>Rename unique_path -&gt; generate_unique_path.</li>
+  <li>Should &quot;change_extension&quot; be &quot;replace_extensioin&quot;? What did V2 call it?</li>
+  <li dir="ltr">
+
+<p dir="ltr">Zach Laine:</li>
+</ul>
+<blockquote>
+  <pre dir="ltr">The descriptions for portable_name() and portable_directory_name()
+appear to be at odds.
+
+portable_name() : ... &amp;&amp; (name is &quot;.&quot; or &quot;..&quot;, and the first character
+not a period or hyphen)
+
+portable_directory_name(): ... &amp;&amp; (name is &quot;.&quot; or &quot;..&quot; &nbsp;or contains no periods)
+
+Should portable_name() be &quot;... &amp;&amp; (name is &quot;.&quot; or &quot;..&quot;, or contains no
+periods) &amp;&amp; (first character not a hyphen)&quot;? &nbsp;Maybe I'm missing
+something?</pre>
+</blockquote>
+<ul>
+  <li dir="ltr">
+  <p dir="ltr">Zach Laine:</li>
+</ul>
+<blockquote>
+  <pre>Also, in the tut3.cpp tutorial code, there's no mention of the dangers
+of using &quot;*it&quot; inside the directory_iterator loop. &nbsp;IIRC, in previous
+Filesystem revisions, this would throw if you did not have adequate
+permissions to see the file to which &quot;it&quot; refers. &nbsp;Has this changed?
+If not, I think that you should either wrap the body of the loop in a
+try-catch block, or use one of the non-throwing function overloads,
+and indicate to the user what the exception safety concerns are. &nbsp;I
+think the tutorial code should exhibit enough robustness that the user
+can just cut-and-paste to get the basic code needed to use the
+library.</pre>
+</blockquote>
+<h2 dir="ltr">Docs</h2>
 <ul>
   <li>Reorganize files</li>
   <li>Create Jamfile for examples</li>
