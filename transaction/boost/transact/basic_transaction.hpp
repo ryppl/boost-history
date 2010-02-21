@@ -155,13 +155,14 @@ private:
 #define BOOST_TRANSACT_BASIC_BEGIN_TRANSACTION(TXMGR) \
 	{ \
 		int ___control; \
+		boost::transact::basic_transaction<TXMGR> ___tx; \
 		while(true){ \
 			try{ \
-				boost::transact::basic_transaction<TXMGR> ___tx; \
 				boost::transact::detail::commit_on_destruction<TXMGR> ___commit(___tx); \
 				try{ \
 					do{ \
-						___control=1;
+						___control=1; \
+						if(false);else
 
 #define BOOST_TRANSACT_BASIC_RETRY(TXMGR) \
 						___control=0; \
@@ -174,18 +175,30 @@ private:
 				break; \
 			}catch(boost::transact::isolation_exception &___i){ \
 				___i.unwind<TXMGR>(); \
-				___control=0;
+				do{ \
+					___control=1; \
+					if(false);else
 
 #define BOOST_TRANSACT_BASIC_END_RETRY(TXMGR) \
+					___control=0; \
+					break; \
+				}while((___control=2),false); \
 			} \
+			BOOST_ASSERT(___control == 0); \
+			___tx.restart();
 		}; \
 		BOOST_ASSERT(___control == 0); \
 	}void()
 
 #define BOOST_TRANSACT_BASIC_END_RETRY_IN_LOOP(TXMGR) \
+					___control=0; \
+					break; \
+				}while((___control=2),false); \
 			} \
+			if(___control != 0) break; }
+			___tx.restart();
 		}; \
-		if(___control > 0){ \
+		if(___control != 0){ \
 			if(___control==1) break; \
 			else continue; \
 		} \
