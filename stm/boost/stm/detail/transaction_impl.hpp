@@ -463,7 +463,7 @@ inline boost::stm::transaction::transaction() :
    currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
 
-   transactionsRef_(transactions(threadId_)),
+   transactionsRef_(transactions(threadId_, true)),
 
 ////////////////////////////////////////
 #else
@@ -501,7 +501,7 @@ inline boost::stm::transaction::transaction() :
 #endif
 
 ////////////////////////////////////////
-   transactionsRef_(transactions(threadId_)),
+   transactionsRef_(transactions(threadId_, true)),
 #endif
 
    hasMutex_(0), priority_(0),
