@@ -185,7 +185,7 @@ private:
 				}while((___control=2),false); \
 			} \
 			BOOST_ASSERT(___control == 0); \
-			___tx.restart();
+			___tx.restart(); \
 		}; \
 		BOOST_ASSERT(___control == 0); \
 	}void()
@@ -195,8 +195,8 @@ private:
 					break; \
 				}while((___control=2),false); \
 			} \
-			if(___control != 0) break; }
-			___tx.restart();
+			if(___control != 0) break; \
+			___tx.restart(); \
 		}; \
 		if(___control != 0){ \
 			if(___control==1) break; \
