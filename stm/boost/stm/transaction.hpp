@@ -108,6 +108,8 @@ public:
 #endif
    typedef std::map<size_t, ReadContainer*> ThreadReadContainer;
 
+   typedef std::multimap<base_transaction_object*, base_transaction_object*> MapOfTxObjects;
+
 #ifdef MAP_WRITE_CONTAINER
    typedef std::map<base_transaction_object*, base_transaction_object*> WriteContainer;
 #else
@@ -240,7 +242,7 @@ typedef std::map<size_t, boost::stm::bit_vector*> ThreadBitVectorList;
       else return directLateWriteReadConflict_ = true;
    }
 
-   inline static std::string consistency_checking_string()
+   inline static std::string conflict_detection_string()
    {
       if (validating()) return "val";
       else return "inval";
@@ -341,7 +343,85 @@ typedef std::map<size_t, boost::stm::bit_vector*> ThreadBitVectorList;
    static int pthread_trylock(Mutex *lock);
    static int pthread_unlock(Mutex *lock);
 
+   //##########################################################################
+   // begin transaction::bind() implementation
+   //##########################################################################
 
+   //--------------------------------------------------------------------------
+   //--------------------------------------------------------------------------
+   void if_bound_perform_subreads(base_transaction_object* lhs)
+   {
+      lock_general_access();
+
+      MapOfTxObjects::iterator i = threadBoundObjects_.find(lhs);
+
+      if (i != threadBoundObjects_.end())
+      {
+         this->read(*(i->second));
+
+         for (++i; i != threadBoundObjects_.end(); ++i)
+         {
+            if (i->first != lhs) break;
+            this->read(*(i->second));
+         }
+      }
+
+      unlock_general_access();
+   }
+
+   //--------------------------------------------------------------------------
+   //--------------------------------------------------------------------------
+   static void bind(base_transaction_object * lhs, 
+      base_transaction_object * rhs)
+   {
+      //-----------------------------------------------------------------------
+      // because bind might be called before the TM is initialized (due to 
+      // global space allocation), we need to force a call to initialiaze()
+      // so our general lock will be initialized, if initialized_ is false
+      //-----------------------------------------------------------------------
+      if (!initialized_) initialize();
+
+      lock_general_access();
+      threadBoundObjects_.insert(MapOfTxObjects::value_type(lhs, rhs));
+      unlock_general_access();
+   }
+
+   //--------------------------------------------------------------------------
+   //--------------------------------------------------------------------------
+   static void unbind(base_transaction_object * lhs)
+   {
+      //-----------------------------------------------------------------------
+      // because bind might be called before the TM is initialized (due to 
+      // global space allocation), we need to force a call to initialiaze()
+      // so our general lock will be initialized, if initialized_ is false
+      //-----------------------------------------------------------------------
+      if (!initialized_) initialize();
+
+      lock_general_access();
+
+      unlock_general_access();
+   }
+
+   //--------------------------------------------------------------------------
+   //--------------------------------------------------------------------------
+   static void unbind(base_transaction_object * lhs,
+      base_transaction_object * rhs)
+   {
+      //-----------------------------------------------------------------------
+      // because bind might be called before the TM is initialized (due to 
+      // global space allocation), we need to force a call to initialiaze()
+      // so our general lock will be initialized, if initialized_ is false
+      //-----------------------------------------------------------------------
+      if (!initialized_) initialize();
+
+      lock_general_access();
+
+      unlock_general_access();
+   }
+
+   //##########################################################################
+   // end transaction::bind() implementation
+   //##########################################################################
 
    //--------------------------------------------------------------------------
 #if PERFORMING_LATM
@@ -842,6 +922,11 @@ private:
             //guard.unlock();
 
             ++reads_;
+
+            // before leaving, we need to verify this object isn't bound
+            // to subobjects
+            if_bound_perform_subreads(readMem->second);
+
             return *static_cast<T*>(readMem->second);
          }
 
@@ -1289,7 +1374,7 @@ private:
    static transaction_bookkeeping bookkeeping_;
    static base_contention_manager *cm_;
 
-
+   static MapOfTxObjects threadBoundObjects_;
 
 #ifndef USE_SINGLE_THREAD_CONTEXT_MAP
     static ThreadWriteContainer threadWriteLists_;
@@ -1507,9 +1592,15 @@ private:
     TransactionsStack& transactionsRef_;
    public:
     inline TransactionsStack& transactions() {return transactionsRef_;}
-    inline static TransactionsStack &transactions(thread_id_t id) {
-        light_auto_lock auto_general_lock_(general_lock());
-        return *threadTransactionsStack_.find(id)->second;
+    inline static TransactionsStack &transactions(thread_id_t id, 
+       bool const &alreadyHasGeneralLock = false) {
+
+       if (!alreadyHasGeneralLock)
+       {
+         light_auto_lock auto_general_lock_(general_lock());
+         return *threadTransactionsStack_.find(id)->second;
+       }
+       else return *threadTransactionsStack_.find(id)->second;
     }
     private:
 
