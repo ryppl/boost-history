@@ -687,6 +687,7 @@ inline transaction::~transaction()
        synchro::lock_guard<Mutex> lock(*mutex());
         abort();
     }
+    transactionsInFlight_.erase(this);
     transactions().pop();
 
 }
