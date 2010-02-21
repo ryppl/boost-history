@@ -68,7 +68,7 @@ namespace auto_size{
         typedef expr<E,T,N,Ref> expr_;
         typedef expr<expr_,T,N+1,Ref> type;
     };
-            
+        
     template<typename E,typename T,int N,template<typename> class Ref>
     class expr{
         typedef boost::mpl::int_<N> int_n_;
@@ -81,8 +81,8 @@ namespace auto_size{
         typedef typename ref_array<T,N,Ref>::type ref_array_;
         typedef typename next<E,T,N,Ref>::type next_;
 
-        previous_ previous;
-        ref_ ref;
+        mutable previous_ previous;
+        mutable ref_ ref;
                                 
         expr(T& t):ref(t){} // only for N == 1
         expr(E& p,T& t):previous(p),ref(t){}
@@ -91,7 +91,7 @@ namespace auto_size{
         next_ operator()(T& t){ return next_(*this,t); }
                 
         template<typename T1>
-        operator boost::array<T1,N>(){
+        operator boost::array<T1,N>()const{
         	boost::array<T1,N> ar;
 			std::copy(	
             	boost::begin(this->ref_array()),
@@ -102,7 +102,7 @@ namespace auto_size{
         }
                 
         template<typename C>
-        operator C()
+        operator C()const
         {
             return C(
             	boost::begin(this->ref_array()),
@@ -129,6 +129,17 @@ namespace auto_size{
             this->alloc_if();
             return boost::end(this->ref_array());
         }
+
+        const_iterator begin()const
+        {
+            return boost::begin(this->ref_array());
+        }
+        const_iterator end()const 
+        {
+            this->alloc_if();
+            return boost::end(this->ref_array());
+        }
+
         size_type size() const
         {
             return ref_array_::size();
@@ -139,27 +150,32 @@ namespace auto_size{
         }
                 
         private:
-        void alloc(){ 
+
+        void alloc()const{ 
             this->ptr = smart_ptr_(new ref_array_);
             write_to_array(*this->ptr,*this);		
         }
                 
-        void alloc_if(){
+        void alloc_if()const{
             if(!this->ptr){
                 return this->alloc();
             }
         }
 
-		ref_array_& ref_array(){ 
-        	this->alloc_if();
+        const ref_array_& ref_array()const{ 
+            this->alloc_if();
             return (*this->ptr);
         }
-                
+        ref_array_& ref_array(){ 
+            this->alloc_if();
+            return (*this->ptr);
+        }
+        
         typedef boost::shared_ptr<ref_array_> smart_ptr_;
-        // Only the last of N expressions needs to instantiate an array, hence a
-        // pointer.
-        smart_ptr_ ptr;
-                
+        // Only the last of N expressions needs to instantiate an array, 
+        // hence a pointer.
+		mutable smart_ptr_ ptr;
+
     };
             
     typedef boost::mpl::bool_<false> false_;
@@ -167,7 +183,7 @@ namespace auto_size{
             
     template<typename A,typename E,typename T,int N,
     	template<typename> class Ref>
-    void write_to_array(A& a,expr<E,T,N,Ref>& e){
+    void write_to_array(A& a,const expr<E,T,N,Ref>& e){
         typedef expr<E,T,N,Ref> expr_;
         typedef typename expr_::is_first_ exit_;
         write_to_array(a,e,exit_());
@@ -175,14 +191,14 @@ namespace auto_size{
             
     template<typename A,typename E,typename T,int N,
     	template<typename> class Ref>
-    void write_to_array(A& a,expr<E,T,N,Ref>& e,false_ /*exit*/){
+    void write_to_array(A& a,const expr<E,T,N,Ref>& e,false_ /*exit*/){
         a[N-1] = e.ref;
         write_to_array(a,e.previous);
     }
             
     template<typename A,typename E,typename T,int N,
     	template<typename> class Ref>
-    void write_to_array(A& a,expr<E,T,N,Ref>& e,true_ /*exit*/){
+    void write_to_array(A& a,const expr<E,T,N,Ref>& e,true_ /*exit*/){
         a[N-1] = e.ref;
     }
             
