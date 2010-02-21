@@ -89,7 +89,7 @@ Distributed under the Boost Software License, Version 1.0.
 [def __SGI_FRONT_INSERTION_SEQUENCE__ [@http://www.sgi.com/tech/stl/FrontInsertionSequence.html Front Insertion Sequence]]
 [def __SGI_BACK_INSERTION_SEQUENCE__ [@http://www.sgi.com/tech/stl/BackInsertionSequence.html Back Insertion Sequence]]
 [def __SGI_INPUT_ITERATOR__ [@http://www.sgi.com/tech/stl/InputIterator.html Input Iterator]]
-[def __SGI_FORWARD_ITERATOR__ [@http://www.sgi.com/tech/stl/ForwardIterator.html Forward Iterator]]
+[def __SGI_FORWARD_ITERATOR__ [@http://www.sgi.com/tech/stl/ForwardIterator.o Forward Iterator]]
 [def __SGI_STRICT_WEAK_ORDERING__ [@http://www.sgi.com/tech/stl/StrictWeakOrdering.html   Strict Weak Ordering]]
 
 [def __EIFFEL__ [@http://www.eiffel.com/ Eiffel]]
@@ -115,33 +115,145 @@ Distributed under the Boost Software License, Version 1.0.
 
 [heading Description]
 
-__BOOST_TOKENMAP_LOGO__
+In summary, a tokenmap is a data structure that maps auto-generated tokens with 
+elements of the collection. 
 
-Boost.Tokenmap is a bidirectional maps library for C++. With Boost.Tokenmap you can create associative containers in which both types can be used as key. A `tokenmap<X,Y>` 
-can be thought of as a combination of a `std::map<X,Y>` and a `std::map<Y,X>`. 
-The learning curve of tokenmap is almost flat if you know how to use standard 
-containers. A great deal of effort has been put into mapping the naming scheme of the
-STL in Boost.Tokenmap. The library is designed to match the common STL containers.
+Boost.Tokenmap is a (perfect) hash container library for C++. The library provides
+a tokenmap, a data structure that maps auto-generated tokens with elements of 
+the collection. An important distinction between tokenmap and other dictionary-like
+containers (such as std::map or boost::unordered) is that tokenmap generates the 
+keys internally (referred to as "tokens") rather than relying on users to provide 
+them. Specifically, when a new element is inserted into the tokenmap, an apparently
+random token is returned back to the caller. The returned token can later be used 
+for very efficient lookups.
 
 [heading Influences and Related Work]
 
 The design of Boost.Tokenmap interface follows the standard template library.
-It has been strongly influenced by Joaquin Lopez Muñoz's Boost.MultiIndex library
-(the heart of tokenmaps) and codeproject::tokenmap library.
 
 [endsect]
 
-[include introduction.qbk]
-[include quick_tutorial.qbk]
-[include tutorial.qbk]
-[include tokenmap_and_boost.qbk]
-[include reference.qbk]
-[include compiler_specifics.qbk]
-[include performance.qbk]
-[include examples.qbk]
-[include test_suite.qbk]
-[include future_work.qbk]
-[include release_notes.qbk]
-[include rationale.qbk]
-[include history.qbk]
-[include acknowledgements.qbk]
+[section Quick tutorial]
+
+A convenience header is avaiable in the boost directory:
+
+    #include <boost/tokenmap.hpp>
+
+Lets define a token map for strings. The following code creates an empty tokenamp 
+container with initial capacity set to 10000, load factor set to 0.7 and current 
+time as seed for pseudo-number generator:
+
+typedef tokenmap<std::string, unsigned int> tokenmap_type;
+tokenmap_type names( 10000, 0.7, time(NULL) );
+
+Next, to insert elements into the container we do:
+
+tokenamp_type::value_type rob = 
+    names.insert( "Robert DeNiro" );
+tokenamp_type::value_type mart = 
+    names.insert( "Martin Scorsese" );
+
+The returned from insert `tokenamp_type::value_type' is a pair, defined as 
+std::pair<unsigned int, std::string*>.  The first element of the pair is an 
+auto-generated token, whereas the second element is a pointer to the stored 
+element that maps to it.
+
+With the returned token we can perform efficient lookups within the container,
+example:
+
+tokenamp_type::mapped_type * name = names.find( rob.first ); 
+
+We can also check if an element exists:
+
+bool found = names.exists( rob.first );
+
+Finally, we can remove the element:
+
+std::auto_ptr<map_type::mapped_type> take_over 
+  = names.pop( rob.first );
+
+[endsect]
+
+[section Reference]
+
+[section Headers]
+
+* "boost/tokenmap.hpp" ['(includes "boost/tokenmap/tokenmap.hpp" and imports the tokenmap class to boost namespace)]
+
+[endsect]
+
+[section Header "boost/tokenmap/tokenmap.hpp" synopsis]
+
+    namespace boost {
+    namespace tokenmaps {
+
+    template <typename value__, typename key__ = uint32_t>
+    class tokenmap
+    {
+      public:
+
+      // Metadata
+
+      typedef uint64_t                           hash_type;
+      typedef key__                              key_type;
+      typedef value__                            mapped_type;
+      typedef std::pair<key_type, mapped_type*>  value_type;
+
+      // Constructor 
+
+      tokenmap(size_t capacity, float load_factor, hash_type seed);
+
+      // Destructor 
+
+      ~tokenmap();
+
+      // Modifiers
+
+      value_type insert(mapped_type const & value);
+
+      value_type insert(std::auto_ptr<mapped_type> value);
+
+      std::auto_ptr<mapped_type> pop(key_type key);
+
+      // Accessors
+
+      mapped_type * find(key_type key) const;
+
+      bool exists(key_type key) const;
+
+      key_type size() const;
+    };
+
+    } // namespace tokenmap
+    } // namespace boost
+
+[endsect]
+
+[section Class template tokenmap]
+[endsect]
+
+[section Nested types]
+[endsect]
+
+[section Constructors, copy and assignment]
+      tokenmap(size_t capacity, float load_factor, hash_type seed);
+
+* [*Effects:] Constructs an empty `tokenmap`.
+* [*Complexity:] Constant.
+
+[endsect]
+
+[section Performance ]
+[endsect]
+
+[section Examples ]
+[endsect]
+
+[section Rationale ]
+[endsect]
+
+[section Future Work ]
+[endsect]
+
+[section Acknowledgements ]
+[endsect]
