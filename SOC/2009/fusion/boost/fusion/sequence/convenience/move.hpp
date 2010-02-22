@@ -23,7 +23,7 @@ namespace boost { namespace fusion
 {
     namespace detail
     {
-        struct move
+        struct mover
         {
             template<class ZippedElements>
             void

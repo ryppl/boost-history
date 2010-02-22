@@ -11,6 +11,7 @@
 
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion
 {
@@ -32,7 +33,7 @@ namespace boost { namespace fusion
         {
             BOOST_FUSION_TAG_CHECK(OtherIt,nview_iterator_tag);
             BOOST_FUSION_MPL_ASSERT((
-                mpl::equal_to<
+                is_same<
                     Pos
                   , detail::remove_reference<OtherIt>::type::pos_type
                 >));
@@ -48,7 +49,7 @@ namespace boost { namespace fusion
         {
             BOOST_FUSION_TAG_CHECK(OtherIt,nview_iterator_tag);
             BOOST_FUSION_MPL_ASSERT((
-                mpl::equal_to<
+                is_same<
                     Pos
                   , detail::remove_reference<OtherIt>::type::pos_type
                 >));

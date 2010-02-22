@@ -9,7 +9,6 @@
 #define BOOST_FUSION_VIEW_NVIEW_DETAIL_EQUAL_TO_IMPL_HPP
 
 #include <boost/mpl/and.hpp>
-#include <boost/mpl/equal_to.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion { namespace extension
@@ -32,7 +31,7 @@ namespace boost { namespace fusion { namespace extension
                         typename detail::identity<typename it1::seq_type>::type
                       , typename detail::identity<typename it2::seq_type>::type
                     >
-                  , mpl::equal_to<
+                  , is_same<
                         typename it1::pos_type
                       , typename it2::pos_type
                     >

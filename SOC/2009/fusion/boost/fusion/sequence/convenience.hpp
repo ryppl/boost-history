@@ -8,10 +8,13 @@
 #ifndef BOOST_FUSION_SEQUENCE_CONVENIENCE_HPP
 #define BOOST_FUSION_SEQUENCE_CONVENIENCE_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/sequence/convenience/copy.hpp>
 #include <boost/fusion/sequence/convenience/fill.hpp>
 #include <boost/fusion/sequence/convenience/generate.hpp>
-#include <boost/fusion/sequence/convenience/move.hpp>
+#ifndef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/fusion/sequence/convenience/move.hpp>
+#endif
 #include <boost/fusion/sequence/convenience/swap.hpp>
 
 #endif

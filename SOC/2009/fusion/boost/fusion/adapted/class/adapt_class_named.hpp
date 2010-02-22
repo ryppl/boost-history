@@ -14,10 +14,11 @@
 #define BOOST_FUSION_ADAPT_CLASS_NAMED_NS(                                      \
     WRAPPED_TYPE, NAMESPACE_SEQ, NAME, ATTRIBUTES)                              \
                                                                                 \
-    BOOST_FUSION_ADAPT_STRUCT_DEFINE_PROXY_TYPE(WRAPPED_TYPE,NAMESPACE_SEQ,NAME)\
+    BOOST_FUSION_ADAPT_STRUCT_DEFINE_PROXY_TYPE(                                \
+        WRAPPED_TYPE,(0)NAMESPACE_SEQ,NAME)                                     \
                                                                                 \
     BOOST_FUSION_ADAPT_CLASS(                                                   \
-        BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION(NAMESPACE_SEQ)NAME,     \
+        BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION((0)NAMESPACE_SEQ)NAME,  \
         ATTRIBUTES)
 
 #define BOOST_FUSION_ADAPT_CLASS_NAMED(WRAPPED_TYPE, NAME, ATTRIBUTES)          \

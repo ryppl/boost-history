@@ -22,7 +22,7 @@ namespace boost { namespace fusion
             F f;
 
             generator(F f)
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_NO_RVALUE_REFERENCES
               : f(f)
 #else
               : f(std::move(f))
@@ -59,7 +59,7 @@ namespace boost { namespace fusion
     {
         fusion::for_each(
             seq,
-            detail::generator<BOOST_FUSION_R_ELSE_OBJ(F)>(
+            detail::generator<BOOST_FUSION_RREF_ELSE_OBJ(F)>(
                 BOOST_FUSION_FORWARD(F,f)));
     }
 }}

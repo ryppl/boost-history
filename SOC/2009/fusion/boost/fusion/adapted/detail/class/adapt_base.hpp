@@ -16,38 +16,50 @@
     template<                                                                   \
         BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \
     >                                                                           \
+    struct class_member_proxy<                                                  \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)                         \
+      , I                                                                       \
+    >                                                                           \
+    {                                                                           \
+        typedef                                                                 \
+            BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE)             \
+        type;                                                                   \
+                                                                                \
+        class_member_proxy(BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)& obj)\
+          : obj(obj)                                                            \
+        {}                                                                      \
+                                                                                \
+        template<class Arg>                                                     \
+        class_member_proxy&                                                     \
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Arg) val)                           \
+        {                                                                       \
+            BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 3, ATTRIBUTE);            \
+            return *this;                                                       \
+        }                                                                       \
+                                                                                \
+        operator type()                                                         \
+        {                                                                       \
+            return BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 2, ATTRIBUTE);     \
+        }                                                                       \
+                                                                                \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)& obj;                   \
+    };                                                                          \
+                                                                                \
+    template<                                                                   \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \
+    >                                                                           \
     struct struct_member<BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ), I>    \
     {                                                                           \
         typedef BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE) type;   \
         typedef                                                                 \
             BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 1, ATTRIBUTE)             \
         get_type;                                                               \
-                                                                                \
-        struct proxy                                                            \
-        {                                                                       \
-            typedef                                                             \
-                BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE)         \
-            type;                                                               \
-                                                                                \
-            proxy(BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)& obj)         \
-              : obj(obj)                                                        \
-            {}                                                                  \
-                                                                                \
-            template<class Arg>                                                 \
-            proxy&                                                              \
-            operator=(BOOST_FUSION_R_ELSE_CLREF(Arg) val)                       \
-            {                                                                   \
-                BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 3, ATTRIBUTE);        \
-                return *this;                                                   \
-            }                                                                   \
-                                                                                \
-            operator type()                                                     \
-            {                                                                   \
-                return BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 2, ATTRIBUTE); \
-            }                                                                   \
-                                                                                \
-            BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)& obj;               \
-        };                                                                      \
+        typedef                                                                 \
+            class_member_proxy<                                                 \
+                BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)                 \
+              , I                                                               \
+            >                                                                   \
+        proxy;                                                                  \
                                                                                 \
         static get_type                                                         \
         call(BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ) const& obj)        \
@@ -61,5 +73,11 @@
             return proxy(obj);                                                  \
         };                                                                      \
     };
+
+namespace boost { namespace fusion { namespace extension
+{
+    template <typename T, int N>
+    struct class_member_proxy;
+}}}
 
 #endif

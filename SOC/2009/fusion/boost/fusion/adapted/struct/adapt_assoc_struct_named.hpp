@@ -20,11 +20,13 @@
 #define BOOST_FUSION_ADAPT_ASSOC_STRUCT_NAMED_NS(                               \
     WRAPPED_TYPE, NAMESPACE_SEQ, NAME, ATTRIBUTES)                              \
                                                                                 \
-    BOOST_FUSION_ADAPT_STRUCT_DEFINE_PROXY_TYPE(WRAPPED_TYPE,NAMESPACE_SEQ,NAME)\
+    BOOST_FUSION_ADAPT_STRUCT_DEFINE_PROXY_TYPE(                                \
+        WRAPPED_TYPE,(0)NAMESPACE_SEQ,NAME)                                     \
                                                                                 \
     BOOST_FUSION_ADAPT_STRUCT_BASE(                                             \
         (0),                                                                    \
-        (0)(BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION(NAMESPACE_SEQ)NAME),\
+        (0)(BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION(                    \
+            (0)NAMESPACE_SEQ)NAME),                                             \
         assoc_struct_tag,                                                       \
         BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_STRUCT_FILLER_0 ATTRIBUTES,_END), \
         BOOST_FUSION_ADAPT_ASSOC_STRUCT_NAMED_C)

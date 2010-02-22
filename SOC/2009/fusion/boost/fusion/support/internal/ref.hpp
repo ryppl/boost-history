@@ -31,6 +31,10 @@
 #   include <boost/type_traits/remove_const.hpp>
 #endif
 
+#ifndef BOOST_NO_RVALUE_REFERENCES
+#   include <utility>
+#endif
+
 //cschmidt: We ignore volatile in the BOOST_FUSION_ALL_CV_*-Macros, as we would
 //get a lot of problems with older compilers. On top of that, fusion
 //types are not meant to be volatile anyway.

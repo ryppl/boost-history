@@ -9,8 +9,6 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_SIZE_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_SIZE_IMPL_HPP
 
-#include <boost/mpl/int.hpp>
-
 namespace boost { namespace fusion { namespace extension
 {
     template<typename>

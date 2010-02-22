@@ -42,7 +42,7 @@
     TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,PREFIX,ATTRIBUTE)                            \
                                                                                 \
     BOOST_FUSION_ADAPT_STRUCT_C_BASE(                                           \
-        TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, BOOST_PP_EMPTY(), ATTRIBUTE, 3)       \
+        TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, PREFIX, ATTRIBUTE, 3)                 \
                                                                                 \
     template<                                                                   \
         BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \

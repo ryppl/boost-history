@@ -78,8 +78,7 @@ namespace boost { namespace fusion
             typedef T MODIFIER2(MODIFIER3 type)[N];\
         };
 
-        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(
-            BOOST_PP_EMPTY(),BOOST_PP_EMPTY(),&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(BOOST_PP_EMPTY(),const,&);
         BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(const,const,&);
         BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(volatile,volatile,&);
         BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(

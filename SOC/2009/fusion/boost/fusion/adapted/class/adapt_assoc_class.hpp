@@ -9,7 +9,9 @@
 #define BOOST_FUSION_ADAPTED_CLASS_ADAPT_ASSOC_CLASS_HPP
 
 #include <boost/fusion/support/internal/ref.hpp>
+#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/empty.hpp>
+#include <boost/preprocessor/tuple/elem.hpp>
 
 #include <boost/fusion/adapted/detail/class/extension.hpp>
 #include <boost/fusion/adapted/detail/class/adapt_base.hpp>

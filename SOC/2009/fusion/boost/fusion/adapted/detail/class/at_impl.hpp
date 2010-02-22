@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_CLASS_AT_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_CLASS_AT_IMPL_HPP
 
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/remove_const.hpp>
