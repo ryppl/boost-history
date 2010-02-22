@@ -245,13 +245,6 @@ project
 
     alias fails_sometimes
         :
-            ########### fails sometimes
-            #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52
-            [ run stm : -bench accounts -def -threads 2 -inserts 100 : : : accounts_def_t2_i100 ]
-            ########### fails sometimes
-            #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52
-            [ run stm : -bench accounts -def -threads 4 -inserts 100 : : : accounts_def_t4_i100 ]
-
             ########### fails sometimes 17:27 091003
             #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52
             [ run stm : -bench hashmap -def -threads 4 -inserts 100 : : : hashmap_def_t4_i100 ]
@@ -289,6 +282,13 @@ project
 
     alias failures
         :
+            ########### fails since revison 2010/02/22
+            #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52
+            [ run stm : -bench accounts -def -threads 2 -inserts 100 : : : accounts_def_t2_i100 ]
+            ########### fails since revison 2010/02/22
+            #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52
+            [ run stm : -bench accounts -def -threads 4 -inserts 100 : : : accounts_def_t4_i100 ]
+
             ########### fails often
             [ run stm : -bench ll -def -threads 2 -inserts 100 -latm tx : : : ll_def_tx_t2_i100 ]
 

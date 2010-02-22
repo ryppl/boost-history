@@ -19,7 +19,16 @@
 #include <list>
 #include <iostream>
 #include <stdlib.h>
+#include <boost/exception/info.hpp>
+#include <boost/exception/errinfo_errno.hpp>
 
+#if 0
+struct commiting_exception: virtual boost::exception {
+    boost::exception_ptr
+};
+
+#defined THROW_COMMITG_EXCEPTION(EX)
+#endif
 using namespace std;
 using namespace boost;
 
@@ -118,9 +127,9 @@ bool test_less() {
         counter2=0;
     } BOOST_STM_END_TRANSACTION_IN_LOOP(_)
     }
-    BOOST_STM_E_TRANSACTION(_)
-        BOOST_STM_E_RETURN(_,  (counter<counter2)) ;
-    BOOST_STM_E_END_TRANSACTION(_)
+    BOOST_STM_E_TRANSACTION
+        BOOST_STM_E_RETURN(counter<counter2) ;
+    BOOST_STM_E_END_TRANSACTION
     return false;
 }
 
@@ -145,20 +154,20 @@ bool test_outer_throw() {
 }
 bool test_outer_throw_e() {
     reset();
-    BOOST_STM_E_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION {
         counter=0;
-    } BOOST_STM_E_END_TRANSACTION(_)
+    } BOOST_STM_E_END_TRANSACTION
 
     try{
-        BOOST_STM_E_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION {
             counter=1;
             throw 1;
-        } BOOST_STM_E_END_TRANSACTION(_)
+        } BOOST_STM_E_END_TRANSACTION
     } catch (...) {}
 
-    BOOST_STM_E_TRANSACTION(_) {
-        BOOST_STM_E_RETURN(_,  (counter==0));
-    } BOOST_STM_E_END_TRANSACTION(_)
+    BOOST_STM_E_TRANSACTION {
+        BOOST_STM_E_RETURN(counter==0);
+    } BOOST_STM_E_END_TRANSACTION
 
     return true;
 }
@@ -167,9 +176,9 @@ bool test_outer_throw_e() {
 
 bool test_inner_throw() {
     reset();
-    BOOST_STM_E_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION {
         counter=0; counter2=0;
-    } BOOST_STM_E_END_TRANSACTION(_)
+    } BOOST_STM_E_END_TRANSACTION
 
     try{
         BOOST_STM_TRANSACTION(_) {
@@ -192,40 +201,40 @@ bool test_inner_throw() {
 
 bool test_inner_throw_e() {
     reset();
-    BOOST_STM_E_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION {
         counter=0; counter2=0;
-    } BOOST_STM_E_END_TRANSACTION(_)
+    } BOOST_STM_E_END_TRANSACTION
 
     try{
-        BOOST_STM_E_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION {
             counter=1;
-            BOOST_STM_E_TRANSACTION(_) {
+            BOOST_STM_E_TRANSACTION {
                 counter=2;
                 throw 1;
-            } BOOST_STM_E_END_TRANSACTION(_)
+            } BOOST_STM_E_END_TRANSACTION
             counter=3;
-        } BOOST_STM_E_END_TRANSACTION(_)
+        } BOOST_STM_E_END_TRANSACTION
     } catch (...) {}
 
-    BOOST_STM_E_TRANSACTION(_) {
-        BOOST_STM_E_RETURN(_,  (counter==0) );
-    } BOOST_STM_E_END_TRANSACTION(_)
+    BOOST_STM_E_TRANSACTION {
+        BOOST_STM_E_RETURN(counter==0);
+    } BOOST_STM_E_END_TRANSACTION
 
     return false;
 }
 
 bool test_nested_e() {
     reset();
-    BOOST_STM_E_TRANSACTION(_) {
-        counter=1; 
-        BOOST_STM_E_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION {
+        counter=1;
+        BOOST_STM_E_TRANSACTION {
             counter2=2;
-        } BOOST_STM_E_END_TRANSACTION(_)
-    } BOOST_STM_E_END_TRANSACTION(_)
+        } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION
 
-    BOOST_STM_E_TRANSACTION(_) {
-        BOOST_STM_E_RETURN(_,  (counter==1) && (counter2==2));
-    } BOOST_STM_E_END_TRANSACTION(_)
+    BOOST_STM_E_TRANSACTION {
+        BOOST_STM_E_RETURN((counter==1) && (counter2==2));
+    } BOOST_STM_E_END_TRANSACTION
 
     return false;
 }
@@ -233,16 +242,16 @@ bool test_nested_e() {
 bool test_assign_e() {
     reset();
     for(int i=0; i<2;++i) {
-        BOOST_STM_E_TRANSACTION_IN_LOOP(_) {
+        BOOST_STM_E_TRANSACTION_IN_LOOP {
             counter=1;
             counter2=counter;
             continue;
             counter2=3;
-        } BOOST_STM_E_END_TRANSACTION_IN_LOOP(_)
+        } BOOST_STM_E_END_TRANSACTION_IN_LOOP
     }
-    BOOST_STM_E_TRANSACTION(_) {
-        BOOST_STM_E_RETURN(_,  (counter==1) && (counter2==1) && (counter==counter2)) ;
-    } BOOST_STM_E_END_TRANSACTION(_)
+    BOOST_STM_E_TRANSACTION {
+        BOOST_STM_E_RETURN((counter==1) && (counter2==1) && (counter==counter2)) ;
+    } BOOST_STM_E_END_TRANSACTION
 
     return false;
 }
@@ -250,16 +259,16 @@ bool test_assign_e() {
 bool test_less_e() {
     reset();
     for(;;) {
-        BOOST_STM_E_TRANSACTION_IN_LOOP(_) {
+        BOOST_STM_E_TRANSACTION_IN_LOOP {
             counter=1;
             counter2=2;
             break;
             counter2=0;
-        } BOOST_STM_E_END_TRANSACTION_IN_LOOP(_)
+        } BOOST_STM_E_END_TRANSACTION_IN_LOOP
     }
-    BOOST_STM_E_TRANSACTION(_) {
-        BOOST_STM_E_RETURN(_,  counter<counter2);
-    } BOOST_STM_E_END_TRANSACTION(_)
+    BOOST_STM_E_TRANSACTION {
+        BOOST_STM_E_RETURN(counter<counter2);
+    } BOOST_STM_E_END_TRANSACTION
     return false;
 }
 
@@ -280,9 +289,9 @@ bool test_const(stm::tx::numeric<int> const& c) {
     BOOST_STM_TRANSACTION(_) {
         counter2=c;
     } BOOST_STM_RETRY
-    BOOST_STM_E_TRANSACTION(_) {
-        BOOST_STM_E_RETURN(_, c==counter2) ;
-    } BOOST_STM_E_END_TRANSACTION(_)
+    BOOST_STM_E_TRANSACTION {
+        BOOST_STM_E_RETURN(c==counter2) ;
+    } BOOST_STM_E_END_TRANSACTION
     return false;
 }
 bool test_par() {
@@ -310,10 +319,10 @@ bool test_twice() {
 }
 
 bool test_twice_e() {
-    BOOST_STM_E_TRANSACTION(_) {
-        BOOST_STM_E_TRANSACTION(_) {
-        } BOOST_STM_E_END_TRANSACTION(_)
-    } BOOST_STM_E_END_TRANSACTION(_)
+    BOOST_STM_E_TRANSACTION {
+        BOOST_STM_E_TRANSACTION {
+        } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION
 
     return true;
 }
@@ -338,9 +347,9 @@ int test_all() {
     fails += !test_nested_e();
     fails += !test_le();
     fails += !test_const(counter);
-    
+
     fails += !test_par();
-    
+
     return fails;
 }
 

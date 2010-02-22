@@ -96,10 +96,10 @@ bool test_const(tx_int_const_ptr& const  ptr) {
 #endif
 
 int test_counter() {
-    atomic(_) {
+    BOOST_STM_OUTER_TRANSACTION(_) {
         write_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
         *tx_counter_ptr_ptr=BOOST_STM_TX_NEW_PTR(_, tx_int());
-    }  end_atom
+    }  BOOST_STM_RETRY
     thread  th1(inc);
     thread  th2(decr);
     thread  th3(inc);
