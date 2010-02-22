@@ -8,6 +8,8 @@
 //  Library home page: http://www.boost.org/libs/filesystem
 
 #include <iostream>
+#include <iterator>
+#include <algorithm>
 #include <boost/filesystem.hpp>
 using namespace std;
 using namespace boost::filesystem;
@@ -33,16 +35,10 @@ int main(int argc, char* argv[])
     {
       cout << "is a directory containing:\n";
 
-      for (directory_iterator it (p);       // initialize it to the first element
-            it != directory_iterator();     // test for the past-the-end element
-            ++it)                           // increment
-      {
-        cout << "   " << *it << '\n';       // *it returns a directory_entry,
-                                            // which is converted to a path
-                                            // by the stream inserter.
-                                            // it->path() would be wordier, but would
-                                            // eliminate an unnecessary path temporary
-      }
+      copy(directory_iterator(p), directory_iterator(),  // directory_iterator::value_type
+        ostream_iterator<directory_entry>(cout, "\n"));  // is directory_entry, which is
+                                                         // converted to a path by the
+                                                         // path stream inserter
     }
     else
       cout << "exists, but is neither a regular file nor a directory\n";

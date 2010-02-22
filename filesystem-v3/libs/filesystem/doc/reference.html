@@ -549,27 +549,27 @@ system. </p>
         const u32string     generic_u32string() const; // ditto
 
         // <a href="#path-decomposition">decomposition</a>
-        path  root_name() const;
-        path  root_directory() const;
-        path  root_path() const;
-        path  relative_path() const;
-        path  parent_path() const;
-        path  filename() const;
-        path  stem() const;
-        path  extension() const;
+        path  <a href="#path-root_name">root_name</a>() const;
+        path  <a href="#path-root_directory">root_directory</a>() const;
+        path  <a href="#path-root_path">root_path</a>() const;
+        path  <a href="#path-relative_path">relative_path</a>() const;
+        path  <a href="#path-parent_path">parent_path</a>() const;
+        path  <a href="#path-filename">filename</a>() const;
+        path  <a href="#path-stem">stem</a>() const;
+        path  <a href="#path-extension">extension</a>() const;
 
         // <a href="#path-query">query</a>
-        bool empty() const;
-        bool has_root_name() const;
-        bool has_root_directory() const;
-        bool has_root_path() const;
-        bool has_relative_path() const;
-        bool has_parent_path() const;
-        bool has_filename() const;
-        bool has_stem() const;
-        bool has_extension() const;
-        bool is_absolute() const;
-        bool is_relative() const;
+        bool <a href="#path-query">empty</a>() const;
+        bool <a href="#path-has_root_name">has_root_name</a>() const;
+        bool <a href="#path-has_root_directory">has_root_directory</a>() const;
+        bool <a href="#path-has_root_path">has_root_path</a>() const;
+        bool <a href="#path-has_relative_path">has_relative_path</a>() const;
+        bool <a href="#path-has_parent_path">has_parent_path</a>() const;
+        bool <a href="#path-has_filename">has_filename</a>() const;
+        bool <a href="#path-has_stem">has_stem</a>() const;
+        bool <a href="#path-has_extension">has_extension</a>() const;
+        bool <a href="#path-is_absolute">is_absolute</a>() const;
+        bool <a href="#path-is_relative">is_relative</a>() const;
 
         // <a href="#path-iterators">iterators</a>
         class iterator;
@@ -918,33 +918,29 @@ decomposition</a></h3>
 <p><span style="background-color: #E0E0E0"><i>See the
 <a href="#Path-decomposition-table">Path decomposition table</a> for examples 
 for values returned by decomposition functions.</i></span></p>
-<pre>path root_name() const;</pre>
+<pre>path <a name="path-root_name">root_name</a>() const;</pre>
 <blockquote>
 <p><i>Returns:</i> <i>root-name,</i> if <code>pathname</code> includes <i>
 root-name</i>, otherwise <code>path()</code>. </p>
 </blockquote>
-<pre>path root_directory() const;</pre>
+<pre>path <a name="path-root_directory">root_directory</a>() const;</pre>
 <blockquote>
 <p><i>Returns:</i> <i>root-directory</i>, if <code>pathname</code> includes <i>
 root-directory</i>, otherwise <code>path()</code>.</p>
 <p>If <i>root-directory</i> is composed of <i>slash name</i>, <i>slash</i> is 
 excluded from the returned string.</p>
 </blockquote>
-<pre>path root_path() const;</pre>
+<pre>path <a name="path-root_path">root_path</a>() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>root_name() / root_directory()</code></p>
 </blockquote>
-<pre>path relative_path() const;</pre>
+<pre>path <a name="path-relative_path">relative_path</a>() const;</pre>
 <blockquote>
 <p><i>Returns:</i> A <code>path</code> composed from <code>pathname</code>, if <code>
 !empty()</code>, beginning 
 with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</code>.</p>
 </blockquote>
-<pre>path <a name="path-filename">filename</a>() const;</pre>
-<blockquote>
-  <p><i>Returns:</i> <code>empty() ? path() : *--end()</code></p>
-</blockquote>
-<pre>path parent_path() const;</pre>
+<pre>path <a name="path-parent_path">parent_path</a>() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>(empty() || begin() == --end()) ? path() : <i>pp</i></code>, where
   <code><i>pp</i></code> is constructed as if by 
@@ -952,7 +948,13 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
   operator/=</code> for each element in the range <code>begin()</code>, <code>
   --end()</code>.</p>
 </blockquote>
-<pre>path stem(const path&amp; p) const;</pre>
+<pre>path <a name="path-filename">filename</a>() const;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>empty() ? path() : *--end()</code></p>
+  <p>[<i>Example:</i> <code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).filename();</code> 
+  outputs &quot;<code>bar.txt</code>&quot; (without the quotes). <i>--end example</i>]</p>
+</blockquote>
+<pre>path <a name="path-stem">stem</a>(const path&amp; p) const;</pre>
 <blockquote>
   <p><i>Returns:</i> if <code>p.filename()</code>contains a dot but does not 
   consist solely of one or to two dots, returns 
@@ -960,14 +962,18 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
   ending at the last dot (the dot is not included). Otherwise, 
   returns <code>
   p.filename()</code>.</p>
+  <p>[<i>Example:</i> <code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).stem();</code> 
+  outputs &quot;<code>bar</code>&quot; (without the quotes). <i>--end example</i>]</p>
 </blockquote>
-<pre>path extension(const path&amp; p) const;</pre>
+<pre>path <a name="path-extension">extension</a>(const path&amp; p) const;</pre>
 <blockquote>
   <p><i>Returns:</i> if <code>p.filename()</code> contains a dot but does not 
   consist solely of one or to two dots, returns 
   the substring of <code>p.filename()</code> starting at the rightmost dot 
   and ending at the path's end. Otherwise, returns an empty <code>path</code> 
   object. </p>
+  <p>[<i>Example:</i> <code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).extension();</code> 
+  outputs &quot;<code>.txt</code>&quot; (without the quotes). <i>--end example</i>]</p>
   <p>[<i>Note:<b> </b></i>The dot is included in the return value so that 
   it is possible to distinguish between no extension and an empty extension. See
   <a href="http://permalink.gmane.org/gmane.comp.lib.boost.devel/199744">
@@ -978,43 +984,43 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
   as alternate data streams or partitioned dataset names.</p>
 </blockquote>
 <h3> <a name="path-query"> <code><font size="4">path</font></code> query</a></h3>
-<pre>bool empty() const;</pre>
+<pre>bool <a name="path-empty">empty</a>() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>native().empty()</code>.</p>
+  <p><i>Returns:</i> <code>m_pathname.empty()</code>.</p>
 </blockquote>
-<pre>bool has_root_path() const;</pre>
+<pre>bool <a name="path-has_root_path">has_root_path</a>() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>!root_path().empty()</code></p>
+  <p><i>Returns:</i> <code>!<a href="#path-root_path">root_path</a>().empty()</code></p>
 </blockquote>
-<pre>bool has_root_name() const;</pre>
+<pre>bool <a name="path-has_root_name">has_root_name</a>() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>!root_name().empty()</code></p>
+  <p><i>Returns:</i> <code>!<a href="#path-root_name">root_name</a>().empty()</code></p>
 </blockquote>
-<pre>bool has_root_directory() const;</pre>
+<pre>bool <a name="path-has_root_directory">has_root_directory</a>() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>!root_directory().empty()</code></p>
+  <p><i>Returns:</i> <code>!<a href="#path-root_directory">root_directory</a>().empty()</code></p>
 </blockquote>
-<pre>bool has_relative_path() const;</pre>
+<pre>bool <a name="path-has_relative_path">has_relative_path</a>() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>!relative_path().empty()</code></p>
+  <p><i>Returns:</i> <code>!<a href="#path-has_relative_path">relative_path</a>().empty()</code></p>
 </blockquote>
-<pre>bool has_parent_path() const;</pre>
+<pre>bool <a name="path-has_parent_path">has_parent_path</a>() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>!parent_path().empty()</code></p>
+  <p><i>Returns:</i> <code>!<a href="#path-parent_path">parent_path</a>().empty()</code></p>
 </blockquote>
-<pre>bool has_filename() const;</pre>
+<pre>bool <a name="path-has_filename">has_filename</a>() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>!filename().empty()</code></p>
+  <p><i>Returns:</i> <code>!<a href="#path-filename">filename</a>().empty()</code></p>
 </blockquote>
-<pre>bool has_stem() const;</pre>
+<pre>bool <a name="path-has_stem">has_stem</a>() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>!</code><code>stem().empty()</code></p>
+  <p><i>Returns:</i> <code>!<a href="#path-stem">stem</a>().empty()</code></p>
 </blockquote>
-<pre>bool has_extension() const;</pre>
+<pre>bool <a name="path-has_extension">has_extension</a>() const;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>!extension().empty()</code></p>
+  <p><i>Returns:</i> <code>!<a href="#path-has_extension">extension</a>().empty()</code></p>
 </blockquote>
-<pre>bool is_absolute() const;</pre>
+<pre>bool <a name="path-is_absolute">is_absolute</a>() const;</pre>
 <blockquote>
   <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>true</code> 
   if the elements of <code>root_path()</code> uniquely identify a directory, else <code>false</code>.</span></p>
@@ -1022,7 +1028,7 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
   path(&quot;/foo&quot;).is_absolute()</code> returns <code>true</code>. On Windows, <code>
   path(&quot;/foo&quot;).is_absolute()</code> returns <code>false</code>. <i>--end note</i>]</span></p>
 </blockquote>
-<pre>bool is_relative() const;</pre>
+<pre>bool <a name="path-is_relative">is_relative</a>() const;</pre>
 <blockquote>
   <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>!is_absolute()</code>.</span></p>
 </blockquote>
@@ -1345,12 +1351,20 @@ clause.</p>
         // <a href="#directory_entry-modifiers">modifiers</a>
         directory_entry&amp; operator=(const directory_entry&amp;);
         void assign(const path_type&amp; p, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
-        void replace_filename(const string_type&amp; s, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
+        void replace_filename(const path&amp; p, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
 
         // <a href="#directory_entry-observers">observers</a>
         const path&amp;  path() const;
 <span style="background-color: #FFFFFF">        file_status  status(system::error_code&amp; ec) const;
         file_status  symlink_status(system::error_code&amp; ec) const;
+
+        bool operator&lt; (const directory_entry&amp; rhs);
+        bool operator==(const directory_entry&amp; rhs); 
+        bool operator!=(const directory_entry&amp; rhs); 
+        bool operator&lt; (const directory_entry&amp; rhs);
+        bool operator&lt;=(const directory_entry&amp; rhs);
+        bool operator&gt; (const directory_entry&amp; rhs);
+        bool operator&gt;=(const directory_entry&amp; rhs);
 </span><span style="background-color: #FFFF00">
 </span>      private:
         path_type            m_path;           // for exposition only
@@ -1443,7 +1457,7 @@ systems that provide status as a by-product of directory iteration.</i></span></
     </tr>
   </table>
 </blockquote>
-<pre>void replace_filename(const string_type&amp; s, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());</pre>
+<pre>void replace_filename(const path&amp; p, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());</pre>
 <blockquote>
   <p><i>Postconditions:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="43%">
@@ -1498,6 +1512,36 @@ else if ( &amp;ec != &amp;boost::throws() ) ec.clear();</span></pre>
   </blockquote>
   <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>
   m_symlink_status</code></span></p>
+</blockquote>
+<pre><span style="background-color: #FFFFFF">bool operator==(const directory_entry&amp; rhs);</span></pre>
+<blockquote>
+  <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>m_path == 
+  rhs.m_path</code>.</span></p>
+</blockquote>
+<pre><span style="background-color: #FFFFFF">bool operator!=(const directory_entry&amp; rhs);</span></pre>
+<blockquote>
+  <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>m_path != 
+  rhs.m_path</code>.</span></p>
+</blockquote>
+<pre><span style="background-color: #FFFFFF">bool operator&lt; (const directory_entry&amp; rhs);</span></pre>
+<blockquote>
+  <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>m_path &lt; 
+  rhs.m_path</code>.</span></p>
+</blockquote>
+<pre><span style="background-color: #FFFFFF">bool operator&lt;=(const directory_entry&amp; rhs);</span></pre>
+<blockquote>
+  <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>m_path &lt;= 
+  rhs.m_path</code>.</span></p>
+</blockquote>
+<pre><span style="background-color: #FFFFFF">bool operator&gt; (const directory_entry&amp; rhs);</span></pre>
+<blockquote>
+  <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>m_path &gt; 
+  rhs.m_path</code>.</span></p>
+</blockquote>
+<pre><span style="background-color: #FFFFFF">bool operator&gt;=(const directory_entry&amp; rhs);</span></pre>
+<blockquote>
+  <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>m_path &gt;= 
+  rhs.m_path</code>.</span></p>
 </blockquote>
 <h3><a name="Class-directory_iterator">Class <code>directory_iterator</code></a></h3>
 <p>Objects of type <code>directory_iterator</code> provide standard library 
@@ -3099,7 +3143,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->20 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40539" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40543" --></p>
 
 </body>
 

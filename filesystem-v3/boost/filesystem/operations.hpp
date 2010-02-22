@@ -452,18 +452,18 @@ public:
   directory_entry() {}
   explicit directory_entry(const boost::filesystem::path& p,
     file_status st = file_status(), file_status symlink_st=file_status())
-    : m_pathname(p), m_status(st), m_symlink_status(symlink_st)
+    : m_path(p), m_status(st), m_symlink_status(symlink_st)
     {}
 
   void assign(const boost::filesystem::path& p,
     file_status st = file_status(), file_status symlink_st = file_status())
-    { m_pathname = p; m_status = st; m_symlink_status = symlink_st; }
+    { m_path = p; m_status = st; m_symlink_status = symlink_st; }
 
   void replace_filename(const boost::filesystem::path& p,
     file_status st = file_status(), file_status symlink_st = file_status())
   {
-    m_pathname.remove_filename();
-    m_pathname /= p;
+    m_path.remove_filename();
+    m_path /= p;
     m_status = st;
     m_symlink_status = symlink_st;
   }
@@ -474,14 +474,21 @@ public:
       { replace_filename(p, st, symlink_st); }
 # endif
 
-  const boost::filesystem::path&  path() const               {return m_pathname;}
+  const boost::filesystem::path&  path() const               {return m_path;}
   file_status   status() const                               {return m_get_status();}
   file_status   status(system::error_code& ec) const         {return m_get_status(&ec);}
   file_status   symlink_status() const                       {return m_get_symlink_status();}
   file_status   symlink_status(system::error_code& ec) const {return m_get_symlink_status(&ec);}
 
+  bool operator==(const directory_entry& rhs) {return m_path == rhs.m_path;} 
+  bool operator!=(const directory_entry& rhs) {return m_path != rhs.m_path;} 
+  bool operator< (const directory_entry& rhs) {return m_path < rhs.m_path;} 
+  bool operator<=(const directory_entry& rhs) {return m_path <= rhs.m_path;} 
+  bool operator> (const directory_entry& rhs) {return m_path > rhs.m_path;} 
+  bool operator>=(const directory_entry& rhs) {return m_path >= rhs.m_path;} 
+
 private:
-  boost::filesystem::path   m_pathname;
+  boost::filesystem::path   m_path;
   mutable file_status       m_status;           // stat()-like
   mutable file_status       m_symlink_status;   // lstat()-like
 

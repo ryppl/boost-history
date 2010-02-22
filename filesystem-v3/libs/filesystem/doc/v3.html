@@ -51,11 +51,11 @@ changes include:</p>
 &nbsp;</li>
   <li>New class path members include:<br>
 &nbsp;<ul>
-  <li><code>has_stem()</code></li>
-  <li><code>has_extension()</code></li>
-  <li><code>is_absolute()</code>. This renames <code>is_complete()</code>, which 
+  <li><code><a href="reference.html#path-has_stem">has_stem</a>()</code></li>
+  <li><code><a href="reference.html#path-has_extension">has_extension</a>()</code></li>
+  <li><code><a href="reference.html#path-is_absolute">is_absolute</a>()</code>. This renames <code>is_complete()</code>, which 
   is now deprecated.</li>
-  <li><code>is_relative()</code></li>
+  <li><code><a href="reference.html#path-is_relative">is_relative</a>()</code></li>
   <li><code>absolute()</code>. This replaces the operations function <code>
   complete()</code>, which is now deprecated.</li>
   <li><code>preferred()<br>
@@ -65,10 +65,10 @@ changes include:</p>
   </li>
   <li>New or improved operations functions include:<br>
 &nbsp;<ul>
-    <li><code>create_symlink()</code> now supported on both POSIX and Windows.</li>
-    <li><code>read_symlink()</code> function added. Supported on both POSIX and 
+    <li><code><a href="reference.html#create_symlink">create_symlink</a>()</code> now supported on both POSIX and Windows.</li>
+    <li><code><a href="reference.html#read_symlink">read_symlink</a>()</code> function added. Supported on both POSIX and 
     Windows. Used to read the contents of a symlink itself.</li>
-    <li><code>resize_file()</code> function added. Supported on both POSIX and 
+    <li><code><a href="reference.html#resize_file">resize_file</a>()</code> function added. Supported on both POSIX and 
     Windows. Used to shrink or grow a regular file.</li>
     <li><code>unique_path()</code> function added. Supported on both POSIX and 
     Windows. Used to generate a secure temporary pathname.<br>
@@ -88,7 +88,7 @@ changes include:</p>
 
 <h2>Breaking changes</h2>
 
-<p>To ease the transition, Versions 2 and 3 will both included in the next 
+<p>To ease the transition, Versions 2 and 3 will both be included in the next 
 several Boost releases. Version 2 will be the default version for one release 
 cycle, and then Version 3 will become the default version.</p>
 <h3>Class <code>path</code></h3>
@@ -115,7 +115,7 @@ cycle, and then Version 3 will become the default version.</p>
   This impacts primarily Cygwin users; versions prior to 1.7 are no longer 
   supported.<br>
 &nbsp;</li>
-  <li>Microsoft VC++ 7.1 and earlier are not currently supported.</li>
+  <li>Microsoft VC++ 7.1 and earlier are no longer supported.</li>
 </ul>
 
 <hr>
@@ -123,7 +123,7 @@ cycle, and then Version 3 will become the default version.</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->17 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40552" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->18 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40554" --></p>
 
 </body>
 

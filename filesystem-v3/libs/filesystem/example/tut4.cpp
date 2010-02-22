@@ -8,6 +8,7 @@
 //  Library home page: http://www.boost.org/libs/filesystem
 
 #include <iostream>
+#include <iterator>
 #include <vector>
 #include <algorithm>
 #include <boost/filesystem.hpp>
@@ -38,9 +39,7 @@ int main(int argc, char* argv[])
       typedef vector<path> vec;             // store paths,
       vec v;                                // so we can sort them later
 
-      for (directory_iterator it (p);       // initialize it to the first element
-            it != directory_iterator();     // test for the past-the-end element
-            ++it)                           // increment
+      for (directory_iterator it(p), it_end; it != it_end; ++it) // iterate over directory
       {
         path fn = it->path().filename();    // extract the filename from the path
         v.push_back(fn);                    // push into vector for later sorting
@@ -49,7 +48,7 @@ int main(int argc, char* argv[])
       sort(v.begin(), v.end());             // sort, since directory iteration
                                             // is not ordered on some file systems
 
-      for (vec::const_iterator it (v.begin()); it != v.end(); ++it)
+      for (vec::const_iterator it(v.begin()), it_end(v.end()); it != it_end; ++it)
       {
         cout << "   " << *it << '\n';
       }

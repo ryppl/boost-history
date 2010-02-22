@@ -150,7 +150,8 @@ int main(int argc, char* argv[])
   </tr>
 </table>
 
-<p>The Boost.Filesystem <code><a href="reference.html#file_size">file_size</a></code> function returns an <code>uintmax_t</code> 
+<p>The Boost.Filesystem <code><a href="reference.html#file_size">file_size</a></code> 
+function returns a <code>uintmax_t</code> 
 containing the size of the file named by the argument. The declaration looks 
 like this:</p>
 
@@ -271,12 +272,12 @@ files and with different kinds of files:</p>
 
   cout &lt;&lt; p &lt;&lt; &quot;: &quot;;  // utilize the <a href="reference.html#path-inserter-extractor">path narrow stream inserter</a>
 
-  if ( <a href="reference.html#exists-path">exists</a>(p) )    // does p actually exist?
+  if (<a href="reference.html#exists-path">exists</a>(p))    // does p actually exist?
   {
-    if ( <a href="reference.html#is_regular_file-path">is_regular_file</a>(p) )        // is p a regular file?   
+    if (<a href="reference.html#is_regular_file-path">is_regular_file</a>(p))        // is p a regular file?   
       cout &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
 
-    else if ( <a href="reference.html#is_directory-path">is_directory</a>(p) )      // is p a directory?
+    else if (<a href="reference.html#is_directory-path">is_directory</a>(p))      // is p a directory?
       cout &lt;&lt; &quot;is a directory\n&quot;;
 
     else
@@ -335,10 +336,10 @@ acts as the end iterator.</p>
 
 <p>The value type of <code>directory_iterator</code> is <code>
 <a href="reference.html#directory_entry">directory_entry</a></code>. A <code>
-directory_entry</code> contains a <code>path</code> and symlink/non-symlink 
-resolving <code><a href="reference.html#file_status">file_status</a></code> 
-caches, and 
-can be passed to <code>path</code> arguments in function calls.</p>
+directory_entry</code> object contains a <code>path</code> and <code><a href="reference.html#file_status">file_status</a></code> 
+information.&nbsp; A <code>
+directory_entry</code> object 
+can be used directly, but can also be passed to <code>path</code> arguments in function calls.</p>
 
 <table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
   <tr>
@@ -351,25 +352,19 @@ can be passed to <code>path</code> arguments in function calls.</p>
 
   cout &lt;&lt; p &lt;&lt; &quot;: &quot;;  // utilize the <a href="reference.html#path-inserter-extractor">path narrow stream inserter</a>
 
-  if ( <a href="reference.html#exists-path">exists</a>(p) )    // does p actually exist?
+  if (<a href="reference.html#exists-path">exists</a>(p))    // does p actually exist?
   {
-    if ( <a href="reference.html#is_regular_file-path">is_regular_file</a>(p) )        // is p a regular file?   
+    if (<a href="reference.html#is_regular_file-path">is_regular_file</a>(p))        // is p a regular file?   
       cout &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
 
-    else if ( <a href="reference.html#is_directory-path">is_directory</a>(p) )      // is p a directory?
+    else if (<a href="reference.html#is_directory-path">is_directory</a>(p))      // is p a directory?
     {
       cout &lt;&lt; &quot;is a directory containing:\n&quot;;
 
-      for ( <a href="reference.html#directory_iterator-ctor-path">directory_iterator</a> it (p);   // initialize it to the first element
-            it != <a href="reference.html#directory_iterator-default-ctor">directory_iterator()</a>;  // test for the past-the-end element
-            ++it )                       // increment
-      {
-        cout &lt;&lt; &quot; &quot; &lt;&lt; *it &lt;&lt; '\n';      // *it returns a <a href="reference.html#directory_entry">directory_entry</a>,
-                                         // which is converted to a path by the
-                                         // stream inserter.
-                                         // it-&gt;path() would be wordier, but would
-                                         // eliminate an unnecessary path temporary
-      }
+      copy(directory_iterator(p), directory_iterator(), // directory_iterator::value_type
+        ostream_iterator&lt;directory_entry&gt;(cout, &quot;\n&quot;)); // is directory_entry, which is
+                                                        // converted to a path by the
+                                                        // path stream inserter
     }
 
     else
@@ -476,21 +471,21 @@ c:\boost\trunk: is a directory containing:
 
   cout &lt;&lt; p &lt;&lt; &quot;: &quot;;  // utilize the <a href="reference.html#path-inserter-extractor">path narrow stream inserter</a>
 
-  if ( <a href="reference.html#exists-path">exists</a>(p) )    // does p actually exist?
+  if (<a href="reference.html#exists-path">exists</a>(p))    // does p actually exist?
   {
-    if ( <a href="reference.html#is_regular_file-path">is_regular_file</a>(p) )        // is p a regular file?   
+    if (<a href="reference.html#is_regular_file-path">is_regular_file</a>(p))        // is p a regular file?   
       cout &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
 
-    else if ( <a href="reference.html#is_directory-path">is_directory</a>(p) )      // is p a directory?
+    else if (<a href="reference.html#is_directory-path">is_directory</a>(p))      // is p a directory?
     {
       cout &lt;&lt; &quot;is a directory containing:\n&quot;;
 
       typedef vector&lt;path&gt; vec;             // store paths,
       vec v;                                // so we can sort them later
 
-      for ( <a href="reference.html#directory_iterator-ctor-path">directory_iterator</a> it (p);      // initialize it to the first element
+      for (<a href="reference.html#directory_iterator-ctor-path">directory_iterator</a> it (p);       // initialize it to the first element
             it != <a href="reference.html#directory_iterator-default-ctor">directory_iterator()</a>;     // test for the past-the-end element
-            ++it )                          // increment
+            ++it)                           // increment
       {
         path fn = it-&gt;path().<a href="reference.html#path-filename">filename</a>();    // extract the filename from the path
         v.push_back(fn);                    // push into vector for later sorting
@@ -679,8 +674,14 @@ int main()
   { fs::ofstream f(L&quot;smile\u263A&quot;); }
   { fs::ofstream f(narrow_string); }
   { fs::ofstream f(wide_string); }
-  // { fs::ofstream f(narrow_list); } and { fs::ofstream f(wide_list); }
-  // would work, but we want to show off construction from an iterator range:
+  { fs::ofstream f(narrow_list); }
+  { fs::ofstream f(wide_list); }
+  narrow_list.pop_back();
+  narrow_list.push_back('4');
+  wide_list.pop_back();
+  wide_list.pop_back();
+  wide_list.push_back(L'4');
+  wide_list.push_back(L'\u263A');
   { fs::ofstream f(fs::path(narrow_list.begin(), narrow_list.end())); }
   { fs::ofstream f(fs::path(wide_list.begin(), wide_list.end())); }
 
@@ -702,7 +703,7 @@ int main()
       <td width="50%" style="font-size: 10pt" valign="top">
       <pre>$ ./tut5
 $ ls smile*
-smile smile&#9786; smile2 smile2&#9786; smile3 smile3&#9786;</pre>
+smile smile&#9786; smile2 smile2&#9786; smile3 smile3&#9786; smile4 smile4&#9786;</pre>
       </td>
       <td style="font-size: 10pt" valign="top">
       <pre>&gt;tut5
@@ -712,6 +713,8 @@ smile2
 smile2&#9786;
 smile3
 smile3&#9786;
+smile4
+smile4&#9786;
 smile&#9786;</pre>
       </td>
     </tr>
@@ -741,8 +744,8 @@ international character sets than command line interpreters.</p>
 
 <h2><a name="Class-path-formats">Class path: Generic format vs. Native format</a></h2>
 
-<p dir="ltr"><b>Class <code>path</code> deals with two different pathname 
-formats - generic format and native format.</b> In the case of POSIX-like 
+<p dir="ltr">Class <code>path</code> deals with two different pathname 
+formats - generic format and native format. For POSIX-like 
 file systems, these formats are the same. But for users of Windows and 
 other non-POSIX file systems, the distinction is important. Even 
 programmers writing for POSIX-like systems need to understand the distinction if 
@@ -756,7 +759,7 @@ separator character is always one or more slash characters.</p>
 
 <p dir="ltr">The <b>native format</b> is the format as defined by the particular 
 operating system. For Windows, either the slash or the backslash can be used as 
-the directory separator character. If a drive specified or a backslash appears 
+the directory separator character. If a drive specifier or a backslash appears 
 in a pathname on a Windows system, it is always treated as the native format.</p>
 
 <p dir="ltr">We can use <code>tut4</code> to explore the two formats:</p>
@@ -818,7 +821,7 @@ the examples below on your system, and try some different path arguments as we
 go along.</p>
 
 <p> <code>path_info</code> produces several dozen output lines every time it's 
-invoked. We will only show the output lines we are interested in at the moment.</p>
+invoked. We will only show the output lines we are interested in at each step.</p>
 
 <p>First we'll look at iteration over the elements of a path, and then use 
 iteration to illustrate the difference between generic and native format paths.</p>
@@ -1082,11 +1085,11 @@ argument report operational error status by setting the <code>ec</code> argument
 do not throw exceptions when I/O errors occur.</p>
 
 <hr>
-<p>© Copyright Beman Dawes 2010</p>
+<p>Â© Copyright Beman Dawes 2010</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->18 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40554" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->21 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40541" --></p>
 
 </body>
 

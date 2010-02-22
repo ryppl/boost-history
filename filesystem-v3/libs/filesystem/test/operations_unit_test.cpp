@@ -1,6 +1,6 @@
 //  operations_unit_test.cpp  ----------------------------------------------------------//
 
-//  Copyright Beman Dawes 2008
+//  Copyright Beman Dawes 2008, 2009
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -133,6 +133,24 @@ namespace
     last_write_time(".", ft, ec);
   }
 
+  //  directory_entry_test  ------------------------------------------------------------//
+
+  void directory_entry_test()
+  {
+    std::cout << "directory_entry test..." << std::endl;
+
+    directory_entry de("foo.bar", file_status(regular_file), file_status(directory_file));
+
+    CHECK(de.path() == "foo.bar");
+    CHECK(de.status() == file_status(regular_file));
+    CHECK(de.symlink_status() == file_status(directory_file));
+    CHECK(de < directory_entry("goo.bar"));
+    CHECK(de == directory_entry("foo.bar"));
+    CHECK(de != directory_entry("goo.bar"));
+    de.replace_filename("bar.foo");
+    CHECK(de.path() == "bar.foo");
+  }
+
   //  directory_entry_overload_test  ---------------------------------------------------//
 
   void directory_entry_overload_test()
@@ -197,6 +215,7 @@ int main(int, char* argv[])
   query_test();
   directory_iterator_test();
   operations_test();
+  directory_entry_test();
   directory_entry_overload_test();
 
   std::cout << unique_path() << std::endl;
