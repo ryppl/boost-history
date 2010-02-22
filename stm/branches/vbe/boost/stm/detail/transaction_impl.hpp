@@ -687,8 +687,15 @@ inline transaction::~transaction()
        synchro::lock_guard<Mutex> lock(*mutex());
         abort();
     }
-    transactionsInFlight_.erase(this);
     transactions().pop();
+
+    // BUG not removed from the list because the test is inversed
+    //~ if (alreadyRemovedFromInFlight)
+
+    //~ synchro::lock(*inflight_lock());
+    // if I'm the last transaction of this thread, reset abort to false
+    //~ transactionsInFlight_.erase(this);
+
 
 }
 
@@ -1308,7 +1315,7 @@ inline void transaction::deferred_abort
    wbloom().clear();
 #endif
 
-   if (alreadyRemovedFromInFlight)
+   if (!alreadyRemovedFromInFlight)
    {
       synchro::lock(*inflight_lock());
       // if I'm the last transaction of this thread, reset abort to false
