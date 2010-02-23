@@ -39,10 +39,10 @@
       Another example is that of an API of a library. Consider a shared library which
       internally manages resources on behave of its users. As an API author, you
       may wish not to share certain implementation details, such as pointers or iterators,
-      with your users yet you would like to efficiently dispatch API calls. When
-      you use <code class="computeroutput"><span class="identifier">tokenmap</span></code> generated
-      keys, you are not sharing any such implementation details, ensuring users cannot
-      corrupt your internally managed state.
+      with users yet you would like to efficiently dispatch API calls. When you use
+      <code class="computeroutput"><span class="identifier">tokenmap</span></code>-generated keys, you
+      are not sharing any such implementation details, ensuring users cannot corrupt
+      your internally managed state.
     </p>
 <p>
       Additionally, since we're not dereferencing tokens, unlike pointers, it is
