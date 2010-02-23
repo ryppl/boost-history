@@ -45,7 +45,7 @@ public:
     typedef       interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> joint_type;
     typedef type overloadable_type;
 
-    typedef interval_base_map <split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>, 
+    typedef interval_base_map <type, 
                                DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> base_type;
 
     typedef DomainT domain_type;

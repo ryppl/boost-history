@@ -29,10 +29,9 @@ class split_interval_set:
                              DomainT,Compare,Interval,Alloc>
 {
 public:
-    typedef interval_base_set<itl::split_interval_set<DomainT,Compare,Interval,Alloc>,
-                              DomainT,Compare,Interval,Alloc> base_type;
-
     typedef split_interval_set<DomainT,Compare,Interval,Alloc> type;
+    typedef interval_base_set<type,DomainT,Compare,Interval,Alloc> base_type;
+
     typedef interval_set<DomainT,Compare,Interval,Alloc> joint_type;
     typedef type overloadable_type;
 

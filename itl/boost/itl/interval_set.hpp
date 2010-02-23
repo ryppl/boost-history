@@ -30,11 +30,11 @@ class interval_set:
 {
 public:
 
-    /// The base_type of this class
-    typedef interval_base_set<itl::interval_set<DomainT,Compare,Interval,Alloc>,
-                              DomainT,Compare,Interval,Alloc> base_type;
-
     typedef interval_set<DomainT,Compare,Interval,Alloc> type;
+
+    /// The base_type of this class
+    typedef interval_base_set<type,DomainT,Compare,Interval,Alloc> base_type;
+
     typedef type overloadable_type;
 
     typedef type joint_type;
