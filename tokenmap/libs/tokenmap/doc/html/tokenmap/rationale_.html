@@ -27,12 +27,27 @@
 <a name="tokenmap.rationale_"></a><a class="link" href="rationale_.html" title="Rationale">Rationale </a>
 </h2></div></div></div>
 <p>
-      Network applications often require keeping track of sessions where a "session
-      key" is exchanged between a server and a client. The server then keeps
-      track of the client's state by having the session key mapped to an in-memory
-      "session object". Today, developers often use <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code> for
-      this purpose, which has sub-optimal performance and requires users to come
-      up with sufficiently hard to guess random keys.
+      Network applications based on various stateless protocols (UDP, HTTP) often
+      require keeping track of sessions where a "session key" is exchanged
+      between a server and a client. The server then maintains the client's state
+      by having the session key mapped to an in-memory session object. Today, developers
+      often use <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code> for the purpose of such mapping, which
+      has sub-optimal performance and requires users to come up with sufficiently
+      hard to guess random keys.
+    </p>
+<p>
+      Another example is that of an API of a shared library. Consider a library which
+      internally manages resources on behave of its users. As an API author, you
+      may wish not to share certain implementation details, such as pointers or iterators,
+      with your users yet you would like to efficiently dispatch API calls. When
+      you use <code class="computeroutput"><span class="identifier">tokenmap</span></code> generated
+      keys, you are not sharing any such implementation details, ensuring users cannot
+      corrupt your internally managed state.
+    </p>
+<p>
+      Additionally, since we're not dereferencing tokens, unlike pointers, it is
+      perfectly OK for them to outlive the mapped-to-objects without the usual consequences
+      of accessing stale pointers.
     </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
