@@ -165,8 +165,7 @@ private:
     void add_segment(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
 
     template<class Combiner>
-    void subtract_main(/*Cl const interval_type& inter_val,*/ const CodomainT& co_val, 
-                       iterator& it_, iterator& end_  );
+    void subtract_main(const CodomainT& co_val, iterator& it_, iterator& end_  );
 
     void subtract_front(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
 
