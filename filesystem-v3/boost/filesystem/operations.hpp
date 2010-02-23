@@ -250,13 +250,13 @@ namespace boost
   inline
   path complete(const path& p)
   {
-    return path(p).absolute(detail::initial_path(0));
+    return path(p).make_absolute(detail::initial_path(0));
   }
 
   inline
   path complete(const path& p, const path& base)
   {
-    return path(p).absolute(base);
+    return path(p).make_absolute(base);
   }
 # endif
 

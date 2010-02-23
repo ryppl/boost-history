@@ -39,11 +39,7 @@ int main(int argc, char* argv[])
       typedef vector<path> vec;             // store paths,
       vec v;                                // so we can sort them later
 
-      for (directory_iterator it(p), it_end; it != it_end; ++it) // iterate over directory
-      {
-        path fn = it->path().filename();    // extract the filename from the path
-        v.push_back(fn);                    // push into vector for later sorting
-      }
+      copy(directory_iterator(p), directory_iterator(), back_inserter(v));
 
       sort(v.begin(), v.end());             // sort, since directory iteration
                                             // is not ordered on some file systems

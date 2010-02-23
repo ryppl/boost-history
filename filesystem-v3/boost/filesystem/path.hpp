@@ -206,9 +206,9 @@ namespace filesystem
 
     //  -----  modifiers  -----
 
-    path&  absolute(const path& base); 
     void   clear()             { m_pathname.clear(); }
-    path&  preferred()
+    path&  make_absolute(const path& base); 
+    path&  make_preferred()
 #                              ifdef BOOST_POSIX_PATH
                                { return *this; }  // POSIX no effect
 #                              else // BOOST_WINDOWS_PATH

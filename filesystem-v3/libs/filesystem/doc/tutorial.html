@@ -483,13 +483,7 @@ c:\boost\trunk: is a directory containing:
       typedef vector&lt;path&gt; vec;             // store paths,
       vec v;                                // so we can sort them later
 
-      for (<a href="reference.html#directory_iterator-ctor-path">directory_iterator</a> it (p);       // initialize it to the first element
-            it != <a href="reference.html#directory_iterator-default-ctor">directory_iterator()</a>;     // test for the past-the-end element
-            ++it)                           // increment
-      {
-        path fn = it-&gt;path().<a href="reference.html#path-filename">filename</a>();    // extract the filename from the path
-        v.push_back(fn);                    // push into vector for later sorting
-      }
+      copy(directory_iterator(p), directory_iterator(), back_inserter(v));
 
       sort(v.begin(), v.end());             // sort, since directory iteration
                                             // is not ordered on some file systems
@@ -873,7 +867,7 @@ for (path::iterator it = p.begin(); it != p.end(); ++it)
 <p><code>path::iterator::value_type</code> is <code>path::string_type</code>, 
 and iteration treats <code>path</code> as a container of filenames.</p>
 
-<p dir="ltr">Let's look at some at the output from the a slightly different 
+<p dir="ltr">Let's look at some of the output from a slightly different 
 example:</p>
 
   <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
@@ -1036,7 +1030,7 @@ cout &lt;&lt; &quot; preferred()----------: &quot; &lt;&lt; p.preferred() &lt;&l
     </tr>
     <tr>
       <td width="50%" style="font-size: 10pt">
-      <pre>$ ./path_info / foo/bar baz.txt
+      <pre>$ ./path_info / foo/bar baa.txt
 
 composed path:
   cout &lt;&lt; -------------: /foo/bar/baa.txt
@@ -1058,38 +1052,47 @@ composed path:
 
   <h2><a name="Error-reporting">Error reporting</a></h2>
 
-  <p>Legacy C interfaces like the original <code>rename</code> function report 
-  errors via an error code, typically obtained via <code>errno</code>. The 
-  preferred C++ practice is to throw an exception to report an error, and that's 
-  how the first of the two Boost.Filesystem <code>rename</code> functions 
-  reports errors. A <code>filesystem_error</code> exception will be thrown on an 
-  operational error. It's derived from <code>std::runtime_error</code> and has a 
-  member function to obtain the <code>error_code</code> reported by the source 
-  of the error. It also has member functions to obtain the path[s] that caused 
+  <p>The Boost.Filesystem <code>file_size</code> function has two overloads:</p>
+
+  <blockquote>
+  <pre><span style="background-color: #FFFFFF; ">uintmax_t</span> <a name="file_size">file_size</a>(const path&amp; p);
+<span style="background-color: #FFFFFF; ">uintmax_t</span> <a name="file_size2">file_size</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+</blockquote>
+<p>The only significant difference between the two is how they report errors.</p>
+<p>The 
+  first signature will throw exceptions to report errors. A <code>
+<a href="reference.html#Class-filesystem_error">filesystem_error</a></code> exception will be thrown 
+on an 
+  operational error. <code>filesystem_error</code> is derived from <code>std::runtime_error</code>. 
+It has a 
+  member function to obtain the <code>
+<a href="../../system/doc/reference.html#Class-error_code">error_code</a></code> reported by the source 
+  of the error. It also has member functions to obtain the path or paths that caused 
   the error.</p>
 
-  <p>That was the entire error reporting story for the earliest versions of 
-  Boost.Filesystem, and indeed throwing exceptions on errors worked very well in 
-  many applications. But some user reports trickled in of code that became so 
-  littered by try and catch blocks as to be unreadable and unmaintainable. In 
-  some applications I/O errors aren't exceptional, and that's why most 
-  Boost.Filesystem operational functions come in two flavors.</p>
+  <blockquote>
 
-  <p>Functions without a <code>system::error_code&amp;</code> 
-argument throw exceptions to report operational errors. These functions should 
-  be your default choice, unless you really do need to deal with errors via hand 
-  coded error tests.</p>
+  <p><b>Motivation for the second signature:</b> Throwing exceptions on errors was the entire error reporting story for the earliest versions of 
+  Boost.Filesystem, and indeed throwing exceptions on errors works very well for 
+  many applications. But user reports trickled in that some code became so 
+  littered with try and catch blocks as to be unreadable and unmaintainable. In 
+  some applications I/O errors aren't exceptional, and that's the use case for 
+  the second signature.</p>
 
-  <p>Functions with a <code>system::error_code&amp;</code> 
-argument report operational error status by setting the <code>ec</code> argument, and 
-do not throw exceptions when I/O errors occur.</p>
+  </blockquote>
+
+  <p>Functions with a <code>system::error_code&amp;</code> argument set that 
+  argument to report operational error status, and so do not throw exceptions when I/O 
+  related errors occur. For a full explanation, see
+  <a href="reference.html#Error-reporting">Error reporting</a> in the reference 
+  documentation. </p>
 
 <hr>
-<p>Â© Copyright Beman Dawes 2010</p>
+<p>© Copyright Beman Dawes 2010</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->21 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40541" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40543" --></p>
 
 </body>
 

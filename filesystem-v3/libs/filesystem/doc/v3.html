@@ -49,16 +49,16 @@ changes include:</p>
   supported. This is a major simplification of the path abstraction, 
   particularly for functions that take path arguments.<br>
 &nbsp;</li>
-  <li>New class path members include:<br>
+  <li>New <code>class path</code> members include:<br>
 &nbsp;<ul>
   <li><code><a href="reference.html#path-has_stem">has_stem</a>()</code></li>
   <li><code><a href="reference.html#path-has_extension">has_extension</a>()</code></li>
   <li><code><a href="reference.html#path-is_absolute">is_absolute</a>()</code>. This renames <code>is_complete()</code>, which 
   is now deprecated.</li>
   <li><code><a href="reference.html#path-is_relative">is_relative</a>()</code></li>
-  <li><code>absolute()</code>. This replaces the operations function <code>
+  <li><code><a href="reference.html#path-make_absolute">make_absolute</a>()</code>. This replaces the operations function <code>
   complete()</code>, which is now deprecated.</li>
-  <li><code>preferred()<br>
+  <li><code><a href="reference.html#path-make_preferred">make_preferred</a>()<br>
 &nbsp;</code></li>
 </ul>
 
@@ -70,7 +70,7 @@ changes include:</p>
     Windows. Used to read the contents of a symlink itself.</li>
     <li><code><a href="reference.html#resize_file">resize_file</a>()</code> function added. Supported on both POSIX and 
     Windows. Used to shrink or grow a regular file.</li>
-    <li><code>unique_path()</code> function added. Supported on both POSIX and 
+    <li><code><a href="reference.html#unique_path">unique_path</a>()</code> function added. Supported on both POSIX and 
     Windows. Used to generate a secure temporary pathname.<br>
 &nbsp;</li>
   </ul>
@@ -93,8 +93,7 @@ several Boost releases. Version 2 will be the default version for one release
 cycle, and then Version 3 will become the default version.</p>
 <h3>Class <code>path</code></h3>
 <ul>
-  <li>Class template <code>basic_path</code> and its specializations are gone.
-  <span style="background-color: #FFFF00">...</span></li>
+  <li>Class template <code>basic_path</code> and its specializations are gone.</li>
   <li>Certain functions now return <code>path</code> objects rather than <code>
   basic_string</code> objects:<ul>
     <li><code>root_name()</code></li>
@@ -123,7 +122,7 @@ cycle, and then Version 3 will become the default version.</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->18 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40554" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40543" --></p>
 
 </body>
 

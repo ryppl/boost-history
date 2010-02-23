@@ -1062,9 +1062,9 @@ namespace
       std::string s2(fs::initial_path().root_path().string()+"foo");
       BOOST_TEST_EQ(s1, s2);
 
-      BOOST_TEST(fs::path("x:/").absolute(fs::initial_path()).string()
+      BOOST_TEST(fs::path("x:/").make_absolute(fs::initial_path()).string()
         == "x:/");
-      BOOST_TEST(fs::path("x:/foo").absolute(fs::initial_path()).string()
+      BOOST_TEST(fs::path("x:/foo").make_absolute(fs::initial_path()).string()
         ==  "x:/foo");
 
       BOOST_TEST(fs::system_complete(fs::path(fs::initial_path().root_name()))

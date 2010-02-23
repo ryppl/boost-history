@@ -113,7 +113,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#status">status</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#status_known">status_known</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp <a href="#symlink_status">symlink_status</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#system_complete">system_complete</a></td>
+&nbsp;&nbsp;&nbsp;&nbsp <a href="#system_complete">system_complete</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#unique_path">unique_path</a></td>
     <td width="34%" valign="top">
     <a href="#File-streams">File streams</a><br>
 <a href="#Path-decomposition-table">Path decomposition table</a><br>
@@ -520,12 +521,12 @@ system. </p>
           path&amp; operator/=(Source const&amp; source);
 
         // <a href="#path-modifiers">modifiers</a>
-        path&amp; absolute(const path&amp; base);
-        void  clear();
-        path&amp; preferred();  // POSIX: no effect. Windows: convert slashes to backslashes
-        path&amp; remove_filename();
-        path&amp; replace_extension(const path&amp; new_extension = path());
-        void  swap(path&amp; rhs);
+        void  <a href="#path-clear">clear</a>();
+        path&amp; <a href="#path-make_absolute">make_absolute</a>(const path&amp; base);
+        path&amp; <a href="#path-make_preferred">make_preferred</a>();  // POSIX: no effect. Windows: convert slashes to backslashes
+        path&amp; <a href="#path-remove_filename">remove_filename</a>();
+        path&amp; <a href="#path-replace_extension">replace_extension</a>(const path&amp; new_extension = path());
+        void  <a href="#path-swap">swap</a>(path&amp; rhs);
 
         // <a href="#path-native-format-observers">native format observers</a>
         const string_type&amp;  native() const;            // native format, encoding
@@ -768,12 +769,16 @@ letters to uppercase.<i> -- end note.</i>]</p>
   
 <h3> <a name="path-modifiers"> <code>
 <font size="4">path</font></code> modifiers</a></h3>
-<pre>path&amp; <a name="absolute">absolute</a>(const path&amp; base);</pre>
+<pre>void <a name="path-clear">clear</a>();</pre>
+<blockquote>
+<p><i>Postcondition:</i> <code>this-&gt;empty()</code> is true.</p>
+</blockquote>
+<pre>path&amp; <a name="path-make_absolute">make_absolute</a>(const path&amp; base);</pre>
   <blockquote>
   <p><i>Preconditions:</i> <code>
   (has_root_name() || base.has_root_name() || path(&quot;/&quot;).is_absolute()) &amp;&amp; (has_root_directory() 
   || base.has_root_directory())</code> is true.</p>
-  <p><i>Effects:</i> Makes <code>pathname</code> absolute by applying the following rules:</p>
+  <p><i>Effects:</i> Makes <code>m_pathname</code> absolute by applying the following rules:</p>
   <table border="1" cellpadding="5" cellspacing="0" bordercolor="#111111" style="border-collapse: collapse">
     <tr>
       <td align="center">&nbsp;</td>
@@ -807,11 +812,7 @@ letters to uppercase.<i> -- end note.</i>]</p>
   is expected by program users. <i>-- 
   end note</i>]</p>
 </blockquote>
-<pre>void clear();</pre>
-<blockquote>
-<p><i>Postcondition:</i> <code>this-&gt;empty()</code> is true.</p>
-</blockquote>
-<pre>path&amp; preferred();</pre>
+<pre>path&amp; <a name="path-make_preferred">make_preferred</a>();</pre>
 <blockquote>
   <p><i>Effects:</i> The contained pathname is converted to the preferred native 
   format. [<i>Note:</i> On Windows, the effect is to replace slashes with 
@@ -819,7 +820,7 @@ letters to uppercase.<i> -- end note.</i>]</p>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
 
-<pre>path&amp; remove_filename();</pre>
+<pre>path&amp; <a name="path-remove_filename">remove_filename</a>();</pre>
 <blockquote>
   <p><i>Returns: </i>As if, <code>*this = parent_path();</code></p>
   <p>[<i>Note:</i> This function is needed to efficiently implement <code>
@@ -827,7 +828,7 @@ letters to uppercase.<i> -- end note.</i>]</p>
   implementation may be much more efficient than <code>*this = parent_path()</code>&nbsp; <i>-- end 
   note</i>]</p>
 </blockquote>
-<pre>path&amp; replace_extension(const path&amp; new_extension = path());</pre>
+<pre>path&amp; <a name="path-replace_extension">replace_extension</a>(const path&amp; new_extension = path());</pre>
 <blockquote>
   <p><i>Postcondition: </i> <code>extension() == <i>replacement</i></code>, 
   where <code><i>replacement</i></code> is <code>new_extension</code> if <code>
@@ -836,7 +837,7 @@ letters to uppercase.<i> -- end note.</i>]</p>
   <code>new_extension</code>.</p>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
-<pre><code><span style="background-color: #FFFFFF">void swap(path&amp; rhs);</span></code></pre>
+<pre><code><span style="background-color: #FFFFFF">void <a name="path-swap">swap</a>(path&amp; rhs);</span></code></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF"> 
   Swaps the contents of the two paths.</span></p>

@@ -214,7 +214,7 @@ namespace filesystem
 
   //  modifiers  -----------------------------------------------------------------------//
 
-  path&  path::absolute(const path& base)
+  path&  path::make_absolute(const path& base)
   {
     //  store expensive to compute values that are needed multiple times
     path this_root_name (root_name());
@@ -260,7 +260,7 @@ namespace filesystem
   }
 
 # ifdef BOOST_WINDOWS_PATH
-  path & path::preferred()
+  path & path::make_preferred()
   {
     for (string_type::iterator it = m_pathname.begin();
           it != m_pathname.end(); ++it)

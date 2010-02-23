@@ -35,11 +35,11 @@ int main(int argc, char* argv[])
 
   cout  <<  "\ncomposed path:\n";
   cout  <<  "  cout << -------------: " << p << "\n";
-  cout  <<  "  preferred()----------: " << path(p).preferred() << "\n";
+  cout  <<  "  make_preferred()----------: " << path(p).make_preferred() << "\n";
 
   cout << "\nelements:\n";
 
-  for (path::iterator it = p.begin(); it != p.end(); ++it)
+  for (path::iterator it(p.begin()), it_end(p.end()); it != it_end; ++it)
     cout << "  " << *it << '\n';
 
   cout  <<  "\nobservers, native format:" << endl;

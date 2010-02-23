@@ -409,15 +409,15 @@ namespace
 
     //  operator /
 
-    CHECK(p1 / p2 == path("foo/bar").preferred());
-    CHECK("foo" / p2 == path("foo/bar").preferred());
-    CHECK(L"foo" / p2 == path("foo/bar").preferred());
-    CHECK(string("foo") / p2 == path("foo/bar").preferred());
-    CHECK(wstring(L"foo") / p2 == path("foo/bar").preferred());
-    CHECK(p1 / "bar" == path("foo/bar").preferred());
-    CHECK(p1 / L"bar" == path("foo/bar").preferred());
-    CHECK(p1 / string("bar") == path("foo/bar").preferred());
-    CHECK(p1 / wstring(L"bar") == path("foo/bar").preferred());
+    CHECK(p1 / p2 == path("foo/bar").make_preferred());
+    CHECK("foo" / p2 == path("foo/bar").make_preferred());
+    CHECK(L"foo" / p2 == path("foo/bar").make_preferred());
+    CHECK(string("foo") / p2 == path("foo/bar").make_preferred());
+    CHECK(wstring(L"foo") / p2 == path("foo/bar").make_preferred());
+    CHECK(p1 / "bar" == path("foo/bar").make_preferred());
+    CHECK(p1 / L"bar" == path("foo/bar").make_preferred());
+    CHECK(p1 / string("bar") == path("foo/bar").make_preferred());
+    CHECK(p1 / wstring(L"bar") == path("foo/bar").make_preferred());
 
     swap(p1, p2);
 
@@ -471,18 +471,18 @@ namespace
   {
     std::cout << "testing modifiers..." << std::endl;
 
-//    CHECK(path("").absolute("") == "");  // should assert
-//    CHECK(path("").absolute("foo") == ""); // should assert
+//    CHECK(path("").make_absolute("") == "");  // should assert
+//    CHECK(path("").make_absolute("foo") == ""); // should assert
 
 #   ifdef BOOST_WINDOWS_PATH
-    CHECK(path("baa").absolute("c:/") == "c:/baa"); 
-    CHECK(path("/baa").absolute("c:/foo").string() == path("c:/baa").string()); 
-    CHECK(path("baa/baz").absolute("c:/foo/bar").string()
+    CHECK(path("baa").make_absolute("c:/") == "c:/baa"); 
+    CHECK(path("/baa").make_absolute("c:/foo").string() == path("c:/baa").string()); 
+    CHECK(path("baa/baz").make_absolute("c:/foo/bar").string()
       == path("c:/foo/bar\\baa/baz").string());
 #   else
-    CHECK(path("baa").absolute("/") == "/baa"); 
-    CHECK(path("/baa").absolute("/foo").string() == path("/baa").string()); 
-    CHECK(path("baa/baz").absolute("/foo/bar").string()
+    CHECK(path("baa").make_absolute("/") == "/baa"); 
+    CHECK(path("/baa").make_absolute("/foo").string() == path("/baa").string()); 
+    CHECK(path("baa/baz").make_absolute("/foo/bar").string()
       == path("/foo/bar/baa/baz").string());
 #   endif
   }
