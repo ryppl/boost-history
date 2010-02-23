@@ -255,7 +255,7 @@ then maintains the client's state by having the session key mapped to an in-memo
 Today, developers often use `std::map` for the purpose of such mapping, which has sub-optimal 
 performance and requires users to come up with sufficiently hard to guess random keys.
 
-Another example is that of an API of a shared library. Consider a library which internally manages
+Another example is that of an API of a library. Consider a shared library which internally manages
 resources on behave of its users. As an API author, you may wish not to share certain 
 implementation details, such as pointers or iterators, with your users yet you would
 like to efficiently dispatch API calls. When you use `tokenmap` generated keys, you are not sharing 
