@@ -30,6 +30,8 @@
 // with M.P.G
 //
 // Revision history:
+// Feb 21, 2010 : made member variables mutable and added constness unless
+// necessary to member functions.
 // Feb 9, 2010 : 
 // 	- Added a template parameter for the reference_wrapper
 // 	- The temporary array in the conversion operator is now assigned by calling 
@@ -80,9 +82,6 @@ namespace auto_size{
         typedef typename boost::mpl::if_<is_first_,E,E&>::type previous_;
         typedef typename ref_array<T,N,Ref>::type ref_array_;
         typedef typename next<E,T,N,Ref>::type next_;
-
-        mutable previous_ previous;
-        mutable ref_ ref;
                                 
         expr(T& t):ref(t){} // only for N == 1
         expr(E& p,T& t):previous(p),ref(t){}
@@ -149,6 +148,9 @@ namespace auto_size{
             return !(this->size());
         }
                 
+        mutable previous_ previous;
+        mutable ref_ ref;
+        
         private:
 
         void alloc()const{ 

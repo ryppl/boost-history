@@ -74,7 +74,7 @@ void test_cref_copy_list_of_speed(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
- 			os << "cref_copy_list_of(" << N << ") => ";
+ 			os << "cref_list_of<>(" << N << ") => ";
         }
     }
     {
@@ -100,7 +100,7 @@ void test_cref_copy_list_of_speed(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
- 			os << "cref_copy_list_of(" << N << ") => ";
+ 			os << "cref_list_of<>(" << N << ") => ";
         }
     }
     
@@ -127,7 +127,7 @@ void test_cref_copy_list_of_speed(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
- 			os << "cref_copy_list_of(" << N << ") => ";
+ 			os << "cref_list_of<>(" << N << ") => ";
         }
     }
     
@@ -158,7 +158,7 @@ void test_cref_copy_list_of_speed(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
- 			os << "cref_copy_list_of(" << N << ") => ";
+ 			os << "cref_list_of<>(" << N << ") => ";
         }
     }    
     
@@ -199,7 +199,7 @@ void test_cref_copy_list_of_speed(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
- 			os << "cref_copy_list_of(" << N << ") => ";
+ 			os << "cref_list_of<>(" << N << ") => ";
         }
     }  
     
@@ -256,7 +256,7 @@ void test_cref_copy_list_of_speed(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
- 			os << "cref_copy_list_of(" << N << ") => ";
+ 			os << "cref_list_of<>(" << N << ") => ";
         }
     }       
 	os << "<- " << std::endl;

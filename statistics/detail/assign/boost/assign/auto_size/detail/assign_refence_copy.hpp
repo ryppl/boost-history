@@ -42,8 +42,6 @@ namespace detail{
             std::swap( *ref_, *r.ref_ );
         }
 
-		// destructor?
-
         T& get_ref() const
         {
             return *ref_;
