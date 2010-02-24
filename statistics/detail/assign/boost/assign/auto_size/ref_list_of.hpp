@@ -18,7 +18,7 @@
 // BOOST_AUTO(tmp,ref_list_of(a)(b)(c)); boost::fill(tmp,d);
 //    
 // This function has the same side effect as ref_list_of<int>(), but supersedes
-// it as the number of elements deduced from the arguments. 
+// it as it deduces the number of elements, here 3, from the arguments. 
 //
 // Usage 3 binds d to a, b, c. Unless this specific feature is needed, function 
 // ref_copy_list_of() is more straightforward.

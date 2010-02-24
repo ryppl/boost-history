@@ -77,7 +77,7 @@ namespace auto_size{
         typedef boost::mpl::int_<1> int_1_;
         typedef typename Ref<T>::type ref_;
 
-		public:       
+        public:       
         typedef typename boost::mpl::equal_to<int_n_,int_1_>::type is_first_;
         typedef typename boost::mpl::if_<is_first_,E,E&>::type previous_;
         typedef typename ref_array<T,N,Ref>::type ref_array_;
@@ -175,7 +175,7 @@ namespace auto_size{
         typedef boost::shared_ptr<ref_array_> smart_ptr_;
         // Only the last of N expressions needs to instantiate an array, 
         // hence a pointer.
-		mutable smart_ptr_ ptr;
+        mutable smart_ptr_ ptr;
 
     };
             
