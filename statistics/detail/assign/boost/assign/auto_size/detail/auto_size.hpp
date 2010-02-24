@@ -125,7 +125,6 @@ namespace auto_size{
         }
         iterator end() 
         {
-            this->alloc_if();
             return boost::end(this->ref_array());
         }
 
@@ -135,7 +134,6 @@ namespace auto_size{
         }
         const_iterator end()const 
         {
-            this->alloc_if();
             return boost::end(this->ref_array());
         }
 
@@ -164,10 +162,6 @@ namespace auto_size{
             }
         }
 
-        const ref_array_& ref_array()const{ 
-            this->alloc_if();
-            return (*this->ptr);
-        }
         ref_array_& ref_array(){ 
             this->alloc_if();
             return (*this->ptr);

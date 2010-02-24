@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::assign_reference_copy.hpp                               	//
+// assign::detail::assign_reference_copy.hpp                                //
 //                                                                          //
-//  (C) Copyright 2010 M.P.G                                        		//
+//  (C) Copyright 2010 M.P.G                                                //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
@@ -13,12 +13,12 @@ namespace boost{
 namespace assign{
 namespace detail{
 
-	// This is a reference wrapper whose assignment operator copies the value of
+    // This is a reference wrapper whose assignment operator copies the value of
     // the rhs to the object pointed to.
     //
     // This is in contrast to assign_reference whose operator= rebinds the 
     // address of the internal pointer. To that effect, here, call rebind() 
-	template< class T >
+    template< class T >
     struct assign_reference_copy
     {
         assign_reference_copy()
@@ -29,7 +29,7 @@ namespace detail{
 
         void operator=( const T& r )
         {
-			*ref_ = r;
+            *ref_ = r;
         }
 
         operator T&() const
@@ -47,9 +47,9 @@ namespace detail{
             return *ref_;
         }
 
-		void rebind( T & r )
+        void rebind( T & r )
     	{
-       		ref_ = &r;
+            ref_ = &r;
     	}
         
     private:
