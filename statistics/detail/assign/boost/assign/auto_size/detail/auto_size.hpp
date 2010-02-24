@@ -45,7 +45,7 @@ namespace assign{
 namespace detail{
 namespace auto_size{
             
-	typedef boost::mpl::void_ top_;
+    typedef boost::mpl::void_ top_;
 
     template<typename T>
     struct ref_rebind{
