@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::ref_copy_list_of.hpp                               				//
+// assign::ref_copy_list_of.hpp                                             //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
