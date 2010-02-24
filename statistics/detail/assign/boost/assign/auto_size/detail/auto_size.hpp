@@ -91,8 +91,8 @@ namespace auto_size{
                 
         template<typename T1>
         operator boost::array<T1,N>()const{
-        	boost::array<T1,N> ar;
-			std::copy(	
+            boost::array<T1,N> ar;
+            std::copy(	
             	boost::begin(this->ref_array()),
             	boost::end(this->ref_array()),
                 boost::begin(ar)
