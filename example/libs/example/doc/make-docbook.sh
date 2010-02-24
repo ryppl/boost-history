@@ -45,20 +45,20 @@ EOF
 
 export XML_CATALOG_FILES=$(pwd)/$BUILD_DIR/catalog.xml
 
-# 2: Collect the doxygen output into a single file
+# 3: Collect the doxygen output into a single file
 
 xsltproc --stringparam doxygen.xml.path $DOXYGEN_OUTPUT_DIR \
     -o $BUILD_DIR/example.doxygen \
     $BOOST_ROOT/tools/boostbook/xsl/doxygen/collect.xsl \
     $DOXYGEN_OUTPUT_DIR/index.xml
 
-# 3: Convert the doxygen xml to boostbook
+# 4: Convert the doxygen xml to boostbook
 
 xsltproc -o $BUILD_DIR/example.boostbook \
     $BOOST_ROOT/tools/boostbook/xsl/doxygen/doxygen2boostbook.xsl \
     $BUILD_DIR/example.doxygen
 
-# 4: Convert the boostbook to docbook
+# 5: Convert the boostbook to docbook
 
 xsltproc -o example.docbook \
     $BOOST_ROOT/tools/boostbook/xsl/docbook.xsl \
