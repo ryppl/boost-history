@@ -18,7 +18,7 @@
 // 	boost::fill( ref_list_of(a)(b)(c), 0);
 //    
 // The name copy is to emphasize that copy semantics are used, in constrast to
-// ref_list_of() which uses rebind semantics.
+// ref_list_of() which uses rebind semantics. 
 
 namespace boost{
 namespace assign{

@@ -22,16 +22,16 @@
 // This is the implementation behind ref_list_of() and ref_copy_list_of().
 //
 // This approach improves upon ref_list_of<int>() by deducing the number of 
-// arguments at compile time and factors the reference wrapper for each element
-// into a template parameter. In general, a reference wrapper that implements
-// copy rather than rebind semantics for operator= is preferable.
+// arguments at compile time and factors the reference wrapper into a template
+// parameter. In general, a reference wrapper that has copy rather than rebind 
+// semantics for operator= is preferable for most situations.
 //    
 // Acknowledgement: The idea of this class was developed in collaboration 
 // with M.P.G
 //
 // Revision history:
-// Feb 21, 2010 : made member variables mutable and added constness unless
-// necessary to member functions.
+// Feb 21, 2010 : made member variables mutable and added constness to member 
+// functions where appropriate.
 // Feb 9, 2010 : 
 // 	- Added a template parameter for the reference_wrapper
 // 	- The temporary array in the conversion operator is now assigned by calling 
