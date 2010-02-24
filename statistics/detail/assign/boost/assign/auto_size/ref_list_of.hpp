@@ -11,18 +11,17 @@
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 
 // Usage 1: 
-// 	std::vector<T> vec = cref_list_of(a)(b)(c);
+// 	std::vector<T> elems = cref_list_of(a)(b)(c);
 // Usage 2: 
-// 	boost::array<T,3> vec = cref_list_of(a)(b)(c);
+// 	boost::array<T,3> elems = cref_list_of(a)(b)(c);
 // Usage 3: 
 // BOOST_AUTO(tmp,ref_list_of(a)(b)(c)); boost::fill(tmp,d);
 //    
-// Note that this function supersedes and has the same side effect as 
-// ref_list_of<int>(), which still exists, however, for backward-compatibility.
+// This function has the same side effect as ref_list_of<int>(), but supersedes
+// it as the number of elements deduced from the arguments. 
 //
-// Unlike ref_copy_list_of, has rebind semantics so that Usage 3 binds d to
-// a, b, c. Unless this very specific need arises, ref_copy_list_of is safer and
-// more straightforward as it takes rvalues.
+// Usage 3 binds d to a, b, c. Unless this specific feature is needed, function 
+// ref_copy_list_of() is more straightforward.
 
 namespace boost{
 namespace assign{

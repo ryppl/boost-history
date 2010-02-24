@@ -11,14 +11,15 @@
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 
 // Usage 1: 
-// 	std::vector<T> vec = cref_copy_list_of(a)(b)(c);
+// 	std::vector<T> elems = cref_copy_list_of(a)(b)(c);
 // Usage 2: 
-// 	boost::array<T,3> vec = cref_copy_list_of(a)(b)(c);
+// 	boost::array<T,3> elems = cref_copy_list_of(a)(b)(c);
 // Usage 3: 
 // 	boost::fill( ref_list_of(a)(b)(c), 0);
 //    
-// The name copy is to emphasize that copy semantics are used, in constrast to
-// ref_list_of() which uses rebind semantics. 
+// The infix 'copy' emphasizes that copy semantics are used, which is the 
+// preferable choice in most situations, in constrast to ref_list_of() which 
+// has rebind semantics. 
 
 namespace boost{
 namespace assign{
