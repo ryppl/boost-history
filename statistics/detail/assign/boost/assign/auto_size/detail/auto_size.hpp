@@ -109,7 +109,7 @@ namespace auto_size{
             );
         }
                 
-        // -------- as container ---- //
+        // ---- as container ---- //
                 
         typedef ref_ value_type;
         typedef typename boost::range_iterator<ref_array_>::type iterator;
