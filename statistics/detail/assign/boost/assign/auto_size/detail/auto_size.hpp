@@ -33,14 +33,13 @@
 //
 // Revision history:
 // Feb 25, 2010 : Completed the boost::array interface
-// Feb 21, 2010 : made member variables mutable and added constness to member 
+// Feb 21, 2010 : Made member variables mutable and added constness to member 
 // functions where appropriate.
 // Feb 9, 2010 : 
 // 	- Added a template parameter for the reference_wrapper
 // 	- The temporary array in the conversion operator is now assigned by calling 
 // 	begin() and end() rather than write_to_array() to ensure consistency of 
-//  side effect when assigning under rebind semantics. Negligible loss in 
-//	performance
+//  side effect. Negligible loss in	performance
 // Feb 5, 2010 : First version. rebind semantics.
 
 namespace boost{
