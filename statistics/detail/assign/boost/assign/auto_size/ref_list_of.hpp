@@ -10,9 +10,9 @@
 #define BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 
-// Creates collection of references having the boost::array interface and con-
+// Creates a collection of references having the boost::array interface and con-
 // vertible to a container constructible from a pair of iterators. It can be 
-// used both as the rhs or lhs of an assignment such as:
+// used as the rhs or lhs of an assignment such as:
 // 	boost::fill(ref_list_of(a)(b)(c),0)
 // Note that this function supersedes ref_list_of<int>() 
 
