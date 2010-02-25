@@ -32,6 +32,7 @@
 // with M.P.G
 //
 // Revision history:
+// Feb 25, 2010 : Completed the boost::array interface
 // Feb 21, 2010 : made member variables mutable and added constness to member 
 // functions where appropriate.
 // Feb 9, 2010 : 
