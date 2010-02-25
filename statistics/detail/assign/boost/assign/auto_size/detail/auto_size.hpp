@@ -20,8 +20,7 @@
 #include <boost/assign/auto_size/detail/assign_refence_copy.hpp>
 
 // Creates a collection of references having the interface of boost::array and 
-// convertible to a range constructible from a pair of itera-
-// tors.
+// convertible to a range constructible from a pair of iterators.
 //
 // This approach improves upon ref_list_of<int>() by deducing the number of 
 // arguments at compile time and factors the reference wrapper into a template
