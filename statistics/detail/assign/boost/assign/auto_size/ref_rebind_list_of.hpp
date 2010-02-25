@@ -10,12 +10,12 @@
 #define BOOST_ASSIGN_AUTO_SIZE_REF_REBIND_LIST_OF_ER_2010_HPP
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 
-// This function supersedes ref_list_of<int>() as it deduces the number of 
-// elements, from the arguments. The infix 'rebind' emphasizes that if the 
-// result is the lhs of an assignement such as,
-// 	ref_rebind_list_of(a)(b)(c).assign(d)
-// binds a, b and c to d. Unless this specific feature is required, it is more 
-// straightforward to use ref_list_of().
+// Creates an anonymous collection of references whose interface is that of
+// boost::array. When used as the lhs of an assignment, such as 
+// 	cref_rebind_list_of(a)(b)(c).assign(d)
+// rebind semantics are used. Unless this specific feature is required, it is 
+// more straightforward to use ref_list_of().
+// Note that this function supersedes ref_list_of<int>() 
 
 namespace boost{
 namespace assign{

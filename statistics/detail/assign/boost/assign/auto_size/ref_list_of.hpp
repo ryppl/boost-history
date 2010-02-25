@@ -10,11 +10,12 @@
 #define BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 
-// This function supersedes ref_list_of<int>() as it deduces the number of 
-// elements from the arguments but also uses copy rather than rebind semantics,
-// if used as the lhs of an assignement :
+// Creates an anonymous collection of references whose interface is that of
+// boost::array, such as:
+// 	array = cref_list_of(a)(b)(c)
+// When used as the lhs of an assignment, uses copy semantics, such as
 // 	boost::fill(ref_list_of(a)(b)(c),0)
-// assigns 0 to a,b,c.
+// Note that this function supersedes ref_list_of<int>() 
 
 namespace boost{
 namespace assign{
