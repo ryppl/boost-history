@@ -1,4 +1,6 @@
 /*=============================================================================
+    Copyright (c) 2001-2009 Joel de Guzman
+    Copyright (c) 2005-2006 Dan Marsden
     Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -11,6 +13,7 @@
 #include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
 
+#include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/control/if.hpp>
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
@@ -90,11 +93,39 @@
         typedef BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE) type;   \
                                                                                 \
         template<typename Seq>                                                  \
-        static typename detail::forward_as<Seq&,type>::type                     \
-        call(Seq& seq)                                                          \
+        struct apply                                                            \
         {                                                                       \
-            return seq.PREFIX                                                   \
-                BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 1, ATTRIBUTE);        \
+            typedef typename                                                    \
+                detail::forward_as<                                             \
+                    Seq                                                         \
+                  , BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE)     \
+                >::type                                                         \
+            type;                                                               \
+                                                                                \
+            static type                                                         \
+            call(Seq seq)                                                       \
+            {                                                                   \
+                return seq.PREFIX                                               \
+                    BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 1, ATTRIBUTE);    \
+            }                                                                   \
+        };                                                                      \
+    };                                                                          \
+                                                                                \
+    template<                                                                   \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \
+    >                                                                           \
+    struct struct_member_name<                                                  \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)                         \
+      , I                                                                       \
+    >                                                                           \
+    {                                                                           \
+        typedef char const* type;                                               \
+                                                                                \
+        static type                                                             \
+        call()                                                                  \
+        {                                                                       \
+            return BOOST_PP_STRINGIZE(                                          \
+                BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE,1,ATTRIBUTE));         \
         }                                                                       \
     };
 

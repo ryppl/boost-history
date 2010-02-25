@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2007 Joel de Guzman
     Copyright (c) 2005-2006 Dan Marsden
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -17,7 +17,6 @@ namespace boost { namespace fusion
     struct struct_tag;
     struct struct_iterator_tag;
     struct assoc_struct_tag;
-    struct assoc_struct_iterator_tag;
     struct fusion_sequence_tag;
 
     struct assoc_struct_category
@@ -30,6 +29,9 @@ namespace boost { namespace fusion
 
         template<typename Seq, int N>
         struct struct_member;
+
+        template<typename Seq, int N>
+        struct struct_member_name;
 
         template<typename Seq, int N>
         struct struct_assoc_key;
