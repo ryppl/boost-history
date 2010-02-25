@@ -14,7 +14,7 @@
 // vertible to a range constructible from a pair of iterators. It can be used 
 // either as the rhs or lhs of an assignment such as:
 // 	boost::fill(ref_list_of(a)(b)(c),0)
-// Note that this function supersedes ref_list_of<int>() 
+// This function supersedes ref_list_of<int>().
 
 namespace boost{
 namespace assign{
