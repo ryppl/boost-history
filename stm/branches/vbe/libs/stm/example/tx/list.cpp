@@ -84,13 +84,13 @@ public:
     std::size_t size() const {
         BOOST_STM_E_TRANSACTION {
             BOOST_STM_E_RETURN(size_);
-        }  BOOST_STM_E_END_TRANSACTION
+        }  BOOST_STM_E_END_TRANSACTION;
         //~ BOOST_STM_TRANSACTION(_) {
             //~ BOOST_STM_RETURN(_, size_);
         //~ }  BOOST_STM_RETRY
         BOOST_STM_E_TRANSACTION {
             BOOST_STM_E_RETURN(size_);
-        }  BOOST_STM_E_END_TRANSACTION
+        }  BOOST_STM_E_END_TRANSACTION;
         //~ BOOST_STM_TRANSACTION(_) {
             //~ BOOST_STM_RETURN(_, size_);
         //~ }  BOOST_STM_RETRY
@@ -100,12 +100,33 @@ public:
     //--------------------------------------------------------------------------
     // find the location to insert the node. if the value already exists, fail
     //--------------------------------------------------------------------------
+    void insert_e(const T& val) {
+        BOOST_STM_TRANSACTION(_) {
+            list_node<T> * prev = head_;
+            list_node<T> * curr = prev->next_;
+            while (curr!=0) {
+                if (curr->value_ == val) BOOST_STM_TX_RETURN_NOTHING(_);
+                //~ if (curr->value_ == val) return;
+                else if (curr->value_ > val) BOOST_STM_BREAK(_);
+                prev = curr;
+                curr = curr->next_;
+            }
+            if (curr==0 || (curr->value_ > val)) {
+                prev->next_=BOOST_STM_TX_NEW_PTR(_,list_node<T>(val, curr));
+                ++size_;
+            }
+        } BOOST_STM_RETRY
+   }
+
     void insert(const T& val) {
         BOOST_STM_E_TRANSACTION {
             list_node<T> * prev = head_;
             list_node<T> * curr = prev->next_;
             while (curr!=0) {
-                if (curr->value_ == val) BOOST_STM_E_RETURN_NOTHING;
+                if (curr->value_ == val) {
+        std::cout << __FILE__ << "["<<__LINE__<<"] return" << std::endl;\
+                    BOOST_STM_E_RETURN_NOTHING;
+                }
                 //~ if (curr->value_ == val) return;
                 else if (curr->value_ > val) break;
                 prev = curr;
@@ -115,10 +136,7 @@ public:
                 prev->next_=BOOST_STM_E_NEW_PTR(list_node<T>(val, curr));
                 ++size_;
             }
-        } BOOST_STM_E_END_TRANSACTION
-        //~ catch (...) {
-            //~ cerr << __LINE__ << " * insert" << endl;
-        //~ }
+        } BOOST_STM_E_END_TRANSACTION;
    }
 
     // search function
@@ -130,7 +148,7 @@ public:
                 curr = curr->next_;
             }
             BOOST_STM_E_RETURN((curr) && (curr->value_ == val));
-        }  BOOST_STM_E_END_TRANSACTION
+        }  BOOST_STM_E_END_TRANSACTION;
         return false;
     }
 
@@ -172,20 +190,20 @@ void create() {
         cerr << " create size " << l.size() << endl;
     } BOOST_STM_RETRY
     catch (...) {
-        cerr << "aborted" << endl;
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch" << std::endl;
     }
 }
 bool check_size(std::size_t val) {
     BOOST_STM_E_TRANSACTION {
         BOOST_STM_E_RETURN(l.size()==val);
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
     return false;
 }
 bool check_lookup(int val) {
     BOOST_STM_E_TRANSACTION {
         //cerr << " check_lookup " << l.lookup(val) << endl;
         BOOST_STM_E_RETURN(l.lookup(val));
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
     return false;
 }
 
@@ -198,21 +216,32 @@ bool insert(int val) {
 }
 void insert1_th() {
     thread_initializer thi;
-    BOOST_STM_OUTER_TRANSACTION(_) {
-        l.insert(1);
-    }  BOOST_STM_RETRY
+    try {
+        BOOST_STM_E_TRANSACTION {
+            l.insert(1);
+        }  BOOST_STM_E_END_TRANSACTION;
+    } 
+    CATCH_AND_PRINT_ALL
 }
 void insert2_th() {
     thread_initializer thi;
-    BOOST_STM_OUTER_TRANSACTION(_) {
-        l.insert(2);
-    } BOOST_STM_RETRY
+    try {
+    //~ BOOST_STM_OUTER_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION {
+            l.insert(2);
+        } BOOST_STM_E_END_TRANSACTION;
+    //~ } BOOST_STM_RETRY
+    } 
+    CATCH_AND_PRINT_ALL
 }
 void insert3_th() {
     thread_initializer thi;
+    try {
     BOOST_STM_OUTER_TRANSACTION(_) {
         l.insert(3);
     } BOOST_STM_RETRY
+    } 
+    CATCH_AND_PRINT_ALL
 }
 
 bool remove(int val) {
@@ -230,7 +259,7 @@ bool n1() {
     } BOOST_STM_RETRY
     BOOST_STM_E_TRANSACTION {
         BOOST_STM_E_RETURN(n.next_->value_==10);
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
     return false;
 }
 
@@ -240,7 +269,7 @@ bool n2() {
     } BOOST_STM_RETRY
     BOOST_STM_E_TRANSACTION {
         BOOST_STM_E_RETURN(n.next_->value_==12);
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
     return false;
 }
 
@@ -253,7 +282,7 @@ bool n3() {
     } BOOST_STM_RETRY
     BOOST_STM_E_TRANSACTION {
         BOOST_STM_E_RETURN(n.next_->value_==10);
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
     return false;
 }
 
@@ -300,7 +329,13 @@ int test_all() {
     return fails;
 }
 
+void term_hd() {
+    std::cout << "****************** ERROR: "<< __FILE__ << "["<<__LINE__<<"] term_hd"<< std::endl;
+    std::abort();
+}
 int main() {
+    try {
+    std::terminate_handler x = std::set_terminate(term_hd);
     transaction::enable_dynamic_priority_assignment();
     transaction::do_deferred_updating();
     transaction::initialize();
@@ -308,5 +343,7 @@ int main() {
 
 
     return test_all();
+    } 
+    CATCH_AND_PRINT_ALL
 
 }

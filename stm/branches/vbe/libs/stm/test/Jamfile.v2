@@ -76,6 +76,7 @@ project
             [ run stm : -bench isolated_int_lock_in_tx -def -threads 4 -inserts 100 -latm tx : : : isolated_int_lock_in_tx_def_tx_t4_i100 ]
 
 
+            ########### deadlock sometimes. 2010/02/22
             [ run stm : -bench isolated_composed_int_lock2 -def -threads 2 -inserts 100 -latm tx : : : isolated_composed_int_lock2_def_tx_t2_i100 ]
 
             [ run stm : -bench irrevocable_int -def -threads 2 -inserts 100 : : : irrevocable_int_def_t2_i100 ]
@@ -134,7 +135,7 @@ project
             ########### fails with CHECK  all-modes
             #/bin/sh: line 4:  3764 Aborted                 (core dumped) "bin/tx_linear_lock_dir_t2.test/gcc-3.4.4/debug/threading-multi/tx_linear_lock_dir_t2.exe" > "bin/tx_linear_lock_dir_t2.test/gcc-3.4.4/debug/threading-multi/tx_linear_lock_dir_t2.output" 2>&1
             #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
-            ########### deadlock. without CHECK
+            ########### deadlock. without CHECK 2010/02/22
             [ run stm : -bench tx_linear_lock -dir -threads 2 -inserts 100 -latm full : : : tx_linear_lock_dir_full_t2_i100 ]
             ########### deadlock
             #[ run stm : -bench tx_linear_lock -dir -threads 4 -inserts 100 -latm full : : : tx_linear_lock_dir_full_t4_i100 ]

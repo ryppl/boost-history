@@ -104,7 +104,13 @@ public:
       head_.value() = T();
    }
 
-   ~LinkedList() { quick_clear(); }
+   ~LinkedList() { 
+       try {
+       quick_clear(); 
+            } catch (...) {
+            BOOST_STM_ERROR;
+        }   
+}
 
    mutex_type* get_list_lock() { return &list_lock_; }
 

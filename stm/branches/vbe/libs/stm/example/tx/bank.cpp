@@ -36,20 +36,21 @@ public:
     }
 
     void Deposit(int amount) {
-        BOOST_STM_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION {
             balance_ += amount;
-        } BOOST_STM_RETRY
+        } BOOST_STM_E_END_TRANSACTION;
     }
     int Withdraw(int amount) {
-        BOOST_STM_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION {
             balance_ -= amount;
-        } BOOST_STM_RETRY
+        } BOOST_STM_E_END_TRANSACTION;
         return amount;
     }
     int Balance() const {
         BOOST_STM_E_TRANSACTION {
+        std::cout << __FILE__ << "["<<__LINE__<<"] return" << std::endl;\
             BOOST_STM_E_RETURN(balance_);
-        } BOOST_STM_E_END_TRANSACTION
+        } BOOST_STM_E_END_TRANSACTION;
 
         return 0;
     }
@@ -100,16 +101,16 @@ struct Teller {
         thread_initializer thi;
         for(int i=10; i>0;--i)
         {
-            BOOST_STM_OUTER_TRANSACTION(_) {
-                int amount=random() % 1000;
-                int acc1=random() % bank_->accounts.size();
-                int acc2=random() % bank_->accounts.size();
-                bank_->accounts[acc1]->Withdraw(amount);
-                bank_->accounts[acc2]->Deposit(amount+1);
-            } BOOST_STM_RETRY
-            catch(...) {
-                cerr << "aborted"<< endl;
+            try {
+                BOOST_STM_OUTER_TRANSACTION(_) {
+                    int amount=random() % 1000;
+                    int acc1=random() % bank_->accounts.size();
+                    int acc2=random() % bank_->accounts.size();
+                    bank_->accounts[acc1]->Withdraw(amount);
+                    bank_->accounts[acc2]->Deposit(amount+1);
+                } BOOST_STM_RETRY
             }
+            CATCH_AND_PRINT_ALL
         }
     }
     tx::pointer<const Bank> bank_;
@@ -133,9 +134,12 @@ BankAccount b(1);
 //tx::tx_ptr<BankAccount> a;
 void account_withdraw_thr() {
     thread_initializer thi;
-    BOOST_STM_OUTER_TRANSACTION(_) {
+    try {
+    BOOST_STM_E_TRANSACTION {
         a->Withdraw(10);
-    } BOOST_STM_RETRY
+    } BOOST_STM_E_END_TRANSACTION;
+    } 
+    CATCH_AND_PRINT_ALL
 }
 void account_withdraw() {
     BOOST_STM_OUTER_TRANSACTION(_) {
@@ -145,9 +149,14 @@ void account_withdraw() {
 
 void account_deposit_thr() {
     thread_initializer thi;
-    BOOST_STM_OUTER_TRANSACTION(_) {
+    try {
+    //~ BOOST_STM_OUTER_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION {
         a->Deposit(10);
-    } BOOST_STM_RETRY
+    } BOOST_STM_E_END_TRANSACTION;
+    //~ } BOOST_STM_RETRY
+    } 
+    CATCH_AND_PRINT_ALL
 }
 void account_deposit() {
     BOOST_STM_OUTER_TRANSACTION(_) {
@@ -166,8 +175,9 @@ int test_account_0() {
         int res = (a->Balance()==10?0:1);
         //BUG assertion "pthread_mutex_lock(&lockable)==0&&"synchro::lock<pthread_mutex_t>"" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 46
         //~ BOOST_STM_TX_DELETE_PTR(_, a.value());
+        std::cout << __FILE__ << "["<<__LINE__<<"] return" << std::endl;
         BOOST_STM_E_RETURN(res);
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
     return 1;
 }
 
@@ -182,8 +192,9 @@ int test_account_1() {
     BOOST_STM_E_TRANSACTION {
         int res = (a->Balance()==-10?0:1);
         //~ BOOST_STM_TX_DELETE_PTR(_, a.value());
+        std::cout << __FILE__ << "["<<__LINE__<<"] return" << std::endl;
         BOOST_STM_E_RETURN(res);
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
     return 1;
 }
 
@@ -204,8 +215,9 @@ int test_account_2() {
     BOOST_STM_E_TRANSACTION {
         int res = (a->Balance()==0?0:1);
         //~ BOOST_STM_TX_DELETE_PTR(_, a.value());
+        std::cout << __FILE__ << "["<<__LINE__<<"] return" << std::endl;
         BOOST_STM_E_RETURN(res);
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
     return 1;
 }
 
@@ -272,7 +284,13 @@ bool test_bank_2() {
 }
 
 
+void term_hd() {
+    std::cout << "****************** ERROR: "<< __FILE__ << "["<<__LINE__<<"] term_hd"<< std::endl;
+    std::abort();
+}
 int main() {
+    try {
+    std::terminate_handler x = std::set_terminate(term_hd);
     transaction::enable_dynamic_priority_assignment();
     transaction::do_deferred_updating();
     transaction::initialize();
@@ -288,5 +306,7 @@ int main() {
     res+=test_bank_2();
 
     return res;
+    } 
+    CATCH_AND_PRINT_ALL
 
 }

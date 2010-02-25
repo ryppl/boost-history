@@ -84,7 +84,13 @@ public:
 
    LinkedList() { head_.value() = T(); }
 
-   ~LinkedList() { quick_clear(); }
+   ~LinkedList() { 
+        try {       
+       quick_clear(); 
+        } catch (...) {
+            BOOST_STM_ERROR;
+        }   
+    }
 
    bool move(list_node<T> const &node1, list_node<T> const &node2)
    {

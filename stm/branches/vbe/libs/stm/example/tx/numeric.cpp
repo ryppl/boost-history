@@ -129,7 +129,7 @@ bool test_less() {
     }
     BOOST_STM_E_TRANSACTION
         BOOST_STM_E_RETURN(counter<counter2) ;
-    BOOST_STM_E_END_TRANSACTION
+    BOOST_STM_E_END_TRANSACTION;
     return false;
 }
 
@@ -142,7 +142,7 @@ bool test_outer_throw() {
     try{
         BOOST_STM_TRANSACTION(_) {
             counter=1;
-            throw 1;
+            throw "1";
         } BOOST_STM_END_TRANSACTION(_)
     } catch (...) {}
 
@@ -156,18 +156,18 @@ bool test_outer_throw_e() {
     reset();
     BOOST_STM_E_TRANSACTION {
         counter=0;
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
 
     try{
         BOOST_STM_E_TRANSACTION {
             counter=1;
-            throw 1;
-        } BOOST_STM_E_END_TRANSACTION
+            throw "1";
+        } BOOST_STM_E_END_TRANSACTION;
     } catch (...) {}
 
     BOOST_STM_E_TRANSACTION {
         BOOST_STM_E_RETURN(counter==0);
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
 
     return true;
 }
@@ -178,13 +178,13 @@ bool test_inner_throw() {
     reset();
     BOOST_STM_E_TRANSACTION {
         counter=0; counter2=0;
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
 
     try{
         BOOST_STM_TRANSACTION(_) {
             counter=1;
             BOOST_STM_TRANSACTION(__) {
-                throw 1;
+                throw "1";
             } BOOST_STM_END_TRANSACTION(_)
             catch (...){throw;}
             counter=3;
@@ -203,22 +203,22 @@ bool test_inner_throw_e() {
     reset();
     BOOST_STM_E_TRANSACTION {
         counter=0; counter2=0;
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
 
     try{
         BOOST_STM_E_TRANSACTION {
             counter=1;
             BOOST_STM_E_TRANSACTION {
                 counter=2;
-                throw 1;
-            } BOOST_STM_E_END_TRANSACTION
+                throw "1";
+            } BOOST_STM_E_END_TRANSACTION;
             counter=3;
-        } BOOST_STM_E_END_TRANSACTION
+        } BOOST_STM_E_END_TRANSACTION;
     } catch (...) {}
 
     BOOST_STM_E_TRANSACTION {
         BOOST_STM_E_RETURN(counter==0);
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
 
     return false;
 }
@@ -229,12 +229,12 @@ bool test_nested_e() {
         counter=1;
         BOOST_STM_E_TRANSACTION {
             counter2=2;
-        } BOOST_STM_E_END_TRANSACTION
-    } BOOST_STM_E_END_TRANSACTION
+        } BOOST_STM_E_END_TRANSACTION;
+    } BOOST_STM_E_END_TRANSACTION;
 
     BOOST_STM_E_TRANSACTION {
         BOOST_STM_E_RETURN((counter==1) && (counter2==2));
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
 
     return false;
 }
@@ -247,11 +247,11 @@ bool test_assign_e() {
             counter2=counter;
             continue;
             counter2=3;
-        } BOOST_STM_E_END_TRANSACTION_IN_LOOP
+        } BOOST_STM_E_END_TRANSACTION_IN_LOOP;
     }
     BOOST_STM_E_TRANSACTION {
         BOOST_STM_E_RETURN((counter==1) && (counter2==1) && (counter==counter2)) ;
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
 
     return false;
 }
@@ -264,11 +264,11 @@ bool test_less_e() {
             counter2=2;
             break;
             counter2=0;
-        } BOOST_STM_E_END_TRANSACTION_IN_LOOP
+        } BOOST_STM_E_END_TRANSACTION_IN_LOOP;
     }
     BOOST_STM_E_TRANSACTION {
         BOOST_STM_E_RETURN(counter<counter2);
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
     return false;
 }
 
@@ -291,7 +291,7 @@ bool test_const(stm::tx::numeric<int> const& c) {
     } BOOST_STM_RETRY
     BOOST_STM_E_TRANSACTION {
         BOOST_STM_E_RETURN(c==counter2) ;
-    } BOOST_STM_E_END_TRANSACTION
+    } BOOST_STM_E_END_TRANSACTION;
     return false;
 }
 bool test_par() {
@@ -321,8 +321,8 @@ bool test_twice() {
 bool test_twice_e() {
     BOOST_STM_E_TRANSACTION {
         BOOST_STM_E_TRANSACTION {
-        } BOOST_STM_E_END_TRANSACTION
-    } BOOST_STM_E_END_TRANSACTION
+        } BOOST_STM_E_END_TRANSACTION;
+    } BOOST_STM_E_END_TRANSACTION;
 
     return true;
 }

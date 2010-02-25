@@ -38,7 +38,13 @@ public:
       resize(kMaxArrSize);
    }
 
-   ~named_array() { delete [] name_; delete [] array_; size_ = 0; }
+   ~named_array() { 
+       try {
+       delete [] name_; delete [] array_; size_ = 0; 
+        } catch (...) {
+            BOOST_STM_ERROR;
+        }   
+    }
 
    char const * const name() const { return name_; }
    T* array() { return array_; }
