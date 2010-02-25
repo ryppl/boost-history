@@ -162,6 +162,8 @@ inline bool boost::stm::transaction::mutex_is_on_obtained_tx_list(latm::mutex_ty
    for (tss_context_map_type::iterator iter = tss_context_map_.begin();
    tss_context_map_.end() != iter; ++iter)
    {
+        BOOST_ASSERT(iter->second!=0);
+       
       if (iter->second->obtainedLocks_.find(mutex) != iter->second->obtainedLocks_.end())
       {
          return true;
@@ -171,6 +173,7 @@ inline bool boost::stm::transaction::mutex_is_on_obtained_tx_list(latm::mutex_ty
    for (latm::thread_id_mutex_set_map::iterator iter = threadObtainedLocks_.begin();
    threadObtainedLocks_.end() != iter; ++iter)
    {
+        BOOST_ASSERT(iter->second!=0);
       if (iter->second->find(mutex) != iter->second->end())
       {
          return true;
@@ -220,6 +223,7 @@ inline void boost::stm::transaction::unblock_threads_if_locks_are_empty()
       for (latm::thread_id_mutex_set_map::iterator it = threadObtainedLocks_.begin();
       it != threadObtainedLocks_.end(); ++it)
       {
+            BOOST_ASSERT(it->second!=0);
          if (!it->second->empty()) return;
       }
       thread_conflicting_mutexes_set_all(false);
@@ -263,7 +267,8 @@ inline void boost::stm::transaction::must_be_in_tm_conflicting_lock_set(latm::mu
 {
    if (tmConflictingLocks_.find(inLock) == tmConflictingLocks_.end())
    {
-      throw "lock not in tx conflict lock set, use add_tm_conflicting_lock";
+       BOOST_ASSERT(false&&"lock not in tx conflict lock set, use add_tm_conflicting_lock");
+      //~ throw "lock not in tx conflict lock set, use add_tm_conflicting_lock";
    }
 }
 #endif
@@ -274,7 +279,7 @@ inline void boost::stm::transaction::must_be_in_conflicting_lock_set(latm::mutex
 {
    if (get_tx_conflicting_locks().find(inLock) == get_tx_conflicting_locks().end())
    {
-      throw "lock not in tx conflict lock set, use add_tx_conflicting_lock";
+       BOOST_ASSERT(false&&"lock not in tx conflict lock set, use add_tx_conflicting_lock");
    }
 }
 
@@ -337,7 +342,7 @@ inline void boost::stm::transaction::lock(M& m, latm::mutex_type& mutex)
       if (direct_updating()) {dir_tx_lock(m, mutex);return;}
       else {def_tx_lock(m, mutex);return;}
    default:
-      throw "invalid LATM type";
+       BOOST_ASSERT(false&&"invalid LATM type");
    }
 }
 
@@ -361,7 +366,7 @@ inline bool boost::stm::transaction::try_lock(M& m, latm::mutex_type& mutex)
       if (direct_updating()) return dir_tx_try_lock(m, mutex);
       else return def_tx_try_lock(m, mutex);
    default:
-      throw "invalid LATM type";
+       BOOST_ASSERT(false&&"invalid LATM type");
    }
 }
 
@@ -384,7 +389,7 @@ inline void boost::stm::transaction::unlock(M& m, latm::mutex_type& mutex)
       if (direct_updating()) {dir_tx_unlock(m, mutex);return;}
       else {def_tx_unlock(m, mutex);return;}
    default:
-      throw "invalid LATM type";
+       BOOST_ASSERT(false&&"invalid LATM type");
    }
 }
 
@@ -434,7 +439,7 @@ inline void boost::stm::transaction::see_if_tx_must_block_due_to_tx_latm()
          this_thread::get_id() != l->second)
       {
          latm::mutex_thread_id_set_map::iterator locksAndThreadsIter = latm::instance().latmLockedLocksAndThreadIdsMap_.find(*k);
-
+         
          if (locksAndThreadsIter == latm::instance().latmLockedLocksAndThreadIdsMap_.end())
          {
             ThreadIdSet s;
@@ -484,7 +489,8 @@ inline boost::stm::transaction* boost::stm::transaction::get_inflight_tx_of_same
    for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
-      //~ transaction *t = (transaction*)*i;
+        BOOST_ASSERT(*i!=0); 
+        (*i)->assert_tx_type();
       transaction *t = *i;
 
       //--------------------------------------------------------------------

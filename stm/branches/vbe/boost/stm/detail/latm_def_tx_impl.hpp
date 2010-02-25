@@ -59,7 +59,8 @@ inline bool transaction::def_do_core_tx_conflicting_lock_pthread_lock_mutex
     for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
     {
-        //transaction *t = (transaction*)*i;
+        BOOST_ASSERT(*i!=0);
+        (*i)->assert_tx_type();
         transaction *t = *i;
 
         // if this tx is part of this thread, skip it (it's an LiT)
@@ -86,7 +87,8 @@ inline bool transaction::def_do_core_tx_conflicting_lock_pthread_lock_mutex
 
         for (std::list<transaction*>::iterator it = txList.begin(); txList.end() != it; ++it)
         {
-            //transaction *t = (transaction*)*it;
+            BOOST_ASSERT(*it!=0);
+
             transaction *t = *it;
 
             t->force_to_abort();
@@ -205,7 +207,7 @@ inline bool transaction::def_tx_try_lock(M& m, latm::mutex_type& mutex)
 {
     //--------------------------------------------------------------------------
 
-    throw "might not be possible to implement trylock for this";
+    BOOST_ASSERT(false&& "might not be possible to implement trylock for this");
 
     bool txIsIrrevocable = false;
 
@@ -257,7 +259,7 @@ inline void transaction::def_tx_unlock(M& m, latm::mutex_type& mutex)
             // this is illegal, it means the transaction is unlocking a lock
             // it did not obtain (e.g., early release) while the transaction
             // is still in-flight. Throw exception
-            throw "lock released for transaction that did not obtain it";
+            BOOST_ASSERT(false&& "lock released for transaction that did not obtain it");
         }
 
         if (!t->is_currently_locked_lock(&mutex)) hasLock = false;

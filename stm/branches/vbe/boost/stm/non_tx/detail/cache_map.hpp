@@ -19,6 +19,7 @@
 #include <memory>
 //-----------------------------------------------------------------------------
 #include <boost/synchro.hpp>
+#include <boost/stm/trace.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction_object.hpp>
 #include <boost/stm/cache_fct.hpp>
@@ -62,7 +63,12 @@ public:
         , value_(ptr), ptr_(0) {}
 
     ~cache() {
-        delete ptr_;
+        try {        
+            delete ptr_;
+        } catch (...) {
+            BOOST_STM_ERROR;
+        }
+        
     }
 
     inline T const * get() const {

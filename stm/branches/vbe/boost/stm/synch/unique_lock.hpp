@@ -137,10 +137,15 @@ namespace stm {
 #endif
         ~unique_lock()
         {
-            if(owns_lock())
-            {
-                m->unlock();
+            try {
+                if(owns_lock())
+                {
+                    m->unlock();
+                }
+            } catch (...) {
+                BOOST_STM_ERROR;
             }
+            
         }
         void lock()
         {
@@ -155,7 +160,7 @@ namespace stm {
         {
             if(owns_lock())
             {
-                throw lock_error();
+                throw synchro::lock_error();
             }
             is_locked=m->try_lock();
             return is_locked;

@@ -21,6 +21,7 @@
 #include <memory.h>
 #include <map>
 #include <vector>
+#include <boost/stm/trace.hpp>
 
 #include <boost/stm/detail/vector_map.hpp>
 
@@ -41,13 +42,20 @@ public:
    explicit FixedReserve(size_t const &amount, size_t const &size) :
       allocSize_(amount), currentLoc_(0), currentSize_(0), chunk_(size), data_(0)
    {
-      if (allocSize_ < 1) throw "invalid allocation size";
+      if (allocSize_ < 1) BOOST_ASSERT(false&& "invalid allocation size");
       data_.reserve(allocSize_ * 2);
       allocateBlock(allocSize_);
    }
 
    //////////////////////////////////////////////////////////////////////////
-   ~FixedReserve() { freeAllocatedMem(); }
+   ~FixedReserve() { 
+       try {
+           freeAllocatedMem(); 
+       } catch (...) {
+           BOOST_STM_ERROR;
+       }
+    }
+       
 
    //////////////////////////////////////////////////////////////////////////
    void* retrieveFixedChunk()
@@ -122,12 +130,16 @@ public:
    //////////////////////////////////////////////////////////////////////////
    ~MemoryPool()
    {
-      typename MemoryMap::iterator iter;
-      // wipe out all the FixedReserves we created
-      for (iter = mem.begin(); mem.end() != iter; ++iter)
-      {
-         delete iter->second;
-      }
+       try {
+          typename MemoryMap::iterator iter;
+          // wipe out all the FixedReserves we created
+          for (iter = mem.begin(); mem.end() != iter; ++iter)
+          {
+             delete iter->second;
+          }
+       } catch (...) {
+           BOOST_STM_ERROR;
+       }
    }
 
    //////////////////////////////////////////////////////////////////////////

@@ -39,7 +39,11 @@ namespace stm {
         explicit static_lock_guard(adopt_lock_t)
         {}
         ~static_lock_guard() {
-            unlock(m);
+            try {
+                unlock(m);
+            } catch (...) {
+                BOOST_STM_ERROR;
+            }
         }
     };
 #endif
@@ -62,7 +66,11 @@ namespace stm {
             : m(m_)
         {}
         ~lock_guard() {
-            m.unlock();
+            try {
+                m.unlock();
+            } catch (...) {
+                BOOST_STM_ERROR;
+            }
         }
     };
 
@@ -84,7 +92,11 @@ namespace stm {
             : cnd_(cnd)
         {}
         ~static_lock_guard_if() {
-            if (cnd_) unlock(m);
+            try {
+                if (cnd_) unlock(m);
+            } catch (...) {
+                BOOST_STM_ERROR;
+            }
         }
     };
 
@@ -108,7 +120,11 @@ namespace stm {
             , cnd_(cnd)
         {}
         ~lock_guard_if() {
-            if (cnd_) unlock(m);
+            try {
+                if (cnd_) unlock(m);
+            } catch (...) {
+                BOOST_STM_ERROR;
+            }
         }
     };
 #endif

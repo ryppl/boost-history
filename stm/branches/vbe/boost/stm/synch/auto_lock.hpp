@@ -48,15 +48,11 @@ namespace boost { namespace stm {
 
 //---------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-class timer_lock_exception : public std::exception
+class timer_lock_exception : public std::logic_error
 {
 public:
-   timer_lock_exception(char const * const what) : what_(what) {}
+   timer_lock_exception(char const * const what) : std::logic_error(what) {}
 
-   //virtual char const * what() const { return what_; }
-
-private:
-   char const * const what_;
 };
 
 
@@ -98,7 +94,13 @@ public:
       do_timed_auto_lock(timeOut);
    }
 
-   ~auto_lock() { do_auto_unlock(); }
+   ~auto_lock() { 
+        try {
+            do_auto_unlock(); 
+        } catch (...) {
+            BOOST_STM_ERROR;
+        }
+    }
 
    bool has_lock() { return hasLock_; }
 

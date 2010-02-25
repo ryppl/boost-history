@@ -26,6 +26,7 @@
 #include <string>
 #include <vector>
 //-----------------------------------------------------------------------------
+#include <boost/stm/trace.hpp>
 #include <boost/synchro/tss.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
@@ -241,7 +242,7 @@ public:
    inline static void enable_move_semantics()
    {
       if (!kDracoMoveSemanticsCompiled)
-         throw "move semantics off - rebuild with #define BUILD_MOVE_SEMANTICS 1";
+         throw not_implemented("move semantics off - rebuild with #define BUILD_MOVE_SEMANTICS 1");
       usingMoveSemantics_ = true;
    }
 
@@ -386,8 +387,9 @@ public:
 
    bool is_nested() const
    {
-      synchro::lock_guard<Mutex> lock_m(*inflight_lock());
-      return other_in_flight_same_thread_transactions();
+       return nested_;
+      //~ synchro::lock_guard<Mutex> lock_m(*inflight_lock());
+      //~ return other_in_flight_same_thread_transactions();
    }
 
    bool check_throw_before_restart() const
@@ -404,7 +406,7 @@ public:
       synchro::lock_guard<Mutex> lock_m(*inflight_lock());
       if (other_in_flight_same_thread_transactions())
       {
-         throw aborted_transaction_exception("closed nesting throw");
+         throw aborted_transaction_exception("closed nesting throws");
       }
 
       return true;
@@ -426,8 +428,6 @@ public:
       //-----------------------------------------------------------------------
       if (1 == in.new_memory()) return in;
       if (in.transaction_thread() == invalid_thread_id()) return in;
-
-      //base_transaction_object *inPtr = (base_transaction_object*)&in;
 
       for (WriteContainer::iterator i = writeList().begin(); i != writeList().end(); ++i)
       {
@@ -560,7 +560,7 @@ public:
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
-         throw "direct updating not implemented for validation yet";
+         throw not_implemented("direct updating not implemented for validation yet");
 #else
          return direct_read(in);
 #endif
@@ -608,7 +608,7 @@ public:
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
-         throw "direct updating not implemented for validation yet";
+         throw not_implemented("direct updating not implemented for validation yet");
 #else
          return direct_write<T,Poly>(in);
 #endif
@@ -626,7 +626,7 @@ public:
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
-         throw "direct updating not implemented for validation yet";
+         throw ("direct updating not implemented for validation yet");
 #else
          direct_delete_memory(in);
 #endif
@@ -649,7 +649,7 @@ public:
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
-         throw "direct updating not implemented for validation yet";
+         throw ("direct updating not implemented for validation yet");
 #else
          direct_delete_non_tx_ptr(in);
 #endif
@@ -681,7 +681,7 @@ public:
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
-         throw "direct updating not implemented for validation yet";
+         throw ("direct updating not implemented for validation yet");
 #else
          direct_delete_tx_array(in, size);
 #endif
@@ -697,7 +697,7 @@ public:
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
-         throw "direct updating not implemented for validation yet";
+         throw ("direct updating not implemented for validation yet");
 #else
          direct_delete_tx_array(in, size);
 #endif
@@ -867,7 +867,9 @@ public:
       for (InflightTxes::iterator j = transactionsInFlight_.begin();
       j != transactionsInFlight_.end(); ++j)
       {
-         //~ transaction *t = (transaction*)*j;
+        BOOST_ASSERT(*j!=0);
+          
+        (*j)->assert_tx_type();
          transaction *t = *j;
 
          // if this is a parent or child tx, it must abort too
@@ -895,10 +897,11 @@ public:
 
    inline static InflightTxes const & in_flight_transactions() { return transactionsInFlight_; }
 
-   void make_irrevocable();
-   void make_isolated();
-   bool irrevocable() const;
-   bool isolated() const;
+   inline void make_irrevocable();
+   inline void make_isolated();
+   inline bool irrevocable() const;
+   inline bool isolated() const;
+   inline void assert_tx_type() const;
 
    inline thread_id_t const & thread_id() const { return threadId_; }
 
@@ -949,7 +952,6 @@ private:
       // otherwise, see if its in our read list
       //--------------------------------------------------------------------
 #ifndef DISABLE_READ_SETS
-      //~ ReadContainer::iterator i = readList().find((base_transaction_object*)&in);
       ReadContainer::iterator i = readList().find(&in);
       if (i != readList().end()) return in;
 #endif
@@ -980,7 +982,6 @@ private:
             //stm::lock(m);
 
             WriteContainer* c = write_lists(in.transaction_thread());
-            //~ WriteContainer::iterator readMem = c->find((base_transaction_object*)&in);
             WriteContainer::iterator readMem = c->find(const_cast<T*>(&in));
             if (readMem == c->end())
             {
@@ -988,7 +989,6 @@ private:
             }
 
 #ifndef DISABLE_READ_SETS
-            //~ readList().insert((base_transaction_object*)readMem->second);
             readList().insert(readMem->second);
 #endif
 #if USE_BLOOM_FILTER
@@ -1002,7 +1002,6 @@ private:
 
          // already have locked us above - in both if / else
 #ifndef DISABLE_READ_SETS
-         //~ readList().insert((base_transaction_object*)&in);
          readList().insert(&in);
 #endif
 #if USE_BLOOM_FILTER
@@ -1028,7 +1027,6 @@ private:
          //lock_tx();
          // already have locked us above - in both if / else
 #ifndef DISABLE_READ_SETS
-         //~ readList().insert((base_transaction_object*)&in);
          readList().insert(&in);
 #endif
 #if USE_BLOOM_FILTER
@@ -1068,7 +1066,6 @@ private:
       }
 
       in.transaction_thread(threadId_);
-      //~ writeList().insert(tx_pair((base_transaction_object*)&in, detail::make_cache_aux<Poly>::apply(in , *this)));
       writeList().insert(tx_pair(&in, detail::make_cache_aux<Poly>::apply(in , *this)));
 #if USE_BLOOM_FILTER
       bloom().insert((std::size_t)&in);
@@ -1103,7 +1100,7 @@ private:
          lock_m.unlock();
          // is this really necessary? in the deferred case it is, but in direct it
          // doesn't actually save any time for anything
-         //writeList()[(base_transaction_object*)&in] = 0;
+         //writeList()[&in] = 0;
 
          deletedMemoryList().push_back(detail::make(in));
       }
@@ -1136,7 +1133,7 @@ private:
          lock_m.unlock();
          // is this really necessary? in the deferred case it is, but in direct it
          // doesn't actually save any time for anything
-         //writeList()[(base_transaction_object*)&in] = 0;
+         //writeList()[&in] = 0;
 
          deletedMemoryList().push_back(detail::make_non_tx(in));
       }
@@ -1249,7 +1246,7 @@ private:
             lock_m.unlock();
             // is this really necessary? in the deferred case it is, but in direct it
             // doesn't actually save any time for anything
-            //writeList()[(base_transaction_object*)&in] = 0;
+            //writeList()[&in] = 0;
 
             deletedMemoryList().push_back(detail::make_array(in, size));
         }
@@ -1281,8 +1278,6 @@ private:
       if (writeList().empty()) return insert_and_return_read_memory(in);
 #endif
 
-      //~ WriteContainer::iterator i = writeList().find
-         //~ ((base_transaction_object*)(&in));
       WriteContainer::iterator i = writeList().find(const_cast<T*>(&in));
       //----------------------------------------------------------------
       // always check to see if read memory is in write list since it is
@@ -1312,10 +1307,8 @@ public:
       //lock_tx();
 #ifndef DISABLE_READ_SETS
 #if PERFORMING_VALIDATION
-      //~ readList()[(base_transaction_object*)&in] = in.version_;
       readList()[&in] = in.version_;
 #else
-      //~ readList().insert((base_transaction_object*)&in);
       readList().insert(&in);
 #endif
 #endif
@@ -1407,7 +1400,6 @@ private:
          // second location. If it's there, it means we made a copy of a piece
          for (WriteContainer::iterator j = writeList().begin(); writeList().end() != j; ++j)
          {
-            //~ if (j->second == (base_transaction_object*)&in)
             if (j->second == &in)
             {
                writeList().insert(tx_pair(j->first, 0));
@@ -1438,7 +1430,7 @@ private:
       //      synchro::lock_guard<Mutex> lock(*mutex());
       //      bloom().insert((std::size_t)&in);
       //   }
-      //   writeList().insert(tx_pair((base_transaction_object*)&in, 0));
+      //   writeList().insert(tx_pair(&in, 0));
       //}
       //-----------------------------------------------------------------------
       // this isn't real memory, it's transactional memory. But the good news is,
@@ -1455,7 +1447,7 @@ private:
       //   // second location. If it's there, it means we made a copy of a piece
       //   for (WriteContainer::iterator j = writeList().begin(); writeList().end() != j; ++j)
       //   {
-      //      if (j->second == (base_transaction_object*)&in)
+      //      if (j->second == &in)
       //      {
       //         writeList().insert(tx_pair(j->first, 0));
       //         deletedMemoryList().push_back(detail::make(j->first));
@@ -1521,7 +1513,6 @@ private:
                 }
             }
             for (int i=size-1; i>=0; --i) {
-                //~ writeList().insert(tx_pair((base_transaction_object*)(&in[i]), 0));
                 writeList().insert(tx_pair(&in[i], 0));
             }
         }
@@ -1543,7 +1534,6 @@ private:
             for (int i=size-1; i>=0; --i)
             for (WriteContainer::iterator j = writeList().begin(); writeList().end() != j; ++j)
             {
-                //~ if (j->second == (base_transaction_object*)(&in[i]))
                 if (j->second == &in[i])
                 {
                     writeList().insert(tx_pair(j->first, 0));
@@ -2319,6 +2309,7 @@ private:
    transaction_state state_; // 2bits
    std::size_t reads_;
    mutable clock_t startTime_;
+   bool nested_;
 
    inline transaction_state const & state() const { return state_; }
 

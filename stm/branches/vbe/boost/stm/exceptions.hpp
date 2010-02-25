@@ -17,6 +17,7 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 #include <exception>
+#include <stdexcept>
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -27,18 +28,39 @@ class aborted_transaction_exception_no_unlocks {};
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-class aborted_transaction_exception : public std::exception
+class aborted_transaction_exception 
+    : public std::logic_error
 {
 public:
-   aborted_transaction_exception(char const * const what) : what_(what) {}
+   aborted_transaction_exception(char const * const what) 
+        : std::logic_error(what) {}
 
-   //virtual char const * what() const { return what_; }
+};
 
-private:
-   char const * const what_;
+class aborted_transaction_exception_error 
+    : public aborted_transaction_exception
+{
+public:
+   aborted_transaction_exception_error(char const * const what) 
+        : aborted_transaction_exception(what) {}
+
 };
 
 typedef aborted_transaction_exception aborted_tx;
+
+struct not_implemented 
+    : public std::logic_error {
+   not_implemented(char const * const what) 
+        : std::logic_error(what) {}
+
+};
+
+struct invalid_operation 
+    : public std::logic_error {
+   invalid_operation(char const * const what) 
+        : std::logic_error(what) {}
+
+};
 
 }}
 

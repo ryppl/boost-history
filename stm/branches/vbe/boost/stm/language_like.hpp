@@ -21,6 +21,7 @@
 #include <cstring>
 #include <iostream>
 #include <boost/assert.hpp>
+#include <exception>
 //---------------------------------------------------------------------------
 // helper function to implement macros
 namespace boost { namespace stm { namespace detail {
@@ -33,29 +34,30 @@ enum control_flow {
 
 struct commit_on_destruction {
     transaction* tx_;
-    bool &stop_;
-    bool &exception_catched_;
-    bool commited_;
-    commit_on_destruction(transaction& tx, bool &stop, bool& exception_catched)
-    : tx_(&tx), stop_(stop), exception_catched_(exception_catched), commited_(false) {}
+    commit_on_destruction(transaction& tx)
+    : tx_(&tx) {}
 
     ~commit_on_destruction() {
         if (tx_!=0) {
-            if(!commited_) {
+            if (!std::uncaught_exception()) {
                 try {
-                    tx_->commit();
-                } catch (...) {
-                    exception_catched_=true;
+                    commit();
+                    //~ BOOST_STM_INFO;
+                } catch(...) {
+                    BOOST_STM_INFO;
+                    throw;
                 }
+            } else {
+                BOOST_STM_ERROR;
             }
-            stop_ = tx_->committed();
-        };
+        }
     }
 
     void commit() {
-        if (tx_!=0&&!commited_) {
-            tx_->commit();
-            commited_=true;
+        if (tx_!=0) {
+            transaction* tmp=tx_;
+            tx_=0;
+            tmp->commit();
         }
     }
     void release() {
@@ -218,22 +220,6 @@ struct dummy_exception{};
 //                      // or BOOST_STM_BEFORE_RETRY
 //---------------------------------------------------------------------------
 
-#define BOOST_STM_E_TRANSACTION                                             \
-if (bool __boost_stm_stop_ = boost::stm::detail::no_opt_false()) {} else       \
-{                                                                               \
-    boost::stm::detail::control_flow __boost_stm_ctrl_;                    \
-    do {                                                                        \
-        boost::stm::transaction __boost_stm_txn_;                                             \
-        try{                                                                    \
-            bool __boost_stm_catched_=false;                               \
-            {                                                                   \
-                boost::stm::detail::commit_on_destruction __boost_stm_destr_ (__boost_stm_txn_, __boost_stm_stop_, __boost_stm_catched_); \
-                try{                                                            \
-                    {                                                           \
-                        try {                                                   \
-                            if(false);else
-
-
 //~ __boost_stm_ctrl_: states if a specific control flow must be done
 //~ TX: the transaction
 //~ __boost_stm_catched_: variable
@@ -241,46 +227,43 @@ if (bool __boost_stm_stop_ = boost::stm::detail::no_opt_false()) {} else       \
 // allow the user to compose exception handlers after his/her code
 // avoid the commit on destruction when an exception is thrown
 
-#define BOOST_STM_E_TRANSACTION_IN_LOOP                                     \
-if (bool __boost_stm_stop_ = boost::stm::detail::no_opt_false()) {} else       \
+//~ if (false) {} else
+
+
+#define BOOST_STM_E_TRANSACTION                                             \
 {                                                                               \
     boost::stm::detail::control_flow __boost_stm_ctrl_;                    \
-    do {                                                                        \
-        boost::stm::transaction __boost_stm_txn_;                                             \
-        try {                                                                   \
-            bool __boost_stm_catched_=false;                               \
-            {                                                                   \
-                boost::stm::detail::commit_on_destruction __boost_stm_destr_ (__boost_stm_txn_, __boost_stm_stop_, __boost_stm_catched_); \
-                try {                                                           \
-                    do {                                                        \
-                        __boost_stm_ctrl_=boost::stm::detail::break_;      \
-                        try {                                                   \
-                            if(false);else
+    for(boost::stm::transaction __boost_stm_txn_;;) {                                                                        \
+        \
+        try{                                                                    \
+            boost::stm::detail::commit_on_destruction __boost_stm_destr_ (__boost_stm_txn_); \
+            try{                                                            \
+                do {                                                           \
+                    __boost_stm_ctrl_=boost::stm::detail::break_;      \
+                        if(false);else
 
                         // user code here
 
-#define BOOST_STM_E_ON_EXCEPTION                                                \
-                        }                                                           \
-                        catch(boost::stm::detail::dummy_exception &ex) { throw; }
 
 #define BOOST_STM_E_RETRY                                                       \
-                        __boost_stm_ctrl_=boost::stm::detail::none;            \
-                        break;                                                      \
-                    } while ((__boost_stm_ctrl_=boost::stm::detail::continue_),false);   \
-                    __boost_stm_destr_.commit();                               \
-                } catch(...) {                                                      \
-                    __boost_stm_destr_.release();                              \
-                    throw;                                                          \
-                }                                                                   \
-            }                                                                       \
-            if (__boost_stm_catched_) {                                        \
-                throw boost::stm::aborted_tx("commit throw");                       \
-            }                                                                       \
+                    std::cout << __FILE__ << "["<<__LINE__<<"] end" << std::endl;\
+                    __boost_stm_ctrl_=boost::stm::detail::none;            \
+                    break;                                                      \
+                } while ((__boost_stm_ctrl_=boost::stm::detail::continue_),false);   \
+            } catch(...) {                                                      \
+                if (false)std::cout << __FILE__ << "["<<__LINE__<<"] catch1" << std::endl;\
+                __boost_stm_destr_.release();                              \
+                throw;                                                          \
+            }                                                                   \
             break;                                                                  \
         } catch (boost::stm::aborted_tx &) {                                        \
+                std::cout << __FILE__ << "["<<__LINE__<<"] catch2" << std::endl;\
             if (__boost_stm_txn_.is_nested()) throw;                                              \
+                std::cout << __FILE__ << "["<<__LINE__<<"] catch3" << std::endl;\
             do {                                                                    \
+                std::cout << __FILE__ << "["<<__LINE__<<"] catch4" << std::endl;\
                 __boost_stm_ctrl_=boost::stm::detail::break_;                  \
+                std::cout << __FILE__ << "["<<__LINE__<<"] catch5" << std::endl;\
                 try {throw;}catch (boost::stm::aborted_tx &)
 
 
@@ -288,41 +271,54 @@ if (bool __boost_stm_stop_ = boost::stm::detail::no_opt_false()) {} else       \
                 __boost_stm_ctrl_=boost::stm::detail::none;                        \
                 break;                                                                  \
             } while ((__boost_stm_ctrl_=boost::stm::detail::continue_),false);     \
-            BOOST_ASSERT(__boost_stm_ctrl_ == boost::stm::detail::none);           \
-            __boost_stm_txn_.restart();                                                               \
         }                                                                               \
-    } while(!__boost_stm_stop_);                                                       \
-}
+        BOOST_ASSERT(__boost_stm_ctrl_ == boost::stm::detail::none);           \
+        if (true) __boost_stm_txn_.restart();                                                               \
+    }                                                       \
+    BOOST_ASSERT(__boost_stm_ctrl_ == boost::stm::detail::none);           \
+} void()
 
 #define BOOST_STM_E_END_RETRY_IN_LOOP                                               \
                 __boost_stm_ctrl_=boost::stm::detail::none;                        \
                 break;                                                                  \
             } while ((__boost_stm_ctrl_=boost::stm::detail::continue_),false);     \
-            if (__boost_stm_ctrl_ != boost::stm::detail::none) break;              \
-            __boost_stm_txn_.restart();                                                               \
         }                                                                       \
-    } while(!__boost_stm_stop_);                                               \
+        if (__boost_stm_ctrl_ != boost::stm::detail::none) break;              \
+        if (true) __boost_stm_txn_.restart();                                                               \
+    }                                               \
     if (__boost_stm_ctrl_==boost::stm::detail::continue_) continue;                          \
     if (__boost_stm_ctrl_==boost::stm::detail::break_) break;                           \
-}
+} void()
+
+
 
 #define BOOST_STM_E_END_TRANSACTION                                         \
- BOOST_STM_E_ON_EXCEPTION                                                   \
  BOOST_STM_E_RETRY {}                                                       \
  BOOST_STM_E_END_RETRY
 
+#define BOOST_STM_E_TRANSACTION_IN_LOOP BOOST_STM_E_TRANSACTION
+
 #define BOOST_STM_E_END_TRANSACTION_IN_LOOP                                 \
- BOOST_STM_E_ON_EXCEPTION                                                   \
  BOOST_STM_E_RETRY {}                                                       \
  BOOST_STM_E_END_RETRY_IN_LOOP
 
 #define BOOST_STM_E_BEFORE_RETRY    BOOST_STM_E_RETRY
 
+#ifdef BOOST_STM_COMMITS_BEFORE_RETURN
 #define BOOST_STM_E_RETURN(EXPRESSION) \
     return boost::stm::detail::commit_and_return(__boost_stm_destr_, EXPRESSION)
 
 #define BOOST_STM_E_RETURN_NOTHING \
     if (!boost::stm::detail::commit_expr(__boost_stm_destr_));else return
+
+#else
+#define BOOST_STM_E_RETURN(EXPRESSION) \
+    return EXPRESSION
+
+#define BOOST_STM_E_RETURN_NOTHING \
+    return
+
+#endif
 
 //---------------------------------------------------------------------------
 // Catch a named abort exception leting the user to do somethink before retry
@@ -539,6 +535,45 @@ if (bool __boost_stm_stop_ = boost::stm::detail::no_opt_false()) {} else       \
         BOOST_STM_TX_DELETE_ARRAY(*boost::stm::current_transaction(), \
             PTR) \
     else delete [] PTR
+
+
+#define CATCH_AND_PRINT_ALL\
+    catch (int ex) { \
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex << std::endl;\
+    }\
+    catch (int& ex) { \
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex << std::endl;\
+    }\
+    catch (const char* ex) {\
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex << std::endl;\
+    }\
+    catch (const char*& ex) {\
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex << std::endl;\
+    }\
+    catch (std::string& ex) {\
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex << std::endl;\
+    }\
+    catch (boost::synchro::lock_error& ex) {\
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex.what() << std::endl;\
+    }\
+    catch (boost::synchro::timeout_exception& ex) {\
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex.what() << std::endl;\
+    }\
+    catch (boost::stm::timer_lock_exception& ex) {\
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex.what() << std::endl;\
+    }\
+    catch (boost::stm::aborted_tx& ex) {\
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex.what() << std::endl;\
+    }\
+    catch (std::logic_error& ex) {\
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex.what() << std::endl;\
+    }\
+    catch (std::exception& ex) {\
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex.what() << std::endl;\
+    }\
+    catch (...) {\
+        std::cout << "*** ERROR: " <<__FILE__ << "["<<__LINE__<<"] catch UNKNOWN " << std::endl;\
+    }\
 
 ///////////////////////////////////////////////////////////////////////////////
 #endif // BOOST_STM_LANGUAGE_LIKE__HPP

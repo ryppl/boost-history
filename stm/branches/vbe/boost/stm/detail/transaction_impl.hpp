@@ -44,16 +44,24 @@ namespace boost { namespace stm {
 //--------------------------------------------------------------------------
 inline bool transaction::isolatedTxInFlight()
 {
+    BOOST_STM_INFO;
+    assert_tx_type();
+    //~ BOOST_STM_INFO;
    for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
-      // if this is our threadId, skip it
-      //if (((transaction*)*i)->threadId_ == this->threadId_) continue;
-      if ((*i)->threadId_ == this->threadId_) continue;
+        BOOST_ASSERT(*i!=0);
+        (*i)->assert_tx_type();
 
-      //if (((transaction*)*i)->isolated()) return true;
+    //~ BOOST_STM_INFO;
+      // if this is our threadId, skip it
+      if ((*i)->threadId_ == this->threadId_) continue;
+    //~ BOOST_STM_INFO;
+
       if ((*i)->isolated()) return true;
+    //~ BOOST_STM_INFO;
    }
+    //~ BOOST_STM_INFO;
 
    return false;
 }
@@ -68,10 +76,12 @@ inline bool transaction::irrevocableTxInFlight()
    for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
+        BOOST_ASSERT(*i!=0);
+        (*i)->assert_tx_type();
       // if this is our threadId, skip it
-      if (((transaction*)*i)->threadId_ == this->threadId_) continue;
+      if ((*i)->threadId_ == this->threadId_) continue;
 
-      if (((transaction*)*i)->irrevocable()) return true;
+      if ((*i)->irrevocable()) return true;
    }
 
    return false;
@@ -88,10 +98,12 @@ inline bool transaction::abortAllInFlightTxs()
    for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
+        BOOST_ASSERT(*i!=0);
+        (*i)->assert_tx_type();
       // if this is our threadId, skip it
-      if (((transaction*)*i)->threadId_ == this->threadId_) continue;
+      if ((*i)->threadId_ == this->threadId_) continue;
 
-      ((transaction*)*i)->force_to_abort();
+      (*i)->force_to_abort();
    }
 
    return true;
@@ -107,10 +119,12 @@ inline bool transaction::canAbortAllInFlightTxs()
    for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
+        BOOST_ASSERT(*i!=0);
+        (*i)->assert_tx_type();
       // if this is our threadId, skip it
-      if (((transaction*)*i)->threadId_ == this->threadId_) continue;
+      if ((*i)->threadId_ == this->threadId_) continue;
 
-      if (cm_permission_to_abort(*((transaction*)*i), *this)) return false;
+      if (cm_permission_to_abort(*(*i), *this)) return false;
    }
 
    return true;
@@ -189,7 +203,8 @@ inline bool transaction::irrevocable() const
    case eIrrevocableTx: return true;
    case eIrrevocableAndIsolatedTx: return true;
    default:
-      throw "tx type not found";
+        BOOST_ASSERT(false&&"tx type not found");
+        return false; 
    }
 }
 
@@ -203,7 +218,20 @@ inline bool transaction::isolated() const
    case eIrrevocableTx: return false;
    case eIrrevocableAndIsolatedTx: return true;
    default:
-      throw "tx type not found";
+        BOOST_ASSERT(false&&"tx type not found");
+        return false; 
+   }
+}
+
+inline void transaction::assert_tx_type() const
+{
+   switch (tx_type())
+   {
+   case eNormalTx: return ;
+   case eIrrevocableTx: return ;
+   case eIrrevocableAndIsolatedTx: return ;
+   default:
+            BOOST_STM_ERROR;
    }
 }
 
@@ -217,7 +245,7 @@ inline bool transaction::isolated() const
 inline void transaction::commit_deferred_update_tx()
 {
    // ensure this method is isolated
-   if (!this->irrevocable()) throw "cannot commit deferred tx: not isolated";
+   if (!this->irrevocable()) throw invalid_operation("cannot commit deferred tx: not isolated");
 
    //--------------------------------------------------------------------------
    // otherwise, force the tx to commit its writes/reads
@@ -291,6 +319,8 @@ inline void transaction::lock_all_mutexes_but_this(thread_id_t threadId)
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
       i != tss_context_map_.end(); ++i)
    {
+        BOOST_ASSERT(i->secondi!=0);
+       
       if (i->first == threadId) continue;
       synchro::lock(i->second->mutex_);
    }
@@ -299,6 +329,8 @@ inline void transaction::lock_all_mutexes_but_this(thread_id_t threadId)
       i != threadMutexes_.end(); ++i)
    {
       if (i->first == threadId) continue;
+        BOOST_ASSERT(i->second!=0);
+          
       synchro::lock(*(i->second));
    }
 #endif
@@ -319,6 +351,9 @@ inline void transaction::unlock_all_mutexes_but_this(thread_id_t threadId)
       i != threadMutexes_.end(); ++i)
    {
       if (i->first == threadId) continue;
+
+        BOOST_ASSERT(i->second!=0);
+      
       synchro::unlock(*(i->second));
    }
 #endif
@@ -332,12 +367,16 @@ inline void transaction::lock_all_mutexes()
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
       i != tss_context_map_.end(); ++i)
    {
+        BOOST_ASSERT(i->second!=0);
+       
       synchro::lock(i->second->mutex_);
    }
 #else
    for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
       i != threadMutexes_.end(); ++i)
    {
+        BOOST_ASSERT(i->second!=0);
+       
       synchro::lock(*(i->second));
    }
 #endif
@@ -356,12 +395,14 @@ inline void transaction::unlock_all_mutexes()
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
       i != tss_context_map_.end(); ++i)
    {
+        BOOST_ASSERT(i->second!=0);
       synchro::unlock(i->second->mutex_);
    }
 #else
    for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
       i != threadMutexes_.end(); ++i)
    {
+        BOOST_ASSERT(i->second!=0);
       synchro::unlock(*(i->second));
    }
 #endif
@@ -386,6 +427,7 @@ inline transaction::transaction() :
 
 #if USE_SINGLE_THREAD_CONTEXT_MAP
 ////////////////////////////////////////
+// BUG possible core dump if find doesn't suceed
    context_(*tss_context_map_.find(threadId_)->second),
 
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
@@ -424,9 +466,12 @@ inline transaction::transaction() :
 
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
+// BUG possible core dump if find doesn't suceed
    conflictingMutexRef_(*threadConflictingMutexes_.find(threadId_)->second),
 #endif
+// BUG possible core dump if find doesn't suceed
    obtainedLocksRef_(*threadObtainedLocks_.find(threadId_)->second),
+// BUG possible core dump if find doesn't suceed
    currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
 #endif
@@ -434,6 +479,7 @@ inline transaction::transaction() :
 #else
 ////////////////////////////////////////
 #ifndef DISABLE_READ_SETS
+// BUG possible core dump if find doesn't suceed
    readListRef_(*threadReadLists_.find(threadId_)->second),
 #endif
    write_list_ref_(threadWriteLists_.find(threadId_)->second),
@@ -459,8 +505,10 @@ inline transaction::transaction() :
 
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
+// BUG possible core dump if find doesn't suceed
    conflictingMutexRef_(*threadConflictingMutexes_.find(threadId_)->second),
 #endif
+// BUG possible core dump if find doesn't suceed
    obtainedLocksRef_(*threadObtainedLocks_.find(threadId_)->second),
    currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
@@ -473,6 +521,7 @@ inline transaction::transaction() :
    reads_(0),
    startTime_(time(0))
 {
+    nested_=(current_transaction()!=0);
    auto_general_lock_.unlock();
    if (direct_updating()) doIntervalDeletions();
 #if PERFORMING_LATM
@@ -545,12 +594,19 @@ inline std::string transaction::outputBlockedThreadsAndLockedLocks()
 //--------------------------------------------------------------------------
 inline bool transaction::restart()
 {
+    BOOST_STM_INFO;
+    assert_tx_type();
+    //~ BOOST_STM_INFO;
    if (e_in_flight == state_) lock_and_abort();
+    //~ BOOST_STM_INFO;
 
 #if PERFORMING_LATM
 #ifdef LOGGING_BLOCKS
+    //~ BOOST_STM_INFO;
    int iterations = 0;
+    //~ BOOST_STM_INFO;
 #endif
+    //~ BOOST_STM_INFO;
    while (blocked())
    {
 #ifdef LOGGING_BLOCKS
@@ -567,6 +623,7 @@ inline bool transaction::restart()
       SLEEP(10);
    }
 #endif
+    //~ BOOST_STM_INFO;
    //-----------------------------------------------------------------------
    // this is a vital check for composed transactions that abort, but the
    // outer instance tx is never destructed, but instead restarted via
@@ -576,17 +633,26 @@ inline bool transaction::restart()
 #ifdef USING_SHARED_FORCED_TO_ABORT
    {
    synchro::lock_guard<Mutex> lock_i(*inflight_lock());
+    //~ BOOST_STM_INFO;
    if (!otherInFlightTransactionsOfSameThreadNotIncludingThis(this))
    {
+    //~ BOOST_STM_INFO;
       unforce_to_abort();
+    //~ BOOST_STM_INFO;
    }
    }
 #else
+    //~ BOOST_STM_INFO;
    unforce_to_abort();
+    //~ BOOST_STM_INFO;
 #endif
 #endif
 
+    BOOST_STM_INFO;
+    assert_tx_type();
+    //~ BOOST_STM_INFO;
    put_tx_inflight();
+    //~ BOOST_STM_INFO;
 
 #if 0
    if (doing_dynamic_priority_assignment())
@@ -597,6 +663,7 @@ inline bool transaction::restart()
    reads_ = 0;
 #endif
 
+    //~ BOOST_STM_INFO;
    return true;
 }
 
@@ -648,46 +715,71 @@ inline bool transaction::can_go_inflight()
 //--------------------------------------------------------------------------
 inline void transaction::put_tx_inflight()
 {
+    BOOST_STM_INFO;
+    assert_tx_type();
+    //~ BOOST_STM_INFO;
 #if PERFORMING_LATM
    while (true)
    {
+    //~ BOOST_STM_INFO;
       {
       synchro::lock_guard<Mutex> lock_i(*inflight_lock());
+    //~ BOOST_STM_INFO;
 
-      if (latm::instance().can_go_inflight() && !isolatedTxInFlight())
+          bool b1=latm::instance().can_go_inflight();
+    //~ BOOST_STM_INFO;
+          bool b2=!isolatedTxInFlight();
+    //~ BOOST_STM_INFO;
+      if (b1 && b2)
       {
+    //~ BOOST_STM_INFO;
          transactionsInFlight_.insert(this);
          state_ = e_in_flight;
          break;
       }
+    //~ BOOST_STM_INFO;
 
       }
       SLEEP(10);
    }
 #else
    synchro::lock_guard<Mutex> lock_i(*inflight_lock());
+    //~ BOOST_STM_INFO;
    transactionsInFlight_.insert(this);
+    //~ BOOST_STM_INFO;
    state_ = e_in_flight;
 #endif
+    BOOST_STM_INFO;
+    assert_tx_type();
+    //~ BOOST_STM_INFO;
 }
 
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 inline transaction::~transaction()
 {
+   BOOST_STM_INFO;
+    assert_tx_type();
+   BOOST_STM_INFO;
    // if we're not an inflight transaction - bail
    if (state_ != e_in_flight)
    {
+   BOOST_STM_INFO;
       //if (hasLock()) unlock_tx();
       return;
    }
 
+   BOOST_STM_INFO;
     //if (!hasLock())
     {
        synchro::lock_guard<Mutex> lock(*mutex());
+   BOOST_STM_INFO;
         abort();
+   BOOST_STM_INFO;
     }
+   BOOST_STM_INFO;
     transactions().pop();
+   BOOST_STM_INFO;
 
     // BUG not removed from the list because the test is inversed
     //~ if (alreadyRemovedFromInFlight)
@@ -834,6 +926,7 @@ inline void transaction::invalidating_direct_end_transaction()
          synchro::unlock(*general_lock());
          synchro::unlock(*inflight_lock());
       } else {
+          BOOST_STM_ERROR;
           std::cout << "invalidating_direct_end_transaction e_committed != state_" << std::endl;
       }
    }
@@ -934,6 +1027,7 @@ inline void transaction::invalidating_deferred_end_transaction()
         //synchro::unique_lock<Mutex> lk_i(*inflight_lock());
 
 #if PERFORMING_COMPOSITION
+       // BUG
       if (other_in_flight_same_thread_transactions())
       {
          transactionsInFlight_.erase(this);
@@ -1171,7 +1265,9 @@ inline void transaction::forceOtherInFlightTransactionsWritingThisWriteMemoryToA
       for (InflightTxes::iterator j = transactionsInFlight_.begin();
       j != transactionsInFlight_.end();)
       {
-         transaction *t = (transaction*)*j;
+        BOOST_ASSERT(*j!=0);
+        (*j)->assert_tx_type();
+         transaction *t = *j;
 
          // if we're already aborting for this transaction, skip it
          if (t->forced_to_abort()) {++j; continue;}
@@ -1227,6 +1323,7 @@ inline void transaction::forceOtherInFlightTransactionsWritingThisWriteMemoryToA
    // ok, forced to aborts are allowed, do them
    for (std::list<transaction*>::iterator k = aborted.begin(); k != aborted.end();)
    {
+        BOOST_ASSERT(k!=0);
       (*k)->force_to_abort();
       transactionsInFlight_.erase(*k);
    }
@@ -1287,6 +1384,7 @@ inline void transaction::direct_abort
    }
    catch (...)
    {
+       BOOST_STM_ERROR;
       std::cout << "Exception caught in abort - bad" << std::endl;
    }
 }
@@ -1507,8 +1605,11 @@ inline void transaction::invalidating_deferred_commit()
 #endif
       }
 
-      transactionsInFlight_.erase(this);
+      //BUG
+      //~ transactionsInFlight_.erase(this);
+      //~ synchro::unlock(*inflight_lock());
       synchro::unlock(*inflight_lock());
+      transactionsInFlight_.erase(this);
       synchro::unlock(*general_lock());
 
       deferredCommitWriteState();
@@ -1583,7 +1684,7 @@ inline void transaction::invalidating_deferred_commit()
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::validating_direct_commit()
 {
-   throw "not implemented yet";
+   throw not_implemented("not implemented yet: validating_direct_commit";
 
 
 
@@ -1775,7 +1876,11 @@ inline void transaction::validating_deferred_commit()
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::unlockAllLockedThreads(LockedTransactionContainer &l)
 {
-   for (LockedTransactionContainer::iterator i = l.begin(); i != l.end(); ++i) (*i)->unlock_tx();
+   for (LockedTransactionContainer::iterator i = l.begin(); i != l.end(); ++i) {
+        BOOST_ASSERT(*i!=0);
+       
+       (*i)->unlock_tx();
+   }
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1799,6 +1904,8 @@ inline void transaction::directAbortWriteList()
 
       //-----------------------------------------------------------------------
       if (0 == i->second) continue;
+
+        BOOST_ASSERT(i->first!=0);
 
       if (using_move_semantics()) i->first->move_state(i->second);
       else i->first->copy_cache(*i->second);
@@ -1827,7 +1934,6 @@ inline void transaction::deferredAbortWriteList() throw()
 {
    for (WriteContainer::iterator i = writeList().begin(); writeList().end() != i; ++i)
    {
-      //delete i->second; // delete all the temporary memory
       cache_release(i->second); // delete all the temporary memory
    }
 
@@ -1844,7 +1950,9 @@ inline clock_t transaction::earliest_start_time_of_inflight_txes()
    for (InflightTxes::iterator j = transactionsInFlight_.begin();
    j != transactionsInFlight_.end(); ++j)
    {
-      transaction *t = (transaction*)*j;
+        BOOST_ASSERT(*j!=0);
+        (*j)->assert_tx_type();
+      transaction *t = *j;
       //-----------------------------------------------------------------------
       // since this is called while direct_writes are occurring, the transaction
       // calling it will be inflight, so we have to check for it and skip it
@@ -1928,8 +2036,6 @@ inline void transaction::deferredCommitTransactionNewMemory()
    for (MemoryContainerList::iterator i = newMemoryList().begin(); i != newMemoryList().end(); ++i)
    {
       detail::reset(*i);
-      //(*i)->transaction_thread(invalid_thread_id());
-      //(*i)->new_memory(0);
    }
 
    newMemoryList().clear();
@@ -1949,6 +2055,8 @@ inline void transaction::directCommitWriteState()
       // memory is being destroyed, not updated. Do not perform copyState()
       // on it.
       //-----------------------------------------------------------------------
+        BOOST_ASSERT(i->first!=0);
+
       i->first->transaction_thread(invalid_thread_id());
       i->first->new_memory(0);
 
@@ -1981,6 +2089,8 @@ inline void transaction::deferredCommitWriteState()
          continue;
       }
 
+        BOOST_ASSERT(i->first!=0);
+      
       if (using_move_semantics()) i->first->move_state(i->second);
       else i->first->copy_cache(*i->second);
 
@@ -2003,6 +2113,8 @@ inline void transaction::verifyReadMemoryIsValidWithGlobalMemory()
    // copy the newObject into the oldObject, updating the real data
    for (ReadContainer::iterator i = readList().begin(); readList().end() != i; ++i)
    {
+        BOOST_ASSERT(i->first!=0);
+       
       if (i->first->version_ != i->second)
       {
          bookkeeping_.inc_read_aborts();
@@ -2018,6 +2130,8 @@ inline void transaction::verifyWrittenMemoryIsValidWithGlobalMemory()
    // copy the newObject into the oldObject, updating the real data
    for (WriteContainer::iterator i = writeList().begin(); writeList().end() != i; ++i)
    {
+        BOOST_ASSERT(i->first!=0);
+       
       if (0 == i->second) continue;
       if (i->first->version_ != i->second->version_)
       {
@@ -2036,7 +2150,9 @@ inline bool transaction::otherInFlightTransactionsWritingThisMemory(base_transac
    for (InflightTxes::iterator j = transactionsInFlight_.begin();
    j != transactionsInFlight_.end(); ++j)
    {
-      transaction *t = (transaction*)*j;
+        BOOST_ASSERT(*j!=0);
+        (*j)->assert_tx_type();
+      transaction *t = *j;
       //-----------------------------------------------------------------------
       // since this is called while direct_writes are occurring, the transaction
       // calling it will be inflight, so we have to check for it and skip it
@@ -2092,7 +2208,9 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
    for (InflightTxes::iterator j = transactionsInFlight_.begin();
    j != transactionsInFlight_.end(); ++j)
    {
-      transaction *t = (transaction*)*j;
+        BOOST_ASSERT(*j!=0);
+        (*j)->assert_tx_type();
+      transaction *t = *j;
       // if we're already aborting for this transaction, skip it
       if (t->forced_to_abort()) continue;
 
@@ -2188,6 +2306,8 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
          for (std::list<transaction*>::iterator k = aborted.begin();
               k != aborted.end(); ++k)
          {
+        BOOST_ASSERT(*k!=0);
+             
             (*k)->force_to_abort();
          }
 
@@ -2213,7 +2333,9 @@ inline void transaction::forceOtherInFlightTransactionsReadingThisWriteMemoryToA
    for (InflightTxes::iterator j = transactionsInFlight_.begin();
    j != transactionsInFlight_.end(); ++j)
    {
-      transaction *t = (transaction*)*j;
+        BOOST_ASSERT(*j!=0);
+        (*j)->assert_tx_type();
+      transaction *t = *j;
       // if we're already aborting for this transaction, skip it
 #ifndef DISABLE_READ_SETS
       if (!t->isReading()) continue;
@@ -2262,6 +2384,8 @@ inline void transaction::forceOtherInFlightTransactionsReadingThisWriteMemoryToA
    // ok, forced to aborts are allowed, do them
    for (std::list<transaction*>::iterator k = aborted.begin(); k != aborted.end(); ++k)
    {
+        BOOST_ASSERT(*k!=0);
+       
       (*k)->force_to_abort();
       //bookkeeping_.inc_abort_perm_denied((*k)->threadId_);
    }
@@ -2282,10 +2406,12 @@ inline bool transaction::other_in_flight_same_thread_transactions() const throw(
    for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
-      if (((transaction*)*i) == this) continue;
-      if (((transaction*)*i) == 0) continue;
+        BOOST_ASSERT(*i!=0);
+        (*i)->assert_tx_type();
+      if (*i == this) continue;
+      if (*i == 0) continue;
       // if this is not our threadId or this thread is not composable, skip it
-      if (((transaction*)*i)->threadId_ != this->threadId_) continue;
+      if ((*i)->threadId_ != this->threadId_) continue;
       return true;
    }
 
@@ -2297,9 +2423,11 @@ inline bool transaction::otherInFlightTransactionsOfSameThreadNotIncludingThis(t
    //////////////////////////////////////////////////////////////////////
    for (InflightTxes::iterator i = transactionsInFlight_.begin(); i != transactionsInFlight_.end(); ++i)
    {
+        BOOST_ASSERT(*i!=0);
+        (*i)->assert_tx_type();
       if (*i == rhs) continue;
       // if this is not our threadId or this thread is not composable, skip it
-      if (((transaction*)*i)->threadId_ != this->threadId_) continue;
+      if ((*i)->threadId_ != this->threadId_) continue;
       return true;
    }
 
