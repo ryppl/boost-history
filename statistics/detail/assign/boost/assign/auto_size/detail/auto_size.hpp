@@ -23,8 +23,8 @@
 //
 // This approach improves upon ref_list_of<int>() by deducing the number of 
 // arguments at compile time and factors the reference wrapper into a template
-// parameter. In general, a reference wrapper that has copy rather than rebind 
-// semantics for operator= is preferable in most situations.
+// parameter. In most situations, a reference wrapper that has copy rather than 
+// rebind semantics for operator= is preferable.
 //    
 // Acknowledgement: The idea of this class was developed in collaboration 
 // with M.P.G

@@ -12,9 +12,9 @@
 
 // This function supersedes ref_list_of<int>() as it deduces the number of 
 // elements, from the arguments. The infix 'rebind' emphasizes that if the 
-// result if on the lhs of an assignement such as,
+// result is the lhs of an assignement such as,
 // 	boost::fill(ref_rebind_list_of(a)(b)(c),d)
-// the elements, here a, b and c, are bound to d. Unless this specific feature 
+// the elements, a, b and c, are bound to d. Unless this specific feature 
 // is required, it is more straightforward to use ref_list_of().
 
 namespace boost{

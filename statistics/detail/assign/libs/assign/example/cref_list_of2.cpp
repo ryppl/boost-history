@@ -104,7 +104,6 @@ void example_cref_list_of(std::ostream& os)
             std::fill(boost::begin(tmp),boost::end(tmp),d);
             d = 5;
             // Prints 4, 4, 4 instead of 5, 5, 5. However, works with Foo.
-            // rvalue/lvalue?
             std::copy(
             	boost::begin(tmp),
                 boost::end(tmp), 
