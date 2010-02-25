@@ -38,92 +38,60 @@ void example_cref_list_of(std::ostream& os)
     
   	typedef std::vector<int> ints_;
     typedef boost::array<int,3> array_;
-	array_ array0 = {{-1,-1,-1}};
-	array_ array = array0;
+	array_ array;
+
+	// Since operator= calls begin(), end(), no need to test these separately
 
 	{    
-    	int a=1,b=2,c=3;
+		// cref_list_of
+
+    	int a=1, b=2, c=3;
     	ints_ ints;
     
-    	// cref_list_of<int>
-    	ints = cref_list_of<3>(a)(b)(3);
-		BOOST_ASSERT(ints[0] == a);    
-		BOOST_ASSERT(ints[1] == b);    
-		BOOST_ASSERT(ints[2] == 3);    
-        
-        array = array0;
-		array = cref_list_of<3>(a)(b)(3);
-		BOOST_ASSERT(array[0] == a);    
-		BOOST_ASSERT(array[1] == b);    
-		BOOST_ASSERT(array[2] == c);    
-        
-		// cref_copy_list_of
-    	ints.clear();
-		ints = cref_list_of(a)(b)(3);     
-		BOOST_ASSERT(ints[0] == a);    
-		BOOST_ASSERT(ints[1] == b);    
-		BOOST_ASSERT(ints[2] == c);    
-        array = array0;
-		array = cref_list_of(a)(b)(3);
-		BOOST_ASSERT(array[0] == a);    
-		BOOST_ASSERT(array[1] == b);    
-		BOOST_ASSERT(array[2] == c);    
-		{
+        {
     		ints.clear();
-        	BOOST_AUTO(
-        		tmp,
-            	cref_list_of(a)(b)(3)
-        	);
-        	ints = ints_(boost::begin(tmp),boost::end(tmp));
+			ints = cref_list_of(a)(b)(3);     
 			BOOST_ASSERT(ints[0] == a);    
 			BOOST_ASSERT(ints[1] == b);    
 			BOOST_ASSERT(ints[2] == c);    
-		}
-
-        // ref_list_of
+        }
+        {
+        	array.assign(-1);
+			array = cref_list_of(a)(b)(3);
+			BOOST_ASSERT(array[0] == a);    
+			BOOST_ASSERT(array[1] == b);    
+			BOOST_ASSERT(array[2] == c);    
+        }
+        {
+            BOOST_AUTO(tmp,ref_list_of(a)(b)(c));
+			std::fill(boost::begin(tmp),boost::end(tmp),0);
+			BOOST_ASSERT(a == 0);    
+			BOOST_ASSERT(b == 0);    
+			BOOST_ASSERT(c == 0);    
+        }
+	}
+    {
+        // ref_rebind_list_of
 		{
             int a=1, b=2, c=3;
+    		ints_ ints;
     		ints.clear();
-        	BOOST_AUTO(
-                tmp,
-                cref_rebind_list_of(a)(b)(c)
-            );
+        	BOOST_AUTO(tmp,cref_rebind_list_of(a)(b)(c));
             {
         		ints = tmp; 
 				BOOST_ASSERT(ints[0] == a);    
 				BOOST_ASSERT(ints[1] == b);    
 				BOOST_ASSERT(ints[2] == c);    
             }
+            int d = 4;             
+            tmp.assign(d);
+			d = 5;
             {
-        		ints = ints_(boost::begin(tmp),boost::end(tmp));
-				BOOST_ASSERT(ints[0] == a);    
-				BOOST_ASSERT(ints[1] == b);    
-				BOOST_ASSERT(ints[2] == c);    
-            }
-            int d = 4;
-            std::fill(boost::begin(tmp),boost::end(tmp),d);
-            d = 5;
-            // Prints 4, 4, 4 instead of 5, 5, 5. However, works with Foo.
-            std::copy(
-            	boost::begin(tmp),
-                boost::end(tmp), 
-                std::ostream_iterator<int>(os, "\n")
-            );    
-/*
-            {
-        		ints = ints_(boost::begin(tmp),boost::end(tmp));
-				BOOST_ASSERT(ints[0] == d);    
-				BOOST_ASSERT(ints[1] == d);    
-				BOOST_ASSERT(ints[2] == d);    
-            }
-            {
-            	// Before rev. Feb 9, 2010,  this required a,b,c, respectively
         		ints = tmp;
 				BOOST_ASSERT(ints[0] == d);    
 				BOOST_ASSERT(ints[1] == d);    
 				BOOST_ASSERT(ints[2] == d);    
             }
-*/
         }
         
     }
