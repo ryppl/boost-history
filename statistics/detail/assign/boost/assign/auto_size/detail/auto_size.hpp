@@ -19,8 +19,8 @@
 #include <boost/assign/list_of.hpp> // needed for assign_referene
 #include <boost/assign/auto_size/detail/assign_refence_copy.hpp>
 
-// Creates an anonymous collection of references whose interface is that of 
-// boost::array and is convertible to range constructible from a pair of itera-
+// Creates a collection of references having the interface of boost::array and 
+// convertible to a range constructible from a pair of itera-
 // tors.
 //
 // This approach improves upon ref_list_of<int>() by deducing the number of 
