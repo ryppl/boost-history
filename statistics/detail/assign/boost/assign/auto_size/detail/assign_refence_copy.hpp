@@ -16,7 +16,7 @@ namespace detail{
     // This is a reference wrapper whose assignment operator copies the value of
     // the rhs to the object pointed to.
     //
-    // In contrast assign_reference's assignement operator rebinds the address 
+    // In contrast, assign_reference's assignement operator rebinds the address 
     // of the internal pointer. For the same effect, here, use rebind()
     template< class T >
     struct assign_reference_copy

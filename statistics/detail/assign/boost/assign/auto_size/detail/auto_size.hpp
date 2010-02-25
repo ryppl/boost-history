@@ -147,20 +147,20 @@ namespace auto_size{
             return !(this->size());
         }
                 
-		typedef typename ref_array_::reference reference;
-		typedef typename ref_array_::const_reference const_reference;
+        typedef typename ref_array_::reference reference;
+        typedef typename ref_array_::const_reference const_reference;
 
-		reference operator[](size_type i){ return (this->ref_array())[i]; }
-		const_reference operator[](size_type i)const{ 
-        	return (this->array())[i]; }
-
-		reference front(){ return (this->ref_array()).front(); }
-		const_reference front() const{ return (this->ref_array()).front(); }
-		reference back(){ return (this->ref_array()).back(); }
-		const_reference back() const{ return (this->ref_array()).back(); }
+        reference operator[](size_type i){ return (this->ref_array())[i]; }
+        const_reference operator[](size_type i)const{ 
+            return (this->array())[i]; }
+			
+        reference front(){ return (this->ref_array()).front(); }
+        const_reference front() const{ return (this->ref_array()).front(); }
+        reference back(){ return (this->ref_array()).back(); }
+        const_reference back() const{ return (this->ref_array()).back(); }
         
-  		void swap(ref_array_& other){ return (this->ref_array()).swap(other); }
-  		void assign(const T& val){ return (this->ref_array()).assign(val); }
+        void swap(ref_array_& other){ return (this->ref_array()).swap(other); }
+        void assign(const T& val){ return (this->ref_array()).assign(val); }
         
         mutable previous_ previous;
         mutable ref_ ref;
