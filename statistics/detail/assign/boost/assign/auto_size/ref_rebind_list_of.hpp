@@ -10,11 +10,11 @@
 #define BOOST_ASSIGN_AUTO_SIZE_REF_REBIND_LIST_OF_ER_2010_HPP
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 
-// Creates an anonymous collection of references whose interface is that of
-// boost::array. When used as the lhs of an assignment, such as 
+// Creates collection of references having the boost::array interface and con-
+// vertible to a container constructible from a pair of iterators.
+// Rebind semantics if the collection is lhs of an assignment:
 // 	cref_rebind_list_of(a)(b)(c).assign(d)
-// rebind semantics are used. Unless this specific feature is required, it is 
-// more straightforward to use ref_list_of().
+// Unless this specific feature is needed, ref_list_of() is preferable.
 // Note that this function supersedes ref_list_of<int>() 
 
 namespace boost{

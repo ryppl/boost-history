@@ -19,7 +19,8 @@
 #include <boost/assign/list_of.hpp> // needed for assign_referene
 #include <boost/assign/auto_size/detail/assign_refence_copy.hpp>
 
-// This is the implementation behind ref_rebind_list_of() and ref_list_of().
+// Creates an anonymous collection of references whose interface is that of 
+// boost::array.
 //
 // This approach improves upon ref_list_of<int>() by deducing the number of 
 // arguments at compile time and factors the reference wrapper into a template
