@@ -10,8 +10,8 @@
 #include <vector>
 #include <algorithm>
 #include <boost/typeof/typeof.hpp>
+#include <boost/assign/auto_size/ref_rebind_list_of.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
-#include <boost/assign/auto_size/ref_copy_list_of.hpp>
 #include <boost/assign/list_of.hpp>
 #include <libs/assign/example/cref_list_of2.h>
 
@@ -59,12 +59,12 @@ void example_cref_list_of(std::ostream& os)
         
 		// cref_copy_list_of
     	ints.clear();
-		ints = cref_copy_list_of(a)(b)(3);     
+		ints = cref_list_of(a)(b)(3);     
 		BOOST_ASSERT(ints[0] == a);    
 		BOOST_ASSERT(ints[1] == b);    
 		BOOST_ASSERT(ints[2] == c);    
         array = array0;
-		array = cref_copy_list_of(a)(b)(3);
+		array = cref_list_of(a)(b)(3);
 		BOOST_ASSERT(array[0] == a);    
 		BOOST_ASSERT(array[1] == b);    
 		BOOST_ASSERT(array[2] == c);    
@@ -72,7 +72,7 @@ void example_cref_list_of(std::ostream& os)
     		ints.clear();
         	BOOST_AUTO(
         		tmp,
-            	cref_copy_list_of(a)(b)(3)
+            	cref_list_of(a)(b)(3)
         	);
         	ints = ints_(boost::begin(tmp),boost::end(tmp));
 			BOOST_ASSERT(ints[0] == a);    
@@ -86,7 +86,7 @@ void example_cref_list_of(std::ostream& os)
     		ints.clear();
         	BOOST_AUTO(
                 tmp,
-                cref_list_of(a)(b)(c)
+                cref_rebind_list_of(a)(b)(c)
             );
             {
         		ints = tmp; 

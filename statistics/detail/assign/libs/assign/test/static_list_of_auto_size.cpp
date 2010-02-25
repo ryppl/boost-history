@@ -21,7 +21,7 @@
 
 #include <algorithm>
 #include <iostream>
-#include <boost/assign/auto_size/ref_copy_list_of.hpp>
+#include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/array.hpp>
 #include <boost/test/test_tools.hpp>
 
@@ -69,26 +69,26 @@ void check_static_list_of_auto_size()
 {
     using namespace boost::assign;
     
-    BOOST_CHECK( cref_copy_list_of( 1 )( 2 )( 3 )( 4 ).size() == 4 );
+    BOOST_CHECK( cref_list_of( 1 )( 2 )( 3 )( 4 ).size() == 4 );
     
     int a=1,b=5,c=3,d=4,e=2,f=9,g=0,h=7;
 
-    int& max = *max_element( ref_copy_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
+    int& max = *max_element( ref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
     BOOST_CHECK_EQUAL( max, f );
     max = 8;
     BOOST_CHECK_EQUAL( f, 8 );
-    const int& const_max = *max_element( cref_copy_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
+    const int& const_max = *max_element( cref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
     BOOST_CHECK_EQUAL( max, const_max );
 
-    print( ref_copy_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
-    print( cref_copy_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
+    print( ref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
+    print( cref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
 
-    boost::array<int,4> array = cref_copy_list_of(1)(2)(3)(4);
+    boost::array<int,4> array = cref_list_of(1)(2)(3)(4);
 
     BOOST_CHECK_EQUAL( array[0], 1 );
     BOOST_CHECK_EQUAL( array[3], 4 );
     //
-    //print( cref_copy_list_of( "foo" )( "bar" )( "foobar" ) );
+    //print( cref_list_of( "foo" )( "bar" )( "foobar" ) );
     //
 }
 
