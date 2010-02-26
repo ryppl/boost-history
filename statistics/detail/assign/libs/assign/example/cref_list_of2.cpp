@@ -69,12 +69,12 @@ void example_cref_list_of(std::ostream& os)
             }
             int d = 4;             
             tmp.assign(d);
-			d = 5;
+            d = 5;
             {
-        		ints = tmp;
-				BOOST_ASSERT(ints[0] == d);    
-				BOOST_ASSERT(ints[1] == d);    
-				BOOST_ASSERT(ints[2] == d);    
+                ints = tmp;
+                BOOST_ASSERT(ints[0] == d);    
+                BOOST_ASSERT(ints[1] == d);    
+                BOOST_ASSERT(ints[2] == d);    
             }
         }
         
