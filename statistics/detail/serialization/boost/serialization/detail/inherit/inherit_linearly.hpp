@@ -15,7 +15,7 @@
 #include <boost/serialization/base_object.hpp>
 
 #include <boost/concept/assert.hpp>
-#include <boost/serialization/detail/inherit/inherit2.hpp>
+#include <boost/serialization/detail/inherit/detail/inherit2.hpp>
 
 namespace boost{
 namespace serialization{

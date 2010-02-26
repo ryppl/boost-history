@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// serialization::detail::inherit::inherit2.hpp         					//
+// serialization::detail::inherit::detail::inherit2.hpp         			//
 //                                                                          //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SERIALIZATION_DETAIL_INHERIT_INHERIT2_HPP_ER_2010
-#define BOOST_SERIALIZATION_DETAIL_INHERIT_INHERIT2_HPP_ER_2010
+#ifndef BOOST_SERIALIZATION_DETAIL_INHERIT_DETAIL_INHERIT2_HPP_ER_2010
+#define BOOST_SERIALIZATION_DETAIL_INHERIT_DETAIL_INHERIT2_HPP_ER_2010
 #include <boost/mpl/empty_base.hpp>
 #include <boost/concept/assert.hpp>
 #include <boost/accumulators/framework/accumulator_base.hpp>
@@ -20,8 +20,13 @@ namespace boost{
 namespace serialization{
 namespace detail{
 
-	// Inherits from the non-empty base subset of {T1,T2} and implements 
-    // serialization and operator<<(ostream,)
+	// inherit2<T1,T2> innherits from the elements of {T1,T2} that are not of
+    // type mpl::empty_base, and for those, forwards an argument pack at
+    // construction, serialization.
+    //
+    // operator<<(ostream,) requires special formatting that is implemented in
+    // detail/stream.hpp
+
 	template<typename T1,typename T2>
 	struct inherit2 : T1, T2
 	{

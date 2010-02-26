@@ -32,7 +32,7 @@ namespace impl_inherit2_stream{
 	// Writes a comma separated list of the instances of the non-empty
 	// "terminal types" within the nested structure inherit2<T1,T2>. A terminal 
     // type is one that is not an instance of inherit2.
-    // For example, if these type are A,B,C, with descriptions 'a, 'b' and 'c',
+    // For example, if these types are A,B,C, with descriptions 'a, 'b' and 'c',
     // "a,b,c" is written to os.
     template<typename A,typename B,typename T1,typename T2>
 	std::basic_ostream<A,B>&

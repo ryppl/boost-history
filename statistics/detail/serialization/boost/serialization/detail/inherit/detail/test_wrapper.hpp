@@ -38,7 +38,7 @@ namespace detail{
     template<typename A,typename B,typename T>
 	std::basic_ostream<A,B>&
     operator<<(std::basic_ostream<A,B>& os,const test_wrapper<T>& that){
-		return os << '(' << that.value << ')';
+		return os << that.value;
     }
 
 

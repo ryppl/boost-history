@@ -11,13 +11,14 @@
 #define BOOST_SERIALIZATION_DETAIL_INHERIT_INHERIT_HPP_ER_2010
 #include <boost/mpl/empty_base.hpp>
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/detail/inherit/inherit2.hpp>
+#include <boost/serialization/detail/inherit/detail/inherit2.hpp>
 
 namespace boost{
 namespace serialization{
 namespace detail{
 	  
-	// THIS CLASS IS PROBABLY SUPERSEDED BY inherit_linearly                                  
+	// Warning : this class is probably deprecated and superseded by 
+    // inherit_linearly. It is retained temporarily for testing purposes.                                  
     template<
     	typename T1 = boost::mpl::empty_base,
         typename T2 = boost::mpl::empty_base,

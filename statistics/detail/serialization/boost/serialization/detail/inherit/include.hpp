@@ -10,6 +10,6 @@
 #ifndef BOOST_SERIALIZATION_DETAIL_INHERIT_INCLUDE_HPP_ER_2010
 #define BOOST_SERIALIZATION_DETAIL_INHERIT_INCLUDE_HPP_ER_2010
 
-#include <boost/serialization/detail/inherit.hpp>
+#include <boost/serialization/detail/inherit_linearly.hpp>
 
 #endif

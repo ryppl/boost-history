@@ -39,7 +39,7 @@ struct foo{
     template<typename A,typename B>
 	std::basic_ostream<A,B>&
     operator<<(std::basic_ostream<A,B>& os,const foo& that){
-		return os << '(' << that.value << ')';
+		return os << that.value;
     }
 
 
@@ -82,6 +82,7 @@ void example_inherit_linearly(std::ostream& os){
 
 	os << "description : ";
 	{
+    	// prints (-1,1,-0.999,-1)
     	os << inlin << std::endl;
     }
 	os << "save" << std::endl;
