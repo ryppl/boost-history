@@ -48,24 +48,24 @@ void example_cref_list_of(std::ostream& os)
         }
         {
             BOOST_AUTO(tmp,ref_list_of(a)(b)(c));
-			std::fill(boost::begin(tmp),boost::end(tmp),0);
-			BOOST_ASSERT(a == 0);    
-			BOOST_ASSERT(b == 0);    
-			BOOST_ASSERT(c == 0);    
+            std::fill(boost::begin(tmp),boost::end(tmp),0);
+            BOOST_ASSERT(a == 0);    
+            BOOST_ASSERT(b == 0);    
+            BOOST_ASSERT(c == 0);    
         }
 	}
     {
         // ref_rebind_list_of
-		{
+        {
             int a=1, b=2, c=3;
-    		ints_ ints;
-    		ints.clear();
-        	BOOST_AUTO(tmp,cref_rebind_list_of(a)(b)(c));
+            ints_ ints;
+            ints.clear();
+            BOOST_AUTO(tmp,cref_rebind_list_of(a)(b)(c));
             {
-        		ints = tmp; 
-				BOOST_ASSERT(ints[0] == a);    
-				BOOST_ASSERT(ints[1] == b);    
-				BOOST_ASSERT(ints[2] == c);    
+                ints = tmp; 
+                BOOST_ASSERT(ints[0] == a);    
+                BOOST_ASSERT(ints[1] == b);    
+                BOOST_ASSERT(ints[2] == c);    
             }
             int d = 4;             
             tmp.assign(d);
