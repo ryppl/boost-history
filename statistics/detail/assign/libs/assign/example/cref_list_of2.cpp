@@ -80,6 +80,6 @@ void example_cref_list_of(std::ostream& os)
         
     }
 
-	os << "<- " << std::endl;
+    os << "<- " << std::endl;
     
 };
