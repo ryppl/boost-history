@@ -26,7 +26,7 @@ namespace detail{
 	struct inherit2 : T1, T2
 	{
     	typedef inherit2 type;
-    
+                
 		inherit2(){}
 
     	template<typename Args>
@@ -44,6 +44,7 @@ namespace detail{
             ar & boost::serialization::base_object<T2>(*this);
         }
 	};
+	
 
 	template<typename T1>
 	struct inherit2<T1,boost::mpl::empty_base> : T1

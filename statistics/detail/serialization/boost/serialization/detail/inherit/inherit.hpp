@@ -16,27 +16,8 @@
 namespace boost{
 namespace serialization{
 namespace detail{
-	                
-    // Merges up to 5 serializable classes together into one that is also
-    // serializable. 
-    //
-    // Requirements :
-    // Each non-empty base is serializable and the default constructor or one
-    // that takes an argument pack must be defined.
-    //
-    // Usage : let arg denote an argument pack :
-    // inherit<T1,T2,T3> obj(args);
-    // oa << obj;
-    // ia >> obj;
-    //
-    // See Boost.Parameter regarding argument pack.
-    // See sandbox/statistics/data for a small application
-	//
-    // Note that class inherit<> will not inherit from any empty_base passed
-    // as a template argument. This selective inheritance principle was found 
-    // in the class by the same name in Boost.MPL
-    //
-    // TODO : define a macro to extend this to arbitrary n.
+	  
+	// THIS CLASS IS PROBABLY SUPERSEDED BY inherit_linearly                                  
     template<
     	typename T1 = boost::mpl::empty_base,
         typename T2 = boost::mpl::empty_base,
