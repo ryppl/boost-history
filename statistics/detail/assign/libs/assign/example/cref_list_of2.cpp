@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// example::cref_list_of.cpp                               					//
+// example::cref_list_of.cpp                                                //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
