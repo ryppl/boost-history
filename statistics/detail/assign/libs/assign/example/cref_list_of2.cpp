@@ -26,25 +26,25 @@ void example_cref_list_of(std::ostream& os)
 
 	// Since operator= calls begin(), end(), no need to test these separately
 
-	{    
-		// cref_list_of
+    {    
+        // cref_list_of
 
     	int a=1, b=2, c=3;
     	ints_ ints;
     
         {
     		ints.clear();
-			ints = cref_list_of(a)(b)(3);     
-			BOOST_ASSERT(ints[0] == a);    
-			BOOST_ASSERT(ints[1] == b);    
-			BOOST_ASSERT(ints[2] == c);    
+            ints = cref_list_of(a)(b)(3);     
+            BOOST_ASSERT(ints[0] == a);    
+            BOOST_ASSERT(ints[1] == b);    
+            BOOST_ASSERT(ints[2] == c);    
         }
         {
-        	array.assign(-1);
-			array = cref_list_of(a)(b)(3);
-			BOOST_ASSERT(array[0] == a);    
-			BOOST_ASSERT(array[1] == b);    
-			BOOST_ASSERT(array[2] == c);    
+            array.assign(-1);
+            array = cref_list_of(a)(b)(3);
+            BOOST_ASSERT(array[0] == a);    
+            BOOST_ASSERT(array[1] == b);    
+            BOOST_ASSERT(array[2] == c);    
         }
         {
             BOOST_AUTO(tmp,ref_list_of(a)(b)(c));
