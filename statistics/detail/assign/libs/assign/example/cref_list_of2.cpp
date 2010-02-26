@@ -53,7 +53,7 @@ void example_cref_list_of(std::ostream& os)
             BOOST_ASSERT(b == 0);    
             BOOST_ASSERT(c == 0);    
         }
-	}
+    }
     {
         // ref_rebind_list_of
         {
