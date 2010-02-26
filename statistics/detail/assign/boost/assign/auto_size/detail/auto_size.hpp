@@ -19,7 +19,7 @@
 #include <boost/assign/list_of.hpp> // needed for assign_referene
 #include <boost/assign/auto_size/detail/assign_refence_copy.hpp>
 
-// Creates a collection of references having the interface of boost::array and 
+// Creates a collection of references exposing the boost::array interface and 
 // convertible to a range constructible from a pair of iterators.
 //
 // This approach improves upon ref_list_of<int>() by deducing the number of 
@@ -152,7 +152,7 @@ namespace auto_size{
 
         reference operator[](size_type i){ return (this->ref_array())[i]; }
         const_reference operator[](size_type i)const{ 
-            return (this->array())[i]; }
+             return (this->array())[i]; }
 			
         reference front(){ return (this->ref_array()).front(); }
         const_reference front() const{ return (this->ref_array()).front(); }

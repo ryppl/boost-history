@@ -15,22 +15,6 @@
 #include <boost/assign/list_of.hpp>
 #include <libs/assign/example/cref_list_of2.h>
 
-struct Foo
-{
-    int i;
-    bool destroyed;
-    Foo(){}
-    Foo(int i) : i(i) { destroyed = false; }
-    ~Foo() { destroyed = true;}
-};
-std::ostream & operator<<(std::ostream & os, Foo const & i)
-{
-    if(i.destroyed) 
-        return os << "You have a bug\n";
-    return os << i.i;
-}
-
-
 void example_cref_list_of(std::ostream& os)
 {
 	os << "-> example_cref_listof2 : ";
