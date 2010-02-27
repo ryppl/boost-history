@@ -113,3 +113,35 @@ Depends(
         "a_map_indexing_suite.cpp"])
     )
 env.BoostRunTest("import_", "import_.cpp", "./${SOURCES[0]} ${SOURCES[1]}", "import_.py")
+
+env.BoostCompileTest("indirect_traits_test")
+env.BoostRunTests(Split("""
+    destroy_test
+    pointer_type_id_test
+    bases
+    if_else
+    pointee
+    result
+    """))
+
+env.BoostCompileTests(Split("""
+    string_literal
+    borrowed
+    object_manager
+    copy_ctor_mutates_rhs
+    """))
+
+env.BoostRunTest("upcast")
+
+env.BoostCompileTest("select_holder")
+
+env.BoostRunTest("select_from_python_test")
+
+env.BoostCompileTest("select_arg_to_python_test")
+
+#env.BoostCompileTests(Split("""
+#    raw_pyobject_fail1
+#    raw_pyobject_fail2
+#    as_to_python_function
+#    object_fail1
+#    """))
