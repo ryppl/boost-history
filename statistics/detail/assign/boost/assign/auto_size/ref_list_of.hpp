@@ -46,6 +46,7 @@ namespace assign{
     	return cref_list_of(a)(b)(c);
     }
 
+
 }// assign
 }// boost
 
