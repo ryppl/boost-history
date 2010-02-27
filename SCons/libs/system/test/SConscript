@@ -1,0 +1,10 @@
+# vi: syntax=python:et:ts=4
+Import("env")
+
+env.BoostRunTests(Split("""
+    error_code_test
+    error_code_user_test
+    system_error_test
+    initialization_test
+    header_only_test
+    """))
