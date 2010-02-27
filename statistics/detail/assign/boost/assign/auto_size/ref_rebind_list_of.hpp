@@ -21,17 +21,15 @@ namespace boost{
 namespace assign{
 
     template<typename T>
-    typename detail::auto_size::rebind_first<const T>::type
+    typename detail::auto_size::first_rebind<const T>::type
     cref_rebind_list_of(const T& t){
-        typedef typename detail::auto_size::rebind_first<const T>::type expr_;
-        return expr_(t);
+		return detail::auto_size::first_rebind<const T>::call(t);
     }
 
     template<typename T>
-    typename detail::auto_size::rebind_first<T>::type
+    typename detail::auto_size::first_rebind<T>::type
     ref_rebind_list_of(T& t){
-        typedef typename detail::auto_size::rebind_first<T>::type expr_;
-        return expr_(t);
+		return detail::auto_size::first_rebind<T>::call(t);
     }
 
 }// assign
