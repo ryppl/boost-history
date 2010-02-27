@@ -22,13 +22,6 @@
 #include <boost/exception/info.hpp>
 #include <boost/exception/errinfo_errno.hpp>
 
-#if 0
-struct commiting_exception: virtual boost::exception {
-    boost::exception_ptr
-};
-
-#defined THROW_COMMITG_EXCEPTION(EX)
-#endif
 using namespace std;
 using namespace boost;
 
@@ -154,9 +147,6 @@ bool test_outer_throw() {
 }
 bool test_outer_throw_e() {
     reset();
-    BOOST_STM_E_TRANSACTION {
-        counter=0;
-    } BOOST_STM_E_END_TRANSACTION;
 
     try{
         BOOST_STM_E_TRANSACTION {
@@ -166,12 +156,31 @@ bool test_outer_throw_e() {
     } catch (...) {}
 
     BOOST_STM_E_TRANSACTION {
-        BOOST_STM_E_RETURN(counter==0);
+        BOOST_STM_E_RETURN(counter==1);
     } BOOST_STM_E_END_TRANSACTION;
 
     return true;
 }
 
+bool test_outer_abort_throw_e() {
+    reset();
+    BOOST_STM_E_TRANSACTION {
+        counter=0;
+    } BOOST_STM_E_END_TRANSACTION;
+
+    try{
+        BOOST_STM_E_TRANSACTION {
+            counter=1;
+            BOOST_STM_E_ABORT_AND_THROW("1");
+        } BOOST_STM_E_END_TRANSACTION;
+    } catch (...) {}
+
+    BOOST_STM_E_TRANSACTION {
+        BOOST_STM_E_RETURN(counter==0);
+    } BOOST_STM_E_END_TRANSACTION;
+
+    return true;
+}
 
 
 bool test_inner_throw() {
@@ -211,6 +220,31 @@ bool test_inner_throw_e() {
             BOOST_STM_E_TRANSACTION {
                 counter=2;
                 throw "1";
+            } BOOST_STM_E_END_TRANSACTION;
+            counter=3;
+        } BOOST_STM_E_END_TRANSACTION;
+    } catch (...) {
+    }
+
+    BOOST_STM_E_TRANSACTION {
+        BOOST_STM_E_RETURN(counter==2);
+    } BOOST_STM_E_END_TRANSACTION;
+
+    return false;
+}
+
+bool test_inner_abort_throw_e() {
+    reset();
+    BOOST_STM_E_TRANSACTION {
+        counter=0; counter2=0;
+    } BOOST_STM_E_END_TRANSACTION;
+
+    try{
+        BOOST_STM_E_TRANSACTION {
+            counter=1;
+            BOOST_STM_E_TRANSACTION {
+                counter=2;
+                BOOST_STM_E_ABORT_AND_THROW( "1");
             } BOOST_STM_E_END_TRANSACTION;
             counter=3;
         } BOOST_STM_E_END_TRANSACTION;
@@ -337,6 +371,8 @@ int test_all() {
     fails += !test_inner_throw_e();
     fails += !test_outer_throw();
     fails += !test_outer_throw_e();
+    fails += !test_inner_abort_throw_e();
+    fails += !test_outer_abort_throw_e();
 
     fails += !test_equal();
     fails += !test_diff();
@@ -352,13 +388,19 @@ int test_all() {
 
     return fails;
 }
-
+void term_hd() {
+    std::cout << "****************** ERROR: "<< __FILE__ << "["<<__LINE__<<"] term_hd"<< std::endl;
+    std::abort();
+}
 int main() {
+    try {
     stm::transaction::enable_dynamic_priority_assignment();
     stm::transaction::do_deferred_updating();
     stm::transaction::initialize();
     stm::thread_initializer thi;
 
     return test_all();
+    } 
+    CATCH_AND_PRINT_ALL
 
 }

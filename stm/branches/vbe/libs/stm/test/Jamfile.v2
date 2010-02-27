@@ -76,8 +76,6 @@ project
             [ run stm : -bench isolated_int_lock_in_tx -def -threads 4 -inserts 100 -latm tx : : : isolated_int_lock_in_tx_def_tx_t4_i100 ]
 
 
-            ########### deadlock sometimes. 2010/02/22
-            [ run stm : -bench isolated_composed_int_lock2 -def -threads 2 -inserts 100 -latm tx : : : isolated_composed_int_lock2_def_tx_t2_i100 ]
 
             [ run stm : -bench irrevocable_int -def -threads 2 -inserts 100 : : : irrevocable_int_def_t2_i100 ]
 
@@ -185,6 +183,11 @@ project
             [ run stm : -bench list_hash_w_locks -dir -threads 4 -inserts 100 -latm full : : : list_hash_w_locks_dir_full_t4_i100 ]
             [ run stm : -bench list_hash_w_locks -dir -threads 4 -inserts 100 -latm tm : : : list_hash_w_locks_dir_tm_t4_i100 ]
             [ run stm : -bench list_hash_w_locks -dir -threads 4 -inserts 100 -latm tx : : : list_hash_w_locks_dir_tx_t4_i100 ]
+            
+            [ run stm : -bench using_linkedlist -dir -threads 2 -inserts 100 -latm full : : : using_linkedlist_dir_full_t2_i100 ]
+            [ run stm : -bench using_linkedlist -dir -threads 2 -inserts 100 -latm tm : : : using_linkedlist_dir_tm_t2_i100 ]
+            [ run stm : -bench using_linkedlist -dir -threads 2 -inserts 100 -latm tx : : : using_linkedlist_dir_tx_t2_i100 ]
+            
     ;
 
     alias embedded
@@ -246,6 +249,9 @@ project
 
     alias fails_sometimes
         :
+            ########### deadlock sometimes. 2010/02/22
+            [ run stm : -bench isolated_composed_int_lock2 -def -threads 2 -inserts 100 -latm tx : : : isolated_composed_int_lock2_def_tx_t2_i100 ]
+        
             ########### fails sometimes 17:27 091003
             #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52
             [ run stm : -bench hashmap -def -threads 4 -inserts 100 : : : hashmap_def_t4_i100 ]
@@ -279,6 +285,9 @@ project
             ########### fails sometimes 19:00 091107
             [ run stm : -bench ll -dir -threads 2 -inserts 100 -latm tx : : : ll_dir_t2_tx_i100 ]
 
+            ########### fails often
+            [ run stm : -bench ll -def -threads 2 -inserts 100 -latm tx : : : ll_def_tx_t2_i100 ]
+
     ;
 
     alias failures
@@ -288,10 +297,8 @@ project
             [ run stm : -bench accounts -def -threads 2 -inserts 100 : : : accounts_def_t2_i100 ]
             ########### fails since revison 2010/02/22
             #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52
-            [ run stm : -bench accounts -def -threads 4 -inserts 100 : : : accounts_def_t4_i100 ]
+            #[ run stm : -bench accounts -def -threads 4 -inserts 100 : : : accounts_def_t4_i100 ]
 
-            ########### fails often
-            [ run stm : -bench ll -def -threads 2 -inserts 100 -latm tx : : : ll_def_tx_t2_i100 ]
 
             ########### fails with CHECK  all-modes
             # /bin/sh: line 4:  4072 Aborted                 (core dumped) "bin/lit_def_t2.test/gcc-3.4.4/debug/threading-multi/lit_def_t2.exe" > "bin/lit_def_t2.test/gcc-3.4.4/debug/threading-multi/lit_def_t2.output" 2>&1
@@ -299,6 +306,8 @@ project
             [ run stm : -bench lit_example -def -threads 2 -inserts 100 -latm full : : : lit_example_def_full_t2_i100 ]
             ########### fails
             [ run stm : -bench lit_example -def -threads 2 -inserts 100 -latm tm : : : lit_example_def_tm_t2_i100 ]
+            ########### fails
+            [ run stm : -bench lit_example -dir -threads 2 -inserts 100 -latm tm : : : lit_example_dir_tm_t2_i100 ]
 
             ########### fails
             # /bin/sh: line 4:  2944 Aborted                 (core dumped) "bin/ht_def_t2_i1000.test/gcc-3.4.4/debug/threading-multi/ht_def_t2_i1000.exe" > "bin/ht_def_t2_i1000.test/gcc-3.4.4/debug/threading-multi/ht_def_t2_i1000.output" 2>&1
@@ -314,19 +323,25 @@ project
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
             #   19469 [sig] tx_linear_lock_def_t2 3768 _cygtls::handle_exceptions: Error while dumping state (probably corrupted stack)
             [ run stm : -bench tx_linear_lock -def -threads 2 -inserts 100 -latm full : : : tx_linear_lock_def_full_t2_i100 ]
+            ########### fails
+            [ run stm : -bench tx_linear_lock -dir -threads 2 -inserts 100 -latm tm : : : tx_linear_lock_dir_tm_t2_i100 ]
+            ########### fails
+            [ run stm : -bench tx_linear_lock -def -threads 2 -inserts 100 -latm tm : : : tx_linear_lock_def_tm_t2_i100 ]
 
             ###########  fails all-modes
             # /bin/sh: line 4:  3660 Segmentation fault      (core dumped) "bin/isolated_composed_int_lock_def_t2.test/gcc-3.4.4/debug/threading-multi/isolated_composed_int_lock_def_t2.exe" > "bin/isolated_composed_int_lock_def_t2.test/gcc-3.4.4/debug/threading-multi/isolated_composed_int_lock_def_t2.output" 2>&1
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
             [ run stm : -bench isolated_composed_int_lock -def -threads 2 -inserts 100 -latm full : : : isolated_composed_int_lock_def_full_t2_i100 ]
-
             ########### fails
             # /bin/sh: line 4:  4744 Aborted                 (core dumped) "bin/gcc-3.4.4/debug/threading-multi/stm.exe" -bench isolated_composed_int_lock -def -threads 2 -inserts 100 -latm tm > "bin/isolated_composed_int_lock_def_tm_t2_i100.test/gcc-3.4.4/debug/threading-multi/isolated_composed_int_lock_def_tm_t2_i100.output" 2>&1
             [ run stm : -bench isolated_composed_int_lock -def -threads 2 -inserts 100 -latm tm : : : isolated_composed_int_lock_def_tm_t2_i100 ]
-
             ########### fails
             # /bin/sh: line 4:  4772 Aborted                 (core dumped) "bin/gcc-3.4.4/debug/threading-multi/stm.exe" -bench isolated_composed_int_lock -def -threads 2 -inserts 100 -latm tx > "bin/isolated_composed_int_lock_def_tx_t2_i100.test/gcc-3.4.4/debug/threading-multi/isolated_composed_int_lock_def_tx_t2_i100.output" 2>&1
             [ run stm : -bench isolated_composed_int_lock -def -threads 2 -inserts 100 -latm tx : : : isolated_composed_int_lock_def_tx_t2_i100 ]
+            ########### fails
+            [ run stm : -bench isolated_composed_int_lock -dir -threads 2 -inserts 100 -latm tm : : : isolated_composed_int_lock_dir_tm_t2_i100 ]
+            ########### fails
+            [ run stm : -bench isolated_composed_int_lock -dir -threads 2 -inserts 100 -latm tx : : : isolated_composed_int_lock_dir_tx_t2_i100 ]
 
             ###########  deadlock
             #/bin/sh: line 4:  4536 Aborted                 (core dumped) "bin/gcc-3.4.4/debug/threading-multi/stm.exe" -bench isolated_composed_int_lock2 -def -threads 2 -inserts 100 -latm full > "bin/isolated_composed_int_lock2_def_full_t2_i100.test/gcc-3.4.4/debug/threading-multi/isolated_composed_int_lock2_def_full_t2_i100.output" 2>&1
@@ -338,7 +353,6 @@ project
             #74 unlock
             #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52
             [ run stm : -bench isolated_composed_int_lock2 -def -threads 2 -inserts 100 -latm full : : : isolated_composed_int_lock2_def_full_t2_i100 ]
-
             ###########  fails
             #/bin/sh: line 4:  4556 Aborted                 (core dumped) "bin/gcc-3.4.4/debug/threading-multi/stm.exe" -bench isolated_composed_int_lock2 -def -threads 2 -inserts 100 -latm tm > "bin/isolated_composed_int_lock2_def_tm_t2_i100.test/gcc-3.4.4/debug/threading-multi/isolated_composed_int_lock2_def_tm_t2_i100.output" 2>&1
             #====== BEGIN OUTPUT ======
@@ -346,17 +360,18 @@ project
             #66 i=0 end= 50 count= 1
             #70 lock
             [ run stm : -bench isolated_composed_int_lock2 -def -threads 2 -inserts 100 -latm tm : : : isolated_composed_int_lock2_def_tm_t2_i100 ]
-
             ###########  fails
-            [ run stm : -bench isolated_composed_int_lock2 -def -threads 4 -inserts 100 -latm tx : : : isolated_composed_int_lock2_def_tx_t4_i100 ]
+            #[ run stm : -bench isolated_composed_int_lock2 -def -threads 4 -inserts 100 -latm tx : : : isolated_composed_int_lock2_def_tx_t4_i100 ]
+            ########### fails
+            [ run stm : -bench isolated_composed_int_lock2 -dir -threads 2 -inserts 100  -latm tm : : : isolated_composed_int_lock2_dir_tm_t2_i100 ]
+            ########### fails
+            #[ run stm : -bench isolated_composed_int_lock2 -dir -threads 4 -inserts 100  -latm tx : : : isolated_composed_int_lock2_dir_tx_t4_i100 ]
 
             ########### fails all-modes
             # /bin/sh: line 4:  2376 Aborted                 (core dumped) "bin/using_linkedlist_def_t2_i1000.test/gcc-3.4.4/debug/threading-multi/using_linkedlist_def_t2_i1000.exe" > "bin/using_linkedlist_def_t2_i1000.test/gcc-3.4.4/debug/threading-multi/using_linkedlist_def_t2_i1000.output" 2>&1
             [ run stm : -bench using_linkedlist -def -threads 2 -inserts 100 -latm full : : : using_linkedlist_def_full_t2_i100 ]
-
             ########### fails
             [ run stm : -bench using_linkedlist -def -threads 2 -inserts 100 -latm tm : : : using_linkedlist_def_tm_t2_i100 ]
-
             ########### fails
             [ run stm : -bench using_linkedlist -def -threads 2 -inserts 100 -latm tx : : : using_linkedlist_def_tx_t2_i100 ]
 
@@ -372,38 +387,10 @@ project
             ########### fails
             # assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 40
             [ run stm : -bench list_hash_w_locks -def -threads 2 -inserts 100 -latm full : : : list_hash_w_locks_def_full_t2_i100 ]
-
             ########### fails
             #assertion "res==0" failed: file "../../../boost/synchro/pthread/mutex.hpp", line 52
             [ run stm : -bench list_hash_w_locks -def -threads 4 -inserts 100 -latm tm : : : list_hash_w_locks_def_tm_t4_i100 ]
 
-            ########### fails
-            [ run stm : -bench tx_linear_lock -dir -threads 2 -inserts 100 -latm tm : : : tx_linear_lock_dir_tm_t2_i100 ]
-
-            ########### fails
-            [ run stm : -bench isolated_composed_int_lock2 -dir -threads 2 -inserts 100  -latm tm : : : isolated_composed_int_lock2_dir_tm_t2_i100 ]
-
-            ########### fails
-            [ run stm : -bench isolated_composed_int_lock2 -dir -threads 4 -inserts 100  -latm tx : : : isolated_composed_int_lock2_dir_tx_t4_i100 ]
-
-            ########### fails all-modes
-            #/bin/sh: line 4:   408 Aborted                 (core dumped) "bin/using_linkedlist_dir_t2_i1000.test/gcc-3.4.4/debug/threading-multi/using_linkedlist_dir_t2_i1000.exe" > "bin/using_linkedlist_dir_t2_i1000.test/gcc-3.4.4/debug/threading-multi/using_linkedlist_dir_t2_i1000.output" 2>&1
-            [ run stm : -bench using_linkedlist -dir -threads 2 -inserts 100 -latm full : : : using_linkedlist_dir_full_t2_i100 ]
-            ########### fails
-            [ run stm : -bench using_linkedlist -dir -threads 2 -inserts 100 -latm tm : : : using_linkedlist_dir_tm_t2_i100 ]
-            ########### fails
-            [ run stm : -bench using_linkedlist -dir -threads 2 -inserts 100 -latm tx : : : using_linkedlist_dir_tx_t2_i100 ]
-
-            ########### fails
-            [ run stm : -bench tx_linear_lock -def -threads 2 -inserts 100 -latm tm : : : tx_linear_lock_def_tm_t2_i100 ]
-
-            ########### fails
-            [ run stm : -bench isolated_composed_int_lock -dir -threads 2 -inserts 100 -latm tm : : : isolated_composed_int_lock_dir_tm_t2_i100 ]
-            ########### fails
-            [ run stm : -bench isolated_composed_int_lock -dir -threads 2 -inserts 100 -latm tx : : : isolated_composed_int_lock_dir_tx_t2_i100 ]
-
-            ########### fails
-            [ run stm : -bench lit_example -dir -threads 2 -inserts 100 -latm tm : : : lit_example_dir_tm_t2_i100 ]
     ;
 
     exe perf_counter : ../example/counter.cpp ;
@@ -417,5 +404,5 @@ project
 
 
     alias all
-        : def dir examples fails_sometimes
+        : def dir examples
     ;
