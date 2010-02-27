@@ -181,19 +181,25 @@ namespace auto_size{
             );
         }
 
+		// This needs to be exposed for csv.
+        const D& allocated()const{
+			this->alloc_if();
+            return static_cast<const D&>(*this);
+        }
+
 		private:
         
+        void alloc_if()const{
+            if(!this->ptr){
+               return this->alloc();
+            }
+        }
+
         void alloc()const{ 
             this->ptr = smart_ptr_(new ref_array_);
             write_to_array(*this->ptr,static_cast<const D&>(*this));		
         }
                 
-        void alloc_if()const{
-            if(!this->ptr){
-                return this->alloc();
-            }
-        }
-
         protected:
 		
         ref_array_& ref_array(){ 

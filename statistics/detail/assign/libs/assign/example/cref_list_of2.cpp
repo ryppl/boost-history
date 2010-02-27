@@ -44,8 +44,8 @@ void example_cref_list_of(std::ostream& os)
             {
             	// BUG
             	res_ res  = cref_list_of(a,b,c); 
-				BOOST_ASSERT(res[0] != a); //wrong
-				BOOST_ASSERT(res[1] != b); //wrong
+				BOOST_ASSERT(res[0] == a); //wrong
+				BOOST_ASSERT(res[1] == b); //wrong
 				BOOST_ASSERT(res[2] == c); //correct
             }
 			os << "<-" << std::endl;

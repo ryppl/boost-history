@@ -16,17 +16,18 @@
 
 // Warning : currently buggy
 
-#define BOOST_ASSIGN_LIST_OF_CSV_tmp(z,n,unused) (BOOST_PP_CAT(_,n))
-#define BOOST_ASSIGN_LIST_OF_CSV_rec(fun,N) 								\
-	boost::assign::fun BOOST_PP_ENUM(N,BOOST_ASSIGN_LIST_OF_CSV_tmp,~)		\
+#define BOOST_ASSIGN_CSV_ARG(z,n,arg) (BOOST_PP_CAT(arg,n))
+#define BOOST_ASSIGN_CSV_CALL(fun,N) 										\
+	boost::assign::fun BOOST_PP_ENUM(N,BOOST_ASSIGN_CSV_ARG,~)				\
 /**/    
-#define BOOST_ASSIGN_LIST_OF_CSV_ITER(fun,N)								\
+#define BOOST_ASSIGN_CSV_ITER(fun,N)										\
 namespace boost{															\
 namespace assign{															\
 	template<typename T>													\
    	typename assign::detail::auto_size::result_of_copy<const T,N>::type		\
 	fun(BOOST_PP_ENUM_PARAMS(N, const T& _)){								\
-		return BOOST_ASSIGN_LIST_OF_CSV_rec(fun,N); 						\
+        return (boost::assign::fun 											\
+        	BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_)).allocated(); 		\
     }																		\
 }																			\
 }																			\

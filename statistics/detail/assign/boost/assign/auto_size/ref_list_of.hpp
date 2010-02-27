@@ -8,13 +8,14 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
+#include <boost/typeof/typeof.hpp> // templatetmp.
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 #include <boost/assign/auto_size/detail/csv.hpp>
 
 // Creates a collection of references exposing the boost::array interface and 
 // convertible to a range that is constructible from a pair of iterators. It can
 // be used either as the rhs or lhs of an assignment such as:
-// 	boost::fill(ref_list_of(a)(b)(c),0)
+// 	boost::fill(ref_list_of(a,b,c),0)
 // This function supersedes ref_list_of<int>().
 
 namespace boost{
@@ -32,24 +33,9 @@ namespace assign{
 		return detail::auto_size::first_copy<T>::call(t);
     }
 
-	// Temporary manual overloads. A is MACRO needed. See csv.hpp
-
-	template<typename T>
-	typename assign::detail::auto_size::result_of_copy<const T,2>::type
-    cref_list_of(const T& a,const T& b){
-    	return cref_list_of(a)(b);
-    }
-
-	template<typename T>
-	typename assign::detail::auto_size::result_of_copy<const T,3>::type
-    cref_list_of(const T& a,const T& b,const T& c){
-    	return cref_list_of(a)(b)(c);
-    }
-
-
 }// assign
 }// boost
 
-//BOOST_ASSIGN_LIST_OF_CSV_ITER(cref_list_of,3)
+BOOST_ASSIGN_CSV_ITER(cref_list_of,3)
 
 #endif
