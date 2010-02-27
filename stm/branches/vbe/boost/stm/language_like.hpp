@@ -250,9 +250,18 @@ struct dummy_exception{};
                     __boost_stm_ctrl_=boost::stm::detail::none;            \
                     break;                                                      \
                 } while ((__boost_stm_ctrl_=boost::stm::detail::continue_),false);   \
-            } catch(...) {                                                      \
-                if (false)std::cout << __FILE__ << "["<<__LINE__<<"] catch1" << std::endl;\
+            } catch (boost::stm::aborted_tx &) {                                        \
                 __boost_stm_destr_.release();                              \
+                throw;                                                          \
+            } catch(...) {                                                      \
+                std::cout << __FILE__ << "["<<__LINE__<<"] catch1" << std::endl;\
+                if (__boost_stm_txn_.forced_to_abort()) {\
+                std::cout << __FILE__ << "["<<__LINE__<<"] catch11" << std::endl;\
+                    __boost_stm_destr_.release();                              \
+                } else {\
+                    __boost_stm_destr_.commit();\
+                }\
+                std::cout << __FILE__ << "["<<__LINE__<<"] catch12" << std::endl;\
                 throw;                                                          \
             }                                                                   \
             break;                                                                  \
@@ -403,7 +412,7 @@ struct dummy_exception{};
 //---------------------------------------------------------------------------
 // aborts the transaction TX
 //---------------------------------------------------------------------------
-#define BOOST_STM_TX_ABORT(TX) (TX).force_to_abort()
+#define BOOST_STM_TX_ABORT(TX) (TX).abort()
 
 //---------------------------------------------------------------------------
 // aborts the current transaction
@@ -412,18 +421,28 @@ struct dummy_exception{};
     if (boost::stm::current_transaction()==0) ;  \
     else BOOST_STM_TX_ABORT(*boost::stm::current_transaction())
 
+#define BOOST_STM_E_ABORT BOOST_STM_CURRENT.abort()
+
 //---------------------------------------------------------------------------
 // aborts the transaction TX
 //---------------------------------------------------------------------------
-#define BOOST_STM_TX_ABORT_OUTER(TX) (TX).force_to_abort()
+#define BOOST_STM_TX_ABORT_OUTER(TX) (TX).abort()
 
 //---------------------------------------------------------------------------
 // aborts the current transaction
 //---------------------------------------------------------------------------
+#define BOOST_STM_E_ABORT_OUTER(TX) BOOST_STM_TX_ABORT_OUTER(BOOST_STM_CURRENT)
+
 #define BOOST_STM_ABORT_OUTER     \
     if (boost::stm::current_transaction()==0) ;  \
     else BOOST_STM_TX_ABORT_OUTER(*boost::stm::current_transaction())
 
+//---------------------------------------------------------------------------
+// commits the current transaction
+//---------------------------------------------------------------------------
+#define BOOST_STM_TX_COMMIT(TX) (TX).commit()
+
+#define BOOST_STM_E_COMMIT BOOST_STM_TX_COMMIT(BOOST_STM_CURRENT)
 
 //---------------------------------------------------------------------------
 // throw an exception
@@ -435,7 +454,9 @@ struct dummy_exception{};
 //---------------------------------------------------------------------------
 // aborts the transaction TX and throw exception
 //---------------------------------------------------------------------------
-#define BOOST_STM_TX_ABORT_AND_THROW(TX, EXCEPTION) if ((TX).force_to_abort()) throw (EXCEPTION)
+#define BOOST_STM_TX_ABORT_AND_THROW(TX, EXCEPTION) if ((TX).force_to_abort(),false) ; throw (EXCEPTION)
+#define BOOST_STM_E_ABORT_AND_THROW(EXCEPTION) BOOST_STM_TX_ABORT_AND_THROW(BOOST_STM_CURRENT, EXCEPTION)
+
 
 //---------------------------------------------------------------------------
 // aborts the current transaction
@@ -455,6 +476,8 @@ struct dummy_exception{};
 #define BOOST_STM_ABORT_OUTER_AND_THROW(EXCEPTION)     \
     if (boost::stm::current_transaction()==0) ;  \
     else BOOST_STM_TX_ABORT_OUTER_AND_THROW(*boost::stm::current_transaction(), EXCEPTION)
+
+
 
 //---------------------------------------------------------------------------
 // Memory management

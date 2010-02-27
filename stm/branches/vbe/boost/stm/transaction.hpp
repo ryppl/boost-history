@@ -859,7 +859,7 @@ public:
       // can't abort irrevocable transactions
       if (irrevocable()) return;
 
-      forced_to_abort_ref() = true;
+      *forced_to_abort_ptr() = true;
 
 #ifdef PERFORMING_COMPOSITION
 #ifndef USING_SHARED_FORCED_TO_ABORT
@@ -873,12 +873,12 @@ public:
          transaction *t = *j;
 
          // if this is a parent or child tx, it must abort too
-         if (t->threadId_ == this->threadId_) t->forced_to_abort_ref() = true;
+         if (t->threadId_ == this->threadId_) *(t->forced_to_abort_ptr()) = true;
       }
 #endif
 #endif
    }
-   inline void unforce_to_abort() { forced_to_abort_ref() = false; }
+   inline void unforce_to_abort() { *forced_to_abort_ptr() = false; }
 
    //--------------------------------------------------------------------------
    void lock_and_abort();
@@ -1195,14 +1195,14 @@ private:
    template <typename T>
    static typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
    set_thread(T & in, thread_id_t thread_id, detail::dummy<0> = 0) {
-       in.transaction_thread() = thread_id;
+       in.transaction_thread(thread_id);
    }
 
    template <typename T>
    typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
    static set_thread(T & in, thread_id_t thread_id, detail::dummy<1> = 0) {
        // not yet implemented
-       in.transaction_thread() = thread_id;
+       in.transaction_thread(thread_id);
    }
 
    //--------------------------------------------------------------------------
@@ -1230,7 +1230,7 @@ private:
 
         bool all_invalid = true;
         for (int i=size-1; i>=0; --i) {
-            if (in[i].transaction_thread() = invalid_thread_id()) {
+            if (in[i].transaction_thread() == invalid_thread_id()) {
                 all_invalid=false;
                 break;
             }
@@ -1855,7 +1855,7 @@ private:
     TxType *txTypeRef_;
     inline TxType const tx_type() const { return *txTypeRef_; }
     inline void tx_type(TxType const &rhs) { *txTypeRef_ = rhs; }
-    inline TxType&  tx_type_ref() { return *txTypeRef_; }
+    inline TxType*  tx_type_ptr() { return txTypeRef_; }
 #else // BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
     inline WriteContainer *write_list() {
         return &context_.writeMem;
@@ -1873,7 +1873,7 @@ private:
     inline MemoryContainerList& deletedMemoryList() { return context_.delMem; }
     inline TxType const tx_type() const { return context_.txType; }
     inline void tx_type(TxType const &rhs) { context_.txType = rhs; }
-    inline TxType&  tx_type_ref() { return context_.txType; }
+    inline TxType*  tx_type_ptr() { return &context_.txType; }
 #endif
 
 #ifdef USING_SHARED_FORCED_TO_ABORT
@@ -1882,19 +1882,19 @@ private:
 public:
     inline int const forced_to_abort() const { return *forcedToAbortRef_; }
 private:
-    inline int& forced_to_abort_ref() { return *forcedToAbortRef_; }
+    inline int* forced_to_abort_ptr() { return forcedToAbortRef_; }
 #else
 public:
     inline int const forced_to_abort() const { return context_.abort; }
 private:
-    inline int& forced_to_abort_ref() { return context_.abort; }
+    inline int* forced_to_abort_ptr() { return &context_.abort; }
 #endif
 #else
    int forcedToAbortRef_;
 public:
     inline int const forced_to_abort() const { return forcedToAbortRef_; }
 private:
-    inline int& forced_to_abort_ref() { return forcedToAbortRef_; }
+    inline int* forced_to_abort_ptr() { return &forcedToAbortRef_; }
 #endif
 
     static ThreadMutexContainer threadMutexes_;
@@ -1911,7 +1911,7 @@ private:
    inline void block() { blockedRef_ = true; }
    inline void unblock() { blockedRef_ = false; }
    inline int const blocked() const { return blockedRef_; }
-   inline static int& blocked(thread_id_t id) { return *threadBlockedLists_.find(id)->second; }
+   inline static int* blocked_ptr(thread_id_t id) { return threadBlockedLists_.find(id)->second; }
 #endif
 
 
@@ -1930,7 +1930,7 @@ private:
         for (latm::thread_id_mutex_set_map::iterator iter = threadConflictingMutexes_.begin();
             threadConflictingMutexes_.end() != iter; ++iter)
         {
-            blocked(iter->first) = b;
+            *blocked_ptr(iter->first) = b;
         }
     }
 
@@ -1945,7 +1945,7 @@ private:
             if (iter->second->find(mutex) != iter->second->end() &&
                 0 == thread_id_occurance_in_locked_locks_map(iter->first))
             {
-                blocked(iter->first) = false;
+                *blocked_ptr(iter->first) = false;
             }
         }
    }
@@ -2020,7 +2020,7 @@ private:
     TxType *txTypeRef_;
     inline TxType const tx_type() const { return *txTypeRef_; }
     inline void tx_type(TxType const &rhs) { *txTypeRef_ = rhs; }
-    inline TxType&  tx_type_ref() { return *txTypeRef_; }
+    inline TxType*  tx_type_ptr() { return txTypeRef_; }
 #else // BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
     inline WriteContainer *write_list() {
         return &context_.tx_.writeMem;
@@ -2038,7 +2038,7 @@ private:
    inline MemoryContainerList& deletedMemoryList() { return context_.tx_.delMem; }
    inline TxType const tx_type() const { return context_.tx_.txType; }
    inline void tx_type(TxType const &rhs) { context_.tx_.txType = rhs; }
-   inline TxType&  tx_type_ref() { return context_.tx_.txType; }
+   inline TxType*  tx_type_ptr() { return &context_.tx_.txType; }
 #endif
 
 #ifdef USING_SHARED_FORCED_TO_ABORT
@@ -2047,19 +2047,19 @@ private:
 public:
     inline int const forced_to_abort() const { return *forcedToAbortRef_; }
 private:
-    inline int& forced_to_abort_ref() { return *forcedToAbortRef_; }
+    inline int* forced_to_abort_ptr() { return forcedToAbortRef_; }
 #else
 public:
     inline int const forced_to_abort() const { return context_.tx_.abort; }
 private:
-    inline int& forced_to_abort_ref() { return context_.tx_.abort; }
+    inline int* forced_to_abort_ptr() { return &context_.tx_.abort; }
 #endif
 #else
    int forcedToAbortRef_;
 public:
     inline int const forced_to_abort() const { return forcedToAbortRef_; }
 private:
-    inline int& forced_to_abort_ref() { return forcedToAbortRef_; }
+    inline int* forced_to_abort_ptr() { return &forcedToAbortRef_; }
 #endif
 
     inline Mutex * mutex() { return &context_.mutex_; }
@@ -2072,9 +2072,9 @@ private:
    inline void block() { context_.blocked_ = true; }
    inline void unblock() { context_.blocked_ = false; }
    inline int const blocked() const { return context_.blocked_; }
-   inline static int& blocked(thread_id_t id)  {
+   inline static int* blocked_ptr(thread_id_t id)  {
         tss_context_map_type::iterator i = tss_context_map_.find(id);
-        return i->second->blocked_;
+        return &i->second->blocked_;
     }
 #endif
 
@@ -2091,7 +2091,7 @@ private:
         for (tss_context_map_type::iterator iter = tss_context_map_.begin();
             tss_context_map_.end() != iter; ++iter)
         {
-            blocked(iter->first) = b;
+            *blocked_ptr(iter->first) = b;
         }
     }
 
@@ -2106,7 +2106,7 @@ private:
             if (iter->second->conflictingMutex_.find(mutex) != iter->second->conflictingMutex_.end() &&
                 0 == thread_id_occurance_in_locked_locks_map(iter->first))
             {
-                blocked(iter->first) = false;
+                *blocked_ptr(iter->first) = false;
             }
         }
    }
@@ -2187,20 +2187,20 @@ private:
    TxType *txTypeRef_;
    inline TxType const tx_type() const { return *txTypeRef_; }
    inline void tx_type(TxType const &rhs) { *txTypeRef_ = rhs; }
-   inline TxType&  tx_type_ref() { return *txTypeRef_; }
+   inline TxType*  tx_type_ptr() { return txTypeRef_; }
 
 #ifdef USING_SHARED_FORCED_TO_ABORT
    int *forcedToAbortRef_;
 public:
     inline int const forced_to_abort() const { return *forcedToAbortRef_; }
 private:
-    inline int& forced_to_abort_ref() { return *forcedToAbortRef_; }
+    inline int* forced_to_abort_ptr() { return forcedToAbortRef_; }
 #else
    int forcedToAbortRef_;
 public:
     inline int const forced_to_abort() const { return forcedToAbortRef_; }
 private:
-    inline int& forced_to_abort_ref() { return forcedToAbortRef_; }
+    inline int* forced_to_abort_ptr() { return &forcedToAbortRef_; }
 #endif
 
     static ThreadMutexContainer threadMutexes_;
@@ -2217,7 +2217,7 @@ private:
    inline void block() { blockedRef_ = true; }
    inline void unblock() { blockedRef_ = false; }
    inline int const blocked() const { return blockedRef_; }
-   inline static int& blocked(thread_id_t id) { return *threadBlockedLists_.find(id)->second; }
+   inline static int* blocked_ptr(thread_id_t id) { return threadBlockedLists_.find(id)->second; }
 #endif
 
 
@@ -2236,7 +2236,7 @@ private:
         for (latm::thread_id_mutex_set_map::iterator iter = threadConflictingMutexes_.begin();
             threadConflictingMutexes_.end() != iter; ++iter)
         {
-            blocked(iter->first) = b;
+            *blocked_ptr(iter->first) = b;
         }
     }
 
@@ -2251,7 +2251,7 @@ private:
             if (iter->second->find(mutex) != iter->second->end() &&
                 0 == thread_id_occurance_in_locked_locks_map(iter->first))
             {
-                blocked(iter->first) = false;
+                *blocked_ptr(iter->first) = false;
             }
         }
    }

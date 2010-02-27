@@ -107,7 +107,7 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
             {
                 if (0 == thread_id_occurance_in_locked_locks_map(*it))
                 {
-                    blocked(*it) = false;
+                    *blocked_ptr(*it) = false;
                 }
             }
             throw;

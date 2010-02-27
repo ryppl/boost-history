@@ -38,7 +38,7 @@ public:
         case eTxConflictingLockLatmProtection:
             return "tx_protect";
         default:
-            throw "invalid LATM type";
+            BOOST_ASSERT(false&& "invalid LATM type");
         }
     }
     void do_full_lock_protection_i() {

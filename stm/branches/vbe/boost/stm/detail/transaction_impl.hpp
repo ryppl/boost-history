@@ -44,24 +44,24 @@ namespace boost { namespace stm {
 //--------------------------------------------------------------------------
 inline bool transaction::isolatedTxInFlight()
 {
-    BOOST_STM_INFO;
+    BOOST_STM_INFO<<std::endl;
     assert_tx_type();
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
         (*i)->assert_tx_type();
 
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
       // if this is our threadId, skip it
       if ((*i)->threadId_ == this->threadId_) continue;
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
 
       if ((*i)->isolated()) return true;
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    }
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
 
    return false;
 }
@@ -197,12 +197,14 @@ inline void transaction::make_isolated()
 //--------------------------------------------------------------------------
 inline bool transaction::irrevocable() const
 {
+   BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
    switch (tx_type())
    {
    case eNormalTx: return false;
    case eIrrevocableTx: return true;
    case eIrrevocableAndIsolatedTx: return true;
    default:
+            BOOST_STM_ERROR << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
         BOOST_ASSERT(false&&"tx type not found");
         return false; 
    }
@@ -212,12 +214,14 @@ inline bool transaction::irrevocable() const
 //--------------------------------------------------------------------------
 inline bool transaction::isolated() const
 {
+   BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<< const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
    switch (tx_type())
    {
    case eNormalTx: return false;
    case eIrrevocableTx: return false;
    case eIrrevocableAndIsolatedTx: return true;
    default:
+            BOOST_STM_ERROR << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
         BOOST_ASSERT(false&&"tx type not found");
         return false; 
    }
@@ -225,13 +229,14 @@ inline bool transaction::isolated() const
 
 inline void transaction::assert_tx_type() const
 {
+   BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
    switch (tx_type())
    {
    case eNormalTx: return ;
    case eIrrevocableTx: return ;
    case eIrrevocableAndIsolatedTx: return ;
    default:
-            BOOST_STM_ERROR;
+            BOOST_STM_ERROR << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
    }
 }
 
@@ -461,7 +466,7 @@ inline transaction::transaction() :
    mutexRef_(threadMutexes_.find(threadId_)->second),
 
 #if PERFORMING_LATM
-   blockedRef_(blocked(threadId_)),
+   blockedRef_(*blocked_ptr(threadId_)),
 #endif
 
 #if PERFORMING_LATM
@@ -500,7 +505,7 @@ inline transaction::transaction() :
    mutexRef_(threadMutexes_.find(threadId_)->second),
 
 #if PERFORMING_LATM
-   blockedRef_(blocked(threadId_)),
+   blockedRef_(*blocked_ptr(threadId_)),
 #endif
 
 #if PERFORMING_LATM
@@ -562,7 +567,7 @@ inline std::string transaction::outputBlockedThreadsAndLockedLocks()
       // list, then allow the thread to make forward progress again
       // by turning its "blocked" but only if it does not appear in the
       // locked_locks_thread_id_map
-      o << iter->first << " blocked: " << blocked(iter->first) << endl;
+      o << iter->first << " blocked: " << *blocked_ptr(iter->first) << endl;
       o << "\t";
 
       for (latm::mutex_set::iterator inner = iter->second->begin(); inner != iter->second->end(); ++inner)
@@ -594,19 +599,19 @@ inline std::string transaction::outputBlockedThreadsAndLockedLocks()
 //--------------------------------------------------------------------------
 inline bool transaction::restart()
 {
-    BOOST_STM_INFO;
+    BOOST_STM_INFO<<std::endl;
     assert_tx_type();
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    if (e_in_flight == state_) lock_and_abort();
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
 
 #if PERFORMING_LATM
 #ifdef LOGGING_BLOCKS
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    int iterations = 0;
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
 #endif
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    while (blocked())
    {
 #ifdef LOGGING_BLOCKS
@@ -623,7 +628,7 @@ inline bool transaction::restart()
       SLEEP(10);
    }
 #endif
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    //-----------------------------------------------------------------------
    // this is a vital check for composed transactions that abort, but the
    // outer instance tx is never destructed, but instead restarted via
@@ -633,26 +638,26 @@ inline bool transaction::restart()
 #ifdef USING_SHARED_FORCED_TO_ABORT
    {
    synchro::lock_guard<Mutex> lock_i(*inflight_lock());
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    if (!otherInFlightTransactionsOfSameThreadNotIncludingThis(this))
    {
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
       unforce_to_abort();
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    }
    }
 #else
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    unforce_to_abort();
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
 #endif
 #endif
 
-    BOOST_STM_INFO;
+    BOOST_STM_INFO<<std::endl;
     assert_tx_type();
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    put_tx_inflight();
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
 
 #if 0
    if (doing_dynamic_priority_assignment())
@@ -663,7 +668,7 @@ inline bool transaction::restart()
    reads_ = 0;
 #endif
 
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    return true;
 }
 
@@ -715,71 +720,71 @@ inline bool transaction::can_go_inflight()
 //--------------------------------------------------------------------------
 inline void transaction::put_tx_inflight()
 {
-    BOOST_STM_INFO;
+    BOOST_STM_INFO<<std::endl;
     assert_tx_type();
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
 #if PERFORMING_LATM
    while (true)
    {
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
       {
       synchro::lock_guard<Mutex> lock_i(*inflight_lock());
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
 
           bool b1=latm::instance().can_go_inflight();
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
           bool b2=!isolatedTxInFlight();
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
       if (b1 && b2)
       {
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
          transactionsInFlight_.insert(this);
          state_ = e_in_flight;
          break;
       }
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
 
       }
       SLEEP(10);
    }
 #else
    synchro::lock_guard<Mutex> lock_i(*inflight_lock());
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    transactionsInFlight_.insert(this);
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
    state_ = e_in_flight;
 #endif
-    BOOST_STM_INFO;
+    BOOST_STM_INFO<<std::endl;
     assert_tx_type();
-    //~ BOOST_STM_INFO;
+    //~ BOOST_STM_INFO<<std::endl;
 }
 
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 inline transaction::~transaction()
 {
-   BOOST_STM_INFO;
+   BOOST_STM_INFO<<std::endl;
     assert_tx_type();
-   BOOST_STM_INFO;
+   BOOST_STM_INFO<<std::endl;
    // if we're not an inflight transaction - bail
    if (state_ != e_in_flight)
    {
-   BOOST_STM_INFO;
+   BOOST_STM_INFO<<std::endl;
       //if (hasLock()) unlock_tx();
       return;
    }
 
-   BOOST_STM_INFO;
+   BOOST_STM_INFO<<std::endl;
     //if (!hasLock())
     {
        synchro::lock_guard<Mutex> lock(*mutex());
-   BOOST_STM_INFO;
+   BOOST_STM_INFO<<std::endl;
         abort();
-   BOOST_STM_INFO;
+   BOOST_STM_INFO<<std::endl;
     }
-   BOOST_STM_INFO;
+   BOOST_STM_INFO<<std::endl;
     transactions().pop();
-   BOOST_STM_INFO;
+   BOOST_STM_INFO<<std::endl;
 
     // BUG not removed from the list because the test is inversed
     //~ if (alreadyRemovedFromInFlight)
@@ -926,7 +931,7 @@ inline void transaction::invalidating_direct_end_transaction()
          synchro::unlock(*general_lock());
          synchro::unlock(*inflight_lock());
       } else {
-          BOOST_STM_ERROR;
+          BOOST_STM_ERROR<<std::endl;
           std::cout << "invalidating_direct_end_transaction e_committed != state_" << std::endl;
       }
    }
@@ -1384,7 +1389,7 @@ inline void transaction::direct_abort
    }
    catch (...)
    {
-       BOOST_STM_ERROR;
+       BOOST_STM_ERROR<<std::endl;
       std::cout << "Exception caught in abort - bad" << std::endl;
    }
 }
@@ -1715,7 +1720,8 @@ inline void transaction::validating_direct_commit()
       bookkeeping_.inc_new_mem_commits_by(newMemoryList().size());
       directCommitTransactionNewMemory();
 
-      tx_type_ref() = eNormalTx;
+      //~ tx_type_ptr() = eNormalTx;
+      tx_type(eNormalTx);
 #if PERFORMING_LATM
       get_tx_conflicting_locks().clear();
       /* BACKTRACE
@@ -1835,7 +1841,8 @@ inline void transaction::validating_deferred_commit()
 
       // finally set the state to committed
       bookkeeping_.inc_commits();
-      tx_type_ref() = eNormalTx;
+      //~ tx_type_ptr() = eNormalTx;
+      tx_type(eNormalTx);
 #if PERFORMING_LATM
       get_tx_conflicting_locks().clear();
       clear_latm_obtained_locks();

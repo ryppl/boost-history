@@ -44,7 +44,7 @@ public:
     {
        if (tmConflictingLocks_.find(inLock) == tmConflictingLocks_.end())
        {
-          throw "lock not in tx conflict lock set, use add_tm_conflicting_lock";
+          invalid_operation(false&& "lock not in tx conflict lock set, use add_tm_conflicting_lock");
        }
     }
 
