@@ -24,7 +24,7 @@ namespace detail{
         assign_reference_copy()
         { /* intentionally empty */ }
 
-        assign_reference_copy( T& r ) : ref_(&r)
+        explicit assign_reference_copy( T& r ) : ref_(&r)
         { }
 
         void operator=( const T& r )

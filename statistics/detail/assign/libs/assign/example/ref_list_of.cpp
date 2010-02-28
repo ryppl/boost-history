@@ -12,6 +12,8 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/auto_size/ref_rebind_list_of.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
+#include <boost/assign/auto_size/detail/array_wrapper.hpp>
+
 #include <boost/assign/list_of.hpp>
 #include <libs/assign/example/ref_list_of.h>
 
@@ -27,27 +29,28 @@ void example_ref_list_of(std::ostream& os)
 	// Since operator= calls begin() and end(), no need to test these separately
 
     {    
-        // cref_list_of
+        // cref_list_of_csv
 
     	int a=1, b=2, c=3;
     	ints_ ints;
     
         {
     		ints.clear();
-            ints = cref_list_of(a,b,3);     
+            ints = cref_list_of_csv(a,b,3);     
             BOOST_ASSERT(ints[0] == a);    
             BOOST_ASSERT(ints[1] == b);    
             BOOST_ASSERT(ints[2] == c);    
+            
         }
         {
             array.assign(-1);
-            array = cref_list_of(a,b,3);
+            array = cref_list_of_csv(a,b,3);
             BOOST_ASSERT(array[0] == a);    
             BOOST_ASSERT(array[1] == b);    
             BOOST_ASSERT(array[2] == c);    
         }
         {
-            BOOST_AUTO(tmp,ref_list_of(a,b,c));
+            BOOST_AUTO(tmp,ref_list_of_csv(a,b,c));
             std::fill(boost::begin(tmp),boost::end(tmp),0);
             BOOST_ASSERT(a == 0);    
             BOOST_ASSERT(b == 0);    
@@ -55,12 +58,12 @@ void example_ref_list_of(std::ostream& os)
         }
     }
     {
-        // ref_rebind_list_of
+        // ref_rebind_list_of_csv
         {
             int a=1, b=2, c=3;
             ints_ ints;
             ints.clear();
-            BOOST_AUTO(tmp,cref_rebind_list_of(a,b,c));
+            BOOST_AUTO(tmp,cref_rebind_list_of_csv(a,b,c));
             {
                 ints = tmp; 
                 BOOST_ASSERT(ints[0] == a);    

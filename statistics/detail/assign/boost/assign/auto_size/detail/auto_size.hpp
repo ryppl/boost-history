@@ -13,23 +13,19 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/shared_ptr.hpp>
+//#include <boost/shared_ptr.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/array.hpp>
-#include <boost/range.hpp>
+//#include <boost/array.hpp>
+//#include <boost/range.hpp>
 #include <boost/assign/list_of.hpp> // needed for assign_referene
 #include <boost/assign/auto_size/detail/assign_refence_copy.hpp>
+#include <boost/assign/auto_size/detail/policy/array.hpp>
 
-// Creates a collection of references exposing the boost::array interface and 
-// convertible to a range constructible from a pair of iterators.
+// Creates a collection of references.
 //
 // This approach improves upon ref_list_of<int>() by deducing the number of 
-// arguments at compile time and factors the reference wrapper into a template. 
-// Whereas successive unary function calls is the usual way to create a collec-
-// tion in the Boost.Assign, the auto-size set up optionally provides functions 
-// that are overloaded on the number of arguments. See csv.hpp
+// arguments at compile time, and factors both the reference wrapper and the 
+// container interface into templates, denoted Ref and P, respectively.
 //
 // Note:
 // In most situations, a reference wrapper that has copy rather than rebind 
@@ -57,198 +53,83 @@ namespace auto_size{
             
     typedef boost::mpl::void_ top_;
             
-    template<typename T,int N,template<typename> class Ref>
-    struct ref_array{
-        typedef boost::array<typename Ref<T>::type,N> type;
-    };
-            
-    template<typename L,typename T,int N,template<typename> class Ref>
+    template<typename L,typename T,int N,template<typename> class Ref,
+    	typename P>
     struct expr;
             
-    template<typename E,typename T,int N,template<typename> class Ref>
+    template<typename E,typename T,int N,template<typename> class Ref,
+    	typename P>
     struct next{
-        typedef expr<E,T,N,Ref> expr_;
-        typedef expr<expr_,T,N+1,Ref> type;
+        typedef expr<E,T,N,Ref,P> expr_;
+        typedef expr<expr_,T,N+1,Ref,P> type;
     };
 
-    template<typename T,int N,template<typename> class Ref,typename D>
-    struct array_wrapper;
+	struct default_policy;
 
-    template<typename E,typename T,int N,template<typename> class Ref>
-    class expr : public array_wrapper<T,N,Ref,expr<E,T,N,Ref> >{
+	struct default_policy{
+    	
+        template<typename E,typename T,int N,template<typename> class Ref>
+        struct apply{
+			typedef expr<E,T,N,Ref,default_policy> expr_;        	
+    		typedef policy::array<T,N,Ref,expr_> type;
+    	};
+    };
+
+    template<
+    	typename E,typename T,int N,template<typename> class Ref,typename P
+    >
+    class expr : public default_policy::apply<E,T,N,Ref>::type{
         typedef boost::mpl::int_<N> int_n_;
         typedef boost::mpl::int_<1> int_1_;
         typedef typename Ref<T>::type ref_;
 
-		typedef array_wrapper<T,N,Ref,expr<E,T,N,Ref> > super_;
+		typedef typename default_policy::apply<E,T,N,Ref>::type super_;
 
         public:       
+
         typedef typename 
         	boost::mpl::equal_to<int_n_,int_1_>::type is_first_;
         typedef typename 
         	boost::mpl::if_<is_first_,E,const E&>::type previous_;
-        typedef typename next<E,T,N,Ref>::type next_;
+        typedef typename next<E,T,N,Ref,P>::type next_;
                                 
         expr(const E& p,T& t):previous(p),ref(t){} 
 
         typedef next_ result_type;
         next_ operator()(T& t)const{ return next_(*this,t); }
-                        
+
         mutable previous_ previous;
         mutable ref_ ref;
 
     };
 
-    template<typename T,int N,template<typename> class Ref,typename D>
-    struct array_wrapper{
-        typedef typename Ref<T>::type ref_;
-        typedef typename ref_array<T,N,Ref>::type ref_array_;
-
-        typedef ref_ value_type;
-        typedef typename 
-        	boost::range_iterator<ref_array_>::type iterator;
-        typedef typename boost::range_iterator<
-        	const ref_array_>::type const_iterator;
-        typedef typename 
-        	boost::range_size<ref_array_>::type size_type;
-        typedef typename boost::range_difference<
-            ref_array_>::type difference_type;
-                
-        iterator begin()
-        {
-            return boost::begin(this->ref_array());
-        }
-        iterator end() 
-        {
-            return boost::end(this->ref_array());
-        }
-
-        const_iterator begin()const
-        {
-            return boost::begin(this->ref_array());
-        }
-        const_iterator end()const 
-        {
-            return boost::end(this->ref_array());
-        }
-
-        size_type size() const
-        {
-            return ref_array_::size();
-        }
-        bool empty() const
-        {
-            return !(this->size());
-        }
-                
-        typedef typename ref_array_::reference reference;
-        typedef typename 
-        	ref_array_::const_reference const_reference;
-
-        reference operator[](size_type i){ return (this->ref_array())[i]; }
-        const_reference operator[](size_type i)const{ 
-             return (this->array())[i]; }
-			
-        reference front(){ return (this->ref_array()).front(); }
-        const_reference front() const{ return (this->ref_array()).front(); }
-        reference back(){ return (this->ref_array()).back(); }
-        const_reference back() const{ return (this->ref_array()).back(); }
-        
-        void swap(ref_array_& other){ return (this->ref_array()).swap(other); }
-        void assign(const T& val){ return (this->ref_array()).assign(val); }
-
-        template<typename T1>
-        operator boost::array<T1,N>()const{
-            boost::array<T1,N> ar;
-            std::copy(	
-            	boost::begin(this->ref_array()),
-            	boost::end(this->ref_array()),
-                boost::begin(ar)
-            );
-            return ar;
-        }
-
-        template<typename C>
-        operator C ()const
-        {
-            return C(
-            	boost::begin(this->ref_array()),
-                boost::end(this->ref_array())
-            );
-        }
-
-        // Needed by csv.hpp
-        const D& allocated()const{
-			this->alloc_if();
-            return static_cast<const D&>(*this);
-        }
-
-        private:
-        
-        void alloc_if()const{
-            if(!this->ptr){
-               return this->alloc();
-            }
-        }
-
-        void alloc()const{ 
-            this->ptr = smart_ptr_(new ref_array_);
-            write_to_array(*this->ptr,static_cast<const D&>(*this));		
-        }
-                
-        protected:
-		
-        ref_array_& ref_array(){ 
-            this->alloc_if();
-            return (*this->ptr);
-        }
-
-        const ref_array_& ref_array()const{ 
-            this->alloc_if();
-            return (*this->ptr);
-        }
-        
-        private:
-        typedef boost::shared_ptr<ref_array_> smart_ptr_;
-        // Only the last of N expressions needs to instantiate an array, 
-        // hence a pointer.
-        mutable smart_ptr_ ptr;
-
-    };
-                    
     // ---- write_to_array ---- //
 
     typedef boost::mpl::bool_<false> false_;
     typedef boost::mpl::bool_<true> true_;
             
     template<typename A,typename E,typename T,int N,
-    	template<typename> class Ref>
-    void write_to_array(A& a,const expr<E,T,N,Ref>& e){
-        typedef expr<E,T,N,Ref> expr_;
+    	template<typename> class Ref,typename P>
+    void write_to_array(A& a,const expr<E,T,N,Ref,P>& e){
+        typedef expr<E,T,N,Ref,P> expr_;
         typedef typename expr_::is_first_ exit_;
         write_to_array(a,e,exit_());
     }
             
     template<typename A,typename E,typename T,int N,
-    	template<typename> class Ref>
-    void write_to_array(A& a,const expr<E,T,N,Ref>& e,false_ /*exit*/){
+    	template<typename> class Ref,typename P>
+    void write_to_array(A& a,const expr<E,T,N,Ref,P>& e,false_ /*exit*/){
         a[N-1] = e.ref;
         write_to_array(a,e.previous);
     }
             
     template<typename A,typename E,typename T,int N,
-    	template<typename> class Ref>
-    void write_to_array(A& a,const expr<E,T,N,Ref>& e,true_ /*exit*/){
+    	template<typename> class Ref,typename P>
+    void write_to_array(A& a,const expr<E,T,N,Ref,P>& e,true_ /*exit*/){
         a[N-1] = e.ref;
     }
 
-    // ---- first expr ---- //
-
-    template<typename T,template<typename> class Ref>
-    struct first_expr{
-        typedef detail::auto_size::expr<detail::auto_size::top_,T,1,Ref> type;   
-        static type call(T& a){ return type(top_(),a); }
-    };
+	// ---- ref wrappers ---- //
 
     template<typename T>
     struct ref_copy{
@@ -256,32 +137,40 @@ namespace auto_size{
     };
 
     template<typename T>
-    struct first_copy : first_expr<T,ref_copy>{};
-
-    template<typename T>
     struct ref_rebind{
         typedef boost::assign_detail::assign_reference<T> type;
     };
 
-    template<typename T>
-    struct first_rebind : first_expr<T,ref_rebind>{};
+    // ---- first expr ---- //
+
+    template<typename T,template<typename> class Ref,typename P>
+    struct first_expr{
+        typedef detail::auto_size::expr<detail::auto_size::top_,T,1,Ref,P> type;   
+        static type call(T& a){ return type(top_(),a); }
+    };
+
+    template<typename T,typename P = default_policy>
+    struct first_copy : first_expr<T,ref_copy,P>{};
+
+    template<typename T,typename P = default_policy>
+    struct first_rebind : first_expr<T,ref_rebind,P>{};
 
     // ---- result_of ---- //
 	
-    template<typename T,int N,template<typename> class Ref>
+    template<typename T,int N,template<typename> class Ref,typename P>
     struct result_of{
-		typedef typename result_of<T,N-1,Ref>::type previous;
-    	typedef expr<previous,T,N,Ref> type;
+		typedef typename result_of<T,N-1,Ref,P>::type previous;
+    	typedef expr<previous,T,N,Ref,P> type;
     };
 
-    template<typename T,template<typename> class Ref>
-    struct result_of<T,1,Ref> : first_expr<T,Ref>{};
+    template<typename T,template<typename> class Ref,typename P>
+    struct result_of<T,1,Ref,P> : first_expr<T,Ref,P>{};
 
-    template<typename T,int N>
-    struct result_of_copy : result_of<T,N,ref_copy>{};	
+    template<typename T,int N,typename P = default_policy>
+    struct result_of_copy : result_of<T,N,ref_copy,P>{};	
 
-    template<typename T,int N>
-    struct result_of_rebind : result_of<T,N,ref_rebind>{};	
+    template<typename T,int N,typename P = default_policy>
+    struct result_of_rebind : result_of<T,N,ref_rebind,P>{};	
             
 }// auto_size  
 }// detail      

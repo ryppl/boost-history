@@ -14,20 +14,22 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/assign/auto_size/detail/auto_size.hpp>
+#include <boost/assign/auto_size/detail/array_wrapper.hpp>
 
-// Let n = BOOST_ASSIGN_CSV_SIZE and a1,...,an objects of type T and 
-// Ref an alias for BOOST_ASSIGN_CSV_ref
+// Whereas successive unary function calls is the usual way to create a collec-
+// tion in Boost.Assign, this macro provides, as an alternative, functions that 
+// are overloaded on the number of arguments.
+//
+// Let n = BOOST_ASSIGN_CSV_SIZE and a1,...,an objects of type T, Ref an alias 
+// for BOOST_ASSIGN_CSV_ref, and w<U,N> and alias for
+// array_wrapper<U,N,BOOST_ASSIGN_CSV_ref>. 
+//
 // Usage:
 // BOOST_ASSIGN_CSV(fun) creates for i=2,...,n the following overloads:
-// 	fun(a1,..,.ai) 
-// 	cfun(a1,..,.ai) 
-// which return the same result as calling fun(a1)...(ai) and cfun(a1)...(ai),
-// respectively.
-//
-// Requirements:
-// Valid expression             Result
-// fun(a1)(a2)...(an)           auto_size::result_of<T,n,Ref>::type
-// cfun(a1)(a2)...(an)          auto_size::result_of<const T,n,Ref>::type
+// 	fun_csv(a1,..,.ai) 
+// 	cfun_csv(a1,..,.ai) 
+// which return the same result as calling fun(a1)...(ai).wrapper(), and 
+// cfun(a1)...(ai).wrapper(), of type w<T,i> and w<const T,i>, respectively.
 
 #ifndef BOOST_ASSIGN_CSV_SIZE
 #define BOOST_ASSIGN_CSV_SIZE 20
@@ -38,38 +40,37 @@
 #endif
 
 #define BOOST_ASSIGN_CSV_ARG(z,n,arg) (BOOST_PP_CAT(arg,n))
-#define BOOST_ASSIGN_CSV_CALL(fun,N) 										\
-	boost::assign::fun BOOST_PP_ENUM(N,BOOST_ASSIGN_CSV_ARG,~)				\
+#define BOOST_ASSIGN_CSV_CALL(fun,N,arg) 									\
+	boost::assign::fun BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,arg)			\
 /**/    
-
 
 #define BOOST_ASSIGN_CSV_ITER_UNQUAL(F,T,U,N)								\
 namespace boost{															\
 namespace assign{															\
 	template<typename T>													\
-   	typename assign::detail::auto_size::result_of<							\
-    	U,N,BOOST_ASSIGN_CSV_ref>::type										\
-	F(BOOST_PP_ENUM_PARAMS(N, U& _)){										\
-        return (boost::assign::F 											\
-        	BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_)						\
-        ).allocated(); 														\
+    boost::assign::detail::auto_size::array_wrapper<                        \
+    	U,N,BOOST_ASSIGN_CSV_ref>											\
+	BOOST_PP_CAT(F,_csv)(BOOST_PP_ENUM_PARAMS(N, U& _)){					\
+        return (				 											\
+        	boost::assign::F BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_)      \
+        ).wrapper(); 														\
     }																		\
 }																			\
 }																			\
 /**/
 
-#define BOOST_ASSIGN_CSV_ITER(fun,N)										\
-	BOOST_ASSIGN_CSV_ITER_UNQUAL(fun,T,T,N)									\
-	BOOST_ASSIGN_CSV_ITER_UNQUAL(BOOST_PP_CAT(c,fun),T,const T,N)			\
+#define BOOST_ASSIGN_CSV_ITER(F,N)											\
+	BOOST_ASSIGN_CSV_ITER_UNQUAL(F,T,T,N)									\
+	BOOST_ASSIGN_CSV_ITER_UNQUAL(BOOST_PP_CAT(c,F),T,const T,N)				\
 /**/
 
-// overloads begin at n = 2
+// overloads begin at n = 1
 #define BOOST_ASSIGN_CSV_SHIFTED_ITER(z,n,F) 								\
-	BOOST_ASSIGN_CSV_ITER(F,BOOST_PP_ADD(n,2))								\
+	BOOST_ASSIGN_CSV_ITER(F,BOOST_PP_ADD(n,1))								\
 /**/
 
 #define BOOST_ASSIGN_CSV_REPEAT(fun,N) 										\
-	BOOST_PP_REPEAT(BOOST_PP_DEC(N),BOOST_ASSIGN_CSV_SHIFTED_ITER,fun)		\
+	BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_SHIFTED_ITER,fun)					\
 /**/
 
 #define BOOST_ASSIGN_CSV(fun) 												\

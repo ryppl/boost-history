@@ -10,11 +10,12 @@
 #define BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
 #include <boost/typeof/typeof.hpp> // tmp.
 #include <boost/assign/auto_size/detail/auto_size.hpp>
+#include <boost/assign/auto_size/detail/array_wrapper.hpp>
 
 // Creates a collection of references exposing the boost::array interface and 
 // convertible to a range that is constructible from a pair of iterators. It can
 // be used either as the rhs or lhs of an assignment such as:
-// 	boost::fill(ref_list_of(a,b,c),0)
+// 	boost::fill(ref_list_of(a)(b)(c),0)
 // This function supersedes ref_list_of<int>().
 
 namespace boost{
@@ -35,6 +36,7 @@ namespace assign{
 }// assign
 }// boost
 
+// Adds csv support, e.g. ref_list_of_csv(a,b,c)
 #define BOOST_ASSIGN_CSV_ref boost::assign::detail::auto_size::ref_copy
 #include <boost/assign/auto_size/detail/csv.hpp>
 BOOST_ASSIGN_CSV(ref_list_of)
