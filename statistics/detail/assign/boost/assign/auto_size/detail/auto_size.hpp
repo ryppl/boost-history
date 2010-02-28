@@ -251,7 +251,7 @@ namespace auto_size{
         a[N-1] = e.ref;
     }
 
-	// ---- first expr ---- //
+    // ---- first expr ---- //
 
     template<typename T,template<typename> class Ref>
     struct first_expr{
@@ -265,7 +265,7 @@ namespace auto_size{
     template<typename T>
     struct first_rebind : first_expr<T,ref_rebind>{};
 
-	// ---- result_of ---- //
+    // ---- result_of ---- //
 	
     template<typename T,int N,template<typename> class Ref>
     struct result_of{
