@@ -42,13 +42,12 @@ struct commit_on_destruction {
             if (!std::uncaught_exception()) {
                 try {
                     commit();
-                    //~ BOOST_STM_INFO;
                 } catch(...) {
-                    BOOST_STM_INFO;
+                    BOOST_STM_INFO << std::endl;
                     throw;
                 }
             } else {
-                BOOST_STM_ERROR;
+                BOOST_STM_ERROR << std::endl;
             }
         }
     }
@@ -246,7 +245,6 @@ struct dummy_exception{};
 
 
 #define BOOST_STM_E_RETRY                                                       \
-                    std::cout << __FILE__ << "["<<__LINE__<<"] end" << std::endl;\
                     __boost_stm_ctrl_=boost::stm::detail::none;            \
                     break;                                                      \
                 } while ((__boost_stm_ctrl_=boost::stm::detail::continue_),false);   \
@@ -254,25 +252,18 @@ struct dummy_exception{};
                 __boost_stm_destr_.release();                              \
                 throw;                                                          \
             } catch(...) {                                                      \
-                std::cout << __FILE__ << "["<<__LINE__<<"] catch1" << std::endl;\
                 if (__boost_stm_txn_.forced_to_abort()) {\
-                std::cout << __FILE__ << "["<<__LINE__<<"] catch11" << std::endl;\
                     __boost_stm_destr_.release();                              \
                 } else {\
                     __boost_stm_destr_.commit();\
                 }\
-                std::cout << __FILE__ << "["<<__LINE__<<"] catch12" << std::endl;\
                 throw;                                                          \
             }                                                                   \
             break;                                                                  \
         } catch (boost::stm::aborted_tx &) {                                        \
-                std::cout << __FILE__ << "["<<__LINE__<<"] catch2" << std::endl;\
             if (__boost_stm_txn_.is_nested()) throw;                                              \
-                std::cout << __FILE__ << "["<<__LINE__<<"] catch3" << std::endl;\
             do {                                                                    \
-                std::cout << __FILE__ << "["<<__LINE__<<"] catch4" << std::endl;\
                 __boost_stm_ctrl_=boost::stm::detail::break_;                  \
-                std::cout << __FILE__ << "["<<__LINE__<<"] catch5" << std::endl;\
                 try {throw;}catch (boost::stm::aborted_tx &)
 
 
