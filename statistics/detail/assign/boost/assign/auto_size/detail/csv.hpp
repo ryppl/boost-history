@@ -25,7 +25,7 @@
 // respectively.
 //
 // Requirements:
-// Valid expression	            Result
+// Valid expression             Result
 // fun(a1)(a2)...(an)           auto_size::result_of<T,n,Ref>::type
 // cfun(a1)(a2)...(an)          auto_size::result_of<const T,n,Ref>::type
 
