@@ -32,41 +32,22 @@ void example_cref_list_of(std::ostream& os)
     	int a=1, b=2, c=3;
     	ints_ ints;
     
-    	{	os <<  "->Testing work in progress : csv " << std::endl;
-    		typedef detail::auto_size::result_of_copy<const int,3>::type res_;
-
-            {
-            	res_ res = cref_list_of(a)(b)(3); 
-				BOOST_ASSERT(res[0] == a); 
-				BOOST_ASSERT(res[1] == b);
-				BOOST_ASSERT(res[2] == 3);
-			}
-            {
-            	// BUG
-            	res_ res  = cref_list_of(a,b,c); 
-				BOOST_ASSERT(res[0] == a); //wrong
-				BOOST_ASSERT(res[1] == b); //wrong
-				BOOST_ASSERT(res[2] == c); //correct
-            }
-			os << "<-" << std::endl;
-    	}
-/*    
         {
     		ints.clear();
-            ints = cref_list_of(a)(b)(3);     
+            ints = cref_list_of(a,b,3);     
             BOOST_ASSERT(ints[0] == a);    
             BOOST_ASSERT(ints[1] == b);    
             BOOST_ASSERT(ints[2] == c);    
         }
         {
             array.assign(-1);
-            array = cref_list_of(a)(b)(3);
+            array = cref_list_of(a,b,3);
             BOOST_ASSERT(array[0] == a);    
             BOOST_ASSERT(array[1] == b);    
             BOOST_ASSERT(array[2] == c);    
         }
         {
-            BOOST_AUTO(tmp,ref_list_of(a)(b)(c));
+            BOOST_AUTO(tmp,ref_list_of(a,b,c));
             std::fill(boost::begin(tmp),boost::end(tmp),0);
             BOOST_ASSERT(a == 0);    
             BOOST_ASSERT(b == 0);    
@@ -79,7 +60,7 @@ void example_cref_list_of(std::ostream& os)
             int a=1, b=2, c=3;
             ints_ ints;
             ints.clear();
-            BOOST_AUTO(tmp,cref_rebind_list_of(a)(b)(c));
+            BOOST_AUTO(tmp,cref_rebind_list_of(a,b,c));
             {
                 ints = tmp; 
                 BOOST_ASSERT(ints[0] == a);    
@@ -96,7 +77,6 @@ void example_cref_list_of(std::ostream& os)
                 BOOST_ASSERT(ints[2] == d);    
             }
         }
-*/
     }
     os << "<- " << std::endl;
     

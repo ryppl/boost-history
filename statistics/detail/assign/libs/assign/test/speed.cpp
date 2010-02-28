@@ -10,7 +10,7 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <libs/assign/test/speed_common.h>
-#include <libs/assign/test/cref_list_of2_speed.h>
+#include <libs/assign/test/speed.h>
 
 // This file was provided by M.P.G 
 
