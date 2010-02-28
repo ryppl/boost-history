@@ -186,13 +186,13 @@ namespace auto_size{
             );
         }
 
-		// Needed by csv.hpp
+        // Needed by csv.hpp
         const D& allocated()const{
 			this->alloc_if();
             return static_cast<const D&>(*this);
         }
 
-		private:
+        private:
         
         void alloc_if()const{
             if(!this->ptr){
@@ -223,7 +223,7 @@ namespace auto_size{
         // hence a pointer.
         mutable smart_ptr_ ptr;
 
-	};
+    };
                     
 	// ---- write_to_array ---- //
 
@@ -259,11 +259,11 @@ namespace auto_size{
         static type call(T& a){ return type(top_(),a); }
     };
 
-	template<typename T>
-	struct first_copy : first_expr<T,ref_copy>{};
+    template<typename T>
+    struct first_copy : first_expr<T,ref_copy>{};
 
-	template<typename T>
-	struct first_rebind : first_expr<T,ref_rebind>{};
+    template<typename T>
+    struct first_rebind : first_expr<T,ref_rebind>{};
 
 	// ---- result_of ---- //
 	
@@ -276,10 +276,10 @@ namespace auto_size{
     template<typename T,template<typename> class Ref>
     struct result_of<T,1,Ref> : first_expr<T,Ref>{};
 
-	template<typename T,int N>
+    template<typename T,int N>
     struct result_of_copy : result_of<T,N,ref_copy>{};	
 
-	template<typename T,int N>
+    template<typename T,int N>
     struct result_of_rebind : result_of<T,N,ref_rebind>{};	
             
 }// auto_size  
