@@ -80,7 +80,7 @@ namespace auto_size{
         typedef expr<expr_,T,N+1,Ref> type;
     };
 
-	template<typename T,int N,template<typename> class Ref,typename D>
+    template<typename T,int N,template<typename> class Ref,typename D>
     struct array_wrapper;
 
     template<typename E,typename T,int N,template<typename> class Ref>
@@ -108,7 +108,7 @@ namespace auto_size{
 
     };
 
-	template<typename T,int N,template<typename> class Ref,typename D>
+    template<typename T,int N,template<typename> class Ref,typename D>
     struct array_wrapper{
         typedef typename Ref<T>::type ref_;
         typedef typename ref_array<T,N,Ref>::type ref_array_;
