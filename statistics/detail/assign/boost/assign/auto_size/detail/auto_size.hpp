@@ -56,16 +56,6 @@ namespace detail{
 namespace auto_size{
             
     typedef boost::mpl::void_ top_;
-
-    template<typename T>
-    struct ref_rebind{
-        typedef boost::assign_detail::assign_reference<T> type;
-    };
-
-    template<typename T>
-    struct ref_copy{
-        typedef boost::assign::detail::assign_reference_copy<T> type;
-    };
             
     template<typename T,int N,template<typename> class Ref>
     struct ref_array{
@@ -261,7 +251,17 @@ namespace auto_size{
     };
 
     template<typename T>
+    struct ref_copy{
+        typedef boost::assign::detail::assign_reference_copy<T> type;
+    };
+
+    template<typename T>
     struct first_copy : first_expr<T,ref_copy>{};
+
+    template<typename T>
+    struct ref_rebind{
+        typedef boost::assign_detail::assign_reference<T> type;
+    };
 
     template<typename T>
     struct first_rebind : first_expr<T,ref_rebind>{};
