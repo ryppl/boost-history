@@ -26,15 +26,19 @@
 // convertible to a range constructible from a pair of iterators.
 //
 // This approach improves upon ref_list_of<int>() by deducing the number of 
-// arguments at compile time, factors the reference wrapper into a template.
-// In most situations, a reference wrapper that has copy rather than 
-// rebind semantics for operator= is preferable.
+// arguments at compile time and factors the reference wrapper into a template. 
+// In addition, this set up is amenable to comma separated arguments which is 
+// provided in file csv.hpp
+//
+// Warning:
+// In most situations, a reference wrapper that has copy rather than rebind 
+// semantics for operator= is preferable. 
 //    
 // Acknowledgement: The idea of this class was developed in collaboration 
 // with M.P.G
 //
 // Revision history:
-// Feb 27, 2010 : support for comma separated arguments (csv.hpp)
+// Feb 27, 2010 : Support for comma separated arguments (See csv.hpp)
 // Feb 25, 2010 : Complemented the boost::array interface
 // Feb 21, 2010 : Made member variables mutable and added constness to member 
 // functions where appropriate.
