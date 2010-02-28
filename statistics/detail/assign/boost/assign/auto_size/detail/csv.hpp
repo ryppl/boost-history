@@ -26,8 +26,8 @@
 //
 // Requirements:
 // Valid expression	            Result
-// fun(a1)(a2)...(an) 			auto_size::result_of<T,n,Ref>::type
-// cfun(a1)(a2)...(an)			auto_size::result_of<const T,n,Ref>::type
+// fun(a1)(a2)...(an)           auto_size::result_of<T,n,Ref>::type
+// cfun(a1)(a2)...(an)          auto_size::result_of<const T,n,Ref>::type
 
 #ifndef BOOST_ASSIGN_CSV_SIZE
 #define BOOST_ASSIGN_CSV_SIZE 20
