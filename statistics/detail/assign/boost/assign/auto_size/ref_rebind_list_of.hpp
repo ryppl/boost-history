@@ -13,7 +13,7 @@
 // Creates a collection of references exposing the boost::array interface and 
 // convertible to a range that is constructible from a pair of iterators. Rebind
 // semantics apply if the collection is the lhs of an assignment:
-// 	cref_rebind_list_of(a)(b)(c).assign(d)
+// 	cref_rebind_list_of(a,b,c).assign(d)
 // Unless this specific feature is needed, ref_list_of() is preferable.
 // Note that this function supersedes ref_list_of<int>().
 
@@ -34,5 +34,10 @@ namespace assign{
 
 }// assign
 }// boost
+
+#define BOOST_ASSIGN_CSV_ref boost::assign::detail::auto_size::ref_rebind
+#include <boost/assign/auto_size/detail/csv.hpp>
+BOOST_ASSIGN_CSV(ref_rebind_list_of)
+#undef BOOST_ASSIGN_CSV_ref
 
 #endif

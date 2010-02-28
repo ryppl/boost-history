@@ -1,43 +1,22 @@
 //////////////////////////////////////////////////////////////////////////////
-// test::cref_copy_list_of_speed.cpp                                        //
+// test::speed.cpp                                        					//
 //                                                                          //
 //////////////////////////////////////////////////////////////////////////////
 #include <iostream>
 #include <vector>
 #include <string>
-#include <algorithm>
 #include <boost/progress.hpp>
 #include <boost/bind.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
+#include <libs/assign/test/speed_common.h>
 #include <libs/assign/test/cref_list_of2_speed.h>
 
 // This file was provided by M.P.G 
 
-// http://www.eternallyconfuzzled.com/arts/jsw_art_rand.aspx
-inline double uniform_deviate ( int seed )
+void test_speed(std::ostream& os)
 {
-    return seed * ( 1.0 / ( RAND_MAX + 1.0 ) );
-}
-inline int rand(int M, int N) // Range [M..N)
-{   
-    return int(M + uniform_deviate(std::rand()) * (N - M));
-}
-char rand_letter()
-{
-    return char(rand('a', 'z' + 1));
-}
-
-std::string rand_str(int len)
-{
-    std::string result;
-    std::generate_n(std::back_inserter(result), len, &rand_letter);
-    return result;
-}
-
-void test_cref_copy_list_of_speed(std::ostream& os)
-{
-	os << "-> test_cref_listof2_speed : " << std::endl;
+	os << "-> test_speed : " << std::endl;
 
 	typedef boost::progress_timer timer_;
     

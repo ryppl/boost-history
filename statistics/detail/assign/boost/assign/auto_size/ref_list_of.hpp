@@ -8,9 +8,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
-#include <boost/typeof/typeof.hpp> // templatetmp.
+#include <boost/typeof/typeof.hpp> // tmp.
 #include <boost/assign/auto_size/detail/auto_size.hpp>
-#include <boost/assign/auto_size/detail/csv.hpp>
 
 // Creates a collection of references exposing the boost::array interface and 
 // convertible to a range that is constructible from a pair of iterators. It can
@@ -36,6 +35,9 @@ namespace assign{
 }// assign
 }// boost
 
-BOOST_ASSIGN_CSV_ITER(cref_list_of,3)
+#define BOOST_ASSIGN_CSV_ref boost::assign::detail::auto_size::ref_copy
+#include <boost/assign/auto_size/detail/csv.hpp>
+BOOST_ASSIGN_CSV(ref_list_of)
+#undef BOOST_ASSIGN_CSV_ref
 
 #endif

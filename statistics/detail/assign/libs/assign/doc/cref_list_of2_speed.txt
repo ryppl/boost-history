@@ -5,22 +5,22 @@ cref_list_of(1) => 0.01 s
 
 cref_list_of<>(1) => 0.01 s
 
-cref_list_of(3) => 0.03 s
+cref_list_of(3) => 0.04 s
 
 cref_list_of<>(3) => 0.01 s
 
-cref_list_of(10) => 0.09 s
+cref_list_of(10) => 0.15 s
 
 cref_list_of<>(10) => 0.05 s
 
-cref_list_of(30) => 0.30 s
+cref_list_of(30) => 0.45 s
 
 cref_list_of<>(30) => 0.22 s
 
-cref_list_of(80) => 0.87 s
+cref_list_of(80) => 1.52 s
 
-cref_list_of<>(80) => 0.49 s
+cref_list_of<>(80) => 0.50 s
 
-cref_list_of(160) => 2.05 s
+cref_list_of(160) => 5.30 s
 
-cref_list_of<>(160) => 0.97 s
+cref_list_of<>(160) => 0.98 s

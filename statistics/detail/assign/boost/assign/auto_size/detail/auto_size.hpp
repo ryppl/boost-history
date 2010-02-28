@@ -26,22 +26,23 @@
 // convertible to a range constructible from a pair of iterators.
 //
 // This approach improves upon ref_list_of<int>() by deducing the number of 
-// arguments at compile time and factors the reference wrapper into a template
-// parameter. In most situations, a reference wrapper that has copy rather than 
+// arguments at compile time, factors the reference wrapper into a template.
+// In most situations, a reference wrapper that has copy rather than 
 // rebind semantics for operator= is preferable.
 //    
 // Acknowledgement: The idea of this class was developed in collaboration 
 // with M.P.G
 //
 // Revision history:
-// Feb 25, 2010 : Completed the boost::array interface
+// Feb 27, 2010 : support for comma separated arguments (csv.hpp)
+// Feb 25, 2010 : Complemented the boost::array interface
 // Feb 21, 2010 : Made member variables mutable and added constness to member 
 // functions where appropriate.
 // Feb 9, 2010 : 
 // 	- Added a template parameter for the reference_wrapper
 // 	- The temporary array in the conversion operator is now assigned by calling 
 // 	begin() and end() rather than write_to_array() to ensure consistency of 
-//  side effect. Negligible loss in	performance
+//  side effect. 
 // Feb 5, 2010 : First version. rebind semantics.
 
 namespace boost{
@@ -181,7 +182,7 @@ namespace auto_size{
             );
         }
 
-		// This needs to be exposed for csv.
+		// Needed by csv.hpp
         const D& allocated()const{
 			this->alloc_if();
             return static_cast<const D&>(*this);
