@@ -27,10 +27,11 @@
 //
 // This approach improves upon ref_list_of<int>() by deducing the number of 
 // arguments at compile time and factors the reference wrapper into a template. 
-// In addition, this set up is amenable to comma separated arguments which is 
-// provided in file csv.hpp
+// Whereas successive unary function calls is the usual way to create a collec-
+// tion in the Boost.Assign library, the auto-size set up optionally provides
+// functions that are overloaded on the number of arguments. See csv.hpp
 //
-// Warning:
+// Note:
 // In most situations, a reference wrapper that has copy rather than rebind 
 // semantics for operator= is preferable. 
 //    
