@@ -225,7 +225,7 @@ namespace auto_size{
 
     };
                     
-	// ---- write_to_array ---- //
+    // ---- write_to_array ---- //
 
     typedef boost::mpl::bool_<false> false_;
     typedef boost::mpl::bool_<true> true_;
