@@ -40,9 +40,6 @@
 #endif
 
 #define BOOST_ASSIGN_CSV_ARG(z,n,arg) (BOOST_PP_CAT(arg,n))
-#define BOOST_ASSIGN_CSV_CALL(fun,N,arg) 									\
-	boost::assign::fun BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,arg)			\
-/**/    
 
 #define BOOST_ASSIGN_CSV_ITER_UNQUAL(F,T,U,N)								\
 namespace boost{															\

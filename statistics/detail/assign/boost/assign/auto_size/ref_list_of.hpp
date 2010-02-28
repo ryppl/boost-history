@@ -8,7 +8,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
-#include <boost/typeof/typeof.hpp> // tmp.
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 #include <boost/assign/auto_size/detail/array_wrapper.hpp>
 

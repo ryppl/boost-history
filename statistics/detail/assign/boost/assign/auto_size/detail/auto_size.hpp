@@ -81,28 +81,23 @@ namespace auto_size{
     	typename E,typename T,int N,template<typename> class Ref,typename P
     >
     class expr : public default_policy::apply<E,T,N,Ref>::type{
-        typedef boost::mpl::int_<N> int_n_;
         typedef boost::mpl::int_<1> int_1_;
+        typedef boost::mpl::int_<N> int_n_;
         typedef typename Ref<T>::type ref_;
-
 		typedef typename default_policy::apply<E,T,N,Ref>::type super_;
 
         public:       
 
-        typedef typename 
-        	boost::mpl::equal_to<int_n_,int_1_>::type is_first_;
-        typedef typename 
-        	boost::mpl::if_<is_first_,E,const E&>::type previous_;
+        typedef typename boost::mpl::equal_to<int_n_,int_1_>::type is_1st_;
+        typedef typename boost::mpl::if_<is_1st_,E,const E&>::type previous_;
         typedef typename next<E,T,N,Ref,P>::type next_;
-                                
-        expr(const E& p,T& t):previous(p),ref(t){} 
-
         typedef next_ result_type;
+
+        expr(const E& p,T& t):previous(p),ref(t){} 
         next_ operator()(T& t)const{ return next_(*this,t); }
 
         mutable previous_ previous;
         mutable ref_ ref;
-
     };
 
     // ---- write_to_array ---- //
@@ -114,7 +109,7 @@ namespace auto_size{
     	template<typename> class Ref,typename P>
     void write_to_array(A& a,const expr<E,T,N,Ref,P>& e){
         typedef expr<E,T,N,Ref,P> expr_;
-        typedef typename expr_::is_first_ exit_;
+        typedef typename expr_::is_1st_ exit_;
         write_to_array(a,e,exit_());
     }
             

@@ -17,7 +17,7 @@ namespace assign{
 namespace detail{
 namespace auto_size{
  
- 	// Exposes the boost::array interface. This is needed for csv support.
+ 	// This is needed for csv support.
     template<typename T,int N,template<typename> class Ref>
     class array_wrapper 
     	: public array_interface<T,N,Ref,array_wrapper<T,N,Ref> >
@@ -27,9 +27,6 @@ namespace auto_size{
         typedef boost::shared_ptr<ref_array_> smart_ptr_;
                 
         public:
-
-//		array_wrapper(smart_ptr_ arg)
-//        	:ptr(arg){}
 
 		array_wrapper(){}		
 		
@@ -47,7 +44,6 @@ namespace auto_size{
         }
         
         private:
-        //mutable smart_ptr_ ptr;
 
 		mutable ref_array_ ref_array;
 
