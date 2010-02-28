@@ -55,14 +55,6 @@ namespace policy{
 		
         public:
 
-		typedef array_wrapper<T,N,Ref> wrapper_;
-
-        // Needed by csv.hpp
-		wrapper_ wrapper()const{
-        	this->alloc_if();
-            return wrapper_(this->ptr);
-        }
-
         ref_array_& ref_array_impl(){ 
             this->alloc_if();
             return (*this->ptr);

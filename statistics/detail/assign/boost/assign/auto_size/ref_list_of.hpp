@@ -16,7 +16,6 @@
 // convertible to a range that is constructible from a pair of iterators. It can
 // be used either as the rhs or lhs of an assignment such as:
 // 	boost::fill(ref_list_of(a)(b)(c),0)
-// This function supersedes ref_list_of<int>().
 
 namespace boost{
 namespace assign{
@@ -35,11 +34,5 @@ namespace assign{
 
 }// assign
 }// boost
-
-// Adds csv support, e.g. ref_list_of_csv(a,b,c)
-#define BOOST_ASSIGN_CSV_ref boost::assign::detail::auto_size::ref_copy
-#include <boost/assign/auto_size/detail/csv.hpp>
-BOOST_ASSIGN_CSV(ref_list_of)
-#undef BOOST_ASSIGN_CSV_ref
 
 #endif

@@ -12,7 +12,7 @@
 #include <libs/assign/test/speed_common.h>
 
 #define BOOST_ASSIGN_CSV_SIZE 160
-#include <boost/assign/auto_size/ref_list_of.hpp>
+#include <boost/assign/auto_size/ref_list_of_csv.hpp>
 #undef BOOST_ASSIGN_CSV_SIZE
 
 #include <libs/assign/test/speed.h>

@@ -10,8 +10,10 @@
 #include <vector>
 #include <algorithm>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/auto_size/ref_rebind_list_of.hpp>
-#include <boost/assign/auto_size/ref_list_of.hpp>
+//#include <boost/assign/auto_size/ref_rebind_list_of.hpp>
+//#include <boost/assign/auto_size/ref_list_of.hpp>
+#include <boost/assign/auto_size/ref_list_of_csv.hpp>
+#include <boost/assign/auto_size/ref_rebind_list_of_csv.hpp>
 #include <boost/assign/auto_size/detail/array_wrapper.hpp>
 
 #include <boost/assign/list_of.hpp>
@@ -82,6 +84,7 @@ void example_ref_list_of(std::ostream& os)
             }
         }
     }
+
     os << "<- " << std::endl;
     
 };

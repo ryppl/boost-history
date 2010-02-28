@@ -10,6 +10,7 @@
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_WRAPPER_ER_2010_HPP
 #include <boost/shared_ptr.hpp>
 #include <boost/assign/auto_size/detail/array_interface.hpp>
+#include <boost/assign/auto_size/detail/auto_size.hpp>
 
 namespace boost{
 namespace assign{
@@ -27,19 +28,28 @@ namespace auto_size{
                 
         public:
 
-		array_wrapper(smart_ptr_ arg)
-        	:ptr(arg){}
+//		array_wrapper(smart_ptr_ arg)
+//        	:ptr(arg){}
+
+		array_wrapper(){}		
 		
         ref_array_& ref_array_impl(){ 
-            return (*this->ptr);
+            return this->ref_array;
         }
 
         const ref_array_& ref_array_impl()const{ 
-            return (*this->ptr);
+            return this->ref_array;
+        }
+        
+        template<typename E>
+        void initialize(const E& coll)const{
+        	write_to_array(this->ref_array,coll);
         }
         
         private:
-        mutable smart_ptr_ ptr;
+        //mutable smart_ptr_ ptr;
+
+		mutable ref_array_ ref_array;
 
     };
 

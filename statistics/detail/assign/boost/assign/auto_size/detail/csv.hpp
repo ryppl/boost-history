@@ -49,11 +49,19 @@ namespace boost{															\
 namespace assign{															\
 	template<typename T>													\
     boost::assign::detail::auto_size::array_wrapper<                        \
-    	U,N,BOOST_ASSIGN_CSV_ref>											\
-	BOOST_PP_CAT(F,_csv)(BOOST_PP_ENUM_PARAMS(N, U& _)){					\
-        return (				 											\
-        	boost::assign::F BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_)      \
-        ).wrapper(); 														\
+    	U,N,BOOST_ASSIGN_CSV_ref											\
+	>																		\
+	F(BOOST_PP_ENUM_PARAMS(N, U& _))										\
+	{																		\
+		typedef boost::assign::detail::auto_size::array_wrapper<            \
+    		U,N,BOOST_ASSIGN_CSV_ref> wrapper_;								\
+		wrapper_ wrapper;													\
+		wrapper.initialize(													\
+			boost::assign::detail::auto_size::make_first_expr_no_policy<	\
+				BOOST_ASSIGN_CSV_ref										\
+			> BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_)						\
+		);																	\
+		return wrapper;														\
     }																		\
 }																			\
 }																			\

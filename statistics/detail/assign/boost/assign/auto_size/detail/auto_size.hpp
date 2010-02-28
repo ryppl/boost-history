@@ -75,6 +75,8 @@ namespace auto_size{
     	};
     };
 
+	struct no_policy{};
+
     template<
     	typename E,typename T,int N,template<typename> class Ref,typename P
     >
@@ -148,6 +150,21 @@ namespace auto_size{
         typedef detail::auto_size::expr<detail::auto_size::top_,T,1,Ref,P> type;   
         static type call(T& a){ return type(top_(),a); }
     };
+
+    template<typename T,template<typename> class Ref>
+    struct first_expr_no_policy : first_expr<T,Ref,no_policy>{};
+
+	template<template<typename> class Ref,typename T>
+    typename first_expr_no_policy<T,Ref>::type 
+    make_first_expr_no_policy(T& a){
+    	return first_expr_no_policy<T,Ref>::call(a);
+    }
+
+	template<template<typename> class Ref,typename T>
+    typename first_expr_no_policy<const T,Ref>::type 
+    make_first_expr_no_policy(const T& a){
+    	return first_expr_no_policy<const T,Ref>::call(a);
+    }
 
     template<typename T,typename P = default_policy>
     struct first_copy : first_expr<T,ref_copy,P>{};
