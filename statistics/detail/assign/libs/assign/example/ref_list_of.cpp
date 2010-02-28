@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// example::cref_list_of.cpp                                                //
+// example::ref_list_of.cpp                                                 //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -13,11 +13,11 @@
 #include <boost/assign/auto_size/ref_rebind_list_of.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/list_of.hpp>
-#include <libs/assign/example/cref_list_of2.h>
+#include <libs/assign/example/ref_list_of.h>
 
-void example_cref_list_of(std::ostream& os)
+void example_ref_list_of(std::ostream& os)
 {
-	os << "-> example_cref_listof2 : ";
+	os << "-> example_ref_listof : ";
 	using namespace boost::assign;
     
   	typedef std::vector<int> ints_;
