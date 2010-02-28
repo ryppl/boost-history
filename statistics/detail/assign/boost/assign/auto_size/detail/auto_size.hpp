@@ -28,8 +28,8 @@
 // This approach improves upon ref_list_of<int>() by deducing the number of 
 // arguments at compile time and factors the reference wrapper into a template. 
 // Whereas successive unary function calls is the usual way to create a collec-
-// tion in the Boost.Assign library, the auto-size set up optionally provides
-// functions that are overloaded on the number of arguments. See csv.hpp
+// tion in the Boost.Assign, the auto-size set up also providesfunctions that 
+// are overloaded on the number of arguments. See csv.hpp
 //
 // Note:
 // In most situations, a reference wrapper that has copy rather than rebind 
