@@ -217,7 +217,7 @@ namespace auto_size{
             return (*this->ptr);
         }
         
-		private:
+        private:
         typedef boost::shared_ptr<ref_array_> smart_ptr_;
         // Only the last of N expressions needs to instantiate an array, 
         // hence a pointer.
