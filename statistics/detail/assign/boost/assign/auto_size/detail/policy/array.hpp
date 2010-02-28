@@ -18,9 +18,7 @@ namespace detail{
 namespace auto_size{
  
     template<
-    	typename E,typename T,int N,
-        template<typename> class Ref,
-        typename P
+    	typename E,typename T,int N,template<typename> class Ref,typename P
     >
     class expr;         
 

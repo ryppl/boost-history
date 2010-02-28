@@ -16,6 +16,7 @@ namespace assign{
 namespace detail{
 namespace auto_size{
  
+ 	// Exposes the boost::array interface. This is needed for csv support.
     template<typename T,int N,template<typename> class Ref>
     class array_wrapper 
     	: public array_interface<T,N,Ref,array_wrapper<T,N,Ref> >

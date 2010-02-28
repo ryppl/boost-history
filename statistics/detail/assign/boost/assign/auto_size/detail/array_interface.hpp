@@ -9,8 +9,10 @@
 #ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_INTERFACE_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_INTERFACE_ER_2010_HPP
 #include <algorithm>
+#include <boost/mpl/bool.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
+#include <boost/assign/auto_size/detail/has_copy_semantics.hpp>
 
 namespace boost{
 namespace assign{
@@ -86,10 +88,8 @@ namespace auto_size{
         
         void swap(ref_array_& other){ return (this->ref_array()).swap(other); }
         void assign(const T& val){ 
-           	// Force copy semantics. Suggested by M.P.G on Feb 28th, 2010.
-//           	ref_array_& ra = this->ref_array();
-//           	std::fill(ra.begin(), ra.end(), val);
-            return this->ref_array().assign(val);
+        	typedef has_copy_semantics<ref_> pred_;
+            return this->assign(val,pred_());
         }
 
         template<typename T1>
@@ -113,6 +113,19 @@ namespace auto_size{
         }
 
         private:
+		typedef boost::mpl::bool_<false> false_;
+		typedef boost::mpl::bool_<true> true_;
+
+        void assign(const T& val,true_ /*copy semantics*/){ 
+        	// Force copy semantics. Suggested by M.P.G on Feb 28th, 2010.
+           	ref_array_& ra = this->ref_array();
+           	std::fill(ra.begin(), ra.end(), val);
+        }
+
+        void assign(const T& val,false_ /*copy semantics*/){ 
+        	// Force copy semantics. Suggested by M.P.G on Feb 28th, 2010.
+           	return this->ref_array().assign(val);
+        }
 		
         ref_array_& ref_array(){ 
 			return static_cast<D&>(*this).ref_array_impl();
