@@ -24,7 +24,7 @@
 // Creates a collection of references.
 //
 // This approach improves upon ref_list_of<int>() by deducing the number of 
-// arguments at compile time, factor the reference wrapper into template, Ref,
+// arguments at compile time, factors the reference wrapper into template, Ref,
 // and inherits from an arbitrary policy, P, usually intended to expose a 
 // container interface.
 //
