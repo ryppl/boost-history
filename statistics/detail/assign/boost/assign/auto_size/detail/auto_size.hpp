@@ -19,7 +19,7 @@
 //#include <boost/range.hpp>
 #include <boost/assign/list_of.hpp> // needed for assign_referene
 #include <boost/assign/auto_size/detail/assign_refence_copy.hpp>
-#include <boost/assign/auto_size/detail/policy/array.hpp>
+#include <boost/assign/auto_size/array/policy.hpp>
 
 // Creates a collection of references.
 //
@@ -72,7 +72,7 @@ namespace auto_size{
         template<typename E,typename T,int N,template<typename> class Ref>
         struct apply{
 			typedef expr<E,T,N,Ref,default_policy> expr_;        	
-    		typedef policy::array<T,N,Ref,expr_> type;
+    		typedef array_policy<T,N,Ref,expr_> type;
     	};
     };
 

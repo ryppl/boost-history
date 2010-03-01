@@ -14,7 +14,7 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/assign/auto_size/detail/auto_size.hpp>
-#include <boost/assign/auto_size/detail/array_wrapper.hpp>
+#include <boost/assign/auto_size/array/wrapper.hpp>
 
 // Whereas successive unary function calls is the usual way to create a collec-
 // tion in Boost.Assign, this macro provides, as an alternative, functions that 

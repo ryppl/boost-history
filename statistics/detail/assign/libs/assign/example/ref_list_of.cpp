@@ -14,7 +14,7 @@
 //#include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/ref_list_of_csv.hpp>
 #include <boost/assign/auto_size/ref_rebind_list_of_csv.hpp>
-#include <boost/assign/auto_size/detail/array_wrapper.hpp>
+#include <boost/assign/auto_size/array/wrapper.hpp>
 
 #include <boost/assign/list_of.hpp>
 #include <libs/assign/example/ref_list_of.h>

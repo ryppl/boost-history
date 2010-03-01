@@ -9,7 +9,7 @@
 #ifndef BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
 #include <boost/assign/auto_size/detail/auto_size.hpp>
-#include <boost/assign/auto_size/detail/array_wrapper.hpp>
+#include <boost/assign/auto_size/array/wrapper.hpp>
 
 // Creates a collection of references whose functionality is that of assign::
 // auto_size::detail::array_interface. It can be used either as the rhs or lhs 
