@@ -15,10 +15,10 @@ namespace boost{
 namespace assign{
 namespace detail{
 
-	template<typename T>
+    template<typename T>
     struct has_copy_semantics : boost::mpl::bool_<false>{};
 
-	template<typename T>
+    template<typename T>
     struct has_copy_semantics<assign_reference_copy<T> > 
     	: boost::mpl::bool_<true>{};
     
