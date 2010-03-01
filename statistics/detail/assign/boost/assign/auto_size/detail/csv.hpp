@@ -63,8 +63,6 @@ namespace assign{                                                           \
 }                                                                           \
 /**/
 
-// Note : ming
-
 #define BOOST_ASSIGN_CSV_ITER(F,N)                                          \
     BOOST_ASSIGN_CSV_ITER_UNQUAL(F,T,T,N)                                   \
     BOOST_ASSIGN_CSV_ITER_UNQUAL(BOOST_PP_CAT(c,F),T,const T,N)             \
