@@ -176,7 +176,7 @@ namespace auto_size{
 	
     template<typename T,int N,template<typename> class Ref,typename P>
     struct result_of{
-		typedef typename result_of<T,N-1,Ref,P>::type previous;
+        typedef typename result_of<T,N-1,Ref,P>::type previous;
     	typedef expr<previous,T,N,Ref,P> type;
     };
 
