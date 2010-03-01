@@ -154,13 +154,13 @@ namespace auto_size{
     template<typename T,template<typename> class Ref>
     struct first_expr_no_policy : first_expr<T,Ref,no_policy>{};
 
-	template<template<typename> class Ref,typename T>
+    template<template<typename> class Ref,typename T>
     typename first_expr_no_policy<T,Ref>::type 
     make_first_expr_no_policy(T& a){
     	return first_expr_no_policy<T,Ref>::call(a);
     }
 
-	template<template<typename> class Ref,typename T>
+    template<template<typename> class Ref,typename T>
     typename first_expr_no_policy<const T,Ref>::type 
     make_first_expr_no_policy(const T& a){
     	return first_expr_no_policy<const T,Ref>::call(a);
