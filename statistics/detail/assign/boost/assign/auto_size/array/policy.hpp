@@ -29,7 +29,7 @@ namespace auto_size{
                   
    // Policy for auto_size::expr that exposes an array interface
    template<typename T,int N,template<typename> class Ref,typename D>
-   	class array_policy 
+   class array_policy 
     	: public array_interface<T,N,Ref,array_policy<T,N,Ref,D> >
     {
 
