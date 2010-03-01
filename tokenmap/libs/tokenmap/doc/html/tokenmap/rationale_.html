@@ -36,13 +36,13 @@
       hard to guess random keys.
     </p>
 <p>
-      Another example is that of an API of a library. Consider a shared library which
-      internally manages resources on behalf of its users. As an API author, you
-      probably don't want to expose certain implementation details, such as pointers
-      or iterators with your callers, yet you would like to efficiently handle their
-      calls. When you use <code class="computeroutput"><span class="identifier">tokenmap</span></code>-generated
+      Another example is that of a library API. Consider a shared library which internally
+      manages resources on behalf of its users. As an API author, you probably don't
+      want to expose certain implementation details, such as pointers or iterators
+      with your callers, yet you would like to efficiently handle their calls. When
+      you use <code class="computeroutput"><span class="identifier">tokenmap</span></code>-generated
       keys, you are not sharing any implementation details, so it's harder for the
-      users of the library to corrupt the internally managed state.
+      users of the library to corrupt your internally managed state.
     </p>
 <p>
       Additionally, unlike pointers, we're not dereferencing tokens, so it is perfectly
