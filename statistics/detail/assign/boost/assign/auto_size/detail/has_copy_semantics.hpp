@@ -9,18 +9,27 @@
 #ifndef BOOST_ASSIGN_DETAIL_HAS_COPY_SEMANTICS_ER_2010_HPP
 #define BOOST_ASSIGN_DETAIL_HAS_COPY_SEMANTICS_ER_2010_HPP
 #include <boost/mpl/bool.hpp>
-#include <boost/assign/auto_size/detail/assign_refence_copy.hpp>
 
 namespace boost{
+namespace assign_detail{
+    template< class T > struct assign_reference;
+}
 namespace assign{
 namespace detail{
 
+    template<typename T> struct has_copy_semantics{};
+    
+    template< class T > struct assign_reference_copy;
+    
     template<typename T>
-    struct has_copy_semantics : boost::mpl::bool_<false>{};
+    struct has_copy_semantics<
+    	assign_detail::assign_reference<T> 
+    > : boost::mpl::bool_<false>{};
 
     template<typename T>
-    struct has_copy_semantics<assign_reference_copy<T> > 
-    	: boost::mpl::bool_<true>{};
+    struct has_copy_semantics<
+    	assign_reference_copy<T> 
+    > : boost::mpl::bool_<true>{};
     
 }// detail
 }// assign

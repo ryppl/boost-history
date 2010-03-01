@@ -16,11 +16,11 @@
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 #include <boost/assign/auto_size/array/wrapper.hpp>
 
-// Whereas successive unary function calls is the usual way to create a collec-
+// Whereas adjacent unary function calls is the usual way to create a collec-
 // tion in Boost.Assign, this macro provides, as an alternative, functions that 
 // are overloaded on the number of arguments.
 //
-// Let n = BOOST_ASSIGN_CSV_SIZE and a1,...,an objects of type T, Ref an alias 
+// Let n = BOOST_ASSIGN_CSV_SIZE and a1,...,an, objects of type T, Ref an alias 
 // for BOOST_ASSIGN_CSV_ref, and w<U,N> and alias for
 // array_wrapper<U,N,BOOST_ASSIGN_CSV_ref>. 
 //

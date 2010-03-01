@@ -13,17 +13,16 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
+#include <boost/mpl/empty_base.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/assign/list_of.hpp> // needed for assign_referene
+#include <boost/assign/list_of.hpp> // needed for assign_reference
 #include <boost/assign/auto_size/detail/assign_refence_copy.hpp>
 #include <boost/assign/auto_size/array/policy.hpp>
 
 // Creates a collection of references by deducing the number of arguments
-// a compile time.
-//
-// Requirements
-// Ref specifies a reference_wrapper
-// P is an abitrary policy, usually intended as providing a container interface
+// at compile time. The functionality is controlled by parameter Ref which
+// specifies a reference_wrapper and P, an abitrary policy, usually intended
+// to expose a container interface.
 //
 // Note:
 // In most situations, a reference wrapper that has copy rather than rebind 
@@ -51,9 +50,30 @@ namespace auto_size{
             
     typedef boost::mpl::void_ top_;
             
+	// ---- Policy meta classes --- //
+
     template<typename L,typename T,int N,template<typename> class Ref,
     	typename P>
     struct expr;
+
+	struct default_policy;
+
+	struct default_policy{
+        template<typename E,typename T,int N,template<typename> class Ref>
+        struct apply{
+			typedef expr<E,T,N,Ref,default_policy> expr_;        	
+    		typedef array_policy<T,N,Ref,expr_> type;
+    	};
+    };
+
+	struct no_policy{
+        template<typename E,typename T,int N,template<typename> class Ref>
+        struct apply{
+    		typedef boost::mpl::empty_base type;
+    	};
+    };
+
+	// ---- Collection builder ---- //
             
     template<typename E,typename T,int N,template<typename> class Ref,
     	typename P>
@@ -62,27 +82,14 @@ namespace auto_size{
         typedef expr<expr_,T,N+1,Ref,P> type;
     };
 
-	struct default_policy;
-
-	struct default_policy{
-    	
-        template<typename E,typename T,int N,template<typename> class Ref>
-        struct apply{
-			typedef expr<E,T,N,Ref,default_policy> expr_;        	
-    		typedef array_policy<T,N,Ref,expr_> type;
-    	};
-    };
-
-	struct no_policy{};
-
     template<
     	typename E,typename T,int N,template<typename> class Ref,typename P
     >
-    class expr : public default_policy::apply<E,T,N,Ref>::type{
+    class expr : public P::template apply<E,T,N,Ref>::type{
         typedef boost::mpl::int_<1> int_1_;
         typedef boost::mpl::int_<N> int_n_;
         typedef typename Ref<T>::type ref_;
-		typedef typename default_policy::apply<E,T,N,Ref>::type super_;
+		typedef typename P::template apply<E,T,N,Ref>::type super_;
 
         public:       
 
