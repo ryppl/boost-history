@@ -11,6 +11,6 @@ double uniform_deviate ( int seed );
 int rand(int M, int N);
 char rand_letter();
 std::string rand_str(int len);
-std::vector<int> rand_vec();
+std::vector<int> rand_vec(int);
 
 #endif

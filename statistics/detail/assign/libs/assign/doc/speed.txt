@@ -1,9 +1,9 @@
 Output from test/speed.cpp 
-Mac OS Leopard 10.6 - x86_64 - Release mode - gcc 4.2
+2.4 GHz Intel Core 2 Duo - Mac OS Leopard 10.6 - x86_64 - Release mode - gcc 4.2
 
-  Each arg is a string of size : 100
-  Number of repeated function calls : 1000000
-  N is the number of arguments. 
+Each arg is a string of size : 100
+Number of repeated function calls : 1000000
+
 cref_list_of(1) => 0.00 s
 
 cref_list_of_csv(1) => 0.00 s

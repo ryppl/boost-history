@@ -32,10 +32,10 @@ std::string rand_str(int len)
 }
 
 std::vector<int> 
-rand_vec()
+rand_vec(int max_n)
 {
     std::vector<int> result(
-        (std::size_t)rand(1, 100)
+        (std::size_t)rand(1, max_n)
     );
     std::generate(
         result.begin(), 

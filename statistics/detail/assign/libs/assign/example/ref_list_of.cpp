@@ -53,7 +53,6 @@ void example_ref_list_of(std::ostream& os)
         }
         {
             BOOST_AUTO(tmp,ref_list_of_csv(a,b,c));
-            std::fill(boost::begin(tmp),boost::end(tmp),0);
             tmp.assign(0);
             BOOST_ASSERT(a == 0);    
             BOOST_ASSERT(b == 0);    
