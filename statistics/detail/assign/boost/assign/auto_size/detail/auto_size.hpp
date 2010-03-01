@@ -50,13 +50,13 @@ namespace auto_size{
             
     typedef boost::mpl::void_ top_;
             
-	// ---- Policy meta classes --- //
+    // ---- Policy meta classes --- //
 
     template<typename L,typename T,int N,template<typename> class Ref,
     	typename P>
     struct expr;
 
-	struct default_policy;
+    struct default_policy;
 
 	struct default_policy{
         template<typename E,typename T,int N,template<typename> class Ref>
@@ -66,14 +66,14 @@ namespace auto_size{
     	};
     };
 
-	struct no_policy{
+    struct no_policy{
         template<typename E,typename T,int N,template<typename> class Ref>
         struct apply{
     		typedef boost::mpl::empty_base type;
     	};
     };
 
-	// ---- Collection builder ---- //
+    // ---- Collection builder ---- //
             
     template<typename E,typename T,int N,template<typename> class Ref,
     	typename P>
