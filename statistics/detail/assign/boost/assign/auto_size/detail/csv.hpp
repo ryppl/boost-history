@@ -54,7 +54,7 @@ namespace assign{                                                           \
         wrapper_ wrapper;                                                   \
         wrapper.initialize(                                                 \
             boost::assign::detail::auto_size::make_first_expr_no_policy<    \
-                BOOST_ASSIGN_CSV_ref                                        \
+                BOOST_ASSIGN_CSV_ref,T                                      \
             > BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_)                     \
         );                                                                  \
         return wrapper;                                                     \
@@ -62,6 +62,8 @@ namespace assign{                                                           \
 }                                                                           \
 }                                                                           \
 /**/
+
+// Note : ming
 
 #define BOOST_ASSIGN_CSV_ITER(F,N)                                          \
     BOOST_ASSIGN_CSV_ITER_UNQUAL(F,T,T,N)                                   \
