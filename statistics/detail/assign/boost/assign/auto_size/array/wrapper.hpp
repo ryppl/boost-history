@@ -45,7 +45,7 @@ namespace auto_size{
         
         private:
 
-		mutable ref_array_ ref_array;
+        mutable ref_array_ ref_array;
 
     };
 
