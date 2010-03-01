@@ -11,9 +11,9 @@
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 
 // Creates a collection of references whose functionality is that of assign::
-// auto_size::detail::array_interface. Rebind semantics apply if the collection 
+// detail::auto_size::array_interface. Rebind semantics apply if the collection 
 // is the lhs of an assignment:
-// 	cref_rebind_list_of(a)(b(c).assign(d)
+// 	cref_rebind_list_of(a)(b)(c).assign(d)
 // Unless this specific feature is needed, ref_list_of() is preferable.
 
 namespace boost{
