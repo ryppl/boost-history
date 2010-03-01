@@ -13,20 +13,17 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
-//#include <boost/shared_ptr.hpp>
 #include <boost/type_traits.hpp>
-//#include <boost/array.hpp>
-//#include <boost/range.hpp>
 #include <boost/assign/list_of.hpp> // needed for assign_referene
 #include <boost/assign/auto_size/detail/assign_refence_copy.hpp>
 #include <boost/assign/auto_size/array/policy.hpp>
 
-// Creates a collection of references.
+// Creates a collection of references by deducing the number of arguments
+// a compile time.
 //
-// This approach improves upon ref_list_of<int>() by deducing the number of 
-// arguments at compile time, factors the reference wrapper into template, Ref,
-// and inherits from an arbitrary policy, P, usually intended to expose a 
-// container interface.
+// Requirements
+// Ref specifies a reference_wrapper
+// P is an abitrary policy, usually intended as providing a container interface
 //
 // Note:
 // In most situations, a reference wrapper that has copy rather than rebind 
