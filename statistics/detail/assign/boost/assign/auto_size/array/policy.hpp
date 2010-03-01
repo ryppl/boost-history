@@ -11,6 +11,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/assign/auto_size/array/interface.hpp>
 #include <boost/assign/auto_size/array/wrapper.hpp>
+#include <boost/assign/auto_size/array/ref.hpp>
 
 namespace boost{
 namespace assign{
@@ -22,14 +23,10 @@ namespace auto_size{
     >
     class expr;         
 
-    template<typename T,int N,template<typename> class Ref>
-    struct ref_array;
-                         
     template<typename A,typename E,typename T,int N,
     	template<typename> class Ref,typename P>
     void write_to_array(A& a,const expr<E,T,N,Ref,P>& e);
                   
-
    // Policy for auto_size::expr that exposes an array interface
    template<typename T,int N,template<typename> class Ref,typename D>
    	class array_policy 

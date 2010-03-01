@@ -13,17 +13,13 @@
 #include <boost/array.hpp>
 #include <boost/range.hpp>
 #include <boost/assign/auto_size/detail/has_copy_semantics.hpp>
+#include <boost/assign/auto_size/array/ref.hpp>
 
 namespace boost{
 namespace assign{
 namespace detail{
 namespace auto_size{
                    
-    template<typename T,int N,template<typename> class Ref>
-    struct ref_array{
-        typedef boost::array<typename Ref<T>::type,N> type;
-    };
-
     // Used as a base class of D, adds the array interface and a conversion 
     // operator to any data-structure constructible from a pair of iterators.
     // Let d an instance of D. Requirements:

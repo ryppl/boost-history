@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <iterator>
 #include <boost/bind.hpp>
 #include <libs/assign/test/speed_common.h>
 
