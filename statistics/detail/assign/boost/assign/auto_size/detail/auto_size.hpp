@@ -89,7 +89,7 @@ namespace auto_size{
         typedef boost::mpl::int_<1> int_1_;
         typedef boost::mpl::int_<N> int_n_;
         typedef typename Ref<T>::type ref_;
-		typedef typename P::template apply<E,T,N,Ref>::type super_;
+        typedef typename P::template apply<E,T,N,Ref>::type super_;
 
         public:       
 
